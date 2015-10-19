@@ -1,0 +1,5 @@
+ftbl:gamemode_loaded=Gamemode set!
+ftbl:gamemode_not_found=Gamemode does not exist!
+ftbl:gamemode_already_set=Gamemode already set!
+ftbl:gamemode_current=Current gamemode: %s
+ftbl:gamemode_list=Available gamemodes: %s

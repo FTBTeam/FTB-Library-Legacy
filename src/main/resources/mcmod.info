@@ -1,17 +1,17 @@
 [
 {
-  "modid": "FTBG",
-  "name": "FTBGamemodes",
-  "description": "FTBGamemodes",
+  "modid": "FTBL",
+  "name": "FTBLib",
+  "description": "FTBLib",
   "version": "${version}",
-  "url": "http://minecraft.curseforge.com/projects/ftb-gamemodes",
+  "url": "http://minecraft.curseforge.com/projects/ftblib",
   "updateUrl": "",
   "authorList": [
     "LatvianModder",
     "Jared"
   ],
   "credits": "",
-  "logoFile": "assets/ftbg/textures/logo.png",
+  "logoFile": "assets/ftbl/textures/logo.png",
   "screenshots": [
   ],
   "parent":"",
