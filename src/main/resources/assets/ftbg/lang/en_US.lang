@@ -1,6 +1,0 @@
-ftbg:gamemode_loading=Gamemode loading...
-ftbg:gamemode_loaded=Gamemode set!
-ftbg:gamemode_not_found=Gamemode does not exist!
-ftbg:gamemode_already_set=Gamemode already set!
-ftbg:gamemode_current=Current gamemode: %s
-ftbg:gamemode_list=All gamemodes: %s
