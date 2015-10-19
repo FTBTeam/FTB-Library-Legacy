@@ -1,0 +1,21 @@
+[
+{
+  "modid": "FTBG",
+  "name": "FTBGamemodes",
+  "description": "FTBGamemodes",
+  "version": "${version}",
+  "url": "http://minecraft.curseforge.com/projects/ftb-gamemodes",
+  "updateUrl": "",
+  "authorList": [
+    "LatvianModder",
+    "Jared"
+  ],
+  "credits": "",
+  "logoFile": "assets/ftbg/textures/logo.png",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
