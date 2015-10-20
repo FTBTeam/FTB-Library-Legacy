@@ -1,5 +1,38 @@
-ftbl:gamemode_loaded=Gamemode set!
-ftbl:gamemode_not_found=Gamemode does not exist!
-ftbl:gamemode_already_set=Gamemode already set!
-ftbl:gamemode_current=Current gamemode: %s
-ftbl:gamemode_list=Available gamemodes: %s
+ftbl:gamemode.loaded=Gamemode set to '%s'!
+ftbl:gamemode.not_found=Gamemode does not exist!
+ftbl:gamemode.already_set=Gamemode already set!
+ftbl:gamemode.current=Current gamemode: %s
+ftbl:gamemode.list=Available gamemodes: %s
+
+#Colors
+ftbl:color.black=Black
+ftbl:color.red=Red
+ftbl:color.green=Green
+ftbl:color.brown=Brown
+ftbl:color.blue=Blue
+ftbl:color.purple=Purple
+ftbl:color.cyan=Cyan
+ftbl:color.silver=Light Gray
+ftbl:color.gray=Dark Gray
+ftbl:color.pink=Pink
+ftbl:color.lime=Lime
+ftbl:color.yellow=Yellow
+ftbl:color.light_blue=Light Blue
+ftbl:color.magenta=Magenta
+ftbl:color.orange=Orange
+ftbl:color.white=White
+
+#Sides
+ftbl:side.down=Down
+ftbl:side.up=Up
+ftbl:side.north=North
+ftbl:side.south=South
+ftbl:side.west=West
+ftbl:side.east=East
+
+ftbl:dside.bottom=Bottom
+ftbl:dside.top=Top
+ftbl:dside.back=Back
+ftbl:dside.front=Front
+ftbl:dside.left=Left
+ftbl:dside.right=Right

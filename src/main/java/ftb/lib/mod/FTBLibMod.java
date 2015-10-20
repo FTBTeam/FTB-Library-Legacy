@@ -1,23 +1,27 @@
 package ftb.lib.mod;
 
-import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
 
-@Mod(modid = FTBLibMod.MOD_ID, name = "FTBLib", version = "@VERSION@", dependencies = "required-after:Forge@[10.13.4.1448,)")
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
 {
-	public static final String MOD_ID = "FTBL";
-	
-	@Mod.Instance(MOD_ID)
+	@Mod.Instance(FTBLibFinals.MOD_ID)
 	public static FTBLibMod inst;
+	
+	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.FTBLibModClient")
+	public static FTBLibModCommon proxy;
 	
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
 		FTBLib.init(e.getModConfigurationDirectory());
-		EventBusHelper.register(new FTBLibEventHandler());
+		JsonHelper.init();
 		FTBLibNetHandler.init();
+		
+		EventBusHelper.register(new FTBLibEventHandler());
+		proxy.preInit();
 	}
 	
 	@Mod.EventHandler

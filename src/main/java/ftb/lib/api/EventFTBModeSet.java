@@ -4,7 +4,7 @@ import java.io.File;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.mod.FTBLib;
+import ftb.lib.FTBLib;
 
 public class EventFTBModeSet extends Event
 {
