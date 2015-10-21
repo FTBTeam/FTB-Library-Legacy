@@ -1,14 +1,20 @@
 package ftb.lib.api;
 
-import com.google.common.collect.*;
+import java.util.*;
 
 public class GameModes
 {
-	public final ImmutableSortedSet<String> allModes;
+	public final List<String> allModes;
 	public final String defaultMode;
 	public final String commonMode;
-	public final ImmutableSortedMap<String, String> customData;
+	public final Map<String, String> customData;
 	
-	public GameModes(ImmutableSortedSet<String> l, String d, String c, ImmutableSortedMap<String, String> cd)
-	{ allModes = l; defaultMode = d; commonMode = c; customData = cd; }
+	public GameModes(List<String> l, String d, String c, Map<String, String> cd)
+	{
+		if(l == null || l.isEmpty()) throw new RuntimeException("gamemodes.json|mods can't be empty!");
+		allModes = l;
+		defaultMode = d;
+		commonMode = c;
+		customData = cd;
+	}
 }

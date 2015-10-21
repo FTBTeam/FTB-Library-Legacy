@@ -3,6 +3,7 @@ package ftb.lib.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
+import ftb.lib.mod.net.FTBLibNetHandler;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
@@ -19,6 +20,7 @@ public class FTBLibMod
 		FTBLib.init(e.getModConfigurationDirectory());
 		JsonHelper.init();
 		FTBLibNetHandler.init();
+		FTBWorld.init();
 		
 		EventBusHelper.register(new FTBLibEventHandler());
 		proxy.preInit();
@@ -26,5 +28,5 @@ public class FTBLibMod
 	
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
-	{ e.registerServerCommand(new CommandFTBLMode()); }
+	{ e.registerServerCommand(new CommandFTBWorld()); }
 }

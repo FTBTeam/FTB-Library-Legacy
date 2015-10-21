@@ -2,11 +2,10 @@ package ftb.lib.api;
 
 import java.io.File;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.FTBLib;
 
-public class EventFTBModeSet extends Event
+public class EventFTBModeSet extends EventLM
 {
 	public final Side side;
 	public final GameModes modes;
