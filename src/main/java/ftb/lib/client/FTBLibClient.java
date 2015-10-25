@@ -14,20 +14,19 @@ import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.*;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClient // LatCoreMCClient
 {
 	public static final Minecraft mc = FMLClientHandler.instance().getClient();
-	private static final FastMap<ResourceLocation, Integer> textureMap = new FastMap<ResourceLocation, Integer>();
 	private static final FastMap<String, ResourceLocation> cachedSkins = new FastMap<String, ResourceLocation>();
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
@@ -56,10 +55,9 @@ public class FTBLibClient // LatCoreMCClient
 	{
 		//getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
 		
-		World w = mc.theWorld;
-		if(w != null)
+		if(mc.theWorld != null)
 		{
-			EntityPlayer ep = w.func_152378_a(uuid);
+			EntityPlayer ep = mc.theWorld.func_152378_a(uuid);
 			if(ep != null && ep instanceof EntityPlayerSP)
 				return (EntityPlayerSP)ep;
 		}
@@ -143,25 +141,15 @@ public class FTBLibClient // LatCoreMCClient
 	public static void setTexture(ResourceLocation tex)
 	{
 		if(mc.currentScreen instanceof ITextureGui)
-		{
 			((ITextureGui)mc.currentScreen).setTexture(tex);
-			return;
-		}
-		
-		Integer i = textureMap.get(tex);
-		
-		if(i == null)
-		{
-			FTBLibClient.mc.getTextureManager().bindTexture(tex);
-			textureMap.put(tex, i = Integer.valueOf(FTBLibClient.mc.getTextureManager().getTexture(tex).getGlTextureId()));
-		}
-		
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, i.intValue());
+		else mc.getTextureManager().bindTexture(tex);
 	}
 	
 	public static void clearCachedData()
 	{
-		textureMap.clear();
 		cachedSkins.clear();
 	}
+
+	public static boolean canRenderGui()
+	{ return mc.currentScreen == null || mc.currentScreen instanceof GuiChat; }
 }

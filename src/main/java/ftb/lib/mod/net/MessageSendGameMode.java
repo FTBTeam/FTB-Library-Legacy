@@ -1,26 +1,20 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.FTBWorld;
-import io.netty.buffer.ByteBuf;
+import ftb.lib.api.*;
 
-public class MessageSendGameMode implements IMessage, IMessageHandler<MessageSendGameMode, IMessage>
+public class MessageSendGameMode extends MessageLM
 {
-	public String mode;
-	
-	public MessageSendGameMode() { }
+	public MessageSendGameMode() { super(DATA_SHORT); }
 	
 	public MessageSendGameMode(String s)
-	{ mode = s; }
+	{ this(); io.writeString(s); }
 	
-	public void fromBytes(ByteBuf io)
-	{ mode = ByteBufUtils.readUTF8String(io); }
+	public LMNetworkWrapper getWrapper()
+	{ return FTBLibNetHandler.NET; }
 	
-	public void toBytes(ByteBuf io)
-	{ ByteBufUtils.writeUTF8String(io, mode); }
-	
-	public IMessage onMessage(MessageSendGameMode m, MessageContext ctx)
-	{ FTBWorld.client.setMode(Side.CLIENT, m.mode, true); return null; }
+	public IMessage onMessage(MessageContext ctx)
+	{ FTBWorld.client.setMode(Side.CLIENT, io.readString(), true); return null; }
 }

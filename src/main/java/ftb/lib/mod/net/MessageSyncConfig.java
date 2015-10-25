@@ -1,39 +1,23 @@
 package ftb.lib.mod.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
+import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigSyncRegistry;
-import io.netty.buffer.ByteBuf;
-import latmod.lib.ByteIOStream;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageSyncConfig implements IMessage, IMessageHandler<MessageSyncConfig, IMessage>
+public class MessageSyncConfig extends MessageLM
 {
-	public final ByteIOStream io = new ByteIOStream();
-	
-	public MessageSyncConfig() { }
+	public MessageSyncConfig() { super(DATA_LONG); }
 	
 	public MessageSyncConfig(EntityPlayerMP ep)
-	{
-		ConfigSyncRegistry.writeToIO(io);
-	}
+	{ this(); ConfigSyncRegistry.writeToIO(io); }
 	
-	public void fromBytes(ByteBuf bb)
-	{
-		byte[] b = new byte[bb.readInt()];
-		bb.readBytes(b, 0, b.length);
-		io.setCompressedData(b);
-	}
+	public LMNetworkWrapper getWrapper()
+	{ return FTBLibNetHandler.NET; }
 	
-	public void toBytes(ByteBuf bb)
+	public IMessage onMessage(MessageContext ctx)
 	{
-		byte[] b = io.toCompressedByteArray();
-		bb.writeInt(b.length);
-		bb.writeBytes(b, 0, b.length);
-	}
-	
-	public IMessage onMessage(MessageSyncConfig m, MessageContext ctx)
-	{
-		ConfigSyncRegistry.readFromIO(m.io);
+		ConfigSyncRegistry.readFromIO(io);
 		return null;
 	}
 }

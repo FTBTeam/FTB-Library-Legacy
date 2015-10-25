@@ -28,9 +28,9 @@ public class FTBLibEventHandler
 		if(e.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)e.player;
-			FTBLibNetHandler.NET.sendTo(new MessageSyncConfig(ep), ep);
-			FTBLibNetHandler.NET.sendTo(new MessageSendWorldID(FTBWorld.server), ep);
-			FTBLibNetHandler.NET.sendTo(new MessageSendGameMode(FTBWorld.server.getMode()), ep);
+			new MessageSyncConfig(ep).sendTo(ep);
+			new MessageSendWorldID(FTBWorld.server).sendTo(ep);
+			new MessageSendGameMode(FTBWorld.server.getMode()).sendTo(ep);
 		}
 	}
 }

@@ -100,23 +100,11 @@ public class LMDimUtils
 		return true;
 	}
 	
-	/*
-	public static class CustomTeleporter extends net.minecraft.world.Teleporter
-	{
-		public CustomTeleporter(WorldServer ws)
-		{ super(ws); }
-		
-		public boolean makePortal(Entity entity)
-		{ return true; }
-		
-		public void placeInPortal(Entity entity, double x, double y, double z, float yaw)
-		{
-			//((EntityPlayerMP)entity).setPositionAndUpdate(x, y, z);
-		}
-	}*/
-	
 	public static World getWorld(int dim)
-	{ return DimensionManager.getWorld(dim); }
+	{
+		if(dim == 0) return FTBLib.getServerWorld();
+		return DimensionManager.getWorld(dim);
+	}
 	
 	public static String getDimName(World w)
 	{ return (w == null) ? "" : w.provider.getDimensionName(); }
@@ -138,9 +126,8 @@ public class LMDimUtils
 	
 	public static ChunkCoordinates getSpawnPoint(int dim)
 	{
-		WorldServer w = DimensionManager.getWorld(dim);
-		if(w == null) return null;
-		return w.getSpawnPoint();
+		World w = getWorld(dim);
+		return (w == null) ? null : w.getSpawnPoint();
 	}
 	
 	public static EntityPos getEntitySpawnPoint(int dim)

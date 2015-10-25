@@ -4,6 +4,7 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
+import latmod.lib.OS;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
@@ -17,6 +18,13 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
+		if(FTBLibFinals.DEV)
+			FTBLib.logger.info("Loading FTBLib, DevEnv");
+		else
+			FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.VERSION);
+		
+		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
+		
 		FTBLib.init(e.getModConfigurationDirectory());
 		JsonHelper.init();
 		FTBLibNetHandler.init();

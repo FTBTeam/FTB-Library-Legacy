@@ -112,11 +112,11 @@ public class CommandFTBWorld extends CommandBase
 		FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true);
 		
 		ConfigListRegistry.reloadAll();
-		FTBLibNetHandler.NET.sendToAll(new MessageSyncConfig(null));
+		new MessageSyncConfig(null).sendTo(null);
 		
 		new EventFTBReloadPre(Side.SERVER, sender).post();
 		new EventFTBReload(Side.SERVER, sender).post();
-		FTBLibNetHandler.NET.sendToAll(new MessageReload());
+		new MessageReload().sendTo(null);
 		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
 	}
 }

@@ -5,23 +5,17 @@ import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.mod.FTBLibMod;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 
-public class MessageReload implements IMessage, IMessageHandler<MessageReload, IMessage>
+public class MessageReload extends MessageLM
 {
-	public MessageReload() { }
+	public MessageReload() { super(DATA_NONE); }
 	
-	public void fromBytes(ByteBuf io)
-	{
-	}
+	public LMNetworkWrapper getWrapper()
+	{ return FTBLibNetHandler.NET; }
 	
-	public void toBytes(ByteBuf io)
-	{
-	}
-	
-	public IMessage onMessage(MessageReload m, MessageContext ctx)
+	public IMessage onMessage(MessageContext ctx)
 	{
 		FTBWorld.reloadGameModes();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();

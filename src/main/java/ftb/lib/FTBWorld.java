@@ -8,7 +8,7 @@ import com.google.gson.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import ftb.lib.mod.GameModesSerializer;
-import ftb.lib.mod.net.*;
+import ftb.lib.mod.net.MessageSendGameMode;
 import latmod.lib.*;
 import net.minecraft.world.World;
 
@@ -88,7 +88,7 @@ public class FTBWorld
 		{
 			try { LMFileUtils.save(currentModeFile, getMode()); }
 			catch(Exception ex) { ex.printStackTrace(); }
-			FTBLibNetHandler.NET.sendToAll(new MessageSendGameMode(currentMode));
+			new MessageSendGameMode(currentMode).sendTo(null);
 		}
 		
 		return 0;
