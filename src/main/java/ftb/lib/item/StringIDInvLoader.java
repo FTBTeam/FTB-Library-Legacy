@@ -21,33 +21,42 @@ public class StringIDInvLoader
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				Item item = LMInvUtils.getItemFromRegName(tag1.getString("ID"));
-		        
-		        if(item != null)
-		        {
-		        	if(tag1.hasKey("S"))
-		    		{
-		        		int slot = tag1.getShort("S");
-		        		
-		        		if(slot >= 0 && slot < items.length)
-		        		{
-		        			int size = tag1.getByte("C");
-				        	int dmg = Math.max(0, tag1.getShort("D"));
-				        	items[slot] = new ItemStack(item, size, dmg);
-				        	if(tag1.hasKey("T")) items[slot].setTagCompound(tag1.getCompoundTag("T"));
-		        		}
-		    		}
-		        	else
-		        	{
-		        		int[] ai = tag1.getIntArray("D");
-		        		
-		        		if(ai.length == 3 && ai[0] >= 0 && ai[0] < items.length)
-		        		{
-		        			items[ai[0]] = new ItemStack(item, ai[1], ai[2]);
-				        	if(tag1.hasKey("T", 10)) items[ai[0]].setTagCompound(tag1.getCompoundTag("T"));
-		        		}
-		        	}
-		        }
+				
+				if(tag1.hasKey("Slot"))
+				{
+					int slot = tag1.getShort("Slot");
+					items[slot] = ItemStack.loadItemStackFromNBT(tag1);
+				}
+				else
+				{
+					Item item = LMInvUtils.getItemFromRegName(tag1.getString("ID"));
+			        
+			        if(item != null)
+			        {
+			        	if(tag1.hasKey("S"))
+			    		{
+			        		int slot = tag1.getShort("S");
+			        		
+			        		if(slot >= 0 && slot < items.length)
+			        		{
+			        			int size = tag1.getByte("C");
+					        	int dmg = Math.max(0, tag1.getShort("D"));
+					        	items[slot] = new ItemStack(item, size, dmg);
+					        	if(tag1.hasKey("T")) items[slot].setTagCompound(tag1.getCompoundTag("T"));
+			        		}
+			    		}
+			        	else
+			        	{
+			        		int[] ai = tag1.getIntArray("D");
+			        		
+			        		if(ai.length == 3 && ai[0] >= 0 && ai[0] < items.length)
+			        		{
+			        			items[ai[0]] = new ItemStack(item, ai[1], ai[2]);
+					        	if(tag1.hasKey("T", 10)) items[ai[0]].setTagCompound(tag1.getCompoundTag("T"));
+			        		}
+			        	}
+			        }
+				}
 			}
 		}
 	}

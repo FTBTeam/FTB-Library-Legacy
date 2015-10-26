@@ -1,8 +1,6 @@
 package ftb.lib.api;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.FTBLib;
-import ftb.lib.mod.FTBLibFinals;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.ByteIOStream;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -104,14 +102,14 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 	
 	public final void sendTo(EntityPlayerMP ep)
 	{
-		if(FTBLibFinals.DEV) FTBLib.logger.info("[S] Message sent: " + getClass().getName());
+		//if(FTBLibFinals.DEV) FTBLib.logger.info("[S] Message sent: " + getClass().getName());
 		if(ep != null) getWrapper().sendTo(this, ep);
 		else getWrapper().sendToAll(this);
 	}
 	
 	public final void sendToServer()
 	{
-		if(FTBLibFinals.DEV) FTBLib.logger.info("[C] Message sent: " + getClass().getName());
+		//if(FTBLibFinals.DEV) FTBLib.logger.info("[C] Message sent: " + getClass().getName());
 		getWrapper().sendToServer(this);
 	}
 }
