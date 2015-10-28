@@ -3,20 +3,18 @@ package ftb.lib.mod;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.*;
-import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigListRegistry;
-import ftb.lib.mod.net.*;
+import ftb.lib.FTBWorld;
+import ftb.lib.api.GameModes;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
-public class CommandFTBWorld extends CommandBase
+public class CommandFTBMode extends CommandBase
 {
 	public String getCommandName()
-	{ return "ftb_world"; }
+	{ return "ftb_mode"; }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/ftb_world [reload | setmode <modeID> | getmode | listmodes | getID] "; }
+	{ return "/ftb_mode [set <modeID> | get | list] "; }
 	
 	public int getRequiredPermissionLevel()
 	{ return 4; }
@@ -24,9 +22,8 @@ public class CommandFTBWorld extends CommandBase
 	@SuppressWarnings("all")
 	public List addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(args.length == 1)
-			return getListOfStringsMatchingLastWord(args, "reload", "getmode", "setmode", "listmodes", "getID");
-		else if(args.length == 2 && args[0].equals("setmode"))
+		if(args.length == 1) return getListOfStringsMatchingLastWord(args, "get", "set", "list");
+		else if(args.length == 2 && args[0].equals("set"))
 			return getListOfStringsFromIterableMatchingLastWord(args, FTBWorld.getAllModes().allModes);
 		return null;
 	}
@@ -45,12 +42,7 @@ public class CommandFTBWorld extends CommandBase
 		
 		GameModes list = FTBWorld.getAllModes();
 		
-		if(args[0].equals("reload"))
-		{
-			reload(ics, false);
-			return new ChatComponentTranslation("ftbl:reloadedServer");
-		}
-		else if(args[0].equals("setmode"))
+		if(args[0].equals("set"))
 		{
 			if(args.length == 1)
 				return new ChatComponentText(getCommandUsage(ics));
@@ -77,13 +69,13 @@ public class CommandFTBWorld extends CommandBase
 			
 			return c;
 		}
-		else if(args[0].equals("getmode"))
+		else if(args[0].equals("get"))
 		{
 			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.current", FTBWorld.server.getMode());
 			c.getChatStyle().setColor(EnumChatFormatting.BLUE);
 			return c;
 		}
-		else if(args[0].equals("listmodes"))
+		else if(args[0].equals("list"))
 		{
 			StringBuilder sb = new StringBuilder();
 			
@@ -100,23 +92,7 @@ public class CommandFTBWorld extends CommandBase
 			c.getChatStyle().setColor(EnumChatFormatting.BLUE);
 			return c;
 		}
-		else if(args[0].equals("getID"))
-			return new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS());
 		
 		return null;
-	}
-
-	public static void reload(ICommandSender sender, boolean printMessage)
-	{
-		FTBWorld.reloadGameModes();
-		FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true);
-		
-		ConfigListRegistry.reloadAll();
-		new MessageSyncConfig(null).sendTo(null);
-		
-		new EventFTBReloadPre(Side.SERVER, sender).post();
-		new EventFTBReload(Side.SERVER, sender).post();
-		new MessageReload().sendTo(null);
-		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
 	}
 }

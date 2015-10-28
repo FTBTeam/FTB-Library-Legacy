@@ -2,9 +2,14 @@ package ftb.lib.mod;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.mod.net.FTBLibNetHandler;
+import ftb.lib.api.*;
+import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.mod.net.*;
 import latmod.lib.OS;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentTranslation;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
@@ -36,5 +41,23 @@ public class FTBLibMod
 	
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
-	{ e.registerServerCommand(new CommandFTBWorld()); }
+	{
+		e.registerServerCommand(new CommandFTBMode());
+		e.registerServerCommand(new CommandFTBReload());
+		e.registerServerCommand(new CommandFTBWorldID());
+	}
+	
+	public static void reload(ICommandSender sender, boolean printMessage)
+	{
+		FTBWorld.reloadGameModes();
+		FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true);
+		
+		ConfigListRegistry.reloadAll();
+		new MessageSyncConfig(null).sendTo(null);
+		
+		new EventFTBReloadPre(Side.SERVER, sender).post();
+		new EventFTBReload(Side.SERVER, sender).post();
+		new MessageReload().sendTo(null);
+		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
+	}
 }
