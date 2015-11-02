@@ -1,6 +1,6 @@
 package ftb.lib.item;
 
-import java.util.*;
+import java.util.Arrays;
 
 import ftb.lib.LMNBTUtils;
 import latmod.lib.MapEntry;
