@@ -8,6 +8,7 @@ import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -485,4 +486,7 @@ public class LMInvUtils
 			}
 		}
 	}
+	
+	public static boolean isAir(Item item)
+	{ return item != null && item instanceof ItemBlock && Block.getBlockFromItem(item) == Blocks.air; }
 }

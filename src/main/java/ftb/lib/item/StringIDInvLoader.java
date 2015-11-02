@@ -1,8 +1,9 @@
 package ftb.lib.item;
 
-import java.util.Arrays;
+import java.util.*;
 
 import ftb.lib.LMNBTUtils;
+import latmod.lib.MapEntry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
@@ -21,41 +22,11 @@ public class StringIDInvLoader
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				
-				if(tag1.hasKey("Slot"))
+				MapEntry<Integer, ItemStack> itemEntry = loadFromNBT(tag1);
+				if(itemEntry != null)
 				{
-					int slot = tag1.getShort("Slot");
-					items[slot] = ItemStack.loadItemStackFromNBT(tag1);
-				}
-				else
-				{
-					Item item = LMInvUtils.getItemFromRegName(tag1.getString("ID"));
-			        
-			        if(item != null)
-			        {
-			        	if(tag1.hasKey("S"))
-			    		{
-			        		int slot = tag1.getShort("S");
-			        		
-			        		if(slot >= 0 && slot < items.length)
-			        		{
-			        			int size = tag1.getByte("C");
-					        	int dmg = Math.max(0, tag1.getShort("D"));
-					        	items[slot] = new ItemStack(item, size, dmg);
-					        	if(tag1.hasKey("T")) items[slot].setTagCompound(tag1.getCompoundTag("T"));
-			        		}
-			    		}
-			        	else
-			        	{
-			        		int[] ai = tag1.getIntArray("D");
-			        		
-			        		if(ai.length == 3 && ai[0] >= 0 && ai[0] < items.length)
-			        		{
-			        			items[ai[0]] = new ItemStack(item, ai[1], ai[2]);
-					        	if(tag1.hasKey("T", 10)) items[ai[0]].setTagCompound(tag1.getCompoundTag("T"));
-			        		}
-			        	}
-			        }
+					int key = itemEntry.getKey().intValue();
+					if(key >= 0 && key < items.length) items[key] = itemEntry.getValue();
 				}
 			}
 		}
@@ -69,14 +40,7 @@ public class StringIDInvLoader
 		for(int i = 0; i < items.length; i++)
 		{
 			if(items[i] != null)
-			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				tag1.setString("ID", LMInvUtils.getRegName(items[i].getItem()));
-				tag1.setIntArray("D", new int[] { i, items[i].stackSize, items[i].getItemDamage() });
-		        if(items[i].stackTagCompound != null) tag1.setTag("T", items[i].stackTagCompound);
-				list.appendTag(tag1);
-			}
-			
+				list.appendTag(saveToNBT(items[i], i));
 		}
 		
 		if(list.tagCount() > 0) tag.setTag(s, list);
@@ -127,5 +91,58 @@ public class StringIDInvLoader
 		}
 		
 		return count;
+	}
+	
+	public static MapEntry<Integer, ItemStack> loadFromNBT(NBTTagCompound tag)
+	{
+		if(tag == null || tag.hasNoTags()) return null;
+		
+		if(tag.hasKey("Slot"))
+		{
+			int slot = tag.getShort("Slot");
+			ItemStack is = ItemStack.loadItemStackFromNBT(tag);
+			if(is != null) return new MapEntry<Integer, ItemStack>(Integer.valueOf(slot), is);
+		}
+		else
+		{
+			Item item = LMInvUtils.getItemFromRegName(tag.getString("ID"));
+	        
+	        if(item != null)
+	        {
+	        	if(tag.hasKey("S"))
+	    		{
+	        		int slot = tag.getShort("S");
+	        		
+	        		int size = tag.getByte("C");
+		        	int dmg = Math.max(0, tag.getShort("D"));
+		        	ItemStack is = new ItemStack(item, size, dmg);
+		        	if(tag.hasKey("T")) is.setTagCompound(tag.getCompoundTag("T"));
+		        	return new MapEntry<Integer, ItemStack>(Integer.valueOf(slot), is);
+	    		}
+	        	else
+	        	{
+	        		int[] ai = tag.getIntArray("D");
+	        		
+	        		if(ai.length == 3)
+	        		{
+	        			ItemStack is = new ItemStack(item, ai[1], ai[2]);
+			        	if(tag.hasKey("T", LMNBTUtils.MAP)) is.setTagCompound(tag.getCompoundTag("T"));
+			        	return new MapEntry<Integer, ItemStack>(Integer.valueOf(ai[0]), is);
+	        		}
+	        	}
+	        }
+		}
+		
+		return null;
+	}
+	
+	public static NBTTagCompound saveToNBT(ItemStack is, int slot)
+	{
+		if(is == null || is.getItem() == null) return null;
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("ID", LMInvUtils.getRegName(is.getItem()));
+		tag.setIntArray("D", new int[] { slot, is.stackSize, is.getItemDamage() });
+        if(is.hasTagCompound()) tag.setTag("T", is.getTagCompound());
+        return tag;
 	}
 }

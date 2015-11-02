@@ -78,7 +78,6 @@ public class FTBWorld
 		modeID = modeID.trim();
 		if(modeID.isEmpty() || modeID.equals(gameModes.commonMode)) return 1;
 		if(!forced && !currentMode.isEmpty() && modeID.equals(currentMode)) return 2;
-		System.out.println("ModeID: " + modeID);
 		if(!gameModes.allModes.contains(modeID)) return 1;
 		currentMode = modeID;
 		

@@ -3,7 +3,7 @@ package ftb.lib.mod;
 import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.FTBWorld;
+import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
@@ -17,7 +17,10 @@ public class CommandFTBMode extends CommandBase
 	{ return "/ftb_mode [set <modeID> | get | list] "; }
 	
 	public int getRequiredPermissionLevel()
-	{ return 4; }
+	{ return 2; }
+	
+	public boolean canCommandSenderUseCommand(ICommandSender ics)
+	{ return !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics); }
 	
 	@SuppressWarnings("all")
 	public List addTabCompletionOptions(ICommandSender ics, String[] args)

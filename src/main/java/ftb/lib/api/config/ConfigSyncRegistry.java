@@ -1,5 +1,6 @@
 package ftb.lib.api.config;
 
+import ftb.lib.FTBLib;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.lib.*;
 import latmod.lib.config.*;
@@ -47,7 +48,7 @@ public class ConfigSyncRegistry
 			count += l.writeToIO(io);
 		}
 		
-		if(FTBLibFinals.DEV) System.out.println("Sent " + count + " synced config values");
+		if(FTBLibFinals.DEV) FTBLib.logger.info("Sent " + count + " synced config values");
 		return count;
 	}
 	
@@ -69,7 +70,7 @@ public class ConfigSyncRegistry
 			else new EventSyncedConfig(l).post();
 		}
 		
-		System.out.println("Received " + count + " synced config values");
+		FTBLib.logger.info("Received " + count + " synced config values");
 		return count;
 	}
 }
