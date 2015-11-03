@@ -1,0 +1,50 @@
+package ftb.lib.mod.net;
+import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.*;
+import ftb.lib.api.gui.IGuiTile;
+import ftb.lib.client.FTBLibClient;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+
+public class MessageOpenGuiTile extends MessageLM
+{
+	public MessageOpenGuiTile() { super(DATA_LONG); }
+	
+	public MessageOpenGuiTile(TileEntity t, NBTTagCompound tag, int wid)
+	{
+		this();
+		io.writeInt(t.xCoord);
+		io.writeInt(t.yCoord);
+		io.writeInt(t.zCoord);
+		writeTag(tag);
+		io.writeUByte(wid);
+	}
+	
+	public LMNetworkWrapper getWrapper()
+	{ return FTBLibNetHandler.NET_GUI; }
+	
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageContext ctx)
+	{
+		int x = io.readInt();
+		int y = io.readInt();
+		int z = io.readInt();
+		
+		TileEntity te = FTBLibClient.mc.theWorld.getTileEntity(x, y, z);
+		
+		if(te != null && !te.isInvalid() && te instanceof IGuiTile)
+		{
+			GuiScreen gui = ((IGuiTile)te).getGui(FTBLibClient.mc.thePlayer, readTag());
+			
+			if(gui != null)
+			{
+				FTBLibClient.mc.displayGuiScreen(gui);
+				FTBLibClient.mc.thePlayer.openContainer.windowId = io.readUByte();
+			}
+		}
+		
+		return null;
+	}
+}

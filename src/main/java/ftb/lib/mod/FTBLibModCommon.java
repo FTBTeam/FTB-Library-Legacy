@@ -2,7 +2,9 @@ package ftb.lib.mod;
 
 import java.util.UUID;
 
+import ftb.lib.api.gui.IGuiTile;
 import net.minecraft.entity.player.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class FTBLibModCommon // FTBLibModClient
@@ -28,6 +30,15 @@ public class FTBLibModCommon // FTBLibModClient
 	}
 	
 	public void spawnDust(World worldObj, double x, double y, double z, int i)
+	{
+	}
+
+	public boolean openClientGui(EntityPlayer ep, String mod, int ID, NBTTagCompound data)
+	{
+		return false;
+	}
+	
+	public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
 	{
 	}
 }

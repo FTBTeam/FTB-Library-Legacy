@@ -7,12 +7,14 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
+import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.lib.LMColorUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.player.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 @SideOnly(Side.CLIENT)
@@ -59,5 +61,32 @@ public class FTBLibModClient extends FTBLibModCommon
 		fx.setRBGColorF(red, green, blue);
 		fx.setAlphaF(alpha);
 		FTBLibClient.mc.effectRenderer.addEffect(fx);
+	}
+	
+	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
+	{
+		LMGuiHandler h = LMGuiHandlerRegistry.getLMGuiHandler(mod);
+		
+		if(h != null)
+		{
+			GuiScreen g = h.getGui(ep, id, data);
+			
+			if(g != null)
+			{
+				FTBLibClient.mc.displayGuiScreen(g);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
+	{
+		if(ep != null && t != null)
+		{
+			GuiScreen g = t.getGui(ep, data);
+			if(g != null) FTBLibClient.mc.displayGuiScreen(g);
+		}
 	}
 }

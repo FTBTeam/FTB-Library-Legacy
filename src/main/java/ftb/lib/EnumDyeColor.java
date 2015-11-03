@@ -37,7 +37,7 @@ public enum EnumDyeColor // ItemDye
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
-		lang = "ftbt:color." + name;
+		lang = "ftbl:color." + name;
 		color = ItemDye.field_150922_c[ID];
 		colorBright = c;
 		

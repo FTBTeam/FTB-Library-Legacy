@@ -11,16 +11,22 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.mod.*;
+import ftb.lib.mod.net.MessageOpenGuiTile;
 import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class FTBLib
 {
@@ -176,4 +182,24 @@ public class FTBLib
 
 	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
 	{ c.getChatStyle().setColor(e); return c; }
+	
+	public static void openGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
+	{
+		if(t == null || !(t instanceof TileEntity) || ep instanceof FakePlayer) return;
+		else if(ep instanceof EntityPlayerMP)
+		{
+			Container c = t.getContainer(ep, data);
+			if(c == null) return;
+			
+			EntityPlayerMP epM = (EntityPlayerMP)ep;
+			epM.getNextWindowId();
+			epM.closeContainer();
+			epM.openContainer = c;
+			epM.openContainer.windowId = epM.currentWindowId;
+			epM.openContainer.addCraftingToCrafters(epM);
+			new MessageOpenGuiTile((TileEntity)t, data, epM.currentWindowId).sendTo(epM);
+		}
+		else if(!FTBLib.isServer())
+			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
+	}
 }
