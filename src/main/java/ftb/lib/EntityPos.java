@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 
-public class EntityPos
+public class EntityPos implements Cloneable
 {
 	public double x, y, z;
 	public int dim;
@@ -68,6 +68,9 @@ public class EntityPos
 	public int[] toIntArray()
 	{ return new int[] { intX(), intY(), intZ(), dim }; }
 	
+	public EntityPos clone()
+	{ return new EntityPos(x, y, z, dim); }
+	
 	public static EntityPos fromIntArray(int[] pos)
 	{
 		if(pos == null || pos.length < 4) return null;
@@ -85,6 +88,9 @@ public class EntityPos
 		
 		public boolean equalsPosRot(Entity e)
 		{ return equalsPos(e) && rotYaw == e.rotationYaw && rotPitch == e.rotationPitch; }
+		
+		public Rot(double x, double y, double z, int dim, float yaw, float pitch)
+		{ super(x, y, z, dim); rotYaw = yaw; rotPitch = pitch; }
 		
 		public void set(Entity e)
 		{
@@ -106,5 +112,8 @@ public class EntityPos
 			tag.setFloat("YR", rotYaw);
 			tag.setFloat("PR", rotPitch);
 		}
+		
+		public Rot clone()
+		{ return new Rot(x, y, z, dim, rotYaw, rotPitch); }
 	}
 }

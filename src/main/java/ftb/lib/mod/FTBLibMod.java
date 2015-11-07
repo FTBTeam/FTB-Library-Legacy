@@ -49,15 +49,17 @@ public class FTBLibMod
 	
 	public static void reload(ICommandSender sender, boolean printMessage)
 	{
-		FTBWorld.reloadGameModes();
-		FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true);
-		
 		ConfigListRegistry.reloadAll();
-		new MessageSyncConfig(null).sendTo(null);
+		FTBWorld.reloadGameModes();
 		
-		new EventFTBReloadPre(Side.SERVER, sender).post();
-		new EventFTBReload(Side.SERVER, sender).post();
-		new MessageReload().sendTo(null);
-		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
+		if(FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true) == 0)
+		{
+			new MessageSyncConfig(null).sendTo(null);
+			
+			new EventFTBReloadPre(Side.SERVER, sender).post();
+			new EventFTBReload(Side.SERVER, sender).post();
+			new MessageReload().sendTo(null);
+			if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
+		}
 	}
 }
