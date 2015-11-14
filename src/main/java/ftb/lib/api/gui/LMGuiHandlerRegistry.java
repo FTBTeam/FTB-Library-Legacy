@@ -4,11 +4,11 @@ import latmod.lib.FastMap;
 
 public class LMGuiHandlerRegistry
 {
-	private static final FastMap<String, LMGuiHandler> guiHandlers = new FastMap<String, LMGuiHandler>();
+	private static final FastMap<String, LMGuiHandler> map = new FastMap<String, LMGuiHandler>();
 	
 	public static void add(LMGuiHandler h)
-	{ if(h != null && !guiHandlers.keys.contains(h.ID)) guiHandlers.put(h.ID, h); }
+	{ if(h != null && !map.keys.contains(h.ID)) map.put(h.ID, h); }
 	
-	public static LMGuiHandler getLMGuiHandler(String id)
-	{ return guiHandlers.get(id); }
+	public static LMGuiHandler get(String id)
+	{ return map.get(id); }
 }

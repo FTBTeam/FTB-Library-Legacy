@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.item.ODItems;
 import ftb.lib.mod.net.*;
 import latmod.lib.OS;
 import net.minecraft.command.ICommandSender;
@@ -34,9 +35,16 @@ public class FTBLibMod
 		JsonHelper.init();
 		FTBLibNetHandler.init();
 		FTBWorld.init();
+		ODItems.preInit();
 		
 		EventBusHelper.register(new FTBLibEventHandler());
 		proxy.preInit();
+	}
+	
+	@Mod.EventHandler
+	public void onPostInit(FMLPostInitializationEvent e)
+	{
+		ODItems.postInit();
 	}
 	
 	@Mod.EventHandler
@@ -47,9 +55,17 @@ public class FTBLibMod
 		e.registerServerCommand(new CommandFTBWorldID());
 	}
 	
+	/*
+	@NetworkCheckHandler
+	public boolean checkNetwork(Map<String, String> m, Side side)
+	{
+		String s = m.get(FTBLibFinals.MOD_ID);
+		return s == null || FTBLibFinals.DEV || s.equals(FTBLibFinals.VERSION);
+	}*/
+	
 	public static void reload(ICommandSender sender, boolean printMessage)
 	{
-		ConfigListRegistry.reloadAll();
+		ConfigListRegistry.reloadInstance();
 		FTBWorld.reloadGameModes();
 		
 		if(FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true) == 0)

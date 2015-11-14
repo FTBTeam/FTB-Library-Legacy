@@ -11,6 +11,7 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import ftb.lib.api.ServerTickCallback;
 import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.MessageOpenGuiTile;
@@ -202,4 +203,7 @@ public class FTBLib
 		else if(!FTBLib.isServer())
 			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
 	}
+	
+	public static void addCallback(ServerTickCallback c)
+	{ FTBLibEventHandler.addCallback(c); }
 }

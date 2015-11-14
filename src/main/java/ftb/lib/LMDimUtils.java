@@ -106,8 +106,15 @@ public class LMDimUtils
 		return DimensionManager.getWorld(dim);
 	}
 	
-	public static String getDimName(World w)
-	{ return (w == null) ? "" : w.provider.getDimensionName(); }
+	public static String getDimName(int dim)
+	{
+		if(dim == 0) return "Overworld";
+		else if(dim == 1) return "The End";
+		else if(dim == -1) return "Nether";
+		
+		World w = getWorld(dim);
+		return w == null ? ("DIM" + dim) : w.provider.getDimensionName();
+	}
 	
 	public static double getMovementFactor(int dim)
 	{

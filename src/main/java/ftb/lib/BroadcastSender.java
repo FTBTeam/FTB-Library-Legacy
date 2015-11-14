@@ -8,14 +8,14 @@ public class BroadcastSender implements ICommandSender
 {
 	public static final BroadcastSender inst = new BroadcastSender();
 	
+	public static final BroadcastSender mute = new BroadcastSender()
+	{ public void addChatMessage(IChatComponent ics) { } };
+	
 	public String getCommandSenderName()
 	{ return "[Server]"; }
 	
 	public IChatComponent func_145748_c_()
-	{
-		ChatComponentText c = new ChatComponentText(getCommandSenderName());
-		c.getChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE); return c;
-	}
+	{ return null; }
 	
 	public void addChatMessage(IChatComponent ics)
 	{ FTBLib.getServer().getConfigurationManager().sendChatMsgImpl(ics, true); }

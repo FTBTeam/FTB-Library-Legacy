@@ -65,7 +65,7 @@ public class ConfigSyncRegistry
 			l.setID(id);
 			count += l.totalEntryCount();
 			
-			ConfigList list = ConfigListRegistry.list.getObj(l);
+			ConfigList list = ConfigListRegistry.instance.list.getObj(l);
 			if(list != null) list.loadFromList(l);
 			else new EventSyncedConfig(l).post();
 		}

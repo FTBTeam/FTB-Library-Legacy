@@ -65,7 +65,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
-		LMGuiHandler h = LMGuiHandlerRegistry.getLMGuiHandler(mod);
+		LMGuiHandler h = LMGuiHandlerRegistry.get(mod);
 		
 		if(h != null)
 		{

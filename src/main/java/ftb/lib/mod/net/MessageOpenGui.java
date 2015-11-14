@@ -31,7 +31,7 @@ public class MessageOpenGui extends MessageLM
 		NBTTagCompound data = readTag();
 		int windowID = io.readUByte();
 		
-		LMGuiHandler h = LMGuiHandlerRegistry.getLMGuiHandler(modID);
+		LMGuiHandler h = LMGuiHandlerRegistry.get(modID);
 		if(h != null && FTBLibMod.proxy.openClientGui(FTBLibClient.mc.thePlayer, modID, guiID, data))
 			FTBLibClient.mc.thePlayer.openContainer.windowId = windowID;
 		return null;
