@@ -8,7 +8,7 @@ import net.minecraft.nbt.*;
 
 public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, IMessage>
 {
-	public final NBTTagCompound readTag()
+	public static final NBTTagCompound readTag(ByteIOStream io)
 	{
 		try
 		{
@@ -26,7 +26,10 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		return null;
 	}
 	
-	public final void writeTag(NBTTagCompound tag)
+	public final NBTTagCompound readTag()
+	{ return readTag(io); }
+	
+	public static final void writeTag(ByteIOStream io, NBTTagCompound tag)
 	{
 		try
 		{
@@ -42,6 +45,9 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		catch(Exception ex)
 		{ ex.printStackTrace(); }
 	}
+	
+	public final void writeTag(NBTTagCompound tag)
+	{ writeTag(io, tag); }
 	
 	// End of static //
 	
