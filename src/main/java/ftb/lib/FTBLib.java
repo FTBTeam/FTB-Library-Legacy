@@ -205,5 +205,5 @@ public class FTBLib
 	}
 	
 	public static void addCallback(ServerTickCallback c)
-	{ FTBLibEventHandler.addCallback(c); }
+	{ if(c.maxTick == 0) c.onCallback(); else FTBLibEventHandler.pendingCallbacks.add(c); }
 }

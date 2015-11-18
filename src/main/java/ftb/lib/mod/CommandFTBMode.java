@@ -1,17 +1,16 @@
 package ftb.lib.mod;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.GameModes;
-import net.minecraft.command.*;
+import ftb.lib.cmd.*;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CommandFTBMode extends CommandBase
+public class CommandFTBMode extends CommandLM
 {
-	public String getCommandName()
-	{ return "ftb_mode"; }
+	public CommandFTBMode()
+	{ super("ftb_mode", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/ftb_mode [set <modeID> | get | list] "; }
@@ -22,23 +21,15 @@ public class CommandFTBMode extends CommandBase
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
 	{ return !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics); }
 	
-	@SuppressWarnings("all")
-	public List addTabCompletionOptions(ICommandSender ics, String[] args)
+	public String[] getTabStrings(ICommandSender ics, String[] args, int i)
 	{
-		if(args.length == 1) return getListOfStringsMatchingLastWord(args, "get", "set", "list");
+		if(args.length == 1) return new String[] { "get", "set", "list" };
 		else if(args.length == 2 && args[0].equals("set"))
-			return getListOfStringsFromIterableMatchingLastWord(args, FTBWorld.getAllModes().allModes);
+			return FTBWorld.getAllModes().allModes.toArray(new String[0]);
 		return null;
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args)
-	{
-		IChatComponent c = execCmd(ics, args);
-		if(c != null) ics.addChatMessage(c);
-		else throw new IllegalArgumentException((args.length > 0) ? args[0] : "No arguments!");
-	}
-	
-	public IChatComponent execCmd(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		if(args == null || args.length == 0)
 			return new ChatComponentText(getCommandUsage(ics));
@@ -47,8 +38,7 @@ public class CommandFTBMode extends CommandBase
 		
 		if(args[0].equals("set"))
 		{
-			if(args.length == 1)
-				return new ChatComponentText(getCommandUsage(ics));
+			if(args.length == 1) return new ChatComponentText(getCommandUsage(ics));
 			
 			IChatComponent c;
 			

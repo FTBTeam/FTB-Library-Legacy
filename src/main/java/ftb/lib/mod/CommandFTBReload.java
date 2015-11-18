@@ -1,18 +1,14 @@
 package ftb.lib.mod;
 
-import net.minecraft.command.*;
+import ftb.lib.cmd.*;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.IChatComponent;
 
-public class CommandFTBReload extends CommandBase
+public class CommandFTBReload extends CommandLM
 {
-	public String getCommandName()
-	{ return "ftb_reload"; }
-	
-	public String getCommandUsage(ICommandSender ics)
-	{ return "/ftb_reload"; }
-	
-	public int getRequiredPermissionLevel()
-	{ return 4; }
-	
-	public void processCommand(ICommandSender ics, String[] args)
-	{ FTBLibMod.reload(ics, true); }
+	public CommandFTBReload()
+	{ super("ftb_reload", CommandLevel.OP); }
+
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	{ FTBLibMod.reload(ics, true); return null; }
 }

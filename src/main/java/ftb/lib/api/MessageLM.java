@@ -8,15 +8,15 @@ import net.minecraft.nbt.*;
 
 public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, IMessage>
 {
-	public static final NBTTagCompound readTag(ByteIOStream io)
+	public static final NBTTagCompound readTag(ByteIOStream data)
 	{
 		try
 		{
-			short s = io.readShort();
+			short s = data.readShort();
 			if(s >= 0)
 			{
 				byte[] abyte = new byte[s];
-				io.readRawBytes(abyte);
+				data.readRawBytes(abyte);
 				return CompressedStreamTools.func_152457_a(abyte, new NBTSizeTracker(2097152L));
 			}
 		}
@@ -29,17 +29,17 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 	public final NBTTagCompound readTag()
 	{ return readTag(io); }
 	
-	public static final void writeTag(ByteIOStream io, NBTTagCompound tag)
+	public static final void writeTag(ByteIOStream data, NBTTagCompound tag)
 	{
 		try
 		{
 			if (tag == null)
-				io.writeShort((short)-1);
+				data.writeShort((short)-1);
 			else
 			{
 				byte[] abyte = CompressedStreamTools.compress(tag);
-				io.writeShort((short)abyte.length);
-				io.writeRawBytes(abyte);
+				data.writeShort((short)abyte.length);
+				data.writeRawBytes(abyte);
 			}
 		}
 		catch(Exception ex)

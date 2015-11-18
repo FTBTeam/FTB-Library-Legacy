@@ -6,7 +6,7 @@ public abstract class ServerTickCallback
 	public final int maxTick;
 	
 	public ServerTickCallback(int i)
-	{ maxTick = Math.max(1, i); }
+	{ maxTick = Math.max(0, i); }
 	
 	public ServerTickCallback()
 	{ this(1); }
@@ -14,7 +14,7 @@ public abstract class ServerTickCallback
 	public boolean incAndCheck()
 	{
 		ticks++;
-		if(ticks == maxTick)
+		if(ticks >= maxTick)
 		{
 			onCallback();
 			return true;

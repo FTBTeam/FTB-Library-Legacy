@@ -1,20 +1,15 @@
 package ftb.lib.mod;
 
 import ftb.lib.FTBWorld;
-import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentTranslation;
+import ftb.lib.cmd.*;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.*;
 
-public class CommandFTBWorldID extends CommandBase
+public class CommandFTBWorldID extends CommandLM
 {
-	public String getCommandName()
-	{ return "ftb_worldID"; }
+	public CommandFTBWorldID()
+	{ super("ftb_worldID", CommandLevel.ALL); }
 	
-	public String getCommandUsage(ICommandSender ics)
-	{ return "/ftb_worldID"; }
-	
-	public int getRequiredPermissionLevel()
-	{ return 0; }
-	
-	public void processCommand(ICommandSender ics, String[] args)
-	{ ics.addChatMessage(new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS())); }
+	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	{ return new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS()); }
 }

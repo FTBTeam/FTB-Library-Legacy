@@ -6,6 +6,10 @@ ftbl:gamemode.list=Available gamemodes: %s
 ftbl:worldID=WorldID: %s
 ftbl:reloadedServer=FTBLib reloaded (Server)
 ftbl:reloadedClient=FTBLib reloaded (Client)
+commands.lmmissingargs=Missing Arguments!
+commands.lmdisabled=This feature is disabled!
+ftbl:cmd.invalid_sub=Invalid subcommand: '%s'!
+ftbl:owner=Owner: %s
 
 #Colors
 ftbl:color.black=Black
