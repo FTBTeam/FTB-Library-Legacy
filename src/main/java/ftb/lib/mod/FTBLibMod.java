@@ -4,7 +4,7 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.item.ODItems;
 import ftb.lib.mod.net.*;
@@ -72,8 +72,10 @@ public class FTBLibMod
 		{
 			new MessageSyncConfig(null).sendTo(null);
 			
-			new EventFTBReloadPre(Side.SERVER, sender).post();
-			new EventFTBReload(Side.SERVER, sender).post();
+			EventFTBReload event = new EventFTBReload(Side.SERVER, sender);
+			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
+			event.post();
+			
 			new MessageReload().sendTo(null);
 			if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
 		}

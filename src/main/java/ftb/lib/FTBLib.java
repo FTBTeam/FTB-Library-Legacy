@@ -8,7 +8,6 @@ import org.apache.logging.log4j.*;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.ServerTickCallback;
@@ -32,6 +31,7 @@ import net.minecraftforge.common.util.FakePlayer;
 public class FTBLib
 {
 	public static final Logger logger = LogManager.getLogger("FTBLib");
+	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	
@@ -40,19 +40,26 @@ public class FTBLib
 	public static File folderModpack;
 	public static File folderLocal;
 	
-	public static void init(File c)
+	public static void init(File configFolder)
 	{
-		folderConfig = c;
-		folderMinecraft = c.getParentFile();
+		folderConfig = configFolder;
+		folderMinecraft = folderConfig.getParentFile();
 		folderModpack = new File(folderMinecraft, "modpack/");
 		folderLocal = new File(folderMinecraft, "local/");
 		
 		if(!folderModpack.exists()) folderModpack.mkdirs();
 		if(!folderLocal.exists()) folderLocal.mkdirs();
+		
+		if(dev_logger instanceof org.apache.logging.log4j.core.Logger)
+		{
+			if(FTBLibFinals.DEV) ((org.apache.logging.log4j.core.Logger)dev_logger).setLevel(org.apache.logging.log4j.Level.ALL);
+			else ((org.apache.logging.log4j.core.Logger)dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
+		}
+		else logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
 	}
 	
-	public static final Configuration loadConfig(FMLPreInitializationEvent e, String s)
-	{ return new Configuration(new File(e.getModConfigurationDirectory(), s)); }
+	public static final Configuration loadConfig(String s)
+	{ return new Configuration(new File(folderConfig, s)); }
 	
 	public static IChatComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o); }
@@ -180,7 +187,7 @@ public class FTBLib
 		
 		return runCommand(ics, sb.toString());
 	}
-
+	
 	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
 	{ c.getChatStyle().setColor(e); return c; }
 	

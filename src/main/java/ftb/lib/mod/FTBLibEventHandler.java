@@ -19,14 +19,16 @@ public class FTBLibEventHandler
 	public static final FastList<ServerTickCallback> pendingCallbacks = new FastList<ServerTickCallback>();
 	
 	@SubscribeEvent
-	public void onServerStarted(WorldEvent.Load e)
+	public void onWorldLoaded(WorldEvent.Load e)
 	{
 		if(e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
 			ConfigListRegistry.reloadInstance();
 			FTBWorld.reloadGameModes();
 			FTBWorld.server = new FTBWorld(e.world);
-			new EventFTBWorldServer(FTBWorld.server).post();
+			EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, e.world);
+			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onFTBWorldServer(event);
+			event.post();
 			FTBLibMod.reload(FTBLib.getServer(), false);
 		}
 	}
@@ -40,6 +42,7 @@ public class FTBLibEventHandler
 			new MessageSyncConfig(ep).sendTo(ep);
 			new MessageSendWorldID(FTBWorld.server).sendTo(ep);
 			new MessageSendGameMode(FTBWorld.server.getMode()).sendTo(ep);
+			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onPlayerJoined(e.player);
 		}
 	}
 	
@@ -60,6 +63,8 @@ public class FTBLibEventHandler
 					if(callbacks.get(i).incAndCheck())
 						callbacks.remove(i);
 			}
+			
+			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onServerTick();
 		}
 	}
 }

@@ -41,10 +41,10 @@ public class ConfigListRegistry
 				ConfigList o = instance.list.getObj(key);
 				if(o != null && o.loadFromList(ol))
 				{
-					FTBLib.logger.info("Config overriden: " + ol.groups);
+					FTBLib.dev_logger.info("Config overriden: " + ol.groups);
 					o.parentFile.save();
 				}
-				else FTBLib.logger.info("Didnt load anything from " + ol);
+				else FTBLib.dev_logger.info("Didnt load anything from " + ol);
 			}
 		}
 	}

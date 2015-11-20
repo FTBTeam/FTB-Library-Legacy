@@ -48,7 +48,7 @@ public class ConfigSyncRegistry
 			count += l.writeToIO(io);
 		}
 		
-		if(FTBLibFinals.DEV) FTBLib.logger.info("Sent " + count + " synced config values");
+		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Sent " + count + " synced config values");
 		return count;
 	}
 	
