@@ -26,7 +26,7 @@ public class CommandSubLM extends CommandLM
 		
 		if(cmd != null)
 		{
-			String[] s = cmd.getTabStrings(ics, trimArgs(args), i - 1);
+			String[] s = cmd.getTabStrings(ics, LMStringUtils.shiftArray(args), i - 1);
 			if(s != null && s.length > 0) return s;
 		}
 		
@@ -39,7 +39,7 @@ public class CommandSubLM extends CommandLM
 		{
 			CommandLM cmd = subCommands.get(args[0]);
 			if(cmd != null)
-				return cmd.getUsername(trimArgs(args), i - 1);
+				return cmd.getUsername(LMStringUtils.shiftArray(args), i - 1);
 		}
 		
 		return null;
@@ -50,16 +50,7 @@ public class CommandSubLM extends CommandLM
 		if(args == null || args.length == 0)
 			return new ChatComponentText(LMStringUtils.strip(getTabStrings(ics, args, 0)));
 		CommandLM cmd = subCommands.get(args[0]);
-		if(cmd != null) return cmd.onCommand(ics, trimArgs(args));
+		if(cmd != null) return cmd.onCommand(ics, LMStringUtils.shiftArray(args));
 		return new ChatComponentTranslation(FTBLibFinals.ASSETS + "cmd.invalid_sub", args[0]);
-	}
-	
-	private static String[] trimArgs(String[] args)
-	{
-		if(args == null || args.length == 0) return new String[0];
-		String[] args1 = new String[args.length - 1];
-		for(int i = 0; i < args1.length; i++)
-			args1[i] = args[i + 1];
-		return args1;
 	}
 }

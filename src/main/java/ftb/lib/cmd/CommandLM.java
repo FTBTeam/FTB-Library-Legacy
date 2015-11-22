@@ -3,7 +3,7 @@ package ftb.lib.cmd;
 import java.util.*;
 
 import ftb.lib.FTBLib;
-import latmod.lib.FastList;
+import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -101,4 +101,7 @@ public abstract class CommandLM extends CommandBase
 	
 	public static void checkArgsStrong(String[] args, int i)
 	{ if(args == null || args.length != i) throw new MissingArgsException(); }
+	
+	public static int parseRelInt(ICommandSender ics, int n, String s)
+	{ return MathHelperLM.floor(func_110666_a(ics, n, s)); }
 }

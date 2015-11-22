@@ -10,17 +10,22 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.gui.GuiLM;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.*;
-import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 
 @SideOnly(Side.CLIENT)
@@ -31,6 +36,7 @@ public class FTBLibClient // LatCoreMCClient
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
 	private static float lastBrightnessX, lastBrightnessY;
+	private static EntityItem entityItem;
 	
 	public static UUID getUUID()
 	{ return mc.getSession().func_148256_e().getId(); }
@@ -87,7 +93,7 @@ public class FTBLibClient // LatCoreMCClient
 		int r = LMColorUtils.getRed(c);
 		int g = LMColorUtils.getGreen(c);
 		int b = LMColorUtils.getBlue(c);
-		GL11.glColor4f(r / 255F, g / 255F, b / 255F, a / 255F);
+		GlStateManager.color(r / 255F, g / 255F, b / 255F, a / 255F);
 	}
 	
 	public static void setGLColor(int c)
@@ -140,8 +146,8 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void setTexture(ResourceLocation tex)
 	{
-		if(mc.currentScreen instanceof ITextureGui)
-			((ITextureGui)mc.currentScreen).setTexture(tex);
+		if(mc.currentScreen instanceof GuiLM)
+			((GuiLM)mc.currentScreen).setTexture(tex);
 		else mc.getTextureManager().bindTexture(tex);
 	}
 	
@@ -152,4 +158,71 @@ public class FTBLibClient // LatCoreMCClient
 
 	public static boolean canRenderGui()
 	{ return mc.currentScreen == null || mc.currentScreen instanceof GuiChat; }
+	
+	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
+	{
+		if(entityItem == null) entityItem = new EntityItem(w);
+		
+		entityItem.worldObj = w;
+		entityItem.hoverStart = 0F;
+		entityItem.setEntityItemStack(is);
+		
+		boolean isFancy = RenderManager.instance.options.fancyGraphics;
+		RenderManager.instance.options.fancyGraphics = true;
+		RenderItem.renderInFrame = frame;
+		
+		RenderManager.instance.renderEntityWithPosYaw(entityItem, 0D, 0D, 0D, 0F, 0F);
+		
+		RenderManager.instance.options.fancyGraphics = isFancy;
+		RenderItem.renderInFrame = false;
+	}
+	
+	public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
+	{
+		GL11.glBegin(GL11.GL_LINE_STRIP);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
+		GL11.glEnd();
+		
+		GL11.glBegin(GL11.GL_LINE_STRIP);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
+		GL11.glEnd();
+		
+		GL11.glBegin(GL11.GL_LINES);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.minZ);
+		GL11.glVertex3d(bb.maxX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
+		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
+		GL11.glEnd();
+	}
+	
+	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
+	{
+		GlStateManager.pushAttrib();
+		if(is == null || is.getItem() == null) return;
+		GL11.glPushMatrix();
+		//GL11.glTranslatef(0F, 0F, 32F);
+		GlStateManager.enableLighting();
+		RenderHelper.enableGUIStandardItemLighting();
+		GlStateManager.enableRescaleNormal();
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		FontRenderer f = is.getItem().getFontRenderer(is);
+		if (f == null) f = font;
+		itemRender.renderItemAndEffectIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y);
+		itemRender.renderItemOverlayIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y, null);
+		GlStateManager.popMatrix();
+		GlStateManager.popAttrib();
+	}
 }
