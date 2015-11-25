@@ -13,4 +13,5 @@ public abstract class FTBUIntegration
 	public abstract void onFTBWorldClient(EventFTBWorldClient e);
 	public abstract void onServerTick();
 	public abstract void onPlayerJoined(EntityPlayer player);
+	public abstract int getPlayerID(Object player);
 }

@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.*;
 
+import com.mojang.authlib.GameProfile;
+
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -16,7 +18,7 @@ import ftb.lib.mod.*;
 import ftb.lib.mod.net.MessageOpenGuiTile;
 import latmod.lib.*;
 import net.minecraft.block.Block;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
@@ -67,7 +69,7 @@ public class FTBLib
 	/** Prints message to chat (doesn't translate it) */
 	public static void printChat(ICommandSender ep, Object o)
 	{
-		if(ep == null && FTBLibFinals.DEV) ep = FTBLibMod.proxy.getClientPlayer();
+		if(ep == null) ep = FTBLibMod.proxy.getClientPlayer();
 		if(ep != null) ep.addChatMessage(getChatComponent(o));
 		else logger.info(o);
 	}
@@ -169,13 +171,10 @@ public class FTBLib
 		return ms.worldServers[0];
 	}
 	
-	public static Exception runCommand(ICommandSender ics, String s)
-	{
-		try { getServer().getCommandManager().executeCommand(ics, s); }
-		catch(Exception e) { return e; } return null;
-	}
+	public static int runCommand(ICommandSender ics, String s) throws CommandException
+	{ return getServer().getCommandManager().executeCommand(ics, s); }
 	
-	public static Exception runCommand(ICommandSender ics, String cmd, String[] args)
+	public static int runCommand(ICommandSender ics, String cmd, String[] args)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(cmd);
@@ -213,4 +212,7 @@ public class FTBLib
 	
 	public static void addCallback(ServerTickCallback c)
 	{ if(c.maxTick == 0) c.onCallback(); else FTBLibEventHandler.pendingCallbacks.add(c); }
+
+	public static boolean isOP(GameProfile p)
+	{ return FTBLib.getServer().getConfigurationManager().func_152596_g(p); }
 }

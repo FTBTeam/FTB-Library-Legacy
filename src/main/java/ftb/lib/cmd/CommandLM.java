@@ -70,6 +70,9 @@ public abstract class CommandLM extends CommandBase
 	public Boolean getUsername(String[] args, int i)
 	{ return null; }
 	
+	public final boolean isUsernameIndex(String[] args, int i)
+	{ return getUsername(args, i) != null; }
+	
 	public static boolean isArg(String[] args, int i, String... s)
 	{
 		if(args != null && i >= 0 && i < args.length)
