@@ -26,7 +26,7 @@ public class ConfigSyncRegistry
 			if(g == null)
 			{
 				g = new ConfigGroup(e.parentGroup.toString());
-				l.groups.add(g);
+				l.add(g);
 			}
 			
 			g.add(e);

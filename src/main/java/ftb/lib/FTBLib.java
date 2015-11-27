@@ -15,7 +15,8 @@ import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.ServerTickCallback;
 import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.mod.*;
-import ftb.lib.mod.net.MessageOpenGuiTile;
+import ftb.lib.mod.net.*;
+import ftb.lib.notification.Notification;
 import latmod.lib.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
@@ -215,4 +216,7 @@ public class FTBLib
 
 	public static boolean isOP(GameProfile p)
 	{ return FTBLib.getServer().getConfigurationManager().func_152596_g(p); }
+	
+	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
+	{ new MessageNotifyPlayer(n).sendTo(ep); }
 }

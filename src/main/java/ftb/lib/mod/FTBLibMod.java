@@ -18,7 +18,7 @@ public class FTBLibMod
 	@Mod.Instance(FTBLibFinals.MOD_ID)
 	public static FTBLibMod inst;
 	
-	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.FTBLibModClient")
+	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.client.FTBLibModClient")
 	public static FTBLibModCommon proxy;
 	
 	@Mod.EventHandler
@@ -50,6 +50,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
 	{
+		e.registerServerCommand(new CommandFTBConfig());
 		e.registerServerCommand(new CommandFTBMode());
 		e.registerServerCommand(new CommandFTBReload());
 		e.registerServerCommand(new CommandFTBWorldID());

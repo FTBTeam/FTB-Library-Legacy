@@ -6,10 +6,38 @@ ftbl:gamemode.list=Available gamemodes: %s
 ftbl:worldID=WorldID: %s
 ftbl:reloadedServer=FTBLib reloaded (Server)
 ftbl:reloadedClient=FTBLib reloaded (Client)
-commands.lmmissingargs=Missing Arguments!
-commands.lmdisabled=This feature is disabled!
-ftbl:cmd.invalid_sub=Invalid subcommand: '%s'!
+ftbl:missing_args=Missing Arguments!
+ftbl:feature_disabled=This feature is disabled!
+ftbl:invalid_subcmd=Invalid subcommand: '%s'!
 ftbl:owner=Owner: %s
+ftbu:delete_item=Do you want to delete '%s'?
+ftbu:label.server_forced=Server overrides to '%s'
+
+#Buttons
+ftbl:button.settings=Settings
+ftbl:button.back=Back
+ftbl:button.up=Up
+ftbl:button.down=Down
+ftbl:button.prev=Previous
+ftbl:button.next=Next
+ftbl:button.cancel=Cancel
+ftbl:button.accept=Accept
+ftbl:button.remove=Remove
+ftbl:button.add=Add
+ftbl:button.close=Close
+ftbl:button.save=Save
+ftbl:button.refresh=Refresh
+ftbl:button.other=Other
+ftbl:button.edit=Edit
+
+ftbl:label.true=True
+ftbl:label.false=False
+ftbl:label.enabled=Enabled
+ftbl:label.disabled=Disabled
+ftbl:label.on=On
+ftbl:label.off=Off
+ftbl:label.online=Online
+ftbl:label.offline=Offline
 
 #Colors
 ftbl:color.black=Black
@@ -19,12 +47,12 @@ ftbl:color.brown=Brown
 ftbl:color.blue=Blue
 ftbl:color.purple=Purple
 ftbl:color.cyan=Cyan
-ftbl:color.silver=Light Gray
+ftbl:color.lightgray=Light Gray
 ftbl:color.gray=Dark Gray
 ftbl:color.pink=Pink
 ftbl:color.lime=Lime
 ftbl:color.yellow=Yellow
-ftbl:color.light_blue=Light Blue
+ftbl:color.lightblue=Light Blue
 ftbl:color.magenta=Magenta
 ftbl:color.orange=Orange
 ftbl:color.white=White
@@ -43,3 +71,10 @@ ftbl:dside.back=Back
 ftbl:dside.front=Front
 ftbl:dside.left=Left
 ftbl:dside.right=Right
+
+#Config
+config.client_config=Client Config
+client_config.ftbl=FTBLib
+client_config.ftbl.item_ore_names=Item OreDict Names
+client_config.ftbl.item_reg_names=Item Registry Names
+client_config.ftbl.debug_info=Debug Info

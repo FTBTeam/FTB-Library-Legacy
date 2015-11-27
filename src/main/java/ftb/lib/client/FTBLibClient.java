@@ -10,7 +10,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.gui.GuiLM;
+import ftb.lib.mod.client.FTBLibRenderHandler;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -37,6 +39,10 @@ public class FTBLibClient // LatCoreMCClient
 	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;
+	public static int displayW, displayH;
+	
+	public static boolean isPlaying()
+	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
 	
 	public static UUID getUUID()
 	{ return mc.getSession().func_148256_e().getId(); }
@@ -152,12 +158,13 @@ public class FTBLibClient // LatCoreMCClient
 	}
 	
 	public static void clearCachedData()
-	{
-		cachedSkins.clear();
-	}
+	{ cachedSkins.clear(); }
 
 	public static boolean canRenderGui()
 	{ return mc.currentScreen == null || mc.currentScreen instanceof GuiChat; }
+	
+	public static void addClientTickCallback(ClientTickCallback e)
+	{ FTBLibRenderHandler.callbacks.add(e); }
 	
 	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
 	{

@@ -13,10 +13,7 @@ public class CommandFTBMode extends CommandLM
 	{ super("ftb_mode", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/ftb_mode [set <modeID> | get | list] "; }
-	
-	public int getRequiredPermissionLevel()
-	{ return 2; }
+	{ return "/ftb_mode [set <modeID> | get | list]"; }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
 	{ return !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics); }
@@ -70,18 +67,7 @@ public class CommandFTBMode extends CommandLM
 		}
 		else if(args[0].equals("list"))
 		{
-			StringBuilder sb = new StringBuilder();
-			
-			int i = -1;
-			for(String s : list.allModes)
-			{
-				sb.append(s);
-				i++;
-				if(i != list.allModes.size() - 1)
-					sb.append(", ");
-			}
-			
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", sb.toString());
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(list.allModes));
 			c.getChatStyle().setColor(EnumChatFormatting.BLUE);
 			return c;
 		}
