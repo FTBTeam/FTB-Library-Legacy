@@ -19,7 +19,7 @@ public class MessageReload extends MessageLM
 	{
 		FTBWorld.reloadGameModes();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-		EventFTBReload event = new EventFTBReload(Side.CLIENT, ep);
+		EventFTBReload event = new EventFTBReload(Side.CLIENT, ep, true);
 		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
 		event.post();
 		FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient"));

@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraftforge.common.UsernameCache;
 
-public abstract class CommandLM extends CommandBase
+public abstract class CommandLM extends CommandBase // CommandFTBU
 {
 	public final String commandName;
 	public final CommandLevel level;
@@ -71,7 +71,7 @@ public abstract class CommandLM extends CommandBase
 	{ return null; }
 	
 	public final boolean isUsernameIndex(String[] args, int i)
-	{ return getUsername(args, i) != null; }
+	{ return false; }
 	
 	public static boolean isArg(String[] args, int i, String... s)
 	{

@@ -64,6 +64,9 @@ public class FTBLibMod
 	}*/
 	
 	public static void reload(ICommandSender sender, boolean printMessage)
+	{ reload(sender, printMessage, true); }
+	
+	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
 		ConfigListRegistry.reloadInstance();
 		FTBWorld.reloadGameModes();
@@ -72,12 +75,12 @@ public class FTBLibMod
 		{
 			new MessageSyncConfig(null).sendTo(null);
 			
-			EventFTBReload event = new EventFTBReload(Side.SERVER, sender);
+			EventFTBReload event = new EventFTBReload(Side.SERVER, sender, reloadClient);
 			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
 			event.post();
 			
-			new MessageReload().sendTo(null);
 			if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
+			if(reloadClient) new MessageReload().sendTo(null);
 		}
 	}
 }

@@ -49,22 +49,25 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent e)
 	{
-		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD && e.world.provider.dimensionId == 0)
+		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
 		{
-			if(!pendingCallbacks.isEmpty())
+			if(e.world.provider.dimensionId == 0)
 			{
-				callbacks.addAll(pendingCallbacks);
-				pendingCallbacks.clear();
+				if(!pendingCallbacks.isEmpty())
+				{
+					callbacks.addAll(pendingCallbacks);
+					pendingCallbacks.clear();
+				}
+				
+				if(!callbacks.isEmpty())
+				{
+					for(int i = callbacks.size() - 1; i >= 0; i--)
+						if(callbacks.get(i).incAndCheck())
+							callbacks.remove(i);
+				}
 			}
 			
-			if(!callbacks.isEmpty())
-			{
-				for(int i = callbacks.size() - 1; i >= 0; i--)
-					if(callbacks.get(i).incAndCheck())
-						callbacks.remove(i);
-			}
-			
-			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onServerTick();
+			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onServerTick(e.world);
 		}
 	}
 }
