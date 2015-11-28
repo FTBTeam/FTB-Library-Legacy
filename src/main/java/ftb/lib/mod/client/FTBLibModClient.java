@@ -27,7 +27,8 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool addOreNames = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool addRegistryNames = new ConfigEntryBool("item_reg_names", false);
 	public static final ConfigEntryBool displayDebugInfo = new ConfigEntryBool("debug_info", false);
-	public static final ConfigEntryBool openHSB = new ConfigEntryBool("open_hsb_cg", false).setHidden(true);
+	public static final ConfigEntryBool openHSB = new ConfigEntryBool("open_hsb_cg", false).setHidden();
+	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<EnumScreen>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
 	
 	public void preInit()
 	{
@@ -40,11 +41,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		if(FTBLibFinals.DEV) clientConfig.add(displayDebugInfo);
 		else displayDebugInfo.set(false);
 		
-		clientConfig.add(addOreNames);
-		clientConfig.add(addRegistryNames);
-		clientConfig.add(openHSB);
-		
-		ClientConfigRegistry.add(clientConfig);
+		ClientConfigRegistry.add(clientConfig.addAll(FTBLibModClient.class));
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

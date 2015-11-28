@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import latmod.lib.LMFileUtils;
 import latmod.lib.config.*;
-import net.minecraft.util.*;
+import net.minecraft.client.resources.I18n;
 
 public final class ClientConfigRegistry
 {
@@ -16,8 +16,14 @@ public final class ClientConfigRegistry
 	@SideOnly(Side.CLIENT)
 	public static final IConfigProvider provider = new IConfigProvider()
 	{
-		public IChatComponent getTitle()
-		{ return new ChatComponentTranslation("config.client_config"); }
+		public String getTitle()
+		{ return I18n.format("config.client_config"); }
+		
+		public String getGroupTitle(ConfigGroup g)
+		{ return I18n.format(g.getFullID()); }
+		
+		public String getEntryTitle(ConfigEntry e)
+		{ return I18n.format(e.getFullID()); }
 		
 		public ConfigList getList()
 		{ return configFile.configList; }
@@ -32,7 +38,7 @@ public final class ClientConfigRegistry
 		if(file.exists()) LMFileUtils.delete(file); // TODO: Remove me
 		
 		file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/config.json"));
-		configFile = new ConfigFile("client_config", file, true);
+		configFile = new ConfigFile("client_config", file);
 	}
 	
 	public static void add(ConfigGroup g)

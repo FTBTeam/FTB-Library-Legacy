@@ -45,7 +45,7 @@ public class GuiSelectField extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				callback.onFieldSelected(new FieldSelected(ID, false, textBox.text, true));
+				callback.onFieldSelected(new FieldSelected(ID, true, textBox.text, true));
 			}
 		};
 		

@@ -10,8 +10,8 @@ ftbl:missing_args=Missing Arguments!
 ftbl:feature_disabled=This feature is disabled!
 ftbl:invalid_subcmd=Invalid subcommand: '%s'!
 ftbl:owner=Owner: %s
-ftbu:delete_item=Do you want to delete '%s'?
-ftbu:label.server_forced=Server overrides to '%s'
+ftbl:delete_item=Do you want to delete '%s'?
+ftbl:label.server_forced=Server overrides to '%s'
 
 #Buttons
 ftbl:button.settings=Settings

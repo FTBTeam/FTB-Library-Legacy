@@ -17,7 +17,7 @@ public class MessageEditConfigResponse extends MessageLM
 		this();
 		io.writeLong(provider.adminToken);
 		io.writeString(provider.list.ID);
-		provider.list.writeToIO(io);
+		provider.list.writeToIO(io, false);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -34,7 +34,7 @@ public class MessageEditConfigResponse extends MessageLM
 		
 		if(list0 != null)
 		{
-			ConfigList list = ConfigList.readFromIO(io);
+			ConfigList list = ConfigList.readFromIO(io, false);
 			list.setID(id);
 			
 			if(list0.loadFromList(list))

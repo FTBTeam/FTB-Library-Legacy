@@ -17,7 +17,7 @@ public class MessageEditConfig extends MessageLM
 		this();
 		io.writeLong(t);
 		io.writeString(list.ID);
-		list.writeToIO(io);
+		list.writeToIO(io, true);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -28,7 +28,7 @@ public class MessageEditConfig extends MessageLM
 	{
 		long token = io.readLong();
 		String id = io.readString();
-		ConfigList list = ConfigList.readFromIO(io);
+		ConfigList list = ConfigList.readFromIO(io, true);
 		list.setID(id);
 		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(null, new ServerConfigProvider(token, list)));
 		return null;

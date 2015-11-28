@@ -3,15 +3,15 @@ package ftb.lib.mod.client.gui;
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.config.*;
-import ftb.lib.api.gui.GuiIcons;
-import ftb.lib.client.GlStateManager;
+import ftb.lib.api.config.IConfigProvider;
+import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.callback.*;
+import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.lib.*;
 import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
 
 @SideOnly(Side.CLIENT)
@@ -23,6 +23,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	public final PanelLM configPanel;
 	public final ButtonLM buttonClose;
 	public final SliderLM scroll;
+	public boolean changed = false;
 	
 	public GuiEditConfig(GuiScreen g, IConfigProvider p)
 	{
@@ -30,7 +31,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		hideNEI = true;
 		parent = g;
 		provider = p;
-		title = p.getTitle().getFormattedText();
+		title = p.getTitle();
 		
 		configPanel = new PanelLM(this, 0, 0, 0, 20)
 		{
@@ -47,7 +48,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					temp.clear();
 					
 					for(ConfigEntry e : c.entries)
-						if(!e.hideEntry) temp.add(new ButtonConfigEntry(cat, e));
+						if(!e.isHidden()) temp.add(new ButtonConfigEntry(GuiEditConfig.this, cat, e));
 					
 					if(!temp.isEmpty())
 					{
@@ -56,7 +57,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 						{
 							ButtonConfigEntry e = temp.get(i);
 							add(e);
-							e.handler.initGui();
 						}
 					}
 				}
@@ -113,9 +113,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	}
 	
 	public void onLMGuiClosed()
-	{
-		provider.save();
-	}
+	{ if(changed) provider.save(); }
 	
 	public void drawBackground()
 	{
@@ -189,7 +187,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		public ButtonCategory(GuiEditConfig g, ConfigGroup gr)
 		{
 			super(g, gr);
-			title = EnumChatFormatting.BOLD + "- " + I18n.format(gr.parentList.ID + '.' + gr.ID) + " -";
+			title = EnumChatFormatting.BOLD + "- " + g.provider.getGroupTitle(gr) + " -";
 		}
 		
 		public void renderWidget()
@@ -208,35 +206,146 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	{
 		public final ButtonCategory category;
 		public final ConfigEntry entry;
-		public final ClientConfigHandler handler;
 		
-		public ButtonConfigEntry(ButtonCategory c, ConfigEntry e)
+		public ButtonConfigEntry(GuiEditConfig g, ButtonCategory c, ConfigEntry e)
 		{
 			super(c.gui, e.parentGroup);
 			category = c;
 			entry = e;
-			handler = ClientConfigHandler.create(entry);
-			title = handler.getTitle();
+			title = g.provider.getEntryTitle(entry);
 		}
 		
 		public void renderWidget()
 		{
 			if(!isVisible()) return;
 			boolean mouseOver = mouseOver();
-			int textCol = handler.getColor(mouseOver);
+			int textCol = 0xFF000000 | getColor();
+			if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
 			int y = getAY();
 			
 			if(mouseOver) drawBlankRect(0, y, gui.zLevel, width, height, 0x22FFFFFF);
 			gui.drawString(gui.fontRendererObj, title, 4, y + 4, mouseOver ? 0xFFFFFFFF : 0xFF999999);
-			String s = handler.getText();
-			gui.drawString(gui.fontRendererObj, s, gui.width - (gui.fontRendererObj.getStringWidth(s) + 20), y + 4, textCol);
+			String s = entry.getValue();
+			
+			int slen = gui.fontRendererObj.getStringWidth(s);
+			
+			if(slen > 150)
+			{
+				s = gui.fontRendererObj.trimStringToWidth(s, 150);
+				s += "...";
+				slen = 152;
+			}
+			
+			gui.drawString(gui.fontRendererObj, s, gui.width - (slen + 20), y + 4, textCol);
 		}
 		
 		public void onButtonPressed(int b)
-		{ gui.playClickSound(); handler.onClicked(); }
+		{
+			gui.playClickSound();
+			
+			if(entry instanceof IClickableConfigEntry)
+				((IClickableConfigEntry)entry).onClicked();
+			else if(entry.type == PrimitiveType.COLOR)
+			{
+				LMGuis.displayColorSelector(new IColorCallback()
+				{
+					public void onColorSelected(ColorSelected c)
+					{
+						if(c.set)
+						{
+							((ConfigEntryColor)entry).set(c.color);
+							((GuiEditConfig)gui).changed = true;
+						}
+						
+						if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+					}
+				},
+				((ConfigEntryColor)entry).get(), 0, false);
+			}
+			else if(entry.type == PrimitiveType.INT || entry.type == PrimitiveType.FLOAT || entry.type == PrimitiveType.STRING)
+			{
+				if(entry.type == PrimitiveType.INT)
+				{
+					LMGuis.displayFieldSelector(entry.getFullID(), FieldType.INT, ((ConfigEntryInt)entry).get(), new IFieldCallback()
+					{
+						public void onFieldSelected(FieldSelected c)
+						{
+							if(c.set)
+							{
+								((ConfigEntryInt)entry).set(c.getI());
+								((GuiEditConfig)gui).changed = true;
+							}
+							
+							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+						}
+					});
+				}
+				else if(entry.type == PrimitiveType.FLOAT)
+				{
+					LMGuis.displayFieldSelector(entry.getFullID(), FieldType.FLOAT, ((ConfigEntryFloat)entry).get(), new IFieldCallback()
+					{
+						public void onFieldSelected(FieldSelected c)
+						{
+							if(c.set)
+							{
+								((ConfigEntryFloat)entry).set(c.getF());
+								((GuiEditConfig)gui).changed = true;
+							}
+							
+							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+						}
+					});
+				}
+				else if(entry.type == PrimitiveType.STRING)
+				{
+					LMGuis.displayFieldSelector(entry.getFullID(), FieldType.TEXT, ((ConfigEntryString)entry).get(), new IFieldCallback()
+					{
+						public void onFieldSelected(FieldSelected c)
+						{
+							if(c.set)
+							{
+								((ConfigEntryString)entry).set(c.getS());
+								((GuiEditConfig)gui).changed = true;
+							}
+							
+							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+						}
+					});
+				}
+			}
+			
+			((GuiEditConfig)gui).changed = true;
+		}
 		
+		public int getColor()
+		{
+			if(entry instanceof ConfigEntryBlank)
+				return 0xFFAA00;
+			else if(entry.type == PrimitiveType.COLOR)
+				return ((ConfigEntryColor)entry).get();
+			else if(entry.type.isEnum)
+				return 0x0094FF;
+			else if(entry.type.isBoolean)
+				return ((ConfigEntryBool)entry).get() ? 0x339933 : 0x993333;
+			else if(entry.type.isArray)
+				return 0xFF4F34;
+			else if(entry.type.isNumber)
+				return 0x933ABC;
+			return 0x999999;
+		}
+		
+		@SuppressWarnings("unchecked")
 		public void addMouseOverText(FastList<String> l)
-		{ handler.mouseText(l); }
+		{
+			if(gui.mouseX < gui.fontRendererObj.getStringWidth(title) + 10)
+			{
+				if(entry.info != null && entry.info.info != null && !entry.info.info.isEmpty())
+				{
+					String[] sl = entry.info.info.split("\n");
+					for(String s : sl) l.addAll(FTBLibClient.mc.fontRenderer.listFormattedStringToWidth(s, 230));
+				}
+			}
+		}
 	}
 	
 	public void onClientDataChanged()
