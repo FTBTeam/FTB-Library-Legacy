@@ -48,11 +48,11 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 			int size = 1;
 			
 			if(s1.length == 2)
-				dmg = Integer.parseInt(s1[1]);
+				dmg = (s1[1].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[1]);
 			else if(s1.length >= 3)
 			{
 				size = Integer.parseInt(s1[1]);
-				dmg = Integer.parseInt(s1[2]);
+				dmg = (s1[2].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[2]);
 			}
 			/*else if(s1.length >= 4)
 			{

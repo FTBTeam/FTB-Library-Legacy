@@ -236,6 +236,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				slen = 152;
 			}
 			
+			if(mouseOver && gui.mouseX > width - slen - 9)
+				drawBlankRect(width - slen - 8, y, gui.zLevel, slen + 8, height, 0x22FFFFFF);
+			
 			gui.drawString(gui.fontRendererObj, s, gui.width - (slen + 20), y + 4, textCol);
 		}
 		
@@ -339,11 +342,18 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			if(gui.mouseX < gui.fontRendererObj.getStringWidth(title) + 10)
 			{
-				if(entry.info != null && entry.info.info != null && !entry.info.info.isEmpty())
+				if(entry.info != null && !entry.info.isEmpty())
 				{
-					String[] sl = entry.info.info.split("\n");
+					String[] sl = entry.info.split("\n");
 					for(String s : sl) l.addAll(FTBLibClient.mc.fontRenderer.listFormattedStringToWidth(s, 230));
 				}
+			}
+			
+			if(gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getValue())) + 25))
+			{
+				if(entry.defaultValue != null) l.add(EnumChatFormatting.AQUA + "Def: " + entry.defaultValue);
+				if(entry.getMinValue() != null) l.add(EnumChatFormatting.AQUA + "Min: " + entry.getMinValue());
+				if(entry.getMaxValue() != null) l.add(EnumChatFormatting.AQUA + "Max: " + entry.getMaxValue());
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
@@ -19,7 +18,7 @@ public class GuiViewImage extends GuiLM
 		texCoords = t;
 		hideNEI = true;
 		
-		buttonClose = new ButtonLM(this, 0, 0, 16, 16)
+		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
 			public void onButtonPressed(int b)
 			{ mc.displayGuiScreen(parent); }
@@ -30,11 +29,12 @@ public class GuiViewImage extends GuiLM
 	{
 		xSize = width;
 		ySize = height;
+		buttonClose.width = width;
+		buttonClose.height = height;
 	}
 	
 	public void addWidgets()
 	{
-		buttonClose.posX = xSize - 16;
 		mainPanel.add(buttonClose);
 	}
 	
@@ -63,7 +63,5 @@ public class GuiViewImage extends GuiLM
 			
 			render(texCoords, (width - w) / 2, (height - h) / 2, w, h);
 		}
-		
-		buttonClose.render(GuiIcons.accept);
 	}
 }
