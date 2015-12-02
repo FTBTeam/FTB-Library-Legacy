@@ -1,6 +1,7 @@
 package ftb.lib.mod;
 
 import ftb.lib.api.*;
+import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -15,4 +16,5 @@ public abstract class FTBUIntegration
 	public abstract void onServerTick(World w);
 	public abstract void onPlayerJoined(EntityPlayer player);
 	public abstract int getPlayerID(Object player);
+	public abstract FastList<String> getPlayerNames(boolean online);
 }

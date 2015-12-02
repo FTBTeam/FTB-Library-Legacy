@@ -11,7 +11,7 @@ import ftb.lib.client.*;
 import ftb.lib.gui.widgets.PanelLM;
 import latmod.lib.*;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -98,6 +98,12 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public void initLMGui()
 	{
+	}
+	
+	public void close(GuiScreen g)
+	{
+		if(g == null) container.player.closeScreen();
+		else mc.displayGuiScreen(g);
 	}
 	
 	protected final void mouseClicked(int mx, int my, int b)

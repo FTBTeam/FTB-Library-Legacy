@@ -28,6 +28,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -133,6 +134,21 @@ public class FTBLib
 		return null;
 	}
 	
+	public static FastList<String> getPlayerNames(boolean online)
+	{
+		if(FTBUIntegration.instance != null) return FTBUIntegration.instance.getPlayerNames(online);
+		FastList<String> l = new FastList<String>();
+		
+		if(online)
+		{
+			FastList<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
+			for(int j = 0; j < players.size(); j++)
+				l.add(players.get(j).getCommandSenderName());
+		}
+		else l.addAll(UsernameCache.getMap().values());
+		return l;
+	}
+	
 	public static boolean remap(MissingMapping m, String id, Item i)
 	{
 		if(m.type == GameRegistry.Type.ITEM && id.equals(m.name))
@@ -219,4 +235,29 @@ public class FTBLib
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
+	
+	@SuppressWarnings("all")
+	public static FastList<ICommand> getAllCommands(ICommandSender sender)
+	{
+		FastList<ICommand> commands = new FastList<ICommand>();
+		/*
+		ICommandManager icm = FTBLib.getServer().getCommandManager();
+		if(icm != null && icm instanceof CommandHandler)
+		{
+			try
+			{
+				Set set = ReflectionHelper.getPrivateValue(CommandHandler.class, (CommandHandler)icm, "commandSet", "field_71561_b");
+				for(Object o : set)
+				{
+					ICommand cmd = (ICommand)o;
+					if(cmd != null && (sender == null || cmd.canCommandSenderUseCommand(sender))) commands.add(cmd);
+				}
+			}
+			catch(Exception ex)
+			{ ex.printStackTrace(); }
+		}
+		*/
+		commands.addAll(getServer().getCommandManager().getPossibleCommands(sender));
+		return commands;
+	}
 }

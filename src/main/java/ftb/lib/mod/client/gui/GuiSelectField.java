@@ -5,19 +5,20 @@ import ftb.lib.api.gui.FTBLibLang;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
+import latmod.lib.PrimitiveType;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
 {
 	public final Object ID;
-	public final FieldType type;
+	public final PrimitiveType type;
 	public final String def;
 	public final IFieldCallback callback;
 	
 	public final ButtonSimpleLM buttonCancel, buttonAccept;
 	public final TextBoxLM textBox;
 	
-	public GuiSelectField(Object id, FieldType typ, String d, IFieldCallback c)
+	public GuiSelectField(Object id, PrimitiveType typ, String d, IFieldCallback c)
 	{
 		super(null, null);
 		hideNEI = true;
@@ -54,10 +55,22 @@ public class GuiSelectField extends GuiLM
 		textBox = new TextBoxLM(this, 2, 2, xSize - 4, 18)
 		{
 			public boolean canAddChar(char c)
-			{ return super.canAddChar(c) && type.isCharValid(c); }
+			{ return super.canAddChar(c) && isCharValid(c); }
 		};
 		
 		textBox.text = def;
+	}
+	
+	private boolean isCharValid(char c)
+	{
+		if(type == PrimitiveType.STRING || type == PrimitiveType.INT || type == PrimitiveType.FLOAT)
+		{
+			if(type == PrimitiveType.STRING || c == '-') return true;
+			else if(c == '.') return type == PrimitiveType.FLOAT;
+			else return c >= '0' && c <= '9';
+		}
+		
+		return false;
 	}
 	
 	public GuiSelectField setCharLimit(int i)

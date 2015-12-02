@@ -269,7 +269,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			{
 				if(entry.type == PrimitiveType.INT)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), FieldType.INT, ((ConfigEntryInt)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryInt)entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
@@ -285,7 +285,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 				else if(entry.type == PrimitiveType.FLOAT)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), FieldType.FLOAT, ((ConfigEntryFloat)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryFloat)entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
@@ -301,7 +301,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 				else if(entry.type == PrimitiveType.STRING)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), FieldType.TEXT, ((ConfigEntryString)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryString)entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
@@ -329,11 +329,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			else if(entry.type.isEnum)
 				return 0x0094FF;
 			else if(entry.type.isBoolean)
-				return ((ConfigEntryBool)entry).get() ? 0x339933 : 0x993333;
+				return ((ConfigEntryBool)entry).get() ? 0x33AA33 : 0xD52834;
 			else if(entry.type.isArray)
 				return 0xFF4F34;
 			else if(entry.type.isNumber)
-				return 0x933ABC;
+				return 0xAA5AE8;
+			else if(entry.type.isString)
+				return 0xFFAA49;
 			return 0x999999;
 		}
 		

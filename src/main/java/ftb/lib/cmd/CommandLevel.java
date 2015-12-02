@@ -1,5 +1,10 @@
 package ftb.lib.cmd;
 
+import ftb.lib.FTBLib;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+
 public enum CommandLevel
 {
 	NONE, ALL, OP;
@@ -26,5 +31,17 @@ public enum CommandLevel
 		if(this == ALL) return 0;
 		if(this == OP) return 2;
 		return 0;
+	}
+	
+	public boolean hasLevel(ICommandSender s)
+	{
+		if(this == NONE) return false;
+		else if(this == ALL) return true;
+		else
+		{
+			if(s instanceof MinecraftServer) return true;
+			else if(s instanceof EntityPlayerMP) return FTBLib.isOP(((EntityPlayerMP)s).getGameProfile());
+			else return true;
+		}
 	}
 }

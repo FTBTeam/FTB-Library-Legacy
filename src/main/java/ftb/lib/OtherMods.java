@@ -15,4 +15,5 @@ public class OtherMods
 	public static final String CHISEL2 = "Chisel2";
 	public static final String EE3 = "EE3";
 	public static final String LATBLOCKS = "LatBlocks";
+	public static final String COMPUTER_CRAFT = "ComputerCraft";
 }

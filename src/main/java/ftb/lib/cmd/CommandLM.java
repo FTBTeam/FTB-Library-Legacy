@@ -13,12 +13,11 @@ public abstract class CommandLM extends CommandBase // CommandFTBU
 {
 	public final String commandName;
 	public final CommandLevel level;
-	public final FastList<String> aliases = new FastList<String>();
 	
 	public CommandLM(String s, CommandLevel l)
 	{
-		commandName = s;
-		level = (l == null) ? CommandLevel.NONE : l;
+		commandName = ((s == null) ? "" : s).trim();
+		level = (l == null || commandName.isEmpty()) ? CommandLevel.NONE : l;
 	}
 	
 	public int getRequiredPermissionLevel()
@@ -31,19 +30,16 @@ public abstract class CommandLM extends CommandBase // CommandFTBU
 	{ return commandName; }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/" + commandName; }
+	{ return '/' + commandName; }
 	
 	public final void processCommand(ICommandSender ics, String[] args)
 	{
+		if(!level.isEnabled()) throw new FeatureDisabledException();
 		if(args == null) args = new String[0];
-		
 		IChatComponent s = onCommand(ics, args);
 		if(s != null) FTBLib.printChat(ics, s);
 		onPostCommand(ics, args);
 	}
-	
-	public List<String> getCommandAliases()
-	{ return aliases.isEmpty() ? null : aliases; }
 	
 	public abstract IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException;
 	
@@ -58,6 +54,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU
 	@SuppressWarnings("all")
 	public final List addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
+		if(!level.isEnabled()) return null;
 		String[] s = getTabStrings(ics, args, args.length - 1);
 		if(s != null && s.length > 0)
 		{

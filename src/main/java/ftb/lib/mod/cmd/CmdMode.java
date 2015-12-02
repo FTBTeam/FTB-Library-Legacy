@@ -1,19 +1,20 @@
-package ftb.lib.mod;
+package ftb.lib.mod.cmd;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import ftb.lib.cmd.*;
+import ftb.lib.mod.config.FTBLibConfigCmd;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
-public class CommandFTBMode extends CommandLM
+public class CmdMode extends CommandLM
 {
-	public CommandFTBMode()
-	{ super("ftb_mode", CommandLevel.OP); }
+	public CmdMode()
+	{ super(FTBLibConfigCmd.name_mode.get(), CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/ftb_mode [set <modeID> | get | list]"; }
+	{ return "/" + commandName + " [set <modeID> | get | list]"; }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
 	{ return !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics); }
@@ -28,8 +29,7 @@ public class CommandFTBMode extends CommandLM
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		if(args == null || args.length == 0)
-			return new ChatComponentText(getCommandUsage(ics));
+		checkArgs(args, 1);
 		
 		GameModes list = FTBWorld.getAllModes();
 		

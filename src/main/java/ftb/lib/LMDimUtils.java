@@ -101,10 +101,7 @@ public class LMDimUtils
 	}
 	
 	public static World getWorld(int dim)
-	{
-		if(dim == 0) return FTBLib.getServerWorld();
-		return DimensionManager.getWorld(dim);
-	}
+	{ return DimensionManager.getWorld(dim); }
 	
 	public static String getDimName(int dim)
 	{

@@ -1,8 +1,10 @@
-package ftb.lib.mod;
+package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.cmd.*;
+import ftb.lib.mod.FTBLibMod;
+import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
 import latmod.lib.config.*;
@@ -10,13 +12,13 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
-public class CommandFTBConfig extends CommandLM
+public class CmdEditConfig extends CommandLM
 {
-	public CommandFTBConfig()
-	{ super("edit_config", CommandLevel.OP); }
+	public CmdEditConfig()
+	{ super(FTBLibConfigCmd.name_edit_config.get(), CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/edit_config <ID> [group] [entry] [value]"; }
+	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{

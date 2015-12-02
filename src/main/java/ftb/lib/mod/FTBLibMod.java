@@ -7,6 +7,8 @@ import ftb.lib.*;
 import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.item.ODItems;
+import ftb.lib.mod.cmd.*;
+import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.*;
 import latmod.lib.OS;
 import net.minecraft.command.ICommandSender;
@@ -37,6 +39,7 @@ public class FTBLibMod
 		FTBWorld.init();
 		ODItems.preInit();
 		
+		FTBLibConfig.load();
 		EventBusHelper.register(new FTBLibEventHandler());
 		proxy.preInit();
 	}
@@ -50,10 +53,12 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
 	{
-		e.registerServerCommand(new CommandFTBConfig());
-		e.registerServerCommand(new CommandFTBMode());
-		e.registerServerCommand(new CommandFTBReload());
-		e.registerServerCommand(new CommandFTBWorldID());
+		if(FTBLibConfigCmd.override_list.get()) e.registerServerCommand(new CmdListOverride());
+		if(FTBLibConfigCmd.override_help.get()) e.registerServerCommand(new CmdHelpOverride());
+		e.registerServerCommand(new CmdEditConfig());
+		e.registerServerCommand(new CmdMode());
+		e.registerServerCommand(new CmdReload());
+		e.registerServerCommand(new CmdWorldID());
 	}
 	
 	/*
