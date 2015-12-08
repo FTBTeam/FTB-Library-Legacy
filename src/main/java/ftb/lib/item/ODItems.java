@@ -1,5 +1,7 @@
 package ftb.lib.item;
 
+import java.util.List;
+
 import ftb.lib.*;
 import latmod.lib.FastList;
 import net.minecraft.init.*;
@@ -26,8 +28,8 @@ public class ODItems
 	public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.wool, 1, 0);
 	
 	public static final String SLIMEBALL = "slimeball";
-	public static final String MEAT_RAW = "meatRaw";
-	public static final String MEAT_COOKED = "meatCooked";
+	public static final String MEAT_RAW = "listAllmeatraw";
+	public static final String MEAT_COOKED = "listAllmeatcooked";
 	public static final String RUBBER = "itemRubber";
 	public static final String SILICON = "itemSilicon";
 	
@@ -115,7 +117,6 @@ public class ODItems
 	public static ItemStack add(String name, ItemStack is)
 	{
 		ItemStack is1 = LMInvUtils.singleCopy(is);
-		if(!getOres(name).contains(is1))
 		OreDictionary.registerOre(name, is1);
 		return is1;
 	}
@@ -129,16 +130,12 @@ public class ODItems
 		return l;
 	}
 	
-	public static FastList<ItemStack> getOres(String name)
-	{
-		FastList<ItemStack> l = new FastList<ItemStack>();
-		l.addAll(OreDictionary.getOres(name));
-		return l;
-	}
+	public static List<ItemStack> getOres(String name)
+	{ return OreDictionary.getOres(name); }
 	
 	public static ItemStack getFirstOre(String name)
 	{
-		FastList<ItemStack> l = getOres(name);
+		List<ItemStack> l = getOres(name);
 		if(!l.isEmpty()) return l.get(0);
 		return null;
 	}

@@ -3,7 +3,6 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.cmd.*;
-import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
@@ -108,7 +107,7 @@ public class CmdEditConfig extends CommandLM
 		
 		if(!success) return new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
 		
-		FTBLibMod.reload(ics, true);
+		FTBLib.reload(ics, true, true);
 		return null;
 	}
 }

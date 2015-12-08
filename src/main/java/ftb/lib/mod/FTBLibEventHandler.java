@@ -29,7 +29,7 @@ public class FTBLibEventHandler
 			EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, e.world);
 			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onFTBWorldServer(event);
 			event.post();
-			FTBLibMod.reload(FTBLib.getServer(), false);
+			FTBLib.reload(FTBLib.getServer(), false, true);
 		}
 	}
 	

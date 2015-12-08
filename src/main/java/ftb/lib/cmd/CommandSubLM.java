@@ -8,7 +8,6 @@ import net.minecraft.util.*;
 public class CommandSubLM extends CommandLM
 {
 	public final FastMap<String, CommandLM> subCommands;
-	public static boolean extendedUsageInfo = false;
 	
 	public CommandSubLM(String s, CommandLevel l)
 	{

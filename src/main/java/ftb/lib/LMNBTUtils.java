@@ -47,6 +47,8 @@ public class LMNBTUtils
 	public static <E extends NBTBase> FastMap<String, E> toFastMapWithType(NBTTagCompound tag)
 	{
 		FastMap<String, E> map = new FastMap<String, E>();
+		if(tag == null || tag.hasNoTags()) return map;
+		
 		FastList<String> keys = getMapKeys(tag);
 		
 		for(int i = 0; i < keys.size(); i++)

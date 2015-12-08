@@ -1,45 +1,44 @@
 package ftb.lib.mod.cmd;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.*;
+import ftb.lib.FTBWorld;
 import ftb.lib.api.GameModes;
 import ftb.lib.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.command.*;
 import net.minecraft.util.*;
 
-public class CmdMode extends CommandLM
+public class CmdMode extends CommandSubLM
 {
 	public CmdMode()
-	{ super(FTBLibConfigCmd.name_mode.get(), CommandLevel.OP); }
-	
-	public String getCommandUsage(ICommandSender ics)
-	{ return "/" + commandName + " [set <modeID> | get | list]"; }
-	
-	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics); }
-	
-	public String[] getTabStrings(ICommandSender ics, String[] args, int i)
 	{
-		if(args.length == 1) return new String[] { "get", "set", "list" };
-		else if(args.length == 2 && args[0].equals("set"))
-			return FTBWorld.getAllModes().allModes.toArray(new String[0]);
-		return null;
+		super(FTBLibConfigCmd.name_mode.get(), CommandLevel.OP);
+		add(new CmdSet("set"));
+		add(new CmdGet("get"));
+		add(new CmdList("list"));
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public static class CmdSet extends CommandLM
 	{
-		checkArgs(args, 1);
+		public CmdSet(String s)
+		{ super(s, CommandLevel.OP); }
 		
-		GameModes list = FTBWorld.getAllModes();
+		public String getCommandUsage(ICommandSender ics)
+		{ return '/' + commandName + " <modeID>"; }
 		
-		if(args[0].equals("set"))
+		public String[] getTabStrings(ICommandSender ics, String[] args, int i)
 		{
-			if(args.length == 1) return new ChatComponentText(getCommandUsage(ics));
+			if(args.length == 1) return FTBWorld.getAllModes().allModes.toArray(new String[0]);
+			return super.getTabStrings(ics, args, i);
+		}
+		
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		{
+			if(args.length == 0) return new ChatComponentText(getCommandUsage(ics));
 			
 			IChatComponent c;
 			
-			int i = FTBWorld.server.setMode(Side.SERVER, args[1], false);
+			int i = FTBWorld.server.setMode(Side.SERVER, args[0], false);
 			
 			if(i == 1)
 			{
@@ -53,25 +52,38 @@ public class CmdMode extends CommandLM
 			}
 			else
 			{
-				c = new ChatComponentTranslation("ftbl:gamemode.loaded", args[1]);
+				c = new ChatComponentTranslation("ftbl:gamemode.loaded", args[0]);
 				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
 			}
 			
 			return c;
 		}
-		else if(args[0].equals("get"))
+	}
+	
+	public static class CmdGet extends CommandLM
+	{
+		public CmdGet(String s)
+		{ super(s, CommandLevel.OP); }
+		
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.current", FTBWorld.server.getMode());
-			c.getChatStyle().setColor(EnumChatFormatting.BLUE);
+			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			return c;
 		}
-		else if(args[0].equals("list"))
-		{
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(list.allModes));
-			c.getChatStyle().setColor(EnumChatFormatting.BLUE);
-			return c;
-		}
+	}
+	
+	public static class CmdList extends CommandLM
+	{
+		public CmdList(String s)
+		{ super(s, CommandLevel.OP); }
 		
-		return null;
+		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		{
+			GameModes list = FTBWorld.getAllModes();
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(list.allModes));
+			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
+			return c;
+		}
 	}
 }

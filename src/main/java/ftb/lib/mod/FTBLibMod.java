@@ -2,17 +2,12 @@ package ftb.lib.mod;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
-import ftb.lib.api.EventFTBReload;
-import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.item.ODItems;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
-import ftb.lib.mod.net.*;
+import ftb.lib.mod.net.FTBLibNetHandler;
 import latmod.lib.OS;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentTranslation;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
@@ -59,6 +54,7 @@ public class FTBLibMod
 		e.registerServerCommand(new CmdMode());
 		e.registerServerCommand(new CmdReload());
 		e.registerServerCommand(new CmdWorldID());
+		e.registerServerCommand(new CmdNotify());
 	}
 	
 	/*
@@ -68,25 +64,4 @@ public class FTBLibMod
 		String s = m.get(FTBLibFinals.MOD_ID);
 		return s == null || FTBLibFinals.DEV || s.equals(FTBLibFinals.VERSION);
 	}*/
-	
-	public static void reload(ICommandSender sender, boolean printMessage)
-	{ reload(sender, printMessage, true); }
-	
-	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
-	{
-		ConfigListRegistry.reloadInstance();
-		FTBWorld.reloadGameModes();
-		
-		if(FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true) == 0)
-		{
-			new MessageSyncConfig(null).sendTo(null);
-			
-			EventFTBReload event = new EventFTBReload(Side.SERVER, sender, reloadClient);
-			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
-			event.post();
-			
-			if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
-			if(reloadClient) new MessageReload().sendTo(null);
-		}
-	}
 }

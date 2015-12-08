@@ -1,9 +1,8 @@
 package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.AdminToken;
+import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigListRegistry;
-import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.ServerConfigProvider;
 import latmod.lib.config.ConfigList;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,7 +39,7 @@ public class MessageEditConfigResponse extends MessageLM
 			if(list0.loadFromList(list))
 			{
 				if(list0.parentFile != null) list0.parentFile.save();
-				FTBLibMod.reload(ep, true, true);
+				FTBLib.reload(ep, true, true);
 			}
 		}
 		

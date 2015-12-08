@@ -6,13 +6,15 @@ import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.*;
 
+import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.api.ServerTickCallback;
+import ftb.lib.api.*;
+import ftb.lib.api.config.ConfigListRegistry;
 import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
@@ -38,6 +40,7 @@ public class FTBLib
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
+	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<String, UUID>().allowNullKeys();
 	
 	public static File folderConfig;
 	public static File folderMinecraft;
@@ -60,6 +63,23 @@ public class FTBLib
 			else ((org.apache.logging.log4j.core.Logger)dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
 		}
 		else logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
+	}
+	
+	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
+	{
+		ConfigListRegistry.reloadInstance();
+		FTBWorld.reloadGameModes();
+		
+		new MessageSyncConfig(null).sendTo(null);
+		
+		EventFTBReload event = new EventFTBReload(Side.SERVER, sender, reloadClient);
+		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
+		event.post();
+		
+		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
+		if(reloadClient) new MessageReload().sendTo(null);
+		
+		FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true);
 	}
 	
 	public static final Configuration loadConfig(String s)
@@ -259,5 +279,25 @@ public class FTBLib
 		*/
 		commands.addAll(getServer().getCommandManager().getPossibleCommands(sender));
 		return commands;
+	}
+	
+	public static UUID getPlayerID(String s)
+	{
+		s = s.trim().toLowerCase();
+		
+		if(!cachedUUIDs.keys.contains(s))
+		{
+			cachedUUIDs.put(s, null);
+			
+			try
+			{
+				String json = new LMURLConnection(LMURLConnection.Type.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
+				JsonElement e = LMJsonUtils.getJsonElement(json);
+				cachedUUIDs.put(s, LMStringUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
+			}
+			catch(Exception e) { }
+		}
+		
+		return cachedUUIDs.get(s);
 	}
 }

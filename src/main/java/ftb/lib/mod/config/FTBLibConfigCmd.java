@@ -13,4 +13,5 @@ public class FTBLibConfigCmd
 	public static final ConfigEntryString name_mode = new ConfigEntryString("name_mode", "ftb_mode");
 	public static final ConfigEntryString name_edit_config = new ConfigEntryString("name_config", "edit_config");
 	public static final ConfigEntryString name_world_id = new ConfigEntryString("name_world_id", "ftb_world_id");
+	public static final ConfigEntryString name_notify = new ConfigEntryString("name_notify", "ftb_notify");
 }

@@ -10,6 +10,9 @@ public class CmdHelpOverride extends CommandHelp
 	public CmdHelpOverride()
 	{ super(); }
 	
+	public String getCommandUsage(ICommandSender ics)
+	{ return '/' + getCommandName() + " [command]"; }
+	
 	@SuppressWarnings("all")
 	protected List getSortedPossibleCommands(ICommandSender ics)
     {

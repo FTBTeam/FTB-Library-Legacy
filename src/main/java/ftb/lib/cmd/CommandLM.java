@@ -9,10 +9,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraftforge.common.UsernameCache;
 
-public abstract class CommandLM extends CommandBase // CommandFTBU
+public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 {
 	public final String commandName;
 	public final CommandLevel level;
+	public static boolean extendedUsageInfo = false;
 	
 	public CommandLM(String s, CommandLevel l)
 	{
@@ -24,7 +25,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU
 	{ return level.requiredPermsLevel(); }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return level != CommandLevel.NONE && (level == CommandLevel.ALL || super.canCommandSenderUseCommand(ics)); }
+	{ return level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics)); }
 	
 	public final String getCommandName()
 	{ return commandName; }

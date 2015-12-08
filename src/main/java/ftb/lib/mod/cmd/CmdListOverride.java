@@ -12,6 +12,9 @@ public class CmdListOverride extends CommandLM
 	public CmdListOverride()
 	{ super("list", CommandLevel.ALL); }
 	
+	public String getCommandUsage(ICommandSender ics)
+	{ return '/' + commandName + " ['uuid']"; }
+	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		FastList<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
