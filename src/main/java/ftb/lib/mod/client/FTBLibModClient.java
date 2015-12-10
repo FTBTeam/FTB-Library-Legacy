@@ -10,7 +10,7 @@ import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibModCommon;
 import latmod.lib.LMColorUtils;
 import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,25 +23,24 @@ import net.minecraft.world.World;
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
 {
-	public static final ConfigGroup clientConfig = new ConfigGroup("ftbl");
-	public static final ConfigEntryBool addOreNames = new ConfigEntryBool("item_ore_names", false);
-	public static final ConfigEntryBool addRegistryNames = new ConfigEntryBool("item_reg_names", false);
-	public static final ConfigEntryBool displayDebugInfo = new ConfigEntryBool("debug_info", false);
-	public static final ConfigEntryBool openHSB = new ConfigEntryBool("open_hsb_cg", false).setHidden();
+	public static final ConfigGroup client_config = new ConfigGroup("ftbl");
+	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
+	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
+	public static final ConfigEntryBool debug_info = new ConfigEntryBool("debug_info", false);
+	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<EnumScreen>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
 	
 	public void preInit()
 	{
 		JsonHelper.initClient();
 		EventBusHelper.register(FTBLibClientEventHandler.instance);
+		EventBusHelper.register(FTBLibGuiEventHandler.instance);
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		ClientConfigRegistry.init();
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
-		if(FTBLibFinals.DEV) clientConfig.add(displayDebugInfo);
-		else displayDebugInfo.set(false);
-		
-		ClientConfigRegistry.add(clientConfig.addAll(FTBLibModClient.class));
+		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class));
+		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class));
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

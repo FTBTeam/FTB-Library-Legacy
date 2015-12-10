@@ -76,7 +76,7 @@ public class GuiSelectColorRGB extends GuiLM
 			public void onButtonPressed(int b)
 			{
 				playClickSound();
-				FTBLibModClient.openHSB.set(true);
+				FTBLibModClient.open_hsb_cg.set(true);
 				ClientConfigRegistry.provider.save();
 				mc.displayGuiScreen(new GuiSelectColorHSB(callback, getInitRGB(), colorID, isInstant));
 			}

@@ -60,12 +60,12 @@ public class FTBLibClientEventHandler
 	{
 		if(e.itemStack == null || e.itemStack.getItem() == null) return;
 		
-		if(FTBLibModClient.addRegistryNames.get())
+		if(FTBLibModClient.item_reg_names.get())
 		{
 			e.toolTip.add(LMInvUtils.getRegName(e.itemStack));
 		}
 		
-		if(FTBLibModClient.addOreNames.get())
+		if(FTBLibModClient.item_ore_names.get())
 		{
 			FastList<String> ores = ODItems.getOreNames(e.itemStack);
 			
@@ -83,7 +83,7 @@ public class FTBLibClientEventHandler
 	{
 		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
-			if(FTBLibModClient.displayDebugInfo.get())
+			if(FTBLibModClient.debug_info.get())
 				e.left.add(FTBLibClient.mc.debug);
 			
 			if(FTBLibFinals.DEV)
@@ -93,7 +93,7 @@ public class FTBLibClientEventHandler
 		{
 			e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
 			
-			if(FTBLibModClient.displayDebugInfo.get())
+			if(FTBLibModClient.debug_info.get())
 			{
 				e.right.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
 				

@@ -79,3 +79,7 @@ client_config.ftbl.item_ore_names=Item OreDict Names
 client_config.ftbl.item_reg_names=Item Registry Names
 client_config.ftbl.debug_info=Debug Info
 client_config.ftbl.notifications=Notifications
+
+client_config.sidebar_buttons=Sidebar Buttons
+client_config.sidebar_buttons.settings=Client Settings
+client_config.sidebar_buttons.notifications=Notifications

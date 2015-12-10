@@ -10,7 +10,7 @@ public class LMGuis
 {
 	public static void displayColorSelector(IColorCallback cb, int col, int id, boolean instant)
 	{
-		if(FTBLibModClient.openHSB.get())
+		if(FTBLibModClient.open_hsb_cg.get())
 			FTBLibClient.mc.displayGuiScreen(new GuiSelectColorHSB(cb, col, id, instant));
 		else FTBLibClient.mc.displayGuiScreen(new GuiSelectColorRGB(cb, col, id, instant));
 	}
