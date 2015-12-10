@@ -121,7 +121,7 @@ public class FTBLib
 		if(hasOnlinePlayers())
 		{
 			l.addAll(getServer().getConfigurationManager().playerEntityList);
-			if(except != null) l.removeObj(except);
+			if(except != null) l.remove(except);
 		}
 		return l;
 	}

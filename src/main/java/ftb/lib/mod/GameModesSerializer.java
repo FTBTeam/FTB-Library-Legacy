@@ -49,7 +49,7 @@ public class GameModesSerializer implements JsonSerializer<GameModes>, JsonDeser
 		JsonArray a = o.get("modes").getAsJsonArray();
 		for(int i = 0; i < a.size(); i++)
 			allModes.add(a.get(i).getAsString());
-		allModes.removeObj(common);
+		allModes.remove(common);
 		
 		HashMap<String, String> custom = new HashMap<String, String>();
 		

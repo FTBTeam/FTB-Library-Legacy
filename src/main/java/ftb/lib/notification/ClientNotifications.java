@@ -35,8 +35,8 @@ public class ClientNotifications
 		if(n == null) return;
 		if(n.ID != null)
 		{
-			Temp.list.removeObj(n.ID);
-			Perm.list.removeObj(n.ID);
+			Temp.list.remove(n.ID);
+			Perm.list.remove(n.ID);
 			if(current != null && current.ID != null && current.ID.equals(n.ID))
 				current = null;
 		}
