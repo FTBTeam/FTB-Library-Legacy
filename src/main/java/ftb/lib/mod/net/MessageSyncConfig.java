@@ -5,7 +5,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.config.*;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.lib.config.ConfigList;
+import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageSyncConfig extends MessageLM
@@ -17,13 +17,14 @@ public class MessageSyncConfig extends MessageLM
 		this();
 		
 		int count = 0;
-		io.writeUShort(ConfigListRegistry.instance.synced.size());
+		io.writeUShort(ConfigRegistry.synced.size());
 		
-		for(int i = 0; i < ConfigListRegistry.instance.synced.size(); i++)
+		for(int i = 0; i < ConfigRegistry.synced.size(); i++)
 		{
-			ConfigList l = ConfigListRegistry.instance.synced.get(i);
+			ConfigGroup l = ConfigRegistry.synced.get(i);
 			io.writeString(l.toString());
-			count += l.writeToIO(io, false);
+			l.write(io);
+			count += l.getTotalEntryCount();
 		}
 		
 		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Sent " + count + " synced config values");
@@ -41,12 +42,12 @@ public class MessageSyncConfig extends MessageLM
 		for(int i = 0; i < s; i++)
 		{
 			String id = io.readString();
-			ConfigList l = ConfigList.readFromIO(io, false);
-			l.setID(id);
-			count += l.totalEntryCount();
+			ConfigGroup l = new ConfigGroup(id);
+			l.read(io);
+			count += l.getTotalEntryCount();
 			
-			ConfigList list = ConfigListRegistry.instance.list.getObj(l);
-			if(list != null) list.loadFromList(l);
+			ConfigGroup list = ConfigRegistry.list.getObj(l);
+			if(list != null) list.loadFromGroup(l);
 			else new EventSyncedConfig(l).post();
 		}
 		

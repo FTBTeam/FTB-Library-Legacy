@@ -19,8 +19,7 @@ public class ClickActionRegistry
 	{
 		if(a != null && a.type != null)
 		{
-			String s = a.toString();
-			if(LMStringUtils.isValid(s) && !list.contains(s))
+			if(LMStringUtils.isValid(a.ID) && !list.contains(a.ID))
 				list.add(a);
 		}
 	}

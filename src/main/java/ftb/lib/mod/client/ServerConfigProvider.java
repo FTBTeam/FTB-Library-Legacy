@@ -9,13 +9,14 @@ import latmod.lib.config.*;
 public class ServerConfigProvider implements IConfigProvider
 {
 	public final long adminToken;
-	public final ConfigList list;
+	public final boolean isTemp;
+	public final ConfigGroup group;
 	
-	public ServerConfigProvider(long t, ConfigList l)
-	{ adminToken = t; list = l; }
+	public ServerConfigProvider(long t, boolean temp, ConfigGroup g)
+	{ adminToken = t; isTemp = temp; group = g; }
 	
 	public String getTitle()
-	{ return list.getDisplayName(); }
+	{ return group.getDisplayName(); }
 	
 	public String getGroupTitle(ConfigGroup g)
 	{ return g.getDisplayName(); }
@@ -23,8 +24,8 @@ public class ServerConfigProvider implements IConfigProvider
 	public String getEntryTitle(ConfigEntry e)
 	{ return e.ID; }
 	
-	public ConfigList getList()
-	{ return list; }
+	public ConfigGroup getGroup()
+	{ return group; }
 	
 	public void save()
 	{ new MessageEditConfigResponse(this).sendToServer(); }

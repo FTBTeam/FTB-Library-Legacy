@@ -38,4 +38,7 @@ public class FTBLibLang
 	public static String label_off() { return get("label.off"); }
 	public static String label_online() { return get("label.online"); }
 	public static String label_offline() { return get("label.offline"); }
+	
+	public static String label_enabled(boolean enabled)
+	{ return enabled ? label_enabled() : label_disabled(); }
 }

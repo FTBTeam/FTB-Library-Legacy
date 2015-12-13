@@ -6,18 +6,19 @@ import ftb.lib.api.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.client.ServerConfigProvider;
 import ftb.lib.mod.client.gui.GuiEditConfig;
-import latmod.lib.config.ConfigList;
+import latmod.lib.config.ConfigGroup;
 
-public class MessageEditConfig extends MessageLM
+public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(DATA_LONG); }
 	
-	public MessageEditConfig(long t, ConfigList list)
+	public MessageEditConfig(long t, boolean temp, ConfigGroup group)
 	{
 		this();
 		io.writeLong(t);
-		io.writeString(list.ID);
-		list.writeToIO(io, true);
+		io.writeBoolean(temp);
+		io.writeString(group.ID);
+		group.writeExtended(io);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -27,10 +28,12 @@ public class MessageEditConfig extends MessageLM
 	public IMessage onMessage(MessageContext ctx)
 	{
 		long token = io.readLong();
+		boolean temp = io.readBoolean();
 		String id = io.readString();
-		ConfigList list = ConfigList.readFromIO(io, true);
-		list.setID(id);
-		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(null, new ServerConfigProvider(token, list)));
+		
+		ConfigGroup group = new ConfigGroup(id);
+		group.readExtended(io);
+		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(null, new ServerConfigProvider(token, temp, group)));
 		return null;
 	}
 }

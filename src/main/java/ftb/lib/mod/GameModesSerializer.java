@@ -45,7 +45,7 @@ public class GameModesSerializer implements JsonSerializer<GameModes>, JsonDeser
 		String def = o.get("default").getAsString();
 		String common = o.get("common").getAsString();
 		
-		FastList<String> allModes = new FastList<String>();
+		List<String> allModes = new FastList<String>();
 		JsonArray a = o.get("modes").getAsJsonArray();
 		for(int i = 0; i < a.size(); i++)
 			allModes.add(a.get(i).getAsString());
@@ -60,7 +60,7 @@ public class GameModesSerializer implements JsonSerializer<GameModes>, JsonDeser
 				custom.put(e.getKey(), e.getValue().getAsString());
 		}
 		
-		allModes.setLocked();
+		allModes = Collections.unmodifiableList(allModes);
 		return new GameModes(allModes, def, common, custom);
 	}
 }

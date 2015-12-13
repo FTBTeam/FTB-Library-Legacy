@@ -1,7 +1,7 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
-import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.mod.net.MessageEditConfig;
@@ -21,31 +21,23 @@ public class CmdEditConfig extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i)
 	{
-		if(i == 0) return getTabS(ConfigListRegistry.instance.list);
+		if(i == 0) return ConfigRegistry.list.toStringArray();
 		else if(i == 1)
 		{
-			ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
-			if(list != null) return getTabS(list.groups);
+			ConfigGroup list = ConfigRegistry.list.getObj(args[0]);
+			if(list != null) return list.entries.toStringArray();
 		}
 		else if(i == 2)
 		{
-			ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
-			if(list != null)
+			ConfigGroup file = ConfigRegistry.list.getObj(args[0]);
+			if(file != null)
 			{
-				ConfigGroup group = list.groups.getObj(args[1]);
-				if(group != null) return getTabS(group.entries);
+				ConfigGroup group = file.getGroup(args[1]);
+				if(group != null) return group.entries.toStringArray();
 			}
 		}
 		
 		return null;
-	}
-	
-	private static String[] getTabS(FastList<?> l)
-	{
-		String[] s = new String[l.size()];
-		for(int i = 0; i < s.length; i++)
-			s[i] = l.get(i).toString();
-		return s;
 	}
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
@@ -55,24 +47,43 @@ public class CmdEditConfig extends CommandLM
 		if(args.length == 1 && ics instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
 			
-			if(list != null)
+			if(args[0].startsWith("Forge:") && args[0].length() > 6 && args[0].indexOf('.') > 0)
 			{
-				new MessageEditConfig(AdminToken.generate(ep), list).sendTo(ep);
-				return null;
+				/*
+				String filename = args[0].substring(6, args[0].length());
+				File file = new File(FTBLib.folderConfig, filename);
+				
+				if(file.exists() && file.canRead() && file.canWrite())
+				{
+					Configuration c = new Configuration(file);
+					new MessageEditConfig(AdminToken.generate(ep), new ForgeConfigFile(filename, c).configGroup).sendTo(ep);
+					return null;
+				}
+				*/
 			}
-			else return error(new ChatComponentText("Invalid config: " + args[0] + "!"));
+			else
+			{
+				ConfigGroup group = ConfigRegistry.list.getObj(args[0]);
+				
+				if(group != null)
+				{
+					new MessageEditConfig(AdminToken.generate(ep), false, group).sendTo(ep);
+					return null;
+				}
+			}
+			
+			return error(new ChatComponentText("Invalid config: " + args[0] + "!"));
 		}
 		
 		checkArgs(args, 3); // file, group, entry, value...
 		
-		ConfigList list = ConfigListRegistry.instance.list.getObj(args[0]);
+		ConfigGroup file = ConfigRegistry.list.getObj(args[0]);
 		
 		boolean success = false;
-		if(list != null)
+		if(file != null)
 		{
-			ConfigGroup group = list.groups.getObj(args[1]);
+			ConfigGroup group = file.getGroup(args[1]);
 			
 			if(group != null)
 			{
@@ -90,8 +101,8 @@ public class CmdEditConfig extends CommandLM
 						
 						try
 						{
-							entry.setJson(LMJsonUtils.getJsonElement(json));
-							if(list.parentFile != null) list.parentFile.save();
+							entry.setJson(LMJsonUtils.getJsonElement(json), LMJsonUtils.deserializationContext);
+							if(file.parentFile != null) file.parentFile.save();
 						}
 						catch(Exception ex)
 						{
@@ -100,7 +111,7 @@ public class CmdEditConfig extends CommandLM
 							return error;
 						}
 					}
-					else return new ChatComponentText(entry.getJson().toString());
+					else return new ChatComponentText(entry.getJson(LMJsonUtils.serializationContext).toString());
 				}
 			}
 		}

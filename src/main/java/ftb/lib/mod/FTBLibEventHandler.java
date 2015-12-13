@@ -6,7 +6,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.mod.net.*;
 import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,7 +23,7 @@ public class FTBLibEventHandler
 	{
 		if(e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
 		{
-			ConfigListRegistry.reloadInstance();
+			ConfigRegistry.reload();
 			FTBWorld.reloadGameModes();
 			FTBWorld.server = new FTBWorld(e.world);
 			EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, e.world);

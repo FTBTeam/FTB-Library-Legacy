@@ -2,12 +2,12 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.mod.client.ServerConfigProvider;
-import latmod.lib.config.ConfigList;
+import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageEditConfigResponse extends MessageLM
+public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 {
 	public MessageEditConfigResponse() { super(DATA_LONG); }
 	
@@ -15,8 +15,9 @@ public class MessageEditConfigResponse extends MessageLM
 	{
 		this();
 		io.writeLong(provider.adminToken);
-		io.writeString(provider.list.ID);
-		provider.list.writeToIO(io, false);
+		io.writeBoolean(provider.isTemp);
+		io.writeString(provider.group.ID);
+		provider.group.write(io);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -27,18 +28,19 @@ public class MessageEditConfigResponse extends MessageLM
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		if(!AdminToken.equals(ep, io.readLong())) return null;
 		
+		boolean isTemp = io.readBoolean();
 		String id = io.readString();
 		
-		ConfigList list0 = ConfigListRegistry.instance.list.getObj(id);
+		ConfigGroup group0 = isTemp ? ConfigRegistry.getTemp(true) : ConfigRegistry.list.getObj(id);
 		
-		if(list0 != null)
+		if(group0 != null)
 		{
-			ConfigList list = ConfigList.readFromIO(io, false);
-			list.setID(id);
+			ConfigGroup group = new ConfigGroup(id);
+			group.read(io);
 			
-			if(list0.loadFromList(list))
+			if(group0.loadFromGroup(group) > 0)
 			{
-				if(list0.parentFile != null) list0.parentFile.save();
+				if(group0.parentFile != null) group0.parentFile.save();
 				FTBLib.reload(ep, true, true);
 			}
 		}

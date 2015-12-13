@@ -6,9 +6,8 @@ import latmod.lib.config.*;
 @SideOnly(Side.CLIENT)
 public interface IConfigProvider
 {
-	public String getTitle();
 	public String getGroupTitle(ConfigGroup g);
 	public String getEntryTitle(ConfigEntry e);
-	public ConfigList getList();
+	public ConfigGroup getGroup();
 	public void save();
 }

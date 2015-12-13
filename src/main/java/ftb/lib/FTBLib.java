@@ -14,7 +14,7 @@ import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigListRegistry;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
@@ -42,6 +42,26 @@ public class FTBLib
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<String, UUID>().allowNullKeys();
 	
+	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
+	{
+		EnumChatFormatting.BLACK,
+		EnumChatFormatting.DARK_BLUE,
+		EnumChatFormatting.DARK_GREEN,
+		EnumChatFormatting.DARK_AQUA,
+		EnumChatFormatting.DARK_RED,
+		EnumChatFormatting.DARK_PURPLE,
+		EnumChatFormatting.GOLD,
+		EnumChatFormatting.GRAY,
+		EnumChatFormatting.DARK_GRAY,
+		EnumChatFormatting.BLUE,
+		EnumChatFormatting.GREEN,
+		EnumChatFormatting.AQUA,
+		EnumChatFormatting.RED,
+		EnumChatFormatting.LIGHT_PURPLE,
+		EnumChatFormatting.YELLOW,
+		EnumChatFormatting.WHITE,
+	};
+	
 	public static File folderConfig;
 	public static File folderMinecraft;
 	public static File folderModpack;
@@ -67,7 +87,7 @@ public class FTBLib
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
-		ConfigListRegistry.reloadInstance();
+		ConfigRegistry.reload();
 		FTBWorld.reloadGameModes();
 		
 		new MessageSyncConfig(null).sendTo(null);

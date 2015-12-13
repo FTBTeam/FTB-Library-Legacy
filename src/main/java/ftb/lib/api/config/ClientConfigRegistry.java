@@ -16,17 +16,14 @@ public final class ClientConfigRegistry
 	@SideOnly(Side.CLIENT)
 	public static final IConfigProvider provider = new IConfigProvider()
 	{
-		public String getTitle()
-		{ return I18n.format("config.client_config"); }
-		
 		public String getGroupTitle(ConfigGroup g)
 		{ return I18n.format(g.getFullID()); }
 		
 		public String getEntryTitle(ConfigEntry e)
 		{ return I18n.format(e.getFullID()); }
 		
-		public ConfigList getList()
-		{ return configFile.configList; }
+		public ConfigGroup getGroup()
+		{ return configFile.configGroup; }
 		
 		public void save()
 		{ configFile.save(); }

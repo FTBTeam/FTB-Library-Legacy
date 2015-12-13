@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui;
 
-import org.lwjgl.input.Mouse;
+import java.util.Comparator;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.config.IConfigProvider;
@@ -20,8 +20,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	public final GuiScreen parent;
 	public final IConfigProvider provider;
 	public final String title;
+	public final FastList<ButtonConfigEntry> configEntryButtons;
 	public final PanelLM configPanel;
-	public final ButtonLM buttonClose;
+	public final ButtonLM buttonClose, buttonExpandAll, buttonCollapseAll;
 	public final SliderLM scroll;
 	public boolean changed = false;
 	
@@ -31,41 +32,37 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		hideNEI = true;
 		parent = g;
 		provider = p;
-		title = p.getTitle();
+		
+		
+		title = p.getGroupTitle(p.getGroup());
+		
+		configEntryButtons = new FastList<ButtonConfigEntry>();
 		
 		configPanel = new PanelLM(this, 0, 0, 0, 20)
 		{
 			public void addWidgets()
 			{
-				FastList<ButtonConfigEntry> temp = new FastList<ButtonConfigEntry>();
-				
-				provider.getList().sort();
-				
-				for(ConfigGroup c : provider.getList().groups)
-				{
-					ButtonCategory cat = new ButtonCategory(GuiEditConfig.this, c);
-					
-					temp.clear();
-					
-					for(ConfigEntry e : c.entries)
-						if(!e.isHidden()) temp.add(new ButtonConfigEntry(GuiEditConfig.this, cat, e));
-					
-					if(!temp.isEmpty())
-					{
-						add(cat);
-						for(int i = 0; i < temp.size(); i++)
-						{
-							ButtonConfigEntry e = temp.get(i);
-							add(e);
-						}
-					}
-				}
+				height = 0;
+				for(ButtonConfigEntry b : configEntryButtons)
+					addCE(b);
 			}
 			
 			public void renderWidget()
 			{
 				for(int i = 0; i < widgets.size(); i++)
 					widgets.get(i).renderWidget();
+			}
+			
+			private void addCE(ButtonConfigEntry e)
+			{
+				add(e);
+				e.posY = height;
+				height += e.height;
+				if(e.expanded)
+				{
+					for(ButtonConfigEntry b : e.subButtons)
+						addCE(b);
+				}
 			}
 		};
 		
@@ -76,6 +73,48 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				gui.playClickSound();
 				if(parent == null) container.player.closeScreen();
 				else mc.displayGuiScreen(parent);
+			}
+		};
+		
+		buttonExpandAll = new ButtonLM(this, 0, 2, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				gui.playClickSound();
+				for(ButtonConfigEntry e : configEntryButtons)
+					expandAll(e);
+				gui.refreshWidgets();
+			}
+			
+			private void expandAll(ButtonConfigEntry e)
+			{
+				if(e.entry.getAsGroup() != null)
+				{
+					e.expanded = true;
+					for(ButtonConfigEntry e1 : e.subButtons)
+						expandAll(e1);
+				}
+			}
+		};
+		
+		buttonCollapseAll = new ButtonLM(this, 0, 2, 16, 16)
+		{
+			public void onButtonPressed(int b)
+			{
+				gui.playClickSound();
+				for(ButtonConfigEntry e : configEntryButtons)
+					collapseAll(e);
+				gui.refreshWidgets();
+			}
+			
+			private void collapseAll(ButtonConfigEntry e)
+			{
+				if(e.entry.getAsGroup() != null)
+				{
+					e.expanded = false;
+					for(ButtonConfigEntry e1 : e.subButtons)
+						collapseAll(e1);
+				}
 			}
 		};
 		
@@ -93,23 +132,66 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		xSize = width;
 		ySize = height;
 		guiLeft = guiTop = 0;
-		buttonClose.posX = width - 18;
+		buttonClose.posX = width - 18 * 1;
+		buttonExpandAll.posX = width - 18 * 2;
+		buttonCollapseAll.posX = width - 18 * 3;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
 		configPanel.posY = 20;
 		scroll.value = 0F;
-		refreshWidgets();
+		
+		if(configEntryButtons.isEmpty())
+		{
+			configEntryButtons.clear();
+			ConfigGroup group = provider.getGroup();
+			group.sort(new Comparator<ConfigEntry>()
+			{
+				public int compare(ConfigEntry o1, ConfigEntry o2)
+				{
+					int i = Boolean.compare(o2.getAsGroup() != null, o1.getAsGroup() != null);
+					return (i == 0) ? o1.compareTo(o2) : i;
+				}
+			});
+			
+			for(ConfigEntry e : group.entries)
+				addCE(null, e, 0);
+		}
+	}
+	
+	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
+	{
+		if(!e.isHidden())
+		{
+			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
+			b.posX += level * 12;
+			b.width -= level * 12;
+			if(parent == null)
+			{
+				//b.expanded = true;
+				configEntryButtons.add(b);
+			}
+			else parent.subButtons.add(b);
+			
+			ConfigGroup g = e.getAsGroup();
+			if(g != null)
+			{
+				for(ConfigEntry e1 : g.entries)
+					addCE(b, e1, level + 1);
+			}
+		}
 	}
 	
 	public void addWidgets()
 	{
-		mainPanel.add(buttonClose);
 		configPanel.height = 20;
 		configPanel.width = width;
 		configPanel.posX = 0;
-		configPanel.posY = 0;
+		configPanel.posY = 20;
+		mainPanel.add(buttonClose);
+		mainPanel.add(buttonExpandAll);
+		mainPanel.add(buttonCollapseAll);
 		mainPanel.add(configPanel);
-		if(configPanel.height > height) mainPanel.add(scroll);
+		mainPanel.add(scroll);
 	}
 	
 	public void onLMGuiClosed()
@@ -121,125 +203,90 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		boolean drawScroll = configPanel.height > height;
+		scroll.scrollStep = 0F;
+		scroll.update();
 		
-		if(drawScroll)
+		if(configPanel.height + 20 < height) scroll.value = 0F;
+		else if(mouseDWheel != 0)
 		{
-			float pvalue = scroll.value;
-			scroll.update();
-			
-			int dw = Mouse.getDWheel();
-			if(dw != 0)
-			{
-				float s = (20F / (float)(height - configPanel.height)) * 3F;
-				if(dw < 0) scroll.value -= s;
-				else scroll.value += s;
-				scroll.value = MathHelperLM.clampFloat(scroll.value, 0F, 1F);
-			}
-			
-			if(scroll.value != pvalue)
-				configPanel.posY = (int)(scroll.value * (height - configPanel.height));
+			float s = (20F / (float)(height - configPanel.height + 20)) * 1F;
+			if(mouseDWheel < 0) scroll.value -= s;
+			else scroll.value += s;
+			scroll.value = MathHelperLM.clampFloat(scroll.value, 0F, 1F);
 		}
+		
+		configPanel.posY = (int)(scroll.value * (height - configPanel.height - 20)) + 20;
 		
 		configPanel.renderWidget();
 		
 		drawRect(0, 0, width, 20, 0x99333333);
 		drawCenteredString(fontRendererObj, title, width / 2, 6, 0xFFFFFFFF);
 		
-		if(drawScroll)
-		{
-			drawRect(scroll.posX, scroll.posY, scroll.posX + scroll.width, scroll.posY + scroll.height, 0x99333333);
-			int sy = (int)(scroll.posY + scroll.value * (scroll.height - scroll.sliderSize));
-			drawRect(scroll.posX, sy, scroll.posX + scroll.width, sy + scroll.sliderSize, 0x99666666);
-		}
+		drawRect(scroll.posX, scroll.posY, scroll.posX + scroll.width, scroll.posY + scroll.height, 0x99333333);
+		int sy = (int)(scroll.posY + scroll.value * (scroll.height - scroll.sliderSize));
+		drawRect(scroll.posX, sy, scroll.posX + scroll.width, sy + scroll.sliderSize, 0x99666666);
 		
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		buttonClose.render(GuiIcons.accept);
+		buttonExpandAll.render(GuiIcons.add);
+		buttonCollapseAll.render(GuiIcons.remove);
 	}
 	
-	public static abstract class ConfigLine extends ButtonLM
+	public static class ButtonConfigEntry extends ButtonLM
 	{
 		public final GuiEditConfig gui;
-		public final ConfigGroup group;
+		public final ConfigEntry entry;
+		public boolean expanded = false;
+		public final FastList<ButtonConfigEntry> subButtons;
 		
-		public ConfigLine(GuiEditConfig g, ConfigGroup gr)
+		public ButtonConfigEntry(GuiEditConfig g, ConfigEntry e)
 		{
 			super(g, 0, g.configPanel.height, g.width - 16, 16);
 			gui = g;
-			group = gr;
-			g.configPanel.height += height;
-			title = gr.ID;
+			entry = e;
+			title = g.provider.getEntryTitle(entry);
+			subButtons = new FastList<ButtonConfigEntry>();
 		}
 		
 		public boolean isVisible()
 		{ int ay = getAY(); return ay > -height && ay < gui.height; }
 		
-		public abstract void onButtonPressed(int b);
-		
-		public void addMouseOverText(FastList<String> l) { }
-	}
-	
-	public static class ButtonCategory extends ConfigLine
-	{
-		public ButtonCategory(GuiEditConfig g, ConfigGroup gr)
-		{
-			super(g, gr);
-			title = EnumChatFormatting.BOLD + "- " + g.provider.getGroupTitle(gr) + " -";
-		}
-		
-		public void renderWidget()
-		{
-			if(!isVisible()) return;
-			int y = getAY();
-			gui.drawString(gui.fontRendererObj, title, 4, y + 4, 0xFFFFFFFF);
-		}
-		
-		public void onButtonPressed(int b)
-		{
-		}
-	}
-	
-	public static class ButtonConfigEntry extends ConfigLine
-	{
-		public final ButtonCategory category;
-		public final ConfigEntry entry;
-		
-		public ButtonConfigEntry(GuiEditConfig g, ButtonCategory c, ConfigEntry e)
-		{
-			super(c.gui, e.parentGroup);
-			category = c;
-			entry = e;
-			title = g.provider.getEntryTitle(entry);
-		}
-		
 		public void renderWidget()
 		{
 			if(!isVisible()) return;
 			boolean mouseOver = mouseOver();
-			int textCol = 0xFF000000 | getColor();
-			if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
-			int y = getAY();
 			
-			if(mouseOver) drawBlankRect(0, y, gui.zLevel, width, height, 0x22FFFFFF);
-			gui.drawString(gui.fontRendererObj, title, 4, y + 4, mouseOver ? 0xFFFFFFFF : 0xFF999999);
-			String s = entry.getValue();
+			int ax = getAX();
+			int ay = getAY();
+			boolean isGroup = entry.getAsGroup() != null;
 			
-			int slen = gui.fontRendererObj.getStringWidth(s);
+			if(mouseOver) drawBlankRect(ax, ay, gui.zLevel, width, height, 0x22FFFFFF);
+			gui.drawString(gui.fontRendererObj, isGroup ? (((expanded ? "[-] " : "[+] ") + title)) : title, ax + 4, ay + 4, mouseOver ? 0xFFFFFFFF : (isGroup ? 0xFFCCCCCC : 0xFF999999));
 			
-			if(slen > 150)
+			if(!isGroup)
 			{
-				s = gui.fontRendererObj.trimStringToWidth(s, 150);
-				s += "...";
-				slen = 152;
+				String s = entry.getValue();
+				
+				int slen = gui.fontRendererObj.getStringWidth(s);
+				
+				if(slen > 150)
+				{
+					s = gui.fontRendererObj.trimStringToWidth(s, 150);
+					s += "...";
+					slen = 152;
+				}
+				
+				int textCol = 0xFF000000 | getColor();
+				if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
+				
+				if(mouseOver && gui.mouseX > ax + width - slen - 9)
+					drawBlankRect(ax + width - slen - 8, ay, gui.zLevel, slen + 8, height, 0x22FFFFFF);
+				
+				gui.drawString(gui.fontRendererObj, s, gui.width - (slen + 20), ay + 4, textCol);
 			}
-			
-			if(mouseOver && gui.mouseX > width - slen - 9)
-				drawBlankRect(width - slen - 8, y, gui.zLevel, slen + 8, height, 0x22FFFFFF);
-			
-			gui.drawString(gui.fontRendererObj, s, gui.width - (slen + 20), y + 4, textCol);
 		}
 		
 		public void onButtonPressed(int b)
@@ -247,7 +294,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			gui.playClickSound();
 			
 			if(entry instanceof IClickableConfigEntry)
+			{
 				((IClickableConfigEntry)entry).onClicked();
+				((GuiEditConfig)gui).changed = true;
+			}
+			else if(entry.getAsGroup() != null)
+			{
+				expanded = !expanded;
+				gui.refreshWidgets();
+			}
 			else if(entry.type == PrimitiveType.COLOR)
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
@@ -265,7 +320,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				},
 				((ConfigEntryColor)entry).get(), 0, false);
 			}
-			else if(entry.type == PrimitiveType.INT || entry.type == PrimitiveType.FLOAT || entry.type == PrimitiveType.STRING)
+			else if(entry.type == PrimitiveType.INT || entry.type == PrimitiveType.DOUBLE || entry.type == PrimitiveType.STRING)
 			{
 				if(entry.type == PrimitiveType.INT)
 				{
@@ -283,15 +338,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 						}
 					});
 				}
-				else if(entry.type == PrimitiveType.FLOAT)
+				else if(entry.type == PrimitiveType.DOUBLE)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryFloat)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryDouble)entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
-								((ConfigEntryFloat)entry).set(c.getF());
+								((ConfigEntryDouble)entry).set(c.getF());
 								((GuiEditConfig)gui).changed = true;
 							}
 							
@@ -316,8 +371,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					});
 				}
 			}
-			
-			((GuiEditConfig)gui).changed = true;
 		}
 		
 		public int getColor()
@@ -351,7 +404,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 			}
 			
-			if(gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getValue())) + 25))
+			if(entry.getAsGroup() == null && gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getValue())) + 25))
 			{
 				if(entry.defaultValue != null) l.add(EnumChatFormatting.AQUA + "Def: " + entry.defaultValue);
 				if(entry.getMinValue() != null) l.add(EnumChatFormatting.AQUA + "Min: " + entry.getMinValue());
