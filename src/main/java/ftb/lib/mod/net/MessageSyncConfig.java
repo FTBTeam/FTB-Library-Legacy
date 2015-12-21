@@ -5,24 +5,25 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.config.*;
 import ftb.lib.mod.FTBLibFinals;
+import latmod.lib.ByteCount;
 import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageSyncConfig extends MessageLM
 {
-	public MessageSyncConfig() { super(DATA_LONG); }
+	public MessageSyncConfig() { super(ByteCount.INT); }
 	
 	public MessageSyncConfig(EntityPlayerMP ep)
 	{
 		this();
 		
 		int count = 0;
-		io.writeUShort(ConfigRegistry.synced.size());
+		io.writeShort(ConfigRegistry.synced.size());
 		
 		for(int i = 0; i < ConfigRegistry.synced.size(); i++)
 		{
 			ConfigGroup l = ConfigRegistry.synced.get(i);
-			io.writeString(l.toString());
+			io.writeUTF(l.toString());
 			l.write(io);
 			count += l.getTotalEntryCount();
 		}
@@ -37,11 +38,11 @@ public class MessageSyncConfig extends MessageLM
 	{
 		int count = 0;
 		
-		int s = io.readUShort();
+		int s = io.readUnsignedShort();
 		
 		for(int i = 0; i < s; i++)
 		{
-			String id = io.readString();
+			String id = io.readUTF();
 			ConfigGroup l = new ConfigGroup(id);
 			l.read(io);
 			count += l.getTotalEntryCount();

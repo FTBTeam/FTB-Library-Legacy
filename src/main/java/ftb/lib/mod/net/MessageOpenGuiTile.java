@@ -4,13 +4,14 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.client.FTBLibClient;
+import latmod.lib.ByteCount;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class MessageOpenGuiTile extends MessageLM
 {
-	public MessageOpenGuiTile() { super(DATA_LONG); }
+	public MessageOpenGuiTile() { super(ByteCount.INT); }
 	
 	public MessageOpenGuiTile(TileEntity t, NBTTagCompound tag, int wid)
 	{
@@ -19,7 +20,7 @@ public class MessageOpenGuiTile extends MessageLM
 		io.writeInt(t.yCoord);
 		io.writeInt(t.zCoord);
 		writeTag(tag);
-		io.writeUByte(wid);
+		io.writeByte(wid);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -41,7 +42,7 @@ public class MessageOpenGuiTile extends MessageLM
 			if(gui != null)
 			{
 				FTBLibClient.mc.displayGuiScreen(gui);
-				FTBLibClient.mc.thePlayer.openContainer.windowId = io.readUByte();
+				FTBLibClient.mc.thePlayer.openContainer.windowId = io.readUnsignedByte();
 			}
 		}
 		

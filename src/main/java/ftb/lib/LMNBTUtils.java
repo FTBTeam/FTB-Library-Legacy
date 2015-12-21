@@ -111,4 +111,36 @@ public class LMNBTUtils
 			tag.appendTag(new NBTTagString(l.get(i)));
 		return tag;
 	}
+	
+	public static NBTTagCompound readTag(ByteIOStream data)
+	{
+		try
+		{
+			byte[] abyte = data.readByteArray(ByteCount.INT);
+			
+			if(abyte == null) return null;
+			else if(abyte.length == 0) return new NBTTagCompound();
+			else return CompressedStreamTools.func_152457_a(abyte, NBTSizeTracker.field_152451_a);
+		}
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
+		
+		return null;
+	}
+	
+	public static void writeTag(ByteIOStream data, NBTTagCompound tag)
+	{
+		try
+		{
+			byte[] abyte;
+			
+			if(tag == null) abyte = null;
+			else if(tag.hasNoTags()) abyte = new byte[0];
+			else abyte = CompressedStreamTools.compress(tag);
+			
+			data.writeByteArray(abyte, ByteCount.INT);
+		}
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
+	}
 }

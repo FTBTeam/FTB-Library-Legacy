@@ -6,15 +6,16 @@ import ftb.lib.api.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.*;
+import latmod.lib.ByteCount;
 
 public class MessageNotifyPlayer extends MessageLM
 {
-	public MessageNotifyPlayer() { super(DATA_SHORT); }
+	public MessageNotifyPlayer() { super(ByteCount.SHORT); }
 	
 	public MessageNotifyPlayer(Notification n)
 	{
 		this();
-		io.writeString(n.toJson());
+		io.writeUTF(n.toJson());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -25,7 +26,7 @@ public class MessageNotifyPlayer extends MessageLM
 	{
 		if(FTBLibModClient.notifications.get() != EnumScreen.OFF)
 		{
-			Notification n = Notification.fromJson(io.readString());
+			Notification n = Notification.fromJson(io.readUTF());
 			
 			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN)
 				ClientNotifications.add(n);

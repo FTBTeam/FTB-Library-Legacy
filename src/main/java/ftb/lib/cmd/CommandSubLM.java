@@ -20,16 +20,25 @@ public class CommandSubLM extends CommandLM
 	
 	public String getCommandUsage(ICommandSender ics)
 	{
+		StringBuilder sb = new StringBuilder();
+		sb.append('/');
+		sb.append(commandName);
+		
 		if(extendedUsageInfo)
 		{
 			FastList<String> l = new FastList<String>();
 			addCommandUsage(ics, l, 0);
-			StringBuilder sb = new StringBuilder('/' + commandName + "\n\n");
+			sb.append('\n');
+			sb.append('\n');
 			for(String s : l) { sb.append(s); sb.append('\n'); }
 			return sb.toString().trim();
 		}
 		
-		return '/' + commandName + ' ' + subCommands.keys.toString();
+		sb.append(" [ ");
+		sb.append(LMStringUtils.strip(subCommands.getKeyStringArray()));
+		sb.append("]");
+		
+		return sb.toString();
 	}
 	
 	private void addCommandUsage(ICommandSender ics, FastList<String> l, int level)
@@ -63,7 +72,7 @@ public class CommandSubLM extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 0) return subCommands.keys.toArray(new String[0]);
+		if(i == 0) return subCommands.getKeyStringArray();
 		
 		CommandLM cmd = subCommands.get(args[0]);
 		

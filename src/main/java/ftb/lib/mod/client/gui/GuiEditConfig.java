@@ -17,7 +17,6 @@ import net.minecraft.util.EnumChatFormatting;
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM implements IClientActionGui
 {
-	public final GuiScreen parent;
 	public final IConfigProvider provider;
 	public final String title;
 	public final FastList<ButtonConfigEntry> configEntryButtons;
@@ -28,9 +27,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	
 	public GuiEditConfig(GuiScreen g, IConfigProvider p)
 	{
-		super(null, null);
+		super(g, null, null);
 		hideNEI = true;
-		parent = g;
 		provider = p;
 		
 		
@@ -71,12 +69,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				if(parent == null) container.player.closeScreen();
-				else mc.displayGuiScreen(parent);
+				close(parentScreen);
 			}
 		};
 		
-		buttonExpandAll = new ButtonLM(this, 0, 2, 16, 16)
+		buttonExpandAll = new ButtonLM(this, 2, 2, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -97,7 +94,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 		};
 		
-		buttonCollapseAll = new ButtonLM(this, 0, 2, 16, 16)
+		buttonCollapseAll = new ButtonLM(this, 20, 2, 16, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -133,8 +130,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		ySize = height;
 		guiLeft = guiTop = 0;
 		buttonClose.posX = width - 18 * 1;
-		buttonExpandAll.posX = width - 18 * 2;
-		buttonCollapseAll.posX = width - 18 * 3;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
 		configPanel.posY = 20;
@@ -167,7 +162,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			b.width -= level * 12;
 			if(parent == null)
 			{
-				//b.expanded = true;
+				b.expanded = true;
 				configEntryButtons.add(b);
 			}
 			else parent.subButtons.add(b);
@@ -257,7 +252,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		public void renderWidget()
 		{
 			if(!isVisible()) return;
-			boolean mouseOver = mouseOver();
+			boolean mouseOver = gui.mouseY >= 20 && mouseOver();
 			
 			int ax = getAX();
 			int ay = getAY();
@@ -291,6 +286,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		public void onButtonPressed(int b)
 		{
+			if(gui.mouseY < 20) return;
+			
 			gui.playClickSound();
 			
 			if(entry instanceof IClickableConfigEntry)

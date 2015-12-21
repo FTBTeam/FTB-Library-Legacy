@@ -9,7 +9,7 @@ import latmod.lib.FastList;
 @SideOnly(Side.CLIENT)
 public abstract class PanelLM extends WidgetLM // GuiLM
 {
-	protected final FastList<WidgetLM> widgets;
+	public final FastList<WidgetLM> widgets;
 	protected final FastList<PanelLM> childPanels;
 	
 	public PanelLM(GuiLM g, int x, int y, int w, int h)
@@ -18,9 +18,6 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		widgets = new FastList<WidgetLM>();
 		childPanels = new FastList<PanelLM>();
 	}
-	
-	public FastList<WidgetLM> getWidgets()
-	{ return widgets.clone(); }
 	
 	public abstract void addWidgets();
 	
@@ -47,7 +44,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	public void addAll(List<? extends WidgetLM> l)
 	{
 		if(l == null || l.isEmpty()) return;
-		for(int i = 0; i < l.size(); i++) add(l.get(i));
+		for(WidgetLM w : l) add(w);
 	}
 	
 	public void refreshWidgets()

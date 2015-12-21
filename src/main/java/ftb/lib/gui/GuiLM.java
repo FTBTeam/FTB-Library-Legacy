@@ -26,6 +26,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	// GuiLM //
 	
+	public final GuiScreen parentScreen;
 	public final ContainerLM container;
 	public final ResourceLocation texture;
 	public final PanelLM mainPanel;
@@ -36,9 +37,10 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	private ResourceLocation prevTexture = null;
 	private boolean refreshWidgets = true;
 	
-	public GuiLM(ContainerLM c, ResourceLocation tex)
+	public GuiLM(GuiScreen parent, ContainerLM c, ResourceLocation tex)
 	{
 		super((c == null) ? new ContainerEmpty(FTBLibClient.mc.thePlayer, null) : c);
+		parentScreen = parent;
 		mc = FTBLibClient.mc;
 		mainPanel = new PanelLM(this, 0, 0, 0, 0)
 		{
@@ -49,6 +51,9 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		container = (ContainerLM)inventorySlots;
 		texture = tex;
 	}
+	
+	public GuiLM(ContainerLM c, ResourceLocation tex)
+	{ this(null, c, tex); }
 	
 	public void refreshWidgets()
 	{ refreshWidgets = true; }
@@ -102,7 +107,12 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public void close(GuiScreen g)
 	{
-		if(g == null) container.player.closeScreen();
+		if(g == null)
+		{
+			if(parentScreen == null)
+				container.player.closeScreen();
+			else mc.displayGuiScreen(parentScreen);
+		}
 		else mc.displayGuiScreen(g);
 	}
 	
@@ -121,6 +131,9 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	protected void keyTyped(char keyChar, int key)
 	{
+		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode())
+			close(null);
+		
 		if(mainPanel.keyPressed(key, keyChar)) return;
 		super.keyTyped(keyChar, key);
 	}

@@ -5,12 +5,13 @@ import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.mod.*;
+import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 
 public class MessageReload extends MessageLM
 {
-	public MessageReload() { super(DATA_NONE); }
+	public MessageReload() { super(ByteCount.INT); }
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }

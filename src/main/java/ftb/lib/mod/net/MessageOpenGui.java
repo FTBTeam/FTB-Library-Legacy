@@ -5,19 +5,20 @@ import ftb.lib.api.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibMod;
+import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageOpenGui extends MessageLM
 {
-	public MessageOpenGui() { super(DATA_LONG); }
+	public MessageOpenGui() { super(ByteCount.INT); }
 	
 	public MessageOpenGui(String mod, int id, NBTTagCompound tag, int wid)
 	{
 		this();
-		io.writeString(mod);
+		io.writeUTF(mod);
 		io.writeInt(id);
 		writeTag(tag);
-		io.writeUByte(wid);
+		io.writeByte(wid);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -26,10 +27,10 @@ public class MessageOpenGui extends MessageLM
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		String modID = io.readString();
+		String modID = io.readUTF();
 		int guiID = io.readInt();
 		NBTTagCompound data = readTag();
-		int windowID = io.readUByte();
+		int windowID = io.readUnsignedByte();
 		
 		LMGuiHandler h = LMGuiHandlerRegistry.get(modID);
 		if(h != null && FTBLibMod.proxy.openClientGui(FTBLibClient.mc.thePlayer, modID, guiID, data))

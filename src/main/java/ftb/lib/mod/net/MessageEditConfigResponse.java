@@ -4,19 +4,20 @@ import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.mod.client.ServerConfigProvider;
+import latmod.lib.ByteCount;
 import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 {
-	public MessageEditConfigResponse() { super(DATA_LONG); }
+	public MessageEditConfigResponse() { super(ByteCount.INT); }
 	
 	public MessageEditConfigResponse(ServerConfigProvider provider)
 	{
 		this();
 		io.writeLong(provider.adminToken);
 		io.writeBoolean(provider.isTemp);
-		io.writeString(provider.group.ID);
+		io.writeUTF(provider.group.ID);
 		provider.group.write(io);
 	}
 	
@@ -29,7 +30,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		if(!AdminToken.equals(ep, io.readLong())) return null;
 		
 		boolean isTemp = io.readBoolean();
-		String id = io.readString();
+		String id = io.readUTF();
 		
 		ConfigGroup group0 = isTemp ? ConfigRegistry.getTemp(true) : ConfigRegistry.list.getObj(id);
 		

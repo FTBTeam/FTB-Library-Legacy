@@ -14,7 +14,7 @@ import net.minecraft.util.*;
 public class CmdEditConfig extends CommandLM
 {
 	public CmdEditConfig()
-	{ super(FTBLibConfigCmd.name_edit_config.get(), CommandLevel.OP); }
+	{ super(FTBLibConfigCmd.Name.edit_config.get(), CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }

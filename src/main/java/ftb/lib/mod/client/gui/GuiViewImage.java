@@ -23,7 +23,7 @@ public class GuiViewImage extends GuiLM
 		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
 			public void onButtonPressed(int b)
-			{ mc.displayGuiScreen(parent); }
+			{ close(parent); }
 		};
 	}
 	

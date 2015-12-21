@@ -2,13 +2,14 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.IClientActionTile;
+import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class MessageClientTileAction extends MessageLM
 {
-	public MessageClientTileAction() { super(DATA_LONG); }
+	public MessageClientTileAction() { super(ByteCount.INT); }
 	
 	public MessageClientTileAction(TileEntity t, String s, NBTTagCompound tag)
 	{
@@ -16,7 +17,7 @@ public class MessageClientTileAction extends MessageLM
 		io.writeInt(t.xCoord);
 		io.writeInt(t.yCoord);
 		io.writeInt(t.zCoord);
-		io.writeString(s);
+		io.writeUTF(s);
 		writeTag(tag);
 	}
 	
@@ -28,7 +29,7 @@ public class MessageClientTileAction extends MessageLM
 		int x = io.readInt();
 		int y = io.readInt();
 		int z = io.readInt();
-		String action = io.readString();
+		String action = io.readUTF();
 		NBTTagCompound data = readTag();
 		
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;

@@ -7,7 +7,7 @@ import ftb.lib.item.ODItems;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
-import latmod.lib.OS;
+import latmod.lib.util.OS;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
@@ -55,6 +55,7 @@ public class FTBLibMod
 		e.registerServerCommand(new CmdReload());
 		e.registerServerCommand(new CmdWorldID());
 		e.registerServerCommand(new CmdNotify());
+		e.registerServerCommand(new CmdSetItemName());
 	}
 	
 	/*

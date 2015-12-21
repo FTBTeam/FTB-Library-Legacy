@@ -159,7 +159,7 @@ public class ClientNotifications
 				GlStateManager.popAttrib();
 			}
 		}
-
+		
 		public boolean isDead()
 		{ return time == 0L; }
 	}
@@ -178,10 +178,10 @@ public class ClientNotifications
 		}
 		
 		public boolean equals(Object o)
-		{ return notification.equals(o); }
+		{ return notification.ID.equals(String.valueOf(o)); }
 		
 		public int compareTo(Perm o)
-		{ return Long.compare(timeAdded, o.timeAdded); }
+		{ return Long.compare(o.timeAdded, timeAdded); }
 		
 		public void onClicked()
 		{

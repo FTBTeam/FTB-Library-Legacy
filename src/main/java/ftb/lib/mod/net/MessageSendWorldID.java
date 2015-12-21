@@ -5,19 +5,20 @@ import java.util.UUID;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.FTBWorld;
 import ftb.lib.api.*;
+import latmod.lib.ByteCount;
 
 public class MessageSendWorldID extends MessageLM
 {
 	public UUID worldID;
 	public String worldIDS;
 	
-	public MessageSendWorldID() { super(DATA_SHORT); }
+	public MessageSendWorldID() { super(ByteCount.SHORT); }
 	
 	public MessageSendWorldID(FTBWorld w)
 	{
 		this();
 		io.writeUUID(w.getWorldID());
-		io.writeString(w.getWorldIDS());
+		io.writeUTF(w.getWorldIDS());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -26,7 +27,7 @@ public class MessageSendWorldID extends MessageLM
 	public IMessage onMessage(MessageContext ctx)
 	{
 		UUID id = io.readUUID();
-		String ids = io.readString();
+		String ids = io.readUTF();
 		
 		if(FTBWorld.client == null || !FTBWorld.client.getWorldID().equals(id))
 			FTBWorld.client = new FTBWorld(id, ids);

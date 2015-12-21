@@ -9,7 +9,7 @@ import net.minecraft.util.*;
 public class CmdWorldID extends CommandLM
 {
 	public CmdWorldID()
-	{ super(FTBLibConfigCmd.name_world_id.get(), CommandLevel.ALL); }
+	{ super(FTBLibConfigCmd.Name.world_id.get(), CommandLevel.ALL); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{ return new ChatComponentTranslation("ftbl:worldID", FTBWorld.server.getWorldIDS()); }

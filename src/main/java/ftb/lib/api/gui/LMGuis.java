@@ -8,7 +8,7 @@ import latmod.lib.PrimitiveType;
 
 public class LMGuis
 {
-	public static void displayColorSelector(IColorCallback cb, int col, int id, boolean instant)
+	public static void displayColorSelector(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		if(FTBLibModClient.open_hsb_cg.get())
 			FTBLibClient.mc.displayGuiScreen(new GuiSelectColorHSB(cb, col, id, instant));

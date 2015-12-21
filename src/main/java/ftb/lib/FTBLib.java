@@ -40,7 +40,7 @@ public class FTBLib
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
-	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<String, UUID>().allowNullKeys();
+	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<String, UUID>().allowNullValues();
 	
 	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
 	{
@@ -305,7 +305,7 @@ public class FTBLib
 	{
 		s = s.trim().toLowerCase();
 		
-		if(!cachedUUIDs.keys.contains(s))
+		if(!cachedUUIDs.containsKey(s))
 		{
 			cachedUUIDs.put(s, null);
 			

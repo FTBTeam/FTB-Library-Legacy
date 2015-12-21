@@ -459,11 +459,11 @@ public class LMInvUtils
 		return map;
 	}
 	
-	public static void setEnchantments(ItemStack is, FastMap<Enchantment, Integer> map)
+	public static void setEnchantments(ItemStack is, Map<Enchantment, Integer> map)
 	{
 		HashMap<Integer, Integer> m = new HashMap<Integer, Integer>();
-		for(int i = 0; i < map.size(); i++)
-			m.put(map.keys.get(i).effectId, map.values.get(i).intValue());
+		for(Map.Entry<Enchantment, Integer> e : map.entrySet())
+			m.put(e.getKey().effectId, e.getValue().intValue());
 		EnchantmentHelper.setEnchantments(m, is);
 	}
 	

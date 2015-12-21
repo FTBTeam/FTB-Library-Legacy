@@ -12,7 +12,7 @@ public class CmdMode extends CommandSubLM
 {
 	public CmdMode()
 	{
-		super(FTBLibConfigCmd.name_mode.get(), CommandLevel.OP);
+		super(FTBLibConfigCmd.Name.mode.get(), CommandLevel.OP);
 		add(new CmdSet("set"));
 		add(new CmdGet("get"));
 		add(new CmdList("list"));

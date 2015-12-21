@@ -10,7 +10,7 @@ import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.FTBUIntegration;
-import ftb.lib.mod.client.gui.GuiEditConfig;
+import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
 import latmod.lib.FastList;
 import latmod.lib.config.*;
@@ -37,7 +37,7 @@ public class FTBLibGuiEventHandler
 	public static final PlayerAction notifications = new PlayerAction(GuiIcons.comment)
 	{
 		public void onClicked(int playerID)
-		{ /* TODO: Make Notifications gui */ }
+		{ FTBLibClient.mc.displayGuiScreen(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getTitle()
 		{ return I18n.format(FTBLibModClient.notifications.getFullID()); }

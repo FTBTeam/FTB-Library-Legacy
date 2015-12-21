@@ -2,18 +2,19 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.IClientActionItem;
+import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageClientItemAction extends MessageLM
 {
-	public MessageClientItemAction() { super(DATA_LONG); }
+	public MessageClientItemAction() { super(ByteCount.INT); }
 	
 	public MessageClientItemAction(String s, NBTTagCompound tag)
 	{
 		this();
-		io.writeString(s);
+		io.writeUTF(s);
 		writeTag(tag);
 	}
 	
@@ -22,7 +23,7 @@ public class MessageClientItemAction extends MessageLM
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
-		String action = io.readString();
+		String action = io.readUTF();
 		
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		

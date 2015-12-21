@@ -14,7 +14,7 @@ import net.minecraft.util.*;
 public class CmdNotify extends CommandLM
 {
 	public CmdNotify()
-	{ super(FTBLibConfigCmd.name_notify.get(), CommandLevel.OP); }
+	{ super(FTBLibConfigCmd.Name.notify.get(), CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{

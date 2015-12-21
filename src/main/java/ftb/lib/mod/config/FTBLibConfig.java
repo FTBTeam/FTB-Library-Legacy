@@ -4,7 +4,7 @@ import java.io.File;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
-import latmod.lib.config.ConfigFile;
+import latmod.lib.config.*;
 
 public class FTBLibConfig
 {
@@ -14,7 +14,9 @@ public class FTBLibConfig
 	{
 		configFile = new ConfigFile("ftblib", new File(FTBLib.folderLocal, "FTBLib.json"));
 		configFile.configGroup.setName("FTBLib");
-		configFile.add(FTBLibConfigCmd.group.addAll(FTBLibConfigCmd.class));
+		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class));
+		FTBLibConfigCmd.name.addAll(FTBLibConfigCmd.Name.class);
+		
 		ConfigRegistry.add(configFile);
 		configFile.load();
 	}
