@@ -280,24 +280,18 @@ public class FTBLib
 	public static FastList<ICommand> getAllCommands(ICommandSender sender)
 	{
 		FastList<ICommand> commands = new FastList<ICommand>();
-		/*
-		ICommandManager icm = FTBLib.getServer().getCommandManager();
-		if(icm != null && icm instanceof CommandHandler)
+		FastList<String> cmdIDs = new FastList<String>();
+		
+		for(Object o : getServer().getCommandManager().getPossibleCommands(sender))
 		{
-			try
+			ICommand c = (ICommand)o;
+			if(!cmdIDs.contains(c.getCommandName()))
 			{
-				Set set = ReflectionHelper.getPrivateValue(CommandHandler.class, (CommandHandler)icm, "commandSet", "field_71561_b");
-				for(Object o : set)
-				{
-					ICommand cmd = (ICommand)o;
-					if(cmd != null && (sender == null || cmd.canCommandSenderUseCommand(sender))) commands.add(cmd);
-				}
+				commands.add(c);
+				cmdIDs.add(c.getCommandName());
 			}
-			catch(Exception ex)
-			{ ex.printStackTrace(); }
 		}
-		*/
-		commands.addAll(getServer().getCommandManager().getPossibleCommands(sender));
+		
 		return commands;
 	}
 	

@@ -3,6 +3,7 @@ package ftb.lib.cmd;
 import java.util.*;
 
 import ftb.lib.FTBLib;
+import ftb.lib.mod.FTBUIntegration;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -86,7 +87,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	{
 		Boolean b = getUsername(args, i);
 		if(b == null) return new String[0];
-		if(!b) return UsernameCache.getMap().values().toArray(new String[0]);
+		if(!b) return (FTBUIntegration.instance == null) ? UsernameCache.getMap().values().toArray(new String[0]) : FTBUIntegration.instance.getOfflinePlayerNames();
 		FastList<String> l = new FastList<String>();
 		FastList<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
 		for(int j = 0; j < players.size(); j++)

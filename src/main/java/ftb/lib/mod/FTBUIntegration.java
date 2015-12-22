@@ -5,7 +5,7 @@ import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public abstract class FTBUIntegration
+public abstract class FTBUIntegration // FTBLIntegration
 {
 	public static FTBUIntegration instance = null;
 	
@@ -17,4 +17,5 @@ public abstract class FTBUIntegration
 	public abstract void onPlayerJoined(EntityPlayer player);
 	public abstract int getPlayerID(Object player);
 	public abstract FastList<String> getPlayerNames(boolean online);
+	public abstract String[] getOfflinePlayerNames();
 }

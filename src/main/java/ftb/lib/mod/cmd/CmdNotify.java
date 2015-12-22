@@ -4,7 +4,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.notification.*;
-import latmod.lib.LMStringUtils;
+import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
@@ -25,15 +25,14 @@ public class CmdNotify extends CommandLM
 		
 		if(extendedUsageInfo)
 		{
-			sb.append('\n');
-			sb.append("Example:");
+			sb.append("\nExample:\n");
 			
 			Notification n = new Notification("example_id", new ChatComponentText("Example title"), 6500);
 			n.setColor(0xFFFF0000);
 			n.setItem(new ItemStack(Items.apple, 10));
 			n.setMouseAction(new MouseAction(ClickAction.CMD, "/ftb_reload"));
 			n.setDesc(new ChatComponentText("Example description"));
-			sb.append(n.toJson());
+			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n));
 			
 			sb.append('\n');
 			sb.append("Only \"id\" and \"title\" are required, the rest is optional");
@@ -41,6 +40,15 @@ public class CmdNotify extends CommandLM
 		
 		return sb.toString();
 	}
+	
+	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+	{
+		if(i == 1) return new String[] { "{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}" };
+		return super.getTabStrings(ics, args, i);
+	}
+	
+	public Boolean getUsername(String[] args, int i)
+	{ return (i == 0) ? Boolean.TRUE : null; }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{

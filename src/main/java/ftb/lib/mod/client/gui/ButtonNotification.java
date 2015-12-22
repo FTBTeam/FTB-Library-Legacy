@@ -11,14 +11,12 @@ import net.minecraft.item.ItemStack;
 public class ButtonNotification extends ButtonLM
 {
 	public final ClientNotifications.Perm notification;
-	public final int index;
 	
-	public ButtonNotification(PanelNotifications p, ClientNotifications.Perm n)
+	public ButtonNotification(GuiNotifications g, ClientNotifications.Perm n)
 	{
-		super(p.gui, 0, 0, 0, 25);
+		super(g, 0, 0, 0, 24);
 		notification = n;
-		index = p.widgets.size();
-		posY += index * 26;
+		posY += g.buttonList.size() * 25;
 		title = n.notification.title.getFormattedText();
 		width = gui.getFontRenderer().getStringWidth(n.notification.title.getFormattedText());
 		if(n.notification.desc != null) width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.desc.getFormattedText()));
@@ -66,6 +64,7 @@ public class ButtonNotification extends ButtonLM
 		if(gui.mouseX < getAX() + width - 16) notification.onClicked();
 		ClientNotifications.Perm.list.remove(notification);
 		
+		gui.initLMGui();
 		gui.refreshWidgets();
 	}
 	

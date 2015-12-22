@@ -67,7 +67,7 @@ public class Notification
 			if(n.timer != 3000) o.add("timer", new JsonPrimitive(n.timer));
 			if(n.desc != null) o.add("desc", context.serialize(n.desc, IChatComponent.class));
 			if(n.item != null) o.add("item", context.serialize(n.item, ItemStack.class));
-			if(n.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(n.color));
+			if(n.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(LMColorUtils.getHex(n.color)));
 			if(n.mouse != null) o.add("mouse", context.serialize(n.mouse));
 			return o;
 		}
