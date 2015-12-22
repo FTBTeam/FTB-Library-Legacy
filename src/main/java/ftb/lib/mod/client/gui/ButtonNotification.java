@@ -1,11 +1,13 @@
 package ftb.lib.mod.client.gui;
 
+import java.util.List;
+
 import ftb.lib.api.gui.*;
 import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
 import net.minecraft.item.ItemStack;
 
 public class ButtonNotification extends ButtonLM
@@ -68,7 +70,7 @@ public class ButtonNotification extends ButtonLM
 		gui.refreshWidgets();
 	}
 	
-	public void addMouseOverText(FastList<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 		int ax = getAX();
 		if(mouseOver(ax, getAY()) && gui.mouseX >= ax + width - 16)

@@ -1,5 +1,7 @@
 package ftb.lib.mod.client.gui;
 
+import java.util.List;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -55,7 +57,7 @@ public class GuiSelectColorHSB extends GuiLM
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
 			
-			public void addMouseOverText(FastList<String> s)
+			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_cancel());
 				s.add(title);
@@ -69,7 +71,7 @@ public class GuiSelectColorHSB extends GuiLM
 			public void onButtonPressed(int b)
 			{ closeGui(true); }
 			
-			public void addMouseOverText(FastList<String> s)
+			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_accept());
 				s.add(title);

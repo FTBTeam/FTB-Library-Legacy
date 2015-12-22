@@ -62,6 +62,7 @@ public class ConfigRegistry
 			if(l.parentFile != null) l.parentFile.load();
 		}
 		
+		FTBLib.dev_logger.info("Loading override configs");
 		Map<String, ConfigGroup> overrides = LMJsonUtils.fromJsonFile(new File(FTBLib.folderModpack, "overrides.json"), new TypeToken<Map<String, ConfigGroup>>(){}.getType());
 		
 		if(overrides != null && !overrides.isEmpty())

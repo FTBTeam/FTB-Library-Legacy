@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui;
 
-import java.util.Comparator;
+import java.util.*;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.config.IConfigProvider;
@@ -390,7 +390,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 		
 		@SuppressWarnings("unchecked")
-		public void addMouseOverText(FastList<String> l)
+		public void addMouseOverText(List<String> l)
 		{
 			if(gui.mouseX < gui.fontRendererObj.getStringWidth(title) + 10)
 			{

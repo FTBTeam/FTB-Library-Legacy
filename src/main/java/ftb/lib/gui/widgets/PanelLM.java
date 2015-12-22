@@ -9,8 +9,8 @@ import latmod.lib.FastList;
 @SideOnly(Side.CLIENT)
 public abstract class PanelLM extends WidgetLM // GuiLM
 {
-	public final FastList<WidgetLM> widgets;
-	protected final FastList<PanelLM> childPanels;
+	public final List<WidgetLM> widgets;
+	protected final List<PanelLM> childPanels;
 	
 	public PanelLM(GuiLM g, int x, int y, int w, int h)
 	{
@@ -53,7 +53,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		addWidgets();
 	}
 	
-	public void addMouseOverText(FastList<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 		if(title != null) l.add(title); 
 		for(WidgetLM w : widgets)

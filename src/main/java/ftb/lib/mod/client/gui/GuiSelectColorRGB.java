@@ -1,5 +1,7 @@
 package ftb.lib.mod.client.gui;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.*;
@@ -12,7 +14,7 @@ import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.FTBLibModClient;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -50,7 +52,7 @@ public class GuiSelectColorRGB extends GuiLM
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
 			
-			public void addMouseOverText(FastList<String> s)
+			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_cancel());
 				s.add(title);
@@ -64,7 +66,7 @@ public class GuiSelectColorRGB extends GuiLM
 			public void onButtonPressed(int b)
 			{ closeGui(true); }
 			
-			public void addMouseOverText(FastList<String> s)
+			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_accept());
 				s.add(title);

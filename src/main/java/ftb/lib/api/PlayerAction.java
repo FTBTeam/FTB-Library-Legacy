@@ -1,9 +1,10 @@
 package ftb.lib.api;
 
+import java.util.List;
+
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibGuiEventHandler;
-import latmod.lib.FastList;
 
 public abstract class PlayerAction
 {
@@ -25,7 +26,7 @@ public abstract class PlayerAction
 	public abstract void onClicked(int playerID);
 	public abstract String getTitle();
 	
-	public void addMouseOverText(FastList<String> l) { }
+	public void addMouseOverText(List<String> l) { }
 	
 	public void render(int ax, int ay, double z)
 	{

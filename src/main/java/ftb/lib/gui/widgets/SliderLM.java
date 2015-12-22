@@ -1,11 +1,13 @@
 package ftb.lib.gui.widgets;
 
+import java.util.List;
+
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.*;
+import latmod.lib.MathHelperLM;
 
 @SideOnly(Side.CLIENT)
 public class SliderLM extends WidgetLM
@@ -70,7 +72,7 @@ public class SliderLM extends WidgetLM
 			isGrabbed = true;
 	}
 	
-	public void addMouseOverText(FastList<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 		if(displayMin == 0 && displayMax == 0) return;
 		String s = "" + (int)MathHelperLM.map(value, 0D, 1D, displayMin, displayMax);

@@ -1,9 +1,10 @@
 package ftb.lib.gui.widgets;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
 public class ButtonPopupMenu extends ButtonLM
@@ -52,7 +53,7 @@ public class ButtonPopupMenu extends ButtonLM
 		}
 	}
 	
-	public void addMouseOverText(FastList<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 	}
 }

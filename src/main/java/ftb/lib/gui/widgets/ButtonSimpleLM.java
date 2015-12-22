@@ -1,8 +1,9 @@
 package ftb.lib.gui.widgets;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
 public abstract class ButtonSimpleLM extends ButtonLM
@@ -14,7 +15,7 @@ public abstract class ButtonSimpleLM extends ButtonLM
 	public ButtonSimpleLM(GuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
-	public void addMouseOverText(FastList<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 	}
 	

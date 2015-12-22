@@ -1,8 +1,9 @@
 package ftb.lib.gui.widgets;
+import java.util.List;
+
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.FastList;
 
 @SideOnly(Side.CLIENT)
 public class WidgetLM
@@ -51,7 +52,7 @@ public class WidgetLM
 		return false;
 	}
 	
-	public void addMouseOverText(FastList<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 		if(title != null) l.add(title);
 	}
