@@ -30,7 +30,7 @@ public abstract class PlayerAction
 	
 	public void render(int ax, int ay, double z)
 	{
-		FTBLibClient.setTexture(icon.texture);
+		FTBLibClient.setTexture(icon);
 		GuiLM.drawTexturedRectD(ax, ay, z, 16, 16, icon.minU, icon.minV, icon.maxU, icon.maxV);
 	}
 	

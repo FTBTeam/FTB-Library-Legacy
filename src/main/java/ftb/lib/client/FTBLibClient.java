@@ -150,6 +150,9 @@ public class FTBLibClient // LatCoreMCClient
 		return r;
 	}
 	
+	public static void setTexture(TextureCoords tex)
+	{ if(tex != null) setTexture(tex.texture); }
+	
 	public static void setTexture(ResourceLocation tex)
 	{
 		if(mc.currentScreen instanceof GuiLM)

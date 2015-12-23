@@ -52,7 +52,7 @@ public class GuiSelectColorHSB extends GuiLM
 		xSize = 76;
 		ySize = 107;
 		
-		colorInit = new ButtonLM(this, 6, 5, col_tex.widthI, col_tex.heightI)
+		colorInit = new ButtonLM(this, 6, 5, col_tex.widthI(), col_tex.heightI())
 		{
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
@@ -66,7 +66,7 @@ public class GuiSelectColorHSB extends GuiLM
 		
 		colorInit.title = LMColorUtils.getHex(getInitRGB());
 		
-		colorCurrent = new ButtonLM(this, 49, 5, col_tex.widthI, col_tex.heightI)
+		colorCurrent = new ButtonLM(this, 49, 5, col_tex.widthI(), col_tex.heightI())
 		{
 			public void onButtonPressed(int b)
 			{ closeGui(true); }

@@ -32,7 +32,7 @@ public class ForgeConfigFile implements IConfigFile // ConfigFile
 				{
 					if(p.isBooleanList()) ;
 					else if(p.isIntList()) e = new ConfigEntryIntArray(s1, IntList.asList(p.getIntList()));
-					else if(p.isDoubleList()) e = new ConfigEntryDoubleArray(s1, Converter.toFloats(p.getDoubleList()));
+					else if(p.isDoubleList()) e = new ConfigEntryDoubleArray(s1, p.getDoubleList());
 					else e = new ConfigEntryStringArray(s1, new FastList<String>(p.getStringList()));
 				}
 				else

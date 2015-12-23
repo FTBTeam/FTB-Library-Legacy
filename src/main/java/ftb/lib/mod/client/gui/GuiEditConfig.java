@@ -263,7 +263,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(!isGroup)
 			{
-				String s = entry.getValue();
+				String s = entry.getAsString();
 				
 				int slen = gui.fontRendererObj.getStringWidth(s);
 				
@@ -401,7 +401,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 			}
 			
-			if(entry.getAsGroup() == null && gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getValue())) + 25))
+			if(entry.getAsGroup() == null && gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
 			{
 				if(entry.defaultValue != null) l.add(EnumChatFormatting.AQUA + "Def: " + entry.defaultValue);
 				if(entry.getMinValue() != null) l.add(EnumChatFormatting.AQUA + "Min: " + entry.getMinValue());

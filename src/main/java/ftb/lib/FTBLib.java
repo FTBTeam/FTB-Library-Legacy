@@ -41,6 +41,7 @@ public class FTBLib
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<String, UUID>().allowNullValues();
+	public static FTBUIntegration ftbu = null;
 	
 	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
 	{
@@ -93,7 +94,7 @@ public class FTBLib
 		new MessageSyncConfig(null).sendTo(null);
 		
 		EventFTBReload event = new EventFTBReload(Side.SERVER, sender, reloadClient);
-		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
+		if(ftbu != null) ftbu.onReloaded(event);
 		event.post();
 		
 		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
@@ -176,7 +177,7 @@ public class FTBLib
 	
 	public static FastList<String> getPlayerNames(boolean online)
 	{
-		if(FTBUIntegration.instance != null) return FTBUIntegration.instance.getPlayerNames(online);
+		if(ftbu != null) return new FastList<String>(ftbu.getPlayerNames(online));
 		FastList<String> l = new FastList<String>();
 		
 		if(online)

@@ -4,12 +4,12 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
-import ftb.lib.mod.FTBUIntegration;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
 import latmod.lib.FastList;
@@ -92,7 +92,7 @@ public class FTBLibGuiEventHandler
 			
 			buttons.clear();
 			if(!ClientNotifications.Perm.list.isEmpty()) buttons.add(notifications);
-			EventPlayerActionButtons event = new EventPlayerActionButtons((FTBUIntegration.instance == null) ? 0 : FTBUIntegration.instance.getPlayerID(FTBLibClient.mc.thePlayer), true, false);
+			EventPlayerActionButtons event = new EventPlayerActionButtons((FTBLib.ftbu == null) ? 0 : FTBLib.ftbu.getPlayerID(FTBLibClient.mc.thePlayer), true, false);
 			event.post();
 			buttons.addAll(event.actions);
 			if(button_settings.get()) buttons.add(settings);
@@ -119,7 +119,7 @@ public class FTBLibGuiEventHandler
 			if(creativeContainer == null || creativeContainer.func_147056_g() == CreativeTabs.tabInventory.getTabIndex())
 			{
 				PlayerAction b = buttons.getObj(e.button.id);
-				b.onClicked(FTBUIntegration.instance.getPlayerID(e.gui.mc.thePlayer));
+				b.onClicked(FTBLib.ftbu.getPlayerID(e.gui.mc.thePlayer));
 			}
 		}
 	}

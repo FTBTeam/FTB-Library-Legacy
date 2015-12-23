@@ -10,7 +10,7 @@ import ftb.lib.*;
 import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.*;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibFinals;
 import latmod.lib.*;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.*;
@@ -42,7 +42,7 @@ public class FTBLibClientEventHandler
 		FTBWorld.client = new FTBWorld(new UUID(0L, 0L), s);
 		
 		EventFTBWorldClient event = new EventFTBWorldClient(FTBWorld.client, true);
-		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onFTBWorldClient(event);
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
 		event.post();
 	}
 	
@@ -50,7 +50,7 @@ public class FTBLibClientEventHandler
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
 		EventFTBWorldClient event = new EventFTBWorldClient(null, false);
-		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onFTBWorldClient(event);
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
 		event.post();
 		FTBWorld.client = null;
 	}

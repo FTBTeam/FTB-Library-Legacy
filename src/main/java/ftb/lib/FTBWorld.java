@@ -7,7 +7,7 @@ import com.google.gson.*;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
-import ftb.lib.mod.*;
+import ftb.lib.mod.GameModesSerializer;
 import ftb.lib.mod.net.MessageSendGameMode;
 import latmod.lib.*;
 import net.minecraft.world.World;
@@ -82,7 +82,7 @@ public class FTBWorld
 		currentMode = modeID;
 		
 		EventFTBModeSet event = new EventFTBModeSet(side, gameModes, currentMode);
-		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onModeSet(event);
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onModeSet(event);
 		event.post();
 		
 		if(side.isServer())

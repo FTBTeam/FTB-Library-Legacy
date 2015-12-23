@@ -27,7 +27,7 @@ public class FTBLibEventHandler
 			FTBWorld.reloadGameModes();
 			FTBWorld.server = new FTBWorld(e.world);
 			EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, e.world);
-			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onFTBWorldServer(event);
+			if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 			event.post();
 			FTBLib.reload(FTBLib.getServer(), false, true);
 		}
@@ -42,7 +42,7 @@ public class FTBLibEventHandler
 			new MessageSyncConfig(ep).sendTo(ep);
 			new MessageSendWorldID(FTBWorld.server).sendTo(ep);
 			new MessageSendGameMode(FTBWorld.server.getMode()).sendTo(ep);
-			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onPlayerJoined(e.player);
+			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(e.player);
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class FTBLibEventHandler
 				}
 			}
 			
-			if(FTBUIntegration.instance != null) FTBUIntegration.instance.onServerTick(e.world);
+			if(FTBLib.ftbu != null) FTBLib.ftbu.onServerTick(e.world);
 		}
 	}
 }

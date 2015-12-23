@@ -5,11 +5,10 @@ import net.minecraft.util.ResourceLocation;
 
 public final class TextureCoords
 {
-	public static final TextureCoords nullTexture = new TextureCoords(null, 0, 0, 0, 0, 0, 0);
+	public static final TextureCoords nullTexture = new TextureCoords(null, 0D, 0D, 0D, 0D, 0D, 0D);
 	
 	public final ResourceLocation texture;
 	public final double posX, posY, width, height;
-	public final int posXI, posYI, widthI, heightI;
 	public final double textureW, textureH;
 	public final double minU, minV, maxU, maxV;
 	
@@ -22,11 +21,6 @@ public final class TextureCoords
 		posY = y;
 		width = w;
 		height = h;
-		posXI = (int)posX;
-		posYI = (int)posY;
-		widthI = (int)width;
-		heightI = (int)height;
-		
 		textureW = tw;
 		textureH = th;
 		
@@ -37,7 +31,22 @@ public final class TextureCoords
 	}
 	
 	public TextureCoords(ResourceLocation res, int x, int y, int w, int h)
-	{ this(res, x, y, w, h, 256, 256); }
+	{ this(res, x, y, w, h, 256D, 256D); }
+	
+	public static TextureCoords getSquareIcon(ResourceLocation res, int size)
+	{ return new TextureCoords(res, 0D, 0D, size, size, size, size); }
+	
+	public int posXI()
+	{ return (int)posX; }
+	
+	public int posYI()
+	{ return (int)posY; }
+	
+	public int widthI()
+	{ return (int)width; }
+	
+	public int heightI()
+	{ return (int)height; }
 	
 	public int hashCode()
 	{ return LMUtils.hashCode(texture, posX, posY, width, height); }
@@ -47,13 +56,13 @@ public final class TextureCoords
 		if(toString == null)
 		{
 			StringBuilder sb = new StringBuilder();
-			sb.append(posXI);
+			sb.append(posXI());
 			sb.append(',');
-			sb.append(posYI);
+			sb.append(posYI());
 			sb.append(',');
-			sb.append(widthI);
+			sb.append(widthI());
 			sb.append(',');
-			sb.append(heightI);
+			sb.append(heightI());
 			toString = sb.toString();
 		}
 		

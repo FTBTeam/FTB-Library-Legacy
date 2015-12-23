@@ -4,7 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
@@ -21,7 +21,7 @@ public class MessageReload extends MessageLM
 		FTBWorld.reloadGameModes();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
 		EventFTBReload event = new EventFTBReload(Side.CLIENT, ep, true);
-		if(FTBUIntegration.instance != null) FTBUIntegration.instance.onReloaded(event);
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		event.post();
 		FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient"));
 		return null;

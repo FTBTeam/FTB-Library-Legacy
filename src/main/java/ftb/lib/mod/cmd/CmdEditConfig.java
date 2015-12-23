@@ -101,7 +101,7 @@ public class CmdEditConfig extends CommandLM
 						
 						try
 						{
-							entry.setJson(LMJsonUtils.getJsonElement(json), LMJsonUtils.deserializationContext);
+							entry.setJson(LMJsonUtils.getJsonElement(json));
 							if(file.parentFile != null) file.parentFile.save();
 						}
 						catch(Exception ex)
@@ -111,7 +111,7 @@ public class CmdEditConfig extends CommandLM
 							return error;
 						}
 					}
-					else return new ChatComponentText(entry.getJson(LMJsonUtils.serializationContext).toString());
+					else return new ChatComponentText(entry.getJson().toString());
 				}
 			}
 		}
