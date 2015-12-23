@@ -43,6 +43,11 @@ public class FTBLibModClient extends FTBLibModCommon
 		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class));
 	}
 	
+	public void postInit()
+	{
+		ClientConfigRegistry.provider.save();
+	}
+	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }

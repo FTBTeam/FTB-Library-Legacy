@@ -12,7 +12,7 @@ public class FTBLibConfig
 	
 	public static void load()
 	{
-		configFile = new ConfigFile("ftblib", new File(FTBLib.folderLocal, "FTBLib.json"));
+		configFile = new ConfigFile("ftblib", new File(FTBLib.folderLocal, "ftblib.json"));
 		configFile.configGroup.setName("FTBLib");
 		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class));
 		FTBLibConfigCmd.name.addAll(FTBLibConfigCmd.Name.class);

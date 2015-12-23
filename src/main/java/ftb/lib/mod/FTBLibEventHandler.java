@@ -42,7 +42,7 @@ public class FTBLibEventHandler
 			new MessageSyncConfig(ep).sendTo(ep);
 			new MessageSendWorldID(FTBWorld.server).sendTo(ep);
 			new MessageSendGameMode(FTBWorld.server.getMode()).sendTo(ep);
-			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(e.player);
+			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep);
 		}
 	}
 	

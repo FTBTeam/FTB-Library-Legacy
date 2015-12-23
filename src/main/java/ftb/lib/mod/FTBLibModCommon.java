@@ -13,6 +13,10 @@ public class FTBLibModCommon // FTBLibModClient
 	{
 	}
 	
+	public void postInit()
+	{
+	}
+	
 	public boolean isShiftDown() { return false; }
 	public boolean isCtrlDown() { return false; }
 	public boolean isTabDown() { return false; }

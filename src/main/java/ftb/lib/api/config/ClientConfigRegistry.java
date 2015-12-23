@@ -10,8 +10,7 @@ import net.minecraft.client.resources.I18n;
 
 public final class ClientConfigRegistry
 {
-	private static File file;
-	public static ConfigFile configFile;
+	public static final ConfigGroup group = new ConfigGroup("client_config");
 	
 	@SideOnly(Side.CLIENT)
 	public static final IConfigProvider provider = new IConfigProvider()
@@ -23,21 +22,23 @@ public final class ClientConfigRegistry
 		{ return I18n.format(e.getFullID()); }
 		
 		public ConfigGroup getGroup()
-		{ return configFile.configGroup; }
+		{ return group; }
 		
 		public void save()
-		{ configFile.save(); }
+		{ group.parentFile.save(); }
 	};
 	
 	public static void init()
 	{
-		file = new File(FTBLib.folderLocal, "client/config.txt");
+		File file = new File(FTBLib.folderLocal, "client/config.txt");
 		if(file.exists()) LMFileUtils.delete(file); // TODO: Remove me
 		
 		file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/config.json"));
-		configFile = new ConfigFile("client_config", file);
+		ConfigFile configFile = new ConfigFile(group, file);
+		group.parentFile = configFile;
+		configFile.load();
 	}
 	
 	public static void add(ConfigGroup g)
-	{ configFile.add(g); }
+	{ group.add(g); provider.save(); }
 }
