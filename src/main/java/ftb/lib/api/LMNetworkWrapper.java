@@ -1,13 +1,13 @@
 package ftb.lib.api;
 
-import java.util.EnumMap;
-
 import cpw.mods.fml.common.network.*;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelFutureListener;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
+
+import java.util.EnumMap;
 
 public class LMNetworkWrapper // SimpleNetworkWrapper
 {

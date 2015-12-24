@@ -1,10 +1,10 @@
 package ftb.lib;
 
-import java.io.*;
-
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
+
+import java.io.*;
 
 @SuppressWarnings("all")
 public class LMNBTUtils

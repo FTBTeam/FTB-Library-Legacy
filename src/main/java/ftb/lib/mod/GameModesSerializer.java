@@ -1,12 +1,11 @@
 package ftb.lib.mod;
 
-import java.lang.reflect.Type;
-import java.util.*;
-
 import com.google.gson.*;
-
 import ftb.lib.api.GameModes;
 import latmod.lib.FastList;
+
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class GameModesSerializer implements JsonSerializer<GameModes>, JsonDeserializer<GameModes>
 {

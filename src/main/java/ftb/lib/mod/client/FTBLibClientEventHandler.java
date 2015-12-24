@@ -1,7 +1,5 @@
 package ftb.lib.mod.client;
 
-import java.util.UUID;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
@@ -16,6 +14,8 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler

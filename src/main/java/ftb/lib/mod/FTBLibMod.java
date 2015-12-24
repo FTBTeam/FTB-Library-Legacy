@@ -43,6 +43,7 @@ public class FTBLibMod
 	public void onPostInit(FMLPostInitializationEvent e)
 	{
 		ODItems.postInit();
+		proxy.postInit();
 	}
 	
 	@Mod.EventHandler

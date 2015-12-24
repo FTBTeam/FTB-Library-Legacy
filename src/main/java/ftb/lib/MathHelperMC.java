@@ -1,7 +1,5 @@
 package ftb.lib;
 
-import java.util.Random;
-
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 import latmod.lib.util.VecLM;
@@ -10,6 +8,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class MathHelperMC
 {

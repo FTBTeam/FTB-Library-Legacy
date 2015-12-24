@@ -1,15 +1,16 @@
 package ftb.lib.api.config;
 
-import java.io.File;
-
 import ftb.lib.FTBLib;
+import ftb.lib.mod.net.MessageReload;
 import latmod.lib.LMFileUtils;
 import latmod.lib.config.*;
 import net.minecraft.client.resources.I18n;
 
+import java.io.File;
+
 public final class ClientConfigRegistry
 {
-	public static final ConfigGroup group = new ConfigGroup("client_config");
+	private static final ConfigGroup group = new ConfigGroup("client_config");
 	
 	public static final IConfigProvider provider = new IConfigProvider()
 	{
@@ -23,7 +24,11 @@ public final class ClientConfigRegistry
 		{ return group; }
 		
 		public void save()
-		{ group.parentFile.save(); }
+		{
+			if(group.parentFile == null) init();
+			group.parentFile.save();
+			MessageReload.reloadClient();
+		}
 	};
 	
 	public static void init()
@@ -38,5 +43,5 @@ public final class ClientConfigRegistry
 	}
 	
 	public static void add(ConfigGroup g)
-	{ group.add(g); provider.save(); }
+	{ group.add(g); }
 }

@@ -1,12 +1,12 @@
 package ftb.lib.cmd;
 
-import java.util.*;
-
 import ftb.lib.FTBLib;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
+
+import java.util.*;
 
 public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 {

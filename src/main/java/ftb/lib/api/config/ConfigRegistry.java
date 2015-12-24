@@ -1,13 +1,12 @@
 package ftb.lib.api.config;
 
-import java.io.File;
-import java.util.Map;
-
 import com.google.gson.reflect.TypeToken;
-
 import ftb.lib.FTBLib;
 import latmod.lib.*;
 import latmod.lib.config.*;
+
+import java.io.File;
+import java.util.Map;
 
 public class ConfigRegistry
 {

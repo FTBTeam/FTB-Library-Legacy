@@ -1,12 +1,12 @@
 package ftb.lib.item;
 
-import java.util.List;
-
 import ftb.lib.*;
 import latmod.lib.FastList;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.List;
 
 public class ODItems
 {

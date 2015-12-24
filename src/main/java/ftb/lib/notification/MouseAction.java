@@ -1,11 +1,10 @@
 package ftb.lib.notification;
 
-import java.lang.reflect.Type;
-
 import com.google.gson.*;
-
 import latmod.lib.PrimitiveType;
 import net.minecraft.util.IChatComponent;
+
+import java.lang.reflect.Type;
 
 public class MouseAction
 {

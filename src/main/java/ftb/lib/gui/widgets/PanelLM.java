@@ -1,10 +1,10 @@
 package ftb.lib.gui.widgets;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
 import latmod.lib.FastList;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public abstract class PanelLM extends WidgetLM // GuiLM

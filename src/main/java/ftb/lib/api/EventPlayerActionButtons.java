@@ -1,8 +1,8 @@
 package ftb.lib.api;
 
-import java.util.List;
-
 import latmod.lib.FastList;
+
+import java.util.List;
 
 public class EventPlayerActionButtons extends EventLM
 {

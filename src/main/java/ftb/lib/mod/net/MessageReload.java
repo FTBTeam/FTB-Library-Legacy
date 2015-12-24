@@ -1,7 +1,7 @@
 package ftb.lib.mod.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.mod.FTBLibMod;
@@ -15,8 +15,13 @@ public class MessageReload extends MessageLM
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
-	
+
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
+	{ reloadClient(); return null; }
+
+	@SideOnly(Side.CLIENT)
+	public static void reloadClient()
 	{
 		FTBWorld.reloadGameModes();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
@@ -24,6 +29,5 @@ public class MessageReload extends MessageLM
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		event.post();
 		FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient"));
-		return null;
 	}
 }

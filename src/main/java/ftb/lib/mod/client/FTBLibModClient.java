@@ -1,9 +1,5 @@
 package ftb.lib.mod.client;
 
-import java.util.UUID;
-
-import org.lwjgl.input.Keyboard;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
@@ -19,6 +15,9 @@ import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.lwjgl.input.Keyboard;
+
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
@@ -36,7 +35,6 @@ public class FTBLibModClient extends FTBLibModCommon
 		EventBusHelper.register(FTBLibClientEventHandler.instance);
 		EventBusHelper.register(FTBLibGuiEventHandler.instance);
 		EventBusHelper.register(FTBLibRenderHandler.instance);
-		ClientConfigRegistry.init();
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class));
@@ -45,7 +43,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public void postInit()
 	{
-		ClientConfigRegistry.provider.save();
+		ClientConfigRegistry.init();
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }

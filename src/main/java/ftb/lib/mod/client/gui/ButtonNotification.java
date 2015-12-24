@@ -1,7 +1,5 @@
 package ftb.lib.mod.client.gui;
 
-import java.util.List;
-
 import ftb.lib.api.gui.*;
 import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
@@ -9,6 +7,8 @@ import ftb.lib.gui.widgets.ButtonLM;
 import ftb.lib.notification.ClientNotifications;
 import latmod.lib.LMColorUtils;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public class ButtonNotification extends ButtonLM
 {

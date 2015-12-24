@@ -1,10 +1,10 @@
 package ftb.lib.gui.widgets;
 
-import java.util.List;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class ButtonPopupMenu extends ButtonLM

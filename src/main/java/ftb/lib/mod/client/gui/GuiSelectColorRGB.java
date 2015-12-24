@@ -1,9 +1,5 @@
 package ftb.lib.mod.client.gui;
 
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumMCColor;
 import ftb.lib.api.config.ClientConfigRegistry;
@@ -16,6 +12,9 @@ import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.LMColorUtils;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectColorRGB extends GuiLM

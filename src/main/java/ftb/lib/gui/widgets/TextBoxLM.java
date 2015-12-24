@@ -1,11 +1,11 @@
 package ftb.lib.gui.widgets;
-import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
+import org.lwjgl.input.Keyboard;
 
 @SideOnly(Side.CLIENT)
 public class TextBoxLM extends WidgetLM

@@ -1,11 +1,11 @@
 package ftb.lib.mod;
 
-import java.util.UUID;
-
 import ftb.lib.api.gui.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class FTBLibModCommon // FTBLibModClient
 {

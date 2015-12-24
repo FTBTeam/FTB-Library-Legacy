@@ -1,8 +1,8 @@
 package ftb.lib;
 
-import java.util.Random;
-
 import net.minecraft.entity.player.EntityPlayerMP;
+
+import java.util.Random;
 
 public class AdminToken
 {

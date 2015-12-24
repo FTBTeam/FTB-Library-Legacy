@@ -1,10 +1,10 @@
 package ftb.lib.mod.config;
 
-import java.io.File;
-
 import ftb.lib.FTBLib;
 import ftb.lib.api.config.ConfigRegistry;
 import latmod.lib.config.*;
+
+import java.io.File;
 
 public class FTBLibConfig
 {

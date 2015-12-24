@@ -1,7 +1,5 @@
 package ftb.lib.mod.client.gui;
 
-import java.util.*;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.config.IConfigProvider;
 import ftb.lib.api.gui.*;
@@ -13,6 +11,8 @@ import latmod.lib.*;
 import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM implements IClientActionGui

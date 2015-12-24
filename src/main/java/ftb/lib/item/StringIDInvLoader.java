@@ -1,12 +1,12 @@
 package ftb.lib.item;
 
-import java.util.Arrays;
-
 import ftb.lib.LMNBTUtils;
 import latmod.lib.MapEntry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+
+import java.util.Arrays;
 
 public class StringIDInvLoader
 {

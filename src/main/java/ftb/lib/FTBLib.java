@@ -1,14 +1,7 @@
 package ftb.lib;
 
-import java.io.File;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
-import org.apache.logging.log4j.*;
-
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -34,6 +27,11 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
+import org.apache.logging.log4j.*;
+
+import java.io.File;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class FTBLib
 {

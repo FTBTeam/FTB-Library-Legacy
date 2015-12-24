@@ -1,13 +1,13 @@
 package ftb.lib.notification;
 
-import java.io.File;
-import java.net.URI;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.lib.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.gui.GuiChat;
+
+import java.io.File;
+import java.net.URI;
 
 public abstract class ClickAction extends FinalIDObject
 {

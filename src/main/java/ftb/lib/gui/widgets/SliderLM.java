@@ -1,13 +1,12 @@
 package ftb.lib.gui.widgets;
 
-import java.util.List;
-
-import org.lwjgl.input.Mouse;
-
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
 import latmod.lib.MathHelperLM;
+import org.lwjgl.input.Mouse;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class SliderLM extends WidgetLM

@@ -1,12 +1,5 @@
 package ftb.lib.client;
 
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.util.UUID;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.*;
@@ -29,6 +22,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClient // LatCoreMCClient
@@ -66,7 +65,9 @@ public class FTBLibClient // LatCoreMCClient
 	public static EntityPlayerSP getPlayerSP(UUID uuid)
 	{
 		//getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
-		
+
+		if(uuid == null) return mc.thePlayer;
+
 		if(mc.theWorld != null)
 		{
 			EntityPlayer ep = mc.theWorld.func_152378_a(uuid);

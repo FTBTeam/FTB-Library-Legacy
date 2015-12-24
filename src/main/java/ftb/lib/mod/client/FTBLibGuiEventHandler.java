@@ -1,7 +1,5 @@
 package ftb.lib.mod.client;
 
-import org.lwjgl.opengl.GL11;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
@@ -20,6 +18,7 @@ import net.minecraft.client.gui.inventory.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibGuiEventHandler

@@ -1,11 +1,10 @@
 package ftb.lib.item;
 
-import java.io.IOException;
-
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.*;
-
 import net.minecraft.item.*;
+
+import java.io.IOException;
 
 public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 {

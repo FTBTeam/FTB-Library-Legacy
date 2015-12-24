@@ -1,5 +1,4 @@
 package ftb.lib.item;
-import java.util.*;
 
 import ftb.lib.LMNBTUtils;
 import latmod.lib.FastMap;
@@ -16,6 +15,8 @@ import net.minecraft.tileentity.*;
 import net.minecraft.util.Facing;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
+
+import java.util.*;
 
 /** Made by LatvianModder */
 public class LMInvUtils

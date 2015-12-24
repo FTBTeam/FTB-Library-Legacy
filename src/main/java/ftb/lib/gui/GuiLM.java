@@ -1,8 +1,4 @@
 package ftb.lib.gui;
-import java.util.List;
-
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.*;
@@ -17,6 +13,10 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
@@ -131,10 +131,9 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	protected void keyTyped(char keyChar, int key)
 	{
+		if(mainPanel.keyPressed(key, keyChar)) return;
 		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode())
 			close(null);
-		
-		if(mainPanel.keyPressed(key, keyChar)) return;
 		super.keyTyped(keyChar, key);
 	}
 	
