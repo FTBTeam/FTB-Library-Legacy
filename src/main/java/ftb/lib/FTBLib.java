@@ -20,6 +20,7 @@ import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import ftb.lib.notification.Notification;
 import latmod.lib.*;
+import latmod.lib.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.*;
@@ -306,7 +307,7 @@ public class FTBLib
 			
 			try
 			{
-				String json = new LMURLConnection(LMURLConnection.Type.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
+				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
 				JsonElement e = LMJsonUtils.getJsonElement(json);
 				cachedUUIDs.put(s, LMStringUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
 			}

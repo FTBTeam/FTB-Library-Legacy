@@ -2,7 +2,6 @@ package ftb.lib.api.config;
 
 import java.io.File;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import latmod.lib.LMFileUtils;
 import latmod.lib.config.*;
@@ -12,7 +11,6 @@ public final class ClientConfigRegistry
 {
 	public static final ConfigGroup group = new ConfigGroup("client_config");
 	
-	@SideOnly(Side.CLIENT)
 	public static final IConfigProvider provider = new IConfigProvider()
 	{
 		public String getGroupTitle(ConfigGroup g)

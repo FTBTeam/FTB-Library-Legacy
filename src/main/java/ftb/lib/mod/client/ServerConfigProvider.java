@@ -1,11 +1,9 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.config.IConfigProvider;
 import ftb.lib.mod.net.MessageEditConfigResponse;
 import latmod.lib.config.*;
 
-@SideOnly(Side.CLIENT)
 public class ServerConfigProvider implements IConfigProvider
 {
 	public final long adminToken;
