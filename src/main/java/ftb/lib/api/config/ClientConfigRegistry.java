@@ -41,7 +41,8 @@ public final class ClientConfigRegistry
 		group.parentFile = configFile;
 		configFile.load();
 	}
-	
+
+	/** Do this before postInit() */
 	public static void add(ConfigGroup g)
 	{ group.add(g); }
 }

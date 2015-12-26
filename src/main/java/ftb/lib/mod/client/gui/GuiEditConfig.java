@@ -139,16 +139,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			ConfigGroup group = provider.getGroup();
-			group.sort(new Comparator<ConfigEntry>()
-			{
-				public int compare(ConfigEntry o1, ConfigEntry o2)
-				{
-					int i = Boolean.compare(o2.getAsGroup() != null, o1.getAsGroup() != null);
-					return (i == 0) ? o1.compareTo(o2) : i;
-				}
-			});
+			group.sort();
 			
-			for(ConfigEntry e : group.entries)
+			for(ConfigEntry e : group.entries())
 				addCE(null, e, 0);
 		}
 	}
@@ -170,7 +163,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
 			{
-				for(ConfigEntry e1 : g.entries)
+				for(ConfigEntry e1 : g.entries())
 					addCE(b, e1, level + 1);
 			}
 		}

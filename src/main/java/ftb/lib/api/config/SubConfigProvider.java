@@ -19,7 +19,7 @@ public class SubConfigProvider implements IConfigProvider
 	{ return parent.getEntryTitle(e); }
 	
 	public ConfigGroup getGroup()
-	{ return (ConfigGroup)parent.getGroup().entries.getObj(key); }
+	{ return (ConfigGroup)parent.getGroup().getGroup(key); }
 	
 	public void save()
 	{ parent.save(); }

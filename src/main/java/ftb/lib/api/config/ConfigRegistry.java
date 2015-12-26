@@ -20,7 +20,7 @@ public class ConfigRegistry
 		{
 			list.add(l);
 			
-			for(ConfigEntry e : l.entries)
+			for(ConfigEntry e : l.entries())
 			{
 				if(e.shouldSync())
 				{
