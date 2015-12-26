@@ -12,7 +12,7 @@ import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.*;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM implements IClientActionGui
