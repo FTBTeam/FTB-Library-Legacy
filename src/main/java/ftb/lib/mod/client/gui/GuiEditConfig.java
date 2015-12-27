@@ -139,10 +139,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			ConfigGroup group = provider.getGroup();
-			group.sort();
-			
-			for(ConfigEntry e : group.entries())
-				addCE(null, e, 0);
+
+			for(ConfigEntry entry : group.entryMap().values(null))
+				addCE(null, entry, 0);
 		}
 	}
 	
@@ -163,8 +162,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
 			{
-				for(ConfigEntry e1 : g.entries())
-					addCE(b, e1, level + 1);
+				for(ConfigEntry entry : g.entryMap().values(null))
+					addCE(b, entry, level + 1);
 			}
 		}
 	}
