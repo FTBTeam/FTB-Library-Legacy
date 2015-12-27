@@ -25,7 +25,7 @@ public class CmdEditConfig extends CommandLM
 		else if(i == 1)
 		{
 			ConfigGroup list = ConfigRegistry.list.getObj(args[0]);
-			if(list != null) return list.entryMap().getKeyStringArray();
+			if(list != null) return list.entryMap.getKeyStringArray();
 		}
 		else if(i == 2)
 		{
@@ -33,7 +33,7 @@ public class CmdEditConfig extends CommandLM
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup(args[1]);
-				if(group != null) return group.entryMap().getKeyStringArray();
+				if(group != null) return group.entryMap.getKeyStringArray();
 			}
 		}
 		

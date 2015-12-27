@@ -34,7 +34,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		title = p.getGroupTitle(p.getGroup());
 		
-		configEntryButtons = new FastList<ButtonConfigEntry>();
+		configEntryButtons = new FastList<>();
 		
 		configPanel = new PanelLM(this, 0, 0, 0, 20)
 		{
@@ -140,7 +140,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			configEntryButtons.clear();
 			ConfigGroup group = provider.getGroup();
 
-			for(ConfigEntry entry : group.entryMap().values(null))
+			for(ConfigEntry entry : group.entries())
 				addCE(null, entry, 0);
 		}
 	}
@@ -162,7 +162,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
 			{
-				for(ConfigEntry entry : g.entryMap().values(null))
+				for(ConfigEntry entry : g.entries())
 					addCE(b, entry, level + 1);
 			}
 		}
