@@ -11,7 +11,7 @@ import java.util.Map;
 public class ConfigRegistry
 {
 	public static final FastList<ConfigGroup> list = new FastList<ConfigGroup>();
-	public static final FastList<ConfigGroup> synced = new FastList<ConfigGroup>();
+	public static final ConfigGroup synced = new ConfigGroup("synced");
 	private static ConfigGroup temp = null;
 	
 	public static void add(ConfigGroup l)
@@ -19,28 +19,10 @@ public class ConfigRegistry
 		if(l != null && !list.contains(l))
 		{
 			list.add(l);
-			
-			for(ConfigEntry e : l.entries())
-			{
-				if(e.shouldSync())
-				{
-					ConfigGroup l1 = ConfigRegistry.synced.getObj(e.parentGroup.ID);
-					if(l1 == null)
-					{
-						l1 = new ConfigGroup(e.parentGroup.ID);
-						ConfigRegistry.synced.add(l1);
-					}
-					
-					ConfigGroup g1 = l1.getGroup(e.parentGroup.ID);
-					if(g1 == null)
-					{
-						g1 = new ConfigGroup(e.parentGroup.ID);
-						l1.add(g1);
-					}
-					
-					g1.add(e);
-				}
-			}
+
+			ConfigGroup g = l.generateSynced(false);
+			if(!g.entries().isEmpty())
+				synced.add(g, false);
 		}
 	}
 	

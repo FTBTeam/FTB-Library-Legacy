@@ -14,8 +14,8 @@ public class FTBLibConfig
 	{
 		configFile = new ConfigFile("ftblib", new File(FTBLib.folderLocal, "ftblib.json"));
 		configFile.configGroup.setName("FTBLib");
-		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class));
-		FTBLibConfigCmd.name.addAll(FTBLibConfigCmd.Name.class);
+		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class, null, false));
+		FTBLibConfigCmd.name.addAll(FTBLibConfigCmd.Name.class, null, false);
 		
 		ConfigRegistry.add(configFile);
 		configFile.load();

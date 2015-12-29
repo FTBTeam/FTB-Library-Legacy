@@ -37,8 +37,8 @@ public class FTBLibModClient extends FTBLibModCommon
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
-		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class));
-		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class));
+		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
+		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class, null, false));
 	}
 	
 	public void postInit()

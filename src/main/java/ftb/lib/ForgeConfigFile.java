@@ -45,12 +45,12 @@ public class ForgeConfigFile implements IConfigFile // ConfigFile
 				
 				if(e != null)
 				{
-					g.add(e);
+					g.add(e, false);
 					e.setInfo(p.comment);
 				}
 			}
 			
-			configGroup.add(g);
+			configGroup.add(g, false);
 		}
 	}
 	

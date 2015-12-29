@@ -44,5 +44,5 @@ public final class ClientConfigRegistry
 
 	/** Do this before postInit() */
 	public static void add(ConfigGroup g)
-	{ group.add(g); }
+	{ group.add(g, false); }
 }

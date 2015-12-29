@@ -3,7 +3,7 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.mod.FTBLibFinals;
 import latmod.lib.ByteCount;
 import latmod.lib.config.ConfigGroup;
@@ -16,19 +16,9 @@ public class MessageSyncConfig extends MessageLM
 	public MessageSyncConfig(EntityPlayerMP ep)
 	{
 		this();
-		
-		int count = 0;
-		io.writeShort(ConfigRegistry.synced.size());
-		
-		for(int i = 0; i < ConfigRegistry.synced.size(); i++)
-		{
-			ConfigGroup l = ConfigRegistry.synced.get(i);
-			io.writeUTF(l.toString());
-			l.write(io);
-			count += l.getTotalEntryCount();
-		}
-		
-		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Sent " + count + " synced config values");
+
+		ConfigRegistry.synced.write(io);
+		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -36,24 +26,10 @@ public class MessageSyncConfig extends MessageLM
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
-		int count = 0;
-		
-		int s = io.readUnsignedShort();
-		
-		for(int i = 0; i < s; i++)
-		{
-			String id = io.readUTF();
-			ConfigGroup l = new ConfigGroup(id);
-			l.read(io);
-			count += l.getTotalEntryCount();
-			
-			ConfigGroup list = ConfigRegistry.list.getObj(l);
-			if(list != null) list.loadFromGroup(l);
-			else new EventSyncedConfig(l).post();
-		}
-		
-		FTBLib.logger.info("Received " + count + " synced config values");
-		
+		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.ID);
+		synced.read(io);
+		ConfigRegistry.synced.loadFromGroup(synced);
+		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config RX: " + synced.getJson());
 		return null;
 	}
 }
