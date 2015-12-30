@@ -10,25 +10,24 @@ import java.util.Map;
 
 public class ConfigRegistry
 {
-	public static final FastList<ConfigGroup> list = new FastList<ConfigGroup>();
+	public static final FastMap<String, Provider> map = new FastMap<>();
 	public static final ConfigGroup synced = new ConfigGroup("synced");
 	private static ConfigGroup temp = null;
 	
-	public static void add(ConfigGroup l)
+	public static void add(Provider p)
+	{ if(p != null) map.put(p.getID(), p); }
+	
+	public static void add(ConfigFile e)
 	{
-		if(l != null && !list.contains(l))
+		if(e != null)
 		{
-			list.add(l);
-
-			ConfigGroup g = l.generateSynced(false);
+			add(new ConfigFileProvider(e));
+			ConfigGroup g = e.configGroup.generateSynced(false);
 			if(!g.entries().isEmpty())
 				synced.add(g, false);
 		}
 	}
-	
-	public static void add(ConfigFile e)
-	{ if(e != null) add(e.configGroup); }
-	
+
 	public static void setTemp(ConfigGroup g)
 	{ temp = g; }
 	
@@ -37,10 +36,10 @@ public class ConfigRegistry
 	
 	public static void reload()
 	{
-		for(int i = 0; i < list.size(); i++)
+		for(Provider p : map.values())
 		{
-			ConfigGroup l = list.get(i);
-			if(l.parentFile != null) l.parentFile.load();
+			if(p instanceof ConfigFileProvider)
+				((ConfigFileProvider)p).file.load();
 		}
 		
 		FTBLib.dev_logger.info("Loading override configs");
@@ -53,7 +52,8 @@ public class ConfigRegistry
 				ConfigGroup ol = overrides.get(key);
 				
 				int result;
-				ConfigGroup o = list.getObj(key);
+				Provider p = map.get(key);
+				ConfigGroup o = (p == null) ? null : p.getGroup();
 				if(o != null && (result = o.loadFromGroup(ol)) > 0)
 				{
 					FTBLib.dev_logger.info("Config overriden: " + result);
@@ -62,5 +62,25 @@ public class ConfigRegistry
 				else FTBLib.dev_logger.info("Didnt load anything from " + ol);
 			}
 		}
+	}
+
+	public static interface Provider
+	{
+		public String getID();
+		public ConfigGroup getGroup();
+	}
+
+	public static class ConfigFileProvider implements Provider
+	{
+		public final ConfigFile file;
+
+		public ConfigFileProvider(ConfigFile f)
+		{ file = f; }
+
+		public String getID()
+		{ return file.ID; }
+
+		public ConfigGroup getGroup()
+		{ return file.configGroup; }
 	}
 }

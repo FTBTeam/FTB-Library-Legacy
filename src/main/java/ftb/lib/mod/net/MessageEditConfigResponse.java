@@ -32,7 +32,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		boolean isTemp = io.readBoolean();
 		String id = io.readUTF();
 		
-		ConfigGroup group0 = isTemp ? ConfigRegistry.getTemp(true) : ConfigRegistry.list.getObj(id);
+		ConfigGroup group0 = isTemp ? ConfigRegistry.getTemp(true) : ConfigRegistry.map.get(id).getGroup();
 		
 		if(group0 != null)
 		{
