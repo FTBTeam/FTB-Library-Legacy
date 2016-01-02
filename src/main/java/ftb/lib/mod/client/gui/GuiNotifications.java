@@ -8,6 +8,8 @@ import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
+import java.util.Collections;
+
 @SideOnly(Side.CLIENT)
 public class GuiNotifications extends GuiLM
 {
@@ -28,7 +30,7 @@ public class GuiNotifications extends GuiLM
 		
 		buttonList.clear();
 		
-		ClientNotifications.Perm.list.sort(null);
+		Collections.sort(ClientNotifications.Perm.list, null);
 		
 		int s = Math.min(ClientNotifications.Perm.list.size(), 7);
 		

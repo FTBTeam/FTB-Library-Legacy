@@ -47,6 +47,10 @@ public class CmdEditConfig extends CommandLM
 		if(args.length == 1 && ics instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+
+			if(!ConfigRegistry.map.containsKey(args[0]))
+				return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
+
 			ConfigGroup group = ConfigRegistry.map.get(args[0]).getGroup();
 
 			if(group != null && group.parentFile != null)
@@ -55,7 +59,7 @@ public class CmdEditConfig extends CommandLM
 				return null;
 			}
 			
-			return error(new ChatComponentText("Invalid file: " + args[0] + "!"));
+			return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
 		}
 		
 		checkArgs(args, 3); // file, group, entry, value...
