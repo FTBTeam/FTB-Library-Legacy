@@ -169,11 +169,11 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void addClientTickCallback(ClientTickCallback e)
 	{ FTBLibRenderHandler.callbacks.add(e); }
-	
+
 	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
 	{
 		if(entityItem == null) entityItem = new EntityItem(w);
-		
+
 		entityItem.worldObj = w;
 		entityItem.hoverStart = 0F;
 		entityItem.setEntityItemStack(is);

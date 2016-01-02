@@ -27,8 +27,8 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
 	public static final ConfigEntryBool debug_info = new ConfigEntryBool("debug_info", false);
 	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
-	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<EnumScreen>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
-	
+	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
+
 	public void preInit()
 	{
 		JsonHelper.initClient();
