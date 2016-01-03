@@ -39,7 +39,7 @@ public class FTBLib
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
-	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<String, UUID>().allowNullValues();
+	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<>();
 	public static FTBUIntegration ftbu = null;
 	
 	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
@@ -66,6 +66,7 @@ public class FTBLib
 	public static File folderMinecraft;
 	public static File folderModpack;
 	public static File folderLocal;
+	public static File folderWorld = null;
 	
 	public static void init(File configFolder)
 	{
@@ -96,10 +97,10 @@ public class FTBLib
 		if(ftbu != null) ftbu.onReloaded(event);
 		event.post();
 		
-		if(printMessage) FTBLib.printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
+		if(printMessage) printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
 		if(reloadClient) new MessageReload().sendTo(null);
 		
-		FTBWorld.server.setMode(Side.SERVER, FTBWorld.server.getMode(), true);
+		FTBWorld.server.setMode(FTBWorld.server.getMode(), true);
 	}
 	
 	public static final Configuration loadConfig(String s)
@@ -137,7 +138,7 @@ public class FTBLib
 	@SuppressWarnings("unchecked")
 	public static FastList<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
-		FastList<EntityPlayerMP> l = new FastList<EntityPlayerMP>();
+		FastList<EntityPlayerMP> l = new FastList<>();
 		if(hasOnlinePlayers())
 		{
 			l.addAll(getServer().getConfigurationManager().playerEntityList);
@@ -148,7 +149,7 @@ public class FTBLib
 	
 	public static FastMap<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
 	{
-		FastMap<UUID, EntityPlayerMP> m = new FastMap<UUID, EntityPlayerMP>();
+		FastMap<UUID, EntityPlayerMP> m = new FastMap<>();
 		
 		if(!hasOnlinePlayers()) return m;
 		
@@ -176,12 +177,12 @@ public class FTBLib
 	
 	public static FastList<String> getPlayerNames(boolean online)
 	{
-		if(ftbu != null) return new FastList<String>(ftbu.getPlayerNames(online));
-		FastList<String> l = new FastList<String>();
+		if(ftbu != null) return new FastList<>(ftbu.getPlayerNames(online));
+		FastList<String> l = new FastList<>();
 		
 		if(online)
 		{
-			FastList<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
+			FastList<EntityPlayerMP> players = getAllOnlinePlayers(null);
 			for(int j = 0; j < players.size(); j++)
 				l.add(players.get(j).getCommandSenderName());
 		}
@@ -263,7 +264,7 @@ public class FTBLib
 			epM.openContainer.addCraftingToCrafters(epM);
 			new MessageOpenGuiTile((TileEntity)t, data, epM.currentWindowId).sendTo(epM);
 		}
-		else if(!FTBLib.isServer())
+		else if(!isServer())
 			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
 	}
 	
@@ -271,7 +272,7 @@ public class FTBLib
 	{ if(c.maxTick == 0) c.onCallback(); else FTBLibEventHandler.pendingCallbacks.add(c); }
 
 	public static boolean isOP(GameProfile p)
-	{ return FTBLib.getServer().getConfigurationManager().func_152596_g(p); }
+	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152596_g(p); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
@@ -279,8 +280,8 @@ public class FTBLib
 	@SuppressWarnings("all")
 	public static FastList<ICommand> getAllCommands(ICommandSender sender)
 	{
-		FastList<ICommand> commands = new FastList<ICommand>();
-		FastList<String> cmdIDs = new FastList<String>();
+		FastList<ICommand> commands = new FastList<>();
+		FastList<String> cmdIDs = new FastList<>();
 		
 		for(Object o : getServer().getCommandManager().getPossibleCommands(sender))
 		{
@@ -297,21 +298,23 @@ public class FTBLib
 	
 	public static UUID getPlayerID(String s)
 	{
-		s = s.trim().toLowerCase();
+		if(s == null || s.isEmpty()) return null;
+
+		String key = s.trim().toLowerCase();
 		
-		if(!cachedUUIDs.containsKey(s))
+		if(!cachedUUIDs.containsKey(key))
 		{
-			cachedUUIDs.put(s, null);
+			cachedUUIDs.put(key, null);
 			
 			try
 			{
 				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
 				JsonElement e = LMJsonUtils.getJsonElement(json);
-				cachedUUIDs.put(s, LMStringUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
+				cachedUUIDs.put(key, LMStringUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }
 		}
 		
-		return cachedUUIDs.get(s);
+		return cachedUUIDs.get(key);
 	}
 }

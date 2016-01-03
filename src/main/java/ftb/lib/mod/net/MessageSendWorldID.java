@@ -1,6 +1,7 @@
 package ftb.lib.mod.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.relauncher.Side;
 import ftb.lib.FTBWorld;
 import ftb.lib.api.*;
 import latmod.lib.ByteCount;
@@ -30,7 +31,7 @@ public class MessageSendWorldID extends MessageLM
 		String ids = io.readUTF();
 		
 		if(FTBWorld.client == null || !FTBWorld.client.getWorldID().equals(id))
-			FTBWorld.client = new FTBWorld(id, ids);
+			FTBWorld.client = new FTBWorld(Side.CLIENT, id, ids);
 		new EventFTBWorldClient(FTBWorld.client, false).post();
 		return null;
 	}

@@ -17,7 +17,9 @@ public class MessageSyncConfig extends MessageLM
 	{
 		this();
 
-		ConfigRegistry.synced.write(io);
+		try { ConfigRegistry.synced.write(io); }
+		catch(Exception ex) {}
+
 		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
 	}
 	
@@ -27,7 +29,10 @@ public class MessageSyncConfig extends MessageLM
 	public IMessage onMessage(MessageContext ctx)
 	{
 		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.ID);
-		synced.read(io);
+
+		try { synced.write(io); }
+		catch(Exception ex) {}
+
 		ConfigRegistry.synced.loadFromGroup(synced);
 		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config RX: " + synced.getJson());
 		return null;

@@ -6,7 +6,6 @@ import ftb.lib.api.*;
 import ftb.lib.mod.GameModesSerializer;
 import ftb.lib.mod.net.MessageSendGameMode;
 import latmod.lib.*;
-import net.minecraft.world.World;
 
 import java.io.File;
 import java.util.*;
@@ -17,7 +16,8 @@ public class FTBWorld
 	
 	public static FTBWorld get(Side s)
 	{ return s.isServer() ? server : client; }
-	
+
+	public final Side side;
 	private final UUID worldID;
 	private final String worldIDS;
 	private String currentMode = "";
@@ -25,18 +25,20 @@ public class FTBWorld
 	private File currentModeFile = null;
 	private File currentWorldIDFile = null;
 	
-	public FTBWorld(UUID id, String ids)
+	public FTBWorld(Side s, UUID id, String ids)
 	{
+		side = s;
 		worldID = id;
 		worldIDS = ids;
 	}
 	
-	public FTBWorld(World w)
+	public FTBWorld()
 	{
+		side = Side.SERVER;
 		currentMode = "";
 		try
 		{
-			currentModeFile = new File(w.getSaveHandler().getWorldDirectory(), "ftb_gamemode.txt");
+			currentModeFile = new File(FTBLib.folderWorld, "ftb_gamemode.txt");
 			currentMode = LMFileUtils.loadAsText(currentModeFile).trim();
 		}
 		catch(Exception ex) { /*ex.printStackTrace();*/ }
@@ -47,15 +49,15 @@ public class FTBWorld
 		for(String s : gameModes.allModes)
 			new File(FTBLib.folderModpack, s).mkdir();
 		
-		setMode(Side.SERVER, currentMode, true);
+		setMode(currentMode, true);
 		
 		FTBLib.logger.info("Current Mode: " + getMode());
 		
 		UUID worldID0 = null;
 		try
 		{
-			currentWorldIDFile = new File(w.getSaveHandler().getWorldDirectory(), "ftb_worldID.dat");
-			worldID0 = LMStringUtils.fromString(LMFileUtils.loadAsText(currentWorldIDFile).trim());
+			currentWorldIDFile = new File(FTBLib.folderWorld, "ftb_worldID.dat");
+			if(currentWorldIDFile.exists()) worldID0 = LMStringUtils.fromString(LMFileUtils.loadAsText(currentWorldIDFile).trim());
 		}
 		catch(Exception ex) { /*ex.printStackTrace();*/ }
 		
@@ -71,7 +73,7 @@ public class FTBWorld
 	}
 	
 	/** 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true) */
-	public int setMode(Side side, String modeID, boolean forced)
+	public int setMode(String modeID, boolean forced)
 	{
 		if(modeID == null) return 1;
 		modeID = modeID.trim();
@@ -144,7 +146,7 @@ public class FTBWorld
 		gameModes = LMJsonUtils.fromJsonFile(gameModesGson, gamemodesJsonFile, GameModes.class);
 		if(gameModes == null)
 		{
-			List<String> list = new FastList<String>();
+			List<String> list = new FastList<>();
 			list.add("default");
 			list = Collections.unmodifiableList(list);
 			gameModes = new GameModes(list, list.get(0), "common", new HashMap<String, String>());

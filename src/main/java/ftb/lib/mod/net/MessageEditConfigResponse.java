@@ -18,7 +18,9 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		io.writeLong(provider.adminToken);
 		io.writeBoolean(provider.isTemp);
 		io.writeUTF(provider.group.ID);
-		provider.group.write(io);
+
+		try { provider.group.write(io); }
+		catch(Exception e) { }
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -37,8 +39,10 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		if(group0 != null)
 		{
 			ConfigGroup group = new ConfigGroup(id);
-			group.read(io);
-			
+
+			try { group.read(io); }
+			catch(Exception e) { }
+
 			if(group0.loadFromGroup(group) > 0)
 			{
 				if(group0.parentFile != null) group0.parentFile.save();

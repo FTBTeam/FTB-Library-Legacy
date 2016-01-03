@@ -10,6 +10,7 @@ public interface FTBUIntegration // FTBLIntegration
 	public void onModeSet(EventFTBModeSet e);
 	public void onFTBWorldServer(EventFTBWorldServer e);
 	public void onFTBWorldClient(EventFTBWorldClient e);
+	public void onFTBWorldServerClosed();
 	public void onServerTick(World w);
 	public void onPlayerJoined(EntityPlayerMP player);
 	public int getPlayerID(Object player);

@@ -1,13 +1,13 @@
 package ftb.lib.api;
 
 import ftb.lib.FTBWorld;
-import net.minecraft.world.World;
+import net.minecraft.server.MinecraftServer;
 
 public class EventFTBWorldServer extends EventLM
 {
 	public final FTBWorld world;
-	public final World worldMC;
+	public final MinecraftServer server;
 	
-	public EventFTBWorldServer(FTBWorld w, World w1)
-	{ world = w; worldMC = w1; }
+	public EventFTBWorldServer(FTBWorld w, MinecraftServer s)
+	{ world = w; server = s; }
 }

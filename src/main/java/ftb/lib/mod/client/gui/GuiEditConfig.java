@@ -395,9 +395,12 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry.getAsGroup() == null && gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
 			{
-				if(entry.defaultValue != null) l.add(EnumChatFormatting.AQUA + "Def: " + entry.defaultValue);
-				if(entry.getMinValue() != null) l.add(EnumChatFormatting.AQUA + "Min: " + entry.getMinValue());
-				if(entry.getMaxValue() != null) l.add(EnumChatFormatting.AQUA + "Max: " + entry.getMaxValue());
+				String def = entry.getDefValue();
+				String min = entry.getMinValue();
+				String max = entry.getMaxValue();
+				if(def != null) l.add(EnumChatFormatting.AQUA + "Def: " + def);
+				if(min != null) l.add(EnumChatFormatting.AQUA + "Min: " + min);
+				if(max != null) l.add(EnumChatFormatting.AQUA + "Max: " + max);
 			}
 		}
 	}

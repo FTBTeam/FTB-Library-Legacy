@@ -19,7 +19,9 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		io.writeLong(t);
 		io.writeBoolean(temp);
 		io.writeUTF(group.ID);
-		group.writeExtended(io);
+
+		try { group.writeExtended(io); }
+		catch(Exception e) { }
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -31,9 +33,11 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		long token = io.readLong();
 		boolean temp = io.readBoolean();
 		String id = io.readUTF();
-		
 		ConfigGroup group = new ConfigGroup(id);
-		group.readExtended(io);
+
+		try { group.readExtended(io); }
+		catch(Exception e) { }
+
 		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(null, new ServerConfigProvider(token, temp, group)));
 		return null;
 	}

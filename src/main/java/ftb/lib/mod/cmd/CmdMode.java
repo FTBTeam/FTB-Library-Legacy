@@ -1,6 +1,5 @@
 package ftb.lib.mod.cmd;
 
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.FTBWorld;
 import ftb.lib.api.GameModes;
 import ftb.lib.cmd.*;
@@ -38,7 +37,7 @@ public class CmdMode extends CommandSubLM
 			
 			IChatComponent c;
 			
-			int i = FTBWorld.server.setMode(Side.SERVER, args[0], false);
+			int i = FTBWorld.server.setMode(args[0], false);
 			
 			if(i == 1)
 			{

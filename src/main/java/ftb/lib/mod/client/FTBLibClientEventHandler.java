@@ -39,7 +39,7 @@ public class FTBLibClientEventHandler
 	{
 		ServerData sd = FTBLibClient.mc.func_147104_D();
 		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
-		FTBWorld.client = new FTBWorld(new UUID(0L, 0L), s);
+		FTBWorld.client = new FTBWorld(Side.CLIENT, new UUID(0L, 0L), s);
 		
 		EventFTBWorldClient event = new EventFTBWorldClient(FTBWorld.client, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
