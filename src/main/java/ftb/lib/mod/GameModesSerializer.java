@@ -2,7 +2,6 @@ package ftb.lib.mod;
 
 import com.google.gson.*;
 import ftb.lib.api.GameModes;
-import latmod.lib.FastList;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -43,14 +42,14 @@ public class GameModesSerializer implements JsonSerializer<GameModes>, JsonDeser
 		
 		String def = o.get("default").getAsString();
 		String common = o.get("common").getAsString();
-		
-		List<String> allModes = new FastList<String>();
+
+		List<String> allModes = new ArrayList<>();
 		JsonArray a = o.get("modes").getAsJsonArray();
 		for(int i = 0; i < a.size(); i++)
 			allModes.add(a.get(i).getAsString());
 		allModes.remove(common);
 		
-		HashMap<String, String> custom = new HashMap<String, String>();
+		HashMap<String, String> custom = new HashMap<>();
 		
 		if(o.has("custom"))
 		{

@@ -86,11 +86,11 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		Boolean b = getUsername(args, i);
 		if(b == null) return new String[0];
 		if(FTBLib.ftbu != null) return FTBLib.ftbu.getPlayerNames(b);
-		FastList<String> l = new FastList<String>();
-		FastList<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
+		ArrayList<String> l = new ArrayList<>();
+		List<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
 		for(int j = 0; j < players.size(); j++)
 			l.add(players.get(j).getCommandSenderName());
-		return l.toStringArray();
+		return LMListUtils.toStringArray(l);
 	}
 	
 	public boolean sortStrings(ICommandSender ics, String args[], int i)

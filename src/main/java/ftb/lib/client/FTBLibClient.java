@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibRenderHandler;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.*;
@@ -27,13 +27,13 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.File;
 import java.nio.ByteBuffer;
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClient // LatCoreMCClient
 {
 	public static final Minecraft mc = FMLClientHandler.instance().getClient();
-	private static final FastMap<String, ResourceLocation> cachedSkins = new FastMap<String, ResourceLocation>();
+	private static final HashMap<String, ResourceLocation> cachedSkins = new HashMap<>();
 	public static IIcon blockNullIcon, unknownItemIcon;
 	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
 	private static float lastBrightnessX, lastBrightnessY;

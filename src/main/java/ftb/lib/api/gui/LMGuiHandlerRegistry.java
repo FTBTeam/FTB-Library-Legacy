@@ -1,10 +1,10 @@
 package ftb.lib.api.gui;
 
-import latmod.lib.FastMap;
+import java.util.HashMap;
 
 public class LMGuiHandlerRegistry
 {
-	private static final FastMap<String, LMGuiHandler> map = new FastMap<String, LMGuiHandler>();
+	private static final HashMap<String, LMGuiHandler> map = new HashMap<>();
 	
 	public static void add(LMGuiHandler h)
 	{ if(h != null && !map.containsKey(h.ID)) map.put(h.ID, h); }

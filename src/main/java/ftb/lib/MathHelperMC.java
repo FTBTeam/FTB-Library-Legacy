@@ -1,7 +1,7 @@
 package ftb.lib;
 
 import ftb.lib.mod.FTBLibMod;
-import latmod.lib.*;
+import latmod.lib.MathHelperLM;
 import latmod.lib.util.VecLM;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
-import java.util.Random;
+import java.util.*;
 
 public class MathHelperMC
 {
@@ -85,7 +85,7 @@ public class MathHelperMC
 		return current;
 	}
 	
-	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, FastList<AxisAlignedBB> boxes)
+	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, List<AxisAlignedBB> boxes)
 	{
 		AxisAlignedBB[] boxesa = new AxisAlignedBB[boxes.size()];
 		for(int i = 0; i < boxesa.length; i++) boxesa[i] = boxes.get(i).copy();

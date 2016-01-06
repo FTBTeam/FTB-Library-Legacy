@@ -30,7 +30,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import org.apache.logging.log4j.*;
 
 import java.io.File;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class FTBLib
@@ -39,7 +39,7 @@ public class FTBLib
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
-	private static final FastMap<String, UUID> cachedUUIDs = new FastMap<>();
+	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
 	
 	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
@@ -136,9 +136,9 @@ public class FTBLib
 	{ return !getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
 	@SuppressWarnings("unchecked")
-	public static FastList<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
+	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
-		FastList<EntityPlayerMP> l = new FastList<>();
+		ArrayList<EntityPlayerMP> l = new ArrayList<>();
 		if(hasOnlinePlayers())
 		{
 			l.addAll(getServer().getConfigurationManager().playerEntityList);
@@ -147,9 +147,9 @@ public class FTBLib
 		return l;
 	}
 	
-	public static FastMap<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
+	public static Map<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
 	{
-		FastMap<UUID, EntityPlayerMP> m = new FastMap<>();
+		HashMap<UUID, EntityPlayerMP> m = new HashMap<>();
 		
 		if(!hasOnlinePlayers()) return m;
 		
@@ -175,14 +175,14 @@ public class FTBLib
 		return null;
 	}
 	
-	public static FastList<String> getPlayerNames(boolean online)
+	public static List<String> getPlayerNames(boolean online)
 	{
-		if(ftbu != null) return new FastList<>(ftbu.getPlayerNames(online));
-		FastList<String> l = new FastList<>();
+		if(ftbu != null) return Arrays.asList(ftbu.getPlayerNames(online));
+		ArrayList<String> l = new ArrayList<>();
 		
 		if(online)
 		{
-			FastList<EntityPlayerMP> players = getAllOnlinePlayers(null);
+			List<EntityPlayerMP> players = getAllOnlinePlayers(null);
 			for(int j = 0; j < players.size(); j++)
 				l.add(players.get(j).getCommandSenderName());
 		}
@@ -278,10 +278,10 @@ public class FTBLib
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
 	
 	@SuppressWarnings("all")
-	public static FastList<ICommand> getAllCommands(ICommandSender sender)
+	public static List<ICommand> getAllCommands(ICommandSender sender)
 	{
-		FastList<ICommand> commands = new FastList<>();
-		FastList<String> cmdIDs = new FastList<>();
+		ArrayList<ICommand> commands = new ArrayList<>();
+		ArrayList<String> cmdIDs = new ArrayList<>();
 		
 		for(Object o : getServer().getCommandManager().getPossibleCommands(sender))
 		{

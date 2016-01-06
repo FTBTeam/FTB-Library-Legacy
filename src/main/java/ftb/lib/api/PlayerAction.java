@@ -1,30 +1,29 @@
 package ftb.lib.api;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
-import ftb.lib.mod.client.FTBLibGuiEventHandler;
+import latmod.lib.util.FinalIDObject;
+import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
-public abstract class PlayerAction
+public abstract class PlayerAction extends FinalIDObject
 {
-	public final int ID;
 	public final TextureCoords icon;
 	
-	public PlayerAction(TextureCoords c)
+	public PlayerAction(String id, TextureCoords c)
 	{
-		ID = FTBLibGuiEventHandler.getNextButtonID();
+		super(id);
 		icon = c;
 	}
-	
-	public int hashCode()
-	{ return ID; }
-	
-	public boolean equals(Object o)
-	{ return o == this || o.hashCode() == hashCode(); }
-	
+
 	public abstract void onClicked(int playerID);
-	public abstract String getTitle();
+	public abstract String getTitleKey();
+
+	@SideOnly(Side.CLIENT)
+	public String getTitle()
+	{ return I18n.format(getTitleKey()); }
 	
 	public void addMouseOverText(List<String> l) { }
 	

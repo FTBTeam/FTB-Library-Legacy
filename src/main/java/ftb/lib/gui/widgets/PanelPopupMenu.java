@@ -2,18 +2,19 @@ package ftb.lib.gui.widgets;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.FastList;
+
+import java.util.ArrayList;
 
 @SideOnly(Side.CLIENT)
 public abstract class PanelPopupMenu extends PanelLM
 {
 	public int buttonHeight = 18;
-	public final FastList<ButtonPopupMenu> menuButtons;
+	public final ArrayList<ButtonPopupMenu> menuButtons;
 	
 	public PanelPopupMenu(GuiLM g, int x, int y, int w)
 	{
 		super(g, x, y, w, 0);
-		menuButtons = new FastList<ButtonPopupMenu>();
+		menuButtons = new ArrayList<>();
 	}
 	
 	public final void addWidgets()

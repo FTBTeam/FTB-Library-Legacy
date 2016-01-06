@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.OtherMods;
 import ftb.lib.client.*;
 import ftb.lib.gui.widgets.PanelLM;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -16,13 +16,13 @@ import net.minecraft.util.*;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import java.util.List;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 @Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
 public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.INEIGuiHandler
 {
-	private static final FastList<String> tempTextList = new FastList<String>();
+	private static final ArrayList<String> tempTextList = new ArrayList<>();
 	
 	// GuiLM //
 	
@@ -190,7 +190,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		drawForeground();
 	}
 	
-	public void drawText(FastList<String> l)
+	public void drawText(List<String> l)
 	{
 		mainPanel.addMouseOverText(l);
 	}

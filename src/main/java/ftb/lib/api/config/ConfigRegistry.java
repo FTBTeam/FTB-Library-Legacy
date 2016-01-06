@@ -2,15 +2,15 @@ package ftb.lib.api.config;
 
 import com.google.gson.reflect.TypeToken;
 import ftb.lib.FTBLib;
-import latmod.lib.*;
+import latmod.lib.LMJsonUtils;
 import latmod.lib.config.*;
 
 import java.io.File;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigRegistry
 {
-	public static final FastMap<String, Provider> map = new FastMap<>();
+	public static final HashMap<String, Provider> map = new HashMap<>();
 	public static final ConfigGroup synced = new ConfigGroup("synced");
 	private static ConfigGroup temp = null;
 	

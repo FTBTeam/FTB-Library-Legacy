@@ -1,10 +1,9 @@
 package ftb.lib;
 
 import ftb.lib.mod.FTBLibFinals;
-import latmod.lib.FastMap;
 
 import javax.swing.*;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by LatvianModder on 04.01.2016.
@@ -92,7 +91,7 @@ public class DevConsole
 
 	public static class Tree extends ConsoleObject
 	{
-		private final Map<String, ConsoleObject> map = new FastMap<>();
+		private final Map<String, ConsoleObject> map = new HashMap<>();
 
 		public void set(String s, Object o)
 		{

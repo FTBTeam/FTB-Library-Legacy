@@ -5,6 +5,7 @@ import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 
 import java.io.*;
+import java.util.*;
 
 @SuppressWarnings("all")
 public class LMNBTUtils
@@ -28,28 +29,28 @@ public class LMNBTUtils
 		return (String[]) tag.func_150296_c().toArray(new String[0]);
 	}
 	
-	public static FastList<String> getMapKeys(NBTTagCompound tag)
+	public static List<String> getMapKeys(NBTTagCompound tag)
 	{
-		FastList<String> list = new FastList<String>();
+		ArrayList<String> list = new ArrayList<String>();
 		if(tag == null || tag.hasNoTags()) return list;
 		list.addAll(tag.func_150296_c()); return list;
 	}
 	
-	public static FastMap<String, NBTBase> toFastMap(NBTTagCompound tag)
+	public static Map<String, NBTBase> toMap(NBTTagCompound tag) // TODO: Rename me
 	{
-		FastMap<String, NBTBase> map = new FastMap<String, NBTBase>();
-		FastList<String> keys = getMapKeys(tag);
+		Map<String, NBTBase> map = new HashMap<String, NBTBase>();
+		List<String> keys = getMapKeys(tag);
 		for(int i = 0; i < keys.size(); i++)
 		{ String s = keys.get(i); map.put(s, tag.getTag(s)); }
 		return map;
 	}
 	
-	public static <E extends NBTBase> FastMap<String, E> toFastMapWithType(NBTTagCompound tag)
+	public static <E extends NBTBase> Map<String, E> toMapWithType(NBTTagCompound tag)
 	{
-		FastMap<String, E> map = new FastMap<String, E>();
+		HashMap<String, E> map = new HashMap<String, E>();
 		if(tag == null || tag.hasNoTags()) return map;
-		
-		FastList<String> keys = getMapKeys(tag);
+
+		List<String> keys = getMapKeys(tag);
 		
 		for(int i = 0; i < keys.size(); i++)
 		{
@@ -94,17 +95,17 @@ public class LMNBTUtils
 		return tag1.equals(tag2);
 	}
 	
-	public static void toStringList(FastList<String> l, NBTTagList tag)
+	public static void toStringList(List<String> l, NBTTagList tag)
 	{
 		l.clear();
 		for(int i = 0; i < tag.tagCount(); i++)
 			l.add(tag.getStringTagAt(i));
 	}
 	
-	public static FastList<String> toStringList(NBTTagList tag)
-	{ FastList<String> l = new FastList<String>(); toStringList(l, tag); return l; }
+	public static List<String> toStringList(NBTTagList tag)
+	{ ArrayList<String> l = new ArrayList<String>(); toStringList(l, tag); return l; }
 	
-	public static NBTTagList fromStringList(FastList<String> l)
+	public static NBTTagList fromStringList(List<String> l)
 	{
 		NBTTagList tag = new NBTTagList();
 		for(int i = 0; i < l.size(); i++)

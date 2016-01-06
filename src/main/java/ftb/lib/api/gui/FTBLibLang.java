@@ -25,7 +25,7 @@ public class FTBLibLang
 	public static String button_refresh() { return get("button.refresh"); }
 	public static String button_edit() { return get("button.edit"); }
 	
-	public static String client_config() { return I18n.format("config.client_config"); }
+	public static String client_config() { return I18n.format("client_config"); }
 	public static String feature_disabled() { return get("feature_disabled"); }
 	public static String delete_item(String s) { return get("delete_item", s); }
 	public static String label_server_forced(String s) { return get("label.server_forced", s); }

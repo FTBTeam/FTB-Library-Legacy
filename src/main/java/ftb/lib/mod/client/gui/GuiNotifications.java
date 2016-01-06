@@ -4,16 +4,16 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.*;
+import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-import java.util.Collections;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiNotifications extends GuiLM
 {
-	public final FastList<ButtonNotification> buttonList;
+	public final ArrayList<ButtonNotification> buttonList;
 	
 	public GuiNotifications(GuiScreen parent)
 	{
@@ -21,7 +21,7 @@ public class GuiNotifications extends GuiLM
 		hideNEI = true;
 		ySize = 25 * 7;
 		
-		buttonList = new FastList<ButtonNotification>();
+		buttonList = new ArrayList<>();
 	}
 	
 	public void initLMGui()

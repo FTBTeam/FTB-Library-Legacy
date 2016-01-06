@@ -5,10 +5,11 @@ import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.item.ItemDisplay;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.lib.FastList;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiDisplayItem extends GuiLM
@@ -42,7 +43,7 @@ public class GuiDisplayItem extends GuiLM
 		GlStateManager.popMatrix();
 	}
 	
-	public void drawText(FastList<String> l)
+	public void drawText(List<String> l)
 	{
 		if(itemDisplay.title != null && !itemDisplay.title.isEmpty()) drawCenteredString(fontRendererObj, itemDisplay.title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
 		if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty()) l.addAll(itemDisplay.desc);

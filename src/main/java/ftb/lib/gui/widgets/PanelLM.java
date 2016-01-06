@@ -2,9 +2,8 @@ package ftb.lib.gui.widgets;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.FastList;
 
-import java.util.List;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class PanelLM extends WidgetLM // GuiLM
@@ -15,8 +14,8 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	public PanelLM(GuiLM g, int x, int y, int w, int h)
 	{
 		super(g, x, y, w, h);
-		widgets = new FastList<WidgetLM>();
-		childPanels = new FastList<PanelLM>();
+		widgets = new ArrayList<>();
+		childPanels = new ArrayList<>();
 	}
 	
 	public abstract void addWidgets();

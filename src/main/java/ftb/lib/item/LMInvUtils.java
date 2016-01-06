@@ -1,7 +1,6 @@
 package ftb.lib.item;
 
 import ftb.lib.LMNBTUtils;
-import latmod.lib.FastMap;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
@@ -370,11 +369,11 @@ public class LMInvUtils
 	public static boolean canInsert(IInventory inv, ItemStack is, int slot, int side)
 	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(slot, is, side); }
 	
-	public static FastMap<Integer, ItemStack> getAllItemsMap(IInventory inv, int side)
+	public static Map<Integer, ItemStack> getAllItemsMap(IInventory inv, int side)
 	{
 		ItemStack[] is = getAllItems(inv, side);
 		if(is == null) return null;
-		FastMap<Integer, ItemStack> map = new FastMap<Integer, ItemStack>();
+		HashMap<Integer, ItemStack> map = new HashMap<>();
 		for(int i = 0; i < is.length; i++)
 		if(is[i] != null) map.put(i, is[i]);
 		return map;
@@ -444,9 +443,9 @@ public class LMInvUtils
 	public static boolean isBucket(ItemStack is)
 	{ return FluidContainerRegistry.isBucket(is); }
 	
-	public static FastMap<Enchantment, Integer> getEnchantments(ItemStack is)
+	public static Map<Enchantment, Integer> getEnchantments(ItemStack is)
 	{
-		FastMap<Enchantment, Integer> map = new FastMap<Enchantment, Integer>();
+		HashMap<Enchantment, Integer> map = new HashMap<>();
 		
 		@SuppressWarnings("unchecked")
 		Map<Integer, Integer> m = EnchantmentHelper.getEnchantments(is);
@@ -462,7 +461,7 @@ public class LMInvUtils
 	
 	public static void setEnchantments(ItemStack is, Map<Enchantment, Integer> map)
 	{
-		HashMap<Integer, Integer> m = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> m = new HashMap<>();
 		for(Map.Entry<Enchantment, Integer> e : map.entrySet())
 			m.put(e.getKey().effectId, e.getValue().intValue());
 		EnchantmentHelper.setEnchantments(m, is);

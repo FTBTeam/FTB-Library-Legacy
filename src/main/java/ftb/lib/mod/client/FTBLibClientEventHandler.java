@@ -9,13 +9,13 @@ import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.item.*;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.lib.*;
+import latmod.lib.LMStringUtils;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.*;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
-import java.util.UUID;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler
@@ -67,7 +67,7 @@ public class FTBLibClientEventHandler
 		
 		if(FTBLibModClient.item_ore_names.get())
 		{
-			FastList<String> ores = ODItems.getOreNames(e.itemStack);
+			List<String> ores = ODItems.getOreNames(e.itemStack);
 			
 			if(ores != null && !ores.isEmpty())
 			{

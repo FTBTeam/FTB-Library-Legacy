@@ -1,10 +1,12 @@
 package ftb.lib.notification;
 
-import latmod.lib.*;
+import latmod.lib.LMStringUtils;
+
+import java.util.HashMap;
 
 public class ClickActionRegistry
 {
-	private static final FastList<ClickAction> list = new FastList<ClickAction>();
+	private static final HashMap<String, ClickAction> map = new HashMap<>();
 	
 	static
 	{
@@ -19,11 +21,11 @@ public class ClickActionRegistry
 	{
 		if(a != null && a.type != null)
 		{
-			if(LMStringUtils.isValid(a.ID) && !list.contains(a.ID))
-				list.add(a);
+			if(LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID))
+				map.put(a.ID, a);
 		}
 	}
 	
 	public static ClickAction get(String s)
-	{ return list.getObj(s); }
+	{ return map.get(s); }
 }

@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 
+import java.util.*;
+
 @SideOnly(Side.CLIENT)
 public class ClientNotifications
 {
@@ -54,7 +56,7 @@ public class ClientNotifications
 	
 	public static class Temp extends Gui
 	{
-		public static final FastList<Temp> list = new FastList<Temp>();
+		public static final List<Temp> list = new ArrayList<>();
 		private static RenderItem renderItem = new RenderItem();
 		private static Minecraft mc;
 		
@@ -166,7 +168,7 @@ public class ClientNotifications
 	
 	public static class Perm implements Comparable<Perm>
 	{
-		public static final FastList<Perm> list = new FastList<Perm>();
+		public static final List<Perm> list = new ArrayList<>();
 		
 		public final Notification notification;
 		public final long timeAdded;

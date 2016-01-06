@@ -6,14 +6,15 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.client.*;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.FastList;
 import net.minecraft.client.gui.ScaledResolution;
+
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibRenderHandler
 {
 	public static final FTBLibRenderHandler instance = new FTBLibRenderHandler();
-	public static final FastList<ClientTickCallback> callbacks = new FastList<ClientTickCallback>();
+	public static final List<ClientTickCallback> callbacks = new ArrayList<>();
 	
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void renderTick(TickEvent.RenderTickEvent e)

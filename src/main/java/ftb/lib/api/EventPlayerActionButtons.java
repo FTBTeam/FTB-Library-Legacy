@@ -1,8 +1,6 @@
 package ftb.lib.api;
 
-import latmod.lib.FastList;
-
-import java.util.List;
+import java.util.*;
 
 public class EventPlayerActionButtons extends EventLM
 {
@@ -16,6 +14,6 @@ public class EventPlayerActionButtons extends EventLM
 		playerID = id;
 		self = s;
 		addAll = a;
-		actions = new FastList<PlayerAction>();
+		actions = new ArrayList<PlayerAction>();
 	}
 }

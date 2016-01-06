@@ -7,13 +7,14 @@ import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.ServerTickCallback;
 import ftb.lib.mod.net.*;
-import latmod.lib.FastList;
 import net.minecraft.entity.player.EntityPlayerMP;
+
+import java.util.*;
 
 public class FTBLibEventHandler
 {
-	public static final FastList<ServerTickCallback> callbacks = new FastList<ServerTickCallback>();
-	public static final FastList<ServerTickCallback> pendingCallbacks = new FastList<ServerTickCallback>();
+	public static final List<ServerTickCallback> callbacks = new ArrayList<>();
+	public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
 	
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent e)

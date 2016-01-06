@@ -1,24 +1,25 @@
 package ftb.lib.item;
 
 import ftb.lib.LMNBTUtils;
-import latmod.lib.FastList;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 
+import java.util.*;
+
 public class ItemDisplay
 {
 	public final ItemStack item;
 	public final String title;
-	public final FastList<String> desc;
+	public final List<String> desc;
 	public final float scale;
 	
-	public ItemDisplay(ItemStack is, String t, FastList<String> d, float s)
+	public ItemDisplay(ItemStack is, String t, List<String> d, float s)
 	{
 		item = (is == null) ? new ItemStack(Blocks.stone) : is;
 		title = (t == null) ? "" : t;
-		desc = (d == null) ? new FastList<String>() : d;
+		desc = (d == null) ? new ArrayList<String>() : d;
 		scale = MathHelper.clamp_float(s, 1F, 8F);
 	}
 	

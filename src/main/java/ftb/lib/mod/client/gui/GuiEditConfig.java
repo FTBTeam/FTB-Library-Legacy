@@ -12,14 +12,14 @@ import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.List;
+import java.util.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM implements IClientActionGui
 {
 	public final IConfigProvider provider;
 	public final String title;
-	public final FastList<ButtonConfigEntry> configEntryButtons;
+	public final ArrayList<ButtonConfigEntry> configEntryButtons;
 	public final PanelLM configPanel;
 	public final ButtonLM buttonClose, buttonExpandAll, buttonCollapseAll;
 	public final SliderLM scroll;
@@ -34,7 +34,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		title = p.getGroupTitle(p.getGroup());
 		
-		configEntryButtons = new FastList<>();
+		configEntryButtons = new ArrayList<>();
 		
 		configPanel = new PanelLM(this, 0, 0, 0, 20)
 		{
@@ -227,7 +227,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		public final GuiEditConfig gui;
 		public final ConfigEntry entry;
 		public boolean expanded = false;
-		public final FastList<ButtonConfigEntry> subButtons;
+		public final ArrayList<ButtonConfigEntry> subButtons;
 		
 		public ButtonConfigEntry(GuiEditConfig g, ConfigEntry e)
 		{
@@ -235,7 +235,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			gui = g;
 			entry = e;
 			title = g.provider.getEntryTitle(entry);
-			subButtons = new FastList<ButtonConfigEntry>();
+			subButtons = new ArrayList<>();
 		}
 		
 		public boolean isVisible()

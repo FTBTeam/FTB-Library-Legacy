@@ -1,12 +1,11 @@
 package ftb.lib.item;
 
 import ftb.lib.*;
-import latmod.lib.FastList;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.List;
+import java.util.*;
 
 public class ODItems
 {
@@ -121,11 +120,11 @@ public class ODItems
 		return is1;
 	}
 	
-	public static FastList<String> getOreNames(ItemStack is)
+	public static List<String> getOreNames(ItemStack is)
 	{
 		int[] ai = OreDictionary.getOreIDs(is);
-		if(ai == null || ai.length == 0) return new FastList<String>();
-		FastList<String> l = new FastList<String>();
+		if(ai == null || ai.length == 0) return new ArrayList<>();
+		ArrayList<String> l = new ArrayList<>();
 		for(int i : ai) l.add(OreDictionary.getOreName(i));
 		return l;
 	}

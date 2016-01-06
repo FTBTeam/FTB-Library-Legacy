@@ -1,9 +1,10 @@
 package ftb.lib;
 
-import latmod.lib.*;
+import latmod.lib.IntList;
 import latmod.lib.config.*;
 import latmod.lib.util.*;
 import net.minecraftforge.common.config.*;
+import scala.actors.threadpool.Arrays;
 
 public class ForgeConfigFile implements IConfigFile // ConfigFile
 {
@@ -33,7 +34,7 @@ public class ForgeConfigFile implements IConfigFile // ConfigFile
 					if(p.isBooleanList()) ;
 					else if(p.isIntList()) e = new ConfigEntryIntArray(s1, IntList.asList(p.getIntList()));
 					else if(p.isDoubleList()) e = new ConfigEntryDoubleArray(s1, p.getDoubleList());
-					else e = new ConfigEntryStringArray(s1, new FastList<String>(p.getStringList()));
+					else e = new ConfigEntryStringArray(s1, Arrays.asList(p.getStringList()));
 				}
 				else
 				{

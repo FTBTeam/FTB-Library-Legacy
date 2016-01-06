@@ -146,7 +146,7 @@ public class FTBWorld
 		gameModes = LMJsonUtils.fromJsonFile(gameModesGson, gamemodesJsonFile, GameModes.class);
 		if(gameModes == null)
 		{
-			List<String> list = new FastList<>();
+			List<String> list = new ArrayList<>();
 			list.add("default");
 			list = Collections.unmodifiableList(list);
 			gameModes = new GameModes(list, list.get(0), "common", new HashMap<String, String>());

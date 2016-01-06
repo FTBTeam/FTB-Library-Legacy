@@ -21,11 +21,11 @@ public class CmdEditConfig extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 0) return ConfigRegistry.map.getKeyStringArray();
+		if(i == 0) return LMMapUtils.toKeyStringArray(ConfigRegistry.map);
 		else if(i == 1)
 		{
 			ConfigGroup list = ConfigRegistry.map.get(args[0]).getGroup();
-			if(list != null) return list.entryMap.getKeyStringArray();
+			if(list != null) return LMMapUtils.toKeyStringArray(list.entryMap);
 		}
 		else if(i == 2)
 		{
@@ -33,7 +33,7 @@ public class CmdEditConfig extends CommandLM
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup(args[1]);
-				if(group != null) return group.entryMap.getKeyStringArray();
+				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap);
 			}
 		}
 		

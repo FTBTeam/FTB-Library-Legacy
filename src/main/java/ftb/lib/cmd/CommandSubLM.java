@@ -5,14 +5,16 @@ import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
+import java.util.*;
+
 public class CommandSubLM extends CommandLM
 {
-	public final FastMap<String, CommandLM> subCommands;
+	public final HashMap<String, CommandLM> subCommands;
 	
 	public CommandSubLM(String s, CommandLevel l)
 	{
 		super(s, l);
-		subCommands = new FastMap<String, CommandLM>();
+		subCommands = new HashMap<>();
 	}
 	
 	public void add(CommandLM c)
@@ -26,7 +28,7 @@ public class CommandSubLM extends CommandLM
 		
 		if(extendedUsageInfo)
 		{
-			FastList<String> l = new FastList<String>();
+			ArrayList<String> l = new ArrayList<>();
 			addCommandUsage(ics, l, 0);
 			sb.append('\n');
 			sb.append('\n');
@@ -35,15 +37,15 @@ public class CommandSubLM extends CommandLM
 		}
 		
 		sb.append(" [ ");
-		sb.append(LMStringUtils.strip(subCommands.getKeyStringArray()));
-		sb.append("]");
+		sb.append(LMStringUtils.strip(LMMapUtils.toKeyStringArray(subCommands)));
+		sb.append(" ]");
 		
 		return sb.toString();
 	}
 	
-	private void addCommandUsage(ICommandSender ics, FastList<String> l, int level)
+	private void addCommandUsage(ICommandSender ics, ArrayList<String> l, int level)
 	{
-		for(CommandLM c : subCommands)
+		for(CommandLM c : subCommands.values())
 		{
 			if(c instanceof CommandSubLM)
 			{
@@ -72,7 +74,7 @@ public class CommandSubLM extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 0) return subCommands.getKeyStringArray();
+		if(i == 0) return LMMapUtils.toKeyStringArray(subCommands);
 		
 		CommandLM cmd = subCommands.get(args[0]);
 		
