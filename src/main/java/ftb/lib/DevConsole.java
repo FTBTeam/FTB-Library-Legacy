@@ -19,9 +19,12 @@ public class DevConsole
 	private static JFrame frame = null;
 	private static JTextArea textArea = new JTextArea();
 
+	public static boolean enabled()
+	{ return FTBLibFinals.DEV || FTBLib.userIsLatvianModder; }
+
 	public static void update()
 	{
-		if(!FTBLibFinals.DEV && !FTBLib.userIsLatvianModder) return;
+		if(!enabled()) return;
 
 		try
 		{
@@ -35,7 +38,7 @@ public class DevConsole
 
 	public static void open()
 	{
-		if(!FTBLibFinals.DEV && !FTBLib.userIsLatvianModder) return;
+		if(!enabled()) return;
 
 		if(frame == null)
 		{
@@ -96,6 +99,8 @@ public class DevConsole
 
 		public void set(String s, Object o)
 		{
+			if(!enabled()) return;
+
 			if(o instanceof Tree) map.put(s, (Tree)o);
 			else map.put(s, new Line(String.valueOf(o)));
 		}
