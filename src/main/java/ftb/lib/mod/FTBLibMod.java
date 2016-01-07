@@ -3,7 +3,7 @@ package ftb.lib.mod;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
 import ftb.lib.*;
-import ftb.lib.api.EventFTBWorldServer;
+import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.item.ODItems;
 import ftb.lib.mod.cmd.*;
@@ -35,7 +35,6 @@ public class FTBLibMod
 		FTBLib.init(e.getModConfigurationDirectory());
 		JsonHelper.init();
 		FTBLibNetHandler.init();
-		FTBWorld.init();
 		ODItems.preInit();
 		
 		FTBLibConfig.load();
@@ -69,11 +68,13 @@ public class FTBLibMod
 		FTBLib.folderWorld = new File(FTBLib.folderMinecraft, FTBLib.getServer().getFolderName());
 
 		ConfigRegistry.reload();
-		FTBWorld.reloadGameModes();
+		GameModes.reload();
+
 		FTBWorld.server = new FTBWorld();
 		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, FTBLib.getServer());
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();
+
 		FTBLib.reload(FTBLib.getServer(), false, true);
 	}
 

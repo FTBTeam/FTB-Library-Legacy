@@ -27,7 +27,7 @@ public final class ClientConfigRegistry
 		{
 			if(group.parentFile == null) init();
 			group.parentFile.save();
-			MessageReload.reloadClient();
+			MessageReload.reloadClient(0L, true);
 		}
 	};
 	

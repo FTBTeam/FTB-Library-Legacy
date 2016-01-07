@@ -25,7 +25,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.UsernameCache;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.FakePlayer;
 import org.apache.logging.log4j.*;
 
@@ -35,13 +34,14 @@ import java.util.regex.Pattern;
 
 public class FTBLib
 {
+	public static boolean userIsLatvianModder = false;
 	public static final Logger logger = LogManager.getLogger("FTBLib");
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
-	
+
 	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
 	{
 		EnumChatFormatting.BLACK,
@@ -88,24 +88,18 @@ public class FTBLib
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
+		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
-		FTBWorld.reloadGameModes();
-		
-		new MessageSyncConfig(null).sendTo(null);
-		
-		EventFTBReload event = new EventFTBReload(Side.SERVER, sender, reloadClient);
+		GameModes.reload();
+
+		EventFTBReload event = new EventFTBReload(FTBWorld.server, sender, reloadClient);
 		if(ftbu != null) ftbu.onReloaded(event);
 		event.post();
-		
-		if(printMessage) printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer"));
-		if(reloadClient) new MessageReload().sendTo(null);
-		
-		FTBWorld.server.setMode(FTBWorld.server.getMode(), true);
+
+		if(printMessage) printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
+		if(reloadClient) new MessageReload(FTBWorld.server).sendTo(null);
 	}
-	
-	public static final Configuration loadConfig(String s)
-	{ return new Configuration(new File(folderConfig, s)); }
-	
+
 	public static IChatComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o); }
 	
@@ -119,10 +113,7 @@ public class FTBLib
 	
 	public static MinecraftServer getServer()
 	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }
-	
-	public static boolean isServer()
-	{ return getEffectiveSide().isServer(); }
-	
+
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
 	
@@ -264,7 +255,7 @@ public class FTBLib
 			epM.openContainer.addCraftingToCrafters(epM);
 			new MessageOpenGuiTile((TileEntity)t, data, epM.currentWindowId).sendTo(epM);
 		}
-		else if(!isServer())
+		else if(!getEffectiveSide().isServer())
 			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
 	}
 	

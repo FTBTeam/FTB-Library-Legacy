@@ -6,7 +6,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.ServerTickCallback;
-import ftb.lib.mod.net.*;
+import ftb.lib.mod.net.MessageSendWorldID;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.*;
@@ -22,9 +22,7 @@ public class FTBLibEventHandler
 		if(e.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP)e.player;
-			new MessageSyncConfig(ep).sendTo(ep);
-			new MessageSendWorldID(FTBWorld.server).sendTo(ep);
-			new MessageSendGameMode(FTBWorld.server.getMode()).sendTo(ep);
+			new MessageSendWorldID(FTBWorld.server, ep).sendTo(ep);
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep);
 		}
 	}

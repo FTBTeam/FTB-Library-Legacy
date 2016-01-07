@@ -21,21 +21,22 @@ public class DevConsole
 
 	public static void update()
 	{
-		if(FTBLibFinals.DEV)
+		if(!FTBLibFinals.DEV && !FTBLib.userIsLatvianModder) return;
+
+		try
 		{
-			try
-			{
-				StringBuilder sb = new StringBuilder();
-				text.toString(sb, "DevEnv", 0);
-				textArea.setText(sb.toString());
-			}
-			catch(Exception ex)
-			{ ex.printStackTrace(); }
+			StringBuilder sb = new StringBuilder();
+			text.toString(sb, "DevEnv", 0);
+			textArea.setText(sb.toString());
 		}
+		catch(Exception ex)
+		{ ex.printStackTrace(); }
 	}
 
 	public static void open()
 	{
+		if(!FTBLibFinals.DEV && !FTBLib.userIsLatvianModder) return;
+
 		if(frame == null)
 		{
 			frame = new JFrame("FTBLib: DevEnv Console")

@@ -1,14 +1,11 @@
 package ftb.lib;
 
-import com.google.gson.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
-import ftb.lib.mod.GameModesSerializer;
-import ftb.lib.mod.net.MessageSendGameMode;
 import latmod.lib.*;
 
 import java.io.File;
-import java.util.*;
+import java.util.UUID;
 
 public class FTBWorld
 {
@@ -20,7 +17,7 @@ public class FTBWorld
 	public final Side side;
 	private final UUID worldID;
 	private final String worldIDS;
-	private String currentMode = "";
+	private GameMode currentMode;
 	
 	private File currentModeFile = null;
 	private File currentWorldIDFile = null;
@@ -30,28 +27,23 @@ public class FTBWorld
 		side = s;
 		worldID = id;
 		worldIDS = ids;
+		currentMode = new GameMode("default");
 	}
-	
+
 	public FTBWorld()
 	{
 		side = Side.SERVER;
-		currentMode = "";
+		currentMode = GameModes.getGameModes().defaultMode;
 		try
 		{
 			currentModeFile = new File(FTBLib.folderWorld, "ftb_gamemode.txt");
-			currentMode = LMFileUtils.loadAsText(currentModeFile).trim();
+			currentMode = GameModes.getGameModes().get(LMFileUtils.loadAsText(currentModeFile).trim());
 		}
 		catch(Exception ex) { /*ex.printStackTrace();*/ }
+
+		for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
 		
-		if(currentMode == null || currentMode.isEmpty())
-			currentMode = gameModes.defaultMode;
-		
-		for(String s : gameModes.allModes)
-			new File(FTBLib.folderModpack, s).mkdir();
-		
-		setMode(currentMode, true);
-		
-		FTBLib.logger.info("Current Mode: " + getMode());
+		FTBLib.logger.info("Current Mode: " + currentMode);
 		
 		UUID worldID0 = null;
 		try
@@ -71,89 +63,43 @@ public class FTBWorld
 		worldID = worldID0;
 		worldIDS = LMStringUtils.fromUUID(worldID);
 	}
+
+	public GameMode getMode()
+	{ return currentMode; }
+
+	public void writeReloadData(ByteIOStream io)
+	{
+		io.writeUTF(currentMode.ID);
+	}
+
+	public void readReloadData(ByteIOStream io)
+	{
+		String mode = io.readUTF();
+		currentMode = GameModes.getGameModes().get(mode);
+	}
 	
 	/** 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true) */
-	public int setMode(String modeID, boolean forced)
+	public int setMode(String s)
 	{
-		if(modeID == null) return 1;
-		modeID = modeID.trim();
-		if(modeID.isEmpty() || modeID.equals(gameModes.commonMode)) return 1;
-		if(!forced && !currentMode.isEmpty() && modeID.equals(currentMode)) return 2;
-		if(!gameModes.allModes.contains(modeID)) return 1;
-		currentMode = modeID;
-		
-		EventFTBModeSet event = new EventFTBModeSet(side, gameModes, currentMode);
-		if(FTBLib.ftbu != null) FTBLib.ftbu.onModeSet(event);
-		event.post();
-		
+		GameMode m = GameModes.getGameModes().modes.get(s);
+
+		if(m == null) return 1;
+		if(m.equals(currentMode)) return 2;
+
+		currentMode = m;
+
 		if(side.isServer())
 		{
-			try { LMFileUtils.save(currentModeFile, getMode()); }
+			try { LMFileUtils.save(currentModeFile, currentMode.ID); }
 			catch(Exception ex) { ex.printStackTrace(); }
-			new MessageSendGameMode(currentMode).sendTo(null);
 		}
-		
+
 		return 0;
 	}
-	
-	public String getMode()
-	{ return currentMode.isEmpty() ? gameModes.defaultMode : currentMode; }
-	
-	public File getCurrentModeFolder()
-	{
-		File f = new File(FTBLib.folderModpack, getMode());
-		if(!f.exists()) f.mkdirs();
-		return f;
-	}
-	
-	public File getCurrentModeFile(String path)
-	{ return new File(getCurrentModeFolder(), path); }
-	
-	public File getCommonModeFolder()
-	{
-		File f = new File(FTBLib.folderModpack, gameModes.commonMode);
-		if(!f.exists()) f.mkdirs();
-		return f;
-	}
-	
-	public File getCommonModeFile(String path)
-	{ return new File(getCommonModeFolder(), path); }
-	
+
 	public UUID getWorldID()
 	{ return worldID; }
 	
 	public String getWorldIDS()
 	{ return worldIDS; }
-	
-	// Static //
-	
-	private static File gamemodesJsonFile = null;
-	private static GameModes gameModes = null;
-	private static Gson gameModesGson = null;
-	
-	public static void init()
-	{
-		GsonBuilder gb = new GsonBuilder();
-		gb.setPrettyPrinting();
-		gb.registerTypeAdapter(GameModes.class, new GameModesSerializer());
-		gameModesGson = gb.create();
-		reloadGameModes();
-	}
-	
-	public static void reloadGameModes()
-	{
-		if(gamemodesJsonFile == null) gamemodesJsonFile = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
-		gameModes = LMJsonUtils.fromJsonFile(gameModesGson, gamemodesJsonFile, GameModes.class);
-		if(gameModes == null)
-		{
-			List<String> list = new ArrayList<>();
-			list.add("default");
-			list = Collections.unmodifiableList(list);
-			gameModes = new GameModes(list, list.get(0), "common", new HashMap<String, String>());
-			LMJsonUtils.toJsonFile(gameModesGson, gamemodesJsonFile, gameModes);
-		}
-	}
-	
-	public static GameModes getAllModes()
-	{ return gameModes; }
 }

@@ -101,7 +101,7 @@ public class FTBLibGuiEventHandler
 			event.post();
 			for(PlayerAction a : event.actions) buttons.add(a);
 			if(button_settings.get()) buttons.add(settings);
-			if(FTBLibFinals.DEV) buttons.add(dev_console);
+			if(FTBLibFinals.DEV || FTBLib.userIsLatvianModder) buttons.add(dev_console);
 
 			int i = -1;
 			for(PlayerAction a : buttons)

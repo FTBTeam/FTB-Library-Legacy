@@ -7,7 +7,7 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibModCommon;
-import latmod.lib.LMColorUtils;
+import latmod.lib.*;
 import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -36,6 +36,8 @@ public class FTBLibModClient extends FTBLibModCommon
 		EventBusHelper.register(FTBLibGuiEventHandler.instance);
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
+
+		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
 		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class, null, false));

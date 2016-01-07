@@ -25,7 +25,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -85,7 +84,7 @@ public class FTBLibClient // LatCoreMCClient
 		
 		if (img == null)
 		{
-			img = new ThreadDownloadImageData((File)null, url, def, buffer);
+			img = new ThreadDownloadImageData(null, url, def, buffer);
 			t.loadTexture(out, img);
 		}
 		
@@ -112,12 +111,12 @@ public class FTBLibClient // LatCoreMCClient
 		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
 		byte alpha255 = (byte)255;
 		
-		for(int i = 0; i < pixels.length; i++)
+		for(int p : pixels)
 		{
-			bb.put((byte)LMColorUtils.getRed(pixels[i]));
-			bb.put((byte)LMColorUtils.getGreen(pixels[i]));
-			bb.put((byte)LMColorUtils.getBlue(pixels[i]));
-			bb.put(alpha ? (byte)LMColorUtils.getAlpha(pixels[i]) : alpha255);
+			bb.put((byte)LMColorUtils.getRed(p));
+			bb.put((byte)LMColorUtils.getGreen(p));
+			bb.put((byte)LMColorUtils.getBlue(p));
+			bb.put(alpha ? (byte)LMColorUtils.getAlpha(p) : alpha255);
 		}
 		
 		bb.flip();
@@ -220,9 +219,9 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
 	{
-		GlStateManager.pushAttrib();
 		if(is == null || is.getItem() == null) return;
-		GL11.glPushMatrix();
+		GlStateManager.pushAttrib();
+		GlStateManager.pushMatrix();
 		//GL11.glTranslatef(0F, 0F, 32F);
 		GlStateManager.enableLighting();
 		RenderHelper.enableGUIStandardItemLighting();

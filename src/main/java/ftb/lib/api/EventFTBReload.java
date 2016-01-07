@@ -1,14 +1,14 @@
 package ftb.lib.api;
 
-import cpw.mods.fml.relauncher.Side;
+import ftb.lib.FTBWorld;
 import net.minecraft.command.ICommandSender;
 
 public class EventFTBReload extends EventLM
 {
-	public final Side side;
+	public final FTBWorld world;
 	public final ICommandSender sender;
 	public final boolean reloadingClient;
 	
-	public EventFTBReload(Side s, ICommandSender ics, boolean b)
-	{ side = s; sender = ics; reloadingClient = b; }
+	public EventFTBReload(FTBWorld w, ICommandSender ics, boolean b)
+	{ world = w; sender = ics; reloadingClient = b; }
 }

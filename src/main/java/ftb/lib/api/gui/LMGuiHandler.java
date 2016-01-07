@@ -38,7 +38,7 @@ public abstract class LMGuiHandler
 			epM.openContainer.addCraftingToCrafters(epM);
 			new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
 		}
-		else if(!FTBLib.isServer())
+		else if(!FTBLib.getEffectiveSide().isServer())
 			FTBLibMod.proxy.openClientGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, ID, id, data);
 	}
 }
