@@ -1,4 +1,5 @@
 package ftb.lib.mod.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.*;
@@ -37,7 +38,7 @@ public class MessageOpenGuiTile extends MessageLM
 		
 		if(te != null && !te.isInvalid() && te instanceof IGuiTile)
 		{
-			GuiScreen gui = ((IGuiTile)te).getGui(FTBLibClient.mc.thePlayer, readTag());
+			GuiScreen gui = ((IGuiTile) te).getGui(FTBLibClient.mc.thePlayer, readTag());
 			
 			if(gui != null)
 			{

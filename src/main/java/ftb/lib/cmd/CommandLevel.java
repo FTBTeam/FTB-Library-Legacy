@@ -7,10 +7,12 @@ import net.minecraft.server.MinecraftServer;
 
 public enum CommandLevel
 {
-	NONE, ALL, OP;
+	NONE,
+	ALL,
+	OP;
 	
-	public static final CommandLevel[] VALUES = { NONE, ALL, OP };
-	public static final String[] LEVEL_STRINGS = { "NONE", "ALL", "OP" };
+	public static final CommandLevel[] VALUES = {NONE, ALL, OP};
+	public static final String[] LEVEL_STRINGS = {"NONE", "ALL", "OP"};
 	
 	public static CommandLevel get(String s)
 	{
@@ -40,7 +42,7 @@ public enum CommandLevel
 		else
 		{
 			if(s instanceof MinecraftServer) return true;
-			else if(s instanceof EntityPlayerMP) return FTBLib.isOP(((EntityPlayerMP)s).getGameProfile());
+			else if(s instanceof EntityPlayerMP) return FTBLib.isOP(((EntityPlayerMP) s).getGameProfile());
 			else return true;
 		}
 	}

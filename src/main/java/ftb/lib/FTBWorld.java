@@ -49,7 +49,8 @@ public class FTBWorld
 		try
 		{
 			currentWorldIDFile = new File(FTBLib.folderWorld, "ftb_worldID.dat");
-			if(currentWorldIDFile.exists()) worldID0 = LMStringUtils.fromString(LMFileUtils.loadAsText(currentWorldIDFile).trim());
+			if(currentWorldIDFile.exists())
+				worldID0 = LMStringUtils.fromString(LMFileUtils.loadAsText(currentWorldIDFile).trim());
 		}
 		catch(Exception ex) { /*ex.printStackTrace();*/ }
 		
@@ -78,7 +79,9 @@ public class FTBWorld
 		currentMode = GameModes.getGameModes().get(mode);
 	}
 	
-	/** 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true) */
+	/**
+	 * 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true)
+	 */
 	public int setMode(String s)
 	{
 		GameMode m = GameModes.getGameModes().modes.get(s);

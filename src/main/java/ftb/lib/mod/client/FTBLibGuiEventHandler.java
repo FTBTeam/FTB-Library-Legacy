@@ -90,7 +90,10 @@ public class FTBLibGuiEventHandler
 			}
 			boolean hasPotions = !e.gui.mc.thePlayer.getActivePotionEffects().isEmpty();
 			if(hasPotions)
-			{ buttonX -= 4; buttonY -= 26; }
+			{
+				buttonX -= 4;
+				buttonY -= 26;
+			}
 			
 			int guiLeft = (e.gui.width - xSize) / 2;
 			int guiTop = (e.gui.height - ySize) / 2;
@@ -120,11 +123,11 @@ public class FTBLibGuiEventHandler
 	{
 		if(e.button instanceof ButtonInvLM)
 		{
-			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative)e.gui : null;
+			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative) e.gui : null;
 			
 			if(creativeContainer == null || creativeContainer.func_147056_g() == CreativeTabs.tabInventory.getTabIndex())
 			{
-				PlayerAction b = ((ButtonInvLM)e.button).action;
+				PlayerAction b = ((ButtonInvLM) e.button).action;
 				b.onClicked(FTBLib.ftbu.getPlayerID(e.gui.mc.thePlayer));
 			}
 		}
@@ -139,7 +142,7 @@ public class FTBLibGuiEventHandler
 		{
 			super(id, x, y, 16, 16, "");
 			action = b;
-			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative)g : null;
+			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative) g : null;
 		}
 		
 		public void drawButton(Minecraft mc, int mx, int my)

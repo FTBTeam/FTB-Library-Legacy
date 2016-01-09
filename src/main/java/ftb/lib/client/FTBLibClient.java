@@ -3,6 +3,7 @@ package ftb.lib.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.gui.IClientActionGui;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibRenderHandler;
@@ -41,6 +42,9 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static boolean isPlaying()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
+
+	public static int getDim()
+	{ return isPlaying() ? mc.theWorld.provider.dimensionId : 0; }
 	
 	public static UUID getUUID()
 	{ return mc.getSession().func_148256_e().getId(); }
@@ -49,8 +53,17 @@ public class FTBLibClient // LatCoreMCClient
 	{ mc.effectRenderer.addEffect(e); }
 	
 	public static KeyBinding addKeyBinding(String name, int key, String cat)
-	{ KeyBinding k = new KeyBinding(name, key, cat); ClientRegistry.registerKeyBinding(k); return k; }
-	
+	{
+		KeyBinding k = new KeyBinding(name, key, cat);
+		ClientRegistry.registerKeyBinding(k);
+		return k;
+	}
+
+	public static void onGuiClientAction()
+	{
+		if(mc.currentScreen instanceof IClientActionGui) ((IClientActionGui) mc.currentScreen).onClientDataChanged();
+	}
+
 	public static void pushMaxBrightness()
 	{
 		lastBrightnessX = OpenGlHelper.lastBrightnessX;
@@ -70,8 +83,7 @@ public class FTBLibClient // LatCoreMCClient
 		if(mc.theWorld != null)
 		{
 			EntityPlayer ep = mc.theWorld.func_152378_a(uuid);
-			if(ep != null && ep instanceof EntityPlayerSP)
-				return (EntityPlayerSP)ep;
+			if(ep != null && ep instanceof EntityPlayerSP) return (EntityPlayerSP) ep;
 		}
 		
 		return null;
@@ -80,9 +92,9 @@ public class FTBLibClient // LatCoreMCClient
 	public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, IImageBuffer buffer)
 	{
 		TextureManager t = mc.getTextureManager();
-		ThreadDownloadImageData img = (ThreadDownloadImageData)t.getTexture(out);
+		ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);
 		
-		if (img == null)
+		if(img == null)
 		{
 			img = new ThreadDownloadImageData(null, url, def, buffer);
 			t.loadTexture(out, img);
@@ -109,14 +121,14 @@ public class FTBLibClient // LatCoreMCClient
 	{
 		if(pixels == null) return null;
 		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
-		byte alpha255 = (byte)255;
+		byte alpha255 = (byte) 255;
 		
 		for(int p : pixels)
 		{
-			bb.put((byte)LMColorUtils.getRed(p));
-			bb.put((byte)LMColorUtils.getGreen(p));
-			bb.put((byte)LMColorUtils.getBlue(p));
-			bb.put(alpha ? (byte)LMColorUtils.getAlpha(p) : alpha255);
+			bb.put((byte) LMColorUtils.getRed(p));
+			bb.put((byte) LMColorUtils.getGreen(p));
+			bb.put((byte) LMColorUtils.getBlue(p));
+			bb.put(alpha ? (byte) LMColorUtils.getAlpha(p) : alpha255);
 		}
 		
 		bb.flip();
@@ -126,8 +138,7 @@ public class FTBLibClient // LatCoreMCClient
 	public static void execClientCommand(String s)
 	{
 		mc.ingameGUI.getChatGUI().addToSentMessages(s);
-		if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0)
-			mc.thePlayer.sendChatMessage(s);
+		if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0) mc.thePlayer.sendChatMessage(s);
 	}
 	
 	public static ResourceLocation getSkinTexture(String username)
@@ -144,7 +155,9 @@ public class FTBLibClient // LatCoreMCClient
 				cachedSkins.put(username, r);
 			}
 			catch(Exception e)
-			{ e.printStackTrace(); }
+			{
+				e.printStackTrace();
+			}
 		}
 		
 		return r;
@@ -155,8 +168,7 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void setTexture(ResourceLocation tex)
 	{
-		if(mc.currentScreen instanceof GuiLM)
-			((GuiLM)mc.currentScreen).setTexture(tex);
+		if(mc.currentScreen instanceof GuiLM) ((GuiLM) mc.currentScreen).setTexture(tex);
 		else mc.getTextureManager().bindTexture(tex);
 	}
 	
@@ -229,7 +241,7 @@ public class FTBLibClient // LatCoreMCClient
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		FontRenderer f = is.getItem().getFontRenderer(is);
-		if (f == null) f = font;
+		if(f == null) f = font;
 		itemRender.renderItemAndEffectIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y);
 		itemRender.renderItemOverlayIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y, null);
 		GlStateManager.popMatrix();

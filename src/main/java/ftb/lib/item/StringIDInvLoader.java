@@ -39,8 +39,7 @@ public class StringIDInvLoader
 		
 		for(int i = 0; i < items.length; i++)
 		{
-			if(items[i] != null)
-				list.appendTag(saveToNBT(items[i], i));
+			if(items[i] != null) list.appendTag(saveToNBT(items[i], i));
 		}
 		
 		if(list.tagCount() > 0) tag.setTag(s, list);
@@ -79,14 +78,13 @@ public class StringIDInvLoader
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-		        
-				if(tag1.hasKey("S"))
-					count += tag1.getByte("C");
-	        	else
-	        	{
-	        		int[] ai = tag1.getIntArray("D");
-	        		if(ai.length == 3) count += ai[1];
-	        	}
+
+				if(tag1.hasKey("S")) count += tag1.getByte("C");
+				else
+				{
+					int[] ai = tag1.getIntArray("D");
+					if(ai.length == 3) count += ai[1];
+				}
 			}
 		}
 		
@@ -106,31 +104,31 @@ public class StringIDInvLoader
 		else
 		{
 			Item item = LMInvUtils.getItemFromRegName(tag.getString("ID"));
-	        
-	        if(item != null)
-	        {
-	        	if(tag.hasKey("S"))
-	    		{
-	        		int slot = tag.getShort("S");
-	        		
-	        		int size = tag.getByte("C");
-		        	int dmg = Math.max(0, tag.getShort("D"));
-		        	ItemStack is = new ItemStack(item, size, dmg);
-		        	if(tag.hasKey("T")) is.setTagCompound(tag.getCompoundTag("T"));
-		        	return new MapEntry<Integer, ItemStack>(Integer.valueOf(slot), is);
-	    		}
-	        	else
-	        	{
-	        		int[] ai = tag.getIntArray("D");
-	        		
-	        		if(ai.length == 3)
-	        		{
-	        			ItemStack is = new ItemStack(item, ai[1], ai[2]);
-			        	if(tag.hasKey("T", LMNBTUtils.MAP)) is.setTagCompound(tag.getCompoundTag("T"));
-			        	return new MapEntry<Integer, ItemStack>(Integer.valueOf(ai[0]), is);
-	        		}
-	        	}
-	        }
+
+			if(item != null)
+			{
+				if(tag.hasKey("S"))
+				{
+					int slot = tag.getShort("S");
+
+					int size = tag.getByte("C");
+					int dmg = Math.max(0, tag.getShort("D"));
+					ItemStack is = new ItemStack(item, size, dmg);
+					if(tag.hasKey("T")) is.setTagCompound(tag.getCompoundTag("T"));
+					return new MapEntry<Integer, ItemStack>(Integer.valueOf(slot), is);
+				}
+				else
+				{
+					int[] ai = tag.getIntArray("D");
+
+					if(ai.length == 3)
+					{
+						ItemStack is = new ItemStack(item, ai[1], ai[2]);
+						if(tag.hasKey("T", LMNBTUtils.MAP)) is.setTagCompound(tag.getCompoundTag("T"));
+						return new MapEntry<Integer, ItemStack>(Integer.valueOf(ai[0]), is);
+					}
+				}
+			}
 		}
 		
 		return null;
@@ -141,8 +139,8 @@ public class StringIDInvLoader
 		if(is == null || is.getItem() == null) return null;
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("ID", LMInvUtils.getRegName(is.getItem()));
-		tag.setIntArray("D", new int[] { slot, is.stackSize, is.getItemDamage() });
-        if(is.hasTagCompound()) tag.setTag("T", is.getTagCompound());
-        return tag;
+		tag.setIntArray("D", new int[] {slot, is.stackSize, is.getItemDamage()});
+		if(is.hasTagCompound()) tag.setTag("T", is.getTagCompound());
+		return tag;
 	}
 }

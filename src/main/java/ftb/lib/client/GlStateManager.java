@@ -2,7 +2,9 @@ package ftb.lib.client;
 
 import org.lwjgl.opengl.*;
 
-/** For easier 1.8 port! */
+/**
+ * For easier 1.8 port!
+ */
 public class GlStateManager // GuiLM
 {
 	public static void color(float r, float g, float b, float a)

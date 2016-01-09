@@ -1,4 +1,5 @@
 package ftb.lib.gui.widgets;
+
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
@@ -22,8 +23,7 @@ public abstract class ButtonLM extends WidgetLM
 			if(doubleClickRequired)
 			{
 				long l = LMUtils.millis();
-				if(l - lastClickMillis < 300)
-					onButtonPressed(b);
+				if(l - lastClickMillis < 300) onButtonPressed(b);
 				lastClickMillis = l;
 			}
 			

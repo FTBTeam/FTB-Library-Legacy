@@ -1,4 +1,5 @@
 package ftb.lib.gui;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
@@ -13,7 +14,7 @@ public abstract class ContainerLM extends Container
 	{
 		player = ep;
 		inv = i;
-		iinv = (inv != null && inv instanceof IInventory) ? (IInventory)inv : null;
+		iinv = (inv != null && inv instanceof IInventory) ? (IInventory) inv : null;
 	}
 	
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
@@ -21,7 +22,7 @@ public abstract class ContainerLM extends Container
 		if(iinv == null) return null;
 		
 		ItemStack is = null;
-		Slot slot = (Slot)inventorySlots.get(i);
+		Slot slot = (Slot) inventorySlots.get(i);
 		
 		if(slot != null && slot.getHasStack())
 		{
@@ -30,16 +31,12 @@ public abstract class ContainerLM extends Container
 
 			if(i < iinv.getSizeInventory())
 			{
-				if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
-					return null;
+				if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true)) return null;
 			}
-			else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
-				return null;
+			else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false)) return null;
 
-			if(is1.stackSize == 0)
-				slot.putStack(null);
-			else
-				slot.onSlotChanged();
+			if(is1.stackSize == 0) slot.putStack(null);
+			else slot.onSlotChanged();
 		}
 
 		return is;
@@ -58,13 +55,14 @@ public abstract class ContainerLM extends Container
 	{
 		if(player == null || player.inventory == null) return;
 		
-		for(int y = 0; y < 3; y++) for(int x = 0; x < 9; x++)
-			addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
+		for(int y = 0; y < 3; y++)
+			for(int x = 0; x < 9; x++)
+				addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
 		
 		int i = ignoreCurrent ? player.inventory.currentItem : -1;
 		
-		for(int x = 0; x < 9; x++) if(x != i)
-			addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
+		for(int x = 0; x < 9; x++)
+			if(x != i) addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
 	}
 	
 	public void addPlayerSlots(int posY)
@@ -83,7 +81,7 @@ public abstract class ContainerLM extends Container
 	{
 		boolean flag1 = false;
 		int k = min;
-		if (RtoL) k = max - 1;
+		if(RtoL) k = max - 1;
 		Slot slot;
 		ItemStack is1;
 		
@@ -91,7 +89,7 @@ public abstract class ContainerLM extends Container
 		{
 			while(is.stackSize > 0 && (!RtoL && k < max || RtoL && k >= min))
 			{
-				slot = (Slot)inventorySlots.get(k);
+				slot = (Slot) inventorySlots.get(k);
 				is1 = slot.getStack();
 				
 				if(slot.isItemValid(is) && slot.inventory.isItemValidForSlot(k, is))
@@ -129,7 +127,7 @@ public abstract class ContainerLM extends Container
 			
 			while(!RtoL && k < max || RtoL && k >= min)
 			{
-				slot = (Slot)inventorySlots.get(k);
+				slot = (Slot) inventorySlots.get(k);
 				is1 = slot.getStack();
 
 				if(is1 == null)
@@ -141,7 +139,7 @@ public abstract class ContainerLM extends Container
 					break;
 				}
 
-				if (RtoL) --k;
+				if(RtoL) --k;
 				else ++k;
 			}
 		}

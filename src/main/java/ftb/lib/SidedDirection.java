@@ -5,19 +5,37 @@ import net.minecraft.util.Facing;
 public enum SidedDirection
 {
 	BOTTOM(2, 3, 0, 0, 0, 0),
-	TOP   (3, 2, 1, 1, 1, 1),
-	BACK  (1, 0, 3, 2, 5, 4),
-	FRONT (0, 1, 2, 3, 4, 5),
-	LEFT  (4, 5, 5, 4, 2, 3),
-	RIGHT (5, 4, 4, 5, 3, 2),
-	NONE  (6, 6, 6, 6, 6, 6);
+	TOP(3, 2, 1, 1, 1, 1),
+	BACK(1, 0, 3, 2, 5, 4),
+	FRONT(0, 1, 2, 3, 4, 5),
+	LEFT(4, 5, 5, 4, 2, 3),
+	RIGHT(5, 4, 4, 5, 3, 2),
+	NONE(6, 6, 6, 6, 6, 6);
 	
-	/** -Y */ public static final int DOWN = 0;
-	/** +Y */ public static final int UP = 1;
-	/** -Z */ public static final int NORTH = 2;
-	/** +Z */ public static final int SOUTH = 3;
-	/** -X */ public static final int WEST = 4;
-	/** +X */ public static final int EAST = 5;
+	/**
+	 * -Y
+	 */
+	public static final int DOWN = 0;
+	/**
+	 * +Y
+	 */
+	public static final int UP = 1;
+	/**
+	 * -Z
+	 */
+	public static final int NORTH = 2;
+	/**
+	 * +Z
+	 */
+	public static final int SOUTH = 3;
+	/**
+	 * -X
+	 */
+	public static final int WEST = 4;
+	/**
+	 * +X
+	 */
+	public static final int EAST = 5;
 	
 	public final int[] directions;
 	public final int ID;
@@ -30,13 +48,13 @@ public enum SidedDirection
 	
 	// Static //
 	
-	public static final SidedDirection[] VALUES = new SidedDirection[] { BOTTOM, TOP, BACK, FRONT, LEFT, RIGHT };
+	public static final SidedDirection[] VALUES = new SidedDirection[] {BOTTOM, TOP, BACK, FRONT, LEFT, RIGHT};
 	
 	public static SidedDirection getSide(int side, int rot)
 	{
 		if(rot < 0 || rot >= 6 || side < 0 || side >= 6) return NONE;
 		for(int i = 0; i < VALUES.length; i++)
-		if(VALUES[i].directions[rot] == side) return VALUES[i];
+			if(VALUES[i].directions[rot] == side) return VALUES[i];
 		return NONE;
 	}
 	

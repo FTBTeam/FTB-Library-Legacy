@@ -55,7 +55,7 @@ public class CmdEditConfig extends CommandLM
 
 			if(group != null && group.parentFile != null)
 			{
-				new MessageEditConfig(AdminToken.generate(ep), false, group).sendTo(ep);
+				new MessageEditConfig(LMAccessToken.generate(ep), false, group).sendTo(ep);
 				return null;
 			}
 			
@@ -65,8 +65,7 @@ public class CmdEditConfig extends CommandLM
 		checkArgs(args, 3); // file, group, entry, value...
 
 		ConfigRegistry.Provider p = ConfigRegistry.map.get(args[0]);
-		if(!(p instanceof ConfigRegistry.ConfigFileProvider))
-			return new ChatComponentText("Can only edit files!");
+		if(!(p instanceof ConfigRegistry.ConfigFileProvider)) return new ChatComponentText("Can only edit files!");
 
 		ConfigGroup file = p.getGroup();
 
@@ -106,7 +105,8 @@ public class CmdEditConfig extends CommandLM
 			}
 		}
 		
-		if(!success) return new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
+		if(!success)
+			return new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
 		
 		FTBLib.reload(ics, true, true);
 		return null;

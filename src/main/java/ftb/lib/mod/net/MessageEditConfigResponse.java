@@ -1,4 +1,5 @@
 package ftb.lib.mod.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
@@ -12,15 +13,20 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 {
 	public MessageEditConfigResponse() { super(ByteCount.INT); }
 	
-	public MessageEditConfigResponse(ServerConfigProvider provider)
+	public MessageEditConfigResponse(ServerConfigProvider provider, boolean remove, boolean data)
 	{
 		this();
 		io.writeLong(provider.adminToken);
 		io.writeBoolean(provider.isTemp);
 		io.writeUTF(provider.group.ID);
+		io.writeBoolean(remove);
+		io.writeBoolean(data);
 
-		try { provider.group.write(io); }
-		catch(Exception e) { }
+		if(data)
+		{
+			try { provider.group.write(io); }
+			catch(Exception e) { }
+		}
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -29,14 +35,16 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 	public IMessage onMessage(MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		if(!AdminToken.equals(ep, io.readLong())) return null;
+		if(!LMAccessToken.equals(ep, io.readLong())) return null;
 		
 		boolean isTemp = io.readBoolean();
 		String id = io.readUTF();
+		boolean remove = io.readBoolean();
+		boolean data = io.readBoolean();
 		
-		ConfigGroup group0 = isTemp ? ConfigRegistry.getTemp(true) : ConfigRegistry.map.get(id).getGroup();
+		ConfigGroup group0 = isTemp ? ConfigRegistry.getTemp(id, remove) : ConfigRegistry.map.get(id).getGroup();
 		
-		if(group0 != null)
+		if(group0 != null && data)
 		{
 			ConfigGroup group = new ConfigGroup(id);
 

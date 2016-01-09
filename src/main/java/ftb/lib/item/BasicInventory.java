@@ -24,7 +24,10 @@ public class BasicInventory implements IInventory
 	{ return LMInvUtils.getStackInSlotOnClosing(this, i); }
 	
 	public void setInventorySlotContents(int i, ItemStack is)
-	{ items[i] = is; markDirty(); }
+	{
+		items[i] = is;
+		markDirty();
+	}
 	
 	public String getInventoryName()
 	{ return ""; }

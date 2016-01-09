@@ -19,6 +19,7 @@ public abstract class PlayerAction extends FinalIDObject
 	}
 
 	public abstract void onClicked(int playerID);
+
 	public abstract String getTitleKey();
 
 	@SideOnly(Side.CLIENT)

@@ -56,8 +56,9 @@ public class GameModes
 
 	public static void reload()
 	{
-		if(gamemodesJsonFile == null) gamemodesJsonFile = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
-		gameModes = (GameModes)LMJsonUtils.fromJsonFile(Serializer.getGson(), gamemodesJsonFile, GameModes.class);
+		if(gamemodesJsonFile == null)
+			gamemodesJsonFile = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
+		gameModes = (GameModes) LMJsonUtils.fromJsonFile(Serializer.getGson(), gamemodesJsonFile, GameModes.class);
 		if(gameModes == null)
 		{
 			JsonObject o = new JsonObject();

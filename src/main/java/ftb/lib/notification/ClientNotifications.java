@@ -22,8 +22,7 @@ public class ClientNotifications
 		if(current != null)
 		{
 			current.render();
-			if(current.isDead())
-				current = null;
+			if(current.isDead()) current = null;
 		}
 		else if(!Temp.list.isEmpty())
 		{
@@ -39,8 +38,7 @@ public class ClientNotifications
 		{
 			Temp.list.remove(n.ID);
 			Perm.list.remove(n.ID);
-			if(current != null && current.ID != null && current.ID.equals(n.ID))
-				current = null;
+			if(current != null && current.ID != null && current.ID.equals(n.ID)) current = null;
 		}
 		
 		Temp.list.add(new Temp(n));
@@ -76,7 +74,7 @@ public class ClientNotifications
 			ID = n.ID;
 			title = n.title.getFormattedText();
 			desc = (n.desc == null) ? null : n.desc.getFormattedText();
-			timer = (double)n.timer;
+			timer = (double) n.timer;
 			item = n.item;
 			color = LMColorUtils.getRGBA(n.color, 230);
 			width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
@@ -93,7 +91,7 @@ public class ClientNotifications
 		{
 			if(time == -1L) time = Minecraft.getSystemTime();
 			
-			if (time > 0L)
+			if(time > 0L)
 			{
 				/*GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -111,23 +109,27 @@ public class ClientNotifications
 				GlStateManager.disableDepth();
 				GlStateManager.depthMask(false);
 				
-				double d0 = (double)(Minecraft.getSystemTime() - time) / timer;
+				double d0 = (double) (Minecraft.getSystemTime() - time) / timer;
 				
-				if (d0 < 0D || d0 > 1D) { time = 0L; return; }
+				if(d0 < 0D || d0 > 1D)
+				{
+					time = 0L;
+					return;
+				}
 				
 				double d1 = d0 * 2D;
 				
-				if (d1 > 1D) d1 = 2D - d1;
+				if(d1 > 1D) d1 = 2D - d1;
 				d1 *= 4D;
 				d1 = 1D - d1;
 
-				if (d1 < 0D) d1 = 0D;
+				if(d1 < 0D) d1 = 0D;
 				
 				d1 *= d1;
 				d1 *= d1;
 				
 				int i = FTBLibClient.displayW - width;
-				int j = 0 - (int)(d1 * 36D);
+				int j = 0 - (int) (d1 * 36D);
 				GlStateManager.color(1F, 1F, 1F, 1F);
 				GlStateManager.disableTexture();
 				GlStateManager.disableLighting();

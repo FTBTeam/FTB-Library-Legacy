@@ -5,5 +5,5 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface IClientActionTile
 {
-	public void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data);
+	void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data);
 }

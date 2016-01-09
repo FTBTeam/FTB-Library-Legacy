@@ -77,7 +77,10 @@ public class GuiSelectField extends GuiLM
 	}
 	
 	public GuiSelectField setCharLimit(int i)
-	{ textBox.charLimit = i; return this; }
+	{
+		textBox.charLimit = i;
+		return this;
+	}
 	
 	public void addWidgets()
 	{

@@ -38,7 +38,7 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		try { group.readExtended(io); }
 		catch(Exception e) { }
 
-		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(null, new ServerConfigProvider(token, temp, group)));
+		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, temp, group)));
 		return null;
 	}
 }

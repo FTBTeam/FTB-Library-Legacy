@@ -49,8 +49,11 @@ public class FTBLibModClient extends FTBLibModCommon
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
+
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
+
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
+
 	public boolean inGameHasFocus() { return FTBLibClient.mc.inGameHasFocus; }
 	
 	public EntityPlayer getClientPlayer()

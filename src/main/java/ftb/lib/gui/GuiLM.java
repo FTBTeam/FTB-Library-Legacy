@@ -48,7 +48,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 			{ GuiLM.this.addWidgets(); }
 		};
 		refreshWidgets();
-		container = (ContainerLM)inventorySlots;
+		container = (ContainerLM) inventorySlots;
 		texture = tex;
 	}
 	
@@ -109,8 +109,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 		if(g == null)
 		{
-			if(parentScreen == null)
-				container.player.closeScreen();
+			if(parentScreen == null) container.player.closeScreen();
 			else mc.displayGuiScreen(parentScreen);
 		}
 		else mc.displayGuiScreen(g);
@@ -132,8 +131,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	protected void keyTyped(char keyChar, int key)
 	{
 		if(mainPanel.keyPressed(key, keyChar)) return;
-		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode())
-			close(null);
+		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode()) close(null);
 		super.keyTyped(keyChar, key);
 	}
 	
@@ -182,8 +180,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		tempTextList.clear();
 		drawText(tempTextList);
 		
-		if(!tempTextList.isEmpty())
-			drawHoveringText(tempTextList, mouseX, mouseY, fontRendererObj);
+		if(!tempTextList.isEmpty()) drawHoveringText(tempTextList, mouseX, mouseY, fontRendererObj);
 		
 		GlStateManager.disableLighting();
 		
@@ -241,8 +238,8 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public static void drawTexturedRect(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1, int textureW, int textureH)
 	{
-		double scX = 1D / (double)textureW;
-		double scY = 1D / (double)textureH;
+		double scX = 1D / (double) textureW;
+		double scY = 1D / (double) textureH;
 		drawTexturedRectD(x, y, z, w, h, u0 * scX, v0 * scY, u1 * scX, v1 * scY);
 	}
 	
@@ -253,7 +250,10 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{ FTBLibClient.playClickSound(); }
 	
 	public FontRenderer getFontRenderer()
-	{ setTexture(null); return fontRendererObj; }
+	{
+		setTexture(null);
+		return fontRendererObj;
+	}
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
@@ -302,7 +302,10 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 
 	@Optional.Method(modid = OtherMods.NEI)
 	public codechicken.nei.VisiblityData modifyVisiblity(GuiContainer g, codechicken.nei.VisiblityData vd)
-	{ if(hideNEI) vd.showNEI = false; return vd; }
+	{
+		if(hideNEI) vd.showNEI = false;
+		return vd;
+	}
 	
 	public Iterable<Integer> getItemSpawnSlots(GuiContainer g, ItemStack is)
 	{ return null; }

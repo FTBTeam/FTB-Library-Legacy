@@ -43,7 +43,7 @@ public class CmdNotify extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 1) return new String[] { "{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}" };
+		if(i == 1) return new String[] {"{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}"};
 		return super.getTabStrings(ics, args, i);
 	}
 	
@@ -69,7 +69,9 @@ public class CmdNotify extends CommandLM
 			}
 		}
 		catch(Exception e)
-		{ e.printStackTrace(); }
+		{
+			e.printStackTrace();
+		}
 		
 		return error(new ChatComponentText("Invalid notification: " + s));
 	}

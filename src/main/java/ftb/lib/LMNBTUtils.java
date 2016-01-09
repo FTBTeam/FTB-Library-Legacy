@@ -33,7 +33,8 @@ public class LMNBTUtils
 	{
 		ArrayList<String> list = new ArrayList<String>();
 		if(tag == null || tag.hasNoTags()) return list;
-		list.addAll(tag.func_150296_c()); return list;
+		list.addAll(tag.func_150296_c());
+		return list;
 	}
 	
 	public static Map<String, NBTBase> toMap(NBTTagCompound tag) // TODO: Rename me
@@ -41,7 +42,10 @@ public class LMNBTUtils
 		Map<String, NBTBase> map = new HashMap<String, NBTBase>();
 		List<String> keys = getMapKeys(tag);
 		for(int i = 0; i < keys.size(); i++)
-		{ String s = keys.get(i); map.put(s, tag.getTag(s)); }
+		{
+			String s = keys.get(i);
+			map.put(s, tag.getTag(s));
+		}
 		return map;
 	}
 	
@@ -55,7 +59,7 @@ public class LMNBTUtils
 		for(int i = 0; i < keys.size(); i++)
 		{
 			String s = keys.get(i);
-			map.put(s, (E)tag.getTag(s));
+			map.put(s, (E) tag.getTag(s));
 		}
 		
 		return map;
@@ -64,18 +68,23 @@ public class LMNBTUtils
 	public static void writeMap(OutputStream os, NBTTagCompound tag) throws Exception
 	{
 		byte[] b = CompressedStreamTools.compress(tag);
-		os.write(b); os.flush(); os.close();
+		os.write(b);
+		os.flush();
+		os.close();
 	}
 	
 	public static Exception writeMap(File f, NBTTagCompound tag)
 	{
 		try { writeMap(new FileOutputStream(LMFileUtils.newFile(f)), tag); }
-		catch(Exception e) { return e; } return null;
+		catch(Exception e) { return e; }
+		return null;
 	}
 	
 	public static NBTTagCompound readMap(InputStream is) throws Exception
 	{
-		byte[] b = new byte[is.available()]; is.read(b); is.close();
+		byte[] b = new byte[is.available()];
+		is.read(b);
+		is.close();
 		return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a);
 	}
 	
@@ -103,7 +112,11 @@ public class LMNBTUtils
 	}
 	
 	public static List<String> toStringList(NBTTagList tag)
-	{ ArrayList<String> l = new ArrayList<String>(); toStringList(l, tag); return l; }
+	{
+		ArrayList<String> l = new ArrayList<String>();
+		toStringList(l, tag);
+		return l;
+	}
 	
 	public static NBTTagList fromStringList(List<String> l)
 	{
@@ -124,7 +137,9 @@ public class LMNBTUtils
 			else return CompressedStreamTools.func_152457_a(abyte, NBTSizeTracker.field_152451_a);
 		}
 		catch(Exception ex)
-		{ ex.printStackTrace(); }
+		{
+			ex.printStackTrace();
+		}
 		
 		return null;
 	}
@@ -142,6 +157,8 @@ public class LMNBTUtils
 			data.writeByteArray(abyte, ByteCount.INT);
 		}
 		catch(Exception ex)
-		{ ex.printStackTrace(); }
+		{
+			ex.printStackTrace();
+		}
 	}
 }

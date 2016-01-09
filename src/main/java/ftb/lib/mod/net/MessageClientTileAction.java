@@ -1,4 +1,5 @@
 package ftb.lib.mod.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.IClientActionTile;
@@ -35,8 +36,7 @@ public class MessageClientTileAction extends MessageLM
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		TileEntity te = ep.worldObj.getTileEntity(x, y, z);
 		
-		if(te instanceof IClientActionTile)
-			((IClientActionTile)te).onClientAction(ep, action, data);
+		if(te instanceof IClientActionTile) ((IClientActionTile) te).onClientAction(ep, action, data);
 		
 		return null;
 	}

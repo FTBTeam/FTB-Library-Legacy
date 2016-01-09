@@ -30,8 +30,7 @@ public class FTBLibClientEventHandler
 			FTBLibClient.blockNullIcon = e.map.registerIcon("ftbl:empty_block");
 			FTBLibClient.clearCachedData();
 		}
-		else if(e.map.getTextureType() == 1)
-			FTBLibClient.unknownItemIcon = e.map.registerIcon("ftbl:unknown");
+		else if(e.map.getTextureType() == 1) FTBLibClient.unknownItemIcon = e.map.registerIcon("ftbl:unknown");
 	}
 	
 	@SubscribeEvent
@@ -73,7 +72,7 @@ public class FTBLibClientEventHandler
 			{
 				e.toolTip.add("Ore Dictionary names:");
 				for(String or : ores)
-				e.toolTip.add("> " + or);
+					e.toolTip.add("> " + or);
 			}
 		}
 	}
@@ -83,8 +82,7 @@ public class FTBLibClientEventHandler
 	{
 		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
-			if(FTBLibModClient.debug_info.get())
-				e.left.add(FTBLibClient.mc.debug);
+			if(FTBLibModClient.debug_info.get()) e.left.add(FTBLibClient.mc.debug);
 			
 			if(FTBLibFinals.DEV)
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");

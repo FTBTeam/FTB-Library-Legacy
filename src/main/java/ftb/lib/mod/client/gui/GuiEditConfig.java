@@ -182,7 +182,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	}
 	
 	public void onLMGuiClosed()
-	{ if(changed) provider.save(); }
+	{ provider.closed(changed); }
 	
 	public void drawBackground()
 	{
@@ -196,13 +196,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		if(configPanel.height + 20 < height) scroll.value = 0F;
 		else if(mouseDWheel != 0)
 		{
-			float s = (20F / (float)(height - configPanel.height + 20)) * 1F;
+			float s = (20F / (float) (height - configPanel.height + 20)) * 1F;
 			if(mouseDWheel < 0) scroll.value -= s;
 			else scroll.value += s;
 			scroll.value = MathHelperLM.clampFloat(scroll.value, 0F, 1F);
 		}
 		
-		configPanel.posY = (int)(scroll.value * (height - configPanel.height - 20)) + 20;
+		configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20)) + 20;
 		
 		configPanel.renderWidget();
 		
@@ -210,7 +210,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		drawCenteredString(fontRendererObj, title, width / 2, 6, 0xFFFFFFFF);
 		
 		drawRect(scroll.posX, scroll.posY, scroll.posX + scroll.width, scroll.posY + scroll.height, 0x99333333);
-		int sy = (int)(scroll.posY + scroll.value * (scroll.height - scroll.sliderSize));
+		int sy = (int) (scroll.posY + scroll.value * (scroll.height - scroll.sliderSize));
 		drawRect(scroll.posX, sy, scroll.posX + scroll.width, sy + scroll.sliderSize, 0x99666666);
 		
 		GlStateManager.disableLighting();
@@ -239,7 +239,10 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 		
 		public boolean isVisible()
-		{ int ay = getAY(); return ay > -height && ay < gui.height; }
+		{
+			int ay = getAY();
+			return ay > -height && ay < gui.height;
+		}
 		
 		public void renderWidget()
 		{
@@ -255,7 +258,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(!isGroup)
 			{
-				String s = entry.getAsString();
+				String s = "";
+				try { s = entry.getAsString(); }
+				catch(Exception ex) { s = "Error"; }
 				
 				int slen = gui.fontRendererObj.getStringWidth(s);
 				
@@ -284,8 +289,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry instanceof IClickableConfigEntry)
 			{
-				((IClickableConfigEntry)entry).onClicked();
-				((GuiEditConfig)gui).changed = true;
+				((IClickableConfigEntry) entry).onClicked();
+				((GuiEditConfig) gui).changed = true;
 			}
 			else if(entry.getAsGroup() != null)
 			{
@@ -300,27 +305,26 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					{
 						if(c.set)
 						{
-							((ConfigEntryColor)entry).set(c.color);
-							((GuiEditConfig)gui).changed = true;
+							((ConfigEntryColor) entry).value.set(c.color);
+							((GuiEditConfig) gui).changed = true;
 						}
 						
 						if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
 					}
-				},
-				((ConfigEntryColor)entry).get(), 0, false);
+				}, ((ConfigEntryColor) entry).value.color(), 0, false);
 			}
 			else if(entry.type == PrimitiveType.INT || entry.type == PrimitiveType.DOUBLE || entry.type == PrimitiveType.STRING)
 			{
 				if(entry.type == PrimitiveType.INT)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryInt)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryInt) entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
-								((ConfigEntryInt)entry).set(c.getI());
-								((GuiEditConfig)gui).changed = true;
+								((ConfigEntryInt) entry).set(c.getI());
+								((GuiEditConfig) gui).changed = true;
 							}
 							
 							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
@@ -329,14 +333,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 				else if(entry.type == PrimitiveType.DOUBLE)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryDouble)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryDouble) entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
-								((ConfigEntryDouble)entry).set(c.getF());
-								((GuiEditConfig)gui).changed = true;
+								((ConfigEntryDouble) entry).set(c.getF());
+								((GuiEditConfig) gui).changed = true;
 							}
 							
 							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
@@ -345,14 +349,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 				else if(entry.type == PrimitiveType.STRING)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryString)entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryString) entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
-								((ConfigEntryString)entry).set(c.getS());
-								((GuiEditConfig)gui).changed = true;
+								((ConfigEntryString) entry).set(c.getS());
+								((GuiEditConfig) gui).changed = true;
 							}
 							
 							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
@@ -364,20 +368,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		public int getColor()
 		{
-			if(entry instanceof ConfigEntryBlank)
-				return 0xFFAA00;
-			else if(entry.type == PrimitiveType.COLOR)
-				return ((ConfigEntryColor)entry).get();
-			else if(entry.type.isEnum)
-				return 0x0094FF;
-			else if(entry.type.isBoolean)
-				return ((ConfigEntryBool)entry).get() ? 0x33AA33 : 0xD52834;
-			else if(entry.type.isArray)
-				return 0xFF4F34;
-			else if(entry.type.isNumber)
-				return 0xAA5AE8;
-			else if(entry.type.isString)
-				return 0xFFAA49;
+			if(entry instanceof ConfigEntryBlank) return 0xFFAA00;
+			else if(entry.type == PrimitiveType.COLOR) return ((ConfigEntryColor) entry).value.color();
+			else if(entry.type.isEnum) return 0x0094FF;
+			else if(entry.type.isBoolean) return ((ConfigEntryBool) entry).get() ? 0x33AA33 : 0xD52834;
+			else if(entry.type.isArray) return 0xFF4F34;
+			else if(entry.type.isNumber) return 0xAA5AE8;
+			else if(entry.type.isString) return 0xFFAA49;
 			return 0x999999;
 		}
 		

@@ -28,8 +28,7 @@ public class FTBLibGuiHandler extends LMGuiHandler
 	@SideOnly(Side.CLIENT)
 	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(id == DISPLAY_ITEM)
-			return new GuiDisplayItem(ItemDisplay.readFromNBT(data));
+		if(id == DISPLAY_ITEM) return new GuiDisplayItem(ItemDisplay.readFromNBT(data));
 		return null;
 	}
 }

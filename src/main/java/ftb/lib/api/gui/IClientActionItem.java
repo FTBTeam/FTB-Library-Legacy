@@ -6,5 +6,5 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface IClientActionItem
 {
-	public ItemStack onClientAction(ItemStack is, EntityPlayer ep, String action, NBTTagCompound data);
+	ItemStack onClientAction(ItemStack is, EntityPlayer ep, String action, NBTTagCompound data);
 }

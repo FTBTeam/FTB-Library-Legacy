@@ -38,12 +38,15 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
 			packetCodec.addDiscriminator(discriminator, c);
 			FMLEmbeddedChannel channel = get(s);
 			String type = channel.findChannelHandlerNameForType(SimpleIndexedCodec.class);
-			if (s == Side.SERVER)
+			if(s == Side.SERVER)
 				channel.pipeline().addAfter(type, h.getClass().getName(), new SimpleChannelHandlerWrapper(h, Side.SERVER, c));
-			else channel.pipeline().addAfter(type, h.getClass().getName(), new SimpleChannelHandlerWrapper(h, Side.CLIENT, c));
+			else
+				channel.pipeline().addAfter(type, h.getClass().getName(), new SimpleChannelHandlerWrapper(h, Side.CLIENT, c));
 		}
 		catch(Exception e)
-		{ e.printStackTrace(); }
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public Packet getPacketFrom(IMessage message)

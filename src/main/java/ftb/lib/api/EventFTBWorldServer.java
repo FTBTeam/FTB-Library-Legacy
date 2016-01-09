@@ -9,5 +9,8 @@ public class EventFTBWorldServer extends EventLM
 	public final MinecraftServer server;
 	
 	public EventFTBWorldServer(FTBWorld w, MinecraftServer s)
-	{ world = w; server = s; }
+	{
+		world = w;
+		server = s;
+	}
 }

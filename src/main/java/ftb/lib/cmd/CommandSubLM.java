@@ -32,7 +32,11 @@ public class CommandSubLM extends CommandLM
 			addCommandUsage(ics, l, 0);
 			sb.append('\n');
 			sb.append('\n');
-			for(String s : l) { sb.append(s); sb.append('\n'); }
+			for(String s : l)
+			{
+				sb.append(s);
+				sb.append('\n');
+			}
 			return sb.toString().trim();
 		}
 		
@@ -51,11 +55,14 @@ public class CommandSubLM extends CommandLM
 			{
 				StringBuilder sb = new StringBuilder();
 				for(int i = 0; i < level; i++)
-				{ sb.append(' '); sb.append(' '); }
+				{
+					sb.append(' ');
+					sb.append(' ');
+				}
 				sb.append('/' + c.commandName);
 				l.add(sb.toString());
 				
-				((CommandSubLM)c).addCommandUsage(ics, l, level + 1);
+				((CommandSubLM) c).addCommandUsage(ics, l, level + 1);
 			}
 			else
 			{
@@ -63,7 +70,10 @@ public class CommandSubLM extends CommandLM
 				{
 					StringBuilder sb = new StringBuilder();
 					for(int i = 0; i < level; i++)
-					{ sb.append(' '); sb.append(' '); }
+					{
+						sb.append(' ');
+						sb.append(' ');
+					}
 					sb.append(c.getCommandUsage(ics));
 					l.add(sb.toString());
 				}
@@ -92,8 +102,7 @@ public class CommandSubLM extends CommandLM
 		if(i > 0 && args.length > 1)
 		{
 			CommandLM cmd = subCommands.get(args[0]);
-			if(cmd != null)
-				return cmd.getUsername(LMStringUtils.shiftArray(args), i - 1);
+			if(cmd != null) return cmd.getUsername(LMStringUtils.shiftArray(args), i - 1);
 		}
 		
 		return null;

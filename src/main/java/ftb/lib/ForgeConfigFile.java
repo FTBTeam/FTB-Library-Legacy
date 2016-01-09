@@ -39,8 +39,10 @@ public class ForgeConfigFile implements IConfigFile // ConfigFile
 				else
 				{
 					if(p.isBooleanValue()) e = new ConfigEntryBool(s1, p.getBoolean());
-					else if(p.isIntValue()) e = new ConfigEntryInt(s1, new IntBounds(p.getInt(), Integer.parseInt(p.getMinValue()), Integer.parseInt(p.getMaxValue())));
-					else if(p.isDoubleValue()) e = new ConfigEntryDouble(s1, new DoubleBounds((float)p.getDouble(), (float)Double.parseDouble(p.getMinValue()), (float)Double.parseDouble(p.getMaxValue())));
+					else if(p.isIntValue())
+						e = new ConfigEntryInt(s1, new IntBounds(p.getInt(), Integer.parseInt(p.getMinValue()), Integer.parseInt(p.getMaxValue())));
+					else if(p.isDoubleValue())
+						e = new ConfigEntryDouble(s1, new DoubleBounds((float) p.getDouble(), (float) Double.parseDouble(p.getMinValue()), (float) Double.parseDouble(p.getMaxValue())));
 					else e = new ConfigEntryString(s1, p.getString());
 				}
 				

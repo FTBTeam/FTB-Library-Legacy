@@ -16,7 +16,11 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 	
 	public ItemStack read(JsonReader in) throws IOException
 	{
-		if(in.peek() == JsonToken.NULL) { in.nextNull(); return null; }
+		if(in.peek() == JsonToken.NULL)
+		{
+			in.nextNull();
+			return null;
+		}
 		return parseItem(in.nextString());
 	}
 	
@@ -46,8 +50,7 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 			int dmg = 0;
 			int size = 1;
 			
-			if(s1.length == 2)
-				dmg = (s1[1].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[1]);
+			if(s1.length == 2) dmg = (s1[1].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[1]);
 			else if(s1.length >= 3)
 			{
 				size = Integer.parseInt(s1[1]);

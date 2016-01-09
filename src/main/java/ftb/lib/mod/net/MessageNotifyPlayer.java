@@ -1,4 +1,5 @@
 package ftb.lib.mod.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumScreen;
@@ -28,8 +29,7 @@ public class MessageNotifyPlayer extends MessageLM
 		{
 			Notification n = Notification.fromJson(io.readUTF());
 			
-			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN)
-				ClientNotifications.add(n);
+			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) ClientNotifications.add(n);
 			else
 			{
 				FTBLibClient.mc.thePlayer.addChatMessage(n.title);

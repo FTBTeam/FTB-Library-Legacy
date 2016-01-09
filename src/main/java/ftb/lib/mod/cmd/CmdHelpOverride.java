@@ -15,9 +15,9 @@ public class CmdHelpOverride extends CommandHelp
 	
 	@SuppressWarnings("all")
 	protected List getSortedPossibleCommands(ICommandSender ics)
-    {
-        List list = MinecraftServer.getServer().getCommandManager().getPossibleCommands(ics);
-        try { Collections.sort(list); } catch(Exception e) { }
-        return list;
-    }
+	{
+		List list = MinecraftServer.getServer().getCommandManager().getPossibleCommands(ics);
+		try { Collections.sort(list); } catch(Exception e) { }
+		return list;
+	}
 }

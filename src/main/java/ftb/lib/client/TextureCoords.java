@@ -37,16 +37,16 @@ public final class TextureCoords
 	{ return new TextureCoords(res, 0D, 0D, size, size, size, size); }
 	
 	public int posXI()
-	{ return (int)posX; }
+	{ return (int) posX; }
 	
 	public int posYI()
-	{ return (int)posY; }
+	{ return (int) posY; }
 	
 	public int widthI()
-	{ return (int)width; }
+	{ return (int) width; }
 	
 	public int heightI()
-	{ return (int)height; }
+	{ return (int) height; }
 	
 	public int hashCode()
 	{ return LMUtils.hashCode(texture, posX, posY, width, height); }
@@ -70,10 +70,10 @@ public final class TextureCoords
 	}
 	
 	public int getWidth(double h)
-	{ return (int)(width * (h / (double)height)); }
+	{ return (int) (width * (h / (double) height)); }
 	
 	public int getHeight(double w)
-	{ return (int)(height * (w / (double)width)); }
+	{ return (int) (height * (w / (double) width)); }
 	
 	public boolean isValid()
 	{ return texture != null && width > 0 && height > 0; }
@@ -84,7 +84,7 @@ public final class TextureCoords
 	public TextureCoords[] split(int x, int y)
 	{
 		if(x == 0 || y == 0) return new TextureCoords[0];
-		if(x == 1 && y == 1) return new TextureCoords[] { clone() };
+		if(x == 1 && y == 1) return new TextureCoords[] {clone()};
 		if(x == 1) return splitY(y);
 		if(y == 1) return splitX(x);
 		
@@ -105,7 +105,7 @@ public final class TextureCoords
 	private TextureCoords[] splitX(int s)
 	{
 		TextureCoords[] l = new TextureCoords[s];
-		double ds = (double)s;
+		double ds = (double) s;
 		double d = width / ds;
 		for(int i = 0; i < s; i++)
 			l[i] = new TextureCoords(texture, posX + d * i, posY, d, height, textureW, textureH);
@@ -115,7 +115,7 @@ public final class TextureCoords
 	private TextureCoords[] splitY(int s)
 	{
 		TextureCoords[] l = new TextureCoords[s];
-		double ds = (double)s;
+		double ds = (double) s;
 		double d = height / ds;
 		for(int i = 0; i < s; i++)
 			l[i] = new TextureCoords(texture, posX, posY + d * i, width, d, textureW, textureH);

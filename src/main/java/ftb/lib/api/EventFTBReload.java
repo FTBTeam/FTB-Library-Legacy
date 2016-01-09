@@ -10,5 +10,9 @@ public class EventFTBReload extends EventLM
 	public final boolean reloadingClient;
 	
 	public EventFTBReload(FTBWorld w, ICommandSender ics, boolean b)
-	{ world = w; sender = ics; reloadingClient = b; }
+	{
+		world = w;
+		sender = ics;
+		reloadingClient = b;
+	}
 }

@@ -12,5 +12,8 @@ public class CmdReload extends CommandLM
 	{ super(FTBLibConfigCmd.Name.reload.get(), CommandLevel.OP); }
 
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
-	{ FTBLib.reload(ics, true, true); return null; }
+	{
+		FTBLib.reload(ics, true, true);
+		return null;
+	}
 }

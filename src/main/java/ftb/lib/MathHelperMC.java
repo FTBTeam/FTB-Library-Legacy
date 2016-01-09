@@ -104,30 +104,31 @@ public class MathHelperMC
 		Vec3 zmin = pos.getIntermediateWithZValue(rot, aabb.minZ);
 		Vec3 zmax = pos.getIntermediateWithZValue(rot, aabb.maxZ);
 		
-		if (!isVecInsideYZBounds(xmin, aabb)) xmin = null;
-		if (!isVecInsideYZBounds(xmax, aabb)) xmax = null;
-		if (!isVecInsideXZBounds(ymin, aabb)) ymin = null;
-		if (!isVecInsideXZBounds(ymax, aabb)) ymax = null;
-		if (!isVecInsideXYBounds(zmin, aabb)) zmin = null;
-		if (!isVecInsideXYBounds(zmax, aabb)) zmax = null;
+		if(!isVecInsideYZBounds(xmin, aabb)) xmin = null;
+		if(!isVecInsideYZBounds(xmax, aabb)) xmax = null;
+		if(!isVecInsideXZBounds(ymin, aabb)) ymin = null;
+		if(!isVecInsideXZBounds(ymax, aabb)) ymax = null;
+		if(!isVecInsideXYBounds(zmin, aabb)) zmin = null;
+		if(!isVecInsideXYBounds(zmax, aabb)) zmax = null;
 		Vec3 v = null;
 		
-		if (xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v))) v = xmin;
-		if (xmax != null && (v == null || pos.squareDistanceTo(xmax) < pos.squareDistanceTo(v))) v = xmax;
-		if (ymin != null && (v == null || pos.squareDistanceTo(ymin) < pos.squareDistanceTo(v))) v = ymin;
-		if (ymax != null && (v == null || pos.squareDistanceTo(ymax) < pos.squareDistanceTo(v))) v = ymax;
-		if (zmin != null && (v == null || pos.squareDistanceTo(zmin) < pos.squareDistanceTo(v))) v = zmin;
-		if (zmax != null && (v == null || pos.squareDistanceTo(zmax) < pos.squareDistanceTo(v))) v = zmax;
-		if (v == null) return null; else
+		if(xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v))) v = xmin;
+		if(xmax != null && (v == null || pos.squareDistanceTo(xmax) < pos.squareDistanceTo(v))) v = xmax;
+		if(ymin != null && (v == null || pos.squareDistanceTo(ymin) < pos.squareDistanceTo(v))) v = ymin;
+		if(ymax != null && (v == null || pos.squareDistanceTo(ymax) < pos.squareDistanceTo(v))) v = ymax;
+		if(zmin != null && (v == null || pos.squareDistanceTo(zmin) < pos.squareDistanceTo(v))) v = zmin;
+		if(zmax != null && (v == null || pos.squareDistanceTo(zmax) < pos.squareDistanceTo(v))) v = zmax;
+		if(v == null) return null;
+		else
 		{
 			int side = -1;
 
-			if (v == xmin) side = 4;
-			if (v == xmax) side = 5;
-			if (v == ymin) side = 0;
-			if (v == ymax) side = 1;
-			if (v == zmin) side = 2;
-			if (v == zmax) side = 3;
+			if(v == xmin) side = 4;
+			if(v == xmax) side = 5;
+			if(v == ymin) side = 0;
+			if(v == ymax) side = 1;
+			if(v == zmin) side = 2;
+			if(v == zmax) side = 3;
 			
 			return new MovingObjectPosition(x, y, z, side, v.addVector(x, y, z));
 		}
@@ -161,8 +162,7 @@ public class MathHelperMC
 		double y2 = bb.maxY;
 		double z2 = bb.maxZ;
 		
-		if(dir < 0 || dir >= 6 || dir == 2 || dir == 3)
-			return AxisAlignedBB.getBoundingBox(x1, y1, z1, x2, y2, z2);
+		if(dir < 0 || dir >= 6 || dir == 2 || dir == 3) return AxisAlignedBB.getBoundingBox(x1, y1, z1, x2, y2, z2);
 		return AxisAlignedBB.getBoundingBox(z1, y1, x1, z2, y2, x2);
 	}
 }

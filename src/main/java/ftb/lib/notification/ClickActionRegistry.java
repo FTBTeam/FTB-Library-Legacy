@@ -21,8 +21,7 @@ public class ClickActionRegistry
 	{
 		if(a != null && a.type != null)
 		{
-			if(LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID))
-				map.put(a.ID, a);
+			if(LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID)) map.put(a.ID, a);
 		}
 	}
 	

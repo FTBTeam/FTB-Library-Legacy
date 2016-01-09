@@ -75,7 +75,7 @@ public class ODItems
 		
 		public boolean equals(Object o)
 		{
-			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry)o).itemStack : (ItemStack)o);
+			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry) o).itemStack : (ItemStack) o);
 			return is.getItem() == itemStack.getItem() && (is.getItemDamage() == itemStack.getItemDamage() || itemStack.getItemDamage() == ANY);
 		}
 	}

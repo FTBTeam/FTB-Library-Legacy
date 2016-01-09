@@ -1,4 +1,5 @@
 package ftb.lib.mod.net;
+
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.IClientActionItem;
@@ -30,7 +31,7 @@ public class MessageClientItemAction extends MessageLM
 		ItemStack is = ep.inventory.mainInventory[ep.inventory.currentItem];
 		
 		if(is != null && is.getItem() instanceof IClientActionItem)
-			is = ((IClientActionItem)is.getItem()).onClientAction(is, ep, action, readTag());
+			is = ((IClientActionItem) is.getItem()).onClientAction(is, ep, action, readTag());
 		
 		if(is != null && is.stackSize <= 0) is = null;
 		

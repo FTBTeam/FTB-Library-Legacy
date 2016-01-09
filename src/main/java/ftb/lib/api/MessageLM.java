@@ -37,12 +37,9 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		
 		int len = 0;
 		
-		if(dataType == ByteCount.BYTE)
-			len = bb.readByte() & 0xFF;
-		else if(dataType == ByteCount.SHORT)
-			len = bb.readShort() & 0xFFFF;
-		else if(dataType == ByteCount.INT)
-			len = bb.readInt();
+		if(dataType == ByteCount.BYTE) len = bb.readByte() & 0xFF;
+		else if(dataType == ByteCount.SHORT) len = bb.readShort() & 0xFFFF;
+		else if(dataType == ByteCount.INT) len = bb.readInt();
 		
 		byte[] b = new byte[len];
 		bb.readBytes(b, 0, len);
@@ -57,18 +54,18 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		
 		byte[] b = (dataType == ByteCount.BYTE) ? io.toByteArray() : io.toCompressedByteArray();
 		
-		if(dataType == ByteCount.BYTE)
-			bb.writeByte((byte)b.length);
-		else if(dataType == ByteCount.SHORT)
-			bb.writeShort((short)b.length);
-		else if(dataType == ByteCount.INT)
-			bb.writeInt(b.length);
+		if(dataType == ByteCount.BYTE) bb.writeByte((byte) b.length);
+		else if(dataType == ByteCount.SHORT) bb.writeShort((short) b.length);
+		else if(dataType == ByteCount.INT) bb.writeInt(b.length);
 		
 		bb.writeBytes(b, 0, b.length);
 	}
 	
 	public final IMessage onMessage(MessageLM m, MessageContext ctx)
-	{ io = m.io; return onMessage(ctx); }
+	{
+		io = m.io;
+		return onMessage(ctx);
+	}
 	
 	public final void sendTo(EntityPlayerMP ep)
 	{

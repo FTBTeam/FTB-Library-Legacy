@@ -45,7 +45,8 @@ public class GuiDisplayItem extends GuiLM
 	
 	public void drawText(List<String> l)
 	{
-		if(itemDisplay.title != null && !itemDisplay.title.isEmpty()) drawCenteredString(fontRendererObj, itemDisplay.title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
+		if(itemDisplay.title != null && !itemDisplay.title.isEmpty())
+			drawCenteredString(fontRendererObj, itemDisplay.title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
 		if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty()) l.addAll(itemDisplay.desc);
 		super.drawText(l);
 	}

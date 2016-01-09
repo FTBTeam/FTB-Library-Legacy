@@ -21,7 +21,7 @@ public class ButtonPopupMenu extends ButtonLM
 	}
 	
 	public void onButtonPressed(int b)
-	{ ((PanelPopupMenu)parentPanel).onClosed(this, b); }
+	{ ((PanelPopupMenu) parentPanel).onClosed(this, b); }
 	
 	public TextureCoords getIcon()
 	{ return icon; }

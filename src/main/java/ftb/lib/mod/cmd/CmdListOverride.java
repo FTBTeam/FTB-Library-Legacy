@@ -29,8 +29,7 @@ public class CmdListOverride extends CommandLM
 			
 			if(printUUID)
 				FTBLib.printChat(ics, ep.getCommandSenderName() + " :: " + LMStringUtils.fromUUID(ep.getUniqueID()));
-			else
-				FTBLib.printChat(ics, ep.getCommandSenderName());
+			else FTBLib.printChat(ics, ep.getCommandSenderName());
 		}
 		
 		return null;

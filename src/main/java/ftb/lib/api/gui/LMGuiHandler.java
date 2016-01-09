@@ -30,7 +30,7 @@ public abstract class LMGuiHandler
 			Container c = getContainer(ep, id, data);
 			if(c == null) return;
 			
-			EntityPlayerMP epM = (EntityPlayerMP)ep;
+			EntityPlayerMP epM = (EntityPlayerMP) ep;
 			epM.getNextWindowId();
 			epM.closeContainer();
 			epM.openContainer = c;

@@ -21,7 +21,7 @@ public class FTBLibEventHandler
 	{
 		if(e.player instanceof EntityPlayerMP)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP)e.player;
+			EntityPlayerMP ep = (EntityPlayerMP) e.player;
 			new MessageSendWorldID(FTBWorld.server, ep).sendTo(ep);
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep);
 		}
@@ -43,8 +43,7 @@ public class FTBLibEventHandler
 				if(!callbacks.isEmpty())
 				{
 					for(int i = callbacks.size() - 1; i >= 0; i--)
-						if(callbacks.get(i).incAndCheck())
-							callbacks.remove(i);
+						if(callbacks.get(i).incAndCheck()) callbacks.remove(i);
 				}
 			}
 			

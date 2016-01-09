@@ -29,7 +29,7 @@ targetCompatibility = JavaVersion.VERSION_1_7
 minecraft {
     version = version_mc + "-" + version_forge
     runDir = mcp_run_dir
-    
+
     replace "@VERSION@", version_mod
     replaceIn "FTBLibFinals.java"
 }
@@ -42,7 +42,7 @@ sourceSets {
     main {
         java {
             srcDir project_dir + archivesBaseName + "/src/main/java"
-            srcDir project_dir + "LatLib/src"
+            srcDir project_dir + "../LatLib/src"
         }
         resources {
             srcDir project_dir + archivesBaseName + "/src/main/resources"
@@ -51,23 +51,23 @@ sourceSets {
 }
 
 tasks.withType(Jar) {
-    destinationDir = file(project_dir + "/Exported/" + version_mc)
+    destinationDir = file(project_dir + "/Exported/")
 }
 
 processResources
-{
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+                expand 'version': project.version, 'mcversion': project.minecraft.version
+            }
 
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 task sourceJar(type: Jar) {
     from sourceSets.main.java

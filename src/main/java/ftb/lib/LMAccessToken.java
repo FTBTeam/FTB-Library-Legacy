@@ -2,25 +2,27 @@ package ftb.lib;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.Random;
+import java.util.*;
 
-public class AdminToken
+public class LMAccessToken
 {
+	private static final HashMap<UUID, Long> tokens = new HashMap<>();
 	private static final Random random = new Random();
-	private static final String TAG = "TempAT";
-	
+
 	public static long generate(EntityPlayerMP ep)
 	{
 		long token = random.nextLong();
-		ep.getEntityData().setLong(TAG, token);
+		tokens.put(ep.getUniqueID(), token);
 		return token;
 	}
 	
 	public static boolean equals(EntityPlayerMP ep, long token)
 	{
-		if(ep.getEntityData().getLong(TAG) == token)
+		Long t = tokens.get(ep.getUniqueID());
+
+		if(t != null && t.longValue() == token)
 		{
-			ep.getEntityData().removeTag(TAG);
+			tokens.remove(ep.getUniqueID());
 			return true;
 		}
 		

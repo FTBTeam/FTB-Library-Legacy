@@ -29,8 +29,7 @@ public class FTBLibRenderHandler
 			FTBLibClient.displayH = sr.getScaledHeight();
 		}
 		
-		if(e.phase == TickEvent.Phase.END && FTBLibClient.isPlaying())
-			ClientNotifications.renderTemp();
+		if(e.phase == TickEvent.Phase.END && FTBLibClient.isPlaying()) ClientNotifications.renderTemp();
 		
 		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();

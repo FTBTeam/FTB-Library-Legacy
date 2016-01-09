@@ -50,8 +50,7 @@ public class TextBoxLM extends WidgetLM
 			{
 				if(text.length() > 0)
 				{
-					if(GuiScreen.isCtrlKeyDown())
-						clear();
+					if(GuiScreen.isCtrlKeyDown()) clear();
 					else text = text.substring(0, text.length() - 1);
 					textChanged();
 				}
@@ -106,17 +105,18 @@ public class TextBoxLM extends WidgetLM
 	}
 	
 	public String getText()
-	{ if(text == null) text = ""; return text; }
+	{
+		if(text == null) text = "";
+		return text;
+	}
 	
 	public void render(int x, int y, int col)
 	{
 		String s = getText();
 		
-		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
-			s += '_';
+		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) s += '_';
 		
-		if(s.length() > 0)
-			gui.getFontRenderer().drawString(s, gui.getPosX(x), gui.getPosY(y), col);
+		if(s.length() > 0) gui.getFontRenderer().drawString(s, gui.getPosX(x), gui.getPosY(y), col);
 	}
 	
 	public void renderCentred(int x, int y, int col)
@@ -124,8 +124,7 @@ public class TextBoxLM extends WidgetLM
 		String s = getText();
 		String os = s + "";
 		
-		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
-			s += '_';
+		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) s += '_';
 		
 		if(s.length() > 0)
 			gui.getFontRenderer().drawString(s, gui.getPosX(0) + (x - gui.getFontRenderer().getStringWidth(os) / 2), gui.getPosY(0) + y, col);

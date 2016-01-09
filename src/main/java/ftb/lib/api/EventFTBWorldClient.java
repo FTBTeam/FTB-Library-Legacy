@@ -8,5 +8,8 @@ public class EventFTBWorldClient extends EventLM
 	public final boolean isFake;
 	
 	public EventFTBWorldClient(FTBWorld w, boolean b)
-	{ world = w; isFake = b; }
+	{
+		world = w;
+		isFake = b;
+	}
 }

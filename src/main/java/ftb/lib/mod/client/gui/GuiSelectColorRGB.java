@@ -10,7 +10,7 @@ import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.FTBLibModClient;
-import latmod.lib.LMColorUtils;
+import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -27,10 +27,11 @@ public class GuiSelectColorRGB extends GuiLM
 	public static final TextureCoords slider_col_tex = new TextureCoords(tex, 98, 0, SLIDER_BAR_W, SLIDER_H);
 	
 	public final IColorCallback callback;
-	public final int initCol;
+	public final LMColor initCol;
 	public final Object colorID;
 	public final boolean isInstant;
-	
+	public final LMColor currentColor;
+
 	public final ButtonLM colorInit, colorCurrent, switchHSB;
 	public final SliderLM currentColR, currentColG, currentColB;
 	
@@ -39,7 +40,8 @@ public class GuiSelectColorRGB extends GuiLM
 		super(null, tex);
 		hideNEI = true;
 		callback = cb;
-		initCol = LMColorUtils.getRGBA(col, 255);
+		initCol = new LMColor(col);
+		currentColor = new LMColor(initCol.color());
 		colorID = id;
 		isInstant = instant;
 		
@@ -54,12 +56,10 @@ public class GuiSelectColorRGB extends GuiLM
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_cancel());
-				s.add(title);
+				s.add(colorInit.toString());
 			}
 		};
-		
-		colorInit.title = LMColorUtils.getHex(getInitRGB());
-		
+
 		colorCurrent = new ButtonLM(this, 60, 6, col_tex.widthI(), col_tex.heightI())
 		{
 			public void onButtonPressed(int b)
@@ -68,7 +68,7 @@ public class GuiSelectColorRGB extends GuiLM
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_accept());
-				s.add(title);
+				s.add(currentColor.toString());
 			}
 		};
 		
@@ -79,7 +79,7 @@ public class GuiSelectColorRGB extends GuiLM
 				playClickSound();
 				FTBLibModClient.open_hsb_cg.set(true);
 				ClientConfigRegistry.provider.save();
-				mc.displayGuiScreen(new GuiSelectColorHSB(callback, getInitRGB(), colorID, isInstant));
+				mc.displayGuiScreen(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
 			}
 		};
 		
@@ -118,13 +118,13 @@ public class GuiSelectColorRGB extends GuiLM
 	{
 		super.drawBackground();
 		
-		int prevCol = getCurrentRGB();
+		int prevCol = currentColor.color();
 		update();
 		
-		if(isInstant && prevCol != getCurrentRGB())
-			callback.onColorSelected(new ColorSelected(colorID, true, getCurrentRGB(), false));
+		if(isInstant && prevCol != currentColor.color())
+			callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
 		
-		FTBLibClient.setGLColor(initCol, 255);
+		FTBLibClient.setGLColor(initCol.color(), 255);
 		colorInit.render(col_tex);
 		GlStateManager.color(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);
@@ -150,33 +150,45 @@ public class GuiSelectColorRGB extends GuiLM
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(0F, currentColG.value, currentColB.value, 1F);
-		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
-		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glTexCoord2d(u0, v0);
+		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glTexCoord2d(u0, v1);
+		GL11.glVertex3d(x + 0, y + h, z);
 		GlStateManager.color(1F, currentColG.value, currentColB.value, 1F);
-		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
-		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glTexCoord2d(u1, v1);
+		GL11.glVertex3d(x + w, y + h, z);
+		GL11.glTexCoord2d(u1, v0);
+		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
 		x = guiLeft + currentColG.posX;
 		y = guiTop + currentColG.posY;
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, 0F, currentColB.value, 1F);
-		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
-		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glTexCoord2d(u0, v0);
+		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glTexCoord2d(u0, v1);
+		GL11.glVertex3d(x + 0, y + h, z);
 		GlStateManager.color(currentColR.value, 1F, currentColB.value, 1F);
-		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
-		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glTexCoord2d(u1, v1);
+		GL11.glVertex3d(x + w, y + h, z);
+		GL11.glTexCoord2d(u1, v0);
+		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
 		x = guiLeft + currentColB.posX;
 		y = guiTop + currentColB.posY;
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, currentColG.value, 0F, 1F);
-		GL11.glTexCoord2d(u0, v0); GL11.glVertex3d(x + 0, y + 0, z);
-		GL11.glTexCoord2d(u0, v1); GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glTexCoord2d(u0, v0);
+		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glTexCoord2d(u0, v1);
+		GL11.glVertex3d(x + 0, y + h, z);
 		GlStateManager.color(currentColR.value, currentColG.value, 1F, 1F);
-		GL11.glTexCoord2d(u1, v1); GL11.glVertex3d(x + w, y + h, z);
-		GL11.glTexCoord2d(u1, v0); GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glTexCoord2d(u1, v1);
+		GL11.glVertex3d(x + w, y + h, z);
+		GL11.glTexCoord2d(u1, v0);
+		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -190,26 +202,23 @@ public class GuiSelectColorRGB extends GuiLM
 	
 	public void update()
 	{
-		currentColR.update();
-		currentColG.update();
-		currentColB.update();
-		colorCurrent.title = LMColorUtils.getHex(getCurrentRGB());
-	}
-	
-	public int getInitRGB()
-	{ return initCol; }
-	
-	public int getCurrentRGB()
-	{
-		int r = (int)(currentColR.value * 255F);
-		int g = (int)(currentColG.value * 255F);
-		int b = (int)(currentColB.value * 255F);
-		return LMColorUtils.getRGBA(r, g, b, 255);
+		boolean u = false;
+		u |= currentColR.update();
+		u |= currentColG.update();
+		u |= currentColB.update();
+
+		if(u)
+		{
+			int r = (int) (currentColR.value * 255F);
+			int g = (int) (currentColG.value * 255F);
+			int b = (int) (currentColB.value * 255F);
+			currentColor.setRGB(LMColorUtils.getRGBA(r, g, b, 255));
+		}
 	}
 	
 	public void closeGui(boolean set)
 	{
 		playClickSound();
-		callback.onColorSelected(new ColorSelected(colorID, set, set ? getCurrentRGB() : getInitRGB(), true));
+		callback.onColorSelected(new ColorSelected(colorID, set, set ? currentColor : initCol, true));
 	}
 }

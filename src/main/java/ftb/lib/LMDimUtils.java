@@ -1,5 +1,7 @@
 package ftb.lib;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.*;
 import net.minecraft.potion.PotionEffect;
@@ -26,17 +28,16 @@ public class LMDimUtils
 		
 		if(!DimensionManager.isDimensionRegistered(dim)) return false;
 		MinecraftServer mcs = MinecraftServer.getServer();
-		if (mcs == null || (dim != 0 && !mcs.getAllowNether()))
-			return false;
+		if(mcs == null || (dim != 0 && !mcs.getAllowNether())) return false;
 		
 		WorldServer w1 = mcs.worldServerForDimension(dim);
-		if (w1 == null)
+		if(w1 == null)
 		{
 			System.err.println("Cannot teleport " + ep.getCommandSenderName() + " to Dimension " + dim + ": Missing WorldServer");
 			return false;
 		}
 		
-		WorldServer w0 = (WorldServer)ep.worldObj;
+		WorldServer w0 = (WorldServer) ep.worldObj;
 		
 		if(ep.ridingEntity != null)
 		{
@@ -48,7 +49,7 @@ public class LMDimUtils
 		w0.updateEntityWithOptionalForce(ep, false);
 		
 		ep.closeScreen();
-		
+
 		if(chw)
 		{
 			ep.dimension = dim;
@@ -93,10 +94,12 @@ public class LMDimUtils
 		ep.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(ep, w1);
 		ep.mcServer.getConfigurationManager().syncPlayerInventory(ep);
 		for(Object o : ep.getActivePotionEffects())
-			ep.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(ep.getEntityId(), (PotionEffect)o));
+			ep.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(ep.getEntityId(), (PotionEffect) o));
 		ep.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(ep.experience, ep.experienceTotal, ep.experienceLevel));
 		
 		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
+		if(chw)
+			FMLCommonHandler.instance().bus().post(new PlayerEvent.PlayerChangedDimensionEvent(ep, w0.provider.dimensionId, w1.provider.dimensionId));
 		return true;
 	}
 	

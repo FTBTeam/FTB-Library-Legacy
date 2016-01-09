@@ -18,18 +18,22 @@ public class FTBLibModCommon // FTBLibModClient
 	}
 	
 	public boolean isShiftDown() { return false; }
+
 	public boolean isCtrlDown() { return false; }
+
 	public boolean isTabDown() { return false; }
+
 	public boolean inGameHasFocus() { return false; }
 	
 	public EntityPlayer getClientPlayer() { return null; }
+
 	public EntityPlayer getClientPlayer(UUID id) { return null; }
+
 	public World getClientWorld() { return null; }
 
 	public double getReachDist(EntityPlayer ep)
 	{
-		if(ep instanceof EntityPlayerMP)
-			return ((EntityPlayerMP)ep).theItemInWorldManager.getBlockReachDistance();
+		if(ep instanceof EntityPlayerMP) return ((EntityPlayerMP) ep).theItemInWorldManager.getBlockReachDistance();
 		return 0D;
 	}
 	

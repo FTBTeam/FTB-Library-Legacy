@@ -44,7 +44,10 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	public abstract IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException;
 	
 	public static IChatComponent error(IChatComponent c)
-	{ c.getChatStyle().setColor(EnumChatFormatting.RED); return c; }
+	{
+		c.getChatStyle().setColor(EnumChatFormatting.RED);
+		return c;
+	}
 	
 	public final void printHelpLine(ICommandSender ics, String args)
 	{ FTBLib.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }

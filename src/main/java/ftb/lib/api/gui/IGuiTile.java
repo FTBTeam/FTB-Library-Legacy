@@ -8,8 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public interface IGuiTile
 {
-	public Container getContainer(EntityPlayer ep, NBTTagCompound data);
+	Container getContainer(EntityPlayer ep, NBTTagCompound data);
 	
 	@SideOnly(Side.CLIENT)
-	public GuiScreen getGui(EntityPlayer ep, NBTTagCompound data);
+	GuiScreen getGui(EntityPlayer ep, NBTTagCompound data);
 }

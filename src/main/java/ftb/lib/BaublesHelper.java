@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
 /**
  * @author Azanor
  */
-public class BaublesHelper 
+public class BaublesHelper
 {
 	private static Method getBaubles = null;
 	
@@ -22,16 +22,16 @@ public class BaublesHelper
 		
 		try
 		{
-			if(getBaubles == null) 
+			if(getBaubles == null)
 			{
 				Class<?> fake = Class.forName("baubles.common.lib.PlayerHandler");
 				getBaubles = fake.getMethod("getPlayerBaubles", EntityPlayer.class);
 			}
 			
 			ot = (IInventory) getBaubles.invoke(null, player);
-		} 
-		catch(Exception ex) 
-		{ 
+		}
+		catch(Exception ex)
+		{
 			FMLLog.warning("[Baubles API] Could not invoke baubles.common.lib.PlayerHandler method getPlayerBaubles");
 		}
 		

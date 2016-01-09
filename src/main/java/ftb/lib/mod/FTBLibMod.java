@@ -25,10 +25,8 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
-		if(FTBLibFinals.DEV)
-			FTBLib.logger.info("Loading FTBLib, DevEnv");
-		else
-			FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.VERSION);
+		if(FTBLibFinals.DEV) FTBLib.logger.info("Loading FTBLib, DevEnv");
+		else FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.VERSION);
 
 		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		

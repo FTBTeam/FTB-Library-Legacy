@@ -17,20 +17,24 @@ import net.minecraftforge.fluids.*;
 
 import java.util.*;
 
-/** Made by LatvianModder */
+/**
+ * Made by LatvianModder
+ */
 public class LMInvUtils
 {
 	public static ItemStack singleCopy(ItemStack is)
 	{
 		if(is == null || is.stackSize <= 0) return null;
-		ItemStack is1 = is.copy(); is1.stackSize = 1; return is1;
+		ItemStack is1 = is.copy();
+		is1.stackSize = 1;
+		return is1;
 	}
 	
 	public static IInventory getInvAt(World w, double x, double y, double z, boolean entities)
 	{
 		if(entities) return TileEntityHopper.func_145893_b(w, x, y, z);
-		TileEntity te = w.getTileEntity((int)x, (int)y, (int)z);
-		return (te != null && te instanceof IInventory) ? (IInventory)te : null;
+		TileEntity te = w.getTileEntity((int) x, (int) y, (int) z);
+		return (te != null && te instanceof IInventory) ? (IInventory) te : null;
 	}
 	
 	public static IInventory getInvAt(TileEntity te, int side, boolean entities)
@@ -49,7 +53,7 @@ public class LMInvUtils
 	public static int[] getAllSlots(IInventory inv, int side)
 	{
 		if(side != -1 && inv instanceof ISidedInventory)
-			return ((ISidedInventory)inv).getAccessibleSlotsFromSide(side);
+			return ((ISidedInventory) inv).getAccessibleSlotsFromSide(side);
 		
 		int[] ai = new int[inv.getSizeInventory()];
 		for(int i = 0; i < ai.length; i++) ai[i] = i;
@@ -151,8 +155,7 @@ public class LMInvUtils
 				
 				size -= s;
 				is1.stackSize -= s;
-				if(is1.stackSize <= 0)
-					inv.setInventorySlotContents(i, null);
+				if(is1.stackSize <= 0) inv.setInventorySlotContents(i, null);
 				if(size <= 0) return;
 			}
 		}
@@ -215,28 +218,32 @@ public class LMInvUtils
 	{
 		if(tag == null || tag.hasNoTags()) return null;
 		for(int i = 0; i < tags.length; i++)
-		tag.removeTag(tags[i]);
-		if(tag.hasNoTags()) tag = null; return tag;
+			tag.removeTag(tags[i]);
+		if(tag.hasNoTags()) tag = null;
+		return tag;
 	}
 	
 	public static ItemStack removeTags(ItemStack is, String... tags)
-	{ if(is == null) return null; is.setTagCompound(removeTags(is.stackTagCompound, tags)); return is; }
+	{
+		if(is == null) return null;
+		is.setTagCompound(removeTags(is.stackTagCompound, tags));
+		return is;
+	}
 	
 	public static void writeItemsToNBT(ItemStack[] stacks, NBTTagCompound tag, String s)
 	{
 		NBTTagList list = new NBTTagList();
 		
 		for(int i = 0; i < stacks.length; i++)
-		if(stacks[i] != null)
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			tag1.setShort("Slot", (short)i);
-			stacks[i].writeToNBT(tag1);
-			list.appendTag(tag1);
-		}
+			if(stacks[i] != null)
+			{
+				NBTTagCompound tag1 = new NBTTagCompound();
+				tag1.setShort("Slot", (short) i);
+				stacks[i].writeToNBT(tag1);
+				list.appendTag(tag1);
+			}
 		
-		if(list.tagCount() > 0)
-		tag.setTag(s, list);
+		if(list.tagCount() > 0) tag.setTag(s, list);
 	}
 	
 	public static void readItemsFromNBT(ItemStack[] stacks, NBTTagCompound tag, String s)
@@ -261,15 +268,13 @@ public class LMInvUtils
 	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
 	{
 		ItemStack stack = inv.getStackInSlot(slot);
-		if (stack != null)
+		if(stack != null)
 		{
-			if (stack.stackSize <= amt)
-			inv.setInventorySlotContents(slot, null);
+			if(stack.stackSize <= amt) inv.setInventorySlotContents(slot, null);
 			else
 			{
 				stack = stack.splitStack(amt);
-				if (stack.stackSize == 0)
-				inv.setInventorySlotContents(slot, null);
+				if(stack.stackSize == 0) inv.setInventorySlotContents(slot, null);
 			}
 		}
 		
@@ -293,7 +298,9 @@ public class LMInvUtils
 	{
 		if(w == null || is == null || is.stackSize == 0) return;
 		EntityItem ei = new EntityItem(w, x, y, z, is.copy());
-		ei.motionX = mx; ei.motionY = my; ei.motionZ = mz;
+		ei.motionX = mx;
+		ei.motionY = my;
+		ei.motionZ = mz;
 		ei.delayBeforeCanPickup = delay;
 		w.spawnEntityInWorld(ei);
 	}
@@ -320,15 +327,17 @@ public class LMInvUtils
 		for(int i = 0; i < size; i++)
 		{
 			if(LMInvUtils.addSingleItemToInv(is, ep.inventory, LMInvUtils.getPlayerSlots(ep), -1, true))
-			{ is.stackSize--; changed = true; }
+			{
+				is.stackSize--;
+				changed = true;
+			}
 		}
 		
 		if(changed)
 		{
 			ep.inventory.markDirty();
 			
-			if(ep.openContainer != null)
-				ep.openContainer.detectAndSendChanges();
+			if(ep.openContainer != null) ep.openContainer.detectAndSendChanges();
 		}
 		
 		if(is.stackSize > 0) dropItem(ep, is);
@@ -340,16 +349,14 @@ public class LMInvUtils
 		
 		for(int i = 0; i < items.length; i++)
 		{
-			if(items[i] != null && items[i].stackSize > 0)
-				dropItem(w, x, y, z, items[i], 10);
+			if(items[i] != null && items[i].stackSize > 0) dropItem(w, x, y, z, items[i], 10);
 		}
 	}
 
 	public static boolean canStack(ItemStack is1, ItemStack is2)
 	{
 		if(is1 == null || is2 == null) return false;
-		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize()
-		&& is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
+		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize() && is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
 	}
 
 	public static ItemStack[] getAllItems(IInventory inv, int side)
@@ -364,10 +371,10 @@ public class LMInvUtils
 	}
 	
 	public static boolean canExtract(IInventory inv, ItemStack is, int slot, int side)
-	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canExtractItem(slot, is, side); }
+	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canExtractItem(slot, is, side); }
 	
 	public static boolean canInsert(IInventory inv, ItemStack is, int slot, int side)
-	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory)inv).canInsertItem(slot, is, side); }
+	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, is, side); }
 	
 	public static Map<Integer, ItemStack> getAllItemsMap(IInventory inv, int side)
 	{
@@ -375,23 +382,23 @@ public class LMInvUtils
 		if(is == null) return null;
 		HashMap<Integer, ItemStack> map = new HashMap<>();
 		for(int i = 0; i < is.length; i++)
-		if(is[i] != null) map.put(i, is[i]);
+			if(is[i] != null) map.put(i, is[i]);
 		return map;
 	}
 	
 	public static int[] getPlayerSlots(EntityPlayer ep)
 	{
 		int[] ai = new int[ep.inventory.mainInventory.length];
-		for(int i = 0; i < ai.length; i++) ai[i] = i; return ai;
+		for(int i = 0; i < ai.length; i++) ai[i] = i;
+		return ai;
 	}
 	
 	public static ItemStack reduceItem(ItemStack is)
 	{
 		if(is == null || is.stackSize <= 0) return null;
-		if (is.stackSize == 1)
+		if(is.stackSize == 1)
 		{
-			if (is.getItem().hasContainerItem(is))
-				return is.getItem().getContainerItem(is);
+			if(is.getItem().hasContainerItem(is)) return is.getItem().getContainerItem(is);
 			return null;
 		}
 		
@@ -400,7 +407,10 @@ public class LMInvUtils
 	}
 	
 	public static ItemStack loadStack(NBTTagCompound tag, String s)
-	{ if(tag.hasKey(s)) return ItemStack.loadItemStackFromNBT(tag.getCompoundTag(s)); return null; }
+	{
+		if(tag.hasKey(s)) return ItemStack.loadItemStackFromNBT(tag.getCompoundTag(s));
+		return null;
+	}
 	
 	public static void saveStack(NBTTagCompound tag, String s, ItemStack is)
 	{
@@ -413,7 +423,7 @@ public class LMInvUtils
 	}
 	
 	public static Item getItemFromRegName(String s)
-	{ return (Item)Item.itemRegistry.getObject(s); }
+	{ return (Item) Item.itemRegistry.getObject(s); }
 	
 	public static String getRegName(Item item)
 	{ return Item.itemRegistry.getNameForObject(item); }
@@ -433,7 +443,7 @@ public class LMInvUtils
 		
 		if(is.getItem() instanceof IFluidContainerItem)
 		{
-			FluidStack fs = ((IFluidContainerItem)is.getItem()).getFluid(is);
+			FluidStack fs = ((IFluidContainerItem) is.getItem()).getFluid(is);
 			if(fs != null) return fs;
 		}
 		
@@ -447,8 +457,7 @@ public class LMInvUtils
 	{
 		HashMap<Enchantment, Integer> map = new HashMap<>();
 		
-		@SuppressWarnings("unchecked")
-		Map<Integer, Integer> m = EnchantmentHelper.getEnchantments(is);
+		@SuppressWarnings("unchecked") Map<Integer, Integer> m = EnchantmentHelper.getEnchantments(is);
 		
 		for(Integer k : m.keySet())
 		{

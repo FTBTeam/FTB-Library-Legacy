@@ -41,7 +41,8 @@ public class MessageReload extends MessageLM
 		EventFTBReload event = new EventFTBReload(FTBWorld.client, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		event.post();
-		if(printMessage) FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient", ((LMUtils.millis() - ms) + "ms")));
+		if(printMessage)
+			FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient", ((LMUtils.millis() - ms) + "ms")));
 	}
 
 	static void writeSyncedConfig(ByteIOStream out)

@@ -39,7 +39,7 @@ public class WidgetLM
 	{ return mouseOver(getAX(), getAY()); }
 	
 	public void render(TextureCoords icon, double rw, double rh)
-	{ gui.render(icon, getAX(), getAY(), (int)(width * rw), (int)(height * rh)); }
+	{ gui.render(icon, getAX(), getAY(), (int) (width * rw), (int) (height * rh)); }
 	
 	public void render(TextureCoords icon)
 	{ render(icon, 1D, 1D); }

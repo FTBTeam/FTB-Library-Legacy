@@ -45,29 +45,11 @@ public class GuiIcons
 	public static final TextureCoords remove_gray = getIcon(30);
 	public static final TextureCoords info_gray = getIcon(31);
 	
-	public static final TextureCoords[] inv =
-	{
-		getIcon(32),
-		getIcon(33),
-		getIcon(34),
-		getIcon(35),
-	};
+	public static final TextureCoords[] inv = {getIcon(32), getIcon(33), getIcon(34), getIcon(35),};
 	
-	public static final TextureCoords[] redstone =
-	{
-		getIcon(36),
-		getIcon(37),
-		getIcon(38),
-		getIcon(39),
-	};
+	public static final TextureCoords[] redstone = {getIcon(36), getIcon(37), getIcon(38), getIcon(39),};
 	
-	public static final TextureCoords[] security =
-	{
-		getIcon(40),
-		getIcon(41),
-		getIcon(42),
-		getIcon(43),
-	};
+	public static final TextureCoords[] security = {getIcon(40), getIcon(41), getIcon(42), getIcon(43),};
 	
 	public static final TextureCoords back = getIcon(44);
 	public static final TextureCoords close = getIcon(45);

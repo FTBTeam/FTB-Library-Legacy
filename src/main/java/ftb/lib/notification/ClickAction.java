@@ -14,7 +14,10 @@ public abstract class ClickAction extends FinalIDObject
 	public final PrimitiveType type;
 	
 	public ClickAction(String s, PrimitiveType t)
-	{ super(s); type = t; }
+	{
+		super(s);
+		type = t;
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public abstract void onClicked(MouseAction c);

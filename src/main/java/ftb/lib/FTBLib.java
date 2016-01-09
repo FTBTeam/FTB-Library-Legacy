@@ -42,25 +42,7 @@ public class FTBLib
 	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
 
-	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[]
-	{
-		EnumChatFormatting.BLACK,
-		EnumChatFormatting.DARK_BLUE,
-		EnumChatFormatting.DARK_GREEN,
-		EnumChatFormatting.DARK_AQUA,
-		EnumChatFormatting.DARK_RED,
-		EnumChatFormatting.DARK_PURPLE,
-		EnumChatFormatting.GOLD,
-		EnumChatFormatting.GRAY,
-		EnumChatFormatting.DARK_GRAY,
-		EnumChatFormatting.BLUE,
-		EnumChatFormatting.GREEN,
-		EnumChatFormatting.AQUA,
-		EnumChatFormatting.RED,
-		EnumChatFormatting.LIGHT_PURPLE,
-		EnumChatFormatting.YELLOW,
-		EnumChatFormatting.WHITE,
-	};
+	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[] {EnumChatFormatting.BLACK, EnumChatFormatting.DARK_BLUE, EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_AQUA, EnumChatFormatting.DARK_RED, EnumChatFormatting.DARK_PURPLE, EnumChatFormatting.GOLD, EnumChatFormatting.GRAY, EnumChatFormatting.DARK_GRAY, EnumChatFormatting.BLUE, EnumChatFormatting.GREEN, EnumChatFormatting.AQUA, EnumChatFormatting.RED, EnumChatFormatting.LIGHT_PURPLE, EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE,};
 	
 	public static File folderConfig;
 	public static File folderMinecraft;
@@ -80,10 +62,12 @@ public class FTBLib
 		
 		if(dev_logger instanceof org.apache.logging.log4j.core.Logger)
 		{
-			if(FTBLibFinals.DEV) ((org.apache.logging.log4j.core.Logger)dev_logger).setLevel(org.apache.logging.log4j.Level.ALL);
-			else ((org.apache.logging.log4j.core.Logger)dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
+			if(FTBLibFinals.DEV)
+				((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.ALL);
+			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
 		}
-		else logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
+		else
+			logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
 	}
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
@@ -96,14 +80,17 @@ public class FTBLib
 		if(ftbu != null) ftbu.onReloaded(event);
 		event.post();
 
-		if(printMessage) printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
+		if(printMessage)
+			printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
 		if(reloadClient) new MessageReload(FTBWorld.server).sendTo(null);
 	}
 
 	public static IChatComponent getChatComponent(Object o)
-	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent)o : new ChatComponentText("" + o); }
+	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent) o : new ChatComponentText("" + o); }
 	
-	/** Prints message to chat (doesn't translate it) */
+	/**
+	 * Prints message to chat (doesn't translate it)
+	 */
 	public static void printChat(ICommandSender ep, Object o)
 	{
 		if(ep == null) ep = FTBLibMod.proxy.getClientPlayer();
@@ -146,7 +133,7 @@ public class FTBLib
 		
 		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP)getServer().getConfigurationManager().playerEntityList.get(i);
+			EntityPlayerMP ep = (EntityPlayerMP) getServer().getConfigurationManager().playerEntityList.get(i);
 			m.put(ep.getUniqueID(), ep);
 		}
 		
@@ -159,7 +146,7 @@ public class FTBLib
 		
 		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP)getServer().getConfigurationManager().playerEntityList.get(i);
+			EntityPlayerMP ep = (EntityPlayerMP) getServer().getConfigurationManager().playerEntityList.get(i);
 			if(ep.getUniqueID().equals(id)) return ep;
 		}
 		
@@ -209,7 +196,8 @@ public class FTBLib
 	
 	public static String removeFormatting(String s)
 	{
-		if(s == null) return null; if(s.isEmpty()) return "";
+		if(s == null) return null;
+		if(s.isEmpty()) return "";
 		return textFormattingPattern.matcher(s).replaceAll("");
 	}
 	
@@ -230,14 +218,20 @@ public class FTBLib
 		if(args != null && args.length > 0)
 		{
 			for(int i = 0; i < args.length; i++)
-			{ sb.append(' '); sb.append(args[i]); }
+			{
+				sb.append(' ');
+				sb.append(args[i]);
+			}
 		}
 		
 		return runCommand(ics, sb.toString());
 	}
 	
 	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
-	{ c.getChatStyle().setColor(e); return c; }
+	{
+		c.getChatStyle().setColor(e);
+		return c;
+	}
 	
 	public static void openGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
 	{
@@ -247,20 +241,23 @@ public class FTBLib
 			Container c = t.getContainer(ep, data);
 			if(c == null) return;
 			
-			EntityPlayerMP epM = (EntityPlayerMP)ep;
+			EntityPlayerMP epM = (EntityPlayerMP) ep;
 			epM.getNextWindowId();
 			epM.closeContainer();
 			epM.openContainer = c;
 			epM.openContainer.windowId = epM.currentWindowId;
 			epM.openContainer.addCraftingToCrafters(epM);
-			new MessageOpenGuiTile((TileEntity)t, data, epM.currentWindowId).sendTo(epM);
+			new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!getEffectiveSide().isServer())
 			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
 	}
 	
 	public static void addCallback(ServerTickCallback c)
-	{ if(c.maxTick == 0) c.onCallback(); else FTBLibEventHandler.pendingCallbacks.add(c); }
+	{
+		if(c.maxTick == 0) c.onCallback();
+		else FTBLibEventHandler.pendingCallbacks.add(c);
+	}
 
 	public static boolean isOP(GameProfile p)
 	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152596_g(p); }
@@ -276,7 +273,7 @@ public class FTBLib
 		
 		for(Object o : getServer().getCommandManager().getPossibleCommands(sender))
 		{
-			ICommand c = (ICommand)o;
+			ICommand c = (ICommand) o;
 			if(!cmdIDs.contains(c.getCommandName()))
 			{
 				commands.add(c);

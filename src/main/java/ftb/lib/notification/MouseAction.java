@@ -15,7 +15,10 @@ public class MouseAction
 	public MouseAction() {}
 	
 	public MouseAction(ClickAction c, Object v)
-	{ click = c; val = v; }
+	{
+		click = c;
+		val = v;
+	}
 	
 	public String stringVal()
 	{ return val.toString(); }
@@ -24,10 +27,10 @@ public class MouseAction
 	{ return numVal().intValue(); }
 	
 	public Number numVal()
-	{ return (val == null) ? -1 : (Number)val; }
+	{ return (val == null) ? -1 : (Number) val; }
 	
 	public boolean boolVal()
-	{ return ((Boolean)val).booleanValue(); }
+	{ return ((Boolean) val).booleanValue(); }
 	
 	public static class Serializer implements JsonSerializer<MouseAction>, JsonDeserializer<MouseAction>
 	{
@@ -39,8 +42,7 @@ public class MouseAction
 			if(src.click != null)
 			{
 				o.add("click", new JsonPrimitive(src.click.toString()));
-				if(src.val != null && !PrimitiveType.isNull(src.click.type))
-					o.add("val", context.serialize(src.val));
+				if(src.val != null && !PrimitiveType.isNull(src.click.type)) o.add("val", context.serialize(src.val));
 			}
 			
 			if(src.hover != null && src.hover.length > 0)

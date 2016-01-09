@@ -13,7 +13,10 @@ public class DevConsole
 	public static final Tree text = new Tree()
 	{
 		public void set(String s, Object o)
-		{ super.set(s, o); update(); }
+		{
+			super.set(s, o);
+			update();
+		}
 	};
 
 	private static JFrame frame = null;
@@ -33,7 +36,9 @@ public class DevConsole
 			textArea.setText(sb.toString());
 		}
 		catch(Exception ex)
-		{ ex.printStackTrace(); }
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public static void open()
@@ -71,7 +76,10 @@ public class DevConsole
 		public void printSpace(StringBuilder sb, int level)
 		{
 			for(int i = 0; i < level; i++)
-			{ sb.append(' '); sb.append(' '); }
+			{
+				sb.append(' ');
+				sb.append(' ');
+			}
 		}
 	}
 
@@ -101,7 +109,7 @@ public class DevConsole
 		{
 			if(!enabled()) return;
 
-			if(o instanceof Tree) map.put(s, (Tree)o);
+			if(o instanceof Tree) map.put(s, (Tree) o);
 			else map.put(s, new Line(String.valueOf(o)));
 		}
 

@@ -29,7 +29,12 @@ public class EntityPos implements Cloneable
 	{ return (p == this) || (p != null && dim == p.dim && intX() == p.intX() && intY() == p.intY() && intZ() == p.intZ()); }
 	
 	public void setPos(double px, double py, double pz, int d)
-	{ x = px; y = py; z = pz; dim = d; }
+	{
+		x = px;
+		y = py;
+		z = pz;
+		dim = d;
+	}
 	
 	public void set(Entity e)
 	{ setPos(e.posX, e.posY, e.posZ, e.dimension); }
@@ -72,7 +77,7 @@ public class EntityPos implements Cloneable
 	{ return new VecLM(x, y, z); }
 	
 	public int[] toIntArray()
-	{ return new int[] { intX(), intY(), intZ(), dim }; }
+	{ return new int[] {intX(), intY(), intZ(), dim}; }
 	
 	public EntityPos clone()
 	{ return new EntityPos(x, y, z, dim); }
@@ -96,7 +101,11 @@ public class EntityPos implements Cloneable
 		{ return equalsPos(e) && rotYaw == e.rotationYaw && rotPitch == e.rotationPitch; }
 		
 		public Rot(double x, double y, double z, int dim, float yaw, float pitch)
-		{ super(x, y, z, dim); rotYaw = yaw; rotPitch = pitch; }
+		{
+			super(x, y, z, dim);
+			rotYaw = yaw;
+			rotPitch = pitch;
+		}
 		
 		public void set(Entity e)
 		{
