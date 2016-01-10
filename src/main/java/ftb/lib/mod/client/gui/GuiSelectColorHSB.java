@@ -90,8 +90,7 @@ public class GuiSelectColorHSB extends GuiLM
 		switchRGB.title = "RGB";
 		
 		sliderBrightness = new SliderLM(this, 6, 91, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		LMColorUtils.setHSB(col);
-		sliderBrightness.value = LMColorUtils.getHSBBrightness();
+		sliderBrightness.value = initCol.brightness();
 		sliderBrightness.displayMax = 255;
 		sliderBrightness.title = EnumMCColor.BLACK.toString();
 		sliderBrightness.scrollStep = 1F / 255F;
@@ -129,7 +128,6 @@ public class GuiSelectColorHSB extends GuiLM
 		
 		setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		
 		double z = zLevel;
@@ -149,9 +147,10 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glVertex3d(x + 0, y + 0, z);
 		GL11.glTexCoord2d(u0, v1);
 		GL11.glVertex3d(x + 0, y + h, z);
-
-		LMColorUtils.setHSB(color.color());
-		FTBLibClient.setGLColor(LMColorUtils.getHSB(LMColorUtils.getHSBHue(), LMColorUtils.getHSBSaturation(), 1F), 255);
+		
+		LMColor tempColor = new LMColor();
+		tempColor.setHSB(tempColor.hue(), tempColor.saturation(), 1F);
+		FTBLibClient.setGLColor(tempColor.color(), 255);
 		GL11.glTexCoord2d(u1, v1);
 		GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0);
@@ -204,7 +203,7 @@ public class GuiSelectColorHSB extends GuiLM
 			//cursorPosX = Math.sin(0D) + 0.5D;
 			//cursorPosY = Math.cos(0D) + 0.5D;
 		}
-
+		
 		public void renderWidget()
 		{
 			int ax = getAX();

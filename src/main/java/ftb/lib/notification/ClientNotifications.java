@@ -66,7 +66,7 @@ public class ClientNotifications
 		private ItemStack item;
 		private int color;
 		private int width;
-
+		
 		public Temp(Notification n)
 		{
 			mc = FTBLibClient.mc;
@@ -122,7 +122,7 @@ public class ClientNotifications
 				if(d1 > 1D) d1 = 2D - d1;
 				d1 *= 4D;
 				d1 = 1D - d1;
-
+				
 				if(d1 < 0D) d1 = 0D;
 				
 				d1 *= d1;

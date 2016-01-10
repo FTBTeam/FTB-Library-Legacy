@@ -7,8 +7,9 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibModCommon;
-import latmod.lib.*;
+import latmod.lib.LMColorUtils;
 import latmod.lib.config.*;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -28,7 +29,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool debug_info = new ConfigEntryBool("debug_info", false);
 	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
-
+	
 	public void preInit()
 	{
 		JsonHelper.initClient();
@@ -36,8 +37,8 @@ public class FTBLibModClient extends FTBLibModCommon
 		EventBusHelper.register(FTBLibGuiEventHandler.instance);
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
-
-		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
+		
+		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
 		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class, null, false));
@@ -49,11 +50,11 @@ public class FTBLibModClient extends FTBLibModCommon
 	}
 	
 	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
-
+	
 	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
-
+	
 	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
-
+	
 	public boolean inGameHasFocus() { return FTBLibClient.mc.inGameHasFocus; }
 	
 	public EntityPlayer getClientPlayer()

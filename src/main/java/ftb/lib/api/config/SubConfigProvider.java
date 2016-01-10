@@ -24,7 +24,7 @@ public class SubConfigProvider implements IConfigProvider
 	
 	public void save()
 	{ parent.save(); }
-
+	
 	public void closed(boolean changed)
 	{ save(); }
 }

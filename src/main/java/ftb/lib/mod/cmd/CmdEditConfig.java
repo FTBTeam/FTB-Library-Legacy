@@ -47,15 +47,15 @@ public class CmdEditConfig extends CommandLM
 		if(args.length == 1 && ics instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-
+			
 			if(!ConfigRegistry.map.containsKey(args[0]))
 				return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
-
-			ConfigGroup group = ConfigRegistry.map.get(args[0]).getGroup();
-
-			if(group != null && group.parentFile != null)
+			
+			ConfigRegistry.Provider provider = ConfigRegistry.map.get(args[0]);
+			
+			if(provider != null && provider.getGroup().parentFile != null)
 			{
-				new MessageEditConfig(LMAccessToken.generate(ep), false, group).sendTo(ep);
+				new MessageEditConfig(LMAccessToken.generate(ep), false, provider).sendTo(ep);
 				return null;
 			}
 			
@@ -63,17 +63,17 @@ public class CmdEditConfig extends CommandLM
 		}
 		
 		checkArgs(args, 3); // file, group, entry, value...
-
+		
 		ConfigRegistry.Provider p = ConfigRegistry.map.get(args[0]);
 		if(!(p instanceof ConfigRegistry.ConfigFileProvider)) return new ChatComponentText("Can only edit files!");
-
+		
 		ConfigGroup file = p.getGroup();
-
+		
 		boolean success = false;
 		if(file != null)
 		{
 			ConfigGroup group = file.getGroup(args[1]);
-
+			
 			if(group != null)
 			{
 				ConfigEntry entry = group.getEntry(args[2]);

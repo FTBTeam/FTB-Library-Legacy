@@ -12,14 +12,14 @@ public class GameMode extends FinalIDObject
 {
 	public GameMode(String id)
 	{ super(id); }
-
+	
 	public File getFolder()
 	{
 		File f = new File(FTBLib.folderModpack, ID);
 		if(!f.exists()) f.mkdirs();
 		return f;
 	}
-
+	
 	public File getFile(String path)
 	{ return new File(getFolder(), path); }
 }

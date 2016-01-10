@@ -8,22 +8,22 @@ import net.minecraft.world.World;
 public interface FTBUIntegration // FTBLIntegration
 {
 	void onReloaded(EventFTBReload e);
-
+	
 	void onFTBWorldServer(EventFTBWorldServer e);
-
+	
 	void onFTBWorldClient(EventFTBWorldClient e);
-
+	
 	void onFTBWorldServerClosed();
-
+	
 	void onServerTick(World w);
-
+	
 	void onPlayerJoined(EntityPlayerMP player);
-
+	
 	int getPlayerID(Object player);
-
+	
 	String[] getPlayerNames(boolean online);
-
+	
 	void writeWorldData(ByteIOStream io, EntityPlayerMP ep);
-
+	
 	void readWorldData(ByteIOStream io);
 }

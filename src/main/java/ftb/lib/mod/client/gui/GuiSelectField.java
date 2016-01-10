@@ -56,7 +56,7 @@ public class GuiSelectField extends GuiLM
 		{
 			public boolean canAddChar(char c)
 			{ return super.canAddChar(c) && isCharValid(c); }
-
+			
 			public void returnPressed()
 			{ buttonAccept.onButtonPressed(0); }
 		};

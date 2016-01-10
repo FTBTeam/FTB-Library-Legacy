@@ -42,7 +42,7 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static boolean isPlaying()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
-
+	
 	public static int getDim()
 	{ return isPlaying() ? mc.theWorld.provider.dimensionId : 0; }
 	
@@ -58,12 +58,12 @@ public class FTBLibClient // LatCoreMCClient
 		ClientRegistry.registerKeyBinding(k);
 		return k;
 	}
-
+	
 	public static void onGuiClientAction()
 	{
 		if(mc.currentScreen instanceof IClientActionGui) ((IClientActionGui) mc.currentScreen).onClientDataChanged();
 	}
-
+	
 	public static void pushMaxBrightness()
 	{
 		lastBrightnessX = OpenGlHelper.lastBrightnessX;
@@ -73,13 +73,13 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void popMaxBrightness()
 	{ OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY); }
-
+	
 	public static EntityPlayerSP getPlayerSP(UUID uuid)
 	{
 		//getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
-
+		
 		if(uuid == null) return mc.thePlayer;
-
+		
 		if(mc.theWorld != null)
 		{
 			EntityPlayer ep = mc.theWorld.func_152378_a(uuid);
@@ -174,17 +174,17 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void clearCachedData()
 	{ cachedSkins.clear(); }
-
+	
 	public static boolean canRenderGui()
 	{ return mc.currentScreen == null || mc.currentScreen instanceof GuiChat; }
 	
 	public static void addClientTickCallback(ClientTickCallback e)
 	{ FTBLibRenderHandler.callbacks.add(e); }
-
+	
 	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
 	{
 		if(entityItem == null) entityItem = new EntityItem(w);
-
+		
 		entityItem.worldObj = w;
 		entityItem.hoverStart = 0F;
 		entityItem.setEntityItemStack(is);

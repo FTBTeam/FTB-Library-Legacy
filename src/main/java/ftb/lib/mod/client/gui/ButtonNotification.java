@@ -82,7 +82,7 @@ public class ButtonNotification extends ButtonLM
 		
 		if(notification.notification.mouse != null && notification.notification.mouse.hover != null)
 			for(int i = 0; i < notification.notification.mouse.hover.length; i++)
-				if(notification.notification.mouse.hover[ i ] != null)
-					l.add(notification.notification.mouse.hover[ i ].getFormattedText());
+				if(notification.notification.mouse.hover[i] != null)
+					l.add(notification.notification.mouse.hover[i].getFormattedText());
 	}
 }

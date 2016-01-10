@@ -53,7 +53,7 @@ public class LMNBTUtils
 	{
 		HashMap<String, E> map = new HashMap<String, E>();
 		if(tag == null || tag.hasNoTags()) return map;
-
+		
 		List<String> keys = getMapKeys(tag);
 		
 		for(int i = 0; i < keys.size(); i++)

@@ -122,7 +122,7 @@ public class MathHelperMC
 		else
 		{
 			int side = -1;
-
+			
 			if(v == xmin) side = 4;
 			if(v == xmax) side = 5;
 			if(v == ymin) side = 0;

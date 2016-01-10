@@ -3,6 +3,7 @@ package ftb.lib;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import latmod.lib.*;
+import latmod.lib.json.UUIDTypeAdapterLM;
 
 import java.io.File;
 import java.util.UUID;
@@ -13,7 +14,7 @@ public class FTBWorld
 	
 	public static FTBWorld get(Side s)
 	{ return s.isServer() ? server : client; }
-
+	
 	public final Side side;
 	private final UUID worldID;
 	private final String worldIDS;
@@ -29,7 +30,7 @@ public class FTBWorld
 		worldIDS = ids;
 		currentMode = new GameMode("default");
 	}
-
+	
 	public FTBWorld()
 	{
 		side = Side.SERVER;
@@ -40,7 +41,7 @@ public class FTBWorld
 			currentMode = GameModes.getGameModes().get(LMFileUtils.loadAsText(currentModeFile).trim());
 		}
 		catch(Exception ex) { /*ex.printStackTrace();*/ }
-
+		
 		for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
 		
 		FTBLib.logger.info("Current Mode: " + currentMode);
@@ -50,29 +51,29 @@ public class FTBWorld
 		{
 			currentWorldIDFile = new File(FTBLib.folderWorld, "ftb_worldID.dat");
 			if(currentWorldIDFile.exists())
-				worldID0 = LMStringUtils.fromString(LMFileUtils.loadAsText(currentWorldIDFile).trim());
+				worldID0 = UUIDTypeAdapterLM.getUUID(LMFileUtils.loadAsText(currentWorldIDFile).trim());
 		}
 		catch(Exception ex) { /*ex.printStackTrace();*/ }
 		
 		if(worldID0 == null)
 		{
 			worldID0 = UUID.randomUUID();
-			try { LMFileUtils.save(currentWorldIDFile, LMStringUtils.fromUUID(worldID0)); }
+			try { LMFileUtils.save(currentWorldIDFile, UUIDTypeAdapterLM.getString(worldID0)); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
 		
 		worldID = worldID0;
-		worldIDS = LMStringUtils.fromUUID(worldID);
+		worldIDS = UUIDTypeAdapterLM.getString(worldID);
 	}
-
+	
 	public GameMode getMode()
 	{ return currentMode; }
-
+	
 	public void writeReloadData(ByteIOStream io)
 	{
 		io.writeUTF(currentMode.ID);
 	}
-
+	
 	public void readReloadData(ByteIOStream io)
 	{
 		String mode = io.readUTF();
@@ -85,21 +86,21 @@ public class FTBWorld
 	public int setMode(String s)
 	{
 		GameMode m = GameModes.getGameModes().modes.get(s);
-
+		
 		if(m == null) return 1;
 		if(m.equals(currentMode)) return 2;
-
+		
 		currentMode = m;
-
+		
 		if(side.isServer())
 		{
 			try { LMFileUtils.save(currentModeFile, currentMode.ID); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
-
+		
 		return 0;
 	}
-
+	
 	public UUID getWorldID()
 	{ return worldID; }
 	

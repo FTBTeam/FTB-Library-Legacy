@@ -139,7 +139,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			ConfigGroup group = provider.getGroup();
-
+			
 			for(ConfigEntry entry : group.entries())
 				addCE(null, entry, 0);
 		}

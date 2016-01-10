@@ -33,7 +33,7 @@ public class MessageSendWorldID extends MessageLM
 		UUID id = io.readUUID();
 		String ids = io.readUTF();
 		boolean hasFTBU = io.readBoolean();
-
+		
 		boolean first = (FTBWorld.client == null || !FTBWorld.client.getWorldID().equals(id));
 		if(first) FTBWorld.client = new FTBWorld(Side.CLIENT, id, ids);
 		FTBWorld.client.readReloadData(io);

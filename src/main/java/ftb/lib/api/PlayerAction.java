@@ -17,11 +17,11 @@ public abstract class PlayerAction extends FinalIDObject
 		super(id);
 		icon = c;
 	}
-
+	
 	public abstract void onClicked(int playerID);
-
+	
 	public abstract String getTitleKey();
-
+	
 	@SideOnly(Side.CLIENT)
 	public String getTitle()
 	{ return I18n.format(getTitleKey()); }

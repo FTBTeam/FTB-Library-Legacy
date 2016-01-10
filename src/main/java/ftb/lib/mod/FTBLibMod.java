@@ -27,7 +27,7 @@ public class FTBLibMod
 	{
 		if(FTBLibFinals.DEV) FTBLib.logger.info("Loading FTBLib, DevEnv");
 		else FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.VERSION);
-
+		
 		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
 		FTBLib.init(e.getModConfigurationDirectory());
@@ -59,23 +59,23 @@ public class FTBLibMod
 		e.registerServerCommand(new CmdNotify());
 		e.registerServerCommand(new CmdSetItemName());
 	}
-
+	
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
 		FTBLib.folderWorld = new File(FTBLib.folderMinecraft, FTBLib.getServer().getFolderName());
-
+		
 		ConfigRegistry.reload();
 		GameModes.reload();
-
+		
 		FTBWorld.server = new FTBWorld();
 		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, FTBLib.getServer());
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();
-
+		
 		FTBLib.reload(FTBLib.getServer(), false, true);
 	}
-
+	
 	@Mod.EventHandler
 	public void onServerShutDown(FMLServerStoppedEvent e)
 	{

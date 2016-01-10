@@ -59,12 +59,12 @@ public class FTBLibGuiEventHandler
 		public String getTitleKey()
 		{ return "client_config"; }
 	};
-
+	
 	public static final PlayerAction dev_console = new PlayerAction("ftbl.dev_console", GuiIcons.bug)
 	{
 		public void onClicked(int playerID)
 		{ DevConsole.open(); }
-
+		
 		public String getTitleKey()
 		{ return "dev_console"; }
 	};
@@ -105,7 +105,7 @@ public class FTBLibGuiEventHandler
 			for(PlayerAction a : event.actions) buttons.add(a);
 			if(button_settings.get()) buttons.add(settings);
 			if(FTBLibFinals.DEV || FTBLib.userIsLatvianModder) buttons.add(dev_console);
-
+			
 			int i = -1;
 			for(PlayerAction a : buttons)
 			{

@@ -98,7 +98,7 @@ public class TextBoxLM extends WidgetLM
 	public void returnPressed()
 	{
 	}
-
+	
 	public void clear()
 	{
 		text = "";

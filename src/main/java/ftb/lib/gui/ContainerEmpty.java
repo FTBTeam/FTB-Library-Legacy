@@ -25,15 +25,15 @@ public class ContainerEmpty extends ContainerLM
 	{
 		return null;
 	}
-
+	
 	public void onCraftMatrixChanged(IInventory inv)
 	{
 	}
-
+	
 	public void putStackInSlot(int i, ItemStack is)
 	{
 	}
-
+	
 	@SideOnly(Side.CLIENT)
 	public void putStacksInSlots(ItemStack[] is)
 	{

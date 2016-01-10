@@ -78,7 +78,7 @@ public class StringIDInvLoader
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-
+				
 				if(tag1.hasKey("S")) count += tag1.getByte("C");
 				else
 				{
@@ -104,13 +104,13 @@ public class StringIDInvLoader
 		else
 		{
 			Item item = LMInvUtils.getItemFromRegName(tag.getString("ID"));
-
+			
 			if(item != null)
 			{
 				if(tag.hasKey("S"))
 				{
 					int slot = tag.getShort("S");
-
+					
 					int size = tag.getByte("C");
 					int dmg = Math.max(0, tag.getShort("D"));
 					ItemStack is = new ItemStack(item, size, dmg);
@@ -120,7 +120,7 @@ public class StringIDInvLoader
 				else
 				{
 					int[] ai = tag.getIntArray("D");
-
+					
 					if(ai.length == 3)
 					{
 						ItemStack is = new ItemStack(item, ai[1], ai[2]);

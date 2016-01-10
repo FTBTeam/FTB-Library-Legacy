@@ -11,27 +11,27 @@ import java.io.File;
 public final class ClientConfigRegistry
 {
 	private static final ConfigGroup group = new ConfigGroup("client_config");
-
+	
 	public static final IConfigProvider provider = new IConfigProvider()
 	{
 		public String getGroupTitle(ConfigGroup g)
 		{ return I18n.format(g.getFullID()); }
-
+		
 		public String getEntryTitle(ConfigEntry e)
 		{ return I18n.format(e.getFullID()); }
-
+		
 		public ConfigGroup getGroup()
 		{ return group; }
-
+		
 		public void save()
 		{
 			if(group.parentFile == null) init();
 			group.parentFile.save();
 			MessageReload.reloadClient(0L, true);
 		}
-
+		
 		public void closed(boolean changed)
-		{ save(); }
+		{ if(changed) save(); }
 	};
 	
 	public static void init()
@@ -44,7 +44,7 @@ public final class ClientConfigRegistry
 		group.parentFile = configFile;
 		configFile.load();
 	}
-
+	
 	/**
 	 * Do this before postInit()
 	 */

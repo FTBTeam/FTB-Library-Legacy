@@ -11,9 +11,9 @@ import java.util.*;
 public class ConfigRegistry
 {
 	public static final HashMap<String, Provider> map = new HashMap<>();
+	public static final HashMap<String, Provider> tempMap = new HashMap<>();
 	public static final ConfigGroup synced = new ConfigGroup("synced");
-	private static final HashMap<String, ConfigGroup> tempMap = new HashMap<>();
-
+	
 	public static void add(Provider p)
 	{ if(p != null) map.put(p.getID(), p); }
 	
@@ -25,16 +25,6 @@ public class ConfigRegistry
 			ConfigGroup g = e.configGroup.generateSynced(false);
 			if(!g.entries().isEmpty()) synced.add(g, false);
 		}
-	}
-
-	public static void putTemp(ConfigGroup g)
-	{ if(g != null) tempMap.put(g.ID, g); }
-	
-	public static ConfigGroup getTemp(String id, boolean remove)
-	{
-		ConfigGroup g = tempMap.get(id);
-		if(remove) tempMap.remove(id);
-		return g;
 	}
 	
 	public static void reload()
@@ -65,24 +55,24 @@ public class ConfigRegistry
 			}
 		}
 	}
-
+	
 	public static interface Provider
 	{
 		String getID();
-
+		
 		ConfigGroup getGroup();
 	}
-
+	
 	public static class ConfigFileProvider implements Provider
 	{
 		public final ConfigFile file;
-
+		
 		public ConfigFileProvider(ConfigFile f)
 		{ file = f; }
-
+		
 		public String getID()
 		{ return file.ID; }
-
+		
 		public ConfigGroup getGroup()
 		{ return file.configGroup; }
 	}

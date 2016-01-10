@@ -13,6 +13,7 @@ import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import ftb.lib.notification.Notification;
 import latmod.lib.*;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
@@ -41,7 +42,7 @@ public class FTBLib
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
-
+	
 	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[] {EnumChatFormatting.BLACK, EnumChatFormatting.DARK_BLUE, EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_AQUA, EnumChatFormatting.DARK_RED, EnumChatFormatting.DARK_PURPLE, EnumChatFormatting.GOLD, EnumChatFormatting.GRAY, EnumChatFormatting.DARK_GRAY, EnumChatFormatting.BLUE, EnumChatFormatting.GREEN, EnumChatFormatting.AQUA, EnumChatFormatting.RED, EnumChatFormatting.LIGHT_PURPLE, EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE,};
 	
 	public static File folderConfig;
@@ -75,16 +76,16 @@ public class FTBLib
 		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
 		GameModes.reload();
-
+		
 		EventFTBReload event = new EventFTBReload(FTBWorld.server, sender, reloadClient);
 		if(ftbu != null) ftbu.onReloaded(event);
 		event.post();
-
+		
 		if(printMessage)
 			printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
 		if(reloadClient) new MessageReload(FTBWorld.server).sendTo(null);
 	}
-
+	
 	public static IChatComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent) o : new ChatComponentText("" + o); }
 	
@@ -100,7 +101,7 @@ public class FTBLib
 	
 	public static MinecraftServer getServer()
 	{ return FMLCommonHandler.instance().getMinecraftServerInstance(); }
-
+	
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
 	
@@ -258,7 +259,7 @@ public class FTBLib
 		if(c.maxTick == 0) c.onCallback();
 		else FTBLibEventHandler.pendingCallbacks.add(c);
 	}
-
+	
 	public static boolean isOP(GameProfile p)
 	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152596_g(p); }
 	
@@ -287,7 +288,7 @@ public class FTBLib
 	public static UUID getPlayerID(String s)
 	{
 		if(s == null || s.isEmpty()) return null;
-
+		
 		String key = s.trim().toLowerCase();
 		
 		if(!cachedUUIDs.containsKey(key))
@@ -298,7 +299,7 @@ public class FTBLib
 			{
 				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
 				JsonElement e = LMJsonUtils.getJsonElement(json);
-				cachedUUIDs.put(key, LMStringUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
+				cachedUUIDs.put(key, UUIDTypeAdapterLM.getUUID(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }
 		}

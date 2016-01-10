@@ -13,7 +13,7 @@ import net.minecraft.util.ChatComponentTranslation;
 public class MessageReload extends MessageLM
 {
 	public MessageReload() { super(ByteCount.INT); }
-
+	
 	public MessageReload(FTBWorld w)
 	{
 		this();
@@ -23,7 +23,7 @@ public class MessageReload extends MessageLM
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
-
+	
 	public IMessage onMessage(MessageContext ctx)
 	{
 		long ms = LMUtils.millis();
@@ -32,7 +32,7 @@ public class MessageReload extends MessageLM
 		reloadClient(ms, true);
 		return null;
 	}
-
+	
 	public static void reloadClient(long ms, boolean printMessage)
 	{
 		if(ms == 0L) ms = LMUtils.millis();
@@ -44,14 +44,14 @@ public class MessageReload extends MessageLM
 		if(printMessage)
 			FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient", ((LMUtils.millis() - ms) + "ms")));
 	}
-
+	
 	static void writeSyncedConfig(ByteIOStream out)
 	{
 		try { ConfigRegistry.synced.write(out); }
 		catch(Exception ex) {}
 		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
 	}
-
+	
 	static void readSyncedConfig(ByteIOStream in)
 	{
 		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.ID);

@@ -96,7 +96,7 @@ public class GlStateManager // GuiLM
 	
 	public static void bindTexture(int textureID)
 	{ GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID); }
-
+	
 	public static void depthMask(boolean b)
 	{ GL11.glDepthMask(b); }
 	

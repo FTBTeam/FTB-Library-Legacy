@@ -24,7 +24,7 @@ public class EntityPos implements Cloneable
 	
 	public boolean equalsPos(Entity e)
 	{ return x == e.posX && y == e.posY && z == e.posZ && dim == e.dimension; }
-
+	
 	public boolean equalsIntPos(EntityPos p)
 	{ return (p == this) || (p != null && dim == p.dim && intX() == p.intX() && intY() == p.intY() && intZ() == p.intZ()); }
 	
@@ -41,7 +41,7 @@ public class EntityPos implements Cloneable
 	
 	public void set(ChunkCoordinates c, int dim)
 	{ setPos(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D, dim); }
-
+	
 	public EntityPos center()
 	{ return new EntityPos(intX() + 0.5D, intY() + 0.5D, intZ() + 0.5D, dim); }
 	

@@ -80,7 +80,7 @@ public class Notification
 			int l = o.has("timer") ? o.get("timer").getAsInt() : 3000;
 			Notification n = new Notification(o.get("id").getAsString(), t, l);
 			if(o.has("desc")) n.setDesc((IChatComponent) context.deserialize(o.get("desc"), IChatComponent.class));
-			if(o.has("color")) n.setColor(Converter.decodeInt(o.get("color").getAsString()));
+			if(o.has("color")) n.setColor(Integer.decode(o.get("color").getAsString()));
 			if(o.has("item")) n.setItem((ItemStack) context.deserialize(o.get("item"), ItemStack.class));
 			if(o.has("mouse")) n.setMouseAction((MouseAction) context.deserialize(o.get("mouse"), MouseAction.class));
 			return n;

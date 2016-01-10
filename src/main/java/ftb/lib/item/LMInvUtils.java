@@ -131,7 +131,7 @@ public class LMInvUtils
 	{
 		if(inv == null || i == -1 || i >= inv.getSizeInventory()) return false;
 		ItemStack is = inv.getStackInSlot(i);
-
+		
 		if(is != null)
 		{
 			is.stackSize--;
@@ -139,7 +139,7 @@ public class LMInvUtils
 			inv.setInventorySlotContents(i, is);
 			inv.markDirty();
 		}
-
+		
 		return false;
 	}
 	
@@ -352,13 +352,13 @@ public class LMInvUtils
 			if(items[i] != null && items[i].stackSize > 0) dropItem(w, x, y, z, items[i], 10);
 		}
 	}
-
+	
 	public static boolean canStack(ItemStack is1, ItemStack is2)
 	{
 		if(is1 == null || is2 == null) return false;
 		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize() && is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
 	}
-
+	
 	public static ItemStack[] getAllItems(IInventory inv, int side)
 	{
 		if(inv == null) return null;

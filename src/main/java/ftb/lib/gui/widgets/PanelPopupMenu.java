@@ -38,7 +38,7 @@ public abstract class PanelPopupMenu extends PanelLM
 	}
 	
 	public abstract void addItems();
-
+	
 	public abstract void onClosed(ButtonPopupMenu b, int mb);
 	
 	public void renderWidget()

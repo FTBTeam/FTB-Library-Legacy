@@ -49,7 +49,7 @@ public class LMDimUtils
 		w0.updateEntityWithOptionalForce(ep, false);
 		
 		ep.closeScreen();
-
+		
 		if(chw)
 		{
 			ep.dimension = dim;

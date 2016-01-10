@@ -21,7 +21,7 @@ import java.util.*;
 public class FTBLibClientEventHandler
 {
 	public static final FTBLibClientEventHandler instance = new FTBLibClientEventHandler();
-
+	
 	@SubscribeEvent
 	public void preTexturesLoaded(TextureStitchEvent.Pre e)
 	{

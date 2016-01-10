@@ -35,7 +35,7 @@ public enum EnumMCColor // ItemDye
 	public final String dyeName;
 	public final String glassName;
 	public final String paneName;
-
+	
 	EnumMCColor(String s, int c)
 	{
 		ID = ordinal();

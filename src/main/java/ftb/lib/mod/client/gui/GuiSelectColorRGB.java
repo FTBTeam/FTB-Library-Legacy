@@ -31,7 +31,7 @@ public class GuiSelectColorRGB extends GuiLM
 	public final Object colorID;
 	public final boolean isInstant;
 	public final LMColor currentColor;
-
+	
 	public final ButtonLM colorInit, colorCurrent, switchHSB;
 	public final SliderLM currentColR, currentColG, currentColB;
 	
@@ -59,7 +59,7 @@ public class GuiSelectColorRGB extends GuiLM
 				s.add(colorInit.toString());
 			}
 		};
-
+		
 		colorCurrent = new ButtonLM(this, 60, 6, col_tex.widthI(), col_tex.heightI())
 		{
 			public void onButtonPressed(int b)
@@ -206,7 +206,7 @@ public class GuiSelectColorRGB extends GuiLM
 		u |= currentColR.update();
 		u |= currentColG.update();
 		u |= currentColB.update();
-
+		
 		if(u)
 		{
 			int r = (int) (currentColR.value * 255F);

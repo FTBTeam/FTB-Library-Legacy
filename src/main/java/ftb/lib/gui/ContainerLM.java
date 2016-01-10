@@ -28,17 +28,17 @@ public abstract class ContainerLM extends Container
 		{
 			ItemStack is1 = slot.getStack();
 			is = is1.copy();
-
+			
 			if(i < iinv.getSizeInventory())
 			{
 				if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true)) return null;
 			}
 			else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false)) return null;
-
+			
 			if(is1.stackSize == 0) slot.putStack(null);
 			else slot.onSlotChanged();
 		}
-
+		
 		return is;
 	}
 	
@@ -129,7 +129,7 @@ public abstract class ContainerLM extends Container
 			{
 				slot = (Slot) inventorySlots.get(k);
 				is1 = slot.getStack();
-
+				
 				if(is1 == null)
 				{
 					slot.putStack(is.copy());
@@ -138,12 +138,12 @@ public abstract class ContainerLM extends Container
 					flag1 = true;
 					break;
 				}
-
+				
 				if(RtoL) --k;
 				else ++k;
 			}
 		}
-
+		
 		return flag1;
 	}
 }

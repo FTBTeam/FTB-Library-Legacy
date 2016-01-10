@@ -299,7 +299,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public void render(TextureCoords tc, double x, double y)
 	{ if(tc != null && tc.isValid()) render(tc, x, y, tc.width, tc.height); }
-
+	
 	@Optional.Method(modid = OtherMods.NEI)
 	public codechicken.nei.VisiblityData modifyVisiblity(GuiContainer g, codechicken.nei.VisiblityData vd)
 	{

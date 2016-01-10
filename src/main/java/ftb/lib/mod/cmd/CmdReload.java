@@ -10,7 +10,7 @@ public class CmdReload extends CommandLM
 {
 	public CmdReload()
 	{ super(FTBLibConfigCmd.Name.reload.get(), CommandLevel.OP); }
-
+	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
 		FTBLib.reload(ics, true, true);
