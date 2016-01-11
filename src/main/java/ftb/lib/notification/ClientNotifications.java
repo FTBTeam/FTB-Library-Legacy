@@ -5,10 +5,9 @@ import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.item.ItemStack;
 
 import java.util.*;
 
@@ -38,7 +37,8 @@ public class ClientNotifications
 		{
 			Temp.list.remove(n.ID);
 			Perm.list.remove(n.ID);
-			if(current != null && current.ID != null && current.ID.equals(n.ID)) current = null;
+			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
+				current = null;
 		}
 		
 		Temp.list.add(new Temp(n));
@@ -59,33 +59,29 @@ public class ClientNotifications
 		private static Minecraft mc;
 		
 		private long time;
-		private String ID;
+		private Notification notification;
 		private String title;
 		private String desc;
-		private double timer;
-		private ItemStack item;
 		private int color;
 		private int width;
 		
-		public Temp(Notification n)
+		private Temp(Notification n)
 		{
 			mc = FTBLibClient.mc;
+			notification = n;
 			time = -1L;
-			ID = n.ID;
-			title = n.title.getFormattedText();
-			desc = (n.desc == null) ? null : n.desc.getFormattedText();
-			timer = (double) n.timer;
-			item = n.item;
-			color = LMColorUtils.getRGBA(n.color, 230);
+			title = notification.title.getFormattedText();
+			desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
+			color = LMColorUtils.getRGBA(notification.color, 230);
 			width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
-			if(item != null) width += 20;
+			if(notification.item != null) width += 20;
 		}
 		
 		public String toString()
-		{ return ID; }
+		{ return notification.ID; }
 		
 		public boolean equals(Object o)
-		{ return toString().equals(o.toString()); }
+		{ return notification.equals(o.toString()); }
 		
 		public void render()
 		{
@@ -93,23 +89,7 @@ public class ClientNotifications
 			
 			if(time > 0L)
 			{
-				/*GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
-				GL11.glMatrixMode(GL11.GL_PROJECTION);
-				GL11.glLoadIdentity();
-				GL11.glMatrixMode(GL11.GL_MODELVIEW);
-				GL11.glLoadIdentity();
-				GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-				GL11.glMatrixMode(GL11.GL_PROJECTION);
-				GL11.glLoadIdentity();
-				GL11.glOrtho(0D, LatCoreMCClient.displayW, LatCoreMCClient.displayH, 0D, 1000D, 3000D);
-				GL11.glMatrixMode(GL11.GL_MODELVIEW);
-				GL11.glLoadIdentity();
-				GL11.glTranslatef(0F, 0F, -2000F);
-				*/
-				GlStateManager.disableDepth();
-				GlStateManager.depthMask(false);
-				
-				double d0 = (double) (Minecraft.getSystemTime() - time) / timer;
+				double d0 = (double) (Minecraft.getSystemTime() - time) / (double) notification.timer;
 				
 				if(d0 < 0D || d0 > 1D)
 				{
@@ -128,6 +108,8 @@ public class ClientNotifications
 				d1 *= d1;
 				d1 *= d1;
 				
+				GlStateManager.disableDepth();
+				GlStateManager.depthMask(false);
 				int i = FTBLibClient.displayW - width;
 				int j = 0 - (int) (d1 * 36D);
 				GlStateManager.color(1F, 1F, 1F, 1F);
@@ -137,26 +119,28 @@ public class ClientNotifications
 				GlStateManager.enableTexture();
 				GlStateManager.pushAttrib();
 				
-				int w = item == null ? 10 : 30;
+				int w = notification.item == null ? 10 : 30;
+				
+				FontRenderer font = mc.fontRenderer;
 				
 				if(desc == null)
 				{
-					mc.fontRenderer.drawString(title, i + w, j + 12, -256);
+					font.drawString(title, i + w, j + 12, -256);
 				}
 				else
 				{
-					mc.fontRenderer.drawString(title, i + w, j + 7, -256);
-					mc.fontRenderer.drawString(desc, i + w, j + 18, -1);
+					font.drawString(title, i + w, j + 7, -256);
+					font.drawString(desc, i + w, j + 18, -1);
 				}
 				
-				if(item != null)
+				if(notification.item != null)
 				{
 					RenderHelper.enableGUIStandardItemLighting();
 					GlStateManager.enableRescaleNormal();
 					GlStateManager.enableColorMaterial();
 					GlStateManager.enableLighting();
-					renderItem.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8, false);
-					renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, mc.getTextureManager(), item, i + 8, j + 8);
+					renderItem.renderItemIntoGUI(font, mc.getTextureManager(), notification.item, i + 8, j + 8, false);
+					renderItem.renderItemOverlayIntoGUI(font, mc.getTextureManager(), notification.item, i + 8, j + 8);
 				}
 				
 				GlStateManager.depthMask(true);
@@ -175,7 +159,7 @@ public class ClientNotifications
 		public final Notification notification;
 		public final long timeAdded;
 		
-		public Perm(Notification n)
+		private Perm(Notification n)
 		{
 			notification = n;
 			timeAdded = LMUtils.millis();

@@ -131,9 +131,12 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	protected void keyTyped(char keyChar, int key)
 	{
 		if(mainPanel.keyPressed(key, keyChar)) return;
-		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode()) close(null);
+		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode()) onClosedByKey();
 		super.keyTyped(keyChar, key);
 	}
+	
+	public void onClosedByKey()
+	{ close(null); }
 	
 	public final void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{ drawBackground(); }

@@ -2,14 +2,14 @@ package ftb.lib.notification;
 
 import com.google.gson.*;
 import latmod.lib.*;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;
 
 import java.lang.reflect.Type;
 
-public class Notification
+public class Notification extends FinalIDObject
 {
-	public final String ID;
 	public final IChatComponent title;
 	public final int timer;
 	public IChatComponent desc = null;
@@ -19,7 +19,7 @@ public class Notification
 	
 	public Notification(String s, IChatComponent t, int l)
 	{
-		ID = s;
+		super(s);
 		title = t;
 		timer = MathHelperLM.clampInt(l, 1, 30000);
 	}
@@ -38,15 +38,6 @@ public class Notification
 	
 	public boolean isTemp()
 	{ return mouse == null; }
-	
-	public boolean equals(Object o)
-	{ return o != null && (o == this || o.toString().equals(ID)); }
-	
-	public int hashCode()
-	{ return ID.hashCode(); }
-	
-	public String toString()
-	{ return ID; }
 	
 	public static Notification fromJson(String s)
 	{ return (Notification) LMJsonUtils.fromJson(s, Notification.class); }

@@ -9,5 +9,4 @@ public interface IConfigProvider
 	String getEntryTitle(ConfigEntry e);
 	ConfigGroup getGroup();
 	void save();
-	void closed(boolean changed);
 }

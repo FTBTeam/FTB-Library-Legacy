@@ -3,7 +3,6 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.client.ServerConfigProvider;
 import ftb.lib.mod.client.gui.GuiEditConfig;
@@ -14,15 +13,12 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(ByteCount.INT); }
 	
-	public MessageEditConfig(long t, boolean temp, ConfigRegistry.Provider p)
+	public MessageEditConfig(long t, ConfigGroup o)
 	{
 		this();
 		io.writeLong(t);
-		io.writeBoolean(temp);
-		io.writeUTF(p.getID());
-		
-		try { p.getGroup().writeExtended(io); }
-		catch(Exception e) { }
+		io.writeUTF(o.ID);
+		o.writeExtended(io);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -32,14 +28,12 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 	public IMessage onMessage(MessageContext ctx)
 	{
 		long token = io.readLong();
-		boolean temp = io.readBoolean();
 		String id = io.readUTF();
+		
 		ConfigGroup group = new ConfigGroup(id);
+		group.readExtended(io);
 		
-		try { group.readExtended(io); }
-		catch(Exception e) { }
-		
-		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, temp, group)));
+		FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, group)));
 		return null;
 	}
 }

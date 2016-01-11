@@ -37,7 +37,7 @@ public class LMNBTUtils
 		return list;
 	}
 	
-	public static Map<String, NBTBase> toMap(NBTTagCompound tag) // TODO: Rename me
+	public static Map<String, NBTBase> toMap(NBTTagCompound tag)
 	{
 		Map<String, NBTBase> map = new HashMap<String, NBTBase>();
 		List<String> keys = getMapKeys(tag);

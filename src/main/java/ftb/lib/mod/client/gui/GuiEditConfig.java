@@ -23,7 +23,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	public final PanelLM configPanel;
 	public final ButtonLM buttonClose, buttonExpandAll, buttonCollapseAll;
 	public final SliderLM scroll;
-	public boolean changed = false;
+	private boolean changed = false;
+	private boolean shouldClose = false;
 	
 	public GuiEditConfig(GuiScreen g, IConfigProvider p)
 	{
@@ -69,7 +70,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			public void onButtonPressed(int b)
 			{
 				gui.playClickSound();
-				close(parentScreen);
+				shouldClose = true;
+				close(null);
 			}
 		};
 		
@@ -138,16 +140,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		if(configEntryButtons.isEmpty())
 		{
 			configEntryButtons.clear();
-			ConfigGroup group = provider.getGroup();
 			
-			for(ConfigEntry entry : group.entries())
+			for(ConfigEntry entry : provider.getGroup().entries())
 				addCE(null, entry, 0);
 		}
 	}
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.isHidden())
+		if(!e.getFlag(ConfigEntry.FLAG_HIDDEN))
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -182,7 +183,18 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	}
 	
 	public void onLMGuiClosed()
-	{ provider.closed(changed); }
+	{
+		if(shouldClose && changed) provider.save();
+	}
+	
+	public void onClosedByKey()
+	{
+		shouldClose = true;
+		super.onClosedByKey();
+	}
+	
+	public void onChanged()
+	{ changed = true; }
 	
 	public void drawBackground()
 	{
@@ -290,14 +302,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			if(entry instanceof IClickableConfigEntry)
 			{
 				((IClickableConfigEntry) entry).onClicked();
-				((GuiEditConfig) gui).changed = true;
+				gui.onChanged();
 			}
 			else if(entry.getAsGroup() != null)
 			{
 				expanded = !expanded;
 				gui.refreshWidgets();
 			}
-			else if(entry.type == PrimitiveType.COLOR)
+			else if(entry.getType() == PrimitiveType.COLOR)
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
 				{
@@ -306,57 +318,57 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 						if(c.set)
 						{
 							((ConfigEntryColor) entry).value.set(c.color);
-							((GuiEditConfig) gui).changed = true;
+							gui.onChanged();
 						}
 						
 						if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
 					}
 				}, ((ConfigEntryColor) entry).value.color(), 0, false);
 			}
-			else if(entry.type == PrimitiveType.INT || entry.type == PrimitiveType.DOUBLE || entry.type == PrimitiveType.STRING)
+			else if(entry.getType() == PrimitiveType.INT || entry.getType() == PrimitiveType.DOUBLE || entry.getType() == PrimitiveType.STRING)
 			{
-				if(entry.type == PrimitiveType.INT)
+				if(entry.getType() == PrimitiveType.INT)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryInt) entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryInt) entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
 								((ConfigEntryInt) entry).set(c.getI());
-								((GuiEditConfig) gui).changed = true;
+								gui.onChanged();
 							}
 							
 							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
 						}
 					});
 				}
-				else if(entry.type == PrimitiveType.DOUBLE)
+				else if(entry.getType() == PrimitiveType.DOUBLE)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryDouble) entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryDouble) entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
 								((ConfigEntryDouble) entry).set(c.getF());
-								((GuiEditConfig) gui).changed = true;
+								gui.onChanged();
 							}
 							
 							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
 						}
 					});
 				}
-				else if(entry.type == PrimitiveType.STRING)
+				else if(entry.getType() == PrimitiveType.STRING)
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.type, ((ConfigEntryString) entry).get(), new IFieldCallback()
+					LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryString) entry).get(), new IFieldCallback()
 					{
 						public void onFieldSelected(FieldSelected c)
 						{
 							if(c.set)
 							{
 								((ConfigEntryString) entry).set(c.getS());
-								((GuiEditConfig) gui).changed = true;
+								gui.onChanged();
 							}
 							
 							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
@@ -368,13 +380,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		public int getColor()
 		{
-			if(entry instanceof ConfigEntryBlank) return 0xFFAA00;
-			else if(entry.type == PrimitiveType.COLOR) return ((ConfigEntryColor) entry).value.color();
-			else if(entry.type.isEnum) return 0x0094FF;
-			else if(entry.type.isBoolean) return ((ConfigEntryBool) entry).get() ? 0x33AA33 : 0xD52834;
-			else if(entry.type.isArray) return 0xFF4F34;
-			else if(entry.type.isNumber) return 0xAA5AE8;
-			else if(entry.type.isString) return 0xFFAA49;
+			PrimitiveType type = entry.getType();
+			if(PrimitiveType.isNull(type)) return 0xFFAA00;
+			else if(type == PrimitiveType.COLOR) return ((ConfigEntryColor) entry).value.color();
+			else if(type.isEnum) return 0x0094FF;
+			else if(type.isBoolean) return ((ConfigEntryBool) entry).get() ? 0x33AA33 : 0xD52834;
+			else if(type.isArray) return 0xFF4F34;
+			else if(type.isNumber) return 0xAA5AE8;
+			else if(type.isString) return 0xFFAA49;
 			return 0x999999;
 		}
 		

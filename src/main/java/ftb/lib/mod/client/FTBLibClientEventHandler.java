@@ -85,7 +85,10 @@ public class FTBLibClientEventHandler
 			if(FTBLibModClient.debug_info.get()) e.left.add(FTBLibClient.mc.debug);
 			
 			if(FTBLibFinals.DEV)
+			{
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+				DevConsole.text.set("MC", Loader.MC_VERSION + ", " + FTBLibClient.mc.debug);
+			}
 		}
 		else
 		{

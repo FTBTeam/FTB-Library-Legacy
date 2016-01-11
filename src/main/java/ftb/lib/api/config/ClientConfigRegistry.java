@@ -27,11 +27,8 @@ public final class ClientConfigRegistry
 		{
 			if(group.parentFile == null) init();
 			group.parentFile.save();
-			MessageReload.reloadClient(0L, true);
+			MessageReload.reloadClient(0L, false);
 		}
-		
-		public void closed(boolean changed)
-		{ if(changed) save(); }
 	};
 	
 	public static void init()

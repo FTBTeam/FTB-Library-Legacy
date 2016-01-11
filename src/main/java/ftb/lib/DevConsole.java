@@ -19,6 +19,7 @@ public class DevConsole
 		}
 	};
 	
+	private static String prevText = "";
 	private static JFrame frame = null;
 	private static JTextArea textArea = new JTextArea();
 	
@@ -33,7 +34,14 @@ public class DevConsole
 		{
 			StringBuilder sb = new StringBuilder();
 			text.toString(sb, "DevEnv", 0);
-			textArea.setText(sb.toString());
+			String s = sb.toString();
+			
+			if(!prevText.equals(s))
+			{
+				textArea.setLineWrap(true);
+				textArea.setText(s);
+				prevText = s;
+			}
 		}
 		catch(Exception ex)
 		{

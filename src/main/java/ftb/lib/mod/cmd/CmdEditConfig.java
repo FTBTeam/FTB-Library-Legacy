@@ -24,15 +24,15 @@ public class CmdEditConfig extends CommandLM
 		if(i == 0) return LMMapUtils.toKeyStringArray(ConfigRegistry.map);
 		else if(i == 1)
 		{
-			ConfigGroup list = ConfigRegistry.map.get(args[0]).getGroup();
-			if(list != null) return LMMapUtils.toKeyStringArray(list.entryMap);
+			IConfigFile file = ConfigRegistry.map.get(args[0]);
+			if(file != null) return LMMapUtils.toKeyStringArray(file.getGroup().entryMap);
 		}
 		else if(i == 2)
 		{
-			ConfigGroup file = ConfigRegistry.map.get(args[0]).getGroup();
+			IConfigFile file = ConfigRegistry.map.get(args[0]);
 			if(file != null)
 			{
-				ConfigGroup group = file.getGroup(args[1]);
+				ConfigGroup group = file.getGroup().getGroup(args[1]);
 				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap);
 			}
 		}
@@ -47,68 +47,47 @@ public class CmdEditConfig extends CommandLM
 		if(args.length == 1 && ics instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+			IConfigFile file = ConfigRegistry.map.get(args[0]);
 			
-			if(!ConfigRegistry.map.containsKey(args[0]))
-				return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
+			if(file == null) return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
 			
-			ConfigRegistry.Provider provider = ConfigRegistry.map.get(args[0]);
-			
-			if(provider != null && provider.getGroup().parentFile != null)
-			{
-				new MessageEditConfig(LMAccessToken.generate(ep), false, provider).sendTo(ep);
-				return null;
-			}
-			
-			return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
+			new MessageEditConfig(LMAccessToken.generate(ep), file.getGroup()).sendTo(ep);
+			return null;
 		}
 		
 		checkArgs(args, 3); // file, group, entry, value...
 		
-		ConfigRegistry.Provider p = ConfigRegistry.map.get(args[0]);
-		if(!(p instanceof ConfigRegistry.ConfigFileProvider)) return new ChatComponentText("Can only edit files!");
-		
-		ConfigGroup file = p.getGroup();
+		IConfigFile file = ConfigRegistry.map.get(args[0]);
+		if(file == null) return error(new ChatComponentText("Can only edit files!"));
 		
 		boolean success = false;
-		if(file != null)
+		ConfigGroup group = file.getGroup().getGroup(args[1]);
+		ConfigEntry entry = (group == null) ? null : group.getEntry(args[2]);
+		
+		if(entry == null)
+			return error(new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'"));
+		
+		if(args.length >= 4)
 		{
-			ConfigGroup group = file.getGroup(args[1]);
+			String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
 			
-			if(group != null)
+			FTBLib.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
+			
+			try
 			{
-				ConfigEntry entry = group.getEntry(args[2]);
-				
-				if(entry != null)
-				{
-					success = true;
-					
-					if(args.length >= 4)
-					{
-						String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
-						
-						FTBLib.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
-						
-						try
-						{
-							entry.setJson(LMJsonUtils.getJsonElement(json));
-							if(file.parentFile != null) file.parentFile.save();
-						}
-						catch(Exception ex)
-						{
-							ChatComponentText error = new ChatComponentText(ex.getMessage());
-							error.getChatStyle().setColor(EnumChatFormatting.RED);
-							return error;
-						}
-					}
-					else return new ChatComponentText(entry.getPrettyJsonString(false));
-				}
+				entry.setJson(LMJsonUtils.getJsonElement(json));
+				if(group.parentFile != null) group.parentFile.save();
+				FTBLib.reload(ics, true, true);
+				return new ChatComponentText(args[2] + " set to " + entry.getPrettyJsonString(false));
+			}
+			catch(Exception ex)
+			{
+				ChatComponentText error = new ChatComponentText(ex.toString());
+				error.getChatStyle().setColor(EnumChatFormatting.RED);
+				return error;
 			}
 		}
 		
-		if(!success)
-			return new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
-		
-		FTBLib.reload(ics, true, true);
-		return null;
+		return new ChatComponentText(entry.getPrettyJsonString(false));
 	}
 }
