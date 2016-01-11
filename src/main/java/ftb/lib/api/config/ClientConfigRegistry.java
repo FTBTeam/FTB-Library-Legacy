@@ -1,10 +1,12 @@
 package ftb.lib.api.config;
 
 import ftb.lib.FTBLib;
-import ftb.lib.mod.net.MessageReload;
+import ftb.lib.mod.client.FTBLibModClient;
+import ftb.lib.notification.*;
 import latmod.lib.LMFileUtils;
 import latmod.lib.config.*;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.*;
 
 import java.io.File;
 
@@ -27,7 +29,12 @@ public final class ClientConfigRegistry
 		{
 			if(group.parentFile == null) init();
 			group.parentFile.save();
-			MessageReload.reloadClient(0L, false);
+			
+			Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 3000);
+			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
+			n.setColor(0xFF33FF33);
+			ClientNotifications.add(n);
 		}
 	};
 	

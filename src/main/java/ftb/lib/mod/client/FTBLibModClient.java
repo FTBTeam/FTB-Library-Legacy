@@ -7,6 +7,7 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibModCommon;
+import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.LMColorUtils;
 import latmod.lib.config.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
@@ -16,6 +17,7 @@ import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import org.lwjgl.input.Keyboard;
 
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool debug_info = new ConfigEntryBool("debug_info", false);
 	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
+	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	
 	public void preInit()
 	{
@@ -42,6 +45,8 @@ public class FTBLibModClient extends FTBLibModCommon
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
 		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class, null, false));
+		
+		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
 	}
 	
 	public void postInit()

@@ -12,6 +12,7 @@ ftbl:invalid_subcmd=Invalid subcommand: '%s'!
 ftbl:owner=Owner: %s
 ftbl:delete_item=Do you want to delete '%s'?
 ftbl:label.server_forced=Server overrides to '%s'
+ftbl:reload_client_config=Reload client with:
 
 #Buttons
 ftbl:button.settings=Settings
@@ -79,6 +80,7 @@ client_config.ftbl.item_ore_names=Item OreDict Names
 client_config.ftbl.item_reg_names=Item Registry Names
 client_config.ftbl.debug_info=Debug Info
 client_config.ftbl.notifications=Notifications
+client_config.ftbl.reload_client_cmd=Client Reloading Command
 
 client_config.sidebar_buttons=Sidebar Buttons
 client_config.sidebar_buttons.settings=Client Settings

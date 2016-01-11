@@ -2,6 +2,8 @@ package ftb.lib.mod;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -12,6 +14,7 @@ import ftb.lib.mod.net.FTBLibNetHandler;
 import latmod.lib.util.OS;
 
 import java.io.File;
+import java.util.Map;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
 public class FTBLibMod
@@ -84,11 +87,10 @@ public class FTBLibMod
 		FTBLib.folderWorld = null;
 	}
 	
-	/*
 	@NetworkCheckHandler
 	public boolean checkNetwork(Map<String, String> m, Side side)
 	{
 		String s = m.get(FTBLibFinals.MOD_ID);
-		return s == null || FTBLibFinals.DEV || s.equals(FTBLibFinals.VERSION);
-	}*/
+		return s == null || s.equals(FTBLibFinals.VERSION);
+	}
 }
