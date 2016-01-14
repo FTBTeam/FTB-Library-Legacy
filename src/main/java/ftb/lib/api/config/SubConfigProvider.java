@@ -5,12 +5,12 @@ import latmod.lib.config.*;
 public class SubConfigProvider implements IConfigProvider
 {
 	public final IConfigProvider parent;
-	public final Object key;
+	public final ConfigGroup subGroup;
 	
 	public SubConfigProvider(IConfigProvider p, Object k)
 	{
 		parent = p;
-		key = k;
+		subGroup = p.getGroup().getGroup(k);
 	}
 	
 	public String getGroupTitle(ConfigGroup g)
@@ -20,7 +20,7 @@ public class SubConfigProvider implements IConfigProvider
 	{ return parent.getEntryTitle(e); }
 	
 	public ConfigGroup getGroup()
-	{ return parent.getGroup().getGroup(key); }
+	{ return subGroup; }
 	
 	public void save()
 	{ parent.save(); }

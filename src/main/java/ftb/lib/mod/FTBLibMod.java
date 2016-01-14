@@ -66,7 +66,8 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
-		FTBLib.folderWorld = new File(FTBLib.folderMinecraft, FTBLib.getServer().getFolderName());
+		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName());
+		FTBLib.dev_logger.info("World folder: " + FTBLib.folderWorld.getAbsolutePath());
 		
 		ConfigRegistry.reload();
 		GameModes.reload();

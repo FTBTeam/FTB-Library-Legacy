@@ -4,7 +4,7 @@ import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import ftb.lib.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
-import latmod.lib.LMMapUtils;
+import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -81,7 +81,7 @@ public class CmdMode extends CommandSubLM
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.getGameModes().modes.keySet()));
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", LMStringUtils.strip(LMListUtils.toStringArray(GameModes.getGameModes().modes.keySet())));
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			return c;
 		}

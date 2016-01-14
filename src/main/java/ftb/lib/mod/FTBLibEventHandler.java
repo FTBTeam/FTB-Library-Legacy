@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.ServerTickCallback;
 import ftb.lib.mod.net.MessageSendWorldID;
+import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.*;
@@ -22,8 +23,9 @@ public class FTBLibEventHandler
 		if(e.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP) e.player;
+			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.PRE);
 			new MessageSendWorldID(FTBWorld.server, ep).sendTo(ep);
-			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep);
+			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.POST);
 		}
 	}
 	

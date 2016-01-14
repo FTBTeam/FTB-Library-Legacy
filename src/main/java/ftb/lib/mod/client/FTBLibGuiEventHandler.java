@@ -4,7 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
@@ -63,23 +63,7 @@ public class FTBLibGuiEventHandler
 	public static final PlayerAction dev_console = new PlayerAction("ftbl.dev_console", GuiIcons.bug)
 	{
 		public void onClicked(int playerID)
-		{
-			if(DevConsole.enabled())
-			{
-				DevConsole.open();
-				
-				DevConsole.Tree tree = new DevConsole.Tree();
-				
-				tree.set("synced", ConfigRegistry.synced);
-				
-				for(IConfigFile f : ConfigRegistry.map.values())
-				{
-					tree.set(f.getGroup().ID, f.getGroup().getPrettyJsonString(true));
-				}
-				
-				DevConsole.text.set("Config", tree);
-			}
-		}
+		{ DevConsole.open(); }
 		
 		public String getTitleKey()
 		{ return "dev_console"; }

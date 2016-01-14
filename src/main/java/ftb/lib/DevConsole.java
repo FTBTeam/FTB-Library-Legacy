@@ -71,7 +71,10 @@ public class DevConsole
 			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			
 			textArea.setEditable(false);
-			frame.add(textArea);
+			JScrollPane scroll = new JScrollPane(textArea);
+			scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+			scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			frame.add(scroll);
 		}
 		
 		if(!frame.isVisible()) frame.setVisible(true);

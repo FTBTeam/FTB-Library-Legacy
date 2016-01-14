@@ -44,7 +44,7 @@ public class FTBWorld
 		
 		for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
 		
-		FTBLib.logger.info("Current Mode: " + currentMode);
+		FTBLib.logger.info("Current Mode: " + currentMode + " " + GameModes.getGameModes().modes.keySet());
 		
 		UUID worldID0 = null;
 		try
