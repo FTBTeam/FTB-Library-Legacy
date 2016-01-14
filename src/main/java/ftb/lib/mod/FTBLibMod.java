@@ -48,6 +48,8 @@ public class FTBLibMod
 	{
 		ODItems.postInit();
 		proxy.postInit();
+		GameModes.reload();
+		ConfigRegistry.reload();
 	}
 	
 	@Mod.EventHandler

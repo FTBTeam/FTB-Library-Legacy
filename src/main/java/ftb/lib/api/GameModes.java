@@ -84,7 +84,10 @@ public class GameModes
 	}
 	
 	public static GameModes getGameModes()
-	{ return gameModes; }
+	{
+		if(gameModes == null) reload();
+		return gameModes;
+	}
 	
 	public GameMode get(String s)
 	{

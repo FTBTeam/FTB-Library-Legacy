@@ -9,6 +9,8 @@ import ftb.lib.api.ServerTickCallback;
 import ftb.lib.mod.net.MessageSendWorldID;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.*;
 
@@ -16,6 +18,13 @@ public class FTBLibEventHandler
 {
 	public static final List<ServerTickCallback> callbacks = new ArrayList<>();
 	public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
+	
+	@SubscribeEvent
+	public void onWorldLoaded(WorldEvent.Load e)
+	{
+		if(e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
+			FTBLib.reload(FTBLib.getServer(), false, false);
+	}
 	
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent e)
