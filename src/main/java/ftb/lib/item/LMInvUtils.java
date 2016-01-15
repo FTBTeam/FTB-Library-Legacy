@@ -10,8 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.*;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
-import net.minecraft.tileentity.*;
-import net.minecraft.util.Facing;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.*;
 
@@ -30,19 +29,6 @@ public class LMInvUtils
 		return is1;
 	}
 	
-	public static IInventory getInvAt(World w, double x, double y, double z, boolean entities)
-	{
-		if(entities) return TileEntityHopper.func_145893_b(w, x, y, z);
-		TileEntity te = w.getTileEntity((int) x, (int) y, (int) z);
-		return (te != null && te instanceof IInventory) ? (IInventory) te : null;
-	}
-	
-	public static IInventory getInvAt(TileEntity te, int side, boolean entities)
-	{
-		if(side < 0 || side >= 6) return null;
-		return getInvAt(te.getWorldObj(), te.xCoord + Facing.offsetsXForSide[side] + 0.5D, te.yCoord + Facing.offsetsYForSide[side] + 0.5D, te.zCoord + Facing.offsetsZForSide[side] + 0.5D, entities);
-	}
-	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
 	{
 		if(is1 == null && is2 == null) return true;
@@ -50,17 +36,16 @@ public class LMInvUtils
 		return is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (nbt ? ItemStack.areItemStackTagsEqual(is1, is2) : true) && (size ? (is1.stackSize == is2.stackSize) : true);
 	}
 	
-	public static int[] getAllSlots(IInventory inv, int side)
+	public static int[] getAllSlots(IInventory inv, EnumFacing side)
 	{
-		if(side != -1 && inv instanceof ISidedInventory)
-			return ((ISidedInventory) inv).getAccessibleSlotsFromSide(side);
+		if(side != null && inv instanceof ISidedInventory) return ((ISidedInventory) inv).getSlotsForFace(side);
 		
 		int[] ai = new int[inv.getSizeInventory()];
 		for(int i = 0; i < ai.length; i++) ai[i] = i;
 		return ai;
 	}
 	
-	public static int getFirstIndexWhereFits(IInventory inv, ItemStack filter, int side)
+	public static int getFirstIndexWhereFits(IInventory inv, ItemStack filter, EnumFacing side)
 	{
 		if(inv == null) return -1;
 		
@@ -82,7 +67,7 @@ public class LMInvUtils
 		return getFirstEmptyIndex(inv, side);
 	}
 	
-	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, int side, boolean size, boolean nbt)
+	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, EnumFacing side, boolean size, boolean nbt)
 	{
 		if(inv == null || filter == null) return -1;
 		int slots[] = getAllSlots(inv, side);
@@ -95,7 +80,7 @@ public class LMInvUtils
 		return -1;
 	}
 	
-	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, int side)
+	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, EnumFacing side)
 	{
 		if(inv == null) return -1;
 		int slots[] = getAllSlots(inv, side);
@@ -113,7 +98,7 @@ public class LMInvUtils
 		return -1;
 	}
 	
-	public static int getFirstEmptyIndex(IInventory inv, int side)
+	public static int getFirstEmptyIndex(IInventory inv, EnumFacing side)
 	{
 		if(inv == null) return -1;
 		
@@ -163,7 +148,7 @@ public class LMInvUtils
 		inv.markDirty();
 	}
 	
-	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, int side, boolean doAdd)
+	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, EnumFacing side, boolean doAdd)
 	{
 		if(is == null) return false;
 		ItemStack single = singleCopy(is);
@@ -175,7 +160,7 @@ public class LMInvUtils
 			{
 				if(is1.stackSize + 1 <= is1.getMaxStackSize())
 				{
-					if(side == -1 || canInsert(inv, single, i, side))
+					if(side == null || canInsert(inv, single, i, side))
 					{
 						if(doAdd)
 						{
@@ -195,7 +180,7 @@ public class LMInvUtils
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
 			if(is1 == null || is1.stackSize == 0)
 			{
-				if(side == -1 || canInsert(inv, single, i, side))
+				if(side == null || canInsert(inv, single, i, side))
 				{
 					if(doAdd)
 					{
@@ -211,7 +196,7 @@ public class LMInvUtils
 		return false;
 	}
 	
-	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int side, boolean doAdd)
+	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, EnumFacing side, boolean doAdd)
 	{ return addSingleItemToInv(is, inv, getAllSlots(inv, side), side, doAdd); }
 	
 	public static NBTTagCompound removeTags(NBTTagCompound tag, String... tags)
@@ -226,7 +211,7 @@ public class LMInvUtils
 	public static ItemStack removeTags(ItemStack is, String... tags)
 	{
 		if(is == null) return null;
-		is.setTagCompound(removeTags(is.stackTagCompound, tags));
+		is.setTagCompound(removeTags(is.getTagCompound(), tags));
 		return is;
 	}
 	
@@ -301,7 +286,7 @@ public class LMInvUtils
 		ei.motionX = mx;
 		ei.motionY = my;
 		ei.motionZ = mz;
-		ei.delayBeforeCanPickup = delay;
+		ei.setPickupDelay(delay);
 		w.spawnEntityInWorld(ei);
 	}
 	
@@ -326,7 +311,7 @@ public class LMInvUtils
 		int size = is.stackSize;
 		for(int i = 0; i < size; i++)
 		{
-			if(LMInvUtils.addSingleItemToInv(is, ep.inventory, LMInvUtils.getPlayerSlots(ep), -1, true))
+			if(LMInvUtils.addSingleItemToInv(is, ep.inventory, LMInvUtils.getPlayerSlots(ep), null, true))
 			{
 				is.stackSize--;
 				changed = true;
@@ -359,7 +344,7 @@ public class LMInvUtils
 		return (is1.stackSize + is2.stackSize <= is1.getMaxStackSize() && is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
 	}
 	
-	public static ItemStack[] getAllItems(IInventory inv, int side)
+	public static ItemStack[] getAllItems(IInventory inv, EnumFacing side)
 	{
 		if(inv == null) return null;
 		int[] slots = LMInvUtils.getAllSlots(inv, side);
@@ -370,13 +355,13 @@ public class LMInvUtils
 		return ai;
 	}
 	
-	public static boolean canExtract(IInventory inv, ItemStack is, int slot, int side)
+	public static boolean canExtract(IInventory inv, ItemStack is, int slot, EnumFacing side)
 	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canExtractItem(slot, is, side); }
 	
-	public static boolean canInsert(IInventory inv, ItemStack is, int slot, int side)
+	public static boolean canInsert(IInventory inv, ItemStack is, int slot, EnumFacing side)
 	{ return !(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, is, side); }
 	
-	public static Map<Integer, ItemStack> getAllItemsMap(IInventory inv, int side)
+	public static Map<Integer, ItemStack> getAllItemsMap(IInventory inv, EnumFacing side)
 	{
 		ItemStack[] is = getAllItems(inv, side);
 		if(is == null) return null;
@@ -422,16 +407,16 @@ public class LMInvUtils
 		}
 	}
 	
-	public static Item getItemFromRegName(String s)
+	public static Item getItemFromRegName(ResourceLocation s)
 	{ return (Item) Item.itemRegistry.getObject(s); }
 	
-	public static String getRegName(Item item)
+	public static ResourceLocation getRegName(Item item)
 	{ return Item.itemRegistry.getNameForObject(item); }
 	
-	public static String getRegName(Block block)
+	public static ResourceLocation getRegName(Block block)
 	{ return Block.blockRegistry.getNameForObject(block); }
 	
-	public static String getRegName(ItemStack is)
+	public static ResourceLocation getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
 	
 	public static boolean isWrench(ItemStack is)
@@ -459,10 +444,10 @@ public class LMInvUtils
 		
 		@SuppressWarnings("unchecked") Map<Integer, Integer> m = EnchantmentHelper.getEnchantments(is);
 		
-		for(Integer k : m.keySet())
+		for(Map.Entry<Integer, Integer> e : m.entrySet())
 		{
-			Enchantment e = Enchantment.enchantmentsList[k.intValue()];
-			if(e != null) map.put(e, m.get(k).intValue());
+			Enchantment e1 = Enchantment.getEnchantmentById(e.getKey().intValue());
+			if(e1 != null) map.put(e1, e.getValue());
 		}
 		
 		return map;
@@ -478,7 +463,7 @@ public class LMInvUtils
 	
 	public static void removeDisplayName(ItemStack is)
 	{
-		if(is.stackTagCompound != null)
+		if(is.hasTagCompound())
 		{
 			if(is.getTagCompound().hasKey("display"))
 			{

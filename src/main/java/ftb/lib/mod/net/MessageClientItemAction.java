@@ -1,12 +1,12 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.IClientActionItem;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageClientItemAction extends MessageLM
 {

@@ -1,6 +1,5 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.gui.ContainerEmpty;
 import ftb.lib.item.ItemDisplay;
@@ -9,6 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.*;
 
 public class FTBLibGuiHandler extends LMGuiHandler
 {

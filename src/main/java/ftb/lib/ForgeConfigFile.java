@@ -4,7 +4,8 @@ import latmod.lib.IntList;
 import latmod.lib.config.*;
 import latmod.lib.util.*;
 import net.minecraftforge.common.config.*;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Arrays;
 
 public class ForgeConfigFile implements IConfigFile // ConfigFile
 {

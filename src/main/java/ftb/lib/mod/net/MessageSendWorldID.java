@@ -1,11 +1,11 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 

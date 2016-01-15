@@ -1,8 +1,9 @@
 package ftb.lib.gui.widgets;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.*;
+import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
@@ -37,11 +38,16 @@ public class ButtonPopupMenu extends ButtonLM
 		if(icon != null) x += 18;
 		
 		double z = gui.getZLevel();
-		GuiLM.drawBlankRect(ax, ay, z, width, height, mouseOver() ? 0xFF666666 : 0xFF444444);
-		GuiLM.drawBlankRect(ax, ay - 1, z, width, 1, 0xFF222222);
-		GuiLM.drawBlankRect(ax, ay + height, z, width, 1, 0xFF222222);
-		GuiLM.drawBlankRect(ax, ay, z, 1, height, 0xFF222222);
-		GuiLM.drawBlankRect(ax + width - 1, ay, z, 1, height, 0xFF222222);
+		
+		if(mouseOver()) GlStateManager.color(0.4F, 0.4F, 0.4F, 1F);
+		else GlStateManager.color(0.26F, 0.26F, 0.26F, 1F);
+		
+		GuiLM.drawBlankRect(ax, ay, z, width, height);
+		GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
+		GuiLM.drawBlankRect(ax, ay - 1, z, width, 1);
+		GuiLM.drawBlankRect(ax, ay + height, z, width, 1);
+		GuiLM.drawBlankRect(ax, ay, z, 1, height);
+		GuiLM.drawBlankRect(ax + width - 1, ay, z, 1, height);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		gui.render(icon, ax + 2, ay + 1D, 16D, 16D);

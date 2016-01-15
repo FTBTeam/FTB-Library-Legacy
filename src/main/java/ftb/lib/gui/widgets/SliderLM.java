@@ -1,9 +1,9 @@
 package ftb.lib.gui.widgets;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
 import latmod.lib.MathHelperLM;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Mouse;
 
 import java.util.List;

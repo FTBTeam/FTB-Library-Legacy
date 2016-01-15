@@ -1,14 +1,13 @@
 package ftb.lib;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.*;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.*;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class LMDimUtils
 {
@@ -33,7 +32,7 @@ public class LMDimUtils
 		WorldServer w1 = mcs.worldServerForDimension(dim);
 		if(w1 == null)
 		{
-			System.err.println("Cannot teleport " + ep.getCommandSenderName() + " to Dimension " + dim + ": Missing WorldServer");
+			System.err.println("Cannot teleport " + ep.getName() + " to Dimension " + dim + ": Missing WorldServer");
 			return false;
 		}
 		
@@ -53,7 +52,7 @@ public class LMDimUtils
 		if(chw)
 		{
 			ep.dimension = dim;
-			ep.playerNetServerHandler.sendPacket(new S07PacketRespawn(ep.dimension, ep.worldObj.difficultySetting, w1.getWorldInfo().getTerrainType(), ep.theItemInWorldManager.getGameType()));
+			ep.playerNetServerHandler.sendPacket(new S07PacketRespawn(ep.dimension, ep.worldObj.getDifficulty(), w1.getWorldInfo().getTerrainType(), ep.theItemInWorldManager.getGameType()));
 			w0.getPlayerManager().removePlayer(ep);
 			
 			ep.closeScreen();
@@ -65,7 +64,7 @@ public class LMDimUtils
 			if(ep.addedToChunk && w0.getChunkProvider().chunkExists(i, j))
 			{
 				w0.getChunkFromChunkCoords(i, j).removeEntity(ep);
-				w0.getChunkFromChunkCoords(i, j).isModified = true;
+				w0.getChunkFromChunkCoords(i, j).setModified(true);
 			}
 			
 			w0.loadedEntityList.remove(ep);
@@ -85,7 +84,7 @@ public class LMDimUtils
 		w1.updateEntityWithOptionalForce(ep, false);
 		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
 		
-		if(chw) ep.mcServer.getConfigurationManager().func_72375_a(ep, w1);
+		if(chw) ep.mcServer.getConfigurationManager().preparePlayer(ep, w1);
 		ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
 		
 		w1.updateEntityWithOptionalForce(ep, false);
@@ -99,7 +98,7 @@ public class LMDimUtils
 		
 		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
 		if(chw)
-			FMLCommonHandler.instance().bus().post(new PlayerEvent.PlayerChangedDimensionEvent(ep, w0.provider.dimensionId, w1.provider.dimensionId));
+			MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerChangedDimensionEvent(ep, w0.provider.getDimensionId(), w1.provider.getDimensionId()));
 		return true;
 	}
 	
@@ -131,7 +130,7 @@ public class LMDimUtils
 	public static double getWorldScale(int dim)
 	{ return 1D / getMovementFactor(dim); }
 	
-	public static ChunkCoordinates getSpawnPoint(int dim)
+	public static BlockPos getSpawnPoint(int dim)
 	{
 		World w = getWorld(dim);
 		return (w == null) ? null : w.getSpawnPoint();
@@ -139,25 +138,23 @@ public class LMDimUtils
 	
 	public static EntityPos getEntitySpawnPoint(int dim)
 	{
-		ChunkCoordinates c = getSpawnPoint(dim);
+		BlockPos c = getSpawnPoint(dim);
 		if(c == null) return null;
 		return new EntityPos(c, dim);
 	}
 	
-	public static ChunkCoordinates getPlayerSpawnPoint(EntityPlayerMP ep, int dim)
+	public static BlockPos getPlayerSpawnPoint(EntityPlayerMP ep, int dim)
 	{
-		ChunkCoordinates c = ep.getBedLocation(dim);
+		BlockPos c = ep.getBedLocation(dim);
 		return (c == null) ? getSpawnPoint(dim) : c;
 	}
 	
 	public static EntityPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
 	{
-		ChunkCoordinates c = getPlayerSpawnPoint(ep, dim);
-		EntityPos p = new EntityPos();
-		p.x = c.posX + 0.5D;
-		p.y = c.posY + 0.5D;
-		p.z = c.posZ + 0.5D;
-		p.dim = dim;
+		EntityPos p = new EntityPos(getPlayerSpawnPoint(ep, dim), dim);
+		p.x += 0.5D;
+		p.y += 0.5D;
+		p.z += 0.5D;
 		return p;
 	}
 }

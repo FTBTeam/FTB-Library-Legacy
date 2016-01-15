@@ -1,13 +1,13 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumScreen;
 import ftb.lib.api.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.*;
 import latmod.lib.ByteCount;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class MessageNotifyPlayer extends MessageLM
 {

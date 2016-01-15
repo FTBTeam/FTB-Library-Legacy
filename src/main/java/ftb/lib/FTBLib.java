@@ -2,10 +2,6 @@ package ftb.lib;
 
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.gui.IGuiTile;
@@ -27,6 +23,10 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.*;
 
 import java.io.File;
@@ -163,13 +163,13 @@ public class FTBLib
 		{
 			List<EntityPlayerMP> players = getAllOnlinePlayers(null);
 			for(int j = 0; j < players.size(); j++)
-				l.add(players.get(j).getCommandSenderName());
+				l.add(players.get(j).getName());
 		}
 		else l.addAll(UsernameCache.getMap().values());
 		return l;
 	}
 	
-	public static boolean remap(MissingMapping m, String id, Item i)
+	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Item i)
 	{
 		if(m.type == GameRegistry.Type.ITEM && id.equals(m.name))
 		{
@@ -180,7 +180,7 @@ public class FTBLib
 		return false;
 	}
 	
-	public static boolean remap(MissingMapping m, String id, Block b)
+	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Block b)
 	{
 		if(id.equals(m.name))
 		{
@@ -212,7 +212,7 @@ public class FTBLib
 	public static int runCommand(ICommandSender ics, String s) throws CommandException
 	{ return getServer().getCommandManager().executeCommand(ics, s); }
 	
-	public static int runCommand(ICommandSender ics, String cmd, String[] args)
+	public static int runCommand(ICommandSender ics, String cmd, String[] args) throws CommandException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(cmd);
@@ -247,7 +247,7 @@ public class FTBLib
 			epM.closeContainer();
 			epM.openContainer = c;
 			epM.openContainer.windowId = epM.currentWindowId;
-			epM.openContainer.addCraftingToCrafters(epM);
+			epM.openContainer.onCraftGuiOpened(epM);
 			new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!getEffectiveSide().isServer())
@@ -261,7 +261,7 @@ public class FTBLib
 	}
 	
 	public static boolean isOP(GameProfile p)
-	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152596_g(p); }
+	{ return getServerWorld() != null && getServer().getConfigurationManager().canJoin(p); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }

@@ -1,26 +1,24 @@
 package ftb.lib.gui;
 
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.OtherMods;
 import ftb.lib.client.*;
 import ftb.lib.gui.widgets.PanelLM;
-import latmod.lib.LMColorUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import java.io.IOException;
 import java.util.*;
 
 @SideOnly(Side.CLIENT)
-@Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
-public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.INEIGuiHandler
+//@Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
+public abstract class GuiLM extends GuiContainer// implements codechicken.nei.api.INEIGuiHandler
 {
 	private static final ArrayList<String> tempTextList = new ArrayList<>();
 	
@@ -34,7 +32,6 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	public float delta;
 	
 	public boolean hideNEI = false;
-	private ResourceLocation prevTexture = null;
 	private boolean refreshWidgets = true;
 	
 	public GuiLM(GuiScreen parent, ContainerLM c, ResourceLocation tex)
@@ -82,13 +79,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{ return ySize; }
 	
 	public final void setTexture(ResourceLocation tex)
-	{
-		if(prevTexture != tex)
-		{
-			prevTexture = tex;
-			if(tex != null) mc.getTextureManager().bindTexture(tex);
-		}
-	}
+	{ FTBLibClient.setTexture(tex); }
 	
 	public final void initGui()
 	{
@@ -115,7 +106,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		else mc.displayGuiScreen(g);
 	}
 	
-	protected final void mouseClicked(int mx, int my, int b)
+	protected final void mouseClicked(int mx, int my, int b) throws IOException
 	{
 		lastClickX = mouseX = mx;
 		lastClickY = mouseY = my;
@@ -128,7 +119,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 	}
 	
-	protected void keyTyped(char keyChar, int key)
+	protected void keyTyped(char keyChar, int key) throws IOException
 	{
 		if(mainPanel.keyPressed(key, keyChar)) return;
 		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode()) onClosedByKey();
@@ -168,7 +159,6 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		mouseX = mx;
 		mouseY = my;
 		delta = f;
-		prevTexture = null;
 		mouseDWheel = Mouse.getDWheel();
 		
 		if(refreshWidgets)
@@ -178,16 +168,15 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		}
 		
 		super.drawScreen(mx, my, f);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		tempTextList.clear();
 		drawText(tempTextList);
-		
 		if(!tempTextList.isEmpty()) drawHoveringText(tempTextList, mouseX, mouseY, fontRendererObj);
-		
 		GlStateManager.disableLighting();
-		
 		drawForeground();
+		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 	
 	public void drawText(List<String> l)
@@ -205,9 +194,6 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	{
 	}
 	
-	public void drawWrappedIcon(IIcon i, float x, float y, float w, float h)
-	{ drawTexturedRectD(x, y, zLevel, w, h, i.getMinU(), i.getMinV(), i.getMaxU(), i.getMaxV()); }
-	
 	public void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
 	{ drawTexturedModalRectD(x, y, u, v, w, h); }
 	
@@ -219,24 +205,28 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public static void drawTexturedRectD(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1)
 	{
-		Tessellator t = Tessellator.instance;
-		t.startDrawingQuads();
+		GL11.glBegin(GL11.GL_QUADS);
 		
 		if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
 		{
-			t.addVertex(x + 0, y + h, z);
-			t.addVertex(x + w, y + h, z);
-			t.addVertex(x + w, y + 0, z);
-			t.addVertex(x + 0, y + 0, z);
+			GL11.glVertex3d(x + 0, y + h, z);
+			GL11.glVertex3d(x + w, y + h, z);
+			GL11.glVertex3d(x + w, y + 0, z);
+			GL11.glVertex3d(x + 0, y + 0, z);
 		}
 		else
 		{
-			t.addVertexWithUV(x + 0, y + h, z, u0, v1);
-			t.addVertexWithUV(x + w, y + h, z, u1, v1);
-			t.addVertexWithUV(x + w, y + 0, z, u1, v0);
-			t.addVertexWithUV(x + 0, y + 0, z, u0, v0);
+			GL11.glTexCoord2d(u0, v1);
+			GL11.glVertex3d(x + 0, y + h, z);
+			GL11.glTexCoord2d(u1, v1);
+			GL11.glVertex3d(x + w, y + h, z);
+			GL11.glTexCoord2d(u1, v0);
+			GL11.glVertex3d(x + w, y + 0, z);
+			GL11.glTexCoord2d(u0, v0);
+			GL11.glVertex3d(x + 0, y + 0, z);
 		}
-		t.draw();
+		
+		GL11.glEnd();
 	}
 	
 	public static void drawTexturedRect(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1, int textureW, int textureH)
@@ -247,16 +237,13 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	}
 	
 	public void playSoundFX(ResourceLocation s, float pitch)
-	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(s, pitch)); }
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.create(s, pitch)); }
 	
 	public void playClickSound()
 	{ FTBLibClient.playClickSound(); }
 	
 	public FontRenderer getFontRenderer()
-	{
-		setTexture(null);
-		return fontRendererObj;
-	}
+	{ return fontRendererObj; }
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
@@ -265,27 +252,37 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.25D, 0.75D, 0.5D);
 	}
 	
-	public static void drawBlankRect(double x, double y, double z, double w, double h, int col)
+	public static void drawBlankRect(double x, double y, double z, double w, double h)
 	{
-		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.disableTexture();
-		Tessellator t = Tessellator.instance;
-		t.startDrawingQuads();
-		t.setColorRGBA_I(col, LMColorUtils.getAlpha(col));
-		t.addVertex(x + 0, y + h, z);
-		t.addVertex(x + w, y + h, z);
-		t.addVertex(x + w, y + 0, z);
-		t.addVertex(x + 0, y + 0, z);
+		GlStateManager.disableTexture2D();
+		
+		/*
+		Tessellator t = Tessellator.getInstance();
+		WorldRenderer r = t.getWorldRenderer();
+		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+		r.color(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), LMColorUtils.getAlpha(col));
+		r.pos(x + 0, y + h, z).endVertex();
+		r.pos(x + w, y + h, z).endVertex();
+		r.pos(x + w, y + 0, z).endVertex();
+		r.pos(x + 0, y + 0, z).endVertex();
 		t.draw();
-		GlStateManager.enableTexture();
+		*/
+		
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glVertex3d(x + w, y + h, z);
+		GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glEnd();
+		GlStateManager.enableTexture2D();
 	}
 	
 	public void drawItem(ItemStack is, int x, int y)
 	{
 		if(is == null) return;
-		setTexture(TextureMap.locationItemsTexture);
+		setTexture(TextureMap.locationBlocksTexture);
 		zLevel = 200F;
 		itemRender.zLevel = 200F;
 		FTBLibClient.renderGuiItem(is, itemRender, getFontRenderer(), x, y);
@@ -303,7 +300,7 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	public void render(TextureCoords tc, double x, double y)
 	{ if(tc != null && tc.isValid()) render(tc, x, y, tc.width, tc.height); }
 	
-	@Optional.Method(modid = OtherMods.NEI)
+	/*@Optional.Method(modid = OtherMods.NEI)
 	public codechicken.nei.VisiblityData modifyVisiblity(GuiContainer g, codechicken.nei.VisiblityData vd)
 	{
 		if(hideNEI) vd.showNEI = false;
@@ -322,4 +319,5 @@ public abstract class GuiLM extends GuiContainer implements codechicken.nei.api.
 	
 	public boolean hideItemPanelSlot(GuiContainer g, int x, int y, int w, int h)
 	{ return hideNEI; }
+	*/
 }

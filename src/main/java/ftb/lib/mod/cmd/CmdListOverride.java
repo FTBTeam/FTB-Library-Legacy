@@ -27,9 +27,8 @@ public class CmdListOverride extends CommandLM
 		{
 			EntityPlayerMP ep = players.get(i);
 			
-			if(printUUID)
-				FTBLib.printChat(ics, ep.getCommandSenderName() + " :: " + UUIDTypeAdapterLM.getString(ep.getUniqueID()));
-			else FTBLib.printChat(ics, ep.getCommandSenderName());
+			if(printUUID) FTBLib.printChat(ics, ep.getName() + " :: " + UUIDTypeAdapterLM.getString(ep.getUniqueID()));
+			else FTBLib.printChat(ics, ep.getName());
 		}
 		
 		return null;

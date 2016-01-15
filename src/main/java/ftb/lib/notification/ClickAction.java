@@ -1,10 +1,10 @@
 package ftb.lib.notification;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.FTBLibClient;
 import latmod.lib.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.io.File;
 import java.net.URI;

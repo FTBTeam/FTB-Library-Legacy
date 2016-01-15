@@ -1,10 +1,10 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiViewImage extends GuiLM

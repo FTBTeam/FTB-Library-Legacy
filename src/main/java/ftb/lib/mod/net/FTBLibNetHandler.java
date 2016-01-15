@@ -1,7 +1,7 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.LMNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class FTBLibNetHandler
 {

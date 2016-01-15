@@ -1,13 +1,12 @@
 package ftb.lib.notification;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -55,8 +54,6 @@ public class ClientNotifications
 	public static class Temp extends Gui
 	{
 		public static final List<Temp> list = new ArrayList<>();
-		private static RenderItem renderItem = new RenderItem();
-		private static Minecraft mc;
 		
 		private long time;
 		private Notification notification;
@@ -67,13 +64,12 @@ public class ClientNotifications
 		
 		private Temp(Notification n)
 		{
-			mc = FTBLibClient.mc;
 			notification = n;
 			time = -1L;
 			title = notification.title.getFormattedText();
 			desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
 			color = LMColorUtils.getRGBA(notification.color, 230);
-			width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
+			width = 20 + Math.max(FTBLibClient.mc.fontRendererObj.getStringWidth(title), FTBLibClient.mc.fontRendererObj.getStringWidth(desc));
 			if(notification.item != null) width += 20;
 		}
 		
@@ -113,15 +109,15 @@ public class ClientNotifications
 				int i = FTBLibClient.displayW - width;
 				int j = 0 - (int) (d1 * 36D);
 				GlStateManager.color(1F, 1F, 1F, 1F);
-				GlStateManager.disableTexture();
+				GlStateManager.disableTexture2D();
 				GlStateManager.disableLighting();
 				GuiLM.drawRect(i, j, FTBLibClient.displayW, j + 32, color);
-				GlStateManager.enableTexture();
+				GlStateManager.enableTexture2D();
 				GlStateManager.pushAttrib();
 				
 				int w = notification.item == null ? 10 : 30;
 				
-				FontRenderer font = mc.fontRenderer;
+				FontRenderer font = FTBLibClient.mc.fontRendererObj;
 				
 				if(desc == null)
 				{
@@ -135,12 +131,7 @@ public class ClientNotifications
 				
 				if(notification.item != null)
 				{
-					RenderHelper.enableGUIStandardItemLighting();
-					GlStateManager.enableRescaleNormal();
-					GlStateManager.enableColorMaterial();
-					GlStateManager.enableLighting();
-					renderItem.renderItemIntoGUI(font, mc.getTextureManager(), notification.item, i + 8, j + 8, false);
-					renderItem.renderItemOverlayIntoGUI(font, mc.getTextureManager(), notification.item, i + 8, j + 8);
+					FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc.getRenderItem(), font, i + 8, j + 8);
 				}
 				
 				GlStateManager.depthMask(true);

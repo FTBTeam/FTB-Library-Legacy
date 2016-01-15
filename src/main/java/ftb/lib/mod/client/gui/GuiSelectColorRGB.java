@@ -1,6 +1,5 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumMCColor;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
@@ -11,7 +10,9 @@ import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -192,7 +193,7 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glEnd();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableTexture();
+		GlStateManager.enableTexture2D();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		
 		currentColR.renderSlider(slider_tex);

@@ -74,7 +74,7 @@ public abstract class ContainerLM extends Container
 	public void onContainerClosed(EntityPlayer ep)
 	{
 		super.onContainerClosed(ep);
-		if(iinv != null) iinv.closeInventory();
+		if(iinv != null) iinv.closeInventory(ep);
 	}
 	
 	protected boolean mergeItemStack(ItemStack is, int min, int max, boolean RtoL)

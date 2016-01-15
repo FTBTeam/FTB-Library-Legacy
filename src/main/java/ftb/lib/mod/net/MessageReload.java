@@ -1,6 +1,5 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -9,6 +8,7 @@ import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageReload extends MessageLM
 {

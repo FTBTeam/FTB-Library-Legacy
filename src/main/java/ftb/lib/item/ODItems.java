@@ -1,8 +1,8 @@
 package ftb.lib.item;
 
-import ftb.lib.*;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.*;
@@ -58,10 +58,6 @@ public class ODItems
 	public static final String NUGGET_LEAD = "nuggetLead";
 	public static final String NUGGET_SILVER = "nuggetSilver";
 	
-	public static final String TOOL_SAW = "toolSaw";
-	
-	private static boolean hasFMP = false;
-	
 	public static final class OreStackEntry
 	{
 		public final ItemStack itemStack;
@@ -89,26 +85,17 @@ public class ODItems
 		add(MEAT_COOKED, new ItemStack(Items.cooked_beef));
 		add(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
 		add(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
-		
-		hasFMP = FTBLib.isModInstalled(OtherMods.FMP);
 	}
 	
 	public static void postInit()
 	{
-		addOreName(OtherMods.FMP + ":sawStone", ANY, TOOL_SAW);
-		addOreName(OtherMods.FMP + ":sawIron", ANY, TOOL_SAW);
-		addOreName(OtherMods.FMP + ":sawDiamond", ANY, TOOL_SAW);
-		
-		Item wrench = LMInvUtils.getItemFromRegName(OtherMods.THERMAL_EXPANSION + ":wrench");
-		if(wrench != null) wrench.setHarvestLevel(Tool.Type.WRENCH, Tool.Level.BASIC);
+		//Item wrench = LMInvUtils.getItemFromRegName(new ResourceLocation(OtherMods.THERMAL_EXPANSION, "wrench"));
+		//if(wrench != null) wrench.setHarvestLevel(Tool.Type.WRENCH, Tool.Level.BASIC);
 	}
-	
-	public static boolean hasFMP()
-	{ return hasFMP; }
 	
 	private static boolean addOreName(String item, int damage, String name)
 	{
-		Item i = LMInvUtils.getItemFromRegName(item);
+		Item i = LMInvUtils.getItemFromRegName(new ResourceLocation(item));
 		if(i != null) add(name, new ItemStack(i, 1, damage));
 		return i != null;
 	}

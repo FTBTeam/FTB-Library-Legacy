@@ -1,11 +1,9 @@
 package ftb.lib.client;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.relauncher.*;
+import ftb.lib.*;
+import ftb.lib.api.ILMPlayer;
 import ftb.lib.api.gui.IClientActionGui;
 import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibRenderHandler;
 import latmod.lib.LMColorUtils;
 import net.minecraft.client.Minecraft;
@@ -14,7 +12,7 @@ import net.minecraft.client.entity.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.item.EntityItem;
@@ -23,6 +21,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -34,20 +35,25 @@ public class FTBLibClient // LatCoreMCClient
 {
 	public static final Minecraft mc = FMLClientHandler.instance().getClient();
 	private static final HashMap<String, ResourceLocation> cachedSkins = new HashMap<>();
-	public static IIcon blockNullIcon, unknownItemIcon;
 	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;
 	public static int displayW, displayH;
 	
+	public static ILMPlayer getClientLMPlayer()
+	{
+		ILMPlayer p = (FTBLib.ftbu == null) ? null : FTBLib.ftbu.getLMPlayer(mc.thePlayer);
+		return (p == null) ? new TempLMPlayerFromEntity(Side.CLIENT, mc.thePlayer) : p;
+	}
+	
 	public static boolean isPlaying()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
 	
 	public static int getDim()
-	{ return isPlaying() ? mc.theWorld.provider.dimensionId : 0; }
+	{ return isPlaying() ? mc.theWorld.provider.getDimensionId() : 0; }
 	
 	public static UUID getUUID()
-	{ return mc.getSession().func_148256_e().getId(); }
+	{ return mc.getSession().getProfile().getId(); }
 	
 	public static void spawnPart(EntityFX e)
 	{ mc.effectRenderer.addEffect(e); }
@@ -82,7 +88,7 @@ public class FTBLibClient // LatCoreMCClient
 		
 		if(mc.theWorld != null)
 		{
-			EntityPlayer ep = mc.theWorld.func_152378_a(uuid);
+			EntityPlayer ep = mc.theWorld.getPlayerEntityByUUID(uuid);
 			if(ep != null && ep instanceof EntityPlayerSP) return (EntityPlayerSP) ep;
 		}
 		
@@ -104,7 +110,7 @@ public class FTBLibClient // LatCoreMCClient
 	}
 	
 	public static void playClickSound()
-	{ mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(clickSound, 1F)); }
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.create(clickSound, 1F)); }
 	
 	public static void setGLColor(int c, int a)
 	{
@@ -167,10 +173,7 @@ public class FTBLibClient // LatCoreMCClient
 	{ if(tex != null) setTexture(tex.texture); }
 	
 	public static void setTexture(ResourceLocation tex)
-	{
-		if(mc.currentScreen instanceof GuiLM) ((GuiLM) mc.currentScreen).setTexture(tex);
-		else mc.getTextureManager().bindTexture(tex);
-	}
+	{ if(tex != null) mc.getTextureManager().bindTexture(tex); }
 	
 	public static void clearCachedData()
 	{ cachedSkins.clear(); }
@@ -181,22 +184,14 @@ public class FTBLibClient // LatCoreMCClient
 	public static void addClientTickCallback(ClientTickCallback e)
 	{ FTBLibRenderHandler.callbacks.add(e); }
 	
-	public static void renderItem(World w, ItemStack is, boolean fancy, boolean frame)
+	public static void renderItem(World w, ItemStack is)
 	{
+		if(w == null || is == null) return;
 		if(entityItem == null) entityItem = new EntityItem(w);
-		
 		entityItem.worldObj = w;
 		entityItem.hoverStart = 0F;
 		entityItem.setEntityItemStack(is);
-		
-		boolean isFancy = RenderManager.instance.options.fancyGraphics;
-		RenderManager.instance.options.fancyGraphics = true;
-		RenderItem.renderInFrame = frame;
-		
-		RenderManager.instance.renderEntityWithPosYaw(entityItem, 0D, 0D, 0D, 0F, 0F);
-		
-		RenderManager.instance.options.fancyGraphics = isFancy;
-		RenderItem.renderInFrame = false;
+		mc.getRenderManager().renderEntityWithPosYaw(entityItem, 0D, 0D, 0D, 0F, 0F);
 	}
 	
 	public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
@@ -234,7 +229,7 @@ public class FTBLibClient // LatCoreMCClient
 		if(is == null || is.getItem() == null) return;
 		GlStateManager.pushAttrib();
 		GlStateManager.pushMatrix();
-		//GL11.glTranslatef(0F, 0F, 32F);
+		GlStateManager.translate(x, y, 0F);
 		GlStateManager.enableLighting();
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.enableRescaleNormal();
@@ -242,8 +237,7 @@ public class FTBLibClient // LatCoreMCClient
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		FontRenderer f = is.getItem().getFontRenderer(is);
 		if(f == null) f = font;
-		itemRender.renderItemAndEffectIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y);
-		itemRender.renderItemOverlayIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y, null);
+		itemRender.renderItem(is, itemRender.getItemModelMesher().getItemModel(is));
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
 	}

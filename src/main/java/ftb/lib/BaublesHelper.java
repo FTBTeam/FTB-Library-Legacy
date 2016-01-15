@@ -1,8 +1,8 @@
 package ftb.lib;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraftforge.fml.common.FMLLog;
 
 import java.lang.reflect.Method;
 

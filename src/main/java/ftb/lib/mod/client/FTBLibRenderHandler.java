@@ -1,12 +1,13 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.client.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.notification.ClientNotifications;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.common.eventhandler.*;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class FTBLibRenderHandler
 		
 		if(e.phase == TickEvent.Phase.START)
 		{
-			ScaledResolution sr = new ScaledResolution(FTBLibClient.mc, FTBLibClient.mc.displayWidth, FTBLibClient.mc.displayHeight);
+			ScaledResolution sr = new ScaledResolution(FTBLibClient.mc);
 			FTBLibClient.displayW = sr.getScaledWidth();
 			FTBLibClient.displayH = sr.getScaledHeight();
 		}

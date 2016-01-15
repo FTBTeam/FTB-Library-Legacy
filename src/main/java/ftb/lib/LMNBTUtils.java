@@ -4,7 +4,7 @@ import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 
-import java.io.*;
+import java.io.File;
 import java.util.*;
 
 @SuppressWarnings("all")
@@ -26,26 +26,14 @@ public class LMNBTUtils
 	public static String[] getMapKeysA(NBTTagCompound tag)
 	{
 		if(tag == null || tag.hasNoTags()) return new String[0];
-		return (String[]) tag.func_150296_c().toArray(new String[0]);
-	}
-	
-	public static List<String> getMapKeys(NBTTagCompound tag)
-	{
-		ArrayList<String> list = new ArrayList<String>();
-		if(tag == null || tag.hasNoTags()) return list;
-		list.addAll(tag.func_150296_c());
-		return list;
+		return LMListUtils.toStringArray(tag.getKeySet());
 	}
 	
 	public static Map<String, NBTBase> toMap(NBTTagCompound tag)
 	{
 		Map<String, NBTBase> map = new HashMap<String, NBTBase>();
-		List<String> keys = getMapKeys(tag);
-		for(int i = 0; i < keys.size(); i++)
-		{
-			String s = keys.get(i);
+		for(String s : tag.getKeySet())
 			map.put(s, tag.getTag(s));
-		}
 		return map;
 	}
 	
@@ -53,45 +41,22 @@ public class LMNBTUtils
 	{
 		HashMap<String, E> map = new HashMap<String, E>();
 		if(tag == null || tag.hasNoTags()) return map;
-		
-		List<String> keys = getMapKeys(tag);
-		
-		for(int i = 0; i < keys.size(); i++)
-		{
-			String s = keys.get(i);
+		for(String s : tag.getKeySet())
 			map.put(s, (E) tag.getTag(s));
-		}
-		
 		return map;
-	}
-	
-	public static void writeMap(OutputStream os, NBTTagCompound tag) throws Exception
-	{
-		byte[] b = CompressedStreamTools.compress(tag);
-		os.write(b);
-		os.flush();
-		os.close();
 	}
 	
 	public static Exception writeMap(File f, NBTTagCompound tag)
 	{
-		try { writeMap(new FileOutputStream(LMFileUtils.newFile(f)), tag); }
+		try { CompressedStreamTools.write(tag, f); }
 		catch(Exception e) { return e; }
 		return null;
-	}
-	
-	public static NBTTagCompound readMap(InputStream is) throws Exception
-	{
-		byte[] b = new byte[is.available()];
-		is.read(b);
-		is.close();
-		return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a);
 	}
 	
 	public static NBTTagCompound readMap(File f)
 	{
 		if(f == null || !f.exists()) return null;
-		try { return readMap(new FileInputStream(f)); }
+		try { return CompressedStreamTools.read(f); }
 		catch(Exception e) { e.printStackTrace(); }
 		return null;
 	}
@@ -128,37 +93,18 @@ public class LMNBTUtils
 	
 	public static NBTTagCompound readTag(ByteIOStream data)
 	{
-		try
-		{
-			byte[] abyte = data.readByteArray(ByteCount.INT);
-			
-			if(abyte == null) return null;
-			else if(abyte.length == 0) return new NBTTagCompound();
-			else return CompressedStreamTools.func_152457_a(abyte, NBTSizeTracker.field_152451_a);
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		
+		byte i = data.readByte();
+		if(i == 0) return null;
+		else if(i == 1) return new NBTTagCompound();
+		try { return CompressedStreamTools.read(data, NBTSizeTracker.INFINITE); }
+		catch(Exception ex) { ex.printStackTrace(); }
 		return null;
 	}
 	
 	public static void writeTag(ByteIOStream data, NBTTagCompound tag)
 	{
-		try
-		{
-			byte[] abyte;
-			
-			if(tag == null) abyte = null;
-			else if(tag.hasNoTags()) abyte = new byte[0];
-			else abyte = CompressedStreamTools.compress(tag);
-			
-			data.writeByteArray(abyte, ByteCount.INT);
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
+		data.writeByte((tag == null) ? 0 : (tag.hasNoTags() ? 1 : 2));
+		try { if(tag != null && !tag.hasNoTags()) CompressedStreamTools.write(tag, data); }
+		catch(Exception ex) { ex.printStackTrace(); }
 	}
 }

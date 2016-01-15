@@ -50,10 +50,9 @@ public class CmdNotify extends CommandLM
 	public Boolean getUsername(String[] args, int i)
 	{ return (i == 0) ? Boolean.TRUE : null; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args)
+	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
-		EntityPlayerMP[] players = PlayerSelector.matchPlayers(ics, args[0]);
 		
 		String s = LMStringUtils.unsplitSpaceUntilEnd(1, args);
 		
@@ -63,8 +62,8 @@ public class CmdNotify extends CommandLM
 			
 			if(n != null)
 			{
-				for(int i = 0; i < players.length; i++)
-					if(players[i] != null) FTBLib.notifyPlayer(players[i], n);
+				for(EntityPlayerMP ep : PlayerSelector.matchEntities(ics, args[0], EntityPlayerMP.class))
+					FTBLib.notifyPlayer(ep, n);
 				return null;
 			}
 		}

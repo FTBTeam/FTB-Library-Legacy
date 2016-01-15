@@ -1,13 +1,13 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.item.ItemDisplay;
 import ftb.lib.mod.FTBLibFinals;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 

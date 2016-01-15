@@ -1,16 +1,17 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.config.IConfigProvider;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.client.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.lib.*;
 import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -265,21 +266,25 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			int ay = getAY();
 			boolean isGroup = entry.getAsGroup() != null;
 			
-			if(mouseOver) drawBlankRect(ax, ay, gui.zLevel, width, height, 0x22FFFFFF);
+			if(mouseOver)
+			{
+				GlStateManager.color(1F, 1F, 1F, 0.13F);
+				drawBlankRect(ax, ay, gui.zLevel, width, height);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+			}
 			gui.drawString(gui.fontRendererObj, isGroup ? (((expanded ? "[-] " : "[+] ") + title)) : title, ax + 4, ay + 4, mouseOver ? 0xFFFFFFFF : (isGroup ? 0xFFCCCCCC : 0xFF999999));
 			
 			if(!isGroup)
 			{
 				String s = "";
 				try { s = entry.getAsString(); }
-				catch(Exception ex) { s = "Error"; }
+				catch(Exception ex) { s = "error"; }
 				
 				int slen = gui.fontRendererObj.getStringWidth(s);
 				
 				if(slen > 150)
 				{
-					s = gui.fontRendererObj.trimStringToWidth(s, 150);
-					s += "...";
+					s = gui.fontRendererObj.trimStringToWidth(s, 150) + "...";
 					slen = 152;
 				}
 				
@@ -287,7 +292,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
 				
 				if(mouseOver && gui.mouseX > ax + width - slen - 9)
-					drawBlankRect(ax + width - slen - 8, ay, gui.zLevel, slen + 8, height, 0x22FFFFFF);
+				{
+					GlStateManager.color(1F, 1F, 1F, 0.13F);
+					drawBlankRect(ax + width - slen - 8, ay, gui.zLevel, slen + 8, height);
+					GlStateManager.color(1F, 1F, 1F, 1F);
+				}
 				
 				gui.drawString(gui.fontRendererObj, s, gui.width - (slen + 20), ay + 4, textCol);
 			}
@@ -399,7 +408,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				if(entry.info != null && !entry.info.isEmpty())
 				{
 					String[] sl = entry.info.split("\n");
-					for(String s : sl) l.addAll(FTBLibClient.mc.fontRenderer.listFormattedStringToWidth(s, 230));
+					for(String s : sl) l.addAll(FTBLibClient.mc.fontRendererObj.listFormattedStringToWidth(s, 230));
 				}
 			}
 			

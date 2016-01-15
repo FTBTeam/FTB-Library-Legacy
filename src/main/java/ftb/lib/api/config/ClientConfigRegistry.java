@@ -40,10 +40,7 @@ public final class ClientConfigRegistry
 	
 	public static void init()
 	{
-		File file = new File(FTBLib.folderLocal, "client/config.txt");
-		if(file.exists()) LMFileUtils.delete(file); // TODO: Remove me
-		
-		file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/config.json"));
+		File file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/config.json"));
 		ConfigFile configFile = new ConfigFile(group, file);
 		group.parentFile = configFile;
 		configFile.load();

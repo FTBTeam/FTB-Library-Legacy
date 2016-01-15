@@ -1,9 +1,5 @@
 package ftb.lib.mod;
 
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -12,11 +8,15 @@ import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
 import latmod.lib.util.OS;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.Map;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS)
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS, acceptedMinecraftVersions = "[1.8.8, 1.9)")
 public class FTBLibMod
 {
 	@Mod.Instance(FTBLibFinals.MOD_ID)
@@ -48,6 +48,8 @@ public class FTBLibMod
 	{
 		ODItems.postInit();
 		proxy.postInit();
+		GameModes.reload();
+		ConfigRegistry.reload();
 	}
 	
 	@Mod.EventHandler
@@ -66,7 +68,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
-		FTBLib.folderWorld = new File(FTBLib.folderMinecraft, FTBLib.getServer().getFolderName());
+		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName());
 		
 		ConfigRegistry.reload();
 		GameModes.reload();

@@ -1,6 +1,5 @@
 package ftb.lib.api.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageOpenGui;
@@ -9,6 +8,7 @@ import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.*;
 
 public abstract class LMGuiHandler
 {
@@ -35,7 +35,7 @@ public abstract class LMGuiHandler
 			epM.closeContainer();
 			epM.openContainer = c;
 			epM.openContainer.windowId = epM.currentWindowId;
-			epM.openContainer.addCraftingToCrafters(epM);
+			epM.openContainer.onCraftGuiOpened(epM);
 			new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!FTBLib.getEffectiveSide().isServer())

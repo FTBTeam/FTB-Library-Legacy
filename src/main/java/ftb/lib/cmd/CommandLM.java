@@ -1,7 +1,7 @@
 package ftb.lib.cmd;
 
 import ftb.lib.FTBLib;
-import latmod.lib.*;
+import latmod.lib.LMListUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -32,7 +32,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName; }
 	
-	public final void processCommand(ICommandSender ics, String[] args)
+	public final void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		if(!level.isEnabled()) throw new FeatureDisabledException();
 		if(args == null) args = new String[0];
@@ -52,10 +52,12 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	public final void printHelpLine(ICommandSender ics, String args)
 	{ FTBLib.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }
 	
-	public void onPostCommand(ICommandSender ics, String[] args) {}
+	public void onPostCommand(ICommandSender ics, String[] args) throws CommandException
+	{
+	}
 	
 	@SuppressWarnings("all")
-	public final List addTabCompletionOptions(ICommandSender ics, String[] args)
+	public final List addTabCompletionOptions(ICommandSender ics, String[] args) throws CommandException
 	{
 		if(!level.isEnabled()) return null;
 		String[] s = getTabStrings(ics, args, args.length - 1);
@@ -90,21 +92,17 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		if(b == null) return new String[0];
 		if(FTBLib.ftbu != null) return FTBLib.ftbu.getPlayerNames(b);
 		ArrayList<String> l = new ArrayList<>();
-		List<EntityPlayerMP> players = FTBLib.getAllOnlinePlayers(null);
-		for(int j = 0; j < players.size(); j++)
-			l.add(players.get(j).getCommandSenderName());
+		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
+			l.add(ep.getName());
 		return LMListUtils.toStringArray(l);
 	}
 	
 	public boolean sortStrings(ICommandSender ics, String args[], int i)
 	{ return getUsername(args, i) == null; }
 	
-	public static void checkArgs(String[] args, int i)
+	public static void checkArgs(String[] args, int i) throws CommandException
 	{ if(args == null || args.length < i) throw new MissingArgsException(); }
 	
-	public static void checkArgsStrong(String[] args, int i)
+	public static void checkArgsStrong(String[] args, int i) throws CommandException
 	{ if(args == null || args.length != i) throw new MissingArgsException(); }
-	
-	public static int parseRelInt(ICommandSender ics, int n, String s)
-	{ return MathHelperLM.floor(func_110666_a(ics, n, s)); }
 }

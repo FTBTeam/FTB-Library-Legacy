@@ -1,12 +1,13 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -59,10 +60,13 @@ public class GuiNotifications extends GuiLM
 		
 		fontRendererObj.drawString(I18n.format(FTBLibModClient.notifications.getFullID()), guiLeft + 4, guiTop - 11, 0xFFFFFFFF);
 		
-		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize, 0x66000000);
+		GlStateManager.color(0F, 0F, 0F, 0.4F);
+		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize);
 		
 		for(int i = 1; i < 7; i++)
-			drawBlankRect(guiLeft, guiTop + i * 25 - 1, zLevel, xSize, 1, 0x66000000);
+			drawBlankRect(guiLeft, guiTop + i * 25 - 1, zLevel, xSize, 1);
+		
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		for(ButtonNotification b : buttonList)
 			b.renderWidget();

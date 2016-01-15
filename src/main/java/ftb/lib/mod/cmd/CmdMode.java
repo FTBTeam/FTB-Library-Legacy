@@ -26,7 +26,7 @@ public class CmdMode extends CommandSubLM
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <modeID>"; }
 		
-		public String[] getTabStrings(ICommandSender ics, String[] args, int i)
+		public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
 		{
 			if(args.length == 1) return LMMapUtils.toKeyStringArray(GameModes.getGameModes().modes);
 			return super.getTabStrings(ics, args, i);

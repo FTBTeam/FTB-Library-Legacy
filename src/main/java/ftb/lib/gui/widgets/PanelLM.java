@@ -1,7 +1,7 @@
 package ftb.lib.gui.widgets;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.gui.GuiLM;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 

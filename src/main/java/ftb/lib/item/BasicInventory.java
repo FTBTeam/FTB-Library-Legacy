@@ -3,6 +3,7 @@ package ftb.lib.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.*;
 
 public class BasicInventory implements IInventory
 {
@@ -20,6 +21,18 @@ public class BasicInventory implements IInventory
 	public ItemStack decrStackSize(int slot, int amt)
 	{ return LMInvUtils.decrStackSize(this, slot, amt); }
 	
+	public ItemStack removeStackFromSlot(int index)
+	{
+		if(items[index] != null)
+		{
+			ItemStack is0 = items[index];
+			items[index] = null;
+			markDirty();
+			return is0;
+		}
+		return null;
+	}
+	
 	public ItemStack getStackInSlotOnClosing(int i)
 	{ return LMInvUtils.getStackInSlotOnClosing(this, i); }
 	
@@ -29,12 +42,6 @@ public class BasicInventory implements IInventory
 		markDirty();
 	}
 	
-	public String getInventoryName()
-	{ return ""; }
-	
-	public boolean hasCustomInventoryName()
-	{ return false; }
-	
 	public int getInventoryStackLimit()
 	{ return 64; }
 	
@@ -43,10 +50,43 @@ public class BasicInventory implements IInventory
 	public boolean isUseableByPlayer(EntityPlayer ep)
 	{ return true; }
 	
-	public void openInventory() { }
+	public void openInventory(EntityPlayer player) { }
 	
-	public void closeInventory() { }
+	public void closeInventory(EntityPlayer player) { }
 	
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{ return true; }
+	
+	public int getField(int id)
+	{ return 0; }
+	
+	public void setField(int id, int value) { }
+	
+	public int getFieldCount()
+	{ return 0; }
+	
+	public void clear()
+	{
+		boolean dirty = false;
+		
+		for(int i = 0; i < items.length; i++)
+		{
+			if(items[i] != null)
+			{
+				dirty = true;
+				items[i] = null;
+			}
+		}
+		
+		if(dirty) markDirty();
+	}
+	
+	public String getName()
+	{ return ""; }
+	
+	public boolean hasCustomName()
+	{ return false; }
+	
+	public IChatComponent getDisplayName()
+	{ return new ChatComponentText(getName()); }
 }

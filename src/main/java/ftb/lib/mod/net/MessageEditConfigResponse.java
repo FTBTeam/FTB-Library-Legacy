@@ -1,6 +1,5 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -8,6 +7,7 @@ import ftb.lib.mod.client.ServerConfigProvider;
 import latmod.lib.ByteCount;
 import latmod.lib.config.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 {

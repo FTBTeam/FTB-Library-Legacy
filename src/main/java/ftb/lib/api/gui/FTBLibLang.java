@@ -1,8 +1,8 @@
 package ftb.lib.api.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.mod.FTBLibFinals;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibLang

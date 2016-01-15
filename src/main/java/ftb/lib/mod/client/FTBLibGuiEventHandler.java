@@ -1,22 +1,22 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import ftb.lib.DevConsole;
 import ftb.lib.api.*;
 import ftb.lib.api.config.*;
-import ftb.lib.api.gui.GuiIcons;
-import ftb.lib.client.*;
+import ftb.lib.api.gui.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
 import latmod.lib.config.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.*;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -25,36 +25,47 @@ import java.util.ArrayList;
 public class FTBLibGuiEventHandler
 {
 	public static final FTBLibGuiEventHandler instance = new FTBLibGuiEventHandler();
-	private static final ArrayList<PlayerAction> buttons = new ArrayList<>();
 	
 	public static final ConfigGroup sidebar_buttons_config = new ConfigGroup("sidebar_buttons");
 	public static final ConfigEntryBool button_settings = new ConfigEntryBool("settings", true).setHidden();
 	
 	public static final PlayerAction notifications = new PlayerAction("ftbl.notifications", GuiIcons.comment)
 	{
-		public void onClicked(int playerID)
+		public void onClicked(ILMPlayer owner, ILMPlayer player)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getTitleKey()
 		{ return FTBLibModClient.notifications.getFullID(); }
 		
+		public int getPriority()
+		{ return 1000; }
+		
+		public boolean isVisibleFor(ILMPlayer owner, ILMPlayer player)
+		{ return !ClientNotifications.Perm.list.isEmpty() && owner.equals(player); }
+		
 		public void postRender(int ax, int ay, double z)
 		{
 			String n = String.valueOf(ClientNotifications.Perm.list.size());
-			int nw = FTBLibClient.mc.fontRenderer.getStringWidth(n);
+			int nw = FTBLibClient.mc.fontRendererObj.getStringWidth(n);
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			GlStateManager.disableTexture();
+			GlStateManager.disableTexture2D();
 			int width = 16;
 			GuiLM.drawRect(ax + width - nw, ay - 4, ax + width + 1, ay + 5, 0xAAFF2222);
-			GlStateManager.enableTexture();
-			FTBLibClient.mc.fontRenderer.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
+			GlStateManager.enableTexture2D();
+			FTBLibClient.mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
 		}
 	};
 	
 	public static final PlayerAction settings = new PlayerAction("ftbl.settings", GuiIcons.settings)
 	{
-		public void onClicked(int playerID)
+		public void onClicked(ILMPlayer owner, ILMPlayer player)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider)); }
+		
+		public int getPriority()
+		{ return -1000; }
+		
+		public boolean isVisibleFor(ILMPlayer owner, ILMPlayer player)
+		{ return DevConsole.enabled() && owner.equals(player); }
 		
 		public String getTitleKey()
 		{ return "client_config"; }
@@ -62,7 +73,7 @@ public class FTBLibGuiEventHandler
 	
 	public static final PlayerAction dev_console = new PlayerAction("ftbl.dev_console", GuiIcons.bug)
 	{
-		public void onClicked(int playerID)
+		public void onClicked(ILMPlayer owner, ILMPlayer player)
 		{
 			if(DevConsole.enabled())
 			{
@@ -80,6 +91,9 @@ public class FTBLibGuiEventHandler
 				DevConsole.text.set("Config", tree);
 			}
 		}
+		
+		public int getPriority()
+		{ return -2000; }
 		
 		public String getTitleKey()
 		{ return "dev_console"; }
@@ -114,18 +128,17 @@ public class FTBLibGuiEventHandler
 			int guiLeft = (e.gui.width - xSize) / 2;
 			int guiTop = (e.gui.height - ySize) / 2;
 			
-			buttons.clear();
-			if(!ClientNotifications.Perm.list.isEmpty()) buttons.add(notifications);
-			EventPlayerActionButtons event = new EventPlayerActionButtons((FTBLib.ftbu == null) ? 0 : FTBLib.ftbu.getPlayerID(FTBLibClient.mc.thePlayer), true, false);
-			event.post();
-			for(PlayerAction a : event.actions) buttons.add(a);
-			if(button_settings.get()) buttons.add(settings);
-			if(FTBLibFinals.DEV || FTBLib.userIsLatvianModder) buttons.add(dev_console);
+			ArrayList<PlayerAction> buttons = new ArrayList<>();
+			ILMPlayer p = FTBLibClient.getClientLMPlayer();
 			
-			int i = -1;
-			for(PlayerAction a : buttons)
+			for(PlayerAction a : PlayerActionRegistry.getPlayerActions())
 			{
-				i++;
+				if(a.isVisibleFor(p, p)) buttons.add(a);
+			}
+			
+			for(int i = 0; i < buttons.size(); i++)
+			{
+				PlayerAction a = buttons.get(i);
 				if(hasPotions)
 					e.buttonList.add(new ButtonInvLM(495830 + i, a, e.gui, guiLeft + buttonX - 18 * i, guiTop + buttonY));
 				else
@@ -141,10 +154,11 @@ public class FTBLibGuiEventHandler
 		{
 			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative) e.gui : null;
 			
-			if(creativeContainer == null || creativeContainer.func_147056_g() == CreativeTabs.tabInventory.getTabIndex())
+			if(creativeContainer == null || creativeContainer.getSelectedTabIndex() == CreativeTabs.tabInventory.getTabIndex())
 			{
 				PlayerAction b = ((ButtonInvLM) e.button).action;
-				b.onClicked(FTBLib.ftbu.getPlayerID(e.gui.mc.thePlayer));
+				ILMPlayer p = FTBLibClient.getClientLMPlayer();
+				b.onClicked(p, p);
 			}
 		}
 	}
@@ -163,10 +177,11 @@ public class FTBLibGuiEventHandler
 		
 		public void drawButton(Minecraft mc, int mx, int my)
 		{
-			if(creativeContainer != null && creativeContainer.func_147056_g() != CreativeTabs.tabInventory.getTabIndex())
+			if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
 				return;
 			
 			GlStateManager.pushAttrib();
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			
@@ -174,9 +189,14 @@ public class FTBLibGuiEventHandler
 			action.render(xPosition, yPosition, 0D);
 			
 			if(mx >= xPosition && my >= yPosition && mx < xPosition + width && my < yPosition + height)
-				GuiLM.drawBlankRect(xPosition, yPosition, 0D, width, height, 0x55FFFFFF);
+			{
+				GlStateManager.color(1F, 1F, 1F, 0.3F);
+				GuiLM.drawBlankRect(xPosition, yPosition, 0D, width, height);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+			}
 			
 			action.postRender(xPosition, yPosition, 0D);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			
 			GlStateManager.popAttrib();
 		}

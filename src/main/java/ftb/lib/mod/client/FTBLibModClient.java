@@ -1,7 +1,5 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
@@ -18,6 +16,8 @@ import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
 
 import java.util.UUID;
@@ -41,12 +41,16 @@ public class FTBLibModClient extends FTBLibModCommon
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
-		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
+		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
 		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class, null, false));
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
+		
+		PlayerActionRegistry.add(FTBLibGuiEventHandler.notifications);
+		PlayerActionRegistry.add(FTBLibGuiEventHandler.settings);
+		PlayerActionRegistry.add(FTBLibGuiEventHandler.dev_console);
 	}
 	
 	public void postInit()
@@ -81,7 +85,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public void spawnDust(World w, double x, double y, double z, int col)
 	{
-		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F);
+		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F) { };
 		
 		float alpha = LMColorUtils.getAlpha(col) / 255F;
 		float red = LMColorUtils.getRed(col) / 255F;

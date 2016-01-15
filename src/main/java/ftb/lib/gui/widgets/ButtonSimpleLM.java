@@ -1,7 +1,9 @@
 package ftb.lib.gui.widgets;
 
-import cpw.mods.fml.relauncher.*;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
@@ -23,7 +25,9 @@ public abstract class ButtonSimpleLM extends ButtonLM
 	{
 		int ax = getAX();
 		int ay = getAY();
-		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height, mouseOver(ax, ay) ? colorButtonOver : colorButton);
+		FTBLibClient.setGLColor(mouseOver(ax, ay) ? colorButtonOver : colorButton);
+		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		gui.drawCenteredString(gui.getFontRenderer(), title, ax + width / 2, ay + (height - gui.getFontRenderer().FONT_HEIGHT) / 2, colorText);
 	}
 }

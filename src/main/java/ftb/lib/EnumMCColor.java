@@ -1,9 +1,9 @@
 package ftb.lib;
 
-import cpw.mods.fml.relauncher.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public enum EnumMCColor // ItemDye
 {
@@ -39,9 +39,9 @@ public enum EnumMCColor // ItemDye
 	EnumMCColor(String s, int c)
 	{
 		ID = ordinal();
-		name = ItemDye.field_150921_b[ID];
+		name = EnumDyeColor.byDyeDamage(ID).getUnlocalizedName();
 		lang = "ftbl:color." + s.toLowerCase();
-		color = ItemDye.field_150922_c[ID];
+		color = ItemDye.dyeColors[ID];
 		colorBright = c;
 		
 		dyeName = "dye" + s;

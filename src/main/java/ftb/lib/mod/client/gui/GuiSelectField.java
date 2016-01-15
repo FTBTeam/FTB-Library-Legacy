@@ -1,11 +1,12 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.gui.FTBLibLang;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.lib.PrimitiveType;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
@@ -91,9 +92,7 @@ public class GuiSelectField extends GuiLM
 	
 	public void drawBackground()
 	{
-		getFontRenderer();
-		
-		int size = 8 + fontRendererObj.getStringWidth(textBox.text);
+		int size = 8 + getFontRenderer().getStringWidth(textBox.text);
 		if(size > xSize)
 		{
 			xSize = size;
@@ -103,8 +102,12 @@ public class GuiSelectField extends GuiLM
 			textBox.width = xSize - 4;
 			initGui();
 		}
-		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize, 0xAA666666);
-		drawBlankRect(textBox.getAX(), textBox.getAY(), zLevel, textBox.width, textBox.height, 0xFF333333);
+		
+		GlStateManager.color(0.4F, 0.4F, 0.4F, 0.66F);
+		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize);
+		GlStateManager.color(0.2F, 0.2F, 0.2F, 1F);
+		drawBlankRect(textBox.getAX(), textBox.getAY(), zLevel, textBox.width, textBox.height);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		buttonAccept.renderWidget();
 		buttonCancel.renderWidget();
 		textBox.renderCentred(textBox.width / 2, 6, 0xFFEEEEEE);

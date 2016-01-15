@@ -1,13 +1,13 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class MessageOpenGui extends MessageLM
 {

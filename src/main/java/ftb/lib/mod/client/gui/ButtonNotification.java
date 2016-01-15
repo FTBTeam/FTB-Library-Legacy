@@ -1,11 +1,11 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.gui.*;
-import ftb.lib.client.GlStateManager;
+import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.LMColorUtils;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -42,9 +42,10 @@ public class ButtonNotification extends ButtonLM
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		int color = LMColorUtils.getRGBA(notification.notification.color, mouseOver(ax, ay) ? 255 : 185);
+		FTBLibClient.setGLColor(notification.notification.color, mouseOver(ax, ay) ? 255 : 185);
+		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height, color);
 		gui.getFontRenderer().drawString(title, ax + tx, ay + 4, 0xFFFFFFFF);
 		if(notification.notification.desc != null)
 			gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);

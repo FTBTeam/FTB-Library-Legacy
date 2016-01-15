@@ -1,11 +1,11 @@
 package ftb.lib;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.item.ItemStackTypeAdapter;
 import ftb.lib.notification.*;
 import latmod.lib.LMJsonUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class JsonHelper
 {

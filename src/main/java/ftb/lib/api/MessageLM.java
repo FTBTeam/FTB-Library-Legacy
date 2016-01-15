@@ -1,11 +1,11 @@
 package ftb.lib.api;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.LMNBTUtils;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, IMessage>
 {

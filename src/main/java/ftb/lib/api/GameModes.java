@@ -15,9 +15,26 @@ public class GameModes
 	public final GameMode commonMode;
 	public final Map<String, String> customData;
 	
+	private static JsonObject createDefault()
+	{
+		JsonObject o = new JsonObject();
+		JsonArray a = new JsonArray();
+		a.add(new JsonPrimitive("default"));
+		o.add("modes", a);
+		o.add("default", new JsonPrimitive("default"));
+		o.add("common", new JsonPrimitive("common"));
+		return o;
+	}
+	
+	private static boolean isValid(JsonObject o)
+	{
+		if(o == null || o.entrySet().isEmpty()) return false;
+		return o.has("modes") && o.has("default") && o.has("common");
+	}
+	
 	public GameModes(JsonObject o)
 	{
-		if(o == null || o.entrySet().isEmpty()) throw new RuntimeException("FTBLib: Invalid gamemodes.json!");
+		if(!isValid(o)) o = createDefault();
 		
 		HashMap<String, GameMode> modes0 = new HashMap<>();
 		
@@ -61,18 +78,16 @@ public class GameModes
 		gameModes = (GameModes) LMJsonUtils.fromJsonFile(Serializer.getGson(), gamemodesJsonFile, GameModes.class);
 		if(gameModes == null)
 		{
-			JsonObject o = new JsonObject();
-			JsonArray a = new JsonArray();
-			a.add(new JsonPrimitive("default"));
-			o.add("default", new JsonPrimitive("default"));
-			o.add("common", new JsonPrimitive("common"));
-			gameModes = new GameModes(o);
+			gameModes = new GameModes(createDefault());
 			LMJsonUtils.toJsonFile(Serializer.getGson(), gamemodesJsonFile, gameModes);
 		}
 	}
 	
 	public static GameModes getGameModes()
-	{ return gameModes; }
+	{
+		if(gameModes == null) reload();
+		return gameModes;
+	}
 	
 	public GameMode get(String s)
 	{
@@ -116,7 +131,7 @@ public class GameModes
 		{
 			if(json.isJsonNull() || !json.isJsonObject()) return null;
 			JsonObject o = json.getAsJsonObject();
-			if(!o.has("default") || !o.has("common") || !o.has("modes")) return null;
+			if(!isValid(o)) return null;
 			return new GameModes(o);
 		}
 		

@@ -1,9 +1,9 @@
 package ftb.lib.gui.widgets;
 
-import cpw.mods.fml.relauncher.*;
 import ftb.lib.client.TextureCoords;
 import ftb.lib.gui.GuiLM;
 import latmod.lib.LMUtils;
+import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
 public abstract class ButtonLM extends WidgetLM

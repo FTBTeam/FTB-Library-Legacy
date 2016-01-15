@@ -3,6 +3,7 @@ package ftb.lib.item;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.*;
 import net.minecraft.item.*;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 
@@ -45,7 +46,7 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 			String[] s1 = s.split(getParseRegex(s));
 			if(s1.length <= 0) return null;
 			
-			Item item = LMInvUtils.getItemFromRegName(s1[0]);
+			Item item = LMInvUtils.getItemFromRegName(new ResourceLocation(s1[0]));
 			if(item == null) return null;
 			int dmg = 0;
 			int size = 1;

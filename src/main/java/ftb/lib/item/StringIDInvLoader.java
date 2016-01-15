@@ -5,6 +5,7 @@ import latmod.lib.MapEntry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -103,7 +104,7 @@ public class StringIDInvLoader
 		}
 		else
 		{
-			Item item = LMInvUtils.getItemFromRegName(tag.getString("ID"));
+			Item item = LMInvUtils.getItemFromRegName(new ResourceLocation(tag.getString("ID")));
 			
 			if(item != null)
 			{
@@ -138,7 +139,7 @@ public class StringIDInvLoader
 	{
 		if(is == null || is.getItem() == null) return null;
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("ID", LMInvUtils.getRegName(is.getItem()));
+		tag.setString("ID", LMInvUtils.getRegName(is.getItem()).toString());
 		tag.setIntArray("D", new int[] {slot, is.stackSize, is.getItemDamage()});
 		if(is.hasTagCompound()) tag.setTag("T", is.getTagCompound());
 		return tag;

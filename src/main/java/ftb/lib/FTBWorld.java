@@ -1,9 +1,9 @@
 package ftb.lib;
 
-import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import latmod.lib.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.UUID;
