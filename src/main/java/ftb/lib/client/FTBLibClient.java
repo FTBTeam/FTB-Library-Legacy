@@ -14,15 +14,18 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.*;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -40,14 +43,25 @@ public class FTBLibClient // LatCoreMCClient
 	private static EntityItem entityItem;
 	public static int displayW, displayH;
 	
+	public static <T extends Entity> void addEntityRenderer(Class<T> c, IRenderFactory<? super T> r)
+	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
+	
+	public static void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
+	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+	
 	public static ILMPlayer getClientLMPlayer()
 	{
 		ILMPlayer p = (FTBLib.ftbu == null) ? null : FTBLib.ftbu.getLMPlayer(mc.thePlayer);
 		return (p == null) ? new TempLMPlayerFromEntity(Side.CLIENT, mc.thePlayer) : p;
 	}
 	
+	//TODO: Rename to isIngame()
 	public static boolean isPlaying()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
+	
+	//TODO: Rename to isIngameWithFTBU()
+	public static boolean isPlayingWithFTBU()
+	{ return isPlaying() && FTBLib.ftbu != null && FTBLib.ftbu.hasClientWorld(); }
 	
 	public static int getDim()
 	{ return isPlaying() ? mc.theWorld.provider.getDimensionId() : 0; }

@@ -23,7 +23,7 @@ public class LMNBTUtils
 	public static final byte MAP = Constants.NBT.TAG_COMPOUND;
 	public static final byte INT_ARRAY = Constants.NBT.TAG_INT_ARRAY;
 	
-	public static String[] getMapKeysA(NBTTagCompound tag)
+	public static String[] getMapKeys(NBTTagCompound tag)
 	{
 		if(tag == null || tag.hasNoTags()) return new String[0];
 		return LMListUtils.toStringArray(tag.getKeySet());

@@ -248,8 +248,8 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
 		FTBLibClient.setTexture(FTBLibClient.getSkinTexture(username));
-		drawTexturedRectD(x, y, z, w, h, 0.125D, 0.25D, 0.25D, 0.5D);
-		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.25D, 0.75D, 0.5D);
+		drawTexturedRectD(x, y, z, w, h, 0.125D, 0.125D, 0.25D, 0.25D);
+		drawTexturedRectD(x, y, z, w, h, 0.625D, 0.125D, 0.75D, 0.25D);
 	}
 	
 	public static void drawBlankRect(double x, double y, double z, double w, double h)

@@ -44,6 +44,12 @@ public class FTBLibMod
 	}
 	
 	@Mod.EventHandler
+	public void init(FMLInitializationEvent e)
+	{
+		FMLInterModComms.sendMessage("Waila", "register", "ftb.lib.api.RegisterWailaEvent.registerHandlers");
+	}
+	
+	@Mod.EventHandler
 	public void onPostInit(FMLPostInitializationEvent e)
 	{
 		ODItems.postInit();

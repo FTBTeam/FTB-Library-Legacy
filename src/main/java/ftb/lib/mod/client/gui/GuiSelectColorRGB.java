@@ -79,7 +79,7 @@ public class GuiSelectColorRGB extends GuiLM
 			{
 				playClickSound();
 				FTBLibModClient.open_hsb_cg.set(true);
-				ClientConfigRegistry.provider.save();
+				ClientConfigRegistry.provider().save();
 				mc.displayGuiScreen(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
 			}
 		};

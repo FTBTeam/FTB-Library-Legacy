@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.gui.IGuiTile;
+import ftb.lib.api.item.IItemLM;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import ftb.lib.notification.Notification;
@@ -13,9 +14,10 @@ import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -23,9 +25,10 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.*;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.*;
 
@@ -88,6 +91,38 @@ public class FTBLib
 	
 	public static IChatComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent) o : new ChatComponentText("" + o); }
+	
+	public static void addItem(IItemLM i)
+	{ addItem((Item) i, i.getItemID()); }
+	
+	public static void addItem(Item i, String name)
+	{ GameRegistry.registerItem(i, name); }
+	
+	public static void addBlock(Block b, Class<? extends ItemBlock> c, String name)
+	{ GameRegistry.registerBlock(b, c, name); }
+	
+	public static void addBlock(Block b, String name)
+	{ addBlock(b, ItemBlock.class, name); }
+	
+	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
+	{
+		if(alt == null || alt.length == 0) GameRegistry.registerTileEntity(c, s);
+		else GameRegistry.registerTileEntityWithAlternatives(c, s, alt);
+	}
+	
+	public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
+	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
+	
+	public static void addWorldGenerator(IWorldGenerator i, int w)
+	{ GameRegistry.registerWorldGenerator(i, w); }
+	
+	public static Fluid addFluid(Fluid f)
+	{
+		Fluid f1 = FluidRegistry.getFluid(f.getName());
+		if(f1 != null) return f1;
+		FluidRegistry.registerFluid(f);
+		return f;
+	}
 	
 	/**
 	 * Prints message to chat (doesn't translate it)

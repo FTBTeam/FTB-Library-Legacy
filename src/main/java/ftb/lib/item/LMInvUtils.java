@@ -252,6 +252,7 @@ public class LMInvUtils
 	
 	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
 	{
+		if(inv == null) return null;
 		ItemStack stack = inv.getStackInSlot(slot);
 		if(stack != null)
 		{
@@ -266,17 +267,33 @@ public class LMInvUtils
 		return stack;
 	}
 	
-	public static ItemStack getStackInSlotOnClosing(IInventory inv, int i)
+	public static ItemStack removeStackFromSlot(IInventory inv, int i)
 	{
+		if(inv == null) return null;
 		ItemStack is = inv.getStackInSlot(i);
 		
 		if(is != null)
 		{
 			inv.setInventorySlotContents(i, null);
-			return is;
+			return (is.stackSize > 0) ? is : null;
 		}
 		
 		return null;
+	}
+	
+	public static boolean clear(IInventory inv)
+	{
+		if(inv == null) return false;
+		boolean hadItems = false;
+		
+		for(int i = 0; i < inv.getSizeInventory(); i++)
+		{
+			ItemStack is = removeStackFromSlot(inv, i);
+			if(!hadItems && is != null && is.stackSize > 0) hadItems = true;
+		}
+		
+		if(hadItems) inv.markDirty();
+		return hadItems;
 	}
 	
 	public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack is, int delay)

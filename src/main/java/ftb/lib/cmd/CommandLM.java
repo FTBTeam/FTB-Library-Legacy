@@ -57,14 +57,21 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	}
 	
 	@SuppressWarnings("all")
-	public final List addTabCompletionOptions(ICommandSender ics, String[] args) throws CommandException
+	public final List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(!level.isEnabled()) return null;
-		String[] s = getTabStrings(ics, args, args.length - 1);
-		if(s != null && s.length > 0)
+		try
 		{
-			if(sortStrings(ics, args, args.length - 1)) Arrays.sort(s);
-			return getListOfStringsMatchingLastWord(args, s);
+			String[] s = getTabStrings(ics, args, args.length - 1);
+			if(s != null && s.length > 0)
+			{
+				if(sortStrings(ics, args, args.length - 1)) Arrays.sort(s);
+				return getListOfStringsMatchingLastWord(args, s);
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
 		}
 		return null;
 	}

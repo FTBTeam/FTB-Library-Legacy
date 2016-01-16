@@ -10,17 +10,42 @@ import java.util.List;
 
 public abstract class PlayerAction extends FinalIDObject
 {
+	public static enum Type
+	{
+		SELF,
+		OTHER,
+		BOTH;
+		
+		public boolean self()
+		{ return this == SELF || this == BOTH; }
+		
+		public boolean other()
+		{ return this == OTHER || this == BOTH; }
+		
+		public boolean equalsType(Type t)
+		{
+			if(t == null || t == BOTH) return true;
+			else if(t == SELF) return self();
+			else return other();
+		}
+	}
+	
+	public final Type type;
+	public final int priority;
 	public final TextureCoords icon;
 	
-	public PlayerAction(String id, TextureCoords c)
+	public PlayerAction(Type t, String id, int p, TextureCoords c)
 	{
 		super(id);
+		type = (t == null) ? Type.SELF : t;
+		priority = p;
 		icon = c;
 	}
 	
-	public abstract void onClicked(ILMPlayer owner, ILMPlayer player);
+	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
 	
-	public abstract String getTitleKey();
+	public String getTitleKey()
+	{ return ID; }
 	
 	@SideOnly(Side.CLIENT)
 	public String getTitle()
@@ -38,14 +63,12 @@ public abstract class PlayerAction extends FinalIDObject
 	{
 	}
 	
-	public int getPriority()
-	{ return 0; }
-	
 	public int compareTo(Object o)
-	{ return Integer.compare(((PlayerAction) o).getPriority(), getPriority()); }
-	
-	public boolean isVisibleFor(ILMPlayer owner, ILMPlayer player)
 	{
-		return owner.equals(player);
+		int i = Integer.compare(((PlayerAction) o).priority, priority);
+		return (i == 0) ? super.compareTo(o) : i;
 	}
+	
+	public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
+	{ return true; }
 }

@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibGuiEventHandler
@@ -29,19 +29,16 @@ public class FTBLibGuiEventHandler
 	public static final ConfigGroup sidebar_buttons_config = new ConfigGroup("sidebar_buttons");
 	public static final ConfigEntryBool button_settings = new ConfigEntryBool("settings", true).setHidden();
 	
-	public static final PlayerAction notifications = new PlayerAction("ftbl.notifications", GuiIcons.comment)
+	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.comment)
 	{
-		public void onClicked(ILMPlayer owner, ILMPlayer player)
+		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getTitleKey()
 		{ return FTBLibModClient.notifications.getFullID(); }
 		
-		public int getPriority()
-		{ return 1000; }
-		
-		public boolean isVisibleFor(ILMPlayer owner, ILMPlayer player)
-		{ return !ClientNotifications.Perm.list.isEmpty() && owner.equals(player); }
+		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
+		{ return !ClientNotifications.Perm.list.isEmpty(); }
 		
 		public void postRender(int ax, int ay, double z)
 		{
@@ -56,24 +53,18 @@ public class FTBLibGuiEventHandler
 		}
 	};
 	
-	public static final PlayerAction settings = new PlayerAction("ftbl.settings", GuiIcons.settings)
+	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
-		public void onClicked(ILMPlayer owner, ILMPlayer player)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider)); }
-		
-		public int getPriority()
-		{ return -1000; }
-		
-		public boolean isVisibleFor(ILMPlayer owner, ILMPlayer player)
-		{ return DevConsole.enabled() && owner.equals(player); }
+		public void onClicked(ILMPlayer self, ILMPlayer other)
+		{ FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
 		
 		public String getTitleKey()
 		{ return "client_config"; }
 	};
 	
-	public static final PlayerAction dev_console = new PlayerAction("ftbl.dev_console", GuiIcons.bug)
+	public static final PlayerAction dev_console = new PlayerAction(PlayerAction.Type.SELF, "ftbl.dev_console", -2000, GuiIcons.bug)
 	{
-		public void onClicked(ILMPlayer owner, ILMPlayer player)
+		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{
 			if(DevConsole.enabled())
 			{
@@ -92,8 +83,8 @@ public class FTBLibGuiEventHandler
 			}
 		}
 		
-		public int getPriority()
-		{ return -2000; }
+		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
+		{ return DevConsole.enabled(); }
 		
 		public String getTitleKey()
 		{ return "dev_console"; }
@@ -128,13 +119,8 @@ public class FTBLibGuiEventHandler
 			int guiLeft = (e.gui.width - xSize) / 2;
 			int guiTop = (e.gui.height - ySize) / 2;
 			
-			ArrayList<PlayerAction> buttons = new ArrayList<>();
 			ILMPlayer p = FTBLibClient.getClientLMPlayer();
-			
-			for(PlayerAction a : PlayerActionRegistry.getPlayerActions())
-			{
-				if(a.isVisibleFor(p, p)) buttons.add(a);
-			}
+			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, true);
 			
 			for(int i = 0; i < buttons.size(); i++)
 			{

@@ -18,4 +18,5 @@ public interface FTBUIntegration // FTBLIntegration
 	String[] getPlayerNames(boolean online);
 	void writeWorldData(ByteIOStream io, EntityPlayerMP ep);
 	void readWorldData(ByteIOStream io);
+	boolean hasClientWorld();
 }

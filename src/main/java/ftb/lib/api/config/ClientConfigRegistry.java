@@ -14,29 +14,32 @@ public final class ClientConfigRegistry
 {
 	private static final ConfigGroup group = new ConfigGroup("client_config");
 	
-	public static final IConfigProvider provider = new IConfigProvider()
+	public static IConfigProvider provider()
 	{
-		public String getGroupTitle(ConfigGroup g)
-		{ return I18n.format(g.getFullID()); }
-		
-		public String getEntryTitle(ConfigEntry e)
-		{ return I18n.format(e.getFullID()); }
-		
-		public ConfigGroup getGroup()
-		{ return group; }
-		
-		public void save()
+		return new IConfigProvider()
 		{
-			if(group.parentFile == null) init();
-			group.parentFile.save();
+			public String getGroupTitle(ConfigGroup g)
+			{ return I18n.format(g.getFullID()); }
 			
-			Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 3000);
-			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
-			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
-			n.setColor(0xFF33FF33);
-			ClientNotifications.add(n);
-		}
-	};
+			public String getEntryTitle(ConfigEntry e)
+			{ return I18n.format(e.getFullID()); }
+			
+			public ConfigGroup getGroup()
+			{ return group; }
+			
+			public void save()
+			{
+				if(group.parentFile == null) init();
+				group.parentFile.save();
+				
+				Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 3000);
+				n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
+				n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
+				n.setColor(0xFF33FF33);
+				ClientNotifications.add(n);
+			}
+		};
+	}
 	
 	public static void init()
 	{

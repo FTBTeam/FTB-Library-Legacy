@@ -2,7 +2,7 @@ package ftb.lib.notification;
 
 import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
-import latmod.lib.*;
+import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -59,7 +59,6 @@ public class ClientNotifications
 		private Notification notification;
 		private String title;
 		private String desc;
-		private int color;
 		private int width;
 		
 		private Temp(Notification n)
@@ -68,7 +67,6 @@ public class ClientNotifications
 			time = -1L;
 			title = notification.title.getFormattedText();
 			desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
-			color = LMColorUtils.getRGBA(notification.color, 230);
 			width = 20 + Math.max(FTBLibClient.mc.fontRendererObj.getStringWidth(title), FTBLibClient.mc.fontRendererObj.getStringWidth(desc));
 			if(notification.item != null) width += 20;
 		}
@@ -105,15 +103,21 @@ public class ClientNotifications
 				d1 *= d1;
 				
 				GlStateManager.disableDepth();
+				GlStateManager.pushMatrix();
 				GlStateManager.depthMask(false);
 				int i = FTBLibClient.displayW - width;
 				int j = 0 - (int) (d1 * 36D);
-				GlStateManager.color(1F, 1F, 1F, 1F);
+				
+				GlStateManager.translate(i, j, 0F);
+				
+				
 				GlStateManager.disableTexture2D();
 				GlStateManager.disableLighting();
-				GuiLM.drawRect(i, j, FTBLibClient.displayW, j + 32, color);
+				FTBLibClient.setGLColor(notification.color, 230);
+				GuiLM.drawBlankRect(0D, 0D, 0D, FTBLibClient.displayW, j + 32D);
 				GlStateManager.enableTexture2D();
 				GlStateManager.pushAttrib();
+				GlStateManager.color(1F, 1F, 1F, 1F);
 				
 				int w = notification.item == null ? 10 : 30;
 				
@@ -121,21 +125,23 @@ public class ClientNotifications
 				
 				if(desc == null)
 				{
-					font.drawString(title, i + w, j + 12, -256);
+					font.drawString(title, w, 12, -256);
 				}
 				else
 				{
-					font.drawString(title, i + w, j + 7, -256);
-					font.drawString(desc, i + w, j + 18, -1);
+					font.drawString(title, w, 7, -256);
+					font.drawString(desc, w, 18, -1);
 				}
 				
 				if(notification.item != null)
 				{
-					FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc.getRenderItem(), font, i + 8, j + 8);
+					FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc.getRenderItem(), font, 8, 8);
 				}
 				
 				GlStateManager.depthMask(true);
+				GlStateManager.color(1F, 1F, 1F, 1F);
 				GlStateManager.popAttrib();
+				GlStateManager.popMatrix();
 			}
 		}
 		

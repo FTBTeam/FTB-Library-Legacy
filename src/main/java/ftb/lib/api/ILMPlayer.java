@@ -16,4 +16,5 @@ public interface ILMPlayer
 	GameProfile getProfile();
 	boolean isFriendRaw(ILMPlayer p);
 	boolean isFriend(ILMPlayer p);
+	boolean allowCreativeInteractSecure();
 }

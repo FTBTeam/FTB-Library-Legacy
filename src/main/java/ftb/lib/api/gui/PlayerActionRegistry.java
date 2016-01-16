@@ -1,6 +1,6 @@
 package ftb.lib.api.gui;
 
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 
 import java.util.*;
 
@@ -14,6 +14,16 @@ public class PlayerActionRegistry
 	public static void add(PlayerAction a)
 	{ if(a != null) map.put(a.ID, a); }
 	
-	public static Collection<PlayerAction> getPlayerActions()
-	{ return map.values(); }
+	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ILMPlayer self, ILMPlayer other, boolean sort)
+	{
+		ArrayList<PlayerAction> l = new ArrayList<>();
+		
+		for(PlayerAction a : map.values())
+		{
+			if(a.type.equalsType(t) && a.isVisibleFor(self, other)) l.add(a);
+		}
+		
+		if(sort) Collections.sort(l);
+		return l;
+	}
 }

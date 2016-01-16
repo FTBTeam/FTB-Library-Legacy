@@ -22,25 +22,10 @@ public class BasicInventory implements IInventory
 	{ return LMInvUtils.decrStackSize(this, slot, amt); }
 	
 	public ItemStack removeStackFromSlot(int index)
-	{
-		if(items[index] != null)
-		{
-			ItemStack is0 = items[index];
-			items[index] = null;
-			markDirty();
-			return is0;
-		}
-		return null;
-	}
-	
-	public ItemStack getStackInSlotOnClosing(int i)
-	{ return LMInvUtils.getStackInSlotOnClosing(this, i); }
+	{ return LMInvUtils.removeStackFromSlot(this, index); }
 	
 	public void setInventorySlotContents(int i, ItemStack is)
-	{
-		items[i] = is;
-		markDirty();
-	}
+	{ items[i] = is; }
 	
 	public int getInventoryStackLimit()
 	{ return 64; }
@@ -66,20 +51,7 @@ public class BasicInventory implements IInventory
 	{ return 0; }
 	
 	public void clear()
-	{
-		boolean dirty = false;
-		
-		for(int i = 0; i < items.length; i++)
-		{
-			if(items[i] != null)
-			{
-				dirty = true;
-				items[i] = null;
-			}
-		}
-		
-		if(dirty) markDirty();
-	}
+	{ LMInvUtils.clear(this); }
 	
 	public String getName()
 	{ return ""; }
