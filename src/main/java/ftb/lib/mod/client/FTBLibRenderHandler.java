@@ -21,7 +21,6 @@ public class FTBLibRenderHandler
 	public void renderTick(TickEvent.RenderTickEvent e)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
 		
 		if(e.phase == TickEvent.Phase.START)
 		{
@@ -30,9 +29,8 @@ public class FTBLibRenderHandler
 			FTBLibClient.displayH = sr.getScaledHeight();
 		}
 		
-		if(e.phase == TickEvent.Phase.END && FTBLibClient.isPlaying()) ClientNotifications.renderTemp();
+		if(e.phase == TickEvent.Phase.END && FTBLibClient.isIngame()) ClientNotifications.renderTemp();
 		
-		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
 	}
 	

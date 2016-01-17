@@ -12,6 +12,7 @@ import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -28,29 +29,27 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigGroup client_config = new ConfigGroup("ftbl");
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
-	public static final ConfigEntryBool debug_info = new ConfigEntryBool("debug_info", false);
 	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
+	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", false);
 	
 	public void preInit()
 	{
 		JsonHelper.initClient();
 		EventBusHelper.register(FTBLibClientEventHandler.instance);
-		EventBusHelper.register(FTBLibGuiEventHandler.instance);
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
+		//For Dev reasons, see DevConsole
 		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
-		ClientConfigRegistry.add(FTBLibGuiEventHandler.sidebar_buttons_config.addAll(FTBLibGuiEventHandler.class, null, false));
+		ClientConfigRegistry.add(FTBLibActions.sidebar_buttons_config.addAll(FTBLibActions.class, null, false));
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
 		
-		PlayerActionRegistry.add(FTBLibGuiEventHandler.notifications);
-		PlayerActionRegistry.add(FTBLibGuiEventHandler.settings);
-		PlayerActionRegistry.add(FTBLibGuiEventHandler.dev_console);
+		FTBLibActions.init();
 	}
 	
 	public void postInit()
@@ -58,13 +57,20 @@ public class FTBLibModClient extends FTBLibModCommon
 		ClientConfigRegistry.init();
 	}
 	
-	public boolean isShiftDown() { return GuiScreen.isShiftKeyDown(); }
+	public String translate(String key, Object... obj)
+	{ return I18n.format(key, obj); }
 	
-	public boolean isCtrlDown() { return GuiScreen.isCtrlKeyDown(); }
+	public boolean isShiftDown()
+	{ return GuiScreen.isShiftKeyDown(); }
 	
-	public boolean isTabDown() { return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
+	public boolean isCtrlDown()
+	{ return GuiScreen.isCtrlKeyDown(); }
 	
-	public boolean inGameHasFocus() { return FTBLibClient.mc.inGameHasFocus; }
+	public boolean isTabDown()
+	{ return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
+	
+	public boolean inGameHasFocus()
+	{ return FTBLibClient.mc.inGameHasFocus; }
 	
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }

@@ -77,7 +77,7 @@ public class CmdEditConfig extends CommandLM
 			{
 				entry.setJson(LMJsonUtils.getJsonElement(json));
 				if(group.parentFile != null) group.parentFile.save();
-				FTBLib.reload(ics, true, true);
+				FTBLib.reload(ics, true, false);
 				return new ChatComponentText(args[2] + " set to " + entry.getPrettyJsonString(false));
 			}
 			catch(Exception ex)

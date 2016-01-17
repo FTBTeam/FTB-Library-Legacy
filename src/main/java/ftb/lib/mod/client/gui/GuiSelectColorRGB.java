@@ -7,7 +7,7 @@ import ftb.lib.api.gui.callback.*;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
-import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,7 +20,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiSelectColorRGB extends GuiLM
 {
-	public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID_LC, "textures/gui/colselector_rgb.png");
+	public static final ResourceLocation tex = FTBLibMod.mod.getLocation("textures/gui/colselector_rgb.png");
 	public static final TextureCoords col_tex = new TextureCoords(tex, 98, 13, 32, 16);
 	
 	public static final int SLIDER_W = 6, SLIDER_H = 13, SLIDER_BAR_W = 86;

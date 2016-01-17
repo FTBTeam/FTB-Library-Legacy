@@ -1,6 +1,7 @@
 package ftb.lib.mod;
 
 import ftb.lib.api.*;
+import ftb.lib.api.friends.ILMPlayer;
 import latmod.lib.ByteIOStream;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;

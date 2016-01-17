@@ -24,7 +24,10 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	{ return level.requiredPermsLevel(); }
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
-	{ return level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.getServer().isDedicatedServer() || super.canCommandSenderUseCommand(ics)); }
+	{
+		if(FTBLib.getEffectiveSide().isClient()) return true;
+		return level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.canCommandSenderUseCommand(ics));
+	}
 	
 	public final String getCommandName()
 	{ return commandName; }

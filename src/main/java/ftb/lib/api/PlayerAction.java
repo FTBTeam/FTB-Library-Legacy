@@ -1,10 +1,10 @@
 package ftb.lib.api;
 
+import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
@@ -44,12 +44,8 @@ public abstract class PlayerAction extends FinalIDObject
 	
 	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
 	
-	public String getTitleKey()
-	{ return ID; }
-	
-	@SideOnly(Side.CLIENT)
-	public String getTitle()
-	{ return I18n.format(getTitleKey()); }
+	public String getDisplayName()
+	{ return FTBLibMod.proxy.translate(ID); }
 	
 	public void addMouseOverText(List<String> l) { }
 	

@@ -44,7 +44,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		if(file.getGroup().loadFromGroup(group) > 0)
 		{
 			file.save();
-			FTBLib.reload(ep, true, true);
+			FTBLib.reload(ep, true, false);
 		}
 		
 		return null;

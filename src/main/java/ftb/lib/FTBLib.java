@@ -86,7 +86,7 @@ public class FTBLib
 		
 		if(printMessage)
 			printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
-		if(reloadClient) new MessageReload(FTBWorld.server).sendTo(null);
+		new MessageReload(FTBWorld.server, reloadClient).sendTo(null);
 	}
 	
 	public static IChatComponent getChatComponent(Object o)
@@ -140,6 +140,12 @@ public class FTBLib
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
 	
+	public static boolean isDedicatedServer()
+	{
+		MinecraftServer mcs = getServer();
+		return (mcs == null) ? false : mcs.isDedicatedServer();
+	}
+	
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
 	
@@ -153,6 +159,8 @@ public class FTBLib
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
 		ArrayList<EntityPlayerMP> l = new ArrayList<>();
+		if(getEffectiveSide().isClient()) return l;
+		
 		if(hasOnlinePlayers())
 		{
 			l.addAll(getServer().getConfigurationManager().playerEntityList);

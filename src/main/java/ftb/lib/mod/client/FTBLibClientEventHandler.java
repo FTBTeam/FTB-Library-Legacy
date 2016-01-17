@@ -70,8 +70,6 @@ public class FTBLibClientEventHandler
 	{
 		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
-			if(FTBLibModClient.debug_info.get()) e.left.add(FTBLibClient.mc.debug);
-			
 			if(FTBLibFinals.DEV)
 			{
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
@@ -80,12 +78,7 @@ public class FTBLibClientEventHandler
 		}
 		else
 		{
-			e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
-			
-			if(FTBLibModClient.debug_info.get())
-			{
-				e.right.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
-			}
+			if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
 		}
 	}
 }

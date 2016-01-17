@@ -5,8 +5,9 @@ import ftb.lib.gui.widgets.PanelLM;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
@@ -205,28 +206,28 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	
 	public static void drawTexturedRectD(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1)
 	{
-		GL11.glBegin(GL11.GL_QUADS);
-		
 		if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
 		{
-			GL11.glVertex3d(x + 0, y + h, z);
-			GL11.glVertex3d(x + w, y + h, z);
-			GL11.glVertex3d(x + w, y + 0, z);
-			GL11.glVertex3d(x + 0, y + 0, z);
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(7, DefaultVertexFormats.POSITION);
+			worldrenderer.pos(x + 0, y + h, z).endVertex();
+			worldrenderer.pos(x + w, y + h, z).endVertex();
+			worldrenderer.pos(x + w, y + 0, z).endVertex();
+			worldrenderer.pos(x + 0, y + 0, z).endVertex();
+			tessellator.draw();
 		}
 		else
 		{
-			GL11.glTexCoord2d(u0, v1);
-			GL11.glVertex3d(x + 0, y + h, z);
-			GL11.glTexCoord2d(u1, v1);
-			GL11.glVertex3d(x + w, y + h, z);
-			GL11.glTexCoord2d(u1, v0);
-			GL11.glVertex3d(x + w, y + 0, z);
-			GL11.glTexCoord2d(u0, v0);
-			GL11.glVertex3d(x + 0, y + 0, z);
+			Tessellator tessellator = Tessellator.getInstance();
+			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+			worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+			worldrenderer.pos(x + 0, y + h, z).tex(u0, v1).endVertex();
+			worldrenderer.pos(x + w, y + h, z).tex(u1, v1).endVertex();
+			worldrenderer.pos(x + w, y + 0, z).tex(u1, v0).endVertex();
+			worldrenderer.pos(x + 0, y + 0, z).tex(u0, v0).endVertex();
+			tessellator.draw();
 		}
-		
-		GL11.glEnd();
 	}
 	
 	public static void drawTexturedRect(double x, double y, double z, double w, double h, double u0, double v0, double u1, double v1, int textureW, int textureH)
@@ -257,25 +258,7 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.disableTexture2D();
-		
-		/*
-		Tessellator t = Tessellator.getInstance();
-		WorldRenderer r = t.getWorldRenderer();
-		r.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-		r.color(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), LMColorUtils.getAlpha(col));
-		r.pos(x + 0, y + h, z).endVertex();
-		r.pos(x + w, y + h, z).endVertex();
-		r.pos(x + w, y + 0, z).endVertex();
-		r.pos(x + 0, y + 0, z).endVertex();
-		t.draw();
-		*/
-		
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x + 0, y + h, z);
-		GL11.glVertex3d(x + w, y + h, z);
-		GL11.glVertex3d(x + w, y + 0, z);
-		GL11.glVertex3d(x + 0, y + 0, z);
-		GL11.glEnd();
+		drawTexturedRectD(x, y, z, w, h, 0D, 0D, 0D, 0D);
 		GlStateManager.enableTexture2D();
 	}
 	

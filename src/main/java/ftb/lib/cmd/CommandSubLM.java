@@ -1,6 +1,6 @@
 package ftb.lib.cmd;
 
-import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
@@ -114,6 +114,6 @@ public class CommandSubLM extends CommandLM
 			return new ChatComponentText(LMStringUtils.strip(getTabStrings(ics, args, 0)));
 		CommandLM cmd = subCommands.get(args[0]);
 		if(cmd != null) return cmd.onCommand(ics, LMStringUtils.shiftArray(args));
-		return new ChatComponentTranslation(FTBLibFinals.ASSETS + "invalid_subcmd", args[0]);
+		return new ChatComponentTranslation(FTBLibMod.mod.assets + "invalid_subcmd", args[0]);
 	}
 }

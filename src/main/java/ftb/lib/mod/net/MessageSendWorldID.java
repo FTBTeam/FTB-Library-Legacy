@@ -39,6 +39,8 @@ public class MessageSendWorldID extends MessageLM
 		FTBWorld.client.readReloadData(io);
 		new EventFTBWorldClient(FTBWorld.client, false).post();
 		if(first && hasFTBU && FTBLib.ftbu != null) FTBLib.ftbu.readWorldData(io);
+		
+		MessageReload.reloadClient(0L, false);
 		return null;
 	}
 }

@@ -1,4 +1,4 @@
-package ftb.lib.api;
+package ftb.lib.api.friends;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;

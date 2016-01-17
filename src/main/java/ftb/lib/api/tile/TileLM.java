@@ -95,7 +95,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void onUpdatePacket()
 	{
 		//TODO: Check this
-		if(rerenderBlock()) worldObj.markBlockForUpdate(getPos());
+		if(rerenderBlock()) worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 	}
 	
 	public boolean rerenderBlock()

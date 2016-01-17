@@ -2,10 +2,9 @@ package ftb.lib;
 
 import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
-import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.mod.*;
 import ftb.lib.recipes.LMRecipes;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
@@ -26,7 +25,7 @@ public class LMMod
 	@Target(ElementType.FIELD)
 	public static @interface Instance
 	{
-		public String value();
+		String value();
 	}
 	
 	private static LMMod getLMMod(Object o)
@@ -136,9 +135,8 @@ public class LMMod
 	public String getItemName(String s)
 	{ return assets + "item." + s; }
 	
-	@SideOnly(Side.CLIENT)
-	public String translateClient(String s, Object... args)
-	{ return I18n.format(assets + s, args); }
+	public String translate(String s, Object... args)
+	{ return FTBLibMod.proxy.translate(assets + s, args); }
 	
 	public void addItem(IItemLM i)
 	{

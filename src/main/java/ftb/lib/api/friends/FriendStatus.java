@@ -1,4 +1,4 @@
-package ftb.lib.api;
+package ftb.lib.api.friends;
 
 /**
  * Created by LatvianModder on 15.01.2016.

@@ -1,7 +1,7 @@
 package ftb.lib.client;
 
 import ftb.lib.*;
-import ftb.lib.api.ILMPlayer;
+import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.IClientActionGui;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.mod.client.FTBLibRenderHandler;
@@ -55,16 +55,14 @@ public class FTBLibClient // LatCoreMCClient
 		return (p == null) ? new TempLMPlayerFromEntity(Side.CLIENT, mc.thePlayer) : p;
 	}
 	
-	//TODO: Rename to isIngame()
-	public static boolean isPlaying()
+	public static boolean isIngame()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
 	
-	//TODO: Rename to isIngameWithFTBU()
-	public static boolean isPlayingWithFTBU()
-	{ return isPlaying() && FTBLib.ftbu != null && FTBLib.ftbu.hasClientWorld(); }
+	public static boolean isIngameWithFTBU()
+	{ return isIngame() && FTBLib.ftbu != null && FTBLib.ftbu.hasClientWorld(); }
 	
 	public static int getDim()
-	{ return isPlaying() ? mc.theWorld.provider.getDimensionId() : 0; }
+	{ return isIngame() ? mc.theWorld.provider.getDimensionId() : 0; }
 	
 	public static UUID getUUID()
 	{ return mc.getSession().getProfile().getId(); }
@@ -241,7 +239,6 @@ public class FTBLibClient // LatCoreMCClient
 	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
 	{
 		if(is == null || is.getItem() == null) return;
-		GlStateManager.pushAttrib();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0F);
 		GlStateManager.enableLighting();
@@ -253,6 +250,5 @@ public class FTBLibClient // LatCoreMCClient
 		if(f == null) f = font;
 		itemRender.renderItem(is, itemRender.getItemModelMesher().getItemModel(is));
 		GlStateManager.popMatrix();
-		GlStateManager.popAttrib();
 	}
 }

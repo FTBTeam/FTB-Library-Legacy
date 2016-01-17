@@ -1,6 +1,7 @@
 package ftb.lib.api.gui;
 
-import ftb.lib.api.*;
+import ftb.lib.api.PlayerAction;
+import ftb.lib.api.friends.ILMPlayer;
 
 import java.util.*;
 

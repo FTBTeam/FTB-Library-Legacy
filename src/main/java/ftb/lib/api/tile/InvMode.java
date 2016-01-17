@@ -1,7 +1,7 @@
 package ftb.lib.api.tile;
 
+import ftb.lib.mod.FTBLibMod;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.*;
 
 public enum InvMode
 {
@@ -37,11 +37,9 @@ public enum InvMode
 	public boolean canExtractItem()
 	{ return this == ENABLED || this == ONLY_OUT; }
 	
-	@SideOnly(Side.CLIENT)
 	public String getText()
-	{ return I18n.format("ftbl.invmode." + uname); }
+	{ return FTBLibMod.mod.translate("ftbl.invmode." + uname); }
 	
-	@SideOnly(Side.CLIENT)
 	public String getTitle()
 	{ return I18n.format("ftbl.invmode"); }
 }

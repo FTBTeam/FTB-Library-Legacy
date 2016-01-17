@@ -105,18 +105,13 @@ public class ClientNotifications
 				GlStateManager.disableDepth();
 				GlStateManager.pushMatrix();
 				GlStateManager.depthMask(false);
-				int i = FTBLibClient.displayW - width;
-				int j = 0 - (int) (d1 * 36D);
-				
-				GlStateManager.translate(i, j, 0F);
-				
+				GlStateManager.translate(FTBLibClient.displayW - width, -d1 * 36D, 0F);
 				
 				GlStateManager.disableTexture2D();
 				GlStateManager.disableLighting();
 				FTBLibClient.setGLColor(notification.color, 230);
-				GuiLM.drawBlankRect(0D, 0D, 0D, FTBLibClient.displayW, j + 32D);
+				GuiLM.drawBlankRect(0D, 0D, 0D, FTBLibClient.displayW, 32D);
 				GlStateManager.enableTexture2D();
-				GlStateManager.pushAttrib();
 				GlStateManager.color(1F, 1F, 1F, 1F);
 				
 				int w = notification.item == null ? 10 : 30;
@@ -125,12 +120,12 @@ public class ClientNotifications
 				
 				if(desc == null)
 				{
-					font.drawString(title, w, 12, -256);
+					font.drawString(title, w, 12, 0xFFFFFFFF);
 				}
 				else
 				{
-					font.drawString(title, w, 7, -256);
-					font.drawString(desc, w, 18, -1);
+					font.drawString(title, w, 7, 0xFFFFFFFF);
+					font.drawString(desc, w, 18, 0xFFFFFFFF);
 				}
 				
 				if(notification.item != null)
@@ -140,8 +135,8 @@ public class ClientNotifications
 				
 				GlStateManager.depthMask(true);
 				GlStateManager.color(1F, 1F, 1F, 1F);
-				GlStateManager.popAttrib();
 				GlStateManager.popMatrix();
+				GlStateManager.enableLighting();
 			}
 		}
 		

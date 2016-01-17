@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 import java.util.Map;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, dependencies = FTBLibFinals.DEPS, acceptedMinecraftVersions = "[1.8.8, 1.9)")
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP, acceptedMinecraftVersions = "[1.8.8, 1.9)")
 public class FTBLibMod
 {
 	@Mod.Instance(FTBLibFinals.MOD_ID)
@@ -25,13 +25,18 @@ public class FTBLibMod
 	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.client.FTBLibModClient")
 	public static FTBLibModCommon proxy;
 	
+	@LMMod.Instance(FTBLibFinals.MOD_ID)
+	public static LMMod mod;
+	
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
 		if(FTBLibFinals.DEV) FTBLib.logger.info("Loading FTBLib, DevEnv");
-		else FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.VERSION);
+		else FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
 		
 		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
+		
+		LMMod.init(this);
 		
 		FTBLib.init(e.getModConfigurationDirectory());
 		JsonHelper.init();
@@ -84,7 +89,7 @@ public class FTBLibMod
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();
 		
-		FTBLib.reload(FTBLib.getServer(), false, true);
+		FTBLib.reload(FTBLib.getServer(), false, false);
 	}
 	
 	@Mod.EventHandler
@@ -99,6 +104,6 @@ public class FTBLibMod
 	public boolean checkNetwork(Map<String, String> m, Side side)
 	{
 		String s = m.get(FTBLibFinals.MOD_ID);
-		return s == null || s.equals(FTBLibFinals.VERSION);
+		return s == null || s.equals(FTBLibFinals.MOD_VERSION);
 	}
 }

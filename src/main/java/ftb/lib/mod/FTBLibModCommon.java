@@ -3,6 +3,7 @@ package ftb.lib.mod;
 import ftb.lib.api.gui.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -17,19 +18,32 @@ public class FTBLibModCommon // FTBLibModClient
 	{
 	}
 	
-	public boolean isShiftDown() { return false; }
+	public String translate(String key, Object... obj)
+	{
+		if(obj == null || obj.length == 0) return StatCollector.translateToLocal(key);
+		return StatCollector.translateToLocalFormatted(key, obj);
+	}
 	
-	public boolean isCtrlDown() { return false; }
+	public boolean isShiftDown()
+	{ return false; }
 	
-	public boolean isTabDown() { return false; }
+	public boolean isCtrlDown()
+	{ return false; }
 	
-	public boolean inGameHasFocus() { return false; }
+	public boolean isTabDown()
+	{ return false; }
 	
-	public EntityPlayer getClientPlayer() { return null; }
+	public boolean inGameHasFocus()
+	{ return false; }
 	
-	public EntityPlayer getClientPlayer(UUID id) { return null; }
+	public EntityPlayer getClientPlayer()
+	{ return null; }
 	
-	public World getClientWorld() { return null; }
+	public EntityPlayer getClientPlayer(UUID id)
+	{ return null; }
+	
+	public World getClientWorld()
+	{ return null; }
 	
 	public double getReachDist(EntityPlayer ep)
 	{

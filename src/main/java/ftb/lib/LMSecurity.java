@@ -1,6 +1,6 @@
 package ftb.lib;
 
-import ftb.lib.api.ILMPlayer;
+import ftb.lib.api.friends.ILMPlayer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,7 +1,7 @@
 package ftb.lib;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.api.ILMPlayer;
+import ftb.lib.api.friends.ILMPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
