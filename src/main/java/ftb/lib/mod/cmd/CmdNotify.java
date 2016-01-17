@@ -1,7 +1,7 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.notification.*;
 import latmod.lib.*;

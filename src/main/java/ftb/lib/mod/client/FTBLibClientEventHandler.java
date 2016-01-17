@@ -2,9 +2,10 @@ package ftb.lib.mod.client;
 
 import ftb.lib.*;
 import ftb.lib.api.*;
+import ftb.lib.api.client.*;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.PlayerActionRegistry;
-import ftb.lib.item.*;
+import ftb.lib.api.item.*;
 import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.client.multiplayer.ServerData;

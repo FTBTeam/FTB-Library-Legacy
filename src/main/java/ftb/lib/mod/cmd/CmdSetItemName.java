@@ -1,6 +1,6 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;

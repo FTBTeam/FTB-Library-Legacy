@@ -1,6 +1,6 @@
 package ftb.lib.notification;
 
-import ftb.lib.FTBLibClient;
+import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.gui.GuiChat;

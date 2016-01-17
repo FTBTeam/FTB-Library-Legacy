@@ -1,6 +1,7 @@
 package ftb.lib.mod.client;
 
 import ftb.lib.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.mod.FTBLibModCommon;
@@ -45,7 +46,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
-		ClientConfigRegistry.add(FTBLibActions.sidebar_buttons_config.addAll(FTBLibActions.class, null, false));
+		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
 		

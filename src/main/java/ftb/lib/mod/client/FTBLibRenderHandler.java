@@ -1,7 +1,7 @@
 package ftb.lib.mod.client;
 
-import ftb.lib.*;
-import ftb.lib.api.client.LMFrustrumUtils;
+import ftb.lib.FTBLib;
+import ftb.lib.api.client.*;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.notification.ClientNotifications;
 import net.minecraft.client.gui.ScaledResolution;

@@ -1,11 +1,11 @@
 package ftb.lib.mod.client;
 
-import ftb.lib.*;
+import ftb.lib.EventBusHelper;
 import ftb.lib.api.PlayerAction;
+import ftb.lib.api.client.*;
 import ftb.lib.api.config.*;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
-import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.*;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.*;
@@ -25,7 +24,6 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class FTBLibActions
 {
-	public static final ConfigGroup sidebar_buttons_config = new ConfigGroup("sidebar_buttons");
 	public static final ConfigEntryBool button_settings = new ConfigEntryBool("settings", true).setHidden();
 	
 	public static void init()
@@ -68,9 +66,6 @@ public class FTBLibActions
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
-		
-		public String getDisplayName()
-		{ return FTBLibMod.proxy.translate("client_config"); }
 	};
 	
 	public static final PlayerAction dev_console = new PlayerAction(PlayerAction.Type.SELF, "ftbl.dev_console", -2000, GuiIcons.bug)
@@ -101,7 +96,7 @@ public class FTBLibActions
 		{ return "Dev Console"; }
 	};
 	
-	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -1, GuiIcons.toggle_gamemode)
+	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -10, GuiIcons.toggle_gamemode)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{
@@ -109,35 +104,35 @@ public class FTBLibActions
 			FTBLibClient.execClientCommand("/gamemode " + i);
 		}
 		
-		public String getDisplayName()
-		{ return "Toggle Gamemode"; }
+		public Boolean configDefault()
+		{ return Boolean.FALSE; }
 	};
 	
-	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_downfall", -1, GuiIcons.toggle_rain)
+	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.execClientCommand("/toggledownfall"); }
 		
-		public String getDisplayName()
-		{ return "Toggle Rain"; }
+		public Boolean configDefault()
+		{ return Boolean.FALSE; }
 	};
 	
-	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -1, GuiIcons.toggle_day)
+	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.execClientCommand("/time set 6000"); }
 		
-		public String getDisplayName()
-		{ return "Set time to Day"; }
+		public Boolean configDefault()
+		{ return Boolean.FALSE; }
 	};
 	
-	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -1, GuiIcons.toggle_night)
+	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
 		
-		public String getDisplayName()
-		{ return "Set time to Night"; }
+		public Boolean configDefault()
+		{ return Boolean.FALSE; }
 	};
 	
 	@SubscribeEvent
@@ -223,14 +218,9 @@ public class FTBLibActions
 	{
 		if(e.button instanceof ButtonInvLM)
 		{
-			final GuiContainerCreative creativeContainer = (e.gui instanceof GuiContainerCreative) ? (GuiContainerCreative) e.gui : null;
-			
-			if(creativeContainer == null || creativeContainer.getSelectedTabIndex() == CreativeTabs.tabInventory.getTabIndex())
-			{
-				PlayerAction b = ((ButtonInvLM) e.button).action;
-				ILMPlayer p = FTBLibClient.getClientLMPlayer();
-				b.onClicked(p, p);
-			}
+			PlayerAction b = ((ButtonInvLM) e.button).action;
+			ILMPlayer p = FTBLibClient.getClientLMPlayer();
+			b.onClicked(p, p);
 		}
 	}
 	
@@ -263,8 +253,8 @@ public class FTBLibActions
 		
 		public void drawButton(Minecraft mc, int mx, int my)
 		{
-			if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
-				return;
+			//if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
+			//	return;
 			
 			zLevel = 0F;
 			

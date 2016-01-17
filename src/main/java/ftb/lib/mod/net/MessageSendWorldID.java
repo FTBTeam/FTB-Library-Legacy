@@ -1,7 +1,8 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.api.EventFTBWorldClient;
+import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.*;

@@ -1,6 +1,6 @@
 package ftb.lib.api.gui;
 
-import ftb.lib.FTBLibClient;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.mod.client.gui.*;

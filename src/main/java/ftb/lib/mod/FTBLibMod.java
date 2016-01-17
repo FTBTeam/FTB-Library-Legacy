@@ -3,7 +3,7 @@ package ftb.lib.mod;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.item.ODItems;
+import ftb.lib.api.item.ODItems;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
@@ -51,7 +51,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		FMLInterModComms.sendMessage("Waila", "register", "ftb.lib.api.RegisterWailaEvent.registerHandlers");
+		FMLInterModComms.sendMessage("Waila", "register", "ftb.lib.api.waila.EventRegisterWaila.registerHandlers");
 	}
 	
 	@Mod.EventHandler

@@ -1,8 +1,8 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.widgets.ButtonLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.*;
 

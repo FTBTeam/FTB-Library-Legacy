@@ -75,7 +75,7 @@ ftbl:dside.front=Front
 ftbl:dside.left=Left
 ftbl:dside.right=Right
 
-#Config
+#ClientConfig
 client_config=Client Config
 client_config.ftbl=FTBLib
 client_config.ftbl.item_ore_names=Item OreDict Names
@@ -84,10 +84,17 @@ client_config.ftbl.debug_info=Debug Info
 client_config.ftbl.notifications=Notifications
 client_config.ftbl.reload_client_cmd=Client Reloading Command
 client_config.ftbl.action_buttons_on_top=Action Buttons On Top
+client_config.ftbl.player_options_shortcut=Player Options Shortcut
 
 client_config.sidebar_buttons=Sidebar Buttons
-client_config.sidebar_buttons.settings=Client Settings
-client_config.sidebar_buttons.notifications=Notifications
+
+#PlayerActions
+player_action.ftbl.settings=Client Settings
+player_action.ftbl.notifications=Notifications
+player_action.ftbl.toggle_gamemode=Toggle Gamemode
+player_action.ftbl.toggle_rain=Toggle Rain
+player_action.ftbl.toggle_day=Set time to Day
+player_action.ftbl.toggle_night=Set time to Night
 
 #Security Mode
 ftbl:security=Security

@@ -1,6 +1,6 @@
 package ftb.lib;
 
-import ftb.lib.item.ItemStackTypeAdapter;
+import ftb.lib.api.item.ItemStackTypeAdapter;
 import ftb.lib.notification.*;
 import latmod.lib.LMJsonUtils;
 import net.minecraft.item.ItemStack;

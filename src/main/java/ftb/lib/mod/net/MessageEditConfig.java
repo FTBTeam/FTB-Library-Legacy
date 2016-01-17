@@ -1,7 +1,7 @@
 package ftb.lib.mod.net;
 
-import ftb.lib.FTBLibClient;
-import ftb.lib.api.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.net.*;
 import ftb.lib.mod.client.ServerConfigProvider;
 import ftb.lib.mod.client.gui.GuiEditConfig;
 import latmod.lib.ByteCount;

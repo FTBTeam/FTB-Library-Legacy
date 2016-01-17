@@ -1,7 +1,7 @@
 package ftb.lib.notification;
 
-import ftb.lib.FTBLibClient;
-import ftb.lib.gui.GuiLM;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.gui.GuiLM;
 import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;

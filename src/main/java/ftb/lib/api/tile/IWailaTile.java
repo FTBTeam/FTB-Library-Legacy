@@ -1,6 +1,6 @@
 package ftb.lib.api.tile;
 
-import ftb.lib.waila.WailaDataAccessor;
+import ftb.lib.api.waila.WailaDataAccessor;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;

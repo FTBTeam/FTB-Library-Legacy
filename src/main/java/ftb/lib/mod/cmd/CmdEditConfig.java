@@ -1,8 +1,8 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
+import ftb.lib.api.cmd.*;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
@@ -25,7 +25,7 @@ public class CmdEditConfig extends CommandLM
 		else if(i == 1)
 		{
 			IConfigFile file = ConfigRegistry.map.get(args[0]);
-			if(file != null) return LMMapUtils.toKeyStringArray(file.getGroup().entryMap);
+			if(file != null) return LMMapUtils.toKeyStringArray(file.getGroup().entryMap());
 		}
 		else if(i == 2)
 		{
@@ -33,7 +33,7 @@ public class CmdEditConfig extends CommandLM
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup().getGroup(args[1]);
-				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap);
+				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap());
 			}
 		}
 		

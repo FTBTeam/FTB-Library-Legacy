@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.gui.GuiLM;
+import ftb.lib.api.gui.GuiLM;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;

@@ -1,6 +1,9 @@
 package ftb.lib.api.item;
 
 import ftb.lib.LMMod;
+import ftb.lib.api.client.FTBLibClient;
+import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
@@ -33,6 +36,13 @@ public abstract class ItemLM extends Item implements IItemLM
 	{
 		getMod().addItem(this);
 		return (E) this;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public final void registerModel()
+	{
+		ItemModelMesher mesher = FTBLibClient.mc.getRenderItem().getItemModelMesher();
+		mesher.register(getItem(), 0, new ModelResourceLocation(getMod().assets + itemName, "inventory"));
 	}
 	
 	public final Item getItem()

@@ -1,9 +1,8 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.api.gui.FTBLibLang;
+import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
+import ftb.lib.api.gui.widgets.*;
 import latmod.lib.PrimitiveType;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;

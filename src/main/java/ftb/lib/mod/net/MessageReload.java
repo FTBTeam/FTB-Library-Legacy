@@ -3,6 +3,7 @@ package ftb.lib.mod.net;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.net.*;
 import ftb.lib.mod.*;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.*;

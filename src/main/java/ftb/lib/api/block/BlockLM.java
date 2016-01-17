@@ -1,11 +1,13 @@
 package ftb.lib.api.block;
 
 import ftb.lib.LMMod;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.tile.TileLM;
-import ftb.lib.mod.FTBLibFinals;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.ItemModelMesher;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,11 +53,11 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		return (E) this;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public final <E> E registerDevOnly()
+	@SideOnly(Side.CLIENT)
+	public final void registerModel()
 	{
-		if(FTBLibFinals.DEV) getMod().addBlock(this);
-		return (E) this;
+		ItemModelMesher mesher = FTBLibClient.mc.getRenderItem().getItemModelMesher();
+		mesher.register(getItem(), 0, new ModelResourceLocation(getMod().assets + blockName, "inventory"));
 	}
 	
 	public final String getItemID()

@@ -1,11 +1,10 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.FTBLibClient;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.IConfigProvider;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
+import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
 import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
@@ -32,7 +31,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		super(g, null, null);
 		hideNEI = true;
 		provider = p;
-		
 		
 		title = p.getGroupTitle(p.getGroup());
 		
@@ -203,17 +201,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		scroll.scrollStep = 0F;
+		scroll.scrollStep = 40F / (configPanel.height + 20F);
 		scroll.update();
-		
-		if(configPanel.height + 20 < height) scroll.value = 0F;
-		else if(mouseDWheel != 0)
-		{
-			float s = (20F / (float) (height - configPanel.height + 20)) * 1F;
-			if(mouseDWheel < 0) scroll.value -= s;
-			else scroll.value += s;
-			scroll.value = MathHelperLM.clampFloat(scroll.value, 0F, 1F);
-		}
 		
 		configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20)) + 20;
 		
@@ -307,6 +296,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			if(gui.mouseY < 20) return;
 			
 			gui.playClickSound();
+			
+			if(entry.getFlag(ConfigEntry.FLAG_CANT_EDIT)) return;
 			
 			if(entry instanceof IClickableConfigEntry)
 			{

@@ -3,10 +3,18 @@ package ftb.lib.api.gui;
 import ftb.lib.TextureCoords;
 import ftb.lib.mod.FTBLibMod;
 
+import java.util.*;
+
 public class GuiIcons
 {
+	public static final Map<String, TextureCoords> iconMap = new HashMap<>();
+	
 	private static final TextureCoords getIcon(String s)
-	{ return new TextureCoords(FTBLibMod.mod.getLocation("textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16); }
+	{
+		TextureCoords t = new TextureCoords(FTBLibMod.mod.getLocation("textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16);
+		iconMap.put(s, t);
+		return t;
+	}
 	
 	public static final TextureCoords up = getIcon("up");
 	public static final TextureCoords down = getIcon("down");

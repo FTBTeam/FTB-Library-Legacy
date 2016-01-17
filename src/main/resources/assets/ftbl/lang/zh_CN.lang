@@ -85,10 +85,10 @@ client_config.ftbl.debug_info=调试信息
 client_config.ftbl.notifications=通知
 client_config.ftbl.reload_client_cmd=客户端重新载入命令
 client_config.ftbl.action_buttons_on_top=动作按钮在顶部
-
 client_config.sidebar_buttons=侧边栏按钮
-client_config.sidebar_buttons.settings=客户端设置
-client_config.sidebar_buttons.notifications=通知
+
+sidebar_button.ftbl.settings=客户端设置
+sidebar_button.ftbl.notifications=通知
 
 #Security Mode
 ftbl:security=安全

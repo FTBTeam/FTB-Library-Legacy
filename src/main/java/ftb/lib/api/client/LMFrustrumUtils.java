@@ -1,6 +1,5 @@
 package ftb.lib.api.client;
 
-import ftb.lib.FTBLibClient;
 import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;

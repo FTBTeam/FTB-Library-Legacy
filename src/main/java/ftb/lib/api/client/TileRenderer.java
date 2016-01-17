@@ -1,6 +1,5 @@
 package ftb.lib.api.client;
 
-import ftb.lib.FTBLibClient;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.relauncher.*;

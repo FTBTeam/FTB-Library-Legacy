@@ -1,7 +1,7 @@
 package ftb.lib.mod.net;
 
-import ftb.lib.api.*;
 import ftb.lib.api.gui.IClientActionItem;
+import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

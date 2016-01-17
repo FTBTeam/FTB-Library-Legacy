@@ -1,8 +1,7 @@
 package ftb.lib.mod.client;
 
-import ftb.lib.api.gui.LMGuiHandler;
-import ftb.lib.gui.ContainerEmpty;
-import ftb.lib.item.ItemDisplay;
+import ftb.lib.api.gui.*;
+import ftb.lib.api.item.ItemDisplay;
 import ftb.lib.mod.client.gui.GuiDisplayItem;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

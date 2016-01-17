@@ -2,7 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.GameModes;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import latmod.lib.LMMapUtils;
 import net.minecraft.command.*;

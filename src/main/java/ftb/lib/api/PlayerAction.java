@@ -1,8 +1,9 @@
 package ftb.lib.api;
 
-import ftb.lib.*;
+import ftb.lib.TextureCoords;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
-import ftb.lib.gui.GuiLM;
+import ftb.lib.api.gui.GuiLM;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 
@@ -45,7 +46,7 @@ public abstract class PlayerAction extends FinalIDObject
 	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
 	
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate(ID); }
+	{ return FTBLibMod.proxy.translate("player_action." + ID); }
 	
 	public void addMouseOverText(List<String> l) { }
 	
@@ -67,4 +68,7 @@ public abstract class PlayerAction extends FinalIDObject
 	
 	public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
 	{ return true; }
+	
+	public Boolean configDefault()
+	{ return null; }
 }

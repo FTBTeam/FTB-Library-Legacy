@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.gui.GuiLM;
-import ftb.lib.item.ItemDisplay;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.item.ItemDisplay;
 import ftb.lib.mod.FTBLibMod;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;

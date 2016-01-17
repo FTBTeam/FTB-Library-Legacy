@@ -1,11 +1,11 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
+import ftb.lib.api.gui.widgets.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;

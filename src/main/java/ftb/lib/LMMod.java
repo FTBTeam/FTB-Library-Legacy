@@ -2,9 +2,9 @@ package ftb.lib;
 
 import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
+import ftb.lib.api.recipes.LMRecipes;
 import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.*;
-import ftb.lib.recipes.LMRecipes;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;

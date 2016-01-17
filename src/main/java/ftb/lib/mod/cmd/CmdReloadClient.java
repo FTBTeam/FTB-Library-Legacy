@@ -1,6 +1,6 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.mod.net.MessageReload;
 import net.minecraft.command.ICommandSender;

@@ -1,6 +1,6 @@
 package ftb.lib.api.tile;
 
-import ftb.lib.item.LMInvUtils;
+import ftb.lib.api.item.LMInvUtils;
 import latmod.lib.MathHelperLM;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
