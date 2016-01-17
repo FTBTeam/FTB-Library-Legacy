@@ -1,9 +1,8 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.*;
-import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.config.*;
 import ftb.lib.api.net.*;
-import ftb.lib.mod.client.ServerConfigProvider;
 import latmod.lib.ByteCount;
 import latmod.lib.config.*;
 import net.minecraft.entity.player.EntityPlayerMP;

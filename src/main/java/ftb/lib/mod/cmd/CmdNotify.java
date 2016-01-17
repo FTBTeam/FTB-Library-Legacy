@@ -1,5 +1,6 @@
 package ftb.lib.mod.cmd;
 
+import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
@@ -30,7 +31,7 @@ public class CmdNotify extends CommandLM
 			Notification n = new Notification("example_id", new ChatComponentText("Example title"), 6500);
 			n.setColor(0xFFFF0000);
 			n.setItem(new ItemStack(Items.apple, 10));
-			n.setMouseAction(new MouseAction(ClickAction.CMD, "/ftb_reload"));
+			n.setMouseAction(new MouseAction(ClickAction.CMD, new JsonPrimitive("/ftb_reload")));
 			n.setDesc(new ChatComponentText("Example description"));
 			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n));
 			

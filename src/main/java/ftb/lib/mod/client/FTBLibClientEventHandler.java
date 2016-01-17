@@ -15,8 +15,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.*;
+import org.lwjgl.input.Keyboard;
 
 import java.util.*;
 
@@ -84,7 +86,7 @@ public class FTBLibClientEventHandler
 		}
 		else
 		{
-			if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
+			//if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
 		}
 	}
 	
@@ -99,6 +101,27 @@ public class FTBLibClientEventHandler
 			{
 				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);
 				if(!a.isEmpty()) FTBLibClient.mc.displayGuiScreen(new GuiPlayerActions(self, other, a));
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onKeyEvent(InputEvent.KeyInputEvent e)
+	{
+		if(Keyboard.getEventKeyState())
+		{
+			int key = Keyboard.getEventKey();
+			
+			try
+			{
+				for(Shortcuts.KeyAction a : Shortcuts.keys)
+				{
+					if(a.key == key) a.action.onClicked(a.data);
+				}
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
 			}
 		}
 	}

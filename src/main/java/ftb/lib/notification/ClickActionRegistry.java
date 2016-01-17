@@ -19,10 +19,7 @@ public class ClickActionRegistry
 	
 	public static void add(ClickAction a)
 	{
-		if(a != null && a.type != null)
-		{
-			if(LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID)) map.put(a.ID, a);
-		}
+		if(a != null && LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID)) map.put(a.ID, a);
 	}
 	
 	public static ClickAction get(String s)

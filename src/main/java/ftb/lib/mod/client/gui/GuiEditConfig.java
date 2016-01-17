@@ -201,10 +201,17 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		scroll.scrollStep = 40F / (configPanel.height + 20F);
-		scroll.update();
-		
-		configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20)) + 20;
+		if(configPanel.height + 20 > height)
+		{
+			scroll.scrollStep = 40F / (configPanel.height + 20F);
+			scroll.update();
+			configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20)) + 20;
+		}
+		else
+		{
+			scroll.value = 0F;
+			configPanel.posY = 20;
+		}
 		
 		configPanel.renderWidget();
 		
@@ -265,9 +272,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(!isGroup)
 			{
-				String s = "";
-				try { s = entry.getAsString(); }
-				catch(Exception ex) { s = "error"; }
+				String s;
+				
+				if(PrimitiveType.isNull(entry.getType())) s = EnumChatFormatting.BOLD + ". . .";
+				else
+				{
+					s = "error";
+					try { s = entry.getAsString(); }
+					catch(Exception ex) { }
+				}
 				
 				int slen = gui.fontRendererObj.getStringWidth(s);
 				

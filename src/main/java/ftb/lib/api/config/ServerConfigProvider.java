@@ -1,6 +1,5 @@
-package ftb.lib.mod.client;
+package ftb.lib.api.config;
 
-import ftb.lib.api.config.IConfigProvider;
 import ftb.lib.mod.net.MessageEditConfigResponse;
 import latmod.lib.config.*;
 

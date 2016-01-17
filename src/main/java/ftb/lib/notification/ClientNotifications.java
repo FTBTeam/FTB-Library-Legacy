@@ -166,7 +166,7 @@ public class ClientNotifications
 		public void onClicked()
 		{
 			if(notification.mouse != null && notification.mouse.click != null)
-				notification.mouse.click.onClicked(notification.mouse);
+				notification.mouse.click.onClicked(notification.mouse.val);
 		}
 	}
 }

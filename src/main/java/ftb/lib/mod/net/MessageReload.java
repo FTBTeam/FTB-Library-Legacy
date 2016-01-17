@@ -5,7 +5,7 @@ import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.net.*;
 import ftb.lib.mod.*;
-import ftb.lib.mod.client.FTBLibModClient;
+import ftb.lib.mod.client.*;
 import ftb.lib.notification.*;
 import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
@@ -57,6 +57,7 @@ public class MessageReload extends MessageLM
 	{
 		if(ms == 0L) ms = LMUtils.millis();
 		GameModes.reload();
+		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
 		EventFTBReload event = new EventFTBReload(FTBWorld.client, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);

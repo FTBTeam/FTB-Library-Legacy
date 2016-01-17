@@ -9,11 +9,12 @@ import ftb.lib.api.gui.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.config.*;
+import latmod.lib.config.IConfigFile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.*;
@@ -24,8 +25,6 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class FTBLibActions
 {
-	public static final ConfigEntryBool button_settings = new ConfigEntryBool("settings", true).setHidden();
-	
 	public static void init()
 	{
 		EventBusHelper.register(new FTBLibActions());
@@ -37,6 +36,18 @@ public class FTBLibActions
 		PlayerActionRegistry.add(toggle_rain);
 		PlayerActionRegistry.add(toggle_day);
 		PlayerActionRegistry.add(toggle_night);
+		
+		GuiScreenRegistry.register("notifications", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{ return new GuiNotifications(FTBLibClient.mc.currentScreen); }
+		});
+		
+		GuiScreenRegistry.register("client_config", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{ return new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider()); }
+		});
 	}
 	
 	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
@@ -105,7 +116,7 @@ public class FTBLibActions
 		}
 		
 		public Boolean configDefault()
-		{ return Boolean.FALSE; }
+		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
@@ -114,7 +125,7 @@ public class FTBLibActions
 		{ FTBLibClient.execClientCommand("/toggledownfall"); }
 		
 		public Boolean configDefault()
-		{ return Boolean.FALSE; }
+		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
@@ -123,7 +134,7 @@ public class FTBLibActions
 		{ FTBLibClient.execClientCommand("/time set 6000"); }
 		
 		public Boolean configDefault()
-		{ return Boolean.FALSE; }
+		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
@@ -132,7 +143,7 @@ public class FTBLibActions
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
 		
 		public Boolean configDefault()
-		{ return Boolean.FALSE; }
+		{ return Boolean.TRUE; }
 	};
 	
 	@SubscribeEvent
