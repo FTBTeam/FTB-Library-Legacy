@@ -1,7 +1,6 @@
 package ftb.lib;
 
 import ftb.lib.api.gui.GuiIcons;
-import ftb.lib.client.TextureCoords;
 import net.minecraft.client.resources.I18n;
 
 public enum LMSecurityLevel

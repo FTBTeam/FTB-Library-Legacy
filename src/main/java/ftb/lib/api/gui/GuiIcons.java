@@ -1,77 +1,81 @@
 package ftb.lib.api.gui;
 
-import ftb.lib.client.TextureCoords;
-import ftb.lib.mod.FTBLibFinals;
-import net.minecraft.util.ResourceLocation;
+import ftb.lib.TextureCoords;
+import ftb.lib.mod.FTBLibMod;
 
 public class GuiIcons
 {
-	public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID.toLowerCase(), "textures/icons.png");
+	private static final TextureCoords getIcon(String s)
+	{ return new TextureCoords(FTBLibMod.mod.getLocation("textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16); }
 	
-	private static final TextureCoords getIcon(int index)
-	{ return new TextureCoords(tex, (index % 16) * 16, (index / 16) * 16, 16, 16, 256, 256); }
+	public static final TextureCoords up = getIcon("up");
+	public static final TextureCoords down = getIcon("down");
+	public static final TextureCoords left = getIcon("left");
+	public static final TextureCoords right = getIcon("right");
 	
-	public static final TextureCoords left = getIcon(0);
-	public static final TextureCoords right = getIcon(1);
-	public static final TextureCoords accept = getIcon(2);
-	public static final TextureCoords add = getIcon(3);
-	public static final TextureCoords remove = getIcon(4);
-	public static final TextureCoords info = getIcon(5);
-	public static final TextureCoords sort = getIcon(6);
-	public static final TextureCoords friends = getIcon(7);
-	public static final TextureCoords bug = getIcon(8);
-	public static final TextureCoords jacket = getIcon(9);
-	public static final TextureCoords up = getIcon(10);
-	public static final TextureCoords down = getIcon(11);
-	public static final TextureCoords button = getIcon(12);
-	public static final TextureCoords pressed = getIcon(13);
-	public static final TextureCoords player = getIcon(14);
-	public static final TextureCoords online = getIcon(15);
+	public static final TextureCoords accept = getIcon("accept");
+	public static final TextureCoords add = getIcon("add");
+	public static final TextureCoords remove = getIcon("remove");
+	public static final TextureCoords info = getIcon("info");
+	public static final TextureCoords accept_gray = getIcon("accept_gray");
+	public static final TextureCoords add_gray = getIcon("add_gray");
+	public static final TextureCoords remove_gray = getIcon("remove_gray");
+	public static final TextureCoords info_gray = getIcon("info_gray");
+	public static final TextureCoords settings = getIcon("settings");
+	public static final TextureCoords cancel = getIcon("cancel");
+	public static final TextureCoords back = getIcon("back");
+	public static final TextureCoords close = getIcon("close");
+	public static final TextureCoords refresh = getIcon("refresh");
 	
-	public static final TextureCoords settings = getIcon(16);
-	public static final TextureCoords bed = getIcon(17);
-	public static final TextureCoords bell = getIcon(18);
-	public static final TextureCoords compass = getIcon(19);
-	public static final TextureCoords map = getIcon(20);
-	public static final TextureCoords shield = getIcon(21);
-	public static final TextureCoords picture = getIcon(22);
-	public static final TextureCoords moneybag = getIcon(23);
-	public static final TextureCoords game = getIcon(24);
-	public static final TextureCoords feather = getIcon(25);
-	public static final TextureCoords camera = getIcon(26);
-	public static final TextureCoords cancel = getIcon(27);
-	public static final TextureCoords accept_gray = getIcon(28);
-	public static final TextureCoords add_gray = getIcon(29);
-	public static final TextureCoords remove_gray = getIcon(30);
-	public static final TextureCoords info_gray = getIcon(31);
+	public static final TextureCoords player = getIcon("player");
+	public static final TextureCoords player_gray = getIcon("player_gray");
+	public static final TextureCoords online = getIcon("online");
 	
-	public static final TextureCoords[] inv = {getIcon(32), getIcon(33), getIcon(34), getIcon(35),};
+	public static final TextureCoords sort_az = getIcon("sort_az");
+	public static final TextureCoords friends = getIcon("friends");
+	public static final TextureCoords bug = getIcon("bug");
+	public static final TextureCoords jacket = getIcon("jacket");
+	public static final TextureCoords bed = getIcon("bed");
+	public static final TextureCoords bell = getIcon("bell");
+	public static final TextureCoords compass = getIcon("compass");
+	public static final TextureCoords map = getIcon("map");
+	public static final TextureCoords shield = getIcon("shield");
+	public static final TextureCoords art = getIcon("art");
+	public static final TextureCoords money_bag = getIcon("money_bag");
+	public static final TextureCoords controller = getIcon("controller");
+	public static final TextureCoords feather = getIcon("feather");
+	public static final TextureCoords camera = getIcon("camera");
 	
-	public static final TextureCoords[] redstone = {getIcon(36), getIcon(37), getIcon(38), getIcon(39),};
+	public static final TextureCoords[] inv = {getIcon("inv_io"), getIcon("inv_in"), getIcon("inv_out"), getIcon("inv_none"),};
 	
-	public static final TextureCoords[] security = {getIcon(40), getIcon(41), getIcon(42), getIcon(43),};
+	public static final TextureCoords[] redstone = {getIcon("rs_none"), getIcon("rs_high"), getIcon("rs_low"), getIcon("rs_pulse"),};
 	
-	public static final TextureCoords back = getIcon(44);
-	public static final TextureCoords close = getIcon(45);
-	public static final TextureCoords player_gray = getIcon(46);
-	public static final TextureCoords online_red = getIcon(47);
-	public static final TextureCoords notes = getIcon(48);
-	public static final TextureCoords hsb = getIcon(49);
-	public static final TextureCoords rgb = getIcon(50);
-	public static final TextureCoords comment = getIcon(51);
-	public static final TextureCoords bin = getIcon(52);
-	public static final TextureCoords marker = getIcon(53);
-	public static final TextureCoords beacon = getIcon(54);
-	public static final TextureCoords color_blank = getIcon(55);
-	public static final TextureCoords refresh = getIcon(56);
-	public static final TextureCoords dice = getIcon(57);
-	public static final TextureCoords diamond = getIcon(58);
-	public static final TextureCoords timer = getIcon(59);
-	public static final TextureCoords globe = getIcon(60);
-	public static final TextureCoords money = getIcon(61);
-	public static final TextureCoords tick = getIcon(62);
-	public static final TextureCoords star = getIcon(63);
+	public static final TextureCoords[] security = {getIcon("security_public"), getIcon("security_private"), getIcon("security_friends"), getIcon("security_group"),};
 	
-	public static final TextureCoords guide = getIcon(64);
-	public static final TextureCoords guide_server = getIcon(65);
+	
+	public static final TextureCoords color_blank = getIcon("color_blank");
+	public static final TextureCoords color_hsb = getIcon("color_hsb");
+	public static final TextureCoords color_rgb = getIcon("color_rgb");
+	
+	public static final TextureCoords online_red = getIcon("online_red");
+	public static final TextureCoords notes = getIcon("notes");
+	public static final TextureCoords chat = getIcon("chat");
+	public static final TextureCoords bin = getIcon("bin");
+	public static final TextureCoords marker = getIcon("marker");
+	public static final TextureCoords beacon = getIcon("beacon");
+	
+	public static final TextureCoords dice = getIcon("dice");
+	public static final TextureCoords diamond = getIcon("diamond");
+	public static final TextureCoords time = getIcon("time");
+	public static final TextureCoords globe = getIcon("globe");
+	public static final TextureCoords money = getIcon("money");
+	public static final TextureCoords check = getIcon("check");
+	public static final TextureCoords star = getIcon("star");
+	
+	public static final TextureCoords book = getIcon("book");
+	public static final TextureCoords book_red = getIcon("book_red");
+	public static final TextureCoords toggle_gamemode = getIcon("toggle_gamemode");
+	public static final TextureCoords toggle_rain = getIcon("toggle_rain");
+	public static final TextureCoords toggle_day = getIcon("toggle_day");
+	public static final TextureCoords toggle_night = getIcon("toggle_night");
 }

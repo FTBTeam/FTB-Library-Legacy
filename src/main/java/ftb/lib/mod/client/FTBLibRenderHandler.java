@@ -1,10 +1,12 @@
 package ftb.lib.mod.client;
 
+import ftb.lib.*;
+import ftb.lib.api.client.LMFrustrumUtils;
 import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.notification.ClientNotifications;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.*;
@@ -43,5 +45,12 @@ public class FTBLibRenderHandler
 				callbacks.get(i).onCallback();
 			callbacks.clear();
 		}
+	}
+	
+	@SubscribeEvent
+	public void renderWorld(RenderWorldLastEvent e)
+	{
+		LMFrustrumUtils.update();
+		if(FTBLib.ftbu != null) FTBLib.ftbu.renderWorld(e.partialTicks);
 	}
 }

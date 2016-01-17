@@ -22,7 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.*;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
@@ -349,4 +349,7 @@ public class FTBLib
 		
 		return cachedUUIDs.get(key);
 	}
+	
+	public static void playSoundEffect(World w, BlockPos pos, String s, float g, float p)
+	{ w.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, s, g, p); }
 }

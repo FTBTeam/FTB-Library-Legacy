@@ -1,6 +1,5 @@
-package ftb.lib.client;
+package ftb.lib;
 
-import ftb.lib.*;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.IClientActionGui;
 import ftb.lib.api.gui.callback.ClientTickCallback;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
 import java.util.*;
 
 @SideOnly(Side.CLIENT)
-public class FTBLibClient // LatCoreMCClient
+public class FTBLibClient
 {
 	public static final Minecraft mc = FMLClientHandler.instance().getClient();
 	private static final HashMap<String, ResourceLocation> cachedSkins = new HashMap<>();
@@ -208,32 +208,35 @@ public class FTBLibClient // LatCoreMCClient
 	
 	public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
 	{
-		GL11.glBegin(GL11.GL_LINE_STRIP);
-		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.minY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.minY, bb.maxZ);
-		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
-		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
-		GL11.glEnd();
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
 		
-		GL11.glBegin(GL11.GL_LINE_STRIP);
-		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.maxY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
-		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
-		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
-		GL11.glEnd();
+		worldrenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		tessellator.draw();
 		
-		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex3d(bb.minX, bb.minY, bb.minZ);
-		GL11.glVertex3d(bb.minX, bb.maxY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.minY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.maxY, bb.minZ);
-		GL11.glVertex3d(bb.maxX, bb.minY, bb.maxZ);
-		GL11.glVertex3d(bb.maxX, bb.maxY, bb.maxZ);
-		GL11.glVertex3d(bb.minX, bb.minY, bb.maxZ);
-		GL11.glVertex3d(bb.minX, bb.maxY, bb.maxZ);
-		GL11.glEnd();
+		worldrenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		tessellator.draw();
+		
+		worldrenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+		worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		tessellator.draw();
 	}
 	
 	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)

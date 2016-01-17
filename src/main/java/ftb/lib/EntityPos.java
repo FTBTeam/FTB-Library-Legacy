@@ -69,7 +69,7 @@ public class EntityPos implements Cloneable
 	public int intZ()
 	{ return MathHelperLM.floor(z); }
 	
-	public BlockPos toChunkCoordinates()
+	public BlockPos toBlockPos()
 	{ return new BlockPos(intX(), intY(), intZ()); }
 	
 	public Vec3 toVec3()

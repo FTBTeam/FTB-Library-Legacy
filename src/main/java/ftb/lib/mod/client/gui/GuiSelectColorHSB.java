@@ -1,10 +1,9 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.EnumMCColor;
+import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import ftb.lib.mod.FTBLibMod;
@@ -125,7 +124,7 @@ public class GuiSelectColorHSB extends GuiLM
 		FTBLibClient.setGLColor(color.color(), 255);
 		colorCurrent.render(col_tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		switchRGB.render(GuiIcons.rgb);
+		switchRGB.render(GuiIcons.color_rgb);
 		
 		setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);

@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui;
 
+import ftb.lib.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.ButtonLM;
 import ftb.lib.notification.ClientNotifications;

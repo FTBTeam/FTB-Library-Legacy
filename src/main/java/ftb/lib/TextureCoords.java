@@ -1,4 +1,4 @@
-package ftb.lib.client;
+package ftb.lib;
 
 import latmod.lib.LMUtils;
 import net.minecraft.util.ResourceLocation;

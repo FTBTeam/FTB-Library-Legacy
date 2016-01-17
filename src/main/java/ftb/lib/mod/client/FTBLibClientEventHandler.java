@@ -1,14 +1,17 @@
 package ftb.lib.mod.client;
 
 import ftb.lib.*;
-import ftb.lib.api.EventFTBWorldClient;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.api.*;
+import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.item.*;
 import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.*;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
@@ -63,6 +66,8 @@ public class FTBLibClientEventHandler
 					e.toolTip.add("> " + or);
 			}
 		}
+		
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onTooltip(e);
 	}
 	
 	@SubscribeEvent
@@ -79,6 +84,21 @@ public class FTBLibClientEventHandler
 		else
 		{
 			if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
+		}
+	}
+	
+	@SubscribeEvent
+	public void onEntityRightClick(EntityInteractEvent e)
+	{
+		if(e.entity.worldObj.isRemote && FTBLibClient.isIngame() && FTBLibModClient.player_options_shortcut.get() && e.entityPlayer.getGameProfile().getId().equals(FTBLibClient.mc.thePlayer.getGameProfile().getId()))
+		{
+			ILMPlayer self = FTBLibClient.getClientLMPlayer();
+			ILMPlayer other = (FTBLib.ftbu == null) ? new TempLMPlayerFromEntity(Side.CLIENT, ((EntityPlayer) e.target)) : FTBLib.ftbu.getLMPlayer(e.target);
+			if(other != null)
+			{
+				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);
+				if(!a.isEmpty()) FTBLibClient.mc.displayGuiScreen(new GuiPlayerActions(self, other, a));
+			}
 		}
 	}
 }

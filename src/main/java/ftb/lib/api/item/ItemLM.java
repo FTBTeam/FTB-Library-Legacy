@@ -25,6 +25,9 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public abstract LMMod getMod();
 	
+	@SideOnly(Side.CLIENT)
+	public abstract CreativeTabs getCreativeTab();
+	
 	@SuppressWarnings("unchecked")
 	public final <E> E register()
 	{
@@ -37,9 +40,6 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public final String getItemID()
 	{ return itemName; }
-	
-	@SideOnly(Side.CLIENT)
-	public abstract CreativeTabs getCreativeTab();
 	
 	public void onPostLoaded()
 	{ addAllDamages(1); }

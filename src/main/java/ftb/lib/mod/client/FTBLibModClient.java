@@ -3,7 +3,6 @@ package ftb.lib.mod.client;
 import ftb.lib.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.LMColorUtils;
@@ -33,6 +32,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", false);
+	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	
 	public void preInit()
 	{

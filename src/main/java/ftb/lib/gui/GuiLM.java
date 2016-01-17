@@ -1,6 +1,6 @@
 package ftb.lib.gui;
 
-import ftb.lib.client.*;
+import ftb.lib.*;
 import ftb.lib.gui.widgets.PanelLM;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;

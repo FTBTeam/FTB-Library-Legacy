@@ -1,8 +1,8 @@
 package ftb.lib.mod.net;
 
+import ftb.lib.FTBLibClient;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;

@@ -5,6 +5,7 @@ import ftb.lib.FTBLib;
 import latmod.lib.*;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class GameModes
@@ -97,9 +98,8 @@ public class GameModes
 	public static void reload()
 	{
 		File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
-		JsonElement e = LMJsonUtils.getJsonElement(file);
-		gameModes = new GameModes(e);
-		LMJsonUtils.toJsonFile(file, gameModes.toJsonObject());
+		gameModes = LMJsonUtils.fromJsonFile(Serializer.gson, file, GameModes.class);
+		LMJsonUtils.toJsonFile(Serializer.gson, file, gameModes);
 	}
 	
 	public static GameModes getGameModes()
@@ -113,5 +113,29 @@ public class GameModes
 		if(s == null || s.isEmpty()) return defaultMode;
 		GameMode m = modes.get(s);
 		return (m == null) ? defaultMode : m;
+	}
+	
+	private static class Serializer implements JsonSerializer<GameModes>, JsonDeserializer<GameModes>
+	{
+		private static final Gson gson = gson();
+		
+		public JsonElement serialize(GameModes src, Type typeOfSrc, JsonSerializationContext context)
+		{
+			if(src == null) return null;
+			return src.toJsonObject();
+		}
+		
+		public GameModes deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			return new GameModes(json);
+		}
+		
+		private static Gson gson()
+		{
+			GsonBuilder gb = new GsonBuilder();
+			gb.setPrettyPrinting();
+			gb.registerTypeAdapter(GameModes.class, new Serializer());
+			return gb.create();
+		}
 	}
 }

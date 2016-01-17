@@ -6,6 +6,7 @@ import latmod.lib.ByteIOStream;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.*;
 
 public interface FTBUIntegration // FTBLIntegration
 {
@@ -20,4 +21,7 @@ public interface FTBUIntegration // FTBLIntegration
 	void writeWorldData(ByteIOStream io, EntityPlayerMP ep);
 	void readWorldData(ByteIOStream io);
 	boolean hasClientWorld();
+	void renderWorld(float pt);
+	void onTooltip(ItemTooltipEvent e);
+	void onRightClick(PlayerInteractEvent e);
 }

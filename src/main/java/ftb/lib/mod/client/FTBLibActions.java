@@ -5,7 +5,6 @@ import ftb.lib.api.PlayerAction;
 import ftb.lib.api.config.*;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
@@ -38,9 +37,11 @@ public class FTBLibActions
 		PlayerActionRegistry.add(dev_console);
 		PlayerActionRegistry.add(toggle_gamemode);
 		PlayerActionRegistry.add(toggle_rain);
+		PlayerActionRegistry.add(toggle_day);
+		PlayerActionRegistry.add(toggle_night);
 	}
 	
-	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.comment)
+	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.mc.displayGuiScreen(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
@@ -100,7 +101,7 @@ public class FTBLibActions
 		{ return "Dev Console"; }
 	};
 	
-	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -1, GuiIcons.shield)
+	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -1, GuiIcons.toggle_gamemode)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{
@@ -112,13 +113,31 @@ public class FTBLibActions
 		{ return "Toggle Gamemode"; }
 	};
 	
-	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_downfall", -1, GuiIcons.feather)
+	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_downfall", -1, GuiIcons.toggle_rain)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.execClientCommand("/toggledownfall"); }
 		
 		public String getDisplayName()
 		{ return "Toggle Rain"; }
+	};
+	
+	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -1, GuiIcons.toggle_day)
+	{
+		public void onClicked(ILMPlayer self, ILMPlayer other)
+		{ FTBLibClient.execClientCommand("/time set 6000"); }
+		
+		public String getDisplayName()
+		{ return "Set time to Day"; }
+	};
+	
+	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -1, GuiIcons.toggle_night)
+	{
+		public void onClicked(ILMPlayer self, ILMPlayer other)
+		{ FTBLibClient.execClientCommand("/time set 18000"); }
+		
+		public String getDisplayName()
+		{ return "Set time to Night"; }
 	};
 	
 	@SubscribeEvent

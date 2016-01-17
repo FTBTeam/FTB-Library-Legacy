@@ -2,6 +2,7 @@ package ftb.lib;
 
 import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
+import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.*;
 import ftb.lib.recipes.LMRecipes;
 import net.minecraft.block.Block;
@@ -150,8 +151,8 @@ public class LMMod
 		blocks.add(b);
 	}
 	
-	//public void addTile(Class<? extends TileLM> c, String s, String... alt)
-	//{ FTBLib.addTileEntity(c, modID + '.' + s, alt); }
+	public void addTile(Class<? extends TileLM> c, String s, String... alt)
+	{ FTBLib.addTileEntity(c, modID + '.' + s, alt); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)
 	{ FTBLib.addEntity(c, s, id, modID); }

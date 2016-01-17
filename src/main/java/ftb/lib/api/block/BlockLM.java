@@ -89,7 +89,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		
 		if(isBlockContainer && el instanceof EntityPlayer)
 		{
-			TileLM tile = (TileLM) w.getTileEntity(pos);
+			TileLM tile = getTile(w, pos);
 			if(tile != null) tile.onPlacedBy((EntityPlayer) el, is, state);
 		}
 	}
@@ -98,7 +98,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		if(isBlockContainer)
 		{
-			TileLM tile = (TileLM) w.getTileEntity(pos);
+			TileLM tile = getTile(w, pos);
 			if(tile != null && !tile.isMinable(ep)) return -1F;
 		}
 		
@@ -109,7 +109,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		if(isBlockContainer)
 		{
-			TileLM tile = (TileLM) w.getTileEntity(pos);
+			TileLM tile = getTile(w, pos);
 			if(tile != null && !tile.isMinable(null)) return -1F;
 		}
 		
@@ -120,7 +120,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		if(isBlockContainer)
 		{
-			TileLM tile = (TileLM) w.getTileEntity(pos);
+			TileLM tile = getTile(w, pos);
 			if(tile != null && tile.isExplosionResistant()) return 1000000F;
 		}
 		
@@ -134,7 +134,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		if(!w.isRemote && isBlockContainer)
 		{
-			TileLM tile = (TileLM) w.getTileEntity(pos);
+			TileLM tile = getTile(w, pos);
 			if(tile != null) tile.onBroken(state);
 		}
 		super.breakBlock(w, pos, state);
@@ -143,7 +143,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumFacing s, float x1, float y1, float z1)
 	{
 		if(!isBlockContainer) return false;
-		TileLM tile = (TileLM) w.getTileEntity(pos);
+		TileLM tile = getTile(w, pos);
 		return (tile != null) ? tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1) : false;
 	}
 	
@@ -151,7 +151,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		if(isBlockContainer)
 		{
-			TileLM t = (TileLM) w.getTileEntity(pos);
+			TileLM t = getTile(w, pos);
 			if(t != null) return t.receiveClientEvent(eventID, param);
 		}
 		
@@ -162,7 +162,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		if(isBlockContainer)
 		{
-			TileLM t = (TileLM) w.getTileEntity(pos);
+			TileLM t = getTile(w, pos);
 			if(t != null)
 			{
 				if(t.recolourBlock(side, color)) ;
@@ -182,11 +182,11 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 	}
 	
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
+	public void onNeighborChange(IBlockAccess w, BlockPos pos, BlockPos neighbor)
 	{
 		if(isBlockContainer)
 		{
-			TileLM t = (TileLM) world.getTileEntity(pos);
+			TileLM t = getTile(w, pos);
 			if(t != null) t.onNeighborBlockChange(neighbor);
 		}
 	}
@@ -206,11 +206,10 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{ return getStateFromMeta(meta); }
 	
-	@SuppressWarnings("unchecked")
-	public final <T extends TileEntity> T getTile(Class<T> c, IBlockAccess iba, BlockPos pos)
+	public TileLM getTile(IBlockAccess w, BlockPos pos)
 	{
-		TileEntity te = iba.getTileEntity(pos);
-		if(te != null && c.isAssignableFrom(te.getClass())) return (T) te;
+		TileEntity te = w.getTileEntity(pos);
+		if(te != null && !te.isInvalid() && te instanceof TileLM) return ((TileLM) te);
 		return null;
 	}
 }

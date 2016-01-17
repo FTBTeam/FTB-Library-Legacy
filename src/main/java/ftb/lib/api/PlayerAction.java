@@ -1,7 +1,7 @@
 package ftb.lib.api;
 
+import ftb.lib.*;
 import ftb.lib.api.friends.ILMPlayer;
-import ftb.lib.client.*;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;

@@ -14,8 +14,9 @@ import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.world.IWorldNameable;
 
-public class TileLM extends TileEntity implements IClientActionTile
+public class TileLM extends TileEntity implements IClientActionTile, IWorldNameable
 {
 	public static final String ACTION_BUTTON_PRESSED = "button";
 	public static final String ACTION_OPEN_GUI = "open_gui";
@@ -23,7 +24,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public static final int[] NO_SLOTS = new int[0];
 	
-	public String customName = "";
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
 	public long tick = 0L;
@@ -34,14 +34,12 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{
 		super.readFromNBT(tag);
 		readTileData(tag);
-		readTileServerData(tag);
 	}
 	
 	public final void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		writeTileData(tag);
-		writeTileServerData(tag);
 	}
 	
 	public final Packet getDescriptionPacket()
@@ -62,7 +60,8 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void readTileData(NBTTagCompound tag)
 	{
 		security.readFromNBT(tag, "Security");
-		customName = tag.getString("CustomName");
+		String customName = tag.getString("CustomName");
+		if(!customName.isEmpty()) setName(customName);
 		tick = tag.getLong("Tick");
 		if(tick < 0L) tick = 0L;
 	}
@@ -70,26 +69,21 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void writeTileData(NBTTagCompound tag)
 	{
 		security.writeToNBT(tag, "Security");
+		String customName = getName();
 		if(customName == null) customName = "";
 		if(!customName.isEmpty()) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
 		tag.setLong("Tick", tick);
 	}
 	
-	public void readTileServerData(NBTTagCompound tag)
-	{
-	}
-	
-	public void writeTileServerData(NBTTagCompound tag)
-	{
-	}
-	
 	public void readTileClientData(NBTTagCompound tag)
 	{
+		readTileData(tag);
 	}
 	
 	public void writeTileClientData(NBTTagCompound tag)
 	{
+		writeTileData(tag);
 	}
 	
 	public void onUpdatePacket()
@@ -226,7 +220,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		else if(action.equals(ACTION_CUSTOM_NAME))
 		{
 			String name = data.getString("Name");
-			customName = (name.length() == 0) ? null : name;
+			if(!name.isEmpty()) setName(name);
 			markDirty();
 		}
 	}
@@ -275,4 +269,15 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public IBlockState getBlockState(EnumFacing side)
 	{ return worldObj.getBlockState(getPos().offset(side)); }
+	
+	public void setName(String s) { }
+	
+	public String getName()
+	{ return ""; }
+	
+	public boolean hasCustomName()
+	{ return !getName().isEmpty(); }
+	
+	public IChatComponent getDisplayName()
+	{ return hasCustomName() ? new ChatComponentText(getName()) : new ChatComponentTranslation(getBlockType().getLocalizedName() + ".name"); }
 }

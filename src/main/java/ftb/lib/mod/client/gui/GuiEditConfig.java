@@ -1,9 +1,9 @@
 package ftb.lib.mod.client.gui;
 
+import ftb.lib.FTBLibClient;
 import ftb.lib.api.config.IConfigProvider;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.client.FTBLibClient;
 import ftb.lib.gui.GuiLM;
 import ftb.lib.gui.widgets.*;
 import latmod.lib.*;

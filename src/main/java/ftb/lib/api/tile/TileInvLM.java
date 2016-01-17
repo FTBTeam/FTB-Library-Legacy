@@ -7,10 +7,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
 
 public class TileInvLM extends TileLM implements IInventory
 {
+	private String customName = "";
 	public final ItemStack[] items;
 	public boolean dropItems = true;
 	
@@ -26,12 +26,14 @@ public class TileInvLM extends TileLM implements IInventory
 	{
 		super.readTileData(tag);
 		LMInvUtils.readItemsFromNBT(items, tag, "Items");
+		customName = tag.getString("CustomName");
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
 		LMInvUtils.writeItemsToNBT(items, tag, "Items");
+		if(!customName.isEmpty()) tag.setString("CustomName", customName);
 	}
 	
 	public void onBroken(IBlockState state)
@@ -44,16 +46,10 @@ public class TileInvLM extends TileLM implements IInventory
 	}
 	
 	public String getName()
-	{ return hasCustomName() ? customName : getBlockType().getLocalizedName(); }
+	{ return customName; }
 	
-	public boolean hasCustomName()
-	{ return customName != null; }
-	
-	@Override
-	public IChatComponent getDisplayName()
-	{
-		return null;
-	}
+	public void setName(String s)
+	{ customName = s; }
 	
 	public void openInventory(EntityPlayer ep) { }
 	

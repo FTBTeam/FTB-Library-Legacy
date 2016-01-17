@@ -6,6 +6,7 @@ import ftb.lib.mod.net.MessageSendWorldID;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.*;
@@ -59,5 +60,11 @@ public class FTBLibEventHandler
 			
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onServerTick(e.world);
 		}
+	}
+	
+	@SubscribeEvent
+	public void onRightClick(PlayerInteractEvent e)
+	{
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onRightClick(e);
 	}
 }

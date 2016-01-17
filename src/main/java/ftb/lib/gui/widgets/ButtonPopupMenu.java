@@ -1,6 +1,6 @@
 package ftb.lib.gui.widgets;
 
-import ftb.lib.client.TextureCoords;
+import ftb.lib.TextureCoords;
 import ftb.lib.gui.GuiLM;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;
