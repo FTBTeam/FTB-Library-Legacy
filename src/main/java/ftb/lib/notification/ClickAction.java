@@ -38,7 +38,7 @@ public abstract class ClickAction extends FinalIDObject
 	{
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiChat(data.getAsString())); }
+		{ FTBLibClient.openGui(new GuiChat(data.getAsString())); }
 	};
 	
 	public static final ClickAction URL = new ClickAction("url")
@@ -67,7 +67,7 @@ public abstract class ClickAction extends FinalIDObject
 		public void onClicked(JsonElement data)
 		{
 			GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc.thePlayer, data.getAsString());
-			if(gui != null) FTBLibClient.mc.displayGuiScreen(gui);
+			if(gui != null) FTBLibClient.openGui(gui);
 		}
 	};
 }

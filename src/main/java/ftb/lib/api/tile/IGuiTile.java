@@ -1,4 +1,4 @@
-package ftb.lib.api.gui;
+package ftb.lib.api.tile;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;

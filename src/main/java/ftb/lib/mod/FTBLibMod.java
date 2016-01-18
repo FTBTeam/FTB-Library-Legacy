@@ -71,7 +71,6 @@ public class FTBLibMod
 		e.registerServerCommand(new CmdEditConfig());
 		e.registerServerCommand(new CmdMode());
 		e.registerServerCommand(new CmdReload());
-		e.registerServerCommand(new CmdWorldID());
 		e.registerServerCommand(new CmdNotify());
 		e.registerServerCommand(new CmdSetItemName());
 	}
@@ -80,11 +79,15 @@ public class FTBLibMod
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
 		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName());
-		
 		ConfigRegistry.reload();
+	}
+	
+	@Mod.EventHandler
+	public void onServerAboutToStart(FMLServerStartedEvent e)
+	{
 		GameModes.reload();
 		
-		FTBWorld.server = new FTBWorld();
+		FTBWorld.server = new FTBWorld(FTBLib.getServerWorld());
 		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, FTBLib.getServer());
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();

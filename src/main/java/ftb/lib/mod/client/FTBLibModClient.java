@@ -4,7 +4,9 @@ import ftb.lib.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
+import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
+import ftb.lib.mod.client.gui.GuiEditShortcuts;
 import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.LMColorUtils;
 import latmod.lib.config.*;
@@ -35,11 +37,10 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	
-	public static final ConfigEntryBlank key_bindings = new ConfigEntryBlank("key_bindings")
+	public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
 	{
 		public void onClicked()
-		{
-		}
+		{ FTBLibClient.openGui(new GuiEditShortcuts()); }
 	};
 	
 	public void preInit()
@@ -122,7 +123,7 @@ public class FTBLibModClient extends FTBLibModCommon
 			
 			if(g != null)
 			{
-				FTBLibClient.mc.displayGuiScreen(g);
+				FTBLibClient.openGui(g);
 				return true;
 			}
 		}
@@ -135,7 +136,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		if(ep != null && t != null)
 		{
 			GuiScreen g = t.getGui(ep, data);
-			if(g != null) FTBLibClient.mc.displayGuiScreen(g);
+			if(g != null) FTBLibClient.openGui(g);
 		}
 	}
 }

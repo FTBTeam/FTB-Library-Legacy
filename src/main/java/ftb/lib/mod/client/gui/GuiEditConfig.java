@@ -28,8 +28,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	
 	public GuiEditConfig(GuiScreen g, IConfigProvider p)
 	{
-		super(g, null, null);
-		hideNEI = true;
+		super(g, null);
 		provider = p;
 		
 		title = p.getGroupTitle(p.getGroup());
@@ -68,7 +67,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			public void onButtonPressed(int b)
 			{
-				gui.playClickSound();
+				FTBLibClient.playClickSound();
 				shouldClose = true;
 				close(null);
 			}
@@ -78,7 +77,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			public void onButtonPressed(int b)
 			{
-				gui.playClickSound();
+				FTBLibClient.playClickSound();
 				for(ButtonConfigEntry e : configEntryButtons)
 					expandAll(e);
 				gui.refreshWidgets();
@@ -99,7 +98,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			public void onButtonPressed(int b)
 			{
-				gui.playClickSound();
+				FTBLibClient.playClickSound();
 				for(ButtonConfigEntry e : configEntryButtons)
 					collapseAll(e);
 				gui.refreshWidgets();
@@ -127,9 +126,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	
 	public void initLMGui()
 	{
-		xSize = width;
-		ySize = height;
-		guiLeft = guiTop = 0;
+		mainPanel.width = width;
+		mainPanel.height = height;
+		mainPanel.posX = mainPanel.posY = 0;
 		buttonClose.posX = width - 18 * 1;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
@@ -256,7 +255,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		public void renderWidget()
 		{
 			if(!isVisible()) return;
-			boolean mouseOver = gui.mouseY >= 20 && mouseOver();
+			boolean mouseOver = gui.mouse().y >= 20 && mouseOver();
 			
 			int ax = getAX();
 			int ay = getAY();
@@ -293,7 +292,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				int textCol = 0xFF000000 | getColor();
 				if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
 				
-				if(mouseOver && gui.mouseX > ax + width - slen - 9)
+				if(mouseOver && gui.mouse().x > ax + width - slen - 9)
 				{
 					GlStateManager.color(1F, 1F, 1F, 0.13F);
 					drawBlankRect(ax + width - slen - 8, ay, gui.zLevel, slen + 8, height);
@@ -306,9 +305,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		public void onButtonPressed(int b)
 		{
-			if(gui.mouseY < 20) return;
+			if(gui.mouse().y < 20) return;
 			
-			gui.playClickSound();
+			FTBLibClient.playClickSound();
 			
 			if(entry.getFlag(ConfigEntry.FLAG_CANT_EDIT)) return;
 			
@@ -334,7 +333,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 							gui.onChanged();
 						}
 						
-						if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+						if(c.closeGui) FTBLibClient.openGui(gui);
 					}
 				}, ((ConfigEntryColor) entry).value.color(), 0, false);
 			}
@@ -352,7 +351,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 								gui.onChanged();
 							}
 							
-							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+							if(c.closeGui) FTBLibClient.openGui(gui);
 						}
 					});
 				}
@@ -368,7 +367,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 								gui.onChanged();
 							}
 							
-							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+							if(c.closeGui) FTBLibClient.openGui(gui);
 						}
 					});
 				}
@@ -384,7 +383,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 								gui.onChanged();
 							}
 							
-							if(c.closeGui) FTBLibClient.mc.displayGuiScreen(gui);
+							if(c.closeGui) FTBLibClient.openGui(gui);
 						}
 					});
 				}
@@ -404,10 +403,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			return 0x999999;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public void addMouseOverText(List<String> l)
 		{
-			if(gui.mouseX < gui.fontRendererObj.getStringWidth(title) + 10)
+			if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
 			{
 				if(entry.info != null && !entry.info.isEmpty())
 				{
@@ -416,7 +414,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 			}
 			
-			if(entry.getAsGroup() == null && gui.mouseX > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
+			if(entry.getAsGroup() == null && gui.mouse().x > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
 			{
 				String def = entry.getDefValue();
 				String min = entry.getMinValue();

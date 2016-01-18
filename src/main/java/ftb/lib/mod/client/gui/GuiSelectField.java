@@ -21,18 +21,17 @@ public class GuiSelectField extends GuiLM
 	public GuiSelectField(Object id, PrimitiveType typ, String d, IFieldCallback c)
 	{
 		super(null, null);
-		hideNEI = true;
 		ID = id;
 		type = typ;
 		def = d;
 		callback = c;
 		
-		xSize = 100;
-		ySize = 40;
+		mainPanel.width = 100;
+		mainPanel.height = 40;
 		
-		int bsize = xSize / 2 - 4;
+		int bsize = mainPanel.width / 2 - 4;
 		
-		buttonCancel = new ButtonSimpleLM(this, 2, ySize - 18, bsize, 16)
+		buttonCancel = new ButtonSimpleLM(this, 2, mainPanel.height - 18, bsize, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -42,7 +41,7 @@ public class GuiSelectField extends GuiLM
 		
 		buttonCancel.title = FTBLibLang.button_cancel();
 		
-		buttonAccept = new ButtonSimpleLM(this, xSize - bsize - 2, ySize - 18, bsize, 16)
+		buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
 		{
 			public void onButtonPressed(int b)
 			{
@@ -52,7 +51,7 @@ public class GuiSelectField extends GuiLM
 		
 		buttonAccept.title = FTBLibLang.button_accept();
 		
-		textBox = new TextBoxLM(this, 2, 2, xSize - 4, 18)
+		textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
 		{
 			public boolean canAddChar(char c)
 			{ return super.canAddChar(c) && isCharValid(c); }
@@ -92,18 +91,18 @@ public class GuiSelectField extends GuiLM
 	public void drawBackground()
 	{
 		int size = 8 + getFontRenderer().getStringWidth(textBox.text);
-		if(size > xSize)
+		if(size > mainPanel.width)
 		{
-			xSize = size;
-			int bsize = xSize / 2 - 4;
+			mainPanel.width = size;
+			int bsize = size / 2 - 4;
 			buttonAccept.width = buttonCancel.width = bsize;
-			buttonAccept.posX = xSize - bsize - 2;
-			textBox.width = xSize - 4;
+			buttonAccept.posX = mainPanel.width - bsize - 2;
+			textBox.width = mainPanel.width - 4;
 			initGui();
 		}
 		
 		GlStateManager.color(0.4F, 0.4F, 0.4F, 0.66F);
-		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize);
+		drawBlankRect(mainPanel.posX, mainPanel.posY, zLevel, mainPanel.width, mainPanel.height);
 		GlStateManager.color(0.2F, 0.2F, 0.2F, 1F);
 		drawBlankRect(textBox.getAX(), textBox.getAY(), zLevel, textBox.width, textBox.height);
 		GlStateManager.color(1F, 1F, 1F, 1F);

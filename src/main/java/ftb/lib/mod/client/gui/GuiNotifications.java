@@ -18,16 +18,15 @@ public class GuiNotifications extends GuiLM
 	
 	public GuiNotifications(GuiScreen parent)
 	{
-		super(parent, null, null);
-		hideNEI = true;
-		ySize = 25 * 7;
+		super(parent, null);
+		mainPanel.height = 25 * 7;
 		
 		buttonList = new ArrayList<>();
 	}
 	
 	public void initLMGui()
 	{
-		xSize = 0;
+		mainPanel.width = 0;
 		
 		buttonList.clear();
 		
@@ -40,13 +39,13 @@ public class GuiNotifications extends GuiLM
 			ClientNotifications.Perm p = ClientNotifications.Perm.list.get(i);
 			ButtonNotification b = new ButtonNotification(this, p);
 			buttonList.add(b);
-			xSize = Math.max(xSize, b.width);
+			mainPanel.width = Math.max(mainPanel.width, b.width);
 		}
 		
-		xSize = MathHelperLM.clampInt(xSize, 200, 300);
+		mainPanel.width = MathHelperLM.clampInt(mainPanel.width, 200, 300);
 		
 		for(ButtonNotification b : buttonList)
-			b.width = xSize;
+			b.width = mainPanel.width;
 	}
 	
 	public void addWidgets()
@@ -58,13 +57,13 @@ public class GuiNotifications extends GuiLM
 	{
 		super.drawBackground();
 		
-		fontRendererObj.drawString(I18n.format(FTBLibModClient.notifications.getFullID()), guiLeft + 4, guiTop - 11, 0xFFFFFFFF);
+		fontRendererObj.drawString(I18n.format(FTBLibModClient.notifications.getFullID()), mainPanel.posX + 4, mainPanel.posY - 11, 0xFFFFFFFF);
 		
 		GlStateManager.color(0F, 0F, 0F, 0.4F);
-		drawBlankRect(guiLeft, guiTop, zLevel, xSize, ySize);
+		drawBlankRect(mainPanel.posX, mainPanel.posY, zLevel, mainPanel.width, mainPanel.height);
 		
 		for(int i = 1; i < 7; i++)
-			drawBlankRect(guiLeft, guiTop + i * 25 - 1, zLevel, xSize, 1);
+			drawBlankRect(mainPanel.posX, mainPanel.posY + i * 25 - 1, zLevel, mainPanel.width, 1);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		

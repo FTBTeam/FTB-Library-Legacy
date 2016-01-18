@@ -29,6 +29,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.*;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
@@ -254,5 +255,22 @@ public class FTBLibClient
 		if(f == null) f = font;
 		itemRender.renderItem(is, itemRender.getItemModelMesher().getItemModel(is));
 		GlStateManager.popMatrix();
+	}
+	
+	public static void openGui(GuiScreen gui)
+	{
+		//Evil hacks until I figure out whats wrong
+		
+		int mx = Mouse.getX();
+		int my = Mouse.getY();
+		
+		if(mc.thePlayer != null) mc.thePlayer.closeScreen();
+		mc.displayGuiScreen(gui);
+		
+		if(mc.currentScreen != null)
+		{
+			Mouse.setCursorPosition(mx, my);
+			mc.currentScreen.initGui();
+		}
 	}
 }

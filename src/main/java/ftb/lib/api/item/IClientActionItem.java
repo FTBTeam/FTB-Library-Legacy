@@ -1,4 +1,4 @@
-package ftb.lib.api.gui;
+package ftb.lib.api.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

@@ -5,54 +5,51 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.widgets.PanelLM;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.*;
 
 @SideOnly(Side.CLIENT)
-//@Optional.Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = OtherMods.NEI)
-public abstract class GuiLM extends GuiContainer// implements codechicken.nei.api.INEIGuiHandler
+public abstract class GuiLM extends GuiScreen implements IGuiLM
 {
 	private static final ArrayList<String> tempTextList = new ArrayList<>();
 	
 	// GuiLM //
 	
 	public final GuiScreen parentScreen;
-	public final ContainerLM container;
 	public final ResourceLocation texture;
 	public final PanelLM mainPanel;
-	public int mouseX, mouseY, mouseDWheel, mouseDX, mouseDY, lastClickX, lastClickY;
+	private final MouseLM mouse;
 	public float delta;
 	
-	public boolean hideNEI = false;
 	private boolean refreshWidgets = true;
 	
-	public GuiLM(GuiScreen parent, ContainerLM c, ResourceLocation tex)
+	public GuiLM(GuiScreen parent, ResourceLocation tex)
 	{
-		super((c == null) ? new ContainerEmpty(FTBLibClient.mc.thePlayer, null) : c);
 		parentScreen = parent;
+		texture = tex;
 		mc = FTBLibClient.mc;
-		mainPanel = new PanelLM(this, 0, 0, 0, 0)
+		
+		if(parent != null) mc.thePlayer.closeScreen();
+		
+		ScaledResolution scr = new ScaledResolution(mc);
+		
+		mainPanel = new PanelLM(this, 0, 0, scr.getScaledWidth(), scr.getScaledHeight())
 		{
 			public void addWidgets()
 			{ GuiLM.this.addWidgets(); }
 		};
+		mouse = new MouseLM();
 		refreshWidgets();
-		container = (ContainerLM) inventorySlots;
-		texture = tex;
 	}
-	
-	public GuiLM(ContainerLM c, ResourceLocation tex)
-	{ this(null, c, tex); }
 	
 	public void refreshWidgets()
 	{ refreshWidgets = true; }
@@ -60,13 +57,16 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	public abstract void addWidgets();
 	
 	public ItemStack getHeldItem()
-	{ return container.player.inventory.getItemStack(); }
+	{ return mc.thePlayer.inventory.getItemStack(); }
 	
-	public final int getPosX(int x)
-	{ return guiLeft + x; }
+	public GuiScreen getGui()
+	{ return this; }
 	
-	public final int getPosY(int y)
-	{ return guiTop + y; }
+	public PanelLM getMainPanel()
+	{ return mainPanel; }
+	
+	public MouseLM mouse()
+	{ return mouse; }
 	
 	public final float getZLevel()
 	{ return zLevel; }
@@ -74,23 +74,18 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	public final void setZLevel(float z)
 	{ zLevel = z; }
 	
-	public final int getWidth()
-	{ return xSize; }
+	public FontRenderer getFontRenderer()
+	{ return fontRendererObj; }
 	
-	public final int getHeight()
-	{ return ySize; }
-	
-	public final void setTexture(ResourceLocation tex)
-	{ FTBLibClient.setTexture(tex); }
+	public final void close(GuiScreen g)
+	{ FTBLibClient.openGui((g == null) ? parentScreen : g); }
 	
 	public final void initGui()
 	{
 		super.initGui();
 		initLMGui();
-		mainPanel.width = xSize;
-		mainPanel.height = ySize;
-		mainPanel.posX = guiLeft = (width - xSize) / 2;
-		mainPanel.posY = guiTop = (height - ySize) / 2;
+		mainPanel.posX = (width - mainPanel.width) / 2;
+		mainPanel.posY = (height - mainPanel.height) / 2;
 		refreshWidgets();
 	}
 	
@@ -98,26 +93,15 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	{
 	}
 	
-	public void close(GuiScreen g)
-	{
-		if(g == null)
-		{
-			if(parentScreen == null) container.player.closeScreen();
-			else mc.displayGuiScreen(parentScreen);
-		}
-		else mc.displayGuiScreen(g);
-	}
-	
 	protected final void mouseClicked(int mx, int my, int b) throws IOException
 	{
-		lastClickX = mouseX = mx;
-		lastClickY = mouseY = my;
+		mouse.onClicked(b, true);
 		mainPanel.mousePressed(b);
 		super.mouseClicked(mx, my, b);
-		mouseClicked(b);
+		mouseClicked();
 	}
 	
-	public void mouseClicked(int b)
+	public void mouseClicked()
 	{
 	}
 	
@@ -131,9 +115,6 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	public void onClosedByKey()
 	{ close(null); }
 	
-	public final void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-	{ drawBackground(); }
-	
 	public void drawBackground()
 	{
 		GlStateManager.disableLighting();
@@ -142,13 +123,10 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 		
 		if(texture != null)
 		{
-			setTexture(texture);
-			drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+			FTBLibClient.setTexture(texture);
+			drawTexturedModalRect(mainPanel.posX, mainPanel.posY, 0, 0, mainPanel.width, mainPanel.height);
 		}
 	}
-	
-	public final void drawGuiContainerForegroundLayer(int mx, int my)
-	{ drawForeground(); }
 	
 	public void drawForeground()
 	{
@@ -156,12 +134,8 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	
 	public final void drawScreen(int mx, int my, float f)
 	{
-		mouseDX = mx - mouseX;
-		mouseDY = my - mouseY;
-		mouseX = mx;
-		mouseY = my;
+		mouse.onUpdate(mx, my);
 		delta = f;
-		mouseDWheel = Mouse.getDWheel();
 		
 		if(refreshWidgets)
 		{
@@ -169,13 +143,18 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 			refreshWidgets = false;
 		}
 		
+		drawDefaultBackground();
+		drawBackground();
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
 		super.drawScreen(mx, my, f);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		tempTextList.clear();
 		drawText(tempTextList);
-		if(!tempTextList.isEmpty()) drawHoveringText(tempTextList, mouseX, mouseY, fontRendererObj);
+		if(!tempTextList.isEmpty()) drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
 		GlStateManager.disableLighting();
 		drawForeground();
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -241,12 +220,6 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 	public void playSoundFX(ResourceLocation s, float pitch)
 	{ mc.getSoundHandler().playSound(PositionedSoundRecord.create(s, pitch)); }
 	
-	public void playClickSound()
-	{ FTBLibClient.playClickSound(); }
-	
-	public FontRenderer getFontRenderer()
-	{ return fontRendererObj; }
-	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{
 		FTBLibClient.setTexture(FTBLibClient.getSkinTexture(username));
@@ -263,45 +236,26 @@ public abstract class GuiLM extends GuiContainer// implements codechicken.nei.ap
 		GlStateManager.enableTexture2D();
 	}
 	
-	public void drawItem(ItemStack is, int x, int y)
+	public static void drawItem(IGuiLM gui, ItemStack is, int x, int y)
 	{
 		if(is == null) return;
-		setTexture(TextureMap.locationBlocksTexture);
-		zLevel = 200F;
+		FTBLibClient.setTexture(TextureMap.locationBlocksTexture);
+		float z0 = gui.getZLevel();
+		gui.setZLevel(z0 + 200F);
+		RenderItem itemRender = FTBLibClient.mc.getRenderItem();
 		itemRender.zLevel = 200F;
-		FTBLibClient.renderGuiItem(is, itemRender, getFontRenderer(), x, y);
-		zLevel = 0F;
+		FTBLibClient.renderGuiItem(is, itemRender, gui.getFontRenderer(), x, y);
 		itemRender.zLevel = 0F;
+		gui.setZLevel(z0);
 	}
 	
-	public void render(TextureCoords tc, double x, double y, double w, double h)
+	public static void render(TextureCoords tc, double x, double y, double z, double w, double h)
 	{
 		if(tc == null || !tc.isValid()) return;
-		setTexture(tc.texture);
-		GuiLM.drawTexturedRectD(x, y, zLevel, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
+		FTBLibClient.setTexture(tc.texture);
+		GuiLM.drawTexturedRectD(x, y, z, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
 	}
 	
-	public void render(TextureCoords tc, double x, double y)
-	{ if(tc != null && tc.isValid()) render(tc, x, y, tc.width, tc.height); }
-	
-	/*@Optional.Method(modid = OtherMods.NEI)
-	public codechicken.nei.VisiblityData modifyVisiblity(GuiContainer g, codechicken.nei.VisiblityData vd)
-	{
-		if(hideNEI) vd.showNEI = false;
-		return vd;
-	}
-	
-	public Iterable<Integer> getItemSpawnSlots(GuiContainer g, ItemStack is)
-	{ return null; }
-	
-	@Optional.Method(modid = OtherMods.NEI)
-	public List<codechicken.nei.api.TaggedInventoryArea> getInventoryAreas(GuiContainer paramGuiContainer)
-	{ return null; }
-	
-	public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
-	{ return false; }
-	
-	public boolean hideItemPanelSlot(GuiContainer g, int x, int y, int w, int h)
-	{ return hideNEI; }
-	*/
+	public static void render(TextureCoords tc, double x, double y, double z)
+	{ if(tc != null && tc.isValid()) render(tc, x, y, z, tc.width, tc.height); }
 }

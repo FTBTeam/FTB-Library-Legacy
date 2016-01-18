@@ -1,8 +1,8 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.api.net.*;
+import ftb.lib.api.tile.IGuiTile;
 import latmod.lib.ByteCount;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,7 +44,7 @@ public class MessageOpenGuiTile extends MessageLM
 			
 			if(gui != null)
 			{
-				FTBLibClient.mc.displayGuiScreen(gui);
+				FTBLibClient.openGui(gui);
 				FTBLibClient.mc.thePlayer.openContainer.windowId = io.readUnsignedByte();
 			}
 		}

@@ -1,6 +1,6 @@
 package ftb.lib.mod.client;
 
-import ftb.lib.EventBusHelper;
+import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.*;
 import ftb.lib.api.config.*;
@@ -53,7 +53,7 @@ public class FTBLibActions
 	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
+		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getDisplayName()
 		{ return FTBLibMod.proxy.translate(FTBLibModClient.notifications.getFullID()); }
@@ -76,7 +76,7 @@ public class FTBLibActions
 	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
+		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
 	};
 	
 	public static final PlayerAction dev_console = new PlayerAction(PlayerAction.Type.SELF, "ftbl.dev_console", -2000, GuiIcons.bug)
@@ -154,10 +154,33 @@ public class FTBLibActions
 		if(e.gui instanceof InventoryEffectRenderer)
 		{
 			ILMPlayer p = FTBLibClient.getClientLMPlayer();
-			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, true);
+			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false);
+			
+			for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
+			{
+				if(s instanceof Shortcuts.ButtonAction)
+				{
+					final Shortcuts.ButtonAction a = (Shortcuts.ButtonAction) s;
+					TextureCoords tex = GuiIcons.iconMap.get(a.icon);
+					if(tex == null) tex = GuiIcons.marker;
+					
+					PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), a.priority, tex)
+					{
+						public void onClicked(ILMPlayer self, ILMPlayer other)
+						{ a.action.onClicked(a.data); }
+						
+						public String getDisplayName()
+						{ return a.name; }
+					};
+					
+					buttons.add(pa);
+				}
+			}
 			
 			if(!buttons.isEmpty())
 			{
+				Collections.sort(buttons);
+				
 				ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, e.gui);
 				e.buttonList.add(renderer);
 				

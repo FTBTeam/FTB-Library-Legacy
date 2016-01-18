@@ -16,15 +16,13 @@ import java.util.*;
  */
 public class Shortcuts
 {
-	public static final List<KeyAction> keys = new ArrayList<>();
-	public static final List<ButtonAction> buttons = new ArrayList<>();
+	public static final List<Shortcut> shortcuts = new ArrayList<>();
 	private static File file = null;
 	
 	@SideOnly(Side.CLIENT)
 	public static void load()
 	{
-		keys.clear();
-		buttons.clear();
+		shortcuts.clear();
 		
 		if(file == null) file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/shortcuts.json"));
 		JsonElement e = LMJsonUtils.getJsonElement(file);
@@ -33,36 +31,21 @@ public class Shortcuts
 		{
 			JsonObject o = e.getAsJsonObject();
 			
-			if(o.has("keys"))
+			if(o.has("shortcuts"))
 			{
-				JsonArray a = o.get("keys").getAsJsonArray();
+				JsonArray a = o.get("shortcuts").getAsJsonArray();
 				
 				for(int i = 0; i < a.size(); i++)
 				{
-					KeyAction b = new KeyAction();
-					b.setJson(a.get(i));
-					keys.add(b);
+					JsonObject o1 = a.get(i).getAsJsonObject();
+					Shortcut s;
+					
+					if(o1.has("key")) s = new KeyAction();
+					else s = new ButtonAction();
+					s.setJson(o1);
+					shortcuts.add(s);
 				}
 			}
-			
-			if(o.has("buttons"))
-			{
-				JsonArray a = o.get("buttons").getAsJsonArray();
-				
-				for(int i = 0; i < a.size(); i++)
-				{
-					ButtonAction b = new ButtonAction();
-					b.setJson(a.get(i));
-					buttons.add(b);
-				}
-			}
-		}
-		else
-		{
-			JsonObject o = new JsonObject();
-			o.add("keys", new JsonArray());
-			o.add("buttons", new JsonArray());
-			e = o;
 		}
 		
 		save();
@@ -76,33 +59,24 @@ public class Shortcuts
 		JsonObject o = new JsonObject();
 		JsonArray a = new JsonArray();
 		
-		for(KeyAction b : keys)
-			a.add(b.getJson());
+		for(Shortcut s : shortcuts)
+			a.add(s.getJson());
 		
-		o.add("keys", a);
-		
-		a = new JsonArray();
-		
-		for(ButtonAction b : buttons)
-			a.add(b.getJson());
-		
-		o.add("buttons", a);
+		o.add("shortcuts", a);
 		
 		LMJsonUtils.toJsonFile(file, o);
 	}
 	
-	public static class KeyAction implements IJsonObject
+	public static abstract class Shortcut implements IJsonObject
 	{
 		public ClickAction action;
 		public JsonElement data;
-		public int key;
 		
 		public void setJson(JsonElement e)
 		{
 			JsonObject o = e.getAsJsonObject();
 			action = ClickActionRegistry.get(o.get("type").getAsString());
 			if(action != null && o.has("data")) data = o.get("data");
-			key = Keyboard.getKeyIndex(o.get("key").getAsString());
 		}
 		
 		public JsonElement getJson()
@@ -110,38 +84,66 @@ public class Shortcuts
 			JsonObject o = new JsonObject();
 			o.add("type", new JsonPrimitive(action.ID));
 			if(data != null && !data.isJsonNull()) o.add("data", data);
+			return o;
+		}
+		
+		public String getTitle()
+		{ return "-"; }
+		
+		public boolean isKeyPressed(int k)
+		{ return false; }
+	}
+	
+	public static class KeyAction extends Shortcut
+	{
+		public int key;
+		
+		public void setJson(JsonElement e)
+		{
+			super.setJson(e);
+			JsonObject o = e.getAsJsonObject();
+			key = Keyboard.getKeyIndex(o.get("key").getAsString());
+		}
+		
+		public JsonElement getJson()
+		{
+			JsonObject o = (JsonObject) super.getJson();
 			o.add("key", new JsonPrimitive(Keyboard.getKeyName(key)));
 			return o;
 		}
+		
+		public String getTitle()
+		{ return Keyboard.getKeyName(key) + " : " + action.getDisplayName() + " : '" + data + "'"; }
+		
+		public boolean isKeyPressed(int k)
+		{ return key == k; }
 	}
 	
-	public static class ButtonAction implements IJsonObject
+	public static class ButtonAction extends Shortcut
 	{
-		public ClickAction action;
-		public JsonElement data;
 		public String icon;
 		public String name;
 		public int priority;
 		
 		public void setJson(JsonElement e)
 		{
+			super.setJson(e);
 			JsonObject o = e.getAsJsonObject();
-			action = ClickActionRegistry.get(o.get("type").getAsString());
-			if(action != null && o.has("data")) data = o.get("data");
 			icon = o.has("icon") ? o.get("icon").getAsString() : "marker";
 			name = o.has("name") ? o.get("name").getAsString() : "Unnamed";
-			priority = o.has("priority") ? o.get("priority").getAsInt() : 0;
+			priority = o.has("priority") ? o.get("priority").getAsInt() : -100;
 		}
 		
 		public JsonElement getJson()
 		{
-			JsonObject o = new JsonObject();
-			o.add("type", new JsonPrimitive(action.ID));
-			if(data != null && !data.isJsonNull()) o.add("data", data);
+			JsonObject o = (JsonObject) super.getJson();
 			o.add("icon", new JsonPrimitive(icon));
 			o.add("name", new JsonPrimitive(name));
 			o.add("priority", new JsonPrimitive(priority));
 			return o;
 		}
+		
+		public String getTitle()
+		{ return name + " : " + action.getDisplayName() + " : '" + data + "'"; }
 	}
 }

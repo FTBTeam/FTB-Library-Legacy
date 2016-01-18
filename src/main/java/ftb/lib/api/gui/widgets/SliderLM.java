@@ -1,7 +1,7 @@
 package ftb.lib.api.gui.widgets;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.*;
 import latmod.lib.MathHelperLM;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Mouse;
@@ -19,7 +19,7 @@ public class SliderLM extends WidgetLM
 	public boolean isVertical = false;
 	public float scrollStep = 0.1F;
 	
-	public SliderLM(GuiLM g, int x, int y, int w, int h, int ss)
+	public SliderLM(IGuiLM g, int x, int y, int w, int h, int ss)
 	{
 		super(g, x, y, w, h);
 		sliderSize = ss;
@@ -34,16 +34,17 @@ public class SliderLM extends WidgetLM
 			if(Mouse.isButtonDown(0))
 			{
 				if(isVertical)
-					value = (float) (gui.mouseY - gui.getPosY(posY + (sliderSize / 2))) / (float) (height - sliderSize);
-				else value = (float) (gui.mouseX - gui.getPosX(posX + (sliderSize / 2))) / (float) (width - sliderSize);
+					value = (float) (gui.mouse().y - (gui.getMainPanel().posY + posY + (sliderSize / 2))) / (float) (height - sliderSize);
+				else
+					value = (float) (gui.mouse().x - (gui.getMainPanel().posY + posX + (sliderSize / 2))) / (float) (width - sliderSize);
 				value = MathHelperLM.clampFloat(value, 0F, 1F);
 			}
 			else isGrabbed = false;
 		}
 		
-		if(gui.mouseDWheel != 0 && canMouseScroll())
+		if(gui.mouse().dwheel != 0 && canMouseScroll())
 		{
-			value += (gui.mouseDWheel < 0) ? scrollStep : -scrollStep;
+			value += (gui.mouse().dwheel < 0) ? scrollStep : -scrollStep;
 			value = MathHelperLM.clampFloat(value, 0F, 1F);
 		}
 		
@@ -58,8 +59,8 @@ public class SliderLM extends WidgetLM
 	
 	public void renderSlider(TextureCoords tc)
 	{
-		if(isVertical) gui.render(tc, getAX(), getAY() + getValueI(), width, sliderSize);
-		else gui.render(tc, getAX() + getValueI(), getAY(), sliderSize, height);
+		if(isVertical) GuiLM.render(tc, getAX(), getAY() + getValueI(), gui.getZLevel(), width, sliderSize);
+		else GuiLM.render(tc, getAX() + getValueI(), getAY(), gui.getZLevel(), sliderSize, height);
 	}
 	
 	public void mousePressed(int b)

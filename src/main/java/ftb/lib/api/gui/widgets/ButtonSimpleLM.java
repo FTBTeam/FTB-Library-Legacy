@@ -1,7 +1,8 @@
 package ftb.lib.api.gui.widgets;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.*;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -14,7 +15,7 @@ public abstract class ButtonSimpleLM extends ButtonLM
 	public int colorButton = 0xFF888888;
 	public int colorButtonOver = 0xFF999999;
 	
-	public ButtonSimpleLM(GuiLM g, int x, int y, int w, int h)
+	public ButtonSimpleLM(IGuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
 	public void addMouseOverText(List<String> l)
@@ -28,6 +29,6 @@ public abstract class ButtonSimpleLM extends ButtonLM
 		FTBLibClient.setGLColor(mouseOver(ax, ay) ? colorButtonOver : colorButton);
 		GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		gui.drawCenteredString(gui.getFontRenderer(), title, ax + width / 2, ay + (height - gui.getFontRenderer().FONT_HEIGHT) / 2, colorText);
+		((GuiScreen) gui).drawCenteredString(gui.getFontRenderer(), title, ax + width / 2, ay + (height - gui.getFontRenderer().FONT_HEIGHT) / 2, colorText);
 	}
 }

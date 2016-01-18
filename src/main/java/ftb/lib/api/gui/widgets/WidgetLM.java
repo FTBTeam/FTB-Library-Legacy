@@ -1,7 +1,7 @@
 package ftb.lib.api.gui.widgets;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.*;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
@@ -9,12 +9,12 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class WidgetLM
 {
-	public final GuiLM gui;
+	public final IGuiLM gui;
 	public int posX, posY, width, height;
 	public PanelLM parentPanel = null;
 	public String title = null;
 	
-	public WidgetLM(GuiLM g, int x, int y, int w, int h)
+	public WidgetLM(IGuiLM g, int x, int y, int w, int h)
 	{
 		gui = g;
 		posX = x;
@@ -33,13 +33,13 @@ public class WidgetLM
 	{ return (parentPanel == null) ? posY : (parentPanel.getAY() + posY); }
 	
 	protected boolean mouseOver(int ax, int ay)
-	{ return gui.mouseX >= ax && gui.mouseY >= ay && gui.mouseX < ax + width && gui.mouseY < ay + height; }
+	{ return gui.mouse().isInside(ax, ay, width, height); }
 	
 	public boolean mouseOver()
 	{ return mouseOver(getAX(), getAY()); }
 	
 	public void render(TextureCoords icon, double rw, double rh)
-	{ gui.render(icon, getAX(), getAY(), (int) (width * rw), (int) (height * rh)); }
+	{ GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), (int) (width * rw), (int) (height * rh)); }
 	
 	public void render(TextureCoords icon)
 	{ render(icon, 1D, 1D); }

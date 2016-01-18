@@ -30,7 +30,7 @@ public class ButtonPopupMenu extends ButtonLM
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay + height < 0 || ay > gui.height) return;
+		if(ay + height < 0 || ay > gui.getGui().height) return;
 		int ax = getAX();
 		
 		TextureCoords icon = getIcon();
@@ -50,7 +50,7 @@ public class ButtonPopupMenu extends ButtonLM
 		GuiLM.drawBlankRect(ax + width - 1, ay, z, 1, height);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		gui.render(icon, ax + 2, ay + 1D, 16D, 16D);
+		GuiLM.render(icon, ax + 2, ay + 1D, gui.getZLevel(), 16D, 16D);
 		if(title != null && !title.isEmpty())
 		{
 			GlStateManager.translate(0F, 0F, gui.getZLevel());

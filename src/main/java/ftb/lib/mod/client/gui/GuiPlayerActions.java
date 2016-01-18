@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.PlayerAction;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
@@ -21,7 +22,6 @@ public class GuiPlayerActions extends GuiLM
 		self = s;
 		other = s;
 		actions = a;
-		hideNEI = true;
 	}
 	
 	public void addWidgets()
@@ -40,10 +40,7 @@ public class GuiPlayerActions extends GuiLM
 		for(WidgetLM w : mainPanel.widgets)
 			w.width = mainPanel.width;
 		
-		xSize = mainPanel.width;
-		ySize = mainPanel.height;
-		mainPanel.posX = guiLeft = (width - xSize) / 2;
-		mainPanel.posY = guiTop = (height - ySize) / 2 - 20;
+		mainPanel.posY -= 20;
 	}
 	
 	public void drawBackground()
@@ -68,7 +65,7 @@ public class GuiPlayerActions extends GuiLM
 		
 		public void onButtonPressed(int b)
 		{
-			gui.container.player.closeScreen();
+			FTBLibClient.mc.thePlayer.closeScreen();
 			action.onClicked(gui.self, gui.other);
 		}
 		
@@ -79,7 +76,7 @@ public class GuiPlayerActions extends GuiLM
 			
 			GlStateManager.color(0.46F, 0.46F, 0.46F, 0.53F);
 			GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
-			gui.render(action.icon, ax + 1, ay + 1);
+			GuiLM.render(action.icon, ax + 1, ay + 1, gui.getZLevel());
 			
 			gui.getFontRenderer().drawString(title, ax + 20, ay + 6, 0xFFFFFFFF);
 			GlStateManager.color(1F, 1F, 1F, 0.2F);

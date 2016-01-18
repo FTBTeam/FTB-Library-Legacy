@@ -1,7 +1,7 @@
 package ftb.lib.api.gui.widgets;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IGuiLM;
 import latmod.lib.LMUtils;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -13,7 +13,7 @@ public abstract class ButtonLM extends WidgetLM
 	public boolean doubleClickRequired = false;
 	public TextureCoords background = null;
 	
-	public ButtonLM(GuiLM g, int x, int y, int w, int h)
+	public ButtonLM(IGuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
 	public void mousePressed(int b)

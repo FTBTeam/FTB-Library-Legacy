@@ -42,15 +42,14 @@ public class GuiSelectColorHSB extends GuiLM
 	public GuiSelectColorHSB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);
-		hideNEI = true;
 		callback = cb;
 		initCol = new LMColor(col);
 		color = new LMColor(initCol.color());
 		colorID = id;
 		isInstant = instant;
 		
-		xSize = 76;
-		ySize = 107;
+		mainPanel.width = 76;
+		mainPanel.height = 107;
 		
 		colorInit = new ButtonLM(this, 6, 5, col_tex.widthI(), col_tex.heightI())
 		{
@@ -80,10 +79,10 @@ public class GuiSelectColorHSB extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				playClickSound();
+				FTBLibClient.playClickSound();
 				FTBLibModClient.open_hsb_cg.set(false);
 				ClientConfigRegistry.provider().save();
-				mc.displayGuiScreen(new GuiSelectColorRGB(callback, initCol.color(), colorID, isInstant));
+				FTBLibClient.openGui(new GuiSelectColorRGB(callback, initCol.color(), colorID, isInstant));
 			}
 		};
 		
@@ -126,7 +125,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		switchRGB.render(GuiIcons.color_rgb);
 		
-		setTexture(tex);
+		FTBLibClient.setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		
@@ -138,8 +137,8 @@ public class GuiSelectColorHSB extends GuiLM
 		double u1 = slider_col_tex.maxU;
 		double v1 = slider_col_tex.maxV;
 		
-		int x = guiLeft + sliderBrightness.posX;
-		int y = guiTop + sliderBrightness.posY;
+		int x = mainPanel.posX + sliderBrightness.posX;
+		int y = mainPanel.posY + sliderBrightness.posY;
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(0F, 0F, 0F, 1F);
@@ -181,7 +180,7 @@ public class GuiSelectColorHSB extends GuiLM
 	
 	public void closeGui(boolean set)
 	{
-		playClickSound();
+		FTBLibClient.playClickSound();
 		callback.onColorSelected(new ColorSelected(colorID, set, set ? color : initCol, true));
 	}
 	
@@ -213,8 +212,8 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			if(grabbed)
 			{
-				cursorPosX = (gui.mouseX - ax) / (double) width;
-				cursorPosY = (gui.mouseY - ay) / (double) height;
+				cursorPosX = (gui.mouse().x - ax) / (double) width;
+				cursorPosY = (gui.mouse().y - ay) / (double) height;
 				
 				double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 				
@@ -231,13 +230,13 @@ public class GuiSelectColorHSB extends GuiLM
 			}
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			gui.setTexture(tex_colors);
+			FTBLibClient.setTexture(tex_colors);
 			GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
 				GlStateManager.color(1F - gui.color.red() / 255F, 1F - gui.color.green() / 255F, 1F - gui.color.blue() / 255F, 1F);
-				gui.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
+				GuiLM.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, gui.getZLevel(), 4, 4);
 				GlStateManager.color(1F, 1F, 1F, 1F);
 			}
 		}

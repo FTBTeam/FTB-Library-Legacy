@@ -1,6 +1,6 @@
 package ftb.lib.api.gui.widgets;
 
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IGuiLM;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -11,7 +11,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	public final List<WidgetLM> widgets;
 	protected final List<PanelLM> childPanels;
 	
-	public PanelLM(GuiLM g, int x, int y, int w, int h)
+	public PanelLM(IGuiLM g, int x, int y, int w, int h)
 	{
 		super(g, x, y, w, h);
 		widgets = new ArrayList<>();
@@ -70,5 +70,11 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		for(WidgetLM w : widgets)
 			if(w.isEnabled() && w.keyPressed(key, keyChar)) return true;
 		return false;
+	}
+	
+	public void renderWidget()
+	{
+		for(int i = 0; i < widgets.size(); i++)
+			widgets.get(i).renderWidget();
 	}
 }

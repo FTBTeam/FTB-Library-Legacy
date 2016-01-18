@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.gui.IGuiTile;
 import ftb.lib.api.item.IItemLM;
+import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import ftb.lib.notification.Notification;
@@ -76,6 +76,8 @@ public class FTBLib
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
+		if(FTBWorld.server == null) return;
+		
 		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
 		GameModes.reload();

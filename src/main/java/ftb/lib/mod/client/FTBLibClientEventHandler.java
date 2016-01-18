@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
 
-import java.util.*;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler
@@ -31,18 +31,16 @@ public class FTBLibClientEventHandler
 	public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
 	{
 		ServerData sd = FTBLibClient.mc.getCurrentServerData();
-		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
-		FTBWorld.client = new FTBWorld(Side.CLIENT, new UUID(0L, 0L), s);
-		
-		EventFTBWorldClient event = new EventFTBWorldClient(FTBWorld.client, true);
+		EventFTBWorldClient event = new EventFTBWorldClient(null);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
+		FTBWorld.client = null;
 		event.post();
 	}
 	
 	@SubscribeEvent
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
-		EventFTBWorldClient event = new EventFTBWorldClient(null, false);
+		EventFTBWorldClient event = new EventFTBWorldClient(null);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
 		event.post();
 		FTBWorld.client = null;
@@ -100,7 +98,7 @@ public class FTBLibClientEventHandler
 			if(other != null)
 			{
 				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);
-				if(!a.isEmpty()) FTBLibClient.mc.displayGuiScreen(new GuiPlayerActions(self, other, a));
+				if(!a.isEmpty()) FTBLibClient.openGui(new GuiPlayerActions(self, other, a));
 			}
 		}
 	}
@@ -114,9 +112,9 @@ public class FTBLibClientEventHandler
 			
 			try
 			{
-				for(Shortcuts.KeyAction a : Shortcuts.keys)
+				for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
 				{
-					if(a.key == key) a.action.onClicked(a.data);
+					if(s.isKeyPressed(key)) s.action.onClicked(s.data);
 				}
 			}
 			catch(Exception ex)

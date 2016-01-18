@@ -1,6 +1,6 @@
 package ftb.lib.api.gui.widgets;
 
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IGuiLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -14,7 +14,7 @@ public class TextBoxLM extends WidgetLM
 	public String text = "";
 	public int charLimit = -1;
 	
-	public TextBoxLM(GuiLM g, int x, int y, int w, int h)
+	public TextBoxLM(IGuiLM g, int x, int y, int w, int h)
 	{
 		super(g, x, y, w, h);
 	}
@@ -116,7 +116,8 @@ public class TextBoxLM extends WidgetLM
 		
 		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) s += '_';
 		
-		if(s.length() > 0) gui.getFontRenderer().drawString(s, gui.getPosX(x), gui.getPosY(y), col);
+		if(s.length() > 0)
+			gui.getFontRenderer().drawString(s, gui.getMainPanel().posX + x, gui.getMainPanel().posY + y, col);
 	}
 	
 	public void renderCentred(int x, int y, int col)
@@ -127,6 +128,6 @@ public class TextBoxLM extends WidgetLM
 		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) s += '_';
 		
 		if(s.length() > 0)
-			gui.getFontRenderer().drawString(s, gui.getPosX(0) + (x - gui.getFontRenderer().getStringWidth(os) / 2), gui.getPosY(0) + y, col);
+			gui.getFontRenderer().drawString(s, (x - gui.getFontRenderer().getStringWidth(os) / 2), gui.getMainPanel().posY + y, col);
 	}
 }

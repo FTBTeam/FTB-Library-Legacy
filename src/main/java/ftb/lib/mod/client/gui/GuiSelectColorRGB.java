@@ -38,15 +38,14 @@ public class GuiSelectColorRGB extends GuiLM
 	public GuiSelectColorRGB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);
-		hideNEI = true;
 		callback = cb;
 		initCol = new LMColor(col);
 		currentColor = new LMColor(initCol.color());
 		colorID = id;
 		isInstant = instant;
 		
-		xSize = 98;
-		ySize = 76;
+		mainPanel.width = 98;
+		mainPanel.height = 76;
 		
 		colorInit = new ButtonLM(this, 6, 6, col_tex.widthI(), col_tex.heightI())
 		{
@@ -76,10 +75,10 @@ public class GuiSelectColorRGB extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				playClickSound();
+				FTBLibClient.playClickSound();
 				FTBLibModClient.open_hsb_cg.set(true);
 				ClientConfigRegistry.provider().save();
-				mc.displayGuiScreen(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
+				FTBLibClient.openGui(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
 			}
 		};
 		
@@ -131,7 +130,7 @@ public class GuiSelectColorRGB extends GuiLM
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		switchHSB.render(GuiIcons.color_hsb);
 		
-		setTexture(tex);
+		FTBLibClient.setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
@@ -143,8 +142,8 @@ public class GuiSelectColorRGB extends GuiLM
 		double u1 = slider_col_tex.maxU;
 		double v1 = slider_col_tex.maxV;
 		
-		int x = guiLeft + currentColR.posX;
-		int y = guiTop + currentColR.posY;
+		int x = mainPanel.posX + currentColR.posX;
+		int y = mainPanel.posY + currentColR.posY;
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		
@@ -161,8 +160,8 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
-		x = guiLeft + currentColG.posX;
-		y = guiTop + currentColG.posY;
+		x = mainPanel.posX + currentColG.posX;
+		y = mainPanel.posY + currentColG.posY;
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, 0F, currentColB.value, 1F);
 		GL11.glTexCoord2d(u0, v0);
@@ -176,8 +175,8 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
-		x = guiLeft + currentColB.posX;
-		y = guiTop + currentColB.posY;
+		x = mainPanel.posX + currentColB.posX;
+		y = mainPanel.posY + currentColB.posY;
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, currentColG.value, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0);
@@ -218,7 +217,7 @@ public class GuiSelectColorRGB extends GuiLM
 	
 	public void closeGui(boolean set)
 	{
-		playClickSound();
+		FTBLibClient.playClickSound();
 		callback.onColorSelected(new ColorSelected(colorID, set, set ? currentColor : initCol, true));
 	}
 }

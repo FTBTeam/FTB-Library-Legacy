@@ -36,7 +36,7 @@ public class ButtonNotification extends ButtonLM
 		if(is != null)
 		{
 			tx += 20;
-			gui.drawItem(is, ax + 4, ay + 4);
+			GuiLM.drawItem(gui, is, ax + 4, ay + 4);
 		}
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -52,19 +52,19 @@ public class ButtonNotification extends ButtonLM
 		if(mouseOver(ax, ay))
 		{
 			float alpha = 0.4F;
-			if(gui.mouseX >= ax + width - 16) alpha = 1F;
+			if(gui.mouse().x >= ax + width - 16) alpha = 1F;
 			
 			GlStateManager.color(1F, 1F, 1F, alpha);
-			gui.render(GuiIcons.close, ax + width - 18, ay + 4);
+			GuiLM.render(GuiIcons.close, ax + width - 18, ay + 4, gui.getZLevel());
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 	}
 	
 	public void onButtonPressed(int b)
 	{
-		gui.playClickSound();
+		FTBLibClient.playClickSound();
 		
-		if(gui.mouseX < getAX() + width - 16) notification.onClicked();
+		if(gui.mouse().x < getAX() + width - 16) notification.onClicked();
 		ClientNotifications.Perm.list.remove(notification);
 		
 		gui.initLMGui();
@@ -74,7 +74,7 @@ public class ButtonNotification extends ButtonLM
 	public void addMouseOverText(List<String> l)
 	{
 		int ax = getAX();
-		if(mouseOver(ax, getAY()) && gui.mouseX >= ax + width - 16)
+		if(mouseOver(ax, getAY()) && gui.mouse().x >= ax + width - 16)
 		{
 			l.add(FTBLibLang.button_close());
 			return;

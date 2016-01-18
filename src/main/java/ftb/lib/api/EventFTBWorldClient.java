@@ -5,11 +5,9 @@ import ftb.lib.FTBWorld;
 public class EventFTBWorldClient extends EventLM
 {
 	public final FTBWorld world;
-	public final boolean isFake;
 	
-	public EventFTBWorldClient(FTBWorld w, boolean b)
+	public EventFTBWorldClient(FTBWorld w)
 	{
 		world = w;
-		isFake = b;
 	}
 }

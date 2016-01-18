@@ -14,9 +14,14 @@ ftbl:delete_item=Do you want to delete '%s'?
 ftbl:label.server_forced=Server overrides to '%s'
 ftbl:reload_client_config=Server Reloaded. You can
 
-ftbl:label.shortcut.action=Action
-ftbl:label.shortcut.data=Action Data
-ftbl:label.shortcut.key=Key
+ftbl:button.shortcut.action=Action
+ftbl:button.shortcut.data=Action Data
+ftbl:button.shortcut.key=Key
+ftbl:button.shortcut.icon=Icon
+ftbl:button.shortcut.title=Title
+ftbl:button.shortcut.priority=Priority
+ftbl:button.shortcut.add_key=Add Key Shortcut
+ftbl:button.shortcut.add_button=Add Button Shortcut
 
 #Buttons
 ftbl:button.settings=Settings
@@ -90,7 +95,7 @@ client_config.ftbl.reload_client_cmd=Client Reloading Command
 client_config.ftbl.action_buttons_on_top=Action Buttons On Top
 client_config.ftbl.player_options_shortcut=Player Options Shortcut
 client_config.ftbl.key_bindings=Key Bindings
-client_config.ftbl.button_bindings=Button Bindings
+client_config.ftbl.edit_shortcuts=Edit Shortcuts
 
 client_config.sidebar_buttons=Sidebar Buttons
 

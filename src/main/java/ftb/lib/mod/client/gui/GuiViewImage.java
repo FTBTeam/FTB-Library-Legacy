@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,7 +19,6 @@ public class GuiViewImage extends GuiLM
 		super(null, null);
 		parent = p;
 		texCoords = t;
-		hideNEI = true;
 		
 		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
@@ -29,10 +29,8 @@ public class GuiViewImage extends GuiLM
 	
 	public void initLMGui()
 	{
-		xSize = width;
-		ySize = height;
-		buttonClose.width = width;
-		buttonClose.height = height;
+		mainPanel.width = buttonClose.width = width;
+		mainPanel.height = buttonClose.height = height;
 	}
 	
 	public void addWidgets()
@@ -46,7 +44,7 @@ public class GuiViewImage extends GuiLM
 		
 		if(texCoords != null && texCoords.isValid())
 		{
-			setTexture(texCoords.texture);
+			FTBLibClient.setTexture(texCoords.texture);
 			
 			double w = texCoords.width;
 			double h = texCoords.height;
@@ -63,7 +61,7 @@ public class GuiViewImage extends GuiLM
 				w = texCoords.getWidth(h);
 			}
 			
-			render(texCoords, (width - w) / 2, (height - h) / 2, w, h);
+			GuiLM.render(texCoords, (width - w) / 2, (height - h) / 2, zLevel, w, h);
 		}
 	}
 }

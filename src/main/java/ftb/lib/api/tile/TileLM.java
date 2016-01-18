@@ -2,7 +2,6 @@ package ftb.lib.api.tile;
 
 import ftb.lib.*;
 import ftb.lib.api.block.BlockLM;
-import ftb.lib.api.gui.*;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
 import net.minecraft.block.Block;

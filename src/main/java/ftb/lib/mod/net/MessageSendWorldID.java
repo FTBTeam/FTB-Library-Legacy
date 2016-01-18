@@ -6,9 +6,6 @@ import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
-import net.minecraftforge.fml.relauncher.Side;
-
-import java.util.UUID;
 
 public class MessageSendWorldID extends MessageLM
 {
@@ -18,8 +15,6 @@ public class MessageSendWorldID extends MessageLM
 	{
 		this();
 		MessageReload.writeSyncedConfig(io);
-		io.writeUUID(w.getWorldID());
-		io.writeUTF(w.getWorldIDS());
 		io.writeBoolean(FTBLib.ftbu != null);
 		w.writeReloadData(io);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.writeWorldData(io, ep);
@@ -31,14 +26,12 @@ public class MessageSendWorldID extends MessageLM
 	public IMessage onMessage(MessageContext ctx)
 	{
 		MessageReload.readSyncedConfig(io);
-		UUID id = io.readUUID();
-		String ids = io.readUTF();
 		boolean hasFTBU = io.readBoolean();
 		
-		boolean first = (FTBWorld.client == null || !FTBWorld.client.getWorldID().equals(id));
-		if(first) FTBWorld.client = new FTBWorld(Side.CLIENT, id, ids);
+		boolean first = FTBWorld.client == null;
+		if(first) FTBWorld.client = new FTBWorld();
 		FTBWorld.client.readReloadData(io);
-		new EventFTBWorldClient(FTBWorld.client, false).post();
+		new EventFTBWorldClient(FTBWorld.client).post();
 		if(first && hasFTBU && FTBLib.ftbu != null) FTBLib.ftbu.readWorldData(io);
 		
 		MessageReload.reloadClient(0L, false);

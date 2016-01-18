@@ -10,11 +10,10 @@ public class LMGuis
 {
 	public static void displayColorSelector(IColorCallback cb, int col, Object id, boolean instant)
 	{
-		if(FTBLibModClient.open_hsb_cg.get())
-			FTBLibClient.mc.displayGuiScreen(new GuiSelectColorHSB(cb, col, id, instant));
-		else FTBLibClient.mc.displayGuiScreen(new GuiSelectColorRGB(cb, col, id, instant));
+		if(FTBLibModClient.open_hsb_cg.get()) FTBLibClient.openGui(new GuiSelectColorHSB(cb, col, id, instant));
+		else FTBLibClient.openGui(new GuiSelectColorRGB(cb, col, id, instant));
 	}
 	
 	public static void displayFieldSelector(Object id, PrimitiveType typ, Object d, IFieldCallback c)
-	{ FTBLibClient.mc.displayGuiScreen(new GuiSelectField(id, typ, String.valueOf(d), c)); }
+	{ FTBLibClient.openGui(new GuiSelectField(id, typ, String.valueOf(d), c)); }
 }

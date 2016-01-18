@@ -1,6 +1,6 @@
 package ftb.lib.mod;
 
-import ftb.lib.api.gui.IGuiTile;
+import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
