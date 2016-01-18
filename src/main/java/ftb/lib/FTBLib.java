@@ -306,7 +306,7 @@ public class FTBLib
 	}
 	
 	public static boolean isOP(GameProfile p)
-	{ return getServerWorld() != null && getServer().getConfigurationManager().canJoin(p); }
+	{ return getServerWorld() != null && getServer().getConfigurationManager().getOppedPlayers().getEntry(p) != null; }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
