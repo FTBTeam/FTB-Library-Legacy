@@ -35,6 +35,13 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	
+	public static final ConfigEntryBlank key_bindings = new ConfigEntryBlank("key_bindings")
+	{
+		public void onClicked()
+		{
+		}
+	};
+	
 	public void preInit()
 	{
 		JsonHelper.initClient();

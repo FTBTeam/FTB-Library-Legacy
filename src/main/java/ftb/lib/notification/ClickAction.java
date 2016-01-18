@@ -3,6 +3,7 @@ package ftb.lib.notification;
 import com.google.gson.JsonElement;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiScreenRegistry;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.gui.*;
@@ -20,6 +21,9 @@ public abstract class ClickAction extends FinalIDObject
 	
 	@SideOnly(Side.CLIENT)
 	public abstract void onClicked(JsonElement data);
+	
+	public String getDisplayName()
+	{ return FTBLibMod.proxy.translate("click_action." + ID); }
 	
 	// Static //
 	

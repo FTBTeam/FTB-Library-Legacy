@@ -14,6 +14,10 @@ ftbl:delete_item=Do you want to delete '%s'?
 ftbl:label.server_forced=Server overrides to '%s'
 ftbl:reload_client_config=Server Reloaded. You can
 
+ftbl:label.shortcut.action=Action
+ftbl:label.shortcut.data=Action Data
+ftbl:label.shortcut.key=Key
+
 #Buttons
 ftbl:button.settings=Settings
 ftbl:button.back=Back
@@ -85,6 +89,8 @@ client_config.ftbl.notifications=Notifications
 client_config.ftbl.reload_client_cmd=Client Reloading Command
 client_config.ftbl.action_buttons_on_top=Action Buttons On Top
 client_config.ftbl.player_options_shortcut=Player Options Shortcut
+client_config.ftbl.key_bindings=Key Bindings
+client_config.ftbl.button_bindings=Button Bindings
 
 client_config.sidebar_buttons=Sidebar Buttons
 
@@ -115,3 +121,10 @@ ftbl:invmode.enabled=Enabled
 ftbl:invmode.onlyin=Insert Only
 ftbl:invmode.onlyout=Extract Only
 ftbl:invmode.disabled=Disabled
+
+#Click Actions
+click_action.cmd=Command
+click_action.show_cmd=Show Command
+click_action.url=Open URL
+click_action.file=Open File
+click_action.gui=Open Gui
