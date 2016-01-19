@@ -5,7 +5,6 @@ import ftb.lib.FTBLib;
 import latmod.lib.*;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class GameModes
@@ -26,15 +25,17 @@ public class GameModes
 		return o;
 	}
 	
-	private static boolean isValid(JsonObject o)
+	private static boolean isValid(JsonElement e)
 	{
+		if(e == null || !e.isJsonObject()) return false;
+		JsonObject o = e.getAsJsonObject();
 		if(o == null || o.entrySet().isEmpty()) return false;
 		return o.has("modes") && o.has("default") && o.has("common");
 	}
 	
-	public GameModes(JsonObject o)
+	public GameModes(JsonElement el)
 	{
-		if(!isValid(o)) o = createDefault();
+		JsonObject o = isValid(el) ? el.getAsJsonObject() : createDefault();
 		
 		HashMap<String, GameMode> modes0 = new HashMap<>();
 		
@@ -66,21 +67,38 @@ public class GameModes
 		customData = Collections.unmodifiableMap(customData0);
 	}
 	
+	public JsonObject toJsonObject()
+	{
+		JsonObject o = new JsonObject();
+		
+		JsonArray a = new JsonArray();
+		for(GameMode m : modes.values())
+			a.add(new JsonPrimitive(m.ID));
+		o.add("modes", a);
+		
+		o.add("default", new JsonPrimitive(defaultMode.ID));
+		o.add("common", new JsonPrimitive(commonMode.ID));
+		
+		if(!customData.isEmpty())
+		{
+			JsonObject o1 = new JsonObject();
+			for(Map.Entry<String, String> e : customData.entrySet())
+				o1.add(e.getKey(), new JsonPrimitive(e.getValue()));
+			o.add("custom", o1);
+		}
+		
+		return o;
+	}
+	
 	// Static //
 	
-	private static File gamemodesJsonFile = null;
 	private static GameModes gameModes = null;
 	
 	public static void reload()
 	{
-		if(gamemodesJsonFile == null)
-			gamemodesJsonFile = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
-		gameModes = (GameModes) LMJsonUtils.fromJsonFile(Serializer.getGson(), gamemodesJsonFile, GameModes.class);
-		if(gameModes == null)
-		{
-			gameModes = new GameModes(createDefault());
-			LMJsonUtils.toJsonFile(Serializer.getGson(), gamemodesJsonFile, gameModes);
-		}
+		File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
+		gameModes = new GameModes(LMJsonUtils.getJsonElement(file));
+		LMJsonUtils.toJsonFile(file, gameModes.toJsonObject());
 	}
 	
 	public static GameModes getGameModes()
@@ -94,58 +112,5 @@ public class GameModes
 		if(s == null || s.isEmpty()) return defaultMode;
 		GameMode m = modes.get(s);
 		return (m == null) ? defaultMode : m;
-	}
-	
-	// Serializer //
-	
-	private static class Serializer implements JsonSerializer<GameModes>, JsonDeserializer<GameModes>
-	{
-		private static Gson gson = null;
-		
-		public JsonElement serialize(GameModes src, Type typeOfSrc, JsonSerializationContext context)
-		{
-			if(src == null) return null;
-			
-			JsonObject o = new JsonObject();
-			
-			o.add("default", new JsonPrimitive(src.defaultMode.ID));
-			o.add("common", new JsonPrimitive(src.commonMode.ID));
-			
-			JsonArray a = new JsonArray();
-			for(int i = 0; i < src.modes.size(); i++)
-				a.add(new JsonPrimitive(src.modes.get(i).ID));
-			o.add("modes", a);
-			
-			if(!src.customData.isEmpty())
-			{
-				JsonObject o1 = new JsonObject();
-				for(String key : src.customData.keySet())
-					o1.add(key, new JsonPrimitive(src.customData.get(key)));
-				o.add("custom", o1);
-			}
-			
-			return o;
-		}
-		
-		public GameModes deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-		{
-			if(json.isJsonNull() || !json.isJsonObject()) return null;
-			JsonObject o = json.getAsJsonObject();
-			if(!isValid(o)) return null;
-			return new GameModes(o);
-		}
-		
-		private static Gson getGson()
-		{
-			if(gson == null)
-			{
-				GsonBuilder gb = new GsonBuilder();
-				gb.setPrettyPrinting();
-				gb.registerTypeAdapter(GameModes.class, new Serializer());
-				gson = gb.create();
-			}
-			
-			return gson;
-		}
 	}
 }

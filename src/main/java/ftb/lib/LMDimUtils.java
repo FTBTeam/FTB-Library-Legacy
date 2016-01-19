@@ -1,6 +1,5 @@
 package ftb.lib;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.*;
@@ -8,7 +7,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.*;
 
 public class LMDimUtils
 {
@@ -99,7 +98,7 @@ public class LMDimUtils
 		
 		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
 		if(chw)
-			FMLCommonHandler.instance().bus().post(new PlayerEvent.PlayerChangedDimensionEvent(ep, w0.provider.dimensionId, w1.provider.dimensionId));
+			MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerChangedDimensionEvent(ep, w0.provider.dimensionId, w1.provider.dimensionId));
 		return true;
 	}
 	
@@ -152,12 +151,10 @@ public class LMDimUtils
 	
 	public static EntityPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
 	{
-		ChunkCoordinates c = getPlayerSpawnPoint(ep, dim);
-		EntityPos p = new EntityPos();
-		p.x = c.posX + 0.5D;
-		p.y = c.posY + 0.5D;
-		p.z = c.posZ + 0.5D;
-		p.dim = dim;
+		EntityPos p = new EntityPos(getPlayerSpawnPoint(ep, dim), dim);
+		p.x += 0.5D;
+		p.y += 0.5D;
+		p.z += 0.5D;
 		return p;
 	}
 }

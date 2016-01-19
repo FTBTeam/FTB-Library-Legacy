@@ -1,8 +1,7 @@
 package ftb.lib.mod;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.ServerTickCallback;
@@ -10,6 +9,7 @@ import ftb.lib.mod.net.MessageSendWorldID;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.*;
@@ -27,7 +27,7 @@ public class FTBLibEventHandler
 	}
 	
 	@SubscribeEvent
-	public void onPlayerLoggedIn(PlayerLoggedInEvent e)
+	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
 	{
 		if(e.player instanceof EntityPlayerMP)
 		{
@@ -60,5 +60,11 @@ public class FTBLibEventHandler
 			
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onServerTick(e.world);
 		}
+	}
+	
+	@SubscribeEvent
+	public void onRightClick(PlayerInteractEvent e)
+	{
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onRightClick(e);
 	}
 }

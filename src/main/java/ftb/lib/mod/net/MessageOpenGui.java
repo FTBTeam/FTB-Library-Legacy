@@ -2,9 +2,9 @@ package ftb.lib.mod.net;
 
 import cpw.mods.fml.common.network.simpleimpl.*;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.client.FTBLibClient;
+import ftb.lib.api.net.*;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;

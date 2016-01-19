@@ -1,14 +1,13 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.EnumMCColor;
+import ftb.lib.*;
+import ftb.lib.api.client.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.client.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
-import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.api.gui.widgets.*;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
@@ -20,8 +19,8 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiSelectColorHSB extends GuiLM
 {
-	public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID_LC, "textures/gui/colselector_hsb.png");
-	public static final ResourceLocation tex_colors = new ResourceLocation(FTBLibFinals.MOD_ID_LC, "textures/gui/colselector_hsb_colors.png");
+	public static final ResourceLocation tex = FTBLibMod.mod.getLocation("textures/gui/colselector_hsb.png");
+	public static final ResourceLocation tex_colors = FTBLibMod.mod.getLocation("textures/gui/colselector_hsb_colors.png");
 	public static final TextureCoords col_tex = new TextureCoords(tex, 76, 10, 21, 16);
 	public static final TextureCoords cursor_tex = new TextureCoords(tex, 97, 20, 4, 4);
 	
@@ -42,15 +41,14 @@ public class GuiSelectColorHSB extends GuiLM
 	public GuiSelectColorHSB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);
-		hideNEI = true;
 		callback = cb;
 		initCol = new LMColor(col);
 		color = new LMColor(initCol.color());
 		colorID = id;
 		isInstant = instant;
 		
-		xSize = 76;
-		ySize = 107;
+		mainPanel.width = 76;
+		mainPanel.height = 107;
 		
 		colorInit = new ButtonLM(this, 6, 5, col_tex.widthI(), col_tex.heightI())
 		{
@@ -80,10 +78,10 @@ public class GuiSelectColorHSB extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				playClickSound();
+				FTBLibClient.playClickSound();
 				FTBLibModClient.open_hsb_cg.set(false);
-				ClientConfigRegistry.provider.save();
-				mc.displayGuiScreen(new GuiSelectColorRGB(callback, initCol.color(), colorID, isInstant));
+				ClientConfigRegistry.provider().save();
+				FTBLibClient.openGui(new GuiSelectColorRGB(callback, initCol.color(), colorID, isInstant));
 			}
 		};
 		
@@ -124,9 +122,9 @@ public class GuiSelectColorHSB extends GuiLM
 		FTBLibClient.setGLColor(color.color(), 255);
 		colorCurrent.render(col_tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		switchRGB.render(GuiIcons.rgb);
+		switchRGB.render(GuiIcons.color_rgb);
 		
-		setTexture(tex);
+		FTBLibClient.setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		
@@ -138,8 +136,8 @@ public class GuiSelectColorHSB extends GuiLM
 		double u1 = slider_col_tex.maxU;
 		double v1 = slider_col_tex.maxV;
 		
-		int x = guiLeft + sliderBrightness.posX;
-		int y = guiTop + sliderBrightness.posY;
+		int x = mainPanel.posX + sliderBrightness.posX;
+		int y = mainPanel.posY + sliderBrightness.posY;
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(0F, 0F, 0F, 1F);
@@ -158,7 +156,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glEnd();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableTexture();
+		GlStateManager.enableTexture2D();
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
 		colorSelector.renderWidget();
@@ -181,7 +179,7 @@ public class GuiSelectColorHSB extends GuiLM
 	
 	public void closeGui(boolean set)
 	{
-		playClickSound();
+		FTBLibClient.playClickSound();
 		callback.onColorSelected(new ColorSelected(colorID, set, set ? color : initCol, true));
 	}
 	
@@ -213,8 +211,8 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			if(grabbed)
 			{
-				cursorPosX = (gui.mouseX - ax) / (double) width;
-				cursorPosY = (gui.mouseY - ay) / (double) height;
+				cursorPosX = (gui.mouse().x - ax) / (double) width;
+				cursorPosY = (gui.mouse().y - ay) / (double) height;
 				
 				double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 				
@@ -231,13 +229,13 @@ public class GuiSelectColorHSB extends GuiLM
 			}
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			gui.setTexture(tex_colors);
+			FTBLibClient.setTexture(tex_colors);
 			GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
 				GlStateManager.color(1F - gui.color.red() / 255F, 1F - gui.color.green() / 255F, 1F - gui.color.blue() / 255F, 1F);
-				gui.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
+				GuiLM.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, gui.getZLevel(), 4, 4);
 				GlStateManager.color(1F, 1F, 1F, 1F);
 			}
 		}

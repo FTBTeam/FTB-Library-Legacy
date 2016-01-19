@@ -1,13 +1,11 @@
 package ftb.lib.notification;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.*;
-import ftb.lib.gui.GuiLM;
+import ftb.lib.api.client.*;
+import ftb.lib.api.gui.GuiLM;
 import latmod.lib.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
 
 import java.util.*;
 
@@ -33,10 +31,12 @@ public class ClientNotifications
 	public static void add(Notification n)
 	{
 		if(n == null) return;
+		
+		LMListUtils.removeAll(Temp.list, new ICNRemoveFilter<Temp>(n.ID));
+		LMListUtils.removeAll(Perm.list, new ICNRemoveFilter<Perm>(n.ID));
+		
 		if(n.ID != null)
 		{
-			Temp.list.remove(n.ID);
-			Perm.list.remove(n.ID);
 			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
 				current = null;
 		}
@@ -52,28 +52,24 @@ public class ClientNotifications
 		Temp.list.clear();
 	}
 	
-	public static class Temp extends Gui
+	public static class Temp extends Gui implements ICNotification
 	{
 		public static final List<Temp> list = new ArrayList<>();
-		private static RenderItem renderItem = new RenderItem();
-		private static Minecraft mc;
 		
 		private long time;
 		private Notification notification;
 		private String title;
 		private String desc;
-		private int color;
 		private int width;
 		
 		private Temp(Notification n)
 		{
-			mc = FTBLibClient.mc;
+			n.item = null; // Too lazy to re-implement item drawing
 			notification = n;
 			time = -1L;
 			title = notification.title.getFormattedText();
 			desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
-			color = LMColorUtils.getRGBA(notification.color, 230);
-			width = 20 + Math.max(mc.fontRenderer.getStringWidth(title), mc.fontRenderer.getStringWidth(desc));
+			width = 20 + Math.max(FTBLibClient.mc.fontRenderer.getStringWidth(title), FTBLibClient.mc.fontRenderer.getStringWidth(desc));
 			if(notification.item != null) width += 20;
 		}
 		
@@ -81,7 +77,7 @@ public class ClientNotifications
 		{ return notification.ID; }
 		
 		public boolean equals(Object o)
-		{ return notification.equals(o.toString()); }
+		{ return notification.ID.equals(o.toString()); }
 		
 		public void render()
 		{
@@ -109,50 +105,51 @@ public class ClientNotifications
 				d1 *= d1;
 				
 				GlStateManager.disableDepth();
+				GlStateManager.pushMatrix();
 				GlStateManager.depthMask(false);
-				int i = FTBLibClient.displayW - width;
-				int j = 0 - (int) (d1 * 36D);
-				GlStateManager.color(1F, 1F, 1F, 1F);
-				GlStateManager.disableTexture();
+				GlStateManager.translate(FTBLibClient.displayW - width, -d1 * 36D, 0F);
+				
+				GlStateManager.disableTexture2D();
 				GlStateManager.disableLighting();
-				GuiLM.drawRect(i, j, FTBLibClient.displayW, j + 32, color);
-				GlStateManager.enableTexture();
-				GlStateManager.pushAttrib();
+				FTBLibClient.setGLColor(notification.color, 230);
+				GuiLM.drawBlankRect(0D, 0D, 0D, FTBLibClient.displayW, 32D);
+				GlStateManager.enableTexture2D();
+				GlStateManager.color(1F, 1F, 1F, 1F);
 				
 				int w = notification.item == null ? 10 : 30;
 				
-				FontRenderer font = mc.fontRenderer;
+				FontRenderer font = FTBLibClient.mc.fontRenderer;
 				
 				if(desc == null)
 				{
-					font.drawString(title, i + w, j + 12, -256);
+					font.drawString(title, w, 12, 0xFFFFFFFF);
 				}
 				else
 				{
-					font.drawString(title, i + w, j + 7, -256);
-					font.drawString(desc, i + w, j + 18, -1);
+					font.drawString(title, w, 7, 0xFFFFFFFF);
+					font.drawString(desc, w, 18, 0xFFFFFFFF);
 				}
 				
 				if(notification.item != null)
 				{
-					RenderHelper.enableGUIStandardItemLighting();
-					GlStateManager.enableRescaleNormal();
-					GlStateManager.enableColorMaterial();
-					GlStateManager.enableLighting();
-					renderItem.renderItemIntoGUI(font, mc.getTextureManager(), notification.item, i + 8, j + 8, false);
-					renderItem.renderItemOverlayIntoGUI(font, mc.getTextureManager(), notification.item, i + 8, j + 8);
+					//FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc.getRenderItem(), font, 8, 8);
 				}
 				
 				GlStateManager.depthMask(true);
-				GlStateManager.popAttrib();
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.popMatrix();
+				GlStateManager.enableLighting();
 			}
 		}
 		
 		public boolean isDead()
 		{ return time == 0L; }
+		
+		public String getID()
+		{ return notification.ID; }
 	}
 	
-	public static class Perm implements Comparable<Perm>
+	public static class Perm implements Comparable<Perm>, ICNotification
 	{
 		public static final List<Perm> list = new ArrayList<>();
 		
@@ -174,7 +171,26 @@ public class ClientNotifications
 		public void onClicked()
 		{
 			if(notification.mouse != null && notification.mouse.click != null)
-				notification.mouse.click.onClicked(notification.mouse);
+				notification.mouse.click.onClicked(notification.mouse.val);
 		}
+		
+		public String getID()
+		{ return notification.ID; }
+	}
+	
+	private static interface ICNotification
+	{
+		String getID();
+	}
+	
+	private static class ICNRemoveFilter<E extends ICNotification> implements RemoveFilter<E>
+	{
+		private final String ID;
+		
+		public ICNRemoveFilter(String s)
+		{ ID = String.valueOf(s); }
+		
+		public boolean remove(E n)
+		{ return String.valueOf(n.getID()).equals(ID); }
 	}
 }

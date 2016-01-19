@@ -12,7 +12,16 @@ ftbl:invalid_subcmd=Invalid subcommand: '%s'!
 ftbl:owner=Owner: %s
 ftbl:delete_item=Do you want to delete '%s'?
 ftbl:label.server_forced=Server overrides to '%s'
-ftbl:reload_client_config=Reload client with:
+ftbl:reload_client_config=Server Reloaded. You can
+
+ftbl:button.shortcut.action=Action
+ftbl:button.shortcut.data=Action Data
+ftbl:button.shortcut.key=Key
+ftbl:button.shortcut.icon=Icon
+ftbl:button.shortcut.title=Title
+ftbl:button.shortcut.priority=Priority
+ftbl:button.shortcut.add_key=Add Key Shortcut
+ftbl:button.shortcut.add_button=Add Button Shortcut
 
 #Buttons
 ftbl:button.settings=Settings
@@ -39,6 +48,8 @@ ftbl:label.on=On
 ftbl:label.off=Off
 ftbl:label.online=Online
 ftbl:label.offline=Offline
+ftbl:label.whitelist=Whitelist
+ftbl:label.blacklist=Blacklist
 
 #Colors
 ftbl:color.black=Black
@@ -73,7 +84,7 @@ ftbl:dside.front=Front
 ftbl:dside.left=Left
 ftbl:dside.right=Right
 
-#Config
+#ClientConfig
 client_config=Client Config
 client_config.ftbl=FTBLib
 client_config.ftbl.item_ore_names=Item OreDict Names
@@ -81,7 +92,44 @@ client_config.ftbl.item_reg_names=Item Registry Names
 client_config.ftbl.debug_info=Debug Info
 client_config.ftbl.notifications=Notifications
 client_config.ftbl.reload_client_cmd=Client Reloading Command
+client_config.ftbl.action_buttons_on_top=Action Buttons On Top
+client_config.ftbl.player_options_shortcut=Player Options Shortcut
+client_config.ftbl.key_bindings=Key Bindings
+client_config.ftbl.edit_shortcuts=Edit Shortcuts
 
 client_config.sidebar_buttons=Sidebar Buttons
-client_config.sidebar_buttons.settings=Client Settings
-client_config.sidebar_buttons.notifications=Notifications
+
+#PlayerActions
+player_action.ftbl.settings=Client Settings
+player_action.ftbl.notifications=Notifications
+player_action.ftbl.toggle_gamemode=Toggle Gamemode
+player_action.ftbl.toggle_rain=Toggle Rain
+player_action.ftbl.toggle_day=Set time to Day
+player_action.ftbl.toggle_night=Set time to Night
+
+#Security Mode
+ftbl:security=Security
+ftbl:security.public=Public
+ftbl:security.private=Private
+ftbl:security.friends=Friends
+ftbl:security.group=Group
+
+#Redstone Mode
+ftbl:redstonemode=Redstone Mode
+ftbl:redstonemode.disabled=Disabled
+ftbl:redstonemode.high=Active High
+ftbl:redstonemode.low=Active Low
+
+#Inventory Mode
+ftbl:invmode=Automation
+ftbl:invmode.enabled=Enabled
+ftbl:invmode.onlyin=Insert Only
+ftbl:invmode.onlyout=Extract Only
+ftbl:invmode.disabled=Disabled
+
+#Click Actions
+click_action.cmd=Command
+click_action.show_cmd=Show Command
+click_action.url=Open URL
+click_action.file=Open File
+click_action.gui=Open Gui

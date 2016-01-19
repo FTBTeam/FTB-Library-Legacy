@@ -3,10 +3,12 @@ package ftb.lib.mod.client;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.FTBLib;
+import ftb.lib.api.client.*;
 import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.client.*;
 import ftb.lib.notification.ClientNotifications;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import java.util.*;
 
@@ -19,8 +21,8 @@ public class FTBLibRenderHandler
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void renderTick(TickEvent.RenderTickEvent e)
 	{
-		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
+		GlStateManager.pushMatrix();
 		
 		if(e.phase == TickEvent.Phase.START)
 		{
@@ -29,10 +31,10 @@ public class FTBLibRenderHandler
 			FTBLibClient.displayH = sr.getScaledHeight();
 		}
 		
-		if(e.phase == TickEvent.Phase.END && FTBLibClient.isPlaying()) ClientNotifications.renderTemp();
+		if(e.phase == TickEvent.Phase.END && FTBLibClient.isIngame()) ClientNotifications.renderTemp();
 		
-		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
+		GlStateManager.popAttrib();
 	}
 	
 	@SubscribeEvent
@@ -44,5 +46,12 @@ public class FTBLibRenderHandler
 				callbacks.get(i).onCallback();
 			callbacks.clear();
 		}
+	}
+	
+	@SubscribeEvent
+	public void renderWorld(RenderWorldLastEvent e)
+	{
+		LMFrustrumUtils.update();
+		if(FTBLib.ftbu != null) FTBLib.ftbu.renderWorld(e.partialTicks);
 	}
 }

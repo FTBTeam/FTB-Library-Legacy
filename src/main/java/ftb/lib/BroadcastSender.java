@@ -8,26 +8,21 @@ public class BroadcastSender implements ICommandSender
 {
 	public static final BroadcastSender inst = new BroadcastSender();
 	
-	public static final BroadcastSender mute = new BroadcastSender()
-	{
-		public void addChatMessage(IChatComponent ics) { }
-	};
-	
 	public String getCommandSenderName()
 	{ return "[Server]"; }
 	
 	public IChatComponent func_145748_c_()
 	{ return null; }
 	
-	public void addChatMessage(IChatComponent ics)
-	{ FTBLib.getServer().getConfigurationManager().sendChatMsgImpl(ics, true); }
+	public void addChatMessage(IChatComponent component)
+	{ FTBLib.getServer().getConfigurationManager().sendChatMsgImpl(component, true); }
 	
-	public boolean canCommandSenderUseCommand(int i, String s)
+	public boolean canCommandSenderUseCommand(int permLevel, String commandName)
 	{ return true; }
 	
 	public ChunkCoordinates getPlayerCoordinates()
-	{ return new ChunkCoordinates(0, 66, 0); }
+	{ return FTBLib.getServerWorld().getSpawnPoint(); }
 	
 	public World getEntityWorld()
-	{ return FTBLib.getServer().getEntityWorld(); }
+	{ return FTBLib.getServerWorld(); }
 }

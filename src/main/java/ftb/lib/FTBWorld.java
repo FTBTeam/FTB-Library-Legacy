@@ -3,10 +3,9 @@ package ftb.lib;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import net.minecraft.world.WorldServer;
 
 import java.io.File;
-import java.util.UUID;
 
 public class FTBWorld
 {
@@ -16,22 +15,18 @@ public class FTBWorld
 	{ return s.isServer() ? server : client; }
 	
 	public final Side side;
-	private final UUID worldID;
-	private final String worldIDS;
 	private GameMode currentMode;
 	
 	private File currentModeFile = null;
 	private File currentWorldIDFile = null;
 	
-	public FTBWorld(Side s, UUID id, String ids)
+	public FTBWorld()
 	{
-		side = s;
-		worldID = id;
-		worldIDS = ids;
+		side = Side.CLIENT;
 		currentMode = new GameMode("default");
 	}
 	
-	public FTBWorld()
+	public FTBWorld(WorldServer w)
 	{
 		side = Side.SERVER;
 		currentMode = GameModes.getGameModes().defaultMode;
@@ -44,26 +39,7 @@ public class FTBWorld
 		
 		for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
 		
-		FTBLib.logger.info("Current Mode: " + currentMode + " " + GameModes.getGameModes().modes.keySet());
-		
-		UUID worldID0 = null;
-		try
-		{
-			currentWorldIDFile = new File(FTBLib.folderWorld, "ftb_worldID.dat");
-			if(currentWorldIDFile.exists())
-				worldID0 = UUIDTypeAdapterLM.getUUID(LMFileUtils.loadAsText(currentWorldIDFile).trim());
-		}
-		catch(Exception ex) { /*ex.printStackTrace();*/ }
-		
-		if(worldID0 == null)
-		{
-			worldID0 = UUID.randomUUID();
-			try { LMFileUtils.save(currentWorldIDFile, UUIDTypeAdapterLM.getString(worldID0)); }
-			catch(Exception ex) { ex.printStackTrace(); }
-		}
-		
-		worldID = worldID0;
-		worldIDS = UUIDTypeAdapterLM.getString(worldID);
+		FTBLib.logger.info("Current Mode: " + currentMode);
 	}
 	
 	public GameMode getMode()
@@ -100,10 +76,4 @@ public class FTBWorld
 		
 		return 0;
 	}
-	
-	public UUID getWorldID()
-	{ return worldID; }
-	
-	public String getWorldIDS()
-	{ return worldIDS; }
 }

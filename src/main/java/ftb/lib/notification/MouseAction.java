@@ -1,7 +1,6 @@
 package ftb.lib.notification;
 
 import com.google.gson.*;
-import latmod.lib.PrimitiveType;
 import net.minecraft.util.IChatComponent;
 
 import java.lang.reflect.Type;
@@ -9,28 +8,16 @@ import java.lang.reflect.Type;
 public class MouseAction
 {
 	public ClickAction click;
-	public Object val;
+	public JsonElement val;
 	public IChatComponent[] hover;
 	
 	public MouseAction() {}
 	
-	public MouseAction(ClickAction c, Object v)
+	public MouseAction(ClickAction c, JsonElement v)
 	{
 		click = c;
-		val = v;
+		val = (v == null) ? JsonNull.INSTANCE : v;
 	}
-	
-	public String stringVal()
-	{ return val.toString(); }
-	
-	public int intVal()
-	{ return numVal().intValue(); }
-	
-	public Number numVal()
-	{ return (val == null) ? -1 : (Number) val; }
-	
-	public boolean boolVal()
-	{ return ((Boolean) val).booleanValue(); }
 	
 	public static class Serializer implements JsonSerializer<MouseAction>, JsonDeserializer<MouseAction>
 	{
@@ -42,7 +29,7 @@ public class MouseAction
 			if(src.click != null)
 			{
 				o.add("click", new JsonPrimitive(src.click.toString()));
-				if(src.val != null && !PrimitiveType.isNull(src.click.type)) o.add("val", context.serialize(src.val));
+				if(src.val != null && !src.val.isJsonNull()) o.add("val", src.val);
 			}
 			
 			if(src.hover != null && src.hover.length > 0)
@@ -66,8 +53,7 @@ public class MouseAction
 			if(o1.has("click"))
 			{
 				mouse.click = ClickActionRegistry.get(o1.get("click").getAsString());
-				if(mouse.click != null && !PrimitiveType.isNull(mouse.click.type) && o1.has("val"))
-					mouse.val = context.deserialize(o1.get("val"), mouse.click.type.typeClass);
+				if(mouse.click != null && o1.has("val")) mouse.val = o1.get("val");
 			}
 			
 			if(o1.has("hover"))

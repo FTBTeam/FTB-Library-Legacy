@@ -2,20 +2,25 @@ package ftb.lib.mod.client;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
-import ftb.lib.api.EventFTBWorldClient;
-import ftb.lib.client.FTBLibClient;
-import ftb.lib.item.*;
+import ftb.lib.api.*;
+import ftb.lib.api.client.*;
+import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.gui.PlayerActionRegistry;
+import ftb.lib.api.item.*;
 import ftb.lib.mod.FTBLibFinals;
-import latmod.lib.LMStringUtils;
+import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.*;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.event.entity.player.*;
+import org.lwjgl.input.Keyboard;
 
-import java.util.*;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler
@@ -23,32 +28,19 @@ public class FTBLibClientEventHandler
 	public static final FTBLibClientEventHandler instance = new FTBLibClientEventHandler();
 	
 	@SubscribeEvent
-	public void preTexturesLoaded(TextureStitchEvent.Pre e)
-	{
-		if(e.map.getTextureType() == 0)
-		{
-			FTBLibClient.blockNullIcon = e.map.registerIcon("ftbl:empty_block");
-			FTBLibClient.clearCachedData();
-		}
-		else if(e.map.getTextureType() == 1) FTBLibClient.unknownItemIcon = e.map.registerIcon("ftbl:unknown");
-	}
-	
-	@SubscribeEvent
 	public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
 	{
 		ServerData sd = FTBLibClient.mc.func_147104_D();
-		String s = (sd == null || sd.serverIP.isEmpty()) ? "localhost" : sd.serverIP.replace('.', '_');
-		FTBWorld.client = new FTBWorld(Side.CLIENT, new UUID(0L, 0L), s);
-		
-		EventFTBWorldClient event = new EventFTBWorldClient(FTBWorld.client, true);
+		EventFTBWorldClient event = new EventFTBWorldClient(null);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
+		FTBWorld.client = null;
 		event.post();
 	}
 	
 	@SubscribeEvent
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
-		EventFTBWorldClient event = new EventFTBWorldClient(null, false);
+		EventFTBWorldClient event = new EventFTBWorldClient(null);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldClient(event);
 		event.post();
 		FTBWorld.client = null;
@@ -61,7 +53,7 @@ public class FTBLibClientEventHandler
 		
 		if(FTBLibModClient.item_reg_names.get())
 		{
-			e.toolTip.add(LMInvUtils.getRegName(e.itemStack));
+			e.toolTip.add(LMInvUtils.getRegName(e.itemStack).toString());
 		}
 		
 		if(FTBLibModClient.item_ore_names.get())
@@ -75,6 +67,8 @@ public class FTBLibClientEventHandler
 					e.toolTip.add("> " + or);
 			}
 		}
+		
+		if(FTBLib.ftbu != null) FTBLib.ftbu.onTooltip(e);
 	}
 	
 	@SubscribeEvent
@@ -82,8 +76,6 @@ public class FTBLibClientEventHandler
 	{
 		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
-			if(FTBLibModClient.debug_info.get()) e.left.add(FTBLibClient.mc.debug);
-			
 			if(FTBLibFinals.DEV)
 			{
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
@@ -92,20 +84,42 @@ public class FTBLibClientEventHandler
 		}
 		else
 		{
-			e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
-			
-			if(FTBLibModClient.debug_info.get())
+			//if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
+		}
+	}
+	
+	@SubscribeEvent
+	public void onEntityRightClick(EntityInteractEvent e)
+	{
+		if(e.entity.worldObj.isRemote && FTBLibClient.isIngame() && FTBLibModClient.player_options_shortcut.get() && e.entityPlayer.getGameProfile().getId().equals(FTBLibClient.mc.thePlayer.getGameProfile().getId()))
+		{
+			ILMPlayer self = FTBLibClient.getClientLMPlayer();
+			ILMPlayer other = (FTBLib.ftbu == null) ? new TempLMPlayerFromEntity(Side.CLIENT, ((EntityPlayer) e.target)) : FTBLib.ftbu.getLMPlayer(e.target);
+			if(other != null)
 			{
-				e.right.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
-				
-				MovingObjectPosition mop = FTBLibClient.mc.objectMouseOver;
-				
-				if(mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);
+				if(!a.isEmpty()) FTBLibClient.openGui(new GuiPlayerActions(self, other, a));
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onKeyEvent(InputEvent.KeyInputEvent e)
+	{
+		if(Keyboard.getEventKeyState())
+		{
+			int key = Keyboard.getEventKey();
+			
+			try
+			{
+				for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
 				{
-					e.right.add(null);
-					e.right.add("Block: " + LMStringUtils.stripI(mop.blockX, mop.blockY, mop.blockZ) + ", Side: " + mop.sideHit);
-					e.right.add(LMInvUtils.getRegName(FTBLibClient.mc.theWorld.getBlock(mop.blockX, mop.blockY, mop.blockZ)) + " :: " + FTBLibClient.mc.theWorld.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ));
+					if(s.isKeyPressed(key)) s.action.onClicked(s.data);
 				}
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
 			}
 		}
 	}

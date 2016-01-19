@@ -23,7 +23,7 @@ public class ConfigRegistry
 			{
 				map.put(g.ID, f);
 				ConfigGroup g1 = g.generateSynced(false);
-				if(!g1.entryMap.isEmpty()) synced.add(g1, false);
+				if(!g1.entryMap().isEmpty()) synced.add(g1, false);
 			}
 		}
 	}

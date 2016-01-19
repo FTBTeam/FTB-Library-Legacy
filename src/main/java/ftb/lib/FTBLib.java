@@ -3,12 +3,12 @@ package ftb.lib;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.gui.IGuiTile;
+import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import ftb.lib.notification.Notification;
@@ -17,9 +17,10 @@ import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +28,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fluids.*;
 import org.apache.logging.log4j.*;
 
 import java.io.File;
@@ -63,9 +65,8 @@ public class FTBLib
 		
 		if(dev_logger instanceof org.apache.logging.log4j.core.Logger)
 		{
-			if(FTBLibFinals.DEV)
-				((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.ALL);
-			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
+			if(FTBLibFinals.DEV) ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(Level.ALL);
+			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(Level.OFF);
 		}
 		else
 			logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
@@ -73,6 +74,8 @@ public class FTBLib
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
+		if(FTBWorld.server == null) return;
+		
 		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
 		GameModes.reload();
@@ -83,11 +86,40 @@ public class FTBLib
 		
 		if(printMessage)
 			printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
-		if(reloadClient) new MessageReload(FTBWorld.server).sendTo(null);
+		new MessageReload(FTBWorld.server, reloadClient).sendTo(null);
 	}
 	
 	public static IChatComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent) o : new ChatComponentText("" + o); }
+	
+	public static void addItem(Item i, String name)
+	{ GameRegistry.registerItem(i, name); }
+	
+	public static void addBlock(Block b, Class<? extends ItemBlock> c, String name)
+	{ GameRegistry.registerBlock(b, c, name); }
+	
+	public static void addBlock(Block b, String name)
+	{ addBlock(b, ItemBlock.class, name); }
+	
+	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
+	{
+		if(alt == null || alt.length == 0) GameRegistry.registerTileEntity(c, s);
+		else GameRegistry.registerTileEntityWithAlternatives(c, s, alt);
+	}
+	
+	public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
+	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
+	
+	public static void addWorldGenerator(IWorldGenerator i, int w)
+	{ GameRegistry.registerWorldGenerator(i, w); }
+	
+	public static Fluid addFluid(Fluid f)
+	{
+		Fluid f1 = FluidRegistry.getFluid(f.getName());
+		if(f1 != null) return f1;
+		FluidRegistry.registerFluid(f);
+		return f;
+	}
 	
 	/**
 	 * Prints message to chat (doesn't translate it)
@@ -105,6 +137,12 @@ public class FTBLib
 	public static Side getEffectiveSide()
 	{ return FMLCommonHandler.instance().getEffectiveSide(); }
 	
+	public static boolean isDedicatedServer()
+	{
+		MinecraftServer mcs = getServer();
+		return (mcs == null) ? false : mcs.isDedicatedServer();
+	}
+	
 	public static String getPath(ResourceLocation res)
 	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
 	
@@ -118,6 +156,8 @@ public class FTBLib
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
 		ArrayList<EntityPlayerMP> l = new ArrayList<>();
+		if(getEffectiveSide().isClient()) return l;
+		
 		if(hasOnlinePlayers())
 		{
 			l.addAll(getServer().getConfigurationManager().playerEntityList);
@@ -163,13 +203,13 @@ public class FTBLib
 		{
 			List<EntityPlayerMP> players = getAllOnlinePlayers(null);
 			for(int j = 0; j < players.size(); j++)
-				l.add(players.get(j).getCommandSenderName());
+				l.add(players.get(j).getGameProfile().getName());
 		}
 		else l.addAll(UsernameCache.getMap().values());
 		return l;
 	}
 	
-	public static boolean remap(MissingMapping m, String id, Item i)
+	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Item i)
 	{
 		if(m.type == GameRegistry.Type.ITEM && id.equals(m.name))
 		{
@@ -180,7 +220,7 @@ public class FTBLib
 		return false;
 	}
 	
-	public static boolean remap(MissingMapping m, String id, Block b)
+	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Block b)
 	{
 		if(id.equals(m.name))
 		{
@@ -212,7 +252,7 @@ public class FTBLib
 	public static int runCommand(ICommandSender ics, String s) throws CommandException
 	{ return getServer().getCommandManager().executeCommand(ics, s); }
 	
-	public static int runCommand(ICommandSender ics, String cmd, String[] args)
+	public static int runCommand(ICommandSender ics, String cmd, String[] args) throws CommandException
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(cmd);
@@ -261,7 +301,7 @@ public class FTBLib
 	}
 	
 	public static boolean isOP(GameProfile p)
-	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152596_g(p); }
+	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152603_m().func_152683_b(p) != null; }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }

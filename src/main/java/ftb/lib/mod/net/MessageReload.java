@@ -4,21 +4,29 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.net.*;
 import ftb.lib.mod.*;
+import ftb.lib.mod.client.*;
+import ftb.lib.notification.*;
 import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.*;
 
 public class MessageReload extends MessageLM
 {
 	public MessageReload() { super(ByteCount.INT); }
 	
-	public MessageReload(FTBWorld w)
+	public MessageReload(FTBWorld w, boolean reload)
 	{
 		this();
-		w.writeReloadData(io);
-		writeSyncedConfig(io);
+		io.writeBoolean(reload);
+		
+		if(reload)
+		{
+			w.writeReloadData(io);
+			writeSyncedConfig(io);
+		}
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -26,6 +34,18 @@ public class MessageReload extends MessageLM
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
+		boolean reload = io.readBoolean();
+		
+		if(!reload)
+		{
+			Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 7000);
+			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
+			n.setColor(0xFF333333);
+			ClientNotifications.add(n);
+			return null;
+		}
+		
 		long ms = LMUtils.millis();
 		FTBWorld.client.readReloadData(io);
 		readSyncedConfig(io);
@@ -37,6 +57,7 @@ public class MessageReload extends MessageLM
 	{
 		if(ms == 0L) ms = LMUtils.millis();
 		GameModes.reload();
+		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
 		EventFTBReload event = new EventFTBReload(FTBWorld.client, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);

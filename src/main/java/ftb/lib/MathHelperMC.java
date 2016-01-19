@@ -18,10 +18,10 @@ public class MathHelperMC
 		//int i = floor(el.rotationYaw * 4D / 360D + 0.5D) & 3;
 		int i = MathHelperLM.getRotations(el.rotationYaw, 4);
 		if(i == 0) return 2;
-		else if(i == 1) return 5;
+		else if(i == 1) return 4;
 		else if(i == 2) return 3;
-		else if(i == 3) return 4;
-		return 6;
+		else if(i == 3) return 5;
+		return -1;
 	}
 	
 	public static int get3DRotation(World w, int x, int y, int z, EntityLivingBase el)
@@ -88,7 +88,7 @@ public class MathHelperMC
 	public static MovingObjectPosition collisionRayTrace(World w, int x, int y, int z, Vec3 start, Vec3 end, List<AxisAlignedBB> boxes)
 	{
 		AxisAlignedBB[] boxesa = new AxisAlignedBB[boxes.size()];
-		for(int i = 0; i < boxesa.length; i++) boxesa[i] = boxes.get(i).copy();
+		for(int i = 0; i < boxesa.length; i++) boxesa[i] = boxes.get(i).addCoord(0D, 0D, 0D);
 		return collisionRayTrace(w, x, y, z, start, end, boxesa);
 	}
 	
@@ -123,14 +123,14 @@ public class MathHelperMC
 		{
 			int side = -1;
 			
-			if(v == xmin) side = 4;
-			if(v == xmax) side = 5;
+			if(v == xmin) side = 5;
+			if(v == xmax) side = 4;
 			if(v == ymin) side = 0;
 			if(v == ymax) side = 1;
 			if(v == zmin) side = 2;
 			if(v == zmax) side = 3;
 			
-			return new MovingObjectPosition(x, y, z, side, v.addVector(x, y, z));
+			return new MovingObjectPosition(x, y, z, side, v.addVector(x, y, z), true);
 		}
 	}
 	
@@ -144,7 +144,7 @@ public class MathHelperMC
 	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY; }
 	
 	public static MovingObjectPosition getMOPFrom(int x, int y, int z, int s, float hitX, float hitY, float hitZ)
-	{ return new MovingObjectPosition(x, y, z, s, Vec3.createVectorHelper(x + hitX, y + hitY, z + hitZ)); }
+	{ return new MovingObjectPosition(x, y, z, s, Vec3.createVectorHelper(x + hitX, y + hitY, z + hitZ), true); }
 	
 	public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
 	{ return AxisAlignedBB.getBoundingBox(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D); }

@@ -4,7 +4,6 @@ public class OtherMods
 {
 	// Util/core/lib mods //
 	public static final String NEI = "NotEnoughItems";
-	public static final String FMP = "ForgeMicroblock";
 	public static final String WAILA = "Waila";
 	public static final String BAUBLES = "Baubles";
 	

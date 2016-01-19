@@ -1,68 +1,73 @@
 package ftb.lib.notification;
 
+import com.google.gson.JsonElement;
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.FTBLibClient;
-import latmod.lib.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.gui.GuiScreenRegistry;
+import ftb.lib.mod.FTBLibMod;
+import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.*;
 
 import java.io.File;
 import java.net.URI;
 
 public abstract class ClickAction extends FinalIDObject
 {
-	public final PrimitiveType type;
-	
-	public ClickAction(String s, PrimitiveType t)
+	public ClickAction(String s)
 	{
 		super(s);
-		type = t;
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public abstract void onClicked(MouseAction c);
+	public abstract void onClicked(JsonElement data);
+	
+	public String getDisplayName()
+	{ return FTBLibMod.proxy.translate("click_action." + ID); }
 	
 	// Static //
 	
-	public static final ClickAction CMD = new ClickAction("cmd", PrimitiveType.STRING)
+	public static final ClickAction CMD = new ClickAction("cmd")
 	{
 		@SideOnly(Side.CLIENT)
-		public void onClicked(MouseAction c)
-		{ FTBLibClient.execClientCommand(c.stringVal()); }
+		public void onClicked(JsonElement data)
+		{ FTBLibClient.execClientCommand("/" + data.getAsString()); }
 	};
 	
-	public static final ClickAction SHOW_CMD = new ClickAction("show_cmd", PrimitiveType.STRING)
+	public static final ClickAction SHOW_CMD = new ClickAction("show_cmd")
 	{
 		@SideOnly(Side.CLIENT)
-		public void onClicked(MouseAction c)
-		{ FTBLibClient.mc.displayGuiScreen(new GuiChat(c.stringVal())); }
+		public void onClicked(JsonElement data)
+		{ FTBLibClient.openGui(new GuiChat(data.getAsString())); }
 	};
 	
-	public static final ClickAction URL = new ClickAction("url", PrimitiveType.STRING)
+	public static final ClickAction URL = new ClickAction("url")
 	{
 		@SideOnly(Side.CLIENT)
-		public void onClicked(MouseAction c)
+		public void onClicked(JsonElement data)
 		{
-			try { LMUtils.openURI(new URI(c.stringVal())); }
+			try { LMUtils.openURI(new URI(data.getAsString())); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
 	};
 	
-	public static final ClickAction FILE = new ClickAction("file", PrimitiveType.STRING)
+	public static final ClickAction FILE = new ClickAction("file")
 	{
 		@SideOnly(Side.CLIENT)
-		public void onClicked(MouseAction c)
+		public void onClicked(JsonElement data)
 		{
-			try { LMUtils.openURI(new File(c.stringVal()).toURI()); }
+			try { LMUtils.openURI(new File(data.getAsString()).toURI()); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
 	};
 	
-	public static final ClickAction GUI = new ClickAction("gui", PrimitiveType.STRING)
+	public static final ClickAction GUI = new ClickAction("gui")
 	{
 		@SideOnly(Side.CLIENT)
-		public void onClicked(MouseAction c)
+		public void onClicked(JsonElement data)
 		{
+			GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc.thePlayer, data.getAsString());
+			if(gui != null) FTBLibClient.openGui(gui);
 		}
 	};
 }

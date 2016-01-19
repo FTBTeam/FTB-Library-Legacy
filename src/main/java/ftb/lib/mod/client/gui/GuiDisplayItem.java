@@ -1,10 +1,10 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.client.GlStateManager;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.item.ItemDisplay;
-import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.item.ItemDisplay;
+import ftb.lib.mod.FTBLibMod;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -14,15 +14,15 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiDisplayItem extends GuiLM
 {
-	public static final ResourceLocation texture = new ResourceLocation(FTBLibFinals.MOD_ID_LC, "textures/gui/displayitem.png");
+	public static final ResourceLocation texture = FTBLibMod.mod.getLocation("textures/gui/displayitem.png");
 	
 	public ItemDisplay itemDisplay;
 	
 	public GuiDisplayItem(ItemDisplay i)
 	{
 		super(null, texture);
-		xSize = 144;
-		ySize = 182;
+		mainPanel.width = 144;
+		mainPanel.height = 182;
 		itemDisplay = i;
 	}
 	
@@ -36,24 +36,24 @@ public class GuiDisplayItem extends GuiLM
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(guiLeft + xSize / 2F, guiTop + ySize / 2F, 0F);
+		GlStateManager.translate(mainPanel.posX + mainPanel.width / 2F, mainPanel.posY + mainPanel.height / 2F, 0F);
 		GlStateManager.scale(itemDisplay.scale, itemDisplay.scale, 1F);
 		itemDisplay.item.stackSize = 1;
-		drawItem(itemDisplay.item, -8, -8);
+		GuiLM.drawItem(this, itemDisplay.item, -8, -8);
 		GlStateManager.popMatrix();
 	}
 	
 	public void drawText(List<String> l)
 	{
 		if(itemDisplay.title != null && !itemDisplay.title.isEmpty())
-			drawCenteredString(fontRendererObj, itemDisplay.title, guiLeft + xSize / 2, guiTop + 6, 0xFFFFFFFF);
+			drawCenteredString(fontRendererObj, itemDisplay.title, mainPanel.posX + mainPanel.width / 2, mainPanel.posY + 6, 0xFFFFFFFF);
 		if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty()) l.addAll(itemDisplay.desc);
 		super.drawText(l);
 	}
 	
 	public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
 	{
-		if(is != null && x > guiLeft && x < guiLeft + xSize && y > guiTop && y < guiTop + ySize)
+		if(is != null && x > mainPanel.posX && x < mainPanel.posX + mainPanel.width && y > mainPanel.posY && y < mainPanel.posY + mainPanel.height)
 		{
 			itemDisplay = new ItemDisplay(is.copy(), is.getDisplayName(), null, itemDisplay.scale);
 			is.stackSize = 0;

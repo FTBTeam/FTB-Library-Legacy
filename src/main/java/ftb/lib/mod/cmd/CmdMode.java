@@ -2,9 +2,9 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.GameModes;
-import ftb.lib.cmd.*;
+import ftb.lib.api.cmd.*;
 import ftb.lib.mod.config.FTBLibConfigCmd;
-import latmod.lib.*;
+import latmod.lib.LMMapUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -26,7 +26,7 @@ public class CmdMode extends CommandSubLM
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <modeID>"; }
 		
-		public String[] getTabStrings(ICommandSender ics, String[] args, int i)
+		public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
 		{
 			if(args.length == 1) return LMMapUtils.toKeyStringArray(GameModes.getGameModes().modes);
 			return super.getTabStrings(ics, args, i);
@@ -81,7 +81,7 @@ public class CmdMode extends CommandSubLM
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", LMStringUtils.strip(LMListUtils.toStringArray(GameModes.getGameModes().modes.keySet())));
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.getGameModes().modes.keySet()));
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			return c;
 		}

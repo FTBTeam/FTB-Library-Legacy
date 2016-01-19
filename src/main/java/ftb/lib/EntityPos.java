@@ -1,10 +1,9 @@
 package ftb.lib;
 
 import latmod.lib.MathHelperLM;
-import latmod.lib.util.VecLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.*;
 
 public class EntityPos implements Cloneable
 {
@@ -70,11 +69,11 @@ public class EntityPos implements Cloneable
 	public int intZ()
 	{ return MathHelperLM.floor(z); }
 	
-	public ChunkCoordinates toChunkCoordinates()
+	public ChunkCoordinates toBlockPos()
 	{ return new ChunkCoordinates(intX(), intY(), intZ()); }
 	
-	public VecLM toVertex()
-	{ return new VecLM(x, y, z); }
+	public Vec3 toVec3()
+	{ return Vec3.createVectorHelper(x, y, z); }
 	
 	public int[] toIntArray()
 	{ return new int[] {intX(), intY(), intZ(), dim}; }
@@ -86,49 +85,5 @@ public class EntityPos implements Cloneable
 	{
 		if(pos == null || pos.length < 4) return null;
 		return new EntityPos(pos[0] + 0.5D, pos[1] + 0.5D, pos[2] + 0.5D, pos[3]);
-	}
-	
-	public static class Rot extends EntityPos
-	{
-		public float rotYaw, rotPitch;
-		
-		public Rot() { }
-		
-		public Rot(Entity e)
-		{ super(e); }
-		
-		public boolean equalsPosRot(Entity e)
-		{ return equalsPos(e) && rotYaw == e.rotationYaw && rotPitch == e.rotationPitch; }
-		
-		public Rot(double x, double y, double z, int dim, float yaw, float pitch)
-		{
-			super(x, y, z, dim);
-			rotYaw = yaw;
-			rotPitch = pitch;
-		}
-		
-		public void set(Entity e)
-		{
-			super.set(e);
-			rotYaw = e.rotationYaw;
-			rotPitch = e.rotationPitch;
-		}
-		
-		public void readFromNBT(NBTTagCompound tag)
-		{
-			super.readFromNBT(tag);
-			rotYaw = tag.getFloat("YR");
-			rotPitch = tag.getFloat("PR");
-		}
-		
-		public void writeToNBT(NBTTagCompound tag)
-		{
-			super.writeToNBT(tag);
-			tag.setFloat("YR", rotYaw);
-			tag.setFloat("PR", rotPitch);
-		}
-		
-		public Rot clone()
-		{ return new Rot(x, y, z, dim, rotYaw, rotPitch); }
 	}
 }

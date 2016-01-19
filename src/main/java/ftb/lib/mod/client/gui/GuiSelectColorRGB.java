@@ -1,14 +1,13 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.EnumMCColor;
+import ftb.lib.*;
+import ftb.lib.api.client.*;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
-import ftb.lib.client.*;
-import ftb.lib.gui.GuiLM;
-import ftb.lib.gui.widgets.*;
-import ftb.lib.mod.FTBLibFinals;
+import ftb.lib.api.gui.widgets.*;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +18,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiSelectColorRGB extends GuiLM
 {
-	public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID_LC, "textures/gui/colselector_rgb.png");
+	public static final ResourceLocation tex = FTBLibMod.mod.getLocation("textures/gui/colselector_rgb.png");
 	public static final TextureCoords col_tex = new TextureCoords(tex, 98, 13, 32, 16);
 	
 	public static final int SLIDER_W = 6, SLIDER_H = 13, SLIDER_BAR_W = 86;
@@ -38,15 +37,14 @@ public class GuiSelectColorRGB extends GuiLM
 	public GuiSelectColorRGB(IColorCallback cb, int col, Object id, boolean instant)
 	{
 		super(null, tex);
-		hideNEI = true;
 		callback = cb;
 		initCol = new LMColor(col);
 		currentColor = new LMColor(initCol.color());
 		colorID = id;
 		isInstant = instant;
 		
-		xSize = 98;
-		ySize = 76;
+		mainPanel.width = 98;
+		mainPanel.height = 76;
 		
 		colorInit = new ButtonLM(this, 6, 6, col_tex.widthI(), col_tex.heightI())
 		{
@@ -76,10 +74,10 @@ public class GuiSelectColorRGB extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				playClickSound();
+				FTBLibClient.playClickSound();
 				FTBLibModClient.open_hsb_cg.set(true);
-				ClientConfigRegistry.provider.save();
-				mc.displayGuiScreen(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
+				ClientConfigRegistry.provider().save();
+				FTBLibClient.openGui(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
 			}
 		};
 		
@@ -129,9 +127,9 @@ public class GuiSelectColorRGB extends GuiLM
 		GlStateManager.color(currentColR.value, currentColG.value, currentColB.value, 1F);
 		colorCurrent.render(col_tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		switchHSB.render(GuiIcons.hsb);
+		switchHSB.render(GuiIcons.color_hsb);
 		
-		setTexture(tex);
+		FTBLibClient.setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		
@@ -143,8 +141,8 @@ public class GuiSelectColorRGB extends GuiLM
 		double u1 = slider_col_tex.maxU;
 		double v1 = slider_col_tex.maxV;
 		
-		int x = guiLeft + currentColR.posX;
-		int y = guiTop + currentColR.posY;
+		int x = mainPanel.posX + currentColR.posX;
+		int y = mainPanel.posY + currentColR.posY;
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		
@@ -161,8 +159,8 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
-		x = guiLeft + currentColG.posX;
-		y = guiTop + currentColG.posY;
+		x = mainPanel.posX + currentColG.posX;
+		y = mainPanel.posY + currentColG.posY;
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, 0F, currentColB.value, 1F);
 		GL11.glTexCoord2d(u0, v0);
@@ -176,8 +174,8 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glVertex3d(x + w, y + 0, z);
 		GL11.glEnd();
 		
-		x = guiLeft + currentColB.posX;
-		y = guiTop + currentColB.posY;
+		x = mainPanel.posX + currentColB.posX;
+		y = mainPanel.posY + currentColB.posY;
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, currentColG.value, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0);
@@ -192,7 +190,7 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glEnd();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableTexture();
+		GlStateManager.enableTexture2D();
 		GL11.glShadeModel(GL11.GL_FLAT);
 		
 		currentColR.renderSlider(slider_tex);
@@ -218,7 +216,7 @@ public class GuiSelectColorRGB extends GuiLM
 	
 	public void closeGui(boolean set)
 	{
-		playClickSound();
+		FTBLibClient.playClickSound();
 		callback.onColorSelected(new ColorSelected(colorID, set, set ? currentColor : initCol, true));
 	}
 }
