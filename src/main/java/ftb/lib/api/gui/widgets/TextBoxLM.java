@@ -11,22 +11,28 @@ import org.lwjgl.input.Keyboard;
 public class TextBoxLM extends WidgetLM
 {
 	public boolean isSelected = false;
-	public String text = "";
+	private String text = "";
 	public int charLimit = -1;
+	public int textRenderX = 4, textRenderY = 4;
+	public int textColor = 0xFFFFFFFF;
+	private boolean isValid = true;
 	
 	public TextBoxLM(IGuiLM g, int x, int y, int w, int h)
 	{
 		super(g, x, y, w, h);
+		text = getText();
 	}
 	
 	public void mousePressed(int b)
 	{
+		if(charLimit == 0) return;
+		
 		if(mouseOver())
 		{
 			isSelected = true;
 			Keyboard.enableRepeatEvents(true);
 			
-			if(b == 1 && text.length() > 0)
+			if(b == 1 && getText().length() > 0)
 			{
 				clear();
 				textChanged();
@@ -39,19 +45,19 @@ public class TextBoxLM extends WidgetLM
 		}
 	}
 	
-	public boolean canAddChar(char c)
-	{ return charLimit == -1 || text.length() + 1 <= charLimit; }
-	
 	public boolean keyPressed(int key, char keyChar)
 	{
+		if(charLimit == 0) return false;
+		
 		if(isSelected)
 		{
 			if(key == Keyboard.KEY_BACK)
 			{
+				text = getText();
 				if(text.length() > 0)
 				{
 					if(GuiScreen.isCtrlKeyDown()) clear();
-					else text = text.substring(0, text.length() - 1);
+					else setText(text.substring(0, text.length() - 1));
 					textChanged();
 				}
 			}
@@ -61,23 +67,27 @@ public class TextBoxLM extends WidgetLM
 			}
 			else if(key == Keyboard.KEY_TAB)
 			{
-				tabPressed();
-				isSelected = false;
+				if(isValid())
+				{
+					tabPressed();
+					isSelected = false;
+				}
 			}
 			else if(key == Keyboard.KEY_RETURN)
 			{
-				returnPressed();
-				isSelected = false;
+				if(isValid())
+				{
+					returnPressed();
+					isSelected = false;
+				}
 			}
 			else
 			{
-				if(ChatAllowedCharacters.isAllowedCharacter(keyChar))
+				text = getText();
+				if((charLimit == -1 || text.length() + 1 <= charLimit) && ChatAllowedCharacters.isAllowedCharacter(keyChar))
 				{
-					if(canAddChar(keyChar))
-					{
-						text += keyChar;
-						textChanged();
-					}
+					setText(text + keyChar);
+					textChanged();
 				}
 			}
 			
@@ -100,34 +110,35 @@ public class TextBoxLM extends WidgetLM
 	}
 	
 	public void clear()
+	{ setText(""); }
+	
+	public void setText(String s)
 	{
-		text = "";
+		text = s == null ? "" : s;
 	}
 	
 	public String getText()
-	{
-		if(text == null) text = "";
-		return text;
-	}
+	{ return text; }
 	
-	public void render(int x, int y, int col)
+	public void renderWidget()
 	{
 		String s = getText();
 		
-		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) s += '_';
+		String ns = s;
+		
+		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) ns += '_';
 		
 		if(s.length() > 0)
-			gui.getFontRenderer().drawString(s, gui.getMainPanel().posX + x, gui.getMainPanel().posY + y, col);
+		{
+			int col = textColor;
+			if(!isValid()) col = 0xFFFF0000;
+			
+			if(textRenderX == -1)
+				gui.getFontRenderer().drawString(ns, getAX() + textRenderX - (gui.getFontRenderer().getStringWidth(s) / 2) + width / 2, getAY() + textRenderY, col);
+			else gui.getFontRenderer().drawString(ns, getAX() + textRenderX, getAY() + textRenderY, col);
+		}
 	}
 	
-	public void renderCentred(int x, int y, int col)
-	{
-		String s = getText();
-		String os = s + "";
-		
-		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) s += '_';
-		
-		if(s.length() > 0)
-			gui.getFontRenderer().drawString(s, (x - gui.getFontRenderer().getStringWidth(os) / 2), gui.getMainPanel().posY + y, col);
-	}
+	public boolean isValid()
+	{ return true; }
 }

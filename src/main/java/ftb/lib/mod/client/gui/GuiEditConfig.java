@@ -362,7 +362,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 						{
 							if(c.set)
 							{
-								((ConfigEntryDouble) entry).set(c.getF());
+								((ConfigEntryDouble) entry).set(c.getD());
 								gui.onChanged();
 							}
 							

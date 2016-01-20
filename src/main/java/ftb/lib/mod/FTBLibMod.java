@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
+import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.item.ODItems;
 import ftb.lib.mod.cmd.*;
@@ -68,12 +69,16 @@ public class FTBLibMod
 	{
 		if(FTBLibConfigCmd.override_list.get()) e.registerServerCommand(new CmdListOverride());
 		if(FTBLibConfigCmd.override_help.get()) e.registerServerCommand(new CmdHelpOverride());
-		e.registerServerCommand(new CmdEditConfig());
-		e.registerServerCommand(new CmdMode());
-		e.registerServerCommand(new CmdReload());
-		e.registerServerCommand(new CmdNotify());
-		e.registerServerCommand(new CmdSetItemName());
+		addCmd(e, new CmdEditConfig());
+		addCmd(e, new CmdMode());
+		addCmd(e, new CmdReload());
+		addCmd(e, new CmdNotify());
+		addCmd(e, new CmdSetItemName());
+		addCmd(e, new CmdTrashCan());
 	}
+	
+	private void addCmd(FMLServerStartingEvent e, CommandLM c)
+	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)

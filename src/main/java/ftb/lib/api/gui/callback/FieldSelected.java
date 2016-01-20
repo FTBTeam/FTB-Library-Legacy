@@ -21,6 +21,6 @@ public class FieldSelected
 	public int getI()
 	{ return Integer.parseInt(getS()); }
 	
-	public float getF()
-	{ return Float.parseFloat(getS()); }
+	public double getD()
+	{ return Double.parseDouble(getS()); }
 }

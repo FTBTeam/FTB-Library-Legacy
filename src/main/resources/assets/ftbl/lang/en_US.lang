@@ -106,6 +106,7 @@ player_action.ftbl.toggle_gamemode=Toggle Gamemode
 player_action.ftbl.toggle_rain=Toggle Rain
 player_action.ftbl.toggle_day=Set time to Day
 player_action.ftbl.toggle_night=Set time to Night
+player_action.ftbl.trash_can=Trash Can
 
 #Security Mode
 ftbl:security=Security
