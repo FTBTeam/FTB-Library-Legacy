@@ -86,4 +86,6 @@ public class GuiIcons
 	public static final TextureCoords toggle_rain = getIcon("toggle_rain");
 	public static final TextureCoords toggle_day = getIcon("toggle_day");
 	public static final TextureCoords toggle_night = getIcon("toggle_night");
+	public static final TextureCoords toggle_chunk_bounds = getIcon("toggle_chunk_bounds");
+	public static final TextureCoords toggle_light_values = getIcon("toggle_light_values");
 }

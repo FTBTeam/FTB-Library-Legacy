@@ -3,6 +3,7 @@ package ftb.lib.api.client;
 import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -11,7 +12,7 @@ public class LMFrustrumUtils
 	public static boolean isFirstPerson;
 	public static int currentDim;
 	public static double playerX, playerY, playerZ;
-	//public static double renderX, renderY, renderZ;
+	public static double renderX, renderY, renderZ;
 	public static final Frustum frustum = new Frustum();
 	public static long playerPosHash;
 	
@@ -29,9 +30,9 @@ public class LMFrustrumUtils
 		playerX = mc.getRenderManager().viewerPosX;
 		playerY = mc.getRenderManager().viewerPosY;
 		playerZ = mc.getRenderManager().viewerPosZ;
-		//renderX = mc.getRenderManager().renderPosX;
-		//renderY = mc.getRenderManager().renderPosY;
-		//renderZ = mc.getRenderManager().renderPosZ;
+		renderX = TileEntityRendererDispatcher.staticPlayerX;
+		renderY = TileEntityRendererDispatcher.staticPlayerY;
+		renderZ = TileEntityRendererDispatcher.staticPlayerZ;
 		playerPosHash = Math.abs(LMUtils.longHashCode(currentDim, playerX, playerY, playerZ) + 1);
 		frustum.setPosition(playerX, playerY, playerZ);
 	}

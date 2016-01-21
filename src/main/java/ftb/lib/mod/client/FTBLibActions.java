@@ -36,6 +36,8 @@ public class FTBLibActions
 		PlayerActionRegistry.add(toggle_rain);
 		PlayerActionRegistry.add(toggle_day);
 		PlayerActionRegistry.add(toggle_night);
+		PlayerActionRegistry.add(toggle_chunk_bounds);
+		PlayerActionRegistry.add(toggle_light_values);
 		
 		GuiScreenRegistry.register("notifications", new GuiScreenRegistry.Entry()
 		{
@@ -141,6 +143,24 @@ public class FTBLibActions
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
+		
+		public Boolean configDefault()
+		{ return Boolean.TRUE; }
+	};
+	
+	public static final PlayerAction toggle_chunk_bounds = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_chunk_bounds", -17, GuiIcons.toggle_chunk_bounds)
+	{
+		public void onClicked(ILMPlayer self, ILMPlayer other)
+		{ FTBLibRenderHandler.renderChunkBounds = !FTBLibRenderHandler.renderChunkBounds; }
+		
+		public Boolean configDefault()
+		{ return Boolean.TRUE; }
+	};
+	
+	public static final PlayerAction toggle_light_values = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_light_values", -18, GuiIcons.toggle_light_values)
+	{
+		public void onClicked(ILMPlayer self, ILMPlayer other)
+		{ FTBLibRenderHandler.toggleLightLevel(); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }

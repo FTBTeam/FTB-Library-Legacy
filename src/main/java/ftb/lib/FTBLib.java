@@ -14,7 +14,7 @@ import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
@@ -23,6 +23,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
@@ -250,7 +251,7 @@ public class FTBLib
 	public static WorldServer getServerWorld()
 	{
 		MinecraftServer ms = getServer();
-		if(ms == null || ms.worldServers.length == 0) return null;
+		if(ms == null || ms.worldServers.length < 1) return null;
 		return ms.worldServers[0];
 	}
 	
@@ -271,12 +272,6 @@ public class FTBLib
 		}
 		
 		return runCommand(ics, sb.toString());
-	}
-	
-	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
-	{
-		c.getChatStyle().setColor(e);
-		return c;
 	}
 	
 	public static void openGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
@@ -354,4 +349,20 @@ public class FTBLib
 	
 	public static void playSoundEffect(World w, BlockPos pos, String s, float g, float p)
 	{ w.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, s, g, p); }
+	
+	//null - can't, TRUE - always spawns, FALSE - only spawns at night
+	public static Boolean canMobSpawn(World world, BlockPos pos)
+	{
+		if(world == null || pos == null || pos.getY() < 0 || pos.getY() >= 256) return null;
+		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		
+		if(!SpawnerAnimals.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
+			return null;
+		
+		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
+		if(!world.checkNoEntityCollision(aabb) || world.isAnyLiquid(aabb)) return null;
+		
+		if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8) return Boolean.FALSE;
+		return Boolean.TRUE;
+	}
 }

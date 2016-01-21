@@ -5,7 +5,6 @@ import ftb.lib.notification.*;
 import latmod.lib.LMJsonUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
-import net.minecraftforge.fml.relauncher.*;
 
 public class JsonHelper
 {
@@ -17,10 +16,5 @@ public class JsonHelper
 		LMJsonUtils.register(Notification.class, new Notification.Serializer());
 		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());
 		//LMJsonUtils.register(NBTBase.class, NBTSerializer.instance);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static void initClient()
-	{
 	}
 }

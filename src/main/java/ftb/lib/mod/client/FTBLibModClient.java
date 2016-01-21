@@ -45,7 +45,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public void preInit()
 	{
-		JsonHelper.initClient();
+		//JsonHelper.initClient();
 		EventBusHelper.register(FTBLibClientEventHandler.instance);
 		EventBusHelper.register(FTBLibRenderHandler.instance);
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
