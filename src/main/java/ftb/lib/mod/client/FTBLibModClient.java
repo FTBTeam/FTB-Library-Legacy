@@ -36,6 +36,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
+	public static final ConfigEntryEnum<FTBLibRenderHandler.LightValueTexture> light_value_texture = new ConfigEntryEnum<>("light_value_texture", FTBLibRenderHandler.LightValueTexture.class, FTBLibRenderHandler.LightValueTexture.values(), FTBLibRenderHandler.LightValueTexture.O, false);
 	
 	public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
 	{

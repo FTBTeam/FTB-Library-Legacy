@@ -22,17 +22,28 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class FTBLibRenderHandler
 {
+	public static enum LightValueTexture
+	{
+		O,
+		X;
+		
+		public final ResourceLocation texture;
+		
+		LightValueTexture()
+		{
+			texture = new ResourceLocation("ftbl", "textures/world/light_value_" + name().toLowerCase() + ".png");
+		}
+	}
+	
 	public static final FTBLibRenderHandler instance = new FTBLibRenderHandler();
 	public static final List<ClientTickCallback> callbacks = new ArrayList<>();
 	private static final CubeRenderer chunkBorderRenderer = new CubeRenderer().setTessellator(null);
-	public static final ResourceLocation chunkBorderTexture = new ResourceLocation("ftbl", "textures/chunk_border.png");
-	public static final ResourceLocation lightValueTexture = new ResourceLocation("ftbl", "textures/light_value.png");
+	public static final ResourceLocation chunkBorderTexture = new ResourceLocation("ftbl", "textures/world/chunk_border.png");
 	public static boolean renderChunkBounds = false;
 	
 	private static boolean renderLightValues = false;
 	private static boolean needsLightUpdate = true;
-	private static final List<BlockPos> lightListR = new ArrayList<>();
-	private static final List<BlockPos> lightListY = new ArrayList<>();
+	private static final List<MobSpawnPos> lightList = new ArrayList<>();
 	private static int lastX, lastY = -1, lastZ;
 	
 	public static void toggleLightLevel()
@@ -43,8 +54,7 @@ public class FTBLibRenderHandler
 		if(!renderLightValues)
 		{
 			needsLightUpdate = false;
-			lightListR.clear();
-			lightListY.clear();
+			lightList.clear();
 		}
 	}
 	
@@ -90,8 +100,8 @@ public class FTBLibRenderHandler
 		
 		if(renderChunkBounds || renderLightValues)
 		{
-			int x = MathHelperLM.unchunk(MathHelperLM.chunk(FTBLibClient.mc.thePlayer.posX));
-			int z = MathHelperLM.unchunk(MathHelperLM.chunk(FTBLibClient.mc.thePlayer.posZ));
+			int x = MathHelperLM.unchunk(MathHelperLM.chunk(LMFrustrumUtils.playerX));
+			int z = MathHelperLM.unchunk(MathHelperLM.chunk(LMFrustrumUtils.playerZ));
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(-LMFrustrumUtils.renderX, -LMFrustrumUtils.renderY, -LMFrustrumUtils.renderZ);
@@ -107,77 +117,105 @@ public class FTBLibRenderHandler
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01F);
 			
-			double d = 0.01D;
-			
 			if(renderChunkBounds)
 			{
+				double d = 0.02D;
 				FTBLibClient.setTexture(chunkBorderTexture);
 				chunkBorderRenderer.setSize(x + d, 0D, z + d, x + 16D - d, 256D, z + 16D - d);
 				chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
 				chunkBorderRenderer.renderSides();
 			}
 			
-			if(renderLightValues && FTBLibClient.mc.thePlayer.posY >= 0D)
+			if(renderLightValues && LMFrustrumUtils.playerY >= 0D)
 			{
-				if(lastY == -1D || MathHelperLM.distSq(FTBLibClient.mc.thePlayer.posX, FTBLibClient.mc.thePlayer.posY, FTBLibClient.mc.thePlayer.posZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= 32D)
+				if(lastY == -1D || MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2)
 					needsLightUpdate = true;
 				
 				if(needsLightUpdate)
 				{
 					needsLightUpdate = false;
-					lightListR.clear();
-					lightListY.clear();
+					lightList.clear();
 					World w = FTBLibClient.mc.theWorld;
 					
-					lastX = MathHelperLM.floor(FTBLibClient.mc.thePlayer.posX);
-					lastY = MathHelperLM.floor(FTBLibClient.mc.thePlayer.posY);
-					lastZ = MathHelperLM.floor(FTBLibClient.mc.thePlayer.posZ);
+					lastX = MathHelperLM.floor(LMFrustrumUtils.playerX);
+					lastY = MathHelperLM.floor(LMFrustrumUtils.playerY);
+					lastZ = MathHelperLM.floor(LMFrustrumUtils.playerZ);
 					
-					for(int by = lastY - 16; by < lastY + 16; by++)
+					for(int by = lastY - 16; by <= lastY + 16; by++)
 					{
-						for(int bx = lastX - 16; bx < lastX + 16; bx++)
+						for(int bx = lastX - 16; bx <= lastX + 16; bx++)
 						{
-							for(int bz = lastZ - 16; bz < lastZ + 16; bz++)
+							for(int bz = lastZ - 16; bz <= lastZ + 16; bz++)
 							{
 								BlockPos pos = new BlockPos(bx, by, bz);
 								Boolean b = FTBLib.canMobSpawn(w, pos);
-								
 								if(b != null)
 								{
-									if(b == Boolean.TRUE) lightListR.add(pos);
-									else lightListY.add(pos);
+									int lv = 0;
+									if(FTBLibClient.mc.gameSettings.showDebugInfo) lv = w.getLight(pos, true);
+									lightList.add(new MobSpawnPos(pos, b == Boolean.TRUE, lv));
 								}
 							}
 						}
 					}
 				}
 				
-				if(lightListR.size() > 0 || lightListY.size() > 0)
+				if(!lightList.isEmpty())
 				{
-					FTBLibClient.setTexture(lightValueTexture);
-					chunkBorderRenderer.setUV(0D, 0D, 1D, 1D);
+					GlStateManager.color(1F, 1F, 1F, 1F);
+					FTBLibClient.setTexture(FTBLibModClient.light_value_texture.get().texture);
 					
-					if(lightListR.size() > 0)
+					GL11.glBegin(GL11.GL_QUADS);
+					
+					for(int i = 0; i < lightList.size(); i++)
 					{
-						GlStateManager.color(1F, 0.2F, 0.2F, 1F);
+						MobSpawnPos pos = lightList.get(i);
 						
-						for(int i = 0; i < lightListR.size(); i++)
-						{
-							BlockPos pos = lightListR.get(i);
-							chunkBorderRenderer.setSizeWHD(pos.getX(), pos.getY() + d, pos.getZ(), 1D, 1D, 1D);
-							chunkBorderRenderer.renderDown();
-						}
+						double bx = pos.pos.getX();
+						double by = pos.pos.getY() + 0.03D;
+						double bz = pos.pos.getZ();
+						
+						if(pos.alwaysSpawns) GlStateManager.color(1F, 0.2F, 0.2F, 1F);
+						else GlStateManager.color(1F, 1F, 0.2F, 1F);
+						
+						GL11.glTexCoord2f(0F, 0F);
+						GL11.glVertex3d(bx, by, bz);
+						GL11.glTexCoord2f(1F, 0F);
+						GL11.glVertex3d(bx + 1D, by, bz);
+						GL11.glTexCoord2f(1F, 1F);
+						GL11.glVertex3d(bx + 1D, by, bz + 1D);
+						GL11.glTexCoord2f(0F, 1F);
+						GL11.glVertex3d(bx, by, bz + 1D);
 					}
 					
-					if(lightListY.size() > 0)
+					GL11.glEnd();
+					
+					GlStateManager.color(1F, 1F, 1F, 1F);
+					
+					if(FTBLibClient.mc.gameSettings.showDebugInfo)
 					{
-						GlStateManager.color(1F, 1F, 0.2F, 1F);
-						
-						for(int i = 0; i < lightListY.size(); i++)
+						for(int i = 0; i < lightList.size(); i++)
 						{
-							BlockPos pos = lightListY.get(i);
-							chunkBorderRenderer.setSizeWHD(pos.getX(), pos.getY() + d, pos.getZ(), 1D, 1D, 1D);
-							chunkBorderRenderer.renderDown();
+							MobSpawnPos pos = lightList.get(i);
+							
+							double bx = pos.pos.getX() + 0.5D;
+							double by = pos.pos.getY() + 0.14D;
+							double bz = pos.pos.getZ() + 0.5D;
+							
+							if(MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, bx, by, bz) <= 144D)
+							{
+								GlStateManager.pushMatrix();
+								GlStateManager.translate(bx, by, bz);
+								GlStateManager.rotate((float) (-Math.atan2(bz - LMFrustrumUtils.playerZ, bx - LMFrustrumUtils.playerX) * 180D / Math.PI) + 90F, 0F, 1F, 0F);
+								GlStateManager.rotate(40F, 1F, 0F, 0F);
+								
+								float scale = 1F / 32F;
+								GlStateManager.scale(-scale, -scale, 1F);
+								
+								String s = Integer.toString(pos.lightValue);
+								FTBLibClient.mc.fontRendererObj.drawString(s, -FTBLibClient.mc.fontRendererObj.getStringWidth(s) / 2, -5, 0xFFFFFFFF);
+								GlStateManager.popMatrix();
+							}
 						}
 					}
 				}
@@ -195,5 +233,19 @@ public class FTBLibRenderHandler
 		}
 		
 		if(FTBLib.ftbu != null) FTBLib.ftbu.renderWorld(e.partialTicks);
+	}
+	
+	private static class MobSpawnPos
+	{
+		public final BlockPos pos;
+		public final boolean alwaysSpawns;
+		public final int lightValue;
+		
+		public MobSpawnPos(BlockPos p, boolean b, int lv)
+		{
+			pos = p;
+			alwaysSpawns = b;
+			lightValue = lv;
+		}
 	}
 }

@@ -96,6 +96,7 @@ client_config.ftbl.action_buttons_on_top=Action Buttons On Top
 client_config.ftbl.player_options_shortcut=Player Options Shortcut
 client_config.ftbl.key_bindings=Key Bindings
 client_config.ftbl.edit_shortcuts=Edit Shortcuts
+client_config.ftbl.light_value_texture=Light Value Texture
 
 client_config.sidebar_buttons=Sidebar Buttons
 

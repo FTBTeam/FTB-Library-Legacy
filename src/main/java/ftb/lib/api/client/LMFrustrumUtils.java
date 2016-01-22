@@ -27,6 +27,7 @@ public class LMFrustrumUtils
 		Minecraft mc = FTBLibClient.mc;
 		isFirstPerson = FTBLibClient.mc.gameSettings.thirdPersonView == 0;
 		currentDim = FTBLibClient.getDim();
+		//mc.thePlayer.posX
 		playerX = mc.getRenderManager().viewerPosX;
 		playerY = mc.getRenderManager().viewerPosY;
 		playerZ = mc.getRenderManager().viewerPosZ;
