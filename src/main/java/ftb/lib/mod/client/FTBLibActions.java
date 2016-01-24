@@ -187,7 +187,7 @@ public class FTBLibActions
 					PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), a.priority, tex)
 					{
 						public void onClicked(ILMPlayer self, ILMPlayer other)
-						{ a.action.onClicked(a.data); }
+						{ a.click.onClicked(); }
 						
 						public String getDisplayName()
 						{ return a.name; }

@@ -1,6 +1,6 @@
 package ftb.lib.api.config;
 
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonElement;
 import ftb.lib.FTBLib;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.config.*;
@@ -34,16 +34,17 @@ public class ConfigRegistry
 			f.load();
 		
 		FTBLib.dev_logger.info("Loading override configs");
-		Map<String, ConfigGroup> overrides = LMJsonUtils.fromJsonFile(new File(FTBLib.folderModpack, "overrides.json"), new TypeToken<Map<String, ConfigGroup>>() { }.getType());
+		JsonElement overridesE = LMJsonUtils.fromJson(new File(FTBLib.folderModpack, "overrides.json"));
 		
-		if(overrides != null && !overrides.isEmpty())
+		if(overridesE.isJsonObject())
 		{
-			for(Map.Entry<String, ConfigGroup> e : overrides.entrySet())
+			for(Map.Entry<String, JsonElement> e : overridesE.getAsJsonObject().entrySet())
 			{
-				ConfigGroup ol = e.getValue();
+				ConfigGroup ol = new ConfigGroup(e.getKey());
+				ol.setJson(e.getValue());
 				
 				int result;
-				IConfigFile f = map.get(e.getKey());
+				IConfigFile f = map.get(ol.ID);
 				if(f != null && (result = f.getGroup().loadFromGroup(ol)) > 0)
 				{
 					FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);

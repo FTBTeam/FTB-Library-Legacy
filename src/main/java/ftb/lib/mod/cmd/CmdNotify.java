@@ -31,9 +31,11 @@ public class CmdNotify extends CommandLM
 			Notification n = new Notification("example_id", new ChatComponentText("Example title"), 6500);
 			n.setColor(0xFFFF0000);
 			n.setItem(new ItemStack(Items.apple, 10));
-			n.setMouseAction(new MouseAction(ClickAction.CMD, new JsonPrimitive("/ftb_reload")));
+			MouseAction ma = new MouseAction();
+			ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("/ftb_reload"));
+			n.setMouseAction(ma);
 			n.setDesc(new ChatComponentText("Example description"));
-			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n));
+			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getJson()));
 			
 			sb.append('\n');
 			sb.append("Only \"id\" and \"title\" are required, the rest is optional");
@@ -59,7 +61,7 @@ public class CmdNotify extends CommandLM
 		
 		try
 		{
-			Notification n = Notification.fromJson(s);
+			Notification n = Notification.deserialize(LMJsonUtils.fromJson(s));
 			
 			if(n != null)
 			{

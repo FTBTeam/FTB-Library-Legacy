@@ -1,20 +1,30 @@
 package ftb.lib;
 
-import ftb.lib.api.item.ItemStackTypeAdapter;
-import ftb.lib.notification.*;
-import latmod.lib.LMJsonUtils;
-import net.minecraft.item.ItemStack;
+import com.google.gson.*;
 import net.minecraft.util.*;
 
 public class JsonHelper
 {
+	public static Gson chatComponentGson;
+	
 	public static void init()
 	{
-		LMJsonUtils.register(IChatComponent.class, new IChatComponent.Serializer());
-		LMJsonUtils.register(ChatStyle.class, new ChatStyle.Serializer());
-		LMJsonUtils.register(ItemStack.class, new ItemStackTypeAdapter());
-		LMJsonUtils.register(Notification.class, new Notification.Serializer());
-		LMJsonUtils.register(MouseAction.class, new MouseAction.Serializer());
-		//LMJsonUtils.register(NBTBase.class, NBTSerializer.instance);
+		GsonBuilder gb = new GsonBuilder();
+		gb.registerTypeHierarchyAdapter(IChatComponent.class, new IChatComponent.Serializer());
+		gb.registerTypeHierarchyAdapter(ChatStyle.class, new ChatStyle.Serializer());
+		gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
+		chatComponentGson = gb.create();
+	}
+	
+	public static JsonElement serializeICC(IChatComponent c)
+	{
+		if(c == null) return null;
+		return chatComponentGson.toJsonTree(c, IChatComponent.class);
+	}
+	
+	public static IChatComponent deserializeICC(JsonElement e)
+	{
+		if(e == null || e.isJsonNull()) return null;
+		return chatComponentGson.fromJson(e, IChatComponent.class);
 	}
 }

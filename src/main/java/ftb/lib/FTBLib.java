@@ -301,7 +301,10 @@ public class FTBLib
 	}
 	
 	public static boolean isOP(GameProfile p)
-	{ return getServerWorld() != null && getServer().getConfigurationManager().getOppedPlayers().getEntry(p) != null; }
+	{
+		if(!isDedicatedServer()) return true;
+		return getServerWorld() != null && getServer().getConfigurationManager().getOppedPlayers().getEntry(p) != null;
+	}
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
@@ -338,7 +341,7 @@ public class FTBLib
 			try
 			{
 				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
-				JsonElement e = LMJsonUtils.getJsonElement(json);
+				JsonElement e = LMJsonUtils.fromJson(json);
 				cachedUUIDs.put(key, UUIDTypeAdapterLM.getUUID(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }

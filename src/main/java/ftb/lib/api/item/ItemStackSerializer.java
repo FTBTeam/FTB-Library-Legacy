@@ -1,32 +1,11 @@
 package ftb.lib.api.item;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.*;
+import com.google.gson.*;
 import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.IOException;
-
-public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
+public class ItemStackSerializer
 {
-	public void write(JsonWriter out, ItemStack value) throws IOException
-	{
-		if(value == null) out.nullValue();
-		else out.value(toString(value));
-	}
-	
-	public ItemStack read(JsonReader in) throws IOException
-	{
-		if(in.peek() == JsonToken.NULL)
-		{
-			in.nextNull();
-			return null;
-		}
-		return parseItem(in.nextString());
-	}
-	
-	// Static //
-	
 	private static String getParseRegex(String s)
 	{
 		if(s.indexOf(' ') != -1) return " ";
@@ -86,5 +65,18 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack>
 		sb.append(' ');
 		sb.append(is.getItemDamage());
 		return sb.toString();
+	}
+	
+	public static JsonElement serialize(ItemStack is)
+	{
+		if(is == null || is.getItem() == null) return null;
+		return new JsonPrimitive(toString(is));
+	}
+	
+	public static ItemStack deserialize(JsonElement e)
+	{
+		if(e == null) return null;
+		else if(e.isJsonPrimitive()) return parseItem(e.getAsString());
+		return null;
 	}
 }
