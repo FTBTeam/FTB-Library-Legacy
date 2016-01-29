@@ -32,4 +32,7 @@ public class LMAccessToken
 		
 		return false;
 	}
+	
+	public static void clear()
+	{ tokens.clear(); }
 }

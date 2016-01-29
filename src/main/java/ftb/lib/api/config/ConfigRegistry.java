@@ -1,9 +1,12 @@
 package ftb.lib.api.config;
 
-import com.google.gson.reflect.TypeToken;
-import ftb.lib.FTBLib;
+import com.google.gson.JsonElement;
+import ftb.lib.*;
+import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.config.*;
+import latmod.lib.json.UUIDTypeAdapterLM;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.File;
 import java.util.*;
@@ -12,6 +15,7 @@ public class ConfigRegistry
 {
 	public static final HashMap<String, IConfigFile> map = new HashMap<>();
 	public static final ConfigGroup synced = new ConfigGroup("synced");
+	private static final HashMap<String, ConfigGroup> tempServerConfig = new HashMap<>();
 	
 	public static void add(IConfigFile f)
 	{
@@ -34,16 +38,17 @@ public class ConfigRegistry
 			f.load();
 		
 		FTBLib.dev_logger.info("Loading override configs");
-		Map<String, ConfigGroup> overrides = LMJsonUtils.fromJsonFile(new File(FTBLib.folderModpack, "overrides.json"), new TypeToken<Map<String, ConfigGroup>>() { }.getType());
+		JsonElement overridesE = LMJsonUtils.fromJson(new File(FTBLib.folderModpack, "overrides.json"));
 		
-		if(overrides != null && !overrides.isEmpty())
+		if(overridesE.isJsonObject())
 		{
-			for(Map.Entry<String, ConfigGroup> e : overrides.entrySet())
+			for(Map.Entry<String, JsonElement> e : overridesE.getAsJsonObject().entrySet())
 			{
-				ConfigGroup ol = e.getValue();
+				ConfigGroup ol = new ConfigGroup(e.getKey());
+				ol.setJson(e.getValue());
 				
 				int result;
-				IConfigFile f = map.get(e.getKey());
+				IConfigFile f = map.get(ol.ID);
 				if(f != null && (result = f.getGroup().loadFromGroup(ol)) > 0)
 				{
 					FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
@@ -53,4 +58,32 @@ public class ConfigRegistry
 			}
 		}
 	}
+	
+	public static ConfigGroup createTempConfig(EntityPlayerMP ep)
+	{
+		if(ep != null)
+		{
+			ConfigGroup group = new ConfigGroup(UUIDTypeAdapterLM.getString(ep.getGameProfile().getId()));
+			tempServerConfig.put(group.ID, group);
+			return group;
+		}
+		
+		return null;
+	}
+	
+	public static void editTempConfig(EntityPlayerMP ep, ConfigGroup group)
+	{
+		if(ep != null && group != null && tempServerConfig.containsValue(group))
+			new MessageEditConfig(LMAccessToken.generate(ep), group).sendTo(ep);
+	}
+	
+	public static ConfigGroup getTempConfig(String id)
+	{
+		ConfigGroup group = tempServerConfig.get(id);
+		if(group != null) tempServerConfig.remove(id);
+		return group;
+	}
+	
+	public static void clearTemp()
+	{ tempServerConfig.clear(); }
 }

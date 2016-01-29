@@ -3,7 +3,6 @@ package ftb.lib.mod.cmd;
 import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
-import ftb.lib.mod.config.FTBLibConfigCmd;
 import ftb.lib.notification.*;
 import latmod.lib.*;
 import net.minecraft.command.*;
@@ -15,7 +14,7 @@ import net.minecraft.util.*;
 public class CmdNotify extends CommandLM
 {
 	public CmdNotify()
-	{ super(FTBLibConfigCmd.Name.notify.get(), CommandLevel.OP); }
+	{ super("ftb_notify", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{
@@ -31,9 +30,11 @@ public class CmdNotify extends CommandLM
 			Notification n = new Notification("example_id", new ChatComponentText("Example title"), 6500);
 			n.setColor(0xFFFF0000);
 			n.setItem(new ItemStack(Items.apple, 10));
-			n.setMouseAction(new MouseAction(ClickAction.CMD, new JsonPrimitive("/ftb_reload")));
+			MouseAction ma = new MouseAction();
+			ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("/reload"));
+			n.setMouseAction(ma);
 			n.setDesc(new ChatComponentText("Example description"));
-			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n));
+			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getJson()));
 			
 			sb.append('\n');
 			sb.append("Only \"id\" and \"title\" are required, the rest is optional");
@@ -59,11 +60,11 @@ public class CmdNotify extends CommandLM
 		
 		try
 		{
-			Notification n = Notification.fromJson(s);
+			Notification n = Notification.deserialize(LMJsonUtils.fromJson(s));
 			
 			if(n != null)
 			{
-				for(EntityPlayerMP ep : PlayerSelector.matchPlayers(ics, args[0]))
+				for(EntityPlayerMP ep : findPlayers(ics, args[0]))
 					FTBLib.notifyPlayer(ep, n);
 				return null;
 			}

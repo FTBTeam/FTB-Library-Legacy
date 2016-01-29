@@ -63,7 +63,7 @@ public class FTBLibActions
 			int nw = FTBLibClient.mc.fontRenderer.getStringWidth(n);
 			int width = 16;
 			GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
-			GuiLM.drawBlankRect(ax + width - nw, ay - 4, z, ax + width + 1, ay + 5);
+			GuiLM.drawBlankRect(ax + width - nw, ay - 4, z, nw + 1, 9);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			FTBLibClient.mc.fontRenderer.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
 		}
@@ -124,7 +124,7 @@ public class FTBLibActions
 					PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), a.priority, tex)
 					{
 						public void onClicked(ILMPlayer self, ILMPlayer other)
-						{ a.action.onClicked(a.data); }
+						{ a.click.onClicked(); }
 						
 						public String getDisplayName()
 						{ return a.name; }

@@ -6,25 +6,25 @@ import java.util.HashMap;
 
 public class ClickActionRegistry
 {
-	private static final HashMap<String, ClickAction> map = new HashMap<>();
+	private static final HashMap<String, ClickActionType> map = new HashMap<>();
 	
 	static
 	{
-		add(ClickAction.CMD);
-		add(ClickAction.SHOW_CMD);
-		add(ClickAction.URL);
-		add(ClickAction.FILE);
-		add(ClickAction.GUI);
+		add(ClickActionType.CMD);
+		add(ClickActionType.SHOW_CMD);
+		add(ClickActionType.URL);
+		add(ClickActionType.FILE);
+		add(ClickActionType.GUI);
 	}
 	
 	public static String[] getKeys()
 	{ return LMListUtils.toStringArray(map.keySet()); }
 	
-	public static void add(ClickAction a)
+	public static void add(ClickActionType a)
 	{
 		if(a != null && LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID)) map.put(a.ID, a);
 	}
 	
-	public static ClickAction get(String s)
+	public static ClickActionType get(String s)
 	{ return map.get(s); }
 }

@@ -96,6 +96,7 @@ client_config.ftbl.action_buttons_on_top=Action Buttons On Top
 client_config.ftbl.player_options_shortcut=Player Options Shortcut
 client_config.ftbl.key_bindings=Key Bindings
 client_config.ftbl.edit_shortcuts=Edit Shortcuts
+client_config.ftbl.light_value_texture=Light Value Texture
 
 client_config.sidebar_buttons=Sidebar Buttons
 
@@ -106,7 +107,8 @@ player_action.ftbl.toggle_gamemode=Toggle Gamemode
 player_action.ftbl.toggle_rain=Toggle Rain
 player_action.ftbl.toggle_day=Set time to Day
 player_action.ftbl.toggle_night=Set time to Night
-player_action.ftbl.trash_can=Trash Can
+player_action.ftbl.toggle_chunk_bounds=Toggle Chunk Bounds
+player_action.ftbl.toggle_light_values=Toggle Light Values
 
 #Security Mode
 ftbl:security=Security

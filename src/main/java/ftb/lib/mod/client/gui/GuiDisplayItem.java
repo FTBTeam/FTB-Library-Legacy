@@ -4,7 +4,6 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.item.ItemDisplay;
-import ftb.lib.mod.FTBLibMod;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +13,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiDisplayItem extends GuiLM
 {
-	public static final ResourceLocation texture = FTBLibMod.mod.getLocation("textures/gui/displayitem.png");
+	public static final ResourceLocation texture = new ResourceLocation("ftbl", "textures/gui/displayitem.png");
 	
 	public ItemDisplay itemDisplay;
 	

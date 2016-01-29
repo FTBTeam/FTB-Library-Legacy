@@ -1,27 +1,41 @@
 package ftb.lib.notification;
 
 import com.google.gson.*;
-import latmod.lib.*;
+import ftb.lib.JsonHelper;
+import ftb.lib.api.item.ItemStackSerializer;
+import latmod.lib.LMColorUtils;
+import latmod.lib.json.IJsonObject;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;
 
-import java.lang.reflect.Type;
-
-public class Notification extends FinalIDObject
+public final class Notification extends FinalIDObject implements IJsonObject
 {
-	public final IChatComponent title;
-	public final int timer;
-	public IChatComponent desc = null;
-	public int color = 0xFFA0A0A0;
-	public ItemStack item = null;
-	public MouseAction mouse = null;
+	public IChatComponent title, desc;
+	public int timer, color;
+	public ItemStack item;
+	public MouseAction mouse;
+	
+	public Notification(String s)
+	{
+		super(s);
+	}
 	
 	public Notification(String s, IChatComponent t, int l)
 	{
 		super(s);
 		title = t;
-		timer = MathHelperLM.clampInt(l, 1, 30000);
+		timer = l;
+	}
+	
+	private void setDefaults()
+	{
+		title = null;
+		desc = null;
+		timer = 3000;
+		color = 0xFFA0A0A0;
+		item = null;
+		mouse = null;
 	}
 	
 	public void setDesc(IChatComponent c)
@@ -39,42 +53,47 @@ public class Notification extends FinalIDObject
 	public boolean isTemp()
 	{ return mouse == null; }
 	
-	public static Notification fromJson(String s)
-	{ return (Notification) LMJsonUtils.fromJson(s, Notification.class); }
-	
-	public String toJson()
-	{ return LMJsonUtils.toJson(this); }
-	
-	public static class Serializer implements JsonSerializer<Notification>, JsonDeserializer<Notification>
+	public JsonElement getJson()
 	{
-		public static final Serializer inst = new Serializer();
-		
-		public JsonElement serialize(Notification n, Type typeOfSrc, JsonSerializationContext context)
+		JsonObject o = new JsonObject();
+		o.add("id", new JsonPrimitive(ID));
+		o.add("title", JsonHelper.serializeICC(title));
+		if(timer != 3000) o.add("timer", new JsonPrimitive(timer));
+		if(desc != null) o.add("desc", JsonHelper.serializeICC(desc));
+		if(item != null) o.add("item", ItemStackSerializer.serialize(item));
+		if(color != 0xFFA0A0A0) o.add("color", LMColorUtils.serialize(color));
+		if(mouse != null) o.add("mouse", mouse.getJson());
+		return o;
+	}
+	
+	public void setJson(JsonElement e)
+	{
+		if(e == null || !e.isJsonObject()) return;
+		setDefaults();
+		JsonObject o = e.getAsJsonObject();
+		title = JsonHelper.deserializeICC(o.get("title"));
+		timer = o.has("timer") ? o.get("timer").getAsInt() : 3000;
+		if(o.has("desc")) setDesc(JsonHelper.deserializeICC(o.get("desc")));
+		if(o.has("color")) setColor(LMColorUtils.deserialize(o.get("color")));
+		if(o.has("item")) setItem(ItemStackSerializer.deserialize(o.get("item")));
+		if(o.has("mouse"))
 		{
-			JsonObject o = new JsonObject();
-			o.add("id", new JsonPrimitive(n.ID));
-			o.add("title", context.serialize(n.title, IChatComponent.class));
-			if(n.timer != 3000) o.add("timer", new JsonPrimitive(n.timer));
-			if(n.desc != null) o.add("desc", context.serialize(n.desc, IChatComponent.class));
-			if(n.item != null) o.add("item", context.serialize(n.item, ItemStack.class));
-			if(n.color != 0xFFA0A0A0) o.add("color", new JsonPrimitive(LMColorUtils.getHex(n.color)));
-			if(n.mouse != null) o.add("mouse", context.serialize(n.mouse));
-			return o;
+			MouseAction m = new MouseAction();
+			m.setJson(o.get("mouse"));
+			setMouseAction(m);
 		}
-		
-		public Notification deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-		{
-			if(json.isJsonNull()) return null;
-			JsonObject o = json.getAsJsonObject();
-			if(!o.has("id") || !o.has("title")) return null;
-			IChatComponent t = (IChatComponent) context.deserialize(o.get("title"), IChatComponent.class);
-			int l = o.has("timer") ? o.get("timer").getAsInt() : 3000;
-			Notification n = new Notification(o.get("id").getAsString(), t, l);
-			if(o.has("desc")) n.setDesc((IChatComponent) context.deserialize(o.get("desc"), IChatComponent.class));
-			if(o.has("color")) n.setColor(Integer.decode(o.get("color").getAsString()));
-			if(o.has("item")) n.setItem((ItemStack) context.deserialize(o.get("item"), ItemStack.class));
-			if(o.has("mouse")) n.setMouseAction((MouseAction) context.deserialize(o.get("mouse"), MouseAction.class));
-			return n;
-		}
+	}
+	
+	public String toString()
+	{ return getJson().toString(); }
+	
+	public static Notification deserialize(JsonElement e)
+	{
+		if(e == null || !e.isJsonObject()) return null;
+		JsonObject o = e.getAsJsonObject();
+		if(!o.has("id") || !o.has("title")) return null;
+		Notification n = new Notification(o.get("id").getAsString());
+		n.setJson(o);
+		return n;
 	}
 }

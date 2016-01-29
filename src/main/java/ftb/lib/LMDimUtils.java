@@ -1,31 +1,87 @@
 package ftb.lib;
 
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.*;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.*;
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.DimensionManager;
 
 public class LMDimUtils
 {
-	public static boolean teleportPlayer(EntityPlayerMP ep, EntityPos pos)
-	{ return teleportPlayer(ep, pos.x, pos.y, pos.z, pos.dim); }
+	public static boolean teleportPlayer(Entity entity, EntityPos pos)
+	{ return pos != null && teleportPlayer(entity, pos.x, pos.y, pos.z, pos.dim); }
 	
-	public static boolean teleportPlayer(EntityPlayerMP ep, double x, double y, double z, int dim)
+	public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
+	{ return pos != null && teleportPlayer(entity, pos.x + 0.5D, pos.y + 0.5D, pos.z + 0.5D, pos.dim); }
+	
+	//tterrag's code, I don't own it. Maybe he doesn't too.. but who cares, eh?
+	public static boolean teleportPlayer(Entity entity, double x, double y, double z, int dim)
 	{
-		if(ep == null) return false;
-		ep.fallDistance = 0F;
+		if(entity == null) return false;
+		entity.fallDistance = 0F;
+		EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
 		
-		if(ep.dimension == dim)
+		if(dim == entity.dimension)
 		{
-			ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
-			return true;
+			if(x == entity.posX && y == entity.posY && z == entity.posZ) return true;
+			
+			if(player != null)
+			{
+				player.playerNetServerHandler.setPlayerLocation(x, y, z, player.rotationYaw, player.rotationPitch);
+				return true;
+			}
 		}
 		
-		if(!DimensionManager.isDimensionRegistered(dim)) return false;
+		//FTBLib.dev_logger.info("Teleporting " + entity + " from " + new EntityPos(entity) + " to " + new EntityPos(x, y, z, dim));
+		int from = entity.dimension;
+		float rotationYaw = entity.rotationYaw;
+		float rotationPitch = entity.rotationPitch;
+		MinecraftServer server = MinecraftServer.getServer();
+		WorldServer fromDim = server.worldServerForDimension(from);
+		WorldServer toDim = server.worldServerForDimension(dim);
+		
+		if(player != null)
+		{
+			server.getConfigurationManager().transferPlayerToDimension(player, dim, new TeleporterBlank(toDim));
+			if(from == 1 && entity.isEntityAlive())
+			{
+				// get around vanilla End hacks
+				toDim.spawnEntityInWorld(entity);
+				toDim.updateEntityWithOptionalForce(entity, false);
+			}
+		}
+		else
+		{
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			entity.writeToNBT(tagCompound);
+			Class<? extends Entity> entityClass = entity.getClass();
+			fromDim.removeEntity(entity);
+			
+			try
+			{
+				Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
+				newEntity.readFromNBT(tagCompound);
+				newEntity.setLocationAndAngles(x, y, z, rotationYaw, rotationPitch);
+				newEntity.forceSpawn = true;
+				toDim.spawnEntityInWorld(newEntity);
+				newEntity.forceSpawn = false;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		entity.fallDistance = 0;
+		entity.rotationYaw = rotationYaw;
+		entity.rotationPitch = rotationPitch;
+		if(player != null) player.setPositionAndUpdate(x, y, z);
+		else entity.setPosition(x, y, z);
+		return true;
+		
+		/* Ye olde teleport code
 		MinecraftServer mcs = MinecraftServer.getServer();
 		if(mcs == null || (dim != 0 && !mcs.getAllowNether())) return false;
 		
@@ -97,9 +153,7 @@ public class LMDimUtils
 		ep.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(ep.experience, ep.experienceTotal, ep.experienceLevel));
 		
 		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		if(chw)
-			MinecraftForge.EVENT_BUS.post(new PlayerEvent.PlayerChangedDimensionEvent(ep, w0.provider.dimensionId, w1.provider.dimensionId));
-		return true;
+		*/
 	}
 	
 	public static World getWorld(int dim)
@@ -130,31 +184,44 @@ public class LMDimUtils
 	public static double getWorldScale(int dim)
 	{ return 1D / getMovementFactor(dim); }
 	
-	public static ChunkCoordinates getSpawnPoint(int dim)
+	public static BlockDimPos getSpawnPoint(int dim)
 	{
 		World w = getWorld(dim);
-		return (w == null) ? null : w.getSpawnPoint();
-	}
-	
-	public static EntityPos getEntitySpawnPoint(int dim)
-	{
-		ChunkCoordinates c = getSpawnPoint(dim);
+		if(w == null) return null;
+		ChunkCoordinates c = w.getSpawnPoint();
 		if(c == null) return null;
-		return new EntityPos(c, dim);
+		return new BlockDimPos(c, dim);
 	}
 	
-	public static ChunkCoordinates getPlayerSpawnPoint(EntityPlayerMP ep, int dim)
+	public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
 	{
 		ChunkCoordinates c = ep.getBedLocation(dim);
-		return (c == null) ? getSpawnPoint(dim) : c;
+		if(c == null) return getSpawnPoint(dim);
+		return new BlockDimPos(c, dim);
 	}
 	
-	public static EntityPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
+	private static class TeleporterBlank extends Teleporter
 	{
-		EntityPos p = new EntityPos(getPlayerSpawnPoint(ep, dim), dim);
-		p.x += 0.5D;
-		p.y += 0.5D;
-		p.z += 0.5D;
-		return p;
+		public TeleporterBlank(WorldServer w)
+		{ super(w); }
+		
+		public boolean makePortal(Entity e)
+		{ return true; }
+		
+		public boolean placeInExistingPortal(Entity e, double x, double y, double z, float f)
+		{ return true; }
+		
+		public void placeInPortal(Entity entity, double x, double y, double z, float f)
+		{
+			entity.setLocationAndAngles(x, y, z, entity.rotationPitch, entity.rotationYaw);
+			entity.motionX = 0D;
+			entity.motionY = 0D;
+			entity.motionZ = 0D;
+			entity.fallDistance = 0F;
+		}
+		
+		public void removeStalePortalLocations(long l)
+		{
+		}
 	}
 }

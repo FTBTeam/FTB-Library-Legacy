@@ -114,7 +114,7 @@ public class FTBLibClientEventHandler
 			{
 				for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
 				{
-					if(s.isKeyPressed(key)) s.action.onClicked(s.data);
+					if(s.isKeyPressed(key)) s.click.onClicked();
 				}
 			}
 			catch(Exception ex)

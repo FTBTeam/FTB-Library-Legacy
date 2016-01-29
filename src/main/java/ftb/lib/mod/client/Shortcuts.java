@@ -3,7 +3,7 @@ package ftb.lib.mod.client;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
-import ftb.lib.notification.*;
+import ftb.lib.notification.ClickAction;
 import latmod.lib.*;
 import latmod.lib.json.IJsonObject;
 import org.lwjgl.input.Keyboard;
@@ -25,7 +25,7 @@ public class Shortcuts
 		shortcuts.clear();
 		
 		if(file == null) file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/shortcuts.json"));
-		JsonElement e = LMJsonUtils.getJsonElement(file);
+		JsonElement e = LMJsonUtils.fromJson(file);
 		
 		if(e.isJsonObject())
 		{
@@ -69,22 +69,16 @@ public class Shortcuts
 	
 	public static abstract class Shortcut implements IJsonObject
 	{
-		public ClickAction action;
-		public JsonElement data;
+		public final ClickAction click = new ClickAction();
 		
 		public void setJson(JsonElement e)
 		{
-			JsonObject o = e.getAsJsonObject();
-			action = ClickActionRegistry.get(o.get("type").getAsString());
-			if(action != null && o.has("data")) data = o.get("data");
+			click.setJson(e);
 		}
 		
 		public JsonElement getJson()
 		{
-			JsonObject o = new JsonObject();
-			o.add("type", new JsonPrimitive(action.ID));
-			if(data != null && !data.isJsonNull()) o.add("data", data);
-			return o;
+			return click.getJson();
 		}
 		
 		public String getTitle()
@@ -113,7 +107,7 @@ public class Shortcuts
 		}
 		
 		public String getTitle()
-		{ return Keyboard.getKeyName(key) + " : " + action.getDisplayName() + " : '" + data + "'"; }
+		{ return Keyboard.getKeyName(key) + " : " + click.type.getDisplayName() + " : '" + click.data + "'"; }
 		
 		public boolean isKeyPressed(int k)
 		{ return key == k; }
@@ -144,6 +138,6 @@ public class Shortcuts
 		}
 		
 		public String getTitle()
-		{ return name + " : " + action.getDisplayName() + " : '" + data + "'"; }
+		{ return name + " : " + click.type.getDisplayName() + " : '" + click.data + "'"; }
 	}
 }

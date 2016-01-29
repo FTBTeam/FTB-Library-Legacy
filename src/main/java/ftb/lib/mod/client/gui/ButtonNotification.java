@@ -64,7 +64,7 @@ public class ButtonNotification extends ButtonLM
 		FTBLibClient.playClickSound();
 		
 		if(gui.mouse().x < getAX() + width - 16) notification.onClicked();
-		ClientNotifications.Perm.list.remove(notification);
+		ClientNotifications.Perm.remove(notification);
 		
 		gui.initLMGui();
 		gui.refreshWidgets();
@@ -79,9 +79,6 @@ public class ButtonNotification extends ButtonLM
 			return;
 		}
 		
-		if(notification.notification.mouse != null && notification.notification.mouse.hover != null)
-			for(int i = 0; i < notification.notification.mouse.hover.length; i++)
-				if(notification.notification.mouse.hover[i] != null)
-					l.add(notification.notification.mouse.hover[i].getFormattedText());
+		if(notification.notification.mouse != null) notification.notification.mouse.addHoverText(l);
 	}
 }

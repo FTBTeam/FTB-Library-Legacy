@@ -26,7 +26,6 @@ public class FTBLibMod
 	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.client.FTBLibModClient")
 	public static FTBLibModCommon proxy;
 	
-	@LMMod.Instance(FTBLibFinals.MOD_ID)
 	public static LMMod mod;
 	
 	@Mod.EventHandler
@@ -37,7 +36,7 @@ public class FTBLibMod
 		
 		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
-		LMMod.init(this);
+		mod = LMMod.create(FTBLibFinals.MOD_ID);
 		
 		FTBLib.init(e.getModConfigurationDirectory());
 		JsonHelper.init();
@@ -106,6 +105,8 @@ public class FTBLibMod
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServerClosed();
 		FTBWorld.server = null;
 		FTBLib.folderWorld = null;
+		LMAccessToken.clear();
+		ConfigRegistry.clearTemp();
 	}
 	
 	@NetworkCheckHandler

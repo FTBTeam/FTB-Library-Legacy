@@ -338,7 +338,7 @@ public class FTBLib
 			try
 			{
 				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
-				JsonElement e = LMJsonUtils.getJsonElement(json);
+				JsonElement e = LMJsonUtils.fromJson(json);
 				cachedUUIDs.put(key, UUIDTypeAdapterLM.getUUID(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }

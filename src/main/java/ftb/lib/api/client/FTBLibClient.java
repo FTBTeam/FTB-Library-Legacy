@@ -24,7 +24,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.lwjgl.BufferUtils;
@@ -41,6 +41,7 @@ public class FTBLibClient
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;
 	public static int displayW, displayH;
+	public static IIcon blockNullIcon = null;
 	
 	public static <T extends Entity> void addEntityRenderer(Class<T> c, Render r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }

@@ -1,33 +1,15 @@
 package ftb.lib;
 
-import latmod.lib.MathHelperLM;
+import latmod.lib.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.Vec3;
 
-public class EntityPos implements Cloneable
+public final class EntityPos implements Cloneable
 {
-	public double x, y, z;
-	public int dim;
-	
-	public EntityPos() { }
-	
-	public EntityPos(Entity e)
-	{ set(e); }
-	
-	public EntityPos(ChunkCoordinates c, int dim)
-	{ set(c, dim); }
+	public final double x, y, z;
+	public final int dim;
 	
 	public EntityPos(double px, double py, double pz, int d)
-	{ setPos(px, py, pz, d); }
-	
-	public boolean equalsPos(Entity e)
-	{ return x == e.posX && y == e.posY && z == e.posZ && dim == e.dimension; }
-	
-	public boolean equalsIntPos(EntityPos p)
-	{ return (p == this) || (p != null && dim == p.dim && intX() == p.intX() && intY() == p.intY() && intZ() == p.intZ()); }
-	
-	public void setPos(double px, double py, double pz, int d)
 	{
 		x = px;
 		y = py;
@@ -35,55 +17,47 @@ public class EntityPos implements Cloneable
 		dim = d;
 	}
 	
-	public void set(Entity e)
-	{ setPos(e.posX, e.posY, e.posZ, e.dimension); }
+	public EntityPos(Entity e)
+	{ this(e.posX, e.posY, e.posZ, e.dimension); }
 	
-	public void set(ChunkCoordinates c, int dim)
-	{ setPos(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D, dim); }
+	public int hashCode()
+	{ return LMUtils.hashCode(x, y, z, dim); }
 	
-	public EntityPos center()
-	{ return new EntityPos(intX() + 0.5D, intY() + 0.5D, intZ() + 0.5D, dim); }
-	
-	public void readFromNBT(NBTTagCompound tag)
+	public String toString()
 	{
-		x = tag.getDouble("X");
-		y = tag.getDouble("Y");
-		z = tag.getDouble("Z");
-		dim = tag.getInteger("D");
+		StringBuilder sb = new StringBuilder();
+		sb.append('[');
+		sb.append(x);
+		sb.append(',');
+		sb.append(y);
+		sb.append(',');
+		sb.append(z);
+		sb.append(',');
+		sb.append(LMDimUtils.getDimName(dim));
+		sb.append(']');
+		return sb.toString();
 	}
 	
-	public void writeToNBT(NBTTagCompound tag)
+	public boolean equalsPos(Entity e)
+	{ return x == e.posX && y == e.posY && z == e.posZ && dim == e.dimension; }
+	
+	public boolean equalsPos(EntityPos p)
+	{ return (p == this) || (p != null && toLinkedPos().equalsPos(p.toLinkedPos())); }
+	
+	public boolean equals(Object o)
 	{
-		tag.setDouble("X", x);
-		tag.setDouble("Y", y);
-		tag.setDouble("Z", z);
-		tag.setInteger("D", dim);
+		if(o == null) return false;
+		else if(o == this) return true;
+		else if(o instanceof Entity) return equalsPos((Entity) o);
+		return equalsPos((EntityPos) o);
 	}
-	
-	public int intX()
-	{ return MathHelperLM.floor(x); }
-	
-	public int intY()
-	{ return MathHelperLM.floor(y); }
-	
-	public int intZ()
-	{ return MathHelperLM.floor(z); }
-	
-	public ChunkCoordinates toBlockPos()
-	{ return new ChunkCoordinates(intX(), intY(), intZ()); }
 	
 	public Vec3 toVec3()
 	{ return Vec3.createVectorHelper(x, y, z); }
 	
-	public int[] toIntArray()
-	{ return new int[] {intX(), intY(), intZ(), dim}; }
-	
 	public EntityPos clone()
 	{ return new EntityPos(x, y, z, dim); }
 	
-	public static EntityPos fromIntArray(int[] pos)
-	{
-		if(pos == null || pos.length < 4) return null;
-		return new EntityPos(pos[0] + 0.5D, pos[1] + 0.5D, pos[2] + 0.5D, pos[3]);
-	}
+	public BlockDimPos toLinkedPos()
+	{ return new BlockDimPos(MathHelperLM.floor(x), MathHelperLM.floor(y), MathHelperLM.floor(z), dim); }
 }

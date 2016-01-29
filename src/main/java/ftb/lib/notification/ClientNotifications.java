@@ -3,9 +3,10 @@ package ftb.lib.notification;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
-import latmod.lib.*;
+import latmod.lib.LMUtils;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.FontRenderer;
 
 import java.util.*;
 
@@ -18,8 +19,7 @@ public class ClientNotifications
 	{
 		if(current != null)
 		{
-			current.render();
-			if(current.isDead()) current = null;
+			if(current.render()) current = null;
 		}
 		else if(!Temp.list.isEmpty())
 		{
@@ -31,14 +31,11 @@ public class ClientNotifications
 	public static void add(Notification n)
 	{
 		if(n == null) return;
-		
-		LMListUtils.removeAll(Temp.list, new ICNRemoveFilter<Temp>(n.ID));
-		LMListUtils.removeAll(Perm.list, new ICNRemoveFilter<Perm>(n.ID));
-		
 		if(n.ID != null)
 		{
-			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
-				current = null;
+			Temp.list.remove(n);
+			Perm.list.remove(n);
+			if(current != null && current.equals(n)) current = null;
 		}
 		
 		Temp.list.add(new Temp(n));
@@ -52,7 +49,7 @@ public class ClientNotifications
 		Temp.list.clear();
 	}
 	
-	public static class Temp extends Gui implements ICNotification
+	public static class Temp extends FinalIDObject
 	{
 		public static final List<Temp> list = new ArrayList<>();
 		
@@ -64,6 +61,7 @@ public class ClientNotifications
 		
 		private Temp(Notification n)
 		{
+			super(n.ID);
 			n.item = null; // Too lazy to re-implement item drawing
 			notification = n;
 			time = -1L;
@@ -73,13 +71,7 @@ public class ClientNotifications
 			if(notification.item != null) width += 20;
 		}
 		
-		public String toString()
-		{ return notification.ID; }
-		
-		public boolean equals(Object o)
-		{ return notification.ID.equals(o.toString()); }
-		
-		public void render()
+		public boolean render()
 		{
 			if(time == -1L) time = Minecraft.getSystemTime();
 			
@@ -90,7 +82,7 @@ public class ClientNotifications
 				if(d0 < 0D || d0 > 1D)
 				{
 					time = 0L;
-					return;
+					return true;
 				}
 				
 				double d1 = d0 * 2D;
@@ -140,57 +132,37 @@ public class ClientNotifications
 				GlStateManager.popMatrix();
 				GlStateManager.enableLighting();
 			}
+			
+			return time == 0L;
 		}
-		
-		public boolean isDead()
-		{ return time == 0L; }
-		
-		public String getID()
-		{ return notification.ID; }
 	}
 	
-	public static class Perm implements Comparable<Perm>, ICNotification
+	public static class Perm extends FinalIDObject
 	{
 		public static final List<Perm> list = new ArrayList<>();
+		
+		public static void remove(Object o)
+		{
+			int index = list.indexOf(o);
+			if(index != -1) list.remove(index);
+		}
 		
 		public final Notification notification;
 		public final long timeAdded;
 		
 		private Perm(Notification n)
 		{
+			super(n.ID);
 			notification = n;
 			timeAdded = LMUtils.millis();
 		}
 		
-		public boolean equals(Object o)
-		{ return notification.ID.equals(String.valueOf(o)); }
-		
-		public int compareTo(Perm o)
-		{ return Long.compare(o.timeAdded, timeAdded); }
+		public int compareTo(Object o)
+		{ return Long.compare(((Perm) o).timeAdded, timeAdded); }
 		
 		public void onClicked()
 		{
-			if(notification.mouse != null && notification.mouse.click != null)
-				notification.mouse.click.onClicked(notification.mouse.val);
+			if(notification.mouse != null && notification.mouse.click != null) notification.mouse.click.onClicked();
 		}
-		
-		public String getID()
-		{ return notification.ID; }
-	}
-	
-	private static interface ICNotification
-	{
-		String getID();
-	}
-	
-	private static class ICNRemoveFilter<E extends ICNotification> implements RemoveFilter<E>
-	{
-		private final String ID;
-		
-		public ICNRemoveFilter(String s)
-		{ ID = String.valueOf(s); }
-		
-		public boolean remove(E n)
-		{ return String.valueOf(n.getID()).equals(ID); }
 	}
 }
