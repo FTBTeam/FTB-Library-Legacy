@@ -44,11 +44,15 @@ public class FTBLibClient
 	private static EntityItem entityItem;
 	public static int displayW, displayH;
 	
+	// - Registry - //
+	
 	public static <T extends Entity> void addEntityRenderer(Class<T> c, IRenderFactory<? super T> r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
 	public static void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
 	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+	
+	// -- //
 	
 	public static ILMPlayer getClientLMPlayer()
 	{

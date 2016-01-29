@@ -32,7 +32,7 @@ public class CmdNotify extends CommandLM
 			n.setColor(0xFFFF0000);
 			n.setItem(new ItemStack(Items.apple, 10));
 			MouseAction ma = new MouseAction();
-			ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("/ftb_reload"));
+			ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("/reload"));
 			n.setMouseAction(ma);
 			n.setDesc(new ChatComponentText("Example description"));
 			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getJson()));
@@ -65,8 +65,9 @@ public class CmdNotify extends CommandLM
 			
 			if(n != null)
 			{
-				for(EntityPlayerMP ep : PlayerSelector.matchEntities(ics, args[0], EntityPlayerMP.class))
+				for(EntityPlayerMP ep : findPlayers(ics, args[0]))
 					FTBLib.notifyPlayer(ep, n);
+				
 				return null;
 			}
 		}

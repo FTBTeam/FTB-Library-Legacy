@@ -9,7 +9,7 @@ import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import ftb.lib.notification.Notification;
-import latmod.lib.*;
+import latmod.lib.LMUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import net.minecraft.block.Block;
@@ -146,7 +146,7 @@ public class FTBLib
 	public static boolean isDedicatedServer()
 	{
 		MinecraftServer mcs = getServer();
-		return (mcs == null) ? false : mcs.isDedicatedServer();
+		return mcs != null && mcs.isDedicatedServer();
 	}
 	
 	public static String getPath(ResourceLocation res)
@@ -156,20 +156,17 @@ public class FTBLib
 	{ return FTBLib.class.getResource(getPath(res)) != null; }
 	
 	public static boolean hasOnlinePlayers()
-	{ return !getServer().getConfigurationManager().playerEntityList.isEmpty(); }
+	{ return getServer() != null && !getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
-	@SuppressWarnings("unchecked")
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
-		ArrayList<EntityPlayerMP> l = new ArrayList<>();
-		if(getEffectiveSide().isClient()) return l;
-		
-		if(hasOnlinePlayers())
-		{
-			l.addAll(getServer().getConfigurationManager().playerEntityList);
-			if(except != null) l.remove(except);
-		}
-		return l;
+		ArrayList<EntityPlayerMP> list = new ArrayList<>();
+		if(getServer() == null) return list;
+		List<EntityPlayerMP> l = getServer().getConfigurationManager().playerEntityList;
+		if(l.isEmpty()) return list;
+		list.addAll(l);
+		if(except != null) list.remove(except);
+		return list;
 	}
 	
 	public static Map<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
@@ -180,7 +177,7 @@ public class FTBLib
 		
 		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP) getServer().getConfigurationManager().playerEntityList.get(i);
+			EntityPlayerMP ep = getServer().getConfigurationManager().playerEntityList.get(i);
 			m.put(ep.getUniqueID(), ep);
 		}
 		
@@ -193,7 +190,7 @@ public class FTBLib
 		
 		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP) getServer().getConfigurationManager().playerEntityList.get(i);
+			EntityPlayerMP ep = getServer().getConfigurationManager().playerEntityList.get(i);
 			if(ep.getUniqueID().equals(id)) return ep;
 		}
 		
@@ -340,8 +337,7 @@ public class FTBLib
 			
 			try
 			{
-				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
-				JsonElement e = LMJsonUtils.fromJson(json);
+				JsonElement e = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asJson();
 				cachedUUIDs.put(key, UUIDTypeAdapterLM.getUUID(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }

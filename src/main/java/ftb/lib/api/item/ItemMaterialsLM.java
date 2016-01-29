@@ -1,7 +1,8 @@
 package ftb.lib.api.item;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -10,6 +11,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 {
 	public final HashMap<Integer, MaterialItem> materials;
 	public String folder = "";
+	private boolean requiresMultipleRenderPasses = false;
 	
 	public ItemMaterialsLM(String s)
 	{
@@ -38,10 +40,14 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public void onPostLoaded()
 	{
 		for(MaterialItem m : materials.values())
-		{
-			itemsAdded.add(m.getStack());
 			m.onPostLoaded();
-		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
+	{
+		for(MaterialItem m : materials.values())
+			l.add(new ItemStack(item, 1, m.damage));
 	}
 	
 	public void loadRecipes()

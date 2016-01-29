@@ -2,6 +2,7 @@ package ftb.lib.mod;
 
 import ftb.lib.*;
 import ftb.lib.api.*;
+import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.item.ODItems;
 import ftb.lib.mod.cmd.*;
@@ -25,7 +26,6 @@ public class FTBLibMod
 	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.client.FTBLibModClient")
 	public static FTBLibModCommon proxy;
 	
-	@LMMod.Instance(FTBLibFinals.MOD_ID)
 	public static LMMod mod;
 	
 	@Mod.EventHandler
@@ -36,7 +36,7 @@ public class FTBLibMod
 		
 		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
-		LMMod.init(this);
+		mod = LMMod.create(FTBLibFinals.MOD_ID);
 		
 		FTBLib.init(e.getModConfigurationDirectory());
 		JsonHelper.init();
@@ -68,17 +68,20 @@ public class FTBLibMod
 	{
 		if(FTBLibConfigCmd.override_list.get()) e.registerServerCommand(new CmdListOverride());
 		if(FTBLibConfigCmd.override_help.get()) e.registerServerCommand(new CmdHelpOverride());
-		e.registerServerCommand(new CmdEditConfig());
-		e.registerServerCommand(new CmdMode());
-		e.registerServerCommand(new CmdReload());
-		e.registerServerCommand(new CmdNotify());
-		e.registerServerCommand(new CmdSetItemName());
+		addCmd(e, new CmdEditConfig());
+		addCmd(e, new CmdMode());
+		addCmd(e, new CmdReload());
+		addCmd(e, new CmdNotify());
+		addCmd(e, new CmdSetItemName());
 	}
+	
+	private void addCmd(FMLServerStartingEvent e, CommandLM c)
+	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
-		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName());
+		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
 		ConfigRegistry.reload();
 	}
 	

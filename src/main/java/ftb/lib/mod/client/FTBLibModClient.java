@@ -4,6 +4,7 @@ import ftb.lib.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
+import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.client.gui.GuiEditShortcuts;
@@ -15,10 +16,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
@@ -139,5 +142,10 @@ public class FTBLibModClient extends FTBLibModCommon
 			GuiScreen g = t.getGui(ep, data);
 			if(g != null) FTBLibClient.openGui(g);
 		}
+	}
+	
+	public void addItemModel(String ID, IItemLM i, int meta)
+	{
+		ModelLoader.setCustomModelResourceLocation(i.getItem(), meta, new ModelResourceLocation(ID + ":" + i.getItemID(), "inventory"));
 	}
 }

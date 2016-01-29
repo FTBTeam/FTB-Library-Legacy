@@ -19,8 +19,7 @@ public class ClientNotifications
 	{
 		if(current != null)
 		{
-			current.render();
-			if(current.isDead()) current = null;
+			if(current.render()) current = null;
 		}
 		else if(!Temp.list.isEmpty())
 		{
@@ -34,9 +33,9 @@ public class ClientNotifications
 		if(n == null) return;
 		if(n.ID != null)
 		{
-			Temp.list.remove(n.ID);
-			Perm.list.remove(n.ID);
-			if(current != null && current.notification.ID != null && current.notification.ID.equals(n.ID))
+			Temp.list.remove(n);
+			Perm.list.remove(n);
+			if(current != null && current.equals(n))
 				current = null;
 		}
 		
@@ -75,9 +74,9 @@ public class ClientNotifications
 		{ return notification.ID; }
 		
 		public boolean equals(Object o)
-		{ return notification.equals(o.toString()); }
+		{ return notification.equals(o); }
 		
-		public void render()
+		public boolean render()
 		{
 			if(time == -1L) time = Minecraft.getSystemTime();
 			
@@ -88,7 +87,7 @@ public class ClientNotifications
 				if(d0 < 0D || d0 > 1D)
 				{
 					time = 0L;
-					return;
+					return true;
 				}
 				
 				double d1 = d0 * 2D;
@@ -138,10 +137,9 @@ public class ClientNotifications
 				GlStateManager.popMatrix();
 				GlStateManager.enableLighting();
 			}
+			
+			return time == 0L;
 		}
-		
-		public boolean isDead()
-		{ return time == 0L; }
 	}
 	
 	public static class Perm implements Comparable<Perm>
@@ -158,7 +156,7 @@ public class ClientNotifications
 		}
 		
 		public boolean equals(Object o)
-		{ return notification.ID.equals(String.valueOf(o)); }
+		{ return notification.equals(o); }
 		
 		public int compareTo(Perm o)
 		{ return Long.compare(o.timeAdded, timeAdded); }

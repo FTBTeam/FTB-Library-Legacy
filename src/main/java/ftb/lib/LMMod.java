@@ -5,114 +5,71 @@ import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
 import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.*;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.relauncher.*;
-import org.apache.logging.log4j.*;
 
-import java.lang.annotation.*;
-import java.lang.reflect.Field;
 import java.util.*;
 
-public class LMMod
+public class LMMod extends FinalIDObject
 {
-	public static final HashMap<String, LMMod> modsMap = new HashMap<>();
+	private static final HashMap<String, LMMod> modsMap = new HashMap<>();
 	
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	public static @interface Instance
+	public static LMMod create(String s)
 	{
-		String value();
-	}
-	
-	private static LMMod getLMMod(Object o)
-	{
-		if(o == null) return null;
-		
-		try
-		{
-			Field[] fields = o.getClass().getDeclaredFields();
-			
-			for(Field f : fields)
-			{
-				if(f.isAnnotationPresent(LMMod.Instance.class))
-				{
-					LMMod.Instance m = f.getAnnotation(LMMod.Instance.class);
-					
-					if(m.value() != null)
-					{
-						LMMod mod = new LMMod(m.value());
-						f.set(o, mod);
-						return mod;
-					}
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
-	public static void init(Object o)
-	{
-		LMMod mod = getLMMod(o);
+		if(s == null || s.isEmpty()) return null;
+		LMMod mod = modsMap.get(s);
 		if(mod == null)
 		{
-			FTBLib.logger.warn("LMMod failed to load from " + o);
-			return;
+			mod = new LMMod(s);
+			modsMap.put(mod.ID, mod);
+			if(FTBLibFinals.DEV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
 		}
-		modsMap.put(mod.modID, mod);
-		if(FTBLibFinals.DEV) FTBLib.logger.info("LMMod '" + mod.toString() + "' loaded");
+		
+		return mod;
+	}
+	
+	public static List<LMMod> getMods()
+	{
+		ArrayList<LMMod> list = new ArrayList<>();
+		list.addAll(modsMap.values());
+		return list;
 	}
 	
 	// End of static //
 	
-	public final String modID;
 	public final String lowerCaseModID;
 	public final String assets;
 	private ModContainer modContainer;
-	public final List<IBlockLM> blocks;
-	public final List<IItemLM> items;
+	public final List<IItemLM> itemsAndBlocks;
 	
-	public Logger logger;
 	public LMRecipes recipes;
 	
 	public LMMod(String id)
 	{
-		modID = id;
-		lowerCaseModID = modID.toLowerCase();
+		super(id);
+		lowerCaseModID = ID.toLowerCase();
 		assets = lowerCaseModID + ":";
-		blocks = new ArrayList<>();
-		items = new ArrayList<>();
+		itemsAndBlocks = new ArrayList<>();
 		
-		logger = LogManager.getLogger(modID);
 		recipes = LMRecipes.defaultInstance;
 	}
 	
 	public ModContainer getModContainer()
 	{
-		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(modID);
+		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(ID);
 		return modContainer;
 	}
 	
 	public void setRecipes(LMRecipes r)
 	{ recipes = (r == null) ? new LMRecipes() : r; }
 	
-	public String toFullString()
-	{ return modID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
-	
-	public String toString()
-	{ return modID; }
-	
-	public ResourceLocation getLocation(String s)
-	{ return new ResourceLocation(lowerCaseModID, s); }
+	public String toFullID()
+	{ return ID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
 	public CreativeTabs createTab(final String s, final ItemStack icon)
 	{
@@ -125,6 +82,16 @@ public class LMMod
 			@SideOnly(Side.CLIENT)
 			public Item getTabIconItem()
 			{ return getIconItemStack().getItem(); }
+			
+			@SideOnly(Side.CLIENT)
+			public void displayAllReleventItems(List<ItemStack> l)
+			{
+				for(IItemLM i : itemsAndBlocks)
+				{
+					Item item = i.getItem();
+					if(item.getCreativeTab() == this) item.getSubItems(item, this, l);
+				}
+			}
 		};
 		
 		return tab;
@@ -141,39 +108,35 @@ public class LMMod
 	
 	public void addItem(IItemLM i)
 	{
-		FTBLib.addItem((Item) i, i.getItemID());
-		items.add(i);
+		if(i instanceof IBlockLM)
+		{
+			FTBLib.addBlock((Block) i, ((IBlockLM) i).getItemBlock(), i.getItemID());
+		}
+		else
+		{
+			FTBLib.addItem(i.getItem(), i.getItemID());
+		}
+		
+		itemsAndBlocks.add(i);
 	}
 	
-	public void addBlock(IBlockLM b)
-	{
-		FTBLib.addBlock((Block) b, b.getItemBlock(), b.getItemID());
-		blocks.add(b);
-	}
+	public void addItemModel(IItemLM i, int meta)
+	{ FTBLibMod.proxy.addItemModel(ID, i, meta); }
 	
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
-	{ FTBLib.addTileEntity(c, modID + '.' + s, alt); }
+	{ FTBLib.addTileEntity(c, ID + '.' + s, alt); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)
-	{ FTBLib.addEntity(c, s, id, modID); }
+	{ FTBLib.addEntity(c, s, id, ID); }
 	
 	public void onPostLoaded()
 	{
-		for(int i = 0; i < items.size(); i++)
-			items.get(i).onPostLoaded();
-		
-		for(int i = 0; i < blocks.size(); i++)
-			blocks.get(i).onPostLoaded();
+		for(IItemLM i : itemsAndBlocks) i.onPostLoaded();
 	}
 	
 	public void loadRecipes()
 	{
-		for(int i = 0; i < items.size(); i++)
-			items.get(i).loadRecipes();
-		
-		for(int i = 0; i < blocks.size(); i++)
-			blocks.get(i).loadRecipes();
-		
+		for(IItemLM i : itemsAndBlocks) i.loadRecipes();
 		if(recipes != null) recipes.loadRecipes();
 	}
 }

@@ -2,7 +2,6 @@ package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.item.ItemDisplay;
-import ftb.lib.mod.FTBLibMod;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiDisplayItem extends GuiLM
 {
-	public static final ResourceLocation texture = FTBLibMod.mod.getLocation("textures/gui/displayitem.png");
+	public static final ResourceLocation texture = new ResourceLocation("ftbl", "textures/gui/displayitem.png");
 	
 	public ItemDisplay itemDisplay;
 	

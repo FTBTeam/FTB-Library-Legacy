@@ -22,7 +22,7 @@ public abstract class ContainerLM extends Container
 		if(iinv == null) return null;
 		
 		ItemStack is = null;
-		Slot slot = (Slot) inventorySlots.get(i);
+		Slot slot = inventorySlots.get(i);
 		
 		if(slot != null && slot.getHasStack())
 		{

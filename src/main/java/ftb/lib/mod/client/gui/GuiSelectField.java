@@ -1,9 +1,10 @@
 package ftb.lib.mod.client.gui;
 
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
-import latmod.lib.PrimitiveType;
+import latmod.lib.*;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -35,6 +36,7 @@ public class GuiSelectField extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
+				FTBLibClient.playClickSound();
 				callback.onFieldSelected(new FieldSelected(ID, false, def, true));
 			}
 		};
@@ -45,7 +47,8 @@ public class GuiSelectField extends GuiLM
 		{
 			public void onButtonPressed(int b)
 			{
-				callback.onFieldSelected(new FieldSelected(ID, true, textBox.text, true));
+				FTBLibClient.playClickSound();
+				if(textBox.isValid()) callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
 			}
 		};
 		
@@ -53,26 +56,21 @@ public class GuiSelectField extends GuiLM
 		
 		textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
 		{
-			public boolean canAddChar(char c)
-			{ return super.canAddChar(c) && isCharValid(c); }
+			public boolean isValid()
+			{
+				if(type == PrimitiveType.STRING) return true;
+				else if(type == PrimitiveType.INT) return Converter.canParseInt(getText());
+				else return Converter.canParseDouble(getText());
+			}
 			
 			public void returnPressed()
 			{ buttonAccept.onButtonPressed(0); }
 		};
 		
-		textBox.text = def;
-	}
-	
-	private boolean isCharValid(char c)
-	{
-		if(type == PrimitiveType.STRING || type == PrimitiveType.INT || type == PrimitiveType.FLOAT)
-		{
-			if(type == PrimitiveType.STRING || c == '-') return true;
-			else if(c == '.') return type == PrimitiveType.FLOAT;
-			else return c >= '0' && c <= '9';
-		}
-		
-		return false;
+		textBox.setText(def);
+		textBox.textRenderX = -1;
+		textBox.textRenderY = 6;
+		textBox.textColor = 0xFFEEEEEE;
 	}
 	
 	public GuiSelectField setCharLimit(int i)
@@ -90,7 +88,7 @@ public class GuiSelectField extends GuiLM
 	
 	public void drawBackground()
 	{
-		int size = 8 + getFontRenderer().getStringWidth(textBox.text);
+		int size = 8 + getFontRenderer().getStringWidth(textBox.getText());
 		if(size > mainPanel.width)
 		{
 			mainPanel.width = size;
@@ -108,6 +106,6 @@ public class GuiSelectField extends GuiLM
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		buttonAccept.renderWidget();
 		buttonCancel.renderWidget();
-		textBox.renderCentred(textBox.width / 2, 6, 0xFFEEEEEE);
+		textBox.renderWidget();
 	}
 }

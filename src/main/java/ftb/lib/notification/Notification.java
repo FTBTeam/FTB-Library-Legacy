@@ -94,6 +94,6 @@ public final class Notification extends FinalIDObject implements IJsonObject
 		if(!o.has("id") || !o.has("title")) return null;
 		Notification n = new Notification(o.get("id").getAsString());
 		n.setJson(o);
-		return null;
+		return n;
 	}
 }

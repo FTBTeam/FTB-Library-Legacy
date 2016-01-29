@@ -1,5 +1,6 @@
 package ftb.lib.mod;
 
+import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
@@ -61,6 +62,10 @@ public class FTBLibModCommon // FTBLibModClient
 	}
 	
 	public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
+	{
+	}
+	
+	public void addItemModel(String ID, IItemLM i, int meta)
 	{
 	}
 }

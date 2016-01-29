@@ -1,7 +1,7 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.mod.FTBLibMod;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ public class GuiIcons
 	
 	private static final TextureCoords getIcon(String s)
 	{
-		TextureCoords t = new TextureCoords(FTBLibMod.mod.getLocation("textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16);
+		TextureCoords t = new TextureCoords(new ResourceLocation("ftbl", "textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16);
 		iconMap.put(s, t);
 		return t;
 	}

@@ -69,7 +69,7 @@ public class FTBLibActions
 			int nw = FTBLibClient.mc.fontRendererObj.getStringWidth(n);
 			int width = 16;
 			GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
-			GuiLM.drawBlankRect(ax + width - nw, ay - 4, z, ax + width + 1, ay + 5);
+			GuiLM.drawBlankRect(ax + width - nw, ay - 4, z, nw + 1, 9);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			FTBLibClient.mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
 		}

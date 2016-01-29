@@ -1,13 +1,10 @@
 package ftb.lib.api.block;
 
 import ftb.lib.LMMod;
-import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.tile.TileLM;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.ItemModelMesher;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,19 +14,16 @@ import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.util.*;
+import java.util.List;
 
 public abstract class BlockLM extends BlockContainer implements IBlockLM
 {
 	public final String blockName;
-	public final List<ItemStack> blocksAdded;
-	private Item blockItem = null;
 	
 	public BlockLM(String s, Material m)
 	{
 		super(m);
 		blockName = s;
-		blocksAdded = new ArrayList<>();
 		setUnlocalizedName(getMod().getBlockName(s));
 		setHardness(1.8F);
 		setResistance(3F);
@@ -46,25 +40,18 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public abstract TileLM createNewTileEntity(World w, int m);
 	
-	@SuppressWarnings("unchecked")
-	public final <E> E register()
-	{
-		getMod().addBlock(this);
-		return (E) this;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public final void registerModel()
-	{
-		ItemModelMesher mesher = FTBLibClient.mc.getRenderItem().getItemModelMesher();
-		mesher.register(getItem(), 0, new ModelResourceLocation(getMod().assets + blockName, "inventory"));
-	}
+	public int getRenderType()
+	{ return 3; }
 	
 	public final String getItemID()
 	{ return blockName; }
 	
+	public String getUnlocalizedName()
+	{ return getMod().getBlockName(blockName); }
+	
 	public void onPostLoaded()
-	{ blocksAdded.add(new ItemStack(this)); }
+	{
+	}
 	
 	public int damageDropped(IBlockState state)
 	{ return getMetaFromState(state); }
@@ -72,18 +59,11 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public boolean hasTileEntity(IBlockState state)
 	{ return isBlockContainer; }
 	
-	public String getUnlocalizedName()
-	{ return getMod().getBlockName(blockName); }
-	
-	public void addAllDamages(int until)
-	{
-		for(int i = 0; i < until; i++)
-			blocksAdded.add(new ItemStack(this, 1, i));
-	}
-	
 	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item j, CreativeTabs c, List<ItemStack> l)
-	{ l.addAll(blocksAdded); }
+	public void getSubBlocks(Item item, CreativeTabs c, List<ItemStack> l)
+	{
+		l.add(new ItemStack(item, 1, 0));
+	}
 	
 	public void onBlockPlacedBy(World w, BlockPos pos, IBlockState state, EntityLivingBase el, ItemStack is)
 	{
@@ -194,10 +174,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	}
 	
 	public final Item getItem()
-	{
-		if(blockItem == null) blockItem = Item.getItemFromBlock(this);
-		return blockItem;
-	}
+	{ return Item.getItemFromBlock(this); }
 	
 	public AxisAlignedBB getCollisionBoundingBox(World w, BlockPos pos, IBlockState state)
 	{
@@ -214,4 +191,8 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		if(te != null && !te.isInvalid() && te instanceof TileLM) return ((TileLM) te);
 		return null;
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public EnumWorldBlockLayer getBlockLayer()
+	{ return EnumWorldBlockLayer.SOLID; }
 }

@@ -69,8 +69,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	{
 		security.writeToNBT(tag, "Security");
 		String customName = getName();
-		if(customName == null) customName = "";
-		if(!customName.isEmpty()) tag.setString("CustomName", customName);
+		if(customName == null && !customName.isEmpty()) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
 		tag.setLong("Tick", tick);
 	}

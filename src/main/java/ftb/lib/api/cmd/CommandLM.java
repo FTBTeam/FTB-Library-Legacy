@@ -115,4 +115,42 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	
 	public static void checkArgsStrong(String[] args, int i) throws CommandException
 	{ if(args == null || args.length != i) throw new MissingArgsException(); }
+	
+	public static List<EntityPlayerMP> findPlayers(ICommandSender ics, String arg) throws CommandException
+	{
+		EntityPlayerMP player = null;
+		
+		if(arg.equals("@a")) return FTBLib.getAllOnlinePlayers(null);
+		else if(arg.equals("@r"))
+		{
+			List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
+			if(!l.isEmpty()) player = l.get(ics.getEntityWorld().rand.nextInt(l.size()));
+		}
+		else if(arg.equals("@p"))
+		{
+			if(ics instanceof EntityPlayerMP) return Collections.singletonList((EntityPlayerMP) ics);
+			List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
+			if(l.isEmpty()) return l;
+			Collections.sort(l, new PlayerDistanceComparator(ics));
+			player = l.get(0);
+		}
+		else
+		{
+			player = (EntityPlayerMP) ics.getEntityWorld().getPlayerEntityByName(arg);
+		}
+		
+		if(player == null) return new ArrayList<>();
+		return Collections.singletonList(player);
+	}
+	
+	private static class PlayerDistanceComparator implements Comparator<EntityPlayerMP>
+	{
+		private final Vec3 start;
+		
+		private PlayerDistanceComparator(ICommandSender ics)
+		{ start = ics.getPositionVector(); }
+		
+		public int compare(EntityPlayerMP o1, EntityPlayerMP o2)
+		{ return Double.compare(start.squareDistanceTo(o2.getPositionVector()), start.squareDistanceTo(o1.getPositionVector())); }
+	}
 }
