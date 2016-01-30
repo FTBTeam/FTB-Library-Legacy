@@ -1,9 +1,12 @@
 package ftb.lib.api.item;
 
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.*;
+import net.minecraft.util.IIcon;
 
 import java.util.*;
 
@@ -69,5 +72,20 @@ public abstract class ItemMaterialsLM extends ItemLM
 		MaterialItem m = materials.get(i);
 		if(m != null) return m.getRenderPasses();
 		return 1;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister ir)
+	{
+		for(MaterialItem m : materials.values())
+			m.registerIcons(ir);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIconFromDamage(int dmg)
+	{
+		MaterialItem m = materials.get(dmg);
+		if(m != null) return m.getIcon();
+		return Items.egg.getIconFromDamage(0);
 	}
 }

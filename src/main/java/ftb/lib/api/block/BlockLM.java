@@ -5,6 +5,7 @@ import ftb.lib.LMMod;
 import ftb.lib.api.tile.TileLM;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -189,6 +190,26 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		return null;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public IIcon getBlockIcon()
 	{ return blockIcon; }
+	
+	@SideOnly(Side.CLIENT)
+	protected final String getTextureName()
+	{
+		if(textureName == null) return getMod().assets + blockName;
+		return getMod().assets + textureName;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister ir)
+	{ blockIcon = ir.registerIcon(getTextureName()); }
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int s, int m)
+	{ return blockIcon; }
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int s)
+	{ return getIcon(s, iba.getBlockMetadata(x, y, z)); }
 }

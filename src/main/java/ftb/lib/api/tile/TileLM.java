@@ -51,6 +51,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		NBTTagCompound tag = p.func_148857_g();
 		readTileData(tag);
 		readTileClientData(tag);
+		onUpdatePacket();
 	}
 	
 	public void readTileData(NBTTagCompound tag)
@@ -83,8 +84,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public void onUpdatePacket()
 	{
-		//TODO: Check this
-		if(rerenderBlock()) worldObj.markBlockRangeForRenderUpdate(xCoord, yCoord, zCoord, xCoord, yCoord, zCoord);
+		if(rerenderBlock()) worldObj.func_147479_m(xCoord, yCoord, zCoord);
 	}
 	
 	public boolean rerenderBlock()

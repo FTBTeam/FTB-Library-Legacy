@@ -9,6 +9,7 @@ import ftb.lib.api.gui.IClientActionGui;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.mod.client.FTBLibRenderHandler;
 import latmod.lib.LMColorUtils;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.*;
@@ -22,11 +23,11 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
-import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.*;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -42,6 +43,18 @@ public class FTBLibClient
 	private static EntityItem entityItem;
 	public static int displayW, displayH;
 	public static IIcon blockNullIcon = null;
+	
+	public static int getNewBlockRenderID()
+	{ return RenderingRegistry.getNextAvailableRenderId(); }
+	
+	public static void addBlockRenderer(int i, ISimpleBlockRenderingHandler r)
+	{ RenderingRegistry.registerBlockHandler(i, r); }
+	
+	public static void addItemRenderer(Item item, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(item, i); }
+	
+	public static void addItemRenderer(Block block, IItemRenderer i)
+	{ MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), i); }
 	
 	public static <T extends Entity> void addEntityRenderer(Class<T> c, Render r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }

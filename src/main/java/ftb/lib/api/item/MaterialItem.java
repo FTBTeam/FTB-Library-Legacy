@@ -2,8 +2,10 @@ package ftb.lib.api.item;
 
 import cpw.mods.fml.relauncher.*;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 
 import java.util.List;
 
@@ -11,6 +13,9 @@ public class MaterialItem extends FinalIDObject
 {
 	public final ItemMaterialsLM item;
 	public final int damage;
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon icon;
 	
 	public MaterialItem(ItemMaterialsLM i, int d, String s)
 	{
@@ -38,4 +43,17 @@ public class MaterialItem extends FinalIDObject
 	
 	public String getUnlocalizedName()
 	{ return item.getMod().getItemName(item.folder.isEmpty() ? ID : (item.folder + "." + ID)); }
+	
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister ir)
+	{
+		if(item.folder.isEmpty()) icon = ir.registerIcon(item.getMod().assets + ID);
+		else icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + ID);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon()
+	{
+		return icon;
+	}
 }

@@ -2,6 +2,7 @@ package ftb.lib.api.item;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMMod;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
@@ -58,4 +59,8 @@ public abstract class ItemLM extends Item implements IItemLM
 	public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
 	}
+	
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister ir)
+	{ itemIcon = ir.registerIcon(getIconString()); }
 }
