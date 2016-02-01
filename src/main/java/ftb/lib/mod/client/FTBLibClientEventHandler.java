@@ -7,7 +7,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.client.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.item.*;
@@ -79,7 +79,6 @@ public class FTBLibClientEventHandler
 			if(FTBLibFinals.DEV)
 			{
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
-				DevConsole.text.set("MC", Loader.MC_VERSION + ", " + FTBLibClient.mc.debug);
 			}
 		}
 		else

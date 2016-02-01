@@ -82,20 +82,19 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
-		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName());
+		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
 		ConfigRegistry.reload();
-	}
-	
-	@Mod.EventHandler
-	public void onServerAboutToStart(FMLServerStartedEvent e)
-	{
-		GameModes.reload();
 		
-		FTBWorld.server = new FTBWorld(FTBLib.getServerWorld());
+		GameModes.reload();
+		FTBWorld.server = new FTBWorld(Side.SERVER);
 		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, FTBLib.getServer());
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();
-		
+	}
+	
+	@Mod.EventHandler
+	public void onServerStarted(FMLServerStartedEvent e)
+	{
 		FTBLib.reload(FTBLib.getServer(), false, false);
 	}
 	

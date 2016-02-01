@@ -5,13 +5,12 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.*;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.config.IConfigFile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -31,7 +30,6 @@ public class FTBLibActions
 		
 		PlayerActionRegistry.add(notifications);
 		PlayerActionRegistry.add(settings);
-		PlayerActionRegistry.add(dev_console);
 		
 		GuiScreenRegistry.register("notifications", new GuiScreenRegistry.Entry()
 		{
@@ -73,34 +71,6 @@ public class FTBLibActions
 	{
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
-	};
-	
-	public static final PlayerAction dev_console = new PlayerAction(PlayerAction.Type.SELF, "ftbl.dev_console", -2000, GuiIcons.bug)
-	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{
-			if(DevConsole.enabled())
-			{
-				DevConsole.open();
-				
-				DevConsole.Tree tree = new DevConsole.Tree();
-				
-				tree.set("synced", ConfigRegistry.synced);
-				
-				for(IConfigFile f : ConfigRegistry.map.values())
-				{
-					tree.set(f.getGroup().ID, f.getGroup().getPrettyJsonString(true));
-				}
-				
-				DevConsole.text.set("Config", tree);
-			}
-		}
-		
-		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return DevConsole.enabled(); }
-		
-		public String getDisplayName()
-		{ return "Dev Console"; }
 	};
 	
 	@SubscribeEvent

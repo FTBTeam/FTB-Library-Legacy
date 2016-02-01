@@ -3,7 +3,6 @@ package ftb.lib;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
 import latmod.lib.*;
-import net.minecraft.world.WorldServer;
 
 import java.io.File;
 
@@ -20,24 +19,26 @@ public class FTBWorld
 	private File currentModeFile = null;
 	private File currentWorldIDFile = null;
 	
-	public FTBWorld()
+	public FTBWorld(Side sd)
 	{
-		side = Side.CLIENT;
-		currentMode = new GameMode("default");
-	}
-	
-	public FTBWorld(WorldServer w)
-	{
-		side = Side.SERVER;
-		currentMode = GameModes.getGameModes().defaultMode;
-		try
-		{
-			currentModeFile = new File(FTBLib.folderWorld, "ftb_gamemode.txt");
-			currentMode = GameModes.getGameModes().get(LMFileUtils.loadAsText(currentModeFile).trim());
-		}
-		catch(Exception ex) { /*ex.printStackTrace();*/ }
+		side = sd;
 		
-		for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
+		if(side.isClient())
+		{
+			currentMode = new GameMode("default");
+		}
+		else
+		{
+			currentMode = GameModes.getGameModes().defaultMode;
+			try
+			{
+				currentModeFile = new File(FTBLib.folderWorld, "ftb_gamemode.txt");
+				currentMode = GameModes.getGameModes().get(LMFileUtils.loadAsText(currentModeFile).trim());
+			}
+			catch(Exception ex) { /*ex.printStackTrace();*/ }
+			
+			for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
+		}
 		
 		FTBLib.logger.info("Current Mode: " + currentMode);
 	}

@@ -301,7 +301,7 @@ public class FTBLib
 	}
 	
 	public static boolean isOP(GameProfile p)
-	{ return getServerWorld() != null && getServer().getConfigurationManager().func_152603_m().func_152683_b(p) != null; }
+	{ return !isDedicatedServer() || LMStringUtils.contains(getServer().getConfigurationManager().func_152603_m().func_152685_a(), p.getName()); }
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
