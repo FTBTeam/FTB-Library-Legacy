@@ -87,7 +87,7 @@ public class FTBLibMod
 		
 		GameModes.reload();
 		FTBWorld.server = new FTBWorld(Side.SERVER);
-		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, FTBLib.getServer());
+		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, e.getServer());
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();
 	}
