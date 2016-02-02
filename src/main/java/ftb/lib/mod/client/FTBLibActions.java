@@ -125,7 +125,7 @@ public class FTBLibActions
 				boolean hasPotions = !e.gui.mc.thePlayer.getActivePotionEffects().isEmpty();
 				if(hasPotions)
 				{
-					buttonX -= 4;
+					buttonX -= 64;
 					buttonY -= 26;
 				}
 				
@@ -141,8 +141,8 @@ public class FTBLibActions
 					
 					if(hasPotions)
 					{
-						int x = i % 8;
-						int y = i / 8;
+						int x = i % 6;
+						int y = i / 6;
 						b = new ButtonInvLM(495830 + i, a, guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
 					}
 					else
