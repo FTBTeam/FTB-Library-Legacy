@@ -57,6 +57,9 @@ public class ConfigRegistry
 				else FTBLib.dev_logger.info("Didnt load anything from " + e.getKey());
 			}
 		}
+		
+		for(IConfigFile f : map.values())
+			f.save();
 	}
 	
 	public static ConfigGroup createTempConfig(EntityPlayerMP ep)
