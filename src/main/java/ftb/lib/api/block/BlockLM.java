@@ -38,7 +38,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
 	
-	public abstract TileLM createNewTileEntity(World w, int m);
+	public abstract TileEntity createNewTileEntity(World w, int m);
 	
 	public int getRenderType()
 	{ return 3; }

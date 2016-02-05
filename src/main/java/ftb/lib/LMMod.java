@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.*;
+import net.minecraft.util.*;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -139,4 +140,7 @@ public class LMMod extends FinalIDObject
 		for(IItemLM i : itemsAndBlocks) i.loadRecipes();
 		if(recipes != null) recipes.loadRecipes();
 	}
+	
+	public IChatComponent chatComponent(String s, Object... obj)
+	{ return new ChatComponentTranslation(assets + s, obj); }
 }
