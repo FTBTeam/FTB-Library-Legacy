@@ -1,8 +1,8 @@
 package ftb.lib.mod;
 
-import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -65,7 +65,7 @@ public class FTBLibModCommon // FTBLibModClient
 	{
 	}
 	
-	public void addItemModel(String ID, IItemLM i, int meta)
+	public void addItemModel(String mod, Item i, int meta, String id)
 	{
 	}
 }

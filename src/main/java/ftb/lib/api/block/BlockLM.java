@@ -2,6 +2,7 @@ package ftb.lib.api.block;
 
 import ftb.lib.LMMod;
 import ftb.lib.api.tile.TileLM;
+import ftb.lib.mod.FTBLibMod;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -35,9 +36,6 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public abstract LMMod getMod();
 	
-	@SideOnly(Side.CLIENT)
-	public abstract CreativeTabs getCreativeTabToDisplayOn();
-	
 	public abstract TileEntity createNewTileEntity(World w, int m);
 	
 	public int getRenderType()
@@ -51,6 +49,12 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public void onPostLoaded()
 	{
+		loadModels();
+	}
+	
+	public void loadModels()
+	{
+		FTBLibMod.proxy.addItemModel(getMod().ID, getItem(), 0, blockName);
 	}
 	
 	public int damageDropped(IBlockState state)

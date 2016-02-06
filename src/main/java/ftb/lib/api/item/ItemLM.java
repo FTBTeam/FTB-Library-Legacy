@@ -1,6 +1,7 @@
 package ftb.lib.api.item;
 
 import ftb.lib.LMMod;
+import ftb.lib.mod.FTBLibMod;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
@@ -21,9 +22,6 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public abstract LMMod getMod();
 	
-	@SideOnly(Side.CLIENT)
-	public abstract CreativeTabs getCreativeTab();
-	
 	public final Item getItem()
 	{ return this; }
 	
@@ -32,6 +30,12 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public void onPostLoaded()
 	{
+		loadModels();
+	}
+	
+	public void loadModels()
+	{
+		FTBLibMod.proxy.addItemModel(getMod().ID, getItem(), 0, itemName);
 	}
 	
 	public void loadRecipes()

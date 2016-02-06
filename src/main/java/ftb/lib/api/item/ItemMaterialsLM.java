@@ -10,7 +10,7 @@ import java.util.*;
 public abstract class ItemMaterialsLM extends ItemLM
 {
 	public final HashMap<Integer, MaterialItem> materials;
-	public String folder = "";
+	private String folder = "";
 	private boolean requiresMultipleRenderPasses = false;
 	
 	public ItemMaterialsLM(String s)
@@ -21,12 +21,14 @@ public abstract class ItemMaterialsLM extends ItemLM
 		setMaxDamage(0);
 	}
 	
+	public void setFolder(String s)
+	{ if(s == null || !s.isEmpty()) folder = s; }
+	
 	public ItemStack add(MaterialItem m)
 	{
 		materials.put(m.damage, m);
-		
 		if(m.getRenderPasses() > 1) requiresMultipleRenderPasses = true;
-		
+		m.onPostLoaded();
 		return m.getStack();
 	}
 	
@@ -39,21 +41,19 @@ public abstract class ItemMaterialsLM extends ItemLM
 	
 	public void onPostLoaded()
 	{
-		for(MaterialItem m : materials.values())
-			m.onPostLoaded();
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
 	{
 		for(MaterialItem m : materials.values())
-			l.add(new ItemStack(item, 1, m.damage));
+		{
+			l.add(m.getStack());
+		}
 	}
 	
 	public void loadRecipes()
 	{
-		for(MaterialItem m : materials.values())
-			m.loadRecipes();
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -69,5 +69,11 @@ public abstract class ItemMaterialsLM extends ItemLM
 		MaterialItem m = materials.get(i);
 		if(m != null) return m.getRenderPasses();
 		return 1;
+	}
+	
+	public String getPath(String id, char c)
+	{
+		if(folder == null) return id;
+		return folder + c + id;
 	}
 }

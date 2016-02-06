@@ -7,12 +7,9 @@ import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
 
@@ -72,32 +69,6 @@ public class LMMod extends FinalIDObject
 	public String toFullID()
 	{ return ID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
-	public CreativeTabs createTab(final String s, final ItemStack icon)
-	{
-		CreativeTabs tab = new CreativeTabs(assets + s)
-		{
-			@SideOnly(Side.CLIENT)
-			public ItemStack getIconItemStack()
-			{ return icon; }
-			
-			@SideOnly(Side.CLIENT)
-			public Item getTabIconItem()
-			{ return getIconItemStack().getItem(); }
-			
-			@SideOnly(Side.CLIENT)
-			public void displayAllReleventItems(List<ItemStack> l)
-			{
-				for(IItemLM i : itemsAndBlocks)
-				{
-					Item item = i.getItem();
-					if(item.getCreativeTab() == this) item.getSubItems(item, this, l);
-				}
-			}
-		};
-		
-		return tab;
-	}
-	
 	public String getBlockName(String s)
 	{ return assets + "tile." + s; }
 	
@@ -120,9 +91,6 @@ public class LMMod extends FinalIDObject
 		
 		itemsAndBlocks.add(i);
 	}
-	
-	public void addItemModel(IItemLM i, int meta)
-	{ FTBLibMod.proxy.addItemModel(ID, i, meta); }
 	
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
 	{ FTBLib.addTileEntity(c, ID + '.' + s, alt); }
