@@ -9,7 +9,7 @@ import latmod.lib.config.ConfigGroup;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
+public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(ByteCount.INT); }
 	

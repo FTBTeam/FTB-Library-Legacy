@@ -8,7 +8,7 @@ import latmod.lib.config.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
-public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
+public class MessageEditConfigResponse extends MessageLM_IO // MessageEditConfig
 {
 	public MessageEditConfigResponse() { super(ByteCount.INT); }
 	

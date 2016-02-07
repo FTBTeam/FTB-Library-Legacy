@@ -31,7 +31,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		isBlockContainer = false;
 	}
 	
-	public Class<? extends ItemBlockLM> getItemBlock()
+	public Class<? extends ItemBlock> getItemBlock()
 	{ return ItemBlockLM.class; }
 	
 	public abstract LMMod getMod();
@@ -189,6 +189,13 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{ return getStateFromMeta(meta); }
 	
+	@SideOnly(Side.CLIENT)
+	public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
+	{
+		setBlockBoundsBasedOnState(worldIn, pos);
+		return super.getSelectedBoundingBox(worldIn, pos);
+	}
+	
 	public TileLM getTile(IBlockAccess w, BlockPos pos)
 	{
 		TileEntity te = w.getTileEntity(pos);
@@ -199,4 +206,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public EnumWorldBlockLayer getBlockLayer()
 	{ return EnumWorldBlockLayer.SOLID; }
+	
+	public String getUnlocalizedName(int damage)
+	{ return getUnlocalizedName(); }
 }

@@ -2,36 +2,49 @@ package ftb.lib.mod.net;
 
 import ftb.lib.api.item.IClientActionItem;
 import ftb.lib.api.net.*;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
-public class MessageClientItemAction extends MessageLM
+public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 {
-	public MessageClientItemAction() { super(ByteCount.INT); }
+	public String action;
+	public NBTTagCompound data;
+	
+	public MessageClientItemAction() { }
 	
 	public MessageClientItemAction(String s, NBTTagCompound tag)
 	{
-		this();
-		io.writeUTF(s);
-		writeTag(tag);
+		action = s;
+		data = tag;
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		String action = io.readUTF();
-		
+		action = ByteBufUtils.readUTF8String(io);
+		data = ByteBufUtils.readTag(io);
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		ByteBufUtils.writeUTF8String(io, action);
+		ByteBufUtils.writeTag(io, data);
+	}
+	
+	public IMessage onMessage(MessageClientItemAction m, MessageContext ctx)
+	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		
 		ItemStack is = ep.inventory.mainInventory[ep.inventory.currentItem];
 		
 		if(is != null && is.getItem() instanceof IClientActionItem)
-			is = ((IClientActionItem) is.getItem()).onClientAction(is, ep, action, readTag());
+			is = ((IClientActionItem) is.getItem()).onClientAction(is, ep, m.action, m.data);
 		
 		if(is != null && is.stackSize <= 0) is = null;
 		

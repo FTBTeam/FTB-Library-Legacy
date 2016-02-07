@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
-public class MessageReload extends MessageLM
+public class MessageReload extends MessageLM_IO
 {
 	public MessageReload() { super(ByteCount.INT); }
 	

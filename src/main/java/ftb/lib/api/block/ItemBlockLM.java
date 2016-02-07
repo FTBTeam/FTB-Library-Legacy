@@ -23,6 +23,13 @@ public class ItemBlockLM extends ItemBlock
 	public int getMetadata(int m)
 	{ return m; }
 	
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		if(blockLM instanceof BlockLM) return ((BlockLM) blockLM).getUnlocalizedName(stack.getItemDamage());
+		
+		return getUnlocalizedName();
+	}
+	
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean adv)
 	{ blockLM.addInformation(is, ep, l, adv); }

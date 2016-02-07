@@ -13,11 +13,14 @@
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../DevMods" />
+          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../DevMods" recursive="false" />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
   </component>

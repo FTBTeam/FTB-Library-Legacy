@@ -31,6 +31,7 @@ public class ODItems
 	public static final String MEAT_COOKED = "listAllmeatcooked";
 	public static final String RUBBER = "itemRubber";
 	public static final String SILICON = "itemSilicon";
+	public static final String IRON_ROD = "rodIron";
 	
 	public static final String REDSTONE = "dustRedstone";
 	public static final String GLOWSTONE = "dustGlowstone";

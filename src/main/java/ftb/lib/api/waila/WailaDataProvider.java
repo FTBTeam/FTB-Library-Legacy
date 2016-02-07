@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class WailaDataProvider implements IWailaDataProvider
 		if(dataAccessor == null) dataAccessor = new WailaDataAccessor();
 		dataAccessor.player = i.getPlayer();
 		dataAccessor.world = i.getWorld();
-		dataAccessor.position = i.getPosition();
+		dataAccessor.position = i.getMOP();
 		dataAccessor.tile = i.getTileEntity();
 		dataAccessor.block = i.getBlock();
 		dataAccessor.meta = i.getMetadata();
@@ -42,6 +43,6 @@ public class WailaDataProvider implements IWailaDataProvider
 	public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaTail(is, l, getData(data)); }
 	
-	public NBTTagCompound getNBTData(EntityPlayerMP ep, TileEntity te, NBTTagCompound tag, World w, int x, int y, int z)
+	public NBTTagCompound getNBTData(EntityPlayerMP entityPlayerMP, TileEntity tileEntity, NBTTagCompound nbtTagCompound, World world, BlockPos blockPos)
 	{ return null; }
 }

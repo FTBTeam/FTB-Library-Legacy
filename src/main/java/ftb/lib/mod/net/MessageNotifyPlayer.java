@@ -5,30 +5,42 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.*;
-import latmod.lib.ByteCount;
-import latmod.lib.json.JsonElementIO;
+import io.netty.buffer.ByteBuf;
+import latmod.lib.LMJsonUtils;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class MessageNotifyPlayer extends MessageLM
+public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 {
-	public MessageNotifyPlayer() { super(ByteCount.SHORT); }
+	public String json;
+	
+	public MessageNotifyPlayer() { }
 	
 	public MessageNotifyPlayer(Notification n)
 	{
-		this();
-		JsonElementIO.write(io, n.getJson());
+		json = LMJsonUtils.toJson(n.getJson());
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
+	
+	public void fromBytes(ByteBuf io)
+	{
+		json = ByteBufUtils.readUTF8String(io);
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		ByteBufUtils.writeUTF8String(io, json);
+	}
 	
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
 		if(FTBLibModClient.notifications.get() != EnumScreen.OFF)
 		{
-			Notification n = Notification.deserialize(JsonElementIO.read(io));
+			Notification n = Notification.deserialize(LMJsonUtils.fromJson(json));
 			
 			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) ClientNotifications.add(n);
 			else

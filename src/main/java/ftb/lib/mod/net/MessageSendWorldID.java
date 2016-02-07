@@ -7,7 +7,7 @@ import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
-public class MessageSendWorldID extends MessageLM
+public class MessageSendWorldID extends MessageLM_IO
 {
 	public MessageSendWorldID() { super(ByteCount.INT); }
 	
