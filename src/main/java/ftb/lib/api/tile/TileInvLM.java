@@ -1,5 +1,6 @@
 package ftb.lib.api.tile;
 
+import ftb.lib.api.friends.LMWorldMP;
 import ftb.lib.api.item.LMInvUtils;
 import latmod.lib.MathHelperLM;
 import net.minecraft.block.state.IBlockState;
@@ -74,7 +75,7 @@ public class TileInvLM extends TileLM implements IInventory
 	{ items[i] = is; }
 	
 	public boolean isUseableByPlayer(EntityPlayer ep)
-	{ return security.canInteract(ep); }
+	{ return getPrivacyLevel().canInteract(LMWorldMP.inst.getPlayer(ownerID), LMWorldMP.inst.getPlayer(ep)); }
 	
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{ return true; }

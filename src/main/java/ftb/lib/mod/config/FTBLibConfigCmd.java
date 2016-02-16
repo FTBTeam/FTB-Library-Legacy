@@ -7,7 +7,7 @@ public class FTBLibConfigCmd
 {
 	public static final ConfigEntryBool override_list = new ConfigEntryBool("override_list", true).setInfo("A new layout for /list command");
 	public static final ConfigEntryBool override_help = new ConfigEntryBool("override_help", true).setInfo("Can fix some /help problems");
-	public static final ConfigEntryEnum<CommandLevel> level_set_item_name = new ConfigEntryEnum<>("set_item_name", CommandLevel.class, CommandLevel.VALUES, CommandLevel.OP, false);
+	public static final ConfigEntryEnum<CommandLevel> level_set_item_name = new ConfigEntryEnum<>("set_item_name", CommandLevel.VALUES, CommandLevel.OP, false);
 	public static final ConfigGroup name = new ConfigGroup("name");
 	
 	public static class Name

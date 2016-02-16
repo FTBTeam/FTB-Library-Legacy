@@ -2,7 +2,7 @@ package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.friends.LMPlayer;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,10 +13,10 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiPlayerActions extends GuiLM
 {
-	public final ILMPlayer self, other;
+	public final LMPlayer self, other;
 	public final List<PlayerAction> actions;
 	
-	public GuiPlayerActions(ILMPlayer s, ILMPlayer o, List<PlayerAction> a)
+	public GuiPlayerActions(LMPlayer s, LMPlayer o, List<PlayerAction> a)
 	{
 		super(null, null);
 		self = s;

@@ -1,8 +1,9 @@
 package ftb.lib.api.item;
 
 import com.google.gson.*;
-import net.minecraft.item.*;
-import net.minecraft.util.ResourceLocation;
+import latmod.lib.LMStringUtils;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemStackSerializer
 {
@@ -20,39 +21,30 @@ public class ItemStackSerializer
 		s = s.trim();
 		if(s.isEmpty()) return null;
 		
-		try
+		String[] s1 = s.split(getParseRegex(s));
+		if(s1.length <= 0) return null;
+		
+		String itemID = s1[0];
+		int dmg = 0;
+		int size = 1;
+		String nbt = null;
+		
+		if(s1.length > 1)
 		{
-			String[] s1 = s.split(getParseRegex(s));
-			if(s1.length <= 0) return null;
-			
-			Item item = LMInvUtils.getItemFromRegName(new ResourceLocation(s1[0]));
-			if(item == null) return null;
-			int dmg = 0;
-			int size = 1;
-			
-			if(s1.length == 2) dmg = (s1[1].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[1]);
-			else if(s1.length >= 3)
-			{
-				size = Integer.parseInt(s1[1]);
-				dmg = (s1[2].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[2]);
-			}
-			/*else if(s1.length >= 4)
-			{
-				String tagS = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
-				NBTTagCompound tag = (NBTTagCompound)JsonToNBT.func_150315_a(tagS);
-				
-				if(tag != null)
-				{
-					ItemStack is = new ItemStack(item, size, dmg);
-					is.setTagCompound(tag);
-					return is;
-				}
-			}*/
-			
-			return new ItemStack(item, size, dmg);
+			size = Integer.parseInt(s1[1]);
 		}
-		catch(Exception e) { }
-		return null;
+		
+		if(s1.length > 2)
+		{
+			dmg = (s1[2].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[2]);
+		}
+		
+		if(s1.length > 3)
+		{
+			nbt = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
+		}
+		
+		return GameRegistry.makeItemStack(itemID, size, dmg, nbt);
 	}
 	
 	public static String toString(ItemStack is)

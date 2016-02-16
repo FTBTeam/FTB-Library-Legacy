@@ -1,9 +1,10 @@
 package ftb.lib.mod;
 
 import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.friends.LMWorldMP;
 import ftb.lib.api.item.ODItems;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
@@ -78,32 +79,25 @@ public class FTBLibMod
 	private void addCmd(FMLServerStartingEvent e, CommandLM c)
 	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
-	@Mod.EventHandler
+	/*@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
-		FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
-		ConfigRegistry.reload();
-	}
+	}*/
 	
 	@Mod.EventHandler
-	public void onServerAboutToStart(FMLServerStartedEvent e)
+	public void onServerStarted(FMLServerStartedEvent e)
 	{
+		ConfigRegistry.reload();
 		GameModes.reload();
-		
-		FTBWorld.server = new FTBWorld(FTBLib.getServerWorld());
-		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, FTBLib.getServer());
-		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
-		event.post();
-		
+		LMWorldMP.inst = new LMWorldMP(new File(new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName()), "LatMod"));
 		FTBLib.reload(FTBLib.getServer(), false, false);
 	}
 	
 	@Mod.EventHandler
 	public void onServerShutDown(FMLServerStoppedEvent e)
 	{
-		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServerClosed();
-		FTBWorld.server = null;
-		FTBLib.folderWorld = null;
+		LMWorldMP.inst.onClosed();
+		LMWorldMP.inst = null;
 	}
 	
 	@NetworkCheckHandler

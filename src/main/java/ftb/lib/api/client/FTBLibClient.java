@@ -1,7 +1,6 @@
 package ftb.lib.api.client;
 
-import ftb.lib.*;
-import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.TextureCoords;
 import ftb.lib.api.gui.IClientActionGui;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.mod.client.FTBLibRenderHandler;
@@ -54,17 +53,8 @@ public class FTBLibClient
 	
 	// -- //
 	
-	public static ILMPlayer getClientLMPlayer()
-	{
-		ILMPlayer p = (FTBLib.ftbu == null) ? null : FTBLib.ftbu.getLMPlayer(mc.thePlayer);
-		return (p == null) ? new TempLMPlayerFromEntity(Side.CLIENT, mc.thePlayer) : p;
-	}
-	
 	public static boolean isIngame()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
-	
-	public static boolean isIngameWithFTBU()
-	{ return isIngame() && FTBLib.ftbu != null && FTBLib.ftbu.hasClientWorld(); }
 	
 	public static int getDim()
 	{ return isIngame() ? mc.theWorld.provider.getDimensionId() : 0; }

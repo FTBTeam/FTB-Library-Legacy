@@ -1,8 +1,9 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.*;
+import ftb.lib.FTBLib;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.*;
+import ftb.lib.api.friends.LMWorldMP;
 import ftb.lib.mod.config.FTBLibConfigCmd;
 import latmod.lib.LMMapUtils;
 import net.minecraft.command.*;
@@ -38,7 +39,7 @@ public class CmdMode extends CommandSubLM
 			
 			IChatComponent c;
 			
-			int i = FTBWorld.server.setMode(args[0]);
+			int i = LMWorldMP.inst.setMode(args[0]);
 			
 			if(i == 1)
 			{
@@ -68,7 +69,7 @@ public class CmdMode extends CommandSubLM
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.current", FTBWorld.server.getMode());
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.current", LMWorldMP.inst.getMode());
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			return c;
 		}

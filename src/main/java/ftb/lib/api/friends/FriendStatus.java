@@ -16,7 +16,7 @@ public enum FriendStatus
 	public boolean isFriendRaw()
 	{ return this == FRIEND || this == INVITING; }
 	
-	public static FriendStatus get(ILMPlayer p1, ILMPlayer p2)
+	public static FriendStatus get(LMPlayer p1, LMPlayer p2)
 	{
 		if(p1 == null || p2 == null) return NONE;
 		
@@ -29,10 +29,10 @@ public enum FriendStatus
 		return NONE;
 	}
 	
-	public static int compare(ILMPlayer o, ILMPlayer p1, ILMPlayer p2)
+	public static int compare(LMPlayer owner, LMPlayer p1, LMPlayer p2)
 	{
-		FriendStatus s0 = get(o, p1);
-		FriendStatus s1 = get(o, p2);
+		FriendStatus s0 = get(owner, p1);
+		FriendStatus s1 = get(owner, p2);
 		
 		if(s0 == NONE && s1 != NONE) return 1;
 		if(s0 != NONE && s1 == NONE) return -1;

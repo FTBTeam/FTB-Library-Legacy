@@ -1,6 +1,7 @@
 package ftb.lib;
 
 import latmod.lib.*;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 
@@ -31,29 +32,40 @@ public class LMNBTUtils
 	
 	public static Map<String, NBTBase> toMap(NBTTagCompound tag)
 	{
-		Map<String, NBTBase> map = new HashMap<String, NBTBase>();
+		if(tag == null) return null;
+		HashMap<String, NBTBase> map = new HashMap<>();
+		if(tag.hasNoTags()) return map;
+		
 		for(String s : tag.getKeySet())
+		{
 			map.put(s, tag.getTag(s));
+		}
+		
 		return map;
 	}
 	
-	public static <E extends NBTBase> Map<String, E> toMapWithType(NBTTagCompound tag)
+	public static Set<Map.Entry<String, NBTBase>> entrySet(NBTTagCompound tag)
 	{
-		HashMap<String, E> map = new HashMap<String, E>();
-		if(tag == null || tag.hasNoTags()) return map;
+		if(tag == null) return null;
+		HashSet<Map.Entry<String, NBTBase>> l = new HashSet<>();
+		if(tag.hasNoTags()) return l;
+		
 		for(String s : tag.getKeySet())
-			map.put(s, (E) tag.getTag(s));
-		return map;
+		{
+			l.add(new MapEntry<String, NBTBase>(s, tag.getTag(s)));
+		}
+		
+		return l;
 	}
 	
-	public static Exception writeMap(File f, NBTTagCompound tag)
+	public static Exception writeTag(File f, NBTTagCompound tag)
 	{
 		try { CompressedStreamTools.write(tag, f); }
 		catch(Exception e) { return e; }
 		return null;
 	}
 	
-	public static NBTTagCompound readMap(File f)
+	public static NBTTagCompound readTag(File f)
 	{
 		if(f == null || !f.exists()) return null;
 		try { return CompressedStreamTools.read(f); }
@@ -106,5 +118,17 @@ public class LMNBTUtils
 		data.writeByte((tag == null) ? 0 : (tag.hasNoTags() ? 1 : 2));
 		try { if(tag != null && !tag.hasNoTags()) CompressedStreamTools.write(tag, data); }
 		catch(Exception ex) { ex.printStackTrace(); }
+	}
+	
+	public static UUID getUUID(NBTTagCompound tag, String key)
+	{
+		if(tag == null || !tag.hasKey(key)) return null;
+		return UUIDTypeAdapterLM.getUUID(tag.getString(key));
+	}
+	
+	public static void setUUID(NBTTagCompound tag, String key, UUID uuid)
+	{
+		if(tag == null || key == null || key.isEmpty() || uuid == null) return;
+		tag.setString(key, UUIDTypeAdapterLM.getString(uuid));
 	}
 }

@@ -2,14 +2,13 @@ package ftb.lib.mod.client;
 
 import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.client.*;
-import ftb.lib.api.config.*;
-import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.friends.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.notification.ClientNotifications;
-import latmod.lib.config.IConfigFile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -31,7 +30,6 @@ public class FTBLibActions
 		
 		PlayerActionRegistry.add(notifications);
 		PlayerActionRegistry.add(settings);
-		PlayerActionRegistry.add(dev_console);
 		PlayerActionRegistry.add(toggle_gamemode);
 		PlayerActionRegistry.add(toggle_rain);
 		PlayerActionRegistry.add(toggle_day);
@@ -54,13 +52,13 @@ public class FTBLibActions
 	
 	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getDisplayName()
 		{ return FTBLibMod.proxy.translate(FTBLibModClient.notifications.getFullID()); }
 		
-		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
+		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
 		{ return !ClientNotifications.Perm.list.isEmpty(); }
 		
 		public void postRender(int ax, int ay, double z)
@@ -77,41 +75,13 @@ public class FTBLibActions
 	
 	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
-	};
-	
-	public static final PlayerAction dev_console = new PlayerAction(PlayerAction.Type.SELF, "ftbl.dev_console", -2000, GuiIcons.bug)
-	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
-		{
-			if(DevConsole.enabled())
-			{
-				DevConsole.open();
-				
-				DevConsole.Tree tree = new DevConsole.Tree();
-				
-				tree.set("synced", ConfigRegistry.synced);
-				
-				for(IConfigFile f : ConfigRegistry.map.values())
-				{
-					tree.set(f.getGroup().ID, f.getGroup().getPrettyJsonString(true));
-				}
-				
-				DevConsole.text.set("Config", tree);
-			}
-		}
-		
-		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
-		{ return DevConsole.enabled(); }
-		
-		public String getDisplayName()
-		{ return "Dev Console"; }
 	};
 	
 	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -10, GuiIcons.toggle_gamemode)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{
 			int i = self.getPlayer().capabilities.isCreativeMode ? 0 : 1;
 			FTBLibClient.execClientCommand("/gamemode " + i);
@@ -123,7 +93,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibClient.execClientCommand("/toggledownfall"); }
 		
 		public Boolean configDefault()
@@ -132,7 +102,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibClient.execClientCommand("/time set 6000"); }
 		
 		public Boolean configDefault()
@@ -141,7 +111,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
 		
 		public Boolean configDefault()
@@ -150,7 +120,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_chunk_bounds = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_chunk_bounds", -17, GuiIcons.toggle_chunk_bounds)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibRenderHandler.renderChunkBounds = !FTBLibRenderHandler.renderChunkBounds; }
 		
 		public Boolean configDefault()
@@ -159,7 +129,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_light_values = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_light_values", -18, GuiIcons.toggle_light_values)
 	{
-		public void onClicked(ILMPlayer self, ILMPlayer other)
+		public void onClicked(LMPlayer self, LMPlayer other)
 		{ FTBLibRenderHandler.toggleLightLevel(); }
 		
 		public Boolean configDefault()
@@ -173,7 +143,7 @@ public class FTBLibActions
 		
 		if(e.gui instanceof InventoryEffectRenderer)
 		{
-			ILMPlayer p = FTBLibClient.getClientLMPlayer();
+			LMPlayerSP p = LMWorldSP.inst.clientPlayer;
 			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false);
 			
 			for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
@@ -186,7 +156,7 @@ public class FTBLibActions
 					
 					PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), a.priority, tex)
 					{
-						public void onClicked(ILMPlayer self, ILMPlayer other)
+						public void onClicked(LMPlayer self, LMPlayer other)
 						{ a.click.onClicked(); }
 						
 						public String getDisplayName()
@@ -273,7 +243,7 @@ public class FTBLibActions
 		if(e.button instanceof ButtonInvLM)
 		{
 			PlayerAction b = ((ButtonInvLM) e.button).action;
-			ILMPlayer p = FTBLibClient.getClientLMPlayer();
+			LMPlayer p = LMWorldSP.inst.clientPlayer;
 			b.onClicked(p, p);
 		}
 	}

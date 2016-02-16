@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
@@ -35,8 +34,8 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		posX = io.readInt();
 		posY = io.readInt();
 		posZ = io.readInt();
-		action = ByteBufUtils.readUTF8String(io);
-		data = ByteBufUtils.readTag(io);
+		action = readString(io);
+		data = readTag(io);
 	}
 	
 	public void toBytes(ByteBuf io)
@@ -44,8 +43,8 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		io.writeInt(posX);
 		io.writeInt(posY);
 		io.writeInt(posZ);
-		ByteBufUtils.writeUTF8String(io, action);
-		ByteBufUtils.writeTag(io, data);
+		writeString(io, action);
+		writeTag(io, data);
 	}
 	
 	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)

@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -36,7 +35,7 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 		posX = io.readInt();
 		posY = io.readInt();
 		posZ = io.readInt();
-		data = ByteBufUtils.readTag(io);
+		data = readTag(io);
 		windowID = io.readUnsignedByte();
 	}
 	
@@ -45,7 +44,7 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 		io.writeInt(posX);
 		io.writeInt(posY);
 		io.writeInt(posZ);
-		ByteBufUtils.writeTag(io, data);
+		writeTag(io, data);
 		io.writeByte(windowID);
 	}
 	

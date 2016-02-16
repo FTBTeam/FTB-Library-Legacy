@@ -64,7 +64,7 @@ public class Shortcuts
 		
 		o.add("shortcuts", a);
 		
-		LMJsonUtils.toJsonFile(file, o);
+		LMJsonUtils.toJson(file, o);
 	}
 	
 	public static abstract class Shortcut implements IJsonObject

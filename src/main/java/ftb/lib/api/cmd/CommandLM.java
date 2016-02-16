@@ -1,14 +1,14 @@
 package ftb.lib.api.cmd;
 
 import ftb.lib.FTBLib;
-import latmod.lib.LMListUtils;
+import ftb.lib.api.friends.LMWorldMP;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
 import java.util.*;
 
-public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
+public abstract class CommandLM extends CommandBase // CommandSubLM
 {
 	public final String commandName;
 	public final CommandLevel level;
@@ -100,11 +100,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	{
 		Boolean b = getUsername(args, i);
 		if(b == null) return new String[0];
-		if(FTBLib.ftbu != null) return FTBLib.ftbu.getPlayerNames(b);
-		ArrayList<String> l = new ArrayList<>();
-		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
-			l.add(ep.getName());
-		return LMListUtils.toStringArray(l);
+		return LMWorldMP.inst.getAllPlayerNames(b.booleanValue());
 	}
 	
 	public boolean sortStrings(ICommandSender ics, String args[], int i)
@@ -116,6 +112,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	public static void checkArgsStrong(String[] args, int i) throws CommandException
 	{ if(args == null || args.length != i) throw new MissingArgsException(); }
 	
+	//TODO: Fix me / make work with PlayerMatcher
 	public static List<EntityPlayerMP> findPlayers(ICommandSender ics, String arg) throws CommandException
 	{
 		EntityPlayerMP player = null;

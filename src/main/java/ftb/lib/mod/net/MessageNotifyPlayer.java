@@ -7,7 +7,6 @@ import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.notification.*;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.LMJsonUtils;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -27,12 +26,12 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 	
 	public void fromBytes(ByteBuf io)
 	{
-		json = ByteBufUtils.readUTF8String(io);
+		json = readString(io);
 	}
 	
 	public void toBytes(ByteBuf io)
 	{
-		ByteBufUtils.writeUTF8String(io, json);
+		writeString(io, json);
 	}
 	
 	@SideOnly(Side.CLIENT)

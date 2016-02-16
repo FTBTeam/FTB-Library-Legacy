@@ -1,14 +1,15 @@
 package ftb.lib.api.waila;
 
 import ftb.lib.OtherMods;
-import ftb.lib.api.EventLM;
 import ftb.lib.api.tile.IWailaTile;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.ArrayList;
 
-public class EventRegisterWaila extends EventLM
+public class EventRegisterWaila extends Event
 {
 	private static final ArrayList<WailaRegEntry> registry = new ArrayList<>();
 	
@@ -23,7 +24,7 @@ public class EventRegisterWaila extends EventLM
 		e.register(IWailaTile.Head.class, new WailaLMTile(e, WailaType.HEAD));
 		e.register(IWailaTile.Body.class, new WailaLMTile(e, WailaType.BODY));
 		e.register(IWailaTile.Tail.class, new WailaLMTile(e, WailaType.TAIL));
-		e.post();
+		MinecraftForge.EVENT_BUS.post(e);
 		
 		for(WailaRegEntry wre : registry)
 		{

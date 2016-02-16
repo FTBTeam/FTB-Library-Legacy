@@ -15,6 +15,8 @@ public class ClickActionRegistry
 		add(ClickActionType.URL);
 		add(ClickActionType.FILE);
 		add(ClickActionType.GUI);
+		add(ClickActionType.FRIEND_ADD);
+		add(ClickActionType.FRIEND_ADD_ALL);
 	}
 	
 	public static String[] getKeys()

@@ -3,8 +3,9 @@ package ftb.lib.notification;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import latmod.lib.LMUtils;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -35,8 +36,7 @@ public class ClientNotifications
 		{
 			Temp.list.remove(n);
 			Perm.list.remove(n);
-			if(current != null && current.equals(n))
-				current = null;
+			if(current != null && current.equals(n)) current = null;
 		}
 		
 		Temp.list.add(new Temp(n));
@@ -50,7 +50,7 @@ public class ClientNotifications
 		Temp.list.clear();
 	}
 	
-	public static class Temp extends Gui
+	public static class Temp extends FinalIDObject
 	{
 		public static final List<Temp> list = new ArrayList<>();
 		
@@ -62,23 +62,21 @@ public class ClientNotifications
 		
 		private Temp(Notification n)
 		{
+			super(n.ID);
 			notification = n;
 			time = -1L;
-			title = notification.title.getFormattedText();
-			desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
-			width = 20 + Math.max(FTBLibClient.mc.fontRendererObj.getStringWidth(title), FTBLibClient.mc.fontRendererObj.getStringWidth(desc));
-			if(notification.item != null) width += 20;
 		}
-		
-		public String toString()
-		{ return notification.ID; }
-		
-		public boolean equals(Object o)
-		{ return notification.equals(o); }
 		
 		public boolean render()
 		{
 			if(time == -1L) time = Minecraft.getSystemTime();
+			if(title == null) title = notification.title.getFormattedText();
+			if(desc == null) desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
+			if(width == 0)
+			{
+				width = 20 + Math.max(FTBLibClient.mc.fontRendererObj.getStringWidth(title), FTBLibClient.mc.fontRendererObj.getStringWidth(desc));
+				if(notification.item != null) width += 20;
+			}
 			
 			if(time > 0L)
 			{
@@ -142,7 +140,7 @@ public class ClientNotifications
 		}
 	}
 	
-	public static class Perm implements Comparable<Perm>
+	public static class Perm extends FinalIDObject
 	{
 		public static final List<Perm> list = new ArrayList<>();
 		
@@ -151,15 +149,13 @@ public class ClientNotifications
 		
 		private Perm(Notification n)
 		{
+			super(n.ID);
 			notification = n;
 			timeAdded = LMUtils.millis();
 		}
 		
-		public boolean equals(Object o)
-		{ return notification.equals(o); }
-		
-		public int compareTo(Perm o)
-		{ return Long.compare(o.timeAdded, timeAdded); }
+		public int compareTo(Object o)
+		{ return Long.compare(((Perm) o).timeAdded, timeAdded); }
 		
 		public void onClicked()
 		{

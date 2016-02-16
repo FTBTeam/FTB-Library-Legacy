@@ -2,7 +2,7 @@ package ftb.lib.api;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.friends.LMPlayer;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
@@ -43,7 +43,7 @@ public abstract class PlayerAction extends FinalIDObject
 		icon = c;
 	}
 	
-	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
+	public abstract void onClicked(LMPlayer self, LMPlayer other);
 	
 	public String getDisplayName()
 	{ return FTBLibMod.proxy.translate("player_action." + ID); }
@@ -66,7 +66,7 @@ public abstract class PlayerAction extends FinalIDObject
 		return (i == 0) ? super.compareTo(o) : i;
 	}
 	
-	public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
+	public boolean isVisibleFor(LMPlayer self, LMPlayer other)
 	{ return true; }
 	
 	public Boolean configDefault()

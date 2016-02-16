@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.friends.*;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
@@ -24,7 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.UsernameCache;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.*;
@@ -53,7 +54,6 @@ public class FTBLib
 	public static File folderMinecraft;
 	public static File folderModpack;
 	public static File folderLocal;
-	public static File folderWorld = null;
 	
 	public static void init(File configFolder)
 	{
@@ -77,19 +77,22 @@ public class FTBLib
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
-		if(FTBWorld.server == null) return;
+		if(LMWorldMP.inst == null) return;
 		
 		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
 		GameModes.reload();
 		
-		EventFTBReload event = new EventFTBReload(FTBWorld.server, sender, reloadClient);
+		for(LMPlayer p : LMWorldMP.inst.playerMap.values())
+			p.toPlayerMP().stats.refresh(p.toPlayerMP(), false);
+		
+		EventFTBReload event = new EventFTBReload(LMWorldMP.inst, sender, reloadClient);
 		if(ftbu != null) ftbu.onReloaded(event);
-		event.post();
+		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)
 			printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
-		new MessageReload(FTBWorld.server, reloadClient).sendTo(null);
+		new MessageReload(LMWorldMP.inst, reloadClient).sendTo(null);
 	}
 	
 	public static IChatComponent getChatComponent(Object o)
@@ -195,21 +198,6 @@ public class FTBLib
 		}
 		
 		return null;
-	}
-	
-	public static List<String> getPlayerNames(boolean online)
-	{
-		if(ftbu != null) return Arrays.asList(ftbu.getPlayerNames(online));
-		ArrayList<String> l = new ArrayList<>();
-		
-		if(online)
-		{
-			List<EntityPlayerMP> players = getAllOnlinePlayers(null);
-			for(int j = 0; j < players.size(); j++)
-				l.add(players.get(j).getName());
-		}
-		else l.addAll(UsernameCache.getMap().values());
-		return l;
 	}
 	
 	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Item i)

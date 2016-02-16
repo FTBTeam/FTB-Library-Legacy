@@ -1,7 +1,7 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.friends.ILMPlayer;
+import ftb.lib.api.friends.LMPlayer;
 import latmod.lib.config.*;
 
 import java.util.*;
@@ -45,7 +45,7 @@ public class PlayerActionRegistry
 		}
 	}
 	
-	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ILMPlayer self, ILMPlayer other, boolean sort)
+	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, LMPlayer self, LMPlayer other, boolean sort)
 	{
 		ArrayList<PlayerAction> l = new ArrayList<>();
 		

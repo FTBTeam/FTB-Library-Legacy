@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
@@ -27,14 +26,14 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 	
 	public void fromBytes(ByteBuf io)
 	{
-		action = ByteBufUtils.readUTF8String(io);
-		data = ByteBufUtils.readTag(io);
+		action = readString(io);
+		data = readTag(io);
 	}
 	
 	public void toBytes(ByteBuf io)
 	{
-		ByteBufUtils.writeUTF8String(io, action);
-		ByteBufUtils.writeTag(io, data);
+		writeString(io, action);
+		writeTag(io, data);
 	}
 	
 	public IMessage onMessage(MessageClientItemAction m, MessageContext ctx)

@@ -2,8 +2,12 @@ package ftb.lib.api.tile;
 
 import ftb.lib.*;
 import ftb.lib.api.block.BlockLM;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.friends.*;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
@@ -14,6 +18,10 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.world.IWorldNameable;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.UUID;
 
 public class TileLM extends TileEntity implements IClientActionTile, IWorldNameable
 {
@@ -26,7 +34,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
 	public long tick = 0L;
-	public final LMSecurity security = new LMSecurity(null);
+	public UUID ownerID = null;
 	public boolean redstonePowered = false;
 	
 	public final void readFromNBT(NBTTagCompound tag)
@@ -54,11 +62,12 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		NBTTagCompound tag = p.getNbtCompound();
 		readTileData(tag);
 		readTileClientData(tag);
+		FTBLibClient.onGuiClientAction();
 	}
 	
 	public void readTileData(NBTTagCompound tag)
 	{
-		security.readFromNBT(tag, "Security");
+		ownerID = UUIDTypeAdapterLM.getUUID(tag.getString("OwnerID"));
 		String customName = tag.getString("CustomName");
 		if(!customName.isEmpty()) setName(customName);
 		tick = tag.getLong("Tick");
@@ -67,7 +76,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
-		security.writeToNBT(tag, "Security");
+		if(ownerID != null) tag.setString("OwnerID", UUIDTypeAdapterLM.getString(ownerID));
 		String customName = getName();
 		if(customName == null && !customName.isEmpty()) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
@@ -151,7 +160,11 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
 	{
-		security.setOwner(ep);
+		if(!(ep instanceof FakePlayer))
+		{
+			ownerID = ep.getGameProfile().getId();
+		}
+		
 		markDirty();
 	}
 	
@@ -161,7 +174,18 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	}
 	
 	public final void printOwner(EntityPlayer ep)
-	{ security.printOwner(ep); }
+	{
+		if(ep == null) return;
+		String ownerS = "None";
+		if(ownerID != null)
+		{
+			LMPlayer player = FTBLibMod.proxy.getForgeWorld(isServer() ? Side.SERVER : Side.CLIENT).getPlayer(ep);
+			if(player != null) ownerS = player.getProfile().getName();
+			else ownerS = ownerID.toString();
+		}
+		
+		ep.addChatMessage(FTBLibMod.mod.chatComponent("owner", ownerS));
+	}
 	
 	public BlockLM getBlockType()
 	{
@@ -173,14 +197,17 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public boolean recolourBlock(EnumFacing side, EnumDyeColor col)
 	{ return false; }
 	
+	public PrivacyLevel getPrivacyLevel()
+	{ return PrivacyLevel.PUBLIC; }
+	
 	/**
 	 * Player can be null
 	 */
 	public boolean isMinable(EntityPlayer ep)
-	{ return ep == null || security.canInteract(ep); }
+	{ return ep == null || getPrivacyLevel().canInteract(LMWorldMP.inst.getPlayer(ownerID), LMWorldMP.inst.getPlayer(ep)); }
 	
 	public boolean isExplosionResistant()
-	{ return !security.level.isPublic(); }
+	{ return !getPrivacyLevel().isPublic(); }
 	
 	public final void sendClientAction(String action, NBTTagCompound data)
 	{ new MessageClientTileAction(this, action, data).sendToServer(); }
@@ -258,9 +285,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public void onNeighborBlockChange(BlockPos pos)
 	{ redstonePowered = worldObj.isBlockPowered(getPos()); }
-	
-	public LMSecurity getSecurity()
-	{ return security; }
 	
 	public TileEntity getTile(EnumFacing side)
 	{ return worldObj.getTileEntity(getPos().offset(side)); }

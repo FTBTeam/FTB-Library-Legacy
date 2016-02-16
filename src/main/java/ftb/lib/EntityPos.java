@@ -42,7 +42,7 @@ public final class EntityPos implements Cloneable
 	{ return x == e.posX && y == e.posY && z == e.posZ && dim == e.dimension; }
 	
 	public boolean equalsPos(EntityPos p)
-	{ return (p == this) || (p != null && toLinkedPos().equalsPos(p.toLinkedPos())); }
+	{ return (p == this) || (p != null && toBlockDimPos().equalsPos(p.toBlockDimPos())); }
 	
 	public boolean equals(Object o)
 	{
@@ -58,6 +58,6 @@ public final class EntityPos implements Cloneable
 	public EntityPos clone()
 	{ return new EntityPos(x, y, z, dim); }
 	
-	public BlockDimPos toLinkedPos()
+	public BlockDimPos toBlockDimPos()
 	{ return new BlockDimPos(MathHelperLM.floor(x), MathHelperLM.floor(y), MathHelperLM.floor(z), dim); }
 }

@@ -6,7 +6,6 @@ import ftb.lib.api.net.*;
 import ftb.lib.mod.FTBLibMod;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 
 public class MessageOpenGui extends MessageLM<MessageOpenGui>
@@ -31,17 +30,17 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 	
 	public void fromBytes(ByteBuf io)
 	{
-		modID = ByteBufUtils.readUTF8String(io);
+		modID = readString(io);
 		guiID = io.readInt();
-		data = ByteBufUtils.readTag(io);
+		data = readTag(io);
 		windowID = io.readUnsignedByte();
 	}
 	
 	public void toBytes(ByteBuf io)
 	{
-		ByteBufUtils.writeUTF8String(io, modID);
+		writeString(io, modID);
 		io.writeInt(guiID);
-		ByteBufUtils.writeTag(io, data);
+		writeTag(io, data);
 		io.writeByte(windowID);
 	}
 	

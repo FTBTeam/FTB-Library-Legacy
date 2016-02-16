@@ -3,6 +3,7 @@ package ftb.lib.mod.net;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
 import ftb.lib.mod.*;
 import ftb.lib.mod.client.*;
@@ -10,33 +11,44 @@ import ftb.lib.notification.*;
 import latmod.lib.*;
 import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.relauncher.*;
 
 public class MessageReload extends MessageLM_IO
 {
 	public MessageReload() { super(ByteCount.INT); }
 	
-	public MessageReload(FTBWorld w, boolean reload)
+	public MessageReload(LMWorldMP w, boolean reloadClient)
 	{
 		this();
-		io.writeBoolean(reload);
-		
-		if(reload)
-		{
-			w.writeReloadData(io);
-			writeSyncedConfig(io);
-		}
+		io.writeBoolean(reloadClient);
+		writeSyncedConfig(io);
+		NBTTagCompound tag = new NBTTagCompound();
+		w.writeDataToNet(tag, null);
+		LMNBTUtils.writeTag(io, tag);
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		boolean reload = io.readBoolean();
+		boolean reloadClient = io.readBoolean();
 		
-		if(!reload)
+		long ms = LMUtils.millis();
+		readSyncedConfig(io);
+		NBTTagCompound tag = LMNBTUtils.readTag(io);
+		LMWorldSP.inst.readDataFromNet(tag, false);
+		
+		if(reloadClient)
+		{
+			reloadClient(ms, true);
+		}
+		else
 		{
 			Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
@@ -46,24 +58,24 @@ public class MessageReload extends MessageLM_IO
 			return null;
 		}
 		
-		long ms = LMUtils.millis();
-		FTBWorld.client.readReloadData(io);
-		readSyncedConfig(io);
-		reloadClient(ms, true);
 		return null;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public static void reloadClient(long ms, boolean printMessage)
 	{
 		if(ms == 0L) ms = LMUtils.millis();
 		GameModes.reload();
 		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-		EventFTBReload event = new EventFTBReload(FTBWorld.client, ep, true);
+		EventFTBReload event = new EventFTBReload(LMWorldSP.inst, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
-		event.post();
+		MinecraftForge.EVENT_BUS.post(event);
+		
 		if(printMessage)
+		{
 			FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient", ((LMUtils.millis() - ms) + "ms")));
+		}
 	}
 	
 	static void writeSyncedConfig(ByteIOStream out)
