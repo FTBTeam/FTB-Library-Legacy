@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChunkCoordinates;
 
 public class TileLM extends TileEntity implements IClientActionTile
 {
@@ -41,7 +42,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public final Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
-		writeTileData(tag);
 		writeTileClientData(tag);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
 	}
@@ -49,7 +49,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
 	{
 		NBTTagCompound tag = p.func_148857_g();
-		readTileData(tag);
 		readTileClientData(tag);
 		onUpdatePacket();
 	}
@@ -57,8 +56,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void readTileData(NBTTagCompound tag)
 	{
 		security.readFromNBT(tag, "Security");
-		String customName = tag.getString("CustomName");
-		if(!customName.isEmpty()) setName(customName);
 		tick = tag.getLong("Tick");
 		if(tick < 0L) tick = 0L;
 	}
@@ -66,8 +63,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void writeTileData(NBTTagCompound tag)
 	{
 		security.writeToNBT(tag, "Security");
-		String customName = getName();
-		if(customName == null && !customName.isEmpty()) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
 		tag.setLong("Tick", tick);
 	}
@@ -89,6 +84,9 @@ public class TileLM extends TileEntity implements IClientActionTile
 	
 	public boolean rerenderBlock()
 	{ return false; }
+	
+	public final ChunkCoordinates pos()
+	{ return new ChunkCoordinates(xCoord, yCoord, zCoord); }
 	
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, int side, float x, float y, float z)
 	{
@@ -143,6 +141,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void sendDirtyUpdate()
 	{
 		super.markDirty();
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		//worldObj.markBlockForUpdate(getPos());
 	}
 	
@@ -214,8 +213,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		else if(action.equals(ACTION_OPEN_GUI)) FTBLib.openGui(ep, (IGuiTile) this, data);
 		else if(action.equals(ACTION_CUSTOM_NAME))
 		{
-			String name = data.getString("Name");
-			if(!name.isEmpty()) setName(name);
+			setName(data.getString("Name"));
 			markDirty();
 		}
 	}
@@ -260,9 +258,6 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{ return security; }
 	
 	public void setName(String s) { }
-	
-	public String getName()
-	{ return ""; }
 	
 	public int getMeta()
 	{

@@ -30,7 +30,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		super(g, null);
 		provider = p;
 		
-		title = p.getGroupTitle(p.getGroup());
+		title = p.getConfigFile().getDisplayName();
 		
 		configEntryButtons = new ArrayList<>();
 		
@@ -138,14 +138,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			
-			for(ConfigEntry entry : provider.getGroup().entries())
+			for(ConfigEntry entry : provider.getConfigFile().getAsGroup().entries())
 				addCE(null, entry, 0);
 		}
 	}
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.getFlag(ConfigEntry.FLAG_HIDDEN))
+		if(!e.configData.isHidden())
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -181,7 +181,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	
 	public void onLMGuiClosed()
 	{
-		if(shouldClose && changed) provider.save();
+		if(shouldClose && changed) provider.getConfigFile().save();
 	}
 	
 	public void onClosedByKey()
@@ -308,7 +308,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			FTBLibClient.playClickSound();
 			
-			if(entry.getFlag(ConfigEntry.FLAG_CANT_EDIT)) return;
+			if(entry.configData.canEdit()) return;
 			
 			if(entry instanceof IClickableConfigEntry)
 			{
@@ -406,10 +406,12 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
 			{
-				if(entry.info != null && !entry.info.isEmpty())
+				if(entry.configData.info != null && entry.configData.info.length > 0)
 				{
-					String[] sl = entry.info.split("\n");
-					for(String s : sl) l.addAll(FTBLibClient.mc.fontRenderer.listFormattedStringToWidth(s, 230));
+					for(String s : entry.configData.info)
+					{
+						l.addAll(FTBLibClient.mc.fontRenderer.listFormattedStringToWidth(s, 230));
+					}
 				}
 			}
 			

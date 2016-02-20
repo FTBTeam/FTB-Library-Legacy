@@ -13,11 +13,15 @@
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../DevMods" />
+          <root url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods" />
+          <root url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/1.7.10" />
+          <root url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/unused" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../DevMods" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/1.7.10" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/unused" recursive="false" />
       </library>
     </orderEntry>
   </component>

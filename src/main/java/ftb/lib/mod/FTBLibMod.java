@@ -6,7 +6,6 @@ import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.*;
 import ftb.lib.api.*;
-import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.item.ODItems;
 import ftb.lib.mod.cmd.*;
@@ -31,7 +30,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
-		if(FTBLibFinals.DEV) FTBLib.logger.info("Loading FTBLib, DevEnv");
+		if(FTBLib.DEV_ENV) FTBLib.logger.info("Loading FTBLib, DevEnv");
 		else FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
 		
 		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
@@ -66,18 +65,15 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
 	{
-		if(FTBLibConfigCmd.override_list.get()) e.registerServerCommand(new CmdListOverride());
-		if(FTBLibConfigCmd.override_help.get()) e.registerServerCommand(new CmdHelpOverride());
-		addCmd(e, new CmdEditConfig());
-		addCmd(e, new CmdMode());
-		addCmd(e, new CmdReload());
-		addCmd(e, new CmdNotify());
-		addCmd(e, new CmdSetItemName());
-		addCmd(e, new CmdTrashCan());
+		if(FTBLibConfigCmd.override_list.get()) FTBLib.addCommand(e, new CmdListOverride());
+		if(FTBLibConfigCmd.override_help.get()) FTBLib.addCommand(e, new CmdHelpOverride());
+		FTBLib.addCommand(e, new CmdEditConfig());
+		FTBLib.addCommand(e, new CmdMode());
+		FTBLib.addCommand(e, new CmdReload());
+		FTBLib.addCommand(e, new CmdNotify());
+		FTBLib.addCommand(e, new CmdSetItemName());
+		FTBLib.addCommand(e, new CmdTrashCan());
 	}
-	
-	private void addCmd(FMLServerStartingEvent e, CommandLM c)
-	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)

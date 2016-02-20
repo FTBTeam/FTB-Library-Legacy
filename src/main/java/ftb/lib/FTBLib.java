@@ -3,7 +3,7 @@ package ftb.lib;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.*;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
@@ -21,6 +21,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 
 public class FTBLib
 {
+	public static final boolean DEV_ENV = ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
 	public static boolean userIsLatvianModder = false;
 	public static final Logger logger = LogManager.getLogger("FTBLib");
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
@@ -65,7 +67,7 @@ public class FTBLib
 		
 		if(dev_logger instanceof org.apache.logging.log4j.core.Logger)
 		{
-			if(FTBLibFinals.DEV) ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(Level.ALL);
+			if(DEV_ENV) ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(Level.ALL);
 			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(Level.OFF);
 		}
 		else
@@ -120,6 +122,9 @@ public class FTBLib
 		FluidRegistry.registerFluid(f);
 		return f;
 	}
+	
+	public static void addCommand(FMLServerStartingEvent e, ICommand c)
+	{ if(c != null && !c.getCommandName().isEmpty()) e.registerServerCommand(c); }
 	
 	/**
 	 * Prints message to chat (doesn't translate it)

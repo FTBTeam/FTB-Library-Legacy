@@ -7,6 +7,5 @@ public interface IConfigProvider
 {
 	String getGroupTitle(ConfigGroup g);
 	String getEntryTitle(ConfigEntry e);
-	ConfigGroup getGroup();
-	void save();
+	ConfigFile getConfigFile();
 }

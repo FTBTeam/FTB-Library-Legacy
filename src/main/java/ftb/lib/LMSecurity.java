@@ -9,12 +9,12 @@ import net.minecraft.util.ChatComponentTranslation;
 public class LMSecurity
 {
 	private int ownerID;
-	public LMSecurityLevel level;
+	public PrivacyLevel level;
 	
 	public LMSecurity(Object o)
 	{
 		setOwner(o);
-		level = LMSecurityLevel.PUBLIC;
+		level = PrivacyLevel.PUBLIC;
 	}
 	
 	public int getOwnerID()
@@ -40,18 +40,18 @@ public class LMSecurity
 		{
 			NBTTagCompound tag1 = tag.getCompoundTag(s);
 			ownerID = tag1.getInteger("Owner");
-			level = LMSecurityLevel.VALUES_3[tag1.getByte("Level")];
+			level = PrivacyLevel.VALUES_3[tag1.getByte("Level")];
 		}
 		else
 		{
 			ownerID = 0;
-			level = LMSecurityLevel.PUBLIC;
+			level = PrivacyLevel.PUBLIC;
 		}
 	}
 	
 	public void writeToNBT(NBTTagCompound tag, String s)
 	{
-		if(ownerID > 0 || level != LMSecurityLevel.PUBLIC)
+		if(ownerID > 0 || level != PrivacyLevel.PUBLIC)
 		{
 			NBTTagCompound tag1 = new NBTTagCompound();
 			tag1.setInteger("Owner", ownerID);
@@ -81,13 +81,13 @@ public class LMSecurity
 	public boolean canInteract(ILMPlayer playerLM)
 	{
 		if(FTBLib.ftbu == null) return true;
-		if(level == LMSecurityLevel.PUBLIC || getOwner() == null) return true;
+		if(level == PrivacyLevel.PUBLIC || getOwner() == null) return true;
 		if(playerLM == null) return false;
 		if(isOwner(playerLM)) return true;
 		if(playerLM != null && playerLM.isOnline() && playerLM.allowCreativeInteractSecure()) return true;
-		if(level == LMSecurityLevel.PRIVATE) return false;
+		if(level == PrivacyLevel.PRIVATE) return false;
 		ILMPlayer owner = getOwner();
-		if(level == LMSecurityLevel.FRIENDS && owner.isFriend(playerLM)) return true;
+		if(level == PrivacyLevel.FRIENDS && owner.isFriend(playerLM)) return true;
 		
 		return false;
 	}

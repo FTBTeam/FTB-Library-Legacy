@@ -11,7 +11,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.item.*;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.player.EntityPlayer;
@@ -76,7 +75,7 @@ public class FTBLibClientEventHandler
 	{
 		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
-			if(FTBLibFinals.DEV)
+			if(FTBLib.DEV_ENV)
 			{
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 			}

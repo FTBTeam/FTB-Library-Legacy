@@ -3,19 +3,19 @@ package ftb.lib;
 import ftb.lib.api.gui.GuiIcons;
 import net.minecraft.client.resources.I18n;
 
-public enum LMSecurityLevel
+public enum PrivacyLevel
 {
 	PUBLIC("public"),
 	PRIVATE("private"),
 	FRIENDS("friends");
 	
-	public static final LMSecurityLevel[] VALUES_3 = new LMSecurityLevel[] {PUBLIC, PRIVATE, FRIENDS};
-	public static final LMSecurityLevel[] VALUES_2 = new LMSecurityLevel[] {PUBLIC, PRIVATE};
+	public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, FRIENDS};
+	public static final PrivacyLevel[] VALUES_2 = new PrivacyLevel[] {PUBLIC, PRIVATE};
 	
 	public final int ID;
 	public final String uname;
 	
-	LMSecurityLevel(String s)
+	PrivacyLevel(String s)
 	{
 		ID = ordinal();
 		uname = s;
@@ -27,10 +27,10 @@ public enum LMSecurityLevel
 	public boolean isRestricted()
 	{ return this == FRIENDS; }
 	
-	public LMSecurityLevel next(LMSecurityLevel[] l)
+	public PrivacyLevel next(PrivacyLevel[] l)
 	{ return l[(ID + 1) % l.length]; }
 	
-	public LMSecurityLevel prev(LMSecurityLevel[] l)
+	public PrivacyLevel prev(PrivacyLevel[] l)
 	{
 		int id = ID - 1;
 		if(id < 0) id = l.length - 1;
@@ -54,9 +54,9 @@ public enum LMSecurityLevel
 		return s;
 	}
 	
-	public static LMSecurityLevel get(String s)
+	public static PrivacyLevel get(String s)
 	{
-		for(LMSecurityLevel l : VALUES_3)
+		for(PrivacyLevel l : VALUES_3)
 		{
 			if(l.uname.equalsIgnoreCase(s)) return l;
 		}

@@ -6,7 +6,7 @@ import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
 import ftb.lib.api.tile.TileLM;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -28,7 +28,7 @@ public class LMMod extends FinalIDObject
 		{
 			mod = new LMMod(s);
 			modsMap.put(mod.ID, mod);
-			if(FTBLibFinals.DEV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
+			if(FTBLib.DEV_ENV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
 		}
 		
 		return mod;

@@ -3,7 +3,7 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.mod.config.FTBLibConfigCmd;
+import ftb.lib.mod.config.FTBLibConfigCmdNames;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
 import latmod.lib.config.*;
@@ -14,7 +14,7 @@ import net.minecraft.util.*;
 public class CmdEditConfig extends CommandLM
 {
 	public CmdEditConfig()
-	{ super(FTBLibConfigCmd.Name.edit_config.get(), CommandLevel.OP); }
+	{ super(FTBLibConfigCmdNames.edit_config.get(), CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }
@@ -24,16 +24,16 @@ public class CmdEditConfig extends CommandLM
 		if(i == 0) return LMMapUtils.toKeyStringArray(ConfigRegistry.map);
 		else if(i == 1)
 		{
-			IConfigFile file = ConfigRegistry.map.get(args[0]);
-			if(file != null) return LMMapUtils.toKeyStringArray(file.getGroup().entryMap());
+			ConfigFile file = ConfigRegistry.map.get(args[0]);
+			if(file != null) return LMMapUtils.toKeyStringArray(file.entryMap);
 		}
 		else if(i == 2)
 		{
-			IConfigFile file = ConfigRegistry.map.get(args[0]);
+			ConfigFile file = ConfigRegistry.map.get(args[0]);
 			if(file != null)
 			{
-				ConfigGroup group = file.getGroup().getGroup(args[1]);
-				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap());
+				ConfigGroup group = file.getGroup(args[1]);
+				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap);
 			}
 		}
 		
@@ -47,21 +47,21 @@ public class CmdEditConfig extends CommandLM
 		if(args.length == 1 && ics instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
-			IConfigFile file = ConfigRegistry.map.get(args[0]);
+			ConfigFile file = ConfigRegistry.map.get(args[0]);
 			
 			if(file == null) return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
 			
-			new MessageEditConfig(LMAccessToken.generate(ep), file.getGroup()).sendTo(ep);
+			new MessageEditConfig(LMAccessToken.generate(ep), true, file).sendTo(ep);
 			return null;
 		}
 		
 		checkArgs(args, 3); // file, group, entry, value...
 		
-		IConfigFile file = ConfigRegistry.map.get(args[0]);
+		ConfigFile file = ConfigRegistry.map.get(args[0]);
 		if(file == null) return error(new ChatComponentText("Can only edit files!"));
 		
 		boolean success = false;
-		ConfigGroup group = file.getGroup().getGroup(args[1]);
+		ConfigGroup group = file.getGroup(args[1]);
 		ConfigEntry entry = (group == null) ? null : group.getEntry(args[2]);
 		
 		if(entry == null)

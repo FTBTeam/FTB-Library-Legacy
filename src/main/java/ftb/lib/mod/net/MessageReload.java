@@ -5,7 +5,7 @@ import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.net.*;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.*;
 import ftb.lib.notification.*;
 import latmod.lib.*;
@@ -70,7 +70,7 @@ public class MessageReload extends MessageLM
 	{
 		try { ConfigRegistry.synced.write(out); }
 		catch(Exception ex) {}
-		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
 	}
 	
 	static void readSyncedConfig(ByteIOStream in)
@@ -79,6 +79,6 @@ public class MessageReload extends MessageLM
 		try { synced.read(in); }
 		catch(Exception ex) {}
 		ConfigRegistry.synced.loadFromGroup(synced);
-		if(FTBLibFinals.DEV) FTBLib.dev_logger.info("Synced config RX: " + synced.getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + synced.getJson());
 	}
 }

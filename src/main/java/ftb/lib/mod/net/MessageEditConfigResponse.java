@@ -16,10 +16,12 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 	{
 		this();
 		io.writeLong(provider.adminToken);
-		io.writeUTF(provider.group.ID);
+		io.writeUTF(provider.getConfigFile().ID);
 		
-		try { provider.group.write(io); }
+		try { provider.getConfigFile().write(io); }
 		catch(Exception e) { }
+		
+		io.writeBoolean(provider.reload);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -31,36 +33,18 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		if(!LMAccessToken.equals(ep, io.readLong(), true)) return null;
 		String id = io.readUTF();
 		
-		if(ConfigRegistry.map.containsKey(id))
+		ConfigFile file = ConfigRegistry.map.containsKey(id) ? ConfigRegistry.map.get(id) : ConfigRegistry.getTempConfig(id);
+		if(file == null) return null;
+		
+		ConfigGroup group = new ConfigGroup(id);
+		
+		try { group.read(io); }
+		catch(Exception e) { }
+		
+		if(file.loadFromGroup(group) > 0)
 		{
-			IConfigFile file = ConfigRegistry.map.get(id);
-			if(file == null) return null;
-			ConfigGroup group = new ConfigGroup(id);
-			
-			try { group.read(io); }
-			catch(Exception e) { }
-			
-			if(file.getGroup().loadFromGroup(group) > 0)
-			{
-				file.save();
-				FTBLib.reload(ep, true, false);
-			}
-		}
-		else
-		{
-			ConfigGroup group1 = ConfigRegistry.getTempConfig(id);
-			if(group1 == null) return null;
-			
-			ConfigGroup group = new ConfigGroup(id);
-			
-			try { group.read(io); }
-			catch(Exception e) { }
-			
-			if(group1.loadFromGroup(group) > 0)
-			{
-				if(group1.parentFile != null) group1.parentFile.save();
-				if(group1.getFlag(7)) FTBLib.reload(ep, true, false);
-			}
+			file.save();
+			if(io.readBoolean()) FTBLib.reload(ep, true, false);
 		}
 		
 		return null;

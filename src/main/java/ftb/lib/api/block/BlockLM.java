@@ -3,7 +3,7 @@ package ftb.lib.api.block;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.LMMod;
 import ftb.lib.api.tile.TileLM;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
-public abstract class BlockLM extends BlockContainer implements IBlockLM
+public abstract class BlockLM extends Block implements IBlockLM
 {
 	public final String blockName;
 	
@@ -31,15 +31,13 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 		isBlockContainer = false;
 	}
 	
-	public Class<? extends ItemBlockLM> getItemBlock()
+	public Class<? extends ItemBlock> getItemBlock()
 	{ return ItemBlockLM.class; }
 	
 	public abstract LMMod getMod();
 	
 	@SideOnly(Side.CLIENT)
 	public abstract CreativeTabs getCreativeTabToDisplayOn();
-	
-	public abstract TileLM createNewTileEntity(World w, int m);
 	
 	public final String getItemID()
 	{ return blockName; }

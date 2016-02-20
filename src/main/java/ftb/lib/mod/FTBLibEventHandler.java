@@ -1,5 +1,7 @@
 package ftb.lib.mod;
 
+import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
+import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.*;
 import cpw.mods.fml.relauncher.Side;
@@ -18,6 +20,18 @@ public class FTBLibEventHandler
 {
 	public static final List<ServerTickCallback> callbacks = new ArrayList<>();
 	public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
+	
+	@cpw.mods.fml.common.Optional.Method(modid = "forgeanalytics")
+	@SubscribeEvent
+	public void onAnalytics(AnalyticsEvent event)
+	{
+		FTBWorld w = FTBWorld.get(event.side);
+		if(w != null)
+		{
+			ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", w.getMode().ID);
+			FTBLib.dev_logger.info("Sent FTBLib's analytics");
+		}
+	}
 	
 	@SubscribeEvent
 	public void onWorldLoaded(WorldEvent.Load e)

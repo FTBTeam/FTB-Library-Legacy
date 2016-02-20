@@ -98,7 +98,7 @@ public class GameModes
 	{
 		File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
 		gameModes = new GameModes(LMJsonUtils.fromJson(file));
-		LMJsonUtils.toJsonFile(file, gameModes.toJsonObject());
+		LMJsonUtils.toJson(file, gameModes.toJsonObject());
 	}
 	
 	public static GameModes getGameModes()

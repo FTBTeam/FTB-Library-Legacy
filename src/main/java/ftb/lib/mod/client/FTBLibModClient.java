@@ -31,8 +31,11 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigGroup client_config = new ConfigGroup("ftbl");
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
-	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
-	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.class, EnumScreen.values(), EnumScreen.SCREEN, false);
+	
+	@Hidden(true)
+	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false);
+	
+	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	
