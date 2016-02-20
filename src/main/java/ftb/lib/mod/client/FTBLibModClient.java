@@ -64,7 +64,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public void postInit()
 	{
-		ClientConfigRegistry.init();
+		ClientConfigRegistry.provider().getConfigFile().load();
 	}
 	
 	public String translate(String key, Object... obj)

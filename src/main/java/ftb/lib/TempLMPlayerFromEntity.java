@@ -40,6 +40,6 @@ public class TempLMPlayerFromEntity implements ILMPlayer
 	public boolean isFriend(ILMPlayer p)
 	{ return true; }
 	
-	public boolean allowCreativeInteractSecure()
+	public boolean allowInteractSecure()
 	{ return false; }
 }

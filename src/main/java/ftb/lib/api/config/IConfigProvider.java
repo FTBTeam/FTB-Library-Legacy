@@ -8,4 +8,5 @@ public interface IConfigProvider
 	String getGroupTitle(ConfigGroup g);
 	String getEntryTitle(ConfigEntry e);
 	ConfigFile getConfigFile();
+	void save();
 }

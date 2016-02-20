@@ -31,11 +31,21 @@ public class ForgePermissionRegistry
 		{
 			id = ForgePermission.getID(id);
 			
+			int index = id.indexOf('*');
+			
+			if(index == -1)
+			{
+				ForgePermission p = permissions.get(id);
+				return (p == null) ? Collections.EMPTY_SET : Collections.singleton(p);
+			}
+			
+			id = id.substring(0, index - 1);
+			
 			ArrayList<ForgePermission> list = new ArrayList<>();
 			
 			for(ForgePermission p : permissions.values())
 			{
-				
+				if(p.ID.startsWith(id)) list.add(p);
 			}
 			
 			return list;
@@ -64,7 +74,7 @@ public class ForgePermissionRegistry
 					}
 					
 					permissions.put(p.ID, p);
-					ConfigData.inject(f, null, null);
+					ConfigData.inject(f, null, p);
 				}
 			}
 		}

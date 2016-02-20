@@ -22,16 +22,17 @@ public final class ClientConfigRegistry
 			
 			public ConfigFile getConfigFile()
 			{
-				if(file.getFile() == null) init();
+				if(file.getFile() == null)
+				{
+					file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+				}
+				
 				return file;
 			}
+			
+			public void save()
+			{ getConfigFile().save(); }
 		};
-	}
-	
-	public static void init()
-	{
-		file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
-		file.load();
 	}
 	
 	/**

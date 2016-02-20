@@ -36,9 +36,9 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 	}
 	
 	public final List<String> parts;
+	public final ConfigData configData;
 	private final JsonElement defaultPlayerValue;
 	private final JsonElement defaultOPValue;
-	protected ConfigData configData;
 	
 	//Yes, Im not allowing pure JsonElement in constructor. Reasons.
 	ForgePermission(String id, JsonElement defPlayerValue, JsonElement defOPValue)
@@ -46,6 +46,8 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 		super(getID(id));
 		
 		parts = Collections.unmodifiableList(Arrays.asList(ID.split("\\.")));
+		
+		configData = new ConfigData();
 		
 		if(parts.size() < 2)
 		{
@@ -83,7 +85,7 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 	
 	public void setConfigData(ConfigData d)
 	{
-		configData = d;
+		configData.setFrom(d);
 	}
 	
 	protected JsonElement getDefaultElement(GameProfile profile)
@@ -114,7 +116,7 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 	
 	public Number getNumber(GameProfile profile)
 	{
-		return getElement(profile).getAsNumber();
+		return configData.getNumber(getElement(profile).getAsNumber());
 	}
 	
 	public String getString(GameProfile profile)
@@ -139,8 +141,33 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 	}
 	
 	public List<Number> getNumberList(GameProfile profile)
-	{ return Arrays.asList(LMJsonUtils.fromNumberArray(getElement(profile))); }
+	{
+		JsonElement e = getElement(profile);
+		if(e == null || e.isJsonNull()) return null;
+		
+		if(e.isJsonArray())
+		{
+			List<Number> list = new ArrayList<>();
+			JsonArray a = e.getAsJsonArray();
+			for(int i = 0; i < a.size(); i++)
+				list.add(configData.getNumber(a.get(i).getAsNumber()));
+			return list;
+		}
+		
+		return Collections.singletonList(configData.getNumber(e.getAsNumber()));
+	}
 	
 	public int[] getIntArray(GameProfile profile)
-	{ return LMJsonUtils.fromIntArray(getElement(profile)); }
+	{
+		List<Number> l = getNumberList(profile);
+		if(l == null) return null;
+		else if(l.isEmpty()) return new int[0];
+		else
+		{
+			int[] ai = new int[l.size()];
+			for(int i = 0; i < l.size(); i++)
+				ai[i] = l.get(i).intValue();
+			return ai;
+		}
+	}
 }

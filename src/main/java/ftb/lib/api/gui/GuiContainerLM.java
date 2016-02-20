@@ -19,23 +19,19 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 	private static final ArrayList<String> tempTextList = new ArrayList<>();
 	
 	private boolean refreshWidgets = true;
-	public final GuiScreen parentScreen;
 	public final ResourceLocation texture;
 	public final ContainerLM container;
 	public final PanelLM mainPanel;
 	private final MouseLM mouse;
 	public float delta;
 	
-	public GuiContainerLM(GuiScreen parent, ContainerLM c, ResourceLocation tex)
+	public GuiContainerLM(ContainerLM c, ResourceLocation tex)
 	{
 		super(c);
 		
-		parentScreen = parent;
 		texture = tex;
 		container = c;
 		mc = FTBLibClient.mc;
-		
-		if(parent != null) mc.thePlayer.closeScreen();
 		
 		ScaledResolution scr = new ScaledResolution(mc, FTBLibClient.mc.displayWidth, FTBLibClient.mc.displayHeight);
 		
@@ -44,6 +40,10 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 			public void addWidgets()
 			{ GuiContainerLM.this.addWidgets(); }
 		};
+		
+		mainPanel.width = 176;
+		mainPanel.height = 166;
+		
 		mouse = new MouseLM();
 		refreshWidgets();
 	}
@@ -55,10 +55,10 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 	{
 		super.initGui();
 		initLMGui();
-		mainPanel.width = xSize;
-		mainPanel.height = ySize;
-		mainPanel.posX = (width - mainPanel.width) / 2;
-		mainPanel.posY = (height - mainPanel.height) / 2;
+		xSize = mainPanel.width;
+		ySize = mainPanel.height;
+		guiLeft = mainPanel.posX = (width - mainPanel.width) / 2;
+		guiTop = mainPanel.posY = (height - mainPanel.height) / 2;
 		refreshWidgets();
 	}
 	
@@ -90,7 +90,7 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 	{ return fontRendererObj; }
 	
 	public final void close(GuiScreen g)
-	{ FTBLibClient.openGui((g == null) ? parentScreen : g); }
+	{ FTBLibClient.openGui(g); }
 	
 	protected final void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
@@ -118,6 +118,12 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 	public void onClosedByKey()
 	{ close(null); }
 	
+	public void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
+	{ drawTexturedModalRectD(x, y, u, v, w, h); }
+	
+	public void drawTexturedModalRectD(double x, double y, double u, double v, double w, double h)
+	{ GuiLM.drawTexturedModalRectD(x, y, zLevel, u, v, w, h, 256, 256); }
+	
 	public void drawBackground()
 	{
 		GlStateManager.disableLighting();
@@ -127,7 +133,7 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 		if(texture != null)
 		{
 			FTBLibClient.setTexture(texture);
-			drawTexturedModalRect(mainPanel.posX, mainPanel.posY, 0, 0, mainPanel.width, mainPanel.height);
+			drawTexturedModalRectD(mainPanel.posX, mainPanel.posY, 0D, 0D, mainPanel.width, mainPanel.height);
 		}
 	}
 	
@@ -146,6 +152,8 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 			refreshWidgets = false;
 		}
 		
+		GlStateManager.disableLighting();
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		drawDefaultBackground();
 		drawBackground();
 		GlStateManager.color(1F, 1F, 1F, 1F);

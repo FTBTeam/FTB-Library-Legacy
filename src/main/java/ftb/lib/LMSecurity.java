@@ -84,7 +84,7 @@ public class LMSecurity
 		if(level == PrivacyLevel.PUBLIC || getOwner() == null) return true;
 		if(playerLM == null) return false;
 		if(isOwner(playerLM)) return true;
-		if(playerLM != null && playerLM.isOnline() && playerLM.allowCreativeInteractSecure()) return true;
+		if(playerLM != null && playerLM.isOnline() && playerLM.allowInteractSecure()) return true;
 		if(level == PrivacyLevel.PRIVATE) return false;
 		ILMPlayer owner = getOwner();
 		if(level == PrivacyLevel.FRIENDS && owner.isFriend(playerLM)) return true;
