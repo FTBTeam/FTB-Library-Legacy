@@ -65,7 +65,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	{
 		super.onBlockPlacedBy(w, x, y, z, el, is);
 		
-		if(isBlockContainer && el instanceof EntityPlayer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)) && el instanceof EntityPlayer)
 		{
 			TileLM tile = getTile(w, x, y, z);
 			if(tile != null) tile.onPlacedBy((EntityPlayer) el, is);
@@ -74,7 +74,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public float getPlayerRelativeBlockHardness(EntityPlayer ep, World w, int x, int y, int z)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM tile = getTile(w, x, y, z);
 			if(tile != null && !tile.isMinable(ep)) return -1F;
@@ -85,7 +85,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public float getBlockHardness(World w, int x, int y, int z)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM tile = getTile(w, x, y, z);
 			if(tile != null && !tile.isMinable(null)) return -1F;
@@ -96,7 +96,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public float getExplosionResistance(Entity entity, World w, int x, int y, int z, double explosionX, double explosionY, double explosionZ)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM tile = getTile(w, x, y, z);
 			if(tile != null && tile.isExplosionResistant()) return 1000000F;
@@ -110,7 +110,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public void breakBlock(World w, int x, int y, int z, Block block, int meta)
 	{
-		if(!w.isRemote && isBlockContainer)
+		if(!w.isRemote && hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM tile = getTile(w, x, y, z);
 			if(tile != null) tile.onBroken();
@@ -120,14 +120,14 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
-		if(!isBlockContainer) return false;
+		if(!hasTileEntity(w.getBlockMetadata(x, y, z))) return false;
 		TileLM tile = getTile(w, x, y, z);
 		return (tile != null) ? tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1) : false;
 	}
 	
 	public boolean onBlockEventReceived(World w, int x, int y, int z, int eventID, int param)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM t = getTile(w, x, y, z);
 			if(t != null) return t.receiveClientEvent(eventID, param);
@@ -138,7 +138,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public boolean recolourBlock(World w, int x, int y, int z, ForgeDirection side, int color)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM t = getTile(w, x, y, z);
 			if(t != null)
@@ -162,7 +162,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public void onNeighborBlockChange(World w, int x, int y, int z, Block neighbor)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
 		{
 			TileLM t = getTile(w, x, y, z);
 			if(t != null) t.onNeighborBlockChange(neighbor);

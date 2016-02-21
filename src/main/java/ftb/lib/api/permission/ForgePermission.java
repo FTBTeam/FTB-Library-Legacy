@@ -88,9 +88,19 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 		configData.setFrom(d);
 	}
 	
+	public JsonElement getDefaultPlayerValue()
+	{
+		return defaultPlayerValue;
+	}
+	
+	public JsonElement getDefaultOPValue()
+	{
+		return defaultOPValue;
+	}
+	
 	protected JsonElement getDefaultElement(GameProfile profile)
 	{
-		return FTBLib.isOP(profile) ? defaultOPValue : defaultPlayerValue;
+		return FTBLib.isOP(profile) ? getDefaultOPValue() : getDefaultPlayerValue();
 	}
 	
 	/**
