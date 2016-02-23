@@ -1,8 +1,8 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.notification.ClientNotifications;
 import ftb.lib.mod.client.FTBLibModClient;
-import ftb.lib.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;

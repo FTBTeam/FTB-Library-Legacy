@@ -1,7 +1,7 @@
 package ftb.lib.mod.net;
 
-import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
+import ftb.lib.api.players.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 

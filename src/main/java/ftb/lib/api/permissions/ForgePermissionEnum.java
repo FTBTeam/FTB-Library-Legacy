@@ -1,7 +1,7 @@
 package ftb.lib.api.permissions;
 
 import com.google.gson.JsonPrimitive;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.mojang.authlib.GameProfile;
 
 import java.util.*;
 
@@ -31,8 +31,8 @@ public class ForgePermissionEnum<E extends Enum<E>> extends ForgePermission
 	private static String getName(Enum<?> e)
 	{ return e == null ? "-" : e.name().toLowerCase(); }
 	
-	public E getEnum(EntityPlayerMP player)
+	public E getEnum(GameProfile profile)
 	{
-		return enumMap.get(getString(player));
+		return enumMap.get(getString(profile));
 	}
 }

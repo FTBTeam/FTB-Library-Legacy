@@ -135,13 +135,13 @@ public class MathHelperMC
 	}
 	
 	private static boolean isVecInsideYZBounds(Vec3 v, AxisAlignedBB aabb)
-	{ return v == null ? false : v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ; }
+	{ return v != null && (v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ); }
 	
 	private static boolean isVecInsideXZBounds(Vec3 v, AxisAlignedBB aabb)
-	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ; }
+	{ return v != null && (v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ); }
 	
 	private static boolean isVecInsideXYBounds(Vec3 v, AxisAlignedBB aabb)
-	{ return v == null ? false : v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY; }
+	{ return v != null && (v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY); }
 	
 	public static MovingObjectPosition getMOPFrom(BlockPos pos, EnumFacing s, float hitX, float hitY, float hitZ)
 	{ return new MovingObjectPosition(new Vec3(pos.getX() + hitX, pos.getY() + hitY, pos.getZ() + hitZ), s, pos); }

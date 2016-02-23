@@ -3,7 +3,7 @@ package ftb.lib.api.tile;
 import ftb.lib.*;
 import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.*;
+import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
@@ -68,8 +68,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public void readTileData(NBTTagCompound tag)
 	{
 		ownerID = UUIDTypeAdapterLM.getUUID(tag.getString("OwnerID"));
-		String customName = tag.getString("CustomName");
-		if(!customName.isEmpty()) setName(customName);
 		tick = tag.getLong("Tick");
 		if(tick < 0L) tick = 0L;
 	}
@@ -77,8 +75,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public void writeTileData(NBTTagCompound tag)
 	{
 		if(ownerID != null) tag.setString("OwnerID", UUIDTypeAdapterLM.getString(ownerID));
-		String customName = getName();
-		if(customName == null && !customName.isEmpty()) tag.setString("CustomName", customName);
 		if(tick < 0L) tick = 0L;
 		tag.setLong("Tick", tick);
 	}
@@ -165,6 +161,8 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 			ownerID = ep.getGameProfile().getId();
 		}
 		
+		if(is.hasDisplayName()) setName(is.getDisplayName());
+		
 		markDirty();
 	}
 	
@@ -179,7 +177,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		String ownerS = "None";
 		if(ownerID != null)
 		{
-			LMPlayer player = FTBLibMod.proxy.getForgeWorld(isServer() ? Side.SERVER : Side.CLIENT).getPlayer(ep);
+			LMPlayer player = LMWorld.getFrom(isServer() ? Side.SERVER : Side.CLIENT).getPlayer(ep);
 			if(player != null) ownerS = player.getProfile().getName();
 			else ownerS = ownerID.toString();
 		}
@@ -236,17 +234,20 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data)
 	{
-		if(action.equals(ACTION_BUTTON_PRESSED))
+		switch(action)
 		{
-			handleButton(data.getString("ID"), data.getByte("MB"), data.getCompoundTag("D"), ep);
-			markDirty();
-		}
-		else if(action.equals(ACTION_OPEN_GUI)) FTBLib.openGui(ep, (IGuiTile) this, data);
-		else if(action.equals(ACTION_CUSTOM_NAME))
-		{
-			String name = data.getString("Name");
-			if(!name.isEmpty()) setName(name);
-			markDirty();
+			case ACTION_BUTTON_PRESSED:
+				handleButton(data.getString("ID"), data.getByte("MB"), data.getCompoundTag("D"), ep);
+				markDirty();
+				break;
+			case ACTION_OPEN_GUI:
+				FTBLib.openGui(ep, (IGuiTile) this, data);
+				break;
+			case ACTION_CUSTOM_NAME:
+				String name = data.getString("Name");
+				if(!name.isEmpty()) setName(name);
+				markDirty();
+				break;
 		}
 	}
 	

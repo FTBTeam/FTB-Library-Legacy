@@ -3,8 +3,8 @@ package ftb.lib.mod.client;
 import ftb.lib.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.gui.*;
+import ftb.lib.api.players.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.client.gui.GuiEditShortcuts;
@@ -35,12 +35,16 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigGroup client_config = new ConfigGroup("ftbl");
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
-	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false).setHidden();
+	
+	@Hidden
+	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false);
+	
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	public static final ConfigEntryEnum<FTBLibRenderHandler.LightValueTexture> light_value_texture = new ConfigEntryEnum<>("light_value_texture", FTBLibRenderHandler.LightValueTexture.values(), FTBLibRenderHandler.LightValueTexture.O, false);
+	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	
 	public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
 	{
@@ -68,7 +72,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public void postInit()
 	{
-		ClientConfigRegistry.init();
+		ClientConfigRegistry.provider().save();
 	}
 	
 	public String translate(String key, Object... obj)
@@ -150,15 +154,8 @@ public class FTBLibModClient extends FTBLibModCommon
 		ModelLoader.setCustomModelResourceLocation(i, meta, new ModelResourceLocation(mod + ":" + id, "inventory"));
 	}
 	
-	public LMWorld getForgeWorld(Side side)
-	{
-		if(side.isClient())
-		{
-			return LMWorldSP.inst;
-		}
-		
-		return super.getForgeWorld(side);
-	}
+	public LMWorld getClientLMWorld()
+	{ return LMWorldSP.inst; }
 	
 	public void runClientCode(ClientCode c)
 	{

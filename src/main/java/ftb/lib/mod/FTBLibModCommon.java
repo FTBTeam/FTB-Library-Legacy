@@ -1,15 +1,13 @@
 package ftb.lib.mod;
 
 import ftb.lib.ClientCode;
-import ftb.lib.api.friends.*;
+import ftb.lib.api.players.LMWorld;
 import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
@@ -73,20 +71,8 @@ public class FTBLibModCommon // FTBLibModClient
 	{
 	}
 	
-	public LMWorld getForgeWorld(Side side)
-	{
-		if(side == null)
-		{
-			return getForgeWorld(FMLCommonHandler.instance().getEffectiveSide());
-		}
-		
-		if(side.isServer())
-		{
-			return LMWorldMP.inst;
-		}
-		
-		return null;
-	}
+	public LMWorld getClientLMWorld()
+	{ return null; }
 	
 	public void runClientCode(ClientCode c)
 	{

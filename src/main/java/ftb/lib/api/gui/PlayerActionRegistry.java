@@ -1,7 +1,7 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.friends.LMPlayer;
+import ftb.lib.api.players.LMPlayer;
 import latmod.lib.config.*;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class PlayerActionRegistry
 	public static boolean enabled(String id)
 	{
 		ConfigEntry entry = configEntries.get(id);
-		return (entry == null) ? true : entry.getAsBoolean();
+		return (entry == null) || entry.getAsBoolean();
 	}
 	
 	public static void add(final PlayerAction a)
@@ -34,7 +34,7 @@ public class PlayerActionRegistry
 			
 			if(a.configDefault() != null)
 			{
-				ConfigEntryBool entry = new ConfigEntryBool(a.ID, a.configDefault().booleanValue())
+				ConfigEntryBool entry = new ConfigEntryBool(a.ID, a.configDefault())
 				{
 					public String getFullID()
 					{ return "player_action." + a.ID; }

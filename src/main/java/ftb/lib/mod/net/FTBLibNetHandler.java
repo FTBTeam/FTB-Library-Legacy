@@ -11,19 +11,25 @@ public class FTBLibNetHandler
 	
 	public static void init()
 	{
-		NET.register(MessageLMWorldUpdate.class, 1, Side.CLIENT);
-		//NET.register(MessageSendGameMode.class, 2, Side.CLIENT);
-		//NET.register(MessageSyncConfig.class, 3, Side.CLIENT);
-		NET.register(MessageReload.class, 4, Side.CLIENT);
-		NET.register(MessageEditConfig.class, 5, Side.CLIENT);
-		NET.register(MessageEditConfigResponse.class, 6, Side.SERVER);
+		NET.register(MessageReload.class, 1, Side.CLIENT);
+		NET.register(MessageEditConfig.class, 2, Side.CLIENT);
+		NET.register(MessageEditConfigResponse.class, 3, Side.SERVER);
+		
+		NET.register(MessageLMWorldUpdate.class, 4, Side.CLIENT);
+		NET.register(MessageLMPlayerUpdate.class, 5, Side.CLIENT);
+		NET.register(MessageLMPlayerLoggedIn.class, 6, Side.CLIENT);
+		NET.register(MessageLMPlayerLoggedOut.class, 7, Side.CLIENT);
+		NET.register(MessageLMPlayerDied.class, 8, Side.CLIENT);
+		NET.register(MessageRequestSelfUpdate.class, 9, Side.SERVER);
 		
 		NET_GUI.register(MessageOpenGui.class, 1, Side.CLIENT);
 		NET_GUI.register(MessageOpenGuiTile.class, 2, Side.CLIENT);
 		NET_GUI.register(MessageClientTileAction.class, 3, Side.SERVER);
 		NET_GUI.register(MessageClientItemAction.class, 4, Side.SERVER);
 		NET_GUI.register(MessageNotifyPlayer.class, 5, Side.CLIENT);
+		NET_GUI.register(MessageModifyFriends.class, 6, Side.SERVER);
 		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
+		NET_INFO.register(MessageRequestPlayerInfo.class, 2, Side.SERVER);
 	}
 }

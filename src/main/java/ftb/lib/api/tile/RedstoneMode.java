@@ -24,8 +24,7 @@ public enum RedstoneMode
 	{
 		if(this == DISABLED) return false;
 		if(this == ACTIVE_HIGH && !b) return true;
-		if(this == ACTIVE_LOW && b) return true;
-		return false;
+		return this == ACTIVE_LOW && b;
 	}
 	
 	public RedstoneMode next()

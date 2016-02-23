@@ -26,7 +26,7 @@ public class StringIDInvLoader
 				MapEntry<Integer, ItemStack> itemEntry = loadFromNBT(tag1);
 				if(itemEntry != null)
 				{
-					int key = itemEntry.getKey().intValue();
+					int key = itemEntry.getKey();
 					if(key >= 0 && key < items.length) items[key] = itemEntry.getValue();
 				}
 			}
@@ -100,7 +100,7 @@ public class StringIDInvLoader
 		{
 			int slot = tag.getShort("Slot");
 			ItemStack is = ItemStack.loadItemStackFromNBT(tag);
-			if(is != null) return new MapEntry<Integer, ItemStack>(Integer.valueOf(slot), is);
+			if(is != null) return new MapEntry<>(slot, is);
 		}
 		else
 		{
@@ -116,7 +116,7 @@ public class StringIDInvLoader
 					int dmg = Math.max(0, tag.getShort("D"));
 					ItemStack is = new ItemStack(item, size, dmg);
 					if(tag.hasKey("T")) is.setTagCompound(tag.getCompoundTag("T"));
-					return new MapEntry<Integer, ItemStack>(Integer.valueOf(slot), is);
+					return new MapEntry<>(slot, is);
 				}
 				else
 				{
@@ -126,7 +126,7 @@ public class StringIDInvLoader
 					{
 						ItemStack is = new ItemStack(item, ai[1], ai[2]);
 						if(tag.hasKey("T", LMNBTUtils.MAP)) is.setTagCompound(tag.getCompoundTag("T"));
-						return new MapEntry<Integer, ItemStack>(Integer.valueOf(ai[0]), is);
+						return new MapEntry<>(ai[0], is);
 					}
 				}
 			}

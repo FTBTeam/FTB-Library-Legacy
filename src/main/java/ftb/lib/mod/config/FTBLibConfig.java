@@ -8,15 +8,14 @@ import java.io.File;
 
 public class FTBLibConfig
 {
-	private static ConfigFile configFile;
+	public static final ConfigFile configFile = new ConfigFile("ftblib");
 	
 	public static void load()
 	{
-		configFile = new ConfigFile("ftblib", new File(FTBLib.folderLocal, "ftblib.json"));
-		configFile.configGroup.setName("FTBLib");
-		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class, null, false));
-		FTBLibConfigCmd.name.addAll(FTBLibConfigCmd.Name.class, null, false);
-		
+		configFile.setFile(new File(FTBLib.folderLocal, "ftblib.json"));
+		configFile.setDisplayName("FTBLib");
+		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class, null, false), false);
+		configFile.add(new ConfigGroup("command_names").addAll(FTBLibConfigCmdNames.class, null, false), false);
 		ConfigRegistry.add(configFile);
 		configFile.load();
 	}

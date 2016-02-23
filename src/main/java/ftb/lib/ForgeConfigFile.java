@@ -1,14 +1,8 @@
 package ftb.lib;
 
-import latmod.lib.IntList;
-import latmod.lib.config.*;
-import latmod.lib.util.*;
-import net.minecraftforge.common.config.*;
-
-import java.util.Arrays;
-
-public class ForgeConfigFile implements IConfigFile // ConfigFile
+public class ForgeConfigFile// implements IConfigFile // ConfigFile
 {
+	/*
 	public final ConfigGroup configGroup;
 	public final Configuration config;
 	
@@ -66,4 +60,5 @@ public class ForgeConfigFile implements IConfigFile // ConfigFile
 	
 	public void save()
 	{ config.save(); }
+	*/
 }

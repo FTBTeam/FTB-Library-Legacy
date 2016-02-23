@@ -16,10 +16,12 @@ public class MessageEditConfigResponse extends MessageLM_IO // MessageEditConfig
 	{
 		this();
 		io.writeLong(provider.adminToken);
-		io.writeUTF(provider.group.ID);
+		io.writeUTF(provider.getConfigFile().ID);
 		
-		try { provider.group.write(io); }
+		try { provider.getConfigFile().write(io); }
 		catch(Exception e) { }
+		
+		io.writeBoolean(provider.reload);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -31,8 +33,7 @@ public class MessageEditConfigResponse extends MessageLM_IO // MessageEditConfig
 		if(!LMAccessToken.equals(ep, io.readLong(), true)) return null;
 		String id = io.readUTF();
 		
-		IConfigFile file = ConfigRegistry.map.get(id);
-		
+		ConfigFile file = ConfigRegistry.map.containsKey(id) ? ConfigRegistry.map.get(id) : ConfigRegistry.getTempConfig(id);
 		if(file == null) return null;
 		
 		ConfigGroup group = new ConfigGroup(id);
@@ -40,10 +41,10 @@ public class MessageEditConfigResponse extends MessageLM_IO // MessageEditConfig
 		try { group.read(io); }
 		catch(Exception e) { }
 		
-		if(file.getGroup().loadFromGroup(group) > 0)
+		if(file.loadFromGroup(group) > 0)
 		{
 			file.save();
-			FTBLib.reload(ep, true, false);
+			if(io.readBoolean()) FTBLib.reload(ep, true, false);
 		}
 		
 		return null;

@@ -4,7 +4,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.client.*;
 import ftb.lib.api.client.model.CubeRenderer;
 import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.notification.ClientNotifications;
+import ftb.lib.api.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,7 +22,7 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class FTBLibRenderHandler
 {
-	public static enum LightValueTexture
+	public enum LightValueTexture
 	{
 		O,
 		X;
@@ -80,8 +80,7 @@ public class FTBLibRenderHandler
 	{
 		if(e.phase == TickEvent.Phase.END && !callbacks.isEmpty())
 		{
-			for(int i = 0; i < callbacks.size(); i++)
-				callbacks.get(i).onCallback();
+			for(ClientTickCallback callback : callbacks) callback.onCallback();
 			callbacks.clear();
 		}
 	}
@@ -167,10 +166,8 @@ public class FTBLibRenderHandler
 					
 					GL11.glBegin(GL11.GL_QUADS);
 					
-					for(int i = 0; i < lightList.size(); i++)
+					for(MobSpawnPos pos : lightList)
 					{
-						MobSpawnPos pos = lightList.get(i);
-						
 						double bx = pos.pos.getX();
 						double by = pos.pos.getY() + 0.03D;
 						double bz = pos.pos.getZ();
@@ -194,10 +191,8 @@ public class FTBLibRenderHandler
 					
 					if(FTBLibClient.mc.gameSettings.showDebugInfo)
 					{
-						for(int i = 0; i < lightList.size(); i++)
+						for(MobSpawnPos pos : lightList)
 						{
-							MobSpawnPos pos = lightList.get(i);
-							
 							double bx = pos.pos.getX() + 0.5D;
 							double by = pos.pos.getY() + 0.14D;
 							double bz = pos.pos.getZ() + 0.5D;

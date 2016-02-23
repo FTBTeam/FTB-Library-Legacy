@@ -4,16 +4,19 @@ import ftb.lib.*;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.gui.*;
+import ftb.lib.api.notification.ClientNotifications;
+import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
-import ftb.lib.notification.ClientNotifications;
+import ftb.lib.mod.client.gui.friends.GuiFriends;
+import ftb.lib.mod.net.MessageModifyFriends;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.*;
@@ -29,6 +32,7 @@ public class FTBLibActions
 		EventBusHelper.register(new FTBLibActions());
 		
 		PlayerActionRegistry.add(notifications);
+		PlayerActionRegistry.add(friends_gui);
 		PlayerActionRegistry.add(settings);
 		PlayerActionRegistry.add(toggle_gamemode);
 		PlayerActionRegistry.add(toggle_rain);
@@ -36,6 +40,10 @@ public class FTBLibActions
 		PlayerActionRegistry.add(toggle_night);
 		PlayerActionRegistry.add(toggle_chunk_bounds);
 		PlayerActionRegistry.add(toggle_light_values);
+		
+		PlayerActionRegistry.add(friend_add);
+		PlayerActionRegistry.add(friend_remove);
+		PlayerActionRegistry.add(friend_deny);
 		
 		GuiScreenRegistry.register("notifications", new GuiScreenRegistry.Entry()
 		{
@@ -71,6 +79,15 @@ public class FTBLibActions
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			FTBLibClient.mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
 		}
+	};
+	
+	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbu", "textures/gui/friendsbutton.png"), 256))
+	{
+		public void onClicked(LMPlayer self, LMPlayer other)
+		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }
+		
+		public String getDisplayName()
+		{ return "FriendsGUI"; }
 	};
 	
 	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
@@ -134,6 +151,35 @@ public class FTBLibActions
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
+	};
+	
+	// Other //
+	
+	public static final PlayerAction friend_add = new PlayerAction(PlayerAction.Type.OTHER, "ftbul.add_friend", 1, GuiIcons.add)
+	{
+		public void onClicked(LMPlayer self, LMPlayer other)
+		{ new MessageModifyFriends(MessageModifyFriends.ADD, other.getProfile().getId()).sendToServer(); }
+		
+		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		{ return !self.isFriendRaw(other); }
+	};
+	
+	public static final PlayerAction friend_remove = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.rem_friend", -1, GuiIcons.remove)
+	{
+		public void onClicked(LMPlayer self, LMPlayer other)
+		{ new MessageModifyFriends(MessageModifyFriends.REMOVE, other.getProfile().getId()).sendToServer(); }
+		
+		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		{ return self.isFriendRaw(other); }
+	};
+	
+	public static final PlayerAction friend_deny = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.deny_friend", -1, GuiIcons.remove)
+	{
+		public void onClicked(LMPlayer self, LMPlayer other)
+		{ new MessageModifyFriends(MessageModifyFriends.DENY, other.getProfile().getId()).sendToServer(); }
+		
+		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		{ return !self.isFriendRaw(other) && other.isFriendRaw(self); }
 	};
 	
 	@SubscribeEvent

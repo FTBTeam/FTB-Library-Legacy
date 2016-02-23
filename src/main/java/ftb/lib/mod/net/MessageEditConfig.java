@@ -5,7 +5,7 @@ import ftb.lib.api.config.ServerConfigProvider;
 import ftb.lib.api.net.*;
 import ftb.lib.mod.client.gui.GuiEditConfig;
 import latmod.lib.ByteCount;
-import latmod.lib.config.ConfigGroup;
+import latmod.lib.config.ConfigFile;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -13,11 +13,12 @@ public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(ByteCount.INT); }
 	
-	public MessageEditConfig(long t, ConfigGroup o)
+	public MessageEditConfig(long t, boolean reload, ConfigFile o)
 	{
 		this();
 		io.writeLong(t);
 		io.writeUTF(o.ID);
+		io.writeBoolean(reload);
 		o.writeExtended(io);
 	}
 	
@@ -29,11 +30,12 @@ public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
 	{
 		long token = io.readLong();
 		String id = io.readUTF();
+		boolean reload = io.readBoolean();
 		
-		ConfigGroup group = new ConfigGroup(id);
-		group.readExtended(io);
+		ConfigFile file = new ConfigFile(id);
+		file.readExtended(io);
 		
-		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, group)));
+		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, reload, file)));
 		return null;
 	}
 }

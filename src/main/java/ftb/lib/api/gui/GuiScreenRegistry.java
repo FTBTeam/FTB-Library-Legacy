@@ -30,7 +30,7 @@ public class GuiScreenRegistry
 		return null;
 	}
 	
-	public static interface Entry
+	public interface Entry
 	{
 		GuiScreen openGui(EntityPlayer ep);
 	}

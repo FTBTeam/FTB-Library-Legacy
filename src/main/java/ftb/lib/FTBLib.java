@@ -4,12 +4,12 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.item.IItemLM;
+import ftb.lib.api.notification.Notification;
+import ftb.lib.api.players.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
-import ftb.lib.notification.Notification;
 import latmod.lib.LMUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
@@ -249,10 +249,10 @@ public class FTBLib
 		sb.append(cmd);
 		if(args != null && args.length > 0)
 		{
-			for(int i = 0; i < args.length; i++)
+			for(String arg : args)
 			{
 				sb.append(' ');
-				sb.append(args[i]);
+				sb.append(arg);
 			}
 		}
 		
@@ -287,8 +287,7 @@ public class FTBLib
 	
 	public static boolean isOP(GameProfile p)
 	{
-		if(!isDedicatedServer()) return true;
-		return getServerWorld() != null && getServer().getConfigurationManager().getOppedPlayers().getEntry(p) != null;
+		return !isDedicatedServer() || getServerWorld() != null && getServer().getConfigurationManager().getOppedPlayers().getEntry(p) != null;
 	}
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)

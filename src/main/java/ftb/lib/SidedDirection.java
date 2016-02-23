@@ -30,8 +30,7 @@ public enum SidedDirection
 	public static SidedDirection getSide(EnumFacing side, EnumFacing rot)
 	{
 		if(side == null || rot == null) return NONE;
-		for(int i = 0; i < VALUES.length; i++)
-			if(VALUES[i].directions[rot.ordinal()] == side) return VALUES[i];
+		for(SidedDirection VALUE : VALUES) if(VALUE.directions[rot.ordinal()] == side) return VALUE;
 		return NONE;
 	}
 	

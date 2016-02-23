@@ -43,16 +43,14 @@ public abstract class PanelPopupMenu extends PanelLM
 	
 	public void renderWidget()
 	{
-		for(int i = 0; i < menuButtons.size(); i++)
-			menuButtons.get(i).renderWidget();
+		for(ButtonPopupMenu menuButton : menuButtons) menuButton.renderWidget();
 	}
 	
 	public void mousePressed(int b)
 	{
 		if(mouseOver())
 		{
-			for(int i = 0; i < menuButtons.size(); i++)
-				menuButtons.get(i).mousePressed(b);
+			for(ButtonPopupMenu menuButton : menuButtons) menuButton.mousePressed(b);
 		}
 		else onClosed(null, b);
 	}

@@ -89,7 +89,7 @@ public abstract class ContainerLM extends Container
 		{
 			while(is.stackSize > 0 && (!RtoL && k < max || RtoL && k >= min))
 			{
-				slot = (Slot) inventorySlots.get(k);
+				slot = inventorySlots.get(k);
 				is1 = slot.getStack();
 				
 				if(slot.isItemValid(is) && slot.inventory.isItemValidForSlot(k, is))
@@ -127,7 +127,7 @@ public abstract class ContainerLM extends Container
 			
 			while(!RtoL && k < max || RtoL && k >= min)
 			{
-				slot = (Slot) inventorySlots.get(k);
+				slot = inventorySlots.get(k);
 				is1 = slot.getStack();
 				
 				if(is1 == null)

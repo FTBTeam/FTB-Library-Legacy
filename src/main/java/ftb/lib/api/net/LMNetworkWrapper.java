@@ -11,7 +11,7 @@ import java.util.EnumMap;
 
 public class LMNetworkWrapper // SimpleNetworkWrapper
 {
-	public static final LMNetworkWrapper newWrapper(String ID)
+	public static LMNetworkWrapper newWrapper(String ID)
 	{ return new LMNetworkWrapper(ID); }
 	
 	private final FMLEmbeddedChannel serverChannels;

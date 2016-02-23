@@ -42,8 +42,7 @@ public class GuiEditShortcuts extends GuiLM
 			
 			public void renderWidget()
 			{
-				for(int i = 0; i < widgets.size(); i++)
-					widgets.get(i).renderWidget();
+				for(WidgetLM widget : widgets) widget.renderWidget();
 			}
 		};
 		
@@ -93,7 +92,7 @@ public class GuiEditShortcuts extends GuiLM
 		mainPanel.width = width;
 		mainPanel.height = height;
 		mainPanel.posX = mainPanel.posY = 0;
-		buttonClose.posX = width - 18 * 1;
+		buttonClose.posX = width - 18;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
 		configPanel.posY = 20;

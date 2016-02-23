@@ -2,8 +2,8 @@ package ftb.lib.api;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.LMPlayer;
 import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.players.LMPlayer;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class PlayerAction extends FinalIDObject
 {
-	public static enum Type
+	public enum Type
 	{
 		SELF,
 		OTHER,

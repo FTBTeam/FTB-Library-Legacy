@@ -26,11 +26,10 @@ public class Face
 		else drawMode = GL11.GL_POLYGON;
 	}
 	
-	public static final Face parseFace(OBJModel m, String line, String[] s1)
+	public static Face parseFace(OBJModel m, String line, String[] s1)
 	{
 		String[] s = new String[s1.length - 1];
-		for(int i = 0; i < s.length; i++)
-			s[i] = s1[i + 1];
+		System.arraycopy(s1, 1, s, 0, s.length);
 		
 		if(isValidFace_V_VN_Line(line))
 		{
@@ -95,10 +94,10 @@ public class Face
 		if(!line.contains("/") || !line.contains(" ")) return false;
 		
 		String[] s = line.split(" ");
-		if(s != null && s.length > 1)
+		if(s.length > 1)
 		{
 			String[] s1 = s[1].split("/");
-			if(s1 != null && s1.length == 3) return true;
+			if(s1.length == 3) return true;
 		}
 		
 		return false;
@@ -112,10 +111,10 @@ public class Face
 		if(!line.contains("/") || !line.contains(" ")) return false;
 		
 		String[] s = line.split(" ");
-		if(s != null && s.length > 1)
+		if(s.length > 1)
 		{
 			String[] s1 = s[1].split("/");
-			if(s1 != null && s1.length == 2) return true;
+			if(s1.length == 2) return true;
 		}
 		
 		return false;

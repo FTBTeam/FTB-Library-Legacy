@@ -37,7 +37,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	public void addAll(WidgetLM[] l)
 	{
 		if(l == null || l.length == 0) return;
-		for(int i = 0; i < l.length; i++) add(l[i]);
+		for(WidgetLM aL : l) add(aL);
 	}
 	
 	public void addAll(List<? extends WidgetLM> l)
@@ -74,7 +74,6 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	
 	public void renderWidget()
 	{
-		for(int i = 0; i < widgets.size(); i++)
-			widgets.get(i).renderWidget();
+		for(WidgetLM widget : widgets) widget.renderWidget();
 	}
 }

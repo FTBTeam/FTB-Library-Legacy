@@ -4,8 +4,8 @@ import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.friends.LMWorldMP;
 import ftb.lib.api.item.ODItems;
+import ftb.lib.api.players.*;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
@@ -45,7 +45,7 @@ public class FTBLibMod
 		ODItems.preInit();
 		
 		FTBLibConfig.load();
-		EventBusHelper.register(new FTBLibEventHandler());
+		EventBusHelper.register(FTBLibEventHandler.instance);
 		proxy.preInit();
 	}
 	
@@ -67,6 +67,8 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
 	{
+		FTBLibEventHandler.instance.ticking.clear();
+		
 		if(FTBLibConfigCmd.override_list.get()) e.registerServerCommand(new CmdListOverride());
 		if(FTBLibConfigCmd.override_help.get()) e.registerServerCommand(new CmdHelpOverride());
 		addCmd(e, new CmdEditConfig());
@@ -79,10 +81,12 @@ public class FTBLibMod
 	private void addCmd(FMLServerStartingEvent e, CommandLM c)
 	{ if(!c.commandName.isEmpty()) e.registerServerCommand(c); }
 	
-	/*@Mod.EventHandler
+	/*
+	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
-	}*/
+	}
+	*/
 	
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent e)
@@ -91,6 +95,16 @@ public class FTBLibMod
 		GameModes.reload();
 		LMWorldMP.inst = new LMWorldMP(new File(new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName()), "LatMod"));
 		FTBLib.reload(FTBLib.getServer(), false, false);
+		
+		for(ForgeWorldData d : LMWorldMP.inst.customData.values())
+		{
+			if(d instanceof IWorldTicking)
+			{
+				FTBLibEventHandler.instance.ticking.add((IWorldTicking) d);
+			}
+			
+			d.init();
+		}
 	}
 	
 	@Mod.EventHandler

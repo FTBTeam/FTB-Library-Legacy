@@ -2,9 +2,9 @@ package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.LMPlayer;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.players.LMPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;
 

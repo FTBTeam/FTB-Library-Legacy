@@ -34,7 +34,7 @@ public class Group
 	{
 		if(listID == -1)
 		{
-			if(parent.texVertices == null) GlStateManager.disableTexture2D();
+			if(parent.texVertices.isEmpty()) GlStateManager.disableTexture2D();
 			else GlStateManager.enableTexture2D();
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -45,9 +45,8 @@ public class Group
 			float posX0 = 0F, posY0 = 0F, posZ0 = 0F;
 			float vSize = 0F;
 			
-			for(int i = 0; i < faces.size(); i++)
+			for(Face f : faces)
 			{
-				Face f = faces.get(i);
 				GL11.glBegin(f.drawMode);
 				
 				for(int j = 0; j < f.verticies.length; j++)

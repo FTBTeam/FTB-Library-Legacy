@@ -1,6 +1,6 @@
 package ftb.lib.api;
 
-import ftb.lib.api.friends.*;
+import ftb.lib.api.players.*;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.*;
@@ -10,12 +10,12 @@ import java.util.*;
  */
 public class ForgeWorldDataEvent extends Event
 {
-	public final LMWorld LMWorld;
+	public final LMWorld world;
 	private final Map<String, ForgeWorldData> map;
 	
 	public ForgeWorldDataEvent(LMWorld w)
 	{
-		LMWorld = w;
+		world = w;
 		map = new HashMap<>();
 	}
 	

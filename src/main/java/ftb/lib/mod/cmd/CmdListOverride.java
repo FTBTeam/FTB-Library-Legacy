@@ -23,10 +23,8 @@ public class CmdListOverride extends CommandLM
 		boolean printUUID = args.length > 0 && args[0].equals("uuid");
 		
 		FTBLib.printChat(ics, "Players currently online: [ " + players.size() + " ]");
-		for(int i = 0; i < players.size(); i++)
+		for(EntityPlayerMP ep : players)
 		{
-			EntityPlayerMP ep = players.get(i);
-			
 			if(printUUID) FTBLib.printChat(ics, ep.getName() + " :: " + UUIDTypeAdapterLM.getString(ep.getUniqueID()));
 			else FTBLib.printChat(ics, ep.getName());
 		}

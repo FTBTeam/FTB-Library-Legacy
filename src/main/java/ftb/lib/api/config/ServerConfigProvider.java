@@ -6,25 +6,27 @@ import latmod.lib.config.*;
 public class ServerConfigProvider implements IConfigProvider
 {
 	public final long adminToken;
-	public final ConfigGroup group;
+	public final boolean reload;
+	public final ConfigFile file;
 	
-	public ServerConfigProvider(long t, ConfigGroup g)
+	public ServerConfigProvider(long t, boolean r, ConfigFile f)
 	{
 		adminToken = t;
-		group = g;
+		reload = r;
+		file = f;
 	}
 	
 	public String getTitle()
-	{ return group.getDisplayName(); }
+	{ return file.getDisplayName(); }
 	
 	public String getGroupTitle(ConfigGroup g)
-	{ return g.getDisplayName(); }
+	{ return g.ID; }
 	
 	public String getEntryTitle(ConfigEntry e)
 	{ return e.ID; }
 	
-	public ConfigGroup getGroup()
-	{ return group; }
+	public ConfigFile getConfigFile()
+	{ return file; }
 	
 	public void save()
 	{ new MessageEditConfigResponse(this).sendToServer(); }

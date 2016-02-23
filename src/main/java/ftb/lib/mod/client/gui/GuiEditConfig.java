@@ -31,7 +31,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		super(g, null);
 		provider = p;
 		
-		title = p.getGroupTitle(p.getGroup());
+		title = p.getGroupTitle(p.getConfigFile());
 		
 		configEntryButtons = new ArrayList<>();
 		
@@ -46,8 +46,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			public void renderWidget()
 			{
-				for(int i = 0; i < widgets.size(); i++)
-					widgets.get(i).renderWidget();
+				for(WidgetLM widget : widgets) widget.renderWidget();
 			}
 			
 			private void addCE(ButtonConfigEntry e)
@@ -129,7 +128,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		mainPanel.width = width;
 		mainPanel.height = height;
 		mainPanel.posX = mainPanel.posY = 0;
-		buttonClose.posX = width - 18 * 1;
+		buttonClose.posX = width - 18;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
 		configPanel.posY = 20;
@@ -139,14 +138,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			
-			for(ConfigEntry entry : provider.getGroup().entries())
+			for(ConfigEntry entry : provider.getConfigFile().entries())
 				addCE(null, entry, 0);
 		}
 	}
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.getFlag(ConfigEntry.FLAG_HIDDEN))
+		if(!e.configData.isHidden())
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -309,7 +308,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			FTBLibClient.playClickSound();
 			
-			if(entry.getFlag(ConfigEntry.FLAG_CANT_EDIT)) return;
+			if(!entry.configData.canEdit()) return;
+			
+			PrimitiveType type = entry.getType();
 			
 			if(entry instanceof IClickableConfigEntry)
 			{
@@ -321,7 +322,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				expanded = !expanded;
 				gui.refreshWidgets();
 			}
-			else if(entry.getType() == PrimitiveType.COLOR)
+			else if(type == PrimitiveType.COLOR)
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
 				{
@@ -337,56 +338,69 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				}, ((ConfigEntryColor) entry).value.color(), 0, false);
 			}
-			else if(entry.getType() == PrimitiveType.INT || entry.getType() == PrimitiveType.DOUBLE || entry.getType() == PrimitiveType.STRING)
+			else if(type == PrimitiveType.INT)
 			{
-				if(entry.getType() == PrimitiveType.INT)
+				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryInt) entry).get(), new IFieldCallback()
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryInt) entry).get(), new IFieldCallback()
+					public void onFieldSelected(FieldSelected c)
 					{
-						public void onFieldSelected(FieldSelected c)
+						if(c.set)
 						{
-							if(c.set)
-							{
-								((ConfigEntryInt) entry).set(c.getI());
-								gui.onChanged();
-							}
-							
-							if(c.closeGui) FTBLibClient.openGui(gui);
+							((ConfigEntryInt) entry).set(c.resultI());
+							gui.onChanged();
 						}
-					});
-				}
-				else if(entry.getType() == PrimitiveType.DOUBLE)
+						
+						if(c.closeGui) FTBLibClient.openGui(gui);
+					}
+				});
+			}
+			else if(type == PrimitiveType.DOUBLE)
+			{
+				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryDouble) entry).get(), new IFieldCallback()
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryDouble) entry).get(), new IFieldCallback()
+					public void onFieldSelected(FieldSelected c)
 					{
-						public void onFieldSelected(FieldSelected c)
+						if(c.set)
 						{
-							if(c.set)
-							{
-								((ConfigEntryDouble) entry).set(c.getF());
-								gui.onChanged();
-							}
-							
-							if(c.closeGui) FTBLibClient.openGui(gui);
+							((ConfigEntryDouble) entry).set(c.resultD());
+							gui.onChanged();
 						}
-					});
-				}
-				else if(entry.getType() == PrimitiveType.STRING)
+						
+						if(c.closeGui) FTBLibClient.openGui(gui);
+					}
+				});
+			}
+			else if(type == PrimitiveType.STRING)
+			{
+				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryString) entry).get(), new IFieldCallback()
 				{
-					LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryString) entry).get(), new IFieldCallback()
+					public void onFieldSelected(FieldSelected c)
 					{
-						public void onFieldSelected(FieldSelected c)
+						if(c.set)
 						{
-							if(c.set)
-							{
-								((ConfigEntryString) entry).set(c.getS());
-								gui.onChanged();
-							}
-							
-							if(c.closeGui) FTBLibClient.openGui(gui);
+							((ConfigEntryString) entry).set(c.result);
+							gui.onChanged();
 						}
-					});
-				}
+						
+						if(c.closeGui) FTBLibClient.openGui(gui);
+					}
+				});
+			}
+			else if(type.isArray)
+			{
+				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getJson().toString(), new IFieldCallback()
+				{
+					public void onFieldSelected(FieldSelected c)
+					{
+						if(c.set)
+						{
+							entry.setJson(LMJsonUtils.fromJson(c.result));
+							gui.onChanged();
+						}
+						
+						if(c.closeGui) FTBLibClient.openGui(gui);
+					}
+				});
 			}
 		}
 		
@@ -407,21 +421,26 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
 			{
-				if(entry.info != null && !entry.info.isEmpty())
+				if(entry.configData.info != null && entry.configData.info.length > 0)
 				{
-					String[] sl = entry.info.split("\n");
-					for(String s : sl) l.addAll(FTBLibClient.mc.fontRendererObj.listFormattedStringToWidth(s, 230));
+					for(String s : entry.configData.info)
+					{
+						l.addAll(FTBLibClient.mc.fontRendererObj.listFormattedStringToWidth(s, 230));
+					}
 				}
 			}
 			
 			if(entry.getAsGroup() == null && gui.mouse().x > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
 			{
 				String def = entry.getDefValue();
-				String min = entry.getMinValue();
-				String max = entry.getMaxValue();
+				double min = entry.configData.min();
+				double max = entry.configData.max();
+				
 				if(def != null) l.add(EnumChatFormatting.AQUA + "Def: " + def);
-				if(min != null) l.add(EnumChatFormatting.AQUA + "Min: " + min);
-				if(max != null) l.add(EnumChatFormatting.AQUA + "Max: " + max);
+				if(min != Double.NEGATIVE_INFINITY)
+					l.add(EnumChatFormatting.AQUA + "Min: " + LMStringUtils.formatDouble(min));
+				if(max != Double.POSITIVE_INFINITY)
+					l.add(EnumChatFormatting.AQUA + "Max: " + LMStringUtils.formatDouble(max));
 			}
 		}
 	}

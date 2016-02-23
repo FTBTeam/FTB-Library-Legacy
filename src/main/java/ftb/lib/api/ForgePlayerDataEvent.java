@@ -1,6 +1,6 @@
 package ftb.lib.api;
 
-import ftb.lib.api.friends.*;
+import ftb.lib.api.players.*;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.*;
@@ -10,12 +10,12 @@ import java.util.*;
  */
 public class ForgePlayerDataEvent extends Event
 {
-	public final LMPlayer LMPlayer;
+	public final LMPlayer player;
 	private final Map<String, ForgePlayerData> map;
 	
 	public ForgePlayerDataEvent(LMPlayer p)
 	{
-		LMPlayer = p;
+		player = p;
 		map = new HashMap<>();
 	}
 	

@@ -1,6 +1,6 @@
 package ftb.lib.api;
 
-import ftb.lib.api.friends.LMWorld;
+import ftb.lib.api.players.LMWorld;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.eventhandler.Event;
 

@@ -1,7 +1,7 @@
 package ftb.lib;
 
-import ftb.lib.api.friends.LMPlayer;
 import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.players.LMPlayer;
 import net.minecraft.client.resources.I18n;
 
 public enum PrivacyLevel
@@ -67,10 +67,9 @@ public enum PrivacyLevel
 		if(FTBLib.ftbu == null) return true;
 		if(this == PrivacyLevel.PUBLIC || owner == null) return true;
 		if(player == null) return false;
-		if(owner == null || owner.equalsPlayer(player)) return true;
-		if(player != null && player.isOnline() && player.allowCreativeInteractSecure()) return true;
+		if(owner.equalsPlayer(player)) return true;
+		if(player.isOnline() && player.allowCreativeInteractSecure()) return true;
 		if(this == PrivacyLevel.PRIVATE) return false;
-		if(this == PrivacyLevel.FRIENDS && owner.isFriend(player)) return true;
-		return false;
+		return this == PrivacyLevel.FRIENDS && owner.isFriend(player);
 	}
 }

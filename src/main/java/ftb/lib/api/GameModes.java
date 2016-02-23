@@ -29,8 +29,7 @@ public class GameModes
 	{
 		if(e == null || !e.isJsonObject()) return false;
 		JsonObject o = e.getAsJsonObject();
-		if(o == null || o.entrySet().isEmpty()) return false;
-		return o.has("modes") && o.has("default") && o.has("common");
+		return !(o == null || o.entrySet().isEmpty()) && o.has("modes") && o.has("default") && o.has("common");
 	}
 	
 	public GameModes(JsonElement el)

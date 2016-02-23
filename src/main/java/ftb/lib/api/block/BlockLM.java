@@ -3,7 +3,7 @@ package ftb.lib.api.block;
 import ftb.lib.LMMod;
 import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.FTBLibMod;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
-public abstract class BlockLM extends BlockContainer implements IBlockLM
+public abstract class BlockLM extends Block implements IBlockLM
 {
 	public final String blockName;
 	
@@ -35,8 +35,6 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{ return ItemBlockLM.class; }
 	
 	public abstract LMMod getMod();
-	
-	public abstract TileEntity createNewTileEntity(World w, int m);
 	
 	public int getRenderType()
 	{ return 3; }
@@ -73,7 +71,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	{
 		super.onBlockPlacedBy(w, pos, state, el, is);
 		
-		if(isBlockContainer && el instanceof EntityPlayer)
+		if(hasTileEntity(state) && el instanceof EntityPlayer)
 		{
 			TileLM tile = getTile(w, pos);
 			if(tile != null) tile.onPlacedBy((EntityPlayer) el, is, state);
@@ -82,7 +80,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public float getPlayerRelativeBlockHardness(EntityPlayer ep, World w, BlockPos pos)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM tile = getTile(w, pos);
 			if(tile != null && !tile.isMinable(ep)) return -1F;
@@ -93,7 +91,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public float getBlockHardness(World w, BlockPos pos)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM tile = getTile(w, pos);
 			if(tile != null && !tile.isMinable(null)) return -1F;
@@ -104,7 +102,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public float getExplosionResistance(World w, BlockPos pos, Entity e, Explosion ex)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM tile = getTile(w, pos);
 			if(tile != null && tile.isExplosionResistant()) return 1000000F;
@@ -118,7 +116,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public void breakBlock(World w, BlockPos pos, IBlockState state)
 	{
-		if(!w.isRemote && isBlockContainer)
+		if(!w.isRemote && hasTileEntity(state))
 		{
 			TileLM tile = getTile(w, pos);
 			if(tile != null) tile.onBroken(state);
@@ -128,14 +126,14 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumFacing s, float x1, float y1, float z1)
 	{
-		if(!isBlockContainer) return false;
+		if(!hasTileEntity(state)) return false;
 		TileLM tile = getTile(w, pos);
-		return (tile != null) ? tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1) : false;
+		return (tile != null) && tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1);
 	}
 	
 	public boolean onBlockEventReceived(World w, BlockPos pos, IBlockState state, int eventID, int param)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(state))
 		{
 			TileLM t = getTile(w, pos);
 			if(t != null) return t.receiveClientEvent(eventID, param);
@@ -146,7 +144,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public boolean recolorBlock(World w, BlockPos pos, EnumFacing side, EnumDyeColor color)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM t = getTile(w, pos);
 			if(t != null)
@@ -170,7 +168,7 @@ public abstract class BlockLM extends BlockContainer implements IBlockLM
 	
 	public void onNeighborChange(IBlockAccess w, BlockPos pos, BlockPos neighbor)
 	{
-		if(isBlockContainer)
+		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM t = getTile(w, pos);
 			if(t != null) t.onNeighborBlockChange(neighbor);

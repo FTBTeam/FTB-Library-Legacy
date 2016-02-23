@@ -142,9 +142,9 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(0F, 0F, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0);
-		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glVertex3d(x, y, z);
 		GL11.glTexCoord2d(u0, v1);
-		GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glVertex3d(x, y + h, z);
 		
 		LMColor tempColor = new LMColor();
 		tempColor.setHSB(tempColor.hue(), tempColor.saturation(), 1F);
@@ -152,7 +152,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glTexCoord2d(u1, v1);
 		GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0);
-		GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glVertex3d(x + w, y, z);
 		GL11.glEnd();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);

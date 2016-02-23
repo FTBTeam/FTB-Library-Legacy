@@ -48,7 +48,7 @@ public class FTBLibClient
 	public static <T extends Entity> void addEntityRenderer(Class<T> c, IRenderFactory<? super T> r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
-	public static void addTileRenderer(Class<? extends TileEntity> c, TileEntitySpecialRenderer r)
+	public static <T extends TileEntity> void addTileRenderer(Class<T> c, TileEntitySpecialRenderer<? super T> r)
 	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
 	
 	// -- //

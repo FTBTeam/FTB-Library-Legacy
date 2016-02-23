@@ -2,7 +2,7 @@ package ftb.lib.mod.client;
 
 import com.google.gson.*;
 import ftb.lib.FTBLib;
-import ftb.lib.notification.ClickAction;
+import ftb.lib.api.notification.ClickAction;
 import latmod.lib.*;
 import latmod.lib.json.IJsonObject;
 import net.minecraftforge.fml.relauncher.*;

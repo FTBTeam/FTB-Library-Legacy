@@ -149,14 +149,14 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(0F, currentColG.value, currentColB.value, 1F);
 		GL11.glTexCoord2d(u0, v0);
-		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glVertex3d(x, y, z);
 		GL11.glTexCoord2d(u0, v1);
-		GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glVertex3d(x, y + h, z);
 		GlStateManager.color(1F, currentColG.value, currentColB.value, 1F);
 		GL11.glTexCoord2d(u1, v1);
 		GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0);
-		GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glVertex3d(x + w, y, z);
 		GL11.glEnd();
 		
 		x = mainPanel.posX + currentColG.posX;
@@ -164,14 +164,14 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, 0F, currentColB.value, 1F);
 		GL11.glTexCoord2d(u0, v0);
-		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glVertex3d(x, y, z);
 		GL11.glTexCoord2d(u0, v1);
-		GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glVertex3d(x, y + h, z);
 		GlStateManager.color(currentColR.value, 1F, currentColB.value, 1F);
 		GL11.glTexCoord2d(u1, v1);
 		GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0);
-		GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glVertex3d(x + w, y, z);
 		GL11.glEnd();
 		
 		x = mainPanel.posX + currentColB.posX;
@@ -179,14 +179,14 @@ public class GuiSelectColorRGB extends GuiLM
 		GL11.glBegin(GL11.GL_QUADS);
 		GlStateManager.color(currentColR.value, currentColG.value, 0F, 1F);
 		GL11.glTexCoord2d(u0, v0);
-		GL11.glVertex3d(x + 0, y + 0, z);
+		GL11.glVertex3d(x, y, z);
 		GL11.glTexCoord2d(u0, v1);
-		GL11.glVertex3d(x + 0, y + h, z);
+		GL11.glVertex3d(x, y + h, z);
 		GlStateManager.color(currentColR.value, currentColG.value, 1F, 1F);
 		GL11.glTexCoord2d(u1, v1);
 		GL11.glVertex3d(x + w, y + h, z);
 		GL11.glTexCoord2d(u1, v0);
-		GL11.glVertex3d(x + w, y + 0, z);
+		GL11.glVertex3d(x + w, y, z);
 		GL11.glEnd();
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);

@@ -1,12 +1,11 @@
 package ftb.lib.api.permissions;
 
 import com.google.gson.*;
+import com.mojang.authlib.GameProfile;
+import ftb.lib.FTBLib;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.config.ConfigData;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 {
 	private static IPermissionHandler handler = null;
 	
-	public static final void setHandler(IPermissionHandler h)
+	public static void setHandler(IPermissionHandler h)
 	{
 		if(h != null /*&& handler == null*/)
 		{
@@ -47,9 +46,9 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 	}
 	
 	public final List<String> parts;
-	public final JsonElement defaultPlayerValue;
-	public final JsonElement defaultOPValue;
-	protected ConfigData configData;
+	private final JsonElement defaultPlayerValue;
+	private final JsonElement defaultOPValue;
+	public final ConfigData configData;
 	
 	//Yes, Im not allowing pure JsonElement in constructor. Reasons.
 	ForgePermission(String id, JsonElement defPlayerValue, JsonElement defOPValue)
@@ -65,6 +64,7 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 		
 		defaultPlayerValue = defPlayerValue;
 		defaultOPValue = defOPValue;
+		configData = new ConfigData();
 	}
 	
 	public ForgePermission(String id, boolean defPlayerValue, boolean defOPValue)
@@ -94,51 +94,58 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 	
 	public void setConfigData(ConfigData d)
 	{
-		configData = d;
+		configData.setFrom(d);
+	}
+	
+	public JsonElement getDefaultPlayerValue()
+	{
+		return defaultPlayerValue;
+	}
+	
+	public JsonElement getDefaultOPValue()
+	{
+		return defaultOPValue;
+	}
+	
+	protected JsonElement getDefaultElement(GameProfile profile)
+	{
+		return FTBLib.isOP(profile) ? getDefaultOPValue() : getDefaultPlayerValue();
 	}
 	
 	/**
 	 * Player can't be null, but it can be FakePlayer, if implementation supports that
 	 */
-	JsonElement getElement(EntityPlayerMP player)
+	public JsonElement getElement(GameProfile profile)
 	{
-		if(player == null) throw new RuntimeException("Player can't be null!");
+		if(profile == null) throw new RuntimeException("GameProfile can't be null!");
 		
 		if(handler != null)
 		{
-			JsonElement e = handler.handlePermission(this, player);
+			JsonElement e = handler.handlePermission(this, profile);
 			return (e == null) ? JsonNull.INSTANCE : e;
 		}
 		
-		if(player instanceof FakePlayer)
-		{
-			return defaultPlayerValue;
-		}
-		else
-		{
-			boolean isOP = MinecraftServer.getServer().getConfigurationManager().getOppedPlayers().getEntry(player.getGameProfile()) != null;
-			return isOP ? defaultOPValue : defaultPlayerValue;
-		}
+		return getDefaultElement(profile);
 	}
 	
-	public boolean getBoolean(EntityPlayerMP player)
+	public boolean getBoolean(GameProfile profile)
 	{
-		return getElement(player).getAsBoolean();
+		return getElement(profile).getAsBoolean();
 	}
 	
-	public Number getNumber(EntityPlayerMP player)
+	public Number getNumber(GameProfile profile)
 	{
-		return getElement(player).getAsNumber();
+		return getElement(profile).getAsNumber();
 	}
 	
-	public String getString(EntityPlayerMP player)
+	public String getString(GameProfile profile)
 	{
-		return getElement(player).getAsString();
+		return getElement(profile).getAsString();
 	}
 	
-	public List<String> getStringList(EntityPlayerMP player)
+	public List<String> getStringList(GameProfile profile)
 	{
-		JsonElement e = getElement(player);
+		JsonElement e = getElement(profile);
 		
 		if(e.isJsonArray())
 		{
@@ -152,9 +159,9 @@ public class ForgePermission extends FinalIDObject implements ConfigData.Contain
 		return Collections.singletonList(e.getAsString());
 	}
 	
-	public List<Number> getNumberList(EntityPlayerMP player)
-	{ return Arrays.asList(LMJsonUtils.fromNumberArray(getElement(player))); }
+	public List<Number> getNumberList(GameProfile profile)
+	{ return Arrays.asList(LMJsonUtils.fromNumberArray(getElement(profile))); }
 	
-	public int[] getIntArray(EntityPlayerMP player)
-	{ return LMJsonUtils.fromIntArray(getElement(player)); }
+	public int[] getIntArray(GameProfile profile)
+	{ return LMJsonUtils.fromIntArray(getElement(profile)); }
 }

@@ -57,67 +57,72 @@ public class OBJModel
 				{
 					String[] s3 = s.split(" ");
 					
-					if(s3[0].equals("o"))
+					switch(s3[0])
 					{
-						Group g = new Group(m, s3[1]);
-						if(m.current != null) m.groups.put(m.current.groupName, m.current);
-						m.current = g;
-					}
-					else if(s3[0].equals("g"))
-					{
-					}
-					else if(s3[0].equals("s"))
-					{
-					}
-					else if(s3[0].equals("mtllib"))
-					{
-					}
-					else if(s3[0].equals("usemtl"))
-					{
-					}
-					else if(s3[0].equals("v"))
-					{
-						float x = Float.parseFloat(s3[1]);
-						float y = Float.parseFloat(s3[2]);
-						float z = Float.parseFloat(s3[3]);
-						m.vertices.add(new Vector3f(x, y, z));
-						
-						if(y < minSizeV) minSizeV = y;
-						if(y > maxSizeV) maxSizeV = y;
-					}
-					else if(s3[0].equals("vn"))
-					{
-						float x = Float.parseFloat(s3[1]);
-						float y = Float.parseFloat(s3[2]);
-						float z = Float.parseFloat(s3[3]);
-						m.vertexNormals.add(new Vector3f(x, y, z));
-					}
-					else if(s3[0].equals("vt"))
-					{
-						if(s3.length == 3)
+						case "o":
 						{
-							float x = Float.parseFloat(s3[1]);
-							float y = Float.parseFloat(s3[2]);
-							m.texVertices.add(new Vector3f(x, 1F - y, -1F));
+							Group g = new Group(m, s3[1]);
+							if(m.current != null) m.groups.put(m.current.groupName, m.current);
+							m.current = g;
+							break;
 						}
-						else if(s3.length == 4)
+						case "v":
 						{
 							float x = Float.parseFloat(s3[1]);
 							float y = Float.parseFloat(s3[2]);
 							float z = Float.parseFloat(s3[3]);
-							m.texVertices.add(new Vector3f(x, 1F - y, z));
+							m.vertices.add(new Vector3f(x, y, z));
+							
+							if(y < minSizeV) minSizeV = y;
+							if(y > maxSizeV) maxSizeV = y;
+							break;
 						}
-					}
-					else if(s3[0].equals("f"))
-					{
-						if(m.current == null) m.current = new Group(m, "Default");
-						
-						Face f = Face.parseFace(m, s, s3);
-						if(f != null)
+						case "vn":
 						{
-							m.current.faces.add(f);
-							m.totalFaces.add(f);
+							float x = Float.parseFloat(s3[1]);
+							float y = Float.parseFloat(s3[2]);
+							float z = Float.parseFloat(s3[3]);
+							m.vertexNormals.add(new Vector3f(x, y, z));
+							break;
 						}
+						case "vt":
+						{
+							if(s3.length == 3)
+							{
+								float x = Float.parseFloat(s3[1]);
+								float y = Float.parseFloat(s3[2]);
+								m.texVertices.add(new Vector3f(x, 1F - y, -1F));
+							}
+							else if(s3.length == 4)
+							{
+								float x = Float.parseFloat(s3[1]);
+								float y = Float.parseFloat(s3[2]);
+								float z = Float.parseFloat(s3[3]);
+								m.texVertices.add(new Vector3f(x, 1F - y, z));
+							}
+							break;
+						}
+						case "f":
+						{
+							if(m.current == null) m.current = new Group(m, "Default");
+							
+							Face f = Face.parseFace(m, s, s3);
+							if(f != null)
+							{
+								m.current.faces.add(f);
+								m.totalFaces.add(f);
+							}
+							break;
+						}
+						case "g":
+							break;
+						case "s":
+							break;
+						case "mtllib":
+							break;
+						case "usemtl":
+							break;
+						
 					}
 				}
 			}
@@ -151,19 +156,26 @@ public class OBJModel
 	
 	public void renderAllExcept(int... index)
 	{
+		boolean render = false;
 		for(int i = 0; i < groups.size(); i++)
 		{
-			for(int j = 0; j < index.length; j++)
-				if(i == index[j]) continue;
-			groups.get(i).render();
+			render = true;
+			
+			for(int anIndex : index)
+			{
+				if(i == anIndex) render = false;
+				if(!render) continue;
+			}
+			
+			if(render) groups.get(i).render();
 		}
 	}
 	
 	public void render(String... name)
 	{
-		for(int i = 0; i < name.length; i++)
+		for(String aName : name)
 		{
-			int index = getGroupIndex(name[i]);
+			int index = getGroupIndex(aName);
 			if(index >= 0 && index < groups.size()) groups.get(index).render();
 		}
 	}

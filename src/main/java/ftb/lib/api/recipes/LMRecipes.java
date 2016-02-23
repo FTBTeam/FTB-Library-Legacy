@@ -57,9 +57,9 @@ public class LMRecipes
 		{
 			ArrayList<ItemStack> al = new ArrayList<>();
 			
-			for(int j = 0; j < in.length; ++j)
+			for(Object anIn : in)
 			{
-				ItemStack is = StackArray.getFrom(in[j]);
+				ItemStack is = StackArray.getFrom(anIn);
 				if(is != null) al.add(is);
 				else throw new RuntimeException("Invalid shapeless recipy!");
 			}
@@ -74,7 +74,7 @@ public class LMRecipes
 	{
 		if(small)
 		{
-			addRecipe(block, "EE", "EE", Character.valueOf('E'), item);
+			addRecipe(block, "EE", "EE", 'E', item);
 			
 			if(back)
 			{
@@ -85,7 +85,7 @@ public class LMRecipes
 		}
 		else
 		{
-			addRecipe(block, "EEE", "EEE", "EEE", Character.valueOf('E'), item);
+			addRecipe(block, "EEE", "EEE", "EEE", 'E', item);
 			
 			if(back)
 			{

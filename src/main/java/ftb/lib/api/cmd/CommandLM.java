@@ -1,7 +1,7 @@
 package ftb.lib.api.cmd;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.friends.LMWorldMP;
+import ftb.lib.api.players.LMWorldMP;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -25,8 +25,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
 	{
-		if(FTBLib.getEffectiveSide().isClient()) return true;
-		return level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.canCommandSenderUseCommand(ics));
+		return FTBLib.getEffectiveSide().isClient() || level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.canCommandSenderUseCommand(ics));
 	}
 	
 	public final String getCommandName()
@@ -37,7 +36,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	
 	public final void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
-		if(!level.isEnabled()) throw new FeatureDisabledException();
+		if(level.isEnabled()) throw new FeatureDisabledException();
 		if(args == null) args = new String[0];
 		IChatComponent s = onCommand(ics, args);
 		if(s != null) FTBLib.printChat(ics, s);
@@ -59,10 +58,9 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	{
 	}
 	
-	@SuppressWarnings("all")
 	public final List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(!level.isEnabled()) return null;
+		if(level.isEnabled()) return null;
 		try
 		{
 			String[] s = getTabStrings(ics, args, args.length - 1);
@@ -89,8 +87,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	{
 		if(args != null && i >= 0 && i < args.length)
 		{
-			for(int j = 0; j < s.length; j++)
-				if(args[i].equals(s[j])) return true;
+			for(String value : s) if(args[i].equals(value)) return true;
 		}
 		
 		return false;
@@ -100,7 +97,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	{
 		Boolean b = getUsername(args, i);
 		if(b == null) return new String[0];
-		return LMWorldMP.inst.getAllPlayerNames(b.booleanValue());
+		return LMWorldMP.inst.getAllPlayerNames(b);
 	}
 	
 	public boolean sortStrings(ICommandSender ics, String args[], int i)
@@ -117,23 +114,28 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	{
 		EntityPlayerMP player = null;
 		
-		if(arg.equals("@a")) return FTBLib.getAllOnlinePlayers(null);
-		else if(arg.equals("@r"))
+		switch(arg)
 		{
-			List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
-			if(!l.isEmpty()) player = l.get(ics.getEntityWorld().rand.nextInt(l.size()));
-		}
-		else if(arg.equals("@p"))
-		{
-			if(ics instanceof EntityPlayerMP) return Collections.singletonList((EntityPlayerMP) ics);
-			List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
-			if(l.isEmpty()) return l;
-			Collections.sort(l, new PlayerDistanceComparator(ics));
-			player = l.get(0);
-		}
-		else
-		{
-			player = (EntityPlayerMP) ics.getEntityWorld().getPlayerEntityByName(arg);
+			case "@a":
+				return FTBLib.getAllOnlinePlayers(null);
+			case "@r":
+			{
+				List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
+				if(!l.isEmpty()) player = l.get(ics.getEntityWorld().rand.nextInt(l.size()));
+				break;
+			}
+			case "@p":
+			{
+				if(ics instanceof EntityPlayerMP) return Collections.singletonList((EntityPlayerMP) ics);
+				List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
+				if(l.isEmpty()) return l;
+				Collections.sort(l, new PlayerDistanceComparator(ics));
+				player = l.get(0);
+				break;
+			}
+			default:
+				player = (EntityPlayerMP) ics.getEntityWorld().getPlayerEntityByName(arg);
+				break;
 		}
 		
 		if(player == null) return new ArrayList<>();

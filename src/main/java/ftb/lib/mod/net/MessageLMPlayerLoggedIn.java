@@ -1,8 +1,8 @@
 package ftb.lib.mod.net;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
+import ftb.lib.api.players.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.*;

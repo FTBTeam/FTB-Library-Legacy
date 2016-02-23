@@ -6,7 +6,7 @@ import net.minecraft.util.BlockPos;
 /**
  * Created by LatvianModder on 29.01.2016.
  */
-public final class BlockDimPos implements Cloneable
+public final class BlockDimPos
 {
 	public final int x, y, z, dim;
 	
@@ -46,25 +46,12 @@ public final class BlockDimPos implements Cloneable
 	{ return new int[] {x, y, z, dim}; }
 	
 	public String toString()
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append('[');
-		sb.append(x);
-		sb.append(',');
-		sb.append(y);
-		sb.append(',');
-		sb.append(z);
-		sb.append(',');
-		sb.append(LMDimUtils.getDimName(dim));
-		sb.append(']');
-		return sb.toString();
-	}
+	{ return "[" + x + ',' + y + ',' + z + ',' + LMDimUtils.getDimName(dim) + ']'; }
 	
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
-		else if(o == this) return true;
-		else return equalsPos((BlockDimPos) o);
+		else return o == this || equalsPos((BlockDimPos) o);
 	}
 	
 	public int hashCode()
@@ -73,7 +60,7 @@ public final class BlockDimPos implements Cloneable
 	public EntityPos toEntityPos()
 	{ return new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim); }
 	
-	public BlockDimPos clone()
+	public BlockDimPos copy()
 	{ return new BlockDimPos(x, y, z, dim); }
 	
 	public BlockPos toBlockPos()
@@ -91,7 +78,6 @@ public final class BlockDimPos implements Cloneable
 	public boolean equalsPos(BlockDimPos p)
 	{
 		if(p == null) return false;
-		else if(p == this) return true;
-		else return p.dim == dim && p.x == x && p.y == y && p.z == z;
+		else return p == this || (p.dim == dim && p.x == x && p.y == y && p.z == z);
 	}
 }

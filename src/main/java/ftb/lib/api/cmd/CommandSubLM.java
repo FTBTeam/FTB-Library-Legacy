@@ -59,7 +59,7 @@ public class CommandSubLM extends CommandLM
 					sb.append(' ');
 					sb.append(' ');
 				}
-				sb.append('/' + c.commandName);
+				sb.append('/').append(c.commandName);
 				l.add(sb.toString());
 				
 				((CommandSubLM) c).addCommandUsage(ics, l, level + 1);

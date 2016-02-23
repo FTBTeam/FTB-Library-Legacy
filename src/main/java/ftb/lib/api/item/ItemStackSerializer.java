@@ -50,13 +50,7 @@ public class ItemStackSerializer
 	public static String toString(ItemStack is)
 	{
 		if(is == null) return null;
-		StringBuilder sb = new StringBuilder();
-		sb.append(LMInvUtils.getRegName(is));
-		sb.append(' ');
-		sb.append(is.stackSize);
-		sb.append(' ');
-		sb.append(is.getItemDamage());
-		return sb.toString();
+		return LMInvUtils.getRegName(is).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
 	}
 	
 	public static JsonElement serialize(ItemStack is)

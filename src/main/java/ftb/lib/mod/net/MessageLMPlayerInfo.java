@@ -1,8 +1,8 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.*;
 import ftb.lib.api.net.*;
+import ftb.lib.api.players.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;
@@ -66,14 +66,14 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		writeUUID(io, playerID);
 		
 		io.writeByte(info.length);
-		for(int i = 0; i < info.length; i++)
+		for(String anInfo : info)
 		{
-			ByteBufUtils.writeUTF8String(io, info[i]);
+			ByteBufUtils.writeUTF8String(io, anInfo);
 		}
 		
-		for(int i = 0; i < armor.length; i++)
+		for(ItemStack anArmor : armor)
 		{
-			ByteBufUtils.writeItemStack(io, armor[i]);
+			ByteBufUtils.writeItemStack(io, anArmor);
 		}
 	}
 	

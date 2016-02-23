@@ -3,8 +3,7 @@ package ftb.lib.mod.cmd;
 import ftb.lib.FTBLib;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.friends.LMWorldMP;
-import ftb.lib.mod.config.FTBLibConfigCmd;
+import ftb.lib.api.players.LMWorldMP;
 import latmod.lib.LMMapUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
@@ -13,7 +12,7 @@ public class CmdMode extends CommandSubLM
 {
 	public CmdMode()
 	{
-		super(FTBLibConfigCmd.Name.mode.get(), CommandLevel.OP);
+		super("ftb_mode", CommandLevel.OP);
 		add(new CmdSet("set"));
 		add(new CmdGet("get"));
 		add(new CmdList("list"));

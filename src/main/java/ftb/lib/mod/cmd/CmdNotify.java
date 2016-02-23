@@ -3,8 +3,7 @@ package ftb.lib.mod.cmd;
 import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
-import ftb.lib.mod.config.FTBLibConfigCmd;
-import ftb.lib.notification.*;
+import ftb.lib.api.notification.*;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +14,7 @@ import net.minecraft.util.*;
 public class CmdNotify extends CommandLM
 {
 	public CmdNotify()
-	{ super(FTBLibConfigCmd.Name.notify.get(), CommandLevel.OP); }
+	{ super("ftb_notify", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{

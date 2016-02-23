@@ -42,8 +42,7 @@ public enum CommandLevel
 		else
 		{
 			if(s instanceof MinecraftServer) return true;
-			else if(s instanceof EntityPlayerMP) return FTBLib.isOP(((EntityPlayerMP) s).getGameProfile());
-			else return true;
+			else return !(s instanceof EntityPlayerMP) || FTBLib.isOP(((EntityPlayerMP) s).getGameProfile());
 		}
 	}
 }
