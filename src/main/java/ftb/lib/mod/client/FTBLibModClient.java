@@ -8,7 +8,6 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
-import ftb.lib.mod.client.gui.GuiEditShortcuts;
 import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.LMColorUtils;
 import latmod.lib.config.*;
@@ -38,12 +37,6 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
-	
-	public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
-	{
-		public void onClicked()
-		{ FTBLibClient.openGui(new GuiEditShortcuts()); }
-	};
 	
 	public void preInit()
 	{

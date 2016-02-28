@@ -12,7 +12,6 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 {
 	public final String commandName;
 	public final CommandLevel level;
-	public static boolean extendedUsageInfo = false;
 	
 	public CommandLM(String s, CommandLevel l)
 	{

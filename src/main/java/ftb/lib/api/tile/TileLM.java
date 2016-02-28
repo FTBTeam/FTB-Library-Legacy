@@ -108,6 +108,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public void onLoaded()
 	{
 		blockType = getBlockType();
+		getMeta();
 		
 		if(blockType != null)
 		{

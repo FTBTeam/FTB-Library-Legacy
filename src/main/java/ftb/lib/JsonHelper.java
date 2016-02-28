@@ -18,7 +18,7 @@ public class JsonHelper
 	
 	public static JsonElement serializeICC(IChatComponent c)
 	{
-		if(c == null) return null;
+		if(c == null) return JsonNull.INSTANCE;
 		return chatComponentGson.toJsonTree(c, IChatComponent.class);
 	}
 	

@@ -11,37 +11,15 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
-public class CmdNotify extends CommandLM
+import java.util.List;
+
+public class CmdNotify extends CommandLM implements ICustomCommandInfo
 {
 	public CmdNotify()
 	{ super("ftb_notify", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append('/');
-		sb.append(commandName);
-		sb.append(" <player> <json>");
-		
-		if(extendedUsageInfo)
-		{
-			sb.append("\nExample:\n");
-			
-			Notification n = new Notification("example_id", new ChatComponentText("Example title"), 6500);
-			n.setColor(0xFFFF0000);
-			n.setItem(new ItemStack(Items.apple, 10));
-			MouseAction ma = new MouseAction();
-			ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("/reload"));
-			n.setMouseAction(ma);
-			n.setDesc(new ChatComponentText("Example description"));
-			sb.append(LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getJson()));
-			
-			sb.append('\n');
-			sb.append("Only \"id\" and \"title\" are required, the rest is optional");
-		}
-		
-		return sb.toString();
-	}
+	{ return "/" + commandName + " <player|@a> <json...>"; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
@@ -75,5 +53,31 @@ public class CmdNotify extends CommandLM
 		}
 		
 		return error(new ChatComponentText("Invalid notification: " + s));
+	}
+	
+	public void addInfo(List<IChatComponent> list, ICommandSender sender)
+	{
+		list.add(new ChatComponentText("/" + commandName));
+		list.add(null);
+		
+		list.add(new ChatComponentText("Example:"));
+		list.add(null);
+		
+		Notification n = new Notification("example_id", new ChatComponentText("Example title"), 6500);
+		n.setColor(0xFFFF0000);
+		n.setItem(new ItemStack(Items.apple, 10));
+		MouseAction ma = new MouseAction();
+		ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("reload"));
+		n.setMouseAction(ma);
+		n.setDesc(new ChatComponentText("Example description"));
+		
+		for(String s : LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getJson()).split("\n"))
+		{
+			list.add(new ChatComponentText(s));
+		}
+		
+		list.add(null);
+		list.add(new ChatComponentText("Only \"id\" and \"title\" are required, the rest is optional"));
+		list.add(new ChatComponentText("\"mouse\":{} will make it permanent"));
 	}
 }

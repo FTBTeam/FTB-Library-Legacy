@@ -2,7 +2,6 @@ package ftb.lib.mod.client;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
@@ -17,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.*;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
@@ -97,27 +95,6 @@ public class FTBLibClientEventHandler
 			{
 				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);
 				if(!a.isEmpty()) FTBLibClient.openGui(new GuiPlayerActions(self, other, a));
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public void onKeyEvent(InputEvent.KeyInputEvent e)
-	{
-		if(Keyboard.getEventKeyState())
-		{
-			int key = Keyboard.getEventKey();
-			
-			try
-			{
-				for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
-				{
-					if(s.isKeyPressed(key)) s.click.onClicked();
-				}
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
 			}
 		}
 	}
