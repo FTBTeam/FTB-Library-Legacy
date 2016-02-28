@@ -59,7 +59,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	
 	public void addInfo(List<IChatComponent> list, ICommandSender sender)
 	{
-		list.add(new ChatComponentText("/" + commandName));
+		list.add(new ChatComponentText('/' + commandName));
 		list.add(null);
 		addCommandUsage(sender, list, 0);
 	}

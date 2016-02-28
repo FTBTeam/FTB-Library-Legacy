@@ -51,9 +51,6 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		return c;
 	}
 	
-	public final void printHelpLine(ICommandSender ics, String args)
-	{ FTBLib.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }
-	
 	public void onPostCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 	}
@@ -128,10 +125,30 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		else if(arg.equals("@p"))
 		{
 			if(ics instanceof EntityPlayerMP) return Collections.singletonList((EntityPlayerMP) ics);
+			
 			List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
-			if(l.isEmpty()) return l;
-			Collections.sort(l, new PlayerDistanceComparator(ics));
-			player = l.get(0);
+			if(l.size() < 2) return l;
+			
+			EntityPlayerMP closest = null;
+			double distSq = Double.POSITIVE_INFINITY;
+			ChunkCoordinates c = ics.getPlayerCoordinates();
+			
+			for(EntityPlayerMP ep : l)
+			{
+				if(closest == null) closest = ep;
+				else
+				{
+					double d = ep.getDistanceSq(c.posX + 0.5D, c.posY + 0.5D, c.posZ + 0.5D);
+					
+					if(d < distSq)
+					{
+						distSq = d;
+						closest = ep;
+					}
+				}
+			}
+			
+			return Collections.singletonList(closest);
 		}
 		else
 		{
@@ -140,23 +157,5 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		
 		if(player == null) return new ArrayList<>();
 		return Collections.singletonList(player);
-	}
-	
-	private static class PlayerDistanceComparator implements Comparator<EntityPlayerMP>
-	{
-		private final Vec3 start;
-		
-		private PlayerDistanceComparator(ICommandSender ics)
-		{
-			ChunkCoordinates p = ics.getPlayerCoordinates();
-			start = Vec3.createVectorHelper(p.posX + 0.5D, p.posY + 0.5D, p.posZ + 0.5D);
-		}
-		
-		public int compare(EntityPlayerMP o1, EntityPlayerMP o2)
-		{
-			Vec3 v1 = Vec3.createVectorHelper(o1.posX, o1.posY, o1.posZ);
-			Vec3 v2 = Vec3.createVectorHelper(o2.posX, o2.posY, o2.posZ);
-			return Double.compare(start.squareDistanceTo(v1), start.squareDistanceTo(v2));
-		}
 	}
 }
