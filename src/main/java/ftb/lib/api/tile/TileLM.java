@@ -1,14 +1,12 @@
 package ftb.lib.api.tile;
 
 import ftb.lib.*;
-import ftb.lib.api.block.BlockLM;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.*;
@@ -33,8 +31,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
-	public long tick = 0L;
-	public UUID ownerID = null;
+	public UUID ownerID;
 	public boolean redstonePowered = false;
 	
 	public final void readFromNBT(NBTTagCompound tag)
@@ -52,7 +49,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public final Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
-		writeTileData(tag);
 		writeTileClientData(tag);
 		return new S35PacketUpdateTileEntity(getPos(), 0, tag);
 	}
@@ -60,7 +56,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
 	{
 		NBTTagCompound tag = p.getNbtCompound();
-		readTileData(tag);
 		readTileClientData(tag);
 		FTBLibClient.onGuiClientAction();
 	}
@@ -68,15 +63,11 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public void readTileData(NBTTagCompound tag)
 	{
 		ownerID = UUIDTypeAdapterLM.getUUID(tag.getString("OwnerID"));
-		tick = tag.getLong("Tick");
-		if(tick < 0L) tick = 0L;
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		if(ownerID != null) tag.setString("OwnerID", UUIDTypeAdapterLM.getString(ownerID));
-		if(tick < 0L) tick = 0L;
-		tag.setLong("Tick", tick);
 	}
 	
 	public void readTileClientData(NBTTagCompound tag)
@@ -103,38 +94,18 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		return false;
 	}
 	
-	public void invalidate()
+	public void onLoad()
 	{
-		if(isLoaded) onUnloaded();
-		super.invalidate();
+		isLoaded = true;
 	}
 	
 	public void onChunkUnload()
-	{
-		if(isLoaded) onUnloaded();
-		super.onChunkUnload();
-	}
-	
-	public void onLoaded()
-	{
-		blockType = getBlockType();
-		
-		if(blockType != null)
-		{
-			isLoaded = true;
-			//onNeighborBlockChange(blockType);
-		}
-	}
-	
-	public void onUnloaded()
 	{
 		isLoaded = false;
 	}
 	
 	public final void updateEntity()
 	{
-		if(!isLoaded) onLoaded();
-		
 		onUpdate();
 		
 		if(isDirty)
@@ -142,8 +113,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 			isDirty = false;
 			if(isServer()) sendDirtyUpdate();
 		}
-		
-		tick++;
 	}
 	
 	public void onUpdate() { }
@@ -183,13 +152,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		}
 		
 		ep.addChatMessage(FTBLibMod.mod.chatComponent("owner", ownerS));
-	}
-	
-	public BlockLM getBlockType()
-	{
-		Block b = super.getBlockType();
-		if(b instanceof BlockLM) return (BlockLM) b;
-		return null;
 	}
 	
 	public boolean recolourBlock(EnumFacing side, EnumDyeColor col)
@@ -285,13 +247,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	{ isDirty = true; }
 	
 	public void onNeighborBlockChange(BlockPos pos)
-	{ redstonePowered = worldObj.isBlockPowered(getPos()); }
-	
-	public TileEntity getTile(EnumFacing side)
-	{ return worldObj.getTileEntity(getPos().offset(side)); }
-	
-	public IBlockState getBlockState(EnumFacing side)
-	{ return worldObj.getBlockState(getPos().offset(side)); }
+	{ if(worldObj != null) redstonePowered = worldObj.isBlockPowered(getPos()); }
 	
 	public void setName(String s) { }
 	

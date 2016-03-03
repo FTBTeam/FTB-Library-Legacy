@@ -23,9 +23,6 @@ public class MaterialItem extends FinalIDObject
 	public final ItemStack getStack(int s)
 	{ return new ItemStack(item, s, damage); }
 	
-	public final ItemStack getStack()
-	{ return getStack(1); }
-	
 	public void onPostLoaded()
 	{
 		FTBLibMod.proxy.addItemModel(item.getMod().ID, item, damage, item.getPath(ID, '/'));

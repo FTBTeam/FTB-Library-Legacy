@@ -112,7 +112,7 @@ public class StackArray implements IStackArray
 		else if(o instanceof ItemStack) return ((ItemStack) o);
 		else if(o instanceof Item) return new ItemStack((Item) o);
 		else if(o instanceof Block) return new ItemStack((Block) o);
-		else if(o instanceof MaterialItem) return ((MaterialItem) o).getStack();
+		else if(o instanceof MaterialItem) return ((MaterialItem) o).getStack(1);
 		else return null;
 	}
 	

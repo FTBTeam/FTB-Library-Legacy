@@ -29,7 +29,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 		materials.put(m.damage, m);
 		if(m.getRenderPasses() > 1) requiresMultipleRenderPasses = true;
 		m.onPostLoaded();
-		return m.getStack();
+		return m.getStack(1);
 	}
 	
 	public String getUnlocalizedName(ItemStack is)
@@ -48,7 +48,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	{
 		for(MaterialItem m : materials.values())
 		{
-			l.add(m.getStack());
+			l.add(m.getStack(1));
 		}
 	}
 	
