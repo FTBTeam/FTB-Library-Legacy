@@ -4,23 +4,18 @@ import net.minecraft.util.EnumFacing;
 
 public enum SidedDirection
 {
-	BOTTOM(2, 3, 0, 0, 0, 0),
-	TOP(3, 2, 1, 1, 1, 1),
-	BACK(1, 0, 3, 2, 5, 4),
-	FRONT(0, 1, 2, 3, 4, 5),
-	LEFT(4, 5, 5, 4, 2, 3),
-	RIGHT(5, 4, 4, 5, 3, 2),
-	NONE(6, 6, 6, 6, 6, 6);
+	BOTTOM(EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.DOWN, EnumFacing.DOWN, EnumFacing.DOWN, EnumFacing.DOWN),
+	TOP(EnumFacing.SOUTH, EnumFacing.NORTH, EnumFacing.UP, EnumFacing.UP, EnumFacing.UP, EnumFacing.UP),
+	BACK(EnumFacing.UP, EnumFacing.DOWN, EnumFacing.SOUTH, EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.WEST),
+	FRONT(EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST),
+	LEFT(EnumFacing.WEST, EnumFacing.EAST, EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH),
+	RIGHT(EnumFacing.EAST, EnumFacing.WEST, EnumFacing.WEST, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.NORTH);
 	
 	public final EnumFacing[] directions;
-	public final int ID;
 	
-	SidedDirection(int... i)
+	SidedDirection(EnumFacing a, EnumFacing b, EnumFacing c, EnumFacing d, EnumFacing e, EnumFacing f)
 	{
-		directions = new EnumFacing[6];
-		for(int j = 0; j < 6; j++)
-			directions[j] = EnumFacing.values()[i[j]];
-		ID = ordinal();
+		directions = new EnumFacing[] {a, b, c, d, e, f};
 	}
 	
 	// Static //
@@ -29,9 +24,9 @@ public enum SidedDirection
 	
 	public static SidedDirection getSide(EnumFacing side, EnumFacing rot)
 	{
-		if(side == null || rot == null) return NONE;
-		for(SidedDirection VALUE : VALUES) if(VALUE.directions[rot.ordinal()] == side) return VALUE;
-		return NONE;
+		if(side == null || rot == null) return null;
+		for(SidedDirection d : VALUES) if(d.directions[rot.ordinal()] == side) return d;
+		return null;
 	}
 	
 	public static SidedDirection get(EnumFacing side, EnumFacing rot3D, EnumFacing rot2D)

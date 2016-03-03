@@ -10,6 +10,7 @@ public class ClickActionRegistry
 	
 	static
 	{
+		add(ClickActionType.ACTION);
 		add(ClickActionType.CMD);
 		add(ClickActionType.SHOW_CMD);
 		add(ClickActionType.URL);

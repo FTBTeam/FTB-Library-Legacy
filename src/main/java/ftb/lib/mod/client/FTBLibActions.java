@@ -191,27 +191,7 @@ public class FTBLibActions
 		{
 			LMPlayerSP p = LMWorldSP.inst.clientPlayer;
 			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false);
-			
-			for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
-			{
-				if(s instanceof Shortcuts.ButtonAction)
-				{
-					final Shortcuts.ButtonAction a = (Shortcuts.ButtonAction) s;
-					TextureCoords tex = GuiIcons.iconMap.get(a.icon);
-					if(tex == null) tex = GuiIcons.marker;
-					
-					PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), a.priority, tex)
-					{
-						public void onClicked(LMPlayer self, LMPlayer other)
-						{ a.click.onClicked(); }
-						
-						public String getDisplayName()
-						{ return a.name; }
-					};
-					
-					buttons.add(pa);
-				}
-			}
+			buttons.addAll(Shortcuts.actions);
 			
 			if(!buttons.isEmpty())
 			{

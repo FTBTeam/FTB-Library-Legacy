@@ -30,9 +30,17 @@ public class ClickAction implements IJsonObject
 	
 	public void setJson(JsonElement e)
 	{
-		JsonObject o = e.getAsJsonObject();
-		type = ClickActionRegistry.get(o.get("type").getAsString());
-		data = o.get("data");
+		if(e.isJsonPrimitive())
+		{
+			type = ClickActionRegistry.get(e.getAsString());
+			data = null;
+		}
+		else
+		{
+			JsonObject o = e.getAsJsonObject();
+			type = ClickActionRegistry.get(o.get("type").getAsString());
+			data = o.get("data");
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)

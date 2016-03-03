@@ -8,5 +8,13 @@ import com.mojang.authlib.GameProfile;
  */
 public interface IPermissionHandler
 {
-	JsonElement handlePermission(ForgePermission permission, GameProfile profile);
+	/**
+	 * Return null for default value, otherwise override to true of false
+	 */
+	Boolean handlePermission(String permission, GameProfile profile);
+	
+	/**
+	 * Return null or JsonNull.INSTANCE for default value, otherwise override
+	 */
+	JsonElement handleRankConfig(RankConfig config, GameProfile profile);
 }

@@ -16,8 +16,13 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	
 	public CommandLM(String s, CommandLevel l)
 	{
-		commandName = ((s == null) ? "" : s).trim();
-		level = (l == null || commandName.isEmpty()) ? CommandLevel.NONE : l;
+		if(s == null || s.isEmpty() || s.indexOf(' ') != -1)
+		{
+			throw new NullPointerException("Command ID can't be null!");
+		}
+		
+		commandName = s;
+		level = (l == null) ? CommandLevel.NONE : l;
 	}
 	
 	public int getRequiredPermissionLevel()
@@ -127,11 +132,30 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 			case "@p":
 			{
 				if(ics instanceof EntityPlayerMP) return Collections.singletonList((EntityPlayerMP) ics);
+				
 				List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
-				if(l.isEmpty()) return l;
-				Collections.sort(l, new PlayerDistanceComparator(ics));
-				player = l.get(0);
-				break;
+				if(l.size() < 2) return l;
+				
+				EntityPlayerMP closest = null;
+				double distSq = Double.POSITIVE_INFINITY;
+				BlockPos c = ics.getPosition();
+				
+				for(EntityPlayerMP ep : l)
+				{
+					if(closest == null) closest = ep;
+					else
+					{
+						double d = ep.getDistanceSq(c.getX() + 0.5D, c.getY() + 0.5D, c.getZ() + 0.5D);
+						
+						if(d < distSq)
+						{
+							distSq = d;
+							closest = ep;
+						}
+					}
+				}
+				
+				return Collections.singletonList(closest);
 			}
 			default:
 				player = (EntityPlayerMP) ics.getEntityWorld().getPlayerEntityByName(arg);

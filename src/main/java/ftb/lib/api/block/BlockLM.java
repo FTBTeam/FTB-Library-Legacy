@@ -28,7 +28,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 		setUnlocalizedName(getMod().getBlockName(s));
 		setHardness(1.8F);
 		setResistance(3F);
-		isBlockContainer = false;
 	}
 	
 	public Class<? extends ItemBlock> getItemBlock()
@@ -59,7 +58,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	{ return getMetaFromState(state); }
 	
 	public boolean hasTileEntity(IBlockState state)
-	{ return isBlockContainer; }
+	{ return super.hasTileEntity(state); }
 	
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs c, List<ItemStack> l)

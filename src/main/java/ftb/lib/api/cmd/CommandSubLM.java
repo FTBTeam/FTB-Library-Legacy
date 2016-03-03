@@ -1,13 +1,12 @@
 package ftb.lib.api.cmd;
 
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
 import java.util.*;
 
-public class CommandSubLM extends CommandLM
+public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 {
 	public final HashMap<String, CommandLM> subCommands;
 	
@@ -21,66 +20,7 @@ public class CommandSubLM extends CommandLM
 	{ subCommands.put(c.commandName, c); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{
-		StringBuilder sb = new StringBuilder();
-		sb.append('/');
-		sb.append(commandName);
-		
-		if(extendedUsageInfo)
-		{
-			ArrayList<String> l = new ArrayList<>();
-			addCommandUsage(ics, l, 0);
-			sb.append('\n');
-			sb.append('\n');
-			for(String s : l)
-			{
-				sb.append(s);
-				sb.append('\n');
-			}
-			return sb.toString().trim();
-		}
-		
-		sb.append(" [ ");
-		sb.append(LMStringUtils.strip(LMMapUtils.toKeyStringArray(subCommands)));
-		sb.append(" ]");
-		
-		return sb.toString();
-	}
-	
-	private void addCommandUsage(ICommandSender ics, ArrayList<String> l, int level)
-	{
-		for(CommandLM c : subCommands.values())
-		{
-			if(c instanceof CommandSubLM)
-			{
-				StringBuilder sb = new StringBuilder();
-				for(int i = 0; i < level; i++)
-				{
-					sb.append(' ');
-					sb.append(' ');
-				}
-				sb.append('/').append(c.commandName);
-				l.add(sb.toString());
-				
-				((CommandSubLM) c).addCommandUsage(ics, l, level + 1);
-			}
-			else
-			{
-				if(level > 0)
-				{
-					StringBuilder sb = new StringBuilder();
-					for(int i = 0; i < level; i++)
-					{
-						sb.append(' ');
-						sb.append(' ');
-					}
-					sb.append(c.getCommandUsage(ics));
-					l.add(sb.toString());
-				}
-				else l.add(c.getCommandUsage(ics));
-			}
-		}
-	}
+	{ return '/' + commandName + " [subcommand]"; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
@@ -114,6 +54,45 @@ public class CommandSubLM extends CommandLM
 			return new ChatComponentText(LMStringUtils.strip(getTabStrings(ics, args, 0)));
 		CommandLM cmd = subCommands.get(args[0]);
 		if(cmd != null) return cmd.onCommand(ics, LMStringUtils.shiftArray(args));
-		return new ChatComponentTranslation(FTBLibMod.mod.assets + "invalid_subcmd", args[0]);
+		throw new InvalidSubCommandException(args[0]);
+	}
+	
+	public void addInfo(List<IChatComponent> list, ICommandSender sender)
+	{
+		list.add(new ChatComponentText('/' + commandName));
+		list.add(null);
+		addCommandUsage(sender, list, 0);
+	}
+	
+	private static IChatComponent tree(IChatComponent sibling, int level)
+	{
+		if(level == 0) return sibling;
+		char[] chars = new char[level * 2];
+		Arrays.fill(chars, ' ');
+		return new ChatComponentText(new String(chars)).appendSibling(sibling);
+	}
+	
+	private void addCommandUsage(ICommandSender ics, List<IChatComponent> list, int level)
+	{
+		for(CommandLM c : subCommands.values())
+		{
+			if(c instanceof CommandSubLM)
+			{
+				list.add(tree(new ChatComponentText('/' + c.commandName), level));
+				((CommandSubLM) c).addCommandUsage(ics, list, level + 1);
+			}
+			else
+			{
+				String usage = c.getCommandUsage(ics);
+				if(usage.indexOf('/') != -1 || usage.indexOf('%') != -1)
+				{
+					list.add(tree(new ChatComponentText(usage), level));
+				}
+				else
+				{
+					list.add(tree(new ChatComponentTranslation(usage), level));
+				}
+			}
+		}
 	}
 }

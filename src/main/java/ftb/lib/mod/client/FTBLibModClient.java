@@ -7,7 +7,6 @@ import ftb.lib.api.gui.*;
 import ftb.lib.api.players.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
-import ftb.lib.mod.client.gui.GuiEditShortcuts;
 import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.LMColorUtils;
 import latmod.lib.config.*;
@@ -46,11 +45,13 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryEnum<FTBLibRenderHandler.LightValueTexture> light_value_texture = new ConfigEntryEnum<>("light_value_texture", FTBLibRenderHandler.LightValueTexture.values(), FTBLibRenderHandler.LightValueTexture.O, false);
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	
+	/*
 	public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
 	{
 		public void onClicked()
 		{ FTBLibClient.openGui(new GuiEditShortcuts()); }
 	};
+	*/
 	
 	public void preInit()
 	{

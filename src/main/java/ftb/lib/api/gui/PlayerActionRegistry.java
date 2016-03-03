@@ -11,18 +11,13 @@ import java.util.*;
  */
 public class PlayerActionRegistry
 {
-	private static final HashMap<String, PlayerAction> map = new HashMap<>();
-	public static final Map<String, ConfigEntry> configEntries = new HashMap<>();
+	private static final Map<String, PlayerAction> map = new HashMap<>();
 	
-	public static final ConfigGroup configGroup = new ConfigGroup("sidebar_buttons")
-	{
-		public Map<String, ConfigEntry> entryMap()
-		{ return configEntries; }
-	};
+	public static final ConfigGroup configGroup = new ConfigGroup("sidebar_buttons");
 	
 	public static boolean enabled(String id)
 	{
-		ConfigEntry entry = configEntries.get(id);
+		ConfigEntry entry = configGroup.entryMap.get(id);
 		return (entry == null) || entry.getAsBoolean();
 	}
 	
@@ -40,7 +35,7 @@ public class PlayerActionRegistry
 					{ return "player_action." + a.ID; }
 				};
 				
-				configEntries.put(a.ID, entry);
+				configGroup.entryMap.put(a.ID, entry);
 			}
 		}
 	}
@@ -65,4 +60,7 @@ public class PlayerActionRegistry
 		if(sort) Collections.sort(l);
 		return l;
 	}
+	
+	public static PlayerAction get(String key)
+	{ return map.get(key); }
 }

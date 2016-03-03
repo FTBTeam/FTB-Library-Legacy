@@ -1,8 +1,10 @@
 package ftb.lib.api.notification;
 
 import com.google.gson.JsonElement;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.GuiScreenRegistry;
+import ftb.lib.api.gui.*;
+import ftb.lib.api.players.LMWorldSP;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageModifyFriends;
 import latmod.lib.LMUtils;
@@ -28,6 +30,16 @@ public abstract class ClickActionType extends FinalIDObject
 	{ return FTBLibMod.proxy.translate("click_action." + ID); }
 	
 	// Static //
+	
+	public static final ClickActionType ACTION = new ClickActionType("action")
+	{
+		@SideOnly(Side.CLIENT)
+		public void onClicked(JsonElement data)
+		{
+			PlayerAction a = PlayerActionRegistry.get(data.getAsString());
+			if(a != null && a.type.isSelf()) a.onClicked(LMWorldSP.inst.clientPlayer, LMWorldSP.inst.clientPlayer);
+		}
+	};
 	
 	public static final ClickActionType CMD = new ClickActionType("cmd")
 	{

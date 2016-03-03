@@ -1,5 +1,8 @@
 package ftb.lib.api.permissions;
 
+import com.mojang.authlib.GameProfile;
+import ftb.lib.FTBLib;
+import latmod.lib.Info;
 import latmod.lib.config.ConfigData;
 
 import java.lang.reflect.Field;
@@ -10,27 +13,34 @@ import java.util.*;
  */
 public class ForgePermissionRegistry
 {
-	private static final Map<String, ForgePermission> permissions = new HashMap<>();
+	private static final Map<String, ForgePermissionContainer> permissionContainers = new HashMap<>();
+	private static final Map<String, RankConfig> rankConfig = new HashMap<>();
+	static IPermissionHandler handler = null;
 	
-	/**
-	 * id can contain '*', but then it must be the last character. If its either null or "*", all values are returned
-	 */
-	public static Collection<ForgePermission> values(String id)
+	public static void setHandler(IPermissionHandler h)
 	{
-		if(id == null || id.isEmpty() || id.charAt(0) == '*') return permissions.values();
-		else
+		if(h != null /*&& handler == null*/)
 		{
-			id = ForgePermission.getID(id);
-			
-			ArrayList<ForgePermission> list = new ArrayList<>();
-			
-			for(ForgePermission p : permissions.values())
-			{
-				
-			}
-			
-			return list;
+			handler = h;
 		}
+	}
+	
+	public static boolean hasPermission(String permission, GameProfile profile)
+	{
+		permission = ForgePermissionContainer.getID(permission);
+		
+		if(handler != null)
+		{
+			Boolean b = handler.handlePermission(permission, profile);
+		}
+		
+		if(FTBLib.isOP(profile))
+		{
+			return true;
+		}
+		
+		ForgePermissionContainer c = permissionContainers.get(permission);
+		return (c == null) ? false : c.playerValue;
 	}
 	
 	/**
@@ -45,16 +55,37 @@ public class ForgePermissionRegistry
 				f.setAccessible(true);
 				Object obj = f.get(null);
 				
-				if(obj instanceof ForgePermission)
+				if(obj instanceof String)
 				{
-					ForgePermission p = (ForgePermission) obj;
+					String id = ForgePermissionContainer.getID(obj.toString());
 					
-					if(permissions.containsKey(p.ID))
+					ForgePermissionContainer container;
+					ForgePermission permission = f.getAnnotation(ForgePermission.class);
+					
+					if(permission == null)
 					{
-						throw new RuntimeException("Duplicate permission ID found: " + p.ID + " (" + p.getClass().getName() + " & " + permissions.get(p.ID).getClass().getName() + ")");
+						container = new ForgePermissionContainer(id, true);
+					}
+					else
+					{
+						container = new ForgePermissionContainer(id, permission.value());
 					}
 					
-					permissions.put(p.ID, p);
+					Info info = f.getAnnotation(Info.class);
+					if(info != null) container.info = info.value();
+					
+					permissionContainers.put(id, container);
+				}
+				else if(obj instanceof RankConfig)
+				{
+					RankConfig p = (RankConfig) obj;
+					
+					if(rankConfig.containsKey(p.ID))
+					{
+						throw new RuntimeException("Duplicate RankConfig ID found: " + p.ID + " (" + p.getClass().getName() + " & " + permissionContainers.get(p.ID).getClass().getName() + ")");
+					}
+					
+					rankConfig.put(p.ID, p);
 					ConfigData.inject(f, null, null);
 				}
 			}
@@ -64,4 +95,13 @@ public class ForgePermissionRegistry
 			ex.printStackTrace();
 		}
 	}
+	
+	public static Collection<ForgePermissionContainer> getRegistredPermissions()
+	{ return permissionContainers.values(); }
+	
+	public static Collection<RankConfig> getRegistredConfig()
+	{ return rankConfig.values(); }
+	
+	public static RankConfig getConfig(String s)
+	{ return rankConfig.get(s); }
 }

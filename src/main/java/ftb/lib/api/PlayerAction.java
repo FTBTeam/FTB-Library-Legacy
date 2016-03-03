@@ -17,17 +17,17 @@ public abstract class PlayerAction extends FinalIDObject
 		OTHER,
 		BOTH;
 		
-		public boolean self()
+		public boolean isSelf()
 		{ return this == SELF || this == BOTH; }
 		
-		public boolean other()
+		public boolean isOther()
 		{ return this == OTHER || this == BOTH; }
 		
 		public boolean equalsType(Type t)
 		{
 			if(t == null || t == BOTH) return true;
-			else if(t == SELF) return self();
-			else return other();
+			else if(t == SELF) return isSelf();
+			else return isOther();
 		}
 	}
 	

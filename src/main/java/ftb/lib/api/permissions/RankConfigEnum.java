@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * Created by LatvianModder on 14.02.2016.
  */
-public class ForgePermissionEnum<E extends Enum<E>> extends ForgePermission
+public class RankConfigEnum<E extends Enum<E>> extends RankConfig
 {
 	private final Map<String, E> enumMap;
 	
-	public ForgePermissionEnum(String id, E defPlayerValue, E defOPValue, E[] validEnums, boolean addNull)
+	public RankConfigEnum(String id, E defPlayerValue, E defOPValue, E[] validEnums, boolean addNull)
 	{
 		super(id, new JsonPrimitive(getName(defPlayerValue)), new JsonPrimitive(getName(defOPValue)));
 		enumMap = new HashMap<>();
@@ -33,6 +33,6 @@ public class ForgePermissionEnum<E extends Enum<E>> extends ForgePermission
 	
 	public E getEnum(GameProfile profile)
 	{
-		return enumMap.get(getString(profile));
+		return enumMap.get(get(profile).getAsString());
 	}
 }

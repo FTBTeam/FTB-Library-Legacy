@@ -6,7 +6,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.item.*;
 import ftb.lib.api.players.*;
-import ftb.lib.mod.FTBLibFinals;
 import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
@@ -74,14 +73,10 @@ public class FTBLibClientEventHandler
 	{
 		if(!FTBLibClient.mc.gameSettings.showDebugInfo)
 		{
-			if(FTBLibFinals.DEV)
+			if(FTBLib.DEV_ENV)
 			{
 				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
 			}
-		}
-		else
-		{
-			//if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
 		}
 	}
 	
@@ -105,19 +100,7 @@ public class FTBLibClientEventHandler
 	{
 		if(Keyboard.getEventKeyState())
 		{
-			int key = Keyboard.getEventKey();
-			
-			try
-			{
-				for(Shortcuts.Shortcut s : Shortcuts.shortcuts)
-				{
-					if(s.isKeyPressed(key)) s.click.onClicked();
-				}
-			}
-			catch(Exception ex)
-			{
-				ex.printStackTrace();
-			}
+			Shortcuts.onKeyPressed(Keyboard.getEventKey());
 		}
 	}
 }

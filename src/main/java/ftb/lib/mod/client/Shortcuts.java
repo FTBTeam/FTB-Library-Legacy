@@ -2,9 +2,9 @@ package ftb.lib.mod.client;
 
 import com.google.gson.*;
 import ftb.lib.FTBLib;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.notification.ClickAction;
 import latmod.lib.*;
-import latmod.lib.json.IJsonObject;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
 
@@ -16,13 +16,15 @@ import java.util.*;
  */
 public class Shortcuts
 {
-	public static final List<Shortcut> shortcuts = new ArrayList<>();
+	public static final List<ClickActionKey> keys = new ArrayList<>();
+	public static final List<PlayerAction> actions = new ArrayList<>();
 	private static File file = null;
 	
 	@SideOnly(Side.CLIENT)
 	public static void load()
 	{
-		shortcuts.clear();
+		keys.clear();
+		actions.clear();
 		
 		if(file == null) file = LMFileUtils.newFile(new File(FTBLib.folderLocal, "client/shortcuts.json"));
 		JsonElement e = LMJsonUtils.fromJson(file);
@@ -31,21 +33,49 @@ public class Shortcuts
 		{
 			JsonObject o = e.getAsJsonObject();
 			
-			if(o.has("shortcuts"))
+			if(o.has("keys"))
 			{
-				JsonArray a = o.get("shortcuts").getAsJsonArray();
+				JsonArray a = o.get("keys").getAsJsonArray();
+				
+				for(int i = 0; i < a.size(); i++)
+				{
+					ClickActionKey action = new ClickActionKey();
+					action.setJson(a.get(i));
+					keys.add(action);
+				}
+			}
+			
+			/*
+			if(o.has("buttons"))
+			{
+				JsonArray a = o.get("buttons").getAsJsonArray();
 				
 				for(int i = 0; i < a.size(); i++)
 				{
 					JsonObject o1 = a.get(i).getAsJsonObject();
-					Shortcut s;
-					
-					if(o1.has("key")) s = new KeyAction();
-					else s = new ButtonAction();
-					s.setJson(o1);
-					shortcuts.add(s);
+					if(o1.has("type"))
+					{
+						final ClickAction action = new ClickAction();
+						action.setJson(o1);
+						final String name = o1.has("name") ? o1.get("name").getAsString() : "Unnamed";
+						TextureCoords tex = o1.has("icon") ? GuiIcons.iconMap.get(o1.get("icon").getAsString()) : null;
+						if(tex == null) tex = GuiIcons.marker;
+						int priority = o1.has("priority") ? o1.get("priority").getAsInt() : -100;
+						
+						PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), priority, tex)
+						{
+							public void onClicked(LMPlayer self, LMPlayer other)
+							{ action.onClicked(); }
+							
+							public String getDisplayName()
+							{ return name; }
+						};
+						
+						actions.add(pa);
+					}
 				}
 			}
+			*/
 		}
 		
 		save();
@@ -57,87 +87,56 @@ public class Shortcuts
 		if(file == null) load();
 		
 		JsonObject o = new JsonObject();
+		JsonObject o1;
 		JsonArray a = new JsonArray();
 		
-		for(Shortcut s : shortcuts)
-			a.add(s.getJson());
+		for(ClickActionKey k : keys)
+			a.add(k.getJson());
 		
-		o.add("shortcuts", a);
+		o.add("keys", a);
+		
+		//a = new JsonArray();
+		//o.add("buttons", a);
 		
 		LMJsonUtils.toJson(file, o);
 	}
 	
-	public static abstract class Shortcut implements IJsonObject
+	@SideOnly(Side.CLIENT)
+	public static void onKeyPressed(int key)
 	{
-		public final ClickAction click = new ClickAction();
+		if(key == Keyboard.KEY_NONE) return;
 		
-		public void setJson(JsonElement e)
+		for(ClickActionKey k : keys)
 		{
-			click.setJson(e);
+			if(k.key == key) k.click.onClicked();
 		}
-		
-		public JsonElement getJson()
-		{
-			return click.getJson();
-		}
-		
-		public String getTitle()
-		{ return "-"; }
-		
-		public boolean isKeyPressed(int k)
-		{ return false; }
 	}
 	
-	public static class KeyAction extends Shortcut
+	public static class ClickActionKey
 	{
+		public final ClickAction click;
 		public int key;
 		
-		public void setJson(JsonElement e)
+		public ClickActionKey()
 		{
-			super.setJson(e);
-			JsonObject o = e.getAsJsonObject();
-			key = Keyboard.getKeyIndex(o.get("key").getAsString());
+			click = new ClickAction();
+			key = 0;
 		}
 		
+		@SideOnly(Side.CLIENT)
 		public JsonElement getJson()
 		{
-			JsonObject o = (JsonObject) super.getJson();
+			JsonObject o = (JsonObject) click.getJson();
 			o.add("key", new JsonPrimitive(Keyboard.getKeyName(key)));
 			return o;
 		}
 		
-		public String getTitle()
-		{ return Keyboard.getKeyName(key) + " : " + click.type.getDisplayName() + " : '" + click.data + "'"; }
-		
-		public boolean isKeyPressed(int k)
-		{ return key == k; }
-	}
-	
-	public static class ButtonAction extends Shortcut
-	{
-		public String icon;
-		public String name;
-		public int priority;
-		
+		@SideOnly(Side.CLIENT)
 		public void setJson(JsonElement e)
 		{
-			super.setJson(e);
-			JsonObject o = e.getAsJsonObject();
-			icon = o.has("icon") ? o.get("icon").getAsString() : "marker";
-			name = o.has("name") ? o.get("name").getAsString() : "Unnamed";
-			priority = o.has("priority") ? o.get("priority").getAsInt() : -100;
+			JsonObject o = (JsonObject) e;
+			click.setJson(o);
+			key = Keyboard.getKeyIndex(o.get("key").getAsString());
 		}
-		
-		public JsonElement getJson()
-		{
-			JsonObject o = (JsonObject) super.getJson();
-			o.add("icon", new JsonPrimitive(icon));
-			o.add("name", new JsonPrimitive(name));
-			o.add("priority", new JsonPrimitive(priority));
-			return o;
-		}
-		
-		public String getTitle()
-		{ return name + " : " + click.type.getDisplayName() + " : '" + click.data + "'"; }
 	}
 }

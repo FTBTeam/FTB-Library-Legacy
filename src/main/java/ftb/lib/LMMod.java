@@ -4,7 +4,7 @@ import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
 import ftb.lib.api.tile.TileLM;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -25,7 +25,7 @@ public class LMMod extends FinalIDObject
 		{
 			mod = new LMMod(s);
 			modsMap.put(mod.ID, mod);
-			if(FTBLibFinals.DEV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
+			if(FTBLib.DEV_ENV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
 		}
 		
 		return mod;
@@ -41,7 +41,6 @@ public class LMMod extends FinalIDObject
 	// End of static //
 	
 	public final String lowerCaseModID;
-	public final String assets;
 	private ModContainer modContainer;
 	public final List<IItemLM> itemsAndBlocks;
 	
@@ -51,7 +50,6 @@ public class LMMod extends FinalIDObject
 	{
 		super(id);
 		lowerCaseModID = ID.toLowerCase();
-		assets = lowerCaseModID + ":";
 		itemsAndBlocks = new ArrayList<>();
 		
 		recipes = LMRecipes.defaultInstance;
@@ -70,13 +68,13 @@ public class LMMod extends FinalIDObject
 	{ return ID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
 	public String getBlockName(String s)
-	{ return assets + "tile." + s; }
+	{ return lowerCaseModID + ".tile." + s; }
 	
 	public String getItemName(String s)
-	{ return assets + "item." + s; }
+	{ return lowerCaseModID + ".item." + s; }
 	
 	public String translate(String s, Object... args)
-	{ return FTBLibMod.proxy.translate(assets + s, args); }
+	{ return FTBLibMod.proxy.translate(lowerCaseModID + '.' + s, args); }
 	
 	public void addItem(IItemLM i)
 	{
@@ -110,5 +108,5 @@ public class LMMod extends FinalIDObject
 	}
 	
 	public IChatComponent chatComponent(String s, Object... obj)
-	{ return new ChatComponentTranslation(assets + s, obj); }
+	{ return new ChatComponentTranslation(lowerCaseModID + '.' + s, obj); }
 }
