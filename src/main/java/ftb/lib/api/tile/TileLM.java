@@ -9,6 +9,7 @@ import latmod.lib.LMUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
@@ -21,7 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
-public class TileLM extends TileEntity implements IClientActionTile, IWorldNameable
+public class TileLM extends TileEntity implements IClientActionTile, IWorldNameable, ITickable
 {
 	public static final String ACTION_BUTTON_PRESSED = "button";
 	public static final String ACTION_OPEN_GUI = "open_gui";
@@ -33,6 +34,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public boolean isLoaded = false;
 	public UUID ownerID;
 	public boolean redstonePowered = false;
+	public IBlockState currentState;
 	
 	public final void readFromNBT(NBTTagCompound tag)
 	{
@@ -55,8 +57,8 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
 	{
-		NBTTagCompound tag = p.getNbtCompound();
-		readTileClientData(tag);
+		readTileClientData(p.getNbtCompound());
+		onUpdatePacket();
 		FTBLibClient.onGuiClientAction();
 	}
 	
@@ -82,8 +84,10 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public void onUpdatePacket()
 	{
-		//TODO: Check this
-		if(rerenderBlock()) worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		if(rerenderBlock())
+		{
+			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+		}
 	}
 	
 	public boolean rerenderBlock()
@@ -95,32 +99,49 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	}
 	
 	public void onLoad()
-	{
-		isLoaded = true;
-	}
+	{ isLoaded = true; }
 	
 	public void onChunkUnload()
-	{
-		isLoaded = false;
-	}
+	{ isLoaded = false; }
 	
-	public final void updateEntity()
+	public final void update()
 	{
 		onUpdate();
 		
 		if(isDirty)
 		{
+			if(isServer())
+			{
+				sendDirtyUpdate();
+			}
+			
 			isDirty = false;
-			if(isServer()) sendDirtyUpdate();
 		}
 	}
 	
 	public void onUpdate() { }
 	
+	public void markDirty()
+	{ isDirty = true; }
+	
 	public void sendDirtyUpdate()
 	{
-		super.markDirty();
-		//worldObj.markBlockForUpdate(getPos());
+		if(worldObj != null)
+		{
+			currentState = worldObj.getBlockState(pos);
+			
+			if(rerenderBlock())
+			{
+				worldObj.markBlockForUpdate(getPos());
+			}
+			
+			worldObj.markChunkDirty(pos, this);
+			
+			if(getBlockType() != Blocks.air)
+			{
+				worldObj.updateComparatorOutputLevel(pos, getBlockType());
+			}
+		}
 	}
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
@@ -137,7 +158,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	
 	public void onBroken(IBlockState state)
 	{
-		sendDirtyUpdate();
 	}
 	
 	public final void printOwner(EntityPlayer ep)
@@ -242,9 +262,6 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		
 		return false;
 	}
-	
-	public void markDirty()
-	{ isDirty = true; }
 	
 	public void onNeighborBlockChange(BlockPos pos)
 	{ if(worldObj != null) redstonePowered = worldObj.isBlockPowered(getPos()); }
