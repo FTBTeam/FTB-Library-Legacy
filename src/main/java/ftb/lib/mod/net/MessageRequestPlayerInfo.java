@@ -33,10 +33,10 @@ public class MessageRequestPlayerInfo extends MessageLM<MessageRequestPlayerInfo
 	
 	public IMessage onMessage(MessageRequestPlayerInfo m, MessageContext ctx)
 	{
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(m.playerID);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
 		if(p != null)
 		{
-			return new MessageLMPlayerInfo(LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity), p);
+			return new MessageLMPlayerInfo(ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity), p);
 		}
 		return null;
 	}

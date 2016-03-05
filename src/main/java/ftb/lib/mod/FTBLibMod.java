@@ -75,8 +75,7 @@ public class FTBLibMod
 		FTBLib.addCommand(e, new CmdReload());
 		FTBLib.addCommand(e, new CmdNotify());
 		FTBLib.addCommand(e, new CmdSetItemName());
-		FTBLib.addCommand(e, new CmdLoadInv());
-		FTBLib.addCommand(e, new CmdSaveInv());
+		FTBLib.addCommand(e, new CmdInv());
 	}
 	
 	/*
@@ -91,14 +90,14 @@ public class FTBLibMod
 	{
 		ConfigRegistry.reload();
 		GameModes.reload();
-		LMWorldMP.inst = new LMWorldMP(new File(new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName()), "LatMod"));
+		ForgeWorldMP.inst = new ForgeWorldMP(new File(new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName()), "LatMod"));
 		FTBLib.reload(FTBLib.getServer(), false, false);
 		
-		for(ForgeWorldData d : LMWorldMP.inst.customData.values())
+		for(ForgeWorldData d : ForgeWorldMP.inst.customData.values())
 		{
-			if(d instanceof IWorldTicking)
+			if(d instanceof IWorldTick)
 			{
-				FTBLibEventHandler.instance.ticking.add((IWorldTicking) d);
+				FTBLibEventHandler.instance.ticking.add((IWorldTick) d);
 			}
 			
 			d.init();
@@ -108,8 +107,8 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerShutDown(FMLServerStoppedEvent e)
 	{
-		LMWorldMP.inst.onClosed();
-		LMWorldMP.inst = null;
+		ForgeWorldMP.inst.onClosed();
+		ForgeWorldMP.inst = null;
 	}
 	
 	@NetworkCheckHandler

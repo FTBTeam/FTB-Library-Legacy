@@ -1,9 +1,9 @@
 package ftb.lib.api.cmd;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.players.LMWorldMP;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 
 import java.util.*;
@@ -12,7 +12,6 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 {
 	public final String commandName;
 	public final CommandLevel level;
-	public static boolean extendedUsageInfo = false;
 	
 	public CommandLM(String s, CommandLevel l)
 	{
@@ -21,8 +20,10 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 			throw new NullPointerException("Command ID can't be null!");
 		}
 		
+		if(l == null || l == CommandLevel.NONE) throw new NullPointerException();
+		
 		commandName = s;
-		level = (l == null) ? CommandLevel.NONE : l;
+		level = l;
 	}
 	
 	public int getRequiredPermissionLevel()
@@ -39,54 +40,31 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName; }
 	
-	public final void processCommand(ICommandSender ics, String[] args) throws CommandException
-	{
-		if(level.isEnabled()) throw new FeatureDisabledException();
-		if(args == null) args = new String[0];
-		IChatComponent s = onCommand(ics, args);
-		if(s != null) FTBLib.printChat(ics, s);
-		onPostCommand(ics, args);
-	}
-	
-	public abstract IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException;
-	
-	public static IChatComponent error(IChatComponent c)
-	{
-		c.getChatStyle().setColor(EnumChatFormatting.RED);
-		return c;
-	}
-	
-	public final void printHelpLine(ICommandSender ics, String args)
-	{ FTBLib.printChat(ics, "/" + commandName + (args != null && args.length() > 0 ? (" " + args) : "")); }
-	
 	public void onPostCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 	}
 	
-	public final List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(level.isEnabled()) return null;
-		try
+		if(args.length == 0) return null;
+		else if(isUsernameIndex(args, args.length - 1))
 		{
-			String[] s = getTabStrings(ics, args, args.length - 1);
-			if(s != null && s.length > 0)
-			{
-				if(sortStrings(ics, args, args.length - 1)) Arrays.sort(s);
-				return getListOfStringsMatchingLastWord(args, s);
-			}
+			return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
 		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
+		
 		return null;
 	}
 	
-	public Boolean getUsername(String[] args, int i)
-	{ return null; }
+	public final String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+	{
+		return null;
+	}
 	
-	public final boolean isUsernameIndex(String[] args, int i)
+	public boolean isUsernameIndex(String[] args, int i)
 	{ return false; }
+	
+	public final boolean offlineUsernames(String[] args, int i)
+	{ return true; }
 	
 	public static boolean isArg(String[] args, int i, String... s)
 	{
@@ -97,16 +75,6 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 		
 		return false;
 	}
-	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
-	{
-		Boolean b = getUsername(args, i);
-		if(b == null) return new String[0];
-		return LMWorldMP.inst.getAllPlayerNames(b);
-	}
-	
-	public boolean sortStrings(ICommandSender ics, String args[], int i)
-	{ return getUsername(args, i) == null; }
 	
 	public static void checkArgs(String[] args, int i) throws CommandException
 	{ if(args == null || args.length < i) throw new MissingArgsException(); }

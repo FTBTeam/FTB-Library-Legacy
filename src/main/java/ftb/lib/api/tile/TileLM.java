@@ -146,7 +146,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		String ownerS = "None";
 		if(ownerID != null)
 		{
-			LMPlayer player = LMWorld.getFrom(isServer() ? Side.SERVER : Side.CLIENT).getPlayer(ep);
+			ForgePlayer player = ForgeWorld.getFrom(isServer() ? Side.SERVER : Side.CLIENT).getPlayer(ep);
 			if(player != null) ownerS = player.getProfile().getName();
 			else ownerS = ownerID.toString();
 		}
@@ -164,7 +164,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	 * Player can be null
 	 */
 	public boolean isMinable(EntityPlayer ep)
-	{ return ep == null || getPrivacyLevel().canInteract(LMWorldMP.inst.getPlayer(ownerID), LMWorldMP.inst.getPlayer(ep)); }
+	{ return ep == null || getPrivacyLevel().canInteract(ForgeWorldMP.inst.getPlayer(ownerID), ForgeWorldMP.inst.getPlayer(ep)); }
 	
 	public boolean isExplosionResistant()
 	{ return !getPrivacyLevel().isPublic(); }

@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui.friends;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.players.LMWorldSP;
+import ftb.lib.api.players.ForgeWorldSP;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ public class PanelPlayerView extends PanelFriendsGui
 	public PanelPlayerView(GuiFriends g)
 	{
 		super(g);
-		selectedPlayer = new Player(LMWorldSP.inst.clientPlayer);
+		selectedPlayer = new Player(ForgeWorldSP.inst.clientPlayer);
 	}
 	
 	public void addWidgets()

@@ -56,7 +56,7 @@ public final class Notification extends FinalIDObject implements IJsonObject
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive(ID));
+		o.add("id", new JsonPrimitive(getID()));
 		o.add("title", JsonHelper.serializeICC(title));
 		if(timer != 3000) o.add("timer", new JsonPrimitive(timer));
 		if(desc != null) o.add("desc", JsonHelper.serializeICC(desc));

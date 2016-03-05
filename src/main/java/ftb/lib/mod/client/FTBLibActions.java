@@ -60,13 +60,13 @@ public class FTBLibActions
 	
 	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getDisplayName()
 		{ return FTBLibMod.proxy.translate(FTBLibModClient.notifications.getFullID()); }
 		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !ClientNotifications.Perm.list.isEmpty(); }
 		
 		public void postRender(int ax, int ay, double z)
@@ -83,7 +83,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbu", "textures/gui/friendsbutton.png"), 256))
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }
 		
 		public String getDisplayName()
@@ -92,13 +92,13 @@ public class FTBLibActions
 	
 	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
 	};
 	
 	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -10, GuiIcons.toggle_gamemode)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{
 			int i = self.getPlayer().capabilities.isCreativeMode ? 0 : 1;
 			FTBLibClient.execClientCommand("/gamemode " + i);
@@ -110,7 +110,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/toggledownfall"); }
 		
 		public Boolean configDefault()
@@ -119,7 +119,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/time set 6000"); }
 		
 		public Boolean configDefault()
@@ -128,7 +128,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
 		
 		public Boolean configDefault()
@@ -137,7 +137,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_chunk_bounds = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_chunk_bounds", -17, GuiIcons.toggle_chunk_bounds)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibRenderHandler.renderChunkBounds = !FTBLibRenderHandler.renderChunkBounds; }
 		
 		public Boolean configDefault()
@@ -146,7 +146,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction toggle_light_values = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_light_values", -18, GuiIcons.toggle_light_values)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibRenderHandler.toggleLightLevel(); }
 		
 		public Boolean configDefault()
@@ -157,28 +157,28 @@ public class FTBLibActions
 	
 	public static final PlayerAction friend_add = new PlayerAction(PlayerAction.Type.OTHER, "ftbul.add_friend", 1, GuiIcons.add)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ new MessageModifyFriends(MessageModifyFriends.ADD, other.getProfile().getId()).sendToServer(); }
 		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !self.isFriendRaw(other); }
 	};
 	
 	public static final PlayerAction friend_remove = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.rem_friend", -1, GuiIcons.remove)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ new MessageModifyFriends(MessageModifyFriends.REMOVE, other.getProfile().getId()).sendToServer(); }
 		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return self.isFriendRaw(other); }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.deny_friend", -1, GuiIcons.remove)
 	{
-		public void onClicked(LMPlayer self, LMPlayer other)
+		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ new MessageModifyFriends(MessageModifyFriends.DENY, other.getProfile().getId()).sendToServer(); }
 		
-		public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !self.isFriendRaw(other) && other.isFriendRaw(self); }
 	};
 	
@@ -189,7 +189,7 @@ public class FTBLibActions
 		
 		if(e.gui instanceof InventoryEffectRenderer)
 		{
-			LMPlayerSP p = LMWorldSP.inst.clientPlayer;
+			ForgePlayerSP p = ForgeWorldSP.inst.clientPlayer;
 			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false);
 			buttons.addAll(Shortcuts.actions);
 			
@@ -269,7 +269,7 @@ public class FTBLibActions
 		if(e.button instanceof ButtonInvLM)
 		{
 			PlayerAction b = ((ButtonInvLM) e.button).action;
-			LMPlayer p = LMWorldSP.inst.clientPlayer;
+			ForgePlayer p = ForgeWorldSP.inst.clientPlayer;
 			b.onClicked(p, p);
 		}
 	}

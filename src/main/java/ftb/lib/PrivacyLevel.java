@@ -1,7 +1,7 @@
 package ftb.lib;
 
 import ftb.lib.api.gui.GuiIcons;
-import ftb.lib.api.players.LMPlayer;
+import ftb.lib.api.players.ForgePlayer;
 import net.minecraft.client.resources.I18n;
 
 public enum PrivacyLevel
@@ -62,7 +62,7 @@ public enum PrivacyLevel
 		return null;
 	}
 	
-	public boolean canInteract(LMPlayer owner, LMPlayer player)
+	public boolean canInteract(ForgePlayer owner, ForgePlayer player)
 	{
 		if(FTBLib.ftbu == null) return true;
 		if(this == PrivacyLevel.PUBLIC || owner == null) return true;

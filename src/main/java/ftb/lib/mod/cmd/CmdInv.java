@@ -1,8 +1,14 @@
 package ftb.lib.mod.cmd;
 
+import ftb.lib.*;
 import ftb.lib.api.cmd.*;
+import ftb.lib.api.item.StringIDInvLoader;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.command.*;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+
+import java.io.File;
 
 public class CmdInv extends CommandSubLM
 {
@@ -16,20 +22,54 @@ public class CmdInv extends CommandSubLM
 		public CmdSave(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public String getCommandUsage(ICommandSender ics)
+		{ return '/' + commandName + " <player> <file_id>"; }
+		
+		public boolean isUsernameIndex(String[] args, int i)
+		{ return i == 0; }
+		
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			return null;
+			checkArgs(args, 2);
+			EntityPlayerMP ep = getPlayer(ics, args[0]);
+			File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + UUIDTypeAdapterLM.getString(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			
+			try
+			{
+				onInvCmd(file, ep);
+			}
+			catch(Exception e)
+			{
+				if(FTBLib.DEV_ENV) e.printStackTrace();
+				throw new RawCommandException("Failed to load inventory!");
+			}
+		}
+		
+		protected void onInvCmd(File file, EntityPlayerMP ep) throws Exception
+		{
+			NBTTagCompound tag = new NBTTagCompound();
+			StringIDInvLoader.writeInvToNBT(ep.inventory, tag, "Inventory");
+			
+			if(FTBLib.isModInstalled(OtherMods.BAUBLES))
+				StringIDInvLoader.writeInvToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+			
+			LMNBTUtils.writeTag(file, tag);
 		}
 	}
 	
-	public static class CmdLoad extends CommandLM
+	public static class CmdLoad extends CmdSave
 	{
 		public CmdLoad(String s)
-		{ super(s, CommandLevel.OP); }
+		{ super(s); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		protected void onInvCmd(File file, EntityPlayerMP ep) throws Exception
 		{
-			return null;
+			NBTTagCompound tag = LMNBTUtils.readTag(file);
+			
+			StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
+			
+			if(FTBLib.isModInstalled(OtherMods.BAUBLES))
+				StringIDInvLoader.readInvFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 		}
 	}
 	
@@ -38,9 +78,8 @@ public class CmdInv extends CommandSubLM
 		public CmdList(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			return null;
 		}
 	}
 }

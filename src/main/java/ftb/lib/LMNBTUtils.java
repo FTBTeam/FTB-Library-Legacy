@@ -52,7 +52,7 @@ public class LMNBTUtils
 		
 		for(String s : tag.getKeySet())
 		{
-			l.add(new MapEntry<String, NBTBase>(s, tag.getTag(s)));
+			l.add(new AbstractMap.SimpleEntry<String, NBTBase>(s, tag.getTag(s)));
 		}
 		
 		return l;

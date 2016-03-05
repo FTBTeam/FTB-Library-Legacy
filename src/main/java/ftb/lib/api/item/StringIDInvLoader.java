@@ -1,13 +1,12 @@
 package ftb.lib.api.item;
 
 import ftb.lib.LMNBTUtils;
-import latmod.lib.MapEntry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class StringIDInvLoader
 {
@@ -23,7 +22,7 @@ public class StringIDInvLoader
 			for(int i = 0; i < list.tagCount(); i++)
 			{
 				NBTTagCompound tag1 = list.getCompoundTagAt(i);
-				MapEntry<Integer, ItemStack> itemEntry = loadFromNBT(tag1);
+				Map.Entry<Integer, ItemStack> itemEntry = loadFromNBT(tag1);
 				if(itemEntry != null)
 				{
 					int key = itemEntry.getKey();
@@ -92,7 +91,7 @@ public class StringIDInvLoader
 		return count;
 	}
 	
-	public static MapEntry<Integer, ItemStack> loadFromNBT(NBTTagCompound tag)
+	public static Map.Entry<Integer, ItemStack> loadFromNBT(NBTTagCompound tag)
 	{
 		if(tag == null || tag.hasNoTags()) return null;
 		
@@ -100,7 +99,7 @@ public class StringIDInvLoader
 		{
 			int slot = tag.getShort("Slot");
 			ItemStack is = ItemStack.loadItemStackFromNBT(tag);
-			if(is != null) return new MapEntry<>(slot, is);
+			if(is != null) return new AbstractMap.SimpleEntry<>(slot, is);
 		}
 		else
 		{
@@ -116,7 +115,7 @@ public class StringIDInvLoader
 					int dmg = Math.max(0, tag.getShort("D"));
 					ItemStack is = new ItemStack(item, size, dmg);
 					if(tag.hasKey("T")) is.setTagCompound(tag.getCompoundTag("T"));
-					return new MapEntry<>(slot, is);
+					return new AbstractMap.SimpleEntry<>(slot, is);
 				}
 				else
 				{
@@ -126,7 +125,7 @@ public class StringIDInvLoader
 					{
 						ItemStack is = new ItemStack(item, ai[1], ai[2]);
 						if(tag.hasKey("T", LMNBTUtils.MAP)) is.setTagCompound(tag.getCompoundTag("T"));
-						return new MapEntry<>(ai[0], is);
+						return new AbstractMap.SimpleEntry<>(ai[0], is);
 					}
 				}
 			}

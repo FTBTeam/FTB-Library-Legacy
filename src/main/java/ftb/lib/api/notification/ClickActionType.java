@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.api.players.LMWorldSP;
+import ftb.lib.api.players.ForgeWorldSP;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageModifyFriends;
 import latmod.lib.LMUtils;
@@ -27,7 +27,7 @@ public abstract class ClickActionType extends FinalIDObject
 	public abstract void onClicked(JsonElement data);
 	
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("click_action." + ID); }
+	{ return FTBLibMod.proxy.translate("click_action." + getID()); }
 	
 	// Static //
 	
@@ -37,7 +37,8 @@ public abstract class ClickActionType extends FinalIDObject
 		public void onClicked(JsonElement data)
 		{
 			PlayerAction a = PlayerActionRegistry.get(data.getAsString());
-			if(a != null && a.type.isSelf()) a.onClicked(LMWorldSP.inst.clientPlayer, LMWorldSP.inst.clientPlayer);
+			if(a != null && a.type.isSelf())
+				a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer);
 		}
 	};
 	

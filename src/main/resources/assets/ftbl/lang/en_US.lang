@@ -1,3 +1,4 @@
+ftbl.raw_string=%s
 ftbl.gamemode.loaded=Gamemode set to '%s'!
 ftbl.gamemode.not_found=Gamemode does not exist!
 ftbl.gamemode.already_set=Gamemode already set!

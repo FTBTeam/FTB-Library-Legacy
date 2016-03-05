@@ -155,8 +155,8 @@ public class FTBLibModClient extends FTBLibModCommon
 		ModelLoader.setCustomModelResourceLocation(i, meta, new ModelResourceLocation(mod + ":" + id, "inventory"));
 	}
 	
-	public LMWorld getClientLMWorld()
-	{ return LMWorldSP.inst; }
+	public ForgeWorld getClientLMWorld()
+	{ return ForgeWorldSP.inst; }
 	
 	public void runClientCode(ClientCode c)
 	{

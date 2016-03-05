@@ -17,7 +17,7 @@ public class ForgePlayerStats
 	public long lastSeen;
 	public long timePlayed;
 	
-	public void refresh(LMPlayerMP player, boolean force)
+	public void refresh(ForgePlayerMP player, boolean force)
 	{
 		if(!force && !player.isOnline()) return;
 		StatisticsFile file = player.getPlayer().getStatFile();
@@ -31,7 +31,7 @@ public class ForgePlayerStats
 		if(firstJoined <= 0L) firstJoined = lastSeen;
 	}
 	
-	public void getInfo(LMPlayerMP owner, List<IChatComponent> info, long ms)
+	public void getInfo(ForgePlayerMP owner, List<IChatComponent> info, long ms)
 	{
 		if(lastSeen > 0L && !owner.isOnline())
 			info.add(new ChatComponentTranslation("ftbu:label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
@@ -70,10 +70,10 @@ public class ForgePlayerStats
 		return (double) deaths / (timePlayed / 3600000D);
 	}
 	
-	public long getLastSeen(LMPlayerMP p)
+	public long getLastSeen(ForgePlayerMP p)
 	{ return p.isOnline() ? LMUtils.millis() : lastSeen; }
 	
-	public double getLastSeenDeltaInHours(LMPlayerMP p)
+	public double getLastSeenDeltaInHours(ForgePlayerMP p)
 	{
 		if(p.isOnline()) return 0D;
 		return (LMUtils.millis() - getLastSeen(p)) / 3600000D;

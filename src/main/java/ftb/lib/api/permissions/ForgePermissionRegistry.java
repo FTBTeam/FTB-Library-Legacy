@@ -80,12 +80,12 @@ public class ForgePermissionRegistry
 				{
 					RankConfig p = (RankConfig) obj;
 					
-					if(rankConfig.containsKey(p.ID))
+					if(rankConfig.containsKey(p.getID()))
 					{
-						throw new RuntimeException("Duplicate RankConfig ID found: " + p.ID + " (" + p.getClass().getName() + " & " + permissionContainers.get(p.ID).getClass().getName() + ")");
+						throw new RuntimeException("Duplicate RankConfig ID found: " + p.getID() + " (" + p.getClass().getName() + " & " + permissionContainers.get(p.getID()).getClass().getName() + ")");
 					}
 					
-					rankConfig.put(p.ID, p);
+					rankConfig.put(p.getID(), p);
 					ConfigData.inject(f, null, null);
 				}
 			}

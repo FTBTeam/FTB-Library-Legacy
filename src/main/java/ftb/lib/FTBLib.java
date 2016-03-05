@@ -79,22 +79,22 @@ public class FTBLib
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
-		if(LMWorldMP.inst == null) return;
+		if(ForgeWorldMP.inst == null) return;
 		
 		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
 		GameModes.reload();
 		
-		for(LMPlayer p : LMWorldMP.inst.playerMap.values())
+		for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
 			p.toPlayerMP().stats.refresh(p.toPlayerMP(), false);
 		
-		EventFTBReload event = new EventFTBReload(LMWorldMP.inst, sender, reloadClient);
+		EventFTBReload event = new EventFTBReload(ForgeWorldMP.inst, sender, reloadClient);
 		if(ftbu != null) ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)
-			printChat(BroadcastSender.inst, new ChatComponentTranslation("ftbl:reloadedServer", ((LMUtils.millis() - ms) + "ms")));
-		new MessageReload(LMWorldMP.inst, reloadClient).sendTo(null);
+			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloadedServer", ((LMUtils.millis() - ms) + "ms")));
+		new MessageReload(ForgeWorldMP.inst, reloadClient).sendTo(null);
 	}
 	
 	public static IChatComponent getChatComponent(Object o)

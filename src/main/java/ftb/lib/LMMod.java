@@ -24,8 +24,8 @@ public class LMMod extends FinalIDObject
 		if(mod == null)
 		{
 			mod = new LMMod(s);
-			modsMap.put(mod.ID, mod);
-			if(FTBLib.DEV_ENV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
+			modsMap.put(mod.getID(), mod);
+			if(FTBLib.DEV_ENV) FTBLib.logger.info("LMMod '" + mod.getID() + "' created");
 		}
 		
 		return mod;
@@ -49,7 +49,7 @@ public class LMMod extends FinalIDObject
 	public LMMod(String id)
 	{
 		super(id);
-		lowerCaseModID = ID.toLowerCase();
+		lowerCaseModID = getID().toLowerCase();
 		itemsAndBlocks = new ArrayList<>();
 		
 		recipes = LMRecipes.defaultInstance;
@@ -57,15 +57,15 @@ public class LMMod extends FinalIDObject
 	
 	public ModContainer getModContainer()
 	{
-		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(ID);
+		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(getID());
 		return modContainer;
 	}
 	
 	public void setRecipes(LMRecipes r)
 	{ recipes = (r == null) ? new LMRecipes() : r; }
 	
-	public String toFullID()
-	{ return ID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
+	public String getFullID()
+	{ return getID() + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
 	public String getBlockName(String s)
 	{ return lowerCaseModID + ".tile." + s; }
@@ -91,10 +91,10 @@ public class LMMod extends FinalIDObject
 	}
 	
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
-	{ FTBLib.addTileEntity(c, ID + '.' + s, alt); }
+	{ FTBLib.addTileEntity(c, getID() + '.' + s, alt); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)
-	{ FTBLib.addEntity(c, s, id, ID); }
+	{ FTBLib.addEntity(c, s, id, getID()); }
 	
 	public void onPostLoaded()
 	{

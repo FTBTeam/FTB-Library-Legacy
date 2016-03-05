@@ -19,9 +19,9 @@ public class ConfigRegistry
 	
 	public static void add(ConfigFile f)
 	{
-		if(f != null && f.ID != null)
+		if(f != null)
 		{
-			map.put(f.ID, f);
+			map.put(f.getID(), f);
 			
 			ConfigGroup g1 = f.generateSynced(false);
 			if(!g1.entryMap.isEmpty()) synced.add(g1, false);
@@ -44,7 +44,7 @@ public class ConfigRegistry
 				ol.setJson(e.getValue());
 				
 				int result;
-				ConfigFile f = map.get(ol.ID);
+				ConfigFile f = map.get(ol.getID());
 				if(f != null && (result = f.loadFromGroup(ol)) > 0)
 				{
 					FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
@@ -63,7 +63,7 @@ public class ConfigRegistry
 		if(ep != null)
 		{
 			ConfigFile group = new ConfigFile(UUIDTypeAdapterLM.getString(ep.getGameProfile().getId()));
-			tempServerConfig.put(group.ID, group);
+			tempServerConfig.put(group.getID(), group);
 			return group;
 		}
 		

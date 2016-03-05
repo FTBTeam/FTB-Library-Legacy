@@ -25,7 +25,7 @@ public class MaterialItem extends FinalIDObject
 	
 	public void onPostLoaded()
 	{
-		FTBLibMod.proxy.addItemModel(item.getMod().ID, item, damage, item.getPath(ID, '/'));
+		FTBLibMod.proxy.addItemModel(item.getMod().getID(), item, damage, item.getPath(getID(), '/'));
 	}
 	
 	public int getRenderPasses()
@@ -37,5 +37,5 @@ public class MaterialItem extends FinalIDObject
 	}
 	
 	public String getUnlocalizedName()
-	{ return item.getMod().getItemName(item.getPath(ID, '.')); }
+	{ return item.getMod().getItemName(item.getPath(getID(), '.')); }
 }

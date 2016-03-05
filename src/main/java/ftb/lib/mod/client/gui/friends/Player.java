@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.players.LMPlayerSP;
+import ftb.lib.api.players.ForgePlayerSP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,10 +8,10 @@ import net.minecraft.util.*;
 
 public class Player extends AbstractClientPlayer
 {
-	public final LMPlayerSP playerLM;
+	public final ForgePlayerSP playerLM;
 	public final boolean isOwner;
 	
-	public Player(LMPlayerSP p)
+	public Player(ForgePlayerSP p)
 	{
 		super(Minecraft.getMinecraft().theWorld, p.getProfile());
 		playerLM = p;

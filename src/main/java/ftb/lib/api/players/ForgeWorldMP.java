@@ -14,12 +14,12 @@ import java.util.*;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public final class LMWorldMP extends LMWorld
+public final class ForgeWorldMP extends ForgeWorld
 {
-	public static LMWorldMP inst = null;
+	public static ForgeWorldMP inst = null;
 	public final File latmodFolder;
 	
-	public LMWorldMP(File f)
+	public ForgeWorldMP(File f)
 	{
 		super(Side.SERVER);
 		latmodFolder = f;
@@ -29,17 +29,17 @@ public final class LMWorldMP extends LMWorld
 	public World getMCWorld()
 	{ return MinecraftServer.getServer().getEntityWorld(); }
 	
-	public LMWorldMP toWorldMP()
+	public ForgeWorldMP toWorldMP()
 	{ return this; }
 	
 	@SideOnly(Side.CLIENT)
-	public LMWorldSP toWorldSP()
+	public ForgeWorldSP toWorldSP()
 	{ return null; }
 	
-	public LMPlayerMP getPlayer(Object o)
+	public ForgePlayerMP getPlayer(Object o)
 	{
-		if(o instanceof FakePlayer) return new LMPlayerFake((FakePlayer) o);
-		LMPlayer p = super.getPlayer(o);
+		if(o instanceof FakePlayer) return new ForgePlayerFake((FakePlayer) o);
+		ForgePlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}
 	
@@ -59,7 +59,7 @@ public final class LMWorldMP extends LMWorld
 				
 				if(!group1.entrySet().isEmpty())
 				{
-					customGroup.add(d.ID, group1);
+					customGroup.add(d.getID(), group1);
 				}
 			}
 			
@@ -72,7 +72,7 @@ public final class LMWorldMP extends LMWorld
 	
 	public void save(JsonObject group)
 	{
-		group.add("mode", new JsonPrimitive(currentMode.ID));
+		group.add("mode", new JsonPrimitive(currentMode.getID()));
 		
 		if(!customData.isEmpty())
 		{
@@ -86,7 +86,7 @@ public final class LMWorldMP extends LMWorld
 				
 				if(!group1.entrySet().isEmpty())
 				{
-					customGroup.add(d.ID, group1);
+					customGroup.add(d.getID(), group1);
 				}
 			}
 			
@@ -97,17 +97,17 @@ public final class LMWorldMP extends LMWorld
 		}
 	}
 	
-	public void writeDataToNet(NBTTagCompound tag, LMPlayerMP self)
+	public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self)
 	{
-		tag.setString("M", currentMode.ID);
+		tag.setString("M", currentMode.getID());
 		NBTTagCompound tag1;
 		
 		if(self != null)
 		{
 			NBTTagCompound playerMapTag = new NBTTagCompound();
 			
-			List<LMPlayerMP> onlinePlayers = new ArrayList<>();
-			for(LMPlayer p : playerMap.values())
+			List<ForgePlayerMP> onlinePlayers = new ArrayList<>();
+			for(ForgePlayer p : playerMap.values())
 			{
 				playerMapTag.setString(p.getStringUUID(), p.getProfile().getName());
 				if(p.isOnline() && !p.equalsPlayer(self)) onlinePlayers.add(p.toPlayerMP());
@@ -117,7 +117,7 @@ public final class LMWorldMP extends LMWorld
 			
 			playerMapTag = new NBTTagCompound();
 			
-			for(LMPlayerMP p : onlinePlayers)
+			for(ForgePlayerMP p : onlinePlayers)
 			{
 				tag1 = new NBTTagCompound();
 				p.writeToNet(tag1, false);
@@ -132,10 +132,10 @@ public final class LMWorldMP extends LMWorld
 		}
 	}
 	
-	public List<LMPlayerMP> getServerPlayers()
+	public List<ForgePlayerMP> getServerPlayers()
 	{
-		List<LMPlayerMP> list = new ArrayList<>();
-		for(LMPlayer p : playerMap.values())
+		List<ForgePlayerMP> list = new ArrayList<>();
+		for(ForgePlayer p : playerMap.values())
 			list.add(p.toPlayerMP());
 		return list;
 	}

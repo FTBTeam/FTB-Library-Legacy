@@ -10,10 +10,10 @@ import java.util.*;
  */
 public class ForgeWorldDataEvent extends Event
 {
-	public final LMWorld world;
+	public final ForgeWorld world;
 	private final Map<String, ForgeWorldData> map;
 	
-	public ForgeWorldDataEvent(LMWorld w)
+	public ForgeWorldDataEvent(ForgeWorld w)
 	{
 		world = w;
 		map = new HashMap<>();
@@ -21,9 +21,9 @@ public class ForgeWorldDataEvent extends Event
 	
 	public void add(ForgeWorldData data)
 	{
-		if(!map.containsKey(data.ID))
+		if(!map.containsKey(data.getID()))
 		{
-			map.put(data.ID, data);
+			map.put(data.getID(), data);
 		}
 	}
 	

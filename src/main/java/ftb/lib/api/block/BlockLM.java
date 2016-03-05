@@ -51,7 +51,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public void loadModels()
 	{
-		FTBLibMod.proxy.addItemModel(getMod().ID, getItem(), 0, blockName);
+		FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, blockName);
 	}
 	
 	public int damageDropped(IBlockState state)

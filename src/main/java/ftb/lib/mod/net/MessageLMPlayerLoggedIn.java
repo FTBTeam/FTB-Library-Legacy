@@ -19,7 +19,7 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	
 	public MessageLMPlayerLoggedIn() { }
 	
-	public MessageLMPlayerLoggedIn(LMPlayerMP p, boolean first, boolean self)
+	public MessageLMPlayerLoggedIn(ForgePlayerMP p, boolean first, boolean self)
 	{
 		playerID = p.getProfile().getId();
 		playerName = p.getProfile().getName();
@@ -50,12 +50,12 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
 	{
-		if(LMWorldSP.inst == null) return null;
+		if(ForgeWorldSP.inst == null) return null;
 		
-		LMPlayerSP p = LMWorldSP.inst.getPlayer(m.playerID);
-		if(p == null) p = new LMPlayerSP(new GameProfile(m.playerID, m.playerName));
+		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
+		if(p == null) p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName));
 		p.readFromNet(m.data, p.isMCPlayer());
-		LMWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
+		ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
 		p.onLoggedIn(m.isFirst);
 		return null;
 	}

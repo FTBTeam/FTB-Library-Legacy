@@ -18,12 +18,12 @@ import java.util.*;
  * Created by LatvianModder on 09.02.2016.
  */
 @SideOnly(Side.CLIENT)
-public class LMPlayerSP extends LMPlayer
+public class ForgePlayerSP extends ForgePlayer
 {
 	public final List<IChatComponent> clientInfo;
 	public boolean isOnline;
 	
-	public LMPlayerSP(GameProfile p)
+	public ForgePlayerSP(GameProfile p)
 	{
 		super(p);
 		clientInfo = new ArrayList<>();
@@ -42,19 +42,19 @@ public class LMPlayerSP extends LMPlayer
 	public EntityPlayer getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null; }
 	
-	public final LMPlayerMP toPlayerMP()
+	public final ForgePlayerMP toPlayerMP()
 	{ return null; }
 	
-	public final LMPlayerSP toPlayerSP()
+	public final ForgePlayerSP toPlayerSP()
 	{ return this; }
 	
-	public final LMWorld getWorld()
-	{ return LMWorldSP.inst; }
+	public final ForgeWorld getWorld()
+	{ return ForgeWorldSP.inst; }
 	
 	public ResourceLocation getSkin()
 	{ return FTBLibClient.getSkinTexture(getProfile().getName()); }
 	
-	public LMPlayerSPSelf toPlayerSPSelf()
+	public ForgePlayerSPSelf toPlayerSPSelf()
 	{ return null; }
 	
 	public boolean isMCPlayer()
@@ -97,7 +97,7 @@ public class LMPlayerSP extends LMPlayer
 			}
 		}
 		
-		for(LMPlayer p : getWorld().playerMap.values())
+		for(ForgePlayer p : getWorld().playerMap.values())
 		{
 			if(!p.equalsPlayer(this))
 			{

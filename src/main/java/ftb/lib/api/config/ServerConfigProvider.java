@@ -20,10 +20,10 @@ public class ServerConfigProvider implements IConfigProvider
 	{ return file.getDisplayName(); }
 	
 	public String getGroupTitle(ConfigGroup g)
-	{ return g.ID; }
+	{ return g.getID(); }
 	
 	public String getEntryTitle(ConfigEntry e)
-	{ return e.ID; }
+	{ return e.getID(); }
 	
 	public ConfigFile getConfigFile()
 	{ return file; }

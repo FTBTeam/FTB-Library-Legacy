@@ -64,7 +64,7 @@ public class Shortcuts
 						
 						PlayerAction pa = new PlayerAction(PlayerAction.Type.SELF, "temp-" + UUID.randomUUID(), priority, tex)
 						{
-							public void onClicked(LMPlayer self, LMPlayer other)
+							public void onClicked(ForgePlayer self, ForgePlayer other)
 							{ action.onClicked(); }
 							
 							public String getDisplayName()

@@ -10,10 +10,10 @@ import java.util.*;
  */
 public class ForgePlayerDataEvent extends Event
 {
-	public final LMPlayer player;
+	public final ForgePlayer player;
 	private final Map<String, ForgePlayerData> map;
 	
-	public ForgePlayerDataEvent(LMPlayer p)
+	public ForgePlayerDataEvent(ForgePlayer p)
 	{
 		player = p;
 		map = new HashMap<>();

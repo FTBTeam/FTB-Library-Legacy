@@ -13,7 +13,7 @@ public class ButtonPlayer extends ButtonLM
 	public final Player player;
 	public final PanelPlayerList panel;
 	
-	public ButtonPlayer(PanelPlayerList pl, LMPlayerSP p)
+	public ButtonPlayer(PanelPlayerList pl, ForgePlayerSP p)
 	{
 		super(pl.gui, 0, pl.playerButtons.size() * 21, 34 + pl.gui.getFontRenderer().getStringWidth(p.getProfile().getName()), 20);
 		player = new Player(p);
@@ -53,8 +53,8 @@ public class ButtonPlayer extends ButtonLM
 		else GlStateManager.color(0.4F, 0.4F, 0.4F, 0.4F);
 		GuiLM.drawBlankRect(ax, ay, z, width, height);
 		
-		boolean raw1 = player.playerLM.isFriendRaw(LMWorldSP.inst.clientPlayer);
-		boolean raw2 = LMWorldSP.inst.clientPlayer.isFriendRaw(player.playerLM);
+		boolean raw1 = player.playerLM.isFriendRaw(ForgeWorldSP.inst.clientPlayer);
+		boolean raw2 = ForgeWorldSP.inst.clientPlayer.isFriendRaw(player.playerLM);
 		
 		GlStateManager.color(0F, 0F, 0F, 1F);
 		if(raw1 && raw2) GlStateManager.color(0.18F, 0.74F, 0.18F, 1F);

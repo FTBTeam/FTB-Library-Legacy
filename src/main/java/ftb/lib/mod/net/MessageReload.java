@@ -21,7 +21,7 @@ public class MessageReload extends MessageLM_IO
 {
 	public MessageReload() { super(ByteCount.INT); }
 	
-	public MessageReload(LMWorldMP w, boolean reloadClient)
+	public MessageReload(ForgeWorldMP w, boolean reloadClient)
 	{
 		this();
 		io.writeBoolean(reloadClient);
@@ -42,7 +42,7 @@ public class MessageReload extends MessageLM_IO
 		long ms = LMUtils.millis();
 		readSyncedConfig(io);
 		NBTTagCompound tag = LMNBTUtils.readTag(io);
-		LMWorldSP.inst.readDataFromNet(tag, false);
+		ForgeWorldSP.inst.readDataFromNet(tag, false);
 		
 		if(reloadClient)
 		{
@@ -50,7 +50,7 @@ public class MessageReload extends MessageLM_IO
 		}
 		else
 		{
-			Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 7000);
+			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
 			n.setColor(0xFF333333);
@@ -68,7 +68,7 @@ public class MessageReload extends MessageLM_IO
 		GameModes.reload();
 		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-		EventFTBReload event = new EventFTBReload(LMWorldSP.inst, ep, true);
+		EventFTBReload event = new EventFTBReload(ForgeWorldSP.inst, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		
@@ -87,7 +87,7 @@ public class MessageReload extends MessageLM_IO
 	
 	static void readSyncedConfig(ByteIOStream in)
 	{
-		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.ID);
+		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.getID());
 		try { synced.read(in); }
 		catch(Exception ex) {}
 		ConfigRegistry.synced.loadFromGroup(synced);

@@ -3,10 +3,11 @@ package ftb.lib.mod.cmd;
 import ftb.lib.FTBLib;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.LMWorldMP;
-import latmod.lib.LMMapUtils;
+import ftb.lib.api.players.ForgeWorldMP;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
+
+import java.util.List;
 
 public class CmdMode extends CommandSubLM
 {
@@ -26,19 +27,26 @@ public class CmdMode extends CommandSubLM
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <modeID>"; }
 		
-		public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
 		{
-			if(args.length == 1) return LMMapUtils.toKeyStringArray(GameModes.getGameModes().modes);
-			return super.getTabStrings(ics, args, i);
+			if(args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, GameModes.getGameModes().modes.keySet());
+			}
+			return null;
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			if(args.length == 0) return new ChatComponentText(getCommandUsage(ics));
+			if(args.length == 0)
+			{
+				ics.addChatMessage(new ChatComponentText(getCommandUsage(ics)));
+				return;
+			}
 			
 			IChatComponent c;
 			
-			int i = LMWorldMP.inst.setMode(args[0]);
+			int i = ForgeWorldMP.inst.setMode(args[0]);
 			
 			if(i == 1)
 			{
@@ -57,7 +65,7 @@ public class CmdMode extends CommandSubLM
 				FTBLib.reload(ics, true, true);
 			}
 			
-			return c;
+			ics.addChatMessage(c);
 		}
 	}
 	
@@ -66,11 +74,11 @@ public class CmdMode extends CommandSubLM
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.current", LMWorldMP.inst.getMode());
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.current", ForgeWorldMP.inst.getMode());
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
-			return c;
+			ics.addChatMessage(c);
 		}
 	}
 	
@@ -79,11 +87,11 @@ public class CmdMode extends CommandSubLM
 		public CmdList(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.getGameModes().modes.keySet()));
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
-			return c;
+			ics.addChatMessage(c);
 		}
 	}
 }

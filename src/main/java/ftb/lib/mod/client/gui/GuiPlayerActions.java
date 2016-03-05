@@ -4,7 +4,7 @@ import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.api.players.LMPlayer;
+import ftb.lib.api.players.ForgePlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -13,10 +13,10 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiPlayerActions extends GuiLM
 {
-	public final LMPlayer self, other;
+	public final ForgePlayer self, other;
 	public final List<PlayerAction> actions;
 	
-	public GuiPlayerActions(LMPlayer s, LMPlayer o, List<PlayerAction> a)
+	public GuiPlayerActions(ForgePlayer s, ForgePlayer o, List<PlayerAction> a)
 	{
 		super(null, null);
 		self = s;

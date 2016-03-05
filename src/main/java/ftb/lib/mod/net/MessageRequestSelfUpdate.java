@@ -22,7 +22,7 @@ public class MessageRequestSelfUpdate extends MessageLM<MessageRequestSelfUpdate
 	
 	public IMessage onMessage(MessageRequestSelfUpdate m, MessageContext ctx)
 	{
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		return new MessageLMPlayerUpdate(p, true);
 	}
 }

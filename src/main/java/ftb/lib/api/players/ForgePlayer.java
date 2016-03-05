@@ -13,14 +13,14 @@ import java.util.*;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public abstract class LMPlayer implements Comparable<LMPlayer>
+public abstract class ForgePlayer implements Comparable<ForgePlayer>
 {
 	private GameProfile gameProfile;
 	public final List<UUID> friends;
 	public final Map<Integer, ItemStack> lastArmor;
 	public final Map<String, ForgePlayerData> customData;
 	
-	LMPlayer(GameProfile p)
+	ForgePlayer(GameProfile p)
 	{
 		setProfile(p);
 		friends = new ArrayList<>();
@@ -37,12 +37,12 @@ public abstract class LMPlayer implements Comparable<LMPlayer>
 	public abstract Side getSide();
 	public abstract boolean isOnline();
 	public abstract EntityPlayer getPlayer();
-	public abstract LMPlayerMP toPlayerMP();
+	public abstract ForgePlayerMP toPlayerMP();
 	
 	@SideOnly(Side.CLIENT)
-	public abstract LMPlayerSP toPlayerSP();
+	public abstract ForgePlayerSP toPlayerSP();
 	
-	public abstract LMWorld getWorld();
+	public abstract ForgeWorld getWorld();
 	
 	public boolean allowCreativeInteractSecure()
 	//{ return getPlayer() != null && getPlayer().capabilities.isCreativeMode && getRank().config.allow_creative_interact_secure.get(); }
@@ -64,16 +64,16 @@ public abstract class LMPlayer implements Comparable<LMPlayer>
 	public final String getStringUUID()
 	{ return UUIDTypeAdapterLM.getString(gameProfile.getId()); }
 	
-	public boolean isFriendRaw(LMPlayer p)
+	public boolean isFriendRaw(ForgePlayer p)
 	{ return p != null && (equalsPlayer(this) || friends.contains(p.getProfile().getId())); }
 	
-	public boolean isFriend(LMPlayer p)
+	public boolean isFriend(ForgePlayer p)
 	{ return p != null && isFriendRaw(p) && p.isFriendRaw(this); }
 	
-	public final int compareTo(LMPlayer o)
+	public final int compareTo(ForgePlayer o)
 	{ return getProfile().getName().compareToIgnoreCase(o.getProfile().getName()); }
 	
-	public String toString()
+	public final String toString()
 	{ return gameProfile.getName(); }
 	
 	public final int hashCode()
@@ -84,20 +84,20 @@ public abstract class LMPlayer implements Comparable<LMPlayer>
 		if(o == null) return false;
 		else if(o == this) return true;
 		else if(o instanceof UUID) return gameProfile.getId().equals(o);
-		else if(o instanceof LMPlayer) return equalsPlayer((LMPlayer) o);
+		else if(o instanceof ForgePlayer) return equalsPlayer((ForgePlayer) o);
 		return false;
 	}
 	
-	public boolean equalsPlayer(LMPlayer p)
+	public boolean equalsPlayer(ForgePlayer p)
 	{ return p != null && (p == this || gameProfile.getId().equals(p.gameProfile.getId())); }
 	
-	public List<LMPlayer> getFriends()
+	public List<ForgePlayer> getFriends()
 	{
-		ArrayList<LMPlayer> list = new ArrayList<>();
+		ArrayList<ForgePlayer> list = new ArrayList<>();
 		
 		for(UUID id : friends)
 		{
-			LMPlayer p = getWorld().getPlayer(id);
+			ForgePlayer p = getWorld().getPlayer(id);
 			
 			if(p != null)
 			{
@@ -108,11 +108,11 @@ public abstract class LMPlayer implements Comparable<LMPlayer>
 		return list;
 	}
 	
-	public List<LMPlayer> getOtherFriends()
+	public List<ForgePlayer> getOtherFriends()
 	{
-		List<LMPlayer> l = new ArrayList<>();
+		List<ForgePlayer> l = new ArrayList<>();
 		
-		for(LMPlayer p : getWorld().playerMap.values())
+		for(ForgePlayer p : getWorld().playerMap.values())
 		{
 			if(!p.equalsPlayer(this) && p.isFriendRaw(this))
 			{

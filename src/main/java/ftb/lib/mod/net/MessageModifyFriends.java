@@ -45,11 +45,11 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 	
 	public IMessage onMessage(MessageModifyFriends m, MessageContext ctx)
 	{
-		LMPlayerMP owner = LMWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
 		
 		if(m.actionID == ADD_ALL)
 		{
-			for(LMPlayer p : owner.getWorld().playerMap.values())
+			for(ForgePlayer p : owner.getWorld().playerMap.values())
 			{
 				if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
 				{
@@ -60,7 +60,7 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 		}
 		else
 		{
-			LMPlayerMP p = LMWorldMP.inst.getPlayer(m.playerID);
+			ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
 			if(p == null || p.equalsPlayer(owner)) return null;
 			
 			if(m.actionID == ADD)

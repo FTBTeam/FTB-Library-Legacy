@@ -6,12 +6,12 @@ import net.minecraftforge.fml.relauncher.*;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public final class LMPlayerTemp extends LMPlayer
+public final class ForgePlayerTemp extends ForgePlayer
 {
 	public final Side side;
 	public final EntityPlayer player;
 	
-	public LMPlayerTemp(EntityPlayer ep)
+	public ForgePlayerTemp(EntityPlayer ep)
 	{
 		super(ep.getGameProfile());
 		side = (ep instanceof EntityPlayerMP) ? Side.SERVER : Side.CLIENT;
@@ -27,13 +27,13 @@ public final class LMPlayerTemp extends LMPlayer
 	public EntityPlayer getPlayer()
 	{ return player; }
 	
-	public LMPlayerMP toPlayerMP()
+	public ForgePlayerMP toPlayerMP()
 	{ return null; }
 	
 	@SideOnly(Side.CLIENT)
-	public LMPlayerSP toPlayerSP()
+	public ForgePlayerSP toPlayerSP()
 	{ return null; }
 	
-	public LMWorld getWorld()
-	{ return LMWorld.getFrom(side); }
+	public ForgeWorld getWorld()
+	{ return ForgeWorld.getFrom(side); }
 }

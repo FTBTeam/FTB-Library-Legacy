@@ -33,10 +33,10 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
 	{
-		if(LMWorldSP.inst != null)
+		if(ForgeWorldSP.inst != null)
 		{
-			LMWorldSP.inst.onClosed();
-			LMWorldSP.inst = null;
+			ForgeWorldSP.inst.onClosed();
+			ForgeWorldSP.inst = null;
 		}
 	}
 	
@@ -85,8 +85,8 @@ public class FTBLibClientEventHandler
 	{
 		if(e.entity.worldObj.isRemote && FTBLibClient.isIngame() && FTBLibModClient.player_options_shortcut.get() && e.entityPlayer.getGameProfile().getId().equals(FTBLibClient.mc.thePlayer.getGameProfile().getId()))
 		{
-			LMPlayer self = LMWorldSP.inst.clientPlayer;
-			LMPlayer other = (FTBLib.ftbu == null) ? new LMPlayerTemp(((EntityPlayer) e.target)) : LMWorldSP.inst.getPlayer(e.target);
+			ForgePlayer self = ForgeWorldSP.inst.clientPlayer;
+			ForgePlayer other = (FTBLib.ftbu == null) ? new ForgePlayerTemp(((EntityPlayer) e.target)) : ForgeWorldSP.inst.getPlayer(e.target);
 			if(other != null)
 			{
 				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);

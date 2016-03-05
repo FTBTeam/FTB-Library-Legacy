@@ -43,7 +43,7 @@ public class GameModes
 		for(int i = 0; i < a.size(); i++)
 		{
 			GameMode m = new GameMode(a.get(i).getAsString());
-			modes0.put(m.ID, m);
+			modes0.put(m.getID(), m);
 		}
 		
 		defaultMode = modes0.get(o.get("default").getAsString());
@@ -72,11 +72,11 @@ public class GameModes
 		
 		JsonArray a = new JsonArray();
 		for(GameMode m : modes.values())
-			a.add(new JsonPrimitive(m.ID));
+			a.add(new JsonPrimitive(m.getID()));
 		o.add("modes", a);
 		
-		o.add("default", new JsonPrimitive(defaultMode.ID));
-		o.add("common", new JsonPrimitive(commonMode.ID));
+		o.add("default", new JsonPrimitive(defaultMode.getID()));
+		o.add("common", new JsonPrimitive(commonMode.getID()));
 		
 		if(!customData.isEmpty())
 		{

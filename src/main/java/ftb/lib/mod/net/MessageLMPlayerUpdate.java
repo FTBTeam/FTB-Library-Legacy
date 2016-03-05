@@ -19,7 +19,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 	
 	public MessageLMPlayerUpdate() { }
 	
-	public MessageLMPlayerUpdate(LMPlayerMP p, boolean self)
+	public MessageLMPlayerUpdate(ForgePlayerMP p, boolean self)
 	{
 		this();
 		playerID = p.getProfile().getId();
@@ -48,7 +48,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)
 	{
-		LMPlayerSP p = LMWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
+		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
 		p.readFromNet(m.data, m.isSelf);
 		FTBLibClient.onGuiClientAction();
 		return null;

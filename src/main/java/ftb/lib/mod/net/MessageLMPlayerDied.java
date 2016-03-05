@@ -25,8 +25,8 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerDied m, MessageContext ctx)
 	{
-		if(LMWorldSP.inst == null) return null;
-		LMPlayerSP p = LMWorldSP.inst.getPlayer(FTBLibClient.mc.thePlayer);
+		if(ForgeWorldSP.inst == null) return null;
+		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(FTBLibClient.mc.thePlayer);
 		p.onDeath();
 		return null;
 	}

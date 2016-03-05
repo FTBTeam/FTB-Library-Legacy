@@ -15,31 +15,31 @@ import java.util.*;
  * Created by LatvianModder on 09.02.2016.
  */
 @SideOnly(Side.CLIENT)
-public final class LMWorldSP extends LMWorld
+public final class ForgeWorldSP extends ForgeWorld
 {
-	public static LMWorldSP inst = null;
-	public final LMPlayerSPSelf clientPlayer;
+	public static ForgeWorldSP inst = null;
+	public final ForgePlayerSPSelf clientPlayer;
 	public List<String> serverDataIDs;
 	
-	public LMWorldSP(GameProfile p)
+	public ForgeWorldSP(GameProfile p)
 	{
 		super(Side.CLIENT);
-		clientPlayer = new LMPlayerSPSelf(p);
+		clientPlayer = new ForgePlayerSPSelf(p);
 		serverDataIDs = new ArrayList<>();
 	}
 	
 	public World getMCWorld()
 	{ return FTBLibClient.mc.theWorld; }
 	
-	public LMWorldMP toWorldMP()
+	public ForgeWorldMP toWorldMP()
 	{ return null; }
 	
-	public LMWorldSP toWorldSP()
+	public ForgeWorldSP toWorldSP()
 	{ return this; }
 	
-	public LMPlayerSP getPlayer(Object o)
+	public ForgePlayerSP getPlayer(Object o)
 	{
-		LMPlayer p = super.getPlayer(o);
+		ForgePlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
@@ -59,7 +59,7 @@ public final class LMWorldSP extends LMWorld
 				String name = ((NBTTagString) e.getValue()).getString();
 				
 				if(uuid.equals(clientPlayer.getProfile().getId())) playerMap.put(uuid, clientPlayer);
-				else playerMap.put(uuid, new LMPlayerSP(new GameProfile(uuid, name)));
+				else playerMap.put(uuid, new ForgePlayerSP(new GameProfile(uuid, name)));
 			}
 			
 			FTBLib.dev_logger.info("Client player ID: " + clientPlayer.getProfile().getId() + " and " + (playerMap.size() - 1) + " other players");
@@ -71,7 +71,7 @@ public final class LMWorldSP extends LMWorld
 			
 			for(Map.Entry<String, NBTBase> e : map1.entrySet())
 			{
-				LMPlayerSP p = playerMap.get(UUIDTypeAdapterLM.getUUID(e.getKey())).toPlayerSP();
+				ForgePlayerSP p = playerMap.get(UUIDTypeAdapterLM.getUUID(e.getKey())).toPlayerSP();
 				p.readFromNet((NBTTagCompound) e.getValue(), false);
 			}
 		}

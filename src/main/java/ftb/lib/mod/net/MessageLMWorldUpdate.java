@@ -15,20 +15,20 @@ public class MessageLMWorldUpdate extends MessageLM_IO
 {
 	public MessageLMWorldUpdate() { super(ByteCount.INT); }
 	
-	public MessageLMWorldUpdate(LMPlayerMP self)
+	public MessageLMWorldUpdate(ForgePlayerMP self)
 	{
 		this();
 		MessageReload.writeSyncedConfig(io);
 		
 		NBTTagCompound tag = new NBTTagCompound();
-		LMWorldMP.inst.writeDataToNet(tag, self);
+		ForgeWorldMP.inst.writeDataToNet(tag, self);
 		LMNBTUtils.writeTag(io, tag);
 		
 		List<String> l = new ArrayList<>();
 		
-		for(ForgeWorldData d : LMWorldMP.inst.customData.values())
+		for(ForgeWorldData d : ForgeWorldMP.inst.customData.values())
 		{
-			if(d.syncID()) l.add(d.ID);
+			if(d.syncID()) l.add(d.getID());
 		}
 		
 		io.writeShort(l.size());
@@ -46,20 +46,20 @@ public class MessageLMWorldUpdate extends MessageLM_IO
 	{
 		MessageReload.readSyncedConfig(io);
 		
-		boolean first = LMWorldSP.inst == null;
-		if(first) LMWorldSP.inst = new LMWorldSP(FTBLibClient.mc.getSession().getProfile());
-		LMWorldSP.inst.readDataFromNet(LMNBTUtils.readTag(io), first);
+		boolean first = ForgeWorldSP.inst == null;
+		if(first) ForgeWorldSP.inst = new ForgeWorldSP(FTBLibClient.mc.getSession().getProfile());
+		ForgeWorldSP.inst.readDataFromNet(LMNBTUtils.readTag(io), first);
 		
-		LMWorldSP.inst.serverDataIDs.clear();
+		ForgeWorldSP.inst.serverDataIDs.clear();
 		int s = io.readUnsignedShort();
 		for(int i = 0; i < s; i++)
 		{
-			LMWorldSP.inst.serverDataIDs.add(io.readUTF());
+			ForgeWorldSP.inst.serverDataIDs.add(io.readUTF());
 		}
 		
 		if(first)
 		{
-			for(ForgeWorldData d : LMWorldSP.inst.customData.values())
+			for(ForgeWorldData d : ForgeWorldSP.inst.customData.values())
 				d.init();
 		}
 		

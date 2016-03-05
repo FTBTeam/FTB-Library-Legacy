@@ -20,7 +20,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 	
 	public MessageLMPlayerInfo() { }
 	
-	public MessageLMPlayerInfo(LMPlayerMP owner, LMPlayerMP p)
+	public MessageLMPlayerInfo(ForgePlayerMP owner, ForgePlayerMP p)
 	{
 		playerID = p.getProfile().getId();
 		
@@ -80,8 +80,8 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		if(LMWorldSP.inst == null) return null;
-		LMPlayerSP p = LMWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
+		if(ForgeWorldSP.inst == null) return null;
+		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
 		if(p == null) return null;
 		
 		ArrayList<IChatComponent> info = new ArrayList<>();

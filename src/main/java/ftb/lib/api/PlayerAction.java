@@ -3,7 +3,7 @@ package ftb.lib.api;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.players.LMPlayer;
+import ftb.lib.api.players.ForgePlayer;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 
@@ -43,10 +43,10 @@ public abstract class PlayerAction extends FinalIDObject
 		icon = c;
 	}
 	
-	public abstract void onClicked(LMPlayer self, LMPlayer other);
+	public abstract void onClicked(ForgePlayer self, ForgePlayer other);
 	
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("player_action." + ID); }
+	{ return FTBLibMod.proxy.translate("player_action." + getID()); }
 	
 	public void addMouseOverText(List<String> l) { }
 	
@@ -66,7 +66,7 @@ public abstract class PlayerAction extends FinalIDObject
 		return (i == 0) ? super.compareTo(o) : i;
 	}
 	
-	public boolean isVisibleFor(LMPlayer self, LMPlayer other)
+	public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 	{ return true; }
 	
 	public Boolean configDefault()

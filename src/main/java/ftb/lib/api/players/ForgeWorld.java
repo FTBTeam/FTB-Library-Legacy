@@ -17,24 +17,24 @@ import java.util.*;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public abstract class LMWorld
+public abstract class ForgeWorld
 {
 	public final Side side;
 	protected GameMode currentMode;
-	public final Map<UUID, LMPlayer> playerMap;
+	public final Map<UUID, ForgePlayer> playerMap;
 	public final Map<String, ForgeWorldData> customData;
 	
-	public static LMWorld getFrom(Side side)
+	public static ForgeWorld getFrom(Side side)
 	{
 		if(side == null)
 		{
 			return getFrom(FTBLib.getEffectiveSide());
 		}
 		
-		return side.isServer() ? LMWorldMP.inst : FTBLibMod.proxy.getClientLMWorld();
+		return side.isServer() ? ForgeWorldMP.inst : FTBLibMod.proxy.getClientLMWorld();
 	}
 	
-	LMWorld(Side s)
+	ForgeWorld(Side s)
 	{
 		side = s;
 		currentMode = new GameMode("default");
@@ -47,15 +47,15 @@ public abstract class LMWorld
 	
 	public abstract World getMCWorld();
 	
-	public abstract LMWorldMP toWorldMP();
+	public abstract ForgeWorldMP toWorldMP();
 	
 	@SideOnly(Side.CLIENT)
-	public abstract LMWorldSP toWorldSP();
+	public abstract ForgeWorldSP toWorldSP();
 	
 	public GameMode getMode()
 	{ return currentMode; }
 	
-	public LMPlayer getPlayer(Object o)
+	public ForgePlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
 		else if(o.getClass() == UUID.class)
@@ -64,12 +64,12 @@ public abstract class LMWorld
 			if(id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L) return null;
 			return playerMap.get(id);
 		}
-		else if(o instanceof LMPlayer) return playerMap.get(((LMPlayer) o).getProfile().getId());
+		else if(o instanceof ForgePlayer) return playerMap.get(((ForgePlayer) o).getProfile().getId());
 		else if(o instanceof EntityPlayer)
 		{
 			if(side.isServer())
 			{
-				for(LMPlayer p : playerMap.values())
+				for(ForgePlayer p : playerMap.values())
 				{
 					if(p.isOnline() && p.getPlayer() == o)
 					{
@@ -89,7 +89,7 @@ public abstract class LMWorld
 			
 			if(s == null || s.isEmpty()) return null;
 			
-			for(LMPlayer p : playerMap.values())
+			for(ForgePlayer p : playerMap.values())
 			{
 				if(p.getProfile().getName().equalsIgnoreCase(s))
 				{
@@ -103,11 +103,11 @@ public abstract class LMWorld
 		return null;
 	}
 	
-	public final List<LMPlayer> getOnlinePlayers()
+	public final List<ForgePlayer> getOnlinePlayers()
 	{
-		ArrayList<LMPlayer> l = new ArrayList<>();
+		ArrayList<ForgePlayer> l = new ArrayList<>();
 		
-		for(LMPlayer p : playerMap.values())
+		for(ForgePlayer p : playerMap.values())
 		{
 			if(p.isOnline()) l.add(p);
 		}
@@ -117,11 +117,11 @@ public abstract class LMWorld
 	
 	public String[] getAllPlayerNames(boolean online)
 	{
-		List<LMPlayer> list = online ? getOnlinePlayers() : LMListUtils.clone(playerMap.values());
+		List<ForgePlayer> list = online ? getOnlinePlayers() : LMListUtils.clone(playerMap.values());
 		
-		Collections.sort(list, new Comparator<LMPlayer>()
+		Collections.sort(list, new Comparator<ForgePlayer>()
 		{
-			public int compare(LMPlayer o1, LMPlayer o2)
+			public int compare(ForgePlayer o1, ForgePlayer o2)
 			{
 				if(o1.isOnline() == o2.isOnline())
 					return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());

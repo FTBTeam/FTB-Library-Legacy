@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.*;
  * Created by LatvianModder on 09.02.2016.
  */
 @SideOnly(Side.CLIENT)
-public class LMPlayerSPSelf extends LMPlayerSP
+public class ForgePlayerSPSelf extends ForgePlayerSP
 {
-	public LMPlayerSPSelf(GameProfile p)
+	public ForgePlayerSPSelf(GameProfile p)
 	{
 		super(p);
 	}
@@ -26,7 +26,7 @@ public class LMPlayerSPSelf extends LMPlayerSP
 	public EntityPlayer getPlayer()
 	{ return Minecraft.getMinecraft().thePlayer; }
 	
-	public LMPlayerSPSelf toPlayerSPSelf()
+	public ForgePlayerSPSelf toPlayerSPSelf()
 	{ return this; }
 	
 	/*public Rank getRank()

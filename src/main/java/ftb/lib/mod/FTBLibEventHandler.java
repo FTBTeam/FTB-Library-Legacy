@@ -30,7 +30,7 @@ public class FTBLibEventHandler
 	public static final FTBLibEventHandler instance = new FTBLibEventHandler();
 	public static final List<ServerTickCallback> callbacks = new ArrayList<>();
 	public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
-	public static final List<IWorldTicking> ticking = new ArrayList<>();
+	public static final List<IWorldTick> ticking = new ArrayList<>();
 	
 	@SubscribeEvent
 	public void onWorldLoaded(WorldEvent.Load event)
@@ -47,12 +47,12 @@ public class FTBLibEventHandler
 		if(event.world.provider.getDimensionId() == 0 && event.world instanceof WorldServer)
 		{
 			JsonObject group = new JsonObject();
-			LMWorldMP.inst.save(group);
-			LMJsonUtils.toJson(new File(LMWorldMP.inst.latmodFolder, "world.json"), group);
+			ForgeWorldMP.inst.save(group);
+			LMJsonUtils.toJson(new File(ForgeWorldMP.inst.latmodFolder, "world.json"), group);
 			
 			NBTTagCompound tag = new NBTTagCompound();
 			
-			for(LMPlayer p : LMMapUtils.values(LMWorldMP.inst.playerMap, null))
+			for(ForgePlayer p : LMMapUtils.values(ForgeWorldMP.inst.playerMap, null))
 			{
 				NBTTagCompound tag1 = new NBTTagCompound();
 				p.toPlayerMP().writeToServer(tag1);
@@ -60,23 +60,23 @@ public class FTBLibEventHandler
 				tag.setTag(p.getStringUUID(), tag1);
 			}
 			
-			LMNBTUtils.writeTag(new File(LMWorldMP.inst.latmodFolder, "LMPlayers.dat"), tag);
+			LMNBTUtils.writeTag(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.dat"), tag);
 			
 			// Export player list //
 			
 			try
 			{
 				ArrayList<String> l = new ArrayList<>();
-				ArrayList<LMPlayer> players1 = new ArrayList<>();
-				players1.addAll(LMWorldMP.inst.playerMap.values());
+				ArrayList<ForgePlayer> players1 = new ArrayList<>();
+				players1.addAll(ForgeWorldMP.inst.playerMap.values());
 				Collections.sort(players1);
 				
-				for(LMPlayer p : players1)
+				for(ForgePlayer p : players1)
 				{
 					l.add(p.getStringUUID() + " :: " + p.getProfile().getName());
 				}
 				
-				LMFileUtils.save(new File(LMWorldMP.inst.latmodFolder, "LMPlayers.txt"), l);
+				LMFileUtils.save(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.txt"), l);
 			}
 			catch(Exception ex)
 			{
@@ -92,14 +92,14 @@ public class FTBLibEventHandler
 		{
 			EntityPlayerMP ep = (EntityPlayerMP) e.player;
 			
-			LMPlayerMP p = LMWorldMP.inst.getPlayer(ep);
+			ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
 			
 			boolean firstLogin = p == null;
 			
 			if(firstLogin)
 			{
-				p = new LMPlayerMP(ep.getGameProfile());
-				LMWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
+				p = new ForgePlayerMP(ep.getGameProfile());
+				ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
 				
 				ForgePlayerDataEvent event = new ForgePlayerDataEvent(p);
 			}
@@ -118,7 +118,7 @@ public class FTBLibEventHandler
 	{
 		if(e.player instanceof EntityPlayerMP)
 		{
-			LMWorldMP.inst.getPlayer(e.player).onLoggedOut();
+			ForgeWorldMP.inst.getPlayer(e.player).onLoggedOut();
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class FTBLibEventHandler
 	{
 		if(e.entity instanceof EntityPlayerMP)
 		{
-			LMWorldMP.inst.getPlayer(e.entity).onDeath();
+			ForgeWorldMP.inst.getPlayer(e.entity).onDeath();
 		}
 	}
 	
@@ -156,7 +156,7 @@ public class FTBLibEventHandler
 				WorldServer ws = (WorldServer) e.world;
 				long now = LMUtils.millis();
 				
-				for(IWorldTicking t : ticking)
+				for(IWorldTick t : ticking)
 				{
 					t.onTick(ws, now);
 				}

@@ -14,7 +14,7 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 	
 	public MessageLMPlayerLoggedOut() { }
 	
-	public MessageLMPlayerLoggedOut(LMPlayerMP p)
+	public MessageLMPlayerLoggedOut(ForgePlayerMP p)
 	{
 		playerID = p.getProfile().getId();
 	}
@@ -35,7 +35,7 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerLoggedOut m, MessageContext ctx)
 	{
-		LMPlayerSP p = LMWorldSP.inst.getPlayer(m.playerID);
+		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
 		p.onLoggedOut();
 		p.isOnline = false;
 		return null;

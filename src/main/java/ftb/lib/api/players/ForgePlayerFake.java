@@ -8,9 +8,9 @@ import java.util.List;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public final class LMPlayerFake extends LMPlayerMP
+public final class ForgePlayerFake extends ForgePlayerMP
 {
-	public LMPlayerFake(FakePlayer p)
+	public ForgePlayerFake(FakePlayer p)
 	{
 		super(p.getGameProfile());
 		setPlayer(p);
@@ -24,7 +24,7 @@ public final class LMPlayerFake extends LMPlayerMP
 	public boolean isOP()
 	{ return false; }
 	
-	public void getInfo(LMPlayerMP owner, List<IChatComponent> info) { }
+	public void getInfo(ForgePlayerMP owner, List<IChatComponent> info) { }
 	
 	public void refreshStats() { }
 	

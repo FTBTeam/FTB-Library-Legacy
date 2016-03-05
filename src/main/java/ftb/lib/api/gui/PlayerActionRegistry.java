@@ -1,7 +1,7 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.players.LMPlayer;
+import ftb.lib.api.players.ForgePlayer;
 import latmod.lib.config.*;
 
 import java.util.*;
@@ -25,22 +25,22 @@ public class PlayerActionRegistry
 	{
 		if(a != null)
 		{
-			map.put(a.ID, a);
+			map.put(a.getID(), a);
 			
 			if(a.configDefault() != null)
 			{
-				ConfigEntryBool entry = new ConfigEntryBool(a.ID, a.configDefault())
+				ConfigEntryBool entry = new ConfigEntryBool(a.getID(), a.configDefault())
 				{
 					public String getFullID()
-					{ return "player_action." + a.ID; }
+					{ return "player_action." + a.getID(); }
 				};
 				
-				configGroup.entryMap.put(a.ID, entry);
+				configGroup.entryMap.put(a.getID(), entry);
 			}
 		}
 	}
 	
-	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, LMPlayer self, LMPlayer other, boolean sort)
+	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ForgePlayer self, ForgePlayer other, boolean sort)
 	{
 		ArrayList<PlayerAction> l = new ArrayList<>();
 		
@@ -50,7 +50,7 @@ public class PlayerActionRegistry
 			{
 				if(a.configDefault() != null)
 				{
-					if(!enabled(a.ID)) continue;
+					if(!enabled(a.getID())) continue;
 				}
 				
 				l.add(a);

@@ -8,9 +8,9 @@ import net.minecraft.nbt.NBTTagCompound;
 public abstract class ForgePlayerData implements Comparable<ForgePlayerData>
 {
 	public final String ID;
-	public final LMPlayer player;
+	public final ForgePlayer player;
 	
-	public ForgePlayerData(String id, LMPlayer p)
+	public ForgePlayerData(String id, ForgePlayer p)
 	{
 		ID = id.trim().toLowerCase();
 		player = p;

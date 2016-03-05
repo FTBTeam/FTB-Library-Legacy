@@ -9,9 +9,9 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public abstract class ForgeWorldData extends FinalIDObject
 {
-	public final LMWorld world;
+	public final ForgeWorld world;
 	
-	public ForgeWorldData(String id, LMWorld w)
+	public ForgeWorldData(String id, ForgeWorld w)
 	{
 		super(id);
 		world = w;

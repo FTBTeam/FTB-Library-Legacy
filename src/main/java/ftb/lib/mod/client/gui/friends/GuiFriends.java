@@ -2,7 +2,7 @@ package ftb.lib.mod.client.gui.friends;
 
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.PanelPopupMenu;
-import ftb.lib.api.players.LMWorldSP;
+import ftb.lib.api.players.ForgeWorldSP;
 import ftb.lib.mod.net.MessageRequestPlayerInfo;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -36,7 +36,7 @@ public class GuiFriends extends GuiLM implements IClientActionGui
 	{
 		mainPanel.width = width;
 		mainPanel.height = height;
-		new MessageRequestPlayerInfo(LMWorldSP.inst.clientPlayer.getProfile().getId()).sendToServer();
+		new MessageRequestPlayerInfo(ForgeWorldSP.inst.clientPlayer.getProfile().getId()).sendToServer();
 	}
 	
 	public void addWidgets()

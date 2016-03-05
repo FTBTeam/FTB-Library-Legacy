@@ -9,7 +9,7 @@ import java.util.*;
 
 public class PanelPlayerList extends PanelFriendsGui
 {
-	private static final ArrayList<LMPlayer> tempPlayerList = new ArrayList<>();
+	private static final ArrayList<ForgePlayer> tempPlayerList = new ArrayList<>();
 	
 	public final ArrayList<ButtonPlayer> playerButtons;
 	
@@ -27,18 +27,18 @@ public class PanelPlayerList extends PanelFriendsGui
 	public void addWidgets()
 	{
 		tempPlayerList.clear();
-		tempPlayerList.addAll(LMWorldSP.inst.playerMap.values());
+		tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());
 		
-		tempPlayerList.remove(LMWorldSP.inst.clientPlayer);
+		tempPlayerList.remove(ForgeWorldSP.inst.clientPlayer);
 		
 		if(FTBLibModClient.sort_friends_az.get()) Collections.sort(tempPlayerList, new ForgePlayerNameComparator());
-		else Collections.sort(tempPlayerList, new ForgePlayerStatusComparator(LMWorldSP.inst.clientPlayer));
+		else Collections.sort(tempPlayerList, new ForgePlayerStatusComparator(ForgeWorldSP.inst.clientPlayer));
 		
 		playerButtons.clear();
-		playerButtons.add(new ButtonPlayer(this, LMWorldSP.inst.clientPlayer));
+		playerButtons.add(new ButtonPlayer(this, ForgeWorldSP.inst.clientPlayer));
 		
 		width = playerButtons.get(0).width;
-		for(LMPlayer aTempPlayerList : tempPlayerList)
+		for(ForgePlayer aTempPlayerList : tempPlayerList)
 		{
 			ButtonPlayer b = new ButtonPlayer(this, aTempPlayerList.toPlayerSP());
 			playerButtons.add(b);

@@ -23,20 +23,20 @@ import java.util.*;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public class LMPlayerMP extends LMPlayer
+public class ForgePlayerMP extends ForgePlayer
 {
 	public final ForgePlayerStats stats;
 	public BlockDimPos lastPos, lastDeath;
 	private EntityPlayerMP entityPlayer = null;
 	
-	public static LMPlayerMP get(Object o) throws CommandException
+	public static ForgePlayerMP get(Object o) throws CommandException
 	{
-		LMPlayerMP p = LMWorldMP.inst.getPlayer(o);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(o);
 		if(p == null || p.isFake()) throw new PlayerNotFoundException();
 		return p;
 	}
 	
-	public LMPlayerMP(GameProfile p)
+	public ForgePlayerMP(GameProfile p)
 	{
 		super(p);
 		stats = new ForgePlayerStats();
@@ -54,15 +54,15 @@ public class LMPlayerMP extends LMPlayer
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }
 	
-	public final LMPlayerMP toPlayerMP()
+	public final ForgePlayerMP toPlayerMP()
 	{ return this; }
 	
 	@SideOnly(Side.CLIENT)
-	public final LMPlayerSP toPlayerSP()
+	public final ForgePlayerSP toPlayerSP()
 	{ return null; }
 	
-	public final LMWorld getWorld()
-	{ return LMWorldMP.inst; }
+	public final ForgeWorld getWorld()
+	{ return ForgeWorldMP.inst; }
 	
 	public boolean isFake()
 	{ return getPlayer() instanceof FakePlayer; }
@@ -75,7 +75,7 @@ public class LMPlayerMP extends LMPlayer
 			new MessageLMPlayerUpdate(this, false).sendTo(ep);
 	}
 	
-	public void sendInfoUpdate(LMPlayerMP p)
+	public void sendInfoUpdate(ForgePlayerMP p)
 	{ new MessageLMPlayerInfo(this, p).sendTo(getPlayer()); }
 	
 	public boolean isOP()
@@ -90,7 +90,7 @@ public class LMPlayerMP extends LMPlayer
 	
 	// Reading / Writing //
 	
-	public void getInfo(LMPlayerMP owner, List<IChatComponent> info)
+	public void getInfo(ForgePlayerMP owner, List<IChatComponent> info)
 	{
 		refreshStats();
 		long ms = LMUtils.millis();
@@ -288,13 +288,13 @@ public class LMPlayerMP extends LMPlayer
 			tag.setTag("F", list);
 		}
 		
-		List<LMPlayer> otherFriends = getOtherFriends();
+		List<ForgePlayer> otherFriends = getOtherFriends();
 		
 		if(!otherFriends.isEmpty())
 		{
 			NBTTagList list = new NBTTagList();
 			
-			for(LMPlayer p : otherFriends)
+			for(ForgePlayer p : otherFriends)
 			{
 				list.appendTag(new NBTTagString(p.getStringUUID()));
 			}
@@ -309,7 +309,7 @@ public class LMPlayerMP extends LMPlayer
 		{
 			ArrayList<String> requests = new ArrayList<>();
 			
-			for(LMPlayer p : getWorld().playerMap.values())
+			for(ForgePlayer p : getWorld().playerMap.values())
 			{
 				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getProfile().getName());
 			}

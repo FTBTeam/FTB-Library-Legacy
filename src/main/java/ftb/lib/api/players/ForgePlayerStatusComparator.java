@@ -2,14 +2,14 @@ package ftb.lib.api.players;
 
 import java.util.Comparator;
 
-public class ForgePlayerStatusComparator implements Comparator<LMPlayer>
+public class ForgePlayerStatusComparator implements Comparator<ForgePlayer>
 {
-	public final LMPlayer self;
+	public final ForgePlayer self;
 	
-	public ForgePlayerStatusComparator(LMPlayer p)
+	public ForgePlayerStatusComparator(ForgePlayer p)
 	{ self = p; }
 	
-	public int compare(LMPlayer p1, LMPlayer p2)
+	public int compare(ForgePlayer p1, ForgePlayer p2)
 	{
 		int output = 0;
 		
