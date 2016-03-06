@@ -2,7 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.item.StringIDInvLoader;
+import ftb.lib.api.item.LMInvUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,10 +48,10 @@ public class CmdInv extends CommandSubLM
 		protected void onInvCmd(File file, EntityPlayerMP ep) throws Exception
 		{
 			NBTTagCompound tag = new NBTTagCompound();
-			StringIDInvLoader.writeInvToNBT(ep.inventory, tag, "Inventory");
+			LMInvUtils.writeItemsToNBT(ep.inventory, tag, "Inventory");
 			
 			if(FTBLib.isModInstalled(OtherMods.BAUBLES))
-				StringIDInvLoader.writeInvToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+				LMInvUtils.writeItemsToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 			
 			LMNBTUtils.writeTag(file, tag);
 		}
@@ -66,10 +66,10 @@ public class CmdInv extends CommandSubLM
 		{
 			NBTTagCompound tag = LMNBTUtils.readTag(file);
 			
-			StringIDInvLoader.readInvFromNBT(ep.inventory, tag, "Inventory");
+			LMInvUtils.readItemsFromNBT(ep.inventory, tag, "Inventory");
 			
 			if(FTBLib.isModInstalled(OtherMods.BAUBLES))
-				StringIDInvLoader.readInvFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+				LMInvUtils.readItemsFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
 		}
 	}
 	

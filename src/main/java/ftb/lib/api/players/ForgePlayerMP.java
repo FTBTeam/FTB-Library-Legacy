@@ -3,7 +3,7 @@ package ftb.lib.api.players;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
 import ftb.lib.api.ForgePlayerInfoEvent;
-import ftb.lib.api.item.StringIDInvLoader;
+import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.notification.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.*;
@@ -156,7 +156,7 @@ public class ForgePlayerMP extends ForgePlayer
 		if(tag.hasKey("LastItems"))
 		{
 			ItemStack[] lastArmorItems = new ItemStack[5];
-			StringIDInvLoader.readItemsFromNBT(lastArmorItems, tag, "LastItems");
+			LMInvUtils.readItemsFromNBT(lastArmorItems, tag, "LastItems");
 			
 			for(int i = 0; i < 5; i++)
 			{
@@ -230,7 +230,7 @@ public class ForgePlayerMP extends ForgePlayer
 				lastArmorItems[e.getKey()] = e.getValue();
 			}
 			
-			StringIDInvLoader.writeItemsToNBT(lastArmorItems, tag, "LastItems");
+			LMInvUtils.writeItemsToNBT(lastArmorItems, tag, "LastItems");
 		}
 		
 		stats.save(tag);

@@ -25,7 +25,7 @@ public class MaterialItem extends FinalIDObject
 	
 	public void onPostLoaded()
 	{
-		FTBLibMod.proxy.addItemModel(item.getMod().getID(), item, damage, item.getPath(getID(), '/'));
+		FTBLibMod.proxy.addItemModel(item.getMod().getID(), item, damage, item.getID(), "variant=" + getID());
 	}
 	
 	public int getRenderPasses()

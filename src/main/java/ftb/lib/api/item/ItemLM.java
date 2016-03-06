@@ -35,7 +35,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public void loadModels()
 	{
-		FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, itemName);
+		FTBLibMod.proxy.addItemModel(getMod().getID(), this, 0, itemName, "inventory");
 	}
 	
 	public void loadRecipes()

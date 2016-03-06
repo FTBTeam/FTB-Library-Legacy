@@ -226,6 +226,14 @@ public class LMInvUtils
 		if(list.tagCount() > 0) tag.setTag(s, list);
 	}
 	
+	public static void writeItemsToNBT(IInventory inventory, NBTTagCompound tag, String s)
+	{
+		ItemStack[] stacks = new ItemStack[inventory.getSizeInventory()];
+		for(int i = 0; i < stacks.length; i++)
+			stacks[i] = inventory.getStackInSlot(i);
+		writeItemsToNBT(stacks, tag, s);
+	}
+	
 	public static void readItemsFromNBT(ItemStack[] stacks, NBTTagCompound tag, String s)
 	{
 		Arrays.fill(stacks, null);
@@ -243,6 +251,14 @@ public class LMInvUtils
 				if(i >= stacks.length) break;
 			}
 		}
+	}
+	
+	public static void readItemsFromNBT(IInventory inventory, NBTTagCompound tag, String s)
+	{
+		ItemStack[] stacks = new ItemStack[inventory.getSizeInventory()];
+		readItemsFromNBT(stacks, tag, s);
+		for(int i = 0; i < stacks.length; i++)
+			inventory.setInventorySlotContents(i, stacks[i]);
 	}
 	
 	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
