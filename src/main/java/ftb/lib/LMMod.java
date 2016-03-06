@@ -80,11 +80,11 @@ public class LMMod extends FinalIDObject
 	{
 		if(i instanceof IBlockLM)
 		{
-			FTBLib.addBlock((Block) i, ((IBlockLM) i).getItemBlock(), i.getItemID());
+			FTBLib.addBlock((Block) i, ((IBlockLM) i).getItemBlock(), i.getID());
 		}
 		else
 		{
-			FTBLib.addItem(i.getItem(), i.getItemID());
+			FTBLib.addItem(i.getItem(), i.getID());
 		}
 		
 		itemsAndBlocks.add(i);

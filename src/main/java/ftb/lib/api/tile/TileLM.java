@@ -238,10 +238,10 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	}
 	
 	public final boolean isServer()
-	{ return !worldObj.isRemote; }
+	{ return worldObj != null && !worldObj.isRemote; }
 	
 	public void notifyNeighbors()
-	{ worldObj.notifyBlockOfStateChange(getPos(), blockType); }
+	{ worldObj.notifyBlockOfStateChange(getPos(), getBlockType()); }
 	
 	public int getDimension()
 	{ return worldObj == null ? 0 : worldObj.provider.getDimensionId(); }
@@ -264,7 +264,12 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	}
 	
 	public void onNeighborBlockChange(BlockPos pos)
-	{ if(worldObj != null) redstonePowered = worldObj.isBlockPowered(getPos()); }
+	{
+		if(worldObj != null)
+		{
+			redstonePowered = worldObj.isBlockPowered(getPos());
+		}
+	}
 	
 	public void setName(String s) { }
 	

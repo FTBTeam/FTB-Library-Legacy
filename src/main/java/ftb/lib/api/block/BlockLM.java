@@ -38,7 +38,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public int getRenderType()
 	{ return 3; }
 	
-	public final String getItemID()
+	public final String getID()
 	{ return blockName; }
 	
 	public String getUnlocalizedName()

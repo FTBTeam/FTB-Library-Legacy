@@ -101,7 +101,7 @@ public class FTBLib
 	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent) o : new ChatComponentText("" + o); }
 	
 	public static void addItem(IItemLM i)
-	{ addItem((Item) i, i.getItemID()); }
+	{ addItem((Item) i, i.getID()); }
 	
 	public static void addItem(Item i, String name)
 	{ GameRegistry.registerItem(i, name); }

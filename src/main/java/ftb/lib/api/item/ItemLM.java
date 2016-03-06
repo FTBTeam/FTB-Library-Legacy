@@ -25,7 +25,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	public final Item getItem()
 	{ return this; }
 	
-	public final String getItemID()
+	public final String getID()
 	{ return itemName; }
 	
 	public void onPostLoaded()
