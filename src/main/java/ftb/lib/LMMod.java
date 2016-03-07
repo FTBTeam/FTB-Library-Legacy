@@ -3,11 +3,11 @@ package ftb.lib;
 import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
-import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraftforge.fml.common.*;
 
@@ -90,7 +90,7 @@ public class LMMod extends FinalIDObject
 		itemsAndBlocks.add(i);
 	}
 	
-	public void addTile(Class<? extends TileLM> c, String s, String... alt)
+	public void addTile(Class<? extends TileEntity> c, String s, String... alt)
 	{ FTBLib.addTileEntity(c, getID() + '.' + s, alt); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)

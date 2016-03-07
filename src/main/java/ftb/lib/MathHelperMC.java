@@ -13,16 +13,26 @@ import java.util.*;
 
 public class MathHelperMC
 {
-	public static EnumFacing get2DRotation(EntityLivingBase el)
+	public static EnumFacing getHorizontalFacing(int index)
 	{
-		//int i = floor(el.rotationYaw * 4D / 360D + 0.5D) & 3;
-		int i = MathHelperLM.getRotations(el.rotationYaw, 4);
-		if(i == 0) return EnumFacing.NORTH;
-		else if(i == 1) return EnumFacing.EAST;
-		else if(i == 2) return EnumFacing.SOUTH;
-		else if(i == 3) return EnumFacing.WEST;
+		if(index == 0) return EnumFacing.NORTH;
+		else if(index == 1) return EnumFacing.EAST;
+		else if(index == 2) return EnumFacing.SOUTH;
+		else if(index == 3) return EnumFacing.WEST;
 		return null;
 	}
+	
+	public static int getHorizontalIndex(EnumFacing facing)
+	{
+		if(facing == EnumFacing.NORTH) return 0;
+		else if(facing == EnumFacing.EAST) return 1;
+		else if(facing == EnumFacing.SOUTH) return 2;
+		else if(facing == EnumFacing.WEST) return 3;
+		return -1;
+	}
+	
+	public static EnumFacing get2DRotation(EntityLivingBase el)
+	{ return getHorizontalFacing(MathHelperLM.getRotations(el.rotationYaw, 4)); }
 	
 	public static EnumFacing get3DRotation(World w, BlockPos pos, EntityLivingBase el)
 	{ return BlockPistonBase.getFacingFromEntity(w, pos, el); }
