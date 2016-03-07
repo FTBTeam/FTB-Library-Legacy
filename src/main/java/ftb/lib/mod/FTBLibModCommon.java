@@ -1,6 +1,5 @@
 package ftb.lib.mod;
 
-import ftb.lib.ClientCode;
 import ftb.lib.api.players.ForgeWorld;
 import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
@@ -73,8 +72,4 @@ public class FTBLibModCommon // FTBLibModClient
 	
 	public ForgeWorld getClientLMWorld()
 	{ return null; }
-	
-	public void runClientCode(ClientCode c)
-	{
-	}
 }

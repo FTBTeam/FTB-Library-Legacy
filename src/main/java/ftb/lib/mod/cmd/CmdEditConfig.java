@@ -3,6 +3,7 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.config.FTBLibConfigCmdNames;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
@@ -84,7 +85,7 @@ public class CmdEditConfig extends CommandLM
 		{
 			String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
 			
-			FTBLib.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
+			FTBLibMod.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
 			
 			try
 			{

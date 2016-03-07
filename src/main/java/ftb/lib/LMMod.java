@@ -25,7 +25,7 @@ public class LMMod extends FinalIDObject
 		{
 			mod = new LMMod(s);
 			modsMap.put(mod.getID(), mod);
-			if(FTBLib.DEV_ENV) FTBLib.logger.info("LMMod '" + mod.getID() + "' created");
+			if(FTBLib.DEV_ENV) FTBLibMod.logger.info("LMMod '" + mod.getID() + "' created");
 		}
 		
 		return mod;

@@ -13,7 +13,10 @@ import ftb.lib.mod.net.*;
 import latmod.lib.LMUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
+import latmod.lib.util.StringMapEntry;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
@@ -43,7 +46,6 @@ public class FTBLib
 {
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 	public static boolean userIsLatvianModder = false;
-	public static final Logger logger = LogManager.getLogger("FTBLib");
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
@@ -74,7 +76,7 @@ public class FTBLib
 			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
 		}
 		else
-			logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
+			FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
 	}
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
@@ -142,7 +144,7 @@ public class FTBLib
 	{
 		if(ep == null) ep = FTBLibMod.proxy.getClientPlayer();
 		if(ep != null) ep.addChatMessage(getChatComponent(o));
-		else logger.info(o);
+		else FTBLibMod.logger.info(o);
 	}
 	
 	public static MinecraftServer getServer()
@@ -355,5 +357,34 @@ public class FTBLib
 		
 		if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8) return Boolean.FALSE;
 		return Boolean.TRUE;
+	}
+	
+	public static String getStateString(IBlockState state)
+	{
+		if(state == null) return null;
+		List<StringMapEntry> list = new ArrayList<>();
+		
+		for(IProperty p : state.getPropertyNames())
+		{
+			list.add(new StringMapEntry(p.getName(), state.getValue(p)));
+		}
+		
+		Collections.sort(list);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i = 0; i < list.size(); i++)
+		{
+			StringMapEntry e = list.get(i);
+			sb.append(e.getKey());
+			sb.append('=');
+			sb.append(e.getValue());
+			if(i != list.size() - 1)
+			{
+				sb.append(',');
+			}
+		}
+		
+		return sb.toString();
 	}
 }

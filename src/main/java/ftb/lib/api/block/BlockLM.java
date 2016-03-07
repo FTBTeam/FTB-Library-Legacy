@@ -1,6 +1,6 @@
 package ftb.lib.api.block;
 
-import ftb.lib.LMMod;
+import ftb.lib.*;
 import ftb.lib.api.tile.TileLM;
 import ftb.lib.mod.FTBLibMod;
 import net.minecraft.block.Block;
@@ -51,8 +51,13 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public void loadModels()
 	{
-		FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, blockName, "inventory");
+		IBlockState state = getModelState();
+		if(state == null) FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, blockName, "normal");
+		else FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, blockName, FTBLib.getStateString(state));
 	}
+	
+	public IBlockState getModelState()
+	{ return null; }
 	
 	public int damageDropped(IBlockState state)
 	{ return getMetaFromState(state); }

@@ -157,9 +157,4 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public ForgeWorld getClientLMWorld()
 	{ return ForgeWorldSP.inst; }
-	
-	public void runClientCode(ClientCode c)
-	{
-		c.run();
-	}
 }
