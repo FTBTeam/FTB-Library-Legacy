@@ -1,11 +1,10 @@
 package ftb.lib.mod.client;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.item.*;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;

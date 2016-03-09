@@ -5,6 +5,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
@@ -34,5 +35,5 @@ public class ItemDisplay
 	}
 	
 	public static ItemDisplay readFromNBT(NBTTagCompound tag)
-	{ return new ItemDisplay(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")), tag.getString("T"), LMNBTUtils.toStringList(tag.getTagList("D", LMNBTUtils.STRING)), tag.getFloat("S")); }
+	{ return new ItemDisplay(ItemStack.loadItemStackFromNBT(tag.getCompoundTag("I")), tag.getString("T"), LMNBTUtils.toStringList(tag.getTagList("D", Constants.NBT.TAG_STRING)), tag.getFloat("S")); }
 }

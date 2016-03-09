@@ -1,95 +1,75 @@
 package ftb.lib.api.tile;
 
 import ftb.lib.api.item.LMInvUtils;
-import ftb.lib.api.players.ForgeWorldMP;
-import latmod.lib.MathHelperLM;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.*;
 
-public class TileInvLM extends TileLM implements IInventory
+public class TileInvLM extends TileLM
 {
-	private String customName = "";
-	public final ItemStack[] items;
+	public ItemStackHandler itemHandler;
 	public boolean dropItems = true;
 	
-	public final int[] ALL_SLOTS;
-	
-	public TileInvLM(int invSize)
+	public TileInvLM(int size)
 	{
-		items = new ItemStack[invSize];
-		ALL_SLOTS = MathHelperLM.getAllInts(0, invSize);
+		itemHandler = createHandler(size);
+	}
+	
+	protected ItemStackHandler createHandler(int size)
+	{
+		return new ItemStackHandler(size)
+		{
+			protected void onContentsChanged(int slot)
+			{
+				super.onContentsChanged(slot);
+				TileInvLM.this.markDirty();
+			}
+		};
+	}
+	
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+	{
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
+		return super.hasCapability(capability, facing);
+	}
+	
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+	{
+		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) itemHandler;
+		return super.getCapability(capability, facing);
 	}
 	
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
-		LMInvUtils.readItemsFromNBT(items, tag, "Items");
-		customName = tag.getString("CustomName");
+		itemHandler.deserializeNBT(tag.getCompoundTag("Items"));
 	}
 	
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
-		LMInvUtils.writeItemsToNBT(items, tag, "Items");
-		if(!customName.isEmpty()) tag.setString("CustomName", customName);
+		tag.setTag("Items", itemHandler.serializeNBT());
 	}
 	
 	public void onBroken(IBlockState state)
 	{
-		if(isServer() && dropItems && items.length > 0)
-			LMInvUtils.dropAllItems(worldObj, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, items);
+		if(dropItems && isServer() && itemHandler != null && itemHandler.getSlots() > 0)
+		{
+			for(int i = 0; i < itemHandler.getSlots(); i++)
+			{
+				ItemStack item = itemHandler.getStackInSlot(i);
+				
+				if(item != null && item.stackSize > 0)
+				{
+					LMInvUtils.dropItem(worldObj, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
+				}
+			}
+		}
 		
 		markDirty();
 		super.onBroken(state);
 	}
-	
-	public String getName()
-	{ return customName; }
-	
-	public void setName(String s)
-	{ customName = s; }
-	
-	public void openInventory(EntityPlayer ep) { }
-	
-	public void closeInventory(EntityPlayer ep) { }
-	
-	public ItemStack decrStackSize(int i, int j)
-	{ return LMInvUtils.decrStackSize(this, i, j); }
-	
-	public int getInventoryStackLimit()
-	{ return 64; }
-	
-	public int getSizeInventory()
-	{ return items.length; }
-	
-	public ItemStack getStackInSlot(int i)
-	{ return items[i]; }
-	
-	public ItemStack removeStackFromSlot(int i)
-	{ return LMInvUtils.removeStackFromSlot(this, i); }
-	
-	public void setInventorySlotContents(int i, ItemStack is)
-	{ items[i] = is; }
-	
-	public boolean isUseableByPlayer(EntityPlayer ep)
-	{ return getPrivacyLevel().canInteract(ForgeWorldMP.inst.getPlayer(ownerID), ForgeWorldMP.inst.getPlayer(ep)); }
-	
-	public boolean isItemValidForSlot(int i, ItemStack is)
-	{ return true; }
-	
-	public int getField(int id)
-	{ return 0; }
-	
-	public void setField(int id, int value)
-	{
-	}
-	
-	public int getFieldCount()
-	{ return 0; }
-	
-	public void clear()
-	{ LMInvUtils.clear(this); }
 }

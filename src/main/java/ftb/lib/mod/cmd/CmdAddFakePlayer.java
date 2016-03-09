@@ -1,8 +1,8 @@
 package ftb.lib.mod.cmd;
 
 import com.mojang.authlib.GameProfile;
+import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.command.*;
 import net.minecraft.util.ChatComponentText;

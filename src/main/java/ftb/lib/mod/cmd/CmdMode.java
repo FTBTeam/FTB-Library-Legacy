@@ -1,9 +1,8 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.GameModes;
+import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.players.ForgeWorldMP;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 

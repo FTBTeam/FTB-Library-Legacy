@@ -1,7 +1,6 @@
 package ftb.lib.api.gui;
 
-import ftb.lib.api.PlayerAction;
-import ftb.lib.api.players.ForgePlayer;
+import ftb.lib.api.*;
 import latmod.lib.config.*;
 
 import java.util.*;

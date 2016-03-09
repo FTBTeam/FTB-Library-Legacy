@@ -1,12 +1,11 @@
 package ftb.lib.mod.client;
 
 import ftb.lib.*;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.notification.ClientNotifications;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.mod.client.gui.friends.GuiFriends;

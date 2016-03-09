@@ -1,10 +1,10 @@
 package ftb.lib.mod.client;
 
 import ftb.lib.*;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
-import ftb.lib.api.players.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.cmd.CmdReloadClient;

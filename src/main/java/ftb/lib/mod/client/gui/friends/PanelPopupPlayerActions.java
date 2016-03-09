@@ -1,9 +1,8 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.api.players.*;
 
 public class PanelPopupPlayerActions extends PanelPopupMenu
 {

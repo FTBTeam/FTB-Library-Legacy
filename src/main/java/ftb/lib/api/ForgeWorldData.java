@@ -1,4 +1,4 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.google.gson.JsonObject;
 import latmod.lib.util.FinalIDObject;

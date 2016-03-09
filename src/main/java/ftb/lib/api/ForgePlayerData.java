@@ -1,32 +1,23 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Created by LatvianModder on 10.02.2016.
  */
-public abstract class ForgePlayerData implements Comparable<ForgePlayerData>
+public abstract class ForgePlayerData extends FinalIDObject
 {
-	public final String ID;
 	public final ForgePlayer player;
 	
 	public ForgePlayerData(String id, ForgePlayer p)
 	{
-		ID = id.trim().toLowerCase();
+		super(id.toLowerCase());
 		player = p;
 	}
 	
 	public final String toString()
-	{ return ID; }
-	
-	public final int hashCode()
-	{ return ID.hashCode(); }
-	
-	public final boolean equals(Object o)
-	{ return o.toString().equals(ID); }
-	
-	public final int compareTo(ForgePlayerData o)
-	{ return ID.compareTo(o.ID); }
+	{ return getID() + "_" + player.getProfile().getName(); }
 	
 	/**
 	 * For loading data from server's world folder

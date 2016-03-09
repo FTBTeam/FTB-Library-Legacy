@@ -1,9 +1,9 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.LMNBTUtils;
-import ftb.lib.api.ForgePlayerInfoEvent;
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.events.ForgePlayerInfoEvent;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

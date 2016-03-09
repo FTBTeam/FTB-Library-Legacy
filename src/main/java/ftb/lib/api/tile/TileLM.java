@@ -1,8 +1,8 @@
 package ftb.lib.api.tile;
 
 import ftb.lib.*;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
@@ -268,6 +268,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		if(worldObj != null)
 		{
 			redstonePowered = worldObj.isBlockPowered(getPos());
+			currentState = worldObj.getBlockState(getPos());
 		}
 	}
 	

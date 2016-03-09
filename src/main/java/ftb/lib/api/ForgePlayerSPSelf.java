@@ -1,4 +1,4 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;

@@ -3,9 +3,9 @@ package ftb.lib.mod.net;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.net.*;
 import ftb.lib.api.notification.*;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.*;
 import latmod.lib.*;
@@ -68,7 +68,7 @@ public class MessageReload extends MessageLM_IO
 		GameModes.reload();
 		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-		EventFTBReload event = new EventFTBReload(ForgeWorldSP.inst, ep, true);
+		ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		

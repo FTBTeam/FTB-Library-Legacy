@@ -1,8 +1,8 @@
 package ftb.lib.mod.net;
 
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IChatComponent;

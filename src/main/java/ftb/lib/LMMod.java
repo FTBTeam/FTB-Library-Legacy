@@ -15,27 +15,11 @@ import java.util.*;
 
 public class LMMod extends FinalIDObject
 {
-	private static final HashMap<String, LMMod> modsMap = new HashMap<>();
-	
 	public static LMMod create(String s)
 	{
-		if(s == null || s.isEmpty()) return null;
-		LMMod mod = modsMap.get(s);
-		if(mod == null)
-		{
-			mod = new LMMod(s);
-			modsMap.put(mod.getID(), mod);
-			if(FTBLib.DEV_ENV) FTBLibMod.logger.info("LMMod '" + mod.getID() + "' created");
-		}
-		
+		LMMod mod = new LMMod(s);
+		if(FTBLib.DEV_ENV) FTBLibMod.logger.info("LMMod '" + mod.getID() + "' created");
 		return mod;
-	}
-	
-	public static List<LMMod> getMods()
-	{
-		ArrayList<LMMod> list = new ArrayList<>();
-		list.addAll(modsMap.values());
-		return list;
 	}
 	
 	// End of static //

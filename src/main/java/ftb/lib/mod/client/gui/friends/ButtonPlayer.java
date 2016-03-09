@@ -1,8 +1,8 @@
 package ftb.lib.mod.client.gui.friends;
 
+import ftb.lib.api.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.lib.api.players.*;
 import ftb.lib.mod.net.MessageRequestPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -53,14 +53,12 @@ public class ButtonPlayer extends ButtonLM
 		else GlStateManager.color(0.4F, 0.4F, 0.4F, 0.4F);
 		GuiLM.drawBlankRect(ax, ay, z, width, height);
 		
-		boolean raw1 = player.playerLM.isFriendRaw(ForgeWorldSP.inst.clientPlayer);
-		boolean raw2 = ForgeWorldSP.inst.clientPlayer.isFriendRaw(player.playerLM);
+		FriendStatus status = FriendStatus.get(player.playerLM, ForgeWorldSP.inst.clientPlayer);
 		
 		GlStateManager.color(0F, 0F, 0F, 1F);
-		if(raw1 && raw2) GlStateManager.color(0.18F, 0.74F, 0.18F, 1F);
-			//else if(raw1 || raw2) GlStateManager.color(raw1 ? 0xFFE0BE00 : 0xFF00B6ED);
-		else if(raw1) GlStateManager.color(0.87F, 0.74F, 0F, 1F);
-		else if(raw2) GlStateManager.color(0F, 0.71F, 0.92F, 1F);
+		if(status == FriendStatus.FRIEND) GlStateManager.color(0.18F, 0.74F, 0.18F, 1F);
+		else if(status == FriendStatus.INVITING) GlStateManager.color(0.87F, 0.74F, 0F, 1F);
+		else if(status == FriendStatus.INVITED) GlStateManager.color(0F, 0.71F, 0.92F, 1F);
 		
 		GuiLM.drawBlankRect(ax + 1, ay + 1, z, 18, 18);
 		

@@ -1,4 +1,4 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import net.minecraft.world.WorldServer;
 

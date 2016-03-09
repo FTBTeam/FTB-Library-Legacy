@@ -1,9 +1,9 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.LMNBTUtils;
+import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
-import ftb.lib.api.players.*;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
@@ -26,7 +26,7 @@ public class MessageLMWorldUpdate extends MessageLM_IO
 		
 		List<String> l = new ArrayList<>();
 		
-		for(ForgeWorldData d : ForgeWorldMP.inst.customData.values())
+		for(ForgeWorldData d : ForgeWorldMP.inst.customData())
 		{
 			if(d.syncID()) l.add(d.getID());
 		}
@@ -59,8 +59,7 @@ public class MessageLMWorldUpdate extends MessageLM_IO
 		
 		if(first)
 		{
-			for(ForgeWorldData d : ForgeWorldSP.inst.customData.values())
-				d.init();
+			ForgeWorldSP.inst.init();
 		}
 		
 		MessageReload.reloadClient(0L, false);

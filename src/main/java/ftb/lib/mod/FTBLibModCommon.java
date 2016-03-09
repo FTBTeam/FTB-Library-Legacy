@@ -1,6 +1,6 @@
 package ftb.lib.mod;
 
-import ftb.lib.api.players.ForgeWorld;
+import ftb.lib.api.ForgeWorld;
 import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.Item;

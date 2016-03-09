@@ -3,7 +3,6 @@ package ftb.lib.api;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.players.ForgePlayer;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 

@@ -1,4 +1,4 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,8 +1,9 @@
 package ftb.lib;
 
+import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.gui.GuiIcons;
-import ftb.lib.api.players.ForgePlayer;
-import net.minecraft.client.resources.I18n;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
+import ftb.lib.mod.*;
 
 public enum PrivacyLevel
 {
@@ -37,10 +38,10 @@ public enum PrivacyLevel
 	}
 	
 	public String getText()
-	{ return I18n.format("ftbl.security." + uname); }
+	{ return FTBLibMod.proxy.translate("ftbl.security." + uname); }
 	
 	public String getTitle()
-	{ return I18n.format("ftbl.security"); }
+	{ return FTBLibMod.proxy.translate("ftbl.security"); }
 	
 	public TextureCoords getIcon()
 	{ return GuiIcons.security[ordinal()]; }
@@ -68,7 +69,8 @@ public enum PrivacyLevel
 		if(this == PrivacyLevel.PUBLIC || owner == null) return true;
 		if(player == null) return false;
 		if(owner.equalsPlayer(player)) return true;
-		if(player.isOnline() && player.allowCreativeInteractSecure()) return true;
+		if(player.isOnline() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, player.getProfile()))
+			return true;
 		if(this == PrivacyLevel.PRIVATE) return false;
 		return this == PrivacyLevel.FRIENDS && owner.isFriend(player);
 	}

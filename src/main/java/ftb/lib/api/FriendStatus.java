@@ -1,14 +1,23 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
+
+import net.minecraft.util.EnumChatFormatting;
 
 /**
  * Created by LatvianModder on 15.01.2016.
  */
 public enum FriendStatus
 {
-	NONE,
-	FRIEND,
-	INVITING,
-	INVITED;
+	NONE(EnumChatFormatting.WHITE),
+	FRIEND(EnumChatFormatting.GREEN),
+	INVITING(EnumChatFormatting.GOLD),
+	INVITED(EnumChatFormatting.BLUE);
+	
+	public final EnumChatFormatting color;
+	
+	FriendStatus(EnumChatFormatting c)
+	{
+		color = c;
+	}
 	
 	public boolean isFriend()
 	{ return this == FRIEND; }
@@ -24,8 +33,8 @@ public enum FriendStatus
 		boolean b2 = p2.isFriendRaw(p1);
 		
 		if(b1 && b2) return FRIEND;
-		if(b1 && !b2) return INVITING;
-		if(!b1 && b2) return INVITED;
+		if(b1) return INVITING;
+		if(b2) return INVITED;
 		return NONE;
 	}
 	

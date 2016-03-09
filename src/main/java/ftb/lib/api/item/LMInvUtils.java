@@ -1,6 +1,5 @@
 package ftb.lib.api.item;
 
-import ftb.lib.LMNBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
@@ -12,6 +11,7 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.*;
 
 import java.util.*;
@@ -240,7 +240,7 @@ public class LMInvUtils
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
+			NBTTagList list = tag.getTagList(s, Constants.NBT.TAG_COMPOUND);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{

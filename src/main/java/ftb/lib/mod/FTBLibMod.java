@@ -1,10 +1,10 @@
 package ftb.lib.mod;
 
 import ftb.lib.*;
-import ftb.lib.api.GameModes;
+import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.item.ODItems;
-import ftb.lib.api.players.*;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
@@ -47,6 +47,7 @@ public class FTBLibMod
 		
 		FTBLibConfig.load();
 		EventBusHelper.register(FTBLibEventHandler.instance);
+		ForgePermissionRegistry.register(FTBLibPermissions.class);
 		proxy.preInit();
 	}
 	
@@ -80,37 +81,29 @@ public class FTBLibMod
 		FTBLib.addCommand(e, new CmdInv());
 	}
 	
-	/*
 	@Mod.EventHandler
 	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
 	{
+		ConfigRegistry.reload();
+		GameModes.reload();
+		ForgeWorldMP.inst = new ForgeWorldMP(new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName() + "/LatMod"));
+		FTBLib.reload(FTBLib.getServer(), false, false);
+		ForgeWorldMP.inst.init();
 	}
-	*/
 	
+	/*
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent e)
 	{
-		ConfigRegistry.reload();
-		GameModes.reload();
-		ForgeWorldMP.inst = new ForgeWorldMP(new File(new File(FMLCommonHandler.instance().getSavesDirectory(), FTBLib.getServer().getFolderName()), "LatMod"));
-		FTBLib.reload(FTBLib.getServer(), false, false);
-		
-		for(ForgeWorldData d : ForgeWorldMP.inst.customData.values())
-		{
-			if(d instanceof IWorldTick)
-			{
-				FTBLibEventHandler.instance.ticking.add((IWorldTick) d);
-			}
-			
-			d.init();
-		}
 	}
+	*/
 	
 	@Mod.EventHandler
 	public void onServerShutDown(FMLServerStoppedEvent e)
 	{
 		ForgeWorldMP.inst.onClosed();
 		ForgeWorldMP.inst = null;
+		FTBLibEventHandler.instance.ticking.clear();
 	}
 	
 	@NetworkCheckHandler

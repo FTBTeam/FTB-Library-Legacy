@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.notification.Notification;
-import ftb.lib.api.players.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
@@ -90,7 +90,7 @@ public class FTBLib
 		for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
 			p.toPlayerMP().stats.refresh(p.toPlayerMP(), false);
 		
-		EventFTBReload event = new EventFTBReload(ForgeWorldMP.inst, sender, reloadClient);
+		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient);
 		if(ftbu != null) ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		

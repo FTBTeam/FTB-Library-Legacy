@@ -2,12 +2,12 @@ package ftb.lib.mod.client;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.client.*;
-import ftb.lib.api.client.model.CubeRenderer;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.api.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -120,6 +120,7 @@ public class FTBLibRenderHandler
 			{
 				double d = 0.02D;
 				FTBLibClient.setTexture(chunkBorderTexture);
+				chunkBorderRenderer.setTessellator(Tessellator.getInstance());
 				chunkBorderRenderer.setSize(x + d, 0D, z + d, x + 16D - d, 256D, z + 16D - d);
 				chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
 				chunkBorderRenderer.renderSides();
@@ -127,7 +128,7 @@ public class FTBLibRenderHandler
 			
 			if(renderLightValues && LMFrustrumUtils.playerY >= 0D)
 			{
-				if(lastY == -1D || MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2)
+				if(lastY == -1D || MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
 					needsLightUpdate = true;
 				
 				if(needsLightUpdate)
@@ -164,7 +165,9 @@ public class FTBLibRenderHandler
 					GlStateManager.color(1F, 1F, 1F, 1F);
 					FTBLibClient.setTexture(FTBLibModClient.light_value_texture.get().texture);
 					
-					GL11.glBegin(GL11.GL_QUADS);
+					Tessellator tessellator = Tessellator.getInstance();
+					WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 					
 					for(MobSpawnPos pos : lightList)
 					{
@@ -175,17 +178,14 @@ public class FTBLibRenderHandler
 						if(pos.alwaysSpawns) GlStateManager.color(1F, 0.2F, 0.2F, 1F);
 						else GlStateManager.color(1F, 1F, 0.2F, 1F);
 						
-						GL11.glTexCoord2f(0F, 0F);
-						GL11.glVertex3d(bx, by, bz);
-						GL11.glTexCoord2f(1F, 0F);
-						GL11.glVertex3d(bx + 1D, by, bz);
-						GL11.glTexCoord2f(1F, 1F);
-						GL11.glVertex3d(bx + 1D, by, bz + 1D);
-						GL11.glTexCoord2f(0F, 1F);
-						GL11.glVertex3d(bx, by, bz + 1D);
+						float green = pos.alwaysSpawns ? 0.2F : 1F;
+						worldrenderer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
+						worldrenderer.pos(bx + 1D, by, bz).tex(1D, 0D).color(1F, green, 0.2F, 1F).endVertex();
+						worldrenderer.pos(bx + 1D, by, bz + 1D).tex(1D, 1D).color(1F, green, 0.2F, 1F).endVertex();
+						worldrenderer.pos(bx, by, bz + 1D).tex(0D, 1D).color(1F, green, 0.2F, 1F).endVertex();
 					}
 					
-					GL11.glEnd();
+					tessellator.draw();
 					
 					GlStateManager.color(1F, 1F, 1F, 1F);
 					

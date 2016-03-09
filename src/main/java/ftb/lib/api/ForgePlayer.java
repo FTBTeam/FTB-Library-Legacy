@@ -1,7 +1,7 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.api.ForgePlayerDataEvent;
+import ftb.lib.api.events.ForgePlayerDataEvent;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	private GameProfile gameProfile;
 	public final List<UUID> friends;
 	public final Map<Integer, ItemStack> lastArmor;
-	public final Map<String, ForgePlayerData> customData;
+	final Map<String, ForgePlayerData> customData;
 	
 	ForgePlayer(GameProfile p)
 	{
@@ -31,8 +31,14 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 		customData = Collections.unmodifiableMap(event.getMap());
 	}
 	
-	public ForgePlayerData getData(String id)
-	{ return (id == null || id.isEmpty()) ? null : customData.get(id.toLowerCase()); }
+	public final Collection<ForgePlayerData> customData()
+	{ return customData.values(); }
+	
+	public final ForgePlayerData getData(String id)
+	{
+		if(id == null || id.isEmpty()) return null;
+		return customData.get(id);
+	}
 	
 	public abstract Side getSide();
 	public abstract boolean isOnline();
@@ -43,12 +49,6 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	public abstract ForgePlayerSP toPlayerSP();
 	
 	public abstract ForgeWorld getWorld();
-	
-	public boolean allowCreativeInteractSecure()
-	//{ return getPlayer() != null && getPlayer().capabilities.isCreativeMode && getRank().config.allow_creative_interact_secure.get(); }
-	{
-		return false;
-	}
 	
 	public final void setProfile(GameProfile p)
 	{

@@ -1,6 +1,6 @@
-package ftb.lib.api;
+package ftb.lib.api.events;
 
-import ftb.lib.api.players.*;
+import ftb.lib.api.*;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.*;
@@ -21,9 +21,9 @@ public class ForgePlayerDataEvent extends Event
 	
 	public void add(ForgePlayerData data)
 	{
-		if(!map.containsKey(data.ID))
+		if(!map.containsKey(data.getID()))
 		{
-			map.put(data.ID, data);
+			map.put(data.getID(), data);
 		}
 	}
 	

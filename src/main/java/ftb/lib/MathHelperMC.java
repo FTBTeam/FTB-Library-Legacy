@@ -2,7 +2,6 @@ package ftb.lib;
 
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.MathHelperLM;
-import latmod.lib.util.VecLM;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,12 +36,35 @@ public class MathHelperMC
 	public static EnumFacing get3DRotation(World w, BlockPos pos, EntityLivingBase el)
 	{ return BlockPistonBase.getFacingFromEntity(w, pos, el); }
 	
-	public static VecLM randomAABB(Random r, AxisAlignedBB bb)
+	public static EnumFacing getDirection(Vec3i p0, Vec3i p1)
+	{
+		if(p0 != null && p1 != null)
+		{
+			int x0 = p0.getX();
+			int y0 = p0.getY();
+			int z0 = p0.getZ();
+			int x1 = p1.getX();
+			int y1 = p1.getY();
+			int z1 = p1.getZ();
+			
+			if(x0 == x1 || y0 == y1 || z0 == z1)
+			{
+				if(x0 == x1 && y0 == y1 && z0 == z1) return null;
+				else if(x0 != x1) return x0 > x1 ? EnumFacing.EAST : EnumFacing.WEST;
+				else if(y0 != y1) return y0 > y1 ? EnumFacing.UP : EnumFacing.WEST;
+				else if(z0 != z1) return z0 > z1 ? EnumFacing.SOUTH : EnumFacing.NORTH;
+			}
+		}
+		
+		return null;
+	}
+	
+	public static Vec3 randomAABB(Random r, AxisAlignedBB bb)
 	{
 		double x = MathHelperLM.randomDouble(r, bb.minX, bb.maxX);
 		double y = MathHelperLM.randomDouble(r, bb.minY, bb.maxY);
 		double z = MathHelperLM.randomDouble(r, bb.minZ, bb.maxZ);
-		return new VecLM(x, y, z);
+		return new Vec3(x, y, z);
 	}
 	
 	public static Vec3 getEyePosition(EntityPlayer ep)

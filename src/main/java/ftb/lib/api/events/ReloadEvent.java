@@ -1,16 +1,16 @@
-package ftb.lib.api;
+package ftb.lib.api.events;
 
-import ftb.lib.api.players.ForgeWorld;
+import ftb.lib.api.ForgeWorld;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class EventFTBReload extends Event
+public class ReloadEvent extends Event
 {
 	public final ForgeWorld world;
 	public final ICommandSender sender;
 	public final boolean reloadingClient;
 	
-	public EventFTBReload(ForgeWorld w, ICommandSender ics, boolean b)
+	public ReloadEvent(ForgeWorld w, ICommandSender ics, boolean b)
 	{
 		world = w;
 		sender = ics;

@@ -1,8 +1,8 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import ftb.lib.api.*;
+import ftb.lib.api.events.ForgeWorldDataEvent;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.LMListUtils;
 import latmod.lib.json.UUIDTypeAdapterLM;
@@ -20,9 +20,10 @@ import java.util.*;
 public abstract class ForgeWorld
 {
 	public final Side side;
+	protected UUID worldID;
 	protected GameMode currentMode;
 	public final Map<UUID, ForgePlayer> playerMap;
-	public final Map<String, ForgeWorldData> customData;
+	final Map<String, ForgeWorldData> customData;
 	
 	public static ForgeWorld getFrom(Side side)
 	{
@@ -37,12 +38,40 @@ public abstract class ForgeWorld
 	ForgeWorld(Side s)
 	{
 		side = s;
+		worldID = null;
 		currentMode = new GameMode("default");
 		playerMap = new HashMap<>();
 		
 		ForgeWorldDataEvent event = new ForgeWorldDataEvent(this);
 		MinecraftForge.EVENT_BUS.post(event);
 		customData = Collections.unmodifiableMap(event.getMap());
+	}
+	
+	public final UUID getID()
+	{
+		if(worldID == null || (worldID.getLeastSignificantBits() == 0L && worldID.getMostSignificantBits() == 0L))
+		{
+			worldID = UUID.randomUUID();
+		}
+		
+		return worldID;
+	}
+	
+	public final Collection<ForgeWorldData> customData()
+	{ return customData.values(); }
+	
+	public final ForgeWorldData getData(String id)
+	{
+		if(id == null || id.isEmpty()) return null;
+		return customData.get(id);
+	}
+	
+	public void init()
+	{
+		for(ForgeWorldData d : customData.values())
+		{
+			d.init();
+		}
 	}
 	
 	public abstract World getMCWorld();
@@ -58,31 +87,15 @@ public abstract class ForgeWorld
 	public ForgePlayer getPlayer(Object o)
 	{
 		if(o == null || o instanceof FakePlayer) return null;
-		else if(o.getClass() == UUID.class)
+		else if(o instanceof UUID)
 		{
 			UUID id = (UUID) o;
 			if(id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L) return null;
 			return playerMap.get(id);
 		}
-		else if(o instanceof ForgePlayer) return playerMap.get(((ForgePlayer) o).getProfile().getId());
-		else if(o instanceof EntityPlayer)
-		{
-			if(side.isServer())
-			{
-				for(ForgePlayer p : playerMap.values())
-				{
-					if(p.isOnline() && p.getPlayer() == o)
-					{
-						return p;
-					}
-				}
-			}
-			
-			return getPlayer(((EntityPlayer) o).getGameProfile().getId());
-		}
-		else if(o instanceof GameProfile)
-		{
-		}
+		else if(o instanceof ForgePlayer) return getPlayer(((ForgePlayer) o).getProfile().getId());
+		else if(o instanceof EntityPlayer) return getPlayer(((EntityPlayer) o).getGameProfile().getId());
+		else if(o instanceof GameProfile) return getPlayer(((GameProfile) o).getId());
 		else if(o instanceof CharSequence)
 		{
 			String s = o.toString();

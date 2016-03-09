@@ -1,4 +1,4 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.FakePlayer;

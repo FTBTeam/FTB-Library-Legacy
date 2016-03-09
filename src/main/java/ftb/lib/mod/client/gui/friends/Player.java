@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.players.ForgePlayerSP;
+import ftb.lib.api.ForgePlayerSP;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;

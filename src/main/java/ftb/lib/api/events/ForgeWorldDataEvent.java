@@ -1,6 +1,6 @@
-package ftb.lib.api;
+package ftb.lib.api.events;
 
-import ftb.lib.api.players.*;
+import ftb.lib.api.*;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.*;

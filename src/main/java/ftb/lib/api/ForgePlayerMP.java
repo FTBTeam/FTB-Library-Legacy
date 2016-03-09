@@ -1,8 +1,8 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
-import ftb.lib.api.ForgePlayerInfoEvent;
+import ftb.lib.api.events.ForgePlayerInfoEvent;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.notification.*;
 import ftb.lib.mod.FTBLibMod;
@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.*;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -143,7 +143,7 @@ public class ForgePlayerMP extends ForgePlayer
 		
 		if(tag.hasKey("Friends"))
 		{
-			NBTTagList friendsList = tag.getTagList("Friends", LMNBTUtils.LIST);
+			NBTTagList friendsList = tag.getTagList("Friends", Constants.NBT.TAG_LIST);
 			for(int i = 0; i < friendsList.tagCount(); i++)
 			{
 				UUID id = UUIDTypeAdapterLM.getUUID(friendsList.getStringTagAt(i));
@@ -212,7 +212,7 @@ public class ForgePlayerMP extends ForgePlayer
 				
 				if(!tag2.hasNoTags())
 				{
-					tag1.setTag(d.ID, tag2);
+					tag1.setTag(d.getID(), tag2);
 				}
 			}
 			
@@ -262,7 +262,7 @@ public class ForgePlayerMP extends ForgePlayer
 				
 				if(!tag2.hasNoTags())
 				{
-					tag1.setTag(d.ID, tag2);
+					tag1.setTag(d.getID(), tag2);
 				}
 			}
 			

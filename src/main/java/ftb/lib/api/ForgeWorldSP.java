@@ -1,8 +1,7 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
-import ftb.lib.api.GameMode;
 import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.nbt.*;
@@ -45,6 +44,7 @@ public final class ForgeWorldSP extends ForgeWorld
 	
 	public void readDataFromNet(NBTTagCompound tag, boolean first)
 	{
+		worldID = new UUID(tag.getLong("IDM"), tag.getLong("IDL"));
 		currentMode = new GameMode(tag.getString("M"));
 		
 		if(first)

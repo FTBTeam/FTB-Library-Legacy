@@ -1,7 +1,8 @@
-package ftb.lib.api.players;
+package ftb.lib.api;
 
 import com.google.gson.*;
-import ftb.lib.api.GameModes;
+import ftb.lib.mod.FTBLibEventHandler;
+import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -26,6 +27,19 @@ public final class ForgeWorldMP extends ForgeWorld
 		currentMode = GameModes.getGameModes().defaultMode;
 	}
 	
+	public void init()
+	{
+		super.init();
+		
+		for(ForgeWorldData d : customData.values())
+		{
+			if(d instanceof IWorldTick)
+			{
+				FTBLibEventHandler.instance.ticking.add((IWorldTick) d);
+			}
+		}
+	}
+	
 	public World getMCWorld()
 	{ return MinecraftServer.getServer().getEntityWorld(); }
 	
@@ -45,6 +59,9 @@ public final class ForgeWorldMP extends ForgeWorld
 	
 	public void load(JsonObject group)
 	{
+		worldID = group.has("world_id") ? UUIDTypeAdapterLM.getUUID(group.get("world_id").getAsString()) : null;
+		getID();
+		
 		currentMode = group.has("mode") ? GameModes.getGameModes().get(group.get("mode").getAsString()) : GameModes.getGameModes().defaultMode;
 		
 		if(!customData.isEmpty())
@@ -72,6 +89,7 @@ public final class ForgeWorldMP extends ForgeWorld
 	
 	public void save(JsonObject group)
 	{
+		group.add("world_id", new JsonPrimitive(UUIDTypeAdapterLM.getString(getID())));
 		group.add("mode", new JsonPrimitive(currentMode.getID()));
 		
 		if(!customData.isEmpty())
@@ -99,7 +117,10 @@ public final class ForgeWorldMP extends ForgeWorld
 	
 	public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self)
 	{
+		tag.setLong("IDM", getID().getMostSignificantBits());
+		tag.setLong("IDL", getID().getLeastSignificantBits());
 		tag.setString("M", currentMode.getID());
+		
 		NBTTagCompound tag1;
 		
 		if(self != null)

@@ -1,8 +1,8 @@
 package ftb.lib.mod.client.gui.friends;
 
+import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.PanelPopupMenu;
-import ftb.lib.api.players.ForgeWorldSP;
 import ftb.lib.mod.net.MessageRequestPlayerInfo;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
