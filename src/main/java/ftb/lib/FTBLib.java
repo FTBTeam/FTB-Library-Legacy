@@ -387,4 +387,19 @@ public class FTBLib
 		
 		return sb.toString();
 	}
+	
+	public static Entity getEntityByUUID(World w, UUID id)
+	{
+		if(w == null || id == null) return null;
+		
+		for(Entity e : w.loadedEntityList)
+		{
+			if(e.getUniqueID().equals(id))
+			{
+				return e;
+			}
+		}
+		
+		return null;
+	}
 }

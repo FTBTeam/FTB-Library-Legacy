@@ -79,6 +79,7 @@ public class GuiIcons
 	public static final TextureCoords money = getIcon("money");
 	public static final TextureCoords check = getIcon("check");
 	public static final TextureCoords star = getIcon("star");
+	public static final TextureCoords heart = getIcon("heart");
 	
 	public static final TextureCoords book = getIcon("book");
 	public static final TextureCoords book_red = getIcon("book_red");

@@ -1,6 +1,5 @@
 package ftb.lib.mod.config;
 
-import ftb.lib.api.cmd.CommandLevel;
 import latmod.lib.Info;
 import latmod.lib.config.*;
 
@@ -12,6 +11,10 @@ public class FTBLibConfigCmd
 	@Info("Can fix some /help problems")
 	public static final ConfigEntryBool override_help = new ConfigEntryBool("override_help", true);
 	
-	public static final ConfigEntryEnum<CommandLevel> level_set_item_name = new ConfigEntryEnum<>("set_item_name", CommandLevel.VALUES, CommandLevel.OP, false);
-	public static final ConfigEntryEnum<CommandLevel> level_trash_can = new ConfigEntryEnum<>("trash_can", CommandLevel.VALUES, CommandLevel.ALL, false);
+	public static final ConfigEntryBool edit_config = new ConfigEntryBool("edit_config", true);
+	public static final ConfigEntryBool set_item_name = new ConfigEntryBool("set_item_name", true);
+	public static final ConfigEntryBool trash_can = new ConfigEntryBool("trash_can", true);
+	public static final ConfigEntryBool heal = new ConfigEntryBool("heal", true);
+	
+	public static final ConfigEntryString reload_name = new ConfigEntryString("reload_name", "reload");
 }

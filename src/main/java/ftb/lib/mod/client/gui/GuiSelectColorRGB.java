@@ -7,7 +7,7 @@ import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import ftb.lib.mod.client.FTBLibModClient;
-import latmod.lib.*;
+import latmod.lib.LMColor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
@@ -29,17 +29,18 @@ public class GuiSelectColorRGB extends GuiLM
 	public final LMColor initCol;
 	public final Object colorID;
 	public final boolean isInstant;
-	public final LMColor currentColor;
+	public final LMColor.RGB currentColor;
 	
 	public final ButtonLM colorInit, colorCurrent, switchHSB;
 	public final SliderLM currentColR, currentColG, currentColB;
 	
-	public GuiSelectColorRGB(IColorCallback cb, int col, Object id, boolean instant)
+	public GuiSelectColorRGB(IColorCallback cb, LMColor col, Object id, boolean instant)
 	{
 		super(null, tex);
 		callback = cb;
-		initCol = new LMColor(col);
-		currentColor = new LMColor(initCol.color());
+		initCol = col.copy();
+		currentColor = new LMColor.RGB();
+		currentColor.set(initCol.copy());
 		colorID = id;
 		isInstant = instant;
 		
@@ -77,26 +78,26 @@ public class GuiSelectColorRGB extends GuiLM
 				FTBLibClient.playClickSound();
 				FTBLibModClient.open_hsb_cg.set(true);
 				ClientConfigRegistry.provider().save();
-				FTBLibClient.openGui(new GuiSelectColorHSB(callback, initCol.color(), colorID, isInstant));
+				FTBLibClient.openGui(new GuiSelectColorHSB(callback, initCol, colorID, isInstant));
 			}
 		};
 		
 		switchHSB.title = "HSB";
 		
 		currentColR = new SliderLM(this, 6, 25, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		currentColR.value = LMColorUtils.getRed(col) / 255F;
+		currentColR.value = col.red() / 255F;
 		currentColR.displayMax = 255;
 		currentColR.title = EnumMCColor.RED.toString();
 		currentColR.scrollStep = 1F / 255F;
 		
 		currentColG = new SliderLM(this, 6, 41, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		currentColG.value = LMColorUtils.getGreen(col) / 255F;
+		currentColG.value = col.green() / 255F;
 		currentColG.displayMax = 255;
 		currentColG.title = EnumMCColor.GREEN.toString();
 		currentColG.scrollStep = 1F / 255F;
 		
 		currentColB = new SliderLM(this, 6, 57, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		currentColB.value = LMColorUtils.getBlue(col) / 255F;
+		currentColB.value = col.blue() / 255F;
 		currentColB.displayMax = 255;
 		currentColB.title = EnumMCColor.BLUE.toString();
 		currentColB.scrollStep = 1F / 255F;
@@ -210,7 +211,7 @@ public class GuiSelectColorRGB extends GuiLM
 			int r = (int) (currentColR.value * 255F);
 			int g = (int) (currentColG.value * 255F);
 			int b = (int) (currentColB.value * 255F);
-			currentColor.setRGB(LMColorUtils.getRGBA(r, g, b, 255));
+			currentColor.setRGBA(r, g, b, 255);
 		}
 	}
 	

@@ -56,7 +56,7 @@ public class TileInvLM extends TileLM
 	
 	public void onBroken(IBlockState state)
 	{
-		if(dropItems && isServer() && itemHandler != null && itemHandler.getSlots() > 0)
+		if(dropItems && getSide().isServer() && itemHandler != null && itemHandler.getSlots() > 0)
 		{
 			for(int i = 0; i < itemHandler.getSlots(); i++)
 			{

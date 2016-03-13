@@ -73,11 +73,12 @@ public class FTBLibMod
 		
 		if(FTBLibConfigCmd.override_list.get()) FTBLib.addCommand(e, new CmdListOverride());
 		if(FTBLibConfigCmd.override_help.get()) FTBLib.addCommand(e, new CmdHelpOverride());
-		FTBLib.addCommand(e, new CmdEditConfig());
+		if(!FTBLibConfigCmd.reload_name.get().isEmpty()) FTBLib.addCommand(e, new CmdReload());
+		if(FTBLibConfigCmd.set_item_name.get()) FTBLib.addCommand(e, new CmdSetItemName());
+		if(FTBLibConfigCmd.heal.get()) FTBLib.addCommand(e, new CmdHeal());
+		if(FTBLibConfigCmd.edit_config.get()) FTBLib.addCommand(e, new CmdEditConfig());
 		FTBLib.addCommand(e, new CmdMode());
-		FTBLib.addCommand(e, new CmdReload());
 		FTBLib.addCommand(e, new CmdNotify());
-		FTBLib.addCommand(e, new CmdSetItemName());
 		FTBLib.addCommand(e, new CmdInv());
 	}
 	

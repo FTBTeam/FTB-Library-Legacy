@@ -6,7 +6,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Blocks;
@@ -22,11 +21,24 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
-public class TileLM extends TileEntity implements IClientActionTile, IWorldNameable, ITickable
+public class TileLM extends TileEntity implements ITileEntity, IClientActionTile, IWorldNameable, ITickable
 {
 	public static final String ACTION_BUTTON_PRESSED = "button";
 	public static final String ACTION_OPEN_GUI = "open_gui";
 	public static final String ACTION_CUSTOM_NAME = "custom_name";
+	
+	protected enum EnumSync
+	{
+		OFF,
+		SYNC,
+		RERENDER;
+		
+		boolean sync()
+		{ return this == SYNC || this == RERENDER; }
+		
+		boolean rerender()
+		{ return this == RERENDER; }
+	}
 	
 	public static final int[] NO_SLOTS = new int[0];
 	
@@ -36,45 +48,58 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	public boolean redstonePowered = false;
 	public IBlockState currentState;
 	
-	public final void readFromNBT(NBTTagCompound tag)
-	{
-		super.readFromNBT(tag);
-		readTileData(tag);
-	}
+	public boolean useOwnerID()
+	{ return true; }
+	
+	public final TileEntity getTile()
+	{ return this; }
 	
 	public final void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		writeTileData(tag);
+		
+		if(ownerID != null && useOwnerID())
+		{
+			LMNBTUtils.setUUID(tag, "OwnerID", ownerID, true);
+		}
+	}
+	
+	public final void readFromNBT(NBTTagCompound tag)
+	{
+		super.readFromNBT(tag);
+		ownerID = useOwnerID() ? LMNBTUtils.getUUID(tag, "OwnerID", true) : null;
+		readTileData(tag);
 	}
 	
 	public final Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		writeTileClientData(tag);
+		
+		if(ownerID != null && useOwnerID())
+		{
+			LMNBTUtils.setUUID(tag, "OID", ownerID, false);
+		}
+		
 		return new S35PacketUpdateTileEntity(getPos(), 0, tag);
 	}
 	
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
 	{
-		readTileClientData(p.getNbtCompound());
+		NBTTagCompound data = p.getNbtCompound();
+		ownerID = useOwnerID() ? LMNBTUtils.getUUID(data, "OID", false) : null;
+		readTileClientData(data);
 		onUpdatePacket();
 		FTBLibClient.onGuiClientAction();
 	}
 	
-	public void readTileData(NBTTagCompound tag)
-	{
-		ownerID = UUIDTypeAdapterLM.getUUID(tag.getString("OwnerID"));
-	}
-	
 	public void writeTileData(NBTTagCompound tag)
 	{
-		if(ownerID != null) tag.setString("OwnerID", UUIDTypeAdapterLM.getString(ownerID));
 	}
 	
-	public void readTileClientData(NBTTagCompound tag)
+	public void readTileData(NBTTagCompound tag)
 	{
-		readTileData(tag);
 	}
 	
 	public void writeTileClientData(NBTTagCompound tag)
@@ -82,16 +107,24 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		writeTileData(tag);
 	}
 	
+	public void readTileClientData(NBTTagCompound tag)
+	{
+		readTileData(tag);
+	}
+	
 	public void onUpdatePacket()
 	{
-		if(rerenderBlock())
+		if(getSync().rerender())
 		{
 			worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
 		}
 	}
 	
-	public boolean rerenderBlock()
+	public final boolean rerenderBlock()
 	{ return false; }
+	
+	public EnumSync getSync()
+	{ return EnumSync.SYNC; }
 	
 	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, float x, float y, float z)
 	{
@@ -110,7 +143,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		
 		if(isDirty)
 		{
-			if(isServer())
+			if(getSide().isServer())
 			{
 				sendDirtyUpdate();
 			}
@@ -130,7 +163,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		{
 			currentState = worldObj.getBlockState(pos);
 			
-			if(rerenderBlock())
+			if(getSync().sync())
 			{
 				worldObj.markBlockForUpdate(getPos());
 			}
@@ -166,7 +199,7 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		String ownerS = "None";
 		if(ownerID != null)
 		{
-			ForgePlayer player = ForgeWorld.getFrom(isServer() ? Side.SERVER : Side.CLIENT).getPlayer(ep);
+			ForgePlayer player = ForgeWorld.getFrom(getSide()).getPlayer(ep);
 			if(player != null) ownerS = player.getProfile().getName();
 			else ownerS = ownerID.toString();
 		}
@@ -237,8 +270,8 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 	{
 	}
 	
-	public final boolean isServer()
-	{ return worldObj != null && !worldObj.isRemote; }
+	public final Side getSide()
+	{ return (worldObj != null && !worldObj.isRemote) ? Side.SERVER : Side.CLIENT; }
 	
 	public void notifyNeighbors()
 	{ worldObj.notifyBlockOfStateChange(getPos(), getBlockType()); }
@@ -268,8 +301,18 @@ public class TileLM extends TileEntity implements IClientActionTile, IWorldNamea
 		if(worldObj != null)
 		{
 			redstonePowered = worldObj.isBlockPowered(getPos());
-			currentState = worldObj.getBlockState(getPos());
+			updateBlockState();
 		}
+	}
+	
+	public final void updateBlockState()
+	{
+		currentState = (worldObj != null) ? worldObj.getBlockState(getPos()) : null;
+	}
+	
+	public void playSound(String soundName, float volume, float pitch)
+	{
+		worldObj.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, soundName, volume, pitch);
 	}
 	
 	public void setName(String s) { }

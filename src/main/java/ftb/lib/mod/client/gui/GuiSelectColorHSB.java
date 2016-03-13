@@ -32,18 +32,19 @@ public class GuiSelectColorHSB extends GuiLM
 	public final LMColor initCol;
 	public final Object colorID;
 	public final boolean isInstant;
-	public final LMColor color;
+	public final LMColor.HSB currentColor;
 	
 	public final ButtonLM colorInit, colorCurrent, switchRGB;
 	public final SliderLM sliderBrightness;
 	public final ColorSelector colorSelector;
 	
-	public GuiSelectColorHSB(IColorCallback cb, int col, Object id, boolean instant)
+	public GuiSelectColorHSB(IColorCallback cb, LMColor col, Object id, boolean instant)
 	{
 		super(null, tex);
 		callback = cb;
-		initCol = new LMColor(col);
-		color = new LMColor(initCol.color());
+		initCol = col.copy();
+		currentColor = new LMColor.HSB();
+		currentColor.set(initCol.copy());
 		colorID = id;
 		isInstant = instant;
 		
@@ -70,7 +71,7 @@ public class GuiSelectColorHSB extends GuiLM
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_accept());
-				s.add(color.toString());
+				s.add(currentColor.toString());
 			}
 		};
 		
@@ -81,7 +82,7 @@ public class GuiSelectColorHSB extends GuiLM
 				FTBLibClient.playClickSound();
 				FTBLibModClient.open_hsb_cg.set(false);
 				ClientConfigRegistry.provider().save();
-				FTBLibClient.openGui(new GuiSelectColorRGB(callback, initCol.color(), colorID, isInstant));
+				FTBLibClient.openGui(new GuiSelectColorRGB(callback, initCol, colorID, isInstant));
 			}
 		};
 		
@@ -119,7 +120,7 @@ public class GuiSelectColorHSB extends GuiLM
 		
 		FTBLibClient.setGLColor(initCol.color(), 255);
 		colorInit.render(col_tex);
-		FTBLibClient.setGLColor(color.color(), 255);
+		FTBLibClient.setGLColor(currentColor.color(), 255);
 		colorCurrent.render(col_tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		switchRGB.render(GuiIcons.color_rgb);
@@ -146,7 +147,7 @@ public class GuiSelectColorHSB extends GuiLM
 		GL11.glTexCoord2d(u0, v1);
 		GL11.glVertex3d(x, y + h, z);
 		
-		LMColor tempColor = new LMColor();
+		LMColor.HSB tempColor = currentColor.copy();
 		tempColor.setHSB(tempColor.hue(), tempColor.saturation(), 1F);
 		FTBLibClient.setGLColor(tempColor.color(), 255);
 		GL11.glTexCoord2d(u1, v1);
@@ -173,14 +174,14 @@ public class GuiSelectColorHSB extends GuiLM
 	{
 		float h = (float) (Math.atan2(colorSelector.cursorPosY - 0.5D, colorSelector.cursorPosX - 0.5D) / MathHelperLM.TWO_PI);
 		float s = (float) (MathHelperLM.dist(colorSelector.cursorPosX, colorSelector.cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D);
-		color.setHSB(h, s, sliderBrightness.value);
-		if(isInstant) callback.onColorSelected(new ColorSelected(colorID, true, color, false));
+		currentColor.setHSB(h, s, sliderBrightness.value);
+		if(isInstant) callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
 	}
 	
 	public void closeGui(boolean set)
 	{
 		FTBLibClient.playClickSound();
-		callback.onColorSelected(new ColorSelected(colorID, set, set ? color : initCol, true));
+		callback.onColorSelected(new ColorSelected(colorID, set, set ? currentColor : initCol, true));
 	}
 	
 	public static class ColorSelector extends WidgetLM
@@ -234,7 +235,7 @@ public class GuiSelectColorHSB extends GuiLM
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
 			{
-				GlStateManager.color(1F - gui.color.red() / 255F, 1F - gui.color.green() / 255F, 1F - gui.color.blue() / 255F, 1F);
+				GlStateManager.color(1F - gui.currentColor.red() / 255F, 1F - gui.currentColor.green() / 255F, 1F - gui.currentColor.blue() / 255F, 1F);
 				GuiLM.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, gui.getZLevel(), 4, 4);
 				GlStateManager.color(1F, 1F, 1F, 1F);
 			}

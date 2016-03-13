@@ -1,7 +1,6 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.api.cmd.CommandLM;
-import ftb.lib.mod.config.*;
+import ftb.lib.api.cmd.*;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,7 +9,7 @@ import net.minecraft.util.ChatComponentText;
 public class CmdSetItemName extends CommandLM
 {
 	public CmdSetItemName()
-	{ super(FTBLibConfigCmdNames.set_item_name.get(), FTBLibConfigCmd.level_set_item_name.get()); }
+	{ super("set_item_name", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <name...>"; }

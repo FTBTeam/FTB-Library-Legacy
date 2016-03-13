@@ -7,7 +7,6 @@ import ftb.lib.api.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -37,7 +36,8 @@ public class FTBLibRenderHandler
 	
 	public static final FTBLibRenderHandler instance = new FTBLibRenderHandler();
 	public static final List<ClientTickCallback> callbacks = new ArrayList<>();
-	private static final CubeRenderer chunkBorderRenderer = new CubeRenderer().setTessellator(null);
+	private static final CubeRenderer chunkBorderRenderer = new CubeRenderer().setHasTexture().setHasNormals();
+	private static final CubeRenderer lightLevelRenderer = new CubeRenderer().setHasTexture().setHasNormals().setHasColor();
 	public static final ResourceLocation chunkBorderTexture = new ResourceLocation("ftbl", "textures/world/chunk_border.png");
 	public static boolean renderChunkBounds = false;
 	
@@ -165,9 +165,9 @@ public class FTBLibRenderHandler
 					GlStateManager.color(1F, 1F, 1F, 1F);
 					FTBLibClient.setTexture(FTBLibModClient.light_value_texture.get().texture);
 					
-					Tessellator tessellator = Tessellator.getInstance();
-					WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-					worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+					lightLevelRenderer.setTessellator(Tessellator.getInstance());
+					lightLevelRenderer.begin();
+					lightLevelRenderer.beginAndEnd = false;
 					
 					for(MobSpawnPos pos : lightList)
 					{
@@ -175,17 +175,13 @@ public class FTBLibRenderHandler
 						double by = pos.pos.getY() + 0.03D;
 						double bz = pos.pos.getZ();
 						
-						if(pos.alwaysSpawns) GlStateManager.color(1F, 0.2F, 0.2F, 1F);
-						else GlStateManager.color(1F, 1F, 0.2F, 1F);
-						
-						float green = pos.alwaysSpawns ? 0.2F : 1F;
-						worldrenderer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
-						worldrenderer.pos(bx + 1D, by, bz).tex(1D, 0D).color(1F, green, 0.2F, 1F).endVertex();
-						worldrenderer.pos(bx + 1D, by, bz + 1D).tex(1D, 1D).color(1F, green, 0.2F, 1F).endVertex();
-						worldrenderer.pos(bx, by, bz + 1D).tex(0D, 1D).color(1F, green, 0.2F, 1F).endVertex();
+						lightLevelRenderer.color.setRGBA(255, pos.alwaysSpawns ? 51 : 255, 51, 255);
+						lightLevelRenderer.setSize(bx, by, bz, bx + 1D, by, bz + 1D);
+						lightLevelRenderer.renderDown();
 					}
 					
-					tessellator.draw();
+					lightLevelRenderer.beginAndEnd = true;
+					lightLevelRenderer.end();
 					
 					GlStateManager.color(1F, 1F, 1F, 1F);
 					

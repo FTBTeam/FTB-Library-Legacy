@@ -7,7 +7,6 @@ import net.minecraft.nbt.*;
 import java.io.File;
 import java.util.*;
 
-@SuppressWarnings("all")
 public class LMNBTUtils
 {
 	public static String[] getMapKeys(NBTTagCompound tag)
@@ -38,7 +37,7 @@ public class LMNBTUtils
 		
 		for(String s : tag.getKeySet())
 		{
-			l.add(new AbstractMap.SimpleEntry<String, NBTBase>(s, tag.getTag(s)));
+			l.add(new AbstractMap.SimpleEntry<>(s, tag.getTag(s)));
 		}
 		
 		return l;
@@ -76,7 +75,7 @@ public class LMNBTUtils
 	
 	public static List<String> toStringList(NBTTagList tag)
 	{
-		ArrayList<String> l = new ArrayList<String>();
+		ArrayList<String> l = new ArrayList<>();
 		toStringList(l, tag);
 		return l;
 	}
@@ -84,8 +83,10 @@ public class LMNBTUtils
 	public static NBTTagList fromStringList(List<String> l)
 	{
 		NBTTagList tag = new NBTTagList();
-		for(int i = 0; i < l.size(); i++)
-			tag.appendTag(new NBTTagString(l.get(i)));
+		for(String s : l)
+		{
+			tag.appendTag(new NBTTagString(s));
+		}
 		return tag;
 	}
 	
@@ -106,15 +107,32 @@ public class LMNBTUtils
 		catch(Exception ex) { ex.printStackTrace(); }
 	}
 	
-	public static UUID getUUID(NBTTagCompound tag, String key)
+	public static UUID getUUID(NBTTagCompound tag, String key, boolean string)
 	{
-		if(tag == null || !tag.hasKey(key)) return null;
-		return UUIDTypeAdapterLM.getUUID(tag.getString(key));
+		if(tag == null) return null;
+		else if(string)
+		{
+			return tag.hasKey(key) ? UUIDTypeAdapterLM.getUUID(tag.getString(key)) : null;
+		}
+		else
+		{
+			long msb = tag.getLong(key + 'M');
+			long lsb = tag.getLong(key + 'L');
+			return (msb == 0L && lsb == 0L) ? null : new UUID(msb, lsb);
+		}
 	}
 	
-	public static void setUUID(NBTTagCompound tag, String key, UUID uuid)
+	public static void setUUID(NBTTagCompound tag, String key, UUID uuid, boolean string)
 	{
 		if(tag == null || key == null || key.isEmpty() || uuid == null) return;
-		tag.setString(key, UUIDTypeAdapterLM.getString(uuid));
+		if(string)
+		{
+			tag.setString(key, UUIDTypeAdapterLM.getString(uuid));
+		}
+		else
+		{
+			tag.setLong(key + 'M', uuid.getMostSignificantBits());
+			tag.setLong(key + 'L', uuid.getLeastSignificantBits());
+		}
 	}
 }

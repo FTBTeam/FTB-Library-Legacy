@@ -59,6 +59,12 @@ public class MathHelperMC
 		return null;
 	}
 	
+	public static double getDistance(Vec3i p0, Vec3i p1)
+	{
+		if(p0 == null || p1 == null) return 0D;
+		return MathHelperLM.dist(p0.getX(), p0.getY(), p0.getZ(), p1.getX(), p1.getY(), p1.getZ());
+	}
+	
 	public static Vec3 randomAABB(Random r, AxisAlignedBB bb)
 	{
 		double x = MathHelperLM.randomDouble(r, bb.minX, bb.maxX);

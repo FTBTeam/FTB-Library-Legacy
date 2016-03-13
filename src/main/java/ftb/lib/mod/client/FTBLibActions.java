@@ -37,6 +37,7 @@ public class FTBLibActions
 		PlayerActionRegistry.add(toggle_rain);
 		PlayerActionRegistry.add(toggle_day);
 		PlayerActionRegistry.add(toggle_night);
+		PlayerActionRegistry.add(heal);
 		PlayerActionRegistry.add(toggle_chunk_bounds);
 		PlayerActionRegistry.add(toggle_light_values);
 		
@@ -129,6 +130,15 @@ public class FTBLibActions
 	{
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
+		
+		public Boolean configDefault()
+		{ return Boolean.TRUE; }
+	};
+	
+	public static final PlayerAction heal = new PlayerAction(PlayerAction.Type.SELF, "ftbl.heal", -16, GuiIcons.heart)
+	{
+		public void onClicked(ForgePlayer self, ForgePlayer other)
+		{ FTBLibClient.execClientCommand("/heal"); }
 		
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }

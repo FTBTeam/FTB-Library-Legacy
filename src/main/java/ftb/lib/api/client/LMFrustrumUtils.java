@@ -1,10 +1,16 @@
 package ftb.lib.api.client;
 
 import latmod.lib.LMUtils;
+import latmod.lib.util.Pos2D;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraftforge.fml.relauncher.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+
+import java.nio.*;
 
 @SideOnly(Side.CLIENT)
 public class LMFrustrumUtils
@@ -16,11 +22,10 @@ public class LMFrustrumUtils
 	public static final Frustum frustum = new Frustum();
 	public static long playerPosHash;
 	
-	/*
-	public static final IntBuffer viewport = BufferUtils.createIntBuffer(4);
-	public static final FloatBuffer modelView = BufferUtils.createFloatBuffer(16);
-	public static final FloatBuffer projection = BufferUtils.createFloatBuffer(16);
-	*/
+	public static final IntBuffer VIEWPORT = GLAllocation.createDirectIntBuffer(16);
+	public static final FloatBuffer MODELVIEW = GLAllocation.createDirectFloatBuffer(16);
+	public static final FloatBuffer PROJECTION = GLAllocation.createDirectFloatBuffer(16);
+	public static final FloatBuffer OBJECTCOORDS = GLAllocation.createDirectFloatBuffer(3);
 	
 	public static void update()
 	{
@@ -28,6 +33,7 @@ public class LMFrustrumUtils
 		isFirstPerson = FTBLibClient.mc.gameSettings.thirdPersonView == 0;
 		currentDim = FTBLibClient.getDim();
 		//mc.thePlayer.posX
+		
 		playerX = mc.getRenderManager().viewerPosX;
 		playerY = mc.getRenderManager().viewerPosY;
 		playerZ = mc.getRenderManager().viewerPosZ;
@@ -36,34 +42,28 @@ public class LMFrustrumUtils
 		renderZ = TileEntityRendererDispatcher.staticPlayerZ;
 		playerPosHash = Math.abs(LMUtils.longHashCode(currentDim, playerX, playerY, playerZ) + 1);
 		frustum.setPosition(playerX, playerY, playerZ);
+		
+		updateMatrix();
 	}
 	
-	/*
 	public static void updateMatrix()
 	{
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelView);
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
-		GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
+		GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
+		GL11.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
 	}
 	
-	public static Point2D getScreenCoords(double x, double y, double z)
+	public static Pos2D getScreenCoords(float x, float y, float z)
 	{
-		FloatBuffer screenCoords = BufferUtils.createFloatBuffer(3);
-		//FloatBuffer screenCoords = BufferUtils.createFloatBuffer(4);
-		
-		boolean result = GLU.gluProject((float)x, (float)y, (float)z, modelView, projection, viewport, screenCoords);
+		boolean result = GLU.gluProject(x, y, z, MODELVIEW, PROJECTION, VIEWPORT, OBJECTCOORDS);
 		if(result)
 		{
-			float px = screenCoords.get(0);
-			float py = screenCoords.get(1) - screenCoords.get(2);
-			
-			//if(Minecraft == 0) System.out.println(px + " : " + py);
-			
-			if(px >= 0 && py >= 0 && px < viewport.get(2) && py < viewport.get(3))
-				return new Point2D(px, py);
+			float px = OBJECTCOORDS.get(0);
+			float py = OBJECTCOORDS.get(1);
+			return new Pos2D(px, py);
+			//if(px >= 0 && py >= 0 && px < VIEWPORT.get(2) && py < VIEWPORT.get(3)) return new Pos2D(px, py);
 		}
+		
 		return null;
 	}
-	
-	*/
 }

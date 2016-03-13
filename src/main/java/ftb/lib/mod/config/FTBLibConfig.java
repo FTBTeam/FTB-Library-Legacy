@@ -15,7 +15,6 @@ public class FTBLibConfig
 		configFile.setFile(new File(FTBLib.folderLocal, "ftblib.json"));
 		configFile.setDisplayName("FTBLib");
 		configFile.add(new ConfigGroup("commands").addAll(FTBLibConfigCmd.class, null, false), false);
-		configFile.add(new ConfigGroup("command_names").addAll(FTBLibConfigCmdNames.class, null, false), false);
 		ConfigRegistry.add(configFile);
 		configFile.load();
 	}

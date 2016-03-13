@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public interface IWailaTile
+public interface IWailaTile extends ITileEntity
 {
 	interface Stack extends IWailaTile
 	{

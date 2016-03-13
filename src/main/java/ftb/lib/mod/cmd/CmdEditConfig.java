@@ -4,7 +4,6 @@ import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.mod.FTBLibMod;
-import ftb.lib.mod.config.FTBLibConfigCmdNames;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
 import latmod.lib.config.*;
@@ -17,7 +16,7 @@ import java.util.List;
 public class CmdEditConfig extends CommandLM
 {
 	public CmdEditConfig()
-	{ super(FTBLibConfigCmdNames.edit_config.get(), CommandLevel.OP); }
+	{ super("edit_config", CommandLevel.OP); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }
