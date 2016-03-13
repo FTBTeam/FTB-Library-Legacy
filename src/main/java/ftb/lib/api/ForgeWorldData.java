@@ -2,6 +2,7 @@ package ftb.lib.api;
 
 import com.google.gson.JsonObject;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -13,7 +14,7 @@ public abstract class ForgeWorldData extends FinalIDObject
 	
 	public ForgeWorldData(String id, ForgeWorld w)
 	{
-		super(id);
+		super(id.toLowerCase());
 		world = w;
 	}
 	
@@ -30,11 +31,13 @@ public abstract class ForgeWorldData extends FinalIDObject
 	{
 	}
 	
+	//FIXME: Implement me
 	public void readFromNet(NBTTagCompound tag)
 	{
 	}
 	
-	public void writeToNet(NBTTagCompound tag)
+	//FIXME: Implement me
+	public void writeToNet(NBTTagCompound tag, EntityPlayerMP to)
 	{
 	}
 	

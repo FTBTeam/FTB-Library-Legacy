@@ -1,6 +1,7 @@
 package ftb.lib.api;
 
 import com.google.gson.*;
+import ftb.lib.FTBLib;
 import ftb.lib.mod.FTBLibEventHandler;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,27 +65,20 @@ public final class ForgeWorldMP extends ForgeWorld
 		
 		currentMode = group.has("mode") ? GameModes.getGameModes().get(group.get("mode").getAsString()) : GameModes.getGameModes().defaultMode;
 		
-		if(!customData.isEmpty())
+		if(!customData.isEmpty() && group.has("custom"))
 		{
-			JsonObject customGroup = new JsonObject();
-			JsonObject group1;
-			
-			for(ForgeWorldData d : customData.values())
+			for(Map.Entry<String, JsonElement> entry : group.get("custom").getAsJsonObject().entrySet())
 			{
-				group1 = new JsonObject();
-				d.saveData(group1);
+				ForgeWorldData d = customData.get(entry.getKey());
 				
-				if(!group1.entrySet().isEmpty())
+				if(d != null)
 				{
-					customGroup.add(d.getID(), group1);
+					d.loadData(entry.getValue().getAsJsonObject());
 				}
 			}
-			
-			if(!customGroup.entrySet().isEmpty())
-			{
-				group.add("custom", customGroup);
-			}
 		}
+		
+		FTBLib.dev_logger.info("ForgeWorldMP Loaded: " + group);
 	}
 	
 	public void save(JsonObject group)
@@ -113,6 +107,8 @@ public final class ForgeWorldMP extends ForgeWorld
 				group.add("custom", customGroup);
 			}
 		}
+		
+		FTBLib.dev_logger.info("ForgeWorldMP Saved: " + group);
 	}
 	
 	public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self)

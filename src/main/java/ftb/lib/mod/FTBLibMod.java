@@ -1,5 +1,6 @@
 package ftb.lib.mod;
 
+import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -8,6 +9,7 @@ import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
+import latmod.lib.LMJsonUtils;
 import latmod.lib.util.OS;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
@@ -90,6 +92,13 @@ public class FTBLibMod
 		ForgeWorldMP.inst = new ForgeWorldMP(new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName() + "/LatMod"));
 		FTBLib.reload(FTBLib.getServer(), false, false);
 		ForgeWorldMP.inst.init();
+		
+		JsonElement worldData = LMJsonUtils.fromJson(new File(ForgeWorldMP.inst.latmodFolder, "world.json"));
+		
+		if(worldData.isJsonObject())
+		{
+			ForgeWorldMP.inst.load(worldData.getAsJsonObject());
+		}
 	}
 	
 	/*
