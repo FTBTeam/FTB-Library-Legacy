@@ -4,11 +4,11 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.mod.client.gui.*;
-import latmod.lib.PrimitiveType;
+import latmod.lib.*;
 
 public class LMGuis
 {
-	public static void displayColorSelector(IColorCallback cb, int col, Object id, boolean instant)
+	public static void displayColorSelector(IColorCallback cb, LMColor col, Object id, boolean instant)
 	{
 		if(FTBLibModClient.open_hsb_cg.get()) FTBLibClient.openGui(new GuiSelectColorHSB(cb, col, id, instant));
 		else FTBLibClient.openGui(new GuiSelectColorRGB(cb, col, id, instant));

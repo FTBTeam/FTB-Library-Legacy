@@ -28,7 +28,7 @@ public class FTBLibEventHandler
 		FTBWorld w = FTBWorld.get(event.side);
 		if(w != null)
 		{
-			ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", w.getMode().ID);
+			ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", w.getMode().getID());
 			FTBLib.dev_logger.info("Sent FTBLib's analytics");
 		}
 	}

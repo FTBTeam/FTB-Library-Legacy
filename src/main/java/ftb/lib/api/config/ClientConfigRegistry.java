@@ -15,7 +15,7 @@ public final class ClientConfigRegistry
 		return new IConfigProvider()
 		{
 			public String getGroupTitle(ConfigGroup g)
-			{ return I18n.format(g.ID); }
+			{ return I18n.format(g.getID()); }
 			
 			public String getEntryTitle(ConfigEntry e)
 			{ return I18n.format(e.getFullID()); }

@@ -18,27 +18,11 @@ import java.util.*;
 
 public class LMMod extends FinalIDObject
 {
-	private static final HashMap<String, LMMod> modsMap = new HashMap<>();
-	
 	public static LMMod create(String s)
 	{
-		if(s == null || s.isEmpty()) return null;
-		LMMod mod = modsMap.get(s);
-		if(mod == null)
-		{
-			mod = new LMMod(s);
-			modsMap.put(mod.ID, mod);
-			if(FTBLib.DEV_ENV) FTBLib.logger.info("LMMod '" + mod.ID + "' created");
-		}
-		
+		LMMod mod = new LMMod(s);
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("LMMod '" + mod.getID() + "' created");
 		return mod;
-	}
-	
-	public static List<LMMod> getMods()
-	{
-		ArrayList<LMMod> list = new ArrayList<>();
-		list.addAll(modsMap.values());
-		return list;
 	}
 	
 	// End of static //
@@ -53,7 +37,7 @@ public class LMMod extends FinalIDObject
 	public LMMod(String id)
 	{
 		super(id);
-		lowerCaseModID = ID.toLowerCase();
+		lowerCaseModID = id.toLowerCase();
 		assets = lowerCaseModID + ":";
 		itemsAndBlocks = new ArrayList<>();
 		
@@ -62,7 +46,7 @@ public class LMMod extends FinalIDObject
 	
 	public ModContainer getModContainer()
 	{
-		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(ID);
+		if(modContainer == null) modContainer = Loader.instance().getModObjectList().inverse().get(getID());
 		return modContainer;
 	}
 	
@@ -70,7 +54,7 @@ public class LMMod extends FinalIDObject
 	{ recipes = (r == null) ? new LMRecipes() : r; }
 	
 	public String toFullID()
-	{ return ID + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
+	{ return getID() + '-' + Loader.MC_VERSION + '-' + modContainer.getDisplayVersion(); }
 	
 	public CreativeTabs createTab(final String s, final ItemStack icon)
 	{
@@ -125,10 +109,10 @@ public class LMMod extends FinalIDObject
 	}
 	
 	public void addTile(Class<? extends TileLM> c, String s, String... alt)
-	{ FTBLib.addTileEntity(c, ID + '.' + s, alt); }
+	{ FTBLib.addTileEntity(c, getID() + '.' + s, alt); }
 	
 	public void addEntity(Class<? extends Entity> c, String s, int id)
-	{ FTBLib.addEntity(c, s, id, ID); }
+	{ FTBLib.addEntity(c, s, id, getID()); }
 	
 	public void onPostLoaded()
 	{

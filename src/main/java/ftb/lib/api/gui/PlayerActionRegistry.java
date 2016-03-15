@@ -30,17 +30,17 @@ public class PlayerActionRegistry
 	{
 		if(a != null)
 		{
-			map.put(a.ID, a);
+			map.put(a.getID(), a);
 			
 			if(a.configDefault() != null)
 			{
-				ConfigEntryBool entry = new ConfigEntryBool(a.ID, a.configDefault().booleanValue())
+				ConfigEntryBool entry = new ConfigEntryBool(a.getID(), a.configDefault().booleanValue())
 				{
 					public String getFullID()
-					{ return "player_action." + a.ID; }
+					{ return "player_action." + a.getID(); }
 				};
 				
-				configEntries.put(a.ID, entry);
+				configEntries.put(a.getID(), entry);
 			}
 		}
 	}
@@ -55,7 +55,7 @@ public class PlayerActionRegistry
 			{
 				if(a.configDefault() != null)
 				{
-					if(!enabled(a.ID)) continue;
+					if(!enabled(a.getID())) continue;
 				}
 				
 				l.add(a);

@@ -74,7 +74,7 @@ public class MessageReload extends MessageLM
 	
 	static void readSyncedConfig(ByteIOStream in)
 	{
-		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.ID);
+		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.getID());
 		try { synced.read(in); }
 		catch(Exception ex) {}
 		ConfigRegistry.synced.loadFromGroup(synced);

@@ -46,7 +46,7 @@ public abstract class PlayerAction extends FinalIDObject
 	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
 	
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("player_action." + ID); }
+	{ return FTBLibMod.proxy.translate("player_action." + getID()); }
 	
 	public void addMouseOverText(List<String> l) { }
 	

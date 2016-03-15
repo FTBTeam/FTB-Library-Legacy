@@ -23,7 +23,7 @@ public abstract class ClickActionType extends FinalIDObject
 	public abstract void onClicked(JsonElement data);
 	
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("click_action." + ID); }
+	{ return FTBLibMod.proxy.translate("click_action." + getID()); }
 	
 	// Static //
 	

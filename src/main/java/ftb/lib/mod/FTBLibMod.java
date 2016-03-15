@@ -12,6 +12,7 @@ import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
 import latmod.lib.util.OS;
+import org.apache.logging.log4j.*;
 
 import java.io.File;
 import java.util.Map;
@@ -25,15 +26,17 @@ public class FTBLibMod
 	@SidedProxy(serverSide = "ftb.lib.mod.FTBLibModCommon", clientSide = "ftb.lib.mod.client.FTBLibModClient")
 	public static FTBLibModCommon proxy;
 	
+	public static final Logger logger = LogManager.getLogger("FTBLib");
+	
 	public static LMMod mod;
 	
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
-		if(FTBLib.DEV_ENV) FTBLib.logger.info("Loading FTBLib, DevEnv");
-		else FTBLib.logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
+		if(FTBLib.DEV_ENV) logger.info("Loading FTBLib, DevEnv");
+		else logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
 		
-		FTBLib.logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
+		logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
 		mod = LMMod.create(FTBLibFinals.MOD_ID);
 		

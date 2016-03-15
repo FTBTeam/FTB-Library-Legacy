@@ -2,6 +2,7 @@ package ftb.lib;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class FTBWorld
 			for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
 		}
 		
-		FTBLib.logger.info("Current Mode: " + currentMode);
+		FTBLibMod.logger.info("Current Mode: " + currentMode);
 	}
 	
 	public GameMode getMode()
@@ -48,7 +49,7 @@ public class FTBWorld
 	
 	public void writeReloadData(ByteIOStream io)
 	{
-		io.writeUTF(currentMode.ID);
+		io.writeUTF(currentMode.getID());
 	}
 	
 	public void readReloadData(ByteIOStream io)
@@ -71,7 +72,7 @@ public class FTBWorld
 		
 		if(side.isServer())
 		{
-			try { LMFileUtils.save(currentModeFile, currentMode.ID); }
+			try { LMFileUtils.save(currentModeFile, currentMode.getID()); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
 		

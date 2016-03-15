@@ -17,7 +17,7 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 	{
 		this();
 		io.writeLong(t);
-		io.writeUTF(o.ID);
+		io.writeUTF(o.getID());
 		io.writeBoolean(reload);
 		o.writeExtended(io);
 	}

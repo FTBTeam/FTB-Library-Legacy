@@ -3,7 +3,7 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.*;
-import latmod.lib.LMMapUtils;
+import latmod.lib.LMListUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -27,7 +27,7 @@ public class CmdMode extends CommandSubLM
 		
 		public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
 		{
-			if(args.length == 1) return LMMapUtils.toKeyStringArray(GameModes.getGameModes().modes);
+			if(args.length == 1) return LMListUtils.toStringArray(GameModes.getGameModes().modes.keySet());
 			return super.getTabStrings(ics, args, i);
 		}
 		

@@ -40,7 +40,6 @@ public class FTBLib
 {
 	public static final boolean DEV_ENV = ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")).booleanValue();
 	public static boolean userIsLatvianModder = false;
-	public static final Logger logger = LogManager.getLogger("FTBLib");
 	public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
 	public static final String FORMATTING = "\u00a7";
 	public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
@@ -71,7 +70,7 @@ public class FTBLib
 			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(Level.OFF);
 		}
 		else
-			logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
+			FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
 	}
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
@@ -133,7 +132,7 @@ public class FTBLib
 	{
 		if(ep == null) ep = FTBLibMod.proxy.getClientPlayer();
 		if(ep != null) ep.addChatMessage(getChatComponent(o));
-		else logger.info(o);
+		else System.out.println(o);
 	}
 	
 	public static MinecraftServer getServer()

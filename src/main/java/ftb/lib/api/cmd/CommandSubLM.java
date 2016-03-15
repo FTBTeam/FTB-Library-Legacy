@@ -20,11 +20,11 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	{ subCommands.put(c.commandName, c); }
 	
 	public String getCommandUsage(ICommandSender ics)
-	{ return "/" + commandName + " [ " + LMStringUtils.strip(LMMapUtils.toKeyStringArray(subCommands)) + " ]"; }
+	{ return "/" + commandName + " [ " + LMStringUtils.strip(LMListUtils.toStringArray(subCommands.keySet())) + " ]"; }
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 0) return LMMapUtils.toKeyStringArray(subCommands);
+		if(i == 0) return LMListUtils.toStringArray(subCommands.keySet());
 		
 		CommandLM cmd = subCommands.get(args[0]);
 		

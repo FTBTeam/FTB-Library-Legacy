@@ -31,13 +31,9 @@ public class ClientNotifications
 	public static void add(Notification n)
 	{
 		if(n == null) return;
-		if(n.ID != null)
-		{
-			Temp.list.remove(n);
-			Perm.list.remove(n);
-			if(current != null && current.equals(n)) current = null;
-		}
-		
+		Temp.list.remove(n);
+		Perm.list.remove(n);
+		if(current != null && current.equals(n)) current = null;
 		Temp.list.add(new Temp(n));
 		if(!n.isTemp()) Perm.list.add(new Perm(n));
 	}
@@ -61,7 +57,7 @@ public class ClientNotifications
 		
 		private Temp(Notification n)
 		{
-			super(n.ID);
+			super(n.getID());
 			n.item = null; // Too lazy to re-implement item drawing
 			notification = n;
 			time = -1L;
@@ -152,7 +148,7 @@ public class ClientNotifications
 		
 		private Perm(Notification n)
 		{
-			super(n.ID);
+			super(n.getID());
 			notification = n;
 			timeAdded = LMUtils.millis();
 		}

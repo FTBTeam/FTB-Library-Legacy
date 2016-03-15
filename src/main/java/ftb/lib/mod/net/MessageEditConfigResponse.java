@@ -16,7 +16,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 	{
 		this();
 		io.writeLong(provider.adminToken);
-		io.writeUTF(provider.getConfigFile().ID);
+		io.writeUTF(provider.getConfigFile().getID());
 		
 		try { provider.getConfigFile().write(io); }
 		catch(Exception e) { }

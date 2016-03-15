@@ -3,6 +3,7 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.config.FTBLibConfigCmdNames;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
@@ -21,11 +22,11 @@ public class CmdEditConfig extends CommandLM
 	
 	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
 	{
-		if(i == 0) return LMMapUtils.toKeyStringArray(ConfigRegistry.map);
+		if(i == 0) return LMListUtils.toStringArray(ConfigRegistry.map.keySet());
 		else if(i == 1)
 		{
 			ConfigFile file = ConfigRegistry.map.get(args[0]);
-			if(file != null) return LMMapUtils.toKeyStringArray(file.entryMap);
+			if(file != null) return LMListUtils.toStringArray(file.entryMap.keySet());
 		}
 		else if(i == 2)
 		{
@@ -33,7 +34,7 @@ public class CmdEditConfig extends CommandLM
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup(args[1]);
-				if(group != null) return LMMapUtils.toKeyStringArray(group.entryMap);
+				if(group != null) return LMListUtils.toStringArray(group.entryMap.keySet());
 			}
 		}
 		
@@ -71,7 +72,7 @@ public class CmdEditConfig extends CommandLM
 		{
 			String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
 			
-			FTBLib.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
+			FTBLibMod.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
 			
 			try
 			{

@@ -23,7 +23,7 @@ public class ClickAction implements IJsonObject
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("type", new JsonPrimitive(type.ID));
+		o.add("type", new JsonPrimitive(type.getID()));
 		if(data != null) o.add("data", data);
 		return o;
 	}

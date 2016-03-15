@@ -336,7 +336,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 						
 						if(c.closeGui) FTBLibClient.openGui(gui);
 					}
-				}, ((ConfigEntryColor) entry).value.color(), 0, false);
+				}, ((ConfigEntryColor) entry).value, 0, false);
 			}
 			else if(type == PrimitiveType.INT)
 			{

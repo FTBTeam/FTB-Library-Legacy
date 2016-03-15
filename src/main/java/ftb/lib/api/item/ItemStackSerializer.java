@@ -45,7 +45,7 @@ public class ItemStackSerializer
 		}
 		
 		ItemStack newStack = GameRegistry.makeItemStack(itemID, dmg, size, nbt);
-		newStack.stackSize = size
+		newStack.stackSize = size;
 		return newStack;
 	}
 	

@@ -1,6 +1,6 @@
 package ftb.lib.notification;
 
-import latmod.lib.*;
+import latmod.lib.LMListUtils;
 
 import java.util.HashMap;
 
@@ -22,7 +22,7 @@ public class ClickActionRegistry
 	
 	public static void add(ClickActionType a)
 	{
-		if(a != null && LMStringUtils.isValid(a.ID) && !map.containsKey(a.ID)) map.put(a.ID, a);
+		if(a != null && !map.containsKey(a.getID())) map.put(a.getID(), a);
 	}
 	
 	public static ClickActionType get(String s)

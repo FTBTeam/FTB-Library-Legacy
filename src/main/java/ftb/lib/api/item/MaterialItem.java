@@ -42,13 +42,13 @@ public class MaterialItem extends FinalIDObject
 	{ }
 	
 	public String getUnlocalizedName()
-	{ return item.getMod().getItemName(item.folder.isEmpty() ? ID : (item.folder + "." + ID)); }
+	{ return item.getMod().getItemName(item.folder.isEmpty() ? getID() : (item.folder + "." + getID())); }
 	
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{
-		if(item.folder.isEmpty()) icon = ir.registerIcon(item.getMod().assets + ID);
-		else icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + ID);
+		if(item.folder.isEmpty()) icon = ir.registerIcon(item.getMod().assets + getID());
+		else icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + getID());
 	}
 	
 	@SideOnly(Side.CLIENT)
