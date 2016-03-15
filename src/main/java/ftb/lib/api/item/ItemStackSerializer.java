@@ -44,7 +44,9 @@ public class ItemStackSerializer
 			nbt = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
 		}
 		
-		return GameRegistry.makeItemStack(itemID, size, dmg, nbt);
+		ItemStack newStack = GameRegistry.makeItemStack(itemID, dmg, size, nbt);
+		newStack.stackSize = size
+		return newStack;
 	}
 	
 	public static String toString(ItemStack is)
