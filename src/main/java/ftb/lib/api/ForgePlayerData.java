@@ -12,7 +12,7 @@ public abstract class ForgePlayerData extends FinalIDObject
 	
 	public ForgePlayerData(String id, ForgePlayer p)
 	{
-		super(id.toLowerCase());
+		super(id);
 		player = p;
 	}
 	

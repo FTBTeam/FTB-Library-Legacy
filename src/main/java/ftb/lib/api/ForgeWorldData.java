@@ -14,7 +14,7 @@ public abstract class ForgeWorldData extends FinalIDObject
 	
 	public ForgeWorldData(String id, ForgeWorld w)
 	{
-		super(id.toLowerCase());
+		super(id);
 		world = w;
 	}
 	
