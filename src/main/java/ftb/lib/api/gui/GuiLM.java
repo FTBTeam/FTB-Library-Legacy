@@ -56,16 +56,16 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	
 	public abstract void addWidgets();
 	
-	public ItemStack getHeldItem()
+	public final ItemStack getHeldItem()
 	{ return mc.thePlayer.inventory.getItemStack(); }
 	
-	public GuiScreen getGui()
+	public final GuiScreen getGui()
 	{ return this; }
 	
-	public PanelLM getMainPanel()
+	public final PanelLM getMainPanel()
 	{ return mainPanel; }
 	
-	public MouseLM mouse()
+	public final MouseLM mouse()
 	{ return mouse; }
 	
 	public final float getZLevel()
@@ -74,7 +74,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	public final void setZLevel(float z)
 	{ zLevel = z; }
 	
-	public FontRenderer getFontRenderer()
+	public final FontRenderer getFontRenderer()
 	{ return fontRendererObj; }
 	
 	public final void close(GuiScreen g)

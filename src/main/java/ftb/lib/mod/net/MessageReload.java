@@ -37,6 +37,8 @@ public class MessageReload extends MessageLM_IO
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
+		String mode0 = ForgeWorldSP.inst.getMode().getID();
+		
 		boolean reloadClient = io.readBoolean();
 		
 		long ms = LMUtils.millis();
@@ -46,7 +48,7 @@ public class MessageReload extends MessageLM_IO
 		
 		if(reloadClient)
 		{
-			reloadClient(ms, true);
+			reloadClient(ms, true, !ForgeWorldSP.inst.getMode().getID().equals(mode0));
 		}
 		else
 		{
@@ -62,13 +64,13 @@ public class MessageReload extends MessageLM_IO
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public static void reloadClient(long ms, boolean printMessage)
+	public static void reloadClient(long ms, boolean printMessage, boolean modeChanged)
 	{
 		if(ms == 0L) ms = LMUtils.millis();
 		GameModes.reload();
 		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-		ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, true);
+		ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, true, modeChanged);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		

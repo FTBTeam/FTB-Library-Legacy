@@ -14,6 +14,6 @@ public class CmdReloadClient extends CommandLM
 	
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
-		MessageReload.reloadClient(0L, true);
+		MessageReload.reloadClient(0L, true, false);
 	}
 }

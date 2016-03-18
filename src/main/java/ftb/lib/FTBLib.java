@@ -82,6 +82,7 @@ public class FTBLib
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
 		if(ForgeWorldMP.inst == null) return;
+		String mode0 = ForgeWorldMP.inst.getMode().getID();
 		
 		long ms = LMUtils.millis();
 		ConfigRegistry.reload();
@@ -90,7 +91,7 @@ public class FTBLib
 		for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
 			p.toPlayerMP().stats.refresh(p.toPlayerMP(), false);
 		
-		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient);
+		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient, !ForgeWorldMP.inst.getMode().getID().equals(mode0));
 		if(ftbu != null) ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		

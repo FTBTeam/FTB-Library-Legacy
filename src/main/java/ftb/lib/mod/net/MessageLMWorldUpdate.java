@@ -62,7 +62,7 @@ public class MessageLMWorldUpdate extends MessageLM_IO
 			ForgeWorldSP.inst.init();
 		}
 		
-		MessageReload.reloadClient(0L, false);
+		MessageReload.reloadClient(0L, false, true);
 		return null;
 	}
 }

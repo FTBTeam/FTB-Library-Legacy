@@ -9,11 +9,13 @@ public class ReloadEvent extends Event
 	public final ForgeWorld world;
 	public final ICommandSender sender;
 	public final boolean reloadingClient;
+	public final boolean modeChanged;
 	
-	public ReloadEvent(ForgeWorld w, ICommandSender ics, boolean b)
+	public ReloadEvent(ForgeWorld w, ICommandSender ics, boolean b, boolean b1)
 	{
 		world = w;
 		sender = ics;
 		reloadingClient = b;
+		modeChanged = b1;
 	}
 }
