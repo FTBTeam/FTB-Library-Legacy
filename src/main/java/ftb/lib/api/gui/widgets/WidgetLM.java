@@ -32,17 +32,23 @@ public class WidgetLM
 	public int getAY()
 	{ return (parentPanel == null) ? posY : (parentPanel.getAY() + posY); }
 	
+	public final int endX()
+	{ return getAX() + width; }
+	
+	public final int endY()
+	{ return getAY() + height; }
+	
 	protected boolean mouseOver(int ax, int ay)
 	{ return gui.mouse().isInside(ax, ay, width, height); }
 	
 	public boolean mouseOver()
 	{ return mouseOver(getAX(), getAY()); }
 	
-	public void render(TextureCoords icon, double rw, double rh)
+	public final void render(TextureCoords icon, double rw, double rh)
 	{ GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), (int) (width * rw), (int) (height * rh)); }
 	
-	public void render(TextureCoords icon)
-	{ render(icon, 1D, 1D); }
+	public final void render(TextureCoords icon)
+	{ GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height); }
 	
 	public void mousePressed(int b)
 	{

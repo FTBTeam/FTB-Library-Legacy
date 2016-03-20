@@ -89,6 +89,9 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		refreshWidgets();
 	}
 	
+	public boolean doesGuiPauseGame()
+	{ return false; }
+	
 	public void initLMGui()
 	{
 	}

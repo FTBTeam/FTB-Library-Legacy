@@ -21,10 +21,11 @@ public class MessageReload extends MessageLM_IO
 {
 	public MessageReload() { super(ByteCount.INT); }
 	
-	public MessageReload(ForgeWorldMP w, boolean reloadClient)
+	public MessageReload(ForgeWorldMP w, boolean reloadClient, boolean modeChanged)
 	{
 		this();
 		io.writeBoolean(reloadClient);
+		io.writeBoolean(modeChanged);
 		writeSyncedConfig(io);
 		NBTTagCompound tag = new NBTTagCompound();
 		w.writeDataToNet(tag, null);
@@ -37,9 +38,8 @@ public class MessageReload extends MessageLM_IO
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{
-		String mode0 = ForgeWorldSP.inst.getMode().getID();
-		
 		boolean reloadClient = io.readBoolean();
+		boolean modeChanged = io.readBoolean();
 		
 		long ms = LMUtils.millis();
 		readSyncedConfig(io);
@@ -48,7 +48,7 @@ public class MessageReload extends MessageLM_IO
 		
 		if(reloadClient)
 		{
-			reloadClient(ms, true, !ForgeWorldSP.inst.getMode().getID().equals(mode0));
+			reloadClient(ms, true, modeChanged);
 		}
 		else
 		{

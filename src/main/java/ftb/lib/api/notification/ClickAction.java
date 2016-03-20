@@ -22,9 +22,14 @@ public class ClickAction implements IJsonObject
 	
 	public JsonElement getJson()
 	{
+		if(data == null || data.isJsonNull())
+		{
+			return new JsonPrimitive(type.getID());
+		}
+		
 		JsonObject o = new JsonObject();
 		o.add("type", new JsonPrimitive(type.getID()));
-		if(data != null) o.add("data", data);
+		o.add("data", data);
 		return o;
 	}
 	
@@ -45,5 +50,11 @@ public class ClickAction implements IJsonObject
 	
 	@SideOnly(Side.CLIENT)
 	public void onClicked()
-	{ if(type != null) type.onClicked(data); }
+	{ if(type != null) type.onClicked(data == null ? JsonNull.INSTANCE : data); }
+	
+	public String toString()
+	{
+		if(data == null) return type.getID();
+		return data.toString();
+	}
 }

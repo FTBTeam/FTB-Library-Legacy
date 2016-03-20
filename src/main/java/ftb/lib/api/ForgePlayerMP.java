@@ -13,6 +13,7 @@ import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.stats.StatisticsFile;
 import net.minecraft.util.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.*;
@@ -349,9 +350,16 @@ public class ForgePlayerMP extends ForgePlayer
 	
 	public void onDeath()
 	{
+		if(!isOnline()) return;
 		lastDeath = new EntityPos(getPlayer()).toBlockDimPos();
 		stats.refresh(this, false);
 		super.onDeath();
 		new MessageLMPlayerDied().sendTo(getPlayer());
+	}
+	
+	public StatisticsFile getStatFile(boolean force)
+	{
+		if(isOnline()) return getPlayer().getStatFile();
+		return force ? FTBLib.getServer().getConfigurationManager().getPlayerStatsFile(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
 	}
 }

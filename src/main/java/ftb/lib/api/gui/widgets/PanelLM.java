@@ -9,13 +9,11 @@ import java.util.*;
 public abstract class PanelLM extends WidgetLM // GuiLM
 {
 	public final List<WidgetLM> widgets;
-	protected final List<PanelLM> childPanels;
 	
 	public PanelLM(IGuiLM g, int x, int y, int w, int h)
 	{
 		super(g, x, y, w, h);
 		widgets = new ArrayList<>();
-		childPanels = new ArrayList<>();
 	}
 	
 	public abstract void addWidgets();
@@ -28,9 +26,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		
 		if(w instanceof PanelLM)
 		{
-			PanelLM p = (PanelLM) w;
-			childPanels.add(p);
-			p.refreshWidgets();
+			((PanelLM) w).refreshWidgets();
 		}
 	}
 	

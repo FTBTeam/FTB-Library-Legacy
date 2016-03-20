@@ -1,6 +1,5 @@
 package ftb.lib.api.gui.widgets;
 
-import ftb.lib.TextureCoords;
 import ftb.lib.api.gui.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.*;
@@ -21,9 +20,6 @@ public abstract class ItemButtonLM extends ButtonLM
 	
 	public void setItem(ItemStack is)
 	{ item = is; }
-	
-	public void setBackground(TextureCoords t)
-	{ background = t; }
 	
 	public void renderWidget()
 	{ if(item != null) GuiLM.drawItem(gui, item, getAX(), getAY()); }

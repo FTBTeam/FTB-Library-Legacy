@@ -91,13 +91,15 @@ public class FTBLib
 		for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
 			p.toPlayerMP().stats.refresh(p.toPlayerMP(), false);
 		
-		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient, !ForgeWorldMP.inst.getMode().getID().equals(mode0));
+		boolean modeChanged = !ForgeWorldMP.inst.getMode().getID().equals(mode0);
+		
+		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient, modeChanged);
 		if(ftbu != null) ftbu.onReloaded(event);
 		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)
 			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloadedServer", ((LMUtils.millis() - ms) + "ms")));
-		new MessageReload(ForgeWorldMP.inst, reloadClient).sendTo(null);
+		new MessageReload(ForgeWorldMP.inst, reloadClient, modeChanged).sendTo(null);
 	}
 	
 	public static IChatComponent getChatComponent(Object o)
