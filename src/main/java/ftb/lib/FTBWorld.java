@@ -55,6 +55,7 @@ public class FTBWorld
 	public void readReloadData(ByteIOStream io)
 	{
 		String mode = io.readUTF();
+		GameModes.reload();
 		currentMode = GameModes.getGameModes().get(mode);
 	}
 	

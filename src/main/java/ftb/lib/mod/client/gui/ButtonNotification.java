@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.lib.notification.ClientNotifications;
+import ftb.lib.api.notification.ClientNotifications;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;

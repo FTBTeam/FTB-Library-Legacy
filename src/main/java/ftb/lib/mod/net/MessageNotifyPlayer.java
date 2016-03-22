@@ -5,8 +5,8 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.EnumScreen;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
+import ftb.lib.api.notification.*;
 import ftb.lib.mod.client.FTBLibModClient;
-import ftb.lib.notification.*;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 

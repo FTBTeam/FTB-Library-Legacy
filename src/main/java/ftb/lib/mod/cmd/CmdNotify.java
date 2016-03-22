@@ -3,7 +3,7 @@ package ftb.lib.mod.cmd;
 import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
-import ftb.lib.notification.*;
+import ftb.lib.api.notification.*;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;

@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.notification.ClientNotifications;
+import ftb.lib.api.notification.ClientNotifications;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 

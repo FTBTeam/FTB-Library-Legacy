@@ -37,7 +37,6 @@ public class SliderLM extends WidgetLM
 					value = (float) (gui.mouse().y - (gui.getMainPanel().posY + posY + (sliderSize / 2))) / (float) (height - sliderSize);
 				else
 					value = (float) (gui.mouse().x - (gui.getMainPanel().posY + posX + (sliderSize / 2))) / (float) (width - sliderSize);
-				value = MathHelperLM.clampFloat(value, 0F, 1F);
 			}
 			else isGrabbed = false;
 		}
@@ -45,9 +44,9 @@ public class SliderLM extends WidgetLM
 		if(gui.mouse().dwheel != 0 && canMouseScroll())
 		{
 			value += (gui.mouse().dwheel < 0) ? scrollStep : -scrollStep;
-			value = MathHelperLM.clampFloat(value, 0F, 1F);
 		}
 		
+		value = MathHelperLM.clampFloat(value, 0F, 1F);
 		return v0 != value;
 	}
 	

@@ -1,4 +1,4 @@
-package ftb.lib.notification;
+package ftb.lib.api.notification;
 
 import com.google.gson.*;
 import ftb.lib.JsonHelper;

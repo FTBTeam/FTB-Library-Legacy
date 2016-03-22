@@ -1,4 +1,4 @@
-package ftb.lib.notification;
+package ftb.lib.api.notification;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.*;

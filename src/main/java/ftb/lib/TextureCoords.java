@@ -56,6 +56,8 @@ public final class TextureCoords
 		if(toString == null)
 		{
 			StringBuilder sb = new StringBuilder();
+			sb.append(texture);
+			sb.append(',');
 			sb.append(posXI());
 			sb.append(',');
 			sb.append(posYI());
@@ -69,11 +71,22 @@ public final class TextureCoords
 		return toString;
 	}
 	
-	public int getWidth(double h)
-	{ return (int) (width * (h / (double) height)); }
+	public boolean equals(Object o)
+	{
+		if(o == null) return false;
+		else if(o == this) return true;
+		else
+		{
+			TextureCoords t = (TextureCoords) o;
+			return LMUtils.areObjectsEqual(texture, t.texture, true) && minU == t.minU && minV == t.minV && maxU == t.maxU && maxV == t.maxV;
+		}
+	}
 	
-	public int getHeight(double w)
-	{ return (int) (height * (w / (double) width)); }
+	public double getWidth(double h)
+	{ return width * (h / height); }
+	
+	public double getHeight(double w)
+	{ return height * (w / width); }
 	
 	public boolean isValid()
 	{ return texture != null && width > 0 && height > 0; }
