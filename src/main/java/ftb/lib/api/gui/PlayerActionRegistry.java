@@ -12,19 +12,11 @@ import java.util.*;
 public class PlayerActionRegistry
 {
 	private static final HashMap<String, PlayerAction> map = new HashMap<>();
-	public static final Map<String, ConfigEntry> configEntries = new HashMap<>();
 	
-	public static final ConfigGroup configGroup = new ConfigGroup("sidebar_buttons")
-	{
-		public Map<String, ConfigEntry> entryMap()
-		{ return configEntries; }
-	};
+	public static final ConfigGroup configGroup = new ConfigGroup("sidebar_buttons");
 	
 	public static boolean enabled(String id)
-	{
-		ConfigEntry entry = configEntries.get(id);
-		return (entry == null) ? true : entry.getAsBoolean();
-	}
+	{ return !configGroup.entryMap.containsKey(id) || configGroup.getEntry(id).getAsBoolean(); }
 	
 	public static void add(final PlayerAction a)
 	{
@@ -40,7 +32,7 @@ public class PlayerActionRegistry
 					{ return "player_action." + a.getID(); }
 				};
 				
-				configEntries.put(a.getID(), entry);
+				configGroup.entryMap.put(a.getID(), entry);
 			}
 		}
 	}

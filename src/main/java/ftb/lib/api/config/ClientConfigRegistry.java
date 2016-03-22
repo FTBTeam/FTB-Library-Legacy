@@ -38,6 +38,9 @@ public final class ClientConfigRegistry
 	/**
 	 * Do this before postInit()
 	 */
-	public static void add(ConfigGroup g)
-	{ file.add(g, false); }
+	public static void addGroup(String id, Class<?> c)
+	{ file.addGroup(id, c); }
+	
+	public static void add(ConfigGroup group)
+	{ file.add(group, false); }
 }

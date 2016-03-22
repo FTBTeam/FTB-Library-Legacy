@@ -27,12 +27,8 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
 {
-	public static final ConfigGroup client_config = new ConfigGroup("ftbl");
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
-	
-	@Hidden(true)
-	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false);
 	
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
@@ -47,7 +43,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		//For Dev reasons, see DevConsole
 		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
 		
-		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
+		ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
 		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());

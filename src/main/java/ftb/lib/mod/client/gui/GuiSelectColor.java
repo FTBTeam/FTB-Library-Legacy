@@ -1,13 +1,11 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.*;
+import ftb.lib.TextureCoords;
 import ftb.lib.api.client.*;
-import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
-import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
@@ -16,16 +14,17 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiSelectColorHSB extends GuiLM
+public class GuiSelectColor extends GuiLM
 {
-	public static final ResourceLocation tex = new ResourceLocation("ftbl", "textures/gui/colselector_hsb.png");
-	public static final ResourceLocation tex_colors = new ResourceLocation("ftbl", "textures/gui/colselector_hsb_colors.png");
-	public static final TextureCoords col_tex = new TextureCoords(tex, 76, 10, 21, 16);
-	public static final TextureCoords cursor_tex = new TextureCoords(tex, 97, 20, 4, 4);
+	public static final ResourceLocation tex = new ResourceLocation("ftbl", "textures/gui/colselector.png");
+	public static final ResourceLocation tex_wheel = new ResourceLocation("ftbl", "textures/gui/colselector_wheel.png");
+	
+	public static final TextureCoords col_tex = new TextureCoords(tex, 143, 10, 29, 16);
+	public static final TextureCoords cursor_tex = new TextureCoords(tex, 143, 36, 8, 8);
 	
 	public static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
-	public static final TextureCoords slider_tex = new TextureCoords(tex, 97, 10, SLIDER_W, SLIDER_H);
-	public static final TextureCoords slider_col_tex = new TextureCoords(tex, 76, 0, SLIDER_BAR_W, SLIDER_H);
+	public static final TextureCoords slider_tex = new TextureCoords(tex, 143, 26, SLIDER_W, SLIDER_H);
+	public static final TextureCoords slider_col_tex = new TextureCoords(tex, 143, 0, SLIDER_BAR_W, SLIDER_H);
 	
 	public final IColorCallback callback;
 	public final LMColor.HSB initCol;
@@ -33,25 +32,24 @@ public class GuiSelectColorHSB extends GuiLM
 	public final boolean isInstant;
 	public final LMColor.HSB currentColor;
 	
-	public final ButtonLM colorInit, colorCurrent, switchRGB;
-	public final SliderLM sliderBrightness;
+	public final ButtonLM colorInit, colorCurrent;
+	public final SliderLM sliderHue, sliderSaturation, sliderBrightness;
 	public final ColorSelector colorSelector;
 	
-	public GuiSelectColorHSB(IColorCallback cb, LMColor col, Object id, boolean instant)
+	public GuiSelectColor(IColorCallback cb, LMColor col, Object id, boolean instant)
 	{
 		super(null, tex);
 		callback = cb;
 		initCol = new LMColor.HSB();
 		initCol.set(col);
 		currentColor = new LMColor.HSB();
-		currentColor.set(col);
 		colorID = id;
 		isInstant = instant;
 		
-		mainPanel.width = 76;
-		mainPanel.height = 107;
+		mainPanel.width = 143;
+		mainPanel.height = 93;
 		
-		colorInit = new ButtonLM(this, 6, 5, col_tex.widthI(), col_tex.heightI())
+		colorInit = new ButtonLM(this, 74, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
@@ -63,7 +61,7 @@ public class GuiSelectColorHSB extends GuiLM
 			}
 		};
 		
-		colorCurrent = new ButtonLM(this, 49, 5, col_tex.widthI(), col_tex.heightI())
+		colorCurrent = new ButtonLM(this, 107, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			public void onButtonPressed(int b)
 			{ closeGui(true); }
@@ -75,35 +73,62 @@ public class GuiSelectColorHSB extends GuiLM
 			}
 		};
 		
-		switchRGB = new ButtonLM(this, 30, 5, 16, 16)
-		{
-			public void onButtonPressed(int b)
-			{
-				FTBLibClient.playClickSound();
-				FTBLibModClient.open_hsb_cg.set(false);
-				ClientConfigRegistry.provider().getConfigFile().save();
-				FTBLibClient.openGui(new GuiSelectColorRGB(callback, initCol, colorID, isInstant));
-			}
-		};
+		/*
+		currentColR = new SliderLM(this, 6, 25, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
+		currentColR.value = currentColor.red() / 255F;
+		currentColR.displayMax = 255;
+		currentColR.title = EnumMCColor.RED.toString();
+		currentColR.scrollStep = 1F / 255F;
 		
-		switchRGB.title = "RGB";
+		currentColG = new SliderLM(this, 6, 41, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
+		currentColG.value = currentColor.green() / 255F;
+		currentColG.displayMax = 255;
+		currentColG.title = EnumMCColor.GREEN.toString();
+		currentColG.scrollStep = 1F / 255F;
 		
-		sliderBrightness = new SliderLM(this, 6, 91, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
-		sliderBrightness.value = initCol.brightness();
+		currentColB = new SliderLM(this, 6, 57, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
+		currentColB.value = currentColor.blue() / 255F;
+		currentColB.displayMax = 255;
+		currentColB.title = EnumMCColor.BLUE.toString();
+		currentColB.scrollStep = 1F / 255F;
+		*/
+		
+		sliderHue = new SliderLM(this, 4, 51, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
+		sliderHue.displayMax = 255;
+		sliderHue.title = "Hue";
+		sliderHue.scrollStep = 1F / 255F;
+		
+		sliderSaturation = new SliderLM(this, 4, 64, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
+		sliderSaturation.displayMax = 255;
+		sliderSaturation.title = "Saturation";
+		sliderSaturation.scrollStep = 1F / 255F;
+		
+		sliderBrightness = new SliderLM(this, 4, 77, SLIDER_BAR_W, SLIDER_H, SLIDER_W);
 		sliderBrightness.displayMax = 255;
-		sliderBrightness.title = EnumMCColor.BLACK.toString();
+		sliderBrightness.title = "Brightness";
 		sliderBrightness.scrollStep = 1F / 255F;
 		
-		colorSelector = new ColorSelector(this, 6, 24, 64, 64);
+		colorSelector = new ColorSelector(this, 73, 5, 64, 64);
+		
+		setColor(initCol);
 	}
 	
 	public void addWidgets()
 	{
 		mainPanel.add(colorInit);
 		mainPanel.add(colorCurrent);
-		mainPanel.add(switchRGB);
+		mainPanel.add(sliderHue);
+		mainPanel.add(sliderSaturation);
 		mainPanel.add(sliderBrightness);
 		mainPanel.add(colorSelector);
+	}
+	
+	public void setColor(LMColor col)
+	{
+		currentColor.set(col);
+		sliderHue.value = initCol.hue();
+		sliderSaturation.value = initCol.saturation();
+		sliderBrightness.value = initCol.brightness();
 	}
 	
 	public void drawBackground()
@@ -123,7 +148,6 @@ public class GuiSelectColorHSB extends GuiLM
 		FTBLibClient.setGLColor(currentColor.color(), 255);
 		colorCurrent.render(col_tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		switchRGB.render(GuiIcons.color_rgb);
 		
 		FTBLibClient.setTexture(tex);
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -188,12 +212,12 @@ public class GuiSelectColorHSB extends GuiLM
 	{
 		public static boolean shouldRedraw = true;
 		
-		public final GuiSelectColorHSB gui;
+		public final GuiSelectColor gui;
 		public boolean grabbed = false;
 		public double cursorPosX = 0D;
 		public double cursorPosY = 0D;
 		
-		public ColorSelector(GuiSelectColorHSB g, int x, int y, int w, int h)
+		public ColorSelector(GuiSelectColor g, int x, int y, int w, int h)
 		{
 			super(g, x, y, w, h);
 			gui = g;
@@ -230,7 +254,7 @@ public class GuiSelectColorHSB extends GuiLM
 			}
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			FTBLibClient.setTexture(tex_colors);
+			FTBLibClient.setTexture(tex_wheel);
 			GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 			
 			if(cursorPosX >= 0D && cursorPosY >= 0D)
