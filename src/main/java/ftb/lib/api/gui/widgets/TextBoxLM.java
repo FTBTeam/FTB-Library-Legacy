@@ -128,7 +128,7 @@ public class TextBoxLM extends WidgetLM
 		
 		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) ns += '_';
 		
-		if(s.length() > 0)
+		if(ns.length() > 0)
 		{
 			int col = textColor;
 			if(!isValid()) col = 0xFFFF0000;

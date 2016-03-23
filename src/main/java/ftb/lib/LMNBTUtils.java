@@ -1,10 +1,11 @@
 package ftb.lib;
 
+import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
 import net.minecraftforge.common.util.Constants;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 @SuppressWarnings("all")
@@ -57,7 +58,24 @@ public class LMNBTUtils
 	{
 		if(f == null || !f.exists()) return null;
 		try { return CompressedStreamTools.read(f); }
-		catch(Exception e) { e.printStackTrace(); }
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			FTBLibMod.logger.info("Possibly corrupted / old file. Trying the old method");
+			
+			try
+			{
+				FileInputStream is = new FileInputStream(f);
+				byte[] b = new byte[is.available()];
+				is.read(b);
+				is.close();
+				return CompressedStreamTools.func_152457_a(b, NBTSizeTracker.field_152451_a);
+			}
+			catch(Exception e1)
+			{
+				e1.printStackTrace();
+			}
+		}
 		return null;
 	}
 	
