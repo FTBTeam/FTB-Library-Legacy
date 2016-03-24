@@ -7,6 +7,7 @@ import ftb.lib.api.gui.widgets.PanelLM;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -236,6 +237,12 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	public static void drawItem(IGuiLM gui, ItemStack is, int x, int y)
 	{
 		if(is == null) return;
+		FTBLibClient.setTexture(TextureMap.locationItemsTexture);
+		gui.setZLevel(200F);
+		itemRender.zLevel = 200F;
+		FTBLibClient.renderGuiItem(is, itemRender, gui.getFontRenderer(), x, y);
+		gui.setZLevel(0F);
+		itemRender.zLevel = 0F;
 	}
 	
 	public static void render(TextureCoords tc, double x, double y, double z, double w, double h)

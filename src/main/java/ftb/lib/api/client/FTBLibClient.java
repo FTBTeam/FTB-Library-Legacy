@@ -224,4 +224,23 @@ public class FTBLibClient
 		if(gui == null && mc.thePlayer != null) mc.thePlayer.closeScreen();
 		else mc.displayGuiScreen(gui);
 	}
+	
+	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
+	{
+		if(is == null || is.getItem() == null) return;
+		GlStateManager.pushAttrib();
+		GlStateManager.pushMatrix();
+		//GL11.glTranslatef(0F, 0F, 32F);
+		GlStateManager.enableLighting();
+		RenderHelper.enableGUIStandardItemLighting();
+		GlStateManager.enableRescaleNormal();
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		FontRenderer f = is.getItem().getFontRenderer(is);
+		if(f == null) f = font;
+		itemRender.renderItemAndEffectIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y);
+		itemRender.renderItemOverlayIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y, null);
+		GlStateManager.popMatrix();
+		GlStateManager.popAttrib();
+	}
 }

@@ -93,7 +93,7 @@ public class FTBLibClientEventHandler
 			ILMPlayer other = (FTBLib.ftbu == null) ? new TempLMPlayerFromEntity(Side.CLIENT, ((EntityPlayer) e.target)) : FTBLib.ftbu.getLMPlayer(e.target);
 			if(other != null)
 			{
-				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true);
+				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true, false);
 				if(!a.isEmpty()) FTBLibClient.openGui(new GuiPlayerActions(self, other, a));
 			}
 		}

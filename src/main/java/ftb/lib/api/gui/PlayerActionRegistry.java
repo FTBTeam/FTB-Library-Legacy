@@ -37,7 +37,7 @@ public class PlayerActionRegistry
 		}
 	}
 	
-	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ILMPlayer self, ILMPlayer other, boolean sort)
+	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ILMPlayer self, ILMPlayer other, boolean sort, boolean ignoreConfig)
 	{
 		ArrayList<PlayerAction> l = new ArrayList<>();
 		
@@ -45,7 +45,7 @@ public class PlayerActionRegistry
 		{
 			if(a.type.equalsType(t) && a.isVisibleFor(self, other))
 			{
-				if(a.configDefault() != null)
+				if(!ignoreConfig && a.configDefault() != null)
 				{
 					if(!enabled(a.getID())) continue;
 				}

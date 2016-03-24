@@ -8,7 +8,7 @@ import java.util.*;
 
 public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 {
-	public final HashMap<String, CommandLM> subCommands;
+	public final Map<String, CommandLM> subCommands;
 	
 	public CommandSubLM(String s, CommandLevel l)
 	{

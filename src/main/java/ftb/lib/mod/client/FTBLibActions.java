@@ -81,7 +81,7 @@ public class FTBLibActions
 		if(e.gui instanceof InventoryEffectRenderer)
 		{
 			ILMPlayer p = FTBLibClient.getClientLMPlayer();
-			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false);
+			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false, false);
 			
 			if(!buttons.isEmpty())
 			{
