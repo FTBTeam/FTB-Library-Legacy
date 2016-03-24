@@ -39,6 +39,7 @@ ftbl.button.save=Save
 ftbl.button.refresh=Refresh
 ftbl.button.other=Other
 ftbl.button.edit=Edit
+ftbl.button.info=Info
 
 ftbl.label.true=True
 ftbl.label.false=False

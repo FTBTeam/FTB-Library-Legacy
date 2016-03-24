@@ -1,7 +1,7 @@
 package ftb.lib;
 
 import ftb.lib.api.gui.GuiIcons;
-import net.minecraft.client.resources.I18n;
+import ftb.lib.mod.FTBLibMod;
 
 public enum PrivacyLevel
 {
@@ -38,10 +38,10 @@ public enum PrivacyLevel
 	}
 	
 	public String getText()
-	{ return I18n.format("ftbl.security." + uname); }
+	{ return FTBLibMod.mod.translate("security." + uname); }
 	
 	public String getTitle()
-	{ return I18n.format("ftbl.security"); }
+	{ return FTBLibMod.mod.translate("security"); }
 	
 	public TextureCoords getIcon()
 	{ return GuiIcons.security[ID]; }
