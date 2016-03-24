@@ -61,10 +61,13 @@ public class MessageReload extends MessageLM
 		EventFTBReload event = new EventFTBReload(FTBWorld.client, ep, true);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		event.post();
-		if(printMessage)
-			FTBLib.printChat(ep, FTBLibMod.mod.chatComponent("reloaded_client", ((LMUtils.millis() - ms) + "ms")));
 		
-		System.out.println("Current Mode: " + FTBWorld.client.getMode());
+		if(printMessage)
+		{
+			FTBLib.printChat(ep, FTBLibMod.mod.chatComponent("reloaded_client", ((LMUtils.millis() - ms) + "ms")));
+		}
+		
+		FTBLibMod.logger.info("Current Mode: " + FTBWorld.client.getMode());
 	}
 	
 	static void writeSyncedConfig(ByteIOStream out)

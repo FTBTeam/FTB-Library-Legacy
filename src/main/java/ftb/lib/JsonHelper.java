@@ -27,4 +27,28 @@ public class JsonHelper
 		if(e == null || e.isJsonNull()) return null;
 		return chatComponentGson.fromJson(e, IChatComponent.class);
 	}
+	/*
+	public static JsonElement serializeNBT(NBTBase base)
+	{
+		if(base == null || base.getId() == 0) return JsonNull.INSTANCE;
+		
+		throw new IllegalStateException("Unable to serialize NBTBase " + base);
+	}
+	
+	public static NBTBase deserializeNBT(JsonElement e)
+	{
+		if(e == null || e.isJsonNull()) return null;
+		
+		try
+		{
+			return JsonToNBT.func_150315_a(e.toString());
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		
+		throw new IllegalStateException("Unable to deserialize NBTBase " + e);
+	}
+	*/
 }

@@ -89,13 +89,12 @@ public class FTBLibMod
 		EventFTBWorldServer event = new EventFTBWorldServer(FTBWorld.server, e.getServer());
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onFTBWorldServer(event);
 		event.post();
-		
-		//FTBLib.reload(e.getServer(), false, false);
 	}
 	
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent e)
 	{
+		FTBLib.reload(FTBLib.getServer(), false, false);
 	}
 	
 	@Mod.EventHandler

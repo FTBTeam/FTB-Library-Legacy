@@ -10,7 +10,6 @@ import ftb.lib.api.ServerTickCallback;
 import ftb.lib.mod.net.*;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -35,8 +34,10 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public void onWorldLoaded(WorldEvent.Load e)
 	{
-		if(e.world.provider.dimensionId == 0 && e.world instanceof WorldServer)
+		if(e.world.provider.dimensionId == 0 && !e.world.isRemote)
+		{
 			FTBLib.reload(FTBLib.getServer(), false, false);
+		}
 	}
 	
 	@SubscribeEvent

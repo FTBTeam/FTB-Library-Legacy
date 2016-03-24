@@ -91,13 +91,13 @@ public final class TextureCoords
 	public boolean isValid()
 	{ return texture != null && width > 0 && height > 0; }
 	
-	public TextureCoords clone()
+	public TextureCoords copy()
 	{ return new TextureCoords(texture, posX, posY, width, height, textureW, textureH); }
 	
 	public TextureCoords[] split(int x, int y)
 	{
 		if(x == 0 || y == 0) return new TextureCoords[0];
-		if(x == 1 && y == 1) return new TextureCoords[] {clone()};
+		if(x == 1 && y == 1) return new TextureCoords[] {copy()};
 		if(x == 1) return splitY(y);
 		if(y == 1) return splitX(x);
 		

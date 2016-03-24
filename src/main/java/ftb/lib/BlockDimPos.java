@@ -73,7 +73,7 @@ public final class BlockDimPos implements Cloneable
 	public EntityPos toEntityPos()
 	{ return new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim); }
 	
-	public BlockDimPos clone()
+	public BlockDimPos copy()
 	{ return new BlockDimPos(x, y, z, dim); }
 	
 	public ChunkCoordinates toBlockPos()
