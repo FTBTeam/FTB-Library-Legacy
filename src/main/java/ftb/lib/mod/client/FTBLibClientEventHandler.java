@@ -14,7 +14,7 @@ import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.entity.player.*;
 
 import java.util.List;
@@ -96,6 +96,16 @@ public class FTBLibClientEventHandler
 				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true, false);
 				if(!a.isEmpty()) FTBLibClient.openGui(new GuiPlayerActions(self, other, a));
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void preTexturesLoaded(TextureStitchEvent.Pre e)
+	{
+		if(e.map.getTextureType() == 0)
+		{
+			FTBLibClient.blockNullIcon = e.map.registerIcon("ftbl:empty_block");
+			FTBLibClient.clearCachedData();
 		}
 	}
 }

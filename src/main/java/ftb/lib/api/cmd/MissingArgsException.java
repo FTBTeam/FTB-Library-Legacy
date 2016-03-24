@@ -7,5 +7,5 @@ public class MissingArgsException extends CommandException
 	private static final long serialVersionUID = 1L;
 	
 	public MissingArgsException()
-	{ super("ftbl:missing_args", new Object[0]); }
+	{ super("ftbl.missing_args", new Object[0]); }
 }

@@ -38,7 +38,7 @@ public class MessageReload extends MessageLM
 		
 		if(!reload)
 		{
-			Notification n = new Notification("reload_client_config", new ChatComponentTranslation("ftbl:reload_client_config"), 7000);
+			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
 			n.setColor(0xFF333333);
@@ -62,7 +62,9 @@ public class MessageReload extends MessageLM
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
 		event.post();
 		if(printMessage)
-			FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient", ((LMUtils.millis() - ms) + "ms")));
+			FTBLib.printChat(ep, FTBLibMod.mod.chatComponent("reloaded_client", ((LMUtils.millis() - ms) + "ms")));
+		
+		System.out.println("Current Mode: " + FTBWorld.client.getMode());
 	}
 	
 	static void writeSyncedConfig(ByteIOStream out)

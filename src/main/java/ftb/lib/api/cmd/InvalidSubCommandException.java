@@ -10,5 +10,5 @@ public class InvalidSubCommandException extends CommandException
 	private static final long serialVersionUID = 1L;
 	
 	public InvalidSubCommandException(String s)
-	{ super("ftbl:invalid_subcmd", s); }
+	{ super("ftbl.invalid_subcmd", s); }
 }

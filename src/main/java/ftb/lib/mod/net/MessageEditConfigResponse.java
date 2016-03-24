@@ -22,6 +22,8 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		catch(Exception e) { }
 		
 		io.writeBoolean(provider.reload);
+		
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response TX: " + provider.getConfigFile().getJson());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -30,7 +32,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 	public IMessage onMessage(MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		if(!LMAccessToken.equals(ep, io.readLong(), true)) return null;
+		if(!LMAccessToken.equals(ep, io.readLong(), false)) return null;
 		String id = io.readUTF();
 		
 		ConfigFile file = ConfigRegistry.map.containsKey(id) ? ConfigRegistry.map.get(id) : ConfigRegistry.getTempConfig(id);
@@ -46,6 +48,8 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 			file.save();
 			if(io.readBoolean()) FTBLib.reload(ep, true, false);
 		}
+		
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response RX: " + file.getJson());
 		
 		return null;
 	}

@@ -195,8 +195,8 @@ public abstract class BlockLM extends Block implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	protected final String getTextureName()
 	{
-		if(textureName == null) return getMod().assets + blockName;
-		return getMod().assets + textureName;
+		if(textureName == null) return getMod().lowerCaseModID + ":" + blockName;
+		return getMod().lowerCaseModID + ":" + textureName;
 	}
 	
 	@SideOnly(Side.CLIENT)

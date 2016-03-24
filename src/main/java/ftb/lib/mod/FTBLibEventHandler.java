@@ -29,7 +29,6 @@ public class FTBLibEventHandler
 		if(w != null)
 		{
 			ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", w.getMode().getID());
-			FTBLib.dev_logger.info("Sent FTBLib's analytics");
 		}
 	}
 	
@@ -45,7 +44,7 @@ public class FTBLibEventHandler
 	{
 		if(e.player instanceof EntityPlayerMP)
 		{
-			EntityPlayerMP ep = (EntityPlayerMP) e.player;
+			final EntityPlayerMP ep = (EntityPlayerMP) e.player;
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.PRE);
 			new MessageSendWorldID(FTBWorld.server, ep).sendTo(ep);
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.POST);

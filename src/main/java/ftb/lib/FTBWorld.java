@@ -2,7 +2,6 @@ package ftb.lib;
 
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.*;
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 
 import java.io.File;
@@ -40,8 +39,6 @@ public class FTBWorld
 			
 			for(GameMode s : GameModes.getGameModes().modes.values()) s.getFolder();
 		}
-		
-		FTBLibMod.logger.info("Current Mode: " + currentMode);
 	}
 	
 	public GameMode getMode()

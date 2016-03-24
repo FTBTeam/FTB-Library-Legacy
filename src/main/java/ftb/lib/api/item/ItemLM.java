@@ -47,7 +47,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	@SideOnly(Side.CLIENT)
 	protected String getIconString()
-	{ return getMod().assets + itemName; }
+	{ return getMod().lowerCaseModID + ":" + itemName; }
 	
 	public String getUnlocalizedName(ItemStack is)
 	{ return getMod().getItemName(itemName); }

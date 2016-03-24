@@ -47,8 +47,8 @@ public class MaterialItem extends FinalIDObject
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{
-		if(item.folder.isEmpty()) icon = ir.registerIcon(item.getMod().assets + getID());
-		else icon = ir.registerIcon(item.getMod().assets + item.folder + "/" + getID());
+		if(item.folder.isEmpty()) icon = ir.registerIcon(item.getMod().lowerCaseModID + ":" + getID());
+		else icon = ir.registerIcon(item.getMod().lowerCaseModID + ":" + item.folder + "/" + getID());
 	}
 	
 	@SideOnly(Side.CLIENT)

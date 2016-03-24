@@ -28,7 +28,6 @@ public class LMMod extends FinalIDObject
 	// End of static //
 	
 	public final String lowerCaseModID;
-	public final String assets;
 	private ModContainer modContainer;
 	public final List<IItemLM> itemsAndBlocks;
 	
@@ -38,7 +37,6 @@ public class LMMod extends FinalIDObject
 	{
 		super(id);
 		lowerCaseModID = id.toLowerCase();
-		assets = lowerCaseModID + ":";
 		itemsAndBlocks = new ArrayList<>();
 		
 		recipes = LMRecipes.defaultInstance;
@@ -58,7 +56,7 @@ public class LMMod extends FinalIDObject
 	
 	public CreativeTabs createTab(final String s, final ItemStack icon)
 	{
-		CreativeTabs tab = new CreativeTabs(assets + s)
+		CreativeTabs tab = new CreativeTabs(lowerCaseModID + "." + s)
 		{
 			@SideOnly(Side.CLIENT)
 			public ItemStack getIconItemStack()
@@ -83,13 +81,13 @@ public class LMMod extends FinalIDObject
 	}
 	
 	public String getBlockName(String s)
-	{ return assets + "tile." + s; }
+	{ return lowerCaseModID + ":tile." + s; }
 	
 	public String getItemName(String s)
-	{ return assets + "item." + s; }
+	{ return lowerCaseModID + ":item." + s; }
 	
 	public String translate(String s, Object... args)
-	{ return FTBLibMod.proxy.translate(assets + s, args); }
+	{ return FTBLibMod.proxy.translate(lowerCaseModID + '.' + s, args); }
 	
 	public void addItem(IItemLM... ai)
 	{
@@ -125,5 +123,5 @@ public class LMMod extends FinalIDObject
 	}
 	
 	public IChatComponent chatComponent(String s, Object... obj)
-	{ return new ChatComponentTranslation(assets + s, obj); }
+	{ return new ChatComponentTranslation(lowerCaseModID + '.' + s, obj); }
 }
