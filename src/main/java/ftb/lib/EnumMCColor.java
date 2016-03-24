@@ -40,7 +40,7 @@ public enum EnumMCColor // ItemDye
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
-		lang = "ftbl:color." + s.toLowerCase();
+		lang = "ftbl.color." + s.toLowerCase();
 		color = ItemDye.field_150922_c[ID];
 		colorBright = c;
 		
