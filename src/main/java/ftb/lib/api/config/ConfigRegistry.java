@@ -2,9 +2,9 @@ package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
 import ftb.lib.*;
+import ftb.lib.api.config.old.*;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.LMJsonUtils;
-import latmod.lib.config.*;
 import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.entity.player.EntityPlayerMP;
 

@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import ftb.lib.FTBLib;
-import latmod.lib.config.*;
+import ftb.lib.api.config.old.*;
 import net.minecraft.client.resources.I18n;
 
 import java.io.File;

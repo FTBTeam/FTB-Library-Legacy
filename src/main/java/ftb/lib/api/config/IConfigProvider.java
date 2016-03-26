@@ -1,6 +1,6 @@
 package ftb.lib.api.config;
 
-import latmod.lib.config.*;
+import ftb.lib.api.config.old.*;
 
 //@SideOnly(Side.CLIENT)
 public interface IConfigProvider

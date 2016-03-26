@@ -3,9 +3,9 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.config.*;
+import ftb.lib.api.config.old.*;
 import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
-import latmod.lib.config.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageEditConfigResponse extends MessageLM // MessageEditConfig

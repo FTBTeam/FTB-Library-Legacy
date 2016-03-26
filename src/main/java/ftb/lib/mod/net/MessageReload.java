@@ -4,12 +4,12 @@ import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.config.old.ConfigGroup;
 import ftb.lib.api.net.*;
 import ftb.lib.api.notification.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
-import latmod.lib.config.ConfigGroup;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 

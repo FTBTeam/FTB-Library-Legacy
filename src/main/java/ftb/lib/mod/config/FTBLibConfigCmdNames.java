@@ -1,6 +1,6 @@
 package ftb.lib.mod.config;
 
-import latmod.lib.config.ConfigEntryString;
+import ftb.lib.api.config.old.ConfigEntryString;
 
 /**
  * Created by LatvianModder on 20.02.2016.

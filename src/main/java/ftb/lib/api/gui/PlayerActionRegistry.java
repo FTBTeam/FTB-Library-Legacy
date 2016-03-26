@@ -1,8 +1,8 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.PlayerAction;
+import ftb.lib.api.config.old.*;
 import ftb.lib.api.friends.ILMPlayer;
-import latmod.lib.config.*;
 
 import java.util.*;
 

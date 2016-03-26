@@ -3,11 +3,11 @@ package ftb.lib.mod.client.gui;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.config.IConfigProvider;
+import ftb.lib.api.config.old.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
-import latmod.lib.config.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 

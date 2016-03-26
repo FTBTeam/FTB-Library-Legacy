@@ -1,8 +1,8 @@
 package ftb.lib.mod.config;
 
 import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.config.old.*;
 import latmod.lib.Info;
-import latmod.lib.config.*;
 
 public class FTBLibConfigCmd
 {
