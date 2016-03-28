@@ -3,14 +3,12 @@ package ftb.lib.mod.client;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.config.ClientConfigRegistry;
+import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.cmd.CmdReloadClient;
-import latmod.lib.LMColorUtils;
-import latmod.lib.config.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -35,13 +33,9 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
 	
-	@Hidden
-	public static final ConfigEntryBool open_hsb_cg = new ConfigEntryBool("open_hsb_cg", false);
-	
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
-	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	public static final ConfigEntryEnum<FTBLibRenderHandler.LightValueTexture> light_value_texture = new ConfigEntryEnum<>("light_value_texture", FTBLibRenderHandler.LightValueTexture.values(), FTBLibRenderHandler.LightValueTexture.O, false);
 	public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
 	
@@ -61,9 +55,9 @@ public class FTBLibModClient extends FTBLibModCommon
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
 		//For Dev reasons, see DevConsole
-		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
+		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 		
-		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null, false));
+		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null));
 		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());

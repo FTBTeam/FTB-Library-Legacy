@@ -20,7 +20,8 @@ public class ChunkDimPos extends ChunkCoordIntPair
 	{
 		if(o == null) return false;
 		else if(o == this) return true;
-		else return equalsChunk((ChunkDimPos) o);
+		else if(o instanceof ChunkDimPos) return equalsChunk((ChunkDimPos) o);
+		return o.equals(this);
 	}
 	
 	public boolean equalsChunk(ChunkDimPos p)

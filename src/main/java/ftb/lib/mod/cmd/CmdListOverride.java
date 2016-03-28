@@ -2,7 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -24,7 +24,7 @@ public class CmdListOverride extends CommandLM
 		FTBLib.printChat(ics, "Players currently online: [ " + players.size() + " ]");
 		for(EntityPlayerMP ep : players)
 		{
-			if(printUUID) FTBLib.printChat(ics, ep.getName() + " :: " + UUIDTypeAdapterLM.getString(ep.getUniqueID()));
+			if(printUUID) FTBLib.printChat(ics, ep.getName() + " :: " + LMUtils.fromUUID(ep.getUniqueID()));
 			else FTBLib.printChat(ics, ep.getName());
 		}
 	}

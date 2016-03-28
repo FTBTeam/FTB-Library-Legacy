@@ -2,8 +2,7 @@ package ftb.lib.api.permissions;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import latmod.lib.Info;
-import latmod.lib.config.ConfigData;
+import latmod.lib.annotations.AnnotationHelper;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -71,9 +70,7 @@ public class ForgePermissionRegistry
 						container = new ForgePermissionContainer(id, permission.value());
 					}
 					
-					Info info = f.getAnnotation(Info.class);
-					if(info != null) container.info = info.value();
-					
+					AnnotationHelper.inject(f, null, container);
 					permissionContainers.put(id, container);
 				}
 				else if(obj instanceof RankConfig)
@@ -86,7 +83,6 @@ public class ForgePermissionRegistry
 					}
 					
 					rankConfig.put(p.getID(), p);
-					ConfigData.inject(f, null, null);
 				}
 			}
 		}

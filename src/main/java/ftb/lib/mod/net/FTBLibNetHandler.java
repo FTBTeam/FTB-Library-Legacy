@@ -15,7 +15,7 @@ public class FTBLibNetHandler
 		NET.register(MessageEditConfig.class, 2, Side.CLIENT);
 		NET.register(MessageEditConfigResponse.class, 3, Side.SERVER);
 		
-		NET.register(MessageLMWorldUpdate.class, 4, Side.CLIENT);
+		//4
 		NET.register(MessageLMPlayerUpdate.class, 5, Side.CLIENT);
 		NET.register(MessageLMPlayerLoggedIn.class, 6, Side.CLIENT);
 		NET.register(MessageLMPlayerLoggedOut.class, 7, Side.CLIENT);
@@ -31,5 +31,6 @@ public class FTBLibNetHandler
 		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
 		NET_INFO.register(MessageRequestPlayerInfo.class, 2, Side.SERVER);
+		NET_INFO.register(MessageDisplayGuide.class, 3, Side.CLIENT);
 	}
 }

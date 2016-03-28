@@ -36,7 +36,7 @@ public class GameModes
 	{
 		JsonObject o = isValid(el) ? el.getAsJsonObject() : createDefault();
 		
-		HashMap<String, GameMode> modes0 = new HashMap<>();
+		Map<String, GameMode> modes0 = new HashMap<>();
 		
 		JsonArray a = o.get("modes").getAsJsonArray();
 		
@@ -91,19 +91,19 @@ public class GameModes
 	
 	// Static //
 	
-	private static GameModes gameModes = null;
+	private static GameModes inst = null;
 	
 	public static void reload()
 	{
 		File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
-		gameModes = new GameModes(LMJsonUtils.fromJson(file));
-		LMJsonUtils.toJson(file, gameModes.toJsonObject());
+		inst = new GameModes(LMJsonUtils.fromJson(file));
+		LMJsonUtils.toJson(file, inst.toJsonObject());
 	}
 	
-	public static GameModes getGameModes()
+	public static GameModes instance()
 	{
-		if(gameModes == null) reload();
-		return gameModes;
+		if(inst == null) reload();
+		return inst;
 	}
 	
 	public GameMode get(String s)

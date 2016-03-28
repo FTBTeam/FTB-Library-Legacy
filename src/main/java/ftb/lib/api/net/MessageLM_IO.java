@@ -53,4 +53,9 @@ public abstract class MessageLM_IO extends MessageLM<MessageLM_IO>
 		io = m.io;
 		return onMessage(ctx);
 	}
+	
+	public IMessage onMessage(MessageContext ctx)
+	{
+		return null;
+	}
 }

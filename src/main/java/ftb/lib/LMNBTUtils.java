@@ -1,7 +1,6 @@
 package ftb.lib;
 
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.nbt.*;
 
 import java.io.File;
@@ -31,9 +30,8 @@ public class LMNBTUtils
 	
 	public static Set<Map.Entry<String, NBTBase>> entrySet(NBTTagCompound tag)
 	{
-		if(tag == null) return null;
-		HashSet<Map.Entry<String, NBTBase>> l = new HashSet<>();
-		if(tag.hasNoTags()) return l;
+		Set<Map.Entry<String, NBTBase>> l = new HashSet<>();
+		if(tag == null || tag.hasNoTags()) return l;
 		
 		for(String s : tag.getKeySet())
 		{
@@ -112,7 +110,7 @@ public class LMNBTUtils
 		if(tag == null) return null;
 		else if(string)
 		{
-			return tag.hasKey(key) ? UUIDTypeAdapterLM.getUUID(tag.getString(key)) : null;
+			return tag.hasKey(key) ? LMUtils.fromString(tag.getString(key)) : null;
 		}
 		else
 		{
@@ -127,7 +125,7 @@ public class LMNBTUtils
 		if(tag == null || key == null || key.isEmpty() || uuid == null) return;
 		if(string)
 		{
-			tag.setString(key, UUIDTypeAdapterLM.getString(uuid));
+			tag.setString(key, LMUtils.fromUUID(uuid));
 		}
 		else
 		{

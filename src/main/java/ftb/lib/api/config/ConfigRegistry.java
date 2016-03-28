@@ -3,9 +3,7 @@ package ftb.lib.api.config;
 import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.mod.net.MessageEditConfig;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.config.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.File;
@@ -13,9 +11,9 @@ import java.util.*;
 
 public class ConfigRegistry
 {
-	public static final HashMap<String, ConfigFile> map = new HashMap<>();
+	public static final Map<String, ConfigFile> map = new HashMap<>();
 	public static final ConfigGroup synced = new ConfigGroup("synced");
-	private static final HashMap<String, ConfigFile> tempServerConfig = new HashMap<>();
+	private static final Map<String, ConfigFile> tempServerConfig = new HashMap<>();
 	
 	public static void add(ConfigFile f)
 	{
@@ -23,8 +21,8 @@ public class ConfigRegistry
 		{
 			map.put(f.getID(), f);
 			
-			ConfigGroup g1 = f.generateSynced(false);
-			if(!g1.entryMap.isEmpty()) synced.add(g1, false);
+			ConfigGroup g1 = f.generateSynced();
+			if(!g1.entryMap.isEmpty()) synced.add(g1);
 		}
 	}
 	
@@ -41,11 +39,11 @@ public class ConfigRegistry
 			for(Map.Entry<String, JsonElement> e : overridesE.getAsJsonObject().entrySet())
 			{
 				ConfigGroup ol = new ConfigGroup(e.getKey());
-				ol.setJson(e.getValue());
+				ol.fromJson(e.getValue());
 				
 				int result;
 				ConfigFile f = map.get(ol.getID());
-				if(f != null && (result = f.loadFromGroup(ol)) > 0)
+				if(f != null && (result = f.loadFromGroup(ol, false)) > 0)
 				{
 					FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
 					f.save();
@@ -62,7 +60,7 @@ public class ConfigRegistry
 	{
 		if(ep != null)
 		{
-			ConfigFile group = new ConfigFile(UUIDTypeAdapterLM.getString(ep.getGameProfile().getId()));
+			ConfigFile group = new ConfigFile(LMUtils.fromUUID(ep.getGameProfile().getId()));
 			tempServerConfig.put(group.getID(), group);
 			return group;
 		}

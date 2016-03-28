@@ -2,12 +2,11 @@ package ftb.lib.api.notification;
 
 import com.google.gson.*;
 import ftb.lib.JsonHelper;
-import latmod.lib.json.IJsonObject;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 
 import java.util.*;
 
-public class MouseAction implements IJsonObject
+public class MouseAction implements IJsonSerializable
 {
 	public ClickAction click;
 	public final List<IChatComponent> hover;
@@ -17,11 +16,11 @@ public class MouseAction implements IJsonObject
 		hover = new ArrayList<>();
 	}
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
 		
-		if(click != null) o.add("click", click.getJson());
+		if(click != null) o.add("click", click.getSerializableElement());
 		
 		if(!hover.isEmpty())
 		{
@@ -34,7 +33,7 @@ public class MouseAction implements IJsonObject
 		return o;
 	}
 	
-	public void setJson(JsonElement e)
+	public void fromJson(JsonElement e)
 	{
 		if(e == null || !e.isJsonObject()) return;
 		
@@ -43,7 +42,7 @@ public class MouseAction implements IJsonObject
 		if(o1.has("click"))
 		{
 			click = new ClickAction();
-			click.setJson(o1.get("click"));
+			click.fromJson(o1.get("click"));
 		}
 		else click = null;
 		

@@ -1,6 +1,5 @@
 package ftb.lib.mod;
 
-import com.google.gson.JsonElement;
 import ftb.lib.*;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
@@ -9,7 +8,6 @@ import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.cmd.*;
 import ftb.lib.mod.config.*;
 import ftb.lib.mod.net.FTBLibNetHandler;
-import latmod.lib.LMJsonUtils;
 import latmod.lib.util.OS;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.*;
@@ -73,40 +71,41 @@ public class FTBLibMod
 	{
 		FTBLibEventHandler.instance.ticking.clear();
 		
-		if(FTBLibConfigCmd.override_list.get()) FTBLib.addCommand(e, new CmdListOverride());
-		if(FTBLibConfigCmd.override_help.get()) FTBLib.addCommand(e, new CmdHelpOverride());
-		if(!FTBLibConfigCmd.reload_name.get().isEmpty()) FTBLib.addCommand(e, new CmdReload());
-		if(FTBLibConfigCmd.set_item_name.get()) FTBLib.addCommand(e, new CmdSetItemName());
-		if(FTBLibConfigCmd.heal.get()) FTBLib.addCommand(e, new CmdHeal());
-		if(FTBLibConfigCmd.edit_config.get()) FTBLib.addCommand(e, new CmdEditConfig());
+		if(FTBLibConfigCmd.override_list.getAsBoolean()) FTBLib.addCommand(e, new CmdListOverride());
+		if(FTBLibConfigCmd.override_help.getAsBoolean()) FTBLib.addCommand(e, new CmdHelpOverride());
+		if(FTBLibConfigCmd.reload_name.getAsBoolean()) FTBLib.addCommand(e, new CmdReload());
+		if(FTBLibConfigCmd.set_item_name.getAsBoolean()) FTBLib.addCommand(e, new CmdSetItemName());
+		if(FTBLibConfigCmd.heal.getAsBoolean()) FTBLib.addCommand(e, new CmdHeal());
+		if(FTBLibConfigCmd.edit_config.getAsBoolean()) FTBLib.addCommand(e, new CmdEditConfig());
 		FTBLib.addCommand(e, new CmdMode());
 		FTBLib.addCommand(e, new CmdNotify());
 		FTBLib.addCommand(e, new CmdInv());
 	}
 	
 	@Mod.EventHandler
-	public void onServerAboutToStart(FMLServerAboutToStartEvent e)
+	public void onServerStarted(FMLServerAboutToStartEvent e)
 	{
 		ConfigRegistry.reload();
 		GameModes.reload();
-		ForgeWorldMP.inst = new ForgeWorldMP(new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName() + "/LatMod"));
-		FTBLib.reload(FTBLib.getServer(), false, false);
+		
+		ForgeWorldMP.inst = new ForgeWorldMP(new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName() + "/LatMod/"));
 		ForgeWorldMP.inst.init();
 		
-		JsonElement worldData = LMJsonUtils.fromJson(new File(ForgeWorldMP.inst.latmodFolder, "world.json"));
-		
-		if(worldData.isJsonObject())
+		try
 		{
-			ForgeWorldMP.inst.load(worldData.getAsJsonObject());
+			ForgeWorldMP.inst.load();
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
 		}
 	}
 	
-	/*
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent e)
 	{
+		FTBLib.reload(FTBLib.getServer(), false, false);
 	}
-	*/
 	
 	@Mod.EventHandler
 	public void onServerShutDown(FMLServerStoppedEvent e)

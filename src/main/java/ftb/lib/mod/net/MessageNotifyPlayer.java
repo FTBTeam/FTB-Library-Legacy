@@ -18,7 +18,7 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 	
 	public MessageNotifyPlayer(Notification n)
 	{
-		json = LMJsonUtils.toJson(n.getJson());
+		json = LMJsonUtils.toJson(n.getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()

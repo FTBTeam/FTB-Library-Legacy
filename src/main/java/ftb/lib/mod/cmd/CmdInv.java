@@ -3,7 +3,7 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
 import ftb.lib.api.item.LMInvUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,7 +32,7 @@ public class CmdInv extends CommandSubLM
 		{
 			checkArgs(args, 2);
 			EntityPlayerMP ep = getPlayer(ics, args[0]);
-			File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + UUIDTypeAdapterLM.getString(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
+			File file = new File(FTBLib.folderLocal, "ftbu/playerinvs/" + LMUtils.fromUUID(ep.getGameProfile().getId()) + "_" + args[1].toLowerCase() + ".dat");
 			
 			try
 			{

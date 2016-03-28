@@ -1,16 +1,14 @@
 package ftb.lib.mod;
 
-import com.google.gson.JsonObject;
-import ftb.lib.*;
+import ftb.lib.FTBLib;
 import ftb.lib.api.*;
 import ftb.lib.api.events.ForgePlayerDataEvent;
 import ftb.lib.api.item.ICreativeSafeItem;
 import ftb.lib.api.tile.ISecureTile;
-import latmod.lib.*;
+import latmod.lib.LMUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldServer;
@@ -22,7 +20,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.*;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.File;
 import java.util.*;
 
 public class FTBLibEventHandler
@@ -33,50 +30,13 @@ public class FTBLibEventHandler
 	public static final List<IWorldTick> ticking = new ArrayList<>();
 	
 	@SubscribeEvent
-	public void onWorldLoaded(WorldEvent.Load event)
-	{
-		if(event.world.provider.getDimensionId() == 0 && event.world instanceof WorldServer)
-		{
-			FTBLib.reload(FTBLib.getServer(), false, false);
-		}
-	}
-	
-	@SubscribeEvent
 	public void onWorldSaved(WorldEvent.Save event)
 	{
 		if(event.world.provider.getDimensionId() == 0 && event.world instanceof WorldServer)
 		{
-			JsonObject group = new JsonObject();
-			ForgeWorldMP.inst.save(group);
-			LMJsonUtils.toJson(new File(ForgeWorldMP.inst.latmodFolder, "world.json"), group);
-			
-			NBTTagCompound tag = new NBTTagCompound();
-			
-			for(ForgePlayer p : LMMapUtils.values(ForgeWorldMP.inst.playerMap, null))
-			{
-				NBTTagCompound tag1 = new NBTTagCompound();
-				p.toPlayerMP().writeToServer(tag1);
-				tag1.setString("Name", p.getProfile().getName());
-				tag.setTag(p.getStringUUID(), tag1);
-			}
-			
-			LMNBTUtils.writeTag(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.dat"), tag);
-			
-			// Export player list //
-			
 			try
 			{
-				ArrayList<String> l = new ArrayList<>();
-				ArrayList<ForgePlayer> players1 = new ArrayList<>();
-				players1.addAll(ForgeWorldMP.inst.playerMap.values());
-				Collections.sort(players1);
-				
-				for(ForgePlayer p : players1)
-				{
-					l.add(p.getStringUUID() + " :: " + p.getProfile().getName());
-				}
-				
-				LMFileUtils.save(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.txt"), l);
+				ForgeWorldMP.inst.save();
 			}
 			catch(Exception ex)
 			{

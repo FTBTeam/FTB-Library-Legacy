@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
 import latmod.lib.LMJsonUtils;
-import latmod.lib.config.ConfigData;
+import latmod.lib.annotations.*;
 import latmod.lib.util.FinalIDObject;
 
 /**
@@ -12,18 +12,18 @@ import latmod.lib.util.FinalIDObject;
  * <br>Examples of a permission node ID:
  * <br>"xpt.level_crossdim", "latblocks.allow_paint", etc.
  */
-public class RankConfig extends FinalIDObject implements ConfigData.Container
+public class RankConfig extends FinalIDObject implements INumberBoundsContainer, IInfoContainer
 {
 	private final JsonElement defaultPlayerValue;
 	private final JsonElement defaultOPValue;
-	public final ConfigData configData;
+	private Double minValue, maxValue;
+	private String[] info;
 	
 	public RankConfig(String id, JsonElement defPlayerValue, JsonElement defOPValue)
 	{
 		super(ForgePermissionContainer.getID(id));
 		defaultPlayerValue = defPlayerValue;
 		defaultOPValue = defOPValue;
-		configData = new ConfigData();
 	}
 	
 	public RankConfig(String id, Number defPlayerValue, Number defOPValue)
@@ -46,11 +46,6 @@ public class RankConfig extends FinalIDObject implements ConfigData.Container
 		this(id, LMJsonUtils.toStringArray(defPlayerValue), LMJsonUtils.toStringArray(defOPValue));
 	}
 	
-	public void setConfigData(ConfigData d)
-	{
-		configData.setFrom(d);
-	}
-	
 	public JsonElement getDefaultPlayerValue()
 	{
 		return defaultPlayerValue;
@@ -66,6 +61,15 @@ public class RankConfig extends FinalIDObject implements ConfigData.Container
 		return FTBLib.isOP(profile) ? getDefaultOPValue() : getDefaultPlayerValue();
 	}
 	
+	private JsonElement filter(JsonElement e)
+	{
+		if(e == null || (minValue == null && maxValue == null) || !e.isJsonPrimitive()) return e;
+		double n = e.getAsDouble();
+		if(n < minValue) n = minValue;
+		if(n > maxValue) n = maxValue;
+		return new JsonPrimitive(n);
+	}
+	
 	/**
 	 * Player can't be null, but it can be FakePlayer, if implementation supports that
 	 */
@@ -76,9 +80,27 @@ public class RankConfig extends FinalIDObject implements ConfigData.Container
 		if(ForgePermissionRegistry.handler != null)
 		{
 			JsonElement e = ForgePermissionRegistry.handler.handleRankConfig(this, profile);
-			return (e == null) ? JsonNull.INSTANCE : e;
+			return (e == null) ? JsonNull.INSTANCE : filter(e);
 		}
 		
-		return getDefaultElement(profile);
+		return filter(getDefaultElement(profile));
 	}
+	
+	public void setBounds(double min, double max)
+	{
+		minValue = (min == Double.NEGATIVE_INFINITY) ? null : min;
+		maxValue = (max == Double.POSITIVE_INFINITY) ? null : max;
+	}
+	
+	public double getMin()
+	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue; }
+	
+	public double getMax()
+	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue; }
+	
+	public void setInfo(String[] s)
+	{ info = s; }
+	
+	public String[] getInfo()
+	{ return info; }
 }

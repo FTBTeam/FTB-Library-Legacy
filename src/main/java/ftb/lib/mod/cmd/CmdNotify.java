@@ -75,7 +75,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 		n.setMouseAction(ma);
 		n.setDesc(new ChatComponentText("Example description"));
 		
-		for(String s : LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getJson()).split("\n"))
+		for(String s : LMJsonUtils.toJson(LMJsonUtils.getGson(true), n.getSerializableElement()).split("\n"))
 		{
 			list.add(new ChatComponentText(s));
 		}

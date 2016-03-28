@@ -30,7 +30,7 @@ public class CmdMode extends CommandSubLM
 		{
 			if(args.length == 1)
 			{
-				return getListOfStringsMatchingLastWord(args, GameModes.getGameModes().modes.keySet());
+				return getListOfStringsMatchingLastWord(args, GameModes.instance().modes.keySet());
 			}
 			return null;
 		}
@@ -88,7 +88,7 @@ public class CmdMode extends CommandSubLM
 		
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.getGameModes().modes.keySet()));
+			IChatComponent c = new ChatComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.instance().modes.keySet()));
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			ics.addChatMessage(c);
 		}

@@ -190,17 +190,18 @@ public class MathHelperMC
 	public static AxisAlignedBB centerBox(double x, double y, double z, double w, double h, double d)
 	{ return getBox(x, y - h / 2D, z, w, y + h / 2D, d); }
 	
-	public static AxisAlignedBB rotate90BoxV(AxisAlignedBB bb, int dir)
+	public static final int[][] connectedTextureMap = {{0, 0, 0, 0}, {1, 1, 1, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}, {1, 1, 0, 0}, {0, 1, 1, 0}, {0, 0, 1, 1}, {1, 0, 0, 1}, {0, 1, 1, 1}, {1, 0, 1, 1}, {1, 1, 0, 1}, {1, 1, 1, 0}};
+	
+	public static final int getConnectedTextureIndex(int a, int b, int c, int d)
 	{
-		double x1 = bb.minX;
-		double y1 = bb.minY;
-		double z1 = bb.minZ;
+		for(int i = 0; i < 16; i++)
+		{
+			if(connectedTextureMap[i][0] == a && connectedTextureMap[i][1] == b && connectedTextureMap[i][2] == c && connectedTextureMap[i][3] == d)
+			{
+				return i;
+			}
+		}
 		
-		double x2 = bb.maxX;
-		double y2 = bb.maxY;
-		double z2 = bb.maxZ;
-		
-		if(dir < 0 || dir >= 6 || dir == 2 || dir == 3) return new AxisAlignedBB(x1, y1, z1, x2, y2, z2);
-		return new AxisAlignedBB(z1, y1, x1, z2, y2, x2);
+		return -1;
 	}
 }

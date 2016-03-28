@@ -8,7 +8,7 @@ import net.minecraft.command.*;
 public class CmdReload extends CommandLM
 {
 	public CmdReload()
-	{ super(FTBLibConfigCmd.reload_name.get(), CommandLevel.OP); }
+	{ super(FTBLibConfigCmd.reload_name.getAsString(), CommandLevel.OP); }
 	
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{

@@ -11,7 +11,6 @@ import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import latmod.lib.LMUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import latmod.lib.util.StringMapEntry;
 import net.minecraft.block.Block;
@@ -99,7 +98,14 @@ public class FTBLib
 		
 		if(printMessage)
 			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloadedServer", ((LMUtils.millis() - ms) + "ms")));
-		new MessageReload(ForgeWorldMP.inst, reloadClient, modeChanged).sendTo(null);
+		
+		if(hasOnlinePlayers())
+		{
+			for(EntityPlayerMP ep : getAllOnlinePlayers(null))
+			{
+				new MessageReload(ForgeWorldMP.inst.getPlayer(ep), false, reloadClient, modeChanged).sendTo(ep);
+			}
+		}
 	}
 	
 	public static IChatComponent getChatComponent(Object o)
@@ -173,10 +179,13 @@ public class FTBLib
 	
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
-		ArrayList<EntityPlayerMP> list = new ArrayList<>();
-		if(getServer() == null) return list;
+		if(getServer() == null) return new ArrayList<>();
+		else if(except == null) return getServer().getConfigurationManager().playerEntityList;
+		
 		List<EntityPlayerMP> l = getServer().getConfigurationManager().playerEntityList;
-		if(l.isEmpty()) return list;
+		if(l.isEmpty()) return l;
+		
+		List<EntityPlayerMP> list = new ArrayList<>();
 		list.addAll(l);
 		if(except != null) list.remove(except);
 		return list;
@@ -335,7 +344,7 @@ public class FTBLib
 			try
 			{
 				JsonElement e = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asJson();
-				cachedUUIDs.put(key, UUIDTypeAdapterLM.getUUID(e.getAsJsonObject().get("id").getAsString()));
+				cachedUUIDs.put(key, LMUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }
 		}

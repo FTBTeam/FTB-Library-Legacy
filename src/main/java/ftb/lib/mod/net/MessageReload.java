@@ -1,15 +1,16 @@
 package ftb.lib.mod.net;
 
-import ftb.lib.*;
+import com.mojang.authlib.GameProfile;
+import ftb.lib.FTBLib;
 import ftb.lib.api.*;
-import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.config.*;
 import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.net.*;
 import ftb.lib.api.notification.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.*;
-import latmod.lib.*;
-import latmod.lib.config.ConfigGroup;
+import io.netty.buffer.ByteBuf;
+import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
@@ -17,44 +18,94 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class MessageReload extends MessageLM_IO
+import java.util.UUID;
+
+public class MessageReload extends MessageLM<MessageReload>
 {
-	public MessageReload() { super(ByteCount.INT); }
+	public boolean reloadClient;
+	public boolean modeChanged;
+	public GameProfile profile;
+	public NBTTagCompound synced;
+	public NBTTagCompound world;
 	
-	public MessageReload(ForgeWorldMP w, boolean reloadClient, boolean modeChanged)
+	public MessageReload() { }
+	
+	public MessageReload(ForgePlayerMP self, boolean l, boolean reload, boolean mode)
 	{
-		this();
-		io.writeBoolean(reloadClient);
-		io.writeBoolean(modeChanged);
-		writeSyncedConfig(io);
-		NBTTagCompound tag = new NBTTagCompound();
-		w.writeDataToNet(tag, null);
-		LMNBTUtils.writeTag(io, tag);
+		reloadClient = reload;
+		modeChanged = mode;
+		profile = l ? self.getProfile() : null;
+		synced = (NBTTagCompound) ConfigRegistry.synced.serializeNBT();
+		world = new NBTTagCompound();
+		self.getWorld().toWorldMP().writeDataToNet(world, self, l);
+		
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + synced);
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		boolean reloadClient = io.readBoolean();
-		boolean modeChanged = io.readBoolean();
+		reloadClient = io.readBoolean();
+		modeChanged = io.readBoolean();
+		boolean login = io.readBoolean();
 		
-		long ms = LMUtils.millis();
-		readSyncedConfig(io);
-		NBTTagCompound tag = LMNBTUtils.readTag(io);
-		ForgeWorldSP.inst.readDataFromNet(tag, false);
-		
-		if(reloadClient)
+		if(login)
 		{
-			reloadClient(ms, true, modeChanged);
+			UUID id = readUUID(io);
+			String s = readString(io);
+			profile = new GameProfile(id, s);
+		}
+		else profile = null;
+		
+		synced = readTag(io);
+		world = readTag(io);
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		io.writeBoolean(reloadClient);
+		io.writeBoolean(modeChanged);
+		io.writeBoolean(profile != null);
+		
+		if(profile != null)
+		{
+			writeUUID(io, profile.getId());
+			writeString(io, profile.getName());
+		}
+		
+		writeTag(io, synced);
+		writeTag(io, world);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageReload m, MessageContext ctx)
+	{
+		long ms = LMUtils.millis();
+		
+		ConfigGroup syncedGroup = new ConfigGroup(ConfigRegistry.synced.getID());
+		syncedGroup.readFromNBT(m.synced);
+		ConfigRegistry.synced.loadFromGroup(syncedGroup, true);
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + syncedGroup.getSerializableElement());
+		
+		if(m.profile != null || ForgeWorldSP.inst == null)
+		{
+			ForgeWorldSP.inst = new ForgeWorldSP(m.profile);
+			ForgeWorldSP.inst.init();
+		}
+		
+		ForgeWorldSP.inst.readDataFromNet(m.world, m.profile != null);
+		
+		if(m.reloadClient || m.modeChanged || m.profile != null)
+		{
+			reloadClient(ms, true, m.modeChanged);
 		}
 		else
 		{
 			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
-			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
+			n.desc = new ChatComponentText('/' + FTBLibModClient.reload_client_cmd.getAsString());
 			n.setColor(0xFF333333);
 			ClientNotifications.add(n);
 			return null;
@@ -76,23 +127,7 @@ public class MessageReload extends MessageLM_IO
 		
 		if(printMessage)
 		{
-			FTBLib.printChat(ep, new ChatComponentTranslation("ftbl:reloadedClient", ((LMUtils.millis() - ms) + "ms")));
+			FTBLib.printChat(ep, FTBLibMod.mod.chatComponent("reloaded_client", ((LMUtils.millis() - ms) + "ms")));
 		}
-	}
-	
-	static void writeSyncedConfig(ByteIOStream out)
-	{
-		try { ConfigRegistry.synced.write(out); }
-		catch(Exception ex) {}
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
-	}
-	
-	static void readSyncedConfig(ByteIOStream in)
-	{
-		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.getID());
-		try { synced.read(in); }
-		catch(Exception ex) {}
-		ConfigRegistry.synced.loadFromGroup(synced);
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + synced.getJson());
 	}
 }

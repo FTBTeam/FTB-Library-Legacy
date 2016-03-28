@@ -1,7 +1,7 @@
 package ftb.lib.mod;
 
 import ftb.lib.api.permissions.ForgePermission;
-import latmod.lib.Info;
+import latmod.lib.annotations.Info;
 
 /**
  * Created by LatvianModder on 08.03.2016.

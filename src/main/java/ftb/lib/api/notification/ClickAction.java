@@ -1,13 +1,13 @@
 package ftb.lib.api.notification;
 
 import com.google.gson.*;
-import latmod.lib.json.IJsonObject;
+import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.*;
 
 /**
  * Created by LatvianModder on 23.01.2016.
  */
-public class ClickAction implements IJsonObject
+public class ClickAction implements IJsonSerializable
 {
 	public ClickActionType type;
 	public JsonElement data;
@@ -20,7 +20,7 @@ public class ClickAction implements IJsonObject
 		data = d;
 	}
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
 		if(data == null || data.isJsonNull())
 		{
@@ -33,7 +33,7 @@ public class ClickAction implements IJsonObject
 		return o;
 	}
 	
-	public void setJson(JsonElement e)
+	public void fromJson(JsonElement e)
 	{
 		if(e.isJsonPrimitive())
 		{

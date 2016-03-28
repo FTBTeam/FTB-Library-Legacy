@@ -1,7 +1,7 @@
 package ftb.lib.mod.config;
 
-import latmod.lib.Info;
-import latmod.lib.config.*;
+import ftb.lib.api.config.*;
+import latmod.lib.annotations.Info;
 
 public class FTBLibConfigCmd
 {

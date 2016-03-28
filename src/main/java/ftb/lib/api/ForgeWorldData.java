@@ -1,8 +1,6 @@
 package ftb.lib.api;
 
-import com.google.gson.JsonObject;
-import latmod.lib.util.FinalIDObject;
-import net.minecraft.entity.player.EntityPlayerMP;
+import latmod.lib.util.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -10,34 +8,34 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public abstract class ForgeWorldData extends FinalIDObject
 {
-	public final ForgeWorld world;
+	boolean isLoaded;
 	
-	public ForgeWorldData(String id, ForgeWorld w)
+	public ForgeWorldData(String id)
 	{
 		super(id);
-		world = w;
 	}
 	
-	public abstract void init();
+	public abstract void onLoaded(ForgeWorld w);
 	
 	public boolean syncID()
 	{ return true; }
 	
-	public void loadData(JsonObject o)
+	public final boolean isLoaded()
+	{ return isLoaded; }
+	
+	public void loadData(NBTTagCompound tag, Phase phase)
 	{
 	}
 	
-	public void saveData(JsonObject o)
+	public void saveData(NBTTagCompound tag)
 	{
 	}
 	
-	//FIXME: Implement me
-	public void readFromNet(NBTTagCompound tag)
+	public void readFromNet(NBTTagCompound tag, boolean login)
 	{
 	}
 	
-	//FIXME: Implement me
-	public void writeToNet(NBTTagCompound tag, EntityPlayerMP to)
+	public void writeToNet(NBTTagCompound tag, ForgePlayerMP self, boolean login)
 	{
 	}
 	

@@ -2,7 +2,7 @@ package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.api.events.ForgePlayerDataEvent;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -62,7 +62,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	{ return gameProfile; }
 	
 	public final String getStringUUID()
-	{ return UUIDTypeAdapterLM.getString(gameProfile.getId()); }
+	{ return LMUtils.fromUUID(gameProfile.getId()); }
 	
 	public boolean isFriendRaw(ForgePlayer p)
 	{ return p != null && (equalsPlayer(this) || friends.contains(p.getProfile().getId())); }
@@ -132,6 +132,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 		{
 			lastArmor.clear();
 			EntityPlayer ep = getPlayer();
+			
 			for(int i = 0; i < 4; i++)
 			{
 				if(ep.inventory.armorInventory[i] != null)

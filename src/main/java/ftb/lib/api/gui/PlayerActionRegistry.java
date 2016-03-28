@@ -1,7 +1,7 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.*;
-import latmod.lib.config.*;
+import ftb.lib.api.config.*;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public class PlayerActionRegistry
 		}
 	}
 	
-	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ForgePlayer self, ForgePlayer other, boolean sort)
+	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ForgePlayer self, ForgePlayer other, boolean sort, boolean ignoreConfig)
 	{
 		ArrayList<PlayerAction> l = new ArrayList<>();
 		
@@ -47,7 +47,7 @@ public class PlayerActionRegistry
 		{
 			if(a.type.equalsType(t) && a.isVisibleFor(self, other))
 			{
-				if(a.configDefault() != null)
+				if(!ignoreConfig && a.configDefault() != null)
 				{
 					if(!enabled(a.getID())) continue;
 				}

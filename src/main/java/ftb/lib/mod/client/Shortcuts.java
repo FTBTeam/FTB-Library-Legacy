@@ -56,7 +56,7 @@ public class Shortcuts
 					if(o1.has("type"))
 					{
 						final ClickAction action = new ClickAction();
-						action.setJson(o1);
+						action.fromJson(o1);
 						final String name = o1.has("name") ? o1.get("name").getAsString() : "Unnamed";
 						TextureCoords tex = o1.has("icon") ? GuiIcons.iconMap.get(o1.get("icon").getAsString()) : null;
 						if(tex == null) tex = GuiIcons.marker;
@@ -126,7 +126,7 @@ public class Shortcuts
 		@SideOnly(Side.CLIENT)
 		public JsonElement getJson()
 		{
-			JsonObject o = (JsonObject) click.getJson();
+			JsonObject o = (JsonObject) click.getSerializableElement();
 			o.add("key", new JsonPrimitive(Keyboard.getKeyName(key)));
 			return o;
 		}
@@ -135,7 +135,7 @@ public class Shortcuts
 		public void setJson(JsonElement e)
 		{
 			JsonObject o = (JsonObject) e;
-			click.setJson(o);
+			click.fromJson(o);
 			key = Keyboard.getKeyIndex(o.get("key").getAsString());
 		}
 	}

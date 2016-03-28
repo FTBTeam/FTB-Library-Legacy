@@ -12,9 +12,6 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 {
 	public abstract LMNetworkWrapper getWrapper();
 	
-	public IMessage onMessage(MessageContext ctx)
-	{ return null; }
-	
 	public abstract void fromBytes(ByteBuf io);
 	public abstract void toBytes(ByteBuf io);
 	

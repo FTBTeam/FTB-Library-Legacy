@@ -7,7 +7,6 @@ import ftb.lib.api.gui.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageModifyFriends;
 import latmod.lib.LMUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.gui.*;
 import net.minecraftforge.fml.relauncher.*;
@@ -89,7 +88,7 @@ public abstract class ClickActionType extends FinalIDObject
 	{
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
-		{ new MessageModifyFriends(MessageModifyFriends.ADD, UUIDTypeAdapterLM.getUUID(data.getAsString())).sendToServer(); }
+		{ new MessageModifyFriends(MessageModifyFriends.ADD, LMUtils.fromString(data.getAsString())).sendToServer(); }
 	};
 	
 	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add_all")

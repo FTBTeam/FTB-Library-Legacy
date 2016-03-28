@@ -1,41 +1,57 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.config.ServerConfigProvider;
+import ftb.lib.api.config.*;
 import ftb.lib.api.net.*;
 import ftb.lib.mod.client.gui.GuiEditConfig;
-import latmod.lib.ByteCount;
-import latmod.lib.config.ConfigFile;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
 
-public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
+public class MessageEditConfig extends MessageLM<MessageEditConfig> // MessageEditConfigResponse
 {
-	public MessageEditConfig() { super(ByteCount.INT); }
+	public long token;
+	public String configID;
+	public boolean reload;
+	public NBTTagCompound nbt;
 	
-	public MessageEditConfig(long t, boolean reload, ConfigFile o)
+	public MessageEditConfig() { }
+	
+	public MessageEditConfig(long t, boolean r, ConfigGroup o)
 	{
-		this();
-		io.writeLong(t);
-		io.writeUTF(o.getID());
-		io.writeBoolean(reload);
-		o.writeExtended(io);
+		token = t;
+		configID = o.getID();
+		reload = r;
+		nbt = new NBTTagCompound();
+		o.writeToNBT(nbt);
 	}
 	
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		long token = io.readLong();
-		String id = io.readUTF();
-		boolean reload = io.readBoolean();
-		
-		ConfigFile file = new ConfigFile(id);
-		file.readExtended(io);
-		
-		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, reload, file)));
+		token = io.readLong();
+		configID = readString(io);
+		reload = io.readBoolean();
+		nbt = readTag(io);
+	}
+	
+	public void toBytes(ByteBuf io)
+	{
+		io.writeLong(token);
+		writeString(io, configID);
+		io.writeBoolean(reload);
+		writeTag(io, nbt);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageEditConfig m, MessageContext ctx)
+	{
+		ConfigGroup file = new ConfigGroup(m.configID);
+		file.readFromNBT(m.nbt);
+		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(m.token, m.reload, file)));
 		return null;
 	}
 }

@@ -3,8 +3,8 @@ package ftb.lib.api;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.events.ForgePlayerInfoEvent;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import ftb.lib.api.events.ForgePlayerSPInfoEvent;
+import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
@@ -20,7 +20,7 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public class ForgePlayerSP extends ForgePlayer
 {
-	public final List<IChatComponent> clientInfo;
+	public final List<String> clientInfo;
 	public boolean isOnline;
 	
 	public ForgePlayerSP(GameProfile p)
@@ -66,8 +66,13 @@ public class ForgePlayerSP extends ForgePlayer
 	public void receiveInfo(List<IChatComponent> info)
 	{
 		clientInfo.clear();
-		clientInfo.addAll(info);
-		MinecraftForge.EVENT_BUS.post(new ForgePlayerInfoEvent(this, clientInfo));
+		
+		for(IChatComponent c : info)
+		{
+			clientInfo.add(c.getFormattedText());
+		}
+		
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerSPInfoEvent(this, clientInfo));
 	}
 	
 	public void readFromNet(NBTTagCompound tag, boolean self)
@@ -82,7 +87,7 @@ public class ForgePlayerSP extends ForgePlayer
 		{
 			for(int i = 0; i < tagList.tagCount(); i++)
 			{
-				friends.add(UUIDTypeAdapterLM.getUUID(tagList.getStringTagAt(i)));
+				friends.add(LMUtils.fromString(tagList.getStringTagAt(i)));
 			}
 		}
 		
@@ -93,7 +98,7 @@ public class ForgePlayerSP extends ForgePlayer
 		{
 			for(int i = 0; i < tagList.tagCount(); i++)
 			{
-				otherFriends.add(UUIDTypeAdapterLM.getUUID(tagList.getStringTagAt(i)));
+				otherFriends.add(LMUtils.fromString(tagList.getStringTagAt(i)));
 			}
 		}
 		

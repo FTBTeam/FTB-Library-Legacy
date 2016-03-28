@@ -2,11 +2,10 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.config.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
-import latmod.lib.config.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
@@ -73,7 +72,7 @@ public class CmdEditConfig extends CommandLM
 		
 		boolean success = false;
 		ConfigGroup group = file.getGroup(args[1]);
-		ConfigEntry entry = (group == null) ? null : group.getEntry(args[2]);
+		ConfigEntry entry = (group == null) ? null : group.entryMap.get(args[2]);
 		
 		if(entry == null)
 		{
@@ -88,10 +87,10 @@ public class CmdEditConfig extends CommandLM
 			
 			try
 			{
-				entry.setJson(LMJsonUtils.fromJson(json));
+				entry.fromJson(LMJsonUtils.fromJson(json));
 				file.save();
 				FTBLib.reload(ics, true, false);
-				ics.addChatMessage(new ChatComponentText(args[2] + " set to " + entry.getPrettyJsonString(false)));
+				ics.addChatMessage(new ChatComponentText(args[2] + " set to " + entry.getSerializableElement()));
 				return;
 			}
 			catch(Exception ex)
@@ -100,6 +99,6 @@ public class CmdEditConfig extends CommandLM
 			}
 		}
 		
-		ics.addChatMessage(new ChatComponentText(entry.getPrettyJsonString(false)));
+		ics.addChatMessage(new ChatComponentText(String.valueOf(entry.getSerializableElement())));
 	}
 }

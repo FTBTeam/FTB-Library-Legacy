@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.*;
 public class CmdReloadClient extends CommandLM
 {
 	public CmdReloadClient()
-	{ super(FTBLibModClient.reload_client_cmd.get(), CommandLevel.OP); }
+	{ super(FTBLibModClient.reload_client_cmd.getAsString(), CommandLevel.OP); }
 	
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{

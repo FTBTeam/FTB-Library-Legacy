@@ -1,10 +1,12 @@
 package ftb.lib.api;
 
 import com.google.gson.*;
-import ftb.lib.FTBLib;
+import com.mojang.authlib.GameProfile;
+import ftb.lib.*;
 import ftb.lib.mod.FTBLibEventHandler;
-import latmod.lib.json.UUIDTypeAdapterLM;
-import net.minecraft.nbt.NBTTagCompound;
+import latmod.lib.*;
+import latmod.lib.util.Phase;
+import net.minecraft.nbt.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -25,7 +27,7 @@ public final class ForgeWorldMP extends ForgeWorld
 	{
 		super(Side.SERVER);
 		latmodFolder = f;
-		currentMode = GameModes.getGameModes().defaultMode;
+		currentMode = GameModes.instance().defaultMode;
 	}
 	
 	public void init()
@@ -58,33 +60,87 @@ public final class ForgeWorldMP extends ForgeWorld
 		return (p == null) ? null : p.toPlayerMP();
 	}
 	
-	public void load(JsonObject group)
+	public void load() throws Exception
 	{
-		worldID = group.has("world_id") ? UUIDTypeAdapterLM.getUUID(group.get("world_id").getAsString()) : null;
-		getID();
+		JsonElement worldData = LMJsonUtils.fromJson(new File(latmodFolder.getParent(), "world_data.json"));
 		
-		currentMode = group.has("mode") ? GameModes.getGameModes().get(group.get("mode").getAsString()) : GameModes.getGameModes().defaultMode;
-		
-		if(!customData.isEmpty() && group.has("custom"))
+		if(worldData.isJsonObject())
 		{
-			for(Map.Entry<String, JsonElement> entry : group.get("custom").getAsJsonObject().entrySet())
+			JsonObject group = worldData.getAsJsonObject();
+			worldID = group.has("world_id") ? LMUtils.fromString(group.get("world_id").getAsString()) : null;
+			getID();
+			
+			currentMode = group.has("mode") ? GameModes.instance().get(group.get("mode").getAsString()) : GameModes.instance().defaultMode;
+		}
+		
+		NBTTagCompound nbt = LMNBTUtils.readTag(new File(latmodFolder, "LMWorld.dat"));
+		Set<Map.Entry<String, NBTBase>> customDataSet = null;
+		
+		playerMap.clear();
+		
+		if(nbt != null)
+		{
+			customDataSet = LMNBTUtils.entrySet(nbt.getCompoundTag("Custom"));
+			
+			if(!customData.isEmpty() && !customDataSet.isEmpty())
 			{
-				ForgeWorldData d = customData.get(entry.getKey());
-				
-				if(d != null)
+				for(Map.Entry<String, NBTBase> entry : customDataSet)
 				{
-					d.loadData(entry.getValue().getAsJsonObject());
+					ForgeWorldData d = customData.get(entry.getKey());
+					
+					if(d != null)
+					{
+						d.loadData((NBTTagCompound) entry.getValue(), Phase.PRE);
+					}
 				}
 			}
 		}
 		
-		FTBLib.dev_logger.info("ForgeWorldMP Loaded: " + group);
+		for(Map.Entry<String, NBTBase> entry : LMNBTUtils.entrySet(LMNBTUtils.readTag(new File(latmodFolder, "LMPlayers.dat"))))
+		{
+			NBTTagCompound tag = (NBTTagCompound) entry.getValue();
+			UUID id = LMUtils.fromString(entry.getKey());
+			
+			if(id == null)
+			{
+				id = LMUtils.fromString(tag.getString("UUID"));
+			}
+			
+			if(id != null)
+			{
+				ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, tag.getString("Name")));
+				p.readFromServer(tag);
+				playerMap.put(id, p);
+			}
+		}
+		
+		if(nbt != null && customDataSet != null)
+		{
+			if(!customData.isEmpty() && !customDataSet.isEmpty())
+			{
+				for(Map.Entry<String, NBTBase> entry : customDataSet)
+				{
+					ForgeWorldData d = customData.get(entry.getKey());
+					
+					if(d != null)
+					{
+						d.loadData((NBTTagCompound) entry.getValue(), Phase.POST);
+					}
+				}
+			}
+		}
 	}
 	
-	public void save(JsonObject group)
+	public void save() throws Exception
 	{
-		group.add("world_id", new JsonPrimitive(UUIDTypeAdapterLM.getString(getID())));
+		JsonObject group = new JsonObject();
+		group.add("world_id", new JsonPrimitive(LMUtils.fromUUID(getID())));
 		group.add("mode", new JsonPrimitive(currentMode.getID()));
+		LMJsonUtils.toJson(new File(latmodFolder.getParent(), "world_data.json"), group);
+		
+		FTBLib.dev_logger.info("ForgeWorldMP Saved: " + group);
+		
+		/*
 		
 		if(!customData.isEmpty())
 		{
@@ -108,44 +164,106 @@ public final class ForgeWorldMP extends ForgeWorld
 			}
 		}
 		
-		FTBLib.dev_logger.info("ForgeWorldMP Saved: " + group);
+		JsonObject group = new JsonObject();
+		ForgeWorldMP.inst.save(group);
+		LMJsonUtils.toJson(new File(ForgeWorldMP.inst.latmodFolder, "world.json"), group);
+		
+		NBTTagCompound tag = new NBTTagCompound();
+		
+		for(ForgePlayer p : LMMapUtils.values(ForgeWorldMP.inst.playerMap, null))
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
+			p.toPlayerMP().writeToServer(tag1);
+			tag1.setString("Name", p.getProfile().getName());
+			tag.setTag(p.getStringUUID(), tag1);
+		}
+		
+		LMNBTUtils.writeTag(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.dat"), tag);
+		
+		// Export player list //
+		
+		try
+		{
+			ArrayList<String> l = new ArrayList<>();
+			ArrayList<ForgePlayer> players1 = new ArrayList<>();
+			players1.addAll(ForgeWorldMP.inst.playerMap.values());
+			Collections.sort(players1);
+			
+			for(ForgePlayer p : players1)
+			{
+				l.add(p.getStringUUID() + " :: " + p.getProfile().getName());
+			}
+			
+			LMFileUtils.save(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.txt"), l);
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		*/
 	}
 	
-	public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self)
+	public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self, boolean login)
 	{
 		tag.setLong("IDM", getID().getMostSignificantBits());
 		tag.setLong("IDL", getID().getLeastSignificantBits());
 		tag.setString("M", currentMode.getID());
 		
-		NBTTagCompound tag1;
+		NBTTagCompound tag1, tag2;
 		
-		if(self != null)
+		if(login)
 		{
-			NBTTagCompound playerMapTag = new NBTTagCompound();
+			tag1 = new NBTTagCompound();
 			
 			List<ForgePlayerMP> onlinePlayers = new ArrayList<>();
 			for(ForgePlayer p : playerMap.values())
 			{
-				playerMapTag.setString(p.getStringUUID(), p.getProfile().getName());
+				tag1.setString(p.getStringUUID(), p.getProfile().getName());
 				if(p.isOnline() && !p.equalsPlayer(self)) onlinePlayers.add(p.toPlayerMP());
 			}
 			
-			tag.setTag("PM", playerMapTag);
-			
-			playerMapTag = new NBTTagCompound();
-			
-			for(ForgePlayerMP p : onlinePlayers)
+			if(!tag1.hasNoTags())
 			{
-				tag1 = new NBTTagCompound();
-				p.writeToNet(tag1, false);
-				playerMapTag.setTag(p.getStringUUID(), tag1);
+				tag.setTag("PM", tag1);
 			}
 			
 			tag1 = new NBTTagCompound();
-			self.writeToNet(tag1, false);
-			playerMapTag.setTag(self.getStringUUID(), tag1);
 			
-			tag.setTag("PMD", playerMapTag);
+			for(ForgePlayerMP p : onlinePlayers)
+			{
+				tag2 = new NBTTagCompound();
+				p.writeToNet(tag2, false);
+				tag1.setTag(p.getStringUUID(), tag2);
+			}
+			
+			tag2 = new NBTTagCompound();
+			self.writeToNet(tag2, true);
+			tag1.setTag(self.getStringUUID(), tag2);
+			
+			if(!tag1.hasNoTags())
+			{
+				tag.setTag("PMD", tag1);
+			}
+		}
+		
+		if(!customData.isEmpty())
+		{
+			tag1 = new NBTTagCompound();
+			
+			for(ForgeWorldData d : customData.values())
+			{
+				if(d.syncID())
+				{
+					tag2 = new NBTTagCompound();
+					d.writeToNet(tag2, self, login);
+					tag1.setTag(d.getID(), tag2);
+				}
+			}
+			
+			if(!tag1.hasNoTags())
+			{
+				tag.setTag("SFWD", tag1);
+			}
 		}
 	}
 	

@@ -2,13 +2,12 @@ package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.*;
-import ftb.lib.api.events.ForgePlayerInfoEvent;
+import ftb.lib.api.events.ForgePlayerMPInfoEvent;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.notification.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.*;
 import latmod.lib.LMUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -115,7 +114,7 @@ public class ForgePlayerMP extends ForgePlayer
 			}
 		}
 		
-		MinecraftForge.EVENT_BUS.post(new ForgePlayerInfoEvent(this, info));
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerMPInfoEvent(this, info));
 		
 		/*
 		if(owner.getRank().config.show_rank.get())
@@ -133,7 +132,7 @@ public class ForgePlayerMP extends ForgePlayer
 	{
 		if(isOnline())
 		{
-			//stats.refreshStats();
+			stats.refresh(this, false);
 			getPos();
 		}
 	}
@@ -147,7 +146,7 @@ public class ForgePlayerMP extends ForgePlayer
 			NBTTagList friendsList = tag.getTagList("Friends", Constants.NBT.TAG_LIST);
 			for(int i = 0; i < friendsList.tagCount(); i++)
 			{
-				UUID id = UUIDTypeAdapterLM.getUUID(friendsList.getStringTagAt(i));
+				UUID id = LMUtils.fromString(friendsList.getStringTagAt(i));
 				if(id != null) friends.add(id);
 			}
 		}
@@ -195,7 +194,7 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			for(UUID id : friends)
 			{
-				tagList.appendTag(new NBTTagString(UUIDTypeAdapterLM.getString(id)));
+				tagList.appendTag(new NBTTagString(LMUtils.fromUUID(id)));
 			}
 			
 			tag.setTag("Friends", tagList);
@@ -283,7 +282,7 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			for(UUID id : friends)
 			{
-				list.appendTag(new NBTTagString(UUIDTypeAdapterLM.getString(id)));
+				list.appendTag(new NBTTagString(LMUtils.fromUUID(id)));
 			}
 			
 			tag.setTag("F", list);
@@ -339,7 +338,7 @@ public class ForgePlayerMP extends ForgePlayer
 		super.onLoggedIn(firstLogin);
 		
 		EntityPlayerMP ep = getPlayer();
-		new MessageLMWorldUpdate(this).sendTo(ep);
+		new MessageReload(this, true, true, false).sendTo(ep);
 		
 		new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
 		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))

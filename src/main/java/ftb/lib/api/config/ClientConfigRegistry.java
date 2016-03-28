@@ -1,7 +1,6 @@
 package ftb.lib.api.config;
 
 import ftb.lib.FTBLib;
-import latmod.lib.config.*;
 import net.minecraft.client.resources.I18n;
 
 import java.io.File;
@@ -20,18 +19,19 @@ public final class ClientConfigRegistry
 			public String getEntryTitle(ConfigEntry e)
 			{ return I18n.format(e.getFullID()); }
 			
-			public ConfigFile getConfigFile()
+			public ConfigGroup getConfigGroup()
 			{
 				if(file.getFile() == null)
 				{
 					file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+					file.load();
 				}
 				
 				return file;
 			}
 			
 			public void save()
-			{ getConfigFile().save(); }
+			{ file.save(); }
 		};
 	}
 	
@@ -39,5 +39,8 @@ public final class ClientConfigRegistry
 	 * Do this before postInit()
 	 */
 	public static void add(ConfigGroup g)
-	{ file.add(g, false); }
+	{ file.add(g); }
+	
+	public static void addGroup(String id, Class<?> c)
+	{ file.addGroup(id, c); }
 }

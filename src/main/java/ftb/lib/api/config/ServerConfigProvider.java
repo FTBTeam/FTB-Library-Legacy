@@ -1,23 +1,19 @@
 package ftb.lib.api.config;
 
 import ftb.lib.mod.net.MessageEditConfigResponse;
-import latmod.lib.config.*;
 
 public class ServerConfigProvider implements IConfigProvider
 {
 	public final long adminToken;
 	public final boolean reload;
-	public final ConfigFile file;
+	public final ConfigGroup group;
 	
-	public ServerConfigProvider(long t, boolean r, ConfigFile f)
+	public ServerConfigProvider(long t, boolean r, ConfigGroup f)
 	{
 		adminToken = t;
 		reload = r;
-		file = f;
+		group = f;
 	}
-	
-	public String getTitle()
-	{ return file.getDisplayName(); }
 	
 	public String getGroupTitle(ConfigGroup g)
 	{ return g.getID(); }
@@ -25,9 +21,9 @@ public class ServerConfigProvider implements IConfigProvider
 	public String getEntryTitle(ConfigEntry e)
 	{ return e.getID(); }
 	
-	public ConfigFile getConfigFile()
-	{ return file; }
+	public ConfigGroup getConfigGroup()
+	{ return group; }
 	
 	public void save()
-	{ new MessageEditConfigResponse(this).sendToServer(); }
+	{ new MessageEditConfigResponse(adminToken, reload, group).sendToServer(); }
 }

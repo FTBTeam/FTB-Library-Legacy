@@ -1,12 +1,13 @@
 package ftb.lib.mod.client.gui;
 
+import ftb.lib.api.IClickable;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.config.IConfigProvider;
+import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
-import latmod.lib.config.*;
+import latmod.lib.annotations.Flag;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
@@ -31,7 +32,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		super(g, null);
 		provider = p;
 		
-		title = p.getGroupTitle(p.getConfigFile());
+		title = p.getGroupTitle(p.getConfigGroup());
 		
 		configEntryButtons = new ArrayList<>();
 		
@@ -138,14 +139,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			
-			for(ConfigEntry entry : provider.getConfigFile().entries())
+			for(ConfigEntry entry : LMListUtils.sortToNew(provider.getConfigGroup().entryMap.values(), null))
 				addCE(null, entry, 0);
 		}
 	}
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.configData.isHidden())
+		if(!e.getFlag(Flag.INVISIBLE.ID))
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -160,7 +161,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
 			{
-				for(ConfigEntry entry : g.entries())
+				for(ConfigEntry entry : LMListUtils.sortToNew(g.entryMap.values(), null))
 					addCE(b, entry, level + 1);
 			}
 		}
@@ -270,15 +271,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(!isGroup)
 			{
-				String s;
-				
-				if(PrimitiveType.isNull(entry.getType())) s = EnumChatFormatting.BOLD + ". . .";
-				else
-				{
-					s = "error";
-					try { s = entry.getAsString(); }
-					catch(Exception ex) { }
-				}
+				String s = entry.getAsString();
 				
 				int slen = gui.fontRendererObj.getStringWidth(s);
 				
@@ -288,7 +281,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					slen = 152;
 				}
 				
-				int textCol = 0xFF000000 | getColor();
+				int textCol = 0xFF000000 | entry.getColor();
 				if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
 				
 				if(mouseOver && gui.mouse().x > ax + width - slen - 9)
@@ -308,13 +301,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			FTBLibClient.playClickSound();
 			
-			if(!entry.configData.canEdit()) return;
+			if(entry.getFlag(Flag.UNEDITABLE.ID)) return;
 			
-			PrimitiveType type = entry.getType();
+			ConfigEntryType type = entry.getType();
 			
-			if(entry instanceof IClickableConfigEntry)
+			if(entry instanceof IClickable)
 			{
-				((IClickableConfigEntry) entry).onClicked();
+				((IClickable) entry).onClicked();
 				gui.onChanged();
 			}
 			else if(entry.getAsGroup() != null)
@@ -322,7 +315,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				expanded = !expanded;
 				gui.refreshWidgets();
 			}
-			else if(type == PrimitiveType.COLOR)
+			else if(type == ConfigEntryType.COLOR)
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
 				{
@@ -338,9 +331,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				}, ((ConfigEntryColor) entry).value, 0, false);
 			}
-			else if(type == PrimitiveType.INT)
+			else if(type == ConfigEntryType.INT)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryInt) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.INT, entry.getAsInt(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
@@ -354,15 +347,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type == PrimitiveType.DOUBLE)
+			else if(type == ConfigEntryType.DOUBLE)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryDouble) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.DOUBLE, entry.getAsDouble(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryDouble) entry).set(c.resultD());
+							((ConfigEntryDouble) entry).setDouble(c.resultD());
 							gui.onChanged();
 						}
 						
@@ -370,15 +363,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type == PrimitiveType.STRING)
+			else if(type == ConfigEntryType.STRING)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryString) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getAsString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryString) entry).set(c.result);
+							((ConfigEntryString) entry).setString(c.result);
 							gui.onChanged();
 						}
 						
@@ -386,15 +379,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type.isArray)
+			else if(type.isArray())
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getJson().toString(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							entry.setJson(LMJsonUtils.fromJson(c.result));
+							entry.fromJson(LMJsonUtils.fromJson(c.result));
 							gui.onChanged();
 						}
 						
@@ -402,28 +395,17 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-		}
-		
-		public int getColor()
-		{
-			PrimitiveType type = entry.getType();
-			if(PrimitiveType.isNull(type)) return 0xFFAA00;
-			else if(type == PrimitiveType.COLOR) return ((ConfigEntryColor) entry).value.color();
-			else if(type.isEnum) return 0x0094FF;
-			else if(type.isBoolean) return ((ConfigEntryBool) entry).get() ? 0x33AA33 : 0xD52834;
-			else if(type.isArray) return 0xFF4F34;
-			else if(type.isNumber) return 0xAA5AE8;
-			else if(type.isString) return 0xFFAA49;
-			return 0x999999;
 		}
 		
 		public void addMouseOverText(List<String> l)
 		{
 			if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
 			{
-				if(entry.configData.info != null && entry.configData.info.length > 0)
+				String[] info = entry.getInfo();
+				
+				if(info != null && info.length > 0)
 				{
-					for(String s : entry.configData.info)
+					for(String s : info)
 					{
 						l.addAll(FTBLibClient.mc.fontRendererObj.listFormattedStringToWidth(s, 230));
 					}
@@ -432,15 +414,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry.getAsGroup() == null && gui.mouse().x > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
 			{
-				String def = entry.getDefValue();
-				double min = entry.configData.min();
-				double max = entry.configData.max();
+				String def = entry.getDefValueString();
+				String min = entry.getMinValueString();
+				String max = entry.getMaxValueString();
 				
 				if(def != null) l.add(EnumChatFormatting.AQUA + "Def: " + def);
-				if(min != Double.NEGATIVE_INFINITY)
-					l.add(EnumChatFormatting.AQUA + "Min: " + LMStringUtils.formatDouble(min));
-				if(max != Double.POSITIVE_INFINITY)
-					l.add(EnumChatFormatting.AQUA + "Max: " + LMStringUtils.formatDouble(max));
+				if(min != null) l.add(EnumChatFormatting.AQUA + "Min: " + min);
+				if(max != null) l.add(EnumChatFormatting.AQUA + "Max: " + max);
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package ftb.lib.mod.cmd;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.ChatComponentText;
 
@@ -27,7 +27,7 @@ public class CmdAddFakePlayer extends CommandLM
 	{
 		checkArgs(args, 2);
 		
-		UUID id = UUIDTypeAdapterLM.getUUID(args[0]);
+		UUID id = LMUtils.fromString(args[0]);
 		if(id == null)
 		{
 			throw new RawCommandException("Invalid UUID!");

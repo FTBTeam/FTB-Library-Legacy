@@ -1,14 +1,15 @@
 package ftb.lib.api.permissions;
 
+import latmod.lib.annotations.IInfoContainer;
 import latmod.lib.util.FinalIDObject;
 
 /**
  * Created by LatvianModder on 24.02.2016.
  */
-public class ForgePermissionContainer extends FinalIDObject
+public class ForgePermissionContainer extends FinalIDObject implements IInfoContainer
 {
 	public final boolean playerValue;
-	public String[] info;
+	private String[] info;
 	
 	ForgePermissionContainer(String id, boolean def)
 	{
@@ -46,4 +47,10 @@ public class ForgePermissionContainer extends FinalIDObject
 		
 		return id;
 	}
+	
+	public void setInfo(String[] s)
+	{ info = s; }
+	
+	public String[] getInfo()
+	{ return info; }
 }

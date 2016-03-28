@@ -8,7 +8,8 @@ import ftb.lib.api.gui.*;
 import ftb.lib.api.notification.ClientNotifications;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
-import ftb.lib.mod.client.gui.friends.GuiFriends;
+import ftb.lib.mod.client.gui.friends.InfoFriendsGUI;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.lib.mod.net.MessageModifyFriends;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
@@ -51,6 +52,12 @@ public class FTBLibActions
 			{ return new GuiNotifications(FTBLibClient.mc.currentScreen); }
 		});
 		
+		GuiScreenRegistry.register("friends_gui", new GuiScreenRegistry.Entry()
+		{
+			public GuiScreen openGui(EntityPlayer ep)
+			{ return new GuiInfo(null, new InfoFriendsGUI()); }
+		});
+		
 		GuiScreenRegistry.register("client_config", new GuiScreenRegistry.Entry()
 		{
 			public GuiScreen openGui(EntityPlayer ep)
@@ -81,10 +88,10 @@ public class FTBLibActions
 		}
 	};
 	
-	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbu", "textures/gui/friendsbutton.png"), 256))
+	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/gui/friendsbutton.png"), 256))
 	{
 		public void onClicked(ForgePlayer self, ForgePlayer other)
-		{ FTBLibClient.openGui(new GuiFriends(FTBLibClient.mc.currentScreen)); }
+		{ FTBLibClient.openGui(new GuiInfo(null, new InfoFriendsGUI())); }
 		
 		public String getDisplayName()
 		{ return "FriendsGUI"; }
@@ -199,7 +206,7 @@ public class FTBLibActions
 		if(e.gui instanceof InventoryEffectRenderer)
 		{
 			ForgePlayerSP p = ForgeWorldSP.inst.clientPlayer;
-			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false);
+			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false, false);
 			buttons.addAll(Shortcuts.actions);
 			
 			if(!buttons.isEmpty())
@@ -209,7 +216,7 @@ public class FTBLibActions
 				ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, e.gui);
 				e.buttonList.add(renderer);
 				
-				if(FTBLibModClient.action_buttons_on_top.get())
+				if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
 				{
 					for(int i = 0; i < buttons.size(); i++)
 					{
@@ -347,7 +354,7 @@ public class FTBLibActions
 					String s = b.action.getDisplayName();
 					int tw = FTBLibClient.mc.fontRendererObj.getStringWidth(s);
 					
-					if(!FTBLibModClient.action_buttons_on_top.get())
+					if(!FTBLibModClient.action_buttons_on_top.getAsBoolean())
 					{
 						mx1 -= tw + 8;
 						my1 += 4;

@@ -4,8 +4,7 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
 import ftb.lib.api.events.ForgeWorldDataEvent;
 import ftb.lib.mod.FTBLibMod;
-import latmod.lib.LMListUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -70,7 +69,8 @@ public abstract class ForgeWorld
 	{
 		for(ForgeWorldData d : customData.values())
 		{
-			d.init();
+			d.isLoaded = true;
+			d.onLoaded(this);
 		}
 	}
 	
@@ -110,7 +110,7 @@ public abstract class ForgeWorld
 				}
 			}
 			
-			return getPlayer(UUIDTypeAdapterLM.getUUID(s));
+			return getPlayer(LMUtils.fromString(s));
 		}
 		
 		return null;
@@ -150,7 +150,7 @@ public abstract class ForgeWorld
 	 */
 	public final int setMode(String mode)
 	{
-		GameMode m = GameModes.getGameModes().modes.get(mode);
+		GameMode m = GameModes.instance().modes.get(mode);
 		
 		if(m == null) return 1;
 		if(m.equals(currentMode)) return 2;
@@ -165,6 +165,7 @@ public abstract class ForgeWorld
 		for(ForgeWorldData d : customData.values())
 		{
 			d.onClosed();
+			d.isLoaded = false;
 		}
 		
 		playerMap.clear();
