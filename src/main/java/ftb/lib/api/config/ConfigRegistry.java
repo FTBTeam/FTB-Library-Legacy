@@ -2,10 +2,8 @@ package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
 import ftb.lib.*;
-import ftb.lib.api.config.old.*;
 import ftb.lib.mod.net.MessageEditConfig;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.File;
@@ -62,7 +60,7 @@ public class ConfigRegistry
 	{
 		if(ep != null)
 		{
-			ConfigFile group = new ConfigFile(UUIDTypeAdapterLM.getString(ep.getGameProfile().getId()));
+			ConfigFile group = new ConfigFile(LMUtils.fromUUID(ep.getGameProfile().getId()));
 			tempServerConfig.put(group.getID(), group);
 			return group;
 		}

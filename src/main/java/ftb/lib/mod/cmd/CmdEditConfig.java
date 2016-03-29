@@ -2,8 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.*;
 import ftb.lib.api.cmd.*;
-import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.config.FTBLibConfigCmdNames;
 import ftb.lib.mod.net.MessageEditConfig;

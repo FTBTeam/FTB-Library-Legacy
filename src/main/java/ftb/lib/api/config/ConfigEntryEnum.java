@@ -1,11 +1,10 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
 
 import java.util.LinkedHashMap;
 
-@SuppressWarnings("all")
 public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements IClickableConfigEntry // EnumTypeAdapterFactory
 {
 	private final LinkedHashMap<String, E> enumMap;
@@ -79,7 +78,7 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 	public boolean getAsBoolean()
 	{ return get() != null; }
 	
-	public E getFromIndex(int index)
+	private E getFromIndex(int index)
 	{
 		if(index < 0 || index >= enumMap.size())
 		{
@@ -96,7 +95,7 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		return null;
 	}
 	
-	public int getIndex()
+	private int getIndex()
 	{
 		int idx0 = 0;
 		E e0 = get();
@@ -109,7 +108,7 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		return -1;
 	}
 	
-	public int getDefaultIndex()
+	private int getDefaultIndex()
 	{
 		int idx0 = 0;
 		for(E e : enumMap.values())
@@ -124,6 +123,6 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 	public int getAsInt()
 	{ return enumMap.size(); }
 	
-	public String getDefValue()
+	public String getDefValueString()
 	{ return getName(defValue); }
 }

@@ -13,7 +13,6 @@ import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import latmod.lib.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
 import latmod.lib.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.*;
@@ -343,7 +342,7 @@ public class FTBLib
 			{
 				String json = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asString();
 				JsonElement e = LMJsonUtils.fromJson(json);
-				cachedUUIDs.put(key, UUIDTypeAdapterLM.getUUID(e.getAsJsonObject().get("id").getAsString()));
+				cachedUUIDs.put(key, LMUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }
 		}

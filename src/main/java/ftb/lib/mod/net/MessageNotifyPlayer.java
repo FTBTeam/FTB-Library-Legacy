@@ -17,7 +17,7 @@ public class MessageNotifyPlayer extends MessageLM
 	public MessageNotifyPlayer(Notification n)
 	{
 		this();
-		JsonElementIO.write(io, n.getJson());
+		JsonElementIO.write(io, n.getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()

@@ -1,4 +1,4 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
@@ -108,6 +108,6 @@ public class ConfigEntryIntArray extends ConfigEntry
 		return a1;
 	}
 	
-	public String getDefValue()
+	public String getDefValueString()
 	{ return defValue.toString(); }
 }

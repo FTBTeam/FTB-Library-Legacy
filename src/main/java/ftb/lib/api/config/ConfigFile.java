@@ -1,4 +1,4 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
 import latmod.lib.*;

@@ -2,7 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.cmd.*;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.LMUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
@@ -28,7 +28,7 @@ public class CmdListOverride extends CommandLM
 			EntityPlayerMP ep = players.get(i);
 			
 			if(printUUID)
-				FTBLib.printChat(ics, ep.getCommandSenderName() + " :: " + UUIDTypeAdapterLM.getString(ep.getUniqueID()));
+				FTBLib.printChat(ics, ep.getCommandSenderName() + " :: " + LMUtils.fromUUID(ep.getUniqueID()));
 			else FTBLib.printChat(ics, ep.getCommandSenderName());
 		}
 		

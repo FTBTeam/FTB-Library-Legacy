@@ -1,4 +1,4 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
@@ -57,6 +57,6 @@ public class ConfigEntryEnumExtended extends ConfigEntry implements IClickableCo
 	public int getAsInt()
 	{ return getIndex(); }
 	
-	public String getDefValue()
+	public String getDefValueString()
 	{ return defValue; }
 }

@@ -2,8 +2,9 @@ package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
+import ftb.lib.api.FTBLibLang;
 import ftb.lib.api.client.*;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
@@ -58,7 +59,7 @@ public class GuiSelectColor extends GuiLM
 			
 			public void addMouseOverText(List<String> s)
 			{
-				s.add(FTBLibLang.button_cancel());
+				s.add(FTBLibLang.button_cancel.format());
 				s.add(initCol.toString());
 			}
 		};
@@ -70,7 +71,7 @@ public class GuiSelectColor extends GuiLM
 			
 			public void addMouseOverText(List<String> s)
 			{
-				s.add(FTBLibLang.button_accept());
+				s.add(FTBLibLang.button_accept.format());
 				s.add(currentColor.toString());
 			}
 		};

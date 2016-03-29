@@ -1,7 +1,6 @@
 package ftb.lib.api.tile;
 
-import ftb.lib.mod.FTBLibMod;
-import net.minecraft.client.resources.I18n;
+import ftb.lib.api.LangKey;
 
 public enum InvMode
 {
@@ -11,14 +10,15 @@ public enum InvMode
 	DISABLED("disabled");
 	
 	public static final InvMode[] VALUES = values();
+	public static final String enumLangKey = "ftbl.invmode";
 	
 	public final int ID;
-	public final String uname;
+	public final LangKey lang;
 	
 	InvMode(String s)
 	{
 		ID = ordinal();
-		uname = s;
+		lang = new LangKey(enumLangKey + '.' + s);
 	}
 	
 	public InvMode next()
@@ -36,10 +36,4 @@ public enum InvMode
 	
 	public boolean canExtractItem()
 	{ return this == ENABLED || this == ONLY_OUT; }
-	
-	public String getText()
-	{ return FTBLibMod.mod.translate("ftbl.invmode." + uname); }
-	
-	public String getTitle()
-	{ return I18n.format("ftbl.invmode"); }
 }

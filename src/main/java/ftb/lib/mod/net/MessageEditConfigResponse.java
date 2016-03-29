@@ -3,7 +3,6 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.*;
 import ftb.lib.*;
 import ftb.lib.api.config.*;
-import ftb.lib.api.config.old.*;
 import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;

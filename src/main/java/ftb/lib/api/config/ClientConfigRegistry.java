@@ -1,11 +1,12 @@
 package ftb.lib.api.config;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.old.*;
 import net.minecraft.client.resources.I18n;
 
 import java.io.File;
 
+@SideOnly(Side.CLIENT)
 public final class ClientConfigRegistry
 {
 	private static final ConfigFile file = new ConfigFile("client_config");
@@ -25,6 +26,7 @@ public final class ClientConfigRegistry
 				if(file.getFile() == null)
 				{
 					file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+					file.load();
 				}
 				
 				return file;

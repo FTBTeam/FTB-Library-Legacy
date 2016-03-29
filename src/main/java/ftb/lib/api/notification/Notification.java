@@ -4,12 +4,11 @@ import com.google.gson.*;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.LMColorUtils;
-import latmod.lib.json.IJsonObject;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 
-public final class Notification extends FinalIDObject implements IJsonObject
+public final class Notification extends FinalIDObject implements IJsonSerializable
 {
 	public IChatComponent title, desc;
 	public int timer, color;
@@ -53,7 +52,7 @@ public final class Notification extends FinalIDObject implements IJsonObject
 	public boolean isTemp()
 	{ return mouse == null; }
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
 		o.add("id", new JsonPrimitive(getID()));
@@ -62,11 +61,11 @@ public final class Notification extends FinalIDObject implements IJsonObject
 		if(desc != null) o.add("desc", JsonHelper.serializeICC(desc));
 		if(item != null) o.add("item", ItemStackSerializer.serialize(item));
 		if(color != 0xFFA0A0A0) o.add("color", LMColorUtils.serialize(color));
-		if(mouse != null) o.add("mouse", mouse.getJson());
+		if(mouse != null) o.add("mouse", mouse.getSerializableElement());
 		return o;
 	}
 	
-	public void setJson(JsonElement e)
+	public void func_152753_a(JsonElement e)
 	{
 		if(e == null || !e.isJsonObject()) return;
 		setDefaults();
@@ -79,13 +78,13 @@ public final class Notification extends FinalIDObject implements IJsonObject
 		if(o.has("mouse"))
 		{
 			MouseAction m = new MouseAction();
-			m.setJson(o.get("mouse"));
+			m.func_152753_a(o.get("mouse"));
 			setMouseAction(m);
 		}
 	}
 	
 	public String toString()
-	{ return getJson().toString(); }
+	{ return getSerializableElement().toString(); }
 	
 	public static Notification deserialize(JsonElement e)
 	{
@@ -93,7 +92,7 @@ public final class Notification extends FinalIDObject implements IJsonObject
 		JsonObject o = e.getAsJsonObject();
 		if(!o.has("id") || !o.has("title")) return null;
 		Notification n = new Notification(o.get("id").getAsString());
-		n.setJson(o);
+		n.func_152753_a(o);
 		return n;
 	}
 }

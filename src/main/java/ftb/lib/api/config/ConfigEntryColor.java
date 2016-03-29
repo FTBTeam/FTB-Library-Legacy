@@ -1,4 +1,4 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
@@ -51,6 +51,6 @@ public class ConfigEntryColor extends ConfigEntry
 	public int getAsInt()
 	{ return value.color(); }
 	
-	public String getDefValue()
+	public String getDefValueString()
 	{ return defValue.toString(); }
 }

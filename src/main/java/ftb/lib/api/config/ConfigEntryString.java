@@ -1,4 +1,4 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
@@ -60,6 +60,6 @@ public class ConfigEntryString extends ConfigEntry
 	public double getAsDouble()
 	{ return Double.parseDouble(get()); }
 	
-	public String getDefValue()
+	public String getDefValueString()
 	{ return defValue; }
 }

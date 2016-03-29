@@ -1,4 +1,4 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
@@ -30,6 +30,6 @@ public class ConfigEntryBlank extends ConfigEntry implements IClickableConfigEnt
 	{
 	}
 	
-	public String getDefValue()
+	public String getDefValueString()
 	{ return null; }
 }

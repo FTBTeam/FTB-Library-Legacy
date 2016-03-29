@@ -56,7 +56,7 @@ public class LMMod extends FinalIDObject
 	
 	public CreativeTabs createTab(final String s, final ItemStack icon)
 	{
-		CreativeTabs tab = new CreativeTabs(lowerCaseModID + "." + s)
+		CreativeTabs tab = new CreativeTabs(lowerCaseModID + '.' + s)
 		{
 			@SideOnly(Side.CLIENT)
 			public ItemStack getIconItemStack()
@@ -81,10 +81,10 @@ public class LMMod extends FinalIDObject
 	}
 	
 	public String getBlockName(String s)
-	{ return lowerCaseModID + ":tile." + s; }
+	{ return lowerCaseModID + ".tile." + s; }
 	
 	public String getItemName(String s)
-	{ return lowerCaseModID + ":item." + s; }
+	{ return lowerCaseModID + ".item." + s; }
 	
 	public String translate(String s, Object... args)
 	{ return FTBLibMod.proxy.translate(lowerCaseModID + '.' + s, args); }

@@ -4,14 +4,12 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.config.ClientConfigRegistry;
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.cmd.CmdReloadClient;
-import latmod.lib.LMColorUtils;
-import latmod.lib.json.UUIDTypeAdapterLM;
+import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
@@ -41,7 +39,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 		
 		//For Dev reasons, see DevConsole
-		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(UUIDTypeAdapterLM.getUUID("5afb9a5b207d480e887967bc848f9a8f"));
+		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
 		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);

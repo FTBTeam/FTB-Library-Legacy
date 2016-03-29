@@ -1,6 +1,5 @@
 package ftb.lib.api.config;
 
-import ftb.lib.api.config.old.*;
 import ftb.lib.mod.net.MessageEditConfigResponse;
 
 public class ServerConfigProvider implements IConfigProvider

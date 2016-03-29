@@ -1,8 +1,7 @@
 package ftb.lib.mod.config;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.config.ConfigRegistry;
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 
 import java.io.File;
 

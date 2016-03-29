@@ -1,7 +1,7 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 import ftb.lib.api.friends.ILMPlayer;
 
 import java.util.*;
@@ -32,7 +32,7 @@ public class PlayerActionRegistry
 					{ return "player_action." + a.getID(); }
 				};
 				
-				configGroup.entryMap.put(a.getID(), entry);
+				configGroup.add(entry, false);
 			}
 		}
 	}

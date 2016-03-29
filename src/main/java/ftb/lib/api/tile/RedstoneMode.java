@@ -1,7 +1,6 @@
 package ftb.lib.api.tile;
 
-import cpw.mods.fml.relauncher.*;
-import net.minecraft.client.resources.I18n;
+import ftb.lib.api.LangKey;
 
 public enum RedstoneMode
 {
@@ -10,14 +9,15 @@ public enum RedstoneMode
 	ACTIVE_LOW("low");
 	
 	public static final RedstoneMode[] VALUES = values();
+	public static final String enumLangKey = "ftbl.redstonemode";
 	
 	public final int ID;
-	public final String uname;
+	public final LangKey lang;
 	
 	RedstoneMode(String s)
 	{
 		ID = ordinal();
-		uname = s;
+		lang = new LangKey(enumLangKey + '.' + s);
 	}
 	
 	public boolean cancel(boolean b)
@@ -37,12 +37,4 @@ public enum RedstoneMode
 		if(id < 0) id = VALUES.length - 1;
 		return VALUES[id];
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public String getText()
-	{ return I18n.format("ftbl.redstonemode." + uname); }
-	
-	@SideOnly(Side.CLIENT)
-	public String getTitle()
-	{ return I18n.format("ftbl.redstonemode"); }
 }

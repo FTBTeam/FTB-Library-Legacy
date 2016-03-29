@@ -1,24 +1,25 @@
 package ftb.lib;
 
+import ftb.lib.api.LangKey;
 import ftb.lib.api.gui.GuiIcons;
-import ftb.lib.mod.FTBLibMod;
 
 public enum PrivacyLevel
 {
-	PUBLIC("public"),
-	PRIVATE("private"),
-	FRIENDS("friends");
+	PUBLIC,
+	PRIVATE,
+	FRIENDS;
 	
 	public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, FRIENDS};
 	public static final PrivacyLevel[] VALUES_2 = new PrivacyLevel[] {PUBLIC, PRIVATE};
+	public static final String enumLangKey = "ftbl.security";
 	
 	public final int ID;
-	public final String uname;
+	public final LangKey lang;
 	
-	PrivacyLevel(String s)
+	PrivacyLevel()
 	{
 		ID = ordinal();
-		uname = s;
+		lang = new LangKey(enumLangKey + '.' + name().toLowerCase());
 	}
 	
 	public boolean isPublic()
@@ -37,12 +38,6 @@ public enum PrivacyLevel
 		return l[id];
 	}
 	
-	public String getText()
-	{ return FTBLibMod.mod.translate("security." + uname); }
-	
-	public String getTitle()
-	{ return FTBLibMod.mod.translate("security"); }
-	
 	public TextureCoords getIcon()
 	{ return GuiIcons.security[ID]; }
 	
@@ -50,7 +45,7 @@ public enum PrivacyLevel
 	{
 		String[] s = new String[VALUES_3.length];
 		for(int i = 0; i < VALUES_3.length; i++)
-			s[i] = VALUES_3[i].uname;
+			s[i] = VALUES_3[i].name().toLowerCase();
 		return s;
 	}
 	
@@ -58,7 +53,7 @@ public enum PrivacyLevel
 	{
 		for(PrivacyLevel l : VALUES_3)
 		{
-			if(l.uname.equalsIgnoreCase(s)) return l;
+			if(l.name().equalsIgnoreCase(s)) return l;
 		}
 		return null;
 	}

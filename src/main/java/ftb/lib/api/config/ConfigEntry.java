@@ -1,22 +1,20 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
 import latmod.lib.*;
-import latmod.lib.json.IJsonObject;
+import latmod.lib.annotations.*;
 import latmod.lib.util.FinalIDObject;
 
-public abstract class ConfigEntry extends FinalIDObject implements IJsonObject, ConfigData.Container
+public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer
 {
-	public final ConfigData configData;
 	public ConfigGroup parentGroup;
+	private String[] info;
+	protected byte flags = 0;
 	
 	ConfigEntry(String id)
 	{
 		super(id);
 		if(id == null || id.isEmpty()) throw new NullPointerException("Config ID can't be null!");
-		
-		configData = new ConfigData();
-		configData.type = getType();
 	}
 	
 	public abstract PrimitiveType getType();
@@ -24,9 +22,6 @@ public abstract class ConfigEntry extends FinalIDObject implements IJsonObject, 
 	public abstract JsonElement getJson();
 	public abstract void write(ByteIOStream io);
 	public abstract void read(ByteIOStream io);
-	
-	public void setConfigData(ConfigData data)
-	{ configData.setFrom(data); }
 	
 	public void writeExtended(ByteIOStream io)
 	{ write(io); }
@@ -41,6 +36,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IJsonObject, 
 	{
 		if(t == null) return null;
 		else if(t == PrimitiveType.NULL) return new ConfigEntryBlank(id);
+		else if(t == PrimitiveType.MAP) return new ConfigGroup(id);
 		else if(t == PrimitiveType.BOOLEAN) return new ConfigEntryBool(id, false);
 		else if(t == PrimitiveType.DOUBLE) return new ConfigEntryDouble(id, 0D);
 		else if(t == PrimitiveType.INT) return new ConfigEntryInt(id, 0);
@@ -62,13 +58,19 @@ public abstract class ConfigEntry extends FinalIDObject implements IJsonObject, 
 		return parentGroup.getFullID() + '.' + getID();
 	}
 	
-	public String getDefValue() { return getAsString(); }
+	public String getDefValueString()
+	{ return getAsString(); }
+	
+	public String getMinValueString()
+	{ return null; }
+	
+	public String getMaxValueString()
+	{ return null; }
 	
 	public ConfigEntry copy()
 	{
 		ConfigEntry e = ConfigEntry.getEntry(getType(), getID());
 		e.setJson(getJson());
-		e.configData.setFrom(configData);
 		return e;
 	}
 	
@@ -97,4 +99,16 @@ public abstract class ConfigEntry extends FinalIDObject implements IJsonObject, 
 	
 	public ConfigGroup getAsGroup()
 	{ return null; }
+	
+	public void setFlag(IFlag flag, boolean b)
+	{ flags = Bits.setBit(flags, flag.getFlagID(), b); }
+	
+	public boolean getFlag(IFlag flag)
+	{ return Bits.getBit(flags, flag.getFlagID()); }
+	
+	public void setInfo(String[] s)
+	{ info = s; }
+	
+	public String[] getInfo()
+	{ return new String[0]; }
 }

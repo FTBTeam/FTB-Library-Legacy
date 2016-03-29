@@ -1,7 +1,8 @@
-package ftb.lib.api.config.old;
+package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.*;
+import latmod.lib.annotations.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -61,7 +62,7 @@ public class ConfigGroup extends ConfigEntry
 						ConfigEntry entry = (ConfigEntry) aF.get(parent);
 						if(entry != null && entry != this && !(entry instanceof ConfigFile))
 						{
-							ConfigData.inject(aF, parent, entry);
+							AnnotationHelper.inject(aF, parent, entry);
 							add(entry, copy);
 						}
 					}
@@ -113,7 +114,7 @@ public class ConfigGroup extends ConfigEntry
 		
 		for(ConfigEntry e : entries())
 		{
-			if(!e.configData.isExcluded())
+			if(!e.getFlag(Flag.EXCLUDED))
 			{
 				e.onPreLoaded();
 				o.add(e.getID(), e.getJson());
@@ -169,8 +170,22 @@ public class ConfigGroup extends ConfigEntry
 			e.onPreLoaded();
 			io.writeByte(e.getType().ordinal());
 			io.writeUTF(e.getID());
-			e.configData.write(io);
 			e.writeExtended(io);
+			
+			String[] info = getInfo();
+			
+			e.setFlag(Flag.HAS_INFO, info != null && info.length > 0);
+			io.writeByte(e.flags);
+			
+			if(e.getFlag(Flag.HAS_INFO))
+			{
+				io.writeByte(info.length);
+				
+				for(String s : info)
+				{
+					io.writeUTF(s);
+				}
+			}
 		}
 	}
 	
@@ -183,8 +198,20 @@ public class ConfigGroup extends ConfigEntry
 			int type = io.readUnsignedByte();
 			String id = io.readUTF();
 			ConfigEntry e = ConfigEntry.getEntry(PrimitiveType.VALUES[type], id);
-			e.configData.read(io);
 			e.readExtended(io);
+			e.flags = io.readByte();
+			
+			if(e.getFlag(Flag.HAS_INFO))
+			{
+				String[] info = new String[io.readUnsignedByte()];
+				for(int j = 0; j < info.length; j++)
+				{
+					info[j] = io.readUTF();
+				}
+				
+				e.setInfo(info);
+			}
+			
 			add(e, false);
 		}
 	}
@@ -281,7 +308,10 @@ public class ConfigGroup extends ConfigEntry
 		
 		for(ConfigEntry e : entryMap.values())
 		{
-			if(e.configData.sync()) out.add(e, copy);
+			if(e.getFlag(Flag.SYNC))
+			{
+				out.add(e, copy);
+			}
 			else if(e.getAsGroup() != null)
 			{
 				ConfigGroup g = e.getAsGroup().generateSynced(copy);

@@ -1,8 +1,9 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.FTBLibLang;
 import ftb.lib.api.client.*;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
@@ -40,7 +41,7 @@ public class GuiSelectField extends GuiLM
 			}
 		};
 		
-		buttonCancel.title = FTBLibLang.button_cancel();
+		buttonCancel.title = FTBLibLang.button_cancel.format();
 		
 		buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
 		{
@@ -51,7 +52,7 @@ public class GuiSelectField extends GuiLM
 			}
 		};
 		
-		buttonAccept.title = FTBLibLang.button_accept();
+		buttonAccept.title = FTBLibLang.button_accept.format();
 		
 		textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
 		{

@@ -2,12 +2,12 @@ package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.*;
-import ftb.lib.api.config.IConfigProvider;
-import ftb.lib.api.config.old.*;
+import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
+import latmod.lib.annotations.Flag;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -145,7 +145,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.configData.isHidden())
+		if(!e.getFlag(Flag.HIDDEN))
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -308,7 +308,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			FTBLibClient.playClickSound();
 			
-			if(!entry.configData.canEdit()) return;
+			if(entry.getFlag(Flag.CANT_EDIT)) return;
 			
 			PrimitiveType type = entry.getType();
 			
@@ -421,9 +421,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
 			{
-				if(entry.configData.info != null && entry.configData.info.length > 0)
+				String[] info = entry.getInfo();
+				
+				if(info != null && info.length > 0)
 				{
-					for(String s : entry.configData.info)
+					for(String s : info)
 					{
 						l.addAll(FTBLibClient.mc.fontRenderer.listFormattedStringToWidth(s, 230));
 					}
@@ -432,15 +434,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry.getAsGroup() == null && gui.mouse().x > gui.width - (Math.min(150, gui.fontRendererObj.getStringWidth(entry.getAsString())) + 25))
 			{
-				String def = entry.getDefValue();
-				double min = entry.configData.min();
-				double max = entry.configData.max();
+				String def = entry.getDefValueString();
+				String min = entry.getMinValueString();
+				String max = entry.getMaxValueString();
 				
 				if(def != null) l.add(EnumChatFormatting.AQUA + "Def: " + def);
-				if(min != Double.NEGATIVE_INFINITY)
-					l.add(EnumChatFormatting.AQUA + "Min: " + LMStringUtils.formatDouble(min));
-				if(max != Double.POSITIVE_INFINITY)
-					l.add(EnumChatFormatting.AQUA + "Max: " + LMStringUtils.formatDouble(max));
+				if(min != null) l.add(EnumChatFormatting.AQUA + "Min: " + min);
+				if(max != null) l.add(EnumChatFormatting.AQUA + "Max: " + max);
 			}
 		}
 	}
