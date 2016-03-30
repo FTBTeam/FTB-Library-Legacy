@@ -7,7 +7,7 @@ import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
-import latmod.lib.annotations.Flag;
+import latmod.lib.annotations.Flags;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -145,7 +145,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.getFlag(Flag.HIDDEN))
+		if(!e.getFlag(Flags.HIDDEN))
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -270,15 +270,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(!isGroup)
 			{
-				String s;
-				
-				if(PrimitiveType.isNull(entry.getType())) s = EnumChatFormatting.BOLD + ". . .";
-				else
-				{
-					s = "error";
-					try { s = entry.getAsString(); }
-					catch(Exception ex) { }
-				}
+				String s = entry.getAsString();
 				
 				int slen = gui.fontRendererObj.getStringWidth(s);
 				
@@ -288,7 +280,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					slen = 152;
 				}
 				
-				int textCol = 0xFF000000 | getColor();
+				int textCol = 0xFF000000 | entry.getColor();
 				if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
 				
 				if(mouseOver && gui.mouse().x > ax + width - slen - 9)
@@ -308,9 +300,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			FTBLibClient.playClickSound();
 			
-			if(entry.getFlag(Flag.CANT_EDIT)) return;
+			if(entry.getFlag(Flags.CANT_EDIT)) return;
 			
-			PrimitiveType type = entry.getType();
+			ConfigType type = entry.getConfigType();
 			
 			if(entry instanceof IClickableConfigEntry)
 			{
@@ -322,7 +314,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				expanded = !expanded;
 				gui.refreshWidgets();
 			}
-			else if(type == PrimitiveType.COLOR)
+			else if(type == ConfigType.COLOR)
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
 				{
@@ -338,9 +330,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				}, ((ConfigEntryColor) entry).value, 0, false);
 			}
-			else if(type == PrimitiveType.INT)
+			else if(type == ConfigType.INT)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryInt) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, ((ConfigEntryInt) entry).get(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
@@ -354,9 +346,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type == PrimitiveType.DOUBLE)
+			else if(type == ConfigType.DOUBLE)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryDouble) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, ((ConfigEntryDouble) entry).get(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
@@ -370,9 +362,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type == PrimitiveType.STRING)
+			else if(type == ConfigType.STRING)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), entry.getType(), ((ConfigEntryString) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, ((ConfigEntryString) entry).get(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
@@ -386,9 +378,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type.isArray)
+			else if(type.isArray())
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getJson().toString(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getJson().toString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
@@ -402,19 +394,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-		}
-		
-		public int getColor()
-		{
-			PrimitiveType type = entry.getType();
-			if(PrimitiveType.isNull(type)) return 0xFFAA00;
-			else if(type == PrimitiveType.COLOR) return ((ConfigEntryColor) entry).value.color();
-			else if(type.isEnum) return 0x0094FF;
-			else if(type.isBoolean) return ((ConfigEntryBool) entry).get() ? 0x33AA33 : 0xD52834;
-			else if(type.isArray) return 0xFF4F34;
-			else if(type.isNumber) return 0xAA5AE8;
-			else if(type.isString) return 0xFFAA49;
-			return 0x999999;
 		}
 		
 		public void addMouseOverText(List<String> l)

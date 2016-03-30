@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.*;
+import latmod.lib.ByteIOStream;
 
 public class ConfigEntryBool extends ConfigEntry implements IClickableConfigEntry
 {
@@ -15,8 +15,11 @@ public class ConfigEntryBool extends ConfigEntry implements IClickableConfigEntr
 		defValue = def;
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.BOOLEAN; }
+	public ConfigType getConfigType()
+	{ return ConfigType.BOOLEAN; }
+	
+	public int getColor()
+	{ return get() ? 0x33AA33 : 0xD52834; }
 	
 	public void set(boolean v)
 	{ value = v; }

@@ -14,11 +14,11 @@ public class ConfigGroup extends ConfigEntry
 	public ConfigGroup(String s)
 	{
 		super(s);
-		entryMap = new HashMap<>();
+		entryMap = new LinkedHashMap<>();
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.MAP; }
+	public ConfigType getConfigType()
+	{ return ConfigType.GROUP; }
 	
 	public final List<ConfigEntry> entries()
 	{ return LMMapUtils.values(entryMap, null); }
@@ -96,7 +96,7 @@ public class ConfigGroup extends ConfigEntry
 		
 		for(Map.Entry<String, JsonElement> e : o.entrySet())
 		{
-			ConfigEntry entry = new ConfigEntryJsonElement(e.getKey());
+			ConfigEntry entry = new ConfigEntryCustom(e.getKey());
 			
 			if(!e.getValue().isJsonNull())
 			{
@@ -114,7 +114,7 @@ public class ConfigGroup extends ConfigEntry
 		
 		for(ConfigEntry e : entries())
 		{
-			if(!e.getFlag(Flag.EXCLUDED))
+			if(!e.getFlag(Flags.EXCLUDED))
 			{
 				e.onPreLoaded();
 				o.add(e.getID(), e.getJson());
@@ -142,7 +142,7 @@ public class ConfigGroup extends ConfigEntry
 		for(ConfigEntry e : entryMap.values())
 		{
 			e.onPreLoaded();
-			io.writeByte(e.getType().ordinal());
+			io.writeByte(e.getConfigType().ordinal());
 			io.writeUTF(e.getID());
 			e.write(io);
 		}
@@ -156,7 +156,7 @@ public class ConfigGroup extends ConfigEntry
 		{
 			int type = io.readUnsignedByte();
 			String id = io.readUTF();
-			ConfigEntry e = ConfigEntry.getEntry(PrimitiveType.VALUES[type], id);
+			ConfigEntry e = ConfigType.VALUES[type].createNew(id);
 			e.read(io);
 			add(e, false);
 		}
@@ -168,16 +168,16 @@ public class ConfigGroup extends ConfigEntry
 		for(ConfigEntry e : entryMap.values())
 		{
 			e.onPreLoaded();
-			io.writeByte(e.getType().ordinal());
+			io.writeByte(e.getConfigType().ordinal());
 			io.writeUTF(e.getID());
 			e.writeExtended(io);
 			
 			String[] info = getInfo();
 			
-			e.setFlag(Flag.HAS_INFO, info != null && info.length > 0);
+			e.setFlag(Flags.HAS_INFO, info != null && info.length > 0);
 			io.writeByte(e.flags);
 			
-			if(e.getFlag(Flag.HAS_INFO))
+			if(e.getFlag(Flags.HAS_INFO))
 			{
 				io.writeByte(info.length);
 				
@@ -197,11 +197,11 @@ public class ConfigGroup extends ConfigEntry
 		{
 			int type = io.readUnsignedByte();
 			String id = io.readUTF();
-			ConfigEntry e = ConfigEntry.getEntry(PrimitiveType.VALUES[type], id);
+			ConfigEntry e = ConfigType.VALUES[type].createNew(id);
 			e.readExtended(io);
 			e.flags = io.readByte();
 			
-			if(e.getFlag(Flag.HAS_INFO))
+			if(e.getFlag(Flags.HAS_INFO))
 			{
 				String[] info = new String[io.readUnsignedByte()];
 				for(int j = 0; j < info.length; j++)
@@ -245,7 +245,7 @@ public class ConfigGroup extends ConfigEntry
 					}
 					catch(Exception ex)
 					{
-						System.err.println("Can't set value " + e1.getJson() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getType() + ")");
+						System.err.println("Can't set value " + e1.getJson() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
 						System.err.println(ex.toString());
 					}
 				}
@@ -308,7 +308,7 @@ public class ConfigGroup extends ConfigEntry
 		
 		for(ConfigEntry e : entryMap.values())
 		{
-			if(e.getFlag(Flag.SYNC))
+			if(e.getFlag(Flags.SYNC))
 			{
 				out.add(e, copy);
 			}

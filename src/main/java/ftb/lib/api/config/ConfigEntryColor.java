@@ -18,8 +18,11 @@ public class ConfigEntryColor extends ConfigEntry
 		defValue.set(def);
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.COLOR; }
+	public ConfigType getConfigType()
+	{ return ConfigType.COLOR; }
+	
+	public int getColor()
+	{ return value.color(); }
 	
 	public final void setJson(JsonElement o)
 	{ value.setRGBA(o.getAsInt()); }

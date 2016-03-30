@@ -14,39 +14,22 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	ConfigEntry(String id)
 	{
 		super(id);
-		if(id == null || id.isEmpty()) throw new NullPointerException("Config ID can't be null!");
 	}
 	
-	public abstract PrimitiveType getType();
+	public abstract ConfigType getConfigType();
 	public abstract void setJson(JsonElement o);
 	public abstract JsonElement getJson();
 	public abstract void write(ByteIOStream io);
 	public abstract void read(ByteIOStream io);
+	
+	public int getColor()
+	{ return 0x999999; }
 	
 	public void writeExtended(ByteIOStream io)
 	{ write(io); }
 	
 	public void readExtended(ByteIOStream io)
 	{ read(io); }
-	
-	public final String getPrettyJsonString(boolean pretty)
-	{ return LMJsonUtils.toJson(LMJsonUtils.getGson(pretty), getJson()); }
-	
-	public static ConfigEntry getEntry(PrimitiveType t, String id)
-	{
-		if(t == null) return null;
-		else if(t == PrimitiveType.NULL) return new ConfigEntryBlank(id);
-		else if(t == PrimitiveType.MAP) return new ConfigGroup(id);
-		else if(t == PrimitiveType.BOOLEAN) return new ConfigEntryBool(id, false);
-		else if(t == PrimitiveType.DOUBLE) return new ConfigEntryDouble(id, 0D);
-		else if(t == PrimitiveType.INT) return new ConfigEntryInt(id, 0);
-		else if(t == PrimitiveType.INT_ARRAY) return new ConfigEntryIntArray(id, (IntList) null);
-		else if(t == PrimitiveType.STRING) return new ConfigEntryString(id, null);
-		else if(t == PrimitiveType.STRING_ARRAY) return new ConfigEntryStringArray(id);
-		else if(t == PrimitiveType.ENUM) return new ConfigEntryEnumExtended(id);
-		else if(t == PrimitiveType.COLOR) return new ConfigEntryColor(id, new LMColor.RGB());
-		return null;
-	}
 	
 	public void onPreLoaded() { }
 	
@@ -59,7 +42,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	}
 	
 	public String getDefValueString()
-	{ return getAsString(); }
+	{ return null; }
 	
 	public String getMinValueString()
 	{ return null; }
@@ -69,7 +52,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	
 	public ConfigEntry copy()
 	{
-		ConfigEntry e = ConfigEntry.getEntry(getType(), getID());
+		ConfigEntry e = getConfigType().createNew(getID());
 		e.setJson(getJson());
 		return e;
 	}
@@ -100,11 +83,11 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	public ConfigGroup getAsGroup()
 	{ return null; }
 	
-	public void setFlag(IFlag flag, boolean b)
-	{ flags = Bits.setBit(flags, flag.getFlagID(), b); }
+	public void setFlag(byte flag, boolean b)
+	{ flags = Bits.setBit(flags, flag, b); }
 	
-	public boolean getFlag(IFlag flag)
-	{ return Bits.getBit(flags, flag.getFlagID()); }
+	public boolean getFlag(byte flag)
+	{ return Bits.getBit(flags, flag); }
 	
 	public void setInfo(String[] s)
 	{ info = s; }

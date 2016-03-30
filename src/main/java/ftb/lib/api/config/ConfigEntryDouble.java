@@ -17,8 +17,11 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		set(d);
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.DOUBLE; }
+	public ConfigType getConfigType()
+	{ return ConfigType.DOUBLE; }
+	
+	public int getColor()
+	{ return 0xAA5AE8; }
 	
 	public void setBounds(double min, double max)
 	{

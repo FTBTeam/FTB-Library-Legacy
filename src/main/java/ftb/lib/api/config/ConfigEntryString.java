@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.*;
+import latmod.lib.ByteIOStream;
 
 public class ConfigEntryString extends ConfigEntry
 {
@@ -15,8 +15,11 @@ public class ConfigEntryString extends ConfigEntry
 		defValue = def == null ? "" : def;
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.STRING; }
+	public ConfigType getConfigType()
+	{ return ConfigType.STRING; }
+	
+	public int getColor()
+	{ return 0xFFAA49; }
 	
 	public void set(String o)
 	{ value = o == null ? "" : o; }

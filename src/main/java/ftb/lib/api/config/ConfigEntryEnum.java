@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.*;
+import latmod.lib.ByteIOStream;
 
 import java.util.LinkedHashMap;
 
@@ -31,8 +31,11 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		defValue = def;
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.ENUM; }
+	public ConfigType getConfigType()
+	{ return ConfigType.ENUM; }
+	
+	public int getColor()
+	{ return 0x0094FF; }
 	
 	public void set(Object o)
 	{ value = (E) o; }

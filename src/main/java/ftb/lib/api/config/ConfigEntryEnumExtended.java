@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.*;
+import latmod.lib.ByteIOStream;
 
 import java.util.*;
 
@@ -17,8 +17,11 @@ public class ConfigEntryEnumExtended extends ConfigEntry implements IClickableCo
 		values = new ArrayList<>();
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.ENUM; }
+	public ConfigType getConfigType()
+	{ return ConfigType.ENUM; }
+	
+	public int getColor()
+	{ return 0x0094FF; }
 	
 	public int getIndex()
 	{ return values.indexOf(value); }

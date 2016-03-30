@@ -22,8 +22,11 @@ public class ConfigEntryStringArray extends ConfigEntry
 	public ConfigEntryStringArray(String id, String... def)
 	{ this(id, (def == null || def.length == 0) ? new ArrayList<String>() : Arrays.asList(def)); }
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.STRING_ARRAY; }
+	public ConfigType getConfigType()
+	{ return ConfigType.STRING_ARRAY; }
+	
+	public int getColor()
+	{ return 0xFFAA49; }
 	
 	public void set(List<String> o)
 	{

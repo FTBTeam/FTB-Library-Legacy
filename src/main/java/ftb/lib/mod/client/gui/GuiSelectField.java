@@ -3,23 +3,22 @@ package ftb.lib.mod.client.gui;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.FTBLibLang;
 import ftb.lib.api.client.*;
-import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
-import latmod.lib.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
 {
 	public final Object ID;
-	public final PrimitiveType type;
+	public final LMGuis.FieldType type;
 	public final String def;
 	public final IFieldCallback callback;
 	
 	public final ButtonSimpleLM buttonCancel, buttonAccept;
 	public final TextBoxLM textBox;
 	
-	public GuiSelectField(Object id, PrimitiveType typ, String d, IFieldCallback c)
+	public GuiSelectField(Object id, LMGuis.FieldType typ, String d, IFieldCallback c)
 	{
 		super(null, null);
 		ID = id;
@@ -57,11 +56,7 @@ public class GuiSelectField extends GuiLM
 		textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
 		{
 			public boolean isValid()
-			{
-				if(type == PrimitiveType.STRING) return true;
-				else if(type == PrimitiveType.INT) return Converter.canParseInt(getText());
-				else return Converter.canParseDouble(getText());
-			}
+			{ return type.isValid(getText()); }
 			
 			public void returnPressed()
 			{ buttonAccept.onButtonPressed(0); }

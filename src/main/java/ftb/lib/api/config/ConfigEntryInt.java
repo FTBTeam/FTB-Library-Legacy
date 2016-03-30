@@ -17,8 +17,11 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 		set(def);
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.INT; }
+	public ConfigType getConfigType()
+	{ return ConfigType.INT; }
+	
+	public int getColor()
+	{ return 0xAA5AE8; }
 	
 	public void setBounds(double min, double max)
 	{

@@ -78,7 +78,7 @@ public class CmdEditConfig extends CommandLM
 				entry.setJson(LMJsonUtils.fromJson(json));
 				file.save();
 				FTBLib.reload(ics, true, false);
-				return new ChatComponentText(args[2] + " set to " + entry.getPrettyJsonString(false));
+				return new ChatComponentText(args[2] + " set to " + entry.getAsString());
 			}
 			catch(Exception ex)
 			{
@@ -88,6 +88,6 @@ public class CmdEditConfig extends CommandLM
 			}
 		}
 		
-		return new ChatComponentText(entry.getPrettyJsonString(false));
+		return new ChatComponentText(entry.getAsString());
 	}
 }

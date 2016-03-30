@@ -16,8 +16,11 @@ public class ConfigEntryIntArray extends ConfigEntry
 		defValue = def == null ? new IntList() : def.copy();
 	}
 	
-	public PrimitiveType getType()
-	{ return PrimitiveType.INT_ARRAY; }
+	public ConfigType getConfigType()
+	{ return ConfigType.INT_ARRAY; }
+	
+	public int getColor()
+	{ return 0xAA5AE8; }
 	
 	public ConfigEntryIntArray(String id, int[] def)
 	{ this(id, IntList.asList(def)); }
