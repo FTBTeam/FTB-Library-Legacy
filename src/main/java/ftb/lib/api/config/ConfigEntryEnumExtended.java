@@ -26,10 +26,10 @@ public class ConfigEntryEnumExtended extends ConfigEntry implements IClickableCo
 	public int getIndex()
 	{ return values.indexOf(value); }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ value = o.getAsString(); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(value); }
 	
 	public void write(ByteIOStream io)

@@ -24,10 +24,10 @@ public class ConfigEntryColor extends ConfigEntry
 	public int getColor()
 	{ return value.color(); }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ value.setRGBA(o.getAsInt()); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(value.color()); }
 	
 	public void write(ByteIOStream io)

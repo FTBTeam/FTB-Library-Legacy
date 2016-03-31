@@ -46,10 +46,10 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 	public void add(int i)
 	{ set(get() + i); }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ set((o == null || o.isJsonNull()) ? defValue : o.getAsInt()); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(get()); }
 	
 	public void write(ByteIOStream io)

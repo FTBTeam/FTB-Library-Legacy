@@ -73,7 +73,8 @@ public class MessageReload extends MessageLM
 	{
 		try { ConfigRegistry.synced.write(out); }
 		catch(Exception ex) {}
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getJson());
+		if(FTBLib.DEV_ENV)
+			FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getSerializableElement());
 	}
 	
 	static void readSyncedConfig(ByteIOStream in)
@@ -82,6 +83,6 @@ public class MessageReload extends MessageLM
 		try { synced.read(in); }
 		catch(Exception ex) {}
 		ConfigRegistry.synced.loadFromGroup(synced);
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + synced.getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + synced.getSerializableElement());
 	}
 }

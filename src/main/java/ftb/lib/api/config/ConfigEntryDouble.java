@@ -46,10 +46,10 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 	public void add(double v)
 	{ set(get() + v); }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsDouble()); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(get()); }
 	
 	public void write(ByteIOStream io)

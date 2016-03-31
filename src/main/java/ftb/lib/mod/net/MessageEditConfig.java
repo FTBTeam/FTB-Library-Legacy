@@ -21,7 +21,7 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		io.writeBoolean(reload);
 		file.writeExtended(io);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("TX Send: " + file.getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("TX Send: " + file.getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -37,7 +37,7 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		ConfigFile file = new ConfigFile(id);
 		file.readExtended(io);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("RX Send: " + file.getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("RX Send: " + file.getSerializableElement());
 		
 		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, reload, file)));
 		return null;

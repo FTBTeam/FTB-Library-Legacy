@@ -49,10 +49,10 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 	private E fromString(String s)
 	{ return enumMap.get(s.toLowerCase()); }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ set(fromString(o.getAsString())); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getName(get())); }
 	
 	public void write(ByteIOStream io)

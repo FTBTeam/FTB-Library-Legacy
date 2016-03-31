@@ -27,10 +27,10 @@ public class ConfigEntryString extends ConfigEntry
 	public String get()
 	{ return value; }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsString()); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(get()); }
 	
 	public void write(ByteIOStream io)

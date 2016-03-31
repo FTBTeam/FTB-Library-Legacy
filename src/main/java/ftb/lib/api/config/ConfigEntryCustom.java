@@ -19,30 +19,30 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 	public int getColor()
 	{ return 0xFFAA00; }
 	
-	public void setJson(JsonElement o)
+	public void func_152753_a(JsonElement o)
 	{ value = o == JsonNull.INSTANCE ? null : o; }
 	
-	public JsonElement getJson()
+	public JsonElement getSerializableElement()
 	{ return value == null ? JsonNull.INSTANCE : value; }
 	
 	public void write(ByteIOStream io)
 	{
-		JsonElementIO.write(io, getJson());
+		JsonElementIO.write(io, getSerializableElement());
 	}
 	
 	public void read(ByteIOStream io)
 	{
-		setJson(JsonElementIO.read(io));
+		func_152753_a(JsonElementIO.read(io));
 	}
 	
 	public ConfigGroup getAsGroup()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		if(e.isJsonNull()) return null;
 		else if(e.isJsonObject())
 		{
 			ConfigGroup group = new ConfigGroup(getID());
-			group.setJson(e);
+			group.func_152753_a(e);
 			return group;
 		}
 		return null;
@@ -50,13 +50,13 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 	
 	public String getAsString()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? ". . ." : String.valueOf(e);
 	}
 	
 	public String[] getAsStringArray()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		if(e.isJsonNull()) return new String[0];
 		JsonArray a = e.getAsJsonArray();
 		String[] ai = new String[a.size()];
@@ -67,25 +67,25 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 	
 	public boolean getAsBoolean()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? false : e.getAsBoolean();
 	}
 	
 	public int getAsInt()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? 0 : e.getAsInt();
 	}
 	
 	public double getAsDouble()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? 0D : e.getAsDouble();
 	}
 	
 	public int[] getAsIntArray()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		if(e.isJsonNull()) return null;
 		JsonArray a = e.getAsJsonArray();
 		int[] ai = new int[a.size()];
@@ -96,7 +96,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 	
 	public double[] getAsDoubleArray()
 	{
-		JsonElement e = getJson();
+		JsonElement e = getSerializableElement();
 		if(e.isJsonNull()) return null;
 		JsonArray a = e.getAsJsonArray();
 		double[] ai = new double[a.size()];

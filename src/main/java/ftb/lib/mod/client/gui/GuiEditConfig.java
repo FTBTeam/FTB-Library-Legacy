@@ -380,13 +380,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 			else if(type.isArray())
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getJson().toString(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							entry.setJson(LMJsonUtils.fromJson(c.getS()));
+							entry.func_152753_a(LMJsonUtils.fromJson(c.getS()));
 							gui.onChanged();
 						}
 						

@@ -34,7 +34,7 @@ public class ConfigEntryIntArray extends ConfigEntry
 	public IntList get()
 	{ return value; }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{
 		JsonArray a = o.getAsJsonArray();
 		value.clear();
@@ -43,7 +43,7 @@ public class ConfigEntryIntArray extends ConfigEntry
 		set(value.copy());
 	}
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{
 		JsonArray a = new JsonArray();
 		value = get();

@@ -37,7 +37,7 @@ public class ConfigEntryStringArray extends ConfigEntry
 	public List<String> get()
 	{ return value; }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{
 		JsonArray a = o.getAsJsonArray();
 		value.clear();
@@ -46,7 +46,7 @@ public class ConfigEntryStringArray extends ConfigEntry
 		set(LMListUtils.clone(value));
 	}
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{
 		JsonArray a = new JsonArray();
 		value = get();

@@ -86,7 +86,7 @@ public class ConfigGroup extends ConfigEntry
 		return g;
 	}
 	
-	public final void setJson(JsonElement o0)
+	public final void func_152753_a(JsonElement o0)
 	{
 		if(o0 == null || !o0.isJsonObject()) return;
 		
@@ -100,7 +100,7 @@ public class ConfigGroup extends ConfigEntry
 			
 			if(!e.getValue().isJsonNull())
 			{
-				entry.setJson(e.getValue());
+				entry.func_152753_a(e.getValue());
 				entry.onPostLoaded();
 			}
 			
@@ -108,7 +108,7 @@ public class ConfigGroup extends ConfigEntry
 		}
 	}
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
 		
@@ -117,7 +117,7 @@ public class ConfigGroup extends ConfigEntry
 			if(!e.getFlag(Flags.EXCLUDED))
 			{
 				e.onPreLoaded();
-				o.add(e.getID(), e.getJson());
+				o.add(e.getID(), e.getSerializableElement());
 			}
 		}
 		
@@ -125,7 +125,7 @@ public class ConfigGroup extends ConfigEntry
 	}
 	
 	public String getAsString()
-	{ return getJson().toString(); }
+	{ return getSerializableElement().toString(); }
 	
 	public String[] getAsStringArray()
 	{ return LMListUtils.toStringArray(entries()); }
@@ -231,21 +231,21 @@ public class ConfigGroup extends ConfigEntry
 				if(e0.getAsGroup() != null)
 				{
 					ConfigGroup g1 = new ConfigGroup(e1.getID());
-					g1.setJson(e1.getJson());
+					g1.func_152753_a(e1.getSerializableElement());
 					result += e0.getAsGroup().loadFromGroup(g1);
 				}
 				else
 				{
 					try
 					{
-						//System.out.println("Value " + e1.getFullID() + " set from " + e0.getJson() + " to " + e1.getJson());
-						e0.setJson(e1.getJson());
+						//System.out.println("Value " + e1.getFullID() + " set from " + e0.getSerializableElement() + " to " + e1.getSerializableElement());
+						e0.func_152753_a(e1.getSerializableElement());
 						e0.onPostLoaded();
 						result++;
 					}
 					catch(Exception ex)
 					{
-						System.err.println("Can't set value " + e1.getJson() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
+						System.err.println("Can't set value " + e1.getSerializableElement() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
 						System.err.println(ex.toString());
 					}
 				}

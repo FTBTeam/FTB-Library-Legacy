@@ -2,6 +2,7 @@ package ftb.lib.api.notification;
 
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.util.IJsonSerializable;
 
 /**
@@ -38,4 +39,25 @@ public class ClickAction implements IJsonSerializable
 	@SideOnly(Side.CLIENT)
 	public void onClicked()
 	{ if(type != null) type.onClicked(data); }
+	
+	public static ClickAction from(ClickEvent e)
+	{
+		if(e != null)
+		{
+			JsonPrimitive p = new JsonPrimitive(e.getValue());
+			
+			switch(e.getAction())
+			{
+				case RUN_COMMAND:
+					return new ClickAction(ClickActionType.CMD, p);
+				case OPEN_FILE:
+					return new ClickAction(ClickActionType.FILE, p);
+				case SUGGEST_COMMAND:
+					return new ClickAction(ClickActionType.SHOW_CMD, p);
+				case OPEN_URL:
+					return new ClickAction(ClickActionType.URL, p);
+			}
+		}
+		return null;
+	}
 }

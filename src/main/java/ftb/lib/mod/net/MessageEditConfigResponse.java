@@ -22,7 +22,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		
 		io.writeBoolean(provider.reload);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response TX: " + provider.getConfigFile().getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response TX: " + provider.getConfigFile().getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -48,7 +48,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 			if(io.readBoolean()) FTBLib.reload(ep, true, false);
 		}
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response RX: " + file.getJson());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response RX: " + file.getSerializableElement());
 		
 		return null;
 	}

@@ -27,10 +27,10 @@ public class ConfigEntryBool extends ConfigEntry implements IClickableConfigEntr
 	public boolean get()
 	{ return value; }
 	
-	public final void setJson(JsonElement o)
+	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsBoolean()); }
 	
-	public final JsonElement getJson()
+	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(get()); }
 	
 	public void write(ByteIOStream io)

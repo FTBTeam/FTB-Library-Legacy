@@ -4,8 +4,9 @@ import com.google.gson.JsonElement;
 import latmod.lib.*;
 import latmod.lib.annotations.*;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.util.IJsonSerializable;
 
-public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer
+public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
 	public ConfigGroup parentGroup;
 	private String[] info;
@@ -17,8 +18,8 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	}
 	
 	public abstract ConfigType getConfigType();
-	public abstract void setJson(JsonElement o);
-	public abstract JsonElement getJson();
+	public abstract void func_152753_a(JsonElement o);
+	public abstract JsonElement getSerializableElement();
 	public abstract void write(ByteIOStream io);
 	public abstract void read(ByteIOStream io);
 	
@@ -53,7 +54,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	public ConfigEntry copy()
 	{
 		ConfigEntry e = getConfigType().createNew(getID());
-		e.setJson(getJson());
+		e.func_152753_a(getSerializableElement());
 		return e;
 	}
 	

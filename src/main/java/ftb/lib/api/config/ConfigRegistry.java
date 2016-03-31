@@ -39,7 +39,7 @@ public class ConfigRegistry
 			for(Map.Entry<String, JsonElement> e : overridesE.getAsJsonObject().entrySet())
 			{
 				ConfigGroup ol = new ConfigGroup(e.getKey());
-				ol.setJson(e.getValue());
+				ol.func_152753_a(e.getValue());
 				
 				int result;
 				ConfigFile f = map.get(ol.getID());

@@ -37,13 +37,13 @@ public class ConfigFile extends ConfigGroup
 		if(e.isJsonObject())
 		{
 			ConfigGroup g = new ConfigGroup(getID());
-			g.setJson(e.getAsJsonObject());
+			g.func_152753_a(e.getAsJsonObject());
 			loadFromGroup(g);
 		}
 	}
 	
 	public void save()
-	{ if(file != null) LMJsonUtils.toJson(file, getJson()); }
+	{ if(file != null) LMJsonUtils.toJson(file, getSerializableElement()); }
 	
 	public void writeExtended(ByteIOStream io)
 	{
