@@ -16,12 +16,12 @@ public class MessageReload extends MessageLM
 {
 	public MessageReload() { super(ByteCount.INT); }
 	
-	public MessageReload(FTBWorld w, boolean reload)
+	public MessageReload(FTBWorld w, int reloadClient)
 	{
 		this();
-		io.writeBoolean(reload);
+		io.writeByte(reloadClient);
 		
-		if(reload)
+		if(reloadClient > 0)
 		{
 			w.writeReloadData(io);
 			writeSyncedConfig(io);
@@ -38,9 +38,9 @@ public class MessageReload extends MessageLM
 			FTBLib.dev_logger.info("--------< RELOADING >----------");
 		}
 		
-		boolean reload = io.readBoolean();
+		byte reload = io.readByte();
 		
-		if(!reload)
+		if(reload == 0)
 		{
 			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
@@ -53,7 +53,12 @@ public class MessageReload extends MessageLM
 		long ms = LMUtils.millis();
 		FTBWorld.client.readReloadData(io);
 		readSyncedConfig(io);
-		reloadClient(ms, true);
+		
+		if(reload > 0)
+		{
+			reloadClient(ms, reload > 1);
+		}
+		
 		return null;
 	}
 	

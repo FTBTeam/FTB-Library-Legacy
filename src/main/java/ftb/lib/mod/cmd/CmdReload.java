@@ -13,7 +13,7 @@ public class CmdReload extends CommandLM
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{
-		FTBLib.reload(ics, true, false);
+		FTBLib.reload(ics, true, args.length > 0 && args[0].equalsIgnoreCase("client"));
 		return null;
 	}
 }

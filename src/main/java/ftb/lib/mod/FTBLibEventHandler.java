@@ -58,7 +58,7 @@ public class FTBLibEventHandler
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.PRE);
 			new MessageSendWorldID(FTBWorld.server, ep).sendTo(ep);
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.POST);
-			new MessageReload(FTBWorld.server, true).sendTo(ep);
+			new MessageReload(FTBWorld.server, 1).sendTo(ep);
 		}
 	}
 	

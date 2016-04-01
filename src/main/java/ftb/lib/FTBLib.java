@@ -86,7 +86,7 @@ public class FTBLib
 		
 		if(printMessage)
 			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloaded_server", ((LMUtils.millis() - ms) + "ms")));
-		new MessageReload(FTBWorld.server, reloadClient).sendTo(null);
+		new MessageReload(FTBWorld.server, 2).sendTo(null);
 	}
 	
 	public static IChatComponent getChatComponent(Object o)
