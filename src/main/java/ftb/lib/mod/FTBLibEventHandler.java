@@ -19,7 +19,6 @@ public class FTBLibEventHandler
 {
 	public static final List<ServerTickCallback> callbacks = new ArrayList<>();
 	public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
-	public static boolean loaded = false;
 	
 	@cpw.mods.fml.common.Optional.Method(modid = "forgeanalytics")
 	@SubscribeEvent
@@ -46,12 +45,14 @@ public class FTBLibEventHandler
 	{
 		if(e.player instanceof EntityPlayerMP)
 		{
+			/*
 			//FIXME: This is a workaround
 			if(!loaded)
 			{
 				FTBLib.reload(FTBLib.getServer(), false, false);
 				loaded = true;
 			}
+			*/
 			
 			final EntityPlayerMP ep = (EntityPlayerMP) e.player;
 			if(FTBLib.ftbu != null) FTBLib.ftbu.onPlayerJoined(ep, Phase.PRE);

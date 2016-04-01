@@ -33,6 +33,11 @@ public class MessageReload extends MessageLM
 	
 	public IMessage onMessage(MessageContext ctx)
 	{
+		if(FTBLib.DEV_ENV)
+		{
+			FTBLib.dev_logger.info("--------< RELOADING >----------");
+		}
+		
 		boolean reload = io.readBoolean();
 		
 		if(!reload)

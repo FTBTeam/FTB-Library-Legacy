@@ -105,7 +105,7 @@ public class FTBLibMod
 		FTBLib.folderWorld = null;
 		LMAccessToken.clear();
 		ConfigRegistry.clearTemp();
-		FTBLibEventHandler.loaded = false;
+		//FTBLibEventHandler.loaded = false;
 	}
 	
 	@NetworkCheckHandler
