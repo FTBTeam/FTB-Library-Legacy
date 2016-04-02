@@ -3,7 +3,6 @@ package ftb.lib;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 import net.minecraft.nbt.*;
-import net.minecraftforge.common.util.Constants;
 
 import java.io.*;
 import java.util.*;
@@ -11,19 +10,6 @@ import java.util.*;
 @SuppressWarnings("all")
 public class LMNBTUtils
 {
-	public static final byte END = Constants.NBT.TAG_END;
-	public static final byte BYTE = Constants.NBT.TAG_BYTE;
-	public static final byte SHORT = Constants.NBT.TAG_SHORT;
-	public static final byte INT = Constants.NBT.TAG_INT;
-	public static final byte LONG = Constants.NBT.TAG_LONG;
-	public static final byte FLOAT = Constants.NBT.TAG_FLOAT;
-	public static final byte DOUBLE = Constants.NBT.TAG_DOUBLE;
-	public static final byte BYTE_ARRAY = Constants.NBT.TAG_BYTE_ARRAY;
-	public static final byte STRING = Constants.NBT.TAG_STRING;
-	public static final byte LIST = Constants.NBT.TAG_LIST;
-	public static final byte MAP = Constants.NBT.TAG_COMPOUND;
-	public static final byte INT_ARRAY = Constants.NBT.TAG_INT_ARRAY;
-	
 	public static String[] getMapKeys(NBTTagCompound tag)
 	{
 		if(tag == null || tag.hasNoTags()) return new String[0];
@@ -36,6 +22,19 @@ public class LMNBTUtils
 		for(Object s : tag.func_150296_c())
 			map.put(s.toString(), tag.getTag(s.toString()));
 		return map;
+	}
+	
+	public static Set<Map.Entry<String, NBTBase>> entrySet(NBTTagCompound tag)
+	{
+		Set<Map.Entry<String, NBTBase>> l = new HashSet<>();
+		if(tag == null || tag.hasNoTags()) return l;
+		
+		for(Object s : tag.func_150296_c())
+		{
+			l.add(new AbstractMap.SimpleEntry<>(s.toString(), tag.getTag(s.toString())));
+		}
+		
+		return l;
 	}
 	
 	public static <E extends NBTBase> Map<String, E> toMapWithType(NBTTagCompound tag)

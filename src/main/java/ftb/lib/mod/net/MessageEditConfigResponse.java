@@ -6,23 +6,25 @@ import ftb.lib.api.config.*;
 import ftb.lib.api.net.*;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 {
 	public MessageEditConfigResponse() { super(ByteCount.INT); }
 	
-	public MessageEditConfigResponse(ServerConfigProvider provider)
+	public MessageEditConfigResponse(long adminToken, boolean reload, ConfigGroup group)
 	{
 		this();
-		io.writeLong(provider.adminToken);
-		io.writeUTF(provider.getConfigFile().getID());
+		io.writeLong(adminToken);
+		io.writeUTF(group.getID());
 		
-		try { provider.getConfigFile().write(io); }
-		catch(Exception e) { }
+		NBTTagCompound tag = new NBTTagCompound();
+		group.writeToNBT(tag, false);
+		writeTag(tag);
 		
-		io.writeBoolean(provider.reload);
+		io.writeBoolean(reload);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response TX: " + provider.getConfigFile().getSerializableElement());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response TX: " + group.getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -38,11 +40,9 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		if(file == null) return null;
 		
 		ConfigGroup group = new ConfigGroup(id);
+		group.readFromNBT(readTag(), false);
 		
-		try { group.read(io); }
-		catch(Exception e) { }
-		
-		if(file.loadFromGroup(group) > 0)
+		if(file.loadFromGroup(group, true) > 0)
 		{
 			file.save();
 			if(io.readBoolean()) FTBLib.reload(ep, true, false);

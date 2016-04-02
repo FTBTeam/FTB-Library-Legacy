@@ -21,7 +21,7 @@ public final class ClientConfigRegistry
 			public String getEntryTitle(ConfigEntry e)
 			{ return I18n.format(e.getFullID()); }
 			
-			public ConfigFile getConfigFile()
+			public ConfigGroup getConfigGroup()
 			{
 				if(file.getFile() == null)
 				{
@@ -33,7 +33,7 @@ public final class ClientConfigRegistry
 			}
 			
 			public void save()
-			{ getConfigFile().save(); }
+			{ file.save(); }
 		};
 	}
 	

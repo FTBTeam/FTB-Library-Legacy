@@ -8,20 +8,24 @@ import ftb.lib.api.config.*;
 import ftb.lib.api.net.*;
 import ftb.lib.mod.client.gui.GuiEditConfig;
 import latmod.lib.ByteCount;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(ByteCount.INT); }
 	
-	public MessageEditConfig(long t, boolean reload, ConfigFile file)
+	public MessageEditConfig(long t, boolean reload, ConfigGroup group)
 	{
 		this();
 		io.writeLong(t);
-		io.writeUTF(file.getID());
+		io.writeUTF(group.getID());
 		io.writeBoolean(reload);
-		file.writeExtended(io);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("TX Send: " + file.getSerializableElement());
+		NBTTagCompound tag = new NBTTagCompound();
+		group.writeToNBT(tag, true);
+		writeTag(tag);
+		
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("TX Send: " + group.getSerializableElement());
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -34,12 +38,12 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		String id = io.readUTF();
 		boolean reload = io.readBoolean();
 		
-		ConfigFile file = new ConfigFile(id);
-		file.readExtended(io);
+		ConfigGroup group = new ConfigGroup(id);
+		group.readFromNBT(readTag(), true);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("RX Send: " + file.getSerializableElement());
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("RX Send: " + group.getSerializableElement());
 		
-		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, reload, file)));
+		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, reload, group)));
 		return null;
 	}
 }

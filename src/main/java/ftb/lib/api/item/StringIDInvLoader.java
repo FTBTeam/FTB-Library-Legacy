@@ -1,9 +1,9 @@
 package ftb.lib.api.item;
 
-import ftb.lib.LMNBTUtils;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.*;
 import net.minecraft.nbt.*;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
@@ -16,7 +16,7 @@ public class StringIDInvLoader
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
+			NBTTagList list = tag.getTagList(s, Constants.NBT.TAG_COMPOUND);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
@@ -64,7 +64,7 @@ public class StringIDInvLoader
 	}
 	
 	public static int getSlotsUsed(NBTTagCompound tag, String s)
-	{ return tag.hasKey(s) ? tag.getTagList(s, LMNBTUtils.MAP).tagCount() : 0; }
+	{ return tag.hasKey(s) ? tag.getTagList(s, Constants.NBT.TAG_COMPOUND).tagCount() : 0; }
 	
 	public static int getItemCount(NBTTagCompound tag, String s)
 	{
@@ -72,7 +72,7 @@ public class StringIDInvLoader
 		
 		if(tag.hasKey(s))
 		{
-			NBTTagList list = tag.getTagList(s, LMNBTUtils.MAP);
+			NBTTagList list = tag.getTagList(s, Constants.NBT.TAG_COMPOUND);
 			
 			for(int i = 0; i < list.tagCount(); i++)
 			{
@@ -123,7 +123,7 @@ public class StringIDInvLoader
 					if(ai.length == 3)
 					{
 						ItemStack is = new ItemStack(item, ai[1], ai[2]);
-						if(tag.hasKey("T", LMNBTUtils.MAP)) is.setTagCompound(tag.getCompoundTag("T"));
+						if(tag.hasKey("T", Constants.NBT.TAG_COMPOUND)) is.setTagCompound(tag.getCompoundTag("T"));
 						return new AbstractMap.SimpleEntry<>(Integer.valueOf(ai[0]), is);
 					}
 				}

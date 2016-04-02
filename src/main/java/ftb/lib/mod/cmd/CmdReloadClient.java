@@ -11,7 +11,7 @@ import net.minecraft.util.IChatComponent;
 public class CmdReloadClient extends CommandLM
 {
 	public CmdReloadClient()
-	{ super(FTBLibModClient.reload_client_cmd.get(), CommandLevel.OP); }
+	{ super(FTBLibModClient.reload_client_cmd.getAsString(), CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{

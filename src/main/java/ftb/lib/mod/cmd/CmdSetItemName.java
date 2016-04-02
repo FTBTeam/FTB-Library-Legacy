@@ -10,7 +10,7 @@ import net.minecraft.util.*;
 public class CmdSetItemName extends CommandLM
 {
 	public CmdSetItemName()
-	{ super(FTBLibConfigCmdNames.set_item_name.get(), FTBLibConfigCmd.level_set_item_name.get()); }
+	{ super(FTBLibConfigCmdNames.set_item_name.getAsString(), FTBLibConfigCmd.level_set_item_name.get()); }
 	
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <name...>"; }

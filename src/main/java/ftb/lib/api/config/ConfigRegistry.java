@@ -43,7 +43,7 @@ public class ConfigRegistry
 				
 				int result;
 				ConfigFile f = map.get(ol.getID());
-				if(f != null && (result = f.loadFromGroup(ol)) > 0)
+				if(f != null && (result = f.loadFromGroup(ol, false)) > 0)
 				{
 					FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
 					f.save();

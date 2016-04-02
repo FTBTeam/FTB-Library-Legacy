@@ -10,6 +10,7 @@ import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 
 public class MessageReload extends MessageLM
@@ -44,7 +45,7 @@ public class MessageReload extends MessageLM
 		{
 			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
-			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.get());
+			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.getAsString());
 			n.setColor(0xFF333333);
 			ClientNotifications.add(n);
 			return null;
@@ -81,18 +82,20 @@ public class MessageReload extends MessageLM
 	
 	static void writeSyncedConfig(ByteIOStream out)
 	{
-		try { ConfigRegistry.synced.write(out); }
-		catch(Exception ex) {}
+		NBTTagCompound tag = new NBTTagCompound();
+		ConfigRegistry.synced.writeToNBT(tag, false);
+		LMNBTUtils.writeTag(out, tag);
+		
 		if(FTBLib.DEV_ENV)
 			FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced.getSerializableElement());
 	}
 	
 	static void readSyncedConfig(ByteIOStream in)
 	{
+		NBTTagCompound tag = LMNBTUtils.readTag(in);
 		ConfigGroup synced = new ConfigGroup(ConfigRegistry.synced.getID());
-		try { synced.read(in); }
-		catch(Exception ex) {}
-		ConfigRegistry.synced.loadFromGroup(synced);
+		synced.readFromNBT(tag, false);
+		ConfigRegistry.synced.loadFromGroup(synced, true);
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + synced.getSerializableElement());
 	}
 }

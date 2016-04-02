@@ -4,7 +4,11 @@ import com.google.gson.JsonElement;
 import latmod.lib.*;
 import latmod.lib.annotations.*;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.nbt.*;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraftforge.common.util.Constants;
+
+import java.util.*;
 
 public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
@@ -17,24 +21,12 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 		super(id);
 	}
 	
-	public abstract ConfigType getConfigType();
+	public abstract ConfigEntryType getConfigType();
 	public abstract void func_152753_a(JsonElement o);
 	public abstract JsonElement getSerializableElement();
-	public abstract void write(ByteIOStream io);
-	public abstract void read(ByteIOStream io);
 	
 	public int getColor()
 	{ return 0x999999; }
-	
-	public void writeExtended(ByteIOStream io)
-	{ write(io); }
-	
-	public void readExtended(ByteIOStream io)
-	{ read(io); }
-	
-	public void onPreLoaded() { }
-	
-	public void onPostLoaded() { }
 	
 	public String getFullID()
 	{
@@ -54,7 +46,9 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	public ConfigEntry copy()
 	{
 		ConfigEntry e = getConfigType().createNew(getID());
-		e.func_152753_a(getSerializableElement());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag, true);
+		e.readFromNBT(tag, true);
 		return e;
 	}
 	
@@ -62,9 +56,6 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	{ return getAsString(); }
 	
 	public abstract String getAsString();
-	
-	public String[] getAsStringArray()
-	{ return new String[] {getAsString()}; }
 	
 	public boolean getAsBoolean()
 	{ return false; }
@@ -75,24 +66,65 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	public double getAsDouble()
 	{ return 0D; }
 	
-	public int[] getAsIntArray()
-	{ return new int[] {getAsInt()}; }
+	public IntList getAsIntList()
+	{ return new IntList(new int[] {getAsInt()}); }
 	
-	public double[] getAsDoubleArray()
-	{ return new double[] {getAsDouble()}; }
+	public List<String> getAsStringList()
+	{ return Collections.singletonList(getAsString()); }
 	
 	public ConfigGroup getAsGroup()
 	{ return null; }
 	
-	public void setFlag(byte flag, boolean b)
+	public final void setFlag(byte flag, boolean b)
 	{ flags = Bits.setBit(flags, flag, b); }
 	
-	public boolean getFlag(byte flag)
+	public final boolean getFlag(byte flag)
 	{ return Bits.getBit(flags, flag); }
 	
-	public void setInfo(String[] s)
-	{ info = s; }
+	public final void setInfo(String[] s)
+	{ info = (s != null && s.length > 0) ? s : null; }
 	
-	public String[] getInfo()
-	{ return new String[0]; }
+	public final String[] getInfo()
+	{ return info; }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		if(extended)
+		{
+			if(flags != 0) tag.setByte("F", flags);
+			
+			if(info != null && info.length > 0)
+			{
+				NBTTagList list = new NBTTagList();
+				
+				for(int i = 0; i < info.length; i++)
+				{
+					list.appendTag(new NBTTagString(info[i]));
+				}
+				
+				tag.setTag("I", list);
+			}
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		if(extended)
+		{
+			flags = tag.getByte("F");
+			info = null;
+			
+			if(tag.hasKey("I"))
+			{
+				NBTTagList list = tag.getTagList("I", Constants.NBT.TAG_STRING);
+				
+				info = new String[list.tagCount()];
+				
+				for(int i = 0; i < info.length; i++)
+				{
+					info[i] = list.getStringTagAt(i);
+				}
+			}
+		}
+	}
 }

@@ -3,6 +3,7 @@ package ftb.lib.api.config;
 import com.google.gson.*;
 import latmod.lib.*;
 import latmod.lib.annotations.INumberBoundsContainer;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsContainer
 {
@@ -17,8 +18,8 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		set(d);
 	}
 	
-	public ConfigType getConfigType()
-	{ return ConfigType.DOUBLE; }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.DOUBLE; }
 	
 	public int getColor()
 	{ return 0xAA5AE8; }
@@ -40,49 +41,23 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		value = MathHelperLM.clamp(v, getMin(), getMax());
 	}
 	
-	public double get()
-	{ return value; }
-	
 	public void add(double v)
-	{ set(get() + v); }
+	{ set(getAsDouble() + v); }
 	
 	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsDouble()); }
 	
 	public final JsonElement getSerializableElement()
-	{ return new JsonPrimitive(get()); }
-	
-	public void write(ByteIOStream io)
-	{ io.writeDouble(get()); }
-	
-	public void read(ByteIOStream io)
-	{ set(io.readDouble()); }
-	
-	public void writeExtended(ByteIOStream io)
-	{
-		write(io);
-		io.writeDouble(defValue);
-		io.writeDouble(getMin());
-		io.writeDouble(getMax());
-	}
-	
-	public void readExtended(ByteIOStream io)
-	{
-		read(io);
-		defValue = io.readDouble();
-		double min = io.readDouble();
-		double max = io.readDouble();
-		setBounds(min, max);
-	}
+	{ return new JsonPrimitive(getAsDouble()); }
 	
 	public String getAsString()
-	{ return Double.toString(get()); }
+	{ return Double.toString(getAsDouble()); }
 	
 	public int getAsInt()
-	{ return (int) get(); }
+	{ return (int) getAsDouble(); }
 	
 	public double getAsDouble()
-	{ return get(); }
+	{ return value; }
 	
 	public String getDefValueString()
 	{ return Double.toString(defValue); }
@@ -109,5 +84,39 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		}
 		
 		return null;
+	}
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		
+		double d = getAsDouble();
+		
+		if(d != 0D) tag.setDouble("V", d);
+		
+		if(extended)
+		{
+			if(defValue != 0D) tag.setDouble("D", defValue);
+			
+			d = getMin();
+			
+			if(d != Double.NEGATIVE_INFINITY) tag.setDouble("MN", d);
+			
+			d = getMax();
+			
+			if(d != Double.POSITIVE_INFINITY) tag.setDouble("MX", d);
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		set(tag.getDouble("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getDouble("D");
+			setBounds(tag.hasKey("MN") ? tag.getDouble("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getDouble("MX") : Double.POSITIVE_INFINITY);
+		}
 	}
 }

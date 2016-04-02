@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.ByteIOStream;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class ConfigEntryString extends ConfigEntry
 {
@@ -15,8 +15,8 @@ public class ConfigEntryString extends ConfigEntry
 		defValue = def == null ? "" : def;
 	}
 	
-	public ConfigType getConfigType()
-	{ return ConfigType.STRING; }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.STRING; }
 	
 	public int getColor()
 	{ return 0xFFAA49; }
@@ -24,45 +24,48 @@ public class ConfigEntryString extends ConfigEntry
 	public void set(String o)
 	{ value = o == null ? "" : o; }
 	
-	public String get()
-	{ return value; }
-	
 	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsString()); }
 	
 	public final JsonElement getSerializableElement()
-	{ return new JsonPrimitive(get()); }
-	
-	public void write(ByteIOStream io)
-	{ io.writeUTF(get()); }
-	
-	public void read(ByteIOStream io)
-	{ set(io.readUTF()); }
-	
-	public void writeExtended(ByteIOStream io)
-	{
-		write(io);
-		io.writeUTF(defValue);
-	}
-	
-	public void readExtended(ByteIOStream io)
-	{
-		read(io);
-		defValue = io.readUTF();
-	}
+	{ return new JsonPrimitive(getAsString()); }
 	
 	public String getAsString()
-	{ return get(); }
+	{ return value; }
 	
 	public boolean getAsBoolean()
-	{ return get().equals("true"); }
+	{ return getAsString().equals("true"); }
 	
 	public int getAsInt()
-	{ return Integer.parseInt(get()); }
+	{ return Integer.parseInt(getAsString()); }
 	
 	public double getAsDouble()
-	{ return Double.parseDouble(get()); }
+	{ return Double.parseDouble(getAsString()); }
 	
 	public String getDefValueString()
 	{ return defValue; }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		
+		String s = getAsString();
+		if(!s.isEmpty()) tag.setString("V", s);
+		
+		if(extended && !defValue.isEmpty())
+		{
+			tag.setString("D", defValue);
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		set(tag.getString("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getString("D");
+		}
+	}
 }

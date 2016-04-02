@@ -4,7 +4,7 @@ public class FieldSelected
 {
 	public final Object ID;
 	public final boolean set;
-	private final String result;
+	public final String result;
 	public final boolean closeGui;
 	
 	public FieldSelected(Object id, boolean s, String r, boolean g)
@@ -15,12 +15,9 @@ public class FieldSelected
 		closeGui = g;
 	}
 	
-	public String getS()
-	{ return result; }
+	public int resultI()
+	{ return Integer.parseInt(result); }
 	
-	public int getI()
-	{ return Integer.parseInt(getS()); }
-	
-	public double getD()
-	{ return Double.parseDouble(getS()); }
+	public double resultD()
+	{ return Double.parseDouble(result); }
 }

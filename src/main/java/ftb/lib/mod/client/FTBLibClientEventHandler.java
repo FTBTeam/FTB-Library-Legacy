@@ -5,17 +5,13 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.friends.ILMPlayer;
-import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.item.*;
-import ftb.lib.mod.client.gui.GuiPlayerActions;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import java.util.List;
 
@@ -48,12 +44,12 @@ public class FTBLibClientEventHandler
 	{
 		if(e.itemStack == null || e.itemStack.getItem() == null) return;
 		
-		if(FTBLibModClient.item_reg_names.get())
+		if(FTBLibModClient.item_reg_names.getAsBoolean())
 		{
 			e.toolTip.add(LMInvUtils.getRegName(e.itemStack).toString());
 		}
 		
-		if(FTBLibModClient.item_ore_names.get())
+		if(FTBLibModClient.item_ore_names.getAsBoolean())
 		{
 			List<String> ores = ODItems.getOreNames(e.itemStack);
 			
@@ -81,21 +77,6 @@ public class FTBLibClientEventHandler
 		else
 		{
 			//if(DevConsole.enabled()) e.left.add("r: " + MathHelperMC.get2DRotation(FTBLibClient.mc.thePlayer));
-		}
-	}
-	
-	@SubscribeEvent
-	public void onEntityRightClick(EntityInteractEvent e)
-	{
-		if(e.entity.worldObj.isRemote && FTBLibClient.isIngame() && FTBLibModClient.player_options_shortcut.get() && e.entityPlayer.getGameProfile().getId().equals(FTBLibClient.mc.thePlayer.getGameProfile().getId()))
-		{
-			ILMPlayer self = FTBLibClient.getClientLMPlayer();
-			ILMPlayer other = (FTBLib.ftbu == null) ? new TempLMPlayerFromEntity(Side.CLIENT, ((EntityPlayer) e.target)) : FTBLib.ftbu.getLMPlayer(e.target);
-			if(other != null)
-			{
-				List<PlayerAction> a = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, self, other, true, false);
-				if(!a.isEmpty()) FTBLibClient.openGui(new GuiPlayerActions(self, other, a));
-			}
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.IClickable;
 import ftb.lib.api.client.*;
 import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
@@ -30,7 +31,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		super(g, null);
 		provider = p;
 		
-		title = p.getConfigFile().getDisplayName();
+		title = p.getConfigGroup().getDisplayName();
 		
 		configEntryButtons = new ArrayList<>();
 		
@@ -138,7 +139,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			
-			for(ConfigEntry entry : provider.getConfigFile().getAsGroup().entries())
+			for(ConfigEntry entry : provider.getConfigGroup().sortedEntries())
 				addCE(null, entry, 0);
 		}
 	}
@@ -160,7 +161,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
 			{
-				for(ConfigEntry entry : g.entries())
+				for(ConfigEntry entry : g.sortedEntries())
 					addCE(b, entry, level + 1);
 			}
 		}
@@ -302,11 +303,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry.getFlag(Flags.CANT_EDIT)) return;
 			
-			ConfigType type = entry.getConfigType();
+			ConfigEntryType type = entry.getConfigType();
 			
-			if(entry instanceof IClickableConfigEntry)
+			if(entry instanceof IClickable)
 			{
-				((IClickableConfigEntry) entry).onClicked();
+				((IClickable) entry).onClicked(b == 0);
 				gui.onChanged();
 			}
 			else if(entry.getAsGroup() != null)
@@ -314,7 +315,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				expanded = !expanded;
 				gui.refreshWidgets();
 			}
-			else if(type == ConfigType.COLOR)
+			else if(type == ConfigEntryType.COLOR)
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
 				{
@@ -330,15 +331,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				}, ((ConfigEntryColor) entry).value, 0, false);
 			}
-			else if(type == ConfigType.INT)
+			else if(type == ConfigEntryType.INT)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, ((ConfigEntryInt) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, entry.getAsInt(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryInt) entry).set(c.getI());
+							((ConfigEntryInt) entry).set(c.resultI());
 							gui.onChanged();
 						}
 						
@@ -346,15 +347,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type == ConfigType.DOUBLE)
+			else if(type == ConfigEntryType.DOUBLE)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, ((ConfigEntryDouble) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, entry.getAsDouble(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryDouble) entry).set(c.getD());
+							((ConfigEntryDouble) entry).set(c.resultD());
 							gui.onChanged();
 						}
 						
@@ -362,15 +363,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type == ConfigType.STRING)
+			else if(type == ConfigEntryType.STRING)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, ((ConfigEntryString) entry).get(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getAsString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryString) entry).set(c.getS());
+							((ConfigEntryString) entry).set(c.result);
 							gui.onChanged();
 						}
 						
@@ -378,7 +379,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type.isArray())
+			else if(type == ConfigEntryType.CUSTOM || type == ConfigEntryType.INT_ARRAY || type == ConfigEntryType.STRING_ARRAY)
 			{
 				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
 				{
@@ -386,7 +387,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					{
 						if(c.set)
 						{
-							entry.func_152753_a(LMJsonUtils.fromJson(c.getS()));
+							entry.func_152753_a(LMJsonUtils.fromJson(c.result));
 							gui.onChanged();
 						}
 						

@@ -1,15 +1,18 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
+import ftb.lib.LMNBTUtils;
 import latmod.lib.*;
 import latmod.lib.annotations.*;
+import net.minecraft.nbt.*;
 
 import java.lang.reflect.Field;
 import java.util.*;
 
 public class ConfigGroup extends ConfigEntry
 {
-	public final Map<String, ConfigEntry> entryMap;
+	public final LinkedHashMap<String, ConfigEntry> entryMap;
+	private String displayName;
 	
 	public ConfigGroup(String s)
 	{
@@ -17,11 +20,16 @@ public class ConfigGroup extends ConfigEntry
 		entryMap = new LinkedHashMap<>();
 	}
 	
-	public ConfigType getConfigType()
-	{ return ConfigType.GROUP; }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.GROUP; }
 	
-	public final List<ConfigEntry> entries()
-	{ return LMMapUtils.values(entryMap, null); }
+	public final List<ConfigEntry> sortedEntries()
+	{
+		List<ConfigEntry> list = new ArrayList<>();
+		list.addAll(entryMap.values());
+		Collections.sort(list, null);
+		return list;
+	}
 	
 	public ConfigFile getConfigFile()
 	{ return (parentGroup != null) ? parentGroup.getConfigFile() : null; }
@@ -101,7 +109,6 @@ public class ConfigGroup extends ConfigEntry
 			if(!e.getValue().isJsonNull())
 			{
 				entry.func_152753_a(e.getValue());
-				entry.onPostLoaded();
 			}
 			
 			add(entry, false);
@@ -112,11 +119,10 @@ public class ConfigGroup extends ConfigEntry
 	{
 		JsonObject o = new JsonObject();
 		
-		for(ConfigEntry e : entries())
+		for(ConfigEntry e : entryMap.values())
 		{
 			if(!e.getFlag(Flags.EXCLUDED))
 			{
-				e.onPreLoaded();
 				o.add(e.getID(), e.getSerializableElement());
 			}
 		}
@@ -127,8 +133,16 @@ public class ConfigGroup extends ConfigEntry
 	public String getAsString()
 	{ return getSerializableElement().toString(); }
 	
-	public String[] getAsStringArray()
-	{ return LMListUtils.toStringArray(entries()); }
+	public List<String> getAsStringList()
+	{
+		List<String> list = new ArrayList<>(entryMap.size());
+		for(ConfigEntry e : entryMap.values())
+		{
+			list.add(e.getAsString());
+		}
+		
+		return list;
+	}
 	
 	public boolean getAsBoolean()
 	{ return !entryMap.isEmpty(); }
@@ -136,87 +150,66 @@ public class ConfigGroup extends ConfigEntry
 	public int getAsInt()
 	{ return entryMap.size(); }
 	
-	public void write(ByteIOStream io)
-	{
-		io.writeShort(entryMap.size());
-		for(ConfigEntry e : entryMap.values())
-		{
-			e.onPreLoaded();
-			io.writeByte(e.getConfigType().ordinal());
-			io.writeUTF(e.getID());
-			e.write(io);
-		}
-	}
+	public final void setDisplayName(String s)
+	{ displayName = (s == null || s.isEmpty()) ? null : s; }
 	
-	public void read(ByteIOStream io)
-	{
-		int s = io.readUnsignedShort();
-		entryMap.clear();
-		for(int i = 0; i < s; i++)
-		{
-			int type = io.readUnsignedByte();
-			String id = io.readUTF();
-			ConfigEntry e = ConfigType.VALUES[type].createNew(id);
-			e.read(io);
-			add(e, false);
-		}
-	}
+	public final String getDisplayName()
+	{ return displayName == null ? LMStringUtils.firstUppercase(getID()) : displayName; }
 	
-	public void writeExtended(ByteIOStream io)
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
-		io.writeShort(entryMap.size());
-		for(ConfigEntry e : entryMap.values())
+		super.writeToNBT(tag, extended);
+		
+		if(extended && displayName != null)
 		{
-			e.onPreLoaded();
-			io.writeByte(e.getConfigType().ordinal());
-			io.writeUTF(e.getID());
-			e.writeExtended(io);
+			tag.setString("N", displayName);
+		}
+		
+		if(!entryMap.isEmpty())
+		{
+			NBTTagCompound tag1 = new NBTTagCompound();
 			
-			String[] info = getInfo();
-			
-			e.setFlag(Flags.HAS_INFO, info != null && info.length > 0);
-			io.writeByte(e.flags);
-			
-			if(e.getFlag(Flags.HAS_INFO))
+			for(ConfigEntry e : entryMap.values())
 			{
-				io.writeByte(info.length);
+				NBTTagCompound tag2 = new NBTTagCompound();
+				e.writeToNBT(tag2, extended);
+				tag2.setByte("T", e.getConfigType().ID);
+				tag1.setTag(e.getID(), tag2);
+			}
+			
+			tag.setTag("V", tag1);
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		
+		if(extended)
+		{
+			displayName = tag.hasKey("N") ? tag.getString("N") : null;
+		}
+		
+		entryMap.clear();
+		
+		if(tag.hasKey("V"))
+		{
+			for(Map.Entry<String, NBTBase> entry : LMNBTUtils.entrySet((NBTTagCompound) tag.getTag("V")))
+			{
+				NBTTagCompound tag2 = (NBTTagCompound) entry.getValue();
+				ConfigEntryType t = ConfigEntryType.getFromID(tag2.getByte("T"));
 				
-				for(String s : info)
+				if(t != null)
 				{
-					io.writeUTF(s);
+					ConfigEntry e = t.createNew(entry.getKey());
+					e.readFromNBT(tag2, extended);
+					entryMap.put(e.getID(), e);
 				}
 			}
 		}
 	}
 	
-	public void readExtended(ByteIOStream io)
-	{
-		int s = io.readUnsignedShort();
-		entryMap.clear();
-		for(int i = 0; i < s; i++)
-		{
-			int type = io.readUnsignedByte();
-			String id = io.readUTF();
-			ConfigEntry e = ConfigType.VALUES[type].createNew(id);
-			e.readExtended(io);
-			e.flags = io.readByte();
-			
-			if(e.getFlag(Flags.HAS_INFO))
-			{
-				String[] info = new String[io.readUnsignedByte()];
-				for(int j = 0; j < info.length; j++)
-				{
-					info[j] = io.readUTF();
-				}
-				
-				e.setInfo(info);
-			}
-			
-			add(e, false);
-		}
-	}
-	
-	public int loadFromGroup(ConfigGroup l)
+	public int loadFromGroup(ConfigGroup l, boolean isNBT)
 	{
 		if(l == null || l.entryMap.isEmpty()) return 0;
 		
@@ -231,21 +224,40 @@ public class ConfigGroup extends ConfigEntry
 				if(e0.getAsGroup() != null)
 				{
 					ConfigGroup g1 = new ConfigGroup(e1.getID());
-					g1.func_152753_a(e1.getSerializableElement());
-					result += e0.getAsGroup().loadFromGroup(g1);
+					
+					if(isNBT)
+					{
+						NBTTagCompound tag = new NBTTagCompound();
+						e1.writeToNBT(tag, false);
+						g1.readFromNBT(tag, false);
+					}
+					else
+					{
+						g1.func_152753_a(e1.getSerializableElement());
+					}
+					
+					result += e0.getAsGroup().loadFromGroup(g1, isNBT);
 				}
 				else
 				{
 					try
 					{
-						//System.out.println("Value " + e1.getFullID() + " set from " + e0.getSerializableElement() + " to " + e1.getSerializableElement());
-						e0.func_152753_a(e1.getSerializableElement());
-						e0.onPostLoaded();
+						if(isNBT)
+						{
+							NBTTagCompound tag = new NBTTagCompound();
+							e1.writeToNBT(tag, false);
+							e0.readFromNBT(tag, false);
+						}
+						else
+						{
+							e0.func_152753_a(e1.getSerializableElement());
+						}
+						
 						result++;
 					}
 					catch(Exception ex)
 					{
-						System.err.println("Can't set value " + e1.getSerializableElement() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
+						System.err.println("Can't set value " + e1.getAsString() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
 						System.err.println(ex.toString());
 					}
 				}

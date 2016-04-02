@@ -1,11 +1,12 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.ByteIOStream;
+import ftb.lib.api.IClickable;
+import net.minecraft.nbt.*;
 
 import java.util.LinkedHashMap;
 
-public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements IClickableConfigEntry // EnumTypeAdapterFactory
+public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements IClickable // EnumTypeAdapterFactory
 {
 	private final LinkedHashMap<String, E> enumMap;
 	private E value;
@@ -31,8 +32,8 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		defValue = def;
 	}
 	
-	public ConfigType getConfigType()
-	{ return ConfigType.ENUM; }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.ENUM; }
 	
 	public int getColor()
 	{ return 0x0094FF; }
@@ -55,24 +56,40 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getName(get())); }
 	
-	public void write(ByteIOStream io)
-	{ io.writeUTF(getName(get())); }
-	
-	public void read(ByteIOStream io)
-	{ fromString(io.readUTF()); }
-	
-	public void writeExtended(ByteIOStream io)
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
-		io.writeByte(enumMap.size());
-		for(E e : enumMap.values())
-			io.writeUTF(getName(e));
-		io.writeByte(getIndex());
-		io.writeByte(getDefaultIndex());
+		super.writeToNBT(tag, extended);
+		tag.setString("V", getName(get()));
+		
+		if(extended)
+		{
+			tag.setString("D", getName(defValue));
+			
+			NBTTagList list = new NBTTagList();
+			
+			for(String s : enumMap.keySet())
+				list.appendTag(new NBTTagString(s));
+			
+			tag.setTag("VL", list);
+		}
 	}
 	
-	public void onClicked()
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
-		set(getFromIndex((getIndex() + 1) % enumMap.size()));
+		super.readFromNBT(tag, extended);
+		set(fromString(tag.getString("V")));
+	}
+	
+	public void onClicked(boolean leftClick)
+	{
+		if(leftClick)
+		{
+			set(getFromIndex((getIndex() + 1) % enumMap.size()));
+		}
+		else
+		{
+			set(getFromIndex((getIndex() - 1) & (enumMap.size() - 1)));
+		}
 	}
 	
 	public String getAsString()

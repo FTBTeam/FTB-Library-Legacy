@@ -10,7 +10,7 @@ import net.minecraft.util.IChatComponent;
 public class CmdTrashCan extends CommandLM
 {
 	public CmdTrashCan()
-	{ super(FTBLibConfigCmdNames.trash_can.get(), FTBLibConfigCmd.level_trash_can.get()); }
+	{ super(FTBLibConfigCmdNames.trash_can.getAsString(), FTBLibConfigCmd.level_trash_can.get()); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 	{

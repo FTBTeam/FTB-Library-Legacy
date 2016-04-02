@@ -1,9 +1,10 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.ByteIOStream;
+import ftb.lib.api.IClickable;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class ConfigEntryBool extends ConfigEntry implements IClickableConfigEntry
+public class ConfigEntryBool extends ConfigEntry implements IClickable
 {
 	public boolean defValue;
 	private boolean value;
@@ -15,57 +16,58 @@ public class ConfigEntryBool extends ConfigEntry implements IClickableConfigEntr
 		defValue = def;
 	}
 	
-	public ConfigType getConfigType()
-	{ return ConfigType.BOOLEAN; }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.BOOLEAN; }
 	
 	public int getColor()
-	{ return get() ? 0x33AA33 : 0xD52834; }
+	{ return getAsBoolean() ? 0x33AA33 : 0xD52834; }
 	
 	public void set(boolean v)
 	{ value = v; }
 	
-	public boolean get()
-	{ return value; }
-	
-	public final void func_152753_a(JsonElement o)
+	public void func_152753_a(JsonElement o)
 	{ set(o.getAsBoolean()); }
 	
-	public final JsonElement getSerializableElement()
-	{ return new JsonPrimitive(get()); }
+	public JsonElement getSerializableElement()
+	{ return new JsonPrimitive(getAsBoolean()); }
 	
-	public void write(ByteIOStream io)
-	{ io.writeBoolean(get()); }
-	
-	public void read(ByteIOStream io)
-	{ set(io.readBoolean()); }
-	
-	public void writeExtended(ByteIOStream io)
-	{
-		write(io);
-		io.writeBoolean(defValue);
-	}
-	
-	public void readExtended(ByteIOStream io)
-	{
-		read(io);
-		defValue = io.readBoolean();
-	}
-	
-	public void onClicked()
-	{ set(!get()); }
+	public void onClicked(boolean leftClick)
+	{ set(!getAsBoolean()); }
 	
 	public String getAsString()
-	{ return get() ? "true" : "false"; }
+	{ return getAsBoolean() ? "true" : "false"; }
 	
 	public boolean getAsBoolean()
-	{ return get(); }
+	{ return value; }
 	
 	public int getAsInt()
-	{ return get() ? 1 : 0; }
+	{ return getAsBoolean() ? 1 : 0; }
 	
 	public double getAsDouble()
-	{ return get() ? 1D : 0D; }
+	{ return getAsBoolean() ? 1D : 0D; }
 	
 	public String getDefValueString()
 	{ return defValue ? "true" : "false"; }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		tag.setBoolean("V", getAsBoolean());
+		
+		if(extended)
+		{
+			tag.setBoolean("D", defValue);
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		set(tag.getBoolean("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getBoolean("D");
+		}
+	}
 }

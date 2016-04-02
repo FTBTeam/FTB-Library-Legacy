@@ -30,7 +30,6 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
-	public static final ConfigEntryBool player_options_shortcut = new ConfigEntryBool("player_options_shortcut", false);
 	
 	public void preInit()
 	{
@@ -51,7 +50,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	
 	public void postInit()
 	{
-		ClientConfigRegistry.provider().getConfigFile().load();
+		ClientConfigRegistry.provider().getConfigGroup();
 	}
 	
 	public String translate(String key, Object... obj)

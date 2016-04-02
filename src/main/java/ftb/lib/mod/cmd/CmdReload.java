@@ -9,7 +9,7 @@ import net.minecraft.util.IChatComponent;
 public class CmdReload extends CommandLM
 {
 	public CmdReload()
-	{ super(FTBLibConfigCmdNames.reload.get(), CommandLevel.OP); }
+	{ super(FTBLibConfigCmdNames.reload.getAsString(), CommandLevel.OP); }
 	
 	public IChatComponent onCommand(ICommandSender ics, String[] args)
 	{

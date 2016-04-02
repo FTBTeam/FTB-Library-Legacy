@@ -1,10 +1,13 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.ByteIOStream;
-import latmod.lib.json.JsonElementIO;
+import ftb.lib.api.IClickable;
+import latmod.lib.IntList;
+import net.minecraft.nbt.NBTTagCompound;
 
-public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEntry
+import java.util.*;
+
+public class ConfigEntryCustom extends ConfigEntry implements IClickable
 {
 	private JsonElement value;
 	
@@ -13,8 +16,8 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 		super(id);
 	}
 	
-	public ConfigType getConfigType()
-	{ return ConfigType.CUSTOM; }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.CUSTOM; }
 	
 	public int getColor()
 	{ return 0xFFAA00; }
@@ -24,16 +27,6 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 	
 	public JsonElement getSerializableElement()
 	{ return value == null ? JsonNull.INSTANCE : value; }
-	
-	public void write(ByteIOStream io)
-	{
-		JsonElementIO.write(io, getSerializableElement());
-	}
-	
-	public void read(ByteIOStream io)
-	{
-		func_152753_a(JsonElementIO.read(io));
-	}
 	
 	public ConfigGroup getAsGroup()
 	{
@@ -54,15 +47,14 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 		return e.isJsonNull() ? ". . ." : String.valueOf(e);
 	}
 	
-	public String[] getAsStringArray()
+	public List<String> getAsStringList()
 	{
 		JsonElement e = getSerializableElement();
-		if(e.isJsonNull()) return new String[0];
-		JsonArray a = e.getAsJsonArray();
-		String[] ai = new String[a.size()];
-		for(int i = 0; i < ai.length; i++)
-			ai[i] = (a.get(i).getAsString());
-		return ai;
+		if(e.isJsonNull()) return new ArrayList<>();
+		List<String> list = new ArrayList<>();
+		for(JsonElement e1 : e.getAsJsonArray())
+			list.add(e1.getAsString());
+		return list;
 	}
 	
 	public boolean getAsBoolean()
@@ -83,29 +75,28 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickableConfigEn
 		return e.isJsonNull() ? 0D : e.getAsDouble();
 	}
 	
-	public int[] getAsIntArray()
+	public IntList getAsIntList()
 	{
 		JsonElement e = getSerializableElement();
 		if(e.isJsonNull()) return null;
 		JsonArray a = e.getAsJsonArray();
-		int[] ai = new int[a.size()];
-		for(int i = 0; i < ai.length; i++)
-			ai[i] = (a.get(i).getAsInt());
-		return ai;
+		IntList l = new IntList(a.size());
+		for(int i = 0; i < l.size(); i++)
+			l.set(i, a.get(i).getAsInt());
+		return l;
 	}
 	
-	public double[] getAsDoubleArray()
+	public void onClicked(boolean leftClick)
 	{
-		JsonElement e = getSerializableElement();
-		if(e.isJsonNull()) return null;
-		JsonArray a = e.getAsJsonArray();
-		double[] ai = new double[a.size()];
-		for(int i = 0; i < ai.length; i++)
-			ai[i] = (a.get(i).getAsDouble());
-		return ai;
 	}
 	
-	public void onClicked()
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
+		super.writeToNBT(tag, extended);
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
 	}
 }
