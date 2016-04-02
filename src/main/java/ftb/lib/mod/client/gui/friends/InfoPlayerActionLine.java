@@ -27,12 +27,12 @@ public class InfoPlayerActionLine extends InfoTextLine
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiInfo gui)
-	{ return new ButtonGuidePlayerAction(gui, this); }
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
+	{ return new ButtonInfoPlayerAction(gui, this); }
 	
-	public class ButtonGuidePlayerAction extends ButtonGuideTextLine
+	public class ButtonInfoPlayerAction extends ButtonInfoTextLine
 	{
-		public ButtonGuidePlayerAction(GuiInfo g, InfoPlayerActionLine w)
+		public ButtonInfoPlayerAction(GuiInfo g, InfoPlayerActionLine w)
 		{
 			super(g, null);
 			height = 18;

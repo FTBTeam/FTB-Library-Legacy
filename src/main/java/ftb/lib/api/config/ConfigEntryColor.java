@@ -2,11 +2,8 @@ package ftb.lib.api.config;
 
 import com.google.gson.*;
 import latmod.lib.LMColor;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public class ConfigEntryColor extends ConfigEntry
 {
 	public final LMColor.RGB value;
@@ -16,54 +13,52 @@ public class ConfigEntryColor extends ConfigEntry
 	{
 		super(id);
 		value = new LMColor.RGB();
-		defValue = new LMColor.RGB();
+		value.set(def);
 		
-		if(def != null)
-		{
-			value.set(def);
-			defValue.set(def);
-		}
+		defValue = new LMColor.RGB();
+		defValue.set(def);
 	}
 	
-	public final ConfigEntryType getType()
+	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.COLOR; }
 	
-	public final ConfigEntry simpleCopy()
-	{ return new ConfigEntryColor(getID(), defValue); }
-	
-	public final int getColor()
+	public int getColor()
 	{ return value.color(); }
 	
-	public final String getDefValueString()
-	{ return defValue.toString(); }
+	public void fromJson(JsonElement o)
+	{ value.setRGBA(o.getAsInt()); }
 	
-	public final void fromJson(JsonElement json)
-	{ value.setRGBA(json.getAsInt()); }
-	
-	public final JsonElement getSerializableElement()
+	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(value.color()); }
 	
-	public final NBTBase serializeNBT()
-	{ return new NBTTagInt(value.color()); }
-	
-	public final void deserializeNBT(NBTBase nbt)
-	{ value.setRGBA(((NBTBase.NBTPrimitive) nbt).getInt()); }
-	
-	public final void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setInteger("D", defValue.color());
-	}
-	
-	public final void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		defValue.setRGBA(nbt.getInteger("D"));
-	}
-	
-	public final String getAsString()
+	public String getAsString()
 	{ return value.toString(); }
 	
 	public int getAsInt()
 	{ return value.color(); }
+	
+	public String getDefValueString()
+	{ return defValue.toString(); }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		tag.setInteger("V", value.color());
+		
+		if(extended)
+		{
+			tag.setInteger("D", defValue.color());
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		value.setRGBA(tag.getInteger("V"));
+		
+		if(extended)
+		{
+			defValue.setRGBA(tag.getInteger("D"));
+		}
+	}
 }

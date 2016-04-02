@@ -7,12 +7,12 @@ import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
+import ftb.lib.mod.client.gui.info.InfoClientSettings;
 import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.Item;
@@ -29,7 +29,6 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
 {
-	public static final ConfigGroup client_config = new ConfigGroup("ftbl");
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
 	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
 	
@@ -57,7 +56,9 @@ public class FTBLibModClient extends FTBLibModCommon
 		//For Dev reasons, see DevConsole
 		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 		
-		ClientConfigRegistry.add(client_config.addAll(FTBLibModClient.class, null));
+		ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
+		ClientConfigRegistry.addGroup("ftbu_info", InfoClientSettings.class);
+		
 		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
@@ -69,9 +70,6 @@ public class FTBLibModClient extends FTBLibModCommon
 	{
 		ClientConfigRegistry.provider().save();
 	}
-	
-	public String translate(String key, Object... obj)
-	{ return I18n.format(key, obj); }
 	
 	public boolean isShiftDown()
 	{ return GuiScreen.isShiftKeyDown(); }

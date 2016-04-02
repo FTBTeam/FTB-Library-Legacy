@@ -29,8 +29,8 @@ public class InfoExtendedTextLine extends InfoTextLine
 	{ return text; }
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiInfo gui)
-	{ return new ButtonGuideExtendedTextLine(gui, this); }
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
+	{ return new ButtonInfoExtendedTextLine(gui, this); }
 	
 	public List<IChatComponent> getHover()
 	{ return hover; }

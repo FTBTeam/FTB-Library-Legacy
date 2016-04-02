@@ -261,8 +261,8 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	{ return (parent == null) ? null : parent.useUnicodeFont(); }
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuidePage createButton(GuiInfo gui)
-	{ return new ButtonGuidePage(gui, this); }
+	public ButtonInfoPage createButton(GuiInfo gui)
+	{ return new ButtonInfoPage(gui, this); }
 	
 	public String getFullID()
 	{

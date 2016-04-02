@@ -25,8 +25,8 @@ public class MessageReload extends MessageLM<MessageReload>
 	public boolean reloadClient;
 	public boolean modeChanged;
 	public GameProfile profile;
-	public NBTTagCompound synced;
-	public NBTTagCompound world;
+	public NBTTagCompound worldData;
+	public NBTTagCompound syncedData;
 	
 	public MessageReload() { }
 	
@@ -35,11 +35,13 @@ public class MessageReload extends MessageLM<MessageReload>
 		reloadClient = reload;
 		modeChanged = mode;
 		profile = l ? self.getProfile() : null;
-		synced = (NBTTagCompound) ConfigRegistry.synced.serializeNBT();
-		world = new NBTTagCompound();
-		self.getWorld().toWorldMP().writeDataToNet(world, self, l);
+		worldData = new NBTTagCompound();
+		self.getWorld().toWorldMP().writeDataToNet(worldData, self, l);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + synced);
+		syncedData = new NBTTagCompound();
+		ConfigRegistry.synced.writeToNBT(syncedData, false);
+		
+		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -59,8 +61,8 @@ public class MessageReload extends MessageLM<MessageReload>
 		}
 		else profile = null;
 		
-		synced = readTag(io);
-		world = readTag(io);
+		worldData = readTag(io);
+		syncedData = readTag(io);
 	}
 	
 	public void toBytes(ByteBuf io)
@@ -75,8 +77,8 @@ public class MessageReload extends MessageLM<MessageReload>
 			writeString(io, profile.getName());
 		}
 		
-		writeTag(io, synced);
-		writeTag(io, world);
+		writeTag(io, worldData);
+		writeTag(io, syncedData);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -85,8 +87,9 @@ public class MessageReload extends MessageLM<MessageReload>
 		long ms = LMUtils.millis();
 		
 		ConfigGroup syncedGroup = new ConfigGroup(ConfigRegistry.synced.getID());
-		syncedGroup.readFromNBT(m.synced);
+		syncedGroup.readFromNBT(m.syncedData, false);
 		ConfigRegistry.synced.loadFromGroup(syncedGroup, true);
+		
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + syncedGroup.getSerializableElement());
 		
 		if(m.profile != null || ForgeWorldSP.inst == null)
@@ -95,7 +98,7 @@ public class MessageReload extends MessageLM<MessageReload>
 			ForgeWorldSP.inst.init();
 		}
 		
-		ForgeWorldSP.inst.readDataFromNet(m.world, m.profile != null);
+		ForgeWorldSP.inst.readDataFromNet(m.worldData, m.profile != null);
 		
 		if(m.reloadClient || m.modeChanged || m.profile != null)
 		{

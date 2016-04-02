@@ -10,13 +10,13 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-public class ButtonGuidePage extends ButtonLM
+public class ButtonInfoPage extends ButtonLM
 {
 	public final GuiInfo guiInfo;
 	public final InfoPage page;
 	public String hover;
 	
-	public ButtonGuidePage(GuiInfo g, InfoPage p)
+	public ButtonInfoPage(GuiInfo g, InfoPage p)
 	{
 		super(g, 0, g.panelPages.height, g.panelWidth - 36, 13);
 		guiInfo = g;

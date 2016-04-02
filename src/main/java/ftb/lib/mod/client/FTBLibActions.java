@@ -6,7 +6,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.notification.ClientNotifications;
-import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import ftb.lib.mod.client.gui.friends.InfoFriendsGUI;
 import ftb.lib.mod.client.gui.info.GuiInfo;
@@ -15,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -71,7 +71,7 @@ public class FTBLibActions
 		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getDisplayName()
-		{ return FTBLibMod.proxy.translate(FTBLibModClient.notifications.getFullID()); }
+		{ return I18n.format(FTBLibModClient.notifications.getFullID()); }
 		
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !ClientNotifications.Perm.list.isEmpty(); }

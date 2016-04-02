@@ -11,11 +11,11 @@ import net.minecraftforge.fml.relauncher.*;
  * Created by LatvianModder on 04.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class ButtonGuideImage extends ButtonGuideExtendedTextLine
+public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 {
 	public TextureCoords texture;
 	
-	public ButtonGuideImage(GuiInfo g, InfoImageLine l)
+	public ButtonInfoImage(GuiInfo g, InfoImageLine l)
 	{
 		super(g, l);
 		

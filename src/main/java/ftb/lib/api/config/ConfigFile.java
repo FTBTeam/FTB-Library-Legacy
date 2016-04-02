@@ -5,18 +5,17 @@ import latmod.lib.*;
 
 import java.io.File;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public class ConfigFile extends ConfigGroup
 {
 	private File file;
-	private String displayName;
 	
 	public ConfigFile(String id)
 	{
 		super(id);
 	}
+	
+	public ConfigFile getConfigFile()
+	{ return this; }
 	
 	public void setFile(File f)
 	{ file = LMFileUtils.newFile(f); }
@@ -39,12 +38,6 @@ public class ConfigFile extends ConfigGroup
 	public void save()
 	{ if(file != null) LMJsonUtils.toJson(file, getSerializableElement()); }
 	
-	public void setDisplayName(String s)
-	{ displayName = s; }
-	
-	public String getDisplayName()
-	{ return displayName == null ? getID() : displayName; }
-	
 	public void addGroup(String id, Class<?> c)
-	{ add(new ConfigGroup(id).addAll(c, null)); }
+	{ add(new ConfigGroup(id).addAll(c, null, false), false); }
 }

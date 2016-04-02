@@ -7,7 +7,7 @@ import latmod.lib.annotations.NumberBounds;
 /**
  * Created by LatvianModder on 22.03.2016.
  */
-public class ClientSettings
+public class InfoClientSettings
 {
 	public static final ConfigEntryBool unicode = new ConfigEntryBool("unicode", true);
 	public static final ConfigEntryColor text_color = new ConfigEntryColor("text_color", new LMColor.RGB(123, 101, 52));

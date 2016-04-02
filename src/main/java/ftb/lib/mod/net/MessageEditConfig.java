@@ -24,7 +24,7 @@ public class MessageEditConfig extends MessageLM<MessageEditConfig> // MessageEd
 		configID = o.getID();
 		reload = r;
 		nbt = new NBTTagCompound();
-		o.writeToNBT(nbt);
+		o.writeToNBT(nbt, true);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -50,7 +50,7 @@ public class MessageEditConfig extends MessageLM<MessageEditConfig> // MessageEd
 	public IMessage onMessage(MessageEditConfig m, MessageContext ctx)
 	{
 		ConfigGroup file = new ConfigGroup(m.configID);
-		file.readFromNBT(m.nbt);
+		file.readFromNBT(m.nbt, true);
 		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(m.token, m.reload, file)));
 		return null;
 	}

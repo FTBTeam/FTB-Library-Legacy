@@ -1,36 +1,32 @@
 package ftb.lib.api.config;
 
-import latmod.lib.Bits;
+import com.google.gson.JsonElement;
+import latmod.lib.*;
 import latmod.lib.annotations.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.nbt.*;
 import net.minecraft.util.IJsonSerializable;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
-public abstract class ConfigEntry extends FinalIDObject implements IJsonSerializable, INBTSerializable<NBTBase>, IInfoContainer, IFlagContainer
+public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
-	public byte flags = 0;
 	public ConfigGroup parentGroup;
 	private String[] info;
+	protected byte flags = 0;
 	
 	ConfigEntry(String id)
 	{
 		super(id);
 	}
 	
-	public final void setFlag(byte flag, boolean v)
-	{ flags = Bits.setBit(flags, flag, v); }
+	public abstract ConfigEntryType getConfigType();
+	public abstract void fromJson(JsonElement o);
+	public abstract JsonElement getSerializableElement();
 	
-	public final boolean getFlag(byte flag)
-	{ return Bits.getBit(flags, flag); }
-	
-	public String toString()
-	{ return getID() + '=' + getAsString(); }
+	public int getColor()
+	{ return 0x999999; }
 	
 	public String getFullID()
 	{
@@ -38,19 +34,8 @@ public abstract class ConfigEntry extends FinalIDObject implements IJsonSerializ
 		return parentGroup.getFullID() + '.' + getID();
 	}
 	
-	public ConfigEntry copy()
-	{
-		ConfigEntry e = simpleCopy();
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		e.readFromNBT(tag);
-		return e;
-	}
-	
-	public abstract ConfigEntryType getType();
-	public abstract ConfigEntry simpleCopy();
-	public abstract String getDefValueString();
-	public abstract int getColor();
+	public String getDefValueString()
+	{ return null; }
 	
 	public String getMinValueString()
 	{ return null; }
@@ -58,48 +43,88 @@ public abstract class ConfigEntry extends FinalIDObject implements IJsonSerializ
 	public String getMaxValueString()
 	{ return null; }
 	
-	public void writeToNBT(NBTTagCompound nbt)
+	public ConfigEntry copy()
 	{
-		nbt.setByte("T", (byte) getType().ordinal());
-		NBTBase n = serializeNBT();
-		if(n != null) nbt.setTag("V", n);
-		if(flags != 0) nbt.setByte("F", flags);
+		ConfigEntry e = getConfigType().createNew(getID());
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag, true);
+		e.readFromNBT(tag, true);
+		return e;
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		deserializeNBT(nbt.getTag("V"));
-		flags = nbt.getByte("F");
-	}
+	public final String toString()
+	{ return getAsString(); }
 	
-	public void setInfo(String[] s)
-	{ info = s; }
+	public abstract String getAsString();
 	
-	public String[] getInfo()
-	{ return info; }
+	public boolean getAsBoolean()
+	{ return false; }
+	
+	public int getAsInt()
+	{ return 0; }
+	
+	public double getAsDouble()
+	{ return 0D; }
+	
+	public IntList getAsIntList()
+	{ return new IntList(new int[] {getAsInt()}); }
+	
+	public List<String> getAsStringList()
+	{ return Collections.singletonList(getAsString()); }
 	
 	public ConfigGroup getAsGroup()
 	{ return null; }
 	
-	public abstract String getAsString();
+	public final void setFlag(byte flag, boolean b)
+	{ flags = Bits.setBit(flags, flag, b); }
 	
-	public int getAsInt()
+	public final boolean getFlag(byte flag)
+	{ return Bits.getBit(flags, flag); }
+	
+	public final void setInfo(String[] s)
+	{ info = (s != null && s.length > 0) ? s : null; }
+	
+	public final String[] getInfo()
+	{ return info; }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
-		throw new UnsupportedOperationException();
+		if(extended)
+		{
+			if(flags != 0) tag.setByte("F", flags);
+			
+			if(info != null && info.length > 0)
+			{
+				NBTTagList list = new NBTTagList();
+				
+				for(int i = 0; i < info.length; i++)
+				{
+					list.appendTag(new NBTTagString(info[i]));
+				}
+				
+				tag.setTag("I", list);
+			}
+		}
 	}
 	
-	public double getAsDouble()
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
-		throw new UnsupportedOperationException();
-	}
-	
-	public boolean getAsBoolean()
-	{
-		throw new UnsupportedOperationException();
-	}
-	
-	public List<String> getAsStringList()
-	{
-		return Collections.singletonList(getAsString());
+		if(extended)
+		{
+			flags = tag.getByte("F");
+			info = null;
+			
+			if(tag.hasKey("I"))
+			{
+				NBTTagList list = tag.getTagList("I", Constants.NBT.TAG_STRING);
+				
+				info = new String[list.tagCount()];
+				
+				for(int i = 0; i < info.length; i++)
+				{
+					info[i] = list.getStringTagAt(i);
+				}
+			}
+		}
 	}
 }

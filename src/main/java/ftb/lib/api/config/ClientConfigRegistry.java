@@ -2,9 +2,11 @@ package ftb.lib.api.config;
 
 import ftb.lib.FTBLib;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.io.File;
 
+@SideOnly(Side.CLIENT)
 public final class ClientConfigRegistry
 {
 	private static final ConfigFile file = new ConfigFile("client_config");
@@ -19,7 +21,7 @@ public final class ClientConfigRegistry
 			public String getEntryTitle(ConfigEntry e)
 			{ return I18n.format(e.getFullID()); }
 			
-			public ConfigGroup getConfigGroup()
+			public ConfigFile getConfigGroup()
 			{
 				if(file.getFile() == null)
 				{
@@ -31,16 +33,16 @@ public final class ClientConfigRegistry
 			}
 			
 			public void save()
-			{ file.save(); }
+			{ getConfigGroup().save(); }
 		};
 	}
 	
 	/**
 	 * Do this before postInit()
 	 */
-	public static void add(ConfigGroup g)
-	{ file.add(g); }
-	
 	public static void addGroup(String id, Class<?> c)
 	{ file.addGroup(id, c); }
+	
+	public static void add(ConfigGroup group)
+	{ file.add(group, false); }
 }

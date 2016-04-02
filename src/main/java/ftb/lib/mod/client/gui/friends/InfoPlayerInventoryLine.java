@@ -25,12 +25,12 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiInfo gui)
-	{ return new ButtonGuidePlayerInventory(gui, this); }
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
+	{ return new ButtonInfoPlayerInventory(gui, this); }
 	
-	public class ButtonGuidePlayerInventory extends ButtonGuideTextLine
+	public class ButtonInfoPlayerInventory extends ButtonInfoTextLine
 	{
-		public ButtonGuidePlayerInventory(GuiInfo g, InfoPlayerInventoryLine w)
+		public ButtonInfoPlayerInventory(GuiInfo g, InfoPlayerInventoryLine w)
 		{
 			super(g, null);
 			width = 18 * 9;

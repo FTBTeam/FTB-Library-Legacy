@@ -6,14 +6,11 @@ import net.minecraft.nbt.*;
 
 import java.util.*;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public final class ConfigEntryEnumExtended extends ConfigEntry implements IClickable
 {
-	private int value;
-	private int defValue;
 	private final List<String> values;
+	private String value;
+	private String defValue;
 	
 	public ConfigEntryEnumExtended(String id)
 	{
@@ -21,51 +18,94 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 		values = new ArrayList<>();
 	}
 	
-	public ConfigEntryType getType()
-	{ return ConfigEntryType.ENUM; }
+	public ConfigEntryEnumExtended(String id, List<String> vals, String def)
+	{
+		super(id);
+		values = vals;
+		value = defValue = def;
+	}
 	
-	public ConfigEntry simpleCopy()
-	{ return new ConfigEntryEnumExtended(getID()); }
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.ENUM; }
 	
 	public int getColor()
 	{ return 0x0094FF; }
 	
-	public String getDefValueString()
-	{ return values.get(defValue); }
+	public void set(String s)
+	{ value = s; }
 	
-	public void fromJson(JsonElement json)
-	{ value = values.indexOf(json.getAsString()); }
+	public int getIndex()
+	{ return values.indexOf(getAsString()); }
+	
+	public void fromJson(JsonElement o)
+	{ set(o.getAsString()); }
 	
 	public JsonElement getSerializableElement()
-	{ return new JsonPrimitive(values.get(value)); }
+	{ return new JsonPrimitive(getAsString()); }
 	
-	public NBTBase serializeNBT()
-	{ return new NBTTagString(values.get(value)); }
-	
-	public void deserializeNBT(NBTBase nbt)
-	{ value = values.indexOf(((NBTTagString) nbt).getString()); }
-	
-	public void writeToNBT(NBTTagCompound nbt)
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
-		super.writeToNBT(nbt);
-		nbt.setInteger("D", defValue);
+		super.writeToNBT(tag, extended);
+		tag.setString("V", getAsString());
+		
+		if(extended)
+		{
+			tag.setString("D", defValue);
+			
+			if(!values.isEmpty())
+			{
+				NBTTagList list = new NBTTagList();
+				
+				for(String s : values)
+				{
+					list.appendTag(new NBTTagString(s));
+				}
+				
+				tag.setTag("VL", list);
+			}
+		}
 	}
 	
-	public void readFromNBT(NBTTagCompound nbt)
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
-		super.readFromNBT(nbt);
-		defValue = nbt.getInteger("D");
+		super.readFromNBT(tag, extended);
+		set(tag.getString("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getString("D");
+			
+			values.clear();
+			
+			if(tag.hasKey("VL"))
+			{
+				NBTTagList list = (NBTTagList) tag.getTag("VL");
+				
+				for(int i = 0; i < list.tagCount(); i++)
+				{
+					values.add(list.getStringTagAt(i));
+				}
+			}
+		}
 	}
 	
-	public void onClicked()
-	{ value = (value + 1) % values.size(); }
+	public void onClicked(boolean leftClick)
+	{
+		int i = getIndex() + (leftClick ? 1 : -1);
+		if(i < 0) i = values.size() - 1;
+		if(i >= values.size()) i = 0;
+		set(values.get(i));
+	}
 	
 	public String getAsString()
-	{ return values.get(value); }
-	
-	public int getAsInt()
 	{ return value; }
 	
 	public boolean getAsBoolean()
-	{ return !values.get(value).equals("-"); }
+	{ return getAsString() != null; }
+	
+	public int getAsInt()
+	{ return getIndex(); }
+	
+	public String getDefValueString()
+	{ return defValue; }
 }

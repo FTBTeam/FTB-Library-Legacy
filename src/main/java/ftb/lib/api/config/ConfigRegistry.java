@@ -21,8 +21,8 @@ public class ConfigRegistry
 		{
 			map.put(f.getID(), f);
 			
-			ConfigGroup g1 = f.generateSynced();
-			if(!g1.entryMap.isEmpty()) synced.add(g1);
+			ConfigGroup g1 = f.generateSynced(false);
+			if(!g1.entryMap.isEmpty()) synced.add(g1, false);
 		}
 	}
 	

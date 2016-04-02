@@ -78,10 +78,10 @@ public class InfoImageLine extends InfoExtendedTextLine
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiInfo gui)
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{
 		if(getImage() == null) return null;
-		return new ButtonGuideImage(gui, this);
+		return new ButtonInfoImage(gui, this);
 	}
 	
 	public void fromJson(JsonElement e)

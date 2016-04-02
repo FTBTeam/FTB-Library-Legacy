@@ -71,15 +71,16 @@ public class FTBLibMod
 	{
 		FTBLibEventHandler.instance.ticking.clear();
 		
-		if(FTBLibConfigCmd.override_list.getAsBoolean()) FTBLib.addCommand(e, new CmdListOverride());
-		if(FTBLibConfigCmd.override_help.getAsBoolean()) FTBLib.addCommand(e, new CmdHelpOverride());
-		if(FTBLibConfigCmd.reload_name.getAsBoolean()) FTBLib.addCommand(e, new CmdReload());
-		if(FTBLibConfigCmd.set_item_name.getAsBoolean()) FTBLib.addCommand(e, new CmdSetItemName());
-		if(FTBLibConfigCmd.heal.getAsBoolean()) FTBLib.addCommand(e, new CmdHeal());
-		if(FTBLibConfigCmd.edit_config.getAsBoolean()) FTBLib.addCommand(e, new CmdEditConfig());
+		FTBLib.addCommand(e, new CmdReload());
 		FTBLib.addCommand(e, new CmdMode());
 		FTBLib.addCommand(e, new CmdNotify());
 		FTBLib.addCommand(e, new CmdInv());
+		
+		if(FTBLibConfigCmd.override_list.getAsBoolean()) FTBLib.addCommand(e, new CmdListOverride());
+		if(FTBLibConfigCmd.override_help.getAsBoolean()) FTBLib.addCommand(e, new CmdHelpOverride());
+		if(FTBLibConfigCmd.set_item_name.getAsBoolean()) FTBLib.addCommand(e, new CmdSetItemName());
+		if(FTBLibConfigCmd.heal.getAsBoolean()) FTBLib.addCommand(e, new CmdHeal());
+		if(FTBLibConfigCmd.edit_config.getAsBoolean()) FTBLib.addCommand(e, new CmdEditConfig());
 	}
 	
 	@Mod.EventHandler

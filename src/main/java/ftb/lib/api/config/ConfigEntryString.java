@@ -1,68 +1,71 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public class ConfigEntryString extends ConfigEntry
 {
-	private String value;
 	public String defValue;
+	private String value;
 	
 	public ConfigEntryString(String id, String def)
 	{
 		super(id);
-		defValue = def;
-		value = def;
+		set(def);
+		defValue = def == null ? "" : def;
 	}
 	
-	public final ConfigEntryType getType()
+	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.STRING; }
 	
-	public final ConfigEntry simpleCopy()
-	{ return new ConfigEntryString(getID(), defValue); }
-	
-	public void setString(String v)
-	{ value = v; }
-	
-	public final int getColor()
+	public int getColor()
 	{ return 0xFFAA49; }
 	
-	public final String getDefValueString()
-	{ return defValue; }
+	public void set(String o)
+	{ value = o == null ? "" : o; }
 	
-	public final void fromJson(JsonElement json)
-	{ setString(json.getAsString()); }
+	public final void fromJson(JsonElement o)
+	{ set(o.getAsString()); }
 	
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsString()); }
 	
-	public final NBTBase serializeNBT()
-	{ return new NBTTagString(getAsString()); }
-	
-	public final void deserializeNBT(NBTBase nbt)
-	{ setString(((NBTTagString) nbt).getString()); }
-	
-	public final void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setString("D", defValue);
-	}
-	
-	public final void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		defValue = nbt.getString("D");
-	}
-	
 	public String getAsString()
 	{ return value; }
 	
-	public final int getAsInt()
-	{ return getAsString().length(); }
+	public boolean getAsBoolean()
+	{ return getAsString().equals("true"); }
 	
-	public final boolean getAsBoolean()
-	{ return !getAsString().isEmpty(); }
+	public int getAsInt()
+	{ return Integer.parseInt(getAsString()); }
+	
+	public double getAsDouble()
+	{ return Double.parseDouble(getAsString()); }
+	
+	public String getDefValueString()
+	{ return defValue; }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		
+		String s = getAsString();
+		if(!s.isEmpty()) tag.setString("V", s);
+		
+		if(extended && !defValue.isEmpty())
+		{
+			tag.setString("D", defValue);
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		set(tag.getString("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getString("D");
+		}
+	}
 }

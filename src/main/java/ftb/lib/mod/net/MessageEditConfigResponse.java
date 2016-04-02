@@ -23,7 +23,7 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 		configID = o.getID();
 		reload = r;
 		nbt = new NBTTagCompound();
-		o.writeToNBT(nbt);
+		o.writeToNBT(nbt, false);
 	}
 	
 	public LMNetworkWrapper getWrapper()
@@ -54,7 +54,7 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 		if(file == null) return null;
 		
 		ConfigGroup group = new ConfigGroup(m.configID);
-		group.readFromNBT(m.nbt);
+		group.readFromNBT(m.nbt, false);
 		
 		if(file.loadFromGroup(group, true) > 0)
 		{

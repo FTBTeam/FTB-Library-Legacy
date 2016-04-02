@@ -1,14 +1,11 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.LMListUtils;
+import latmod.lib.*;
 import net.minecraft.nbt.*;
 
 import java.util.*;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public class ConfigEntryStringList extends ConfigEntry
 {
 	public final List<String> defValue;
@@ -19,22 +16,21 @@ public class ConfigEntryStringList extends ConfigEntry
 		super(id);
 		value = new ArrayList<>();
 		defValue = new ArrayList<>();
-		value.addAll(def);
-		defValue.addAll(def);
+		
+		if(def != null && !def.isEmpty())
+		{
+			defValue.addAll(def);
+			value.addAll(def);
+		}
 	}
 	
-	public ConfigEntryStringList(String id, String... def)
-	{
-		this(id, Arrays.asList(def));
-	}
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.STRING_ARRAY; }
 	
-	public final ConfigEntryType getType()
-	{ return ConfigEntryType.STRING; }
+	public int getColor()
+	{ return 0xFFAA49; }
 	
-	public ConfigEntry simpleCopy()
-	{ return new ConfigEntryStringList(getID(), defValue); }
-	
-	public void setStringList(List<String> o)
+	public void set(List<String> o)
 	{
 		value.clear();
 		
@@ -44,79 +40,114 @@ public class ConfigEntryStringList extends ConfigEntry
 		}
 	}
 	
-	public final int getColor()
-	{ return 0xFFAA49; }
-	
-	public final String getDefValueString()
-	{ return LMListUtils.toString(defValue); }
-	
 	public final void fromJson(JsonElement o)
 	{
 		JsonArray a = o.getAsJsonArray();
 		value.clear();
 		for(int i = 0; i < a.size(); i++)
 			value.add(a.get(i).getAsString());
-		setStringList(LMListUtils.clone(value));
+		set(LMListUtils.clone(value));
 	}
 	
 	public final JsonElement getSerializableElement()
 	{
 		JsonArray a = new JsonArray();
-		value = getAsStringList();
-		for(String aValue : value) a.add(new JsonPrimitive(aValue));
+		for(String aValue : getAsStringList())
+		{
+			a.add(new JsonPrimitive(aValue));
+		}
 		return a;
 	}
 	
-	public final NBTBase serializeNBT()
-	{
-		NBTTagList list = new NBTTagList();
-		value = getAsStringList();
-		
-		for(String s : value)
-		{
-			list.appendTag(new NBTTagString(s));
-		}
-		
-		return list;
-	}
+	public String getAsString()
+	{ return getAsStringList().toString(); }
 	
-	public final void deserializeNBT(NBTBase nbt)
-	{
-		NBTTagList list = (NBTTagList) nbt;
-		
-		if(list.hasNoTags()) setStringList(null);
-		else
-		{
-			ArrayList<String> alist = new ArrayList<>();
-			
-			for(int i = 0; i < list.tagCount(); i++)
-			{
-				alist.add(list.getStringTagAt(i));
-			}
-			
-			setStringList(alist);
-		}
-	}
-	
-	public final void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-	}
-	
-	public final void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-	}
-	
-	public final String getAsString()
-	{ return LMListUtils.toString(getAsStringList()); }
-	
-	public final int getAsInt()
-	{ return getAsStringList().size(); }
-	
-	public final boolean getAsBoolean()
+	public boolean getAsBoolean()
 	{ return !getAsStringList().isEmpty(); }
+	
+	public IntList getAsIntList()
+	{
+		List<String> list = getAsStringList();
+		IntList l = new IntList(list.size());
+		for(int i = 0; i < list.size(); i++)
+			l.add(Integer.parseInt(value.get(i)));
+		return l;
+	}
 	
 	public List<String> getAsStringList()
 	{ return value; }
+	
+	public String getDefValueString()
+	{ return defValue.toString(); }
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		
+		List<String> list = getAsStringList();
+		
+		if(!list.isEmpty())
+		{
+			NBTTagList l = new NBTTagList();
+			
+			for(String s : list)
+			{
+				l.appendTag(new NBTTagString(s));
+			}
+			
+			tag.setTag("V", l);
+		}
+		
+		if(extended && !defValue.isEmpty())
+		{
+			NBTTagList l = new NBTTagList();
+			
+			for(String s : defValue)
+			{
+				l.appendTag(new NBTTagString(s));
+			}
+			
+			tag.setTag("D", l);
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		
+		NBTTagList list = (NBTTagList) tag.getTag("V");
+		
+		if(list != null)
+		{
+			List<String> l = new ArrayList<>(list.tagCount());
+			
+			for(int i = 0; i < list.tagCount(); i++)
+			{
+				l.add(list.getStringTagAt(i));
+			}
+			
+			set(l);
+		}
+		else
+		{
+			set(null);
+		}
+		
+		if(extended)
+		{
+			defValue.clear();
+			
+			list = (NBTTagList) tag.getTag("D");
+			
+			if(list != null)
+			{
+				List<String> l = new ArrayList<>(list.tagCount());
+				
+				for(int i = 0; i < list.tagCount(); i++)
+				{
+					defValue.add(list.getStringTagAt(i));
+				}
+			}
+		}
+	}
 }

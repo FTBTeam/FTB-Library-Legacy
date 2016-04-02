@@ -109,7 +109,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 				
 				for(InfoPage c : page.childPages.values())
 				{
-					ButtonGuidePage b = c.createButton(GuiInfo.this);
+					ButtonInfoPage b = c.createButton(GuiInfo.this);
 					
 					if(b != null && b.height > 0)
 					{
@@ -126,7 +126,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 			{
 				for(WidgetLM w : panelPages.widgets)
 				{
-					((ButtonGuidePage) w).updateTitle();
+					((ButtonInfoPage) w).updateTitle();
 				}
 				
 				height = 0;
@@ -136,7 +136,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 				
 				for(InfoTextLine line : selectedPage.text)
 				{
-					ButtonGuideTextLine l = line == null ? new ButtonGuideTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this);
+					ButtonInfoTextLine l = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this);
 					
 					if(l != null && l.height > 0)
 					{
@@ -188,15 +188,15 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		buttonBack.posY = 12;
 		
 		LMColor c = page.getTextColor();
-		if(c == null) c = ClientSettings.text_color.value;
+		if(c == null) c = InfoClientSettings.text_color.value;
 		colorText = 0xFF000000 | c.color();
 		
 		c = page.getBackgroundColor();
-		if(c == null) c = ClientSettings.bg_color.value;
+		if(c == null) c = InfoClientSettings.bg_color.value;
 		colorBackground = 0xFF000000 | c.color();
 		
 		Boolean b = page.useUnicodeFont();
-		useUnicodeFont = (b == null) ? ClientSettings.unicode.getAsBoolean() : b.booleanValue();
+		useUnicodeFont = (b == null) ? InfoClientSettings.unicode.getAsBoolean() : b.booleanValue();
 		
 		//
 		
@@ -238,7 +238,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
-		renderFilling(panelWidth, 0, mainPanel.width - panelWidth, mainPanel.height, ClientSettings.transparency.getAsInt());
+		renderFilling(panelWidth, 0, mainPanel.width - panelWidth, mainPanel.height, InfoClientSettings.transparency.getAsInt());
 		renderFilling(0, 36, panelWidth, mainPanel.height - 32, 255);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();

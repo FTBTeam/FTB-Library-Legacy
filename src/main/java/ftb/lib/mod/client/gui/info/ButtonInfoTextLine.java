@@ -13,12 +13,12 @@ import java.util.List;
  * Created by LatvianModder on 04.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class ButtonGuideTextLine extends ButtonLM
+public class ButtonInfoTextLine extends ButtonLM
 {
 	public final GuiInfo guiInfo;
 	public List<String> text;
 	
-	public ButtonGuideTextLine(GuiInfo g, InfoTextLine l)
+	public ButtonInfoTextLine(GuiInfo g, InfoTextLine l)
 	{
 		super(g, 0, g.panelText.height, 0, 0);
 		guiInfo = g;

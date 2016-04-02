@@ -51,8 +51,8 @@ public class InfoTextLine implements IJsonSerializable
 	{ return new ChatComponentText(text); }
 	
 	@SideOnly(Side.CLIENT)
-	public ButtonGuideTextLine createWidget(GuiInfo gui)
-	{ return new ButtonGuideTextLine(gui, this); }
+	public ButtonInfoTextLine createWidget(GuiInfo gui)
+	{ return new ButtonInfoTextLine(gui, this); }
 	
 	public void fromJson(JsonElement e)
 	{ text = e.getAsString(); }

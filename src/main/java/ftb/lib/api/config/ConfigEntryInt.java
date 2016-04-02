@@ -1,112 +1,128 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
+import latmod.lib.MathHelperLM;
 import latmod.lib.annotations.INumberBoundsContainer;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContainer
 {
-	private int value;
 	public int defValue;
-	private Integer minValue;
-	private Integer maxValue;
+	private int value;
+	private Integer minValue, maxValue;
 	
 	public ConfigEntryInt(String id, int def)
 	{
 		super(id);
 		defValue = def;
-		value = def;
+		set(def);
 	}
 	
-	public final void setBounds(double min, double max)
-	{
-		minValue = (min == Double.NEGATIVE_INFINITY) ? null : (int) min;
-		maxValue = (max == Double.POSITIVE_INFINITY) ? null : (int) max;
-	}
-	
-	public final double getMin()
-	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue.doubleValue(); }
-	
-	public final double getMax()
-	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue.doubleValue();}
-	
-	public final ConfigEntryType getType()
+	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.INT; }
 	
-	public final ConfigEntry simpleCopy()
-	{ return new ConfigEntryInt(getID(), defValue); }
+	public int getColor()
+	{ return 0xAA5AE8; }
+	
+	public void setBounds(double min, double max)
+	{
+		minValue = min == Double.NEGATIVE_INFINITY ? null : (int) min;
+		maxValue = max == Double.POSITIVE_INFINITY ? null : (int) max;
+	}
+	
+	public double getMin()
+	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue.doubleValue(); }
+	
+	public double getMax()
+	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue.doubleValue(); }
 	
 	public void set(int v)
 	{
-		value = v;
-		if(minValue != null && value < minValue) value = minValue;
-		if(maxValue != null && value > maxValue) value = maxValue;
+		value = MathHelperLM.clampInt(v, (int) getMin(), (int) getMax());
 	}
 	
-	public final int getColor()
-	{ return 0xAA5AE8; }
+	public void add(int i)
+	{ set(getAsInt() + i); }
 	
-	public final String getDefValueString()
-	{ return Integer.toString(defValue); }
-	
-	public final void fromJson(JsonElement json)
-	{ set(json.getAsInt()); }
+	public final void fromJson(JsonElement o)
+	{ set((o == null || o.isJsonNull()) ? defValue : o.getAsInt()); }
 	
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsInt()); }
 	
-	public final NBTBase serializeNBT()
-	{ return new NBTTagInt(getAsInt()); }
-	
-	public final void deserializeNBT(NBTBase nbt)
-	{ set(((NBTBase.NBTPrimitive) nbt).getInt()); }
-	
-	public final void writeExtendedNBT(NBTTagCompound nbt)
-	{
-		nbt.setInteger("D", defValue);
-		if(minValue != null) nbt.setInteger("Min", minValue);
-		if(maxValue != null) nbt.setInteger("Max", maxValue);
-	}
-	
-	public final void readExtendedNBT(NBTTagCompound nbt)
-	{
-		defValue = nbt.getInteger("D");
-		minValue = nbt.hasKey("Min") ? nbt.getInteger("Min") : null;
-		maxValue = nbt.hasKey("Max") ? nbt.getInteger("Max") : null;
-	}
-	
-	public final String getAsString()
+	public String getAsString()
 	{ return Integer.toString(getAsInt()); }
+	
+	public boolean getAsBoolean()
+	{ return getAsInt() != 0; }
 	
 	public int getAsInt()
 	{ return value; }
 	
-	public final double getAsDouble()
+	public double getAsDouble()
 	{ return getAsInt(); }
 	
-	public final boolean getAsBoolean()
-	{ return getAsInt() != 0; }
+	public String getDefValueString()
+	{ return Integer.toString(defValue); }
 	
-	public final String getMinValueString()
+	public String getMinValueString()
 	{
-		if(minValue != null)
+		double d = getMin();
+		
+		if(d != Double.NEGATIVE_INFINITY)
 		{
-			return Integer.toString(minValue.intValue());
+			return Integer.toString((int) d);
 		}
 		
 		return null;
 	}
 	
-	public final String getMaxValueString()
+	public String getMaxValueString()
 	{
-		if(maxValue != null)
+		double d = getMax();
+		
+		if(d != Double.POSITIVE_INFINITY)
 		{
-			return Integer.toString(maxValue.intValue());
+			return Integer.toString((int) d);
 		}
 		
 		return null;
+	}
+	
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		tag.setInteger("V", getAsInt());
+		
+		if(extended)
+		{
+			tag.setInteger("D", defValue);
+			
+			double d = getMin();
+			
+			if(d != Double.NEGATIVE_INFINITY)
+			{
+				tag.setInteger("MN", (int) d);
+			}
+			
+			d = getMax();
+			
+			if(d != Double.POSITIVE_INFINITY)
+			{
+				tag.setInteger("MX", (int) d);
+			}
+		}
+	}
+	
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		set(tag.getInteger("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getInteger("D");
+			setBounds(tag.hasKey("MN") ? tag.getInteger("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getInteger("MX") : Double.POSITIVE_INFINITY);
+		}
 	}
 }

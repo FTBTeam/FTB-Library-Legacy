@@ -2,11 +2,11 @@ package ftb.lib.api.config;
 
 import ftb.lib.mod.net.MessageEditConfigResponse;
 
-public class ServerConfigProvider implements IConfigProvider
+public final class ServerConfigProvider implements IConfigProvider
 {
-	public final long adminToken;
-	public final boolean reload;
-	public final ConfigGroup group;
+	private final long adminToken;
+	private final boolean reload;
+	private final ConfigGroup group;
 	
 	public ServerConfigProvider(long t, boolean r, ConfigGroup f)
 	{
@@ -14,6 +14,9 @@ public class ServerConfigProvider implements IConfigProvider
 		reload = r;
 		group = f;
 	}
+	
+	public String getTitle()
+	{ return group.getDisplayName(); }
 	
 	public String getGroupTitle(ConfigGroup g)
 	{ return g.getID(); }

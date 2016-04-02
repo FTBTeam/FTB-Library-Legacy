@@ -1,31 +1,33 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import latmod.lib.LMStringUtils;
+import latmod.lib.*;
 import latmod.lib.annotations.INumberBoundsContainer;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
 public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsContainer
 {
-	private double value;
 	public double defValue;
-	private Double minValue;
-	private Double maxValue;
+	private double value;
+	private Double minValue, maxValue;
 	
-	public ConfigEntryDouble(String id, double def)
+	public ConfigEntryDouble(String id, double d)
 	{
 		super(id);
-		defValue = def;
-		value = def;
+		defValue = d;
+		set(d);
 	}
+	
+	public ConfigEntryType getConfigType()
+	{ return ConfigEntryType.DOUBLE; }
+	
+	public int getColor()
+	{ return 0xAA5AE8; }
 	
 	public void setBounds(double min, double max)
 	{
-		minValue = (min == Double.NEGATIVE_INFINITY) ? null : min;
-		maxValue = (max == Double.POSITIVE_INFINITY) ? null : max;
+		minValue = min == Double.NEGATIVE_INFINITY ? null : min;
+		maxValue = max == Double.POSITIVE_INFINITY ? null : max;
 	}
 	
 	public double getMin()
@@ -34,58 +36,39 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 	public double getMax()
 	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue; }
 	
-	public final ConfigEntryType getType()
-	{ return ConfigEntryType.DOUBLE; }
-	
-	public final ConfigEntry simpleCopy()
-	{ return new ConfigEntryDouble(getID(), defValue); }
-	
-	public void setDouble(double v)
+	public void set(double v)
 	{
-		value = v;
-		if(minValue != null && value < minValue) value = minValue;
-		if(maxValue != null && value > maxValue) value = maxValue;
+		value = MathHelperLM.clamp(v, getMin(), getMax());
 	}
 	
-	public final int getColor()
-	{ return 0xAA5AE8; }
+	public void add(double v)
+	{ set(getAsDouble() + v); }
 	
-	public final String getDefValueString()
-	{ return Double.toString(defValue); }
-	
-	public final void fromJson(JsonElement json)
-	{ setDouble(json.getAsDouble()); }
+	public final void fromJson(JsonElement o)
+	{ set(o.getAsDouble()); }
 	
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsDouble()); }
 	
-	public final NBTBase serializeNBT()
-	{ return new NBTTagDouble(getAsDouble()); }
+	public String getAsString()
+	{ return Double.toString(getAsDouble()); }
 	
-	public final void deserializeNBT(NBTBase nbt)
-	{ setDouble(((NBTBase.NBTPrimitive) nbt).getDouble()); }
+	public int getAsInt()
+	{ return (int) getAsDouble(); }
 	
-	public final void writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		nbt.setDouble("D", defValue);
-		if(minValue != null) nbt.setDouble("Min", minValue);
-		if(maxValue != null) nbt.setDouble("Max", maxValue);
-	}
+	public double getAsDouble()
+	{ return value; }
 	
-	public final void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-		defValue = nbt.getDouble("D");
-		minValue = nbt.hasKey("Min") ? nbt.getDouble("Min") : null;
-		maxValue = nbt.hasKey("Max") ? nbt.getDouble("Max") : null;
-	}
+	public String getDefValueString()
+	{ return Double.toString(defValue); }
 	
 	public String getMinValueString()
 	{
-		if(minValue != null)
+		double d = getMin();
+		
+		if(d != Double.NEGATIVE_INFINITY)
 		{
-			return LMStringUtils.formatDouble(minValue);
+			return LMStringUtils.formatDouble(d);
 		}
 		
 		return null;
@@ -93,23 +76,47 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 	
 	public String getMaxValueString()
 	{
-		if(maxValue != null)
+		double d = getMax();
+		
+		if(d != Double.POSITIVE_INFINITY)
 		{
-			return LMStringUtils.formatDouble(maxValue);
+			return LMStringUtils.formatDouble(d);
 		}
 		
 		return null;
 	}
 	
-	public final String getAsString()
-	{ return Double.toString(getAsDouble()); }
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.writeToNBT(tag, extended);
+		
+		double d = getAsDouble();
+		
+		if(d != 0D) tag.setDouble("V", d);
+		
+		if(extended)
+		{
+			if(defValue != 0D) tag.setDouble("D", defValue);
+			
+			d = getMin();
+			
+			if(d != Double.NEGATIVE_INFINITY) tag.setDouble("MN", d);
+			
+			d = getMax();
+			
+			if(d != Double.POSITIVE_INFINITY) tag.setDouble("MX", d);
+		}
+	}
 	
-	public final int getAsInt()
-	{ return (int) getAsDouble(); }
-	
-	public double getAsDouble()
-	{ return value; }
-	
-	public final boolean getAsBoolean()
-	{ return getAsDouble() != 0D; }
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
+	{
+		super.readFromNBT(tag, extended);
+		set(tag.getDouble("V"));
+		
+		if(extended)
+		{
+			defValue = tag.getDouble("D");
+			setBounds(tag.hasKey("MN") ? tag.getDouble("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getDouble("MX") : Double.POSITIVE_INFINITY);
+		}
+	}
 }

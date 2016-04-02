@@ -7,7 +7,7 @@ import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
 import ftb.lib.api.gui.widgets.*;
 import latmod.lib.*;
-import latmod.lib.annotations.Flag;
+import latmod.lib.annotations.Flags;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumChatFormatting;
@@ -32,7 +32,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		super(g, null);
 		provider = p;
 		
-		title = p.getGroupTitle(p.getConfigGroup());
+		title = p.getConfigGroup().getDisplayName();
 		
 		configEntryButtons = new ArrayList<>();
 		
@@ -47,7 +47,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			public void renderWidget()
 			{
-				for(WidgetLM widget : widgets) widget.renderWidget();
+				for(int i = 0; i < widgets.size(); i++)
+					widgets.get(i).renderWidget();
 			}
 			
 			private void addCE(ButtonConfigEntry e)
@@ -129,7 +130,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		mainPanel.width = width;
 		mainPanel.height = height;
 		mainPanel.posX = mainPanel.posY = 0;
-		buttonClose.posX = width - 18;
+		buttonClose.posX = width - 18 * 1;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
 		configPanel.posY = 20;
@@ -139,14 +140,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		{
 			configEntryButtons.clear();
 			
-			for(ConfigEntry entry : LMListUtils.sortToNew(provider.getConfigGroup().entryMap.values(), null))
+			for(ConfigEntry entry : provider.getConfigGroup().sortedEntries())
 				addCE(null, entry, 0);
 		}
 	}
 	
 	private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
 	{
-		if(!e.getFlag(Flag.INVISIBLE.ID))
+		if(!e.getFlag(Flags.HIDDEN))
 		{
 			ButtonConfigEntry b = new ButtonConfigEntry(this, e);
 			b.posX += level * 12;
@@ -161,7 +162,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
 			{
-				for(ConfigEntry entry : LMListUtils.sortToNew(g.entryMap.values(), null))
+				for(ConfigEntry entry : g.sortedEntries())
 					addCE(b, entry, level + 1);
 			}
 		}
@@ -301,13 +302,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			FTBLibClient.playClickSound();
 			
-			if(entry.getFlag(Flag.UNEDITABLE.ID)) return;
+			if(entry.getFlag(Flags.CANT_EDIT)) return;
 			
-			ConfigEntryType type = entry.getType();
+			ConfigEntryType type = entry.getConfigType();
 			
 			if(entry instanceof IClickable)
 			{
-				((IClickable) entry).onClicked();
+				((IClickable) entry).onClicked(b == 0);
 				gui.onChanged();
 			}
 			else if(entry.getAsGroup() != null)
@@ -333,7 +334,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 			else if(type == ConfigEntryType.INT)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.INT, entry.getAsInt(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, entry.getAsInt(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
@@ -349,13 +350,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 			else if(type == ConfigEntryType.DOUBLE)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.DOUBLE, entry.getAsDouble(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, entry.getAsDouble(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryDouble) entry).setDouble(c.resultD());
+							((ConfigEntryDouble) entry).set(c.resultD());
 							gui.onChanged();
 						}
 						
@@ -365,13 +366,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 			else if(type == ConfigEntryType.STRING)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getAsString(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getAsString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
 						{
-							((ConfigEntryString) entry).setString(c.result);
+							((ConfigEntryString) entry).set(c.result);
 							gui.onChanged();
 						}
 						
@@ -379,9 +380,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					}
 				});
 			}
-			else if(type.isArray())
+			else if(type == ConfigEntryType.CUSTOM || type == ConfigEntryType.INT_ARRAY || type == ConfigEntryType.STRING_ARRAY)
 			{
-				LMGuis.displayFieldSelector(entry.getFullID(), PrimitiveType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
+				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
 				{
 					public void onFieldSelected(FieldSelected c)
 					{

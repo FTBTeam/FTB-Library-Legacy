@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.*;
-import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageModifyFriends;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
@@ -24,8 +23,8 @@ public abstract class ClickActionType extends FinalIDObject
 	@SideOnly(Side.CLIENT)
 	public abstract void onClicked(JsonElement data);
 	
-	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("click_action." + getID()); }
+	public String getDisplayID()
+	{ return "click_action." + getID(); }
 	
 	// Static //
 	

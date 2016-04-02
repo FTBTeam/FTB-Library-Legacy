@@ -1,17 +1,16 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
+import ftb.lib.api.IClickable;
 import net.minecraft.nbt.*;
 
 import java.util.LinkedHashMap;
 
-/**
- * Created by LatvianModder on 26.03.2016.
- */
-public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry
+public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements IClickable // EnumTypeAdapterFactory
 {
 	private final LinkedHashMap<String, E> enumMap;
-	private E value, defValue;
+	private E value;
+	public final E defValue;
 	
 	public ConfigEntryEnum(String id, E[] val, E def, boolean addNull)
 	{
@@ -29,26 +28,18 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry
 			enumMap.put("-", null);
 		}
 		
-		value = def;
+		set(def);
 		defValue = def;
 	}
 	
-	private ConfigEntryEnum(String id, LinkedHashMap<String, E> map, E def)
-	{
-		super(id);
-		enumMap = map;
-		defValue = def;
-		value = def;
-	}
-	
-	public final ConfigEntryType getType()
+	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.ENUM; }
 	
-	public final ConfigEntry simpleCopy()
-	{ return new ConfigEntryEnum(getID(), new LinkedHashMap(enumMap), defValue); }
+	public int getColor()
+	{ return 0x0094FF; }
 	
-	public void setEnum(E v)
-	{ value = v; }
+	public void set(Object o)
+	{ value = (E) o; }
 	
 	public E get()
 	{ return value; }
@@ -56,55 +47,102 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry
 	public static String getName(Enum<?> e)
 	{ return e == null ? "-" : e.name().toLowerCase(); }
 	
-	public final int getColor()
-	{ return 0x0094FF; }
+	private E fromString(String s)
+	{ return enumMap.get(s.toLowerCase()); }
 	
-	public final String getDefValueString()
-	{ return getName(defValue); }
-	
-	public final void fromJson(JsonElement json)
-	{ setEnum(enumMap.get(json.getAsString())); }
+	public final void fromJson(JsonElement o)
+	{ set(fromString(o.getAsString())); }
 	
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getName(get())); }
 	
-	public final NBTBase serializeNBT()
-	{ return new NBTTagString(getName(get())); }
-	
-	public final void deserializeNBT(NBTBase nbt)
-	{ setEnum(enumMap.get(((NBTTagString) nbt).getString())); }
-	
-	public final void writeToNBT(NBTTagCompound nbt)
+	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
-		super.writeToNBT(nbt);
-		nbt.setString("D", getName(defValue));
+		super.writeToNBT(tag, extended);
+		tag.setString("V", getName(get()));
+		
+		if(extended)
+		{
+			tag.setString("D", getName(defValue));
+			
+			NBTTagList list = new NBTTagList();
+			
+			for(String s : enumMap.keySet())
+				list.appendTag(new NBTTagString(s));
+			
+			tag.setTag("VL", list);
+		}
 	}
 	
-	public final void readFromNBT(NBTTagCompound nbt)
+	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
-		super.readFromNBT(nbt);
-		defValue = enumMap.get(nbt.getString("D"));
+		super.readFromNBT(tag, extended);
+		set(fromString(tag.getString("V")));
 	}
 	
-	public final String getAsString()
+	public void onClicked(boolean leftClick)
+	{
+		if(leftClick)
+		{
+			set(getFromIndex((getIndex() + 1) % enumMap.size()));
+		}
+		else
+		{
+			set(getFromIndex((getIndex() - 1) & (enumMap.size() - 1)));
+		}
+	}
+	
+	public String getAsString()
 	{ return getName(get()); }
 	
-	public final int getAsInt()
+	public boolean getAsBoolean()
+	{ return get() != null; }
+	
+	private E getFromIndex(int index)
 	{
-		int i = 0;
-		value = get();
+		if(index < 0 || index >= enumMap.size())
+		{
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
+		
+		int idx0 = 0;
 		for(E e : enumMap.values())
 		{
-			if(value == e)
-			{
-				return i;
-			}
-			i++;
+			if(index == idx0) return e;
+			idx0++;
+		}
+		
+		return null;
+	}
+	
+	private int getIndex()
+	{
+		int idx0 = 0;
+		E e0 = get();
+		for(E e : enumMap.values())
+		{
+			if(e == e0) return idx0;
+			idx0++;
 		}
 		
 		return -1;
 	}
 	
-	public boolean getAsBoolean()
-	{ return get() != null; }
+	private int getDefaultIndex()
+	{
+		int idx0 = 0;
+		for(E e : enumMap.values())
+		{
+			if(e == defValue) return idx0;
+			idx0++;
+		}
+		
+		return -1;
+	}
+	
+	public int getAsInt()
+	{ return enumMap.size(); }
+	
+	public String getDefValueString()
+	{ return getName(defValue); }
 }

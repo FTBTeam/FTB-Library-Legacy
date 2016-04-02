@@ -3,8 +3,9 @@ package ftb.lib.api;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
 
@@ -44,8 +45,9 @@ public abstract class PlayerAction extends FinalIDObject
 	
 	public abstract void onClicked(ForgePlayer self, ForgePlayer other);
 	
+	@SideOnly(Side.CLIENT)
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("player_action." + getID()); }
+	{ return I18n.format("player_action." + getID()); }
 	
 	public void addMouseOverText(List<String> l) { }
 	

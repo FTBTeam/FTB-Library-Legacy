@@ -2,11 +2,13 @@ package ftb.lib.api.gui;
 
 import ftb.lib.mod.FTBLibMod;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.*;
 
+@SideOnly(Side.CLIENT)
 public class FTBLibLang
 {
 	private static String get(String s, Object... o)
-	{ return FTBLibMod.mod.translate(s, o); }
+	{ return FTBLibMod.mod.format(s, o); }
 	
 	public static String button_settings()
 	{ return get("button.settings"); }

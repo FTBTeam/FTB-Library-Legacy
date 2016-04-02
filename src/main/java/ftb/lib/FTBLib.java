@@ -97,7 +97,7 @@ public class FTBLib
 		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)
-			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloadedServer", ((LMUtils.millis() - ms) + "ms")));
+			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloaded_server", ((LMUtils.millis() - ms) + "ms")));
 		
 		if(hasOnlinePlayers())
 		{

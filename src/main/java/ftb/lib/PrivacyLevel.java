@@ -3,22 +3,23 @@ package ftb.lib;
 import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.gui.GuiIcons;
 import ftb.lib.api.permissions.ForgePermissionRegistry;
-import ftb.lib.mod.*;
+import ftb.lib.mod.FTBLibPermissions;
 
 public enum PrivacyLevel
 {
-	PUBLIC("public"),
-	PRIVATE("private"),
-	FRIENDS("friends");
+	PUBLIC,
+	PRIVATE,
+	FRIENDS;
 	
 	public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, FRIENDS};
 	public static final PrivacyLevel[] VALUES_2 = new PrivacyLevel[] {PUBLIC, PRIVATE};
+	public static final String enumLangKey = "ftbl.security";
 	
-	public final String uname;
+	public final String langKey;
 	
-	PrivacyLevel(String s)
+	PrivacyLevel()
 	{
-		uname = s;
+		langKey = enumLangKey + '.' + name().toLowerCase();
 	}
 	
 	public boolean isPublic()
@@ -37,31 +38,8 @@ public enum PrivacyLevel
 		return l[id];
 	}
 	
-	public String getText()
-	{ return FTBLibMod.proxy.translate("ftbl.security." + uname); }
-	
-	public String getTitle()
-	{ return FTBLibMod.proxy.translate("ftbl.security"); }
-	
 	public TextureCoords getIcon()
 	{ return GuiIcons.security[ordinal()]; }
-	
-	public static String[] getNames()
-	{
-		String[] s = new String[VALUES_3.length];
-		for(int i = 0; i < VALUES_3.length; i++)
-			s[i] = VALUES_3[i].uname;
-		return s;
-	}
-	
-	public static PrivacyLevel get(String s)
-	{
-		for(PrivacyLevel l : VALUES_3)
-		{
-			if(l.uname.equalsIgnoreCase(s)) return l;
-		}
-		return null;
-	}
 	
 	public boolean canInteract(ForgePlayer owner, ForgePlayer player)
 	{
@@ -73,5 +51,13 @@ public enum PrivacyLevel
 			return true;
 		if(this == PrivacyLevel.PRIVATE) return false;
 		return this == PrivacyLevel.FRIENDS && owner.isFriend(player);
+	}
+	
+	public static PrivacyLevel get(String s)
+	{
+		if(s == null || s.isEmpty()) return PUBLIC;
+		else if(s.equalsIgnoreCase("friends")) return FRIENDS;
+		else if(s.equalsIgnoreCase("private")) return PRIVATE;
+		return PUBLIC;
 	}
 }

@@ -50,10 +50,10 @@ public class InfoFriendsGUIPage extends InfoPage
 		*/
 	}
 	
-	public ButtonGuidePage createButton(GuiInfo gui)
+	public ButtonInfoPage createButton(GuiInfo gui)
 	{ return new Button(gui, this); }
 	
-	private class Button extends ButtonGuidePage
+	private class Button extends ButtonInfoPage
 	{
 		public Button(GuiInfo g, InfoFriendsGUIPage p)
 		{

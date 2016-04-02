@@ -1,39 +1,38 @@
 package ftb.lib.api.config;
 
+import latmod.lib.*;
+
 /**
- * Created by LatvianModder on 26.03.2016.
+ * Created by LatvianModder on 30.03.2016.
  */
 public enum ConfigEntryType
 {
-	BUTTON,
-	JSON_ELEMENT,
-	NBT_BASE,
-	GROUP,
-	BOOLEAN,
-	INT,
-	DOUBLE,
-	STRING,
-	ENUM,
-	COLOR,
-	INT_LIST,
-	//0xFF4F34
-	DOUBLE_LIST,
-	STRING_LIST;
+	CUSTOM(1),
+	GROUP(2),
+	BOOLEAN(3),
+	INT(4),
+	DOUBLE(5),
+	STRING(6),
+	ENUM(7),
+	INT_ARRAY(8),
+	STRING_ARRAY(9),
+	COLOR(10);
 	
-	public static ConfigEntry createNewEntry(String id, ConfigEntryType type)
+	public final byte ID;
+	
+	ConfigEntryType(int i)
 	{
-		if(id == null || id.isEmpty()) return null;
-		
-		switch(type)
+		ID = (byte) i;
+	}
+	
+	public ConfigEntry createNew(String id)
+	{
+		switch(this)
 		{
+			case CUSTOM:
+				return new ConfigEntryCustom(id);
 			case GROUP:
 				return new ConfigGroup(id);
-			case JSON_ELEMENT:
-				return new ConfigEntryJsonElement(id);
-			case NBT_BASE:
-				return new ConfigEntryNBTBase(id);
-			case BUTTON:
-				return new ConfigEntryButton(id);
 			case BOOLEAN:
 				return new ConfigEntryBool(id, false);
 			case INT:
@@ -41,16 +40,30 @@ public enum ConfigEntryType
 			case DOUBLE:
 				return new ConfigEntryDouble(id, 0D);
 			case STRING:
-				return new ConfigEntryString(id, "");
+				return new ConfigEntryString(id, null);
 			case ENUM:
-				return new ConfigEntryEnum<>(id, null, null, false);
+				return new ConfigEntryEnumExtended(id);
+			case INT_ARRAY:
+				return new ConfigEntryIntList(id, (IntList) null);
+			case STRING_ARRAY:
+				return new ConfigEntryStringList(id, null);
 			case COLOR:
-				return new ConfigEntryColor(id, null);
+				return new ConfigEntryColor(id, new LMColor.RGB());
+			default:
+				return null;
 		}
-		
-		return null;
 	}
 	
-	public boolean isArray()
-	{ return this == INT_LIST || this == DOUBLE_LIST || this == STRING_LIST; }
+	private static final ConfigEntryType[] types = new ConfigEntryType[32];
+	
+	static
+	{
+		for(ConfigEntryType t : values())
+		{
+			types[t.ID] = t;
+		}
+	}
+	
+	public static ConfigEntryType getFromID(byte id)
+	{ return types[id]; }
 }

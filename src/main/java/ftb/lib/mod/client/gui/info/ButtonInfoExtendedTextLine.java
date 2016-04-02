@@ -12,12 +12,12 @@ import java.util.*;
  * Created by LatvianModder on 04.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class ButtonGuideExtendedTextLine extends ButtonGuideTextLine
+public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 {
 	public final InfoExtendedTextLine line;
 	public List<String> hover;
 	
-	public ButtonGuideExtendedTextLine(GuiInfo g, InfoExtendedTextLine l)
+	public ButtonInfoExtendedTextLine(GuiInfo g, InfoExtendedTextLine l)
 	{
 		super(g, l);
 		line = l;
