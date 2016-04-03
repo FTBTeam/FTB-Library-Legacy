@@ -38,11 +38,11 @@ public class WidgetLM
 	public boolean mouseOver()
 	{ return mouseOver(getAX(), getAY()); }
 	
-	public void render(TextureCoords icon, double rw, double rh)
+	public final void render(TextureCoords icon, double rw, double rh)
 	{ GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), (int) (width * rw), (int) (height * rh)); }
 	
-	public void render(TextureCoords icon)
-	{ render(icon, 1D, 1D); }
+	public final void render(TextureCoords icon)
+	{ GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height); }
 	
 	public void mousePressed(int b)
 	{

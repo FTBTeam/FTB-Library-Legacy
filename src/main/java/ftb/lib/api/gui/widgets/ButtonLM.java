@@ -1,7 +1,6 @@
 package ftb.lib.api.gui.widgets;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.TextureCoords;
 import ftb.lib.api.gui.IGuiLM;
 import latmod.lib.LMUtils;
 
@@ -11,7 +10,6 @@ public abstract class ButtonLM extends WidgetLM
 	public int customID = 0;
 	private long lastClickMillis = LMUtils.millis();
 	public boolean doubleClickRequired = false;
-	public TextureCoords background = null;
 	
 	public ButtonLM(IGuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
@@ -32,10 +30,4 @@ public abstract class ButtonLM extends WidgetLM
 	}
 	
 	public abstract void onButtonPressed(int b);
-	
-	public void render(TextureCoords icon, double rw, double rh)
-	{
-		super.render(background, rw, rh);
-		super.render(icon, rw, rh);
-	}
 }
