@@ -99,6 +99,12 @@ client_config.ftbl.key_bindings=Key Bindings
 client_config.ftbl.edit_shortcuts=Edit Shortcuts
 client_config.ftbl.light_value_texture=Light Value Texture
 
+client_config.ftbl_info=FTBLib: InfoGUI
+client_config.ftbl_info.unicode=Use Unicode
+client_config.ftbl_info.text_color=Text Color
+client_config.ftbl_info.bg_color=Background Color
+client_config.ftbl_info.transparency=Transparency
+
 client_config.sidebar_buttons=Sidebar Buttons
 
 #PlayerActions

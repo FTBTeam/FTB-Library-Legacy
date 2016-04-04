@@ -22,5 +22,6 @@ public class FTBLibNetHandler
 		NET_GUI.register(MessageClientTileAction.class, 3, Side.SERVER);
 		NET_GUI.register(MessageClientItemAction.class, 4, Side.SERVER);
 		NET_GUI.register(MessageNotifyPlayer.class, 5, Side.CLIENT);
+		NET_GUI.register(MessageDisplayGuide.class, 6, Side.CLIENT);
 	}
 }

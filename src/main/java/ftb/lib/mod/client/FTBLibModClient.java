@@ -8,6 +8,7 @@ import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
+import ftb.lib.mod.client.gui.info.ClientSettings;
 import ftb.lib.mod.cmd.CmdReloadClient;
 import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
@@ -41,6 +42,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().func_148256_e().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
+		ClientConfigRegistry.addGroup("ftbl_info", ClientSettings.class);
 		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
 		
 		ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
