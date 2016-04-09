@@ -60,9 +60,9 @@ public class FTBLibMod
 	public void onPostInit(FMLPostInitializationEvent e)
 	{
 		ODItems.postInit();
-		proxy.postInit();
 		GameModes.reload();
 		ConfigRegistry.reload();
+		proxy.postInit();
 	}
 	
 	@Mod.EventHandler

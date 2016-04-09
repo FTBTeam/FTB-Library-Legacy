@@ -128,11 +128,20 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		for(InfoPage c : childPages.values()) c.sortAll();
 	}
 	
-	public void copyFrom(InfoPage c)
+	public void copyChildPagesFrom(InfoPage c)
 	{
 		for(InfoPage p : c.childPages.values())
 		{
 			addSub(p.copy().setParent(this));
+		}
+	}
+	
+	public void copyTextFrom(InfoPage c)
+	{
+		for(InfoTextLine l : c.text)
+		{
+			if(l == null) text.add(l);
+			else text.add(l.copy(this));
 		}
 	}
 	

@@ -1,7 +1,6 @@
 package ftb.lib;
 
-import cpw.mods.fml.relauncher.*;
-import net.minecraft.client.resources.I18n;
+import ftb.lib.api.LangKey;
 import net.minecraft.init.Items;
 import net.minecraft.item.*;
 
@@ -27,7 +26,7 @@ public enum EnumMCColor // ItemDye
 	public static final EnumMCColor[] VALUES = values();
 	
 	public final int ID;
-	public final String lang;
+	public final LangKey lang;
 	public final String name;
 	public final int color;
 	public final int colorBright;
@@ -40,7 +39,7 @@ public enum EnumMCColor // ItemDye
 	{
 		ID = ordinal();
 		name = ItemDye.field_150921_b[ID];
-		lang = "ftbl.color." + s.toLowerCase();
+		lang = new LangKey("ftbl.color." + s.toLowerCase());
 		color = ItemDye.field_150922_c[ID];
 		colorBright = c;
 		
@@ -48,10 +47,6 @@ public enum EnumMCColor // ItemDye
 		glassName = "blockGlass" + s;
 		paneName = "paneGlass" + s;
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public String toString()
-	{ return I18n.format(lang); }
 	
 	public ItemStack getDye(int s)
 	{ return new ItemStack(Items.dye, s, ID); }

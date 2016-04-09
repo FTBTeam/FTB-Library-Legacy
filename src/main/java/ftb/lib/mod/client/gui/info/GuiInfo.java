@@ -9,10 +9,11 @@ import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoTextLine;
 import latmod.lib.LMColor;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
-	public static final ResourceLocation tex = new ResourceLocation("ftbu", "textures/gui/guide.png");
+	public static final ResourceLocation tex = new ResourceLocation("ftbl", "textures/gui/info.png");
 	public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
 	public static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
 	public static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);
@@ -28,8 +29,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	public static final TextureCoords tex_bg_NP = new TextureCoords(tex, 0, 16, 13, 13, 64, 64);
 	public static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
 	
-	public int panelWidth;
-	
 	public final GuiInfo parentGui;
 	public final InfoPage page;
 	public final String pageTitle;
@@ -39,6 +38,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	public final ButtonLM buttonBack, buttonSpecial;
 	
 	public final PanelLM panelPages, panelText;
+	public int panelWidth;
 	public int colorText, colorBackground;
 	public boolean useUnicodeFont;
 	
@@ -170,8 +170,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	
 	public void initLMGui()
 	{
-		mainPanel.width = width;
-		mainPanel.height = height;
+		mainPanel.posX = 25;
+		mainPanel.posY = 25;
+		mainPanel.width = width - 50;
+		mainPanel.height = height - 50;
 		panelWidth = mainPanel.width / 7 * 2;
 		
 		panelPages.posX = 10;
@@ -181,7 +183,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		panelText.posX = panelWidth + 10;
 		panelText.posY = 10;
-		panelText.width = width - panelWidth - 20 - sliderText.width;
+		panelText.width = mainPanel.width - panelWidth - 20 - sliderText.width;
 		panelText.height = mainPanel.height - 20;
 		
 		sliderPages.posX = panelWidth - sliderPages.width - 10;
@@ -242,6 +244,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 			panelText.posY = (int) (10F - (sliderText.value * (panelText.height - (mainPanel.height - 20F))));
 		}
 		
+		//GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		//scissor(20, 20, mainPanel.width - 40, mainPanel.height - 40);
+		
 		super.drawBackground();
 		
 		FTBLibClient.setTexture(texture);
@@ -249,16 +254,22 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		renderFilling(panelWidth, 0, mainPanel.width - panelWidth, mainPanel.height, ClientSettings.transparency.getAsInt());
-		renderFilling(0, 36, panelWidth, mainPanel.height - 32, 255);
+		renderFilling(0, 36, panelWidth, mainPanel.height - 36, 255);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
 		fontRendererObj.setUnicodeFlag(useUnicodeFont);
 		
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		scissor(panelText.getAX(), mainPanel.posY + 4, panelText.width, mainPanel.height - 8);
 		panelText.renderWidget();
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		
 		fontRendererObj.setUnicodeFlag(uni);
 		
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		scissor(panelPages.getAX(), mainPanel.posY + 40, panelPages.width, mainPanel.height - 44);
 		panelPages.renderWidget();
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
@@ -285,6 +296,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	private void renderBorders(int px, int py, int w, int h)
 	{
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		px += mainPanel.posX;
+		py += mainPanel.posY;
+		
 		render(tex_bg_NN, px, py, zLevel, 13, 13);
 		render(tex_bg_NP, px, py + h - 13, zLevel, 13, 13);
 		render(tex_bg_PN, px + w - 13, py, zLevel, 13, 13);
@@ -299,7 +313,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	private void renderFilling(int px, int py, int w, int h, int a)
 	{
 		FTBLibClient.setGLColor(colorBackground, a);
-		drawBlankRect(px + 4, py + 4, zLevel, w - 8, h - 8);
+		drawBlankRect(mainPanel.posX + px + 4, mainPanel.posY + py + 4, zLevel, w - 8, h - 8);
 	}
 	
 	public void onClientDataChanged()

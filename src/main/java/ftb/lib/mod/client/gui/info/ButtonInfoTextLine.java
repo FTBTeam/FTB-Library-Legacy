@@ -58,7 +58,6 @@ public class ButtonInfoTextLine extends ButtonLM
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) return;
 		int ax = getAX();
 		
 		boolean mouseOver = mouseOver();
@@ -67,7 +66,7 @@ public class ButtonInfoTextLine extends ButtonLM
 		{
 			for(int i = 0; i < text.size(); i++)
 			{
-				guiInfo.getFontRenderer().drawString(text.get(i), ax, ay + i * 10, guiInfo.colorText);
+				guiInfo.getFontRenderer().drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
 			}
 		}
 		

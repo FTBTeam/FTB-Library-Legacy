@@ -18,12 +18,10 @@ public abstract class ItemLM extends Item implements IItemLM
 		super();
 		itemName = s;
 		setUnlocalizedName(getMod().getItemName(s));
+		setCreativeTab(CreativeTabs.tabMisc);
 	}
 	
 	public abstract LMMod getMod();
-	
-	@SideOnly(Side.CLIENT)
-	public abstract CreativeTabs getCreativeTab();
 	
 	public final Item getItem()
 	{ return this; }

@@ -19,6 +19,7 @@ import java.util.List;
 
 public abstract class BlockLM extends Block implements IBlockLM
 {
+	private boolean isBlockContainer;
 	public final String blockName;
 	
 	public BlockLM(String s, Material m)
@@ -36,9 +37,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public abstract LMMod getMod();
 	
-	@SideOnly(Side.CLIENT)
-	public abstract CreativeTabs getCreativeTabToDisplayOn();
-	
 	public final String getItemID()
 	{ return blockName; }
 	
@@ -53,7 +51,10 @@ public abstract class BlockLM extends Block implements IBlockLM
 	{ return meta; }
 	
 	public boolean hasTileEntity(int meta)
-	{ return isBlockContainer; }
+	{ return false; }
+	
+	public TileEntity createTileEntity(World world, int metadata)
+	{ return null; }
 	
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs c, List l)
@@ -104,9 +105,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 		
 		return super.getExplosionResistance(entity, w, x, y, z, explosionX, explosionY, explosionZ);
 	}
-	
-	public int getMobilityFlag()
-	{ return isBlockContainer ? 2 : 0; }
 	
 	public void breakBlock(World w, int x, int y, int z, Block block, int meta)
 	{

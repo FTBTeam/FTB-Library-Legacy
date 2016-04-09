@@ -7,7 +7,7 @@ import java.util.*;
 
 public class LMAccessToken
 {
-	private static final HashMap<UUID, Long> tokens = new HashMap<>();
+	private static final Map<UUID, Long> tokens = new HashMap<>();
 	private static final Random random = new Random();
 	
 	public static long generate(EntityPlayerMP ep)

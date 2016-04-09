@@ -10,14 +10,14 @@ import net.minecraftforge.common.DimensionManager;
 
 public class LMDimUtils
 {
-	public static boolean teleportPlayer(Entity entity, EntityPos pos)
-	{ return pos != null && teleportPlayer(entity, pos.x, pos.y, pos.z, pos.dim); }
+	public static boolean teleportEntity(Entity entity, EntityPos pos)
+	{ return pos != null && teleportEntity(entity, pos.x, pos.y, pos.z, pos.dim); }
 	
-	public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
-	{ return pos != null && teleportPlayer(entity, pos.x + 0.5D, pos.y + 0.5D, pos.z + 0.5D, pos.dim); }
+	public static boolean teleportEntity(Entity entity, BlockDimPos pos)
+	{ return pos != null && teleportEntity(entity, pos.x + 0.5D, pos.y + 0.5D, pos.z + 0.5D, pos.dim); }
 	
 	//tterrag's code, I don't own it. Maybe he doesn't too.. but who cares, eh?
-	public static boolean teleportPlayer(Entity entity, double x, double y, double z, int dim)
+	public static boolean teleportEntity(Entity entity, double x, double y, double z, int dim)
 	{
 		if(entity == null) return false;
 		entity.fallDistance = 0F;

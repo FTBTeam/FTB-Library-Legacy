@@ -12,7 +12,7 @@ public class GameModes
 	public final Map<String, GameMode> modes;
 	public final GameMode defaultMode;
 	public final GameMode commonMode;
-	public final Map<String, String> customData;
+	private final Map<String, JsonElement> customData;
 	
 	private static JsonObject createDefault()
 	{
@@ -21,7 +21,6 @@ public class GameModes
 		a.add(new JsonPrimitive("default"));
 		o.add("modes", a);
 		o.add("default", new JsonPrimitive("default"));
-		o.add("common", new JsonPrimitive("common"));
 		return o;
 	}
 	
@@ -30,7 +29,7 @@ public class GameModes
 		if(e == null || !e.isJsonObject()) return false;
 		JsonObject o = e.getAsJsonObject();
 		if(o == null || o.entrySet().isEmpty()) return false;
-		return o.has("modes") && o.has("default") && o.has("common");
+		return o.has("modes") && o.has("default");
 	}
 	
 	public GameModes(JsonElement el)
@@ -49,19 +48,22 @@ public class GameModes
 		
 		defaultMode = modes0.get(o.get("default").getAsString());
 		
-		String common = o.get("common").getAsString();
-		if(modes0.containsKey(common)) throw new RuntimeException("FTBLib: common mode name can't be one of 'modes'!");
-		commonMode = new GameMode(common);
+		if(modes0.containsKey("common"))
+		{
+			throw new RuntimeException("FTBLib: common mode name can't be one of 'modes'!");
+		}
+		
+		commonMode = new GameMode("common");
 		
 		modes = Collections.unmodifiableMap(modes0);
 		
-		HashMap<String, String> customData0 = new HashMap<>();
+		Map<String, JsonElement> customData0 = new LinkedHashMap<>();
 		
 		if(o.has("custom"))
 		{
 			JsonObject o1 = o.get("custom").getAsJsonObject();
 			for(Map.Entry<String, JsonElement> e : o1.entrySet())
-				customData0.put(e.getKey(), e.getValue().getAsString());
+				customData0.put(e.getKey(), e.getValue());
 		}
 		
 		customData = Collections.unmodifiableMap(customData0);
@@ -71,23 +73,33 @@ public class GameModes
 	{
 		JsonObject o = new JsonObject();
 		
+		o.add("default", new JsonPrimitive(defaultMode.getID()));
 		JsonArray a = new JsonArray();
 		for(GameMode m : modes.values())
 			a.add(new JsonPrimitive(m.getID()));
 		o.add("modes", a);
 		
-		o.add("default", new JsonPrimitive(defaultMode.getID()));
-		o.add("common", new JsonPrimitive(commonMode.getID()));
-		
 		if(!customData.isEmpty())
 		{
 			JsonObject o1 = new JsonObject();
-			for(Map.Entry<String, String> e : customData.entrySet())
-				o1.add(e.getKey(), new JsonPrimitive(e.getValue()));
+			for(Map.Entry<String, JsonElement> e : customData.entrySet())
+				o1.add(e.getKey(), e.getValue());
 			o.add("custom", o1);
 		}
 		
 		return o;
+	}
+	
+	public JsonElement getCustomData(String key)
+	{
+		JsonElement e = customData.get(key);
+		return e == null ? JsonNull.INSTANCE : e;
+	}
+	
+	public void setCustomData(String key, JsonElement e)
+	{
+		if(e == null || e.isJsonNull()) customData.remove(key);
+		else customData.put(key, e);
 	}
 	
 	// Static //

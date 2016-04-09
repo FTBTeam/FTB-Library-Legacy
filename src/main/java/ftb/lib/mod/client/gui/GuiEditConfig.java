@@ -254,7 +254,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		public void renderWidget()
 		{
-			if(!isVisible()) return;
 			boolean mouseOver = gui.mouse().y >= 20 && mouseOver();
 			
 			int ax = getAX();

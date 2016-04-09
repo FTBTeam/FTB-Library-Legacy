@@ -26,6 +26,22 @@ public class WidgetLM
 	public boolean isEnabled()
 	{ return true; }
 	
+	public boolean isVisible()
+	{
+		PanelLM p = gui.getMainPanel();
+		int a0 = getAY();
+		int a1 = p.getAY();
+		
+		if(a0 < a1 + p.height && a0 + height > a1)
+		{
+			a0 = getAX();
+			a1 = p.getAX();
+			return (a0 < a1 + p.width && a0 + width > a1);
+		}
+		
+		return false;
+	}
+	
 	public int getAX()
 	{ return (parentPanel == null) ? posX : (parentPanel.getAX() + posX); }
 	

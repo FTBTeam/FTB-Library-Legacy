@@ -29,6 +29,10 @@ public class InfoTextLine implements IJsonSerializable
 			{
 				l = new InfoImageLine(c);
 			}
+			else if(o.has("recipe"))
+			{
+				l = new InfoRecipeLine(c);
+			}
 			else
 			{
 				l = new InfoExtendedTextLine(c, null);
@@ -60,4 +64,7 @@ public class InfoTextLine implements IJsonSerializable
 	
 	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(text); }
+	
+	public final InfoTextLine copy(InfoPage p)
+	{ return get(p, getSerializableElement()); }
 }

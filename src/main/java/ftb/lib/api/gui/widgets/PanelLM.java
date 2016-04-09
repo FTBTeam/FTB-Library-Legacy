@@ -34,16 +34,15 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		}
 	}
 	
-	public void addAll(WidgetLM[] l)
+	public void addAll(Iterable<? extends WidgetLM> l)
 	{
-		if(l == null || l.length == 0) return;
-		for(int i = 0; i < l.length; i++) add(l[i]);
-	}
-	
-	public void addAll(List<? extends WidgetLM> l)
-	{
-		if(l == null || l.isEmpty()) return;
-		for(WidgetLM w : l) add(w);
+		if(l != null)
+		{
+			for(WidgetLM w : l)
+			{
+				add(w);
+			}
+		}
 	}
 	
 	public void refreshWidgets()
@@ -55,6 +54,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	public void addMouseOverText(List<String> l)
 	{
 		if(title != null) l.add(title);
+		
 		for(WidgetLM w : widgets)
 			if(w.isEnabled() && w.mouseOver()) w.addMouseOverText(l);
 	}
@@ -74,7 +74,12 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 	
 	public void renderWidget()
 	{
-		for(int i = 0; i < widgets.size(); i++)
-			widgets.get(i).renderWidget();
+		for(WidgetLM w : widgets)
+		{
+			if(w.isVisible())
+			{
+				w.renderWidget();
+			}
+		}
 	}
 }

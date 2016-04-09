@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.*;
 import org.lwjgl.BufferUtils;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.*;
 
@@ -128,6 +129,20 @@ public class FTBLibClient
 		if(img == null)
 		{
 			img = new ThreadDownloadImageData(null, url, def, buffer);
+			t.loadTexture(out, img);
+		}
+		
+		return img;
+	}
+	
+	public static ThreadDownloadImageData getLocalImage(ResourceLocation out, File file, ResourceLocation def, IImageBuffer buffer)
+	{
+		TextureManager t = mc.getTextureManager();
+		ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);
+		
+		if(img == null)
+		{
+			img = new ThreadDownloadImageData(file, null, def, buffer);
 			t.loadTexture(out, img);
 		}
 		
@@ -242,5 +257,24 @@ public class FTBLibClient
 		itemRender.renderItemOverlayIntoGUI(f, FTBLibClient.mc.getTextureManager(), is, x, y, null);
 		GlStateManager.popMatrix();
 		GlStateManager.popAttrib();
+	}
+	
+	public static int computeGuiScale()
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+		int scaleFactor = 1;
+		
+		int k = mc.gameSettings.guiScale;
+		
+		if(k == 0)
+		{
+			k = 1000;
+		}
+		
+		while(scaleFactor < k && mc.displayWidth / (scaleFactor + 1) >= 320 && mc.displayHeight / (scaleFactor + 1) >= 240)
+		{
+			++scaleFactor;
+		}
+		return scaleFactor;
 	}
 }

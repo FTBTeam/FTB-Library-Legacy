@@ -8,7 +8,7 @@ import net.minecraft.util.*;
 /**
  * Created by LatvianModder on 29.03.2016.
  */
-public class LangKey extends FinalIDObject
+public final class LangKey extends FinalIDObject
 {
 	public LangKey(String s)
 	{ super(s); }

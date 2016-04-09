@@ -21,8 +21,8 @@ public class ConfigEntryString extends ConfigEntry
 	public int getColor()
 	{ return 0xFFAA49; }
 	
-	public void set(String o)
-	{ value = o == null ? "" : o; }
+	public void set(Object o)
+	{ value = o == null ? "" : String.valueOf(o); }
 	
 	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsString()); }
