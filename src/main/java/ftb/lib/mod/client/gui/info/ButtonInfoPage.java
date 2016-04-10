@@ -65,8 +65,7 @@ public class ButtonInfoPage extends ButtonLM
 		
 		if(gui.getFontRenderer().getStringWidth(title) > width)
 		{
-			hover = title + "";
-			title = gui.getFontRenderer().trimStringToWidth(title, width - 3) + "...";
+			hover = page.getTitleComponent().getFormattedText();
 		}
 	}
 	

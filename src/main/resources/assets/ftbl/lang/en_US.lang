@@ -104,6 +104,8 @@ client_config.ftbl_info.unicode=Use Unicode
 client_config.ftbl_info.text_color=Text Color
 client_config.ftbl_info.bg_color=Background Color
 client_config.ftbl_info.transparency=Transparency
+client_config.ftbl_info.border_width=Border Width
+client_config.ftbl_info.border_height=Border Height
 
 client_config.sidebar_buttons=Sidebar Buttons
 

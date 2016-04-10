@@ -13,6 +13,9 @@ public final class LangKey extends FinalIDObject
 	public LangKey(String s)
 	{ super(s); }
 	
+	public LangKey sub(String id)
+	{ return new LangKey(getID() + '.' + id); }
+	
 	@SideOnly(Side.CLIENT)
 	public String format(Object... o)
 	{ return I18n.format(getID(), o); }

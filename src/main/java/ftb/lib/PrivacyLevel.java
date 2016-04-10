@@ -11,7 +11,7 @@ public enum PrivacyLevel
 	
 	public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, FRIENDS};
 	public static final PrivacyLevel[] VALUES_2 = new PrivacyLevel[] {PUBLIC, PRIVATE};
-	public static final String enumLangKey = "ftbl.security";
+	public static final LangKey enumLangKey = new LangKey("ftbl.security");
 	
 	public final int ID;
 	public final LangKey lang;
@@ -19,7 +19,7 @@ public enum PrivacyLevel
 	PrivacyLevel()
 	{
 		ID = ordinal();
-		lang = new LangKey(enumLangKey + '.' + name().toLowerCase());
+		lang = new LangKey("ftbl.security." + name().toLowerCase());
 	}
 	
 	public boolean isPublic()

@@ -10,7 +10,7 @@ public enum InvMode
 	DISABLED("disabled");
 	
 	public static final InvMode[] VALUES = values();
-	public static final String enumLangKey = "ftbl.invmode";
+	public static final LangKey enumLangKey = new LangKey("ftbl.invmode");
 	
 	public final int ID;
 	public final LangKey lang;
@@ -18,7 +18,7 @@ public enum InvMode
 	InvMode(String s)
 	{
 		ID = ordinal();
-		lang = new LangKey(enumLangKey + '.' + s);
+		lang = new LangKey("ftbl.invmode." + s);
 	}
 	
 	public InvMode next()

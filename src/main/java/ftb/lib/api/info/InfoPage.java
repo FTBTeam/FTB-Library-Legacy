@@ -57,7 +57,12 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	}
 	
 	public void println(IChatComponent c)
-	{ text.add(c == null ? null : new InfoExtendedTextLine(this, c)); }
+	{
+		if(c == null) text.add(null);
+		else if(c instanceof ChatComponentText && c.getChatStyle().isEmpty() && c.getSiblings().isEmpty())
+			printlnText(((ChatComponentText) c).getChatComponentText_TextValue());
+		else text.add(new InfoExtendedTextLine(this, c));
+	}
 	
 	public void printlnText(String s)
 	{ text.add((s == null || s.isEmpty()) ? null : new InfoTextLine(this, s)); }

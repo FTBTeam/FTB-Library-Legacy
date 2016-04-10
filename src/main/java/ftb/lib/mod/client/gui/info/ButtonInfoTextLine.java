@@ -1,8 +1,6 @@
 package ftb.lib.mod.client.gui.info;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.client.GlStateManager;
-import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.lines.InfoTextLine;
 import net.minecraft.util.IChatComponent;
@@ -60,20 +58,12 @@ public class ButtonInfoTextLine extends ButtonLM
 		int ay = getAY();
 		int ax = getAX();
 		
-		boolean mouseOver = mouseOver();
-		
 		if(text != null)
 		{
 			for(int i = 0; i < text.size(); i++)
 			{
 				guiInfo.getFontRenderer().drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
 			}
-		}
-		
-		if(mouseOver)
-		{
-			GlStateManager.color(0F, 0F, 0F, 0.101F);
-			GuiLM.drawBlankRect(ax, ay, guiInfo.getZLevel(), width, height);
 		}
 	}
 }

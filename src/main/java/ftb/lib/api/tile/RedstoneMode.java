@@ -9,7 +9,7 @@ public enum RedstoneMode
 	ACTIVE_LOW("low");
 	
 	public static final RedstoneMode[] VALUES = values();
-	public static final String enumLangKey = "ftbl.redstonemode";
+	public static final LangKey enumLangKey = new LangKey("ftbl.redstonemode");
 	
 	public final int ID;
 	public final LangKey lang;
@@ -17,7 +17,7 @@ public enum RedstoneMode
 	RedstoneMode(String s)
 	{
 		ID = ordinal();
-		lang = new LangKey(enumLangKey + '.' + s);
+		lang = new LangKey("ftbl.redstonemode." + s);
 	}
 	
 	public boolean cancel(boolean b)

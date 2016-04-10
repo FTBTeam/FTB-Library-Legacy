@@ -170,11 +170,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	
 	public void initLMGui()
 	{
-		mainPanel.posX = 25;
-		mainPanel.posY = 25;
-		mainPanel.width = width - 50;
-		mainPanel.height = height - 50;
-		panelWidth = mainPanel.width / 7 * 2;
+		mainPanel.posX = ClientSettings.border_width.getAsInt();
+		mainPanel.posY = ClientSettings.border_height.getAsInt();
+		mainPanel.width = width - ClientSettings.border_width.getAsInt() * 2;
+		mainPanel.height = height - ClientSettings.border_height.getAsInt() * 2;
+		panelWidth = (int) (mainPanel.width * 2D / 7D);
 		
 		panelPages.posX = 10;
 		panelPages.posY = 46;
@@ -192,7 +192,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		sliderText.posY = 10;
 		sliderText.height = mainPanel.height - 20;
-		sliderText.posX = panelText.getAX() + panelText.width + 1;
+		sliderText.posX = mainPanel.width - 10 - sliderText.width;
 		
 		buttonBack.posX = 12;
 		buttonBack.posY = 12;
@@ -206,7 +206,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		colorBackground = 0xFF000000 | c.color();
 		
 		Boolean b = page.useUnicodeFont();
-		useUnicodeFont = (b == null) ? ClientSettings.unicode.getAsBoolean() : b.booleanValue();
+		if(b == null) b = ClientSettings.unicode.getAsBoolean();
+		useUnicodeFont = b;
 		
 		if(buttonSpecial != null)
 		{
