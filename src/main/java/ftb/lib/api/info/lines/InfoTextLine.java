@@ -3,6 +3,7 @@ package ftb.lib.api.info.lines;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.recipes.InfoRecipeLine;
 import ftb.lib.mod.client.gui.info.*;
 import net.minecraft.util.*;
 

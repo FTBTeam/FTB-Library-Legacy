@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.info;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.*;
-import ftb.lib.api.info.lines.InfoRecipeLine;
+import ftb.lib.api.info.lines.recipes.InfoRecipeLine;
 import latmod.lib.util.Pos2I;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;

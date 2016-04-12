@@ -1,8 +1,9 @@
-package ftb.lib.api.info.lines;
+package ftb.lib.api.info.lines.recipes;
 
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.mod.client.gui.info.*;
 import net.minecraft.item.ItemStack;
 
@@ -31,8 +32,6 @@ public class InfoRecipeLine extends InfoExtendedTextLine
 		super.func_152753_a(e);
 		
 		JsonObject o = e.getAsJsonObject();
-		
-		
 	}
 	
 	public JsonElement getSerializableElement()

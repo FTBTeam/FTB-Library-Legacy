@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.io.File;
 import java.util.*;
 
 public class InfoPage extends FinalIDObject implements IJsonSerializable // GuideFile
@@ -133,20 +132,19 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		for(InfoPage c : childPages.values()) c.sortAll();
 	}
 	
-	public void copyChildPagesFrom(InfoPage c)
-	{
-		for(InfoPage p : c.childPages.values())
-		{
-			addSub(p.copy().setParent(this));
-		}
-	}
-	
-	public void copyTextFrom(InfoPage c)
+	public void copyFrom(InfoPage c)
 	{
 		for(InfoTextLine l : c.text)
 		{
 			if(l == null) text.add(l);
 			else text.add(l.copy(this));
+		}
+		
+		for(InfoPage p : c.childPages.values())
+		{
+			InfoPage p1 = new InfoPage(p.getID());
+			p1.copyFrom(p);
+			addSub(p1);
 		}
 	}
 	
@@ -226,47 +224,6 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		useUnicodeFont = o.has("UUF") ? o.get("UUF").getAsBoolean() : null;
 	}
 	
-	protected static void loadFromFiles(InfoPage c, File f)
-	{
-		if(f == null || !f.exists()) return;
-		
-		if(f.isDirectory())
-		{
-			File[] f1 = f.listFiles();
-			
-			if(f1 != null && f1.length > 0)
-			{
-				Arrays.sort(f1, LMFileUtils.fileComparator);
-				InfoPage c1 = c.getSub(f.getName());
-				for(File f2 : f1) loadFromFiles(c1, f2);
-			}
-		}
-		else if(f.isFile())
-		{
-			if(f.getName().endsWith(".txt"))
-			{
-				try
-				{
-					InfoPage c1 = c.getSub(LMFileUtils.getRawFileName(f));
-					
-					for(String s : LMFileUtils.load(f))
-					{
-						if(s.isEmpty()) c1.text.add(null);
-						else if(s.length() > 2 && s.charAt(0) == '{' && s.charAt(s.length() - 1) == '}')
-						{
-							c1.text.add(InfoTextLine.get(c1, LMJsonUtils.fromJson(s)));
-						}
-						else c1.text.add(new InfoTextLine(c1, s));
-					}
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
 	public void displayGuide(EntityPlayerMP ep)
 	{
 		if(ep != null && !(ep instanceof FakePlayer)) new MessageDisplayGuide(this).sendTo(ep);
@@ -298,5 +255,19 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	{
 		if(parent == null) return getID();
 		return parent.getFullID() + '.' + getID();
+	}
+	
+	public String getPath()
+	{
+		if(parent == null) return getID();
+		return parent.getFullID() + '/' + getID();
+	}
+	
+	public void loadText(List<String> list) throws Exception
+	{
+		for(JsonElement e : LMJsonUtils.deserializeText(list))
+		{
+			text.add(InfoTextLine.get(this, e));
+		}
 	}
 }
