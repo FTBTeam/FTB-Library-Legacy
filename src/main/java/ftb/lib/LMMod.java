@@ -4,12 +4,10 @@ import cpw.mods.fml.common.*;
 import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
 
 import java.util.*;
 
@@ -57,9 +55,6 @@ public class LMMod extends FinalIDObject
 	public String getItemName(String s)
 	{ return lowerCaseModID + ".item." + s; }
 	
-	public String translate(String s, Object... args)
-	{ return FTBLibMod.proxy.translate(lowerCaseModID + '.' + s, args); }
-	
 	public void addItem(IItemLM i)
 	{
 		if(i instanceof IBlockLM)
@@ -89,7 +84,4 @@ public class LMMod extends FinalIDObject
 	{
 		for(IItemLM i : itemsAndBlocks) i.loadRecipes();
 	}
-	
-	public IChatComponent chatComponent(String s, Object... obj)
-	{ return new ChatComponentTranslation(lowerCaseModID + '.' + s, obj); }
 }

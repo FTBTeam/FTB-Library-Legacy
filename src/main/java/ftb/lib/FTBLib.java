@@ -84,8 +84,7 @@ public class FTBLib
 		if(ftbu != null) ftbu.onReloaded(event);
 		event.post();
 		
-		if(printMessage)
-			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloaded_server", ((LMUtils.millis() - ms) + "ms")));
+		if(printMessage) FTBLibLang.reload_server.printChat(BroadcastSender.inst, (LMUtils.millis() - ms) + "ms");
 		new MessageReload(FTBWorld.server, 2).sendTo(null);
 	}
 	

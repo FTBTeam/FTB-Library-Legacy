@@ -1,17 +1,18 @@
 package ftb.lib.api;
 
+import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
+import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
 public abstract class PlayerAction extends FinalIDObject
 {
-	public static enum Type
+	public enum Type
 	{
 		SELF,
 		OTHER,
@@ -45,8 +46,9 @@ public abstract class PlayerAction extends FinalIDObject
 	
 	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
 	
+	@SideOnly(Side.CLIENT)
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("player_action." + getID()); }
+	{ return I18n.format("player_action." + getID()); }
 	
 	public void addMouseOverText(List<String> l) { }
 	

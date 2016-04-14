@@ -3,6 +3,7 @@ package ftb.lib.api;
 import cpw.mods.fml.relauncher.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.*;
 
 /**
@@ -22,4 +23,7 @@ public final class LangKey extends FinalIDObject
 	
 	public IChatComponent chatComponent(Object... o)
 	{ return new ChatComponentTranslation(getID(), o); }
+	
+	public void printChat(ICommandSender ics, Object... o)
+	{ if(ics != null) ics.addChatMessage(chatComponent(o)); }
 }

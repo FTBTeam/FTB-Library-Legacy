@@ -4,10 +4,10 @@ import com.google.gson.JsonElement;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiScreenRegistry;
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.resources.I18n;
 
 import java.io.File;
 import java.net.URI;
@@ -22,8 +22,9 @@ public abstract class ClickActionType extends FinalIDObject
 	@SideOnly(Side.CLIENT)
 	public abstract void onClicked(JsonElement data);
 	
+	@SideOnly(Side.CLIENT)
 	public String getDisplayName()
-	{ return FTBLibMod.proxy.translate("click_action." + getID()); }
+	{ return I18n.format("click_action." + getID()); }
 	
 	// Static //
 	
@@ -31,7 +32,7 @@ public abstract class ClickActionType extends FinalIDObject
 	{
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
-		{ FTBLibClient.execClientCommand("/" + data.getAsString()); }
+		{ FTBLibClient.execClientCommand('/' + data.getAsString()); }
 	};
 	
 	public static final ClickActionType SHOW_CMD = new ClickActionType("show_cmd")

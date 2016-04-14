@@ -9,12 +9,12 @@ import ftb.lib.api.config.ClientConfigRegistry;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.notification.ClientNotifications;
-import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.gui.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import org.lwjgl.opengl.GL11;
@@ -50,7 +50,7 @@ public class FTBLibActions
 		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
 		public String getDisplayName()
-		{ return FTBLibMod.proxy.translate(FTBLibModClient.notifications.getFullID()); }
+		{ return I18n.format(FTBLibModClient.notifications.getFullID()); }
 		
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
 		{ return !ClientNotifications.Perm.list.isEmpty(); }

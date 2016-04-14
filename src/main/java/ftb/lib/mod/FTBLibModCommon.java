@@ -3,7 +3,6 @@ package ftb.lib.mod;
 import ftb.lib.api.tile.IGuiTile;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -16,12 +15,6 @@ public class FTBLibModCommon // FTBLibModClient
 	
 	public void postInit()
 	{
-	}
-	
-	public String translate(String key, Object... obj)
-	{
-		if(obj == null || obj.length == 0) return StatCollector.translateToLocal(key);
-		return StatCollector.translateToLocalFormatted(key, obj);
 	}
 	
 	public boolean isShiftDown()

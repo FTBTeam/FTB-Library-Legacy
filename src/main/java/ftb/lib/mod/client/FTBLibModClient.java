@@ -14,7 +14,6 @@ import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -54,9 +53,6 @@ public class FTBLibModClient extends FTBLibModCommon
 	{
 		ClientConfigRegistry.provider().getConfigGroup();
 	}
-	
-	public String translate(String key, Object... obj)
-	{ return I18n.format(key, obj); }
 	
 	public boolean isShiftDown()
 	{ return GuiScreen.isShiftKeyDown(); }

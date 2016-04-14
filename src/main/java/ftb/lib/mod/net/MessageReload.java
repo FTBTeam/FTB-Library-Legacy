@@ -6,7 +6,7 @@ import ftb.lib.api.*;
 import ftb.lib.api.config.*;
 import ftb.lib.api.net.*;
 import ftb.lib.api.notification.*;
-import ftb.lib.mod.FTBLibMod;
+import ftb.lib.mod.*;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class MessageReload extends MessageLM
 		
 		if(reload == 0)
 		{
-			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
+			Notification n = new Notification("reload_client_config", FTBLibLang.reload_client_config.chatComponent(), 7000);
 			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			n.desc = new ChatComponentText("/" + FTBLibModClient.reload_client_cmd.getAsString());
 			n.setColor(0xFF333333);
@@ -74,7 +74,7 @@ public class MessageReload extends MessageLM
 		
 		if(printMessage)
 		{
-			FTBLib.printChat(ep, FTBLibMod.mod.chatComponent("reloaded_client", ((LMUtils.millis() - ms) + "ms")));
+			FTBLibLang.reload_client.printChat(ep, (LMUtils.millis() - ms) + "ms");
 		}
 		
 		FTBLibMod.logger.info("Current Mode: " + FTBWorld.client.getMode());

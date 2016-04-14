@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.FTBLibLang;
+import ftb.lib.api.GuiLang;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
@@ -165,7 +165,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		mainPanel.add(panelText);
 		mainPanel.add(buttonSpecial);
 		
-		buttonBack.title = (parentGui == null) ? FTBLibLang.button_close.format() : FTBLibLang.button_back.format();
+		buttonBack.title = (parentGui == null) ? GuiLang.button_close.format() : GuiLang.button_back.format();
 	}
 	
 	public void initLMGui()

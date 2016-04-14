@@ -1,9 +1,9 @@
 package ftb.lib.api;
 
-public class FTBLibLang
+public class GuiLang
 {
 	private static final LangKey get(String s)
-	{ return new LangKey("ftbl." + s); }
+	{ return new LangKey("gui_lm." + s); }
 	
 	public static final LangKey button_settings = get("button.settings");
 	public static final LangKey button_back = get("button.back");
@@ -20,12 +20,6 @@ public class FTBLibLang
 	public static final LangKey button_refresh = get("button.refresh");
 	public static final LangKey button_edit = get("button.edit");
 	public static final LangKey button_info = get("button.info");
-	
-	public static final LangKey client_config = get("client_config");
-	public static final LangKey feature_disabled = get("feature_disabled");
-	public static final LangKey invalid_subcmd = get("invalid_subcmd");
-	public static final LangKey missing_args = get("missing_args");
-	public static final LangKey delete_item = get("delete_item");
 	
 	public static final LangKey label_server_forced = get("label.server_forced");
 	public static final LangKey label_true = get("label.true");

@@ -3,8 +3,8 @@ package ftb.lib.mod.cmd;
 import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.*;
-import ftb.lib.mod.FTBLibMod;
-import latmod.lib.LMListUtils;
+import ftb.lib.mod.FTBLibLang;
+import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
 
@@ -42,17 +42,17 @@ public class CmdMode extends CommandSubLM
 			
 			if(i == 1)
 			{
-				c = FTBLibMod.mod.chatComponent("gamemode.not_found");
+				c = FTBLibLang.mode_not_found.chatComponent();
 				c.getChatStyle().setColor(EnumChatFormatting.RED);
 			}
 			else if(i == 2)
 			{
-				c = FTBLibMod.mod.chatComponent("gamemode.already_set");
+				c = FTBLibLang.mode_already_set.chatComponent();
 				c.getChatStyle().setColor(EnumChatFormatting.RED);
 			}
 			else
 			{
-				c = FTBLibMod.mod.chatComponent("gamemode.loaded", args[0]);
+				c = FTBLibLang.mode_loaded.chatComponent();
 				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
 				FTBLib.reload(ics, true, true);
 			}
@@ -68,7 +68,7 @@ public class CmdMode extends CommandSubLM
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = FTBLibMod.mod.chatComponent("gamemode.current", FTBWorld.server.getMode());
+			IChatComponent c = FTBLibLang.mode_current.chatComponent(FTBWorld.server.getMode().getID());
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			return c;
 		}
@@ -81,7 +81,7 @@ public class CmdMode extends CommandSubLM
 		
 		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			IChatComponent c = FTBLibMod.mod.chatComponent("gamemode.list", joinNiceStringFromCollection(GameModes.getGameModes().modes.keySet()));
+			IChatComponent c = FTBLibLang.mode_list.chatComponent(LMStringUtils.strip(GameModes.getGameModes().modes.keySet()));
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
 			return c;
 		}

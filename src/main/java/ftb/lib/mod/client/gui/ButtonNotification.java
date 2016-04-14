@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.api.FTBLibLang;
+import ftb.lib.api.GuiLang;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.ButtonLM;
@@ -76,7 +76,7 @@ public class ButtonNotification extends ButtonLM
 		int ax = getAX();
 		if(mouseOver(ax, getAY()) && gui.mouse().x >= ax + width - 16)
 		{
-			l.add(FTBLibLang.button_close.format());
+			l.add(GuiLang.button_close.format());
 			return;
 		}
 		
