@@ -68,10 +68,11 @@ ftbl.lang.mode.already_set=Mode already set!
 ftbl.lang.mode.current=Current mode: %s
 ftbl.lang.mode.list=Available modes: %s
 
-ftbl.lang.reloaded_server=FTBLib: Server reloaded in %s
-ftbl.lang.reloaded_client=FTBLib: Client reloaded in %s
+ftbl.lang.reload_server=FTBLib: Server reloaded in %s
+ftbl.lang.reload_client=FTBLib: Client reloaded in %s
 ftbl.lang.reload_client_config=Server Reloaded. You can
 
+ftbl.lang.raw=%s
 ftbl.lang.missing_args=Missing Arguments!
 ftbl.lang.feature_disabled=This feature is disabled!
 ftbl.lang.invalid_subcmd=Invalid subcommand: '%s'!

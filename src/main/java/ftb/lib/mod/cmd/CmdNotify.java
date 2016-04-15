@@ -11,7 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
 
-import java.util.List;
+import java.util.*;
 
 public class CmdNotify extends CommandLM implements ICustomCommandInfo
 {
@@ -21,16 +21,16 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <player|@a> <json...>"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 1) return new String[] {"{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}"};
-		return super.getTabStrings(ics, args, i);
+		if(args.length == 2) return Collections.singletonList("{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}");
+		return super.addTabCompletionOptions(ics, args);
 	}
 	
-	public Boolean getUsername(String[] args, int i)
-	{ return (i == 0) ? Boolean.TRUE : null; }
+	public boolean isUsernameIndex(String[] args, int i)
+	{ return i == 0; }
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
 		
@@ -44,7 +44,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 			{
 				for(EntityPlayerMP ep : findPlayers(ics, args[0]))
 					FTBLib.notifyPlayer(ep, n);
-				return null;
+				return;
 			}
 		}
 		catch(Exception e)
@@ -52,7 +52,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 			e.printStackTrace();
 		}
 		
-		return error(new ChatComponentText("Invalid notification: " + s));
+		error("Invalid notification: " + s);
 	}
 	
 	public void addInfo(List<IChatComponent> list, ICommandSender sender)

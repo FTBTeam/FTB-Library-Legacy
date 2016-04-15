@@ -4,9 +4,11 @@ import ftb.lib.*;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.*;
 import ftb.lib.mod.FTBLibLang;
-import latmod.lib.*;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.util.*;
+
+import java.util.List;
 
 public class CmdMode extends CommandSubLM
 {
@@ -26,15 +28,23 @@ public class CmdMode extends CommandSubLM
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <modeID>"; }
 		
-		public String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
+		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
-			if(args.length == 1) return LMListUtils.toStringArray(GameModes.getGameModes().modes.keySet());
-			return super.getTabStrings(ics, args, i);
+			if(args.length == 1)
+			{
+				return getListOfStringsFromIterableMatchingLastWord(args, GameModes.getGameModes().modes.keySet());
+			}
+			
+			return super.addTabCompletionOptions(ics, args);
 		}
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
-			if(args.length == 0) return new ChatComponentText(getCommandUsage(ics));
+			if(args.length == 0)
+			{
+				ics.addChatMessage(new ChatComponentText(getCommandUsage(ics)));
+				return;
+			}
 			
 			IChatComponent c;
 			
@@ -52,12 +62,12 @@ public class CmdMode extends CommandSubLM
 			}
 			else
 			{
-				c = FTBLibLang.mode_loaded.chatComponent();
+				c = FTBLibLang.mode_loaded.chatComponent(args[0]);
 				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
 				FTBLib.reload(ics, true, true);
 			}
 			
-			return c;
+			ics.addChatMessage(c);
 		}
 	}
 	
@@ -66,11 +76,11 @@ public class CmdMode extends CommandSubLM
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			IChatComponent c = FTBLibLang.mode_current.chatComponent(FTBWorld.server.getMode().getID());
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
-			return c;
+			ics.addChatMessage(c);
 		}
 	}
 	
@@ -79,11 +89,11 @@ public class CmdMode extends CommandSubLM
 		public CmdList(String s)
 		{ super(s, CommandLevel.OP); }
 		
-		public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			IChatComponent c = FTBLibLang.mode_list.chatComponent(LMStringUtils.strip(GameModes.getGameModes().modes.keySet()));
 			c.getChatStyle().setColor(EnumChatFormatting.AQUA);
-			return c;
+			ics.addChatMessage(c);
 		}
 	}
 }

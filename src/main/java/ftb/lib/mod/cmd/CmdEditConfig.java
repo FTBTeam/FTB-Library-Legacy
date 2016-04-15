@@ -11,6 +11,8 @@ import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 
+import java.util.List;
+
 public class CmdEditConfig extends CommandLM
 {
 	public CmdEditConfig()
@@ -19,28 +21,28 @@ public class CmdEditConfig extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }
 	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(i == 0) return LMListUtils.toStringArray(ConfigRegistry.map.keySet());
-		else if(i == 1)
+		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, ConfigRegistry.map.keySet());
+		else if(args.length == 2)
 		{
 			ConfigFile file = ConfigRegistry.map.get(args[0]);
-			if(file != null) return LMListUtils.toStringArray(file.entryMap.keySet());
+			if(file != null) return getListOfStringsFromIterableMatchingLastWord(args, file.entryMap.keySet());
 		}
-		else if(i == 2)
+		else if(args.length == 3)
 		{
 			ConfigFile file = ConfigRegistry.map.get(args[0]);
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup(args[1]);
-				if(group != null) return LMListUtils.toStringArray(group.entryMap.keySet());
+				if(group != null) return getListOfStringsFromIterableMatchingLastWord(args, group.entryMap.keySet());
 			}
 		}
 		
 		return null;
 	}
 	
-	public IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException
+	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -49,23 +51,33 @@ public class CmdEditConfig extends CommandLM
 			EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 			ConfigFile file = ConfigRegistry.map.get(args[0]);
 			
-			if(file == null) return error(new ChatComponentText("Invalid file: '" + args[0] + "'!"));
+			if(file == null)
+			{
+				error("Invalid file: '" + args[0] + "'!");
+				return;
+			}
 			
 			new MessageEditConfig(LMAccessToken.generate(ep), true, file).sendTo(ep);
-			return null;
+			return;
 		}
 		
 		checkArgs(args, 3); // file, group, entry, value...
 		
 		ConfigFile file = ConfigRegistry.map.get(args[0]);
-		if(file == null) return error(new ChatComponentText("Can only edit files!"));
+		if(file == null)
+		{
+			error("Can only edit files!");
+			return;
+		}
 		
 		boolean success = false;
 		ConfigGroup group = file.getGroup(args[1]);
 		ConfigEntry entry = (group == null) ? null : group.getEntry(args[2]);
 		
 		if(entry == null)
-			return error(new ChatComponentText("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'"));
+		{
+			error("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
+		}
 		
 		if(args.length >= 4)
 		{
@@ -78,16 +90,18 @@ public class CmdEditConfig extends CommandLM
 				entry.func_152753_a(LMJsonUtils.fromJson(json));
 				file.save();
 				FTBLib.reload(ics, true, false);
-				return new ChatComponentText(args[2] + " set to " + entry.getAsString());
+				ics.addChatMessage(new ChatComponentText(args[2] + " set to " + entry.getAsString()));
 			}
 			catch(Exception ex)
 			{
-				ChatComponentText error = new ChatComponentText(ex.toString());
-				error.getChatStyle().setColor(EnumChatFormatting.RED);
-				return error;
+				ChatComponentText c = new ChatComponentText(ex.toString());
+				c.getChatStyle().setColor(EnumChatFormatting.RED);
+				ics.addChatMessage(c);
 			}
+			
+			return;
 		}
 		
-		return new ChatComponentText(entry.getAsString());
+		ics.addChatMessage(new ChatComponentText(entry.getAsString()));
 	}
 }

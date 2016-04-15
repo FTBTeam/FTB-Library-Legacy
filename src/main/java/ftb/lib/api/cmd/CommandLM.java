@@ -1,10 +1,10 @@
 package ftb.lib.api.cmd;
 
 import ftb.lib.FTBLib;
-import latmod.lib.LMListUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChunkCoordinates;
 
 import java.util.*;
 
@@ -34,51 +34,23 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName; }
 	
-	public final void processCommand(ICommandSender ics, String[] args) throws CommandException
-	{
-		if(!level.isEnabled()) throw new FeatureDisabledException();
-		if(args == null) args = new String[0];
-		IChatComponent s = onCommand(ics, args);
-		if(s != null) FTBLib.printChat(ics, s);
-		onPostCommand(ics, args);
-	}
-	
-	public abstract IChatComponent onCommand(ICommandSender ics, String[] args) throws CommandException;
-	
-	public static IChatComponent error(IChatComponent c)
-	{
-		c.getChatStyle().setColor(EnumChatFormatting.RED);
-		return c;
-	}
-	
-	public void onPostCommand(ICommandSender ics, String[] args) throws CommandException
-	{
-	}
+	public static void error(String o)
+	{ throw new RawCommandError(o); }
 	
 	@SuppressWarnings("all")
-	public final List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
+	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(!level.isEnabled()) return null;
-		try
+		
+		if(isUsernameIndex(args, args.length - 1))
 		{
-			String[] s = getTabStrings(ics, args, args.length - 1);
-			if(s != null && s.length > 0)
-			{
-				if(sortStrings(ics, args, args.length - 1)) Arrays.sort(s);
-				return getListOfStringsMatchingLastWord(args, s);
-			}
+			return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
 		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
+		
 		return null;
 	}
 	
-	public Boolean getUsername(String[] args, int i)
-	{ return null; }
-	
-	public final boolean isUsernameIndex(String[] args, int i)
+	public boolean isUsernameIndex(String[] args, int i)
 	{ return false; }
 	
 	public static boolean isArg(String[] args, int i, String... s)
@@ -91,20 +63,6 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		
 		return false;
 	}
-	
-	public String[] getTabStrings(ICommandSender ics, String args[], int i) throws CommandException
-	{
-		Boolean b = getUsername(args, i);
-		if(b == null) return new String[0];
-		if(FTBLib.ftbu != null) return FTBLib.ftbu.getPlayerNames(b);
-		ArrayList<String> l = new ArrayList<>();
-		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
-			l.add(ep.getGameProfile().getName());
-		return LMListUtils.toStringArray(l);
-	}
-	
-	public boolean sortStrings(ICommandSender ics, String args[], int i)
-	{ return getUsername(args, i) == null; }
 	
 	public static void checkArgs(String[] args, int i) throws CommandException
 	{ if(args == null || args.length < i) throw new MissingArgsException(); }
