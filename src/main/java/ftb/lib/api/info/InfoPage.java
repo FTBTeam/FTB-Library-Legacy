@@ -239,6 +239,14 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	{ return (useUnicodeFont == null) ? ((parent == null) ? null : parent.useUnicodeFont()) : useUnicodeFont; }
 	
 	@SideOnly(Side.CLIENT)
+	public final void refreshGuiTree(GuiInfo gui)
+	{
+		refreshGui(gui);
+		for(InfoPage p : childPages.values())
+			p.refreshGuiTree(gui);
+	}
+	
+	@SideOnly(Side.CLIENT)
 	public void refreshGui(GuiInfo gui)
 	{
 	}

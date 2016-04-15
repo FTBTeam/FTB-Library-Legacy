@@ -104,8 +104,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		{
 			public void addWidgets()
 			{
-				page.refreshGui(GuiInfo.this);
-				
 				height = 0;
 				
 				for(InfoPage c : page.childPages.values())
@@ -125,8 +123,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		{
 			public void addWidgets()
 			{
-				page.refreshGui(GuiInfo.this);
-				
 				for(WidgetLM w : panelPages.widgets)
 				{
 					((ButtonInfoPage) w).updateTitle();
@@ -158,6 +154,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	
 	public void addWidgets()
 	{
+		page.refreshGuiTree(GuiInfo.this);
+		
 		mainPanel.add(sliderPages);
 		mainPanel.add(sliderText);
 		mainPanel.add(buttonBack);
@@ -319,10 +317,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	
 	public void onClientDataChanged()
 	{
-		if(selectedPage instanceof IClientActionGui)
-		{
-			((IClientActionGui) selectedPage).onClientDataChanged();
-			refreshWidgets();
-		}
+		refreshWidgets();
 	}
 }
