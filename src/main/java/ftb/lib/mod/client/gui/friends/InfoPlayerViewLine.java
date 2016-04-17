@@ -9,7 +9,9 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Mouse;
 
@@ -62,8 +64,8 @@ public class InfoPlayerViewLine extends InfoTextLine
 				
 				if(ep1 != null)
 				{
-					player.inventory.mainInventory = ep1.inventory.mainInventory.clone();
-					player.inventory.armorInventory = ep1.inventory.armorInventory.clone();
+					System.arraycopy(ep1.inventory.mainInventory, 0, player.inventory.mainInventory, 0, player.inventory.mainInventory.length);
+					System.arraycopy(ep1.inventory.armorInventory, 0, player.inventory.armorInventory, 0, player.inventory.armorInventory.length);
 					player.inventory.currentItem = ep1.inventory.currentItem;
 				}
 				else
@@ -103,7 +105,7 @@ public class InfoPlayerViewLine extends InfoTextLine
 			public boolean equals(Object o)
 			{ return playerLM.equals(o); }
 			
-			public void addChatMessage(IChatComponent i) { }
+			public void addChatMessage(ITextComponent i) { }
 			
 			public boolean canCommandSenderUseCommand(int i, String s)
 			{ return false; }

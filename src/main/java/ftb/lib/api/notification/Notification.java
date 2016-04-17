@@ -6,11 +6,12 @@ import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.LMColorUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.ITextComponent;
 
 public final class Notification extends FinalIDObject implements IJsonSerializable
 {
-	public IChatComponent title, desc;
+	public ITextComponent title, desc;
 	public int timer, color;
 	public ItemStack item;
 	public MouseAction mouse;
@@ -20,7 +21,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 		super(s);
 	}
 	
-	public Notification(String s, IChatComponent t, int l)
+	public Notification(String s, ITextComponent t, int l)
 	{
 		super(s);
 		title = t;
@@ -37,7 +38,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 		mouse = null;
 	}
 	
-	public void setDesc(IChatComponent c)
+	public void setDesc(ITextComponent c)
 	{ desc = c; }
 	
 	public void setItem(ItemStack is)

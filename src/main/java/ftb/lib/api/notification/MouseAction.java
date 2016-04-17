@@ -2,14 +2,15 @@ package ftb.lib.api.notification;
 
 import com.google.gson.*;
 import ftb.lib.JsonHelper;
-import net.minecraft.util.*;
+import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.*;
 
 public class MouseAction implements IJsonSerializable
 {
 	public ClickAction click;
-	public final List<IChatComponent> hover;
+	public final List<ITextComponent> hover;
 	
 	public MouseAction()
 	{
@@ -25,7 +26,7 @@ public class MouseAction implements IJsonSerializable
 		if(!hover.isEmpty())
 		{
 			JsonArray h = new JsonArray();
-			for(IChatComponent c : hover)
+			for(ITextComponent c : hover)
 				h.add(JsonHelper.serializeICC(c));
 			o.add("hover", h);
 		}
@@ -57,7 +58,7 @@ public class MouseAction implements IJsonSerializable
 	
 	public void addHoverText(List<String> l)
 	{
-		for(IChatComponent c : hover)
+		for(ITextComponent c : hover)
 		{
 			if(c != null) l.add(c.getFormattedText());
 			else l.add("");

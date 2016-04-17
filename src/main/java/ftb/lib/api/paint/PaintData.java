@@ -1,7 +1,8 @@
 package ftb.lib.api.paint;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 public class PaintData
 {

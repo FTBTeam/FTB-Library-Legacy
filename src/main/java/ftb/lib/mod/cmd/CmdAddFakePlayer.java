@@ -5,7 +5,8 @@ import ftb.lib.api.*;
 import ftb.lib.api.cmd.*;
 import latmod.lib.LMUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.UUID;
 
@@ -23,7 +24,7 @@ public class CmdAddFakePlayer extends CommandLM
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
 		
@@ -40,6 +41,6 @@ public class CmdAddFakePlayer extends CommandLM
 		ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
 		p.refreshStats();
 		
-		ics.addChatMessage(new ChatComponentText("Fake player " + args[1] + " added!"));
+		ics.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
 	}
 }

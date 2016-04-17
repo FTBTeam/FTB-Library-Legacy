@@ -1,7 +1,6 @@
 package ftb.lib.api.item;
 
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +11,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.*;
 
 import java.util.*;
 
@@ -448,45 +446,6 @@ public class LMInvUtils
 	
 	public static boolean isWrench(ItemStack is)
 	{ return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC; }
-	
-	public static FluidStack getFluid(ItemStack is)
-	{
-		if(is == null || is.getItem() == null) return null;
-		
-		if(is.getItem() instanceof IFluidContainerItem)
-		{
-			FluidStack fs = ((IFluidContainerItem) is.getItem()).getFluid(is);
-			if(fs != null) return fs;
-		}
-		
-		return FluidContainerRegistry.getFluidForFilledItem(is);
-	}
-	
-	public static boolean isBucket(ItemStack is)
-	{ return FluidContainerRegistry.isBucket(is); }
-	
-	public static Map<Enchantment, Integer> getEnchantments(ItemStack is)
-	{
-		HashMap<Enchantment, Integer> map = new HashMap<>();
-		
-		@SuppressWarnings("unchecked") Map<Integer, Integer> m = EnchantmentHelper.getEnchantments(is);
-		
-		for(Map.Entry<Integer, Integer> e : m.entrySet())
-		{
-			Enchantment e1 = Enchantment.getEnchantmentById(e.getKey());
-			if(e1 != null) map.put(e1, e.getValue());
-		}
-		
-		return map;
-	}
-	
-	public static void setEnchantments(ItemStack is, Map<Enchantment, Integer> map)
-	{
-		HashMap<Integer, Integer> m = new HashMap<>();
-		for(Map.Entry<Enchantment, Integer> e : map.entrySet())
-			m.put(e.getKey().effectId, e.getValue());
-		EnchantmentHelper.setEnchantments(m, is);
-	}
 	
 	public static void removeDisplayName(ItemStack is)
 	{

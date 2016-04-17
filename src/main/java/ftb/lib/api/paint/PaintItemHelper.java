@@ -9,7 +9,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 public class PaintItemHelper
@@ -42,7 +43,7 @@ public class PaintItemHelper
 			
 			if(ep.capabilities.isCreativeMode || i.canPaintBlock(is))
 			{
-				MovingObjectPosition mop = MathHelperMC.rayTrace(ep);
+				RayTraceResult mop = MathHelperMC.rayTrace(ep);
 				
 				Paint p = null;
 				if(paint != null && paint.getItem() != null)
@@ -67,7 +68,7 @@ public class PaintItemHelper
 			{
 				if(b.hasTileEntity(state) && !(b instanceof ICustomPaintBlock)) return true;
 				
-				if(b.getBlockBoundsMinX() == 0D && b.getBlockBoundsMinY() == 0D && b.getBlockBoundsMinZ() == 0D && b.getBlockBoundsMaxX() == 1D && b.getBlockBoundsMaxY() == 1D && b.getBlockBoundsMaxZ() == 1D)
+				if(state.isFullCube())
 				{
 					if(b instanceof INoPaintBlock && !((INoPaintBlock) b).hasPaint(w, pos, state, s)) return true;
 					

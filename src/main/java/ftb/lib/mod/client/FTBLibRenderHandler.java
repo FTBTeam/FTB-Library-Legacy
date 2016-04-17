@@ -8,7 +8,8 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -88,7 +89,7 @@ public class FTBLibRenderHandler
 	@SubscribeEvent
 	public void blockChanged(BlockEvent e)
 	{
-		if(MathHelperLM.distSq(e.pos.getX() + 0.5D, e.pos.getY() + 0.5D, e.pos.getZ() + 0.5D, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) <= 4096D)
+		if(MathHelperLM.distSq(e.getPos().getX() + 0.5D, e.getPos().getY() + 0.5D, e.getPos().getZ() + 0.5D, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) <= 4096D)
 			needsLightUpdate = true;
 	}
 	
@@ -167,9 +168,9 @@ public class FTBLibRenderHandler
 					FTBLibClient.setTexture(FTBLibModClient.light_value_texture.get().texture);
 					
 					Tessellator tessellator = Tessellator.getInstance();
-					WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+					VertexBuffer buffer = tessellator.getBuffer();
 					
-					worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+					buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 					
 					for(MobSpawnPos pos : lightList)
 					{
@@ -178,10 +179,10 @@ public class FTBLibRenderHandler
 						double bz = pos.pos.getZ();
 						
 						float green = pos.alwaysSpawns ? 0.2F : 1F;
-						worldRenderer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
-						worldRenderer.pos(bx, by, bz + 1D).tex(0D, 1D).color(1F, green, 0.2F, 1F).endVertex();
-						worldRenderer.pos(bx + 1D, by, bz + 1D).tex(1D, 1D).color(1F, green, 0.2F, 1F).endVertex();
-						worldRenderer.pos(bx + 1D, by, bz).tex(1D, 0D).color(1F, green, 0.2F, 1F).endVertex();
+						buffer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
+						buffer.pos(bx, by, bz + 1D).tex(0D, 1D).color(1F, green, 0.2F, 1F).endVertex();
+						buffer.pos(bx + 1D, by, bz + 1D).tex(1D, 1D).color(1F, green, 0.2F, 1F).endVertex();
+						buffer.pos(bx + 1D, by, bz).tex(1D, 0D).color(1F, green, 0.2F, 1F).endVertex();
 					}
 					
 					tessellator.draw();
@@ -226,7 +227,10 @@ public class FTBLibRenderHandler
 			GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
 		}
 		
-		if(FTBLib.ftbu != null) FTBLib.ftbu.renderWorld(e.partialTicks);
+		if(FTBLib.ftbu != null)
+		{
+			FTBLib.ftbu.renderWorld(e.getPartialTicks());
+		}
 	}
 	
 	private static class MobSpawnPos

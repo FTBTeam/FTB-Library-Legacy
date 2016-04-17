@@ -1,16 +1,18 @@
 package ftb.lib;
 
 import latmod.lib.*;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 
 /**
  * Created by LatvianModder on 29.01.2016.
  */
 public final class BlockDimPos
 {
-	public final int x, y, z, dim;
+	public final int x, y, z;
+	public final DimensionType dim;
 	
-	public BlockDimPos(int px, int py, int pz, int d)
+	public BlockDimPos(int px, int py, int pz, DimensionType d)
 	{
 		x = px;
 		y = py;
@@ -25,28 +27,28 @@ public final class BlockDimPos
 			x = 0;
 			y = 256;
 			z = 0;
-			dim = 0;
+			dim = DimensionType.OVERWORLD;
 		}
 		else
 		{
 			x = ai[0];
 			y = ai[1];
 			z = ai[2];
-			dim = ai[3];
+			dim = DimensionType.getById(ai[3]);
 		}
 	}
 	
-	public BlockDimPos(BlockPos pos, int dim)
+	public BlockDimPos(BlockPos pos, DimensionType dim)
 	{ this(pos.getX(), pos.getY(), pos.getZ(), dim); }
 	
 	public boolean isValid()
 	{ return y >= 0 && y < 256; }
 	
 	public int[] toIntArray()
-	{ return new int[] {x, y, z, dim}; }
+	{ return new int[] {x, y, z, dim.getId()}; }
 	
 	public String toString()
-	{ return "[" + x + ',' + y + ',' + z + ',' + LMDimUtils.getDimName(dim) + ']'; }
+	{ return "[" + x + ',' + y + ',' + z + ',' + dim.getName() + ']'; }
 	
 	public boolean equals(Object o)
 	{

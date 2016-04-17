@@ -2,7 +2,8 @@ package ftb.lib.api.info;
 
 import com.google.gson.*;
 import ftb.lib.mod.client.gui.info.*;
-import net.minecraft.util.*;
+import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.*;
 import net.minecraftforge.fml.relauncher.*;
 
 /**
@@ -47,8 +48,8 @@ public class InfoTextLine implements IJsonSerializable
 		text = s;
 	}
 	
-	public IChatComponent getText()
-	{ return new ChatComponentText(text); }
+	public ITextComponent getText()
+	{ return new TextComponentString(text); }
 	
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)

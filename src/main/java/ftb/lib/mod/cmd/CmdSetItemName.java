@@ -4,7 +4,8 @@ import ftb.lib.api.cmd.*;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 public class CmdSetItemName extends CommandLM
 {
@@ -14,7 +15,7 @@ public class CmdSetItemName extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <name...>"; }
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
@@ -23,7 +24,7 @@ public class CmdSetItemName extends CommandLM
 		{
 			ep.inventory.getCurrentItem().setStackDisplayName(LMStringUtils.unsplit(args, " "));
 			ep.openContainer.detectAndSendChanges();
-			ics.addChatMessage(new ChatComponentText("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
+			ics.addChatMessage(new TextComponentString("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
 		}
 	}
 }

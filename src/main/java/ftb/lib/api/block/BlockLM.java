@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.*;
 import net.minecraft.world.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -25,6 +26,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	{
 		super(m);
 		blockName = s;
+		setCreativeTab(CreativeTabs.tabMisc);
 		setUnlocalizedName(getMod().getBlockName(s));
 		setHardness(1.8F);
 		setResistance(3F);
@@ -35,8 +37,8 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public abstract LMMod getMod();
 	
-	public int getRenderType()
-	{ return 3; }
+	public EnumBlockRenderType getRenderType(IBlockState state)
+	{ return EnumBlockRenderType.MODEL; }
 	
 	public final String getID()
 	{ return blockName; }
@@ -82,7 +84,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		}
 	}
 	
-	public float getPlayerRelativeBlockHardness(EntityPlayer ep, World w, BlockPos pos)
+	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer ep, World w, BlockPos pos)
 	{
 		if(hasTileEntity(w.getBlockState(pos)))
 		{
@@ -90,10 +92,10 @@ public abstract class BlockLM extends Block implements IBlockLM
 			if(tile != null && !tile.isMinable(ep)) return -1F;
 		}
 		
-		return super.getPlayerRelativeBlockHardness(ep, w, pos);
+		return super.getPlayerRelativeBlockHardness(state, ep, w, pos);
 	}
 	
-	public float getBlockHardness(World w, BlockPos pos)
+	public float getBlockHardness(IBlockState state, World w, BlockPos pos)
 	{
 		if(hasTileEntity(w.getBlockState(pos)))
 		{
@@ -101,7 +103,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 			if(tile != null && !tile.isMinable(null)) return -1F;
 		}
 		
-		return super.getBlockHardness(w, pos);
+		return super.getBlockHardness(state, w, pos);
 	}
 	
 	public float getExplosionResistance(World w, BlockPos pos, Entity e, Explosion ex)
@@ -115,9 +117,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getExplosionResistance(w, pos, e, ex);
 	}
 	
-	public int getMobilityFlag()
-	{ return isBlockContainer ? 2 : 0; }
-	
 	public void breakBlock(World w, BlockPos pos, IBlockState state)
 	{
 		if(!w.isRemote && hasTileEntity(state))
@@ -128,11 +127,11 @@ public abstract class BlockLM extends Block implements IBlockLM
 		super.breakBlock(w, pos, state);
 	}
 	
-	public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumFacing s, float x1, float y1, float z1)
+	public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumHand hand, ItemStack item, EnumFacing s, float x1, float y1, float z1)
 	{
 		if(!hasTileEntity(state)) return false;
 		TileLM tile = getTile(w, pos);
-		return (tile != null) && tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1);
+		return (tile != null) && tile.onRightClick(ep, item, s, x1, y1, z1);
 	}
 	
 	public boolean onBlockEventReceived(World w, BlockPos pos, IBlockState state, int eventID, int param)
@@ -182,21 +181,13 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public final Item getItem()
 	{ return Item.getItemFromBlock(this); }
 	
-	public AxisAlignedBB getCollisionBoundingBox(World w, BlockPos pos, IBlockState state)
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		setBlockBoundsBasedOnState(w, pos);
-		return super.getCollisionBoundingBox(w, pos, state);
+		return FULL_BLOCK_AABB;
 	}
 	
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{ return getStateFromMeta(meta); }
-	
-	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getSelectedBoundingBox(World worldIn, BlockPos pos)
-	{
-		setBlockBoundsBasedOnState(worldIn, pos);
-		return super.getSelectedBoundingBox(worldIn, pos);
-	}
 	
 	public TileLM getTile(IBlockAccess w, BlockPos pos)
 	{
@@ -206,8 +197,8 @@ public abstract class BlockLM extends Block implements IBlockLM
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer()
-	{ return EnumWorldBlockLayer.SOLID; }
+	public BlockRenderLayer getBlockLayer()
+	{ return BlockRenderLayer.SOLID; }
 	
 	public String getUnlocalizedName(int damage)
 	{ return getUnlocalizedName(); }

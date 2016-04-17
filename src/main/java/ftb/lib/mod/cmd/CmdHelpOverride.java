@@ -13,9 +13,9 @@ public class CmdHelpOverride extends CommandHelp
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + getCommandName() + " [command]"; }
 	
-	protected List<ICommand> getSortedPossibleCommands(ICommandSender ics)
+	protected List<ICommand> getSortedPossibleCommands(ICommandSender sender, MinecraftServer server)
 	{
-		List<ICommand> list = MinecraftServer.getServer().getCommandManager().getPossibleCommands(ics);
+		List<ICommand> list = server.getCommandManager().getPossibleCommands(sender);
 		try { Collections.sort(list); } catch(Exception e) { }
 		return list;
 	}

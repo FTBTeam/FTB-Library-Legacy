@@ -13,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.stats.StatisticsFile;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.*;
 import net.minecraftforge.fml.relauncher.*;
@@ -90,7 +90,7 @@ public class ForgePlayerMP extends ForgePlayer
 	
 	// Reading / Writing //
 	
-	public void getInfo(ForgePlayerMP owner, List<IChatComponent> info)
+	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info)
 	{
 		refreshStats();
 		long ms = LMUtils.millis();
@@ -102,14 +102,14 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			if(raw1 && raw2)
 			{
-				IChatComponent c = FTBLibMod.mod.chatComponent("label.friend");
-				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
+				ITextComponent c = FTBLibMod.mod.chatComponent("label.friend");
+				c.getChatStyle().setColor(TextFormatting.GREEN);
 				info.add(c);
 			}
 			else if(raw1 || raw2)
 			{
-				IChatComponent c = FTBLibMod.mod.chatComponent("label.pfriend");
-				c.getChatStyle().setColor(raw1 ? EnumChatFormatting.GOLD : EnumChatFormatting.BLUE);
+				ITextComponent c = FTBLibMod.mod.chatComponent("label.pfriend");
+				c.getChatStyle().setColor(raw1 ? TextFormatting.GOLD : TextFormatting.BLUE);
 				info.add(c);
 			}
 		}
@@ -316,8 +316,8 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			if(requests.size() > 0)
 			{
-				IChatComponent cc = FTBLibMod.mod.chatComponent("label.new_friends");
-				cc.getChatStyle().setColor(EnumChatFormatting.GREEN);
+				ITextComponent cc = FTBLibMod.mod.chatComponent("label.new_friends");
+				cc.getChatStyle().setColor(TextFormatting.GREEN);
 				Notification n = new Notification("new_friend_requests", cc, 6000);
 				n.setDesc(FTBLibMod.mod.chatComponent("label.new_friends_click"));
 				
@@ -325,7 +325,7 @@ public class ForgePlayerMP extends ForgePlayer
 				mouse.click = new ClickAction(ClickActionType.FRIEND_ADD_ALL, null);
 				Collections.sort(requests, null);
 				
-				for(String s : requests) mouse.hover.add(new ChatComponentText(s));
+				for(String s : requests) mouse.hover.add(new TextComponentString(s));
 				n.setMouseAction(mouse);
 				
 				FTBLib.notifyPlayer(getPlayer(), n);
@@ -359,6 +359,6 @@ public class ForgePlayerMP extends ForgePlayer
 	public StatisticsFile getStatFile(boolean force)
 	{
 		if(isOnline()) return getPlayer().getStatFile();
-		return force ? FTBLib.getServer().getConfigurationManager().getPlayerStatsFile(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
+		return force ? FTBLib.getServer().getPlayerList().getPlayerStatsFile(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
 	}
 }

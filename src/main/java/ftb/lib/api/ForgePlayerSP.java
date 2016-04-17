@@ -8,7 +8,8 @@ import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.*;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -63,11 +64,11 @@ public class ForgePlayerSP extends ForgePlayer
 	//public Rank getRank()
 	//{ return Ranks.PLAYER; }
 	
-	public void receiveInfo(List<IChatComponent> info)
+	public void receiveInfo(List<ITextComponent> info)
 	{
 		clientInfo.clear();
 		
-		for(IChatComponent c : info)
+		for(ITextComponent c : info)
 		{
 			clientInfo.add(c.getFormattedText());
 		}

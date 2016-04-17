@@ -11,7 +11,6 @@ import net.minecraft.client.entity.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -19,10 +18,12 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.*;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.*;
@@ -56,8 +57,8 @@ public class FTBLibClient
 	public static boolean isIngame()
 	{ return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null; }
 	
-	public static int getDim()
-	{ return isIngame() ? mc.theWorld.provider.getDimensionId() : 0; }
+	public static DimensionType getDim()
+	{ return isIngame() ? mc.theWorld.provider.getDimensionType() : null; }
 	
 	public static UUID getUUID()
 	{ return mc.getSession().getProfile().getId(); }
@@ -117,7 +118,7 @@ public class FTBLibClient
 	}
 	
 	public static void playClickSound()
-	{ mc.getSoundHandler().playSound(PositionedSoundRecord.create(clickSound, 1F)); }
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1F)); }
 	
 	public static void setGLColor(int c, int a)
 	{
@@ -198,39 +199,39 @@ public class FTBLibClient
 		entityItem.worldObj = w;
 		entityItem.hoverStart = 0F;
 		entityItem.setEntityItemStack(is);
-		mc.getRenderManager().renderEntityWithPosYaw(entityItem, 0D, 0D, 0D, 0F, 0F);
+		mc.getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
 	}
 	
 	public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+		VertexBuffer buffer = tessellator.getBuffer();
 		
-		worldrenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
 		tessellator.draw();
 		
-		worldrenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
 		tessellator.draw();
 		
-		worldrenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		worldrenderer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
-		worldrenderer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
 		tessellator.draw();
 	}
 	

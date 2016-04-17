@@ -203,7 +203,7 @@ public class FTBLibActions
 	{
 		if(!FTBLibClient.isIngame()) return;
 		
-		if(e.gui instanceof InventoryEffectRenderer)
+		if(e.getGui() instanceof InventoryEffectRenderer)
 		{
 			ForgePlayerSP p = ForgeWorldSP.inst.clientPlayer;
 			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false, false);
@@ -213,8 +213,8 @@ public class FTBLibActions
 			{
 				Collections.sort(buttons);
 				
-				ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, e.gui);
-				e.buttonList.add(renderer);
+				ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, e.getGui());
+				e.getButtonList().add(renderer);
 				
 				if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
 				{
@@ -224,7 +224,7 @@ public class FTBLibActions
 						int x = i % 4;
 						int y = i / 4;
 						ButtonInvLM b = new ButtonInvLM(495830 + i, a, 4 + x * 18, 4 + y * 18);
-						e.buttonList.add(b);
+						e.getButtonList().add(b);
 						renderer.buttons.add(b);
 					}
 				}
@@ -235,21 +235,21 @@ public class FTBLibActions
 					int buttonX = -17;
 					int buttonY = 8;
 					
-					if(e.gui instanceof GuiContainerCreative)
+					if(e.getGui() instanceof GuiContainerCreative)
 					{
 						xSize = 195;
 						ySize = 136;
 						buttonY = 6;
 					}
-					boolean hasPotions = !e.gui.mc.thePlayer.getActivePotionEffects().isEmpty();
+					boolean hasPotions = !e.getGui().mc.thePlayer.getActivePotionEffects().isEmpty();
 					if(hasPotions)
 					{
 						buttonX -= 4;
 						buttonY -= 26;
 					}
 					
-					int guiLeft = (e.gui.width - xSize) / 2;
-					int guiTop = (e.gui.height - ySize) / 2;
+					int guiLeft = (e.getGui().width - xSize) / 2;
+					int guiTop = (e.getGui().height - ySize) / 2;
 					
 					if(hasPotions) guiLeft += 60;
 					
@@ -271,7 +271,7 @@ public class FTBLibActions
 							b = new ButtonInvLM(495830 + i, a, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
 						}
 						
-						e.buttonList.add(b);
+						e.getButtonList().add(b);
 						renderer.buttons.add(b);
 					}
 				}
@@ -282,9 +282,9 @@ public class FTBLibActions
 	@SubscribeEvent
 	public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
 	{
-		if(e.button instanceof ButtonInvLM)
+		if(e.getButton() instanceof ButtonInvLM)
 		{
-			PlayerAction b = ((ButtonInvLM) e.button).action;
+			PlayerAction b = ((ButtonInvLM) e.getButton()).action;
 			ForgePlayer p = ForgeWorldSP.inst.clientPlayer;
 			b.onClicked(p, p);
 		}

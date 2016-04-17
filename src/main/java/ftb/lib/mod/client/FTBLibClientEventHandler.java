@@ -4,7 +4,7 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.item.*;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -39,24 +39,24 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
-		if(e.itemStack == null || e.itemStack.getItem() == null) return;
+		if(e.getItemStack() == null || e.getItemStack().getItem() == null) return;
 		
 		if(FTBLibModClient.item_reg_names.getAsBoolean())
 		{
-			e.toolTip.add(LMInvUtils.getRegName(e.itemStack).toString());
+			e.getToolTip().add(LMInvUtils.getRegName(e.getItemStack()).toString());
 		}
 		
 		if(FTBLibModClient.item_ore_names.getAsBoolean())
 		{
-			List<String> ores = ODItems.getOreNames(e.itemStack);
+			List<String> ores = ODItems.getOreNames(e.getItemStack());
 			
 			if(ores != null && !ores.isEmpty())
 			{
-				e.toolTip.add("Ore Dictionary names:");
+				e.getToolTip().add("Ore Dictionary names:");
 				
 				for(String or : ores)
 				{
-					e.toolTip.add("> " + or);
+					e.getToolTip().add("> " + or);
 				}
 			}
 		}
@@ -71,7 +71,7 @@ public class FTBLibClientEventHandler
 		{
 			if(FTBLib.DEV_ENV)
 			{
-				e.left.add("[MC " + EnumChatFormatting.GOLD + Loader.MC_VERSION + EnumChatFormatting.WHITE + " DevEnv]");
+				e.getLeft().add("[MC " + TextFormatting.GOLD + Loader.MC_VERSION + TextFormatting.WHITE + " DevEnv]");
 			}
 		}
 	}

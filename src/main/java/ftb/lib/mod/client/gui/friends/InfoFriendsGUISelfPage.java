@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.friends;
 import ftb.lib.api.*;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.*;
 
 /**
@@ -27,7 +27,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 			text.add(new InfoPlayerActionLine(this, playerLM, a));
 		}
 		
-		InfoPage page = getSub("info").setTitle(new ChatComponentTranslation("ftbl.button.info"));
+		InfoPage page = getSub("info").setTitle(new TextComponentTranslation("ftbl.button.info"));
 		
 		page.text.add(new InfoPlayerViewLine(this, playerLM));
 		
@@ -72,7 +72,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 			}*/
 		};
 		
-		page.setTitle(new ChatComponentTranslation("ftbl.button.settings"));
+		page.setTitle(new TextComponentTranslation("ftbl.button.settings"));
 		page.onClientDataChanged();
 		addSub(page);
 	}

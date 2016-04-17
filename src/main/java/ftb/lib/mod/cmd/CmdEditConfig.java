@@ -8,7 +8,9 @@ import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.*;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class CmdEditConfig extends CommandLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1)
 		{
@@ -41,10 +43,10 @@ public class CmdEditConfig extends CommandLM
 			}
 		}
 		
-		return null;
+		return getTabCompletionOptions(server, ics, args, pos);
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);
 		
@@ -90,7 +92,7 @@ public class CmdEditConfig extends CommandLM
 				entry.fromJson(LMJsonUtils.fromJson(json));
 				file.save();
 				FTBLib.reload(ics, true, false);
-				ics.addChatMessage(new ChatComponentText(args[2] + " set to " + entry.getSerializableElement()));
+				ics.addChatMessage(new TextComponentString(args[2] + " set to " + entry.getSerializableElement()));
 				return;
 			}
 			catch(Exception ex)
@@ -99,6 +101,6 @@ public class CmdEditConfig extends CommandLM
 			}
 		}
 		
-		ics.addChatMessage(new ChatComponentText(String.valueOf(entry.getSerializableElement())));
+		ics.addChatMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
 	}
 }

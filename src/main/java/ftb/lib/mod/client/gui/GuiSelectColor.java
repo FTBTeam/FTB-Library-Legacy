@@ -254,20 +254,19 @@ public class GuiSelectColor extends GuiLM
 		int y = widget.getAY();
 		double w = widget.width;
 		double h = widget.height;
-		
 		Tessellator tessellator = Tessellator.getInstance();
-		WorldRenderer worldRenderer = tessellator.getWorldRenderer();
-		worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		VertexBuffer buffer = tessellator.getBuffer();
+		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		int red = LMColorUtils.getRed(colLeft);
 		int green = LMColorUtils.getGreen(colLeft);
 		int blue = LMColorUtils.getBlue(colLeft);
-		worldRenderer.pos(x + 0, y + 0, zLevel).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
-		worldRenderer.pos(x + 0, y + h, zLevel).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x + 0, y + 0, zLevel).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x + 0, y + h, zLevel).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
 		red = LMColorUtils.getRed(colRight);
 		green = LMColorUtils.getGreen(colRight);
 		blue = LMColorUtils.getBlue(colRight);
-		worldRenderer.pos(x + w, y + h, zLevel).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
-		worldRenderer.pos(x + w, y + 0, zLevel).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x + w, y + h, zLevel).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x + w, y + 0, zLevel).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
 	}
 	
 	public void closeGui(boolean set)

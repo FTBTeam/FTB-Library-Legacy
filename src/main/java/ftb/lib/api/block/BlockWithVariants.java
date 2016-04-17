@@ -85,6 +85,6 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 		return variantProperty;
 	}
 	
-	protected BlockState createBlockState()
-	{ return new BlockState(this, getVariantProperty()); }
+	protected BlockStateContainer createBlockState()
+	{ return new BlockStateContainer(this, getVariantProperty()); }
 }

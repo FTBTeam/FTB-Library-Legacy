@@ -4,7 +4,7 @@ import ftb.lib.FTBLib;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
 
@@ -29,9 +29,9 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	public int getRequiredPermissionLevel()
 	{ return level.requiredPermsLevel(); }
 	
-	public boolean canCommandSenderUseCommand(ICommandSender ics)
+	public boolean checkPermission(MinecraftServer server, ICommandSender ics)
 	{
-		return FTBLib.getEffectiveSide().isClient() || level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.canCommandSenderUseCommand(ics));
+		return FTBLib.getEffectiveSide().isClient() || level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics));
 	}
 	
 	public final String getCommandName()
@@ -40,47 +40,22 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName; }
 	
-	public void onPostCommand(ICommandSender ics, String[] args) throws CommandException
-	{
-	}
-	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 0) return null;
 		else if(isUsernameIndex(args, args.length - 1))
 		{
-			return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+			return getListOfStringsMatchingLastWord(args, server.getAllUsernames());
 		}
 		
-		return null;
-	}
-	
-	public final String[] getTabStrings(ICommandSender ics, String[] args, int i) throws CommandException
-	{
-		return null;
+		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return false; }
 	
-	public final boolean offlineUsernames(String[] args, int i)
-	{ return true; }
-	
-	public static boolean isArg(String[] args, int i, String... s)
-	{
-		if(args != null && i >= 0 && i < args.length)
-		{
-			for(String value : s) if(args[i].equals(value)) return true;
-		}
-		
-		return false;
-	}
-	
 	public static void checkArgs(String[] args, int i) throws CommandException
 	{ if(args == null || args.length < i) throw new MissingArgsException(); }
-	
-	public static void checkArgsStrong(String[] args, int i) throws CommandException
-	{ if(args == null || args.length != i) throw new MissingArgsException(); }
 	
 	//TODO: Fix me / make work with PlayerMatcher
 	public static List<EntityPlayerMP> findPlayers(ICommandSender ics, String arg) throws CommandException
@@ -132,16 +107,5 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 		
 		if(player == null) return new ArrayList<>();
 		return Collections.singletonList(player);
-	}
-	
-	private static class PlayerDistanceComparator implements Comparator<EntityPlayerMP>
-	{
-		private final Vec3 start;
-		
-		private PlayerDistanceComparator(ICommandSender ics)
-		{ start = ics.getPositionVector(); }
-		
-		public int compare(EntityPlayerMP o1, EntityPlayerMP o2)
-		{ return Double.compare(start.squareDistanceTo(o2.getPositionVector()), start.squareDistanceTo(o1.getPositionVector())); }
 	}
 }

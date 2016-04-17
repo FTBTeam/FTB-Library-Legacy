@@ -5,7 +5,7 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
@@ -24,14 +24,14 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 	{
 		playerID = p.getProfile().getId();
 		
-		ArrayList<IChatComponent> info0 = new ArrayList<>();
+		ArrayList<ITextComponent> info0 = new ArrayList<>();
 		p.getInfo(owner, info0);
 		
 		info = new String[Math.min(255, info0.size())];
 		
 		for(int i = 0; i < info.length; i++)
 		{
-			info[i] = IChatComponent.Serializer.componentToJson(info0.get(i));
+			info[i] = ITextComponent.Serializer.componentToJson(info0.get(i));
 		}
 		
 		armor = new ItemStack[5];
@@ -84,10 +84,10 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
 		if(p == null) return null;
 		
-		ArrayList<IChatComponent> info = new ArrayList<>();
+		ArrayList<ITextComponent> info = new ArrayList<>();
 		for(int i = 0; i < m.info.length; i++)
 		{
-			info.add(IChatComponent.Serializer.jsonToComponent(m.info[i]));
+			info.add(ITextComponent.Serializer.jsonToComponent(m.info[i]));
 		}
 		
 		p.receiveInfo(info);

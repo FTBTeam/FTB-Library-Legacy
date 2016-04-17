@@ -5,7 +5,7 @@ import ftb.lib.JsonHelper;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.notification.ClickAction;
 import ftb.lib.mod.client.gui.info.*;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -15,24 +15,24 @@ import java.util.*;
  */
 public class InfoExtendedTextLine extends InfoTextLine
 {
-	protected IChatComponent text;
+	protected ITextComponent text;
 	private ClickAction clickAction;
-	private List<IChatComponent> hover;
+	private List<ITextComponent> hover;
 	
-	public InfoExtendedTextLine(InfoPage c, IChatComponent cc)
+	public InfoExtendedTextLine(InfoPage c, ITextComponent cc)
 	{
 		super(c, null);
 		text = cc;
 	}
 	
-	public IChatComponent getText()
+	public ITextComponent getText()
 	{ return text; }
 	
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoExtendedTextLine(gui, this); }
 	
-	public List<IChatComponent> getHover()
+	public List<ITextComponent> getHover()
 	{ return hover; }
 	
 	@SideOnly(Side.CLIENT)
@@ -101,7 +101,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 			else
 			{
 				JsonArray a = new JsonArray();
-				for(IChatComponent c : hover)
+				for(ITextComponent c : hover)
 				{
 					a.add(JsonHelper.serializeICC(c));
 				}
@@ -116,7 +116,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 	public void setClickAction(ClickAction a)
 	{ clickAction = a; }
 	
-	public void setHover(List<IChatComponent> h)
+	public void setHover(List<ITextComponent> h)
 	{
 		if(h == null || h.isEmpty()) hover = null;
 		else

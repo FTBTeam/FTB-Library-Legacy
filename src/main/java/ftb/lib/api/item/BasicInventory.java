@@ -3,7 +3,7 @@ package ftb.lib.api.item;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 
 public class BasicInventory implements IInventory
 {
@@ -59,6 +59,6 @@ public class BasicInventory implements IInventory
 	public boolean hasCustomName()
 	{ return false; }
 	
-	public IChatComponent getDisplayName()
-	{ return new ChatComponentText(getName()); }
+	public ITextComponent getDisplayName()
+	{ return new TextComponentString(getName()); }
 }

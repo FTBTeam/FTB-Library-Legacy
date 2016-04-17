@@ -2,7 +2,9 @@ package ftb.lib;
 
 import net.minecraft.command.*;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.*;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
 public class BroadcastSender implements ICommandSender
@@ -11,17 +13,17 @@ public class BroadcastSender implements ICommandSender
 	
 	public static final BroadcastSender mute = new BroadcastSender()
 	{
-		public void addChatMessage(IChatComponent ics) { }
+		public void addChatMessage(ITextComponent ics) { }
 	};
 	
 	public String getName()
 	{ return "[Server]"; }
 	
-	public IChatComponent getDisplayName()
-	{ return new ChatComponentText(getName()); }
+	public ITextComponent getDisplayName()
+	{ return new TextComponentString(getName()); }
 	
-	public void addChatMessage(IChatComponent component)
-	{ FTBLib.getServer().getConfigurationManager().sendChatMsgImpl(component, true); }
+	public void addChatMessage(ITextComponent component)
+	{ FTBLib.getServer().getPlayerList().sendChatMsgImpl(component, true); }
 	
 	public boolean canCommandSenderUseCommand(int permLevel, String commandName)
 	{ return true; }
@@ -29,8 +31,8 @@ public class BroadcastSender implements ICommandSender
 	public BlockPos getPosition()
 	{ return FTBLib.getServerWorld().getSpawnCoordinate(); }
 	
-	public Vec3 getPositionVector()
-	{ return new Vec3(getPosition()); }
+	public Vec3d getPositionVector()
+	{ return new Vec3d(getPosition()); }
 	
 	public World getEntityWorld()
 	{ return FTBLib.getServerWorld(); }
@@ -44,4 +46,7 @@ public class BroadcastSender implements ICommandSender
 	public void setCommandStat(CommandResultStats.Type type, int amount)
 	{
 	}
+	
+	public MinecraftServer getServer()
+	{ return FTBLib.getServer(); }
 }

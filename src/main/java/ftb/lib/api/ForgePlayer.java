@@ -31,6 +31,13 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 		customData = Collections.unmodifiableMap(event.getMap());
 	}
 	
+	public void init()
+	{
+		ForgePlayerDataEvent event = new ForgePlayerDataEvent(this);
+		customData.clear();
+		customData.putAll(event.getMap());
+	}
+	
 	public final Collection<ForgePlayerData> customData()
 	{ return customData.values(); }
 	

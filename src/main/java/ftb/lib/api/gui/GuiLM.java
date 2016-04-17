@@ -6,11 +6,10 @@ import ftb.lib.api.gui.widgets.PanelLM;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 
@@ -192,23 +191,23 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
 		{
 			Tessellator tessellator = Tessellator.getInstance();
-			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-			worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-			worldrenderer.pos(x + 0, y + h, z).endVertex();
-			worldrenderer.pos(x + w, y + h, z).endVertex();
-			worldrenderer.pos(x + w, y + 0, z).endVertex();
-			worldrenderer.pos(x + 0, y + 0, z).endVertex();
+			VertexBuffer buffer = tessellator.getBuffer();
+			buffer.begin(7, DefaultVertexFormats.POSITION);
+			buffer.pos(x + 0, y + h, z).endVertex();
+			buffer.pos(x + w, y + h, z).endVertex();
+			buffer.pos(x + w, y + 0, z).endVertex();
+			buffer.pos(x + 0, y + 0, z).endVertex();
 			tessellator.draw();
 		}
 		else
 		{
 			Tessellator tessellator = Tessellator.getInstance();
-			WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-			worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-			worldrenderer.pos(x + 0, y + h, z).tex(u0, v1).endVertex();
-			worldrenderer.pos(x + w, y + h, z).tex(u1, v1).endVertex();
-			worldrenderer.pos(x + w, y + 0, z).tex(u1, v0).endVertex();
-			worldrenderer.pos(x + 0, y + 0, z).tex(u0, v0).endVertex();
+			VertexBuffer buffer = tessellator.getBuffer();
+			buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+			buffer.pos(x + 0, y + h, z).tex(u0, v1).endVertex();
+			buffer.pos(x + w, y + h, z).tex(u1, v1).endVertex();
+			buffer.pos(x + w, y + 0, z).tex(u1, v0).endVertex();
+			buffer.pos(x + 0, y + 0, z).tex(u0, v0).endVertex();
 			tessellator.draw();
 		}
 	}
@@ -220,8 +219,8 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		drawTexturedRectD(x, y, z, w, h, u0 * scX, v0 * scY, u1 * scX, v1 * scY);
 	}
 	
-	public void playSoundFX(ResourceLocation s, float pitch)
-	{ mc.getSoundHandler().playSound(PositionedSoundRecord.create(s, pitch)); }
+	public void playSoundFX(SoundEvent e, float pitch)
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch)); }
 	
 	public static void drawPlayerHead(String username, double x, double y, double w, double h, double z)
 	{

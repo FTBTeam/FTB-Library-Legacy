@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.info;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class ButtonInfoPage extends ButtonLM
 	
 	public void updateTitle()
 	{
-		IChatComponent titleC = page.getTitleComponent().createCopy();
+		ITextComponent titleC = page.getTitleComponent().createCopy();
 		if(guiInfo.selectedPage == page) titleC.getChatStyle().setBold(true);
 		title = titleC.getFormattedText();
 		hover = null;
@@ -62,6 +62,6 @@ public class ButtonInfoPage extends ButtonLM
 		int ay = getAY();
 		if(ay < -height || ay > guiInfo.mainPanel.height) return;
 		int ax = getAX();
-		guiInfo.getFontRenderer().drawString(mouseOver(ax, ay) ? (EnumChatFormatting.UNDERLINE + title) : title, ax + 1, ay + 1, guiInfo.colorText);
+		guiInfo.getFontRenderer().drawString(mouseOver(ax, ay) ? (TextFormatting.UNDERLINE + title) : title, ax + 1, ay + 1, guiInfo.colorText);
 	}
 }

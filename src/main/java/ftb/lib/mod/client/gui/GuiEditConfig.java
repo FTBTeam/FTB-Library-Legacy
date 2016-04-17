@@ -10,7 +10,7 @@ import latmod.lib.*;
 import latmod.lib.annotations.Flags;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -419,9 +419,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				String min = entry.getMinValueString();
 				String max = entry.getMaxValueString();
 				
-				if(def != null) l.add(EnumChatFormatting.AQUA + "Def: " + def);
-				if(min != null) l.add(EnumChatFormatting.AQUA + "Min: " + min);
-				if(max != null) l.add(EnumChatFormatting.AQUA + "Max: " + max);
+				if(def != null) l.add(TextFormatting.AQUA + "Def: " + def);
+				if(min != null) l.add(TextFormatting.AQUA + "Min: " + min);
+				if(max != null) l.add(TextFormatting.AQUA + "Max: " + max);
 			}
 		}
 	}

@@ -7,7 +7,6 @@ import ftb.lib.mod.FTBLibEventHandler;
 import latmod.lib.*;
 import latmod.lib.util.Phase;
 import net.minecraft.nbt.*;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.*;
@@ -38,13 +37,13 @@ public final class ForgeWorldMP extends ForgeWorld
 		{
 			if(d instanceof IWorldTick)
 			{
-				FTBLibEventHandler.instance.ticking.add((IWorldTick) d);
+				FTBLibEventHandler.ticking.add((IWorldTick) d);
 			}
 		}
 	}
 	
 	public World getMCWorld()
-	{ return MinecraftServer.getServer().getEntityWorld(); }
+	{ return FTBLib.getServer().getEntityWorld(); }
 	
 	public ForgeWorldMP toWorldMP()
 	{ return this; }

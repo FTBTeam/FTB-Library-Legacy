@@ -13,7 +13,7 @@ import io.netty.buffer.ByteBuf;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.*;
 import net.minecraftforge.fml.relauncher.*;
@@ -107,8 +107,8 @@ public class MessageReload extends MessageLM<MessageReload>
 		else
 		{
 			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
-			n.title.getChatStyle().setColor(EnumChatFormatting.WHITE);
-			n.desc = new ChatComponentText('/' + FTBLibModClient.reload_client_cmd.getAsString());
+			n.title.getChatStyle().setColor(TextFormatting.WHITE);
+			n.desc = new TextComponentString('/' + FTBLibModClient.reload_client_cmd.getAsString());
 			n.setColor(0xFF333333);
 			ClientNotifications.add(n);
 			return null;

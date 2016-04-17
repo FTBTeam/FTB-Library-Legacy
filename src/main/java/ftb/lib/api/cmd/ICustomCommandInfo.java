@@ -1,7 +1,7 @@
 package ftb.lib.api.cmd;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface ICustomCommandInfo
 {
-	void addInfo(List<IChatComponent> list, ICommandSender sender);
+	void addInfo(List<ITextComponent> list, ICommandSender sender);
 }

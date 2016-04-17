@@ -1,20 +1,20 @@
 package ftb.lib.api;
 
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Created by LatvianModder on 15.01.2016.
  */
 public enum FriendStatus
 {
-	NONE(EnumChatFormatting.WHITE),
-	FRIEND(EnumChatFormatting.GREEN),
-	INVITING(EnumChatFormatting.GOLD),
-	INVITED(EnumChatFormatting.BLUE);
+	NONE(TextFormatting.WHITE),
+	FRIEND(TextFormatting.GREEN),
+	INVITING(TextFormatting.GOLD),
+	INVITED(TextFormatting.BLUE);
 	
-	public final EnumChatFormatting color;
+	public final TextFormatting color;
 	
-	FriendStatus(EnumChatFormatting c)
+	FriendStatus(TextFormatting c)
 	{
 		color = c;
 	}

@@ -12,10 +12,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.*;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.IWorldNameable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.*;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -82,10 +84,10 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			LMNBTUtils.setUUID(tag, "OID", ownerID, false);
 		}
 		
-		return new S35PacketUpdateTileEntity(getPos(), 0, tag);
+		return new SPacketUpdateTileEntity(getPos(), 0, tag);
 	}
 	
-	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
+	public final void onDataPacket(NetworkManager m, SPacketUpdateTileEntity p)
 	{
 		NBTTagCompound data = p.getNbtCompound();
 		ownerID = useOwnerID() ? LMNBTUtils.getUUID(data, "OID", false) : null;
@@ -165,7 +167,8 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			
 			if(getSync().sync())
 			{
-				worldObj.markBlockForUpdate(getPos());
+				//FIXME: Send update
+				//worldObj.send(getPos(), this);
 			}
 			
 			worldObj.markChunkDirty(pos, this);
@@ -276,8 +279,8 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public void notifyNeighbors()
 	{ worldObj.notifyBlockOfStateChange(getPos(), getBlockType()); }
 	
-	public int getDimension()
-	{ return worldObj == null ? 0 : worldObj.provider.getDimensionId(); }
+	public DimensionType getDimension()
+	{ return worldObj == null ? DimensionType.OVERWORLD : worldObj.provider.getDimensionType(); }
 	
 	public final int hashCode()
 	{ return LMUtils.hashCode(getPos(), getDimension()); }
@@ -287,7 +290,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		if(o == null) return false;
 		if(o == this) return true;
 		
-		if(o.hashCode() == hashCode() && o instanceof TileLM)
+		if(o instanceof TileLM)
 		{
 			TileLM t = (TileLM) o;
 			return t.getDimension() == getDimension() && t.getPos().equals(getPos());
@@ -310,11 +313,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		currentState = (worldObj != null) ? worldObj.getBlockState(getPos()) : null;
 	}
 	
-	public void playSound(String soundName, float volume, float pitch)
-	{
-		worldObj.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, soundName, volume, pitch);
-	}
-	
 	public void setName(String s) { }
 	
 	public String getName()
@@ -323,6 +321,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public boolean hasCustomName()
 	{ return !getName().isEmpty(); }
 	
-	public IChatComponent getDisplayName()
-	{ return hasCustomName() ? new ChatComponentText(getName()) : new ChatComponentTranslation(getBlockType().getLocalizedName() + ".name"); }
+	public ITextComponent getDisplayName()
+	{ return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getBlockType().getLocalizedName() + ".name"); }
 }

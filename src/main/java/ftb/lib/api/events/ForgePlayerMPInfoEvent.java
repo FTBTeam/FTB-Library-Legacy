@@ -1,7 +1,7 @@
 package ftb.lib.api.events;
 
 import ftb.lib.api.ForgePlayerMP;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.List;
 public class ForgePlayerMPInfoEvent extends Event
 {
 	public final ForgePlayerMP player;
-	public final List<IChatComponent> list;
+	public final List<ITextComponent> list;
 	
-	public ForgePlayerMPInfoEvent(ForgePlayerMP p, List<IChatComponent> l)
+	public ForgePlayerMPInfoEvent(ForgePlayerMP p, List<ITextComponent> l)
 	{
 		player = p;
 		list = l;

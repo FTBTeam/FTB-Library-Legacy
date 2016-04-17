@@ -2,7 +2,9 @@ package ftb.lib.api.cmd;
 
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.*;
 
 import java.util.*;
 
@@ -22,7 +24,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " [subcommand]"; }
 	
-	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args, BlockPos pos)
+	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1)
 		{
@@ -33,10 +35,10 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		
 		if(cmd != null)
 		{
-			return cmd.addTabCompletionOptions(ics, LMStringUtils.shiftArray(args), pos);
+			return cmd.getTabCompletionOptions(server, ics, LMStringUtils.shiftArray(args), pos);
 		}
 		
-		return null;
+		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
 	public boolean isUsernameIndex(String[] args, int i)
@@ -50,11 +52,11 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		return false;
 	}
 	
-	public void processCommand(ICommandSender ics, String[] args) throws CommandException
+	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		if(args.length < 1)
 		{
-			ics.addChatMessage(new ChatComponentText(LMStringUtils.strip(subCommands.keySet())));
+			ics.addChatMessage(new TextComponentString(LMStringUtils.strip(subCommands.keySet())));
 		}
 		else
 		{
@@ -62,33 +64,33 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 			if(cmd == null) throw new InvalidSubCommandException(args[0]);
 			else
 			{
-				cmd.processCommand(ics, LMStringUtils.shiftArray(args));
+				cmd.execute(server, ics, LMStringUtils.shiftArray(args));
 			}
 		}
 	}
 	
-	public void addInfo(List<IChatComponent> list, ICommandSender sender)
+	public void addInfo(List<ITextComponent> list, ICommandSender sender)
 	{
-		list.add(new ChatComponentText('/' + commandName));
+		list.add(new TextComponentString('/' + commandName));
 		list.add(null);
 		addCommandUsage(sender, list, 0);
 	}
 	
-	private static IChatComponent tree(IChatComponent sibling, int level)
+	private static ITextComponent tree(ITextComponent sibling, int level)
 	{
 		if(level == 0) return sibling;
 		char[] chars = new char[level * 2];
 		Arrays.fill(chars, ' ');
-		return new ChatComponentText(new String(chars)).appendSibling(sibling);
+		return new TextComponentString(new String(chars)).appendSibling(sibling);
 	}
 	
-	private void addCommandUsage(ICommandSender ics, List<IChatComponent> list, int level)
+	private void addCommandUsage(ICommandSender ics, List<ITextComponent> list, int level)
 	{
 		for(ICommand c : subCommands.values())
 		{
 			if(c instanceof CommandSubLM)
 			{
-				list.add(tree(new ChatComponentText('/' + c.getCommandName()), level));
+				list.add(tree(new TextComponentString('/' + c.getCommandName()), level));
 				((CommandSubLM) c).addCommandUsage(ics, list, level + 1);
 			}
 			else
@@ -96,11 +98,11 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 				String usage = c.getCommandUsage(ics);
 				if(usage.indexOf('/') != -1 || usage.indexOf('%') != -1)
 				{
-					list.add(tree(new ChatComponentText(usage), level));
+					list.add(tree(new TextComponentString(usage), level));
 				}
 				else
 				{
-					list.add(tree(new ChatComponentTranslation(usage), level));
+					list.add(tree(new TextComponentTranslation(usage), level));
 				}
 			}
 		}

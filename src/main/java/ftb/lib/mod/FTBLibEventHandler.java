@@ -2,7 +2,6 @@ package ftb.lib.mod;
 
 import ftb.lib.FTBLib;
 import ftb.lib.api.*;
-import ftb.lib.api.events.ForgePlayerDataEvent;
 import ftb.lib.api.item.ICreativeSafeItem;
 import ftb.lib.api.tile.ISecureTile;
 import latmod.lib.LMUtils;
@@ -10,8 +9,9 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.WorldServer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -32,7 +32,7 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public void onWorldSaved(WorldEvent.Save event)
 	{
-		if(event.world.provider.getDimensionId() == 0 && event.world instanceof WorldServer)
+		if(event.getWorld().provider.getDimensionType() == DimensionType.OVERWORLD && event.getWorld() instanceof WorldServer)
 		{
 			try
 			{
@@ -60,8 +60,7 @@ public class FTBLibEventHandler
 			{
 				p = new ForgePlayerMP(ep.getGameProfile());
 				ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
-				
-				ForgePlayerDataEvent event = new ForgePlayerDataEvent(p);
+				p.init();
 			}
 			else if(!p.getProfile().getName().equals(ep.getName()))
 			{
@@ -85,9 +84,9 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public void onPlayerDeath(LivingDeathEvent e)
 	{
-		if(e.entity instanceof EntityPlayerMP)
+		if(e.getEntity() instanceof EntityPlayerMP)
 		{
-			ForgeWorldMP.inst.getPlayer(e.entity).onDeath();
+			ForgeWorldMP.inst.getPlayer(e.getEntity()).onDeath();
 		}
 	}
 	
@@ -96,7 +95,7 @@ public class FTBLibEventHandler
 	{
 		if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
 		{
-			if(e.world.provider.getDimensionId() == 0)
+			if(e.world.provider.getDimensionType() == DimensionType.OVERWORLD)
 			{
 				if(!pendingCallbacks.isEmpty())
 				{
@@ -124,23 +123,24 @@ public class FTBLibEventHandler
 		}
 	}
 	
+	//FIXME: Right click / left click needs a rewrite
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent e)
 	{
-		if(e.entityPlayer instanceof FakePlayer || e.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR) return;
-		else if(!canInteract(e.entityPlayer, e.pos, e.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK))
+		if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty) return;
+		else if(!canInteract(e.getEntityPlayer(), e.getHand(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
 			e.setCanceled(true);
 		else if(FTBLib.ftbu != null) FTBLib.ftbu.onRightClick(e);
 	}
 	
-	private boolean canInteract(EntityPlayer ep, BlockPos pos, boolean leftClick)
+	private boolean canInteract(EntityPlayer ep, EnumHand hand, BlockPos pos, boolean leftClick)
 	{
-		ItemStack heldItem = ep.getHeldItem();
+		ItemStack heldItem = ep.getHeldItem(hand);
 		
 		if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
 		{
 			if(!ep.worldObj.isRemote) ep.worldObj.markBlockRangeForRenderUpdate(pos, pos);
-			else ep.worldObj.markBlockForUpdate(pos);
+			//FIXME: else ep.worldObj.markChunkDirty(pos, null);
 			return false;
 		}
 		

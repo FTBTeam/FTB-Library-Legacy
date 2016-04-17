@@ -42,7 +42,11 @@ public class FTBLibModCommon // FTBLibModClient
 	
 	public double getReachDist(EntityPlayer ep)
 	{
-		if(ep instanceof EntityPlayerMP) return ((EntityPlayerMP) ep).theItemInWorldManager.getBlockReachDistance();
+		if(ep instanceof EntityPlayerMP)
+		{
+			return ((EntityPlayerMP) ep).interactionManager.getBlockReachDistance();
+		}
+		
 		return 0D;
 	}
 	

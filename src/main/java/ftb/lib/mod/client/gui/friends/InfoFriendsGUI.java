@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.friends;
 import ftb.lib.api.*;
 import ftb.lib.api.info.InfoPage;
 import latmod.lib.LMColor;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -17,7 +17,7 @@ public class InfoFriendsGUI extends InfoPage
 	public InfoFriendsGUI()
 	{
 		super("friends_gui");
-		setTitle(new ChatComponentText("FriendsGUI"));
+		setTitle(new TextComponentString("FriendsGUI"));
 		
 		List<ForgePlayer> tempPlayerList = new ArrayList<>();
 		tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());

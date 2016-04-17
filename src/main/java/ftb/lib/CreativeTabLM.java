@@ -56,9 +56,9 @@ public class CreativeTabLM extends CreativeTabs
 	{ return getIconItemStack().getItemDamage(); }
 	
 	@SideOnly(Side.CLIENT)
-	public void displayAllReleventItems(List<ItemStack> l)
+	public void displayAllRelevantItems(List<ItemStack> l)
 	{
-		if(mod == null) super.displayAllReleventItems(l);
+		if(mod == null) super.displayAllRelevantItems(l);
 		else
 		{
 			for(IItemLM i : mod.itemsAndBlocks)

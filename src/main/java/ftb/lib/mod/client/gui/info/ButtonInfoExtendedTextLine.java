@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.info;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.info.InfoExtendedTextLine;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.*;
@@ -24,13 +24,13 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 		
 		if(l != null)
 		{
-			List<IChatComponent> h = l.getHover();
+			List<ITextComponent> h = l.getHover();
 			
 			if(h != null)
 			{
 				hover = new ArrayList<>();
 				
-				for(IChatComponent c1 : h)
+				for(ITextComponent c1 : h)
 				{
 					hover.add(c1.getFormattedText());
 				}

@@ -2,8 +2,10 @@ package ftb.lib.api.client;
 
 import latmod.lib.LMColor;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.*;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
@@ -11,7 +13,7 @@ public final class CubeRenderer
 {
 	public static final CubeRenderer instance = new CubeRenderer();
 	private Tessellator tessellator;
-	private WorldRenderer renderer;
+	private VertexBuffer buffer;
 	
 	private static final float[] normalsX = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
 	private static final float[] normalsY = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
@@ -35,7 +37,7 @@ public final class CubeRenderer
 	public CubeRenderer setTessellator(Tessellator t)
 	{
 		tessellator = t;
-		renderer = (t == null) ? null : tessellator.getWorldRenderer();
+		buffer = (t == null) ? null : tessellator.getBuffer();
 		return this;
 	}
 	
@@ -146,7 +148,7 @@ public final class CubeRenderer
 	{
 		if(beginAndEnd)
 		{
-			renderer.begin(7, format);
+			buffer.begin(7, format);
 		}
 	}
 	
@@ -160,11 +162,11 @@ public final class CubeRenderer
 	
 	private void vertex(int i, double x, double y, double z, double u, double v)
 	{
-		renderer.pos(x, y, z);
-		if(hasTexture) renderer.tex(u, v);
-		if(hasNormals) renderer.normal(normalsX[i], normalsY[i], normalsZ[i]);
-		if(color != null) renderer.color(color.red(), color.green(), color.blue(), color.alpha());
-		renderer.endVertex();
+		buffer.pos(x, y, z);
+		if(hasTexture) buffer.tex(u, v);
+		if(hasNormals) buffer.normal(normalsX[i], normalsY[i], normalsZ[i]);
+		if(color != null) buffer.color(color.red(), color.green(), color.blue(), color.alpha());
+		buffer.endVertex();
 	}
 	
 	public void renderDown()

@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -96,6 +96,6 @@ public class LMMod extends FinalIDObject
 		if(recipes != null) recipes.loadRecipes();
 	}
 	
-	public IChatComponent chatComponent(String s, Object... obj)
-	{ return new ChatComponentTranslation(modAssets + s, obj); }
+	public ITextComponent chatComponent(String s, Object... obj)
+	{ return new TextComponentTranslation(modAssets + s, obj); }
 }

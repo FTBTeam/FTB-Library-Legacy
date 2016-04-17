@@ -8,7 +8,8 @@ import ftb.lib.mod.net.MessageDisplayGuide;
 import latmod.lib.*;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -24,7 +25,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	};
 	
 	public InfoPage parent = null;
-	private IChatComponent title;
+	private ITextComponent title;
 	public final List<InfoTextLine> text;
 	public final Map<String, InfoPage> childPages;
 	
@@ -35,7 +36,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		childPages = new LinkedHashMap<>();
 	}
 	
-	public InfoPage setTitle(IChatComponent c)
+	public InfoPage setTitle(ITextComponent c)
 	{
 		title = c;
 		return this;
@@ -53,7 +54,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		return parent.getOwner();
 	}
 	
-	public void println(IChatComponent c)
+	public void println(ITextComponent c)
 	{ text.add(c == null ? null : new InfoExtendedTextLine(this, c)); }
 	
 	public void printlnText(String s)
@@ -107,8 +108,8 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		c.setParent(this);
 	}
 	
-	public IChatComponent getTitleComponent()
-	{ return title == null ? new ChatComponentText(getID()) : title; }
+	public ITextComponent getTitleComponent()
+	{ return title == null ? new TextComponentString(getID()) : title; }
 	
 	public InfoPage getSub(String id)
 	{

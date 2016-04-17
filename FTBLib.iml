@@ -9,26 +9,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="LatLib" exported="" />
-    <orderEntry type="module" module-name="ProjMCP_1.8" exported="" />
+    <orderEntry type="module" module-name="ProjMC_9" exported="" />
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" />
-          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/1.8.9" />
-          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/excluded" />
-          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/1.8.9" />
-          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/excluded" />
+          <root url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" />
-        </SOURCES>
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/1.8.9" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/1.8.9" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/excluded" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods/excluded" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP_1.8/run/mods" recursive="false" type="SOURCES" />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods" recursive="false" />
       </library>
     </orderEntry>
   </component>

@@ -12,7 +12,7 @@ import ftb.lib.mod.*;
 import ftb.lib.mod.net.*;
 import latmod.lib.LMUtils;
 import latmod.lib.net.*;
-import latmod.lib.util.StringMapEntry;
+import latmod.lib.util.FinalIDObject;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -25,14 +25,16 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.*;
+import net.minecraft.util.text.*;
 import net.minecraft.world.*;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.*;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.*;
@@ -51,7 +53,7 @@ public class FTBLib
 	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
 	
-	public static final EnumChatFormatting[] chatColors = new EnumChatFormatting[] {EnumChatFormatting.BLACK, EnumChatFormatting.DARK_BLUE, EnumChatFormatting.DARK_GREEN, EnumChatFormatting.DARK_AQUA, EnumChatFormatting.DARK_RED, EnumChatFormatting.DARK_PURPLE, EnumChatFormatting.GOLD, EnumChatFormatting.GRAY, EnumChatFormatting.DARK_GRAY, EnumChatFormatting.BLUE, EnumChatFormatting.GREEN, EnumChatFormatting.AQUA, EnumChatFormatting.RED, EnumChatFormatting.LIGHT_PURPLE, EnumChatFormatting.YELLOW, EnumChatFormatting.WHITE,};
+	public static final TextFormatting[] chatColors = new TextFormatting[] {TextFormatting.BLACK, TextFormatting.DARK_BLUE, TextFormatting.DARK_GREEN, TextFormatting.DARK_AQUA, TextFormatting.DARK_RED, TextFormatting.DARK_PURPLE, TextFormatting.GOLD, TextFormatting.GRAY, TextFormatting.DARK_GRAY, TextFormatting.BLUE, TextFormatting.GREEN, TextFormatting.AQUA, TextFormatting.RED, TextFormatting.LIGHT_PURPLE, TextFormatting.YELLOW, TextFormatting.WHITE,};
 	
 	public static File folderConfig;
 	public static File folderMinecraft;
@@ -108,8 +110,8 @@ public class FTBLib
 		}
 	}
 	
-	public static IChatComponent getChatComponent(Object o)
-	{ return (o != null && o instanceof IChatComponent) ? (IChatComponent) o : new ChatComponentText("" + o); }
+	public static ITextComponent getChatComponent(Object o)
+	{ return (o != null && o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString("" + o); }
 	
 	public static void addItem(IItemLM i)
 	{ addItem((Item) i, i.getID()); }
@@ -175,14 +177,14 @@ public class FTBLib
 	{ return FTBLib.class.getResource(getPath(res)) != null; }
 	
 	public static boolean hasOnlinePlayers()
-	{ return getServer() != null && !getServer().getConfigurationManager().playerEntityList.isEmpty(); }
+	{ return getServer() != null && !getServer().getPlayerList().getPlayerList().isEmpty(); }
 	
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
 		if(getServer() == null) return new ArrayList<>();
-		else if(except == null) return getServer().getConfigurationManager().playerEntityList;
+		else if(except == null) return getServer().getPlayerList().getPlayerList();
 		
-		List<EntityPlayerMP> l = getServer().getConfigurationManager().playerEntityList;
+		List<EntityPlayerMP> l = getServer().getPlayerList().getPlayerList();
 		if(l.isEmpty()) return l;
 		
 		List<EntityPlayerMP> list = new ArrayList<>();
@@ -191,55 +193,10 @@ public class FTBLib
 		return list;
 	}
 	
-	public static Map<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
-	{
-		HashMap<UUID, EntityPlayerMP> m = new HashMap<>();
-		
-		if(!hasOnlinePlayers()) return m;
-		
-		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
-		{
-			EntityPlayerMP ep = getServer().getConfigurationManager().playerEntityList.get(i);
-			m.put(ep.getUniqueID(), ep);
-		}
-		
-		return m;
-	}
-	
 	public static EntityPlayerMP getPlayerMP(UUID id)
 	{
 		if(!hasOnlinePlayers()) return null;
-		
-		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
-		{
-			EntityPlayerMP ep = getServer().getConfigurationManager().playerEntityList.get(i);
-			if(ep.getUniqueID().equals(id)) return ep;
-		}
-		
-		return null;
-	}
-	
-	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Item i)
-	{
-		if(m.type == GameRegistry.Type.ITEM && id.equals(m.name))
-		{
-			m.remap(i);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Block b)
-	{
-		if(id.equals(m.name))
-		{
-			if(m.type == GameRegistry.Type.BLOCK) m.remap(b);
-			else if(m.type == GameRegistry.Type.ITEM) m.remap(Item.getItemFromBlock(b));
-			return true;
-		}
-		
-		return false;
+		return getServer().getPlayerList().getPlayerByUUID(id);
 	}
 	
 	public static boolean isModInstalled(String s)
@@ -306,7 +263,7 @@ public class FTBLib
 	
 	public static boolean isOP(GameProfile p)
 	{
-		return !isDedicatedServer() || getServerWorld() != null && getServer().getConfigurationManager().getOppedPlayers().getEntry(p) != null;
+		return !isDedicatedServer() || getServerWorld() != null && getServer().getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0;
 	}
 	
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
@@ -352,16 +309,13 @@ public class FTBLib
 		return cachedUUIDs.get(key);
 	}
 	
-	public static void playSoundEffect(World w, BlockPos pos, String s, float g, float p)
-	{ w.playSoundEffect(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, s, g, p); }
-	
 	//null - can't, TRUE - always spawns, FALSE - only spawns at night
 	public static Boolean canMobSpawn(World world, BlockPos pos)
 	{
 		if(world == null || pos == null || pos.getY() < 0 || pos.getY() >= 256) return null;
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 		
-		if(!SpawnerAnimals.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
+		if(!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
 			return null;
 		
 		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
@@ -374,6 +328,31 @@ public class FTBLib
 	public static String getStateString(IBlockState state)
 	{
 		if(state == null) return null;
+		
+		final class StringMapEntry extends FinalIDObject implements Map.Entry<String, Object>
+		{
+			Object value;
+			
+			StringMapEntry(String s, Object p)
+			{
+				super(s);
+				value = p;
+			}
+			
+			public String getKey()
+			{ return getID(); }
+			
+			public Object getValue()
+			{ return value; }
+			
+			public Object setValue(Object v)
+			{
+				Object p = value;
+				value = v;
+				return p;
+			}
+		}
+		
 		List<StringMapEntry> list = new ArrayList<>();
 		
 		for(IProperty p : state.getPropertyNames())

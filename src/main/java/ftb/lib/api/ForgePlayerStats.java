@@ -4,7 +4,7 @@ import ftb.lib.mod.FTBLibMod;
 import latmod.lib.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.*;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 
@@ -25,14 +25,14 @@ public class ForgePlayerStats
 		
 		long ms = LMUtils.millis();
 		
-		timePlayed = file.readStat(StatList.minutesPlayedStat) * 50L;
-		deaths = file.readStat(StatList.deathsStat);
+		timePlayed = file.readStat(StatList.playOneMinute) * 50L;
+		deaths = file.readStat(StatList.deaths);
 		
 		lastSeen = ms;
 		if(firstJoined <= 0L) firstJoined = lastSeen;
 	}
 	
-	public void getInfo(ForgePlayerMP owner, List<IChatComponent> info, long ms)
+	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info, long ms)
 	{
 		if(lastSeen > 0L && !owner.isOnline())
 			info.add(FTBLibMod.mod.chatComponent("label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
@@ -40,7 +40,7 @@ public class ForgePlayerStats
 			info.add(FTBLibMod.mod.chatComponent("label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
 		if(deaths > 0) info.add(FTBLibMod.mod.chatComponent("label.deaths", String.valueOf(deaths)));
 		if(timePlayed > 0L)
-			info.add(new ChatComponentTranslation("stat.playOneMinute").appendSibling(new ChatComponentText(": " + LMStringUtils.getTimeString(timePlayed))));
+			info.add(new TextComponentTranslation("stat.playOneMinute").appendSibling(new TextComponentString(": " + LMStringUtils.getTimeString(timePlayed))));
 	}
 	
 	public void save(NBTTagCompound tag)

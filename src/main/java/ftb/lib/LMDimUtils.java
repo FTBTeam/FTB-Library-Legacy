@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.*;
 import net.minecraftforge.common.DimensionManager;
 
@@ -17,13 +17,13 @@ public class LMDimUtils
 	{ return pos != null && teleportPlayer(entity, pos.x + 0.5D, pos.y + 0.5D, pos.z + 0.5D, pos.dim); }
 	
 	//tterrag's code, I don't own it. Maybe he doesn't too.. but who cares, eh?
-	public static boolean teleportPlayer(Entity entity, double x, double y, double z, int dim)
+	public static boolean teleportPlayer(Entity entity, double x, double y, double z, DimensionType dim)
 	{
 		if(entity == null) return false;
 		entity.fallDistance = 0F;
 		EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
 		
-		if(dim == entity.dimension)
+		if(dim.getId() == entity.dimension)
 		{
 			if(x == entity.posX && y == entity.posY && z == entity.posZ) return true;
 			
@@ -38,13 +38,13 @@ public class LMDimUtils
 		int from = entity.dimension;
 		float rotationYaw = entity.rotationYaw;
 		float rotationPitch = entity.rotationPitch;
-		MinecraftServer server = MinecraftServer.getServer();
+		MinecraftServer server = FTBLib.getServer();
 		WorldServer fromDim = server.worldServerForDimension(from);
-		WorldServer toDim = server.worldServerForDimension(dim);
+		WorldServer toDim = server.worldServerForDimension(dim.getId());
 		
 		if(player != null)
 		{
-			server.getConfigurationManager().transferPlayerToDimension(player, dim, new TeleporterBlank(toDim));
+			server.getPlayerList().transferPlayerToDimension(player, dim.getId(), new TeleporterBlank(toDim));
 			if(from == 1 && entity.isEntityAlive())
 			{
 				// get around vanilla End hacks
@@ -80,111 +80,30 @@ public class LMDimUtils
 		if(player != null) player.setPositionAndUpdate(x, y, z);
 		else entity.setPosition(x, y, z);
 		return true;
-		
-		/* Ye olde teleport code
-		MinecraftServer mcs = MinecraftServer.getServer();
-		if(mcs == null || (dim != 0 && !mcs.getAllowNether())) return false;
-		
-		WorldServer w1 = mcs.worldServerForDimension(dim);
-		if(w1 == null)
+	}
+	
+	public static World getWorld(DimensionType dim)
+	{ return DimensionManager.getWorld(dim.getId()); }
+	
+	public static double getMovementFactor(DimensionType dim)
+	{
+		switch(dim)
 		{
-			System.err.println("Cannot teleport " + ep.getCommandSenderName() + " to Dimension " + dim + ": Missing WorldServer");
-			return false;
-		}
-		
-		WorldServer w0 = (WorldServer) ep.worldObj;
-		
-		if(ep.ridingEntity != null)
-		{
-			ep.mountEntity(null);
-		}
-		
-		boolean chw = w0 != w1;
-		
-		w0.updateEntityWithOptionalForce(ep, false);
-		
-		ep.closeScreen();
-		
-		if(chw)
-		{
-			ep.dimension = dim;
-			ep.playerNetServerHandler.sendPacket(new S07PacketRespawn(ep.dimension, ep.worldObj.difficultySetting, w1.getWorldInfo().getTerrainType(), ep.theItemInWorldManager.getGameType()));
-			w0.getPlayerManager().removePlayer(ep);
-			
-			ep.closeScreen();
-			w0.playerEntities.remove(ep);
-			w0.updateAllPlayersSleepingFlag();
-			int i = ep.chunkCoordX;
-			int j = ep.chunkCoordZ;
-			
-			if(ep.addedToChunk && w0.getChunkProvider().chunkExists(i, j))
+			case OVERWORLD:
+				return 1D;
+			case NETHER:
+				return 8D;
+			case THE_END:
+				return 1D;
+			default:
 			{
-				w0.getChunkFromChunkCoords(i, j).removeEntity(ep);
-				w0.getChunkFromChunkCoords(i, j).isModified = true;
+				World w = getWorld(dim);
+				return (w == null) ? 1D : w.provider.getMovementFactor();
 			}
-			
-			w0.loadedEntityList.remove(ep);
-			w0.onEntityRemoved(ep);
-		}
-		
-		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		w1.theChunkProviderServer.loadChunk(MathHelper.floor_double(x) >> 4, MathHelper.floor_double(z) >> 4);
-		
-		if(chw)
-		{
-			w1.spawnEntityInWorld(ep);
-			ep.setWorld(w1);
-		}
-		
-		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		w1.updateEntityWithOptionalForce(ep, false);
-		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		
-		if(chw) ep.mcServer.getConfigurationManager().func_72375_a(ep, w1);
-		ep.playerNetServerHandler.setPlayerLocation(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		
-		w1.updateEntityWithOptionalForce(ep, false);
-		
-		ep.theItemInWorldManager.setWorld(w1);
-		ep.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(ep, w1);
-		ep.mcServer.getConfigurationManager().syncPlayerInventory(ep);
-		for(Object o : ep.getActivePotionEffects())
-			ep.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(ep.getEntityId(), (PotionEffect) o));
-		ep.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(ep.experience, ep.experienceTotal, ep.experienceLevel));
-		
-		ep.setLocationAndAngles(x, y, z, ep.rotationYaw, ep.rotationPitch);
-		*/
-	}
-	
-	public static World getWorld(int dim)
-	{ return DimensionManager.getWorld(dim); }
-	
-	public static String getDimName(int dim)
-	{
-		if(dim == 0) return "Overworld";
-		else if(dim == 1) return "The End";
-		else if(dim == -1) return "Nether";
-		
-		World w = getWorld(dim);
-		return w == null ? ("DIM" + dim) : w.provider.getDimensionName();
-	}
-	
-	public static double getMovementFactor(int dim)
-	{
-		if(dim == 0) return 1D;
-		else if(dim == 1) return 1D;
-		else if(dim == -1) return 8D;
-		else
-		{
-			World w = getWorld(dim);
-			return (w == null) ? 1D : w.provider.getMovementFactor();
 		}
 	}
 	
-	public static double getWorldScale(int dim)
-	{ return 1D / getMovementFactor(dim); }
-	
-	public static BlockDimPos getSpawnPoint(int dim)
+	public static BlockDimPos getSpawnPoint(DimensionType dim)
 	{
 		World w = getWorld(dim);
 		if(w == null) return null;
@@ -193,9 +112,9 @@ public class LMDimUtils
 		return new BlockDimPos(c, dim);
 	}
 	
-	public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
+	public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, DimensionType dim)
 	{
-		BlockPos c = ep.getBedLocation(dim);
+		BlockPos c = ep.getBedLocation(dim.getId());
 		if(c == null) return getSpawnPoint(dim);
 		return new BlockDimPos(c, dim);
 	}

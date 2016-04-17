@@ -1,6 +1,6 @@
 package ftb.lib.api;
 
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public final class ForgePlayerFake extends ForgePlayerMP
 	public boolean isOP()
 	{ return false; }
 	
-	public void getInfo(ForgePlayerMP owner, List<IChatComponent> info) { }
+	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info) { }
 	
 	public void refreshStats() { }
 	

@@ -4,7 +4,7 @@ import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoTextLine;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.*;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ButtonInfoTextLine extends ButtonLM
 		
 		if(l != null)
 		{
-			IChatComponent c = l.getText();
+			ITextComponent c = l.getText();
 			
 			if(c != null)
 			{

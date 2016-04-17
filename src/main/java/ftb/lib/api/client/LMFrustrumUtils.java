@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -16,7 +17,7 @@ import java.nio.*;
 public class LMFrustrumUtils
 {
 	public static boolean isFirstPerson;
-	public static int currentDim;
+	public static DimensionType currentDim;
 	public static double playerX, playerY, playerZ;
 	public static double renderX, renderY, renderZ;
 	public static final Frustum frustum = new Frustum();
