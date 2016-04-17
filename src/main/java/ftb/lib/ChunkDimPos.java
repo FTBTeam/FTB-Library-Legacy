@@ -1,16 +1,16 @@
 package ftb.lib;
 
 import latmod.lib.*;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.*;
 
 /**
  * Created by LatvianModder on 14.03.2016.
  */
 public class ChunkDimPos extends ChunkCoordIntPair
 {
-	public final int dim;
+	public final DimensionType dim;
 	
-	public ChunkDimPos(int d, int x, int z)
+	public ChunkDimPos(DimensionType d, int x, int z)
 	{
 		super(x, z);
 		dim = d;
@@ -28,7 +28,7 @@ public class ChunkDimPos extends ChunkCoordIntPair
 	{ return p == this || (p != null && p.dim == dim && p.chunkXPos == chunkXPos && p.chunkZPos == chunkZPos); }
 	
 	public String toString()
-	{ return "[" + dim + ',' + chunkXPos + ',' + chunkZPos + ']'; }
+	{ return "[" + dim.getName() + '@' + chunkXPos + ',' + chunkZPos + ']'; }
 	
 	public int hashCode()
 	{ return LMUtils.hashCode(dim, chunkXPos, chunkZPos); }

@@ -128,7 +128,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public EnumSync getSync()
 	{ return EnumSync.SYNC; }
 	
-	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, float x, float y, float z)
+	public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, EnumHand hand, float x, float y, float z)
 	{
 		return false;
 	}

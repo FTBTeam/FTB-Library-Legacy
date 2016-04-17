@@ -18,7 +18,7 @@ import org.apache.logging.log4j.*;
 import java.io.File;
 import java.util.Map;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP, acceptedMinecraftVersions = "[1.8.8, 1.9)")
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP, acceptedMinecraftVersions = "[1.9, 1.10)")
 public class FTBLibMod
 {
 	@Mod.Instance(FTBLibFinals.MOD_ID)
@@ -69,7 +69,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent e)
 	{
-		FTBLibEventHandler.instance.ticking.clear();
+		FTBLibEventHandler.ticking.clear();
 		
 		FTBLib.addCommand(e, new CmdReload());
 		FTBLib.addCommand(e, new CmdMode());
@@ -113,7 +113,7 @@ public class FTBLibMod
 	{
 		ForgeWorldMP.inst.onClosed();
 		ForgeWorldMP.inst = null;
-		FTBLibEventHandler.instance.ticking.clear();
+		FTBLibEventHandler.ticking.clear();
 	}
 	
 	@NetworkCheckHandler

@@ -25,7 +25,7 @@ public final class EntityPos
 	{ return LMUtils.hashCode(x, y, z, dim); }
 	
 	public String toString()
-	{ return "[" + x + ',' + y + ',' + z + ',' + dim.getName() + ']'; }
+	{ return "[" + dim.getName() + '@' + x + ',' + y + ',' + z + ']'; }
 	
 	public boolean equalsPos(Entity e)
 	{ return x == e.posX && y == e.posY && z == e.posZ && dim.getId() == e.dimension; }

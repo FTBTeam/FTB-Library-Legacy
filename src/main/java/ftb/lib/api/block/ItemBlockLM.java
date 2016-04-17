@@ -5,23 +5,19 @@ import net.minecraft.item.*;
 
 public class ItemBlockLM extends ItemBlock
 {
-	public IBlockLM blockLM;
+	public final IBlockLM blockLM;
 	
-	public ItemBlockLM(Block b)
+	public ItemBlockLM(IBlockLM b)
 	{
-		super(b);
+		super((Block) b);
+		blockLM = b;
 		setHasSubtypes(true);
 		setMaxDamage(0);
-		
-		blockLM = (IBlockLM) b;
 	}
 	
 	public int getMetadata(int m)
 	{ return m; }
 	
 	public String getUnlocalizedName(ItemStack stack)
-	{
-		if(blockLM instanceof BlockLM) return ((BlockLM) blockLM).getUnlocalizedName(stack.getItemDamage());
-		return getUnlocalizedName();
-	}
+	{ return blockLM.getUnlocalizedName(stack); }
 }

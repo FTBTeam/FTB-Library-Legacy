@@ -48,7 +48,7 @@ public final class BlockDimPos
 	{ return new int[] {x, y, z, dim.getId()}; }
 	
 	public String toString()
-	{ return "[" + x + ',' + y + ',' + z + ',' + dim.getName() + ']'; }
+	{ return "[" + dim.getName() + '@' + x + ',' + y + ',' + z + ']'; }
 	
 	public boolean equals(Object o)
 	{

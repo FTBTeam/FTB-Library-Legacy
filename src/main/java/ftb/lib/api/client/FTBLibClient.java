@@ -39,7 +39,6 @@ public class FTBLibClient
 {
 	public static final Minecraft mc = FMLClientHandler.instance().getClient();
 	private static final HashMap<String, ResourceLocation> cachedSkins = new HashMap<>();
-	private static final ResourceLocation clickSound = new ResourceLocation("gui.button.press");
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;
 	public static int displayW, displayH;

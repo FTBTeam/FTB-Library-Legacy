@@ -108,6 +108,7 @@ public final class ForgeWorldMP extends ForgeWorld
 			if(id != null)
 			{
 				ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, tag.getString("Name")));
+				p.init();
 				p.readFromServer(tag);
 				playerMap.put(id, p);
 			}

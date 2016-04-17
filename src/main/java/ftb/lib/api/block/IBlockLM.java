@@ -1,9 +1,10 @@
 package ftb.lib.api.block;
 
 import ftb.lib.api.item.IItemLM;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.*;
 
 public interface IBlockLM extends IItemLM
 {
-	Class<? extends ItemBlock> getItemBlock();
+	ItemBlock createItemBlock();
+	String getUnlocalizedName(ItemStack stack);
 }

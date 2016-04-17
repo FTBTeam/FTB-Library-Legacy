@@ -20,31 +20,27 @@ import java.util.List;
 
 public abstract class BlockLM extends Block implements IBlockLM
 {
-	public final String blockName;
-	
-	public BlockLM(String s, Material m)
+	public BlockLM(Material m)
 	{
 		super(m);
-		blockName = s;
 		setCreativeTab(CreativeTabs.tabMisc);
-		setUnlocalizedName(getMod().getBlockName(s));
 		setHardness(1.8F);
 		setResistance(3F);
 	}
 	
-	public Class<? extends ItemBlock> getItemBlock()
-	{ return ItemBlockLM.class; }
-	
 	public abstract LMMod getMod();
+	
+	public ItemBlock createItemBlock()
+	{ return new ItemBlockLM(this); }
 	
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{ return EnumBlockRenderType.MODEL; }
 	
 	public final String getID()
-	{ return blockName; }
+	{ return getRegistryName().toString(); }
 	
 	public String getUnlocalizedName()
-	{ return getMod().getBlockName(blockName); }
+	{ return getMod().getBlockName(getRegistryName().getResourcePath()); }
 	
 	public void onPostLoaded()
 	{
@@ -54,8 +50,8 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public void loadModels()
 	{
 		IBlockState state = getModelState();
-		if(state == null) FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, blockName, "normal");
-		else FTBLibMod.proxy.addItemModel(getMod().getID(), getItem(), 0, blockName, FTBLib.getStateString(state));
+		if(state == null) FTBLibMod.proxy.addItemModel(getItem(), 0, "normal");
+		else FTBLibMod.proxy.addItemModel(getItem(), 0, FTBLib.getStateString(state));
 	}
 	
 	public IBlockState getModelState()
@@ -131,7 +127,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	{
 		if(!hasTileEntity(state)) return false;
 		TileLM tile = getTile(w, pos);
-		return (tile != null) && tile.onRightClick(ep, item, s, x1, y1, z1);
+		return (tile != null) && tile.onRightClick(ep, item, s, hand, x1, y1, z1);
 	}
 	
 	public boolean onBlockEventReceived(World w, BlockPos pos, IBlockState state, int eventID, int param)
@@ -200,6 +196,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public BlockRenderLayer getBlockLayer()
 	{ return BlockRenderLayer.SOLID; }
 	
-	public String getUnlocalizedName(int damage)
+	public String getUnlocalizedName(ItemStack stack)
 	{ return getUnlocalizedName(); }
 }

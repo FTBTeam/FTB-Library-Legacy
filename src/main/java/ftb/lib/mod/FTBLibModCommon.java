@@ -63,7 +63,7 @@ public class FTBLibModCommon // FTBLibModClient
 	{
 	}
 	
-	public void addItemModel(String mod, Item i, int meta, String id, String variant)
+	public void addItemModel(Item i, int meta, String variant)
 	{
 	}
 	

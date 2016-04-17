@@ -25,11 +25,8 @@ public class MaterialItem extends FinalIDObject
 	
 	public void onPostLoaded()
 	{
-		FTBLibMod.proxy.addItemModel(item.getMod().getID(), item, damage, item.getID(), "variant=" + getID());
+		FTBLibMod.proxy.addItemModel(item, damage, "variant=" + getID());
 	}
-	
-	public int getRenderPasses()
-	{ return 1; }
 	
 	@SideOnly(Side.CLIENT)
 	public void addInfo(EntityPlayer ep, List<String> l)

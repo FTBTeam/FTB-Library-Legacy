@@ -130,7 +130,11 @@ public class FTBLibEventHandler
 		if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty) return;
 		else if(!canInteract(e.getEntityPlayer(), e.getHand(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
 			e.setCanceled(true);
-		else if(FTBLib.ftbu != null) FTBLib.ftbu.onRightClick(e);
+		else if(FTBLib.ftbu != null && e.getEntityPlayer() instanceof EntityPlayerMP)
+		{
+			if(!FTBLib.ftbu.canPlayerInteract((EntityPlayerMP) e.getEntityPlayer(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
+				e.setCanceled(true);
+		}
 	}
 	
 	private boolean canInteract(EntityPlayer ep, EnumHand hand, BlockPos pos, boolean leftClick)

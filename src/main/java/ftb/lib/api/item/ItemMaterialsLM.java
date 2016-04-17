@@ -11,11 +11,9 @@ public abstract class ItemMaterialsLM extends ItemLM
 {
 	public final HashMap<Integer, MaterialItem> materials;
 	private String folder = "";
-	private boolean requiresMultipleRenderPasses = false;
 	
-	public ItemMaterialsLM(String s)
+	public ItemMaterialsLM()
 	{
-		super(s);
 		materials = new HashMap<>();
 		setHasSubtypes(true);
 		setMaxDamage(0);
@@ -27,7 +25,6 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public ItemStack add(MaterialItem m)
 	{
 		materials.put(m.damage, m);
-		if(m.getRenderPasses() > 1) requiresMultipleRenderPasses = true;
 		m.onPostLoaded();
 		return m.getStack(1);
 	}
@@ -61,14 +58,6 @@ public abstract class ItemMaterialsLM extends ItemLM
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
 		if(m != null) m.addInfo(ep, l);
-	}
-	
-	public int getRenderPasses(int i)
-	{
-		if(!requiresMultipleRenderPasses) return 1;
-		MaterialItem m = materials.get(i);
-		if(m != null) return m.getRenderPasses();
-		return 1;
 	}
 	
 	public String getPath(String id, char c)

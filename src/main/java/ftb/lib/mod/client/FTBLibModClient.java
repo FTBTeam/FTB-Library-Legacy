@@ -142,9 +142,9 @@ public class FTBLibModClient extends FTBLibModCommon
 		}
 	}
 	
-	public void addItemModel(String mod, Item i, int meta, String id, String variant)
+	public void addItemModel(Item i, int meta, String variant)
 	{
-		ModelLoader.setCustomModelResourceLocation(i, meta, new ModelResourceLocation(mod + ":" + id, variant));
+		ModelLoader.setCustomModelResourceLocation(i, meta, new ModelResourceLocation(i.getRegistryName(), variant));
 	}
 	
 	public ForgeWorld getClientLMWorld()

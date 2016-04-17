@@ -11,22 +11,13 @@ import java.util.List;
 
 public abstract class ItemLM extends Item implements IItemLM
 {
-	public final String itemName;
-	
-	public ItemLM(String s)
-	{
-		super();
-		itemName = s;
-		setUnlocalizedName(getMod().getItemName(s));
-	}
-	
 	public abstract LMMod getMod();
 	
 	public final Item getItem()
 	{ return this; }
 	
 	public final String getID()
-	{ return itemName; }
+	{ return getRegistryName().toString(); }
 	
 	public void onPostLoaded()
 	{
@@ -35,7 +26,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public void loadModels()
 	{
-		FTBLibMod.proxy.addItemModel(getMod().getID(), this, 0, itemName, "inventory");
+		FTBLibMod.proxy.addItemModel(this, 0, "inventory");
 	}
 	
 	public void loadRecipes()
@@ -49,10 +40,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	}
 	
 	public String getUnlocalizedName(ItemStack is)
-	{ return getMod().getItemName(itemName); }
-	
-	public int getRenderPasses(int m)
-	{ return 1; }
+	{ return getMod().getItemName(getRegistryName().getResourcePath()); }
 	
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)

@@ -53,17 +53,22 @@ public final class ForgeWorldSP extends ForgeWorld
 			
 			GameProfile gp = FTBLibClient.mc.getSession().getProfile();
 			//TODO: Improve this
+			clientPlayer.init();
 			
 			NBTTagCompound tag1 = tag.getCompoundTag("PM");
 			
 			for(String s : tag1.getKeySet())
 			{
-				
 				UUID uuid = LMUtils.fromString(s);
 				String name = tag1.getString(s);
 				
 				if(uuid.equals(clientPlayer.getProfile().getId())) playerMap.put(uuid, clientPlayer);
-				else playerMap.put(uuid, new ForgePlayerSP(new GameProfile(uuid, name)));
+				else
+				{
+					ForgePlayerSP p = new ForgePlayerSP(new GameProfile(uuid, name));
+					p.init();
+					playerMap.put(uuid, p);
+				}
 			}
 			
 			FTBLib.dev_logger.info("Client player ID: " + clientPlayer.getProfile().getId() + " and " + (playerMap.size() - 1) + " other players");

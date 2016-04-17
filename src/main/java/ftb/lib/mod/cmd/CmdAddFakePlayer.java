@@ -38,6 +38,7 @@ public class CmdAddFakePlayer extends CommandLM
 			throw new RawCommandException("Player already exists!");
 		
 		ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, args[1]));
+		p.init();
 		ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
 		p.refreshStats();
 		

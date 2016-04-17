@@ -5,7 +5,6 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.api.*;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.events.ReloadEvent;
-import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.*;
@@ -13,14 +12,12 @@ import ftb.lib.mod.net.*;
 import latmod.lib.LMUtils;
 import latmod.lib.net.*;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.*;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -112,18 +109,6 @@ public class FTBLib
 	
 	public static ITextComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString("" + o); }
-	
-	public static void addItem(IItemLM i)
-	{ addItem((Item) i, i.getID()); }
-	
-	public static void addItem(Item i, String name)
-	{ GameRegistry.registerItem(i, name); }
-	
-	public static void addBlock(Block b, Class<? extends ItemBlock> c, String name)
-	{ GameRegistry.registerBlock(b, c, name); }
-	
-	public static void addBlock(Block b, String name)
-	{ addBlock(b, ItemBlock.class, name); }
 	
 	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
 	{

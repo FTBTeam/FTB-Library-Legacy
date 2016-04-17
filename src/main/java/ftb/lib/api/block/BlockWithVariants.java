@@ -25,9 +25,9 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 	private PropertyEnum<T> variantProperty;
 	private final T[] variants = getVariantType().getEnumConstants();
 	
-	public BlockWithVariants(String s, Material m)
+	public BlockWithVariants(Material m)
 	{
-		super(s, m);
+		super(m);
 		variantProperty = getVariantProperty();
 	}
 	
@@ -50,12 +50,12 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 		
 		for(T e : variants)
 		{
-			FTBLibMod.proxy.addItemModel(getMod().getID(), item, e.getMetadata(), blockName, "variant=" + e.getName());
+			FTBLibMod.proxy.addItemModel(item, e.getMetadata(), "variant=" + e.getName());
 		}
 	}
 	
-	public String getUnlocalizedName(int damage)
-	{ return getMod().getBlockName(getVariantFromMeta(damage).getName()); }
+	public String getUnlocalizedName(ItemStack stack)
+	{ return getMod().getBlockName(getVariantFromMeta(stack.getMetadata()).getName()); }
 	
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)

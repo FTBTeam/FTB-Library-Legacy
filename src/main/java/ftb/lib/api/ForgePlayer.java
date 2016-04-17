@@ -18,24 +18,21 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	private GameProfile gameProfile;
 	public final List<UUID> friends;
 	public final Map<Integer, ItemStack> lastArmor;
-	final Map<String, ForgePlayerData> customData;
+	Map<String, ForgePlayerData> customData;
 	
 	ForgePlayer(GameProfile p)
 	{
 		setProfile(p);
 		friends = new ArrayList<>();
 		lastArmor = new HashMap<>();
-		
-		ForgePlayerDataEvent event = new ForgePlayerDataEvent(this);
-		MinecraftForge.EVENT_BUS.post(event);
-		customData = Collections.unmodifiableMap(event.getMap());
 	}
 	
 	public void init()
 	{
+		customData = new HashMap<>();
 		ForgePlayerDataEvent event = new ForgePlayerDataEvent(this);
-		customData.clear();
-		customData.putAll(event.getMap());
+		MinecraftForge.EVENT_BUS.post(event);
+		customData = Collections.unmodifiableMap(event.getMap());
 	}
 	
 	public final Collection<ForgePlayerData> customData()
