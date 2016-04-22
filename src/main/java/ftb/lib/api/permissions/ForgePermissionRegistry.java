@@ -39,7 +39,7 @@ public class ForgePermissionRegistry
 		}
 		
 		ForgePermissionContainer c = permissionContainers.get(permission);
-		return (c == null) ? false : c.playerValue;
+		return c != null && c.playerValue;
 	}
 	
 	/**
