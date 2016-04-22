@@ -23,12 +23,15 @@ public class CmdInv extends CommandSubLM
 		public CmdSave(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <player> <file_id>"; }
 		
+		@Override
 		public boolean isUsernameIndex(String[] args, int i)
 		{ return i == 0; }
 		
+		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			checkArgs(args, 2);
@@ -63,6 +66,7 @@ public class CmdInv extends CommandSubLM
 		public CmdLoad(String s)
 		{ super(s); }
 		
+		@Override
 		protected void onInvCmd(File file, EntityPlayerMP ep) throws Exception
 		{
 			NBTTagCompound tag = LMNBTUtils.readTag(file);
@@ -79,6 +83,7 @@ public class CmdInv extends CommandSubLM
 		public CmdList(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 		}

@@ -20,6 +20,7 @@ public class ClickAction implements IJsonSerializable
 		data = d;
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		if(data == null || data.isJsonNull())
@@ -33,6 +34,7 @@ public class ClickAction implements IJsonSerializable
 		return o;
 	}
 	
+	@Override
 	public void fromJson(JsonElement e)
 	{
 		if(e.isJsonPrimitive())
@@ -52,6 +54,7 @@ public class ClickAction implements IJsonSerializable
 	public void onClicked()
 	{ if(type != null) type.onClicked(data == null ? JsonNull.INSTANCE : data); }
 	
+	@Override
 	public String toString()
 	{
 		if(data == null) return type.getID();

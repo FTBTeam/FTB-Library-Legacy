@@ -18,22 +18,28 @@ public final class ForgePlayerTemp extends ForgePlayer
 		player = ep;
 	}
 	
+	@Override
 	public Side getSide()
 	{ return side; }
 	
+	@Override
 	public boolean isOnline()
 	{ return player != null; }
 	
+	@Override
 	public EntityPlayer getPlayer()
 	{ return player; }
 	
+	@Override
 	public ForgePlayerMP toPlayerMP()
 	{ return null; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ForgePlayerSP toPlayerSP()
 	{ return null; }
 	
+	@Override
 	public ForgeWorld getWorld()
 	{ return ForgeWorld.getFrom(side); }
 }

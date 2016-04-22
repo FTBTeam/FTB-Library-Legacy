@@ -24,6 +24,7 @@ public class ButtonInfoPage extends ButtonLM
 		updateTitle();
 	}
 	
+	@Override
 	public void onButtonPressed(int b)
 	{
 		FTBLibClient.playClickSound();
@@ -52,11 +53,13 @@ public class ButtonInfoPage extends ButtonLM
 		}
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 		if(hover != null) l.add(hover);
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();

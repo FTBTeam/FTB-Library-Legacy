@@ -21,9 +21,11 @@ public final class EntityPos
 	public EntityPos(Entity e)
 	{ this(e.posX, e.posY, e.posZ, DimensionType.getById(e.dimension)); }
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(x, y, z, dim); }
 	
+	@Override
 	public String toString()
 	{ return "[" + dim.getName() + '@' + x + ',' + y + ',' + z + ']'; }
 	
@@ -33,6 +35,7 @@ public final class EntityPos
 	public boolean equalsPos(EntityPos p)
 	{ return (p == this) || (p != null && toBlockDimPos().equalsPos(p.toBlockDimPos())); }
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;

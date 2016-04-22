@@ -22,12 +22,15 @@ public class StackArray implements IStackArray
 		array = new IStackArray[] {this};
 	}
 	
+	@Override
 	public String toString()
 	{ return "StackEntry: " + items.toString(); }
 	
+	@Override
 	public int hashCode()
 	{ return hashCode; }
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
@@ -131,9 +134,11 @@ public class StackArray implements IStackArray
 		return false;
 	}
 	
+	@Override
 	public boolean matches(ItemStack[] ai)
 	{ return ai != null && ai.length == 1 && equalsItem(ai[0]); }
 	
+	@Override
 	public IStackArray[] getItems()
 	{ return array; }
 }

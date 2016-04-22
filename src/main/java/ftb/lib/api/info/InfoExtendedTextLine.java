@@ -25,9 +25,11 @@ public class InfoExtendedTextLine extends InfoTextLine
 		text = cc;
 	}
 	
+	@Override
 	public ITextComponent getText()
 	{ return text; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoExtendedTextLine(gui, this); }
@@ -49,6 +51,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 		}
 	}
 	
+	@Override
 	public void fromJson(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();
@@ -82,6 +85,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 		else hover = null;
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();

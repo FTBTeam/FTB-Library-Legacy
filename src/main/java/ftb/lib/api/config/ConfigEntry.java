@@ -22,7 +22,11 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	}
 	
 	public abstract ConfigEntryType getConfigType();
+	
+	@Override
 	public abstract void fromJson(JsonElement o);
+	
+	@Override
 	public abstract JsonElement getSerializableElement();
 	
 	public int getColor()
@@ -52,6 +56,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 		return e;
 	}
 	
+	@Override
 	public final String toString()
 	{ return getAsString(); }
 	
@@ -75,15 +80,19 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	public ConfigGroup getAsGroup()
 	{ return null; }
 	
+	@Override
 	public final void setFlag(byte flag, boolean b)
 	{ flags = Bits.setBit(flags, flag, b); }
 	
+	@Override
 	public final boolean getFlag(byte flag)
 	{ return Bits.getBit(flags, flag); }
 	
+	@Override
 	public final void setInfo(String[] s)
 	{ info = (s != null && s.length > 0) ? s : null; }
 	
+	@Override
 	public final String[] getInfo()
 	{ return info; }
 	

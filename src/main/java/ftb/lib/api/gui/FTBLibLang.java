@@ -96,6 +96,4 @@ public class FTBLibLang
 	
 	public static String label_blacklist()
 	{ return get("label.offline"); }
-	
-	
 }

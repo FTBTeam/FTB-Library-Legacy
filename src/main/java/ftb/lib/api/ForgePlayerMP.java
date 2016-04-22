@@ -42,31 +42,38 @@ public class ForgePlayerMP extends ForgePlayer
 		stats = new ForgePlayerStats();
 	}
 	
+	@Override
 	public Side getSide()
 	{ return Side.SERVER; }
 	
+	@Override
 	public boolean isOnline()
 	{ return getPlayer() != null; }
 	
+	@Override
 	public EntityPlayerMP getPlayer()
 	{ return entityPlayer; }
 	
 	public void setPlayer(EntityPlayerMP ep)
 	{ entityPlayer = ep; }
 	
+	@Override
 	public final ForgePlayerMP toPlayerMP()
 	{ return this; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public final ForgePlayerSP toPlayerSP()
 	{ return null; }
 	
+	@Override
 	public final ForgeWorld getWorld()
 	{ return ForgeWorldMP.inst; }
 	
 	public boolean isFake()
 	{ return getPlayer() instanceof FakePlayer; }
 	
+	@Override
 	public void sendUpdate()
 	{
 		//new EventLMPlayerServer.UpdateSent(this).post();
@@ -333,6 +340,7 @@ public class ForgePlayerMP extends ForgePlayer
 		}
 	}
 	
+	@Override
 	public void onLoggedIn(boolean firstLogin)
 	{
 		super.onLoggedIn(firstLogin);
@@ -347,6 +355,7 @@ public class ForgePlayerMP extends ForgePlayer
 		checkNewFriends();
 	}
 	
+	@Override
 	public void onDeath()
 	{
 		if(!isOnline()) return;

@@ -9,17 +9,21 @@ public class MessageRequestSelfUpdate extends MessageLM<MessageRequestSelfUpdate
 {
 	public MessageRequestSelfUpdate() { }
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	public IMessage onMessage(MessageRequestSelfUpdate m, MessageContext ctx)
 	{
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);

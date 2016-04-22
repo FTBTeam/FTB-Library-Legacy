@@ -2,9 +2,7 @@ package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.item.ItemDisplay;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.*;
 
@@ -25,10 +23,12 @@ public class GuiDisplayItem extends GuiLM
 		itemDisplay = i;
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		super.drawBackground();
@@ -42,6 +42,7 @@ public class GuiDisplayItem extends GuiLM
 		GlStateManager.popMatrix();
 	}
 	
+	@Override
 	public void drawText(List<String> l)
 	{
 		if(itemDisplay.title != null && !itemDisplay.title.isEmpty())
@@ -50,6 +51,7 @@ public class GuiDisplayItem extends GuiLM
 		super.drawText(l);
 	}
 	
+	/*
 	public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
 	{
 		if(is != null && x > mainPanel.posX && x < mainPanel.posX + mainPanel.width && y > mainPanel.posY && y < mainPanel.posY + mainPanel.height)
@@ -61,4 +63,5 @@ public class GuiDisplayItem extends GuiLM
 		
 		return false;
 	}
+	*/
 }

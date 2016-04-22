@@ -5,6 +5,7 @@ import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.*;
 import ftb.lib.api.gui.*;
+import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.tile.IGuiTile;
 import ftb.lib.mod.FTBLibModCommon;
 import ftb.lib.mod.client.gui.info.InfoClientSettings;
@@ -13,13 +14,10 @@ import latmod.lib.*;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.EntityReddustFX;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.*;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.*;
 import org.lwjgl.input.Keyboard;
@@ -46,6 +44,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	};
 	*/
 	
+	@Override
 	public void preInit()
 	{
 		//JsonHelper.initClient();
@@ -66,32 +65,41 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLibActions.init();
 	}
 	
+	@Override
 	public void postInit()
 	{
 		ClientConfigRegistry.provider().save();
 	}
 	
+	@Override
 	public boolean isShiftDown()
 	{ return GuiScreen.isShiftKeyDown(); }
 	
+	@Override
 	public boolean isCtrlDown()
 	{ return GuiScreen.isCtrlKeyDown(); }
 	
+	@Override
 	public boolean isTabDown()
 	{ return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
 	
+	@Override
 	public boolean inGameHasFocus()
 	{ return FTBLibClient.mc.inGameHasFocus; }
 	
+	@Override
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
 	
+	@Override
 	public EntityPlayer getClientPlayer(UUID id)
 	{ return FTBLibClient.getPlayerSP(id); }
 	
+	@Override
 	public World getClientWorld()
 	{ return FMLClientHandler.instance().getWorldClient(); }
 	
+	@Override
 	public double getReachDist(EntityPlayer ep)
 	{
 		if(ep == null) return 0D;
@@ -100,6 +108,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		return (c == null) ? 0D : c.getBlockReachDistance();
 	}
 	
+	@Override
 	public void spawnDust(World w, double x, double y, double z, int col)
 	{
 		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F) { };
@@ -115,6 +124,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLibClient.mc.effectRenderer.addEffect(fx);
 	}
 	
+	@Override
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
 		LMGuiHandler h = LMGuiHandlerRegistry.get(mod);
@@ -133,6 +143,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		return false;
 	}
 	
+	@Override
 	public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
 	{
 		if(ep != null && t != null)
@@ -142,11 +153,11 @@ public class FTBLibModClient extends FTBLibModCommon
 		}
 	}
 	
-	public void addItemModel(Item i, int meta, String variant)
-	{
-		ModelLoader.setCustomModelResourceLocation(i, meta, new ModelResourceLocation(i.getRegistryName(), variant));
-	}
-	
+	@Override
 	public ForgeWorld getClientLMWorld()
 	{ return ForgeWorldSP.inst; }
+	
+	@Override
+	public void loadModels(IItemLM i)
+	{ i.loadModels(); }
 }

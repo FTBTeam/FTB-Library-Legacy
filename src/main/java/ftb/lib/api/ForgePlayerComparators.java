@@ -6,6 +6,7 @@ public class ForgePlayerComparators
 {
 	public static class ByName implements Comparator<ForgePlayer>
 	{
+		@Override
 		public int compare(ForgePlayer o1, ForgePlayer o2)
 		{
 			return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
@@ -19,6 +20,7 @@ public class ForgePlayerComparators
 		public ByStatus(ForgePlayer p)
 		{ self = p; }
 		
+		@Override
 		public int compare(ForgePlayer p1, ForgePlayer p2)
 		{
 			int output = 0;

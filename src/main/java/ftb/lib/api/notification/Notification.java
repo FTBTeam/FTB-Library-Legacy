@@ -53,6 +53,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 	public boolean isTemp()
 	{ return mouse == null; }
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -66,6 +67,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 		return o;
 	}
 	
+	@Override
 	public void fromJson(JsonElement e)
 	{
 		if(e == null || !e.isJsonObject()) return;
@@ -84,6 +86,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 		}
 	}
 	
+	@Override
 	public String toString()
 	{ return getSerializableElement().toString(); }
 	

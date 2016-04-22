@@ -15,9 +15,11 @@ public class ItemBlockLM extends ItemBlock
 		setMaxDamage(0);
 	}
 	
+	@Override
 	public int getMetadata(int m)
 	{ return m; }
 	
+	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{ return blockLM.getUnlocalizedName(stack); }
 }

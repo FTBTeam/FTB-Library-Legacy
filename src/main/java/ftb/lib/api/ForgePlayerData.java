@@ -16,6 +16,7 @@ public abstract class ForgePlayerData extends FinalIDObject
 		player = p;
 	}
 	
+	@Override
 	public final String toString()
 	{ return getID() + "_" + player.getProfile().getName(); }
 	

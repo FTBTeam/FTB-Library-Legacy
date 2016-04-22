@@ -134,6 +134,7 @@ public abstract class ForgeWorld
 		
 		Collections.sort(list, new Comparator<ForgePlayer>()
 		{
+			@Override
 			public int compare(ForgePlayer o1, ForgePlayer o2)
 			{
 				if(o1.isOnline() == o2.isOnline())

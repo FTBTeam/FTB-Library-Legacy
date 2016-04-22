@@ -74,15 +74,19 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	public boolean isFriend(ForgePlayer p)
 	{ return p != null && isFriendRaw(p) && p.isFriendRaw(this); }
 	
+	@Override
 	public final int compareTo(ForgePlayer o)
 	{ return getProfile().getName().compareToIgnoreCase(o.getProfile().getName()); }
 	
+	@Override
 	public final String toString()
 	{ return gameProfile.getName(); }
 	
+	@Override
 	public final int hashCode()
 	{ return gameProfile.getId().hashCode(); }
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;

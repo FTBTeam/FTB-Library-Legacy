@@ -22,22 +22,26 @@ public class GuiViewImage extends GuiLM
 		
 		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{ close(parent); }
 		};
 	}
 	
+	@Override
 	public void initLMGui()
 	{
 		mainPanel.width = buttonClose.width = width;
 		mainPanel.height = buttonClose.height = height;
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.add(buttonClose);
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		super.drawBackground();

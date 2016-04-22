@@ -47,14 +47,17 @@ public class ButtonInfoTextLine extends ButtonLM
 		}
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 	}
 	
+	@Override
 	public void onButtonPressed(int b)
 	{
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();

@@ -1,8 +1,8 @@
 package ftb.lib.api.block;
 
 import ftb.lib.*;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.tile.TileLM;
-import ftb.lib.mod.FTBLibMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -30,45 +30,60 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	public abstract LMMod getMod();
 	
+	@Override
 	public ItemBlock createItemBlock()
 	{ return new ItemBlockLM(this); }
 	
+	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state)
 	{ return EnumBlockRenderType.MODEL; }
 	
+	@Override
 	public final String getID()
 	{ return getRegistryName().toString(); }
 	
+	@Override
 	public String getUnlocalizedName()
 	{ return getMod().getBlockName(getRegistryName().getResourcePath()); }
 	
+	@Override
 	public void onPostLoaded()
 	{
-		loadModels();
 	}
 	
+	@Override
+	@SideOnly(Side.CLIENT)
 	public void loadModels()
 	{
 		IBlockState state = getModelState();
-		if(state == null) FTBLibMod.proxy.addItemModel(getItem(), 0, "normal");
-		else FTBLibMod.proxy.addItemModel(getItem(), 0, FTBLib.getStateString(state));
+		if(state == null) FTBLibClient.addItemModel(getItem(), 0, "normal");
+		else FTBLibClient.addItemModel(getItem(), 0, FTBLib.getStateString(state));
+	}
+	
+	@Override
+	public void loadTiles()
+	{
 	}
 	
 	public IBlockState getModelState()
 	{ return null; }
 	
+	@Override
 	public int damageDropped(IBlockState state)
 	{ return getMetaFromState(state); }
 	
+	@Override
 	public boolean hasTileEntity(IBlockState state)
 	{ return super.hasTileEntity(state); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs c, List<ItemStack> l)
 	{
 		l.add(new ItemStack(item, 1, 0));
 	}
 	
+	@Override
 	public void onBlockPlacedBy(World w, BlockPos pos, IBlockState state, EntityLivingBase el, ItemStack is)
 	{
 		super.onBlockPlacedBy(w, pos, state, el, is);
@@ -80,6 +95,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		}
 	}
 	
+	@Override
 	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer ep, World w, BlockPos pos)
 	{
 		if(hasTileEntity(state))
@@ -91,6 +107,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getPlayerRelativeBlockHardness(state, ep, w, pos);
 	}
 	
+	@Override
 	public float getBlockHardness(IBlockState state, World w, BlockPos pos)
 	{
 		if(hasTileEntity(state))
@@ -102,6 +119,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getBlockHardness(state, w, pos);
 	}
 	
+	@Override
 	public float getExplosionResistance(World w, BlockPos pos, Entity e, Explosion ex)
 	{
 		if(hasTileEntity(w.getBlockState(pos)))
@@ -113,6 +131,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getExplosionResistance(w, pos, e, ex);
 	}
 	
+	@Override
 	public void breakBlock(World w, BlockPos pos, IBlockState state)
 	{
 		if(!w.isRemote && hasTileEntity(state))
@@ -123,6 +142,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		super.breakBlock(w, pos, state);
 	}
 	
+	@Override
 	public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumHand hand, ItemStack item, EnumFacing s, float x1, float y1, float z1)
 	{
 		if(!hasTileEntity(state)) return false;
@@ -130,6 +150,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return (tile != null) && tile.onRightClick(ep, item, s, hand, x1, y1, z1);
 	}
 	
+	@Override
 	public boolean onBlockEventReceived(World w, BlockPos pos, IBlockState state, int eventID, int param)
 	{
 		if(hasTileEntity(state))
@@ -141,6 +162,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return false;
 	}
 	
+	@Override
 	public boolean recolorBlock(World w, BlockPos pos, EnumFacing side, EnumDyeColor color)
 	{
 		if(hasTileEntity(w.getBlockState(pos)))
@@ -156,15 +178,18 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.recolorBlock(w, pos, side, color);
 	}
 	
+	@Override
 	public void loadRecipes()
 	{
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
 	}
 	
+	@Override
 	public void onNeighborChange(IBlockAccess w, BlockPos pos, BlockPos neighbor)
 	{
 		if(hasTileEntity(w.getBlockState(pos)))
@@ -174,14 +199,17 @@ public abstract class BlockLM extends Block implements IBlockLM
 		}
 	}
 	
+	@Override
 	public final Item getItem()
 	{ return Item.getItemFromBlock(this); }
 	
+	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
 		return FULL_BLOCK_AABB;
 	}
 	
+	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
 	{ return getStateFromMeta(meta); }
 	
@@ -192,10 +220,12 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return null;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{ return BlockRenderLayer.SOLID; }
 	
+	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{ return getUnlocalizedName(); }
 }

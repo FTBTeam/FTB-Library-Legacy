@@ -59,24 +59,6 @@ public class ODItems
 	public static final String NUGGET_LEAD = "nuggetLead";
 	public static final String NUGGET_SILVER = "nuggetSilver";
 	
-	public static final class OreStackEntry
-	{
-		public final ItemStack itemStack;
-		public final String oreName;
-		
-		public OreStackEntry(ItemStack is, String s)
-		{
-			itemStack = is;
-			oreName = s;
-		}
-		
-		public boolean equals(Object o)
-		{
-			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry) o).itemStack : (ItemStack) o);
-			return is.getItem() == itemStack.getItem() && (is.getItemDamage() == itemStack.getItemDamage() || itemStack.getItemDamage() == ANY);
-		}
-	}
-	
 	public static void preInit()
 	{
 		add(MEAT_RAW, new ItemStack(Items.beef));

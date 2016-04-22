@@ -19,19 +19,23 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 		playerID = p.getProfile().getId();
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		playerID = readUUID(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeUUID(io, playerID);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerLoggedOut m, MessageContext ctx)
 	{

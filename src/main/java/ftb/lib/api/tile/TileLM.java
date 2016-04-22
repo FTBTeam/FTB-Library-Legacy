@@ -5,7 +5,6 @@ import ftb.lib.api.*;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageClientTileAction;
-import latmod.lib.LMUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.*;
 import net.minecraft.init.Blocks;
@@ -53,9 +52,11 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public boolean useOwnerID()
 	{ return true; }
 	
+	@Override
 	public final TileEntity getTile()
 	{ return this; }
 	
+	@Override
 	public final void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
@@ -67,6 +68,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		}
 	}
 	
+	@Override
 	public final void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
@@ -74,6 +76,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		readTileData(tag);
 	}
 	
+	@Override
 	public final Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
@@ -87,6 +90,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		return new SPacketUpdateTileEntity(getPos(), 0, tag);
 	}
 	
+	@Override
 	public final void onDataPacket(NetworkManager m, SPacketUpdateTileEntity p)
 	{
 		NBTTagCompound data = p.getNbtCompound();
@@ -133,12 +137,15 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		return false;
 	}
 	
+	@Override
 	public void onLoad()
 	{ isLoaded = true; }
 	
+	@Override
 	public void onChunkUnload()
 	{ isLoaded = false; }
 	
+	@Override
 	public final void update()
 	{
 		onUpdate();
@@ -156,6 +163,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	
 	public void onUpdate() { }
 	
+	@Override
 	public void markDirty()
 	{ isDirty = true; }
 	
@@ -250,6 +258,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		sendClientAction(ACTION_CUSTOM_NAME, data);
 	}
 	
+	@Override
 	public void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data)
 	{
 		switch(action)
@@ -282,23 +291,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public DimensionType getDimension()
 	{ return worldObj == null ? DimensionType.OVERWORLD : worldObj.provider.getDimensionType(); }
 	
-	public final int hashCode()
-	{ return LMUtils.hashCode(getPos(), getDimension()); }
-	
-	public final boolean equals(Object o)
-	{
-		if(o == null) return false;
-		if(o == this) return true;
-		
-		if(o instanceof TileLM)
-		{
-			TileLM t = (TileLM) o;
-			return t.getDimension() == getDimension() && t.getPos().equals(getPos());
-		}
-		
-		return false;
-	}
-	
 	public void onNeighborBlockChange(BlockPos pos)
 	{
 		if(worldObj != null)
@@ -315,12 +307,15 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	
 	public void setName(String s) { }
 	
+	@Override
 	public String getName()
 	{ return ""; }
 	
+	@Override
 	public boolean hasCustomName()
 	{ return !getName().isEmpty(); }
 	
+	@Override
 	public ITextComponent getDisplayName()
 	{ return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getBlockType().getLocalizedName() + ".name"); }
 }

@@ -20,9 +20,11 @@ public class MessageDisplayGuide extends MessageLM_IO
 		JsonElementIO.write(io, file.getSerializableElement());
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_INFO; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

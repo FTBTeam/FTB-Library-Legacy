@@ -30,6 +30,7 @@ public class PlayerActionRegistry
 			{
 				ConfigEntryBool entry = new ConfigEntryBool(a.getID(), a.configDefault())
 				{
+					@Override
 					public String getFullID()
 					{ return "player_action." + a.getID(); }
 				};
@@ -41,7 +42,7 @@ public class PlayerActionRegistry
 	
 	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ForgePlayer self, ForgePlayer other, boolean sort, boolean ignoreConfig)
 	{
-		ArrayList<PlayerAction> l = new ArrayList<>();
+		List<PlayerAction> l = new ArrayList<>();
 		
 		for(PlayerAction a : map.values())
 		{

@@ -14,6 +14,7 @@ public abstract class ButtonLM extends WidgetLM
 	public ButtonLM(IGuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
+	@Override
 	public void mousePressed(int b)
 	{
 		if(mouseOver())

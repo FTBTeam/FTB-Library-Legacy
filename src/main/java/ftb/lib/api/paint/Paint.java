@@ -17,6 +17,7 @@ public class Paint
 		meta = m;
 	}
 	
+	@Override
 	public String toString()
 	{ return Block.blockRegistry.getNameForObject(block).toString().replace("minecraft:", "") + "@" + meta; }
 	

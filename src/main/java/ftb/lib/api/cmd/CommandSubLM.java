@@ -21,9 +21,11 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	public void add(ICommand c)
 	{ subCommands.put(c.getCommandName(), c); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " [subcommand]"; }
 	
+	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 1)
@@ -41,6 +43,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{
 		if(i > 0 && args.length > 1)
@@ -52,6 +55,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		return false;
 	}
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		if(args.length < 1)
@@ -69,6 +73,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		}
 	}
 	
+	@Override
 	public void addInfo(List<ITextComponent> list, ICommandSender sender)
 	{
 		list.add(new TextComponentString('/' + commandName));

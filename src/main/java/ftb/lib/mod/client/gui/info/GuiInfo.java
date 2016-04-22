@@ -53,9 +53,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		sliderPages = new SliderLM(this, 0, 0, tex_slider.widthI(), 0, tex_slider.heightI())
 		{
+			@Override
 			public boolean canMouseScroll()
 			{ return gui.mouse().x < panelWidth; }
 			
+			@Override
 			public boolean isEnabled()
 			{ return true; }
 		};
@@ -64,9 +66,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		sliderText = new SliderLM(this, 0, 0, tex_slider.widthI(), 0, tex_slider.heightI())
 		{
+			@Override
 			public boolean canMouseScroll()
 			{ return gui.mouse().x > panelWidth; }
 			
+			@Override
 			public boolean isEnabled()
 			{ return true; }
 		};
@@ -75,6 +79,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		buttonBack = new ButtonLM(this, 0, 0, tex_back.widthI(), tex_back.heightI())
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
@@ -103,6 +108,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		panelPages = new PanelLM(this, 0, 0, 0, 0)
 		{
+			@Override
 			public void addWidgets()
 			{
 				height = 0;
@@ -122,6 +128,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		panelText = new PanelLM(this, 0, 0, 0, 0)
 		{
+			@Override
 			public void addWidgets()
 			{
 				for(WidgetLM w : panelPages.widgets)
@@ -151,6 +158,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		};
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.add(sliderPages);
@@ -160,6 +168,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		mainPanel.add(panelText);
 	}
 	
+	@Override
 	public void initLMGui()
 	{
 		mainPanel.width = width;
@@ -203,9 +212,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		page.initGUI(this);
 	}
 	
+	@Override
 	public void drawTexturedModalRectD(double x, double y, double u, double v, double w, double h)
 	{ drawTexturedModalRectD(x, y, zLevel, u, v, w, h, 64, 64); }
 	
+	@Override
 	public void drawBackground()
 	{
 		sliderPages.update();
@@ -266,6 +277,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, colorText);
 	}
 	
+	@Override
 	public void drawDefaultBackground()
 	{
 	}
@@ -290,11 +302,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		drawBlankRect(px + 4, py + 4, zLevel, w - 8, h - 8);
 	}
 	
+	@Override
 	public void onClientDataChanged()
 	{
 		if(selectedPage instanceof IClientActionGui)
 		{
-			((IClientActionGui) selectedPage).onClientDataChanged();
+			selectedPage.onClientDataChanged();
 			refreshWidgets();
 		}
 	}

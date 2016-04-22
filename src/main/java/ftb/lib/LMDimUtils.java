@@ -124,21 +124,25 @@ public class LMDimUtils
 		public TeleporterBlank(WorldServer w)
 		{ super(w); }
 		
+		@Override
 		public boolean makePortal(Entity e)
 		{ return true; }
 		
-		public boolean placeInExistingPortal(Entity e, double x, double y, double z, float f)
+		@Override
+		public boolean placeInExistingPortal(Entity e, float f)
 		{ return true; }
 		
-		public void placeInPortal(Entity entity, double x, double y, double z, float f)
+		@Override
+		public void placeInPortal(Entity entity, float f)
 		{
-			entity.setLocationAndAngles(x, y, z, entity.rotationPitch, entity.rotationYaw);
+			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
 			entity.motionX = 0D;
 			entity.motionY = 0D;
 			entity.motionZ = 0D;
 			entity.fallDistance = 0F;
 		}
 		
+		@Override
 		public void removeStalePortalLocations(long l)
 		{
 		}

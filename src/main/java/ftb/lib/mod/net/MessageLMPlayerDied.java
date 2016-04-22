@@ -11,17 +11,21 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied>
 {
 	public MessageLMPlayerDied() { }
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerDied m, MessageContext ctx)
 	{

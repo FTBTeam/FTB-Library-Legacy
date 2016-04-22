@@ -24,9 +24,11 @@ public class ConfigEntryStringList extends ConfigEntry
 		}
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.STRING_ARRAY; }
 	
+	@Override
 	public int getColor()
 	{ return 0xFFAA49; }
 	
@@ -40,6 +42,7 @@ public class ConfigEntryStringList extends ConfigEntry
 		}
 	}
 	
+	@Override
 	public final void fromJson(JsonElement o)
 	{
 		JsonArray a = o.getAsJsonArray();
@@ -49,6 +52,7 @@ public class ConfigEntryStringList extends ConfigEntry
 		set(LMListUtils.clone(value));
 	}
 	
+	@Override
 	public final JsonElement getSerializableElement()
 	{
 		JsonArray a = new JsonArray();
@@ -59,12 +63,15 @@ public class ConfigEntryStringList extends ConfigEntry
 		return a;
 	}
 	
+	@Override
 	public String getAsString()
 	{ return getAsStringList().toString(); }
 	
+	@Override
 	public boolean getAsBoolean()
 	{ return !getAsStringList().isEmpty(); }
 	
+	@Override
 	public IntList getAsIntList()
 	{
 		List<String> list = getAsStringList();
@@ -74,12 +81,15 @@ public class ConfigEntryStringList extends ConfigEntry
 		return l;
 	}
 	
+	@Override
 	public List<String> getAsStringList()
 	{ return value; }
 	
+	@Override
 	public String getDefValueString()
 	{ return defValue.toString(); }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -111,6 +121,7 @@ public class ConfigEntryStringList extends ConfigEntry
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);

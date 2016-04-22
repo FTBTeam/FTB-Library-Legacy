@@ -17,15 +17,19 @@ public class ForgePlayerSPSelf extends ForgePlayerSP
 		super(p);
 	}
 	
+	@Override
 	public boolean isClientPlayer()
 	{ return true; }
 	
+	@Override
 	public boolean isOnline()
 	{ return true; }
 	
+	@Override
 	public EntityPlayer getPlayer()
 	{ return Minecraft.getMinecraft().thePlayer; }
 	
+	@Override
 	public ForgePlayerSPSelf toPlayerSPSelf()
 	{ return this; }
 	
@@ -35,6 +39,7 @@ public class ForgePlayerSPSelf extends ForgePlayerSP
 		return rank;
 	}*/
 	
+	@Override
 	public void readFromNet(NBTTagCompound tag, boolean self) // LMPlayerServer
 	{
 		super.readFromNet(tag, self);

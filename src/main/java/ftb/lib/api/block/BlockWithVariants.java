@@ -1,6 +1,7 @@
 package ftb.lib.api.block;
 
-import ftb.lib.mod.FTBLibMod;
+import ftb.lib.FTBLib;
+import ftb.lib.api.client.FTBLibClient;
 import net.minecraft.block.material.*;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.*;
@@ -39,24 +40,28 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 	public T getVariant(IBlockState state)
 	{ return state.getValue(getVariantProperty()); }
 	
+	@Override
 	public void onPostLoaded()
 	{
-		loadModels();
 	}
 	
+	@Override
+	@SideOnly(Side.CLIENT)
 	public void loadModels()
 	{
 		Item item = getItem();
 		
 		for(T e : variants)
 		{
-			FTBLibMod.proxy.addItemModel(item, e.getMetadata(), "variant=" + e.getName());
+			FTBLibClient.addItemModel(item, e.getMetadata(), FTBLib.getStateString(createBlockState().getBaseState().withProperty(getVariantProperty(), e)));
 		}
 	}
 	
+	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{ return getMod().getBlockName(getVariantFromMeta(stack.getMetadata()).getName()); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
 	{
@@ -66,15 +71,19 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 		}
 	}
 	
+	@Override
 	public int damageDropped(IBlockState state)
 	{ return state.getValue(getVariantProperty()).getMetadata(); }
 	
+	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{ return getDefaultState().withProperty(getVariantProperty(), getVariantFromMeta(meta)); }
 	
+	@Override
 	public MapColor getMapColor(IBlockState state)
 	{ return state.getValue(getVariantProperty()).getMapColor(); }
 	
+	@Override
 	public int getMetaFromState(IBlockState state)
 	{ return state.getValue(getVariantProperty()).getMetadata(); }
 	
@@ -85,6 +94,7 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 		return variantProperty;
 	}
 	
+	@Override
 	protected BlockStateContainer createBlockState()
 	{ return new BlockStateContainer(this, getVariantProperty()); }
 }

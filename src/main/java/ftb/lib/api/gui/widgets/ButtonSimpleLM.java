@@ -18,10 +18,12 @@ public abstract class ButtonSimpleLM extends ButtonLM
 	public ButtonSimpleLM(IGuiLM g, int x, int y, int w, int h)
 	{ super(g, x, y, w, h); }
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ax = getAX();

@@ -47,15 +47,18 @@ public final class BlockDimPos
 	public int[] toIntArray()
 	{ return new int[] {x, y, z, dim.getId()}; }
 	
+	@Override
 	public String toString()
 	{ return "[" + dim.getName() + '@' + x + ',' + y + ',' + z + ']'; }
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
 		else return o == this || equalsPos((BlockDimPos) o);
 	}
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(x, y, z, dim); }
 	

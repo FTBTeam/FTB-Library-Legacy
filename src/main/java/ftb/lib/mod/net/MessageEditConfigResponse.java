@@ -26,9 +26,11 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 		o.writeToNBT(nbt, false);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		token = io.readLong();
@@ -37,6 +39,7 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 		nbt = readTag(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeLong(token);
@@ -45,6 +48,7 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 		writeTag(io, nbt);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageEditConfigResponse m, MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;

@@ -41,16 +41,19 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 		}
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 		if(hover != null) l.addAll(hover);
 	}
 	
+	@Override
 	public void onButtonPressed(int b)
 	{
 		if(line != null) line.onClicked();
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();

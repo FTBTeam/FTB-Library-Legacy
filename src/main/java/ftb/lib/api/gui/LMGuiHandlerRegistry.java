@@ -1,10 +1,10 @@
 package ftb.lib.api.gui;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class LMGuiHandlerRegistry
 {
-	private static final HashMap<String, LMGuiHandler> map = new HashMap<>();
+	private static final Map<String, LMGuiHandler> map = new HashMap<>();
 	
 	public static void add(LMGuiHandler h)
 	{ if(h != null && !map.containsKey(h.ID)) map.put(h.ID, h); }

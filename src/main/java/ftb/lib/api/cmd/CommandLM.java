@@ -26,20 +26,25 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 		level = l;
 	}
 	
+	@Override
 	public int getRequiredPermissionLevel()
 	{ return level.requiredPermsLevel(); }
 	
+	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender ics)
 	{
 		return FTBLib.getEffectiveSide().isClient() || level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics));
 	}
 	
+	@Override
 	public final String getCommandName()
 	{ return commandName; }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName; }
 	
+	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 0) return null;
@@ -51,6 +56,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return false; }
 	

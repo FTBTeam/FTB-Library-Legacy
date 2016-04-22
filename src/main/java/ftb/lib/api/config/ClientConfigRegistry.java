@@ -15,12 +15,15 @@ public final class ClientConfigRegistry
 	{
 		return new IConfigProvider()
 		{
+			@Override
 			public String getGroupTitle(ConfigGroup g)
 			{ return I18n.format(g.getID()); }
 			
+			@Override
 			public String getEntryTitle(ConfigEntry e)
 			{ return I18n.format(e.getFullID()); }
 			
+			@Override
 			public ConfigFile getConfigGroup()
 			{
 				if(file.getFile() == null)
@@ -32,6 +35,7 @@ public final class ClientConfigRegistry
 				return file;
 			}
 			
+			@Override
 			public void save()
 			{ getConfigGroup().save(); }
 		};

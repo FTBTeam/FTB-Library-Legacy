@@ -28,9 +28,11 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 		p.writeToNet(data, self);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		playerID = readUUID(io);
@@ -38,6 +40,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 		data = ByteBufUtils.readTag(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeUUID(io, playerID);
@@ -45,6 +48,7 @@ public class MessageLMPlayerUpdate extends MessageLM<MessageLMPlayerUpdate>
 		writeTag(io, data);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerUpdate m, MessageContext ctx)
 	{

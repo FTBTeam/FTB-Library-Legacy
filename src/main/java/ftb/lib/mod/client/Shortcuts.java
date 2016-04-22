@@ -14,6 +14,7 @@ import java.util.*;
 /**
  * Created by LatvianModder on 17.01.2016.
  */
+//TODO: Rewrite me to work with KeyBindings
 public class Shortcuts
 {
 	public static final List<ClickActionKey> keys = new ArrayList<>();

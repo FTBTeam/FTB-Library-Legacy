@@ -41,9 +41,11 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		}
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_INFO; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		playerID = readUUID(io);
@@ -61,6 +63,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		}
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeUUID(io, playerID);
@@ -77,6 +80,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		}
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
 	{

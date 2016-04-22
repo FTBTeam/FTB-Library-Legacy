@@ -20,6 +20,7 @@ public class ConfigGroup extends ConfigEntry
 		entryMap = new LinkedHashMap<>();
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.GROUP; }
 	
@@ -86,6 +87,7 @@ public class ConfigGroup extends ConfigEntry
 		return this;
 	}
 	
+	@Override
 	public ConfigEntry copy()
 	{
 		ConfigGroup g = new ConfigGroup(getID());
@@ -94,6 +96,7 @@ public class ConfigGroup extends ConfigEntry
 		return g;
 	}
 	
+	@Override
 	public final void fromJson(JsonElement o0)
 	{
 		if(o0 == null || !o0.isJsonObject()) return;
@@ -115,6 +118,7 @@ public class ConfigGroup extends ConfigEntry
 		}
 	}
 	
+	@Override
 	public final JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -130,9 +134,11 @@ public class ConfigGroup extends ConfigEntry
 		return o;
 	}
 	
+	@Override
 	public String getAsString()
 	{ return getSerializableElement().toString(); }
 	
+	@Override
 	public List<String> getAsStringList()
 	{
 		List<String> list = new ArrayList<>(entryMap.size());
@@ -144,9 +150,11 @@ public class ConfigGroup extends ConfigEntry
 		return list;
 	}
 	
+	@Override
 	public boolean getAsBoolean()
 	{ return !entryMap.isEmpty(); }
 	
+	@Override
 	public int getAsInt()
 	{ return entryMap.size(); }
 	
@@ -156,6 +164,7 @@ public class ConfigGroup extends ConfigEntry
 	public final String getDisplayName()
 	{ return displayName == null ? LMStringUtils.firstUppercase(getID()) : displayName; }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -181,6 +190,7 @@ public class ConfigGroup extends ConfigEntry
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);
@@ -295,6 +305,7 @@ public class ConfigGroup extends ConfigEntry
 		return list;
 	}
 	
+	@Override
 	public ConfigGroup getAsGroup()
 	{ return this; }
 	

@@ -18,6 +18,7 @@ public abstract class MessageLM_IO extends MessageLM<MessageLM_IO>
 		if(t != null) io = new ByteIOStream();
 	}
 	
+	@Override
 	public final void fromBytes(ByteBuf bb)
 	{
 		if(dataType == null) return;
@@ -35,6 +36,7 @@ public abstract class MessageLM_IO extends MessageLM<MessageLM_IO>
 		else io.setCompressedData(b);
 	}
 	
+	@Override
 	public final void toBytes(ByteBuf bb)
 	{
 		if(dataType == null) return;
@@ -48,6 +50,7 @@ public abstract class MessageLM_IO extends MessageLM<MessageLM_IO>
 		bb.writeBytes(b, 0, b.length);
 	}
 	
+	@Override
 	public final IMessage onMessage(MessageLM_IO m, MessageContext ctx)
 	{
 		io = m.io;

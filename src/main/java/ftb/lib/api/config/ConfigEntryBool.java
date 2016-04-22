@@ -16,39 +16,50 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
 		defValue = def;
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.BOOLEAN; }
 	
+	@Override
 	public int getColor()
 	{ return getAsBoolean() ? 0x33AA33 : 0xD52834; }
 	
 	public void set(boolean v)
 	{ value = v; }
 	
+	@Override
 	public void fromJson(JsonElement o)
 	{ set(o.getAsBoolean()); }
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsBoolean()); }
 	
+	@Override
 	public void onClicked(boolean leftClick)
 	{ set(!getAsBoolean()); }
 	
+	@Override
 	public String getAsString()
 	{ return getAsBoolean() ? "true" : "false"; }
 	
+	@Override
 	public boolean getAsBoolean()
 	{ return value; }
 	
+	@Override
 	public int getAsInt()
 	{ return getAsBoolean() ? 1 : 0; }
 	
+	@Override
 	public double getAsDouble()
 	{ return getAsBoolean() ? 1D : 0D; }
 	
+	@Override
 	public String getDefValueString()
 	{ return defValue ? "true" : "false"; }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -60,6 +71,7 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);

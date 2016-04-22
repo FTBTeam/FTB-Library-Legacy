@@ -18,21 +18,26 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 		set(def);
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.INT; }
 	
+	@Override
 	public int getColor()
 	{ return 0xAA5AE8; }
 	
+	@Override
 	public void setBounds(double min, double max)
 	{
 		minValue = min == Double.NEGATIVE_INFINITY ? null : (int) min;
 		maxValue = max == Double.POSITIVE_INFINITY ? null : (int) max;
 	}
 	
+	@Override
 	public double getMin()
 	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue.doubleValue(); }
 	
+	@Override
 	public double getMax()
 	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue.doubleValue(); }
 	
@@ -44,27 +49,35 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 	public void add(int i)
 	{ set(getAsInt() + i); }
 	
+	@Override
 	public final void fromJson(JsonElement o)
 	{ set((o == null || o.isJsonNull()) ? defValue : o.getAsInt()); }
 	
+	@Override
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsInt()); }
 	
+	@Override
 	public String getAsString()
 	{ return Integer.toString(getAsInt()); }
 	
+	@Override
 	public boolean getAsBoolean()
 	{ return getAsInt() != 0; }
 	
+	@Override
 	public int getAsInt()
 	{ return value; }
 	
+	@Override
 	public double getAsDouble()
 	{ return getAsInt(); }
 	
+	@Override
 	public String getDefValueString()
 	{ return Integer.toString(defValue); }
 	
+	@Override
 	public String getMinValueString()
 	{
 		double d = getMin();
@@ -77,6 +90,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 		return null;
 	}
 	
+	@Override
 	public String getMaxValueString()
 	{
 		double d = getMax();
@@ -89,6 +103,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 		return null;
 	}
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -114,6 +129,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);

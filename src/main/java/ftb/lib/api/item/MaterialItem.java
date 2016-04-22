@@ -1,6 +1,5 @@
 package ftb.lib.api.item;
 
-import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,11 +21,6 @@ public class MaterialItem extends FinalIDObject
 	
 	public final ItemStack getStack(int s)
 	{ return new ItemStack(item, s, damage); }
-	
-	public void onPostLoaded()
-	{
-		FTBLibMod.proxy.addItemModel(item, damage, "variant=" + getID());
-	}
 	
 	@SideOnly(Side.CLIENT)
 	public void addInfo(EntityPlayer ep, List<String> l)

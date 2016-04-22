@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.*;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by LatvianModder on 17.01.2016.
@@ -13,7 +13,7 @@ import java.util.HashMap;
 @SideOnly(Side.CLIENT)
 public class GuiScreenRegistry
 {
-	private static final HashMap<String, Entry> map = new HashMap<>();
+	private static final Map<String, Entry> map = new HashMap<>();
 	
 	public static void register(String s, Entry e)
 	{

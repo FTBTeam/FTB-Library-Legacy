@@ -48,9 +48,11 @@ public class ForgePermissionContainer extends FinalIDObject implements IInfoCont
 		return id;
 	}
 	
+	@Override
 	public void setInfo(String[] s)
 	{ info = s; }
 	
+	@Override
 	public String[] getInfo()
 	{ return info; }
 }

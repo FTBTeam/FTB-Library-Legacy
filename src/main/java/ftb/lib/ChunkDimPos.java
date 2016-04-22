@@ -16,6 +16,7 @@ public class ChunkDimPos extends ChunkCoordIntPair
 		dim = d;
 	}
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
@@ -27,9 +28,11 @@ public class ChunkDimPos extends ChunkCoordIntPair
 	public boolean equalsChunk(ChunkDimPos p)
 	{ return p == this || (p != null && p.dim == dim && p.chunkXPos == chunkXPos && p.chunkZPos == chunkZPos); }
 	
+	@Override
 	public String toString()
 	{ return "[" + dim.getName() + '@' + chunkXPos + ',' + chunkZPos + ']'; }
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(dim, chunkXPos, chunkZPos); }
 	

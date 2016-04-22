@@ -54,9 +54,11 @@ public class GuiSelectColor extends GuiLM
 		
 		colorInit = new ButtonLM(this, 76, 71, col_tex.widthI(), col_tex.heightI())
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
 			
+			@Override
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_cancel());
@@ -66,9 +68,11 @@ public class GuiSelectColor extends GuiLM
 		
 		colorCurrent = new ButtonLM(this, 109, 71, col_tex.widthI(), col_tex.heightI())
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{ closeGui(true); }
 			
+			@Override
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(FTBLibLang.button_accept());
@@ -147,6 +151,7 @@ public class GuiSelectColor extends GuiLM
 		setColor(initCol);
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.add(colorInit);
@@ -182,6 +187,7 @@ public class GuiSelectColor extends GuiLM
 		if(isInstant) callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		sliderRed.update();
@@ -289,6 +295,7 @@ public class GuiSelectColor extends GuiLM
 			cursorPosX = cursorPosY = -1D;
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ax = getAX();
@@ -331,6 +338,7 @@ public class GuiSelectColor extends GuiLM
 			}
 		}
 		
+		@Override
 		public void mousePressed(int b)
 		{ if(b == 0 && mouseOver()) grabbed = true; }
 	}

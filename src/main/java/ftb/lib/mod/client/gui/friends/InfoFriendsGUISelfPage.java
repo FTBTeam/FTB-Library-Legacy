@@ -18,6 +18,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 		onClientDataChanged();
 	}
 	
+	@Override
 	public void onClientDataChanged()
 	{
 		clear();
@@ -41,6 +42,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 		
 		page = new InfoPage("settings")
 		{
+			@Override
 			public void onClientDataChanged()
 			{
 				clear();

@@ -46,9 +46,11 @@ public final class TextureCoords
 	public int heightI()
 	{ return (int) height; }
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(texture, posX, posY, width, height); }
 	
+	@Override
 	public String toString()
 	{ return String.valueOf(posXI()) + ',' + posYI() + ',' + widthI() + ',' + heightI(); }
 	

@@ -44,9 +44,11 @@ public class MessageReload extends MessageLM<MessageReload>
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		reloadClient = io.readBoolean();
@@ -65,6 +67,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		syncedData = readTag(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeBoolean(reloadClient);
@@ -81,6 +84,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		writeTag(io, syncedData);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageReload m, MessageContext ctx)
 	{

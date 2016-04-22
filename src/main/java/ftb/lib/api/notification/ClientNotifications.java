@@ -151,6 +151,7 @@ public class ClientNotifications
 			timeAdded = LMUtils.millis();
 		}
 		
+		@Override
 		public int compareTo(Object o)
 		{ return Long.compare(((Perm) o).timeAdded, timeAdded); }
 		

@@ -57,8 +57,8 @@ public class InfoImageLine extends InfoExtendedTextLine
 	{
 		TextureCoords img = getImage();
 		if(img == null) return null;
-		double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : ((double) texture.width / -displayS)));
-		double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : ((double) texture.height / -displayS)));
+		double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
+		double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
 		return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
 	}
 	
@@ -77,6 +77,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 		text = null;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{
@@ -84,6 +85,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 		return new ButtonInfoImage(gui, this);
 	}
 	
+	@Override
 	public void fromJson(JsonElement e)
 	{
 		super.fromJson(e);
@@ -112,6 +114,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 		}
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = (JsonObject) super.getSerializableElement();

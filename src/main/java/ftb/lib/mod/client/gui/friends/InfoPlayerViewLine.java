@@ -29,6 +29,7 @@ public class InfoPlayerViewLine extends InfoTextLine
 		playerLM = p;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoPlayerView(gui, this); }
@@ -43,6 +44,7 @@ public class InfoPlayerViewLine extends InfoTextLine
 			height = 1;
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ay = getAY();
@@ -102,26 +104,35 @@ public class InfoPlayerViewLine extends InfoTextLine
 				super(Minecraft.getMinecraft().theWorld, p.getProfile());
 			}
 			
+			@Override
 			public boolean equals(Object o)
 			{ return playerLM.equals(o); }
 			
+			@Override
 			public void addChatMessage(ITextComponent i) { }
 			
+			@Override
 			public boolean canCommandSenderUseCommand(int i, String s)
 			{ return false; }
 			
-			public BlockPos getPos()
+			@Override
+			public BlockPos getPosition()
 			{ return BlockPos.ORIGIN; }
 			
+			@Override
 			public boolean isInvisibleToPlayer(EntityPlayer ep)
 			{ return true; }
 			
+			@Override
 			public ResourceLocation getLocationSkin()
 			{ return playerLM.getSkin(); }
 			
-			public boolean hasCape()
-			{ return false; }
+			//FIXME: Cape
+			//@Override
+			//public boolean hasCape()
+			//{ return false; }
 			
+			@Override
 			public ResourceLocation getLocationCape()
 			{ return null; }
 		}

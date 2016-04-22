@@ -7,4 +7,5 @@ public interface IBlockLM extends IItemLM
 {
 	ItemBlock createItemBlock();
 	String getUnlocalizedName(ItemStack stack);
+	void loadTiles();
 }

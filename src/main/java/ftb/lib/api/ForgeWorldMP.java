@@ -29,6 +29,7 @@ public final class ForgeWorldMP extends ForgeWorld
 		currentMode = GameModes.instance().defaultMode;
 	}
 	
+	@Override
 	public void init()
 	{
 		super.init();
@@ -42,16 +43,20 @@ public final class ForgeWorldMP extends ForgeWorld
 		}
 	}
 	
+	@Override
 	public World getMCWorld()
 	{ return FTBLib.getServer().getEntityWorld(); }
 	
+	@Override
 	public ForgeWorldMP toWorldMP()
 	{ return this; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ForgeWorldSP toWorldSP()
 	{ return null; }
 	
+	@Override
 	public ForgePlayerMP getPlayer(Object o)
 	{
 		if(o instanceof FakePlayer) return new ForgePlayerFake((FakePlayer) o);

@@ -12,7 +12,11 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 {
 	public abstract LMNetworkWrapper getWrapper();
 	
+	@Override
 	public abstract void fromBytes(ByteBuf io);
+	
+	
+	@Override
 	public abstract void toBytes(ByteBuf io);
 	
 	/*
@@ -25,6 +29,7 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	}
 	*/
 	
+	@Override
 	public IMessage onMessage(E m, MessageContext ctx)
 	{
 		return null;

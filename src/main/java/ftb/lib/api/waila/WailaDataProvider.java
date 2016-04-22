@@ -31,18 +31,23 @@ public class WailaDataProvider implements IWailaDataProvider
 		return dataAccessor;
 	}
 	
+	@Override
 	public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaStack(getData(data)); }
 	
+	@Override
 	public List<String> getWailaHead(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaHead(is, l, getData(data)); }
 	
+	@Override
 	public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaBody(is, l, getData(data)); }
 	
+	@Override
 	public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
 	{ return handler.getWailaTail(is, l, getData(data)); }
 	
+	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP entityPlayerMP, TileEntity tileEntity, NBTTagCompound nbtTagCompound, World world, BlockPos blockPos)
 	{ return null; }
 }

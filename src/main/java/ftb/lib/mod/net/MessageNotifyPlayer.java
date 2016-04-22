@@ -21,25 +21,29 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 		json = LMJsonUtils.toJson(n.getSerializableElement());
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		json = readString(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeString(io, json);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public IMessage onMessage(MessageNotifyPlayer m, MessageContext ctx)
 	{
 		if(FTBLibModClient.notifications.get() != EnumScreen.OFF)
 		{
-			Notification n = Notification.deserialize(LMJsonUtils.fromJson(json));
+			Notification n = Notification.deserialize(LMJsonUtils.fromJson(m.json));
 			
 			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) ClientNotifications.add(n);
 			else

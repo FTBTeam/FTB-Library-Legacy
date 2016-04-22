@@ -11,6 +11,7 @@ public class CmdReload extends CommandLM
 	public CmdReload()
 	{ super(FTBLibConfigCmd.reload_name.getAsString(), CommandLevel.OP); }
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		FTBLib.reload(ics, true, false);

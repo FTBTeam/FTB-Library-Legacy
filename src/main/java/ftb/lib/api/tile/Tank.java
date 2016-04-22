@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.*;
 
-public class Tank
+public class Tank implements IFluidHandler
 {
 	public final String name;
 	public FluidTank fluidTank;
@@ -69,6 +69,7 @@ public class Tank
 		tag.setTag(name, tankTag);
 	}
 	
+	@Override
 	public int fill(EnumFacing from, FluidStack resource, boolean doFill)
 	{
 		if(canFill(from, resource.getFluid()))
@@ -80,6 +81,7 @@ public class Tank
 		return 0;
 	}
 	
+	@Override
 	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
 		if(fluidTank.getFluidAmount() <= 0) return null;
@@ -90,6 +92,7 @@ public class Tank
 		return fs;
 	}
 	
+	@Override
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		FluidStack fs = fluidTank.drain(maxDrain, doDrain);
@@ -97,12 +100,15 @@ public class Tank
 		return fs;
 	}
 	
+	@Override
 	public boolean canFill(EnumFacing from, Fluid fluid)
 	{ return true; }
 	
+	@Override
 	public boolean canDrain(EnumFacing from, Fluid fluid)
 	{ return true; }
 	
+	@Override
 	public FluidTankInfo[] getTankInfo(EnumFacing from)
 	{ return new FluidTankInfo[] {fluidTank.getInfo()}; }
 	

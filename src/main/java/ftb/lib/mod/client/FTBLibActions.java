@@ -48,18 +48,21 @@ public class FTBLibActions
 		
 		GuiScreenRegistry.register("notifications", new GuiScreenRegistry.Entry()
 		{
+			@Override
 			public GuiScreen openGui(EntityPlayer ep)
 			{ return new GuiNotifications(FTBLibClient.mc.currentScreen); }
 		});
 		
 		GuiScreenRegistry.register("friends_gui", new GuiScreenRegistry.Entry()
 		{
+			@Override
 			public GuiScreen openGui(EntityPlayer ep)
 			{ return new GuiInfo(null, new InfoFriendsGUI()); }
 		});
 		
 		GuiScreenRegistry.register("client_config", new GuiScreenRegistry.Entry()
 		{
+			@Override
 			public GuiScreen openGui(EntityPlayer ep)
 			{ return new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider()); }
 		});
@@ -67,15 +70,19 @@ public class FTBLibActions
 	
 	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
+		@Override
 		public String getDisplayName()
 		{ return I18n.format(FTBLibModClient.notifications.getFullID()); }
 		
+		@Override
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !ClientNotifications.Perm.list.isEmpty(); }
 		
+		@Override
 		public void postRender(int ax, int ay, double z)
 		{
 			String n = String.valueOf(ClientNotifications.Perm.list.size());
@@ -90,81 +97,98 @@ public class FTBLibActions
 	
 	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/gui/friendsbutton.png"), 256))
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiInfo(null, new InfoFriendsGUI())); }
 		
+		@Override
 		public String getDisplayName()
 		{ return "FriendsGUI"; }
 	};
 	
 	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
 	};
 	
 	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -10, GuiIcons.toggle_gamemode)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{
 			int i = self.getPlayer().capabilities.isCreativeMode ? 0 : 1;
 			FTBLibClient.execClientCommand("/gamemode " + i);
 		}
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/toggledownfall"); }
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/time set 6000"); }
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/time set 18000"); }
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction heal = new PlayerAction(PlayerAction.Type.SELF, "ftbl.heal", -16, GuiIcons.heart)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.execClientCommand("/heal"); }
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_chunk_bounds = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_chunk_bounds", -17, GuiIcons.toggle_chunk_bounds)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibRenderHandler.renderChunkBounds = !FTBLibRenderHandler.renderChunkBounds; }
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
 	
 	public static final PlayerAction toggle_light_values = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_light_values", -18, GuiIcons.toggle_light_values)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibRenderHandler.toggleLightLevel(); }
 		
+		@Override
 		public Boolean configDefault()
 		{ return Boolean.TRUE; }
 	};
@@ -173,27 +197,33 @@ public class FTBLibActions
 	
 	public static final PlayerAction friend_add = new PlayerAction(PlayerAction.Type.OTHER, "ftbul.add_friend", 1, GuiIcons.add)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ new MessageModifyFriends(MessageModifyFriends.ADD, other.getProfile().getId()).sendToServer(); }
 		
+		@Override
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !self.isFriendRaw(other); }
 	};
 	
 	public static final PlayerAction friend_remove = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.rem_friend", -1, GuiIcons.remove)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ new MessageModifyFriends(MessageModifyFriends.REMOVE, other.getProfile().getId()).sendToServer(); }
 		
+		@Override
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return self.isFriendRaw(other); }
 	};
 	
 	public static final PlayerAction friend_deny = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.deny_friend", -1, GuiIcons.remove)
 	{
+		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ new MessageModifyFriends(MessageModifyFriends.DENY, other.getProfile().getId()).sendToServer(); }
 		
+		@Override
 		public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
 		{ return !self.isFriendRaw(other) && other.isFriendRaw(self); }
 	};
@@ -300,6 +330,7 @@ public class FTBLibActions
 			action = b;
 		}
 		
+		@Override
 		public void drawButton(Minecraft mc, int mx, int my)
 		{
 		}
@@ -317,6 +348,7 @@ public class FTBLibActions
 			creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative) g : null;
 		}
 		
+		@Override
 		public void drawButton(Minecraft mc, int mx, int my)
 		{
 			//if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())

@@ -20,6 +20,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 {
 	private static final RemoveFilter<Map.Entry<String, InfoPage>> cleanupFilter = new RemoveFilter<Map.Entry<String, InfoPage>>()
 	{
+		@Override
 		public boolean remove(Map.Entry<String, InfoPage> entry)
 		{ return entry.getValue().childPages.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty(); }
 	};
@@ -151,6 +152,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		return parent.getParentTop();
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -176,6 +178,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		return o;
 	}
 	
+	@Override
 	public void fromJson(JsonElement e)
 	{
 		clear();
@@ -271,6 +274,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		return parent.getFullID() + '.' + getID();
 	}
 	
+	@Override
 	public void onClientDataChanged()
 	{
 	}

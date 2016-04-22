@@ -91,7 +91,17 @@ public class LMMod extends FinalIDObject
 	
 	public void onPostLoaded()
 	{
-		for(IItemLM i : itemsAndBlocks) i.onPostLoaded();
+		for(IItemLM i : itemsAndBlocks)
+		{
+			i.onPostLoaded();
+			
+			if(i instanceof IBlockLM)
+			{
+				((IBlockLM) i).loadTiles();
+			}
+			
+			FTBLibMod.proxy.loadModels(i);
+		}
 	}
 	
 	public void loadRecipes()

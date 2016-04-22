@@ -37,12 +37,15 @@ public class InfoFriendsGUI extends InfoPage
 		}
 	}
 	
+	@Override
 	public LMColor getBackgroundColor()
 	{ return new LMColor.RGB(30, 30, 30); }
 	
+	@Override
 	public LMColor getTextColor()
 	{ return new LMColor.RGB(200, 200, 200); }
 	
+	@Override
 	public Boolean useUnicodeFont()
 	{ return Boolean.FALSE; }
 }

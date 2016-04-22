@@ -63,11 +63,13 @@ public class SliderLM extends WidgetLM
 		else GuiLM.render(tc, getAX() + getValueI(), getAY(), gui.getZLevel(), sliderSize, height);
 	}
 	
+	@Override
 	public void mousePressed(int b)
 	{
 		if(mouseOver() && b == 0) isGrabbed = true;
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 		if(displayMin == 0 && displayMax == 0) return;

@@ -27,9 +27,11 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 		windowID = wid;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		posX = io.readInt();
@@ -39,6 +41,7 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 		windowID = io.readUnsignedByte();
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeInt(posX);
@@ -48,6 +51,7 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 		io.writeByte(windowID);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageOpenGuiTile m, MessageContext ctx)
 	{

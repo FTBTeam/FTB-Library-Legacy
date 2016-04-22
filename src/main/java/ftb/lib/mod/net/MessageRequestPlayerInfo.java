@@ -18,19 +18,23 @@ public class MessageRequestPlayerInfo extends MessageLM<MessageRequestPlayerInfo
 		playerID = player;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_INFO; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		playerID = readUUID(io);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeUUID(io, playerID);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageRequestPlayerInfo m, MessageContext ctx)
 	{
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);

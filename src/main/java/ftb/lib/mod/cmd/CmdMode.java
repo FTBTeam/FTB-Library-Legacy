@@ -25,9 +25,11 @@ public class CmdMode extends CommandSubLM
 		public CmdSet(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <modeID>"; }
 		
+		@Override
 		public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 		{
 			if(args.length == 1)
@@ -38,6 +40,7 @@ public class CmdMode extends CommandSubLM
 			return super.getTabCompletionOptions(server, ics, args, pos);
 		}
 		
+		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			if(args.length == 0)
@@ -76,6 +79,7 @@ public class CmdMode extends CommandSubLM
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			ITextComponent c = new TextComponentTranslation("ftbl:gamemode.current", ForgeWorldMP.inst.getMode());
@@ -89,6 +93,7 @@ public class CmdMode extends CommandSubLM
 		public CmdList(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			ITextComponent c = new TextComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.instance().modes.keySet()));

@@ -25,9 +25,11 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 		playerID = (id == null) ? new UUID(0L, 0L) : id;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		actionID = io.readByte();
@@ -36,6 +38,7 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 		playerID = new UUID(msb, lsb);
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeByte(actionID);
@@ -43,6 +46,7 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 		io.writeLong(playerID.getLeastSignificantBits());
 	}
 	
+	@Override
 	public IMessage onMessage(MessageModifyFriends m, MessageContext ctx)
 	{
 		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);

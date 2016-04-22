@@ -22,6 +22,7 @@ public class TileInvLM extends TileLM
 	{
 		return new ItemStackHandler(size)
 		{
+			@Override
 			protected void onContentsChanged(int slot)
 			{
 				super.onContentsChanged(slot);
@@ -30,30 +31,35 @@ public class TileInvLM extends TileLM
 		};
 	}
 	
+	@Override
 	public boolean hasCapability(Capability<?> capability, EnumFacing facing)
 	{
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return true;
 		return super.hasCapability(capability, facing);
 	}
 	
+	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing)
 	{
 		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return (T) itemHandler;
 		return super.getCapability(capability, facing);
 	}
 	
+	@Override
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
 		itemHandler.deserializeNBT(tag.getCompoundTag("Items"));
 	}
 	
+	@Override
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
 		tag.setTag("Items", itemHandler.serializeNBT());
 	}
 	
+	@Override
 	public void onBroken(IBlockState state)
 	{
 		if(dropItems && getSide().isServer() && itemHandler != null && itemHandler.getSlots() > 0)

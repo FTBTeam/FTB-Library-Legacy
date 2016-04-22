@@ -43,6 +43,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		
 		mainPanel = new PanelLM(this, 0, 0, scr.getScaledWidth(), scr.getScaledHeight())
 		{
+			@Override
 			public void addWidgets()
 			{ GuiLM.this.addWidgets(); }
 		};
@@ -50,6 +51,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		refreshWidgets();
 	}
 	
+	@Override
 	public void refreshWidgets()
 	{ refreshWidgets = true; }
 	
@@ -58,27 +60,35 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	public final ItemStack getHeldItem()
 	{ return mc.thePlayer.inventory.getItemStack(); }
 	
+	@Override
 	public final GuiScreen getGui()
 	{ return this; }
 	
+	@Override
 	public final PanelLM getMainPanel()
 	{ return mainPanel; }
 	
+	@Override
 	public final MouseLM mouse()
 	{ return mouse; }
 	
+	@Override
 	public final float getZLevel()
 	{ return zLevel; }
 	
+	@Override
 	public final void setZLevel(float z)
 	{ zLevel = z; }
 	
+	@Override
 	public final FontRenderer getFontRenderer()
 	{ return fontRendererObj; }
 	
+	@Override
 	public final void close(GuiScreen g)
 	{ FTBLibClient.openGui((g == null) ? parentScreen : g); }
 	
+	@Override
 	public final void initGui()
 	{
 		super.initGui();
@@ -88,13 +98,16 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		refreshWidgets();
 	}
 	
+	@Override
 	public boolean doesGuiPauseGame()
 	{ return false; }
 	
+	@Override
 	public void initLMGui()
 	{
 	}
 	
+	@Override
 	protected final void mouseClicked(int mx, int my, int b) throws IOException
 	{
 		mouse.onClicked(b, true);
@@ -107,6 +120,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	{
 	}
 	
+	@Override
 	protected void keyTyped(char keyChar, int key) throws IOException
 	{
 		if(mainPanel.keyPressed(key, keyChar)) return;
@@ -134,6 +148,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	{
 	}
 	
+	@Override
 	public final void drawScreen(int mx, int my, float f)
 	{
 		mouse.onUpdate(mx, my);
@@ -167,6 +182,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		mainPanel.addMouseOverText(l);
 	}
 	
+	@Override
 	public final void onGuiClosed()
 	{
 		super.onGuiClosed();
@@ -177,6 +193,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	{
 	}
 	
+	@Override
 	public void drawTexturedModalRect(int x, int y, int u, int v, int w, int h)
 	{ drawTexturedModalRectD(x, y, u, v, w, h); }
 	

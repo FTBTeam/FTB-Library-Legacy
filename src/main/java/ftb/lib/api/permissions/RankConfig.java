@@ -86,21 +86,26 @@ public class RankConfig extends FinalIDObject implements INumberBoundsContainer,
 		return filter(getDefaultElement(profile));
 	}
 	
+	@Override
 	public void setBounds(double min, double max)
 	{
 		minValue = (min == Double.NEGATIVE_INFINITY) ? null : min;
 		maxValue = (max == Double.POSITIVE_INFINITY) ? null : max;
 	}
 	
+	@Override
 	public double getMin()
 	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue; }
 	
+	@Override
 	public double getMax()
 	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue; }
 	
+	@Override
 	public void setInfo(String[] s)
 	{ info = s; }
 	
+	@Override
 	public String[] getInfo()
 	{ return info; }
 }

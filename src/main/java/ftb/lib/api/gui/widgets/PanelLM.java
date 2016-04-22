@@ -48,6 +48,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		addWidgets();
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 		if(title != null) l.add(title);
@@ -55,12 +56,14 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 			if(w.isEnabled() && w.mouseOver()) w.addMouseOverText(l);
 	}
 	
+	@Override
 	public void mousePressed(int b)
 	{
 		for(WidgetLM w : widgets)
 			if(w.isEnabled()) w.mousePressed(b);
 	}
 	
+	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
 		for(WidgetLM w : widgets)
@@ -68,6 +71,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 		return false;
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		for(WidgetLM widget : widgets) widget.renderWidget();

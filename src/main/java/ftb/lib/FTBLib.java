@@ -324,12 +324,15 @@ public class FTBLib
 				value = p;
 			}
 			
+			@Override
 			public String getKey()
 			{ return getID(); }
 			
+			@Override
 			public Object getValue()
 			{ return value; }
 			
+			@Override
 			public Object setValue(Object v)
 			{
 				Object p = value;

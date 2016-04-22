@@ -20,9 +20,11 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 	public CmdNotify()
 	{ super("ftb_notify", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <player|@a> <json...>"; }
 	
+	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
 		if(args.length == 2)
@@ -33,9 +35,11 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 		return super.getTabCompletionOptions(server, ics, args, pos);
 	}
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
+	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
@@ -50,6 +54,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 		}
 	}
 	
+	@Override
 	public void addInfo(List<ITextComponent> list, ICommandSender sender)
 	{
 		list.add(new TextComponentString("/" + commandName));

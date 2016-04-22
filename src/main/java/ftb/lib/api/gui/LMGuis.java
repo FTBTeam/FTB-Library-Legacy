@@ -17,16 +17,19 @@ public class LMGuis
 	{
 		STRING
 				{
+					@Override
 					public boolean isValid(String s)
 					{ return true; }
 				},
 		INTEGER
 				{
+					@Override
 					public boolean isValid(String s)
 					{ return Converter.canParseInt(s); }
 				},
 		DOUBLE
 				{
+					@Override
 					public boolean isValid(String s)
 					{ return Converter.canParseDouble(s); }
 				};

@@ -11,6 +11,7 @@ import net.minecraft.client.entity.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -19,12 +20,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.*;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.*;
 import net.minecraftforge.fml.relauncher.*;
@@ -45,11 +47,24 @@ public class FTBLibClient
 	
 	// - Registry - //
 	
+	public static void addItemModel(Item item, int meta, String variant)
+	{ ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), variant)); }
+	
 	public static <T extends Entity> void addEntityRenderer(Class<T> c, IRenderFactory<? super T> r)
 	{ RenderingRegistry.registerEntityRenderingHandler(c, r); }
 	
 	public static <T extends TileEntity> void addTileRenderer(Class<T> c, TileEntitySpecialRenderer<? super T> r)
 	{ ClientRegistry.bindTileEntitySpecialRenderer(c, r); }
+	
+	public static KeyBinding addKeyBinding(String name, int key, String cat)
+	{
+		KeyBinding k = new KeyBinding(name, key, cat);
+		ClientRegistry.registerKeyBinding(k);
+		return k;
+	}
+	
+	public static void addClientTickCallback(ClientTickCallback e)
+	{ FTBLibRenderHandler.callbacks.add(e); }
 	
 	// -- //
 	
@@ -64,13 +79,6 @@ public class FTBLibClient
 	
 	public static void spawnPart(EntityFX e)
 	{ mc.effectRenderer.addEffect(e); }
-	
-	public static KeyBinding addKeyBinding(String name, int key, String cat)
-	{
-		KeyBinding k = new KeyBinding(name, key, cat);
-		ClientRegistry.registerKeyBinding(k);
-		return k;
-	}
 	
 	public static void onGuiClientAction()
 	{
@@ -187,9 +195,6 @@ public class FTBLibClient
 	
 	public static boolean canRenderGui()
 	{ return mc.currentScreen == null || mc.currentScreen instanceof GuiChat; }
-	
-	public static void addClientTickCallback(ClientTickCallback e)
-	{ FTBLibRenderHandler.callbacks.add(e); }
 	
 	public static void renderItem(World w, ItemStack is)
 	{

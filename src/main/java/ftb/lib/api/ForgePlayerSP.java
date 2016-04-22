@@ -34,21 +34,27 @@ public class ForgePlayerSP extends ForgePlayer
 	public boolean isClientPlayer()
 	{ return getProfile().equals(Minecraft.getMinecraft().thePlayer.getGameProfile()); }
 	
+	@Override
 	public final Side getSide()
 	{ return Side.CLIENT; }
 	
+	@Override
 	public boolean isOnline()
 	{ return isOnline; }
 	
+	@Override
 	public EntityPlayer getPlayer()
 	{ return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null; }
 	
+	@Override
 	public final ForgePlayerMP toPlayerMP()
 	{ return null; }
 	
+	@Override
 	public final ForgePlayerSP toPlayerSP()
 	{ return this; }
 	
+	@Override
 	public final ForgeWorld getWorld()
 	{ return ForgeWorldSP.inst; }
 	
@@ -58,6 +64,7 @@ public class ForgePlayerSP extends ForgePlayer
 	public ForgePlayerSPSelf toPlayerSPSelf()
 	{ return null; }
 	
+	@Override
 	public boolean isMCPlayer()
 	{ return toPlayerSPSelf() != null; }
 	

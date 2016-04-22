@@ -1,5 +1,6 @@
 package ftb.lib.api.item;
 
+import ftb.lib.api.client.FTBLibClient;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.*;
@@ -9,8 +10,8 @@ import java.util.*;
 
 public abstract class ItemMaterialsLM extends ItemLM
 {
-	public final HashMap<Integer, MaterialItem> materials;
-	private String folder = "";
+	public final Map<Integer, MaterialItem> materials;
+	private String folder;
 	
 	public ItemMaterialsLM()
 	{
@@ -25,10 +26,10 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public ItemStack add(MaterialItem m)
 	{
 		materials.put(m.damage, m);
-		m.onPostLoaded();
 		return m.getStack(1);
 	}
 	
+	@Override
 	public String getUnlocalizedName(ItemStack is)
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
@@ -36,10 +37,27 @@ public abstract class ItemMaterialsLM extends ItemLM
 		return "unknown";
 	}
 	
+	@Override
 	public void onPostLoaded()
 	{
 	}
 	
+	@Override
+	public void loadRecipes()
+	{
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void loadModels()
+	{
+		for(MaterialItem i : materials.values())
+		{
+			FTBLibClient.addItemModel(this, i.damage, "variant=" + i.getID());
+		}
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
 	{
@@ -49,10 +67,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 		}
 	}
 	
-	public void loadRecipes()
-	{
-	}
-	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{

@@ -16,17 +16,23 @@ public final class ForgePlayerFake extends ForgePlayerMP
 		setPlayer(p);
 	}
 	
+	@Override
 	public boolean isFake()
 	{ return true; }
 	
+	@Override
 	public void sendUpdate() { }
 	
+	@Override
 	public boolean isOP()
 	{ return false; }
 	
+	@Override
 	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info) { }
 	
+	@Override
 	public void refreshStats() { }
 	
+	@Override
 	public void checkNewFriends() { }
 }

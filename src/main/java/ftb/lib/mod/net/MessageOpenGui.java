@@ -25,9 +25,11 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 		windowID = wid;
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 		modID = readString(io);
@@ -36,6 +38,7 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 		windowID = io.readUnsignedByte();
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 		writeString(io, modID);
@@ -44,6 +47,7 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 		io.writeByte(windowID);
 	}
 	
+	@Override
 	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
 	{
 		LMGuiHandler h = LMGuiHandlerRegistry.get(m.modID);
