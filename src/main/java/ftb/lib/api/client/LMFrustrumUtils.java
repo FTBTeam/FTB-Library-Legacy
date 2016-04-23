@@ -1,6 +1,7 @@
 package ftb.lib.api.client;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustrum;
@@ -28,9 +29,9 @@ public class LMFrustrumUtils
 		playerX = RenderManager.instance.viewerPosX;
 		playerY = RenderManager.instance.viewerPosY;
 		playerZ = RenderManager.instance.viewerPosZ;
-		renderX = RenderManager.instance.renderPosX;
-		renderY = RenderManager.instance.renderPosY;
-		renderZ = RenderManager.instance.renderPosZ;
+		renderX = RenderManager.renderPosX;
+		renderY = RenderManager.renderPosY;
+		renderZ = RenderManager.renderPosZ;
 		playerPosHash = Math.abs(LMUtils.longHashCode(FTBLibClient.getDim(), playerX, playerY, playerZ) + 1);
 		frustum.setPosition(playerX, playerY, playerZ);
 	}

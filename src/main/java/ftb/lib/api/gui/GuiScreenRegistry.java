@@ -1,6 +1,7 @@
 package ftb.lib.api.gui;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import latmod.lib.LMListUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +31,7 @@ public class GuiScreenRegistry
 		return null;
 	}
 	
-	public static interface Entry
+	public interface Entry
 	{
 		GuiScreen openGui(EntityPlayer ep);
 	}

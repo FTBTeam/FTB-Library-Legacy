@@ -2,7 +2,8 @@ package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.MouseButton;
-import ftb.lib.api.client.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;

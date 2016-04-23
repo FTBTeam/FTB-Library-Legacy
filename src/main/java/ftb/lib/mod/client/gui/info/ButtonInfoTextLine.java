@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.MouseButton;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.lines.InfoTextLine;

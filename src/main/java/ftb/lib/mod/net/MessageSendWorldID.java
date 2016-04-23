@@ -1,10 +1,13 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.FTBWorld;
 import ftb.lib.api.EventFTBWorldClient;
-import ftb.lib.api.net.*;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 

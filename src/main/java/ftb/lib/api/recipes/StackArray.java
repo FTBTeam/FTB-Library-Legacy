@@ -1,12 +1,20 @@
 package ftb.lib.api.recipes;
 
-import ftb.lib.api.item.*;
+import ftb.lib.api.item.LMInvUtils;
+import ftb.lib.api.item.MaterialItem;
+import ftb.lib.api.item.ODItems;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.*;
-import net.minecraftforge.fluids.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidContainerRegistry;
+import net.minecraftforge.fluids.FluidStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class StackArray implements IStackArray
 {

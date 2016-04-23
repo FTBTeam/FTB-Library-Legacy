@@ -1,11 +1,15 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.*;
-import ftb.lib.api.client.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.PlayerAction;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.WidgetLM;
 
 import java.util.List;
 

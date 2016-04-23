@@ -1,8 +1,11 @@
 package ftb.lib.mod.client.gui.info;
 
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryColor;
+import ftb.lib.api.config.ConfigEntryInt;
 import latmod.lib.LMColor;
-import latmod.lib.annotations.*;
+import latmod.lib.annotations.Flags;
+import latmod.lib.annotations.NumberBounds;
 
 /**
  * Created by LatvianModder on 22.03.2016.

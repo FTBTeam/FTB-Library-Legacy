@@ -1,12 +1,18 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.FTBWorld;
 import ftb.lib.api.GameModes;
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
 import ftb.lib.mod.FTBLibLang;
 import latmod.lib.LMStringUtils;
-import net.minecraft.command.*;
-import net.minecraft.util.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 import java.util.List;
 

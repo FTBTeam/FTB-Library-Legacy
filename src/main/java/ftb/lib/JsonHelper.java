@@ -1,7 +1,12 @@
 package ftb.lib;
 
-import com.google.gson.*;
-import net.minecraft.util.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumTypeAdapterFactory;
+import net.minecraft.util.IChatComponent;
 
 public class JsonHelper
 {

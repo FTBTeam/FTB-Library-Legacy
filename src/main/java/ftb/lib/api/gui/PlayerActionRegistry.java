@@ -1,10 +1,14 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.PlayerAction;
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.friends.ILMPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 15.01.2016.

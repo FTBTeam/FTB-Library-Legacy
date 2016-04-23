@@ -1,7 +1,9 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.gui.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.gui.ContainerEmpty;
+import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.api.item.ItemDisplay;
 import ftb.lib.mod.client.gui.GuiDisplayItem;
 import net.minecraft.client.gui.GuiScreen;

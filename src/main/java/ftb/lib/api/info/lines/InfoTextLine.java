@@ -1,11 +1,17 @@
 package ftb.lib.api.info.lines;
 
-import com.google.gson.*;
-import cpw.mods.fml.relauncher.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.recipes.InfoRecipeLine;
-import ftb.lib.mod.client.gui.info.*;
-import net.minecraft.util.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IJsonSerializable;
 
 /**
  * Created by LatvianModder on 20.03.2016.

@@ -1,11 +1,13 @@
 package ftb.lib.mod.client.gui.info;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.MouseButton;
 import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import net.minecraft.util.IChatComponent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 04.03.2016.

@@ -1,8 +1,11 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.api.*;
-import ftb.lib.api.client.*;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.notification.ClientNotifications;
 import net.minecraft.item.ItemStack;

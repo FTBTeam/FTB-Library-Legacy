@@ -1,10 +1,16 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.*;
-import ftb.lib.api.client.*;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IClientActionGui;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.PanelLM;
+import ftb.lib.api.gui.widgets.SliderLM;
+import ftb.lib.api.gui.widgets.WidgetLM;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoTextLine;
 import latmod.lib.LMColor;

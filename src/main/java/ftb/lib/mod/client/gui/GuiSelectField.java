@@ -1,11 +1,17 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.*;
-import ftb.lib.api.client.*;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.callback.*;
-import ftb.lib.api.gui.widgets.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.LMGuis;
+import ftb.lib.api.gui.callback.FieldSelected;
+import ftb.lib.api.gui.callback.IFieldCallback;
+import ftb.lib.api.gui.widgets.ButtonSimpleLM;
+import ftb.lib.api.gui.widgets.TextBoxLM;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM

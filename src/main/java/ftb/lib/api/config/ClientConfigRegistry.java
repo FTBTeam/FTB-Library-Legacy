@@ -1,6 +1,7 @@
 package ftb.lib.api.config;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
 import net.minecraft.client.resources.I18n;
 

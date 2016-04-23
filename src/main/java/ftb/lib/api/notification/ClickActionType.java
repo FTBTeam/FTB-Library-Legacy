@@ -1,12 +1,14 @@
 package ftb.lib.api.notification;
 
 import com.google.gson.JsonElement;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiScreenRegistry;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 import java.io.File;

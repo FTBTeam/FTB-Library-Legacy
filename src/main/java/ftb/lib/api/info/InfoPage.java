@@ -1,19 +1,35 @@
 package ftb.lib.api.info;
 
-import com.google.gson.*;
-import cpw.mods.fml.relauncher.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.lib.api.info.lines.*;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
+import ftb.lib.api.info.lines.InfoTextLine;
+import ftb.lib.mod.client.gui.info.ButtonInfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.lib.mod.net.MessageDisplayGuide;
-import latmod.lib.*;
+import latmod.lib.LMColor;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMMapUtils;
+import latmod.lib.RemoveFilter;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InfoPage extends FinalIDObject implements IJsonSerializable // GuideFile
 {

@@ -1,9 +1,12 @@
 package ftb.lib.mod.cmd;
 
-import net.minecraft.command.*;
+import net.minecraft.command.CommandHelp;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public class CmdHelpOverride extends CommandHelp
 {

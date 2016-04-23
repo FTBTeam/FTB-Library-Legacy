@@ -1,12 +1,15 @@
 package ftb.lib.mod;
 
-import ftb.lib.api.*;
+import ftb.lib.api.EventFTBReload;
+import ftb.lib.api.EventFTBWorldClient;
+import ftb.lib.api.EventFTBWorldServer;
 import ftb.lib.api.friends.ILMPlayer;
 import latmod.lib.ByteIOStream;
 import latmod.lib.util.Phase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public interface FTBUIntegration // FTBLIntegration
 {

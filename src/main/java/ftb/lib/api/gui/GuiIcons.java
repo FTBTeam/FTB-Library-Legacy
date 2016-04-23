@@ -3,7 +3,8 @@ package ftb.lib.api.gui;
 import ftb.lib.TextureCoords;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GuiIcons
 {

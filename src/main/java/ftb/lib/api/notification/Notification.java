@@ -1,12 +1,15 @@
 package ftb.lib.api.notification;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.LMColorUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IJsonSerializable;
 
 public final class Notification extends FinalIDObject implements IJsonSerializable
 {

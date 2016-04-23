@@ -2,16 +2,25 @@ package ftb.lib.mod.cmd;
 
 import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
-import ftb.lib.api.cmd.*;
-import ftb.lib.api.notification.*;
-import latmod.lib.*;
-import net.minecraft.command.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.ICustomCommandInfo;
+import ftb.lib.api.notification.ClickAction;
+import ftb.lib.api.notification.ClickActionType;
+import ftb.lib.api.notification.MouseAction;
+import ftb.lib.api.notification.Notification;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMStringUtils;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public class CmdNotify extends CommandLM implements ICustomCommandInfo
 {

@@ -1,8 +1,10 @@
 package ftb.lib.api.gui.widgets;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.TextureCoords;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IGuiLM;
 
 import java.util.List;
 

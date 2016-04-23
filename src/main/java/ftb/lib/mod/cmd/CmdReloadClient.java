@@ -1,10 +1,13 @@
 package ftb.lib.mod.cmd;
 
-import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.cmd.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.mod.client.FTBLibModClient;
 import ftb.lib.mod.net.MessageReload;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 
 @SideOnly(Side.CLIENT)
 public class CmdReloadClient extends CommandLM

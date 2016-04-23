@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.notification.ClientNotifications;
@@ -9,7 +10,8 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class GuiNotifications extends GuiLM

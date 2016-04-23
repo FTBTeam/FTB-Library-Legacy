@@ -2,7 +2,8 @@ package ftb.lib;
 
 import ftb.lib.api.LangKey;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 
 public enum EnumMCColor // ItemDye
 {

@@ -1,8 +1,10 @@
 package ftb.lib;
 
 import cpw.mods.fml.relauncher.Side;
-import ftb.lib.api.*;
-import latmod.lib.*;
+import ftb.lib.api.GameMode;
+import ftb.lib.api.GameModes;
+import latmod.lib.ByteIOStream;
+import latmod.lib.LMFileUtils;
 
 import java.io.File;
 

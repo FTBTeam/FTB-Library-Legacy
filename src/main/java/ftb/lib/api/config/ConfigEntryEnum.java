@@ -1,8 +1,12 @@
 package ftb.lib.api.config;
 
-import com.google.gson.*;
-import ftb.lib.api.*;
-import net.minecraft.nbt.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.api.IClickable;
+import ftb.lib.api.MouseButton;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
 import java.util.LinkedHashMap;
 

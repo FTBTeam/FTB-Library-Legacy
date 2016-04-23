@@ -1,15 +1,23 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.*;
-import ftb.lib.api.cmd.*;
-import ftb.lib.api.config.*;
+import ftb.lib.FTBLib;
+import ftb.lib.LMAccessToken;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.config.ConfigEntry;
+import ftb.lib.api.config.ConfigFile;
+import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.config.FTBLibConfigCmdNames;
 import ftb.lib.mod.net.MessageEditConfig;
-import latmod.lib.*;
-import net.minecraft.command.*;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMStringUtils;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
 

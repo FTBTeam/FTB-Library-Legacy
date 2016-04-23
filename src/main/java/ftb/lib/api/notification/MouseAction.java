@@ -1,10 +1,14 @@
 package ftb.lib.api.notification;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import ftb.lib.JsonHelper;
-import net.minecraft.util.*;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.IJsonSerializable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MouseAction implements IJsonSerializable
 {

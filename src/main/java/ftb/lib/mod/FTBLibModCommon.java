@@ -1,7 +1,8 @@
 package ftb.lib.mod;
 
 import ftb.lib.api.tile.IGuiTile;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 

@@ -1,9 +1,11 @@
 package ftb.lib.mod.client.gui.info;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.MouseButton;
-import ftb.lib.api.client.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
 import ftb.lib.api.info.lines.recipes.InfoRecipeLine;
 import latmod.lib.util.Pos2I;
 import net.minecraft.client.Minecraft;
@@ -12,7 +14,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 04.03.2016.

@@ -1,6 +1,7 @@
 package ftb.lib.api.client;
 
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 /**
  * For easier 1.8 port!

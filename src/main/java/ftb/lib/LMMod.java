@@ -1,6 +1,7 @@
 package ftb.lib;
 
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import ftb.lib.api.block.IBlockLM;
 import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
@@ -9,7 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LMMod extends FinalIDObject
 {

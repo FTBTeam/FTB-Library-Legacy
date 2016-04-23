@@ -1,17 +1,25 @@
 package ftb.lib.api.info.lines;
 
-import com.google.gson.*;
-import cpw.mods.fml.relauncher.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.notification.ClickAction;
-import ftb.lib.mod.client.gui.info.*;
-import net.minecraft.event.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoExtendedTextLine;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.util.IChatComponent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 20.03.2016.

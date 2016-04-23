@@ -1,9 +1,11 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
-import ftb.lib.api.cmd.*;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.mod.config.FTBLibConfigCmdNames;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 
 public class CmdReload extends CommandLM
 {

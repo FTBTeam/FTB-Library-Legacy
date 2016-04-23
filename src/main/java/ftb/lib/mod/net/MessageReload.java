@@ -1,17 +1,28 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.*;
-import ftb.lib.api.*;
-import ftb.lib.api.config.*;
-import ftb.lib.api.net.*;
-import ftb.lib.api.notification.*;
-import ftb.lib.mod.*;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import ftb.lib.FTBLib;
+import ftb.lib.FTBWorld;
+import ftb.lib.LMNBTUtils;
+import ftb.lib.api.EventFTBReload;
+import ftb.lib.api.GameModes;
+import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.notification.ClientNotifications;
+import ftb.lib.api.notification.Notification;
+import ftb.lib.mod.FTBLibLang;
+import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
-import latmod.lib.*;
+import latmod.lib.ByteCount;
+import latmod.lib.ByteIOStream;
+import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 public class MessageReload extends MessageLM
 {

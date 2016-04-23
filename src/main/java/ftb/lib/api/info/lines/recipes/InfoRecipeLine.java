@@ -1,10 +1,14 @@
 package ftb.lib.api.info.lines.recipes;
 
-import com.google.gson.*;
-import cpw.mods.fml.relauncher.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.lines.InfoExtendedTextLine;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoRecipe;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.item.ItemStack;
 
 import java.util.Map;

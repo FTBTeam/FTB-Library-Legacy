@@ -1,7 +1,9 @@
 package ftb.lib.api.config;
 
-import com.google.gson.*;
-import ftb.lib.api.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.api.IClickable;
+import ftb.lib.api.MouseButton;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ConfigEntryBool extends ConfigEntry implements IClickable

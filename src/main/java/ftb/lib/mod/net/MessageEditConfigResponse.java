@@ -1,9 +1,14 @@
 package ftb.lib.mod.net;
 
-import cpw.mods.fml.common.network.simpleimpl.*;
-import ftb.lib.*;
-import ftb.lib.api.config.*;
-import ftb.lib.api.net.*;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import ftb.lib.FTBLib;
+import ftb.lib.LMAccessToken;
+import ftb.lib.api.config.ConfigFile;
+import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

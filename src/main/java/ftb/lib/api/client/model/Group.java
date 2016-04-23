@@ -1,11 +1,13 @@
 package ftb.lib.api.client.model;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.GlStateManager;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Made by LatvianModder

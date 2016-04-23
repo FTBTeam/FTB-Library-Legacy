@@ -2,8 +2,10 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.item.BasicInventory;
-import ftb.lib.mod.config.*;
-import net.minecraft.command.*;
+import ftb.lib.mod.config.FTBLibConfigCmd;
+import ftb.lib.mod.config.FTBLibConfigCmdNames;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class CmdTrashCan extends CommandLM

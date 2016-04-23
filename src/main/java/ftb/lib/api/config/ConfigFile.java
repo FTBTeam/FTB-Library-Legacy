@@ -1,7 +1,8 @@
 package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
-import latmod.lib.*;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMJsonUtils;
 
 import java.io.File;
 

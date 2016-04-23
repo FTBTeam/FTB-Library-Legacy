@@ -1,10 +1,18 @@
 package ftb.lib.api.cmd;
 
-import latmod.lib.*;
-import net.minecraft.command.*;
-import net.minecraft.util.*;
+import latmod.lib.LMListUtils;
+import latmod.lib.LMStringUtils;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 {

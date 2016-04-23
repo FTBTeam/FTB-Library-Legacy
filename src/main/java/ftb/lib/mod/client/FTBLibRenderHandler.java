@@ -1,16 +1,21 @@
 package ftb.lib.mod.client;
 
-import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
-import ftb.lib.api.client.*;
+import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.client.GlStateManager;
+import ftb.lib.api.client.LMFrustrumUtils;
 import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.api.notification.ClientNotifications;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibRenderHandler
