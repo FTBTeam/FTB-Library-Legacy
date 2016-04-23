@@ -16,6 +16,7 @@ public class MouseAction implements IJsonSerializable
 		hover = new ArrayList<>();
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -33,6 +34,7 @@ public class MouseAction implements IJsonSerializable
 		return o;
 	}
 	
+	@Override
 	public void func_152753_a(JsonElement e)
 	{
 		if(e == null || !e.isJsonObject()) return;

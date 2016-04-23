@@ -19,18 +19,22 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		level = (l == null || commandName.isEmpty()) ? CommandLevel.NONE : l;
 	}
 	
+	@Override
 	public int getRequiredPermissionLevel()
 	{ return level.requiredPermsLevel(); }
 	
+	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender ics)
 	{
 		if(FTBLib.getEffectiveSide().isClient()) return true;
 		return level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.canCommandSenderUseCommand(ics));
 	}
 	
+	@Override
 	public final String getCommandName()
 	{ return commandName; }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName; }
 	
@@ -50,6 +54,7 @@ public abstract class CommandLM extends CommandBase // CommandFTBU CommandSubLM
 		return null;
 	}
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return false; }
 	

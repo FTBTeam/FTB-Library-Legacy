@@ -6,6 +6,7 @@ public class LMPNameComparator implements Comparator<ILMPlayer>
 {
 	public static final LMPNameComparator instance = new LMPNameComparator();
 	
+	@Override
 	public int compare(ILMPlayer o1, ILMPlayer o2)
 	{
 		return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());

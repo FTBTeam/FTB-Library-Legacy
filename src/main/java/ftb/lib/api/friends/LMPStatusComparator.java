@@ -9,6 +9,7 @@ public class LMPStatusComparator implements Comparator<ILMPlayer>
 	public LMPStatusComparator(ILMPlayer p)
 	{ self = p; }
 	
+	@Override
 	public int compare(ILMPlayer p1, ILMPlayer p2)
 	{
 		int output = 0;

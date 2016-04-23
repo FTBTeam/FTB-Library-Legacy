@@ -14,6 +14,7 @@ public class ConfigFile extends ConfigGroup
 		super(id);
 	}
 	
+	@Override
 	public ConfigFile getConfigFile()
 	{ return this; }
 	

@@ -24,6 +24,7 @@ public class GuiNotifications extends GuiLM
 		buttonList = new ArrayList<>();
 	}
 	
+	@Override
 	public void initLMGui()
 	{
 		mainPanel.width = 0;
@@ -48,11 +49,13 @@ public class GuiNotifications extends GuiLM
 			b.width = mainPanel.width;
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.addAll(buttonList);
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		super.drawBackground();

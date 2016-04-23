@@ -60,9 +60,11 @@ public class InfoTextLine implements IJsonSerializable
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoTextLine(gui, this); }
 	
+	@Override
 	public void func_152753_a(JsonElement e)
 	{ text = e.getAsString(); }
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(text); }
 	

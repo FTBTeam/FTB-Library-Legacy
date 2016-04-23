@@ -20,9 +20,11 @@ public final class EntityPos implements Cloneable
 	public EntityPos(Entity e)
 	{ this(e.posX, e.posY, e.posZ, e.dimension); }
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(x, y, z, dim); }
 	
+	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -44,6 +46,7 @@ public final class EntityPos implements Cloneable
 	public boolean equalsPos(EntityPos p)
 	{ return (p == this) || (p != null && toLinkedPos().equalsPos(p.toLinkedPos())); }
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
@@ -55,6 +58,7 @@ public final class EntityPos implements Cloneable
 	public Vec3 toVec3()
 	{ return Vec3.createVectorHelper(x, y, z); }
 	
+	@Override
 	public EntityPos clone()
 	{ return new EntityPos(x, y, z, dim); }
 	

@@ -12,6 +12,7 @@ public class CmdReloadClient extends CommandLM
 	public CmdReloadClient()
 	{ super(FTBLibModClient.reload_client_cmd.getAsString(), CommandLevel.OP); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		MessageReload.reloadClient(0L, true);

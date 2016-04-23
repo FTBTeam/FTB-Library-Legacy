@@ -10,6 +10,7 @@ public class CmdReload extends CommandLM
 	public CmdReload()
 	{ super(FTBLibConfigCmdNames.reload.getAsString(), CommandLevel.OP); }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		FTBLib.reload(ics, true, args.length > 0 && args[0].equalsIgnoreCase("client"));

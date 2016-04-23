@@ -23,10 +23,12 @@ public class InfoRecipeLine extends InfoExtendedTextLine
 		super(c, null);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoRecipe(gui, this); }
 	
+	@Override
 	public void func_152753_a(JsonElement e)
 	{
 		super.func_152753_a(e);
@@ -34,6 +36,7 @@ public class InfoRecipeLine extends InfoExtendedTextLine
 		JsonObject o = e.getAsJsonObject();
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = (JsonObject) super.getSerializableElement();

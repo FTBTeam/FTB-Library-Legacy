@@ -45,6 +45,7 @@ public final class BlockDimPos implements Cloneable
 	public int[] toIntArray()
 	{ return new int[] {x, y, z, dim}; }
 	
+	@Override
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -60,6 +61,7 @@ public final class BlockDimPos implements Cloneable
 		return sb.toString();
 	}
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;
@@ -67,6 +69,7 @@ public final class BlockDimPos implements Cloneable
 		else return equalsPos((BlockDimPos) o);
 	}
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(x, y, z, dim); }
 	

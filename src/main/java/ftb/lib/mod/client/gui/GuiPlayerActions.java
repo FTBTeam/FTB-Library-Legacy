@@ -23,6 +23,7 @@ public class GuiPlayerActions extends GuiLM
 		actions = a;
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.width = 0;
@@ -42,6 +43,7 @@ public class GuiPlayerActions extends GuiLM
 		mainPanel.posY -= 20;
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		for(WidgetLM w : mainPanel.widgets)
@@ -62,12 +64,14 @@ public class GuiPlayerActions extends GuiLM
 			width = 22 + g.getFontRenderer().getStringWidth(title);
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 			FTBLibClient.mc.thePlayer.closeScreen();
 			action.onClicked(gui.self, gui.other);
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ax = getAX();
@@ -83,6 +87,7 @@ public class GuiPlayerActions extends GuiLM
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 		
+		@Override
 		public void addMouseOverText(List<String> l)
 		{
 		}

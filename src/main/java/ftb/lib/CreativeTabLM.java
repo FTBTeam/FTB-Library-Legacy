@@ -42,6 +42,7 @@ public class CreativeTabLM extends CreativeTabs
 		return this;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getIconItemStack()
 	{
@@ -54,14 +55,17 @@ public class CreativeTabLM extends CreativeTabs
 		return new ItemStack(Items.diamond);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public Item getTabIconItem()
 	{ return getIconItemStack().getItem(); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int func_151243_f()
 	{ return getIconItemStack().getItemDamage(); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void displayAllReleventItems(List l)
 	{

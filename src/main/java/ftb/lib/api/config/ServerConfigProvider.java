@@ -18,15 +18,19 @@ public final class ServerConfigProvider implements IConfigProvider
 	public String getTitle()
 	{ return group.getDisplayName(); }
 	
+	@Override
 	public String getGroupTitle(ConfigGroup g)
 	{ return g.getID(); }
 	
+	@Override
 	public String getEntryTitle(ConfigEntry e)
 	{ return e.getID(); }
 	
+	@Override
 	public ConfigGroup getConfigGroup()
 	{ return group; }
 	
+	@Override
 	public void save()
 	{ new MessageEditConfigResponse(adminToken, reload, group).sendToServer(); }
 }

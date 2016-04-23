@@ -12,9 +12,11 @@ public class CmdSetItemName extends CommandLM
 	public CmdSetItemName()
 	{ super(FTBLibConfigCmdNames.set_item_name.getAsString(), FTBLibConfigCmd.level_set_item_name.get()); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return '/' + commandName + " <name...>"; }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

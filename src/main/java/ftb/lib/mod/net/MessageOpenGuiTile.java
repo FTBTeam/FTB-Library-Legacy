@@ -24,9 +24,11 @@ public class MessageOpenGuiTile extends MessageLM
 		io.writeByte(wid);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

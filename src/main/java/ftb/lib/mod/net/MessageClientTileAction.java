@@ -22,9 +22,11 @@ public class MessageClientTileAction extends MessageLM
 		writeTag(tag);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
+	@Override
 	public IMessage onMessage(MessageContext ctx)
 	{
 		int x = io.readInt();

@@ -21,6 +21,7 @@ public class TileInvLM extends TileLM implements IInventory
 		ALL_SLOTS = MathHelperLM.getAllInts(0, invSize);
 	}
 	
+	@Override
 	public void readTileData(NBTTagCompound tag)
 	{
 		super.readTileData(tag);
@@ -28,6 +29,7 @@ public class TileInvLM extends TileLM implements IInventory
 		customName = tag.getString("CustomName");
 	}
 	
+	@Override
 	public void writeTileData(NBTTagCompound tag)
 	{
 		super.writeTileData(tag);
@@ -35,6 +37,7 @@ public class TileInvLM extends TileLM implements IInventory
 		if(!customName.isEmpty()) tag.setString("CustomName", customName);
 	}
 	
+	@Override
 	public void onBroken()
 	{
 		if(isServer() && dropItems && items.length > 0)
@@ -44,43 +47,56 @@ public class TileInvLM extends TileLM implements IInventory
 		super.onBroken();
 	}
 	
+	@Override
 	public String getInventoryName()
 	{ return customName; }
 	
+	@Override
 	public void setName(String s)
 	{ customName = s; }
 	
+	@Override
 	public void openInventory() { }
 	
+	@Override
 	public void closeInventory() { }
 	
+	@Override
 	public ItemStack decrStackSize(int i, int j)
 	{ return LMInvUtils.decrStackSize(this, i, j); }
 	
+	@Override
 	public int getInventoryStackLimit()
 	{ return 64; }
 	
+	@Override
 	public int getSizeInventory()
 	{ return items.length; }
 	
+	@Override
 	public ItemStack getStackInSlot(int i)
 	{ return items[i]; }
 	
+	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
 	{ return LMInvUtils.removeStackFromSlot(this, i); }
 	
+	@Override
 	public void setInventorySlotContents(int i, ItemStack is)
 	{ items[i] = is; }
 	
+	@Override
 	public boolean isUseableByPlayer(EntityPlayer ep)
 	{ return security.canInteract(ep); }
 	
+	@Override
 	public boolean isItemValidForSlot(int i, ItemStack is)
 	{ return true; }
 	
 	public void clear()
 	{ LMInvUtils.clear(this); }
 	
+	@Override
 	public boolean hasCustomInventoryName()
 	{ return !getInventoryName().isEmpty(); }
 	

@@ -27,18 +27,21 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public final LMSecurity security = new LMSecurity(null);
 	public boolean redstonePowered = false;
 	
+	@Override
 	public final void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
 		readTileData(tag);
 	}
 	
+	@Override
 	public final void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 		writeTileData(tag);
 	}
 	
+	@Override
 	public final Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
@@ -46,6 +49,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
 	}
 	
+	@Override
 	public final void onDataPacket(NetworkManager m, S35PacketUpdateTileEntity p)
 	{
 		NBTTagCompound tag = p.func_148857_g();
@@ -93,12 +97,14 @@ public class TileLM extends TileEntity implements IClientActionTile
 		return false;
 	}
 	
+	@Override
 	public void invalidate()
 	{
 		if(isLoaded) onUnloaded();
 		super.invalidate();
 	}
 	
+	@Override
 	public void onChunkUnload()
 	{
 		if(isLoaded) onUnloaded();
@@ -122,6 +128,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		isLoaded = false;
 	}
 	
+	@Override
 	public final void updateEntity()
 	{
 		if(!isLoaded) onLoaded();
@@ -160,6 +167,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public final void printOwner(EntityPlayer ep)
 	{ security.printOwner(ep); }
 	
+	@Override
 	public BlockLM getBlockType()
 	{
 		Block b = super.getBlockType();
@@ -204,6 +212,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		sendClientAction(ACTION_CUSTOM_NAME, data);
 	}
 	
+	@Override
 	public void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data)
 	{
 		if(action.equals(ACTION_BUTTON_PRESSED))
@@ -232,9 +241,11 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public int getDimension()
 	{ return worldObj == null ? 0 : worldObj.provider.dimensionId; }
 	
+	@Override
 	public final int hashCode()
 	{ return LMUtils.hashCode(xCoord, yCoord, zCoord, getDimension()); }
 	
+	@Override
 	public final boolean equals(Object o)
 	{
 		if(o == null) return false;
@@ -249,6 +260,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		return false;
 	}
 	
+	@Override
 	public void markDirty()
 	{ isDirty = true; }
 	

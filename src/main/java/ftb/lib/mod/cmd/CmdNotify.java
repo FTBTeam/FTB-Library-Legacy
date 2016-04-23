@@ -18,18 +18,22 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 	public CmdNotify()
 	{ super("ftb_notify", CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <player|@a> <json...>"; }
 	
+	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(args.length == 2) return Collections.singletonList("{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}");
 		return super.addTabCompletionOptions(ics, args);
 	}
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{ return i == 0; }
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 2);
@@ -55,6 +59,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 		error("Invalid notification: " + s);
 	}
 	
+	@Override
 	public void addInfo(List<IChatComponent> list, ICommandSender sender)
 	{
 		list.add(new ChatComponentText("/" + commandName));

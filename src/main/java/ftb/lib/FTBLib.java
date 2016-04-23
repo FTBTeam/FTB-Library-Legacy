@@ -142,7 +142,7 @@ public class FTBLib
 	public static boolean isDedicatedServer()
 	{
 		MinecraftServer mcs = getServer();
-		return (mcs == null) ? false : mcs.isDedicatedServer();
+		return mcs != null && mcs.isDedicatedServer();
 	}
 	
 	public static String getPath(ResourceLocation res)

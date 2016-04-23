@@ -17,6 +17,7 @@ public abstract class ContainerLM extends Container
 		iinv = (inv != null && inv instanceof IInventory) ? (IInventory) inv : null;
 	}
 	
+	@Override
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
 	{
 		if(iinv == null) return null;
@@ -42,6 +43,7 @@ public abstract class ContainerLM extends Container
 		return is;
 	}
 	
+	@Override
 	public Slot getSlot(int i)
 	{
 		if(i < 0 || i >= inventorySlots.size()) return null;
@@ -68,15 +70,18 @@ public abstract class ContainerLM extends Container
 	public void addPlayerSlots(int posY)
 	{ addPlayerSlots(8, posY); }
 	
+	@Override
 	public boolean canInteractWith(EntityPlayer ep)
 	{ return true; }
 	
+	@Override
 	public void onContainerClosed(EntityPlayer ep)
 	{
 		super.onContainerClosed(ep);
 		if(iinv != null) iinv.closeInventory();
 	}
 	
+	@Override
 	protected boolean mergeItemStack(ItemStack is, int min, int max, boolean RtoL)
 	{
 		boolean flag1 = false;

@@ -21,9 +21,11 @@ public class MessageSendWorldID extends MessageLM
 		if(FTBLib.ftbu != null) FTBLib.ftbu.writeWorldData(io, ep);
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	public IMessage onMessage(MessageContext ctx)
 	{
 		MessageReload.readSyncedConfig(io);

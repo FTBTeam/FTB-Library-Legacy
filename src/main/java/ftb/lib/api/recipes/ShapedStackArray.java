@@ -14,6 +14,7 @@ public class ShapedStackArray implements IStackArray
 	public ShapedStackArray(Object... o)
 	{ this(StackArray.convert(o)); }
 	
+	@Override
 	public boolean matches(ItemStack[] ai)
 	{
 		if(items == null || ai == null) return false;
@@ -28,6 +29,7 @@ public class ShapedStackArray implements IStackArray
 		return true;
 	}
 	
+	@Override
 	public StackArray[] getItems()
 	{ return items; }
 }

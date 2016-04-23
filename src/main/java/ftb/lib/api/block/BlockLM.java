@@ -32,36 +32,45 @@ public abstract class BlockLM extends Block implements IBlockLM
 		isBlockContainer = false;
 	}
 	
+	@Override
 	public Class<? extends ItemBlock> getItemBlock()
 	{ return ItemBlockLM.class; }
 	
 	public abstract LMMod getMod();
 	
+	@Override
 	public final String getItemID()
 	{ return blockName; }
 	
+	@Override
 	public String getUnlocalizedName()
 	{ return getMod().getBlockName(blockName); }
 	
+	@Override
 	public void onPostLoaded()
 	{
 	}
 	
+	@Override
 	public int damageDropped(int meta)
 	{ return meta; }
 	
+	@Override
 	public boolean hasTileEntity(int meta)
 	{ return false; }
 	
+	@Override
 	public TileEntity createTileEntity(World world, int metadata)
 	{ return null; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs c, List l)
 	{
 		l.add(new ItemStack(item, 1, 0));
 	}
 	
+	@Override
 	public void onBlockPlacedBy(World w, int x, int y, int z, EntityLivingBase el, ItemStack is)
 	{
 		super.onBlockPlacedBy(w, x, y, z, el, is);
@@ -73,6 +82,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		}
 	}
 	
+	@Override
 	public float getPlayerRelativeBlockHardness(EntityPlayer ep, World w, int x, int y, int z)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -84,6 +94,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getPlayerRelativeBlockHardness(ep, w, x, y, z);
 	}
 	
+	@Override
 	public float getBlockHardness(World w, int x, int y, int z)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -95,6 +106,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getBlockHardness(w, x, y, z);
 	}
 	
+	@Override
 	public float getExplosionResistance(Entity entity, World w, int x, int y, int z, double explosionX, double explosionY, double explosionZ)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -106,6 +118,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.getExplosionResistance(entity, w, x, y, z, explosionX, explosionY, explosionZ);
 	}
 	
+	@Override
 	public void breakBlock(World w, int x, int y, int z, Block block, int meta)
 	{
 		if(!w.isRemote && hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -116,13 +129,15 @@ public abstract class BlockLM extends Block implements IBlockLM
 		super.breakBlock(w, x, y, z, block, meta);
 	}
 	
+	@Override
 	public boolean onBlockActivated(World w, int x, int y, int z, EntityPlayer ep, int s, float x1, float y1, float z1)
 	{
 		if(!hasTileEntity(w.getBlockMetadata(x, y, z))) return false;
 		TileLM tile = getTile(w, x, y, z);
-		return (tile != null) ? tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1) : false;
+		return (tile != null) && tile.onRightClick(ep, ep.getHeldItem(), s, x1, y1, z1);
 	}
 	
+	@Override
 	public boolean onBlockEventReceived(World w, int x, int y, int z, int eventID, int param)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -134,6 +149,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return false;
 	}
 	
+	@Override
 	public boolean recolourBlock(World w, int x, int y, int z, ForgeDirection side, int color)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -149,15 +165,18 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return super.recolourBlock(w, x, y, z, side, color);
 	}
 	
+	@Override
 	public void loadRecipes()
 	{
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
 	}
 	
+	@Override
 	public void onNeighborBlockChange(World w, int x, int y, int z, Block neighbor)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
@@ -167,15 +186,18 @@ public abstract class BlockLM extends Block implements IBlockLM
 		}
 	}
 	
+	@Override
 	public final Item getItem()
 	{ return Item.getItemFromBlock(this); }
 	
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World w, int x, int y, int z)
 	{
 		setBlockBoundsBasedOnState(w, x, y, z);
 		return super.getCollisionBoundingBoxFromPool(w, x, y, z);
 	}
 	
+	@Override
 	public int onBlockPlaced(World worldIn, int x, int y, int z, int facing, float hitX, float hitY, float hitZ, int meta)
 	{ return meta; }
 	
@@ -190,6 +212,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public IIcon getBlockIcon()
 	{ return blockIcon; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	protected final String getTextureName()
 	{
@@ -197,14 +220,17 @@ public abstract class BlockLM extends Block implements IBlockLM
 		return getMod().lowerCaseModID + ":" + textureName;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
 	{ blockIcon = ir.registerIcon(getTextureName()); }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int s, int m)
 	{ return blockIcon; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int s)
 	{ return getIcon(s, iba.getBlockMetadata(x, y, z)); }

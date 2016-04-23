@@ -31,6 +31,7 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 	public IMessage onMessage(MessageContext ctx)
 	{ return null; }
 	
+	@Override
 	public final void fromBytes(ByteBuf bb)
 	{
 		if(dataType == null) return;
@@ -48,6 +49,7 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		else io.setCompressedData(b);
 	}
 	
+	@Override
 	public final void toBytes(ByteBuf bb)
 	{
 		if(dataType == null) return;
@@ -61,6 +63,7 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		bb.writeBytes(b, 0, b.length);
 	}
 	
+	@Override
 	public final IMessage onMessage(MessageLM m, MessageContext ctx)
 	{
 		io = m.io;

@@ -25,10 +25,12 @@ public class GuiDisplayItem extends GuiLM
 		itemDisplay = i;
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		super.drawBackground();
@@ -42,6 +44,7 @@ public class GuiDisplayItem extends GuiLM
 		GlStateManager.popMatrix();
 	}
 	
+	@Override
 	public void drawText(List<String> l)
 	{
 		if(itemDisplay.title != null && !itemDisplay.title.isEmpty())

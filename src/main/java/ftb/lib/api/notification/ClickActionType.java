@@ -30,6 +30,7 @@ public abstract class ClickActionType extends FinalIDObject
 	
 	public static final ClickActionType CMD = new ClickActionType("cmd")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{ FTBLibClient.execClientCommand('/' + data.getAsString()); }
@@ -37,6 +38,7 @@ public abstract class ClickActionType extends FinalIDObject
 	
 	public static final ClickActionType SHOW_CMD = new ClickActionType("show_cmd")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{ FTBLibClient.openGui(new GuiChat(data.getAsString())); }
@@ -44,6 +46,7 @@ public abstract class ClickActionType extends FinalIDObject
 	
 	public static final ClickActionType URL = new ClickActionType("url")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{
@@ -54,6 +57,7 @@ public abstract class ClickActionType extends FinalIDObject
 	
 	public static final ClickActionType FILE = new ClickActionType("file")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{
@@ -64,6 +68,7 @@ public abstract class ClickActionType extends FinalIDObject
 	
 	public static final ClickActionType GUI = new ClickActionType("gui")
 	{
+		@Override
 		@SideOnly(Side.CLIENT)
 		public void onClicked(JsonElement data)
 		{

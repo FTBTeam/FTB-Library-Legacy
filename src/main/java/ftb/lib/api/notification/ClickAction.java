@@ -21,6 +21,7 @@ public class ClickAction implements IJsonSerializable
 		data = d;
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -29,6 +30,7 @@ public class ClickAction implements IJsonSerializable
 		return o;
 	}
 	
+	@Override
 	public void func_152753_a(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();

@@ -28,9 +28,11 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("TX Send: " + group.getSerializableElement());
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

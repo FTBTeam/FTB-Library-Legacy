@@ -205,12 +205,15 @@ public class LMDimUtils
 		public TeleporterBlank(WorldServer w)
 		{ super(w); }
 		
+		@Override
 		public boolean makePortal(Entity e)
 		{ return true; }
 		
+		@Override
 		public boolean placeInExistingPortal(Entity e, double x, double y, double z, float f)
 		{ return true; }
 		
+		@Override
 		public void placeInPortal(Entity entity, double x, double y, double z, float f)
 		{
 			entity.setLocationAndAngles(x, y, z, entity.rotationPitch, entity.rotationYaw);
@@ -220,6 +223,7 @@ public class LMDimUtils
 			entity.fallDistance = 0F;
 		}
 		
+		@Override
 		public void removeStalePortalLocations(long l)
 		{
 		}

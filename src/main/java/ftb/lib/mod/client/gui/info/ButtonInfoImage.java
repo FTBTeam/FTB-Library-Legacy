@@ -28,6 +28,7 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 		height = texture.heightI() + 1;
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();

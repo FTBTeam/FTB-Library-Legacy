@@ -68,6 +68,7 @@ public class ODItems
 			oreName = s;
 		}
 		
+		@Override
 		public boolean equals(Object o)
 		{
 			ItemStack is = (o == null) ? null : ((o instanceof OreStackEntry) ? ((OreStackEntry) o).itemStack : (ItemStack) o);

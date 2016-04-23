@@ -18,9 +18,11 @@ public class CmdEditConfig extends CommandLM
 	public CmdEditConfig()
 	{ super(FTBLibConfigCmdNames.edit_config.getAsString(), CommandLevel.OP); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " <ID> [group] [entry] [value]"; }
 	
+	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, ConfigRegistry.map.keySet());
@@ -42,6 +44,7 @@ public class CmdEditConfig extends CommandLM
 		return null;
 	}
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		checkArgs(args, 1);

@@ -48,9 +48,11 @@ public final class TextureCoords
 	public int heightI()
 	{ return (int) height; }
 	
+	@Override
 	public int hashCode()
 	{ return LMUtils.hashCode(texture, posX, posY, width, height); }
 	
+	@Override
 	public String toString()
 	{
 		if(toString == null)
@@ -71,6 +73,7 @@ public final class TextureCoords
 		return toString;
 	}
 	
+	@Override
 	public boolean equals(Object o)
 	{
 		if(o == null) return false;

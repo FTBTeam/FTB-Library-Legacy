@@ -39,6 +39,7 @@ public class ButtonInfoRecipe extends ButtonInfoTextLine
 		items.put(new Pos2I(105, 34), new ItemStack(Items.diamond_sword, 1, 20));
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 		if(!items.isEmpty())
@@ -57,10 +58,12 @@ public class ButtonInfoRecipe extends ButtonInfoTextLine
 		}
 	}
 	
+	@Override
 	public void onButtonPressed(int b)
 	{
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();

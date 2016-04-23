@@ -16,18 +16,23 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 		super(id);
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.CUSTOM; }
 	
+	@Override
 	public int getColor()
 	{ return 0xFFAA00; }
 	
+	@Override
 	public void func_152753_a(JsonElement o)
 	{ value = o == JsonNull.INSTANCE ? null : o; }
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{ return value == null ? JsonNull.INSTANCE : value; }
 	
+	@Override
 	public ConfigGroup getAsGroup()
 	{
 		JsonElement e = getSerializableElement();
@@ -41,12 +46,14 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 		return null;
 	}
 	
+	@Override
 	public String getAsString()
 	{
 		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? ". . ." : String.valueOf(e);
 	}
 	
+	@Override
 	public List<String> getAsStringList()
 	{
 		JsonElement e = getSerializableElement();
@@ -57,24 +64,28 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 		return list;
 	}
 	
+	@Override
 	public boolean getAsBoolean()
 	{
 		JsonElement e = getSerializableElement();
-		return e.isJsonNull() ? false : e.getAsBoolean();
+		return !e.isJsonNull() && e.getAsBoolean();
 	}
 	
+	@Override
 	public int getAsInt()
 	{
 		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? 0 : e.getAsInt();
 	}
 	
+	@Override
 	public double getAsDouble()
 	{
 		JsonElement e = getSerializableElement();
 		return e.isJsonNull() ? 0D : e.getAsDouble();
 	}
 	
+	@Override
 	public IntList getAsIntList()
 	{
 		JsonElement e = getSerializableElement();
@@ -86,15 +97,18 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 		return l;
 	}
 	
+	@Override
 	public void onClicked(boolean leftClick)
 	{
 	}
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);

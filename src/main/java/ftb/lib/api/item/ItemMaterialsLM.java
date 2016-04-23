@@ -33,6 +33,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 		return m.getStack();
 	}
 	
+	@Override
 	public String getUnlocalizedName(ItemStack is)
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
@@ -40,12 +41,14 @@ public abstract class ItemMaterialsLM extends ItemLM
 		return "unknown";
 	}
 	
+	@Override
 	public void onPostLoaded()
 	{
 		for(MaterialItem m : materials.values())
 			m.onPostLoaded();
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs c, List l)
 	{
@@ -53,12 +56,14 @@ public abstract class ItemMaterialsLM extends ItemLM
 			l.add(new ItemStack(item, 1, m.damage));
 	}
 	
+	@Override
 	public void loadRecipes()
 	{
 		for(MaterialItem m : materials.values())
 			m.loadRecipes();
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
@@ -66,6 +71,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 		if(m != null) m.addInfo(ep, l);
 	}
 	
+	@Override
 	public int getRenderPasses(int i)
 	{
 		if(!requiresMultipleRenderPasses) return 1;
@@ -74,6 +80,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 		return 1;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{
@@ -81,6 +88,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 			m.registerIcons(ir);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIconFromDamage(int dmg)
 	{

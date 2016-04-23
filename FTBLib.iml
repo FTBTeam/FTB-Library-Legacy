@@ -9,19 +9,15 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="LatLib" exported="" />
-    <orderEntry type="module" module-name="ProjMCP" exported="" />
+    <orderEntry type="module" module-name="ProjMC_7" exported="" />
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods" />
-          <root url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/1.7.10" />
-          <root url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/unused" />
+          <root url="file://$MODULE_DIR$/../DevMods" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/1.7.10" recursive="false" />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMCP/eclipse/mods/unused" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../DevMods" recursive="false" />
       </library>
     </orderEntry>
   </component>

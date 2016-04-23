@@ -23,41 +23,51 @@ public abstract class ItemLM extends Item implements IItemLM
 	
 	public abstract LMMod getMod();
 	
+	@Override
 	public final Item getItem()
 	{ return this; }
 	
+	@Override
 	public final String getItemID()
 	{ return itemName; }
 	
+	@Override
 	public void onPostLoaded()
 	{
 	}
 	
+	@Override
 	public void loadRecipes()
 	{
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(Item item, CreativeTabs c, List l)
 	{
 		l.add(new ItemStack(item, 1, 0));
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	protected String getIconString()
 	{ return getMod().lowerCaseModID + ":" + itemName; }
 	
+	@Override
 	public String getUnlocalizedName(ItemStack is)
 	{ return getMod().getItemName(itemName); }
 	
+	@Override
 	public int getRenderPasses(int m)
 	{ return 1; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean b)
 	{
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister ir)
 	{ itemIcon = ir.registerIcon(getIconString()); }

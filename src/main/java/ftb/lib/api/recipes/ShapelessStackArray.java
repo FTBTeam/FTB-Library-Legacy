@@ -16,6 +16,7 @@ public class ShapelessStackArray implements IStackArray
 	public ShapelessStackArray(Object... o)
 	{ this(StackArray.convert(o)); }
 	
+	@Override
 	public boolean matches(ItemStack[] ai)
 	{
 		if(items == null || ai == null) return false;
@@ -29,6 +30,7 @@ public class ShapelessStackArray implements IStackArray
 		return itemsList.isEmpty();
 	}
 	
+	@Override
 	public StackArray[] getItems()
 	{ return items; }
 }

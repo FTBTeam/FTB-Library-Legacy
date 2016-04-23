@@ -19,6 +19,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 {
 	private static final RemoveFilter<Map.Entry<String, InfoPage>> cleanupFilter = new RemoveFilter<Map.Entry<String, InfoPage>>()
 	{
+		@Override
 		public boolean remove(Map.Entry<String, InfoPage> entry)
 		{ return entry.getValue().childPages.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty(); }
 	};
@@ -125,6 +126,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	{
 		LMMapUtils.sortMap(childPages, new Comparator<Map.Entry<String, InfoPage>>()
 		{
+			@Override
 			public int compare(Map.Entry<String, InfoPage> o1, Map.Entry<String, InfoPage> o2)
 			{ return o1.getValue().compareTo(o2.getValue()); }
 		});
@@ -161,6 +163,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		return parent.getParentTop();
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
@@ -190,6 +193,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		return o;
 	}
 	
+	@Override
 	public void func_152753_a(JsonElement e)
 	{
 		clear();

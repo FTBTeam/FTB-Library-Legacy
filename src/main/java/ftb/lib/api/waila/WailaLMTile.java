@@ -10,6 +10,7 @@ public class WailaLMTile extends BasicWailaHandler
 	public WailaLMTile(EventRegisterWaila e, WailaType... t)
 	{ super(e, t); }
 	
+	@Override
 	public ItemStack getWailaStack(WailaDataAccessor data)
 	{
 		if(data.tile != null && !data.tile.isInvalid() && data.tile instanceof IWailaTile.Stack)
@@ -18,6 +19,7 @@ public class WailaLMTile extends BasicWailaHandler
 		return null;
 	}
 	
+	@Override
 	public List<String> getWailaHead(ItemStack is, List<String> l, WailaDataAccessor data)
 	{
 		if(data.tile != null && !data.tile.isInvalid() && data.tile instanceof IWailaTile.Head)
@@ -26,6 +28,7 @@ public class WailaLMTile extends BasicWailaHandler
 		return l;
 	}
 	
+	@Override
 	public List<String> getWailaBody(ItemStack is, List<String> l, WailaDataAccessor data)
 	{
 		if(data.tile != null && !data.tile.isInvalid() && data.tile instanceof IWailaTile.Body)
@@ -34,6 +37,7 @@ public class WailaLMTile extends BasicWailaHandler
 		return l;
 	}
 	
+	@Override
 	public List<String> getWailaTail(ItemStack is, List<String> l, WailaDataAccessor data)
 	{
 		if(data.tile != null && !data.tile.isInvalid() && data.tile instanceof IWailaTile.Tail)

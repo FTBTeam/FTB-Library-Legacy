@@ -62,6 +62,7 @@ public abstract class PlayerAction extends FinalIDObject
 	{
 	}
 	
+	@Override
 	public int compareTo(Object o)
 	{
 		int i = Integer.compare(((PlayerAction) o).priority, priority);

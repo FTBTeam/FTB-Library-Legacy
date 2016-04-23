@@ -31,6 +31,7 @@ public class FTBLibModClient extends FTBLibModCommon
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
 	
+	@Override
 	public void preInit()
 	{
 		EventBusHelper.register(FTBLibClientEventHandler.instance);
@@ -49,32 +50,41 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLibActions.init();
 	}
 	
+	@Override
 	public void postInit()
 	{
 		ClientConfigRegistry.provider().getConfigGroup();
 	}
 	
+	@Override
 	public boolean isShiftDown()
 	{ return GuiScreen.isShiftKeyDown(); }
 	
+	@Override
 	public boolean isCtrlDown()
 	{ return GuiScreen.isCtrlKeyDown(); }
 	
+	@Override
 	public boolean isTabDown()
 	{ return Keyboard.isKeyDown(Keyboard.KEY_TAB); }
 	
+	@Override
 	public boolean inGameHasFocus()
 	{ return FTBLibClient.mc.inGameHasFocus; }
 	
+	@Override
 	public EntityPlayer getClientPlayer()
 	{ return FMLClientHandler.instance().getClientPlayerEntity(); }
 	
+	@Override
 	public EntityPlayer getClientPlayer(UUID id)
 	{ return FTBLibClient.getPlayerSP(id); }
 	
+	@Override
 	public World getClientWorld()
 	{ return FMLClientHandler.instance().getWorldClient(); }
 	
+	@Override
 	public double getReachDist(EntityPlayer ep)
 	{
 		if(ep == null) return 0D;
@@ -83,6 +93,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		return (c == null) ? 0D : c.getBlockReachDistance();
 	}
 	
+	@Override
 	public void spawnDust(World w, double x, double y, double z, int col)
 	{
 		EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F) { };
@@ -98,6 +109,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLibClient.mc.effectRenderer.addEffect(fx);
 	}
 	
+	@Override
 	public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
 	{
 		LMGuiHandler h = LMGuiHandlerRegistry.get(mod);
@@ -116,6 +128,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		return false;
 	}
 	
+	@Override
 	public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
 	{
 		if(ep != null && t != null)

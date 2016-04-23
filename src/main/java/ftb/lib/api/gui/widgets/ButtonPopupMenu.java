@@ -21,12 +21,14 @@ public class ButtonPopupMenu extends ButtonLM
 		width = 2 + (icon == null ? 0 : p.buttonHeight) + ((t == null || t.isEmpty()) ? 0 : (3 + p.gui.getFontRenderer().getStringWidth(t)));
 	}
 	
+	@Override
 	public void onButtonPressed(int b)
 	{ ((PanelPopupMenu) parentPanel).onClosed(this, b); }
 	
 	public TextureCoords getIcon()
 	{ return icon; }
 	
+	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();
@@ -59,6 +61,7 @@ public class ButtonPopupMenu extends ButtonLM
 		}
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 	}

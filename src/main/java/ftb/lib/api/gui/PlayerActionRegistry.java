@@ -28,6 +28,7 @@ public class PlayerActionRegistry
 			{
 				ConfigEntryBool entry = new ConfigEntryBool(a.getID(), a.configDefault().booleanValue())
 				{
+					@Override
 					public String getFullID()
 					{ return "player_action." + a.getID(); }
 				};

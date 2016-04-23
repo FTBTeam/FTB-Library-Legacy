@@ -20,9 +20,11 @@ public class ItemBlockLM extends ItemBlock
 		blockLM = (IBlockLM) b;
 	}
 	
+	@Override
 	public int getMetadata(int m)
 	{ return m; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack is, EntityPlayer ep, List l, boolean adv)
 	{ blockLM.addInformation(is, ep, l, adv); }

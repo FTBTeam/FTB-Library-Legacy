@@ -25,9 +25,11 @@ public class CmdMode extends CommandSubLM
 		public CmdSet(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public String getCommandUsage(ICommandSender ics)
 		{ return '/' + commandName + " <modeID>"; }
 		
+		@Override
 		public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 		{
 			if(args.length == 1)
@@ -38,6 +40,7 @@ public class CmdMode extends CommandSubLM
 			return super.addTabCompletionOptions(ics, args);
 		}
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			if(args.length == 0)
@@ -76,6 +79,7 @@ public class CmdMode extends CommandSubLM
 		public CmdGet(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			IChatComponent c = FTBLibLang.mode_current.chatComponent(FTBWorld.server.getMode().getID());
@@ -89,6 +93,7 @@ public class CmdMode extends CommandSubLM
 		public CmdList(String s)
 		{ super(s, CommandLevel.OP); }
 		
+		@Override
 		public void processCommand(ICommandSender ics, String[] args) throws CommandException
 		{
 			IChatComponent c = FTBLibLang.mode_list.chatComponent(LMStringUtils.strip(GameModes.getGameModes().modes.keySet()));

@@ -32,9 +32,11 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		defValue = def;
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.ENUM; }
 	
+	@Override
 	public int getColor()
 	{ return 0x0094FF; }
 	
@@ -50,12 +52,15 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 	private E fromString(String s)
 	{ return enumMap.get(s.toLowerCase()); }
 	
+	@Override
 	public final void func_152753_a(JsonElement o)
 	{ set(fromString(o.getAsString())); }
 	
+	@Override
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getName(get())); }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -74,12 +79,14 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);
 		set(fromString(tag.getString("V")));
 	}
 	
+	@Override
 	public void onClicked(boolean leftClick)
 	{
 		if(leftClick)
@@ -92,9 +99,11 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		}
 	}
 	
+	@Override
 	public String getAsString()
 	{ return getName(get()); }
 	
+	@Override
 	public boolean getAsBoolean()
 	{ return get() != null; }
 	
@@ -140,9 +149,11 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		return -1;
 	}
 	
+	@Override
 	public int getAsInt()
 	{ return enumMap.size(); }
 	
+	@Override
 	public String getDefValueString()
 	{ return getName(defValue); }
 }

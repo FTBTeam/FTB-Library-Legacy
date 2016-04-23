@@ -19,27 +19,35 @@ public class TempLMPlayerFromEntity implements ILMPlayer
 		entity = ep;
 	}
 	
+	@Override
 	public Side getSide()
 	{ return side; }
 	
+	@Override
 	public int getPlayerID()
 	{ return 0; }
 	
+	@Override
 	public boolean isOnline()
 	{ return true; }
 	
+	@Override
 	public EntityPlayer getPlayer()
 	{ return entity; }
 	
+	@Override
 	public GameProfile getProfile()
 	{ return entity.getGameProfile(); }
 	
+	@Override
 	public boolean isFriendRaw(ILMPlayer p)
 	{ return true; }
 	
+	@Override
 	public boolean isFriend(ILMPlayer p)
 	{ return true; }
 	
+	@Override
 	public boolean allowInteractSecure()
 	{ return false; }
 }

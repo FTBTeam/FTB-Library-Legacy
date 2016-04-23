@@ -33,12 +33,14 @@ public class FTBLibActions
 		
 		GuiScreenRegistry.register("notifications", new GuiScreenRegistry.Entry()
 		{
+			@Override
 			public GuiScreen openGui(EntityPlayer ep)
 			{ return new GuiNotifications(FTBLibClient.mc.currentScreen); }
 		});
 		
 		GuiScreenRegistry.register("client_config", new GuiScreenRegistry.Entry()
 		{
+			@Override
 			public GuiScreen openGui(EntityPlayer ep)
 			{ return new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider()); }
 		});
@@ -46,15 +48,19 @@ public class FTBLibActions
 	
 	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
+		@Override
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen)); }
 		
+		@Override
 		public String getDisplayName()
 		{ return I18n.format(FTBLibModClient.notifications.getFullID()); }
 		
+		@Override
 		public boolean isVisibleFor(ILMPlayer self, ILMPlayer other)
 		{ return !ClientNotifications.Perm.list.isEmpty(); }
 		
+		@Override
 		public void postRender(int ax, int ay, double z)
 		{
 			String n = String.valueOf(ClientNotifications.Perm.list.size());
@@ -69,6 +75,7 @@ public class FTBLibActions
 	
 	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
+		@Override
 		public void onClicked(ILMPlayer self, ILMPlayer other)
 		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
 	};
@@ -159,6 +166,7 @@ public class FTBLibActions
 			action = b;
 		}
 		
+		@Override
 		public void drawButton(Minecraft mc, int mx, int my)
 		{
 		}
@@ -174,6 +182,7 @@ public class FTBLibActions
 			buttons = new ArrayList<>();
 		}
 		
+		@Override
 		public void drawButton(Minecraft mc, int mx, int my)
 		{
 			zLevel = 0F;

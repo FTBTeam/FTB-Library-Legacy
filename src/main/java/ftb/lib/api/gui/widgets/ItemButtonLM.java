@@ -21,6 +21,7 @@ public abstract class ItemButtonLM extends ButtonLM
 	public void setItem(ItemStack is)
 	{ item = is; }
 	
+	@Override
 	public void renderWidget()
 	{ if(item != null) GuiLM.drawItem(gui, item, getAX(), getAY()); }
 }

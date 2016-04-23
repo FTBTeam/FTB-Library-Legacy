@@ -19,9 +19,11 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	public void add(ICommand c)
 	{ subCommands.put(c.getCommandName(), c); }
 	
+	@Override
 	public String getCommandUsage(ICommandSender ics)
 	{ return "/" + commandName + " [ " + LMStringUtils.strip(LMListUtils.toStringArray(subCommands.keySet())) + " ]"; }
 	
+	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
 		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, subCommands.keySet());
@@ -36,6 +38,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		return super.addTabCompletionOptions(ics, args);
 	}
 	
+	@Override
 	public boolean isUsernameIndex(String[] args, int i)
 	{
 		if(i > 0 && args.length > 1)
@@ -47,6 +50,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		return false;
 	}
 	
+	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
 		if(args == null || args.length == 0)
@@ -61,6 +65,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		}
 	}
 	
+	@Override
 	public void addInfo(List<IChatComponent> list, ICommandSender sender)
 	{
 		list.add(new ChatComponentText('/' + commandName));

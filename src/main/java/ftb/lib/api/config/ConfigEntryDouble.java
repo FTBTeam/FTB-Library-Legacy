@@ -18,21 +18,26 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		set(d);
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.DOUBLE; }
 	
+	@Override
 	public int getColor()
 	{ return 0xAA5AE8; }
 	
+	@Override
 	public void setBounds(double min, double max)
 	{
 		minValue = min == Double.NEGATIVE_INFINITY ? null : min;
 		maxValue = max == Double.POSITIVE_INFINITY ? null : max;
 	}
 	
+	@Override
 	public double getMin()
 	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue; }
 	
+	@Override
 	public double getMax()
 	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue; }
 	
@@ -44,24 +49,31 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 	public void add(double v)
 	{ set(getAsDouble() + v); }
 	
+	@Override
 	public final void func_152753_a(JsonElement o)
 	{ set(o.getAsDouble()); }
 	
+	@Override
 	public final JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsDouble()); }
 	
+	@Override
 	public String getAsString()
 	{ return Double.toString(getAsDouble()); }
 	
+	@Override
 	public int getAsInt()
 	{ return (int) getAsDouble(); }
 	
+	@Override
 	public double getAsDouble()
 	{ return value; }
 	
+	@Override
 	public String getDefValueString()
 	{ return Double.toString(defValue); }
 	
+	@Override
 	public String getMinValueString()
 	{
 		double d = getMin();
@@ -74,6 +86,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		return null;
 	}
 	
+	@Override
 	public String getMaxValueString()
 	{
 		double d = getMax();
@@ -86,6 +99,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		return null;
 	}
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -108,6 +122,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);

@@ -18,9 +18,11 @@ public class ConfigEntryIntList extends ConfigEntry
 		value = defValue.copy();
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.INT_ARRAY; }
 	
+	@Override
 	public int getColor()
 	{ return 0xAA5AE8; }
 	
@@ -30,6 +32,7 @@ public class ConfigEntryIntList extends ConfigEntry
 	public void set(IntList l)
 	{ value = (l == null || l.isEmpty()) ? new IntList() : l.copy(); }
 	
+	@Override
 	public void func_152753_a(JsonElement o)
 	{
 		JsonArray a = o.getAsJsonArray();
@@ -39,6 +42,7 @@ public class ConfigEntryIntList extends ConfigEntry
 		set(l);
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonArray a = new JsonArray();
@@ -48,9 +52,11 @@ public class ConfigEntryIntList extends ConfigEntry
 		return a;
 	}
 	
+	@Override
 	public String getAsString()
 	{ return getAsIntList().toString(); }
 	
+	@Override
 	public List<String> getAsStringList()
 	{
 		List<String> l = new ArrayList<>();
@@ -59,12 +65,15 @@ public class ConfigEntryIntList extends ConfigEntry
 		return l;
 	}
 	
+	@Override
 	public IntList getAsIntList()
 	{ return value; }
 	
+	@Override
 	public String getDefValueString()
 	{ return defValue.toString(); }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -82,6 +91,7 @@ public class ConfigEntryIntList extends ConfigEntry
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);

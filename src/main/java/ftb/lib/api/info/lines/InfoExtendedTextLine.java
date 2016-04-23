@@ -42,9 +42,11 @@ public class InfoExtendedTextLine extends InfoTextLine
 		}
 	}
 	
+	@Override
 	public IChatComponent getText()
 	{ return text; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoExtendedTextLine(gui, this); }
@@ -66,6 +68,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 		}
 	}
 	
+	@Override
 	public void func_152753_a(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();
@@ -99,6 +102,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 		else hover = null;
 	}
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();

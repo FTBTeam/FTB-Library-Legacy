@@ -54,9 +54,11 @@ public class GuiSelectColor extends GuiLM
 		
 		colorInit = new ButtonLM(this, 76, 71, col_tex.widthI(), col_tex.heightI())
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{ closeGui(false); }
 			
+			@Override
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(GuiLang.button_cancel.format());
@@ -66,9 +68,11 @@ public class GuiSelectColor extends GuiLM
 		
 		colorCurrent = new ButtonLM(this, 109, 71, col_tex.widthI(), col_tex.heightI())
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{ closeGui(true); }
 			
+			@Override
 			public void addMouseOverText(List<String> s)
 			{
 				s.add(GuiLang.button_accept.format());
@@ -78,6 +82,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderRed = new SliderLM(this, 6, 6, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.RGB((int) (value * 255F), currentColor.green(), currentColor.blue()));
@@ -89,6 +94,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderGreen = new SliderLM(this, 6, 19, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.RGB(currentColor.red(), (int) (value * 255F), currentColor.blue()));
@@ -100,6 +106,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderBlue = new SliderLM(this, 6, 32, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.RGB(currentColor.red(), currentColor.green(), (int) (value * 255F)));
@@ -111,6 +118,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderHue = new SliderLM(this, 6, 51, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.HSB(value, currentColor.saturation(), currentColor.brightness()));
@@ -122,6 +130,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderSaturation = new SliderLM(this, 6, 64, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.HSB(currentColor.hue(), value, currentColor.brightness()));
@@ -133,6 +142,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderBrightness = new SliderLM(this, 6, 77, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), value));
@@ -147,6 +157,7 @@ public class GuiSelectColor extends GuiLM
 		setColor(initCol);
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		mainPanel.add(colorInit);
@@ -182,6 +193,7 @@ public class GuiSelectColor extends GuiLM
 		if(isInstant) callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
 	}
 	
+	@Override
 	public void drawBackground()
 	{
 		sliderRed.update();
@@ -286,6 +298,7 @@ public class GuiSelectColor extends GuiLM
 			cursorPosX = cursorPosY = -1D;
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			int ax = getAX();
@@ -328,6 +341,7 @@ public class GuiSelectColor extends GuiLM
 			}
 		}
 		
+		@Override
 		public void mousePressed(int b)
 		{ if(b == 0 && mouseOver()) grabbed = true; }
 	}

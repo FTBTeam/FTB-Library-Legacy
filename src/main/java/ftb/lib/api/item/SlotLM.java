@@ -9,9 +9,11 @@ public class SlotLM extends Slot // ContainerLM
 	public SlotLM(IInventory inv, int i, int x, int y)
 	{ super(inv, i, x, y); }
 	
+	@Override
 	public boolean isItemValid(ItemStack is)
 	{ return inventory.isItemValidForSlot(getSlotIndex(), is); }
 	
+	@Override
 	public boolean canTakeStack(EntityPlayer ep)
 	{ return true; }
 }

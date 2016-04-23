@@ -20,9 +20,11 @@ public class MessageNotifyPlayer extends MessageLM
 		JsonElementIO.write(io, n.getSerializableElement());
 	}
 	
+	@Override
 	public LMNetworkWrapper getWrapper()
 	{ return FTBLibNetHandler.NET_GUI; }
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageContext ctx)
 	{

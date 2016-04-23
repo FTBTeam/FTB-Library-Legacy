@@ -25,9 +25,11 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 		value = defValue = def;
 	}
 	
+	@Override
 	public ConfigEntryType getConfigType()
 	{ return ConfigEntryType.ENUM; }
 	
+	@Override
 	public int getColor()
 	{ return 0x0094FF; }
 	
@@ -37,12 +39,15 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 	public int getIndex()
 	{ return values.indexOf(getAsString()); }
 	
+	@Override
 	public void func_152753_a(JsonElement o)
 	{ set(o.getAsString()); }
 	
+	@Override
 	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(getAsString()); }
 	
+	@Override
 	public void writeToNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.writeToNBT(tag, extended);
@@ -66,6 +71,7 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 		}
 	}
 	
+	@Override
 	public void readFromNBT(NBTTagCompound tag, boolean extended)
 	{
 		super.readFromNBT(tag, extended);
@@ -89,6 +95,7 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 		}
 	}
 	
+	@Override
 	public void onClicked(boolean leftClick)
 	{
 		int i = getIndex() + (leftClick ? 1 : -1);
@@ -97,15 +104,19 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 		set(values.get(i));
 	}
 	
+	@Override
 	public String getAsString()
 	{ return value; }
 	
+	@Override
 	public boolean getAsBoolean()
 	{ return getAsString() != null; }
 	
+	@Override
 	public int getAsInt()
 	{ return getIndex(); }
 	
+	@Override
 	public String getDefValueString()
 	{ return defValue; }
 }

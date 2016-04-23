@@ -37,6 +37,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		configPanel = new PanelLM(this, 0, 0, 0, 20)
 		{
+			@Override
 			public void addWidgets()
 			{
 				height = 0;
@@ -44,6 +45,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 					addCE(b);
 			}
 			
+			@Override
 			public void renderWidget()
 			{
 				for(int i = 0; i < widgets.size(); i++)
@@ -65,6 +67,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		buttonClose = new ButtonLM(this, 0, 2, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
@@ -75,6 +78,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		buttonExpandAll = new ButtonLM(this, 2, 2, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
@@ -96,6 +100,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		buttonCollapseAll = new ButtonLM(this, 20, 2, 16, 16)
 		{
+			@Override
 			public void onButtonPressed(int b)
 			{
 				FTBLibClient.playClickSound();
@@ -117,6 +122,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		
 		scroll = new SliderLM(this, -16, 20, 16, 0, 10)
 		{
+			@Override
 			public boolean canMouseScroll()
 			{ return true; }
 		};
@@ -124,6 +130,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		scroll.displayMin = scroll.displayMax = 0;
 	}
 	
+	@Override
 	public void initLMGui()
 	{
 		mainPanel.width = width;
@@ -167,6 +174,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 	}
 	
+	@Override
 	public void addWidgets()
 	{
 		configPanel.height = 20;
@@ -180,11 +188,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		mainPanel.add(scroll);
 	}
 	
+	@Override
 	public void onLMGuiClosed()
 	{
 		if(shouldClose && changed) provider.save();
 	}
 	
+	@Override
 	public void onClosedByKey()
 	{
 		shouldClose = true;
@@ -194,6 +204,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	public void onChanged()
 	{ changed = true; }
 	
+	@Override
 	public void drawBackground()
 	{
 		GlStateManager.disableLighting();
@@ -246,12 +257,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			subButtons = new ArrayList<>();
 		}
 		
+		@Override
 		public boolean isVisible()
 		{
 			int ay = getAY();
 			return ay > -height && ay < gui.height;
 		}
 		
+		@Override
 		public void renderWidget()
 		{
 			boolean mouseOver = gui.mouse().y >= 20 && mouseOver();
@@ -294,6 +307,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 		}
 		
+		@Override
 		public void onButtonPressed(int b)
 		{
 			if(gui.mouse().y < 20) return;
@@ -318,6 +332,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			{
 				LMGuis.displayColorSelector(new IColorCallback()
 				{
+					@Override
 					public void onColorSelected(ColorSelected c)
 					{
 						if(c.set)
@@ -334,6 +349,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			{
 				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, entry.getAsInt(), new IFieldCallback()
 				{
+					@Override
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
@@ -350,6 +366,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			{
 				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, entry.getAsDouble(), new IFieldCallback()
 				{
+					@Override
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
@@ -366,6 +383,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			{
 				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getAsString(), new IFieldCallback()
 				{
+					@Override
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
@@ -382,6 +400,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			{
 				LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
 				{
+					@Override
 					public void onFieldSelected(FieldSelected c)
 					{
 						if(c.set)
@@ -396,6 +415,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			}
 		}
 		
+		@Override
 		public void addMouseOverText(List<String> l)
 		{
 			if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
@@ -424,6 +444,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 	}
 	
+	@Override
 	public void onClientDataChanged()
 	{ refreshWidgets(); }
 }

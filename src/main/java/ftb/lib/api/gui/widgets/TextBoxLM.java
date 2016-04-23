@@ -23,6 +23,7 @@ public class TextBoxLM extends WidgetLM
 		text = getText();
 	}
 	
+	@Override
 	public void mousePressed(int b)
 	{
 		if(charLimit == 0) return;
@@ -45,6 +46,7 @@ public class TextBoxLM extends WidgetLM
 		}
 	}
 	
+	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
 		if(charLimit == 0) return false;
@@ -120,6 +122,7 @@ public class TextBoxLM extends WidgetLM
 	public String getText()
 	{ return text; }
 	
+	@Override
 	public void renderWidget()
 	{
 		String s = getText();

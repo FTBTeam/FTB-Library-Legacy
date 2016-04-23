@@ -17,6 +17,7 @@ public abstract class PanelPopupMenu extends PanelLM
 		menuButtons = new ArrayList<>();
 	}
 	
+	@Override
 	public final void addWidgets()
 	{
 		menuButtons.clear();
@@ -41,12 +42,14 @@ public abstract class PanelPopupMenu extends PanelLM
 	
 	public abstract void onClosed(ButtonPopupMenu b, int mb);
 	
+	@Override
 	public void renderWidget()
 	{
 		for(int i = 0; i < menuButtons.size(); i++)
 			menuButtons.get(i).renderWidget();
 	}
 	
+	@Override
 	public void mousePressed(int b)
 	{
 		if(mouseOver())

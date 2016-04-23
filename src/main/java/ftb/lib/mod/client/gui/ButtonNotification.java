@@ -26,6 +26,7 @@ public class ButtonNotification extends ButtonLM
 		width += 8;
 	}
 	
+	@Override
 	public void renderWidget()
 	{
 		int ax = getAX();
@@ -60,6 +61,7 @@ public class ButtonNotification extends ButtonLM
 		}
 	}
 	
+	@Override
 	public void onButtonPressed(int b)
 	{
 		FTBLibClient.playClickSound();
@@ -71,6 +73,7 @@ public class ButtonNotification extends ButtonLM
 		gui.refreshWidgets();
 	}
 	
+	@Override
 	public void addMouseOverText(List<String> l)
 	{
 		int ax = getAX();
