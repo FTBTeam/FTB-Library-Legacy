@@ -44,7 +44,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(boolean leftClick)
 		{
 		}
 		

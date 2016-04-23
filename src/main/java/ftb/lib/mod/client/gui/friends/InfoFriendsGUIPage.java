@@ -77,10 +77,10 @@ public class InfoFriendsGUIPage extends InfoPage
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(boolean leftClick)
 		{
 			new MessageRequestPlayerInfo(playerLM.getProfile().getId()).sendToServer();
-			super.onButtonPressed(b);
+			super.onClicked(leftClick);
 		}
 		
 		@Override

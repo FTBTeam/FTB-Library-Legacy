@@ -69,7 +69,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		buttonClose = new ButtonLM(this, 0, 2, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				shouldClose = true;
@@ -80,7 +80,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		buttonExpandAll = new ButtonLM(this, 2, 2, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				for(ButtonConfigEntry e : configEntryButtons)
@@ -102,7 +102,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		buttonCollapseAll = new ButtonLM(this, 20, 2, 16, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				for(ButtonConfigEntry e : configEntryButtons)
@@ -309,7 +309,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(boolean leftClick)
 		{
 			if(gui.mouse().y < 20) return;
 			
@@ -321,7 +321,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry instanceof IClickable)
 			{
-				((IClickable) entry).onClicked(b == 0);
+				((IClickable) entry).onClicked(leftClick);
 				gui.onChanged();
 			}
 			else if(entry.getAsGroup() != null)

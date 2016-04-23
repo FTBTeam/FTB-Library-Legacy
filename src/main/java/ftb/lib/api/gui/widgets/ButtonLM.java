@@ -1,13 +1,13 @@
 package ftb.lib.api.gui.widgets;
 
+import ftb.lib.api.IClickable;
 import ftb.lib.api.gui.IGuiLM;
 import latmod.lib.LMUtils;
 import net.minecraftforge.fml.relauncher.*;
 
 @SideOnly(Side.CLIENT)
-public abstract class ButtonLM extends WidgetLM
+public abstract class ButtonLM extends WidgetLM implements IClickable
 {
-	public int customID = 0;
 	private long lastClickMillis = LMUtils.millis();
 	public boolean doubleClickRequired = false;
 	
@@ -22,13 +22,11 @@ public abstract class ButtonLM extends WidgetLM
 			if(doubleClickRequired)
 			{
 				long l = LMUtils.millis();
-				if(l - lastClickMillis < 300) onButtonPressed(b);
+				if(l - lastClickMillis < 300) onClicked(b == 0);
 				lastClickMillis = l;
 			}
 			
-			else onButtonPressed(b);
+			else onClicked(b == 0);
 		}
 	}
-	
-	public abstract void onButtonPressed(int b);
 }

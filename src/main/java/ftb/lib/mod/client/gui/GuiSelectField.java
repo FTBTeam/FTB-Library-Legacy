@@ -34,7 +34,7 @@ public class GuiSelectField extends GuiLM
 		buttonCancel = new ButtonSimpleLM(this, 2, mainPanel.height - 18, bsize, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				callback.onFieldSelected(new FieldSelected(ID, false, def, true));
@@ -46,7 +46,7 @@ public class GuiSelectField extends GuiLM
 		buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				if(textBox.isValid()) callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
@@ -63,7 +63,7 @@ public class GuiSelectField extends GuiLM
 			
 			@Override
 			public void returnPressed()
-			{ buttonAccept.onButtonPressed(0); }
+			{ buttonAccept.onClicked(true); }
 		};
 		
 		textBox.setText(def);

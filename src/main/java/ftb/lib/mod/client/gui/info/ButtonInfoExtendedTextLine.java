@@ -48,7 +48,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(boolean leftClick)
 	{
 		if(line != null) line.onClicked();
 	}

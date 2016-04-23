@@ -80,7 +80,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		buttonBack = new ButtonLM(this, 0, 0, tex_back.widthI(), tex_back.heightI())
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{
 				FTBLibClient.playClickSound();
 				

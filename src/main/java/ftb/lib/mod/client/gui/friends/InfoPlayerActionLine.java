@@ -47,7 +47,7 @@ public class InfoPlayerActionLine extends InfoTextLine
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(boolean leftClick)
 		{
 			FTBLibClient.playClickSound();
 			action.onClicked(ForgeWorldSP.inst.clientPlayer, playerLM);

@@ -53,7 +53,7 @@ public class ButtonInfoTextLine extends ButtonLM
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(boolean leftClick)
 	{
 	}
 	

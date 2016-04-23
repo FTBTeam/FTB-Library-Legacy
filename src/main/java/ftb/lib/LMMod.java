@@ -106,8 +106,15 @@ public class LMMod extends FinalIDObject
 	
 	public void loadRecipes()
 	{
-		for(IItemLM i : itemsAndBlocks) i.loadRecipes();
-		if(recipes != null) recipes.loadRecipes();
+		for(IItemLM i : itemsAndBlocks)
+		{
+			i.loadRecipes();
+		}
+		
+		if(recipes != null)
+		{
+			recipes.loadRecipes();
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)

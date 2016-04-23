@@ -55,7 +55,7 @@ public class GuiSelectColor extends GuiLM
 		colorInit = new ButtonLM(this, 76, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{ closeGui(false); }
 			
 			@Override
@@ -69,7 +69,7 @@ public class GuiSelectColor extends GuiLM
 		colorCurrent = new ButtonLM(this, 109, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{ closeGui(true); }
 			
 			@Override

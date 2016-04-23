@@ -23,7 +23,7 @@ public class GuiViewImage extends GuiLM
 		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(boolean leftClick)
 			{ close(parent); }
 		};
 	}

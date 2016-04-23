@@ -25,7 +25,7 @@ public class ButtonInfoPage extends ButtonLM
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(boolean leftClick)
 	{
 		FTBLibClient.playClickSound();
 		

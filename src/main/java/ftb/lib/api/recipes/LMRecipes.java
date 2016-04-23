@@ -101,4 +101,8 @@ public class LMRecipes
 	
 	public void addSmelting(ItemStack out, ItemStack in)
 	{ addSmelting(out, in, 0F); }
+	
+	public void loadRecipes()
+	{
+	}
 }

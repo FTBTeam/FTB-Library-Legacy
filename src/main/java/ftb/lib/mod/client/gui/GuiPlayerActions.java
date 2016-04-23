@@ -65,7 +65,7 @@ public class GuiPlayerActions extends GuiLM
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(boolean leftClick)
 		{
 			FTBLibClient.mc.thePlayer.closeScreen();
 			action.onClicked(gui.self, gui.other);
