@@ -7,7 +7,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
@@ -36,6 +35,7 @@ public abstract class PlayerAction extends FinalIDObject
 	public final Type type;
 	public final int priority;
 	public final TextureCoords icon;
+	public final LangKey langKey;
 	
 	public PlayerAction(Type t, String id, int p, TextureCoords c)
 	{
@@ -43,13 +43,14 @@ public abstract class PlayerAction extends FinalIDObject
 		type = (t == null) ? Type.SELF : t;
 		priority = p;
 		icon = c;
+		langKey = new LangKey("player_action." + id);
 	}
 	
 	public abstract void onClicked(ILMPlayer self, ILMPlayer other);
 	
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName()
-	{ return I18n.format("player_action." + getID()); }
+	{ return langKey.format(); }
 	
 	public void addMouseOverText(List<String> l) { }
 	
