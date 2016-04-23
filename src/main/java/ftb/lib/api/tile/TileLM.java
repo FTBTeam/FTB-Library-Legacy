@@ -1,6 +1,7 @@
 package ftb.lib.api.tile;
 
 import ftb.lib.*;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.block.BlockLM;
 import ftb.lib.mod.net.MessageClientTileAction;
 import latmod.lib.LMUtils;
@@ -190,17 +191,14 @@ public class TileLM extends TileEntity implements IClientActionTile
 	public final void sendClientAction(String action, NBTTagCompound data)
 	{ new MessageClientTileAction(this, action, data).sendToServer(); }
 	
-	public void clientPressButton(String button, int mouseButton, NBTTagCompound data)
+	public void clientPressButton(String button, MouseButton mouseButton, NBTTagCompound data)
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("ID", button);
-		tag.setByte("MB", (byte) mouseButton);
+		tag.setByte("MB", mouseButton.ID);
 		if(data != null) tag.setTag("D", data);
 		sendClientAction(ACTION_BUTTON_PRESSED, tag);
 	}
-	
-	public final void clientPressButton(String button, int mouseButton)
-	{ clientPressButton(button, mouseButton, null); }
 	
 	public void clientOpenGui(NBTTagCompound data)
 	{ sendClientAction(ACTION_OPEN_GUI, data); }
@@ -217,7 +215,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 	{
 		if(action.equals(ACTION_BUTTON_PRESSED))
 		{
-			handleButton(data.getString("ID"), data.getByte("MB"), data.getCompoundTag("D"), ep);
+			handleButton(data.getString("ID"), MouseButton.get(data.getByte("MB")), data.getCompoundTag("D"), ep);
 			markDirty();
 		}
 		else if(action.equals(ACTION_OPEN_GUI)) FTBLib.openGui(ep, (IGuiTile) this, data);
@@ -228,7 +226,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		}
 	}
 	
-	public void handleButton(String button, int mouseButton, NBTTagCompound data, EntityPlayerMP ep)
+	public void handleButton(String button, MouseButton mouseButton, NBTTagCompound data, EntityPlayerMP ep)
 	{
 	}
 	

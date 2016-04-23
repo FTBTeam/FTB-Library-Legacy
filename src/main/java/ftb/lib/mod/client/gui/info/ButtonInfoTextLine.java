@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import cpw.mods.fml.relauncher.*;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.lines.InfoTextLine;
 import net.minecraft.util.IChatComponent;
@@ -51,7 +52,7 @@ public class ButtonInfoTextLine extends ButtonLM
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(MouseButton button)
 	{
 	}
 	

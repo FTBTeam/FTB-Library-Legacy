@@ -2,7 +2,7 @@ package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.*;
-import ftb.lib.api.GuiLang;
+import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.callback.*;
@@ -55,7 +55,7 @@ public class GuiSelectColor extends GuiLM
 		colorInit = new ButtonLM(this, 76, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{ closeGui(false); }
 			
 			@Override
@@ -69,7 +69,7 @@ public class GuiSelectColor extends GuiLM
 		colorCurrent = new ButtonLM(this, 109, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{ closeGui(true); }
 			
 			@Override

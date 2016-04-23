@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.GuiLang;
+import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.callback.*;
@@ -34,7 +34,7 @@ public class GuiSelectField extends GuiLM
 		buttonCancel = new ButtonSimpleLM(this, 2, mainPanel.height - 18, bsize, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				callback.onFieldSelected(new FieldSelected(ID, false, def, true));
@@ -46,7 +46,7 @@ public class GuiSelectField extends GuiLM
 		buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				if(textBox.isValid()) callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
@@ -63,7 +63,7 @@ public class GuiSelectField extends GuiLM
 			
 			@Override
 			public void returnPressed()
-			{ buttonAccept.onButtonPressed(0); }
+			{ buttonAccept.onClicked(MouseButton.LEFT); }
 		};
 		
 		textBox.setText(def);

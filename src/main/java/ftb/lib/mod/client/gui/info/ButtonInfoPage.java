@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
@@ -38,7 +39,7 @@ public class ButtonInfoPage extends ButtonLM
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(MouseButton button)
 	{
 		FTBLibClient.playClickSound();
 		

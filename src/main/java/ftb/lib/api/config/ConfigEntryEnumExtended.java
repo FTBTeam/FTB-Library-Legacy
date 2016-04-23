@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import ftb.lib.api.IClickable;
+import ftb.lib.api.*;
 import net.minecraft.nbt.*;
 
 import java.util.*;
@@ -96,9 +96,9 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
-		int i = getIndex() + (leftClick ? 1 : -1);
+		int i = getIndex() + (button.isLeft() ? 1 : -1);
 		if(i < 0) i = values.size() - 1;
 		if(i >= values.size()) i = 0;
 		set(values.get(i));

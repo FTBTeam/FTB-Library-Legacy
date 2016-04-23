@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import ftb.lib.api.IClickable;
+import ftb.lib.api.*;
 import net.minecraft.nbt.*;
 
 import java.util.LinkedHashMap;
@@ -87,9 +87,9 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
-		if(leftClick)
+		if(button.isLeft())
 		{
 			set(getFromIndex((getIndex() + 1) % enumMap.size()));
 		}

@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
-import ftb.lib.api.PlayerAction;
+import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.friends.ILMPlayer;
 import ftb.lib.api.gui.GuiLM;
@@ -65,7 +65,7 @@ public class GuiPlayerActions extends GuiLM
 		}
 		
 		@Override
-		public void onButtonPressed(int b)
+		public void onClicked(MouseButton button)
 		{
 			FTBLibClient.mc.thePlayer.closeScreen();
 			action.onClicked(gui.self, gui.other);

@@ -3,6 +3,7 @@ package ftb.lib.api.info.lines;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.JsonHelper;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.notification.ClickAction;
@@ -59,7 +60,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 	{ return clickAction != null; }
 	
 	@SideOnly(Side.CLIENT)
-	public void onClicked()
+	public void onClicked(MouseButton button)
 	{
 		if(clickAction != null)
 		{

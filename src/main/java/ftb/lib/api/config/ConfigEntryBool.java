@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import ftb.lib.api.IClickable;
+import ftb.lib.api.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ConfigEntryBool extends ConfigEntry implements IClickable
@@ -36,7 +36,7 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
 	{ return new JsonPrimitive(getAsBoolean()); }
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{ set(!getAsBoolean()); }
 	
 	@Override

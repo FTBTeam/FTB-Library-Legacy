@@ -2,6 +2,7 @@ package ftb.lib.mod.client.gui.info;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.*;
 import ftb.lib.api.info.lines.recipes.InfoRecipeLine;
 import latmod.lib.util.Pos2I;
@@ -59,7 +60,7 @@ public class ButtonInfoRecipe extends ButtonInfoTextLine
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(MouseButton button)
 	{
 	}
 	

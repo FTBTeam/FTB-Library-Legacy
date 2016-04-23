@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
-import ftb.lib.api.GuiLang;
+import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.*;
@@ -79,7 +79,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		buttonBack = new ButtonLM(this, 0, 0, tex_back.widthI(), tex_back.heightI())
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				

@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.api.GuiLang;
+import ftb.lib.api.*;
 import ftb.lib.api.client.*;
 import ftb.lib.api.gui.*;
 import ftb.lib.api.gui.widgets.ButtonLM;
@@ -62,7 +62,7 @@ public class ButtonNotification extends ButtonLM
 	}
 	
 	@Override
-	public void onButtonPressed(int b)
+	public void onClicked(MouseButton button)
 	{
 		FTBLibClient.playClickSound();
 		

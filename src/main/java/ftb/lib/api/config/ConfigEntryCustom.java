@@ -1,7 +1,7 @@
 package ftb.lib.api.config;
 
 import com.google.gson.*;
-import ftb.lib.api.IClickable;
+import ftb.lib.api.*;
 import latmod.lib.IntList;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -98,7 +98,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
 	}
 	

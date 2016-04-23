@@ -2,6 +2,7 @@ package ftb.lib.mod.client.gui;
 
 import cpw.mods.fml.relauncher.*;
 import ftb.lib.TextureCoords;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
@@ -23,7 +24,7 @@ public class GuiViewImage extends GuiLM
 		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
 			@Override
-			public void onButtonPressed(int b)
+			public void onClicked(MouseButton button)
 			{ close(parent); }
 		};
 	}
