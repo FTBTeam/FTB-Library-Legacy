@@ -109,8 +109,15 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 	{ FTBLibClient.openGui(g); }
 	
 	@Override
+	protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_)
+	{
+		drawForeground();
+	}
+	
+	@Override
 	protected final void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
+		drawBackground();
 	}
 	
 	@Override
@@ -173,22 +180,19 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 			refreshWidgets = false;
 		}
 		
-		GlStateManager.disableLighting();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		drawDefaultBackground();
-		drawBackground();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
 		super.drawScreen(mx, my, f);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
+		
 		tempTextList.clear();
 		drawText(tempTextList);
-		if(!tempTextList.isEmpty()) drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
+		if(!tempTextList.isEmpty())
+		{
+			drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
+		}
+		
 		GlStateManager.disableLighting();
-		drawForeground();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 	
