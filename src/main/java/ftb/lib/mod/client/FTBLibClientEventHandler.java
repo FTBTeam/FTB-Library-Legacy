@@ -64,8 +64,6 @@ public class FTBLibClientEventHandler
 					e.toolTip.add("> " + or);
 			}
 		}
-		
-		if(FTBLib.ftbu != null) FTBLib.ftbu.onTooltip(e);
 	}
 	
 	@SubscribeEvent

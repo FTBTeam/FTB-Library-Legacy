@@ -13,7 +13,7 @@ import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import ftb.lib.api.info.lines.InfoTextLine;
 import ftb.lib.mod.client.gui.info.ButtonInfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
-import ftb.lib.mod.net.MessageDisplayGuide;
+import ftb.lib.mod.net.MessageDisplayInfo;
 import latmod.lib.LMColor;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMMapUtils;
@@ -244,9 +244,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		useUnicodeFont = o.has("UUF") ? o.get("UUF").getAsBoolean() : null;
 	}
 	
-	public MessageDisplayGuide displayGuide(EntityPlayerMP ep)
+	public MessageDisplayInfo displayGuide(EntityPlayerMP ep)
 	{
-		MessageDisplayGuide m = new MessageDisplayGuide(this);
+		MessageDisplayInfo m = new MessageDisplayInfo(this);
 		if(ep != null && !(ep instanceof FakePlayer)) m.sendTo(ep);
 		return m;
 	}

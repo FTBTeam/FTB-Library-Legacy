@@ -3,7 +3,7 @@ package ftb.lib;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.GameMode;
 import ftb.lib.api.GameModes;
-import ftb.lib.mod.net.MessageSyncData;
+import ftb.lib.mod.net.MessageReload;
 import latmod.lib.LMFileUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -77,13 +77,13 @@ public class FTBWorld
 	{
 		if(player != null)
 		{
-			new MessageSyncData(player, false).sendTo(player);
+			new MessageReload(ReloadType.SYNC_ONLY, player, false).sendTo(player);
 		}
 		else if(FTBLib.hasOnlinePlayers())
 		{
 			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
 			{
-				new MessageSyncData(ep, false).sendTo(ep);
+				new MessageReload(ReloadType.SYNC_ONLY, ep, false).sendTo(ep);
 			}
 		}
 	}

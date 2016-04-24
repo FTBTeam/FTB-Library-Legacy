@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
+import ftb.lib.ReloadType;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ServerConfigProvider;
@@ -18,12 +19,12 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(ByteCount.INT); }
 	
-	public MessageEditConfig(long t, boolean reload, ConfigGroup group)
+	public MessageEditConfig(long t, ReloadType reload, ConfigGroup group)
 	{
 		this();
 		io.writeLong(t);
 		io.writeUTF(group.getID());
-		io.writeBoolean(reload);
+		io.writeByte(reload.ordinal());
 		
 		NBTTagCompound tag = new NBTTagCompound();
 		group.writeToNBT(tag, true);
@@ -42,7 +43,7 @@ public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
 	{
 		long token = io.readLong();
 		String id = io.readUTF();
-		boolean reload = io.readBoolean();
+		ReloadType reload = ReloadType.values()[io.readUnsignedByte()];
 		
 		ConfigGroup group = new ConfigGroup(id);
 		group.readFromNBT(readTag(), true);

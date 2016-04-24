@@ -12,11 +12,11 @@ import ftb.lib.mod.client.gui.info.GuiInfo;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 
-public class MessageDisplayGuide extends MessageLM
+public class MessageDisplayInfo extends MessageLM
 {
-	public MessageDisplayGuide() { super(ByteCount.INT); }
+	public MessageDisplayInfo() { super(ByteCount.INT); }
 	
-	public MessageDisplayGuide(InfoPage file)
+	public MessageDisplayInfo(InfoPage file)
 	{
 		this();
 		file.cleanup();
@@ -26,7 +26,7 @@ public class MessageDisplayGuide extends MessageLM
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_GUI; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	@SideOnly(Side.CLIENT)

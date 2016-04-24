@@ -2,6 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
 import ftb.lib.FTBWorld;
+import ftb.lib.ReloadType;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
@@ -73,7 +74,7 @@ public class CmdMode extends CommandSubLM
 			{
 				c = FTBLibLang.mode_loaded.chatComponent(args[0]);
 				c.getChatStyle().setColor(EnumChatFormatting.GREEN);
-				FTBLib.reload(ics, true, true);
+				FTBLib.reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT, false);
 			}
 			
 			ics.addChatMessage(c);

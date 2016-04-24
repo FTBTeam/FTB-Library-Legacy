@@ -2,6 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
+import ftb.lib.ReloadType;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.api.config.ConfigEntry;
@@ -68,7 +69,7 @@ public class CmdEditConfig extends CommandLM
 				return;
 			}
 			
-			new MessageEditConfig(LMAccessToken.generate(ep), true, file).sendTo(ep);
+			new MessageEditConfig(LMAccessToken.generate(ep), ReloadType.SERVER_ONLY, file).sendTo(ep);
 			return;
 		}
 		
@@ -87,20 +88,20 @@ public class CmdEditConfig extends CommandLM
 		
 		if(entry == null)
 		{
-			error("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
+			error("Can't find config entry '" + args[0] + ' ' + args[1] + ' ' + args[2] + '\'');
 		}
 		
 		if(args.length >= 4)
 		{
 			String json = LMStringUtils.unsplitSpaceUntilEnd(3, args);
 			
-			FTBLibMod.logger.info("Setting " + args[0] + " " + args[1] + " " + args[2] + " to " + json);
+			FTBLibMod.logger.info("Setting " + args[0] + ' ' + args[1] + ' ' + args[2] + " to " + json);
 			
 			try
 			{
 				entry.func_152753_a(LMJsonUtils.fromJson(json));
 				file.save();
-				FTBLib.reload(ics, true, false);
+				FTBLib.reload(ics, ReloadType.SERVER_ONLY, false);
 				ics.addChatMessage(new ChatComponentText(args[2] + " set to " + entry.getAsString()));
 			}
 			catch(Exception ex)

@@ -4,6 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
+import ftb.lib.ReloadType;
 import ftb.lib.api.config.ConfigFile;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ConfigRegistry;
@@ -17,7 +18,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 {
 	public MessageEditConfigResponse() { super(ByteCount.INT); }
 	
-	public MessageEditConfigResponse(long adminToken, boolean reload, ConfigGroup group)
+	public MessageEditConfigResponse(long adminToken, ReloadType reload, ConfigGroup group)
 	{
 		this();
 		io.writeLong(adminToken);
@@ -27,7 +28,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		group.writeToNBT(tag, false);
 		writeTag(tag);
 		
-		io.writeBoolean(reload);
+		io.writeByte(reload.ordinal());
 		
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response TX: " + group.getSerializableElement());
 	}
@@ -52,7 +53,7 @@ public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
 		if(file.loadFromGroup(group, true) > 0)
 		{
 			file.save();
-			if(io.readBoolean()) FTBLib.reload(ep, true, false);
+			FTBLib.reload(ep, ReloadType.values()[io.readUnsignedByte()], false);
 		}
 		
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Response RX: " + file.getSerializableElement());

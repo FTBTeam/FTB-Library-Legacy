@@ -1,14 +1,15 @@
 package ftb.lib.api.config;
 
+import ftb.lib.ReloadType;
 import ftb.lib.mod.net.MessageEditConfigResponse;
 
 public final class ServerConfigProvider implements IConfigProvider
 {
 	private final long adminToken;
-	private final boolean reload;
+	private final ReloadType reload;
 	private final ConfigGroup group;
 	
-	public ServerConfigProvider(long t, boolean r, ConfigGroup f)
+	public ServerConfigProvider(long t, ReloadType r, ConfigGroup f)
 	{
 		adminToken = t;
 		reload = r;

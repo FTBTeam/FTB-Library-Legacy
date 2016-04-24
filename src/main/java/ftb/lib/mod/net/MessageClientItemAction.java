@@ -23,7 +23,7 @@ public class MessageClientItemAction extends MessageLM
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_GUI; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	public IMessage onMessage(MessageContext ctx)

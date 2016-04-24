@@ -11,9 +11,9 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.EventFTBReload;
-import ftb.lib.api.EventFTBSync;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.ServerTickCallback;
+import ftb.lib.api.block.ItemBlockLM;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.api.tile.IGuiTile;
@@ -48,7 +48,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -58,7 +57,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,26 +100,33 @@ public class FTBLib
 			FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
 	}
 	
-	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
+	public static void reload(ICommandSender sender, ReloadType type, boolean login)
 	{
 		if(FTBWorld.server == null) return;
 		
 		long ms = LMUtils.millis();
-		ConfigRegistry.reload();
-		GameModes.reload();
 		
-		EventFTBReload event = new EventFTBReload(FTBWorld.server, sender, reloadClient);
-		if(ftbu != null) ftbu.onReloaded(event);
-		event.post();
-		
-		if(printMessage) FTBLibLang.reload_server.printChat(BroadcastSender.inst, (LMUtils.millis() - ms) + "ms");
+		if(type.reload(Side.SERVER))
+		{
+			ConfigRegistry.reload();
+			GameModes.reload();
+			
+			EventFTBReload event = new EventFTBReload(FTBWorld.server, sender, type, login);
+			if(ftbu != null) ftbu.onReloaded(event);
+			event.post();
+		}
 		
 		if(hasOnlinePlayers())
 		{
 			for(EntityPlayerMP ep : getAllOnlinePlayers(null))
 			{
-				new MessageReload(2, EventFTBSync.generateData(ep, false)).sendTo(ep);
+				new MessageReload(type, ep, login).sendTo(ep);
 			}
+		}
+		
+		if(!login && type.reload(Side.SERVER))
+		{
+			FTBLibLang.reload_server.printChat(BroadcastSender.inst, (LMUtils.millis() - ms) + "ms");
 		}
 	}
 	
@@ -135,7 +140,7 @@ public class FTBLib
 	{ GameRegistry.registerBlock(b, c, name); }
 	
 	public static void addBlock(Block b, String name)
-	{ addBlock(b, ItemBlock.class, name); }
+	{ addBlock(b, ItemBlockLM.class, name); }
 	
 	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
 	{
@@ -231,21 +236,6 @@ public class FTBLib
 		}
 		
 		return null;
-	}
-	
-	public static List<String> getPlayerNames(boolean online)
-	{
-		if(ftbu != null) return Arrays.asList(ftbu.getPlayerNames(online));
-		ArrayList<String> l = new ArrayList<>();
-		
-		if(online)
-		{
-			List<EntityPlayerMP> players = getAllOnlinePlayers(null);
-			for(int j = 0; j < players.size(); j++)
-				l.add(players.get(j).getGameProfile().getName());
-		}
-		else l.addAll(UsernameCache.getMap().values());
-		return l;
 	}
 	
 	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Item i)

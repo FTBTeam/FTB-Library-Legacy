@@ -5,7 +5,6 @@ import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.api.EventFTBWorldServer;
 import ftb.lib.api.friends.ILMPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public interface FTBUIntegration // FTBLIntegration
@@ -16,9 +15,7 @@ public interface FTBUIntegration // FTBLIntegration
 	void onFTBWorldServerClosed();
 	void onServerTick(World w);
 	ILMPlayer getLMPlayer(Object player);
-	String[] getPlayerNames(boolean online);
 	boolean hasClientWorld();
 	void renderWorld(float pt);
-	void onTooltip(ItemTooltipEvent e);
 	void onRightClick(PlayerInteractEvent e);
 }

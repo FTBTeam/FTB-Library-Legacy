@@ -118,7 +118,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent e)
 	{
-		FTBLib.reload(FTBLib.getServer(), false, false);
+		//TODO: Check which one comes after. FTBLib.reload(FTBLib.getServer(), ReloadType.SERVER_ONLY, false);
 	}
 	
 	@Mod.EventHandler

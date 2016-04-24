@@ -29,7 +29,7 @@ public class MessageOpenGuiTile extends MessageLM
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_GUI; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	@SideOnly(Side.CLIENT)

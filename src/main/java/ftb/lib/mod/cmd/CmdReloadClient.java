@@ -2,6 +2,7 @@ package ftb.lib.mod.cmd;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.ReloadType;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.mod.client.FTBLibModClient;
@@ -18,6 +19,6 @@ public class CmdReloadClient extends CommandLM
 	@Override
 	public void processCommand(ICommandSender ics, String[] args) throws CommandException
 	{
-		MessageReload.reloadClient(0L, true);
+		MessageReload.reloadClient(0L, ReloadType.CLIENT_ONLY, false);
 	}
 }

@@ -3,6 +3,7 @@ package ftb.lib.api.config;
 import com.google.gson.JsonElement;
 import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
+import ftb.lib.ReloadType;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMUtils;
@@ -67,10 +68,12 @@ public class ConfigRegistry
 		return null;
 	}
 	
-	public static void editTempConfig(EntityPlayerMP ep, ConfigFile file, boolean reload)
+	public static void editTempConfig(EntityPlayerMP ep, ConfigFile file, ReloadType reload)
 	{
 		if(ep != null && file != null && tempServerConfig.containsValue(file))
+		{
 			new MessageEditConfig(LMAccessToken.generate(ep), reload, file).sendTo(ep);
+		}
 	}
 	
 	public static ConfigFile getTempConfig(String id)

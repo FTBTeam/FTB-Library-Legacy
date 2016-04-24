@@ -8,7 +8,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.FTBLib;
 import ftb.lib.FTBWorld;
-import ftb.lib.api.EventFTBSync;
+import ftb.lib.ReloadType;
 import ftb.lib.api.ServerTickCallback;
 import ftb.lib.mod.net.MessageReload;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,7 +39,7 @@ public class FTBLibEventHandler
 	{
 		if(e.world.provider.dimensionId == 0 && !e.world.isRemote)
 		{
-			FTBLib.reload(FTBLib.getServer(), false, false);
+			FTBLib.reload(FTBLib.getServer(), ReloadType.SERVER_ONLY, false);
 		}
 	}
 	
@@ -49,7 +49,7 @@ public class FTBLibEventHandler
 		if(e.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP ep = (EntityPlayerMP) e.player;
-			new MessageReload(1, EventFTBSync.generateData(ep, true)).sendTo(ep);
+			new MessageReload(ReloadType.CLIENT_ONLY, ep, true).sendTo(ep);
 		}
 	}
 	

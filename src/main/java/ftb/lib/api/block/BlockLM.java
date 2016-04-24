@@ -177,12 +177,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
-	{
-	}
-	
-	@Override
 	public void onNeighborBlockChange(World w, int x, int y, int z, Block neighbor)
 	{
 		if(hasTileEntity(w.getBlockMetadata(x, y, z)))
