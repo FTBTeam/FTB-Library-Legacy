@@ -15,7 +15,6 @@ import java.util.Map;
 public class ConfigRegistry
 {
 	public static final HashMap<String, ConfigFile> map = new HashMap<>();
-	public static final ConfigGroup synced = new ConfigGroup("synced");
 	private static final HashMap<String, ConfigFile> tempServerConfig = new HashMap<>();
 	
 	public static void add(ConfigFile f)
@@ -23,9 +22,6 @@ public class ConfigRegistry
 		if(f != null)
 		{
 			map.put(f.getID(), f);
-			
-			ConfigGroup g1 = f.generateSynced(false);
-			if(!g1.entryMap.isEmpty()) synced.add(g1, false);
 		}
 	}
 	

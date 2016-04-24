@@ -11,6 +11,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.EventFTBReload;
+import ftb.lib.api.EventFTBSync;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.ServerTickCallback;
 import ftb.lib.api.config.ConfigRegistry;
@@ -114,7 +115,14 @@ public class FTBLib
 		event.post();
 		
 		if(printMessage) FTBLibLang.reload_server.printChat(BroadcastSender.inst, (LMUtils.millis() - ms) + "ms");
-		new MessageReload(FTBWorld.server, 2).sendTo(null);
+		
+		if(hasOnlinePlayers())
+		{
+			for(EntityPlayerMP ep : getAllOnlinePlayers(null))
+			{
+				new MessageReload(2, EventFTBSync.generateData(ep, false)).sendTo(ep);
+			}
+		}
 	}
 	
 	public static IChatComponent getChatComponent(Object o)

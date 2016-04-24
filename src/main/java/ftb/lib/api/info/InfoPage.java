@@ -244,9 +244,11 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		useUnicodeFont = o.has("UUF") ? o.get("UUF").getAsBoolean() : null;
 	}
 	
-	public void displayGuide(EntityPlayerMP ep)
+	public MessageDisplayGuide displayGuide(EntityPlayerMP ep)
 	{
-		if(ep != null && !(ep instanceof FakePlayer)) new MessageDisplayGuide(this).sendTo(ep);
+		MessageDisplayGuide m = new MessageDisplayGuide(this);
+		if(ep != null && !(ep instanceof FakePlayer)) m.sendTo(ep);
+		return m;
 	}
 	
 	public final LMColor getBackgroundColor()

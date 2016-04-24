@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 public interface ILMPlayer
 {
 	Side getSide();
-	int getPlayerID();
 	boolean isOnline();
 	EntityPlayer getPlayer();
 	GameProfile getProfile();

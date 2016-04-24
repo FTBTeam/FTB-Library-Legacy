@@ -24,10 +24,6 @@ public class TempLMPlayerFromEntity implements ILMPlayer
 	{ return side; }
 	
 	@Override
-	public int getPlayerID()
-	{ return 0; }
-	
-	@Override
 	public boolean isOnline()
 	{ return true; }
 	

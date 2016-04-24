@@ -332,24 +332,4 @@ public class ConfigGroup extends ConfigEntry
 	
 	public int getDepth()
 	{ return (parentGroup == null) ? 0 : (parentGroup.getDepth() + 1); }
-	
-	public ConfigGroup generateSynced(boolean copy)
-	{
-		ConfigGroup out = new ConfigGroup(getID());
-		
-		for(ConfigEntry e : entryMap.values())
-		{
-			if(e.getFlag(Flags.SYNC))
-			{
-				out.add(e, copy);
-			}
-			else if(e.getAsGroup() != null)
-			{
-				ConfigGroup g = e.getAsGroup().generateSynced(copy);
-				if(!g.entryMap.isEmpty()) out.add(g, false);
-			}
-		}
-		
-		return out;
-	}
 }

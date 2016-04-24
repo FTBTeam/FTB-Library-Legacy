@@ -10,7 +10,7 @@ public class FTBLibNetHandler
 	
 	public static void init()
 	{
-		NET.register(MessageSendWorldID.class, 1, Side.CLIENT);
+		NET.register(MessageSyncData.class, 1, Side.CLIENT);
 		//NET.register(MessageSendGameMode.class, 2, Side.CLIENT);
 		//NET.register(MessageSyncConfig.class, 3, Side.CLIENT);
 		NET.register(MessageReload.class, 4, Side.CLIENT);

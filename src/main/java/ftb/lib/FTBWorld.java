@@ -3,8 +3,9 @@ package ftb.lib;
 import cpw.mods.fml.relauncher.Side;
 import ftb.lib.api.GameMode;
 import ftb.lib.api.GameModes;
-import latmod.lib.ByteIOStream;
+import ftb.lib.mod.net.MessageSyncData;
 import latmod.lib.LMFileUtils;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.File;
 
@@ -46,18 +47,6 @@ public class FTBWorld
 	public GameMode getMode()
 	{ return currentMode; }
 	
-	public void writeReloadData(ByteIOStream io)
-	{
-		io.writeUTF(currentMode.getID());
-	}
-	
-	public void readReloadData(ByteIOStream io)
-	{
-		String mode = io.readUTF();
-		GameModes.reload();
-		currentMode = GameModes.getGameModes().get(mode);
-	}
-	
 	/**
 	 * 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true)
 	 */
@@ -77,5 +66,25 @@ public class FTBWorld
 		}
 		
 		return 0;
+	}
+	
+	public void setModeRaw(String s)
+	{
+		currentMode = GameModes.getGameModes().get(s);
+	}
+	
+	public void syncData(EntityPlayerMP player)
+	{
+		if(player != null)
+		{
+			new MessageSyncData(player, false).sendTo(player);
+		}
+		else if(FTBLib.hasOnlinePlayers())
+		{
+			for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(null))
+			{
+				new MessageSyncData(ep, false).sendTo(ep);
+			}
+		}
 	}
 }
