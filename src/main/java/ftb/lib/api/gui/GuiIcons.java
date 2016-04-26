@@ -10,7 +10,7 @@ public class GuiIcons
 {
 	public static final Map<String, TextureCoords> iconMap = new HashMap<>();
 	
-	private static final TextureCoords getIcon(String s)
+	private static TextureCoords getIcon(String s)
 	{
 		TextureCoords t = new TextureCoords(new ResourceLocation("ftbl", "textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16);
 		iconMap.put(s, t);

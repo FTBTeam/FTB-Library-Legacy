@@ -1,6 +1,6 @@
 package ftb.lib.api.gui.callback;
 
-public abstract interface ClientTickCallback
+public interface ClientTickCallback
 {
-	public abstract void onCallback();
+	void onCallback();
 }

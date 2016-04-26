@@ -4,5 +4,5 @@ public enum EnumScreen
 {
 	OFF,
 	SCREEN,
-	CHAT;
+	CHAT
 }

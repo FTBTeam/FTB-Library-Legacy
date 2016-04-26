@@ -3,6 +3,7 @@ package ftb.lib.api.client.model;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.GlStateManager;
+import latmod.lib.util.FinalIDObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -13,18 +14,17 @@ import java.util.List;
  * Made by LatvianModder
  */
 @SideOnly(Side.CLIENT)
-public class Group
+public class Group extends FinalIDObject
 {
 	public OBJModel parent;
-	public String groupName;
 	public final List<Face> faces;
 	private int listID = -1;
 	public Vector3f pos, rotation, offset;
 	
 	public Group(OBJModel m, String s)
 	{
+		super(s);
 		parent = m;
-		groupName = s;
 		
 		faces = new ArrayList<>();
 		pos = new Vector3f();

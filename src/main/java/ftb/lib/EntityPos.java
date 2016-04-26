@@ -45,7 +45,7 @@ public final class EntityPos implements Cloneable
 	{ return x == e.posX && y == e.posY && z == e.posZ && dim == e.dimension; }
 	
 	public boolean equalsPos(EntityPos p)
-	{ return (p == this) || (p != null && toLinkedPos().equalsPos(p.toLinkedPos())); }
+	{ return (p == this) || (p != null && toBlockPos().equalsPos(p.toBlockPos())); }
 	
 	@Override
 	public boolean equals(Object o)
@@ -59,10 +59,9 @@ public final class EntityPos implements Cloneable
 	public Vec3 toVec3()
 	{ return Vec3.createVectorHelper(x, y, z); }
 	
-	@Override
-	public EntityPos clone()
+	public EntityPos copy()
 	{ return new EntityPos(x, y, z, dim); }
 	
-	public BlockDimPos toLinkedPos()
+	public BlockDimPos toBlockPos()
 	{ return new BlockDimPos(MathHelperLM.floor(x), MathHelperLM.floor(y), MathHelperLM.floor(z), dim); }
 }

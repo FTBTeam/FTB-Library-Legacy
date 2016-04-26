@@ -2,6 +2,7 @@ package ftb.lib.api.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import ftb.lib.EnumMCColor;
 import ftb.lib.LMMod;
 import ftb.lib.api.tile.TileLM;
 import net.minecraft.block.Block;
@@ -163,7 +164,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 			TileLM t = getTile(w, x, y, z);
 			if(t != null)
 			{
-				if(t.recolorBlock(side.ordinal(), color)) ;
+				if(t.recolorBlock(side, EnumMCColor.values()[color])) ;
 				return true;
 			}
 		}

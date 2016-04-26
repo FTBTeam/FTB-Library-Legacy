@@ -4,7 +4,6 @@ import net.minecraft.item.ItemStack;
 
 public interface IStackArray
 {
-	public boolean matches(ItemStack[] ai);
-	
-	public IStackArray[] getItems();
+	boolean matches(ItemStack[] ai);
+	IStackArray[] getItems();
 }

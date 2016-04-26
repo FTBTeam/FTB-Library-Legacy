@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.IWorldGenerator;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -46,7 +45,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.Fluid;
@@ -59,7 +57,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -187,16 +184,9 @@ public class FTBLib
 		return mcs != null && mcs.isDedicatedServer();
 	}
 	
-	public static String getPath(ResourceLocation res)
-	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
-	
-	public static boolean resourceExists(ResourceLocation res)
-	{ return FTBLib.class.getResource(getPath(res)) != null; }
-	
 	public static boolean hasOnlinePlayers()
 	{ return !getServer().getConfigurationManager().playerEntityList.isEmpty(); }
 	
-	@SuppressWarnings("unchecked")
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
 		ArrayList<EntityPlayerMP> l = new ArrayList<>();
@@ -207,35 +197,8 @@ public class FTBLib
 			l.addAll(getServer().getConfigurationManager().playerEntityList);
 			if(except != null) l.remove(except);
 		}
+		
 		return l;
-	}
-	
-	public static Map<UUID, EntityPlayerMP> getAllOnlinePlayersMap()
-	{
-		HashMap<UUID, EntityPlayerMP> m = new HashMap<>();
-		
-		if(!hasOnlinePlayers()) return m;
-		
-		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
-		{
-			EntityPlayerMP ep = (EntityPlayerMP) getServer().getConfigurationManager().playerEntityList.get(i);
-			m.put(ep.getUniqueID(), ep);
-		}
-		
-		return m;
-	}
-	
-	public static EntityPlayerMP getPlayerMP(UUID id)
-	{
-		if(!hasOnlinePlayers()) return null;
-		
-		for(int i = 0; i < getServer().getConfigurationManager().playerEntityList.size(); i++)
-		{
-			EntityPlayerMP ep = (EntityPlayerMP) getServer().getConfigurationManager().playerEntityList.get(i);
-			if(ep.getUniqueID().equals(id)) return ep;
-		}
-		
-		return null;
 	}
 	
 	public static boolean remap(FMLMissingMappingsEvent.MissingMapping m, String id, Item i)
@@ -260,9 +223,6 @@ public class FTBLib
 		
 		return false;
 	}
-	
-	public static boolean isModInstalled(String s)
-	{ return Loader.isModLoaded(s); }
 	
 	public static String removeFormatting(String s)
 	{
@@ -297,12 +257,6 @@ public class FTBLib
 		return runCommand(ics, sb.toString());
 	}
 	
-	public static IChatComponent setColor(EnumChatFormatting e, IChatComponent c)
-	{
-		c.getChatStyle().setColor(e);
-		return c;
-	}
-	
 	public static void openGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
 	{
 		if(t == null || !(t instanceof TileEntity) || ep instanceof FakePlayer) return;
@@ -320,7 +274,9 @@ public class FTBLib
 			new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!getEffectiveSide().isServer())
+		{
 			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
+		}
 	}
 	
 	public static void addCallback(ServerTickCallback c)
@@ -335,11 +291,10 @@ public class FTBLib
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
 	
-	@SuppressWarnings("all")
 	public static List<ICommand> getAllCommands(ICommandSender sender)
 	{
-		ArrayList<ICommand> commands = new ArrayList<>();
-		ArrayList<String> cmdIDs = new ArrayList<>();
+		List<ICommand> commands = new ArrayList<>();
+		List<String> cmdIDs = new ArrayList<>();
 		
 		for(Object o : getServer().getCommandManager().getPossibleCommands(sender))
 		{

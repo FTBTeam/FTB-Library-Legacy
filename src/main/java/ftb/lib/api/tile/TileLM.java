@@ -1,5 +1,6 @@
 package ftb.lib.api.tile;
 
+import ftb.lib.EnumMCColor;
 import ftb.lib.FTBLib;
 import ftb.lib.LMSecurity;
 import ftb.lib.api.MouseButton;
@@ -16,6 +17,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileLM extends TileEntity implements IClientActionTile
 {
@@ -179,7 +181,7 @@ public class TileLM extends TileEntity implements IClientActionTile
 		return null;
 	}
 	
-	public boolean recolorBlock(int side, int col)
+	public boolean recolorBlock(ForgeDirection side, EnumMCColor col)
 	{ return false; }
 	
 	/**

@@ -34,11 +34,17 @@ public class CmdEditConfig extends CommandLM
 	@Override
 	public List<String> addTabCompletionOptions(ICommandSender ics, String[] args)
 	{
-		if(args.length == 1) return getListOfStringsFromIterableMatchingLastWord(args, ConfigRegistry.map.keySet());
+		if(args.length == 1)
+		{
+			return getListOfStringsFromIterableMatchingLastWord(args, ConfigRegistry.map.keySet());
+		}
 		else if(args.length == 2)
 		{
 			ConfigFile file = ConfigRegistry.map.get(args[0]);
-			if(file != null) return getListOfStringsFromIterableMatchingLastWord(args, file.entryMap.keySet());
+			if(file != null)
+			{
+				return getListOfStringsFromIterableMatchingLastWord(args, file.entryMap.keySet());
+			}
 		}
 		else if(args.length == 3)
 		{
@@ -46,7 +52,10 @@ public class CmdEditConfig extends CommandLM
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup(args[1]);
-				if(group != null) return getListOfStringsFromIterableMatchingLastWord(args, group.entryMap.keySet());
+				if(group != null)
+				{
+					return getListOfStringsFromIterableMatchingLastWord(args, group.entryMap.keySet());
+				}
 			}
 		}
 		

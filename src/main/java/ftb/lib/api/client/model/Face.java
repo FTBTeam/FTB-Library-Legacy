@@ -27,7 +27,7 @@ public class Face
 		else drawMode = GL11.GL_POLYGON;
 	}
 	
-	public static final Face parseFace(OBJModel m, String line, String[] s1)
+	public static Face parseFace(OBJModel m, String line, String[] s1)
 	{
 		String[] s = new String[s1.length - 1];
 		for(int i = 0; i < s.length; i++)

@@ -2,17 +2,17 @@ package ftb.lib.api.client.model;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import ftb.lib.FTBLib;
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.client.GlStateManager;
+import latmod.lib.LMStringUtils;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Made by LatvianModder
@@ -24,7 +24,7 @@ public class OBJModel
 	public final List<Vector3f> vertices;
 	public final List<Vector3f> vertexNormals;
 	public final List<Vector3f> texVertices;
-	public final HashMap<String, Group> groups;
+	public final Map<String, Group> groups;
 	
 	private Group current = null;
 	public double sizeV = 0D;
@@ -38,49 +38,45 @@ public class OBJModel
 		groups = new HashMap<>();
 	}
 	
-	public static OBJModel load(ResourceLocation rl)
+	public static OBJModel load(ResourceLocation rl) throws Exception
 	{
-		try { return OBJModel.load(OBJModel.class.getResourceAsStream(FTBLib.getPath(rl))); }
-		catch(Exception e) { e.printStackTrace(); }
-		return null;
+		return OBJModel.load(FTBLibClient.mc.getResourceManager().getResource(rl).getInputStream());
 	}
 	
 	public static OBJModel load(InputStream is) throws Exception
 	{
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
 		OBJModel m = new OBJModel();
 		
-		if(br.ready())
+		double minSizeV = Double.POSITIVE_INFINITY;
+		double maxSizeV = Double.NEGATIVE_INFINITY;
+		
+		for(String s : LMStringUtils.readStringList(is))
 		{
-			double minSizeV = Double.POSITIVE_INFINITY;
-			double maxSizeV = Double.NEGATIVE_INFINITY;
-			
-			String s = null;
-			while((s = br.readLine()) != null)
+			if(!s.isEmpty() && s.charAt(0) != '#')
 			{
-				if(s.length() > 0 && s.charAt(0) != '#')
+				String[] s3 = s.split(" ");
+				
+				switch(s3[0])
 				{
-					String[] s3 = s.split(" ");
-					
-					if(s3[0].equals("o"))
+					case "o":
 					{
 						Group g = new Group(m, s3[1]);
-						if(m.current != null) m.groups.put(m.current.groupName, m.current);
+						if(m.current != null)
+						{
+							m.groups.put(m.current.getID(), m.current);
+						}
 						m.current = g;
+						break;
 					}
-					else if(s3[0].equals("g"))
-					{
-					}
-					else if(s3[0].equals("s"))
-					{
-					}
-					else if(s3[0].equals("mtllib"))
-					{
-					}
-					else if(s3[0].equals("usemtl"))
-					{
-					}
-					else if(s3[0].equals("v"))
+					case "g":
+						break;
+					case "s":
+						break;
+					case "mtllib":
+						break;
+					case "usemtl":
+						break;
+					case "v":
 					{
 						float x = Float.parseFloat(s3[1]);
 						float y = Float.parseFloat(s3[2]);
@@ -89,15 +85,17 @@ public class OBJModel
 						
 						if(y < minSizeV) minSizeV = y;
 						if(y > maxSizeV) maxSizeV = y;
+						break;
 					}
-					else if(s3[0].equals("vn"))
+					case "vn":
 					{
 						float x = Float.parseFloat(s3[1]);
 						float y = Float.parseFloat(s3[2]);
 						float z = Float.parseFloat(s3[3]);
 						m.vertexNormals.add(new Vector3f(x, y, z));
+						break;
 					}
-					else if(s3[0].equals("vt"))
+					case "vt":
 					{
 						if(s3.length == 3)
 						{
@@ -112,8 +110,10 @@ public class OBJModel
 							float z = Float.parseFloat(s3[3]);
 							m.texVertices.add(new Vector3f(x, 1F - y, z));
 						}
+						
+						break;
 					}
-					else if(s3[0].equals("f"))
+					case "f":
 					{
 						if(m.current == null) m.current = new Group(m, "Default");
 						
@@ -123,17 +123,24 @@ public class OBJModel
 							m.current.faces.add(f);
 							m.totalFaces.add(f);
 						}
+						break;
 					}
 				}
 			}
-			
-			//if(!m.groups.contains(m.current));
-			m.groups.put(m.current.groupName, m.current);
-			m.sizeV = maxSizeV - minSizeV;
 		}
 		
-		if(m != null && m.texVertices != null) GlStateManager.enableTexture2D();
-		else GlStateManager.disableTexture2D();
+		//if(!m.groups.contains(m.current));
+		m.groups.put(m.current.getID(), m.current);
+		m.sizeV = maxSizeV - minSizeV;
+		
+		if(m != null && m.texVertices != null)
+		{
+			GlStateManager.enableTexture2D();
+		}
+		else
+		{
+			GlStateManager.disableTexture2D();
+		}
 		
 		m.renderAll();
 		
@@ -142,66 +149,21 @@ public class OBJModel
 	
 	public void renderAll()
 	{
-		for(int i = 0; i < groups.size(); i++)
-			groups.get(i).render();
-	}
-	
-	public void render(int... index)
-	{
-		for(int i = 0; i < index.length; i++)
+		for(Group g : groups.values())
 		{
-			if(index[i] >= 0 && index[i] < groups.size()) groups.get(index[i]).render();
+			g.render();
 		}
 	}
 	
-	public void renderAllExcept(int... index)
+	public void render(String s)
 	{
-		for(int i = 0; i < groups.size(); i++)
+		Group g = getGroup(s);
+		if(g != null)
 		{
-			for(int j = 0; j < index.length; j++)
-				if(i == index[j]) continue;
-			groups.get(i).render();
+			g.render();
 		}
 	}
 	
-	public void render(String... name)
-	{
-		for(int i = 0; i < name.length; i++)
-		{
-			int index = getGroupIndex(name[i]);
-			if(index >= 0 && index < groups.size()) groups.get(index).render();
-		}
-	}
-	
-	public int getGroupIndex(String s)
-	{
-		for(int i = 0; i < groups.size(); i++)
-		{
-			if(groups.get(i).groupName.equalsIgnoreCase(s)) return i;
-		}
-		return -1;
-	}
-	
-	public OBJModel copy(boolean render)
-	{
-		OBJModel m = new OBJModel();
-		m.vertices.addAll(vertices);
-		//if(texVertices.size() > 0)
-		m.texVertices.addAll(texVertices);
-		//if(vertexNormals.size() > 0)
-		m.vertexNormals.addAll(vertexNormals);
-		m.groups.putAll(groups);
-		m.totalFaces.addAll(totalFaces);
-		m.sizeV = sizeV;
-		
-		if(render)
-		{
-			if(m != null && m.texVertices != null) GlStateManager.enableTexture2D();
-			else GlStateManager.disableTexture2D();
-			
-			m.renderAll();
-		}
-		
-		return m;
-	}
+	public Group getGroup(String s)
+	{ return groups.get(s); }
 }

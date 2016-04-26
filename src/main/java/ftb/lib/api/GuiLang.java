@@ -2,7 +2,7 @@ package ftb.lib.api;
 
 public class GuiLang
 {
-	private static final LangKey get(String s)
+	private static LangKey get(String s)
 	{ return new LangKey("gui_lm." + s); }
 	
 	public static final LangKey button_settings = get("button.settings");
