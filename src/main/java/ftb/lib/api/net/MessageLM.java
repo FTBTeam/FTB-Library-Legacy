@@ -1,76 +1,42 @@
 package ftb.lib.api.net;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import ftb.lib.LMNBTUtils;
 import io.netty.buffer.ByteBuf;
-import latmod.lib.ByteCount;
-import latmod.lib.ByteIOStream;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, IMessage>
+import java.util.UUID;
+
+/**
+ * Created by LatvianModder on 26.04.2016.
+ */
+public abstract class MessageLM<M extends MessageLM<M>> implements IMessage, IMessageHandler<M, IMessage>
 {
-	public final NBTTagCompound readTag()
-	{ return LMNBTUtils.readTag(io); }
-	
-	public final void writeTag(NBTTagCompound tag)
-	{ LMNBTUtils.writeTag(io, tag); }
-	
-	// End of static //
-	
-	public final ByteCount dataType;
-	public ByteIOStream io;
-	
-	public MessageLM(ByteCount t)
-	{
-		dataType = t;
-		if(t != null) io = new ByteIOStream();
-	}
-	
 	public abstract LMNetworkWrapper getWrapper();
 	
-	public IMessage onMessage(MessageContext ctx)
-	{ return null; }
+	@Override
+	public abstract void fromBytes(ByteBuf io);
 	
 	@Override
-	public final void fromBytes(ByteBuf bb)
+	public abstract void toBytes(ByteBuf io);
+	
+	/*
+	public void fromBytes(ByteBuf io)
 	{
-		if(dataType == null) return;
-		
-		int len = 0;
-		
-		if(dataType == ByteCount.BYTE) len = bb.readByte() & 0xFF;
-		else if(dataType == ByteCount.SHORT) len = bb.readShort() & 0xFFFF;
-		else if(dataType == ByteCount.INT) len = bb.readInt();
-		
-		byte[] b = new byte[len];
-		bb.readBytes(b, 0, len);
-		
-		if(dataType == ByteCount.BYTE) io.setData(b);
-		else io.setCompressedData(b);
 	}
 	
-	@Override
-	public final void toBytes(ByteBuf bb)
+	public void toBytes(ByteBuf io)
 	{
-		if(dataType == null) return;
-		
-		byte[] b = (dataType == ByteCount.BYTE) ? io.toByteArray() : io.toCompressedByteArray();
-		
-		if(dataType == ByteCount.BYTE) bb.writeByte((byte) b.length);
-		else if(dataType == ByteCount.SHORT) bb.writeShort((short) b.length);
-		else if(dataType == ByteCount.INT) bb.writeInt(b.length);
-		
-		bb.writeBytes(b, 0, b.length);
 	}
+	*/
 	
 	@Override
-	public final IMessage onMessage(MessageLM m, MessageContext ctx)
+	public IMessage onMessage(M m, MessageContext ctx)
 	{
-		io = m.io;
-		return onMessage(ctx);
+		return null;
 	}
 	
 	public final void sendTo(EntityPlayerMP ep)
@@ -85,4 +51,31 @@ public abstract class MessageLM implements IMessage, IMessageHandler<MessageLM, 
 		//if(FTBLibFinals.DEV) FTBLib.logger.info("[C] Message sent: " + getClass().getName());
 		getWrapper().sendToServer(this);
 	}
+	
+	// Helper methods //
+	
+	public static UUID readUUID(ByteBuf io)
+	{
+		long msb = io.readLong();
+		long lsb = io.readLong();
+		return new UUID(msb, lsb);
+	}
+	
+	public static void writeUUID(ByteBuf io, UUID id)
+	{
+		io.writeLong(id.getMostSignificantBits());
+		io.writeLong(id.getLeastSignificantBits());
+	}
+	
+	public static String readString(ByteBuf io)
+	{ return ByteBufUtils.readUTF8String(io); }
+	
+	public static void writeString(ByteBuf io, String s)
+	{ ByteBufUtils.writeUTF8String(io, s); }
+	
+	public static NBTTagCompound readTag(ByteBuf io)
+	{ return ByteBufUtils.readTag(io); }
+	
+	public static void writeTag(ByteBuf io, NBTTagCompound tag)
+	{ ByteBufUtils.writeTag(io, tag); }
 }

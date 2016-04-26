@@ -3,14 +3,14 @@ package ftb.lib.mod.net;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.api.tile.IClientActionTile;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class MessageClientTileAction extends MessageLM
+public class MessageClientTileAction extends MessageLM_IO
 {
 	public MessageClientTileAction() { super(ByteCount.INT); }
 	

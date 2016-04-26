@@ -7,12 +7,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 
-public class MessageDisplayInfo extends MessageLM
+public class MessageDisplayInfo extends MessageLM_IO
 {
 	public MessageDisplayInfo() { super(ByteCount.INT); }
 	

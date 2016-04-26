@@ -10,12 +10,12 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ServerConfigProvider;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.mod.client.gui.GuiEditConfig;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageEditConfig extends MessageLM // MessageEditConfigResponse
+public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
 {
 	public MessageEditConfig() { super(ByteCount.INT); }
 	

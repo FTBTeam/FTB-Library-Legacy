@@ -12,7 +12,7 @@ import ftb.lib.api.EventFTBSync;
 import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.api.notification.ClientNotifications;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.mod.FTBLibLang;
@@ -25,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
-public class MessageReload extends MessageLM
+public class MessageReload extends MessageLM_IO
 {
 	public MessageReload() { super(ByteCount.INT); }
 	

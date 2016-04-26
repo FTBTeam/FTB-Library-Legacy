@@ -9,12 +9,12 @@ import ftb.lib.api.config.ConfigFile;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import latmod.lib.ByteCount;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageEditConfigResponse extends MessageLM // MessageEditConfig
+public class MessageEditConfigResponse extends MessageLM_IO // MessageEditConfig
 {
 	public MessageEditConfigResponse() { super(ByteCount.INT); }
 	

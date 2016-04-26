@@ -8,12 +8,12 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.ByteCount;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageOpenGui extends MessageLM
+public class MessageOpenGui extends MessageLM_IO
 {
 	public MessageOpenGui() { super(ByteCount.INT); }
 	

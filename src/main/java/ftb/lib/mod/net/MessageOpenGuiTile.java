@@ -6,14 +6,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.api.tile.IGuiTile;
 import latmod.lib.ByteCount;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class MessageOpenGuiTile extends MessageLM
+public class MessageOpenGuiTile extends MessageLM_IO
 {
 	public MessageOpenGuiTile() { super(ByteCount.INT); }
 	

@@ -7,14 +7,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.EnumScreen;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageLM_IO;
 import ftb.lib.api.notification.ClientNotifications;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.mod.client.FTBLibModClient;
 import latmod.lib.ByteCount;
 import latmod.lib.json.JsonElementIO;
 
-public class MessageNotifyPlayer extends MessageLM
+public class MessageNotifyPlayer extends MessageLM_IO
 {
 	public MessageNotifyPlayer() { super(ByteCount.SHORT); }
 	
