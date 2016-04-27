@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.util.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,7 +74,7 @@ public class LMNBTUtils
 		try { return CompressedStreamTools.read(f); }
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			if(!(e instanceof java.io.EOFException)) e.printStackTrace();
 			FTBLibMod.logger.info("Possibly corrupted / old file. Trying the old method");
 			
 			try
@@ -155,6 +156,47 @@ public class LMNBTUtils
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
+		}
+	}
+	
+	//TODO: Finish me
+	public static Object generateTree(NBTBase base)
+	{
+		if(base == null) return null;
+		
+		switch(base.getId())
+		{
+			case Constants.NBT.TAG_END:
+				return null;
+			case Constants.NBT.TAG_LIST:
+			{
+				NBTTagList tagList = (NBTTagList) base;
+				List<Object> list = new ArrayList<>();
+				if(tagList.tagCount() == 0) return list;
+				tagList = (NBTTagList) tagList.copy();
+				
+				for(int i = tagList.tagCount() - 1; i >= 0; i--)
+				{
+					list.add(tagList.removeTag(i));
+				}
+				
+				return list;
+			}
+			case Constants.NBT.TAG_COMPOUND:
+			{
+				NBTTagCompound tagCompound = (NBTTagCompound) base;
+				Map<String, Object> map = new HashMap<>();
+				if(tagCompound.hasNoTags()) return map;
+				
+				for(Object s : tagCompound.func_150296_c())
+				{
+					map.put(s.toString(), generateTree(tagCompound.getTag(s.toString())));
+				}
+				
+				return map;
+			}
+			default:
+				return base;
 		}
 	}
 }

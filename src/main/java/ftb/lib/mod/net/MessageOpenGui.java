@@ -8,22 +8,26 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.lib.mod.FTBLibMod;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageOpenGui extends MessageLM_IO
+public class MessageOpenGui extends MessageLM<MessageOpenGui>
 {
-	public MessageOpenGui() { super(ByteCount.INT); }
+	public String mod;
+	public int guiID;
+	public NBTTagCompound tag;
+	public int windowID;
 	
-	public MessageOpenGui(String mod, int id, NBTTagCompound tag, int wid)
+	public MessageOpenGui() { }
+	
+	public MessageOpenGui(String m, int id, NBTTagCompound t, int wid)
 	{
-		this();
-		io.writeUTF(mod);
-		io.writeInt(id);
-		writeTag(tag);
-		io.writeByte(wid);
+		mod = m;
+		guiID = id;
+		tag = t;
+		windowID = wid;
 	}
 	
 	@Override
@@ -31,17 +35,30 @@ public class MessageOpenGui extends MessageLM_IO
 	{ return FTBLibNetHandler.NET; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		String modID = io.readUTF();
-		int guiID = io.readInt();
-		NBTTagCompound data = readTag();
-		int windowID = io.readUnsignedByte();
-		
-		LMGuiHandler h = LMGuiHandlerRegistry.get(modID);
-		if(h != null && FTBLibMod.proxy.openClientGui(FTBLibClient.mc.thePlayer, modID, guiID, data))
-			FTBLibClient.mc.thePlayer.openContainer.windowId = windowID;
+		mod = readString(io);
+		guiID = io.readInt();
+		tag = readTag(io);
+		windowID = io.readInt();
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeString(io, mod);
+		io.writeInt(guiID);
+		writeTag(io, tag);
+		io.writeInt(windowID);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
+	{
+		LMGuiHandler h = LMGuiHandlerRegistry.get(m.mod);
+		if(h != null && FTBLibMod.proxy.openClientGui(FTBLibClient.mc.thePlayer, m.mod, m.guiID, m.tag))
+			FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID;
 		return null;
 	}
 }

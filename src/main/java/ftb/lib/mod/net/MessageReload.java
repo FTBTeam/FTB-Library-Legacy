@@ -6,36 +6,47 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.FTBLib;
 import ftb.lib.FTBWorld;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.ReloadType;
 import ftb.lib.api.EventFTBReload;
 import ftb.lib.api.EventFTBSync;
 import ftb.lib.api.EventFTBWorldClient;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.lib.api.notification.ClientNotifications;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.mod.FTBLibLang;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
+import latmod.lib.LMMapUtils;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
-public class MessageReload extends MessageLM_IO
+import java.util.Map;
+
+public class MessageReload extends MessageLM<MessageReload>
 {
-	public MessageReload() { super(ByteCount.INT); }
+	public int typeID;
+	public boolean login;
+	public String modeID;
+	public NBTTagCompound tag;
 	
-	public MessageReload(ReloadType t, EntityPlayerMP ep, boolean login)
+	public MessageReload() { }
+	
+	public MessageReload(ReloadType t, EntityPlayerMP ep, boolean l)
 	{
-		this();
-		io.writeByte(t.ordinal());
-		io.writeBoolean(login);
-		io.writeUTF(FTBWorld.server.getMode().getID());
-		writeTag(EventFTBSync.generateData(ep, login));
+		typeID = t.ordinal();
+		login = l;
+		modeID = FTBWorld.server.getMode().getID();
+		tag = EventFTBSync.generateData(ep, login);
+		
+		System.out.println("NBT TREE: " + LMMapUtils.toString((Map<String, Object>) LMNBTUtils.generateTree(tag)));
 	}
 	
 	@Override
@@ -43,26 +54,42 @@ public class MessageReload extends MessageLM_IO
 	{ return FTBLibNetHandler.NET; }
 	
 	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		typeID = io.readUnsignedByte();
+		login = io.readBoolean();
+		modeID = readString(io);
+		tag = readTag(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeByte(typeID);
+		io.writeBoolean(login);
+		writeString(io, modeID);
+		writeTag(io, tag);
+	}
+	
+	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public IMessage onMessage(MessageReload m, MessageContext ctx)
 	{
 		long ms = LMUtils.millis();
 		
-		ReloadType type = ReloadType.values()[io.readUnsignedByte()];
-		boolean login = io.readBoolean();
-		String mode = io.readUTF();
+		ReloadType type = ReloadType.values()[m.typeID];
 		
 		boolean first = FTBWorld.client == null;
 		if(first) FTBWorld.client = new FTBWorld(Side.CLIENT);
 		
-		FTBWorld.client.setModeRaw(mode);
-		EventFTBSync.readData(readTag(), false);
+		FTBWorld.client.setModeRaw(m.modeID);
+		EventFTBSync.readData(m.tag, false);
 		
 		new EventFTBWorldClient(FTBWorld.client).post();
 		
 		if(type.reload(Side.CLIENT))
 		{
-			reloadClient(ms, type, login);
+			reloadClient(ms, type, m.login);
 		}
 		else if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT)
 		{

@@ -6,25 +6,27 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.lib.api.tile.IGuiTile;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class MessageOpenGuiTile extends MessageLM_IO
+public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 {
-	public MessageOpenGuiTile() { super(ByteCount.INT); }
+	public int x, y, z, windowID;
+	public NBTTagCompound tag;
 	
-	public MessageOpenGuiTile(TileEntity t, NBTTagCompound tag, int wid)
+	public MessageOpenGuiTile() { }
+	
+	public MessageOpenGuiTile(TileEntity te, NBTTagCompound t, int wid)
 	{
-		this();
-		io.writeInt(t.xCoord);
-		io.writeInt(t.yCoord);
-		io.writeInt(t.zCoord);
-		writeTag(tag);
-		io.writeByte(wid);
+		x = te.xCoord;
+		y = te.yCoord;
+		z = te.zCoord;
+		windowID = wid;
+		tag = t;
 	}
 	
 	@Override
@@ -32,23 +34,39 @@ public class MessageOpenGuiTile extends MessageLM_IO
 	{ return FTBLibNetHandler.NET; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		int x = io.readInt();
-		int y = io.readInt();
-		int z = io.readInt();
+		x = io.readInt();
+		y = io.readInt();
+		z = io.readInt();
+		windowID = io.readInt();
+		tag = readTag(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(x);
+		io.writeInt(y);
+		io.writeInt(z);
+		io.writeInt(windowID);
+		writeTag(io, tag);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageOpenGuiTile m, MessageContext ctx)
+	{
+		TileEntity te = FTBLibClient.mc.theWorld.getTileEntity(m.x, m.y, m.z);
 		
-		TileEntity te = FTBLibClient.mc.theWorld.getTileEntity(x, y, z);
-		
-		if(te != null && !te.isInvalid() && te instanceof IGuiTile)
+		if(te != null && te instanceof IGuiTile)
 		{
-			GuiScreen gui = ((IGuiTile) te).getGui(FTBLibClient.mc.thePlayer, readTag());
+			GuiScreen gui = ((IGuiTile) te).getGui(FTBLibClient.mc.thePlayer, m.tag);
 			
 			if(gui != null)
 			{
 				FTBLibClient.openGui(gui);
-				FTBLibClient.mc.thePlayer.openContainer.windowId = io.readUnsignedByte();
+				FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID;
 			}
 		}
 		

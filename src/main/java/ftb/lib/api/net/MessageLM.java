@@ -1,10 +1,13 @@
 package ftb.lib.api.net;
 
+import com.google.gson.JsonElement;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import latmod.lib.ByteIOStream;
+import latmod.lib.json.JsonElementIO;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -24,10 +27,12 @@ public abstract class MessageLM<M extends MessageLM<M>> implements IMessage, IMe
 	public abstract void toBytes(ByteBuf io);
 	
 	/*
+	@Override
 	public void fromBytes(ByteBuf io)
 	{
 	}
 	
+	@Override
 	public void toBytes(ByteBuf io)
 	{
 	}
@@ -78,4 +83,22 @@ public abstract class MessageLM<M extends MessageLM<M>> implements IMessage, IMe
 	
 	public static void writeTag(ByteBuf io, NBTTagCompound tag)
 	{ ByteBufUtils.writeTag(io, tag); }
+	
+	public static JsonElement readJsonElement(ByteBuf io)
+	{
+		byte[] b = new byte[io.readInt()];
+		io.readBytes(b, 0, b.length);
+		ByteIOStream stream = new ByteIOStream();
+		stream.setCompressedData(b);
+		return JsonElementIO.read(stream);
+	}
+	
+	public static void writeJsonElement(ByteBuf io, JsonElement e)
+	{
+		ByteIOStream stream = new ByteIOStream();
+		JsonElementIO.write(stream, e);
+		byte[] b = stream.toCompressedByteArray();
+		io.writeInt(b.length);
+		io.writeBytes(b, 0, b.length);
+	}
 }

@@ -10,25 +10,27 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ServerConfigProvider;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM_IO;
+import ftb.lib.api.net.MessageLM;
 import ftb.lib.mod.client.gui.GuiEditConfig;
-import latmod.lib.ByteCount;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
+public class MessageEditConfig extends MessageLM<MessageEditConfig>
 {
-	public MessageEditConfig() { super(ByteCount.INT); }
+	public long token;
+	public int typeID;
+	public String groupID;
+	public NBTTagCompound tag;
+	
+	public MessageEditConfig() { }
 	
 	public MessageEditConfig(long t, ReloadType reload, ConfigGroup group)
 	{
-		this();
-		io.writeLong(t);
-		io.writeUTF(group.getID());
-		io.writeByte(reload.ordinal());
-		
-		NBTTagCompound tag = new NBTTagCompound();
+		token = t;
+		typeID = reload.ordinal();
+		groupID = group.getID();
+		tag = new NBTTagCompound();
 		group.writeToNBT(tag, true);
-		writeTag(tag);
 		
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("TX Send: " + group.getSerializableElement());
 	}
@@ -38,19 +40,33 @@ public class MessageEditConfig extends MessageLM_IO // MessageEditConfigResponse
 	{ return FTBLibNetHandler.NET; }
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageContext ctx)
+	public void fromBytes(ByteBuf io)
 	{
-		long token = io.readLong();
-		String id = io.readUTF();
-		ReloadType reload = ReloadType.values()[io.readUnsignedByte()];
-		
-		ConfigGroup group = new ConfigGroup(id);
-		group.readFromNBT(readTag(), true);
+		token = io.readLong();
+		typeID = io.readUnsignedByte();
+		groupID = readString(io);
+		tag = readTag(io);
+	}
+	
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeLong(token);
+		io.writeByte(typeID);
+		writeString(io, groupID);
+		writeTag(io, tag);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IMessage onMessage(MessageEditConfig m, MessageContext ctx)
+	{
+		ConfigGroup group = new ConfigGroup(m.groupID);
+		group.readFromNBT(m.tag, true);
 		
 		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("RX Send: " + group.getSerializableElement());
 		
-		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(token, reload, group)));
+		FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(m.token, ReloadType.values()[m.typeID], group)));
 		return null;
 	}
 }
