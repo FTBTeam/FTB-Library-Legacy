@@ -18,7 +18,7 @@ public abstract class ForgePlayerData extends FinalIDObject
 	
 	@Override
 	public final String toString()
-	{ return getID() + "_" + player.getProfile().getName(); }
+	{ return getID() + '_' + player.getProfile().getName(); }
 	
 	/**
 	 * For loading data from server's world folder

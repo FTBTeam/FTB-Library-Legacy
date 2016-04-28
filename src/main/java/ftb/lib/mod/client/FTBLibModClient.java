@@ -67,7 +67,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 		
 		ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
-		ClientConfigRegistry.addGroup("ftbu_info", InfoClientSettings.class);
+		ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
 		
 		ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
 		
