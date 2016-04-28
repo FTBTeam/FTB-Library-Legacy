@@ -466,6 +466,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 	}
 	
+	@Override
 	public void onClientDataChanged()
 	{ refreshWidgets(); }
 }

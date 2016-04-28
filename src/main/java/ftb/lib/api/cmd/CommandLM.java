@@ -1,6 +1,7 @@
 package ftb.lib.api.cmd;
 
 import ftb.lib.FTBLib;
+import ftb.lib.mod.FTBLibLang;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -65,7 +66,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	{ return false; }
 	
 	public static void checkArgs(String[] args, int i) throws CommandException
-	{ if(args == null || args.length < i) throw new MissingArgsException(); }
+	{ if(args == null || args.length < i) throw FTBLibLang.missing_args.commandError(); }
 	
 	//TODO: Fix me / make work with PlayerMatcher
 	public static List<EntityPlayerMP> findPlayers(ICommandSender ics, String arg) throws CommandException

@@ -4,11 +4,11 @@ import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
-import ftb.lib.api.cmd.RawCommandException;
 import ftb.lib.api.config.ConfigEntry;
 import ftb.lib.api.config.ConfigFile;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.mod.FTBLibLang;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.LMJsonUtils;
@@ -68,7 +68,7 @@ public class CmdEditConfig extends CommandLM
 			
 			if(file == null)
 			{
-				throw new RawCommandException("Invalid file: '" + args[0] + "'!");
+				throw FTBLibLang.raw.commandError("Invalid file: '" + args[0] + "'!");
 			}
 			
 			new MessageEditConfig(LMAccessToken.generate(ep), true, file).sendTo(ep);
@@ -80,7 +80,7 @@ public class CmdEditConfig extends CommandLM
 		ConfigFile file = ConfigRegistry.map.get(args[0]);
 		if(file == null)
 		{
-			throw new RawCommandException("Can only edit files!");
+			throw FTBLibLang.raw.commandError("Can only edit files!");
 		}
 		
 		boolean success = false;
@@ -89,7 +89,7 @@ public class CmdEditConfig extends CommandLM
 		
 		if(entry == null)
 		{
-			throw new RawCommandException("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
+			throw FTBLibLang.raw.commandError("Can't find config entry '" + args[0] + " " + args[1] + " " + args[2] + "'");
 		}
 		
 		if(args.length >= 4)
@@ -108,7 +108,7 @@ public class CmdEditConfig extends CommandLM
 			}
 			catch(Exception ex)
 			{
-				throw new RawCommandException(ex.toString());
+				throw FTBLibLang.raw.commandError(ex.toString());
 			}
 		}
 		

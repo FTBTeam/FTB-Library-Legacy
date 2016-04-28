@@ -1,5 +1,6 @@
 package ftb.lib.api.cmd;
 
+import ftb.lib.mod.FTBLibLang;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -67,12 +68,16 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	{
 		if(args.length < 1)
 		{
-			ics.addChatMessage(new TextComponentString(LMStringUtils.strip(subCommands.keySet())));
+			throw FTBLibLang.raw.commandError(LMStringUtils.strip(subCommands.keySet()));
 		}
 		else
 		{
 			ICommand cmd = subCommands.get(args[0]);
-			if(cmd == null) throw new InvalidSubCommandException(args[0]);
+			
+			if(cmd == null)
+			{
+				throw FTBLibLang.invalid_subcmd.commandError(args[0]);
+			}
 			else
 			{
 				cmd.execute(server, ics, LMStringUtils.shiftArray(args));

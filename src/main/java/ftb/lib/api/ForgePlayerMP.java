@@ -96,9 +96,15 @@ public class ForgePlayerMP extends ForgePlayer
 	public void sendUpdate()
 	{
 		//new EventLMPlayerServer.UpdateSent(this).post();
-		if(isOnline()) new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
+		if(isOnline())
+		{
+			new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
+		}
+		
 		for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(getPlayer()))
+		{
 			new MessageLMPlayerUpdate(this, false).sendTo(ep);
+		}
 	}
 	
 	public void sendInfoUpdate(ForgePlayerMP p)

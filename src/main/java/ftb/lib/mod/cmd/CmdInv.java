@@ -7,8 +7,8 @@ import ftb.lib.OtherMods;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.api.cmd.CommandSubLM;
-import ftb.lib.api.cmd.RawCommandException;
 import ftb.lib.api.item.LMInvUtils;
+import ftb.lib.mod.FTBLibLang;
 import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -52,7 +52,7 @@ public class CmdInv extends CommandSubLM
 			catch(Exception e)
 			{
 				if(FTBLib.DEV_ENV) e.printStackTrace();
-				throw new RawCommandException("Failed to load inventory!");
+				throw FTBLibLang.raw.commandError("Failed to load inventory!");
 			}
 		}
 		

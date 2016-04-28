@@ -20,7 +20,9 @@ public class FTBLibLang
 	public static final LangKey reload_client = get("reload_client");
 	public static final LangKey reload_client_config = get("reload_client_config");
 	
+	//@Deprecated
 	public static final LangKey raw = get("raw");
+	
 	public static final LangKey missing_args = get("missing_args");
 	public static final LangKey feature_disabled = get("feature_disabled");
 	public static final LangKey invalid_subcmd = get("invalid_subcmd");

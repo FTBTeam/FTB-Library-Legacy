@@ -30,6 +30,6 @@ public final class LangKey extends FinalIDObject
 	public void printChat(ICommandSender ics, Object... o)
 	{ if(ics != null) ics.addChatMessage(textComponent(o)); }
 	
-	public void commandError(Object... o) throws CommandException
-	{ throw new CommandException(getID(), o); }
+	public CommandException commandError(Object... o)
+	{ return new CommandException(getID(), o); }
 }

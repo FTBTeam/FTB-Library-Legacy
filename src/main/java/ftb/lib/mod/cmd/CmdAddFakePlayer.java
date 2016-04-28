@@ -5,7 +5,7 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
-import ftb.lib.api.cmd.RawCommandException;
+import ftb.lib.mod.FTBLibLang;
 import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -38,11 +38,11 @@ public class CmdAddFakePlayer extends CommandLM
 		UUID id = LMUtils.fromString(args[0]);
 		if(id == null)
 		{
-			throw new RawCommandException("Invalid UUID!");
+			throw FTBLibLang.raw.commandError("Invalid UUID!");
 		}
 		
 		if(ForgeWorldMP.inst.getPlayer(id) != null || ForgeWorldMP.inst.getPlayer(args[1]) != null)
-			throw new RawCommandException("Player already exists!");
+			throw FTBLibLang.raw.commandError("Player already exists!");
 		
 		ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, args[1]));
 		p.init();

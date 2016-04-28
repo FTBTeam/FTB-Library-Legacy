@@ -6,13 +6,13 @@ import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.api.cmd.CommandSubLM;
+import ftb.lib.mod.FTBLibLang;
+import latmod.lib.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -52,8 +52,7 @@ public class CmdMode extends CommandSubLM
 		{
 			if(args.length == 0)
 			{
-				ics.addChatMessage(new TextComponentString(getCommandUsage(ics)));
-				return;
+				throw FTBLibLang.raw.commandError(getCommandUsage(ics));
 			}
 			
 			ITextComponent c;
@@ -62,17 +61,17 @@ public class CmdMode extends CommandSubLM
 			
 			if(i == 1)
 			{
-				c = new TextComponentTranslation("ftbl:gamemode.not_found");
+				c = FTBLibLang.mode_not_found.textComponent();
 				c.getChatStyle().setColor(TextFormatting.RED);
 			}
 			else if(i == 2)
 			{
-				c = new TextComponentTranslation("ftbl:gamemode.already_set");
+				c = FTBLibLang.mode_already_set.textComponent();
 				c.getChatStyle().setColor(TextFormatting.RED);
 			}
 			else
 			{
-				c = new TextComponentTranslation("ftbl:gamemode.loaded", args[0]);
+				c = FTBLibLang.mode_loaded.textComponent(args[0]);
 				c.getChatStyle().setColor(TextFormatting.GREEN);
 				FTBLib.reload(ics, true, true);
 			}
@@ -89,7 +88,7 @@ public class CmdMode extends CommandSubLM
 		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
-			ITextComponent c = new TextComponentTranslation("ftbl:gamemode.current", ForgeWorldMP.inst.getMode());
+			ITextComponent c = FTBLibLang.mode_current.textComponent(ForgeWorldMP.inst.getMode().getID());
 			c.getChatStyle().setColor(TextFormatting.AQUA);
 			ics.addChatMessage(c);
 		}
@@ -103,7 +102,7 @@ public class CmdMode extends CommandSubLM
 		@Override
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
-			ITextComponent c = new TextComponentTranslation("ftbl:gamemode.list", joinNiceStringFromCollection(GameModes.instance().modes.keySet()));
+			ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(GameModes.instance().modes.keySet()));
 			c.getChatStyle().setColor(TextFormatting.AQUA);
 			ics.addChatMessage(c);
 		}
