@@ -1,10 +1,13 @@
 package ftb.lib.api;
 
-import ftb.lib.mod.FTBLibMod;
-import latmod.lib.*;
+import latmod.lib.LMStringUtils;
+import latmod.lib.LMUtils;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.*;
-import net.minecraft.util.text.*;
+import net.minecraft.stats.StatList;
+import net.minecraft.stats.StatisticsFile;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import java.util.List;
 
@@ -35,12 +38,24 @@ public class ForgePlayerStats
 	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info, long ms)
 	{
 		if(lastSeen > 0L && !owner.isOnline())
-			info.add(FTBLibMod.mod.chatComponent("label.last_seen", LMStringUtils.getTimeString(ms - lastSeen)));
+		{
+			info.add(GuiLang.label_friend_last_seen.textComponent(LMStringUtils.getTimeString(ms - lastSeen)));
+		}
+		
 		if(firstJoined > 0L)
-			info.add(FTBLibMod.mod.chatComponent("label.joined", LMStringUtils.getTimeString(ms - firstJoined)));
-		if(deaths > 0) info.add(FTBLibMod.mod.chatComponent("label.deaths", String.valueOf(deaths)));
+		{
+			info.add(GuiLang.label_friend_joined.textComponent(LMStringUtils.getTimeString(ms - firstJoined)));
+		}
+		
+		if(deaths > 0)
+		{
+			info.add(GuiLang.label_friend_deaths.textComponent(String.valueOf(deaths)));
+		}
+		
 		if(timePlayed > 0L)
+		{
 			info.add(new TextComponentTranslation("stat.playOneMinute").appendSibling(new TextComponentString(": " + LMStringUtils.getTimeString(timePlayed))));
+		}
 	}
 	
 	public void save(NBTTagCompound tag)

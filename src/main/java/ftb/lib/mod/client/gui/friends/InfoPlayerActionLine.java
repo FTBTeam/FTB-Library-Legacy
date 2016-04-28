@@ -1,12 +1,18 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.info.*;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.InfoTextLine;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -47,7 +53,7 @@ public class InfoPlayerActionLine extends InfoTextLine
 		}
 		
 		@Override
-		public void onClicked(boolean leftClick)
+		public void onClicked(MouseButton button)
 		{
 			FTBLibClient.playClickSound();
 			action.onClicked(ForgeWorldSP.inst.clientPlayer, playerLM);

@@ -1,8 +1,10 @@
 package ftb.lib.api.gui;
 
 import ftb.lib.api.gui.widgets.PanelLM;
-import net.minecraft.client.gui.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 18.01.2016.

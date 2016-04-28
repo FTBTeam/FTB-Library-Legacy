@@ -1,20 +1,34 @@
 package ftb.lib.api.info;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.gui.IClientActionGui;
-import ftb.lib.mod.client.gui.info.*;
-import ftb.lib.mod.net.MessageDisplayGuide;
-import latmod.lib.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
+import ftb.lib.mod.net.MessageDisplayInfo;
+import latmod.lib.LMColor;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMMapUtils;
+import latmod.lib.RemoveFilter;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IJsonSerializable;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InfoPage extends FinalIDObject implements IJsonSerializable, IClientActionGui // GuideFile
 {
@@ -252,7 +266,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public void displayGuide(EntityPlayerMP ep)
 	{
-		if(ep != null && !(ep instanceof FakePlayer)) new MessageDisplayGuide(this).sendTo(ep);
+		if(ep != null && !(ep instanceof FakePlayer)) new MessageDisplayInfo(this).sendTo(ep);
 	}
 	
 	public LMColor getBackgroundColor()

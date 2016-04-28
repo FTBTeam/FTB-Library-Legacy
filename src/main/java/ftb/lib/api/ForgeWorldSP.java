@@ -1,14 +1,20 @@
 package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import latmod.lib.LMUtils;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.

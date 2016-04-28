@@ -1,11 +1,13 @@
 package ftb.lib.mod.client.gui.info;
 
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoTextLine;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class ButtonInfoTextLine extends ButtonLM
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
 	}
 	

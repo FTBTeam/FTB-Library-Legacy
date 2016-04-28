@@ -1,10 +1,24 @@
 package ftb.lib;
 
-import latmod.lib.*;
-import net.minecraft.nbt.*;
+import latmod.lib.ByteIOStream;
+import latmod.lib.LMListUtils;
+import latmod.lib.LMUtils;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
 import java.io.File;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class LMNBTUtils
 {

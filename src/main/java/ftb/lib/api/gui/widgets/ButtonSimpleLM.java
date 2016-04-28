@@ -1,10 +1,12 @@
 package ftb.lib.api.gui.widgets;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IGuiLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 

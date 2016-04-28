@@ -2,7 +2,8 @@ package ftb.lib.api.recipes;
 
 import net.minecraft.item.ItemStack;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class ShapelessStackArray implements IStackArray
 {

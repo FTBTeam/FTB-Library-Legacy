@@ -1,13 +1,21 @@
 package ftb.lib.api.config;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import ftb.lib.LMNBTUtils;
-import latmod.lib.*;
-import latmod.lib.annotations.*;
-import net.minecraft.nbt.*;
+import latmod.lib.LMStringUtils;
+import latmod.lib.LMUtils;
+import latmod.lib.annotations.AnnotationHelper;
+import latmod.lib.annotations.Flags;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConfigGroup extends ConfigEntry
 {

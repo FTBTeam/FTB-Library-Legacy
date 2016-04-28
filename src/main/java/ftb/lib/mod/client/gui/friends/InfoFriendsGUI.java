@@ -1,12 +1,17 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgePlayerComparators;
+import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.info.InfoPage;
 import latmod.lib.LMColor;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 23.03.2016.

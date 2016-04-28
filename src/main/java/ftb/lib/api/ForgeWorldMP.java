@@ -1,18 +1,28 @@
 package ftb.lib.api;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.LMNBTUtils;
 import ftb.lib.mod.FTBLibEventHandler;
-import latmod.lib.*;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMUtils;
 import latmod.lib.util.Phase;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.

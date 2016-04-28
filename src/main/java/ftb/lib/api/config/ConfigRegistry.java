@@ -1,13 +1,16 @@
 package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.LMAccessToken;
 import ftb.lib.mod.net.MessageEditConfig;
-import latmod.lib.*;
+import latmod.lib.LMJsonUtils;
+import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.File;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConfigRegistry
 {

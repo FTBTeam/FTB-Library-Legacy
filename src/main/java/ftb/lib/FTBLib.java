@@ -2,42 +2,65 @@ package ftb.lib;
 
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.GameModes;
+import ftb.lib.api.ServerTickCallback;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.events.ReloadEvent;
 import ftb.lib.api.notification.Notification;
 import ftb.lib.api.tile.IGuiTile;
-import ftb.lib.mod.*;
-import ftb.lib.mod.net.*;
+import ftb.lib.mod.FTBLibEventHandler;
+import ftb.lib.mod.FTBLibLang;
+import ftb.lib.mod.FTBLibMod;
+import ftb.lib.mod.FTBUIntegration;
+import ftb.lib.mod.net.MessageNotifyPlayer;
+import ftb.lib.mod.net.MessageOpenGuiTile;
+import ftb.lib.mod.net.MessageReload;
 import latmod.lib.LMUtils;
-import latmod.lib.net.*;
-import latmod.lib.util.FinalIDObject;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.command.*;
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.*;
+import latmod.lib.net.LMURLConnection;
+import latmod.lib.net.RequestMethod;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.*;
-import net.minecraft.util.text.*;
-import net.minecraft.world.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEntitySpawner;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fluids.*;
-import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.IWorldGenerator;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.*;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class FTBLib
@@ -96,7 +119,9 @@ public class FTBLib
 		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)
-			printChat(BroadcastSender.inst, FTBLibMod.mod.chatComponent("reloaded_server", ((LMUtils.millis() - ms) + "ms")));
+		{
+			FTBLibLang.reload_server.printChat(BroadcastSender.inst, (LMUtils.millis() - ms) + "ms");
+		}
 		
 		if(hasOnlinePlayers())
 		{
@@ -154,12 +179,6 @@ public class FTBLib
 		MinecraftServer mcs = getServer();
 		return mcs != null && mcs.isDedicatedServer();
 	}
-	
-	public static String getPath(ResourceLocation res)
-	{ return "/assets/" + res.getResourceDomain() + "/" + res.getResourcePath(); }
-	
-	public static boolean resourceExists(ResourceLocation res)
-	{ return FTBLib.class.getResource(getPath(res)) != null; }
 	
 	public static boolean hasOnlinePlayers()
 	{ return getServer() != null && !getServer().getPlayerList().getPlayerList().isEmpty(); }
@@ -254,7 +273,6 @@ public class FTBLib
 	public static void notifyPlayer(EntityPlayerMP ep, Notification n)
 	{ new MessageNotifyPlayer(n).sendTo(ep); }
 	
-	@SuppressWarnings("all")
 	public static List<ICommand> getAllCommands(ICommandSender sender)
 	{
 		ArrayList<ICommand> commands = new ArrayList<>();
@@ -308,77 +326,5 @@ public class FTBLib
 		
 		if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8) return Boolean.FALSE;
 		return Boolean.TRUE;
-	}
-	
-	public static String getStateString(IBlockState state)
-	{
-		if(state == null) return null;
-		
-		final class StringMapEntry extends FinalIDObject implements Map.Entry<String, Object>
-		{
-			Object value;
-			
-			StringMapEntry(String s, Object p)
-			{
-				super(s);
-				value = p;
-			}
-			
-			@Override
-			public String getKey()
-			{ return getID(); }
-			
-			@Override
-			public Object getValue()
-			{ return value; }
-			
-			@Override
-			public Object setValue(Object v)
-			{
-				Object p = value;
-				value = v;
-				return p;
-			}
-		}
-		
-		List<StringMapEntry> list = new ArrayList<>();
-		
-		for(IProperty p : state.getPropertyNames())
-		{
-			list.add(new StringMapEntry(p.getName(), state.getValue(p)));
-		}
-		
-		Collections.sort(list);
-		
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i = 0; i < list.size(); i++)
-		{
-			StringMapEntry e = list.get(i);
-			sb.append(e.getKey());
-			sb.append('=');
-			sb.append(e.getValue());
-			if(i != list.size() - 1)
-			{
-				sb.append(',');
-			}
-		}
-		
-		return sb.toString();
-	}
-	
-	public static Entity getEntityByUUID(World w, UUID id)
-	{
-		if(w == null || id == null) return null;
-		
-		for(Entity e : w.loadedEntityList)
-		{
-			if(e.getUniqueID().equals(id))
-			{
-				return e;
-			}
-		}
-		
-		return null;
 	}
 }

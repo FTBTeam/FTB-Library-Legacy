@@ -1,6 +1,7 @@
 package ftb.lib.api.item;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import latmod.lib.LMStringUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;

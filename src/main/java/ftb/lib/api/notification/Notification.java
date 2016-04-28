@@ -1,6 +1,8 @@
 package ftb.lib.api.notification;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.item.ItemStackSerializer;
 import latmod.lib.LMColorUtils;

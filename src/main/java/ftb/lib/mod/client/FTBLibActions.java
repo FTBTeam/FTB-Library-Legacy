@@ -1,28 +1,41 @@
 package ftb.lib.mod.client;
 
-import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.EventBusHelper;
+import ftb.lib.TextureCoords;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.config.ClientConfigRegistry;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.GuiScreenRegistry;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.notification.ClientNotifications;
-import ftb.lib.mod.client.gui.*;
+import ftb.lib.mod.client.gui.GuiEditConfig;
+import ftb.lib.mod.client.gui.GuiNotifications;
 import ftb.lib.mod.client.gui.friends.InfoFriendsGUI;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.lib.mod.net.MessageModifyFriends;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibActions

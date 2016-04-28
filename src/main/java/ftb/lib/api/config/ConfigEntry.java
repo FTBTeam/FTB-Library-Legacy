@@ -1,14 +1,19 @@
 package ftb.lib.api.config;
 
 import com.google.gson.JsonElement;
-import latmod.lib.*;
-import latmod.lib.annotations.*;
+import latmod.lib.Bits;
+import latmod.lib.IntList;
+import latmod.lib.annotations.IFlagContainer;
+import latmod.lib.annotations.IInfoContainer;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
 {

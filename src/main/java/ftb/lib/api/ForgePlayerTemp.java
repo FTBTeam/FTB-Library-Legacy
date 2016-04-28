@@ -1,7 +1,9 @@
 package ftb.lib.api;
 
-import net.minecraft.entity.player.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 09.02.2016.

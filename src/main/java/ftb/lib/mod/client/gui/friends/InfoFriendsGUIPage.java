@@ -1,12 +1,18 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.*;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.PlayerAction;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.mod.client.gui.info.ButtonInfoPage;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.lib.mod.net.MessageRequestPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 24.03.2016.
@@ -77,10 +83,10 @@ public class InfoFriendsGUIPage extends InfoPage
 		}
 		
 		@Override
-		public void onClicked(boolean leftClick)
+		public void onClicked(MouseButton button)
 		{
 			new MessageRequestPlayerInfo(playerLM.getProfile().getId()).sendToServer();
-			super.onClicked(leftClick);
+			super.onClicked(button);
 		}
 		
 		@Override

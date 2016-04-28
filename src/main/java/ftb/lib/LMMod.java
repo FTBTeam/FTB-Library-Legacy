@@ -5,17 +5,17 @@ import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.registry.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LMMod extends FinalIDObject
 {
@@ -116,13 +116,4 @@ public class LMMod extends FinalIDObject
 			recipes.loadRecipes();
 		}
 	}
-	
-	@SideOnly(Side.CLIENT)
-	@Deprecated
-	public String format(String s, Object... args)
-	{ return I18n.format(modAssets + s, args); }
-	
-	@Deprecated
-	public ITextComponent chatComponent(String s, Object... obj)
-	{ return new TextComponentTranslation(modAssets + s, obj); }
 }

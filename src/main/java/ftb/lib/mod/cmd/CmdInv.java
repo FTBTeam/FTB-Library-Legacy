@@ -1,10 +1,17 @@
 package ftb.lib.mod.cmd;
 
-import ftb.lib.*;
-import ftb.lib.api.cmd.*;
+import ftb.lib.BaublesHelper;
+import ftb.lib.FTBLib;
+import ftb.lib.LMNBTUtils;
+import ftb.lib.OtherMods;
+import ftb.lib.api.cmd.CommandLM;
+import ftb.lib.api.cmd.CommandLevel;
+import ftb.lib.api.cmd.CommandSubLM;
+import ftb.lib.api.cmd.RawCommandException;
 import ftb.lib.api.item.LMInvUtils;
 import latmod.lib.LMUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;

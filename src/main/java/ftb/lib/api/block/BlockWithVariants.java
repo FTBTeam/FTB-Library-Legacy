@@ -1,14 +1,17 @@
 package ftb.lib.api.block;
 
-import ftb.lib.FTBLib;
 import ftb.lib.api.client.FTBLibClient;
-import net.minecraft.block.material.*;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.*;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -53,7 +56,7 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IV
 		
 		for(T e : variants)
 		{
-			FTBLibClient.addItemModel(item, e.getMetadata(), FTBLib.getStateString(createBlockState().getBaseState().withProperty(getVariantProperty(), e)));
+			FTBLibClient.addItemModel(item, e.getMetadata(), "variant=" + e.getName());
 		}
 	}
 	

@@ -4,11 +4,13 @@ import ftb.lib.FTBLib;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.net.MessageOpenGui;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class LMGuiHandler
 {

@@ -1,12 +1,16 @@
 package ftb.lib.mod.client.gui.friends;
 
 import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.info.*;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.InfoTextLine;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -44,7 +48,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 		}
 		
 		@Override
-		public void onClicked(boolean leftClick)
+		public void onClicked(MouseButton button)
 		{
 		}
 		

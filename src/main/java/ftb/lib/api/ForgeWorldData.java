@@ -1,6 +1,7 @@
 package ftb.lib.api;
 
-import latmod.lib.util.*;
+import latmod.lib.util.FinalIDObject;
+import latmod.lib.util.Phase;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**

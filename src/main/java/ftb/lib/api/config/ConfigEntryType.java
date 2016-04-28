@@ -1,6 +1,7 @@
 package ftb.lib.api.config;
 
-import latmod.lib.*;
+import latmod.lib.IntList;
+import latmod.lib.LMColor;
 
 /**
  * Created by LatvianModder on 30.03.2016.

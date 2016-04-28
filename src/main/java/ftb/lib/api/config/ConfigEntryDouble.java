@@ -1,7 +1,9 @@
 package ftb.lib.api.config;
 
-import com.google.gson.*;
-import latmod.lib.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import latmod.lib.LMStringUtils;
+import latmod.lib.MathHelperLM;
 import latmod.lib.annotations.INumberBoundsContainer;
 import net.minecraft.nbt.NBTTagCompound;
 

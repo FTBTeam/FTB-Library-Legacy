@@ -1,9 +1,12 @@
 package ftb.lib.api.events;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgePlayerData;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 10.02.2016.

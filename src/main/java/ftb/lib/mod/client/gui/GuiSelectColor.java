@@ -1,15 +1,26 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.*;
+import ftb.lib.EnumMCColor;
+import ftb.lib.TextureCoords;
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.callback.*;
-import ftb.lib.api.gui.widgets.*;
-import latmod.lib.*;
-import net.minecraft.client.renderer.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.callback.ColorSelected;
+import ftb.lib.api.gui.callback.IColorCallback;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.SliderLM;
+import ftb.lib.api.gui.widgets.WidgetLM;
+import latmod.lib.LMColor;
+import latmod.lib.LMColorUtils;
+import latmod.lib.MathHelperLM;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -55,13 +66,13 @@ public class GuiSelectColor extends GuiLM
 		colorInit = new ButtonLM(this, 76, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{ closeGui(false); }
 			
 			@Override
 			public void addMouseOverText(List<String> s)
 			{
-				s.add(FTBLibLang.button_cancel());
+				s.add(GuiLang.button_cancel.format());
 				s.add(initCol.toString());
 			}
 		};
@@ -69,13 +80,13 @@ public class GuiSelectColor extends GuiLM
 		colorCurrent = new ButtonLM(this, 109, 71, col_tex.widthI(), col_tex.heightI())
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{ closeGui(true); }
 			
 			@Override
 			public void addMouseOverText(List<String> s)
 			{
-				s.add(FTBLibLang.button_accept());
+				s.add(GuiLang.button_accept.format());
 				s.add(currentColor.toString());
 			}
 		};

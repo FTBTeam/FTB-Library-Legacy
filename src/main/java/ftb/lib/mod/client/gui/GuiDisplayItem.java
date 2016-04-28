@@ -4,7 +4,8 @@ import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.item.ItemDisplay;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 

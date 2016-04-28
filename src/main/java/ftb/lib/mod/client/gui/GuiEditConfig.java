@@ -1,19 +1,38 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.api.IClickable;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.config.*;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.callback.*;
-import ftb.lib.api.gui.widgets.*;
-import latmod.lib.*;
+import ftb.lib.api.config.ConfigEntry;
+import ftb.lib.api.config.ConfigEntryColor;
+import ftb.lib.api.config.ConfigEntryDouble;
+import ftb.lib.api.config.ConfigEntryInt;
+import ftb.lib.api.config.ConfigEntryString;
+import ftb.lib.api.config.ConfigEntryType;
+import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.config.IConfigProvider;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IClientActionGui;
+import ftb.lib.api.gui.LMGuis;
+import ftb.lib.api.gui.callback.ColorSelected;
+import ftb.lib.api.gui.callback.FieldSelected;
+import ftb.lib.api.gui.callback.IColorCallback;
+import ftb.lib.api.gui.callback.IFieldCallback;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.PanelLM;
+import ftb.lib.api.gui.widgets.SliderLM;
+import latmod.lib.LMColorUtils;
+import latmod.lib.LMJsonUtils;
 import latmod.lib.annotations.Flags;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM implements IClientActionGui
@@ -69,7 +88,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		buttonClose = new ButtonLM(this, 0, 2, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				shouldClose = true;
@@ -80,7 +99,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		buttonExpandAll = new ButtonLM(this, 2, 2, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				for(ButtonConfigEntry e : configEntryButtons)
@@ -102,11 +121,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		buttonCollapseAll = new ButtonLM(this, 20, 2, 16, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				for(ButtonConfigEntry e : configEntryButtons)
+				{
 					collapseAll(e);
+				}
 				gui.refreshWidgets();
 			}
 			
@@ -309,7 +330,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		}
 		
 		@Override
-		public void onClicked(boolean leftClick)
+		public void onClicked(MouseButton button)
 		{
 			if(gui.mouse().y < 20) return;
 			
@@ -321,7 +342,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 			
 			if(entry instanceof IClickable)
 			{
-				((IClickable) entry).onClicked(leftClick);
+				((IClickable) entry).onClicked(button);
 				gui.onChanged();
 			}
 			else if(entry.getAsGroup() != null)

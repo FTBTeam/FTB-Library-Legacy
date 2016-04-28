@@ -5,7 +5,8 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.info.InfoImageLine;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 04.03.2016.

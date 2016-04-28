@@ -1,15 +1,18 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.net.*;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import ftb.lib.api.tile.IGuiTile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 {

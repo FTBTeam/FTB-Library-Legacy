@@ -2,21 +2,31 @@ package ftb.lib.mod.net;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import ftb.lib.api.*;
-import ftb.lib.api.config.*;
+import ftb.lib.api.ForgePlayerMP;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.GameModes;
+import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.events.ReloadEvent;
-import ftb.lib.api.net.*;
-import ftb.lib.api.notification.*;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.notification.ClientNotifications;
+import ftb.lib.api.notification.Notification;
+import ftb.lib.mod.FTBLibLang;
 import ftb.lib.mod.FTBLibMod;
-import ftb.lib.mod.client.*;
+import ftb.lib.mod.client.FTBLibModClient;
+import ftb.lib.mod.client.Shortcuts;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -110,7 +120,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		}
 		else
 		{
-			Notification n = new Notification("reload_client_config", FTBLibMod.mod.chatComponent("reload_client_config"), 7000);
+			Notification n = new Notification("reload_client_config", FTBLibLang.reload_client_config.textComponent(), 7000);
 			n.title.getChatStyle().setColor(TextFormatting.WHITE);
 			n.desc = new TextComponentString('/' + FTBLibModClient.reload_client_cmd.getAsString());
 			n.setColor(0xFF333333);
@@ -134,7 +144,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		
 		if(printMessage)
 		{
-			FTBLib.printChat(ep, FTBLibMod.mod.chatComponent("reloaded_client", ((LMUtils.millis() - ms) + "ms")));
+			FTBLibLang.reload_client.printChat(ep, (LMUtils.millis() - ms) + "ms");
 		}
 	}
 }

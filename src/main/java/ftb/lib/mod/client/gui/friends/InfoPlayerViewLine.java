@@ -1,9 +1,12 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayerSP;
+import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.info.*;
-import ftb.lib.mod.client.gui.info.*;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.InfoTextLine;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -12,7 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 /**

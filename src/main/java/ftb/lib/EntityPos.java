@@ -1,6 +1,7 @@
 package ftb.lib;
 
-import latmod.lib.*;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;

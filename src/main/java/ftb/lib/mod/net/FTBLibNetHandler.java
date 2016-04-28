@@ -31,6 +31,6 @@ public class FTBLibNetHandler
 		
 		NET_INFO.register(MessageLMPlayerInfo.class, 1, Side.CLIENT);
 		NET_INFO.register(MessageRequestPlayerInfo.class, 2, Side.SERVER);
-		NET_INFO.register(MessageDisplayGuide.class, 3, Side.CLIENT);
+		NET_INFO.register(MessageDisplayInfo.class, 3, Side.CLIENT);
 	}
 }

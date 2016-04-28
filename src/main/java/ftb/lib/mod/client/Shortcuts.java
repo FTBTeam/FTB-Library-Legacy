@@ -1,15 +1,21 @@
 package ftb.lib.mod.client;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.notification.ClickAction;
-import latmod.lib.*;
-import net.minecraftforge.fml.relauncher.*;
+import latmod.lib.LMFileUtils;
+import latmod.lib.LMJsonUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 17.01.2016.

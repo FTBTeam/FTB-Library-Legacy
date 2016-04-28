@@ -1,7 +1,8 @@
 package ftb.lib.api.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 
 public class ItemBlockLM extends ItemBlock
 {

@@ -2,7 +2,8 @@ package ftb.lib.api.events;
 
 import ftb.lib.api.ForgePlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 

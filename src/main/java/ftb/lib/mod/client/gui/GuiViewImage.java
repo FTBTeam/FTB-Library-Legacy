@@ -1,11 +1,13 @@
 package ftb.lib.mod.client.gui;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiViewImage extends GuiLM
@@ -23,7 +25,7 @@ public class GuiViewImage extends GuiLM
 		buttonClose = new ButtonLM(this, 0, 0, 0, 0)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{ close(parent); }
 		};
 	}

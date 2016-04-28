@@ -1,14 +1,18 @@
 package ftb.lib.api.notification;
 
 import com.google.gson.JsonElement;
-import ftb.lib.api.*;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiScreenRegistry;
+import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.mod.net.MessageModifyFriends;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.client.gui.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.net.URI;

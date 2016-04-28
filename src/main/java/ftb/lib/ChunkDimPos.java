@@ -1,7 +1,9 @@
 package ftb.lib;
 
-import latmod.lib.*;
-import net.minecraft.world.*;
+import latmod.lib.LMUtils;
+import latmod.lib.MathHelperLM;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.DimensionType;
 
 /**
  * Created by LatvianModder on 14.03.2016.

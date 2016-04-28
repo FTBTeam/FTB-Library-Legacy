@@ -1,9 +1,16 @@
 package ftb.lib.api.gui;
 
-import ftb.lib.api.*;
-import ftb.lib.api.config.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.PlayerAction;
+import ftb.lib.api.config.ConfigEntry;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigGroup;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 15.01.2016.

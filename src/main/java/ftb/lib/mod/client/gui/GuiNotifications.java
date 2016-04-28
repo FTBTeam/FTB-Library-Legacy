@@ -7,9 +7,11 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @SideOnly(Side.CLIENT)
 public class GuiNotifications extends GuiLM

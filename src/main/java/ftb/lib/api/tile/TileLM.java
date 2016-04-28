@@ -1,22 +1,34 @@
 package ftb.lib.api.tile;
 
-import ftb.lib.*;
-import ftb.lib.api.*;
+import ftb.lib.FTBLib;
+import ftb.lib.LMNBTUtils;
+import ftb.lib.PrivacyLevel;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.ForgeWorld;
+import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.mod.FTBLibMod;
+import ftb.lib.mod.FTBLibLang;
 import ftb.lib.mod.net.MessageClientTileAction;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.*;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.*;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.*;
-import net.minecraft.world.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -215,7 +227,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			else ownerS = ownerID.toString();
 		}
 		
-		ep.addChatMessage(FTBLibMod.mod.chatComponent("owner", ownerS));
+		FTBLibLang.owner.printChat(ep, ownerS);
 	}
 	
 	public boolean recolourBlock(EnumFacing side, EnumDyeColor col)

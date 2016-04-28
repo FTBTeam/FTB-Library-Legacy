@@ -1,12 +1,15 @@
 package ftb.lib.mod.client.gui.info;
 
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.info.InfoExtendedTextLine;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 04.03.2016.
@@ -44,13 +47,19 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 	@Override
 	public void addMouseOverText(List<String> l)
 	{
-		if(hover != null) l.addAll(hover);
+		if(hover != null)
+		{
+			l.addAll(hover);
+		}
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
-		if(line != null) line.onClicked();
+		if(line != null)
+		{
+			line.onClicked();
+		}
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package ftb.lib.mod.config;
 
-import ftb.lib.api.config.*;
+import ftb.lib.api.config.ConfigEntryBool;
+import ftb.lib.api.config.ConfigEntryString;
 import latmod.lib.annotations.Info;
 
 public class FTBLibConfigCmd

@@ -1,6 +1,7 @@
 package ftb.lib.api.paint;
 
-import ftb.lib.*;
+import ftb.lib.FTBLib;
+import ftb.lib.MathHelperMC;
 import ftb.lib.api.item.LMInvUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -10,7 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class PaintItemHelper

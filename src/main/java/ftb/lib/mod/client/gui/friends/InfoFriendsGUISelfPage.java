@@ -1,10 +1,12 @@
 package ftb.lib.mod.client.gui.friends;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgeWorldSP;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.PlayerActionRegistry;
 import ftb.lib.api.info.InfoPage;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 24.03.2016.

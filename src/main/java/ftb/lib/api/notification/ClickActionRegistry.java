@@ -1,6 +1,7 @@
 package ftb.lib.api.notification;
 
-import latmod.lib.*;
+import latmod.lib.LMListUtils;
+import latmod.lib.LMStringUtils;
 
 import java.util.HashMap;
 

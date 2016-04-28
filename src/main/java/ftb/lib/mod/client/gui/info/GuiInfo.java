@@ -1,14 +1,21 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.widgets.*;
-import ftb.lib.api.info.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IClientActionGui;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.PanelLM;
+import ftb.lib.api.gui.widgets.SliderLM;
+import ftb.lib.api.gui.widgets.WidgetLM;
+import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.InfoTextLine;
 import latmod.lib.LMColor;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiInfo extends GuiLM implements IClientActionGui
@@ -80,7 +87,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		buttonBack = new ButtonLM(this, 0, 0, tex_back.widthI(), tex_back.heightI())
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				

@@ -1,12 +1,17 @@
 package ftb.lib.mod.net;
 
-import ftb.lib.*;
-import ftb.lib.api.config.*;
-import ftb.lib.api.net.*;
+import ftb.lib.FTBLib;
+import ftb.lib.LMAccessToken;
+import ftb.lib.api.config.ConfigFile;
+import ftb.lib.api.config.ConfigGroup;
+import ftb.lib.api.config.ConfigRegistry;
+import ftb.lib.api.net.LMNetworkWrapper;
+import ftb.lib.api.net.MessageLM;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.simpleimpl.*;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageEditConfigResponse extends MessageLM<MessageEditConfigResponse>
 {

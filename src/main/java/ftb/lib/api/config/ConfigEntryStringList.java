@@ -1,10 +1,16 @@
 package ftb.lib.api.config;
 
-import com.google.gson.*;
-import latmod.lib.*;
-import net.minecraft.nbt.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import latmod.lib.IntList;
+import latmod.lib.LMListUtils;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigEntryStringList extends ConfigEntry
 {

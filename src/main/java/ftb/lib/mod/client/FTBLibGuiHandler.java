@@ -1,13 +1,15 @@
 package ftb.lib.mod.client;
 
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.ContainerEmpty;
+import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.api.item.ItemDisplay;
 import ftb.lib.mod.client.gui.GuiDisplayItem;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBLibGuiHandler extends LMGuiHandler
 {

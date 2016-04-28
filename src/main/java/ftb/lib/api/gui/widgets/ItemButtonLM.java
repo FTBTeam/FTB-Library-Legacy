@@ -1,8 +1,10 @@
 package ftb.lib.api.gui.widgets;
 
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.IGuiLM;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public abstract class ItemButtonLM extends ButtonLM

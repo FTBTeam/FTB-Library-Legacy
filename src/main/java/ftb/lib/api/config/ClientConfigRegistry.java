@@ -2,7 +2,8 @@ package ftb.lib.api.config;
 
 import ftb.lib.FTBLib;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 

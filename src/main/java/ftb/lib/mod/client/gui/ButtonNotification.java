@@ -1,7 +1,10 @@
 package ftb.lib.mod.client.gui;
 
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
+import ftb.lib.api.gui.GuiIcons;
+import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.notification.ClientNotifications;
 import net.minecraft.client.renderer.GlStateManager;
@@ -62,7 +65,7 @@ public class ButtonNotification extends ButtonLM
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
 		FTBLibClient.playClickSound();
 		
@@ -79,7 +82,7 @@ public class ButtonNotification extends ButtonLM
 		int ax = getAX();
 		if(mouseOver(ax, getAY()) && gui.mouse().x >= ax + width - 16)
 		{
-			l.add(FTBLibLang.button_close());
+			l.add(GuiLang.button_close.format());
 			return;
 		}
 		

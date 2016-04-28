@@ -1,24 +1,43 @@
 package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
-import ftb.lib.*;
+import ftb.lib.BlockDimPos;
+import ftb.lib.EntityPos;
+import ftb.lib.FTBLib;
 import ftb.lib.api.events.ForgePlayerMPInfoEvent;
 import ftb.lib.api.item.LMInvUtils;
-import ftb.lib.api.notification.*;
-import ftb.lib.mod.FTBLibMod;
-import ftb.lib.mod.net.*;
+import ftb.lib.api.notification.ClickAction;
+import ftb.lib.api.notification.ClickActionType;
+import ftb.lib.api.notification.MouseAction;
+import ftb.lib.api.notification.Notification;
+import ftb.lib.mod.net.MessageLMPlayerDied;
+import ftb.lib.mod.net.MessageLMPlayerInfo;
+import ftb.lib.mod.net.MessageLMPlayerLoggedIn;
+import ftb.lib.mod.net.MessageLMPlayerUpdate;
+import ftb.lib.mod.net.MessageReload;
 import latmod.lib.LMUtils;
-import net.minecraft.command.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.stats.StatisticsFile;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.
@@ -109,13 +128,13 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			if(raw1 && raw2)
 			{
-				ITextComponent c = FTBLibMod.mod.chatComponent("label.friend");
+				ITextComponent c = GuiLang.label_friend.textComponent();
 				c.getChatStyle().setColor(TextFormatting.GREEN);
 				info.add(c);
 			}
 			else if(raw1 || raw2)
 			{
-				ITextComponent c = FTBLibMod.mod.chatComponent("label.pfriend");
+				ITextComponent c = GuiLang.label_friend_pending.textComponent();
 				c.getChatStyle().setColor(raw1 ? TextFormatting.GOLD : TextFormatting.BLUE);
 				info.add(c);
 			}
@@ -323,10 +342,10 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			if(requests.size() > 0)
 			{
-				ITextComponent cc = FTBLibMod.mod.chatComponent("label.new_friends");
+				ITextComponent cc = GuiLang.label_friend_new.textComponent();
 				cc.getChatStyle().setColor(TextFormatting.GREEN);
 				Notification n = new Notification("new_friend_requests", cc, 6000);
-				n.setDesc(FTBLibMod.mod.chatComponent("label.new_friends_click"));
+				n.setDesc(GuiLang.label_friend_new_click.textComponent());
 				
 				MouseAction mouse = new MouseAction();
 				mouse.click = new ClickAction(ClickActionType.FRIEND_ADD_ALL, null);

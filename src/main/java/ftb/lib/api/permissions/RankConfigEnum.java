@@ -3,7 +3,8 @@ package ftb.lib.api.permissions;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 14.02.2016.

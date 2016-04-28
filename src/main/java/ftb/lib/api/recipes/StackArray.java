@@ -1,13 +1,18 @@
 package ftb.lib.api.recipes;
 
-import ftb.lib.api.item.*;
+import ftb.lib.api.item.LMInvUtils;
+import ftb.lib.api.item.MaterialItem;
+import ftb.lib.api.item.ODItems;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class StackArray implements IStackArray
 {
@@ -85,27 +90,10 @@ public class StackArray implements IStackArray
 	public static Collection<ItemStack> getItems(Object o)
 	{
 		if(o == null) return new ArrayList<>();
-		
 		ItemStack item0 = getFrom(o);
 		if(item0 != null) return Collections.singleton(item0);
 		else if(o instanceof ItemStack[]) return Arrays.asList((ItemStack[]) o);
 		else if(o instanceof String) ODItems.getOres((String) o);
-		else if(o instanceof FluidStack)
-		{
-			ArrayList<ItemStack> list = new ArrayList<>();
-			FluidStack fs = (FluidStack) o;
-			FluidContainerRegistry.FluidContainerData[] fd = FluidContainerRegistry.getRegisteredFluidContainerData();
-			
-			if(fd != null && fd.length > 0) for(FluidContainerRegistry.FluidContainerData f : fd)
-			{
-				if(f.fluid.getFluid() == fs.getFluid() && f.fluid.amount >= fs.amount && f.filledContainer != null)
-					list.add(f.filledContainer.copy());
-			}
-			
-			return list;
-		}
-		else if(o instanceof Fluid) return getItems(new FluidStack((Fluid) o, 1000));
-		
 		return new ArrayList<>();
 	}
 	

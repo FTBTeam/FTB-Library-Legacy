@@ -1,9 +1,11 @@
 package ftb.lib.mod.client.gui.info;
 
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.widgets.ButtonLM;
 import ftb.lib.api.info.InfoPage;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ButtonInfoPage extends ButtonLM
 	}
 	
 	@Override
-	public void onClicked(boolean leftClick)
+	public void onClicked(MouseButton button)
 	{
 		FTBLibClient.playClickSound();
 		

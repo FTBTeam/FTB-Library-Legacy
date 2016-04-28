@@ -1,10 +1,15 @@
 package ftb.lib.api.info;
 
-import com.google.gson.*;
-import ftb.lib.mod.client.gui.info.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
+import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.util.IJsonSerializable;
-import net.minecraft.util.text.*;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 20.03.2016.

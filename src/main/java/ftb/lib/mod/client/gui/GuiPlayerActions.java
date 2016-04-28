@@ -1,11 +1,15 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.api.*;
+import ftb.lib.api.ForgePlayer;
+import ftb.lib.api.MouseButton;
+import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.gui.widgets.WidgetLM;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -65,7 +69,7 @@ public class GuiPlayerActions extends GuiLM
 		}
 		
 		@Override
-		public void onClicked(boolean leftClick)
+		public void onClicked(MouseButton button)
 		{
 			FTBLibClient.mc.thePlayer.closeScreen();
 			action.onClicked(gui.self, gui.other);

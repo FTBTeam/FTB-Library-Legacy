@@ -1,11 +1,17 @@
 package ftb.lib.mod.client.gui;
 
+import ftb.lib.api.GuiLang;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.gui.*;
-import ftb.lib.api.gui.callback.*;
-import ftb.lib.api.gui.widgets.*;
+import ftb.lib.api.gui.GuiLM;
+import ftb.lib.api.gui.LMGuis;
+import ftb.lib.api.gui.callback.FieldSelected;
+import ftb.lib.api.gui.callback.IFieldCallback;
+import ftb.lib.api.gui.widgets.ButtonSimpleLM;
+import ftb.lib.api.gui.widgets.TextBoxLM;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
@@ -34,26 +40,26 @@ public class GuiSelectField extends GuiLM
 		buttonCancel = new ButtonSimpleLM(this, 2, mainPanel.height - 18, bsize, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				callback.onFieldSelected(new FieldSelected(ID, false, def, true));
 			}
 		};
 		
-		buttonCancel.title = FTBLibLang.button_cancel();
+		buttonCancel.title = GuiLang.button_cancel.format();
 		
 		buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
 		{
 			@Override
-			public void onClicked(boolean leftClick)
+			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
 				if(textBox.isValid()) callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
 			}
 		};
 		
-		buttonAccept.title = FTBLibLang.button_accept();
+		buttonAccept.title = GuiLang.button_accept.format();
 		
 		textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
 		{
@@ -63,7 +69,7 @@ public class GuiSelectField extends GuiLM
 			
 			@Override
 			public void returnPressed()
-			{ buttonAccept.onClicked(true); }
+			{ buttonAccept.onClicked(MouseButton.LEFT); }
 		};
 		
 		textBox.setText(def);

@@ -1,6 +1,7 @@
 package ftb.lib.api.config;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class ConfigEntryString extends ConfigEntry

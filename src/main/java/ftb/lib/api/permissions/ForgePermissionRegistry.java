@@ -5,7 +5,9 @@ import ftb.lib.FTBLib;
 import latmod.lib.annotations.AnnotationHelper;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 16.02.2016.

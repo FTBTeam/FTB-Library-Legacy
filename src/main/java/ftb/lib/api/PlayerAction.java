@@ -5,7 +5,8 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.*;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
