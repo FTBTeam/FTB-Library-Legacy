@@ -32,6 +32,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -135,11 +136,8 @@ public class FTBLib
 	public static ITextComponent getChatComponent(Object o)
 	{ return (o != null && o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString("" + o); }
 	
-	public static void addTileEntity(Class<? extends TileEntity> c, String s, String... alt)
-	{
-		if(alt == null || alt.length == 0) GameRegistry.registerTileEntity(c, s);
-		else GameRegistry.registerTileEntityWithAlternatives(c, s, alt);
-	}
+	public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)
+	{ GameRegistry.registerTileEntity(c, id.toString()); }
 	
 	public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
 	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
@@ -326,5 +324,20 @@ public class FTBLib
 		
 		if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8) return Boolean.FALSE;
 		return Boolean.TRUE;
+	}
+	
+	public static Entity getEntityByUUID(World worldObj, UUID uuid)
+	{
+		if(worldObj == null || uuid == null) return null;
+		
+		for(Entity e : worldObj.loadedEntityList)
+		{
+			if(e.getUniqueID().equals(uuid))
+			{
+				return e;
+			}
+		}
+		
+		return null;
 	}
 }

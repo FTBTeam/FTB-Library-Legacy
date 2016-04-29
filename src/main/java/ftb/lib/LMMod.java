@@ -5,9 +5,7 @@ import ftb.lib.api.item.IItemLM;
 import ftb.lib.api.recipes.LMRecipes;
 import ftb.lib.mod.FTBLibMod;
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -82,12 +80,6 @@ public class LMMod extends FinalIDObject
 		
 		return object;
 	}
-	
-	public void addTile(Class<? extends TileEntity> c, String s, String... alt)
-	{ FTBLib.addTileEntity(c, getID() + '.' + s, alt); }
-	
-	public void addEntity(Class<? extends Entity> c, String s, int id)
-	{ FTBLib.addEntity(c, s, id, getID()); }
 	
 	public void onPostLoaded()
 	{

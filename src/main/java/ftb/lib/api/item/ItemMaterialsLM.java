@@ -27,10 +27,10 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public void setFolder(String s)
 	{ if(s == null || !s.isEmpty()) folder = s; }
 	
-	public ItemStack add(MaterialItem m)
+	public MaterialItem add(MaterialItem m)
 	{
 		materials.put(m.damage, m);
-		return m.getStack(1);
+		return m;
 	}
 	
 	@Override

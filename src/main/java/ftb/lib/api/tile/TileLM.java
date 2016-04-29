@@ -23,6 +23,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -330,4 +332,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	@Override
 	public ITextComponent getDisplayName()
 	{ return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getBlockType().getLocalizedName() + ".name"); }
+	
+	public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)
+	{ worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch); }
 }
