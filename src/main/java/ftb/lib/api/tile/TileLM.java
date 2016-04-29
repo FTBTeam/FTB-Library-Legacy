@@ -3,12 +3,11 @@ package ftb.lib.api.tile;
 import ftb.lib.FTBLib;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.PrivacyLevel;
-import ftb.lib.api.ForgePlayer;
-import ftb.lib.api.ForgeWorld;
-import ftb.lib.api.ForgeWorldMP;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.mod.FTBLibLang;
+import ftb.lib.mod.net.FTBLibNetHandler;
 import ftb.lib.mod.net.MessageClientTileAction;
+import ftb.lib.mod.net.MessageMarkTileDirty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -140,9 +139,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		}
 	}
 	
-	public final boolean rerenderBlock()
-	{ return false; }
-	
 	public EnumSync getSync()
 	{ return EnumSync.SYNC; }
 	
@@ -191,6 +187,8 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			{
 				//FIXME: Send update
 				//worldObj.send(getPos(), this);
+				
+				FTBLibNetHandler.NET.sendToDimension(new MessageMarkTileDirty(this), getDimension().getId());
 			}
 			
 			worldObj.markChunkDirty(pos, this);
@@ -218,31 +216,11 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	{
 	}
 	
-	public final void printOwner(EntityPlayer ep)
-	{
-		if(ep == null) return;
-		String ownerS = "None";
-		if(ownerID != null)
-		{
-			ForgePlayer player = ForgeWorld.getFrom(getSide()).getPlayer(ep);
-			if(player != null) ownerS = player.getProfile().getName();
-			else ownerS = ownerID.toString();
-		}
-		
-		FTBLibLang.owner.printChat(ep, ownerS);
-	}
-	
 	public boolean recolourBlock(EnumFacing side, EnumDyeColor col)
 	{ return false; }
 	
 	public PrivacyLevel getPrivacyLevel()
 	{ return PrivacyLevel.PUBLIC; }
-	
-	/**
-	 * Player can be null
-	 */
-	public boolean isMinable(EntityPlayer ep)
-	{ return ep == null || getPrivacyLevel().canInteract(ForgeWorldMP.inst.getPlayer(ownerID), ForgeWorldMP.inst.getPlayer(ep)); }
 	
 	public boolean isExplosionResistant()
 	{ return !getPrivacyLevel().isPublic(); }
@@ -250,17 +228,14 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public final void sendClientAction(String action, NBTTagCompound data)
 	{ new MessageClientTileAction(this, action, data).sendToServer(); }
 	
-	public void clientPressButton(String button, int mouseButton, NBTTagCompound data)
+	public void clientPressButton(String button, MouseButton mouseButton, NBTTagCompound data)
 	{
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("ID", button);
-		tag.setByte("MB", (byte) mouseButton);
+		tag.setByte("MB", (byte) mouseButton.ordinal());
 		if(data != null) tag.setTag("D", data);
 		sendClientAction(ACTION_BUTTON_PRESSED, tag);
 	}
-	
-	public final void clientPressButton(String button, int mouseButton)
-	{ clientPressButton(button, mouseButton, null); }
 	
 	public void clientOpenGui(NBTTagCompound data)
 	{ sendClientAction(ACTION_OPEN_GUI, data); }
@@ -278,7 +253,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		switch(action)
 		{
 			case ACTION_BUTTON_PRESSED:
-				handleButton(data.getString("ID"), data.getByte("MB"), data.getCompoundTag("D"), ep);
+				handleButton(data.getString("ID"), MouseButton.values()[data.getByte("MB")], data.getCompoundTag("D"), ep);
 				markDirty();
 				break;
 			case ACTION_OPEN_GUI:
@@ -292,7 +267,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		}
 	}
 	
-	public void handleButton(String button, int mouseButton, NBTTagCompound data, EntityPlayerMP ep)
+	public void handleButton(String button, MouseButton mouseButton, NBTTagCompound data, EntityPlayerMP ep)
 	{
 	}
 	

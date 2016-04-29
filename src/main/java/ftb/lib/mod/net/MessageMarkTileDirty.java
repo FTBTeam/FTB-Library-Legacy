@@ -1,36 +1,35 @@
 package ftb.lib.mod.net;
 
+import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.lib.api.net.MessageLM;
-import ftb.lib.api.tile.IClientActionTile;
+import ftb.lib.api.tile.TileLM;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
+public class MessageMarkTileDirty extends MessageLM<MessageMarkTileDirty>
 {
 	public int posX, posY, posZ;
-	public String action;
 	public NBTTagCompound data;
 	
-	public MessageClientTileAction() { }
+	public MessageMarkTileDirty() { }
 	
-	public MessageClientTileAction(TileEntity t, String s, NBTTagCompound tag)
+	public MessageMarkTileDirty(TileLM t)
 	{
 		posX = t.getPos().getX();
 		posY = t.getPos().getY();
 		posZ = t.getPos().getZ();
-		action = (s == null) ? "" : s;
-		data = tag;
+		data = new NBTTagCompound();
+		t.writeTileClientData(data);
 	}
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_INFO; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)
@@ -38,7 +37,6 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		posX = io.readInt();
 		posY = io.readInt();
 		posZ = io.readInt();
-		action = readString(io);
 		data = readTag(io);
 	}
 	
@@ -48,17 +46,20 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		io.writeInt(posX);
 		io.writeInt(posY);
 		io.writeInt(posZ);
-		writeString(io, action);
 		writeTag(io, data);
 	}
 	
 	@Override
-	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)
+	public IMessage onMessage(MessageMarkTileDirty m, MessageContext ctx)
 	{
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		TileEntity te = ep.worldObj.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
+		TileEntity te = FTBLibClient.mc.theWorld.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
 		
-		if(te instanceof IClientActionTile) ((IClientActionTile) te).onClientAction(ep, m.action, m.data);
+		if(te instanceof TileLM)
+		{
+			TileLM t = (TileLM) te;
+			t.readTileClientData(m.data);
+			t.onUpdatePacket();
+		}
 		
 		return null;
 	}

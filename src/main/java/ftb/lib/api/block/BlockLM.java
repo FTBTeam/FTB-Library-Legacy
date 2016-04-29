@@ -109,30 +109,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 	}
 	
 	@Override
-	public float getPlayerRelativeBlockHardness(IBlockState state, EntityPlayer ep, World w, BlockPos pos)
-	{
-		if(hasTileEntity(state))
-		{
-			TileLM tile = getTile(w, pos);
-			if(tile != null && !tile.isMinable(ep)) return -1F;
-		}
-		
-		return super.getPlayerRelativeBlockHardness(state, ep, w, pos);
-	}
-	
-	@Override
-	public float getBlockHardness(IBlockState state, World w, BlockPos pos)
-	{
-		if(hasTileEntity(state))
-		{
-			TileLM tile = getTile(w, pos);
-			if(tile != null && !tile.isMinable(null)) return -1F;
-		}
-		
-		return super.getBlockHardness(state, w, pos);
-	}
-	
-	@Override
 	public float getExplosionResistance(World w, BlockPos pos, Entity e, Explosion ex)
 	{
 		if(hasTileEntity(w.getBlockState(pos)))

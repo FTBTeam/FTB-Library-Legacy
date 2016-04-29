@@ -162,7 +162,7 @@ public class FTBLibEventHandler
 			if(state.getBlock().hasTileEntity(state))
 			{
 				TileEntity te = ep.worldObj.getTileEntity(pos);
-				if(te instanceof ISecureTile && !te.isInvalid() && !((ISecureTile) te).canPlayerInteract(ep, leftClick))
+				if(te instanceof ISecureTile && !((ISecureTile) te).canPlayerInteract(ep, leftClick))
 				{
 					((ISecureTile) te).onPlayerNotOwner(ep, leftClick);
 					return false;

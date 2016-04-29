@@ -32,7 +32,7 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_GUI; }
+	{ return FTBLibNetHandler.NET_INFO; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)
