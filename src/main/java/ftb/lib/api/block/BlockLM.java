@@ -1,11 +1,12 @@
 package ftb.lib.api.block;
 
+import ftb.lib.FTBLib;
 import ftb.lib.LMMod;
-import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.tile.TileLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,7 +68,9 @@ public abstract class BlockLM extends Block implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public void loadModels()
 	{
-		FTBLibClient.addItemModel(getItem(), 0, getModelState());
+		String state = getModelState();
+		FTBLib.dev_logger.info("Adding " + getItem() + "'s model: " + state);
+		ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getRegistryName(), state));
 	}
 	
 	@Override

@@ -1,10 +1,11 @@
 package ftb.lib.api.item;
 
-import ftb.lib.api.client.FTBLibClient;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -57,7 +58,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	{
 		for(MaterialItem i : materials.values())
 		{
-			FTBLibClient.addItemModel(this, i.damage, "variant=" + i.getID());
+			ModelLoader.setCustomModelResourceLocation(this, i.damage, new ModelResourceLocation(getRegistryName(), "variant=" + i.getID()));
 		}
 	}
 	

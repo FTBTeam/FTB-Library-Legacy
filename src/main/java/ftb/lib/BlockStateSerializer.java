@@ -15,6 +15,7 @@ public class BlockStateSerializer
 		public StateEntry(IProperty<?> key, Object value)
 		{ super(key, value); }
 		
+		@Override
 		public String toString()
 		{ return getKey().getName() + '=' + getKey().getName(getValueE()); }
 		
@@ -26,7 +27,7 @@ public class BlockStateSerializer
 		{ return getKey().getName().compareTo(o.getKey().getName()); }
 	}
 	
-	public static String getModelState(Object... o)
+	public static String getString(Object... o)
 	{
 		StateEntry[] entries = new StateEntry[o.length / 2];
 		

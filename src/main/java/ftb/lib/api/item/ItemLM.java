@@ -1,11 +1,12 @@
 package ftb.lib.api.item;
 
 import ftb.lib.LMMod;
-import ftb.lib.api.client.FTBLibClient;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,7 +33,7 @@ public abstract class ItemLM extends Item implements IItemLM
 	@SideOnly(Side.CLIENT)
 	public void loadModels()
 	{
-		FTBLibClient.addItemModel(this, 0, "inventory");
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 	}
 	
 	@Override
