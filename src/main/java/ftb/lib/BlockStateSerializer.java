@@ -42,9 +42,10 @@ public class BlockStateSerializer
 		
 		for(int i = 0; i < entries.length; i++)
 		{
+			sb.append(entries[i]);
+			
 			if(i != entries.length - 1)
 			{
-				sb.append(entries[i]);
 				sb.append(',');
 			}
 		}
