@@ -137,7 +137,7 @@ public class FTBLib
 	{ return (o != null && o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString("" + o); }
 	
 	public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)
-	{ GameRegistry.registerTileEntity(c, id.toString()); }
+	{ GameRegistry.registerTileEntity(c, id.toString().replace(':', '.')); }
 	
 	public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
 	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
