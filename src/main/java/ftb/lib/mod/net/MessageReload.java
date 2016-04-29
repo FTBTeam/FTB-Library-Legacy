@@ -15,7 +15,6 @@ import ftb.lib.api.notification.Notification;
 import ftb.lib.mod.FTBLibLang;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
-import ftb.lib.mod.client.Shortcuts;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -136,7 +135,6 @@ public class MessageReload extends MessageLM<MessageReload>
 	{
 		if(ms == 0L) ms = LMUtils.millis();
 		GameModes.reload();
-		Shortcuts.load();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
 		ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, true, modeChanged);
 		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);

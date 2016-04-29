@@ -39,7 +39,6 @@ import java.util.UUID;
 public class FTBLibModClient extends FTBLibModCommon
 {
 	public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
-	public static final ConfigEntryBool item_reg_names = new ConfigEntryBool("item_reg_names", false);
 	
 	public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
 	public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");

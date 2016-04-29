@@ -3,18 +3,15 @@ package ftb.lib.mod.client;
 import ftb.lib.FTBLib;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.item.ODItems;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 
@@ -43,10 +40,12 @@ public class FTBLibClientEventHandler
 	{
 		if(e.getItemStack() == null || e.getItemStack().getItem() == null) return;
 		
+		/*
 		if(FTBLibModClient.item_reg_names.getAsBoolean())
 		{
 			e.getToolTip().add(LMInvUtils.getRegName(e.getItemStack()).toString());
 		}
+		*/
 		
 		if(FTBLibModClient.item_ore_names.getAsBoolean())
 		{
@@ -78,6 +77,7 @@ public class FTBLibClientEventHandler
 		}
 	}
 	
+	/*
 	@SubscribeEvent
 	public void onKeyEvent(InputEvent.KeyInputEvent e)
 	{
@@ -86,4 +86,5 @@ public class FTBLibClientEventHandler
 			Shortcuts.onKeyPressed(Keyboard.getEventKey());
 		}
 	}
+	*/
 }

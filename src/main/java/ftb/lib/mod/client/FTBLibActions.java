@@ -250,7 +250,6 @@ public class FTBLibActions
 		{
 			ForgePlayerSP p = ForgeWorldSP.inst.clientPlayer;
 			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false, false);
-			buttons.addAll(Shortcuts.actions);
 			
 			if(!buttons.isEmpty())
 			{
