@@ -1,5 +1,6 @@
 package ftb.lib.api.tile;
 
+import ftb.lib.BlockDimPos;
 import ftb.lib.FTBLib;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.PrivacyLevel;
@@ -277,6 +278,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public void notifyNeighbors()
 	{ worldObj.notifyBlockOfStateChange(getPos(), getBlockType()); }
 	
+	@Override
 	public DimensionType getDimension()
 	{ return worldObj == null ? DimensionType.OVERWORLD : worldObj.provider.getDimensionType(); }
 	
@@ -310,4 +312,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	
 	public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)
 	{ worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch); }
+	
+	public BlockDimPos getDimPos()
+	{ return new BlockDimPos(pos, getDimension()); }
 }

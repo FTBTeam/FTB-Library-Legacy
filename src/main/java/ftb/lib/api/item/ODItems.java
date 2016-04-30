@@ -7,7 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class ODItems
@@ -93,12 +95,18 @@ public class ODItems
 		return is1;
 	}
 	
-	public static List<String> getOreNames(ItemStack is)
+	public static Collection<String> getOreNames(ItemStack is)
 	{
 		int[] ai = OreDictionary.getOreIDs(is);
-		if(ai == null || ai.length == 0) return new ArrayList<>();
-		ArrayList<String> l = new ArrayList<>();
-		for(int i : ai) l.add(OreDictionary.getOreName(i));
+		if(ai == null || ai.length == 0) return Collections.EMPTY_SET;
+		
+		Collection<String> l = new HashSet<>(ai.length);
+		
+		for(int i : ai)
+		{
+			l.add(OreDictionary.getOreName(i));
+		}
+		
 		return l;
 	}
 	

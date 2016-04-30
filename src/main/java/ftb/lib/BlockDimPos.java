@@ -3,6 +3,8 @@ package ftb.lib;
 import latmod.lib.LMUtils;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.DimensionType;
 
 /**
@@ -10,14 +12,12 @@ import net.minecraft.world.DimensionType;
  */
 public final class BlockDimPos
 {
-	public final int x, y, z;
+	public final BlockPos pos;
 	public final DimensionType dim;
 	
-	public BlockDimPos(int px, int py, int pz, DimensionType d)
+	public BlockDimPos(Vec3i p, DimensionType d)
 	{
-		x = px;
-		y = py;
-		z = pz;
+		pos = new BlockPos(p.getX(), p.getY(), p.getZ());
 		dim = d;
 	}
 	
@@ -25,32 +25,22 @@ public final class BlockDimPos
 	{
 		if(ai == null || ai.length < 4)
 		{
-			x = 0;
-			y = 256;
-			z = 0;
+			pos = new BlockPos(0, 0, 0);
 			dim = DimensionType.OVERWORLD;
 		}
 		else
 		{
-			x = ai[0];
-			y = ai[1];
-			z = ai[2];
+			pos = new BlockPos(ai[0], ai[1], ai[2]);
 			dim = DimensionType.getById(ai[3]);
 		}
 	}
 	
-	public BlockDimPos(BlockPos pos, DimensionType dim)
-	{ this(pos.getX(), pos.getY(), pos.getZ(), dim); }
-	
-	public boolean isValid()
-	{ return y >= 0 && y < 256; }
-	
 	public int[] toIntArray()
-	{ return new int[] {x, y, z, dim.getId()}; }
+	{ return new int[] {pos.getX(), pos.getY(), pos.getZ(), dim.getId()}; }
 	
 	@Override
 	public String toString()
-	{ return "[" + dim.getName() + '@' + x + ',' + y + ',' + z + ']'; }
+	{ return "[" + dim.getName() + '@' + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + ']'; }
 	
 	@Override
 	public boolean equals(Object o)
@@ -61,29 +51,29 @@ public final class BlockDimPos
 	
 	@Override
 	public int hashCode()
-	{ return LMUtils.hashCode(x, y, z, dim); }
+	{ return LMUtils.hashCode(pos, dim); }
 	
-	public EntityPos toEntityPos()
-	{ return new EntityPos(x + 0.5D, y + 0.5D, z + 0.5D, dim); }
+	public Vec3d toVec()
+	{ return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D); }
+	
+	public EntityDimPos toEntityPos()
+	{ return new EntityDimPos(toVec(), dim); }
 	
 	public BlockDimPos copy()
-	{ return new BlockDimPos(x, y, z, dim); }
-	
-	public BlockPos toBlockPos()
-	{ return new BlockPos(x, y, z); }
+	{ return new BlockDimPos(pos, dim); }
 	
 	public int chunkX()
-	{ return MathHelperLM.chunk(x); }
+	{ return MathHelperLM.chunk(pos.getX()); }
 	
 	public int chunkY()
-	{ return MathHelperLM.chunk(y); }
+	{ return MathHelperLM.chunk(pos.getY()); }
 	
 	public int chunkZ()
-	{ return MathHelperLM.chunk(z); }
+	{ return MathHelperLM.chunk(pos.getZ()); }
 	
 	public boolean equalsPos(BlockDimPos p)
 	{
 		if(p == null) return false;
-		else return p == this || (p.dim == dim && p.x == x && p.y == y && p.z == z);
+		else return p == this || (p.dim == dim && p.pos.equals(pos));
 	}
 }

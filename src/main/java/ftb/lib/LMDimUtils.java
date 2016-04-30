@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
@@ -14,26 +15,26 @@ import net.minecraftforge.common.DimensionManager;
 
 public class LMDimUtils
 {
-	public static boolean teleportPlayer(Entity entity, EntityPos pos)
-	{ return pos != null && teleportPlayer(entity, pos.x, pos.y, pos.z, pos.dim); }
+	public static boolean teleportPlayer(Entity entity, EntityDimPos pos)
+	{ return pos != null && teleportPlayer(entity, pos.pos, pos.dim.getId()); }
 	
 	public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
-	{ return pos != null && teleportPlayer(entity, pos.x + 0.5D, pos.y + 0.5D, pos.z + 0.5D, pos.dim); }
+	{ return pos != null && teleportPlayer(entity, pos.toVec(), pos.dim.getId()); }
 	
-	//tterrag's code, I don't own it. Maybe he doesn't too.. but who cares, eh?
-	public static boolean teleportPlayer(Entity entity, double x, double y, double z, DimensionType dim)
+	public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
 	{
-		if(entity == null) return false;
+		if(entity == null || pos == null) return false;
+		
 		entity.fallDistance = 0F;
 		EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
 		
-		if(dim.getId() == entity.dimension)
+		if(dim == entity.dimension)
 		{
-			if(x == entity.posX && y == entity.posY && z == entity.posZ) return true;
+			if(pos.xCoord == entity.posX && pos.yCoord == entity.posY && pos.zCoord == entity.posZ) return true;
 			
 			if(player != null)
 			{
-				player.playerNetServerHandler.setPlayerLocation(x, y, z, player.rotationYaw, player.rotationPitch);
+				player.playerNetServerHandler.setPlayerLocation(pos.xCoord, pos.yCoord, pos.zCoord, player.rotationYaw, player.rotationPitch);
 				return true;
 			}
 		}
@@ -44,11 +45,11 @@ public class LMDimUtils
 		float rotationPitch = entity.rotationPitch;
 		MinecraftServer server = FTBLib.getServer();
 		WorldServer fromDim = server.worldServerForDimension(from);
-		WorldServer toDim = server.worldServerForDimension(dim.getId());
+		WorldServer toDim = server.worldServerForDimension(dim);
 		
 		if(player != null)
 		{
-			server.getPlayerList().transferPlayerToDimension(player, dim.getId(), new TeleporterBlank(toDim));
+			server.getPlayerList().transferPlayerToDimension(player, dim, new TeleporterBlank(toDim));
 			if(from == 1 && entity.isEntityAlive())
 			{
 				// get around vanilla End hacks
@@ -67,7 +68,7 @@ public class LMDimUtils
 			{
 				Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
 				newEntity.readFromNBT(tagCompound);
-				newEntity.setLocationAndAngles(x, y, z, rotationYaw, rotationPitch);
+				newEntity.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, rotationYaw, rotationPitch);
 				newEntity.forceSpawn = true;
 				toDim.spawnEntityInWorld(newEntity);
 				newEntity.forceSpawn = false;
@@ -81,8 +82,8 @@ public class LMDimUtils
 		entity.fallDistance = 0;
 		entity.rotationYaw = rotationYaw;
 		entity.rotationPitch = rotationPitch;
-		if(player != null) player.setPositionAndUpdate(x, y, z);
-		else entity.setPosition(x, y, z);
+		if(player != null) player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
+		else entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
 		return true;
 	}
 	

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
+import java.util.Collection;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler
@@ -49,9 +49,9 @@ public class FTBLibClientEventHandler
 		
 		if(FTBLibModClient.item_ore_names.getAsBoolean())
 		{
-			List<String> ores = ODItems.getOreNames(e.getItemStack());
+			Collection<String> ores = ODItems.getOreNames(e.getItemStack());
 			
-			if(ores != null && !ores.isEmpty())
+			if(!ores.isEmpty())
 			{
 				e.getToolTip().add("Ore Dictionary names:");
 				

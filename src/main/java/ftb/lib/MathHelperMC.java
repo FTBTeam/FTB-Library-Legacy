@@ -18,6 +18,9 @@ import java.util.Random;
 
 public class MathHelperMC
 {
+	public static Vec3d getPosVec(BlockPos pos)
+	{ return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D); }
+	
 	public static EnumFacing getHorizontalFacing(int index)
 	{
 		if(index == 0) return EnumFacing.NORTH;

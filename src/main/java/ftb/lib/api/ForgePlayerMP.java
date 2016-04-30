@@ -2,7 +2,7 @@ package ftb.lib.api;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.BlockDimPos;
-import ftb.lib.EntityPos;
+import ftb.lib.EntityDimPos;
 import ftb.lib.FTBLib;
 import ftb.lib.api.events.ForgePlayerMPInfoEvent;
 import ftb.lib.api.item.LMInvUtils;
@@ -116,7 +116,7 @@ public class ForgePlayerMP extends ForgePlayer
 	public BlockDimPos getPos()
 	{
 		EntityPlayerMP ep = getPlayer();
-		if(ep != null) lastPos = new EntityPos(ep).toBlockDimPos();
+		if(ep != null) lastPos = new EntityDimPos(ep).toBlockDimPos();
 		return lastPos;
 	}
 	
@@ -384,7 +384,7 @@ public class ForgePlayerMP extends ForgePlayer
 	public void onDeath()
 	{
 		if(!isOnline()) return;
-		lastDeath = new EntityPos(getPlayer()).toBlockDimPos();
+		lastDeath = new EntityDimPos(getPlayer()).toBlockDimPos();
 		stats.refresh(this, false);
 		super.onDeath();
 		new MessageLMPlayerDied().sendTo(getPlayer());
