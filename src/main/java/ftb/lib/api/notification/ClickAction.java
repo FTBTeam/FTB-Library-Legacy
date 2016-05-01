@@ -51,17 +51,22 @@ public class ClickAction implements IJsonSerializable
 			JsonObject o = e.getAsJsonObject();
 			type = ClickActionRegistry.get(o.get("type").getAsString());
 			data = o.get("data");
+			
+			if(data == JsonNull.INSTANCE)
+			{
+				data = null;
+			}
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
 	public void onClicked()
-	{ if(type != null) type.onClicked(data == null ? JsonNull.INSTANCE : data); }
+	{ if(type != null) { type.onClicked(data == null ? JsonNull.INSTANCE : data); } }
 	
 	@Override
 	public String toString()
 	{
-		if(data == null) return type.getID();
+		if(data == null) { return type.getID(); }
 		return data.toString();
 	}
 }

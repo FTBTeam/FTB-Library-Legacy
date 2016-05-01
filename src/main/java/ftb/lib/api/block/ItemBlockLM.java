@@ -22,5 +22,5 @@ public class ItemBlockLM extends ItemBlock
 	
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
-	{ return blockLM.getUnlocalizedName(stack); }
+	{ return super.getUnlocalizedName(stack); }
 }

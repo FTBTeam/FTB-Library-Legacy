@@ -29,7 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -186,10 +185,8 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			
 			if(getSync().sync())
 			{
-				//FIXME: Send update
-				//worldObj.send(getPos(), this);
-				
-				FTBLibNetHandler.NET.sendToDimension(new MessageMarkTileDirty(this), getDimension().getId());
+				//TODO: Improve this?
+				FTBLibNetHandler.NET.sendToDimension(new MessageMarkTileDirty(this), worldObj.provider.getDimensionType().getId());
 			}
 			
 			worldObj.markChunkDirty(pos, this);
@@ -208,7 +205,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			ownerID = ep.getGameProfile().getId();
 		}
 		
-		if(is.hasDisplayName()) setName(is.getDisplayName());
+		if(is.hasDisplayName()) { setName(is.getDisplayName()); }
 		
 		markDirty();
 	}
@@ -234,7 +231,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setString("ID", button);
 		tag.setByte("MB", (byte) mouseButton.ordinal());
-		if(data != null) tag.setTag("D", data);
+		if(data != null) { tag.setTag("D", data); }
 		sendClientAction(ACTION_BUTTON_PRESSED, tag);
 	}
 	
@@ -262,7 +259,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 				break;
 			case ACTION_CUSTOM_NAME:
 				String name = data.getString("Name");
-				if(!name.isEmpty()) setName(name);
+				if(!name.isEmpty()) { setName(name); }
 				markDirty();
 				break;
 		}
@@ -277,10 +274,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	
 	public void notifyNeighbors()
 	{ worldObj.notifyBlockOfStateChange(getPos(), getBlockType()); }
-	
-	@Override
-	public DimensionType getDimension()
-	{ return worldObj == null ? DimensionType.OVERWORLD : worldObj.provider.getDimensionType(); }
 	
 	public void onNeighborBlockChange(BlockPos pos)
 	{
@@ -313,6 +306,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)
 	{ worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch); }
 	
+	@Override
 	public BlockDimPos getDimPos()
-	{ return new BlockDimPos(pos, getDimension()); }
+	{ return new BlockDimPos(pos, worldObj == null ? null : worldObj.provider.getDimensionType()); }
 }

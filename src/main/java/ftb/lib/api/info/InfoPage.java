@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	public InfoPage parent = null;
 	private ITextComponent title;
 	public final List<InfoTextLine> text;
-	public final Map<String, InfoPage> childPages;
+	public final LinkedHashMap<String, InfoPage> childPages;
 	
 	public InfoPage(String id)
 	{
@@ -147,13 +148,26 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public void cleanup()
 	{
-		for(InfoPage c : childPages.values()) c.cleanup();
+		for(InfoPage c : childPages.values())
+		{
+			c.cleanup();
+		}
+		
 		LMMapUtils.removeAll(childPages, cleanupFilter);
 	}
 	
 	public void sortAll()
 	{
 		//TODO: sort
+		LMMapUtils.sortMap(childPages, new Comparator<Map.Entry<String, InfoPage>>()
+		{
+			@Override
+			public int compare(Map.Entry<String, InfoPage> o1, Map.Entry<String, InfoPage> o2)
+			{
+				return o1.getValue().getTitleComponent().getFormattedText().compareToIgnoreCase(o1.getValue().getTitleComponent().getFormattedText());
+			}
+		});
+		
 		for(InfoPage c : childPages.values()) c.sortAll();
 	}
 	

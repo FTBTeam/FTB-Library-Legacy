@@ -4,7 +4,6 @@ import latmod.lib.LMUtils;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.DimensionType;
 
 /**
@@ -15,11 +14,14 @@ public final class BlockDimPos
 	public final BlockPos pos;
 	public final DimensionType dim;
 	
-	public BlockDimPos(Vec3i p, DimensionType d)
+	public BlockDimPos(BlockPos p, DimensionType d, boolean copy)
 	{
-		pos = new BlockPos(p.getX(), p.getY(), p.getZ());
+		pos = copy ? new BlockPos(p.getX(), p.getY(), p.getZ()) : p;
 		dim = d;
 	}
+	
+	public BlockDimPos(BlockPos p, DimensionType d)
+	{ this(p, d, true); }
 	
 	public BlockDimPos(int[] ai)
 	{
@@ -45,8 +47,8 @@ public final class BlockDimPos
 	@Override
 	public boolean equals(Object o)
 	{
-		if(o == null) return false;
-		else return o == this || equalsPos((BlockDimPos) o);
+		if(o == null) { return false; }
+		else { return o == this || equalsPos((BlockDimPos) o); }
 	}
 	
 	@Override
@@ -73,7 +75,7 @@ public final class BlockDimPos
 	
 	public boolean equalsPos(BlockDimPos p)
 	{
-		if(p == null) return false;
-		else return p == this || (p.dim == dim && p.pos.equals(pos));
+		if(p == null) { return false; }
+		else { return p == this || (p.dim == dim && p.pos.equals(pos)); }
 	}
 }

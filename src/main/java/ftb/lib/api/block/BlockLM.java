@@ -104,7 +104,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		if(hasTileEntity(state) && el instanceof EntityPlayer)
 		{
 			TileLM tile = getTile(w, pos);
-			if(tile != null) tile.onPlacedBy((EntityPlayer) el, is, state);
+			if(tile != null) { tile.onPlacedBy((EntityPlayer) el, is, state); }
 		}
 	}
 	
@@ -114,7 +114,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM tile = getTile(w, pos);
-			if(tile != null && tile.isExplosionResistant()) return 1000000F;
+			if(tile != null && tile.isExplosionResistant()) { return 1000000F; }
 		}
 		
 		return super.getExplosionResistance(w, pos, e, ex);
@@ -126,7 +126,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		if(!w.isRemote && hasTileEntity(state))
 		{
 			TileLM tile = getTile(w, pos);
-			if(tile != null) tile.onBroken(state);
+			if(tile != null) { tile.onBroken(state); }
 		}
 		super.breakBlock(w, pos, state);
 	}
@@ -134,7 +134,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	@Override
 	public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumHand hand, ItemStack item, EnumFacing s, float x1, float y1, float z1)
 	{
-		if(!hasTileEntity(state)) return false;
+		if(!hasTileEntity(state)) { return false; }
 		TileLM tile = getTile(w, pos);
 		return (tile != null) && tile.onRightClick(ep, item, s, hand, x1, y1, z1);
 	}
@@ -145,7 +145,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		if(hasTileEntity(state))
 		{
 			TileLM t = getTile(w, pos);
-			if(t != null) return t.receiveClientEvent(eventID, param);
+			if(t != null) { return t.receiveClientEvent(eventID, param); }
 		}
 		
 		return false;
@@ -159,7 +159,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 			TileLM t = getTile(w, pos);
 			if(t != null)
 			{
-				if(t.recolourBlock(side, color)) ;
+				if(t.recolourBlock(side, color)) { }
 				return true;
 			}
 		}
@@ -184,7 +184,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 		if(hasTileEntity(w.getBlockState(pos)))
 		{
 			TileLM t = getTile(w, pos);
-			if(t != null) t.onNeighborBlockChange(neighbor);
+			if(t != null) { t.onNeighborBlockChange(neighbor); }
 		}
 	}
 	
@@ -205,7 +205,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public TileLM getTile(IBlockAccess w, BlockPos pos)
 	{
 		TileEntity te = w.getTileEntity(pos);
-		if(te != null && !te.isInvalid() && te instanceof TileLM) return ((TileLM) te);
+		if(te != null && !te.isInvalid() && te instanceof TileLM) { return ((TileLM) te); }
 		return null;
 	}
 	
@@ -213,8 +213,4 @@ public abstract class BlockLM extends Block implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer()
 	{ return BlockRenderLayer.SOLID; }
-	
-	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{ return getUnlocalizedName(); }
 }
