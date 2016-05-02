@@ -20,7 +20,7 @@ public class LMMod extends FinalIDObject
 	public static LMMod create(String s)
 	{
 		LMMod mod = new LMMod(s);
-		if(FTBLib.DEV_ENV) FTBLibMod.logger.info("LMMod '" + mod.getID() + "' created");
+		if(FTBLib.DEV_ENV) { FTBLibMod.logger.info("LMMod '" + mod.getID() + "' created"); }
 		return mod;
 	}
 	

@@ -59,10 +59,10 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
 	{
-		if(ForgeWorldSP.inst == null) return null;
+		if(ForgeWorldSP.inst == null) { return null; }
 		
 		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
-		if(p == null) p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName));
+		if(p == null) { p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName)); }
 		p.init();
 		p.readFromNet(m.data, p.isMCPlayer());
 		ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);

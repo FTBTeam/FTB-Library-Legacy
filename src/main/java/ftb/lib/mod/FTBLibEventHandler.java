@@ -113,7 +113,7 @@ public class FTBLibEventHandler
 				if(!callbacks.isEmpty())
 				{
 					for(int i = callbacks.size() - 1; i >= 0; i--)
-						if(callbacks.get(i).incAndCheck()) callbacks.remove(i);
+						if(callbacks.get(i).incAndCheck()) { callbacks.remove(i); }
 				}
 			}
 			
@@ -134,13 +134,13 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public void onRightClick(PlayerInteractEvent e)
 	{
-		if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty) return;
+		if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty) { return; }
 		else if(!canInteract(e.getEntityPlayer(), e.getHand(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
-			e.setCanceled(true);
+		{ e.setCanceled(true); }
 		else if(FTBLib.ftbu != null && e.getEntityPlayer() instanceof EntityPlayerMP)
 		{
 			if(!FTBLib.ftbu.canPlayerInteract((EntityPlayerMP) e.getEntityPlayer(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
-				e.setCanceled(true);
+			{ e.setCanceled(true); }
 		}
 	}
 	
@@ -150,7 +150,7 @@ public class FTBLibEventHandler
 		
 		if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
 		{
-			if(!ep.worldObj.isRemote) ep.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+			if(!ep.worldObj.isRemote) { ep.worldObj.markBlockRangeForRenderUpdate(pos, pos); }
 			//FIXME: else ep.worldObj.markChunkDirty(pos, null);
 			return false;
 		}

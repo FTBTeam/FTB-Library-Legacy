@@ -36,7 +36,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	public BlockLM(Material m)
 	{
 		super(m);
-		setCreativeTab(CreativeTabs.tabMisc);
+		setCreativeTab(CreativeTabs.MISC);
 		setHardness(1.8F);
 		setResistance(3F);
 	}

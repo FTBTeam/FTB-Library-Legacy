@@ -40,7 +40,7 @@ public abstract class ClickActionType extends FinalIDObject
 		{
 			PlayerAction a = PlayerActionRegistry.get(data.getAsString());
 			if(a != null && a.type.isSelf())
-				a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer);
+			{ a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer); }
 		}
 	};
 	
@@ -89,7 +89,7 @@ public abstract class ClickActionType extends FinalIDObject
 		public void onClicked(JsonElement data)
 		{
 			GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc.thePlayer, data.getAsString());
-			if(gui != null) FTBLibClient.openGui(gui);
+			if(gui != null) { FTBLibClient.openGui(gui); }
 		}
 	};
 	

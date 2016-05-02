@@ -25,7 +25,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 			throw new NullPointerException("Command ID can't be null!");
 		}
 		
-		if(l == null || l == CommandLevel.NONE) throw new NullPointerException();
+		if(l == null || l == CommandLevel.NONE) { throw new NullPointerException(); }
 		
 		commandName = s;
 		level = l;
@@ -52,7 +52,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	@Override
 	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
 	{
-		if(args.length == 0) return null;
+		if(args.length == 0) { return null; }
 		else if(isUsernameIndex(args, args.length - 1))
 		{
 			return getListOfStringsMatchingLastWord(args, server.getAllUsernames());
@@ -66,7 +66,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 	{ return false; }
 	
 	public static void checkArgs(String[] args, int i) throws CommandException
-	{ if(args == null || args.length < i) throw FTBLibLang.missing_args.commandError(); }
+	{ if(args == null || args.length < i) { throw FTBLibLang.missing_args.commandError(); } }
 	
 	//TODO: Fix me / make work with PlayerMatcher
 	public static List<EntityPlayerMP> findPlayers(ICommandSender ics, String arg) throws CommandException
@@ -80,15 +80,15 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 			case "@r":
 			{
 				List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
-				if(!l.isEmpty()) player = l.get(ics.getEntityWorld().rand.nextInt(l.size()));
+				if(!l.isEmpty()) { player = l.get(ics.getEntityWorld().rand.nextInt(l.size())); }
 				break;
 			}
 			case "@p":
 			{
-				if(ics instanceof EntityPlayerMP) return Collections.singletonList((EntityPlayerMP) ics);
+				if(ics instanceof EntityPlayerMP) { return Collections.singletonList((EntityPlayerMP) ics); }
 				
 				List<EntityPlayerMP> l = FTBLib.getAllOnlinePlayers(null);
-				if(l.size() < 2) return l;
+				if(l.size() < 2) { return l; }
 				
 				EntityPlayerMP closest = null;
 				double distSq = Double.POSITIVE_INFINITY;
@@ -96,7 +96,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 				
 				for(EntityPlayerMP ep : l)
 				{
-					if(closest == null) closest = ep;
+					if(closest == null) { closest = ep; }
 					else
 					{
 						double d = ep.getDistanceSq(c.getX() + 0.5D, c.getY() + 0.5D, c.getZ() + 0.5D);
@@ -116,7 +116,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 				break;
 		}
 		
-		if(player == null) return new ArrayList<>();
+		if(player == null) { return new ArrayList<>(); }
 		return Collections.singletonList(player);
 	}
 }

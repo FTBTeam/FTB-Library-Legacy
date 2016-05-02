@@ -20,8 +20,8 @@ public class ShapelessStackArray implements IStackArray
 	@Override
 	public boolean matches(ItemStack[] ai)
 	{
-		if(items == null || ai == null) return false;
-		if(items.length != ai.length) return false;
+		if(items == null || ai == null) { return false; }
+		if(items.length != ai.length) { return false; }
 		
 		List<StackArray> itemsList = Arrays.asList(items);
 		

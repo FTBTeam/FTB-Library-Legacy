@@ -38,9 +38,9 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 					hover.add(c1.getFormattedText());
 				}
 				
-				if(hover.isEmpty()) hover = null;
+				if(hover.isEmpty()) { hover = null; }
 			}
-			else hover = null;
+			else { hover = null; }
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) return;
+		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
 		
 		boolean mouseOver = mouseOver();

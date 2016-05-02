@@ -58,7 +58,7 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
 		TileEntity te = ep.worldObj.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
 		
-		if(te instanceof IClientActionTile) ((IClientActionTile) te).onClientAction(ep, m.action, m.data);
+		if(te instanceof IClientActionTile) { ((IClientActionTile) te).onClientAction(ep, m.action, m.data); }
 		
 		return null;
 	}

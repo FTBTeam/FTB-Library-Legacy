@@ -191,7 +191,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			
 			worldObj.markChunkDirty(pos, this);
 			
-			if(getBlockType() != Blocks.air)
+			if(getBlockType() != Blocks.AIR)
 			{
 				worldObj.updateComparatorOutputLevel(pos, getBlockType());
 			}

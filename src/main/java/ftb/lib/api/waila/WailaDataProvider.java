@@ -22,7 +22,7 @@ public class WailaDataProvider implements IWailaDataProvider
 	
 	private static WailaDataAccessor getData(IWailaDataAccessor i)
 	{
-		if(dataAccessor == null) dataAccessor = new WailaDataAccessor();
+		if(dataAccessor == null) { dataAccessor = new WailaDataAccessor(); }
 		dataAccessor.player = i.getPlayer();
 		dataAccessor.world = i.getWorld();
 		dataAccessor.position = i.getMOP();

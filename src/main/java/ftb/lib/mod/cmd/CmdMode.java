@@ -62,17 +62,17 @@ public class CmdMode extends CommandSubLM
 			if(i == 1)
 			{
 				c = FTBLibLang.mode_not_found.textComponent();
-				c.getChatStyle().setColor(TextFormatting.RED);
+				c.getStyle().setColor(TextFormatting.RED);
 			}
 			else if(i == 2)
 			{
 				c = FTBLibLang.mode_already_set.textComponent();
-				c.getChatStyle().setColor(TextFormatting.RED);
+				c.getStyle().setColor(TextFormatting.RED);
 			}
 			else
 			{
 				c = FTBLibLang.mode_loaded.textComponent(args[0]);
-				c.getChatStyle().setColor(TextFormatting.GREEN);
+				c.getStyle().setColor(TextFormatting.GREEN);
 				FTBLib.reload(ics, true, true);
 			}
 			
@@ -89,7 +89,7 @@ public class CmdMode extends CommandSubLM
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			ITextComponent c = FTBLibLang.mode_current.textComponent(ForgeWorldMP.inst.getMode().getID());
-			c.getChatStyle().setColor(TextFormatting.AQUA);
+			c.getStyle().setColor(TextFormatting.AQUA);
 			ics.addChatMessage(c);
 		}
 	}
@@ -103,7 +103,7 @@ public class CmdMode extends CommandSubLM
 		public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 		{
 			ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(GameModes.instance().modes.keySet()));
-			c.getChatStyle().setColor(TextFormatting.AQUA);
+			c.getStyle().setColor(TextFormatting.AQUA);
 			ics.addChatMessage(c);
 		}
 	}

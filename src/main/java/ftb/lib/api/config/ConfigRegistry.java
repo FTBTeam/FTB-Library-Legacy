@@ -25,7 +25,7 @@ public class ConfigRegistry
 			map.put(f.getID(), f);
 			
 			ConfigGroup g1 = f.generateSynced(false);
-			if(!g1.entryMap.isEmpty()) synced.add(g1, false);
+			if(!g1.entryMap.isEmpty()) { synced.add(g1, false); }
 		}
 	}
 	
@@ -51,7 +51,7 @@ public class ConfigRegistry
 					FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
 					f.save();
 				}
-				else FTBLib.dev_logger.info("Didnt load anything from " + e.getKey());
+				else { FTBLib.dev_logger.info("Didnt load anything from " + e.getKey()); }
 			}
 		}
 		
@@ -74,13 +74,13 @@ public class ConfigRegistry
 	public static void editTempConfig(EntityPlayerMP ep, ConfigFile file, boolean reload)
 	{
 		if(ep != null && file != null && tempServerConfig.containsValue(file))
-			new MessageEditConfig(LMAccessToken.generate(ep), reload, file).sendTo(ep);
+		{ new MessageEditConfig(LMAccessToken.generate(ep), reload, file).sendTo(ep); }
 	}
 	
 	public static ConfigFile getTempConfig(String id)
 	{
 		ConfigFile group = tempServerConfig.get(id);
-		if(group != null) tempServerConfig.remove(id);
+		if(group != null) { tempServerConfig.remove(id); }
 		return group;
 	}
 	

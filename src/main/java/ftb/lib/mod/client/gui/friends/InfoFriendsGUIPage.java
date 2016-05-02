@@ -93,7 +93,7 @@ public class InfoFriendsGUIPage extends InfoPage
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiInfo.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 			int ax = getAX();
 			
 			double z = gui.getZLevel();
@@ -108,10 +108,10 @@ public class InfoFriendsGUIPage extends InfoPage
 			boolean raw2 = ForgeWorldSP.inst.clientPlayer.isFriendRaw(playerLM);
 			
 			GlStateManager.color(0F, 0F, 0F, 1F);
-			if(raw1 && raw2) GlStateManager.color(0.18F, 0.74F, 0.18F, 1F);
-				//else if(raw1 || raw2) GlStateManager.color(raw1 ? 0xFFE0BE00 : 0xFF00B6ED);
-			else if(raw1) GlStateManager.color(0.87F, 0.74F, 0F, 1F);
-			else if(raw2) GlStateManager.color(0F, 0.71F, 0.92F, 1F);
+			if(raw1 && raw2) { GlStateManager.color(0.18F, 0.74F, 0.18F, 1F); }
+			//else if(raw1 || raw2) GlStateManager.color(raw1 ? 0xFFE0BE00 : 0xFF00B6ED);
+			else if(raw1) { GlStateManager.color(0.87F, 0.74F, 0F, 1F); }
+			else if(raw2) { GlStateManager.color(0F, 0.71F, 0.92F, 1F); }
 			
 			GuiLM.drawBlankRect(ax + 1, ay + 1, z, 18, 18);
 			

@@ -14,7 +14,7 @@ public class LMAccessToken
 	
 	public static long generate(EntityPlayerMP ep)
 	{
-		if(ep == null || ep instanceof FakePlayer) return 0L;
+		if(ep == null || ep instanceof FakePlayer) { return 0L; }
 		long token = random.nextLong();
 		tokens.put(ep.getUniqueID(), token);
 		return token;
@@ -22,13 +22,13 @@ public class LMAccessToken
 	
 	public static boolean equals(EntityPlayerMP ep, long token, boolean remove)
 	{
-		if(ep == null || ep instanceof FakePlayer) return false;
+		if(ep == null || ep instanceof FakePlayer) { return false; }
 		
 		Long t = tokens.get(ep.getUniqueID());
 		
 		if(t != null && t.longValue() == token)
 		{
-			if(remove) tokens.remove(ep.getUniqueID());
+			if(remove) { tokens.remove(ep.getUniqueID()); }
 			return true;
 		}
 		

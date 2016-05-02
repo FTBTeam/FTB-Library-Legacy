@@ -10,20 +10,20 @@ public class ItemStackSerializer
 {
 	private static String getParseRegex(String s)
 	{
-		if(s.indexOf(' ') != -1) return " ";
-		else if(s.indexOf(';') != -1) return ";";
-		else if(s.indexOf('@') != -1) return "@";
-		else return " x ";
+		if(s.indexOf(' ') != -1) { return " "; }
+		else if(s.indexOf(';') != -1) { return ";"; }
+		else if(s.indexOf('@') != -1) { return "@"; }
+		else { return " x "; }
 	}
 	
 	public static ItemStack parseItem(String s)
 	{
-		if(s == null) return null;
+		if(s == null) { return null; }
 		s = s.trim();
-		if(s.isEmpty()) return null;
+		if(s.isEmpty()) { return null; }
 		
 		String[] s1 = s.split(getParseRegex(s));
-		if(s1.length <= 0) return null;
+		if(s1.length <= 0) { return null; }
 		
 		String itemID = s1[0];
 		int dmg = 0;
@@ -50,20 +50,20 @@ public class ItemStackSerializer
 	
 	public static String toString(ItemStack is)
 	{
-		if(is == null) return null;
+		if(is == null) { return null; }
 		return LMInvUtils.getRegName(is).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
 	}
 	
 	public static JsonElement serialize(ItemStack is)
 	{
-		if(is == null || is.getItem() == null) return null;
+		if(is == null || is.getItem() == null) { return null; }
 		return new JsonPrimitive(toString(is));
 	}
 	
 	public static ItemStack deserialize(JsonElement e)
 	{
-		if(e == null) return null;
-		else if(e.isJsonPrimitive()) return parseItem(e.getAsString());
+		if(e == null) { return null; }
+		else if(e.isJsonPrimitive()) { return parseItem(e.getAsString()); }
 		return null;
 	}
 }

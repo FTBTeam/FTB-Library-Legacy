@@ -24,15 +24,15 @@ public class ForgePlayerStats
 	public void refresh(ForgePlayerMP player, boolean force)
 	{
 		StatisticsFile file = player.getStatFile(force);
-		if(file == null) return;
+		if(file == null) { return; }
 		
 		long ms = LMUtils.millis();
 		
-		timePlayed = file.readStat(StatList.playOneMinute) * 50L;
-		deaths = file.readStat(StatList.deaths);
+		timePlayed = file.readStat(StatList.PLAY_ONE_MINUTE) * 50L;
+		deaths = file.readStat(StatList.DEATHS);
 		
 		lastSeen = ms;
-		if(firstJoined <= 0L) firstJoined = lastSeen;
+		if(firstJoined <= 0L) { firstJoined = lastSeen; }
 	}
 	
 	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info, long ms)
@@ -82,7 +82,7 @@ public class ForgePlayerStats
 	
 	public double getDeathsPerHour()
 	{
-		if(deaths == 0 || timePlayed == 0L) return 0D;
+		if(deaths == 0 || timePlayed == 0L) { return 0D; }
 		return (double) deaths / (timePlayed / 3600000D);
 	}
 	
@@ -91,7 +91,7 @@ public class ForgePlayerStats
 	
 	public double getLastSeenDeltaInHours(ForgePlayerMP p)
 	{
-		if(p.isOnline()) return 0D;
+		if(p.isOnline()) { return 0D; }
 		return (LMUtils.millis() - getLastSeen(p)) / 3600000D;
 	}
 }

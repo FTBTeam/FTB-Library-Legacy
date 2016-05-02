@@ -16,7 +16,7 @@ public class GameMode extends FinalIDObject
 	public File getFolder()
 	{
 		File f = new File(FTBLib.folderModpack, getID());
-		if(!f.exists()) f.mkdirs();
+		if(!f.exists()) { f.mkdirs(); }
 		return f;
 	}
 	

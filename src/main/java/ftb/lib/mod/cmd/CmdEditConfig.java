@@ -41,7 +41,7 @@ public class CmdEditConfig extends CommandLM
 		else if(args.length == 2)
 		{
 			ConfigFile file = ConfigRegistry.map.get(args[0]);
-			if(file != null) return getListOfStringsMatchingLastWord(args, file.entryMap.keySet());
+			if(file != null) { return getListOfStringsMatchingLastWord(args, file.entryMap.keySet()); }
 		}
 		else if(args.length == 3)
 		{
@@ -49,7 +49,7 @@ public class CmdEditConfig extends CommandLM
 			if(file != null)
 			{
 				ConfigGroup group = file.getGroup(args[1]);
-				if(group != null) return getListOfStringsMatchingLastWord(args, group.entryMap.keySet());
+				if(group != null) { return getListOfStringsMatchingLastWord(args, group.entryMap.keySet()); }
 			}
 		}
 		

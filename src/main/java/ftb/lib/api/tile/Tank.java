@@ -54,7 +54,7 @@ public class Tank implements IFluidHandler
 	{
 		NBTTagCompound tankTag = tag.getCompoundTag(name);
 		fluidTank.readFromNBT(tankTag);
-		if(tankTag.hasKey("Empty")) fluidTank.setFluid(null);
+		if(tankTag.hasKey("Empty")) { fluidTank.setFluid(null); }
 		
 		if(fluidTank.getFluidAmount() > fluidTank.getCapacity())
 		{
@@ -79,7 +79,7 @@ public class Tank implements IFluidHandler
 		if(canFill(from, resource.getFluid()))
 		{
 			int i = fluidTank.fill(resource, doFill);
-			if(doFill) checkIfChanged();
+			if(doFill) { checkIfChanged(); }
 			return i;
 		}
 		return 0;
@@ -88,11 +88,11 @@ public class Tank implements IFluidHandler
 	@Override
 	public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain)
 	{
-		if(fluidTank.getFluidAmount() <= 0) return null;
-		if(!fluidTank.getFluid().isFluidEqual(resource)) return null;
-		if(!canDrain(from, resource.getFluid())) return null;
+		if(fluidTank.getFluidAmount() <= 0) { return null; }
+		if(!fluidTank.getFluid().isFluidEqual(resource)) { return null; }
+		if(!canDrain(from, resource.getFluid())) { return null; }
 		FluidStack fs = fluidTank.drain(resource.amount, doDrain);
-		if(doDrain) checkIfChanged();
+		if(doDrain) { checkIfChanged(); }
 		return fs;
 	}
 	
@@ -100,7 +100,7 @@ public class Tank implements IFluidHandler
 	public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain)
 	{
 		FluidStack fs = fluidTank.drain(maxDrain, doDrain);
-		if(doDrain) checkIfChanged();
+		if(doDrain) { checkIfChanged(); }
 		return fs;
 	}
 	

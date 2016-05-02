@@ -19,7 +19,7 @@ public class GuiScreenRegistry
 	
 	public static void register(String s, Entry e)
 	{
-		if(s != null && e != null && !map.containsKey(s)) map.put(s, e);
+		if(s != null && e != null && !map.containsKey(s)) { map.put(s, e); }
 	}
 	
 	public static String[] getKeys()
@@ -28,7 +28,7 @@ public class GuiScreenRegistry
 	public static GuiScreen openGui(EntityPlayer ep, String id)
 	{
 		Entry e = map.get(id);
-		if(e != null) return e.openGui(ep);
+		if(e != null) { return e.openGui(ep); }
 		return null;
 	}
 	

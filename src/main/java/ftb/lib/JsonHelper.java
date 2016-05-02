@@ -22,13 +22,13 @@ public class JsonHelper
 	
 	public static JsonElement serializeICC(ITextComponent c)
 	{
-		if(c == null) return null;
+		if(c == null) { return null; }
 		return chatComponentGson.toJsonTree(c, ITextComponent.class);
 	}
 	
 	public static ITextComponent deserializeICC(JsonElement e)
 	{
-		if(e == null || e.isJsonNull()) return null;
+		if(e == null || e.isJsonNull()) { return null; }
 		return chatComponentGson.fromJson(e, ITextComponent.class);
 	}
 }

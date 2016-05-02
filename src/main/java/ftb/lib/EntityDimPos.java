@@ -38,9 +38,9 @@ public final class EntityDimPos
 	@Override
 	public boolean equals(Object o)
 	{
-		if(o == null) return false;
-		else if(o == this) return true;
-		else if(o instanceof Entity) return equalsPos((Entity) o);
+		if(o == null) { return false; }
+		else if(o == this) { return true; }
+		else if(o instanceof Entity) { return equalsPos((Entity) o); }
 		return equalsPos((EntityDimPos) o);
 	}
 	

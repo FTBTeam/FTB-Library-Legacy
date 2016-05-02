@@ -185,7 +185,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				b.expanded = true;
 				configEntryButtons.add(b);
 			}
-			else parent.subButtons.add(b);
+			else { parent.subButtons.add(b); }
 			
 			ConfigGroup g = e.getAsGroup();
 			if(g != null)
@@ -213,7 +213,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 	@Override
 	public void onLMGuiClosed()
 	{
-		if(shouldClose && changed) provider.save();
+		if(shouldClose && changed) { provider.save(); }
 	}
 	
 	@Override
@@ -288,7 +288,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		@Override
 		public void renderWidget()
 		{
-			if(!isVisible()) return;
+			if(!isVisible()) { return; }
 			boolean mouseOver = gui.mouse().y >= 20 && mouseOver();
 			
 			int ax = getAX();
@@ -316,7 +316,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				}
 				
 				int textCol = 0xFF000000 | entry.getColor();
-				if(mouseOver) textCol = LMColorUtils.addBrightness(textCol, 60);
+				if(mouseOver) { textCol = LMColorUtils.addBrightness(textCol, 60); }
 				
 				if(mouseOver && gui.mouse().x > ax + width - slen - 9)
 				{
@@ -332,11 +332,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			if(gui.mouse().y < 20) return;
+			if(gui.mouse().y < 20) { return; }
 			
 			FTBLibClient.playClickSound();
 			
-			if(entry.getFlag(Flags.CANT_EDIT)) return;
+			if(entry.getFlag(Flags.CANT_EDIT)) { return; }
 			
 			ConfigEntryType type = entry.getConfigType();
 			
@@ -363,7 +363,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 							gui.onChanged();
 						}
 						
-						if(c.closeGui) FTBLibClient.openGui(gui);
+						if(c.closeGui) { FTBLibClient.openGui(gui); }
 					}
 				}, ((ConfigEntryColor) entry).value, 0, false);
 			}
@@ -380,7 +380,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 							gui.onChanged();
 						}
 						
-						if(c.closeGui) FTBLibClient.openGui(gui);
+						if(c.closeGui) { FTBLibClient.openGui(gui); }
 					}
 				});
 			}
@@ -397,7 +397,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 							gui.onChanged();
 						}
 						
-						if(c.closeGui) FTBLibClient.openGui(gui);
+						if(c.closeGui) { FTBLibClient.openGui(gui); }
 					}
 				});
 			}
@@ -414,7 +414,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 							gui.onChanged();
 						}
 						
-						if(c.closeGui) FTBLibClient.openGui(gui);
+						if(c.closeGui) { FTBLibClient.openGui(gui); }
 					}
 				});
 			}
@@ -431,7 +431,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 							gui.onChanged();
 						}
 						
-						if(c.closeGui) FTBLibClient.openGui(gui);
+						if(c.closeGui) { FTBLibClient.openGui(gui); }
 					}
 				});
 			}
@@ -459,9 +459,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 				String min = entry.getMinValueString();
 				String max = entry.getMaxValueString();
 				
-				if(def != null) l.add(TextFormatting.AQUA + "Def: " + def);
-				if(min != null) l.add(TextFormatting.AQUA + "Min: " + min);
-				if(max != null) l.add(TextFormatting.AQUA + "Max: " + max);
+				if(def != null) { l.add(TextFormatting.AQUA + "Def: " + def); }
+				if(min != null) { l.add(TextFormatting.AQUA + "Min: " + min); }
+				if(max != null) { l.add(TextFormatting.AQUA + "Max: " + max); }
 			}
 		}
 	}

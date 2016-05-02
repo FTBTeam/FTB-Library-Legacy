@@ -45,7 +45,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		texture = tex;
 		mc = FTBLibClient.mc;
 		
-		if(parent != null) mc.thePlayer.closeScreen();
+		if(parent != null) { mc.thePlayer.closeScreen(); }
 		
 		ScaledResolution scr = new ScaledResolution(mc);
 		
@@ -131,8 +131,8 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	@Override
 	protected void keyTyped(char keyChar, int key) throws IOException
 	{
-		if(mainPanel.keyPressed(key, keyChar)) return;
-		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode()) onClosedByKey();
+		if(mainPanel.keyPressed(key, keyChar)) { return; }
+		if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode()) { onClosedByKey(); }
 		super.keyTyped(keyChar, key);
 	}
 	
@@ -179,7 +179,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 		GlStateManager.enableBlend();
 		tempTextList.clear();
 		drawText(tempTextList);
-		if(!tempTextList.isEmpty()) drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
+		if(!tempTextList.isEmpty()) { drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj); }
 		GlStateManager.disableLighting();
 		drawForeground();
 		GlStateManager.color(1F, 1F, 1F, 1F);
@@ -265,8 +265,8 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	
 	public static void drawItem(IGuiLM gui, ItemStack is, int x, int y)
 	{
-		if(is == null) return;
-		FTBLibClient.setTexture(TextureMap.locationBlocksTexture);
+		if(is == null) { return; }
+		FTBLibClient.setTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		float z0 = gui.getZLevel();
 		gui.setZLevel(z0 + 200F);
 		RenderItem itemRender = FTBLibClient.mc.getRenderItem();
@@ -278,11 +278,11 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	
 	public static void render(TextureCoords tc, double x, double y, double z, double w, double h)
 	{
-		if(tc == null || !tc.isValid()) return;
+		if(tc == null || !tc.isValid()) { return; }
 		FTBLibClient.setTexture(tc.texture);
 		GuiLM.drawTexturedRectD(x, y, z, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
 	}
 	
 	public static void render(TextureCoords tc, double x, double y, double z)
-	{ if(tc != null && tc.isValid()) render(tc, x, y, z, tc.width, tc.height); }
+	{ if(tc != null && tc.isValid()) { render(tc, x, y, z, tc.width, tc.height); } }
 }

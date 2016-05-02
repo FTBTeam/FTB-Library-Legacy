@@ -40,7 +40,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 	public ConfigGroup getAsGroup()
 	{
 		JsonElement e = getSerializableElement();
-		if(e.isJsonNull()) return null;
+		if(e.isJsonNull()) { return null; }
 		else if(e.isJsonObject())
 		{
 			ConfigGroup group = new ConfigGroup(getID());
@@ -61,7 +61,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 	public List<String> getAsStringList()
 	{
 		JsonElement e = getSerializableElement();
-		if(e.isJsonNull()) return new ArrayList<>();
+		if(e.isJsonNull()) { return new ArrayList<>(); }
 		List<String> list = new ArrayList<>();
 		for(JsonElement e1 : e.getAsJsonArray())
 			list.add(e1.getAsString());
@@ -93,7 +93,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 	public IntList getAsIntList()
 	{
 		JsonElement e = getSerializableElement();
-		if(e.isJsonNull()) return null;
+		if(e.isJsonNull()) { return null; }
 		JsonArray a = e.getAsJsonArray();
 		IntList l = new IntList(a.size());
 		for(int i = 0; i < l.size(); i++)

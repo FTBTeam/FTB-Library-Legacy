@@ -23,19 +23,19 @@ public class MathHelperMC
 	
 	public static EnumFacing getHorizontalFacing(int index)
 	{
-		if(index == 0) return EnumFacing.NORTH;
-		else if(index == 1) return EnumFacing.EAST;
-		else if(index == 2) return EnumFacing.SOUTH;
-		else if(index == 3) return EnumFacing.WEST;
+		if(index == 0) { return EnumFacing.NORTH; }
+		else if(index == 1) { return EnumFacing.EAST; }
+		else if(index == 2) { return EnumFacing.SOUTH; }
+		else if(index == 3) { return EnumFacing.WEST; }
 		return null;
 	}
 	
 	public static int getHorizontalIndex(EnumFacing facing)
 	{
-		if(facing == EnumFacing.NORTH) return 0;
-		else if(facing == EnumFacing.EAST) return 1;
-		else if(facing == EnumFacing.SOUTH) return 2;
-		else if(facing == EnumFacing.WEST) return 3;
+		if(facing == EnumFacing.NORTH) { return 0; }
+		else if(facing == EnumFacing.EAST) { return 1; }
+		else if(facing == EnumFacing.SOUTH) { return 2; }
+		else if(facing == EnumFacing.WEST) { return 3; }
 		return -1;
 	}
 	
@@ -58,10 +58,10 @@ public class MathHelperMC
 			
 			if(x0 == x1 || y0 == y1 || z0 == z1)
 			{
-				if(x0 == x1 && y0 == y1 && z0 == z1) return null;
-				else if(x0 != x1) return x0 > x1 ? EnumFacing.EAST : EnumFacing.WEST;
-				else if(y0 != y1) return y0 > y1 ? EnumFacing.UP : EnumFacing.WEST;
-				else if(z0 != z1) return z0 > z1 ? EnumFacing.SOUTH : EnumFacing.NORTH;
+				if(x0 == x1 && y0 == y1 && z0 == z1) { return null; }
+				else if(x0 != x1) { return x0 > x1 ? EnumFacing.EAST : EnumFacing.WEST; }
+				else if(y0 != y1) { return y0 > y1 ? EnumFacing.UP : EnumFacing.WEST; }
+				else if(z0 != z1) { return z0 > z1 ? EnumFacing.SOUTH : EnumFacing.NORTH; }
 			}
 		}
 		
@@ -70,7 +70,7 @@ public class MathHelperMC
 	
 	public static double getDistance(Vec3i p0, Vec3i p1)
 	{
-		if(p0 == null || p1 == null) return 0D;
+		if(p0 == null || p1 == null) { return 0D; }
 		return MathHelperLM.dist(p0.getX(), p0.getY(), p0.getZ(), p1.getX(), p1.getY(), p1.getZ());
 	}
 	
@@ -85,18 +85,18 @@ public class MathHelperMC
 	public static Vec3d getEyePosition(EntityPlayer ep)
 	{
 		double y = 0D;
-		if(!ep.worldObj.isRemote) y = ep.getEyeHeight();
+		if(!ep.worldObj.isRemote) { y = ep.getEyeHeight(); }
 		return new Vec3d(ep.posX, ep.posY + y, ep.posZ);
 	}
 	
 	public static RayTraceResult rayTrace(EntityPlayer ep, double d)
 	{
-		if(ep == null) return null;
+		if(ep == null) { return null; }
 		Vec3d pos = getEyePosition(ep);
 		Vec3d look = ep.getLookVec();
 		Vec3d vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
 		RayTraceResult mop = ep.worldObj.rayTraceBlocks(pos, vec, false, true, false);
-		if(mop != null && mop.hitVec == null) mop.hitVec = new Vec3d(0D, 0D, 0D);
+		if(mop != null && mop.hitVec == null) { mop.hitVec = new Vec3d(0D, 0D, 0D); }
 		return mop;
 	}
 	
@@ -105,7 +105,7 @@ public class MathHelperMC
 	
 	public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, AxisAlignedBB[] boxes)
 	{
-		if(boxes == null || boxes.length <= 0) return null;
+		if(boxes == null || boxes.length <= 0) { return null; }
 		
 		RayTraceResult current = null;
 		double dist = Double.POSITIVE_INFINITY;
@@ -151,31 +151,31 @@ public class MathHelperMC
 		Vec3d zmin = pos.getIntermediateWithZValue(rot, aabb.minZ);
 		Vec3d zmax = pos.getIntermediateWithZValue(rot, aabb.maxZ);
 		
-		if(!isVecInsideYZBounds(xmin, aabb)) xmin = null;
-		if(!isVecInsideYZBounds(xmax, aabb)) xmax = null;
-		if(!isVecInsideXZBounds(ymin, aabb)) ymin = null;
-		if(!isVecInsideXZBounds(ymax, aabb)) ymax = null;
-		if(!isVecInsideXYBounds(zmin, aabb)) zmin = null;
-		if(!isVecInsideXYBounds(zmax, aabb)) zmax = null;
+		if(!isVecInsideYZBounds(xmin, aabb)) { xmin = null; }
+		if(!isVecInsideYZBounds(xmax, aabb)) { xmax = null; }
+		if(!isVecInsideXZBounds(ymin, aabb)) { ymin = null; }
+		if(!isVecInsideXZBounds(ymax, aabb)) { ymax = null; }
+		if(!isVecInsideXYBounds(zmin, aabb)) { zmin = null; }
+		if(!isVecInsideXYBounds(zmax, aabb)) { zmax = null; }
 		Vec3d v = null;
 		
-		if(xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v))) v = xmin;
-		if(xmax != null && (v == null || pos.squareDistanceTo(xmax) < pos.squareDistanceTo(v))) v = xmax;
-		if(ymin != null && (v == null || pos.squareDistanceTo(ymin) < pos.squareDistanceTo(v))) v = ymin;
-		if(ymax != null && (v == null || pos.squareDistanceTo(ymax) < pos.squareDistanceTo(v))) v = ymax;
-		if(zmin != null && (v == null || pos.squareDistanceTo(zmin) < pos.squareDistanceTo(v))) v = zmin;
-		if(zmax != null && (v == null || pos.squareDistanceTo(zmax) < pos.squareDistanceTo(v))) v = zmax;
-		if(v == null) return null;
+		if(xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v))) { v = xmin; }
+		if(xmax != null && (v == null || pos.squareDistanceTo(xmax) < pos.squareDistanceTo(v))) { v = xmax; }
+		if(ymin != null && (v == null || pos.squareDistanceTo(ymin) < pos.squareDistanceTo(v))) { v = ymin; }
+		if(ymax != null && (v == null || pos.squareDistanceTo(ymax) < pos.squareDistanceTo(v))) { v = ymax; }
+		if(zmin != null && (v == null || pos.squareDistanceTo(zmin) < pos.squareDistanceTo(v))) { v = zmin; }
+		if(zmax != null && (v == null || pos.squareDistanceTo(zmax) < pos.squareDistanceTo(v))) { v = zmax; }
+		if(v == null) { return null; }
 		else
 		{
 			EnumFacing side = null;
 			
-			if(v == xmin) side = EnumFacing.WEST;
-			if(v == xmax) side = EnumFacing.EAST;
-			if(v == ymin) side = EnumFacing.DOWN;
-			if(v == ymax) side = EnumFacing.UP;
-			if(v == zmin) side = EnumFacing.NORTH;
-			if(v == zmax) side = EnumFacing.SOUTH;
+			if(v == xmin) { side = EnumFacing.WEST; }
+			if(v == xmax) { side = EnumFacing.EAST; }
+			if(v == ymin) { side = EnumFacing.DOWN; }
+			if(v == ymax) { side = EnumFacing.UP; }
+			if(v == zmin) { side = EnumFacing.NORTH; }
+			if(v == zmax) { side = EnumFacing.SOUTH; }
 			
 			return new RayTraceResult(v.addVector(blockPos.getX(), blockPos.getY(), blockPos.getZ()), side, blockPos);
 		}

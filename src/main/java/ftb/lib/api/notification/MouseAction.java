@@ -25,7 +25,7 @@ public class MouseAction implements IJsonSerializable
 	{
 		JsonObject o = new JsonObject();
 		
-		if(click != null) o.add("click", click.getSerializableElement());
+		if(click != null) { o.add("click", click.getSerializableElement()); }
 		
 		if(!hover.isEmpty())
 		{
@@ -41,7 +41,7 @@ public class MouseAction implements IJsonSerializable
 	@Override
 	public void fromJson(JsonElement e)
 	{
-		if(e == null || !e.isJsonObject()) return;
+		if(e == null || !e.isJsonObject()) { return; }
 		
 		JsonObject o1 = e.getAsJsonObject();
 		
@@ -50,7 +50,7 @@ public class MouseAction implements IJsonSerializable
 			click = new ClickAction();
 			click.fromJson(o1.get("click"));
 		}
-		else click = null;
+		else { click = null; }
 		
 		if(o1.has("hover"))
 		{
@@ -65,8 +65,8 @@ public class MouseAction implements IJsonSerializable
 	{
 		for(ITextComponent c : hover)
 		{
-			if(c != null) l.add(c.getFormattedText());
-			else l.add("");
+			if(c != null) { l.add(c.getFormattedText()); }
+			else { l.add(""); }
 		}
 	}
 }

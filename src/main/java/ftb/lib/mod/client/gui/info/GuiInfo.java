@@ -93,7 +93,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 				
 				if(selectedPage == page || page.getFormattedText().isEmpty())
 				{
-					if(parentGui == null) mc.thePlayer.closeScreen();
+					if(parentGui == null) { mc.thePlayer.closeScreen(); }
 					else
 					{
 						parentGui.selectedPage = parentGui.page;
@@ -204,11 +204,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		buttonBack.posY = 12;
 		
 		LMColor c = page.getTextColor();
-		if(c == null) c = InfoClientSettings.text_color.value;
+		if(c == null) { c = InfoClientSettings.text_color.value; }
 		colorText = 0xFF000000 | c.color();
 		
 		c = page.getBackgroundColor();
-		if(c == null) c = InfoClientSettings.bg_color.value;
+		if(c == null) { c = InfoClientSettings.bg_color.value; }
 		colorBackground = 0xFF000000 | c.color();
 		
 		Boolean b = page.useUnicodeFont();

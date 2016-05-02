@@ -69,22 +69,25 @@ public class ConfigGroup extends ConfigEntry
 		{
 			Field f[] = c.getDeclaredFields();
 			
-			if(f != null && f.length > 0) for(Field aF : f)
+			if(f != null && f.length > 0)
 			{
-				try
+				for(Field aF : f)
 				{
-					aF.setAccessible(true);
-					if(ConfigEntry.class.isAssignableFrom(aF.getType()))
+					try
 					{
-						ConfigEntry entry = (ConfigEntry) aF.get(parent);
-						if(entry != null && entry != this && !(entry instanceof ConfigFile))
+						aF.setAccessible(true);
+						if(ConfigEntry.class.isAssignableFrom(aF.getType()))
 						{
-							AnnotationHelper.inject(aF, parent, entry);
-							add(entry, copy);
+							ConfigEntry entry = (ConfigEntry) aF.get(parent);
+							if(entry != null && entry != this && !(entry instanceof ConfigFile))
+							{
+								AnnotationHelper.inject(aF, parent, entry);
+								add(entry, copy);
+							}
 						}
 					}
+					catch(Exception e1) { }
 				}
-				catch(Exception e1) { }
 			}
 		}
 		catch(Exception e)
@@ -107,7 +110,7 @@ public class ConfigGroup extends ConfigEntry
 	@Override
 	public final void fromJson(JsonElement o0)
 	{
-		if(o0 == null || !o0.isJsonObject()) return;
+		if(o0 == null || !o0.isJsonObject()) { return; }
 		
 		entryMap.clear();
 		
@@ -229,7 +232,7 @@ public class ConfigGroup extends ConfigEntry
 	
 	public int loadFromGroup(ConfigGroup l, boolean isNBT)
 	{
-		if(l == null || l.entryMap.isEmpty()) return 0;
+		if(l == null || l.entryMap.isEmpty()) { return 0; }
 		
 		int result = 0;
 		
@@ -282,7 +285,7 @@ public class ConfigGroup extends ConfigEntry
 			}
 		}
 		
-		if(result > 0) onLoadedFromGroup(l);
+		if(result > 0) { onLoadedFromGroup(l); }
 		return result;
 	}
 	
@@ -308,7 +311,7 @@ public class ConfigGroup extends ConfigEntry
 		for(ConfigEntry e : entryMap.values())
 		{
 			ConfigGroup g = e.getAsGroup();
-			if(g != null) list.add(g);
+			if(g != null) { list.add(g); }
 		}
 		return list;
 	}
@@ -323,8 +326,8 @@ public class ConfigGroup extends ConfigEntry
 		
 		for(ConfigEntry e : entryMap.values())
 		{
-			if(e.getAsGroup() == null) count++;
-			else count += e.getAsGroup().getTotalEntryCount();
+			if(e.getAsGroup() == null) { count++; }
+			else { count += e.getAsGroup().getTotalEntryCount(); }
 		}
 		
 		return count;
@@ -346,7 +349,7 @@ public class ConfigGroup extends ConfigEntry
 			else if(e.getAsGroup() != null)
 			{
 				ConfigGroup g = e.getAsGroup().generateSynced(copy);
-				if(!g.entryMap.isEmpty()) out.add(g, false);
+				if(!g.entryMap.isEmpty()) { out.add(g, false); }
 			}
 		}
 		

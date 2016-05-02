@@ -108,19 +108,19 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 		
 		double d = getAsDouble();
 		
-		if(d != 0D) tag.setDouble("V", d);
+		if(d != 0D) { tag.setDouble("V", d); }
 		
 		if(extended)
 		{
-			if(defValue != 0D) tag.setDouble("D", defValue);
+			if(defValue != 0D) { tag.setDouble("D", defValue); }
 			
 			d = getMin();
 			
-			if(d != Double.NEGATIVE_INFINITY) tag.setDouble("MN", d);
+			if(d != Double.NEGATIVE_INFINITY) { tag.setDouble("MN", d); }
 			
 			d = getMax();
 			
-			if(d != Double.POSITIVE_INFINITY) tag.setDouble("MX", d);
+			if(d != Double.POSITIVE_INFINITY) { tag.setDouble("MX", d); }
 		}
 	}
 	

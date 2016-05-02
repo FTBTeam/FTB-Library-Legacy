@@ -69,7 +69,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 			clickAction = new ClickAction();
 			clickAction.fromJson(o.get("click"));
 		}
-		else clickAction = null;
+		else { clickAction = null; }
 		
 		if(o.has("hover"))
 		{
@@ -77,7 +77,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 			
 			JsonElement e1 = o.get("hover");
 			
-			if(e1.isJsonPrimitive()) hover.add(JsonHelper.deserializeICC(e1));
+			if(e1.isJsonPrimitive()) { hover.add(JsonHelper.deserializeICC(e1)); }
 			else
 			{
 				for(JsonElement e2 : o.get("hover").getAsJsonArray())
@@ -86,16 +86,16 @@ public class InfoExtendedTextLine extends InfoTextLine
 				}
 			}
 			
-			if(hover.isEmpty()) hover = null;
+			if(hover.isEmpty()) { hover = null; }
 		}
-		else hover = null;
+		else { hover = null; }
 	}
 	
 	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
-		if(text != null) o.add("text", JsonHelper.serializeICC(text));
+		if(text != null) { o.add("text", JsonHelper.serializeICC(text)); }
 		
 		if(clickAction != null)
 		{
@@ -128,7 +128,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 	
 	public void setHover(List<ITextComponent> h)
 	{
-		if(h == null || h.isEmpty()) hover = null;
+		if(h == null || h.isEmpty()) { hover = null; }
 		else
 		{
 			hover = new ArrayList<>(h.size());

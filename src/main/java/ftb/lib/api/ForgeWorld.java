@@ -70,7 +70,7 @@ public abstract class ForgeWorld
 	
 	public final ForgeWorldData getData(String id)
 	{
-		if(id == null || id.isEmpty()) return null;
+		if(id == null || id.isEmpty()) { return null; }
 		return customData.get(id);
 	}
 	
@@ -95,21 +95,21 @@ public abstract class ForgeWorld
 	
 	public ForgePlayer getPlayer(Object o)
 	{
-		if(o == null || o instanceof FakePlayer) return null;
+		if(o == null || o instanceof FakePlayer) { return null; }
 		else if(o instanceof UUID)
 		{
 			UUID id = (UUID) o;
-			if(id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L) return null;
+			if(id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L) { return null; }
 			return playerMap.get(id);
 		}
-		else if(o instanceof ForgePlayer) return getPlayer(((ForgePlayer) o).getProfile().getId());
-		else if(o instanceof EntityPlayer) return getPlayer(((EntityPlayer) o).getGameProfile().getId());
-		else if(o instanceof GameProfile) return getPlayer(((GameProfile) o).getId());
+		else if(o instanceof ForgePlayer) { return getPlayer(((ForgePlayer) o).getProfile().getId()); }
+		else if(o instanceof EntityPlayer) { return getPlayer(((EntityPlayer) o).getGameProfile().getId()); }
+		else if(o instanceof GameProfile) { return getPlayer(((GameProfile) o).getId()); }
 		else if(o instanceof CharSequence)
 		{
 			String s = o.toString();
 			
-			if(s == null || s.isEmpty()) return null;
+			if(s == null || s.isEmpty()) { return null; }
 			
 			for(ForgePlayer p : playerMap.values())
 			{
@@ -131,7 +131,7 @@ public abstract class ForgeWorld
 		
 		for(ForgePlayer p : playerMap.values())
 		{
-			if(p.isOnline()) l.add(p);
+			if(p.isOnline()) { l.add(p); }
 		}
 		
 		return l;
@@ -147,7 +147,7 @@ public abstract class ForgeWorld
 			public int compare(ForgePlayer o1, ForgePlayer o2)
 			{
 				if(o1.isOnline() == o2.isOnline())
-					return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
+				{ return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName()); }
 				return Boolean.compare(o2.isOnline(), o1.isOnline());
 			}
 		});
@@ -162,8 +162,8 @@ public abstract class ForgeWorld
 	{
 		GameMode m = GameModes.instance().modes.get(mode);
 		
-		if(m == null) return 1;
-		if(m.equals(currentMode)) return 2;
+		if(m == null) { return 1; }
+		if(m.equals(currentMode)) { return 2; }
 		
 		currentMode = m;
 		

@@ -34,7 +34,7 @@ public class CreativeTabLM extends CreativeTabs
 	
 	public CreativeTabLM addIcon(ItemStack is)
 	{
-		if(is != null) iconItems.add(is);
+		if(is != null) { iconItems.add(is); }
 		return this;
 	}
 	
@@ -44,11 +44,11 @@ public class CreativeTabLM extends CreativeTabs
 	{
 		if(!iconItems.isEmpty())
 		{
-			if(iconItems.size() == 1) return iconItems.get(0);
+			if(iconItems.size() == 1) { return iconItems.get(0); }
 			return iconItems.get((int) ((LMUtils.millis() / 1000L) % iconItems.size()));
 		}
 		
-		return new ItemStack(Items.diamond);
+		return new ItemStack(Items.DIAMOND);
 	}
 	
 	@Override
@@ -65,13 +65,13 @@ public class CreativeTabLM extends CreativeTabs
 	@SideOnly(Side.CLIENT)
 	public void displayAllRelevantItems(List<ItemStack> l)
 	{
-		if(mod == null) super.displayAllRelevantItems(l);
+		if(mod == null) { super.displayAllRelevantItems(l); }
 		else
 		{
 			for(IItemLM i : mod.itemsAndBlocks)
 			{
 				Item item = i.getItem();
-				if(item.getCreativeTab() == this) item.getSubItems(item, this, l);
+				if(item.getCreativeTab() == this) { item.getSubItems(item, this, l); }
 			}
 		}
 	}

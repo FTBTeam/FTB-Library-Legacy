@@ -25,5 +25,5 @@ public abstract class ItemButtonLM extends ButtonLM
 	
 	@Override
 	public void renderWidget()
-	{ if(item != null) GuiLM.drawItem(gui, item, getAX(), getAY()); }
+	{ if(item != null) { GuiLM.drawItem(gui, item, getAX(), getAY()); } }
 }

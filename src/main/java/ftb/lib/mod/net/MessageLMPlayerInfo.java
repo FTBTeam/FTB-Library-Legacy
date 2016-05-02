@@ -90,9 +90,9 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
 	{
-		if(ForgeWorldSP.inst == null) return null;
+		if(ForgeWorldSP.inst == null) { return null; }
 		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
-		if(p == null) return null;
+		if(p == null) { return null; }
 		
 		ArrayList<ITextComponent> info = new ArrayList<>();
 		for(int i = 0; i < m.info.length; i++)
@@ -106,7 +106,7 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		
 		for(int i = 0; i < m.armor.length; i++)
 		{
-			if(m.armor[i] != null) p.lastArmor.put(i, m.armor[i].copy());
+			if(m.armor[i] != null) { p.lastArmor.put(i, m.armor[i].copy()); }
 		}
 		
 		FTBLibClient.onGuiClientAction();

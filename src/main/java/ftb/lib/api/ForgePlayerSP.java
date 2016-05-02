@@ -134,7 +134,7 @@ public class ForgePlayerSP extends ForgePlayer
 			for(Map.Entry<String, NBTBase> e : LMNBTUtils.entrySet(tag.getCompoundTag("C")))
 			{
 				ForgePlayerData data = customData.get(e.getKey());
-				if(data != null) data.readFromNet((NBTTagCompound) e.getValue(), self);
+				if(data != null) { data.readFromNet((NBTTagCompound) e.getValue(), self); }
 			}
 		}
 	}

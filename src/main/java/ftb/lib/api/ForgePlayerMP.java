@@ -51,7 +51,7 @@ public class ForgePlayerMP extends ForgePlayer
 	public static ForgePlayerMP get(Object o) throws CommandException
 	{
 		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(o);
-		if(p == null || p.isFake()) throw new PlayerNotFoundException();
+		if(p == null || p.isFake()) { throw new PlayerNotFoundException(); }
 		return p;
 	}
 	
@@ -116,7 +116,7 @@ public class ForgePlayerMP extends ForgePlayer
 	public BlockDimPos getPos()
 	{
 		EntityPlayerMP ep = getPlayer();
-		if(ep != null) lastPos = new EntityDimPos(ep).toBlockDimPos();
+		if(ep != null) { lastPos = new EntityDimPos(ep).toBlockDimPos(); }
 		return lastPos;
 	}
 	
@@ -135,13 +135,13 @@ public class ForgePlayerMP extends ForgePlayer
 			if(raw1 && raw2)
 			{
 				ITextComponent c = GuiLang.label_friend.textComponent();
-				c.getChatStyle().setColor(TextFormatting.GREEN);
+				c.getStyle().setColor(TextFormatting.GREEN);
 				info.add(c);
 			}
 			else if(raw1 || raw2)
 			{
 				ITextComponent c = GuiLang.label_friend_pending.textComponent();
-				c.getChatStyle().setColor(raw1 ? TextFormatting.GOLD : TextFormatting.BLUE);
+				c.getStyle().setColor(raw1 ? TextFormatting.GOLD : TextFormatting.BLUE);
 				info.add(c);
 			}
 		}
@@ -179,7 +179,7 @@ public class ForgePlayerMP extends ForgePlayer
 			for(int i = 0; i < friendsList.tagCount(); i++)
 			{
 				UUID id = LMUtils.fromString(friendsList.getStringTagAt(i));
-				if(id != null) friends.add(id);
+				if(id != null) { friends.add(id); }
 			}
 		}
 		
@@ -306,7 +306,7 @@ public class ForgePlayerMP extends ForgePlayer
 		
 		//Rank rank = getRank();
 		
-		if(isOnline()) tag.setBoolean("O", true);
+		if(isOnline()) { tag.setBoolean("O", true); }
 		
 		if(!friends.isEmpty())
 		{
@@ -343,13 +343,13 @@ public class ForgePlayerMP extends ForgePlayer
 			
 			for(ForgePlayer p : getWorld().playerMap.values())
 			{
-				if(p.isFriendRaw(this) && !isFriendRaw(p)) requests.add(p.getProfile().getName());
+				if(p.isFriendRaw(this) && !isFriendRaw(p)) { requests.add(p.getProfile().getName()); }
 			}
 			
 			if(requests.size() > 0)
 			{
 				ITextComponent cc = GuiLang.label_friend_new.textComponent();
-				cc.getChatStyle().setColor(TextFormatting.GREEN);
+				cc.getStyle().setColor(TextFormatting.GREEN);
 				Notification n = new Notification("new_friend_requests", cc, 6000);
 				n.setDesc(GuiLang.label_friend_new_click.textComponent());
 				
@@ -383,7 +383,7 @@ public class ForgePlayerMP extends ForgePlayer
 	@Override
 	public void onDeath()
 	{
-		if(!isOnline()) return;
+		if(!isOnline()) { return; }
 		lastDeath = new EntityDimPos(getPlayer()).toBlockDimPos();
 		stats.refresh(this, false);
 		super.onDeath();
@@ -392,7 +392,7 @@ public class ForgePlayerMP extends ForgePlayer
 	
 	public StatisticsFile getStatFile(boolean force)
 	{
-		if(isOnline()) return getPlayer().getStatFile();
+		if(isOnline()) { return getPlayer().getStatFile(); }
 		return force ? FTBLib.getServer().getPlayerList().getPlayerStatsFile(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
 	}
 }

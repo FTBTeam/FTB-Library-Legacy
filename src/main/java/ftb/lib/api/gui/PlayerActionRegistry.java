@@ -57,14 +57,14 @@ public class PlayerActionRegistry
 			{
 				if(!ignoreConfig && a.configDefault() != null)
 				{
-					if(!enabled(a.getID())) continue;
+					if(!enabled(a.getID())) { continue; }
 				}
 				
 				l.add(a);
 			}
 		}
 		
-		if(sort) Collections.sort(l);
+		if(sort) { Collections.sort(l); }
 		return l;
 	}
 	

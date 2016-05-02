@@ -61,7 +61,7 @@ public class ConfigEntryString extends ConfigEntry
 		super.writeToNBT(tag, extended);
 		
 		String s = getAsString();
-		if(!s.isEmpty()) tag.setString("V", s);
+		if(!s.isEmpty()) { tag.setString("V", s); }
 		
 		if(extended && !defValue.isEmpty())
 		{

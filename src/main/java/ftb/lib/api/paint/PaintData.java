@@ -33,8 +33,8 @@ public class PaintData
 	
 	public boolean canReplace(Paint p)
 	{
-		if(p == null && paint == null) return false;
-		if(p == null && paint != null) return true;
+		if(p == null && paint == null) { return false; }
+		if(p == null && paint != null) { return true; }
 		return p != null && paint == null || p.block != paint.block || (p.block == paint.block && p.meta != paint.meta);
 	}
 }

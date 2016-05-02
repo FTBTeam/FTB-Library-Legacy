@@ -18,7 +18,7 @@ public class InfoTextLine implements IJsonSerializable
 {
 	public static InfoTextLine get(InfoPage c, JsonElement e)
 	{
-		if(e == null || e.isJsonNull()) return null;
+		if(e == null || e.isJsonNull()) { return null; }
 		else if(e.isJsonPrimitive())
 		{
 			String s = e.getAsString();

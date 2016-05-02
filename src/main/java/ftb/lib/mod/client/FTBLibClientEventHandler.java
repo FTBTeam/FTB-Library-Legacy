@@ -38,7 +38,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public void onTooltip(ItemTooltipEvent e)
 	{
-		if(e.getItemStack() == null || e.getItemStack().getItem() == null) return;
+		if(e.getItemStack() == null || e.getItemStack().getItem() == null) { return; }
 		
 		/*
 		if(FTBLibModClient.item_reg_names.getAsBoolean())
@@ -62,7 +62,7 @@ public class FTBLibClientEventHandler
 			}
 		}
 		
-		if(FTBLib.ftbu != null) FTBLib.ftbu.onTooltip(e);
+		if(FTBLib.ftbu != null) { FTBLib.ftbu.onTooltip(e); }
 	}
 	
 	@SubscribeEvent

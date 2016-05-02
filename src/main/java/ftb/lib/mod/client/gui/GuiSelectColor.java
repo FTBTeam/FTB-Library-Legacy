@@ -181,7 +181,7 @@ public class GuiSelectColor extends GuiLM
 	
 	public void setColor(LMColor col)
 	{
-		if((0xFF000000 | currentColor.color()) == (0xFF000000 | col.color())) return;
+		if((0xFF000000 | currentColor.color()) == (0xFF000000 | col.color())) { return; }
 		currentColor.set(col);
 		
 		sliderRed.value = currentColor.red() / 255F;
@@ -195,7 +195,7 @@ public class GuiSelectColor extends GuiLM
 		colorSelector.cursorPosX = (Math.cos(sliderHue.value * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.value + 0.5D;
 		colorSelector.cursorPosY = (Math.sin(sliderHue.value * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.value + 0.5D;
 		
-		if(isInstant) callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
+		if(isInstant) { callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false)); }
 	}
 	
 	@Override
@@ -312,7 +312,7 @@ public class GuiSelectColor extends GuiLM
 			int ax = getAX();
 			int ay = getAY();
 			
-			if(grabbed && !Mouse.isButtonDown(0)) grabbed = false;
+			if(grabbed && !Mouse.isButtonDown(0)) { grabbed = false; }
 			
 			if(grabbed)
 			{
@@ -351,6 +351,6 @@ public class GuiSelectColor extends GuiLM
 		
 		@Override
 		public void mousePressed(int b)
-		{ if(b == 0 && mouseOver()) grabbed = true; }
+		{ if(b == 0 && mouseOver()) { grabbed = true; } }
 	}
 }

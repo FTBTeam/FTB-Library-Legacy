@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemDisplay
@@ -19,9 +19,9 @@ public class ItemDisplay
 	
 	public ItemDisplay(ItemStack is, String t, List<String> d, float s)
 	{
-		item = (is == null) ? new ItemStack(Blocks.stone) : is;
+		item = (is == null) ? new ItemStack(Blocks.STONE) : is;
 		title = (t == null) ? "" : t;
-		desc = (d == null) ? new ArrayList<String>() : d;
+		desc = (d == null) ? Collections.emptyList() : d;
 		scale = MathHelper.clamp_float(s, 1F, 8F);
 	}
 	

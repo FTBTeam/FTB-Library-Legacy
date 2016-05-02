@@ -24,11 +24,11 @@ public abstract class ButtonLM extends WidgetLM implements IClickable
 			if(doubleClickRequired)
 			{
 				long l = LMUtils.millis();
-				if(l - lastClickMillis < 300) onClicked(MouseButton.get(b));
+				if(l - lastClickMillis < 300) { onClicked(MouseButton.get(b)); }
 				lastClickMillis = l;
 			}
 			
-			else onClicked(MouseButton.get(b));
+			else { onClicked(MouseButton.get(b)); }
 		}
 	}
 }

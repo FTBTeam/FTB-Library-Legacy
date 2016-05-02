@@ -32,14 +32,14 @@ public class ButtonInfoTextLine extends ButtonLM
 			if(c != null)
 			{
 				text = guiInfo.getFontRenderer().listFormattedStringToWidth(c.getFormattedText(), g.panelText.width);
-				if(text.isEmpty()) text = null;
+				if(text.isEmpty()) { text = null; }
 			}
 		}
 		
 		if(text != null)
 		{
-			if(text.size() > 1) width = g.panelText.width;
-			else width = g.getFontRenderer().getStringWidth(text.get(0));
+			if(text.size() > 1) { width = g.panelText.width; }
+			else { width = g.getFontRenderer().getStringWidth(text.get(0)); }
 			height = 10 * text.size();
 		}
 		else
@@ -63,7 +63,7 @@ public class ButtonInfoTextLine extends ButtonLM
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) return;
+		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
 		
 		boolean mouseOver = mouseOver();

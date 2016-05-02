@@ -22,7 +22,7 @@ public abstract class ContainerLM extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer ep, int i)
 	{
-		if(iinv == null) return null;
+		if(iinv == null) { return null; }
 		
 		ItemStack is = null;
 		Slot slot = inventorySlots.get(i);
@@ -34,12 +34,12 @@ public abstract class ContainerLM extends Container
 			
 			if(i < iinv.getSizeInventory())
 			{
-				if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true)) return null;
+				if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true)) { return null; }
 			}
-			else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false)) return null;
+			else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false)) { return null; }
 			
-			if(is1.stackSize == 0) slot.putStack(null);
-			else slot.onSlotChanged();
+			if(is1.stackSize == 0) { slot.putStack(null); }
+			else { slot.onSlotChanged(); }
 		}
 		
 		return is;
@@ -48,7 +48,7 @@ public abstract class ContainerLM extends Container
 	@Override
 	public Slot getSlot(int i)
 	{
-		if(i < 0 || i >= inventorySlots.size()) return null;
+		if(i < 0 || i >= inventorySlots.size()) { return null; }
 		return super.getSlot(i);
 	}
 	
@@ -57,7 +57,7 @@ public abstract class ContainerLM extends Container
 	
 	public void addPlayerSlots(int posX, int posY, boolean ignoreCurrent)
 	{
-		if(player == null || player.inventory == null) return;
+		if(player == null || player.inventory == null) { return; }
 		
 		for(int y = 0; y < 3; y++)
 			for(int x = 0; x < 9; x++)
@@ -66,7 +66,7 @@ public abstract class ContainerLM extends Container
 		int i = ignoreCurrent ? player.inventory.currentItem : -1;
 		
 		for(int x = 0; x < 9; x++)
-			if(x != i) addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
+			if(x != i) { addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58)); }
 	}
 	
 	public void addPlayerSlots(int posY)
@@ -80,7 +80,7 @@ public abstract class ContainerLM extends Container
 	public void onContainerClosed(EntityPlayer ep)
 	{
 		super.onContainerClosed(ep);
-		if(iinv != null) iinv.closeInventory(ep);
+		if(iinv != null) { iinv.closeInventory(ep); }
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public abstract class ContainerLM extends Container
 	{
 		boolean flag1 = false;
 		int k = min;
-		if(RtoL) k = max - 1;
+		if(RtoL) { k = max - 1; }
 		Slot slot;
 		ItemStack is1;
 		
@@ -122,15 +122,15 @@ public abstract class ContainerLM extends Container
 					}
 				}
 				
-				if(RtoL) --k;
-				else ++k;
+				if(RtoL) { --k; }
+				else { ++k; }
 			}
 		}
 		
 		if(is.stackSize > 0)
 		{
-			if(RtoL) k = max - 1;
-			else k = min;
+			if(RtoL) { k = max - 1; }
+			else { k = min; }
 			
 			while(!RtoL && k < max || RtoL && k >= min)
 			{
@@ -146,8 +146,8 @@ public abstract class ContainerLM extends Container
 					break;
 				}
 				
-				if(RtoL) --k;
-				else ++k;
+				if(RtoL) { --k; }
+				else { ++k; }
 			}
 		}
 		

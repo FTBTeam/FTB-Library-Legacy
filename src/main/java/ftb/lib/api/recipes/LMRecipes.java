@@ -36,7 +36,7 @@ public class LMRecipes
 		for(int i = 0; i < in.length; i++)
 		{
 			Object o = StackArray.getFrom(in[i]);
-			if(o != null) in[i] = o;
+			if(o != null) { in[i] = o; }
 		}
 		
 		return in;
@@ -47,8 +47,8 @@ public class LMRecipes
 		in = fixObjects(in);
 		IRecipe r;
 		
-		if(!enableOreRecipes) r = GameRegistry.addShapedRecipe(out, in);
-		else r = addIRecipe(new ShapedOreRecipe(out, in));
+		if(!enableOreRecipes) { r = GameRegistry.addShapedRecipe(out, in); }
+		else { r = addIRecipe(new ShapedOreRecipe(out, in)); }
 		
 		return r;
 	}
@@ -64,8 +64,8 @@ public class LMRecipes
 			for(Object anIn : in)
 			{
 				ItemStack is = StackArray.getFrom(anIn);
-				if(is != null) al.add(is);
-				else throw new RuntimeException("Invalid shapeless recipy!");
+				if(is != null) { al.add(is); }
+				else { throw new RuntimeException("Invalid shapeless recipy!"); }
 			}
 			
 			return addIRecipe(new ShapelessRecipes(out, al));

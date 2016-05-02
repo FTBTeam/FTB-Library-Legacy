@@ -26,7 +26,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	}
 	
 	public void setFolder(String s)
-	{ if(s == null || !s.isEmpty()) folder = s; }
+	{ if(s == null || !s.isEmpty()) { folder = s; } }
 	
 	public MaterialItem add(MaterialItem m)
 	{
@@ -38,7 +38,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public String getUnlocalizedName(ItemStack is)
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
-		if(m != null) return m.getUnlocalizedName();
+		if(m != null) { return m.getUnlocalizedName(); }
 		return "unknown";
 	}
 	
@@ -77,12 +77,12 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
-		if(m != null) m.addInfo(ep, l);
+		if(m != null) { m.addInfo(ep, l); }
 	}
 	
 	public String getPath(String id, char c)
 	{
-		if(folder == null) return id;
+		if(folder == null) { return id; }
 		return folder + c + id;
 	}
 }

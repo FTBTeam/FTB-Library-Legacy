@@ -26,7 +26,7 @@ public class ClickActionRegistry
 	
 	public static void add(ClickActionType a)
 	{
-		if(a != null && LMStringUtils.isValid(a.getID()) && !map.containsKey(a.getID())) map.put(a.getID(), a);
+		if(a != null && LMStringUtils.isValid(a.getID()) && !map.containsKey(a.getID())) { map.put(a.getID(), a); }
 	}
 	
 	public static ClickActionType get(String s)

@@ -50,7 +50,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		syncedData = new NBTTagCompound();
 		ConfigRegistry.synced.writeToNBT(syncedData, false);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced);
+		if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Synced config TX: " + ConfigRegistry.synced); }
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class MessageReload extends MessageLM<MessageReload>
 			String s = readString(io);
 			profile = new GameProfile(id, s);
 		}
-		else profile = null;
+		else { profile = null; }
 		
 		worldData = readTag(io);
 		syncedData = readTag(io);
@@ -103,7 +103,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		syncedGroup.readFromNBT(m.syncedData, false);
 		ConfigRegistry.synced.loadFromGroup(syncedGroup, true);
 		
-		if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Synced config RX: " + syncedGroup.getSerializableElement());
+		if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Synced config RX: " + syncedGroup.getSerializableElement()); }
 		
 		if(m.profile != null || ForgeWorldSP.inst == null)
 		{
@@ -120,7 +120,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		else
 		{
 			Notification n = new Notification("reload_client_config", FTBLibLang.reload_client_config.textComponent(), 7000);
-			n.title.getChatStyle().setColor(TextFormatting.WHITE);
+			n.title.getStyle().setColor(TextFormatting.WHITE);
 			n.desc = new TextComponentString('/' + FTBLibModClient.reload_client_cmd.getAsString());
 			n.setColor(0xFF333333);
 			ClientNotifications.add(n);
@@ -133,11 +133,11 @@ public class MessageReload extends MessageLM<MessageReload>
 	@SideOnly(Side.CLIENT)
 	public static void reloadClient(long ms, boolean printMessage, boolean modeChanged)
 	{
-		if(ms == 0L) ms = LMUtils.millis();
+		if(ms == 0L) { ms = LMUtils.millis(); }
 		GameModes.reload();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
 		ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, true, modeChanged);
-		if(FTBLib.ftbu != null) FTBLib.ftbu.onReloaded(event);
+		if(FTBLib.ftbu != null) { FTBLib.ftbu.onReloaded(event); }
 		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)

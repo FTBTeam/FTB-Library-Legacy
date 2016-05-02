@@ -69,7 +69,7 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 		else
 		{
 			ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
-			if(p == null || p.equalsPlayer(owner)) return null;
+			if(p == null || p.equalsPlayer(owner)) { return null; }
 			
 			if(m.actionID == ADD)
 			{

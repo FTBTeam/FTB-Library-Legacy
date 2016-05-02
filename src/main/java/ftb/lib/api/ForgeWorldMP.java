@@ -69,7 +69,7 @@ public final class ForgeWorldMP extends ForgeWorld
 	@Override
 	public ForgePlayerMP getPlayer(Object o)
 	{
-		if(o instanceof FakePlayer) return new ForgePlayerFake((FakePlayer) o);
+		if(o instanceof FakePlayer) { return new ForgePlayerFake((FakePlayer) o); }
 		ForgePlayer p = super.getPlayer(o);
 		return (p == null) ? null : p.toPlayerMP();
 	}
@@ -234,7 +234,7 @@ public final class ForgeWorldMP extends ForgeWorld
 			for(ForgePlayer p : playerMap.values())
 			{
 				tag1.setString(p.getStringUUID(), p.getProfile().getName());
-				if(p.isOnline() && !p.equalsPlayer(self)) onlinePlayers.add(p.toPlayerMP());
+				if(p.isOnline() && !p.equalsPlayer(self)) { onlinePlayers.add(p.toPlayerMP()); }
 			}
 			
 			if(!tag1.hasNoTags())

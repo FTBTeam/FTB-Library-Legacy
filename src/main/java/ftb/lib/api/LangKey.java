@@ -28,7 +28,7 @@ public final class LangKey extends FinalIDObject
 	{ return new TextComponentTranslation(getID(), o); }
 	
 	public void printChat(ICommandSender ics, Object... o)
-	{ if(ics != null) ics.addChatMessage(textComponent(o)); }
+	{ if(ics != null) { ics.addChatMessage(textComponent(o)); } }
 	
 	public CommandException commandError(Object... o)
 	{ return new CommandException(getID(), o); }

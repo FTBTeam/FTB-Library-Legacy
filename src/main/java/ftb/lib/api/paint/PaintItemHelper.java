@@ -35,7 +35,7 @@ public class PaintItemHelper
 	
 	public static boolean onItemUse(IPainterItem i, ItemStack is, EntityPlayer ep, World w, BlockPos pos, EnumFacing s, float x1, float y1, float z1)
 	{
-		if(w.isRemote) return true;
+		if(w.isRemote) { return true; }
 		
 		TileEntity te = w.getTileEntity(pos);
 		
@@ -52,12 +52,12 @@ public class PaintItemHelper
 				{
 					Block b = Block.getBlockFromItem(paint.getItem());
 					
-					if(b != Blocks.air) p = new Paint(b, paint.getItemDamage());
+					if(b != Blocks.AIR) { p = new Paint(b, paint.getItemDamage()); }
 				}
 				
 				if(mop != null && ((IPaintable) te).setPaint(new PaintData(ep, p, pos, x1, y1, z1, s, mop.subHit)))
 				{
-					if(!ep.capabilities.isCreativeMode) i.damagePainter(is, ep);
+					if(!ep.capabilities.isCreativeMode) { i.damagePainter(is, ep); }
 				}
 			}
 		}
@@ -66,21 +66,21 @@ public class PaintItemHelper
 			IBlockState state = w.getBlockState(pos);
 			Block b = state.getBlock();
 			
-			if(b != Blocks.air)
+			if(b != Blocks.AIR)
 			{
-				if(b.hasTileEntity(state) && !(b instanceof ICustomPaintBlock)) return true;
+				if(b.hasTileEntity(state) && !(b instanceof ICustomPaintBlock)) { return true; }
 				
 				if(state.isFullCube())
 				{
-					if(b instanceof INoPaintBlock && !((INoPaintBlock) b).hasPaint(w, pos, state, s)) return true;
+					if(b instanceof INoPaintBlock && !((INoPaintBlock) b).hasPaint(w, pos, state, s)) { return true; }
 					
 					ItemStack paint = new ItemStack(b, 1, b.getMetaFromState(state));
 					
 					if(b instanceof ICustomPaintBlock)
 					{
 						Paint p = ((ICustomPaintBlock) b).getCustomPaint(w, pos, state);
-						if(p != null) paint = new ItemStack(p.block, 1, p.meta);
-						else return true;
+						if(p != null) { paint = new ItemStack(p.block, 1, p.meta); }
+						else { return true; }
 					}
 					
 					try
@@ -91,7 +91,7 @@ public class PaintItemHelper
 						
 						if(paint0 == null || !ItemStack.areItemStacksEqual(paint0, paint))
 						{
-							if(!is.hasTagCompound()) is.setTagCompound(new NBTTagCompound());
+							if(!is.hasTagCompound()) { is.setTagCompound(new NBTTagCompound()); }
 							
 							NBTTagCompound paintTag = new NBTTagCompound();
 							paint.writeToNBT(paintTag);

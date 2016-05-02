@@ -121,7 +121,7 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		int idx0 = 0;
 		for(E e : enumMap.values())
 		{
-			if(index == idx0) return e;
+			if(index == idx0) { return e; }
 			idx0++;
 		}
 		
@@ -134,7 +134,7 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		E e0 = get();
 		for(E e : enumMap.values())
 		{
-			if(e == e0) return idx0;
+			if(e == e0) { return idx0; }
 			idx0++;
 		}
 		
@@ -146,7 +146,7 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
 		int idx0 = 0;
 		for(E e : enumMap.values())
 		{
-			if(e == defValue) return idx0;
+			if(e == defValue) { return idx0; }
 			idx0++;
 		}
 		

@@ -55,7 +55,10 @@ public class GuiSelectField extends GuiLM
 			public void onClicked(MouseButton button)
 			{
 				FTBLibClient.playClickSound();
-				if(textBox.isValid()) callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
+				if(textBox.isValid())
+				{
+					callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
+				}
 			}
 		};
 		

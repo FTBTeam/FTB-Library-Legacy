@@ -72,7 +72,7 @@ public final class ForgeWorldSP extends ForgeWorld
 				UUID uuid = LMUtils.fromString(s);
 				String name = tag1.getString(s);
 				
-				if(uuid.equals(clientPlayer.getProfile().getId())) playerMap.put(uuid, clientPlayer);
+				if(uuid.equals(clientPlayer.getProfile().getId())) { playerMap.put(uuid, clientPlayer); }
 				else
 				{
 					ForgePlayerSP p = new ForgePlayerSP(new GameProfile(uuid, name));

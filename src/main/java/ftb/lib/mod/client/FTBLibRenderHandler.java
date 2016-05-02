@@ -78,7 +78,7 @@ public class FTBLibRenderHandler
 			FTBLibClient.displayH = sr.getScaledHeight();
 		}
 		
-		if(e.phase == TickEvent.Phase.END && FTBLibClient.isIngame()) ClientNotifications.renderTemp();
+		if(e.phase == TickEvent.Phase.END && FTBLibClient.isIngame()) { ClientNotifications.renderTemp(); }
 		
 		GlStateManager.popMatrix();
 	}
@@ -97,7 +97,7 @@ public class FTBLibRenderHandler
 	public void blockChanged(BlockEvent e)
 	{
 		if(MathHelperLM.distSq(e.getPos().getX() + 0.5D, e.getPos().getY() + 0.5D, e.getPos().getZ() + 0.5D, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) <= 4096D)
-			needsLightUpdate = true;
+		{ needsLightUpdate = true; }
 	}
 	
 	@SubscribeEvent
@@ -137,7 +137,7 @@ public class FTBLibRenderHandler
 			if(renderLightValues && LMFrustrumUtils.playerY >= 0D)
 			{
 				if(lastY == -1D || MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
-					needsLightUpdate = true;
+				{ needsLightUpdate = true; }
 				
 				if(needsLightUpdate)
 				{
@@ -160,7 +160,7 @@ public class FTBLibRenderHandler
 								if(b != null)
 								{
 									int lv = 0;
-									if(FTBLibClient.mc.gameSettings.showDebugInfo) lv = w.getLight(pos, true);
+									if(FTBLibClient.mc.gameSettings.showDebugInfo) { lv = w.getLight(pos, true); }
 									lightList.add(new MobSpawnPos(pos, b == Boolean.TRUE, lv));
 								}
 							}

@@ -24,8 +24,8 @@ public class ButtonNotification extends ButtonLM
 		title = n.notification.title.getFormattedText();
 		width = gui.getFontRenderer().getStringWidth(n.notification.title.getFormattedText());
 		if(n.notification.desc != null)
-			width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.desc.getFormattedText()));
-		if(n.notification.item != null) width += 20;
+		{ width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.desc.getFormattedText())); }
+		if(n.notification.item != null) { width += 20; }
 		width += 8;
 	}
 	
@@ -51,12 +51,12 @@ public class ButtonNotification extends ButtonLM
 		
 		gui.getFontRenderer().drawString(title, ax + tx, ay + 4, 0xFFFFFFFF);
 		if(notification.notification.desc != null)
-			gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);
+		{ gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF); }
 		
 		if(mouseOver(ax, ay))
 		{
 			float alpha = 0.4F;
-			if(gui.mouse().x >= ax + width - 16) alpha = 1F;
+			if(gui.mouse().x >= ax + width - 16) { alpha = 1F; }
 			
 			GlStateManager.color(1F, 1F, 1F, alpha);
 			GuiLM.render(GuiIcons.close, ax + width - 18, ay + 4, gui.getZLevel());
@@ -69,7 +69,7 @@ public class ButtonNotification extends ButtonLM
 	{
 		FTBLibClient.playClickSound();
 		
-		if(gui.mouse().x < getAX() + width - 16) notification.onClicked();
+		if(gui.mouse().x < getAX() + width - 16) { notification.onClicked(); }
 		ClientNotifications.Perm.list.remove(notification.notification);
 		
 		gui.initLMGui();
@@ -86,6 +86,6 @@ public class ButtonNotification extends ButtonLM
 			return;
 		}
 		
-		if(notification.notification.mouse != null) notification.notification.mouse.addHoverText(l);
+		if(notification.notification.mouse != null) { notification.notification.mouse.addHoverText(l); }
 	}
 }

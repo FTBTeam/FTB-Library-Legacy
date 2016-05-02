@@ -31,24 +31,24 @@ public class ForgePlayerComparators
 			boolean o1 = p1.isOnline();
 			boolean o2 = p2.isOnline();
 			
-			if(f1 == f2) output = 0;
+			if(f1 == f2) { output = 0; }
 			else
 			{
-				if(f1 == FriendStatus.FRIEND) output = -1;
-				else if(f2 == FriendStatus.FRIEND) output = 1;
+				if(f1 == FriendStatus.FRIEND) { output = -1; }
+				else if(f2 == FriendStatus.FRIEND) { output = 1; }
 				else
 				{
-					if(f1 == FriendStatus.NONE) return 1;
-					else if(f2 == FriendStatus.NONE) return -1;
+					if(f1 == FriendStatus.NONE) { return 1; }
+					else if(f2 == FriendStatus.NONE) { return -1; }
 				}
 			}
 			
 			if(output == 0)
 			{
-				if(o1 && !o2) output = -1;
-				else if(!o1 && o2) output = 1;
-				else if((o1 && o2) || (!o1 && !o2)) output = 0;
-				if(output == 0) output = p1.getProfile().getName().compareToIgnoreCase(p2.getProfile().getName());
+				if(o1 && !o2) { output = -1; }
+				else if(!o1 && o2) { output = 1; }
+				else if((o1 && o2) || (!o1 && !o2)) { output = 0; }
+				if(output == 0) { output = p1.getProfile().getName().compareToIgnoreCase(p2.getProfile().getName()); }
 			}
 			
 			return output;

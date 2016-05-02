@@ -36,16 +36,16 @@ public class InfoImageLine extends InfoExtendedTextLine
 	@SideOnly(Side.CLIENT)
 	public TextureCoords getImage()
 	{
-		if(texture == TextureCoords.nullTexture) return null;
-		else if(texture != null) return texture;
-		else if(imageURL == null) return null;
+		if(texture == TextureCoords.nullTexture) { return null; }
+		else if(texture != null) { return texture; }
+		else if(imageURL == null) { return null; }
 		
 		texture = TextureCoords.nullTexture;
 		
 		try
 		{
 			File file = new File(FTBLib.folderModpack, "images/" + imageURL);
-			if(FTBLib.DEV_ENV) FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath());
+			if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath()); }
 			BufferedImage img = ImageIO.read(file);
 			ResourceLocation tex = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
 			texture = new TextureCoords(tex, 0D, 0D, img.getWidth(), img.getHeight(), img.getWidth(), img.getHeight());
@@ -62,7 +62,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 	public TextureCoords getDisplayImage()
 	{
 		TextureCoords img = getImage();
-		if(img == null) return null;
+		if(img == null) { return null; }
 		double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
 		double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
 		return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
@@ -72,8 +72,8 @@ public class InfoImageLine extends InfoExtendedTextLine
 	{
 		String imageURL0 = imageURL == null ? null : (imageURL + "");
 		imageURL = img;
-		if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true)) texture = null;
-		if(imageURL != null) text = null;
+		if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true)) { texture = null; }
+		if(imageURL != null) { text = null; }
 	}
 	
 	public void setImage(TextureCoords t)
@@ -87,7 +87,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{
-		if(getImage() == null) return null;
+		if(getImage() == null) { return null; }
 		return new ButtonInfoImage(gui, this);
 	}
 	
@@ -125,7 +125,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 	{
 		JsonObject o = (JsonObject) super.getSerializableElement();
 		
-		if(imageURL != null && !imageURL.isEmpty()) o.add("image", new JsonPrimitive(imageURL));
+		if(imageURL != null && !imageURL.isEmpty()) { o.add("image", new JsonPrimitive(imageURL)); }
 		
 		return o;
 	}

@@ -63,7 +63,7 @@ public class InfoPlayerActionLine extends InfoTextLine
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiInfo.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 			int ax = getAX();
 			float z = gui.getZLevel();
 			
@@ -75,7 +75,7 @@ public class InfoPlayerActionLine extends InfoTextLine
 			
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			
-			if(action.icon != null) action.render(ax + 1, ay + 1, z);
+			if(action.icon != null) { action.render(ax + 1, ay + 1, z); }
 			
 			gui.getFontRenderer().drawString(title, ax + (action.icon == null ? 4 : 20), ay + 5, guiInfo.colorText);
 		}

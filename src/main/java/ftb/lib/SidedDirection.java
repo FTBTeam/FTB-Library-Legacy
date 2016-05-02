@@ -24,22 +24,22 @@ public enum SidedDirection
 	
 	public static SidedDirection getSide(EnumFacing side, EnumFacing rot)
 	{
-		if(side == null || rot == null) return null;
-		for(SidedDirection d : VALUES) if(d.directions[rot.ordinal()] == side) return d;
+		if(side == null || rot == null) { return null; }
+		for(SidedDirection d : VALUES) if(d.directions[rot.ordinal()] == side) { return d; }
 		return null;
 	}
 	
 	public static SidedDirection get(EnumFacing side, EnumFacing rot3D, EnumFacing rot2D)
 	{
-		if(side == rot3D) return FRONT;
-		if(side == rot3D.getOpposite()) return BACK;
+		if(side == rot3D) { return FRONT; }
+		if(side == rot3D.getOpposite()) { return BACK; }
 		
 		if(rot3D == EnumFacing.DOWN)
 		{
 			if(side != EnumFacing.DOWN && side != EnumFacing.UP)
 			{
-				if(rot2D == side) return TOP;
-				else if(rot2D == side.getOpposite()) return BOTTOM;
+				if(rot2D == side) { return TOP; }
+				else if(rot2D == side.getOpposite()) { return BOTTOM; }
 			}
 			
 			return getSide(side, rot2D);
@@ -48,16 +48,16 @@ public enum SidedDirection
 		{
 			if(side != EnumFacing.DOWN && side != EnumFacing.UP)
 			{
-				if(rot2D == side) return BOTTOM;
-				else if(rot2D == side.getOpposite()) return TOP;
+				if(rot2D == side) { return BOTTOM; }
+				else if(rot2D == side.getOpposite()) { return TOP; }
 			}
 			
 			return getSide(side, rot2D);
 		}
 		else
 		{
-			if(side == EnumFacing.DOWN) return BOTTOM;
-			else if(side == EnumFacing.UP) return TOP;
+			if(side == EnumFacing.DOWN) { return BOTTOM; }
+			else if(side == EnumFacing.UP) { return TOP; }
 			return getSide(side, rot3D);
 		}
 	}

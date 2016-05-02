@@ -42,7 +42,7 @@ public class CmdAddFakePlayer extends CommandLM
 		}
 		
 		if(ForgeWorldMP.inst.getPlayer(id) != null || ForgeWorldMP.inst.getPlayer(args[1]) != null)
-			throw FTBLibLang.raw.commandError("Player already exists!");
+		{ throw FTBLibLang.raw.commandError("Player already exists!"); }
 		
 		ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, args[1]));
 		p.init();

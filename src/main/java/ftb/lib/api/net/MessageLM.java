@@ -43,8 +43,8 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	public final void sendTo(EntityPlayerMP ep)
 	{
 		//if(FTBLibFinals.DEV) FTBLib.logger.info("[S] Message sent: " + getClass().getName());
-		if(ep != null) getWrapper().sendTo(this, ep);
-		else getWrapper().sendToAll(this);
+		if(ep != null) { getWrapper().sendTo(this, ep); }
+		else { getWrapper().sendToAll(this); }
 	}
 	
 	public final void sendToServer()

@@ -34,7 +34,7 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) return;
+		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
 		
 		boolean mouseOver = mouseOver();

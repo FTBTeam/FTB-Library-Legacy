@@ -27,7 +27,7 @@ public class TextBoxLM extends WidgetLM
 	@Override
 	public void mousePressed(int b)
 	{
-		if(charLimit == 0) return;
+		if(charLimit == 0) { return; }
 		
 		if(mouseOver())
 		{
@@ -50,7 +50,7 @@ public class TextBoxLM extends WidgetLM
 	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
-		if(charLimit == 0) return false;
+		if(charLimit == 0) { return false; }
 		
 		if(isSelected)
 		{
@@ -59,8 +59,8 @@ public class TextBoxLM extends WidgetLM
 				text = getText();
 				if(text.length() > 0)
 				{
-					if(GuiScreen.isCtrlKeyDown()) clear();
-					else setText(text.substring(0, text.length() - 1));
+					if(GuiScreen.isCtrlKeyDown()) { clear(); }
+					else { setText(text.substring(0, text.length() - 1)); }
 					textChanged();
 				}
 			}
@@ -130,16 +130,16 @@ public class TextBoxLM extends WidgetLM
 		
 		String ns = s;
 		
-		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) ns += '_';
+		if(isSelected && Minecraft.getSystemTime() % 1000L > 500L) { ns += '_'; }
 		
 		if(s.length() > 0)
 		{
 			int col = textColor;
-			if(!isValid()) col = 0xFFFF0000;
+			if(!isValid()) { col = 0xFFFF0000; }
 			
 			if(textRenderX == -1)
-				gui.getFontRenderer().drawString(ns, getAX() + textRenderX - (gui.getFontRenderer().getStringWidth(s) / 2) + width / 2, getAY() + textRenderY, col);
-			else gui.getFontRenderer().drawString(ns, getAX() + textRenderX, getAY() + textRenderY, col);
+			{ gui.getFontRenderer().drawString(ns, getAX() + textRenderX - (gui.getFontRenderer().getStringWidth(s) / 2) + width / 2, getAY() + textRenderY, col); }
+			else { gui.getFontRenderer().drawString(ns, getAX() + textRenderX, getAY() + textRenderY, col); }
 		}
 	}
 	

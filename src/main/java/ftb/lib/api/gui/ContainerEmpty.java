@@ -27,7 +27,7 @@ public class ContainerEmpty extends ContainerLM
 	}
 	
 	@Override
-	public ItemStack func_184996_a(int p_184996_1_, int dragType, ClickType clickTypeIn, EntityPlayer player)
+	public ItemStack slotClick(int p_184996_1_, int dragType, ClickType clickTypeIn, EntityPlayer player)
 	{
 		return null;
 	}

@@ -51,7 +51,7 @@ public class CmdInv extends CommandSubLM
 			}
 			catch(Exception e)
 			{
-				if(FTBLib.DEV_ENV) e.printStackTrace();
+				if(FTBLib.DEV_ENV) { e.printStackTrace(); }
 				throw FTBLibLang.raw.commandError("Failed to load inventory!");
 			}
 		}
@@ -62,7 +62,7 @@ public class CmdInv extends CommandSubLM
 			LMInvUtils.writeItemsToNBT(ep.inventory, tag, "Inventory");
 			
 			if(FTBLib.isModInstalled(OtherMods.BAUBLES))
-				LMInvUtils.writeItemsToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+			{ LMInvUtils.writeItemsToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles"); }
 			
 			LMNBTUtils.writeTag(file, tag);
 		}
@@ -81,7 +81,7 @@ public class CmdInv extends CommandSubLM
 			LMInvUtils.readItemsFromNBT(ep.inventory, tag, "Inventory");
 			
 			if(FTBLib.isModInstalled(OtherMods.BAUBLES))
-				LMInvUtils.readItemsFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+			{ LMInvUtils.readItemsFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles"); }
 		}
 	}
 	

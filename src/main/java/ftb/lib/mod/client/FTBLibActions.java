@@ -244,7 +244,7 @@ public class FTBLibActions
 	@SubscribeEvent
 	public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
 	{
-		if(!FTBLibClient.isIngame()) return;
+		if(!FTBLibClient.isIngame()) { return; }
 		
 		if(e.getGui() instanceof InventoryEffectRenderer)
 		{
@@ -293,7 +293,7 @@ public class FTBLibActions
 					int guiLeft = (e.getGui().width - xSize) / 2;
 					int guiTop = (e.getGui().height - ySize) / 2;
 					
-					if(hasPotions) guiLeft += 60;
+					if(hasPotions) { guiLeft += 60; }
 					
 					for(int i = 0; i < buttons.size(); i++)
 					{
@@ -404,8 +404,8 @@ public class FTBLibActions
 						my1 += 4;
 					}
 					
-					if(mx1 < 4D) mx1 = 4D;
-					if(my1 < 4D) my1 = 4D;
+					if(mx1 < 4D) { mx1 = 4D; }
+					if(my1 < 4D) { my1 = 4D; }
 					
 					GlStateManager.translate(mx1, my1, zLevel);
 					

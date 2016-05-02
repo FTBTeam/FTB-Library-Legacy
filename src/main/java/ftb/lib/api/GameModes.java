@@ -33,7 +33,7 @@ public class GameModes
 	
 	private static boolean isValid(JsonElement e)
 	{
-		if(e == null || !e.isJsonObject()) return false;
+		if(e == null || !e.isJsonObject()) { return false; }
 		JsonObject o = e.getAsJsonObject();
 		return !(o == null || o.entrySet().isEmpty()) && o.has("modes") && o.has("default") && o.has("common");
 	}
@@ -55,7 +55,10 @@ public class GameModes
 		defaultMode = modes0.get(o.get("default").getAsString());
 		
 		String common = o.get("common").getAsString();
-		if(modes0.containsKey(common)) throw new RuntimeException("FTBLib: common mode name can't be one of 'modes'!");
+		if(modes0.containsKey(common))
+		{
+			throw new RuntimeException("FTBLib: common mode name can't be one of 'modes'!");
+		}
 		commonMode = new GameMode(common);
 		
 		modes = Collections.unmodifiableMap(modes0);
@@ -108,13 +111,13 @@ public class GameModes
 	
 	public static GameModes instance()
 	{
-		if(inst == null) reload();
+		if(inst == null) { reload(); }
 		return inst;
 	}
 	
 	public GameMode get(String s)
 	{
-		if(s == null || s.isEmpty()) return defaultMode;
+		if(s == null || s.isEmpty()) { return defaultMode; }
 		GameMode m = modes.get(s);
 		return (m == null) ? defaultMode : m;
 	}

@@ -1,5 +1,6 @@
 package ftb.lib;
 
+import latmod.lib.LMUtils;
 import net.minecraft.block.properties.IProperty;
 
 import java.util.AbstractMap;
@@ -17,10 +18,7 @@ public class BlockStateSerializer
 		
 		@Override
 		public String toString()
-		{ return getKey().getName() + '=' + getKey().getName(getValueE()); }
-		
-		private <E> E getValueE()
-		{ return (E) getValue(); }
+		{ return getKey().getName() + '=' + getKey().getName(LMUtils.convert(getValue())); }
 		
 		@Override
 		public int compareTo(StateEntry o)

@@ -26,11 +26,11 @@ public abstract class LMGuiHandler
 	
 	public void openGui(EntityPlayer ep, int id, NBTTagCompound data)
 	{
-		if(ep instanceof FakePlayer) return;
+		if(ep instanceof FakePlayer) { return; }
 		else if(ep instanceof EntityPlayerMP)
 		{
 			Container c = getContainer(ep, id, data);
-			if(c == null) return;
+			if(c == null) { return; }
 			
 			EntityPlayerMP epM = (EntityPlayerMP) ep;
 			epM.getNextWindowId();
@@ -41,6 +41,6 @@ public abstract class LMGuiHandler
 			new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!FTBLib.getEffectiveSide().isServer())
-			FTBLibMod.proxy.openClientGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, ID, id, data);
+		{ FTBLibMod.proxy.openClientGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, ID, id, data); }
 	}
 }

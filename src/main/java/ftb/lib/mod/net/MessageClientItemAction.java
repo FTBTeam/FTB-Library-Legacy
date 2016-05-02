@@ -49,9 +49,9 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 		ItemStack is = ep.inventory.mainInventory[ep.inventory.currentItem];
 		
 		if(is != null && is.getItem() instanceof IClientActionItem)
-			is = ((IClientActionItem) is.getItem()).onClientAction(is, ep, m.action, m.data);
+		{ is = ((IClientActionItem) is.getItem()).onClientAction(is, ep, m.action, m.data); }
 		
-		if(is != null && is.stackSize <= 0) is = null;
+		if(is != null && is.stackSize <= 0) { is = null; }
 		
 		ep.inventory.mainInventory[ep.inventory.currentItem] = (is == null) ? null : is.copy();
 		ep.inventory.markDirty();

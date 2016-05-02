@@ -112,8 +112,8 @@ public class FTBLibModClient extends FTBLibModCommon
 	@Override
 	public double getReachDist(EntityPlayer ep)
 	{
-		if(ep == null) return 0D;
-		else if(ep instanceof EntityPlayerMP) return super.getReachDist(ep);
+		if(ep == null) { return 0D; }
+		else if(ep instanceof EntityPlayerMP) { return super.getReachDist(ep); }
 		PlayerControllerMP c = FTBLibClient.mc.playerController;
 		return (c == null) ? 0D : c.getBlockReachDistance();
 	}
@@ -127,7 +127,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		float red = LMColorUtils.getRed(col) / 255F;
 		float green = LMColorUtils.getGreen(col) / 255F;
 		float blue = LMColorUtils.getBlue(col) / 255F;
-		if(alpha == 0F) alpha = 1F;
+		if(alpha == 0F) { alpha = 1F; }
 		
 		fx.setRBGColorF(red, green, blue);
 		fx.setAlphaF(alpha);
@@ -159,7 +159,7 @@ public class FTBLibModClient extends FTBLibModCommon
 		if(ep != null && t != null)
 		{
 			GuiScreen g = t.getGui(ep, data);
-			if(g != null) FTBLibClient.openGui(g);
+			if(g != null) { FTBLibClient.openGui(g); }
 		}
 	}
 	

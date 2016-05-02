@@ -137,13 +137,13 @@ public final class CubeRenderer
 	
 	public void renderFace(EnumFacing f)
 	{
-		if(f == null) return;
-		else if(f == EnumFacing.DOWN) renderDown();
-		else if(f == EnumFacing.UP) renderUp();
-		else if(f == EnumFacing.SOUTH) renderSouth();
-		else if(f == EnumFacing.NORTH) renderNorth();
-		else if(f == EnumFacing.WEST) renderWest();
-		else if(f == EnumFacing.EAST) renderEast();
+		if(f == null) { return; }
+		else if(f == EnumFacing.DOWN) { renderDown(); }
+		else if(f == EnumFacing.UP) { renderUp(); }
+		else if(f == EnumFacing.SOUTH) { renderSouth(); }
+		else if(f == EnumFacing.NORTH) { renderNorth(); }
+		else if(f == EnumFacing.WEST) { renderWest(); }
+		else if(f == EnumFacing.EAST) { renderEast(); }
 	}
 	
 	public void begin()
@@ -165,9 +165,9 @@ public final class CubeRenderer
 	private void vertex(int i, double x, double y, double z, double u, double v)
 	{
 		buffer.pos(x, y, z);
-		if(hasTexture) buffer.tex(u, v);
-		if(hasNormals) buffer.normal(normalsX[i], normalsY[i], normalsZ[i]);
-		if(color != null) buffer.color(color.red(), color.green(), color.blue(), color.alpha());
+		if(hasTexture) { buffer.tex(u, v); }
+		if(hasNormals) { buffer.normal(normalsX[i], normalsY[i], normalsZ[i]); }
+		if(color != null) { buffer.color(color.red(), color.green(), color.blue(), color.alpha()); }
 		buffer.endVertex();
 	}
 	

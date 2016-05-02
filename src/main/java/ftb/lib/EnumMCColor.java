@@ -42,7 +42,7 @@ public enum EnumMCColor // ItemDye
 		ID = ordinal();
 		name = EnumDyeColor.byDyeDamage(ID).getUnlocalizedName();
 		langKey = new LangKey("ftbl.color." + s.toLowerCase());
-		color = ItemDye.dyeColors[ID];
+		color = ItemDye.DYE_COLORS[ID];
 		colorBright = c;
 		
 		dyeName = "dye" + s;
@@ -51,5 +51,5 @@ public enum EnumMCColor // ItemDye
 	}
 	
 	public ItemStack getDye(int s)
-	{ return new ItemStack(Items.dye, s, ID); }
+	{ return new ItemStack(Items.DYE, s, ID); }
 }

@@ -38,7 +38,7 @@ public class ConfigFile extends ConfigGroup
 	}
 	
 	public void save()
-	{ if(file != null) LMJsonUtils.toJson(file, getSerializableElement()); }
+	{ if(file != null) { LMJsonUtils.toJson(file, getSerializableElement()); } }
 	
 	public void addGroup(String id, Class<?> c)
 	{ add(new ConfigGroup(id).addAll(c, null, false), false); }

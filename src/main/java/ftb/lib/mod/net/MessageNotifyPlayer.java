@@ -49,11 +49,11 @@ public class MessageNotifyPlayer extends MessageLM<MessageNotifyPlayer>
 		{
 			Notification n = Notification.deserialize(LMJsonUtils.fromJson(m.json));
 			
-			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) ClientNotifications.add(n);
+			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) { ClientNotifications.add(n); }
 			else
 			{
 				FTBLibClient.mc.thePlayer.addChatMessage(n.title);
-				if(n.desc != null) FTBLibClient.mc.thePlayer.addChatMessage(n.desc);
+				if(n.desc != null) { FTBLibClient.mc.thePlayer.addChatMessage(n.desc); }
 			}
 		}
 		

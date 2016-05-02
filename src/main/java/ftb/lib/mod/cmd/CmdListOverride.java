@@ -29,8 +29,8 @@ public class CmdListOverride extends CommandLM
 		FTBLib.printChat(ics, "Players currently online: [ " + players.size() + " ]");
 		for(EntityPlayerMP ep : players)
 		{
-			if(printUUID) FTBLib.printChat(ics, ep.getName() + " :: " + LMUtils.fromUUID(ep.getUniqueID()));
-			else FTBLib.printChat(ics, ep.getName());
+			if(printUUID) { FTBLib.printChat(ics, ep.getName() + " :: " + LMUtils.fromUUID(ep.getUniqueID())); }
+			else { FTBLib.printChat(ics, ep.getName()); }
 		}
 	}
 }

@@ -28,7 +28,7 @@ public class LMInvUtils
 {
 	public static ItemStack singleCopy(ItemStack is)
 	{
-		if(is == null || is.stackSize <= 0) return null;
+		if(is == null || is.stackSize <= 0) { return null; }
 		ItemStack is1 = is.copy();
 		is1.stackSize = 1;
 		return is1;
@@ -36,13 +36,13 @@ public class LMInvUtils
 	
 	public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
 	{
-		if(is1 == null && is2 == null) return true;
+		if(is1 == null && is2 == null) { return true; }
 		return !(is1 == null || is2 == null) && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (!nbt || ItemStack.areItemStackTagsEqual(is1, is2)) && (!size || (is1.stackSize == is2.stackSize));
 	}
 	
 	public static int[] getAllSlots(IInventory inv, EnumFacing side)
 	{
-		if(side != null && inv instanceof ISidedInventory) return ((ISidedInventory) inv).getSlotsForFace(side);
+		if(side != null && inv instanceof ISidedInventory) { return ((ISidedInventory) inv).getSlotsForFace(side); }
 		
 		int[] ai = new int[inv.getSizeInventory()];
 		for(int i = 0; i < ai.length; i++) ai[i] = i;
@@ -51,7 +51,7 @@ public class LMInvUtils
 	
 	public static int getFirstIndexWhereFits(IInventory inv, ItemStack filter, EnumFacing side)
 	{
-		if(inv == null) return -1;
+		if(inv == null) { return -1; }
 		
 		int slots[] = getAllSlots(inv, side);
 		for(int i = 0; i < slots.length; i++)
@@ -60,8 +60,8 @@ public class LMInvUtils
 			
 			if(is1 != null && is1.stackSize < is1.getMaxStackSize())
 			{
-				if(filter == null) return i;
-				else if(itemsEquals(filter, is1, false, true) && is1.stackSize < is1.getMaxStackSize()) return i;
+				if(filter == null) { return i; }
+				else if(itemsEquals(filter, is1, false, true) && is1.stackSize < is1.getMaxStackSize()) { return i; }
 			}
 		}
 		
@@ -70,12 +70,12 @@ public class LMInvUtils
 	
 	public static int getFirstIndexWithItem(IInventory inv, ItemStack filter, EnumFacing side, boolean size, boolean nbt)
 	{
-		if(inv == null || filter == null) return -1;
+		if(inv == null || filter == null) { return -1; }
 		int slots[] = getAllSlots(inv, side);
 		for(int i = 0; i < slots.length; i++)
 		{
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			if(is1 != null && itemsEquals(filter, is1, size, nbt)) return i;
+			if(is1 != null && itemsEquals(filter, is1, size, nbt)) { return i; }
 		}
 		
 		return -1;
@@ -83,7 +83,7 @@ public class LMInvUtils
 	
 	public static int getFirstFilledIndex(IInventory inv, ItemStack filter, EnumFacing side)
 	{
-		if(inv == null) return -1;
+		if(inv == null) { return -1; }
 		int slots[] = getAllSlots(inv, side);
 		for(int i = 0; i < slots.length; i++)
 		{
@@ -91,8 +91,8 @@ public class LMInvUtils
 			
 			if(is1 != null)
 			{
-				if(filter == null) return i;
-				else if(itemsEquals(filter, is1, false, true)) return i;
+				if(filter == null) { return i; }
+				else if(itemsEquals(filter, is1, false, true)) { return i; }
 			}
 		}
 		
@@ -101,13 +101,13 @@ public class LMInvUtils
 	
 	public static int getFirstEmptyIndex(IInventory inv, EnumFacing side)
 	{
-		if(inv == null) return -1;
+		if(inv == null) { return -1; }
 		
 		int slots[] = getAllSlots(inv, side);
 		for(int i = 0; i < slots.length; i++)
 		{
 			ItemStack is1 = inv.getStackInSlot(slots[i]);
-			if(is1 == null || is1.stackSize <= 0) return i;
+			if(is1 == null || is1.stackSize <= 0) { return i; }
 		}
 		
 		return -1;
@@ -115,13 +115,13 @@ public class LMInvUtils
 	
 	public static boolean reduceItemInInv(IInventory inv, int i)
 	{
-		if(inv == null || i == -1 || i >= inv.getSizeInventory()) return false;
+		if(inv == null || i == -1 || i >= inv.getSizeInventory()) { return false; }
 		ItemStack is = inv.getStackInSlot(i);
 		
 		if(is != null)
 		{
 			is.stackSize--;
-			if(is.stackSize <= 0) is = null;
+			if(is.stackSize <= 0) { is = null; }
 			inv.setInventorySlotContents(i, is);
 			inv.markDirty();
 		}
@@ -141,8 +141,8 @@ public class LMInvUtils
 				
 				size -= s;
 				is1.stackSize -= s;
-				if(is1.stackSize <= 0) inv.setInventorySlotContents(i, null);
-				if(size <= 0) return;
+				if(is1.stackSize <= 0) { inv.setInventorySlotContents(i, null); }
+				if(size <= 0) { return; }
 			}
 		}
 		
@@ -151,7 +151,7 @@ public class LMInvUtils
 	
 	public static boolean addSingleItemToInv(ItemStack is, IInventory inv, int[] slots, EnumFacing side, boolean doAdd)
 	{
-		if(is == null) return false;
+		if(is == null) { return false; }
 		ItemStack single = singleCopy(is);
 		
 		for(int i = 0; i < slots.length; i++)
@@ -202,15 +202,15 @@ public class LMInvUtils
 	
 	public static NBTTagCompound removeTags(NBTTagCompound tag, String... tags)
 	{
-		if(tag == null || tag.hasNoTags()) return null;
+		if(tag == null || tag.hasNoTags()) { return null; }
 		for(String tag1 : tags) tag.removeTag(tag1);
-		if(tag.hasNoTags()) tag = null;
+		if(tag.hasNoTags()) { tag = null; }
 		return tag;
 	}
 	
 	public static ItemStack removeTags(ItemStack is, String... tags)
 	{
-		if(is == null) return null;
+		if(is == null) { return null; }
 		is.setTagCompound(removeTags(is.getTagCompound(), tags));
 		return is;
 	}
@@ -228,7 +228,7 @@ public class LMInvUtils
 				list.appendTag(tag1);
 			}
 		
-		if(list.tagCount() > 0) tag.setTag(s, list);
+		if(list.tagCount() > 0) { tag.setTag(s, list); }
 	}
 	
 	public static void writeItemsToNBT(IInventory inventory, NBTTagCompound tag, String s)
@@ -253,7 +253,7 @@ public class LMInvUtils
 				int slot = tag1.getShort("Slot");
 				stacks[slot] = ItemStack.loadItemStackFromNBT(tag1);
 				
-				if(i >= stacks.length) break;
+				if(i >= stacks.length) { break; }
 			}
 		}
 	}
@@ -268,15 +268,15 @@ public class LMInvUtils
 	
 	public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
 	{
-		if(inv == null) return null;
+		if(inv == null) { return null; }
 		ItemStack stack = inv.getStackInSlot(slot);
 		if(stack != null)
 		{
-			if(stack.stackSize <= amt) inv.setInventorySlotContents(slot, null);
+			if(stack.stackSize <= amt) { inv.setInventorySlotContents(slot, null); }
 			else
 			{
 				stack = stack.splitStack(amt);
-				if(stack.stackSize == 0) inv.setInventorySlotContents(slot, null);
+				if(stack.stackSize == 0) { inv.setInventorySlotContents(slot, null); }
 			}
 		}
 		
@@ -285,7 +285,7 @@ public class LMInvUtils
 	
 	public static ItemStack removeStackFromSlot(IInventory inv, int i)
 	{
-		if(inv == null) return null;
+		if(inv == null) { return null; }
 		ItemStack is = inv.getStackInSlot(i);
 		
 		if(is != null)
@@ -299,22 +299,22 @@ public class LMInvUtils
 	
 	public static boolean clear(IInventory inv)
 	{
-		if(inv == null) return false;
+		if(inv == null) { return false; }
 		boolean hadItems = false;
 		
 		for(int i = 0; i < inv.getSizeInventory(); i++)
 		{
 			ItemStack is = removeStackFromSlot(inv, i);
-			if(!hadItems && is != null && is.stackSize > 0) hadItems = true;
+			if(!hadItems && is != null && is.stackSize > 0) { hadItems = true; }
 		}
 		
-		if(hadItems) inv.markDirty();
+		if(hadItems) { inv.markDirty(); }
 		return hadItems;
 	}
 	
 	public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack is, int delay)
 	{
-		if(w == null || is == null || is.stackSize == 0) return;
+		if(w == null || is == null || is.stackSize == 0) { return; }
 		EntityItem ei = new EntityItem(w, x, y, z, is.copy());
 		ei.motionX = mx;
 		ei.motionY = my;
@@ -328,7 +328,7 @@ public class LMInvUtils
 	
 	public static void dropItem(Entity e, ItemStack item)
 	{
-		if(e == null || item == null || item.stackSize <= 0) return;
+		if(e == null || item == null || item.stackSize <= 0) { return; }
 		dropItem(e.worldObj, e.posX, e.posY, e.posZ, item, 0);
 	}
 	
@@ -337,7 +337,7 @@ public class LMInvUtils
 	
 	public static void giveItem(EntityPlayer ep, ItemStack item, int optionalSlot)
 	{
-		if(ep == null || ep.inventory == null || item == null || item.stackSize <= 0) return;
+		if(ep == null || ep.inventory == null || item == null || item.stackSize <= 0) { return; }
 		ItemStack is = item.copy();
 		boolean changed = false;
 		
@@ -355,19 +355,19 @@ public class LMInvUtils
 		{
 			ep.inventory.markDirty();
 			
-			if(ep.openContainer != null) ep.openContainer.detectAndSendChanges();
+			if(ep.openContainer != null) { ep.openContainer.detectAndSendChanges(); }
 		}
 		
-		if(is.stackSize > 0) dropItem(ep, is);
+		if(is.stackSize > 0) { dropItem(ep, is); }
 	}
 	
 	public static void dropAllItems(World w, double x, double y, double z, ItemStack[] items)
 	{
-		if(w.isRemote || items == null || items.length == 0) return;
+		if(w.isRemote || items == null || items.length == 0) { return; }
 		
 		for(ItemStack item : items)
 		{
-			if(item != null && item.stackSize > 0) dropItem(w, x, y, z, item, 10);
+			if(item != null && item.stackSize > 0) { dropItem(w, x, y, z, item, 10); }
 		}
 	}
 	
@@ -378,10 +378,10 @@ public class LMInvUtils
 	
 	public static ItemStack[] getAllItems(IInventory inv, EnumFacing side)
 	{
-		if(inv == null) return null;
+		if(inv == null) { return null; }
 		int[] slots = LMInvUtils.getAllSlots(inv, side);
 		ItemStack[] ai = new ItemStack[slots.length];
-		if(ai.length == 0) return ai;
+		if(ai.length == 0) { return ai; }
 		for(int i = 0; i < ai.length; i++)
 			ai[i] = inv.getStackInSlot(slots[i]);
 		return ai;
@@ -396,10 +396,10 @@ public class LMInvUtils
 	public static Map<Integer, ItemStack> getAllItemsMap(IInventory inv, EnumFacing side)
 	{
 		ItemStack[] is = getAllItems(inv, side);
-		if(is == null) return null;
+		if(is == null) { return null; }
 		HashMap<Integer, ItemStack> map = new HashMap<>();
 		for(int i = 0; i < is.length; i++)
-			if(is[i] != null) map.put(i, is[i]);
+			if(is[i] != null) { map.put(i, is[i]); }
 		return map;
 	}
 	
@@ -412,10 +412,10 @@ public class LMInvUtils
 	
 	public static ItemStack reduceItem(ItemStack is)
 	{
-		if(is == null || is.stackSize <= 0) return null;
+		if(is == null || is.stackSize <= 0) { return null; }
 		if(is.stackSize == 1)
 		{
-			if(is.getItem().hasContainerItem(is)) return is.getItem().getContainerItem(is);
+			if(is.getItem().hasContainerItem(is)) { return is.getItem().getContainerItem(is); }
 			return null;
 		}
 		
@@ -425,7 +425,7 @@ public class LMInvUtils
 	
 	public static ItemStack loadStack(NBTTagCompound tag, String s)
 	{
-		if(tag.hasKey(s)) return ItemStack.loadItemStackFromNBT(tag.getCompoundTag(s));
+		if(tag.hasKey(s)) { return ItemStack.loadItemStackFromNBT(tag.getCompoundTag(s)); }
 		return null;
 	}
 	
@@ -440,13 +440,13 @@ public class LMInvUtils
 	}
 	
 	public static Item getItemFromRegName(ResourceLocation s)
-	{ return Item.itemRegistry.getObject(s); }
+	{ return Item.REGISTRY.getObject(s); }
 	
 	public static ResourceLocation getRegName(Item item)
-	{ return Item.itemRegistry.getNameForObject(item); }
+	{ return Item.REGISTRY.getNameForObject(item); }
 	
 	public static ResourceLocation getRegName(Block block)
-	{ return Block.blockRegistry.getNameForObject(block); }
+	{ return Block.REGISTRY.getNameForObject(block); }
 	
 	public static ResourceLocation getRegName(ItemStack is)
 	{ return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null; }
@@ -466,14 +466,14 @@ public class LMInvUtils
 				{
 					tag1.removeTag("Name");
 					
-					if(tag1.hasNoTags()) is.getTagCompound().removeTag("display");
+					if(tag1.hasNoTags()) { is.getTagCompound().removeTag("display"); }
 				}
 				
-				if(is.getTagCompound().hasNoTags()) is.setTagCompound(null);
+				if(is.getTagCompound().hasNoTags()) { is.setTagCompound(null); }
 			}
 		}
 	}
 	
 	public static boolean isAir(Item item)
-	{ return item != null && item instanceof ItemBlock && Block.getBlockFromItem(item) == Blocks.air; }
+	{ return item != null && item instanceof ItemBlock && Block.getBlockFromItem(item) == Blocks.AIR; }
 }

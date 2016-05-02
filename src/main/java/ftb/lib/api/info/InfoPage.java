@@ -66,7 +66,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public InfoPage getOwner()
 	{
-		if(parent == null) return this;
+		if(parent == null) { return this; }
 		return parent.getOwner();
 	}
 	
@@ -78,42 +78,42 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public String getUnformattedText()
 	{
-		if(text.isEmpty()) return "";
+		if(text.isEmpty()) { return ""; }
 		StringBuilder sb = new StringBuilder();
 		int s = text.size();
 		for(int i = 0; i < s; i++)
 		{
 			InfoTextLine c = text.get(i);
 			
-			if(c == null || c.getText() == null) sb.append('\n');
+			if(c == null || c.getText() == null) { sb.append('\n'); }
 			else
 			{
 				try { sb.append(c.getText().getUnformattedText()); }
 				catch(Exception ex) { ex.printStackTrace(); }
 			}
 			
-			if(i != s - 1) sb.append('\n');
+			if(i != s - 1) { sb.append('\n'); }
 		}
 		return sb.toString();
 	}
 	
 	public String getFormattedText()
 	{
-		if(text.isEmpty()) return "";
+		if(text.isEmpty()) { return ""; }
 		StringBuilder sb = new StringBuilder();
 		int s = text.size();
 		for(int i = 0; i < s; i++)
 		{
 			InfoTextLine c = text.get(i);
 			
-			if(c == null || c.getText() == null) sb.append('\n');
+			if(c == null || c.getText() == null) { sb.append('\n'); }
 			else
 			{
 				try { sb.append(c.getText().getFormattedText()); }
 				catch(Exception ex) { ex.printStackTrace(); }
 			}
 			
-			if(i != s - 1) sb.append('\n');
+			if(i != s - 1) { sb.append('\n'); }
 		}
 		return sb.toString();
 	}
@@ -176,7 +176,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public InfoPage getParentTop()
 	{
-		if(parent == null) return this;
+		if(parent == null) { return this; }
 		return parent.getParentTop();
 	}
 	
@@ -185,7 +185,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	{
 		JsonObject o = new JsonObject();
 		
-		if(title != null) o.add("N", JsonHelper.serializeICC(title));
+		if(title != null) { o.add("N", JsonHelper.serializeICC(title)); }
 		
 		if(!text.isEmpty())
 		{
@@ -211,7 +211,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	{
 		clear();
 		
-		if(e == null || !e.isJsonObject()) return;
+		if(e == null || !e.isJsonObject()) { return; }
 		JsonObject o = e.getAsJsonObject();
 		
 		title = o.has("N") ? JsonHelper.deserializeICC(o.get("N")) : null;
@@ -239,7 +239,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	protected static void loadFromFiles(InfoPage c, File f)
 	{
-		if(f == null || !f.exists()) return;
+		if(f == null || !f.exists()) { return; }
 		
 		if(f.isDirectory())
 		{
@@ -262,12 +262,12 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 					
 					for(String s : LMFileUtils.load(f))
 					{
-						if(s.isEmpty()) c1.text.add(null);
+						if(s.isEmpty()) { c1.text.add(null); }
 						else if(s.length() > 2 && s.charAt(0) == '{' && s.charAt(s.length() - 1) == '}')
 						{
 							c1.text.add(InfoTextLine.get(c1, LMJsonUtils.fromJson(s)));
 						}
-						else c1.text.add(new InfoTextLine(c1, s));
+						else { c1.text.add(new InfoTextLine(c1, s)); }
 					}
 				}
 				catch(Exception e)
@@ -280,7 +280,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public void displayGuide(EntityPlayerMP ep)
 	{
-		if(ep != null && !(ep instanceof FakePlayer)) new MessageDisplayInfo(this).sendTo(ep);
+		if(ep != null && !(ep instanceof FakePlayer)) { new MessageDisplayInfo(this).sendTo(ep); }
 	}
 	
 	public LMColor getBackgroundColor()
@@ -298,7 +298,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public String getFullID()
 	{
-		if(parent == null) return getID();
+		if(parent == null) { return getID(); }
 		return parent.getFullID() + '.' + getID();
 	}
 	

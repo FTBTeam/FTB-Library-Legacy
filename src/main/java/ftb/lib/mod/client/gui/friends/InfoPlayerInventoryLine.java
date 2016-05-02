@@ -56,7 +56,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiInfo.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 			int ax = getAX();
 			float z = gui.getZLevel();
 			

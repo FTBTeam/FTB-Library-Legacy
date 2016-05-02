@@ -24,11 +24,11 @@ public class CustomRecipes<Output>
 	
 	public Output getResult(ItemStack[] ai)
 	{
-		if(ai == null || ai.length == 0) return null;
+		if(ai == null || ai.length == 0) { return null; }
 		
 		for(Map.Entry<IStackArray, Output> e : recipes.entrySet())
 		{
-			if(e.getKey().matches(ai)) return e.getValue();
+			if(e.getKey().matches(ai)) { return e.getValue(); }
 		}
 		
 		return null;

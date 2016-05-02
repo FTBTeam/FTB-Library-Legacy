@@ -24,15 +24,15 @@ public class LMNBTUtils
 {
 	public static String[] getMapKeys(NBTTagCompound tag)
 	{
-		if(tag == null || tag.hasNoTags()) return new String[0];
+		if(tag == null || tag.hasNoTags()) { return new String[0]; }
 		return LMListUtils.toStringArray(tag.getKeySet());
 	}
 	
 	public static Map<String, NBTBase> toMap(NBTTagCompound tag)
 	{
-		if(tag == null) return null;
+		if(tag == null) { return null; }
 		HashMap<String, NBTBase> map = new HashMap<>();
-		if(tag.hasNoTags()) return map;
+		if(tag.hasNoTags()) { return map; }
 		
 		for(String s : tag.getKeySet())
 		{
@@ -45,7 +45,7 @@ public class LMNBTUtils
 	public static Set<Map.Entry<String, NBTBase>> entrySet(NBTTagCompound tag)
 	{
 		Set<Map.Entry<String, NBTBase>> l = new HashSet<>();
-		if(tag == null || tag.hasNoTags()) return l;
+		if(tag == null || tag.hasNoTags()) { return l; }
 		
 		for(String s : tag.getKeySet())
 		{
@@ -64,7 +64,7 @@ public class LMNBTUtils
 	
 	public static NBTTagCompound readTag(File f)
 	{
-		if(f == null || !f.exists()) return null;
+		if(f == null || !f.exists()) { return null; }
 		try { return CompressedStreamTools.read(f); }
 		catch(Exception e) { e.printStackTrace(); }
 		return null;
@@ -72,9 +72,9 @@ public class LMNBTUtils
 	
 	public static boolean areTagsEqual(NBTTagCompound tag1, NBTTagCompound tag2)
 	{
-		if(tag1 == null && tag2 == null) return true;
-		if(tag1 != null && tag2 == null) return false;
-		if(tag1 == null && tag2 != null) return false;
+		if(tag1 == null && tag2 == null) { return true; }
+		if(tag1 != null && tag2 == null) { return false; }
+		if(tag1 == null && tag2 != null) { return false; }
 		return tag1.equals(tag2);
 	}
 	
@@ -105,8 +105,8 @@ public class LMNBTUtils
 	public static NBTTagCompound readTag(ByteIOStream data)
 	{
 		byte i = data.readByte();
-		if(i == 0) return null;
-		else if(i == 1) return new NBTTagCompound();
+		if(i == 0) { return null; }
+		else if(i == 1) { return new NBTTagCompound(); }
 		try { return CompressedStreamTools.read(data, NBTSizeTracker.INFINITE); }
 		catch(Exception ex) { ex.printStackTrace(); }
 		return null;
@@ -115,13 +115,13 @@ public class LMNBTUtils
 	public static void writeTag(ByteIOStream data, NBTTagCompound tag)
 	{
 		data.writeByte((tag == null) ? 0 : (tag.hasNoTags() ? 1 : 2));
-		try { if(tag != null && !tag.hasNoTags()) CompressedStreamTools.write(tag, data); }
+		try { if(tag != null && !tag.hasNoTags()) { CompressedStreamTools.write(tag, data); } }
 		catch(Exception ex) { ex.printStackTrace(); }
 	}
 	
 	public static UUID getUUID(NBTTagCompound tag, String key, boolean string)
 	{
-		if(tag == null) return null;
+		if(tag == null) { return null; }
 		else if(string)
 		{
 			return tag.hasKey(key) ? LMUtils.fromString(tag.getString(key)) : null;
@@ -136,7 +136,7 @@ public class LMNBTUtils
 	
 	public static void setUUID(NBTTagCompound tag, String key, UUID uuid, boolean string)
 	{
-		if(tag == null || key == null || key.isEmpty() || uuid == null) return;
+		if(tag == null || key == null || key.isEmpty() || uuid == null) { return; }
 		if(string)
 		{
 			tag.setString(key, LMUtils.fromUUID(uuid));

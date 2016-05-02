@@ -36,12 +36,12 @@ public class SliderLM extends WidgetLM
 			if(Mouse.isButtonDown(0))
 			{
 				if(isVertical)
-					value = (float) (gui.mouse().y - (gui.getMainPanel().posY + posY + (sliderSize / 2))) / (float) (height - sliderSize);
+				{ value = (float) (gui.mouse().y - (gui.getMainPanel().posY + posY + (sliderSize / 2))) / (float) (height - sliderSize); }
 				else
-					value = (float) (gui.mouse().x - (gui.getMainPanel().posY + posX + (sliderSize / 2))) / (float) (width - sliderSize);
+				{ value = (float) (gui.mouse().x - (gui.getMainPanel().posY + posX + (sliderSize / 2))) / (float) (width - sliderSize); }
 				value = MathHelperLM.clampFloat(value, 0F, 1F);
 			}
-			else isGrabbed = false;
+			else { isGrabbed = false; }
 		}
 		
 		if(gui.mouse().dwheel != 0 && canMouseScroll())
@@ -61,22 +61,22 @@ public class SliderLM extends WidgetLM
 	
 	public void renderSlider(TextureCoords tc)
 	{
-		if(isVertical) GuiLM.render(tc, getAX(), getAY() + getValueI(), gui.getZLevel(), width, sliderSize);
-		else GuiLM.render(tc, getAX() + getValueI(), getAY(), gui.getZLevel(), sliderSize, height);
+		if(isVertical) { GuiLM.render(tc, getAX(), getAY() + getValueI(), gui.getZLevel(), width, sliderSize); }
+		else { GuiLM.render(tc, getAX() + getValueI(), getAY(), gui.getZLevel(), sliderSize, height); }
 	}
 	
 	@Override
 	public void mousePressed(int b)
 	{
-		if(mouseOver() && b == 0) isGrabbed = true;
+		if(mouseOver() && b == 0) { isGrabbed = true; }
 	}
 	
 	@Override
 	public void addMouseOverText(List<String> l)
 	{
-		if(displayMin == 0 && displayMax == 0) return;
+		if(displayMin == 0 && displayMax == 0) { return; }
 		String s = "" + (int) MathHelperLM.map(value, 0D, 1D, displayMin, displayMax);
-		if(title != null) s = title + ": " + s;
+		if(title != null) { s = title + ": " + s; }
 		l.add(s);
 	}
 }

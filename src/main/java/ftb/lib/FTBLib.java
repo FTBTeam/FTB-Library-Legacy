@@ -88,22 +88,22 @@ public class FTBLib
 		folderModpack = new File(folderMinecraft, "modpack/");
 		folderLocal = new File(folderMinecraft, "local/");
 		
-		if(!folderModpack.exists()) folderModpack.mkdirs();
-		if(!folderLocal.exists()) folderLocal.mkdirs();
+		if(!folderModpack.exists()) { folderModpack.mkdirs(); }
+		if(!folderLocal.exists()) { folderLocal.mkdirs(); }
 		
 		if(dev_logger instanceof org.apache.logging.log4j.core.Logger)
 		{
 			if(DEV_ENV)
-				((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.ALL);
-			else ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.OFF);
+			{ ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.ALL); }
+			else { ((org.apache.logging.log4j.core.Logger) dev_logger).setLevel(org.apache.logging.log4j.Level.OFF); }
 		}
 		else
-			FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
+		{ FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName()); }
 	}
 	
 	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
 	{
-		if(ForgeWorldMP.inst == null) return;
+		if(ForgeWorldMP.inst == null) { return; }
 		String mode0 = ForgeWorldMP.inst.getMode().getID();
 		
 		long ms = LMUtils.millis();
@@ -116,7 +116,7 @@ public class FTBLib
 		boolean modeChanged = !ForgeWorldMP.inst.getMode().getID().equals(mode0);
 		
 		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient, modeChanged);
-		if(ftbu != null) ftbu.onReloaded(event);
+		if(ftbu != null) { ftbu.onReloaded(event); }
 		MinecraftForge.EVENT_BUS.post(event);
 		
 		if(printMessage)
@@ -137,7 +137,10 @@ public class FTBLib
 	{ return (o != null && o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString("" + o); }
 	
 	public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)
-	{ GameRegistry.registerTileEntity(c, id.toString().replace(':', '.')); }
+	{
+		if(c == null || id == null) { return; }
+		GameRegistry.registerTileEntity(c, id.toString().replace(':', '.'));
+	}
 	
 	public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
 	{ EntityRegistry.registerModEntity(c, s, id, mod, 50, 1, true); }
@@ -148,22 +151,22 @@ public class FTBLib
 	public static Fluid addFluid(Fluid f)
 	{
 		Fluid f1 = FluidRegistry.getFluid(f.getName());
-		if(f1 != null) return f1;
+		if(f1 != null) { return f1; }
 		FluidRegistry.registerFluid(f);
 		return f;
 	}
 	
 	public static void addCommand(FMLServerStartingEvent e, ICommand c)
-	{ if(c != null && !c.getCommandName().isEmpty()) e.registerServerCommand(c); }
+	{ if(c != null && !c.getCommandName().isEmpty()) { e.registerServerCommand(c); } }
 	
 	/**
 	 * Prints message to chat (doesn't translate it)
 	 */
 	public static void printChat(ICommandSender ep, Object o)
 	{
-		if(ep == null) ep = FTBLibMod.proxy.getClientPlayer();
-		if(ep != null) ep.addChatMessage(getChatComponent(o));
-		else FTBLibMod.logger.info(o);
+		if(ep == null) { ep = FTBLibMod.proxy.getClientPlayer(); }
+		if(ep != null) { ep.addChatMessage(getChatComponent(o)); }
+		else { FTBLibMod.logger.info(o); }
 	}
 	
 	public static MinecraftServer getServer()
@@ -183,21 +186,21 @@ public class FTBLib
 	
 	public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
 	{
-		if(getServer() == null) return new ArrayList<>();
-		else if(except == null) return getServer().getPlayerList().getPlayerList();
+		if(getServer() == null) { return new ArrayList<>(); }
+		else if(except == null) { return getServer().getPlayerList().getPlayerList(); }
 		
 		List<EntityPlayerMP> l = getServer().getPlayerList().getPlayerList();
-		if(l.isEmpty()) return l;
+		if(l.isEmpty()) { return l; }
 		
 		List<EntityPlayerMP> list = new ArrayList<>();
 		list.addAll(l);
-		if(except != null) list.remove(except);
+		if(except != null) { list.remove(except); }
 		return list;
 	}
 	
 	public static EntityPlayerMP getPlayerMP(UUID id)
 	{
-		if(!hasOnlinePlayers()) return null;
+		if(!hasOnlinePlayers()) { return null; }
 		return getServer().getPlayerList().getPlayerByUUID(id);
 	}
 	
@@ -206,15 +209,15 @@ public class FTBLib
 	
 	public static String removeFormatting(String s)
 	{
-		if(s == null) return null;
-		if(s.isEmpty()) return "";
+		if(s == null) { return null; }
+		if(s.isEmpty()) { return ""; }
 		return textFormattingPattern.matcher(s).replaceAll("");
 	}
 	
 	public static WorldServer getServerWorld()
 	{
 		MinecraftServer ms = getServer();
-		if(ms == null || ms.worldServers.length < 1) return null;
+		if(ms == null || ms.worldServers.length < 1) { return null; }
 		return ms.worldServers[0];
 	}
 	
@@ -239,11 +242,11 @@ public class FTBLib
 	
 	public static void openGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
 	{
-		if(t == null || !(t instanceof TileEntity) || ep instanceof FakePlayer) return;
+		if(t == null || !(t instanceof TileEntity) || ep instanceof FakePlayer) { return; }
 		else if(ep instanceof EntityPlayerMP)
 		{
 			Container c = t.getContainer(ep, data);
-			if(c == null) return;
+			if(c == null) { return; }
 			
 			EntityPlayerMP epM = (EntityPlayerMP) ep;
 			epM.getNextWindowId();
@@ -254,13 +257,13 @@ public class FTBLib
 			new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
 		}
 		else if(!getEffectiveSide().isServer())
-			FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
+		{ FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data); }
 	}
 	
 	public static void addCallback(ServerTickCallback c)
 	{
-		if(c.maxTick == 0) c.onCallback();
-		else FTBLibEventHandler.pendingCallbacks.add(c);
+		if(c.maxTick == 0) { c.onCallback(); }
+		else { FTBLibEventHandler.pendingCallbacks.add(c); }
 	}
 	
 	public static boolean isOP(GameProfile p)
@@ -291,7 +294,7 @@ public class FTBLib
 	
 	public static UUID getPlayerID(String s)
 	{
-		if(s == null || s.isEmpty()) return null;
+		if(s == null || s.isEmpty()) { return null; }
 		
 		String key = s.trim().toLowerCase();
 		
@@ -313,22 +316,22 @@ public class FTBLib
 	//null - can't, TRUE - always spawns, FALSE - only spawns at night
 	public static Boolean canMobSpawn(World world, BlockPos pos)
 	{
-		if(world == null || pos == null || pos.getY() < 0 || pos.getY() >= 256) return null;
+		if(world == null || pos == null || pos.getY() < 0 || pos.getY() >= 256) { return null; }
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 		
 		if(!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
-			return null;
+		{ return null; }
 		
 		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
-		if(!world.checkNoEntityCollision(aabb) || world.isAnyLiquid(aabb)) return null;
+		if(!world.checkNoEntityCollision(aabb) || world.containsAnyLiquid(aabb)) { return null; }
 		
-		if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8) return Boolean.FALSE;
+		if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8) { return Boolean.FALSE; }
 		return Boolean.TRUE;
 	}
 	
 	public static Entity getEntityByUUID(World worldObj, UUID uuid)
 	{
-		if(worldObj == null || uuid == null) return null;
+		if(worldObj == null || uuid == null) { return null; }
 		
 		for(Entity e : worldObj.loadedEntityList)
 		{

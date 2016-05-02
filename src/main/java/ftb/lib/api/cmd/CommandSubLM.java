@@ -57,7 +57,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 		if(i > 0 && args.length > 1)
 		{
 			ICommand cmd = subCommands.get(args[0]);
-			if(cmd != null) return cmd.isUsernameIndex(LMStringUtils.shiftArray(args), i - 1);
+			if(cmd != null) { return cmd.isUsernameIndex(LMStringUtils.shiftArray(args), i - 1); }
 		}
 		
 		return false;
@@ -95,7 +95,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 	
 	private static ITextComponent tree(ITextComponent sibling, int level)
 	{
-		if(level == 0) return sibling;
+		if(level == 0) { return sibling; }
 		char[] chars = new char[level * 2];
 		Arrays.fill(chars, ' ');
 		return new TextComponentString(new String(chars)).appendSibling(sibling);

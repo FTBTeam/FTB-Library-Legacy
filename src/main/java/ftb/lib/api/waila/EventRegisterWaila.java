@@ -28,10 +28,10 @@ public class EventRegisterWaila extends Event
 		
 		for(WailaRegEntry wre : registry)
 		{
-			if(wre.type == WailaType.STACK) i.registerStackProvider(new WailaDataProvider(wre.handler), wre.block);
-			if(wre.type == WailaType.HEAD) i.registerHeadProvider(new WailaDataProvider(wre.handler), wre.block);
-			if(wre.type == WailaType.BODY) i.registerBodyProvider(new WailaDataProvider(wre.handler), wre.block);
-			if(wre.type == WailaType.TAIL) i.registerTailProvider(new WailaDataProvider(wre.handler), wre.block);
+			if(wre.type == WailaType.STACK) { i.registerStackProvider(new WailaDataProvider(wre.handler), wre.block); }
+			if(wre.type == WailaType.HEAD) { i.registerHeadProvider(new WailaDataProvider(wre.handler), wre.block); }
+			if(wre.type == WailaType.BODY) { i.registerBodyProvider(new WailaDataProvider(wre.handler), wre.block); }
+			if(wre.type == WailaType.TAIL) { i.registerTailProvider(new WailaDataProvider(wre.handler), wre.block); }
 		}
 	}
 	

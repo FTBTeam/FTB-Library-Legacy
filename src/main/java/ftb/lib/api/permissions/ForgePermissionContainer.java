@@ -37,7 +37,7 @@ public class ForgePermissionContainer extends FinalIDObject implements IInfoCont
 				{
 					throw new IllegalArgumentException("Invalid ForgePermission ID: " + id + "! Can't contain uppercase letters");
 				}
-				else if(c == '.' || (c >= '0' && c <= '9') || (c >= 'a' || c <= 'z')) ;
+				else if(c == '.' || (c >= '0' && c <= '9') || (c >= 'a' || c <= 'z')) { }
 				else
 				{
 					throw new IllegalArgumentException("Invalid ForgePermission ID: " + id + "! Can't contain '" + c + "'");

@@ -56,8 +56,8 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent e)
 	{
-		if(FTBLib.DEV_ENV) logger.info("Loading FTBLib, DevEnv");
-		else logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
+		if(FTBLib.DEV_ENV) { logger.info("Loading FTBLib, DevEnv"); }
+		else { logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION); }
 		
 		logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
 		
@@ -83,10 +83,9 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onPostInit(FMLPostInitializationEvent e)
 	{
-		ODItems.postInit();
-		proxy.postInit();
 		GameModes.reload();
 		ConfigRegistry.reload();
+		proxy.postInit();
 	}
 	
 	@Mod.EventHandler
@@ -99,11 +98,11 @@ public class FTBLibMod
 		FTBLib.addCommand(e, new CmdNotify());
 		FTBLib.addCommand(e, new CmdInv());
 		
-		if(FTBLibConfigCmd.override_list.getAsBoolean()) FTBLib.addCommand(e, new CmdListOverride());
-		if(FTBLibConfigCmd.override_help.getAsBoolean()) FTBLib.addCommand(e, new CmdHelpOverride());
-		if(FTBLibConfigCmd.set_item_name.getAsBoolean()) FTBLib.addCommand(e, new CmdSetItemName());
-		if(FTBLibConfigCmd.heal.getAsBoolean()) FTBLib.addCommand(e, new CmdHeal());
-		if(FTBLibConfigCmd.edit_config.getAsBoolean()) FTBLib.addCommand(e, new CmdEditConfig());
+		if(FTBLibConfigCmd.override_list.getAsBoolean()) { FTBLib.addCommand(e, new CmdListOverride()); }
+		if(FTBLibConfigCmd.override_help.getAsBoolean()) { FTBLib.addCommand(e, new CmdHelpOverride()); }
+		if(FTBLibConfigCmd.set_item_name.getAsBoolean()) { FTBLib.addCommand(e, new CmdSetItemName()); }
+		if(FTBLibConfigCmd.heal.getAsBoolean()) { FTBLib.addCommand(e, new CmdHeal()); }
+		if(FTBLibConfigCmd.edit_config.getAsBoolean()) { FTBLib.addCommand(e, new CmdEditConfig()); }
 	}
 	
 	@Mod.EventHandler

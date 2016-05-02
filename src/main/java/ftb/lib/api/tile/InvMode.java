@@ -23,7 +23,7 @@ public enum InvMode
 	public InvMode prev()
 	{
 		int id = ordinal() - 1;
-		if(id < 0) id = VALUES.length - 1;
+		if(id < 0) { id = VALUES.length - 1; }
 		return VALUES[id];
 	}
 	

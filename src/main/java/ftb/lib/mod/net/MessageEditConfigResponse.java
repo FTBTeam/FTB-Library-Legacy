@@ -57,10 +57,10 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 	public IMessage onMessage(MessageEditConfigResponse m, MessageContext ctx)
 	{
 		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		if(!LMAccessToken.equals(ep, m.token, true)) return null;
+		if(!LMAccessToken.equals(ep, m.token, true)) { return null; }
 		
 		ConfigFile file = ConfigRegistry.map.containsKey(m.configID) ? ConfigRegistry.map.get(m.configID) : ConfigRegistry.getTempConfig(m.configID);
-		if(file == null) return null;
+		if(file == null) { return null; }
 		
 		ConfigGroup group = new ConfigGroup(m.configID);
 		group.readFromNBT(m.nbt, false);

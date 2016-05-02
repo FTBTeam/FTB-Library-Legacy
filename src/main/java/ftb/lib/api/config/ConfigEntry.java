@@ -39,7 +39,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	
 	public String getFullID()
 	{
-		if(parentGroup == null) return getID();
+		if(parentGroup == null) { return getID(); }
 		return parentGroup.getFullID() + '.' + getID();
 	}
 	
@@ -105,7 +105,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 	{
 		if(extended)
 		{
-			if(flags != 0) tag.setByte("F", flags);
+			if(flags != 0) { tag.setByte("F", flags); }
 			
 			if(info != null && info.length > 0)
 			{

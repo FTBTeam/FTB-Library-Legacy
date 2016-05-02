@@ -93,7 +93,10 @@ public class FTBLibClient
 	
 	public static void onGuiClientAction()
 	{
-		if(mc.currentScreen instanceof IClientActionGui) ((IClientActionGui) mc.currentScreen).onClientDataChanged();
+		if(mc.currentScreen instanceof IClientActionGui)
+		{
+			((IClientActionGui) mc.currentScreen).onClientDataChanged();
+		}
 	}
 	
 	public static void pushMaxBrightness()
@@ -110,12 +113,12 @@ public class FTBLibClient
 	{
 		//getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
 		
-		if(uuid == null) return mc.thePlayer;
+		if(uuid == null) { return mc.thePlayer; }
 		
 		if(mc.theWorld != null)
 		{
 			EntityPlayer ep = mc.theWorld.getPlayerEntityByUUID(uuid);
-			if(ep != null && ep instanceof EntityPlayerSP) return (EntityPlayerSP) ep;
+			if(ep != null && ep instanceof EntityPlayerSP) { return (EntityPlayerSP) ep; }
 		}
 		
 		return null;
@@ -136,7 +139,7 @@ public class FTBLibClient
 	}
 	
 	public static void playClickSound()
-	{ mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1F)); }
+	{ mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F)); }
 	
 	public static void setGLColor(int c, int a)
 	{
@@ -151,7 +154,7 @@ public class FTBLibClient
 	
 	public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
 	{
-		if(pixels == null) return null;
+		if(pixels == null) { return null; }
 		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
 		byte alpha255 = (byte) 255;
 		
@@ -170,7 +173,7 @@ public class FTBLibClient
 	public static void execClientCommand(String s)
 	{
 		mc.ingameGUI.getChatGUI().addToSentMessages(s);
-		if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0) mc.thePlayer.sendChatMessage(s);
+		if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0) { mc.thePlayer.sendChatMessage(s); }
 	}
 	
 	public static ResourceLocation getSkinTexture(String username)
@@ -196,10 +199,10 @@ public class FTBLibClient
 	}
 	
 	public static void setTexture(TextureCoords tex)
-	{ if(tex != null) setTexture(tex.texture); }
+	{ if(tex != null) { setTexture(tex.texture); } }
 	
 	public static void setTexture(ResourceLocation tex)
-	{ if(tex != null) mc.getTextureManager().bindTexture(tex); }
+	{ if(tex != null) { mc.getTextureManager().bindTexture(tex); } }
 	
 	public static void clearCachedData()
 	{ cachedSkins.clear(); }
@@ -209,8 +212,8 @@ public class FTBLibClient
 	
 	public static void renderItem(World w, ItemStack is)
 	{
-		if(w == null || is == null) return;
-		if(entityItem == null) entityItem = new EntityItem(w);
+		if(w == null || is == null) { return; }
+		if(entityItem == null) { entityItem = new EntityItem(w); }
 		entityItem.worldObj = w;
 		entityItem.hoverStart = 0F;
 		entityItem.setEntityItemStack(is);
@@ -252,7 +255,7 @@ public class FTBLibClient
 	
 	public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
 	{
-		if(is == null || is.getItem() == null) return;
+		if(is == null || is.getItem() == null) { return; }
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0F);
 		GlStateManager.enableLighting();
@@ -266,7 +269,7 @@ public class FTBLibClient
 	
 	public static void openGui(GuiScreen gui)
 	{
-		if(gui == null && mc.thePlayer != null) mc.thePlayer.closeScreen();
-		else mc.displayGuiScreen(gui);
+		if(gui == null && mc.thePlayer != null) { mc.thePlayer.closeScreen(); }
+		else { mc.displayGuiScreen(gui); }
 	}
 }

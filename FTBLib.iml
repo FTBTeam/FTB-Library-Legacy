@@ -13,11 +13,11 @@
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods" />
+          <root url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods/dev" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
-        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods/dev" recursive="false" />
       </library>
     </orderEntry>
   </component>

@@ -23,14 +23,14 @@ public class LMDimUtils
 	
 	public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
 	{
-		if(entity == null || pos == null) return false;
+		if(entity == null || pos == null) { return false; }
 		
 		entity.fallDistance = 0F;
 		EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
 		
 		if(dim == entity.dimension)
 		{
-			if(pos.xCoord == entity.posX && pos.yCoord == entity.posY && pos.zCoord == entity.posZ) return true;
+			if(pos.xCoord == entity.posX && pos.yCoord == entity.posY && pos.zCoord == entity.posZ) { return true; }
 			
 			if(player != null)
 			{
@@ -82,8 +82,8 @@ public class LMDimUtils
 		entity.fallDistance = 0;
 		entity.rotationYaw = rotationYaw;
 		entity.rotationPitch = rotationPitch;
-		if(player != null) player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
-		else entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+		if(player != null) { player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord); }
+		else { entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord); }
 		return true;
 	}
 	
@@ -111,16 +111,16 @@ public class LMDimUtils
 	public static BlockDimPos getSpawnPoint(DimensionType dim)
 	{
 		World w = getWorld(dim);
-		if(w == null) return null;
+		if(w == null) { return null; }
 		BlockPos c = w.getSpawnPoint();
-		if(c == null) return null;
+		if(c == null) { return null; }
 		return new BlockDimPos(c, dim);
 	}
 	
 	public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, DimensionType dim)
 	{
 		BlockPos c = ep.getBedLocation(dim.getId());
-		if(c == null) return getSpawnPoint(dim);
+		if(c == null) { return getSpawnPoint(dim); }
 		return new BlockDimPos(c, dim);
 	}
 	

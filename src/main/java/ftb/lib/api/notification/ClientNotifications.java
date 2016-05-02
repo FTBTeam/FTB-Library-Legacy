@@ -22,7 +22,7 @@ public class ClientNotifications
 	{
 		if(current != null)
 		{
-			if(current.render()) current = null;
+			if(current.render()) { current = null; }
 		}
 		else if(!Temp.list.isEmpty())
 		{
@@ -33,13 +33,13 @@ public class ClientNotifications
 	
 	public static void add(Notification n)
 	{
-		if(n == null) return;
+		if(n == null) { return; }
 		Temp.list.remove(n);
 		Perm.list.remove(n);
-		if(current != null && current.equals(n)) current = null;
+		if(current != null && current.equals(n)) { current = null; }
 		
 		Temp.list.add(new Temp(n));
-		if(!n.isTemp()) Perm.list.add(new Perm(n));
+		if(!n.isTemp()) { Perm.list.add(new Perm(n)); }
 	}
 	
 	public static void init()
@@ -68,13 +68,13 @@ public class ClientNotifications
 		
 		public boolean render()
 		{
-			if(time == -1L) time = Minecraft.getSystemTime();
-			if(title == null) title = notification.title.getFormattedText();
-			if(desc == null) desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
+			if(time == -1L) { time = Minecraft.getSystemTime(); }
+			if(title == null) { title = notification.title.getFormattedText(); }
+			if(desc == null) { desc = (notification.desc == null) ? null : notification.desc.getFormattedText(); }
 			if(width == 0)
 			{
 				width = 20 + Math.max(FTBLibClient.mc.fontRendererObj.getStringWidth(title), FTBLibClient.mc.fontRendererObj.getStringWidth(desc));
-				if(notification.item != null) width += 20;
+				if(notification.item != null) { width += 20; }
 			}
 			
 			if(time > 0L)
@@ -89,11 +89,11 @@ public class ClientNotifications
 				
 				double d1 = d0 * 2D;
 				
-				if(d1 > 1D) d1 = 2D - d1;
+				if(d1 > 1D) { d1 = 2D - d1; }
 				d1 *= 4D;
 				d1 = 1D - d1;
 				
-				if(d1 < 0D) d1 = 0D;
+				if(d1 < 0D) { d1 = 0D; }
 				
 				d1 *= d1;
 				d1 *= d1;
@@ -159,7 +159,7 @@ public class ClientNotifications
 		
 		public void onClicked()
 		{
-			if(notification.mouse != null && notification.mouse.click != null) notification.mouse.click.onClicked();
+			if(notification.mouse != null && notification.mouse.click != null) { notification.mouse.click.onClicked(); }
 		}
 	}
 }

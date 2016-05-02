@@ -55,7 +55,7 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 	{
 		LMGuiHandler h = LMGuiHandlerRegistry.get(m.modID);
 		if(h != null && FTBLibMod.proxy.openClientGui(FTBLibClient.mc.thePlayer, m.modID, m.guiID, m.data))
-			FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID;
+		{ FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID; }
 		return null;
 	}
 }

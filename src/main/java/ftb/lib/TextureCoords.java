@@ -68,10 +68,10 @@ public final class TextureCoords
 	
 	public TextureCoords[] split(int x, int y)
 	{
-		if(x == 0 || y == 0) return new TextureCoords[0];
-		if(x == 1 && y == 1) return new TextureCoords[] {copy()};
-		if(x == 1) return splitY(y);
-		if(y == 1) return splitX(x);
+		if(x == 0 || y == 0) { return new TextureCoords[0]; }
+		if(x == 1 && y == 1) { return new TextureCoords[] {copy()}; }
+		if(x == 1) { return splitY(y); }
+		if(y == 1) { return splitX(x); }
 		
 		TextureCoords[] l = new TextureCoords[x * y];
 		TextureCoords[] ly = splitY(y);

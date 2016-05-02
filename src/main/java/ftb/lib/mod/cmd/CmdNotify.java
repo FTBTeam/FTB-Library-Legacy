@@ -73,7 +73,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 		
 		Notification n = new Notification("example_id", new TextComponentString("Example title"), 6500);
 		n.setColor(0xFFFF0000);
-		n.setItem(new ItemStack(Items.apple, 10));
+		n.setItem(new ItemStack(Items.APPLE, 10));
 		MouseAction ma = new MouseAction();
 		ma.click = new ClickAction(ClickActionType.CMD, new JsonPrimitive("reload"));
 		n.setMouseAction(ma);

@@ -38,7 +38,7 @@ public class GuiPlayerActions extends GuiLM
 			ButtonPlayerActionSmall b = new ButtonPlayerActionSmall(this, actions.get(i));
 			mainPanel.add(b);
 			mainPanel.width = Math.max(mainPanel.width, b.width);
-			if(i != actions.size() - 1) mainPanel.height += b.height + 4;
+			if(i != actions.size() - 1) { mainPanel.height += b.height + 4; }
 		}
 		
 		for(WidgetLM w : mainPanel.widgets)
@@ -87,7 +87,7 @@ public class GuiPlayerActions extends GuiLM
 			
 			gui.getFontRenderer().drawString(title, ax + 20, ay + 6, 0xFFFFFFFF);
 			GlStateManager.color(1F, 1F, 1F, 0.2F);
-			if(mouseOver(ax, ay)) GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
+			if(mouseOver(ax, ay)) { GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height); }
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 		

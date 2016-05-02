@@ -27,9 +27,9 @@ public class ODItems
 	public static final String STONE = "stone";
 	public static final String COBBLE = "cobblestone";
 	public static final String SAND = "sand";
-	public static final ItemStack OBSIDIAN = new ItemStack(Blocks.obsidian);
-	public static final ItemStack WOOL = new ItemStack(Blocks.wool, 1, ANY);
-	public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.wool, 1, 0);
+	public static final ItemStack OBSIDIAN = new ItemStack(Blocks.OBSIDIAN);
+	public static final ItemStack WOOL = new ItemStack(Blocks.WOOL, 1, ANY);
+	public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
 	
 	public static final String SLIMEBALL = "slimeball";
 	public static final String MEAT_RAW = "listAllmeatraw";
@@ -66,25 +66,23 @@ public class ODItems
 	
 	public static void preInit()
 	{
-		add(MEAT_RAW, new ItemStack(Items.beef));
-		add(MEAT_RAW, new ItemStack(Items.porkchop));
-		add(MEAT_RAW, new ItemStack(Items.chicken));
+		add(MEAT_RAW, new ItemStack(Items.BEEF));
+		add(MEAT_RAW, new ItemStack(Items.PORKCHOP));
+		add(MEAT_RAW, new ItemStack(Items.CHICKEN));
+		add(MEAT_RAW, new ItemStack(Items.MUTTON));
+		add(MEAT_RAW, new ItemStack(Items.RABBIT));
 		
-		add(MEAT_COOKED, new ItemStack(Items.cooked_beef));
-		add(MEAT_COOKED, new ItemStack(Items.cooked_porkchop));
-		add(MEAT_COOKED, new ItemStack(Items.cooked_chicken));
-	}
-	
-	public static void postInit()
-	{
-		//Item wrench = LMInvUtils.getItemFromRegName(new ResourceLocation(OtherMods.THERMAL_EXPANSION, "wrench"));
-		//if(wrench != null) wrench.setHarvestLevel(Tool.Type.WRENCH, Tool.Level.BASIC);
+		add(MEAT_COOKED, new ItemStack(Items.COOKED_BEEF));
+		add(MEAT_COOKED, new ItemStack(Items.COOKED_PORKCHOP));
+		add(MEAT_COOKED, new ItemStack(Items.COOKED_CHICKEN));
+		add(MEAT_COOKED, new ItemStack(Items.COOKED_MUTTON));
+		add(MEAT_COOKED, new ItemStack(Items.COOKED_RABBIT));
 	}
 	
 	private static boolean addOreName(String item, int damage, String name)
 	{
 		Item i = LMInvUtils.getItemFromRegName(new ResourceLocation(item));
-		if(i != null) add(name, new ItemStack(i, 1, damage));
+		if(i != null) { add(name, new ItemStack(i, 1, damage)); }
 		return i != null;
 	}
 	
@@ -98,7 +96,7 @@ public class ODItems
 	public static Collection<String> getOreNames(ItemStack is)
 	{
 		int[] ai = OreDictionary.getOreIDs(is);
-		if(ai == null || ai.length == 0) return Collections.EMPTY_SET;
+		if(ai == null || ai.length == 0) { return Collections.EMPTY_SET; }
 		
 		Collection<String> l = new HashSet<>(ai.length);
 		
@@ -116,7 +114,7 @@ public class ODItems
 	public static ItemStack getFirstOre(String name)
 	{
 		List<ItemStack> l = getOres(name);
-		if(!l.isEmpty()) return l.get(0);
+		if(!l.isEmpty()) { return l.get(0); }
 		return null;
 	}
 	

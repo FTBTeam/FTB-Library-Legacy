@@ -38,13 +38,13 @@ public class ButtonInfoPage extends ButtonLM
 			guiInfo.panelText.posY = 10;
 			guiInfo.panelText.refreshWidgets();
 		}
-		else FTBLibClient.openGui(new GuiInfo(guiInfo, page));
+		else { FTBLibClient.openGui(new GuiInfo(guiInfo, page)); }
 	}
 	
 	public void updateTitle()
 	{
 		ITextComponent titleC = page.getTitleComponent().createCopy();
-		if(guiInfo.selectedPage == page) titleC.getChatStyle().setBold(true);
+		if(guiInfo.selectedPage == page) { titleC.getStyle().setBold(true); }
 		title = titleC.getFormattedText();
 		hover = null;
 		
@@ -58,14 +58,14 @@ public class ButtonInfoPage extends ButtonLM
 	@Override
 	public void addMouseOverText(List<String> l)
 	{
-		if(hover != null) l.add(hover);
+		if(hover != null) { l.add(hover); }
 	}
 	
 	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) return;
+		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
 		guiInfo.getFontRenderer().drawString(mouseOver(ax, ay) ? (TextFormatting.UNDERLINE + title) : title, ax + 1, ay + 1, guiInfo.colorText);
 	}

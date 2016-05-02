@@ -52,10 +52,10 @@ public class InfoPlayerViewLine extends InfoTextLine
 		public void renderWidget()
 		{
 			int ay = getAY();
-			if(ay < -height || ay > guiInfo.mainPanel.height) return;
+			if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 			int ax = getAX();
 			
-			if(player == null) player = new Player(ForgeWorldSP.inst.clientPlayer);
+			if(player == null) { player = new Player(ForgeWorldSP.inst.clientPlayer); }
 			
 			if(mouseOver() && Mouse.isButtonDown(1))
 			{

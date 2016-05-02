@@ -17,13 +17,13 @@ public class ShapedStackArray implements IStackArray
 	@Override
 	public boolean matches(ItemStack[] ai)
 	{
-		if(items == null || ai == null) return false;
+		if(items == null || ai == null) { return false; }
 		
-		if(items.length != ai.length) return false;
+		if(items.length != ai.length) { return false; }
 		
 		for(int i = 0; i < items.length; i++)
 		{
-			if(!items[i].equalsItem(ai[i])) return false;
+			if(!items[i].equalsItem(ai[i])) { return false; }
 		}
 		
 		return true;

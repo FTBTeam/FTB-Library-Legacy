@@ -23,8 +23,8 @@ public enum RedstoneMode
 	
 	public boolean cancel(boolean b)
 	{
-		if(this == DISABLED) return false;
-		if(this == ACTIVE_HIGH && !b) return true;
+		if(this == DISABLED) { return false; }
+		if(this == ACTIVE_HIGH && !b) { return true; }
 		return this == ACTIVE_LOW && b;
 	}
 	
@@ -34,7 +34,7 @@ public enum RedstoneMode
 	public RedstoneMode prev()
 	{
 		int id = ID - 1;
-		if(id < 0) id = VALUES.length - 1;
+		if(id < 0) { id = VALUES.length - 1; }
 		return VALUES[id];
 	}
 	

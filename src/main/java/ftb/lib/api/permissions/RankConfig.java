@@ -66,10 +66,10 @@ public class RankConfig extends FinalIDObject implements INumberBoundsContainer,
 	
 	private JsonElement filter(JsonElement e)
 	{
-		if(e == null || (minValue == null && maxValue == null) || !e.isJsonPrimitive()) return e;
+		if(e == null || (minValue == null && maxValue == null) || !e.isJsonPrimitive()) { return e; }
 		double n = e.getAsDouble();
-		if(n < minValue) n = minValue;
-		if(n > maxValue) n = maxValue;
+		if(n < minValue) { n = minValue; }
+		if(n > maxValue) { n = maxValue; }
 		return new JsonPrimitive(n);
 	}
 	
@@ -78,7 +78,7 @@ public class RankConfig extends FinalIDObject implements INumberBoundsContainer,
 	 */
 	public JsonElement get(GameProfile profile)
 	{
-		if(profile == null) throw new RuntimeException("GameProfile can't be null!");
+		if(profile == null) { throw new RuntimeException("GameProfile can't be null!"); }
 		
 		if(ForgePermissionRegistry.handler != null)
 		{

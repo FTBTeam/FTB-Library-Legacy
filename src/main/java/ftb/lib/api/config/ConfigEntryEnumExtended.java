@@ -104,8 +104,8 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 	public void onClicked(MouseButton button)
 	{
 		int i = getIndex() + (button.isLeft() ? 1 : -1);
-		if(i < 0) i = values.size() - 1;
-		if(i >= values.size()) i = 0;
+		if(i < 0) { i = values.size() - 1; }
+		if(i >= values.size()) { i = 0; }
 		set(values.get(i));
 	}
 	

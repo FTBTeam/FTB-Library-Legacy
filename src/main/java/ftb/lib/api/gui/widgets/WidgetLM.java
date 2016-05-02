@@ -63,7 +63,7 @@ public class WidgetLM
 	
 	public void addMouseOverText(List<String> l)
 	{
-		if(title != null) l.add(title);
+		if(title != null) { l.add(title); }
 	}
 	
 	public void renderWidget()

@@ -26,9 +26,9 @@ public abstract class PlayerAction extends FinalIDObject
 		
 		public boolean equalsType(Type t)
 		{
-			if(t == null || t == BOTH) return true;
-			else if(t == SELF) return isSelf();
-			else return isOther();
+			if(t == null || t == BOTH) { return true; }
+			else if(t == SELF) { return isSelf(); }
+			else { return isOther(); }
 		}
 	}
 	

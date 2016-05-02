@@ -47,7 +47,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	
 	public final ForgePlayerData getData(String id)
 	{
-		if(id == null || id.isEmpty()) return null;
+		if(id == null || id.isEmpty()) { return null; }
 		return customData.get(id);
 	}
 	
@@ -96,10 +96,10 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	@Override
 	public boolean equals(Object o)
 	{
-		if(o == null) return false;
-		else if(o == this) return true;
-		else if(o instanceof UUID) return gameProfile.getId().equals(o);
-		else if(o instanceof ForgePlayer) return equalsPlayer((ForgePlayer) o);
+		if(o == null) { return false; }
+		else if(o == this) { return true; }
+		else if(o instanceof UUID) { return gameProfile.getId().equals(o); }
+		else if(o instanceof ForgePlayer) { return equalsPlayer((ForgePlayer) o); }
 		return false;
 	}
 	
