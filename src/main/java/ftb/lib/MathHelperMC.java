@@ -213,4 +213,50 @@ public class MathHelperMC
 		
 		return -1;
 	}
+	
+	public static AxisAlignedBB rotateAABB(AxisAlignedBB bb, EnumFacing facing)
+	{
+		if(bb == null)
+		{
+			return null;
+		}
+		
+		switch(facing)
+		{
+			case DOWN:
+				return bb;
+			case UP:
+				return new AxisAlignedBB(1D - bb.minX, 1D - bb.minY, 1D - bb.minZ, 1D - bb.maxX, 1D - bb.maxY, 1D - bb.maxZ);
+			case NORTH:
+				return new AxisAlignedBB(bb.minX, bb.minZ, bb.minY, bb.maxX, bb.maxZ, bb.maxY);
+			case SOUTH:
+			{
+				bb = rotateAABB(bb, EnumFacing.NORTH);
+				return new AxisAlignedBB(1D - bb.minX, bb.minY, 1D - bb.minZ, 1D - bb.maxX, bb.maxY, 1D - bb.maxZ);
+			}
+			case WEST:
+				return rotateCW(rotateAABB(bb, EnumFacing.SOUTH));
+			case EAST:
+				return rotateCW(rotateAABB(bb, EnumFacing.NORTH));
+			default:
+				return bb;
+		}
+	}
+	
+	public static AxisAlignedBB rotateCW(AxisAlignedBB bb)
+	{
+		return new AxisAlignedBB(1D - bb.minZ, bb.minY, bb.minX, 1D - bb.maxZ, bb.maxY, bb.maxX);
+	}
+	
+	public static AxisAlignedBB[] getRotatedBoxes(AxisAlignedBB bb, boolean invert)
+	{
+		AxisAlignedBB[] boxes = new AxisAlignedBB[6];
+		
+		for(EnumFacing f : EnumFacing.VALUES)
+		{
+			boxes[f.ordinal()] = rotateAABB(bb, invert ? f.getOpposite() : f);
+		}
+		
+		return boxes;
+	}
 }

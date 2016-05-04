@@ -13,12 +13,17 @@ public class BlockStateSerializer
 {
 	public static class StateEntry extends AbstractMap.SimpleImmutableEntry<IProperty<?>, Object> implements Comparable<StateEntry>
 	{
+		public final String valueString;
+		
 		public StateEntry(IProperty<?> key, Object value)
-		{ super(key, value); }
+		{
+			super(key, value);
+			valueString = value instanceof String ? value.toString() : getKey().getName(LMUtils.convert(getValue()));
+		}
 		
 		@Override
 		public String toString()
-		{ return getKey().getName() + '=' + getKey().getName(LMUtils.convert(getValue())); }
+		{ return getKey().getName() + '=' + valueString; }
 		
 		@Override
 		public int compareTo(StateEntry o)

@@ -1,6 +1,5 @@
 package ftb.lib.api.block;
 
-import ftb.lib.FTBLib;
 import ftb.lib.LMMod;
 import ftb.lib.api.tile.TileLM;
 import net.minecraft.block.Block;
@@ -20,6 +19,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -68,15 +68,16 @@ public abstract class BlockLM extends Block implements IBlockLM
 	@SideOnly(Side.CLIENT)
 	public void loadModels()
 	{
-		String state = getModelState();
-		FTBLib.dev_logger.info("Adding " + getItem() + "'s model: " + state);
-		ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getRegistryName(), state));
+		ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getModelName(), getModelState()));
 	}
 	
 	@Override
 	public void loadTiles()
 	{
 	}
+	
+	public ResourceLocation getModelName()
+	{ return getRegistryName(); }
 	
 	public String getModelState()
 	{ return "normal"; }
@@ -194,9 +195,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 	
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
-		return FULL_BLOCK_AABB;
-	}
+	{ return FULL_BLOCK_AABB; }
 	
 	@Override
 	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)

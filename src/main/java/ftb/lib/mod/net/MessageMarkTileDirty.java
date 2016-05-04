@@ -1,5 +1,6 @@
 package ftb.lib.mod.net;
 
+import ftb.lib.LMNBTUtils;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.lib.api.net.MessageLM;
@@ -25,6 +26,11 @@ public class MessageMarkTileDirty extends MessageLM<MessageMarkTileDirty>
 		posZ = t.getPos().getZ();
 		data = new NBTTagCompound();
 		t.writeTileClientData(data);
+		
+		if(t.ownerID != null && t.useOwnerID())
+		{
+			LMNBTUtils.setUUID(data, "OID", t.ownerID, false);
+		}
 	}
 	
 	@Override
@@ -57,6 +63,7 @@ public class MessageMarkTileDirty extends MessageLM<MessageMarkTileDirty>
 		if(te instanceof TileLM)
 		{
 			TileLM t = (TileLM) te;
+			t.ownerID = t.useOwnerID() ? LMNBTUtils.getUUID(data, "OID", false) : null;
 			t.readTileClientData(m.data);
 			t.onUpdatePacket();
 		}

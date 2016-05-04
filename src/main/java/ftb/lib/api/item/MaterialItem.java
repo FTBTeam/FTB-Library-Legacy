@@ -1,33 +1,25 @@
 package ftb.lib.api.item;
 
 import latmod.lib.util.FinalIDObject;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.List;
-
-public class MaterialItem extends FinalIDObject
+public final class MaterialItem extends FinalIDObject
 {
-	public final ItemMaterialsLM item;
+	public ItemMaterialsLM item;
 	public final int damage;
 	
-	public MaterialItem(ItemMaterialsLM i, int d, String s)
+	public MaterialItem(int d, String s)
 	{
 		super(s);
-		item = i;
 		damage = d;
+	}
+	
+	public MaterialItem setItem(ItemMaterialsLM i)
+	{
+		item = i;
+		return this;
 	}
 	
 	public final ItemStack getStack(int s)
 	{ return new ItemStack(item, s, damage); }
-	
-	@SideOnly(Side.CLIENT)
-	public void addInfo(EntityPlayer ep, List<String> l)
-	{
-	}
-	
-	public String getUnlocalizedName()
-	{ return item.getMod().getItemName(item.getPath(getID(), '.')); }
 }

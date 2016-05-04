@@ -1,8 +1,8 @@
 package ftb.lib.api.item;
 
+import latmod.lib.LMUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
@@ -28,17 +28,37 @@ public abstract class ItemMaterialsLM extends ItemLM
 	public void setFolder(String s)
 	{ if(s == null || !s.isEmpty()) { folder = s; } }
 	
-	public MaterialItem add(MaterialItem m)
+	public final void add(MaterialItem m)
 	{
+		m.setItem(this);
 		materials.put(m.damage, m);
-		return m;
+	}
+	
+	public final void addAll(Class<?> c)
+	{
+		try
+		{
+			for(MaterialItem m : LMUtils.getObjects(MaterialItem.class, c, null))
+			{
+				add(m);
+			}
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 	
 	@Override
 	public String getUnlocalizedName(ItemStack is)
 	{
 		MaterialItem m = materials.get(is.getItemDamage());
-		if(m != null) { return m.getUnlocalizedName(); }
+		
+		if(m != null)
+		{
+			return getMod().getItemName(getPath(m.getID(), '.'));
+		}
+		
 		return "unknown";
 	}
 	
@@ -70,14 +90,6 @@ public abstract class ItemMaterialsLM extends ItemLM
 		{
 			l.add(m.getStack(1));
 		}
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
-	{
-		MaterialItem m = materials.get(is.getItemDamage());
-		if(m != null) { m.addInfo(ep, l); }
 	}
 	
 	public String getPath(String id, char c)
