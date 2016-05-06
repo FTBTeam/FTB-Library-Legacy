@@ -29,7 +29,7 @@ public class InfoFriendsGUIPage extends InfoPage
 	}
 	
 	@Override
-	public void onClientDataChanged()
+	public void refreshGui(GuiInfo gui)
 	{
 		clear();
 		
@@ -65,7 +65,7 @@ public class InfoFriendsGUIPage extends InfoPage
 	{
 		public Button(GuiInfo g, InfoFriendsGUIPage p)
 		{
-			super(g, p);
+			super(g, p, null);
 			height = 20;
 		}
 		

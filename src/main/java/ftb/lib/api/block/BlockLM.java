@@ -160,8 +160,10 @@ public abstract class BlockLM extends Block implements IBlockLM
 			TileLM t = getTile(w, pos);
 			if(t != null)
 			{
-				if(t.recolourBlock(side, color)) { }
-				return true;
+				if(t.recolourBlock(side, color))
+				{
+					return true;
+				}
 			}
 		}
 		

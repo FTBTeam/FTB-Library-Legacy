@@ -277,13 +277,13 @@ public class GuiSelectColor extends GuiLM
 		int red = LMColorUtils.getRed(colLeft);
 		int green = LMColorUtils.getGreen(colLeft);
 		int blue = LMColorUtils.getBlue(colLeft);
-		buffer.pos(x + 0, y + 0, zLevel).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
-		buffer.pos(x + 0, y + h, zLevel).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x, y, zLevel).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x, y + h, zLevel).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
 		red = LMColorUtils.getRed(colRight);
 		green = LMColorUtils.getGreen(colRight);
 		blue = LMColorUtils.getBlue(colRight);
 		buffer.pos(x + w, y + h, zLevel).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
-		buffer.pos(x + w, y + 0, zLevel).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+		buffer.pos(x + w, y, zLevel).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
 	}
 	
 	public void closeGui(boolean set)

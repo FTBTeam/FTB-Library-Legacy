@@ -1,6 +1,6 @@
 package ftb.lib.mod;
 
-import ftb.lib.api.permissions.ForgePermission;
+import ftb.lib.api.permissions.ForgePermissionRegistry;
 import latmod.lib.annotations.Info;
 
 /**
@@ -8,7 +8,10 @@ import latmod.lib.annotations.Info;
  */
 public class FTBLibPermissions
 {
-	@ForgePermission(false)
 	@Info("Enabled access to protected blocks / chunks")
-	public static final String interact_secure = "ftbl.interact_secure";
+	public static final String interact_secure = ForgePermissionRegistry.registerPermission("ftbl.interact_secure", false);
+	
+	public static void init()
+	{
+	}
 }

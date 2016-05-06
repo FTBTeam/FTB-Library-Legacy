@@ -7,7 +7,7 @@ import ftb.lib.api.PlayerAction;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.info.InfoPage;
-import ftb.lib.api.info.InfoTextLine;
+import ftb.lib.api.info.lines.InfoTextLine;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;

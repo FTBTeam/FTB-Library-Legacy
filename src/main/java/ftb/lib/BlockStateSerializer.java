@@ -36,7 +36,7 @@ public class BlockStateSerializer
 		
 		for(int i = 0; i < entries.length; i++)
 		{
-			entries[i] = new StateEntry((IProperty<?>) o[i * 2 + 0], o[i * 2 + 1]);
+			entries[i] = new StateEntry((IProperty<?>) o[i * 2], o[i * 2 + 1]);
 		}
 		
 		Arrays.sort(entries);

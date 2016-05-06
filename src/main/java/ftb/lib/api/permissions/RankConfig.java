@@ -1,13 +1,8 @@
 package ftb.lib.api.permissions;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.annotations.IInfoContainer;
-import latmod.lib.annotations.INumberBoundsContainer;
 import latmod.lib.util.FinalIDObject;
 
 /**
@@ -15,100 +10,31 @@ import latmod.lib.util.FinalIDObject;
  * <br>Examples of a permission node ID:
  * <br>"xpt.level_crossdim", "latblocks.allow_paint", etc.
  */
-public class RankConfig extends FinalIDObject implements INumberBoundsContainer, IInfoContainer
+public abstract class RankConfig extends FinalIDObject
 {
-	private final JsonElement defaultPlayerValue;
-	private final JsonElement defaultOPValue;
-	private Double minValue, maxValue;
-	private String[] info;
-	
-	public RankConfig(String id, JsonElement defPlayerValue, JsonElement defOPValue)
+	public RankConfig(String id)
 	{
-		super(ForgePermissionContainer.getID(id));
-		defaultPlayerValue = defPlayerValue;
-		defaultOPValue = defOPValue;
+		super(ForgePermissionRegistry.getID(id));
 	}
 	
-	public RankConfig(String id, Number defPlayerValue, Number defOPValue)
-	{
-		this(id, new JsonPrimitive(defPlayerValue), new JsonPrimitive(defOPValue));
-	}
+	public abstract JsonElement getDefaultValue(boolean op);
 	
-	public RankConfig(String id, String defPlayerValue, String defOPValue)
-	{
-		this(id, new JsonPrimitive(defPlayerValue), new JsonPrimitive(defOPValue));
-	}
-	
-	public RankConfig(String id, Number[] defPlayerValue, Number[] defOPValue)
-	{
-		this(id, LMJsonUtils.toNumberArray(defPlayerValue), LMJsonUtils.toNumberArray(defOPValue));
-	}
-	
-	public RankConfig(String id, String[] defPlayerValue, String[] defOPValue)
-	{
-		this(id, LMJsonUtils.toStringArray(defPlayerValue), LMJsonUtils.toStringArray(defOPValue));
-	}
-	
-	public JsonElement getDefaultPlayerValue()
-	{
-		return defaultPlayerValue;
-	}
-	
-	public JsonElement getDefaultOPValue()
-	{
-		return defaultOPValue;
-	}
-	
-	protected JsonElement getDefaultElement(GameProfile profile)
-	{
-		return FTBLib.isOP(profile) ? getDefaultOPValue() : getDefaultPlayerValue();
-	}
-	
-	private JsonElement filter(JsonElement e)
-	{
-		if(e == null || (minValue == null && maxValue == null) || !e.isJsonPrimitive()) { return e; }
-		double n = e.getAsDouble();
-		if(n < minValue) { n = minValue; }
-		if(n > maxValue) { n = maxValue; }
-		return new JsonPrimitive(n);
-	}
 	
 	/**
 	 * Player can't be null, but it can be FakePlayer, if implementation supports that
 	 */
-	public JsonElement get(GameProfile profile)
+	public final JsonElement get(GameProfile profile)
 	{
-		if(profile == null) { throw new RuntimeException("GameProfile can't be null!"); }
-		
-		if(ForgePermissionRegistry.handler != null)
+		if(profile == null)
 		{
-			JsonElement e = ForgePermissionRegistry.handler.handleRankConfig(this, profile);
-			return (e == null) ? JsonNull.INSTANCE : filter(e);
+			throw new RuntimeException("GameProfile can't be null!");
 		}
 		
-		return filter(getDefaultElement(profile));
+		if(ForgePermissionRegistry.getPermissionHandler() != null)
+		{
+			return ForgePermissionRegistry.getPermissionHandler().handleRankConfig(this, profile);
+		}
+		
+		return getDefaultValue(FTBLib.isOP(profile));
 	}
-	
-	@Override
-	public void setBounds(double min, double max)
-	{
-		minValue = (min == Double.NEGATIVE_INFINITY) ? null : min;
-		maxValue = (max == Double.POSITIVE_INFINITY) ? null : max;
-	}
-	
-	@Override
-	public double getMin()
-	{ return minValue == null ? Double.NEGATIVE_INFINITY : minValue; }
-	
-	@Override
-	public double getMax()
-	{ return maxValue == null ? Double.POSITIVE_INFINITY : maxValue; }
-	
-	@Override
-	public void setInfo(String[] s)
-	{ info = s; }
-	
-	@Override
-	public String[] getInfo()
-	{ return info; }
 }

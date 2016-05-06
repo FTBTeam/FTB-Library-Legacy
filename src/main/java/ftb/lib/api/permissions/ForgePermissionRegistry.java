@@ -2,9 +2,7 @@ package ftb.lib.api.permissions;
 
 import com.mojang.authlib.GameProfile;
 import ftb.lib.FTBLib;
-import latmod.lib.annotations.AnnotationHelper;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +12,9 @@ import java.util.Map;
  */
 public class ForgePermissionRegistry
 {
-	private static final Map<String, ForgePermissionContainer> permissionContainers = new HashMap<>();
-	private static final Map<String, RankConfig> rankConfig = new HashMap<>();
-	static IPermissionHandler handler = null;
+	private static final Map<String, Boolean> permissions = new HashMap<>();
+	private static final Map<String, RankConfig> rankConfigs = new HashMap<>();
+	private static IPermissionHandler handler;
 	
 	public static void setHandler(IPermissionHandler h)
 	{
@@ -26,13 +24,99 @@ public class ForgePermissionRegistry
 		}
 	}
 	
+	public static IPermissionHandler getPermissionHandler()
+	{
+		return handler;
+	}
+	
+	public static String getID(String id)
+	{
+		if(id == null || id.isEmpty())
+		{
+			throw new NullPointerException("Permission ID can't be blank!");
+		}
+		else if(id.indexOf('.') == -1)
+		{
+			throw new IllegalArgumentException("Invalid ForgePermission: " + id + "! It must contain at least 1 '.'");
+		}
+		else
+		{
+			for(int i = 0; i < id.length(); i++)
+			{
+				char c = id.charAt(i);
+				
+				if(Character.isUpperCase(c))
+				{
+					throw new IllegalArgumentException("Invalid ForgePermission ID: " + id + "! Can't contain uppercase letters");
+				}
+				else if(c == '.' || (c >= '0' && c <= '9') || (c >= 'a' || c <= 'z')) { }
+				else
+				{
+					throw new IllegalArgumentException("Invalid ForgePermission ID: " + id + "! Can't contain '" + c + "'");
+				}
+			}
+		}
+		
+		return id;
+	}
+	
+	public static String registerPermission(String permission, boolean defaultPlayerValue)
+	{
+		permission = getID(permission);
+		
+		if(rankConfigs.containsKey(permission))
+		{
+			throw new RuntimeException("Duplicate ForgePermission ID found: " + permission);
+		}
+		
+		permissions.put(permission, defaultPlayerValue);
+		return permission;
+	}
+	
+	public static <E extends RankConfig> E registerRankConfig(E rankConfig)
+	{
+		if(rankConfigs.containsKey(rankConfig.getID()))
+		{
+			throw new RuntimeException("Duplicate RankConfig ID found: " + rankConfig.getID());
+		}
+		
+		rankConfigs.put(rankConfig.getID(), rankConfig);
+		return rankConfig;
+	}
+	
+	public static Collection<String> getRegistredPermissions()
+	{
+		return permissions.keySet();
+	}
+	
+	public static Collection<RankConfig> getRegistredConfig()
+	{
+		return rankConfigs.values();
+	}
+	
+	public static RankConfig getConfig(String s)
+	{
+		return rankConfigs.get(s);
+	}
+	
+	/**
+	 * Player can't be null, but it can be FakePlayer, if implementation supports that
+	 */
 	public static boolean hasPermission(String permission, GameProfile profile)
 	{
-		permission = ForgePermissionContainer.getID(permission);
-		
-		if(handler != null)
+		if(profile == null)
 		{
-			Boolean b = handler.handlePermission(permission, profile);
+			throw new RuntimeException("GameProfile can't be null!");
+		}
+		
+		if(ForgePermissionRegistry.getPermissionHandler() != null)
+		{
+			Boolean b = ForgePermissionRegistry.getPermissionHandler().handlePermission(permission, profile);
+			
+			if(b != null)
+			{
+				return b;
+			}
 		}
 		
 		if(FTBLib.isOP(profile))
@@ -40,66 +124,9 @@ public class ForgePermissionRegistry
 			return true;
 		}
 		
-		ForgePermissionContainer c = permissionContainers.get(permission);
-		return c != null && c.playerValue;
+		return getDefaultPlayerValue(permission);
 	}
 	
-	/**
-	 * c - Class that contains fields. parent - null in case all fields are static
-	 */
-	public static void register(Class<?> c)
-	{
-		try
-		{
-			for(Field f : c.getDeclaredFields())
-			{
-				f.setAccessible(true);
-				Object obj = f.get(null);
-				
-				if(obj instanceof String)
-				{
-					String id = ForgePermissionContainer.getID(obj.toString());
-					
-					ForgePermissionContainer container;
-					ForgePermission permission = f.getAnnotation(ForgePermission.class);
-					
-					if(permission == null)
-					{
-						container = new ForgePermissionContainer(id, true);
-					}
-					else
-					{
-						container = new ForgePermissionContainer(id, permission.value());
-					}
-					
-					AnnotationHelper.inject(f, null, container);
-					permissionContainers.put(id, container);
-				}
-				else if(obj instanceof RankConfig)
-				{
-					RankConfig p = (RankConfig) obj;
-					
-					if(rankConfig.containsKey(p.getID()))
-					{
-						throw new RuntimeException("Duplicate RankConfig ID found: " + p.getID() + " (" + p.getClass().getName() + " & " + permissionContainers.get(p.getID()).getClass().getName() + ")");
-					}
-					
-					rankConfig.put(p.getID(), p);
-				}
-			}
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-	
-	public static Collection<ForgePermissionContainer> getRegistredPermissions()
-	{ return permissionContainers.values(); }
-	
-	public static Collection<RankConfig> getRegistredConfig()
-	{ return rankConfig.values(); }
-	
-	public static RankConfig getConfig(String s)
-	{ return rankConfig.get(s); }
+	public static boolean getDefaultPlayerValue(String permission)
+	{ return permissions.containsKey(permission) && permissions.get(permission); }
 }

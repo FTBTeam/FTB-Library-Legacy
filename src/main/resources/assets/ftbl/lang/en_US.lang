@@ -112,6 +112,7 @@ client_config.sidebar_buttons=Sidebar Buttons
 
 # PlayerActions
 player_action.ftbl.settings=Client Settings
+player_action.ftbl.my_server_settings=My Server Settings
 player_action.ftbl.notifications=Notifications
 player_action.ftbl.toggle_gamemode=Toggle Gamemode
 player_action.ftbl.toggle_rain=Toggle Rain

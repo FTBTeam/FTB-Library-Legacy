@@ -5,8 +5,6 @@ import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -46,7 +44,6 @@ public abstract class PlayerAction extends FinalIDObject
 	
 	public abstract void onClicked(ForgePlayer self, ForgePlayer other);
 	
-	@SideOnly(Side.CLIENT)
 	public String getDisplayName()
 	{ return I18n.format("player_action." + getID()); }
 	

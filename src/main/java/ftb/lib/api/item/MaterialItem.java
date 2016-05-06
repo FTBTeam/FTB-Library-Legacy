@@ -20,6 +20,6 @@ public final class MaterialItem extends FinalIDObject
 		return this;
 	}
 	
-	public final ItemStack getStack(int s)
+	public ItemStack getStack(int s)
 	{ return new ItemStack(item, s, damage); }
 }

@@ -8,7 +8,6 @@ import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.item.ODItems;
-import ftb.lib.api.permissions.ForgePermissionRegistry;
 import ftb.lib.mod.cmd.CmdEditConfig;
 import ftb.lib.mod.cmd.CmdHeal;
 import ftb.lib.mod.cmd.CmdHelpOverride;
@@ -70,7 +69,7 @@ public class FTBLibMod
 		
 		FTBLibConfig.load();
 		EventBusHelper.register(FTBLibEventHandler.instance);
-		ForgePermissionRegistry.register(FTBLibPermissions.class);
+		FTBLibPermissions.init();
 		proxy.preInit();
 	}
 	

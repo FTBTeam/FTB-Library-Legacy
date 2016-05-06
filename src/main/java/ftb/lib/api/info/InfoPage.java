@@ -5,12 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import ftb.lib.JsonHelper;
-import ftb.lib.api.gui.IClientActionGui;
+import ftb.lib.api.gui.widgets.ButtonLM;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
+import ftb.lib.api.info.lines.InfoTextLine;
 import ftb.lib.mod.client.gui.info.ButtonInfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.lib.mod.net.MessageDisplayInfo;
-import latmod.lib.LMColor;
-import latmod.lib.LMFileUtils;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMMapUtils;
 import latmod.lib.RemoveFilter;
@@ -23,15 +23,13 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InfoPage extends FinalIDObject implements IJsonSerializable, IClientActionGui // GuideFile
+public class InfoPage extends FinalIDObject implements IJsonSerializable // GuideFile
 {
 	private static final RemoveFilter<Map.Entry<String, InfoPage>> cleanupFilter = new RemoveFilter<Map.Entry<String, InfoPage>>()
 	{
@@ -44,6 +42,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	private ITextComponent title;
 	public final List<InfoTextLine> text;
 	public final LinkedHashMap<String, InfoPage> childPages;
+	public InfoPageTheme theme;
 	
 	public InfoPage(String id)
 	{
@@ -71,7 +70,12 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	}
 	
 	public void println(ITextComponent c)
-	{ text.add(c == null ? null : new InfoExtendedTextLine(this, c)); }
+	{
+		if(c == null) { text.add(null); }
+		else if(c instanceof TextComponentString && c.getStyle().isEmpty() && c.getSiblings().isEmpty())
+		{ printlnText(((TextComponentString) c).getText()); }
+		else { text.add(new InfoExtendedTextLine(this, c)); }
+	}
 	
 	public void printlnText(String s)
 	{ text.add((s == null || s.isEmpty()) ? null : new InfoTextLine(this, s)); }
@@ -89,27 +93,6 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 			else
 			{
 				try { sb.append(c.getText().getUnformattedText()); }
-				catch(Exception ex) { ex.printStackTrace(); }
-			}
-			
-			if(i != s - 1) { sb.append('\n'); }
-		}
-		return sb.toString();
-	}
-	
-	public String getFormattedText()
-	{
-		if(text.isEmpty()) { return ""; }
-		StringBuilder sb = new StringBuilder();
-		int s = text.size();
-		for(int i = 0; i < s; i++)
-		{
-			InfoTextLine c = text.get(i);
-			
-			if(c == null || c.getText() == null) { sb.append('\n'); }
-			else
-			{
-				try { sb.append(c.getText().getFormattedText()); }
 				catch(Exception ex) { ex.printStackTrace(); }
 			}
 			
@@ -148,31 +131,43 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 	
 	public void cleanup()
 	{
-		for(InfoPage c : childPages.values())
-		{
-			c.cleanup();
-		}
-		
+		for(InfoPage c : childPages.values()) c.cleanup();
 		LMMapUtils.removeAll(childPages, cleanupFilter);
 	}
 	
 	public void sortAll()
 	{
-		//TODO: sort
 		LMMapUtils.sortMap(childPages, new Comparator<Map.Entry<String, InfoPage>>()
 		{
 			@Override
 			public int compare(Map.Entry<String, InfoPage> o1, Map.Entry<String, InfoPage> o2)
-			{
-				return o1.getValue().getTitleComponent().getFormattedText().compareToIgnoreCase(o1.getValue().getTitleComponent().getFormattedText());
-			}
+			{ return o1.getValue().compareTo(o2.getValue()); }
 		});
 		
 		for(InfoPage c : childPages.values()) c.sortAll();
 	}
 	
 	public void copyFrom(InfoPage c)
-	{ for(int i = 0; i < c.childPages.size(); i++) addSub(c.setParent(this)); }
+	{
+		for(InfoTextLine l : c.text)
+		{
+			text.add(l == null ? null : l.copy(this));
+		}
+		
+		for(InfoPage p : c.childPages.values())
+		{
+			InfoPage p1 = new InfoPage(p.getID());
+			p1.copyFrom(p);
+			addSub(p1);
+		}
+	}
+	
+	public InfoPage copy()
+	{
+		InfoPage page = new InfoPage(getID());
+		page.fromJson(getSerializableElement());
+		return page;
+	}
 	
 	public InfoPage getParentTop()
 	{
@@ -201,6 +196,16 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 			for(InfoPage c : childPages.values())
 				o1.add(c.getID(), c.getSerializableElement());
 			o.add("S", o1);
+		}
+		
+		if(theme != null)
+		{
+			JsonElement e = theme.getSerializableElement();
+			
+			if(e != null)
+			{
+				o.add("C", e);
+			}
 		}
 		
 		return o;
@@ -235,66 +240,48 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 				childPages.put(c.getID(), c);
 			}
 		}
-	}
-	
-	protected static void loadFromFiles(InfoPage c, File f)
-	{
-		if(f == null || !f.exists()) { return; }
 		
-		if(f.isDirectory())
+		if(o.has("C"))
 		{
-			File[] f1 = f.listFiles();
-			
-			if(f1 != null && f1.length > 0)
-			{
-				Arrays.sort(f1, LMFileUtils.fileComparator);
-				InfoPage c1 = c.getSub(f.getName());
-				for(File f2 : f1) loadFromFiles(c1, f2);
-			}
+			theme = new InfoPageTheme();
+			theme.fromJson(o.get("C"));
 		}
-		else if(f.isFile())
+		else
 		{
-			if(f.getName().endsWith(".txt"))
-			{
-				try
-				{
-					InfoPage c1 = c.getSub(LMFileUtils.getRawFileName(f));
-					
-					for(String s : LMFileUtils.load(f))
-					{
-						if(s.isEmpty()) { c1.text.add(null); }
-						else if(s.length() > 2 && s.charAt(0) == '{' && s.charAt(s.length() - 1) == '}')
-						{
-							c1.text.add(InfoTextLine.get(c1, LMJsonUtils.fromJson(s)));
-						}
-						else { c1.text.add(new InfoTextLine(c1, s)); }
-					}
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-			}
+			theme = null;
 		}
 	}
 	
-	public void displayGuide(EntityPlayerMP ep)
+	public MessageDisplayInfo displayGuide(EntityPlayerMP ep)
 	{
-		if(ep != null && !(ep instanceof FakePlayer)) { new MessageDisplayInfo(this).sendTo(ep); }
+		MessageDisplayInfo m = new MessageDisplayInfo(this);
+		if(ep != null && !(ep instanceof FakePlayer)) { m.sendTo(ep); }
+		return m;
 	}
 	
-	public LMColor getBackgroundColor()
-	{ return (parent == null) ? null : parent.getBackgroundColor(); }
+	public final InfoPageTheme getTheme()
+	{ return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : parent.getTheme()) : theme; }
 	
-	public LMColor getTextColor()
-	{ return (parent == null) ? null : parent.getTextColor(); }
+	@SideOnly(Side.CLIENT)
+	public final void refreshGuiTree(GuiInfo gui)
+	{
+		refreshGui(gui);
+		for(InfoPage p : childPages.values())
+			p.refreshGuiTree(gui);
+	}
 	
-	public Boolean useUnicodeFont()
-	{ return (parent == null) ? null : parent.useUnicodeFont(); }
+	@SideOnly(Side.CLIENT)
+	public void refreshGui(GuiInfo gui)
+	{
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public ButtonLM createSpecialButton(GuiInfo gui)
+	{ return null; }
 	
 	@SideOnly(Side.CLIENT)
 	public ButtonInfoPage createButton(GuiInfo gui)
-	{ return new ButtonInfoPage(gui, this); }
+	{ return new ButtonInfoPage(gui, this, null); }
 	
 	public String getFullID()
 	{
@@ -302,13 +289,17 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, IClien
 		return parent.getFullID() + '.' + getID();
 	}
 	
-	@Override
-	public void onClientDataChanged()
+	public String getPath()
 	{
+		if(parent == null) { return getID(); }
+		return parent.getFullID() + '/' + getID();
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public void initGUI(GuiInfo gui)
+	public void loadText(List<String> list) throws Exception
 	{
+		for(JsonElement e : LMJsonUtils.deserializeText(list))
+		{
+			text.add(InfoTextLine.get(this, e));
+		}
 	}
 }

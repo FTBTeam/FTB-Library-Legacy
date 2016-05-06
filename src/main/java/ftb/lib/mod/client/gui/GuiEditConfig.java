@@ -39,7 +39,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 {
 	public final IConfigProvider provider;
 	public final String title;
-	public final ArrayList<ButtonConfigEntry> configEntryButtons;
+	public final List<ButtonConfigEntry> configEntryButtons;
 	public final PanelLM configPanel;
 	public final ButtonLM buttonClose, buttonExpandAll, buttonCollapseAll;
 	public final SliderLM scroll;
@@ -158,7 +158,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 		mainPanel.width = width;
 		mainPanel.height = height;
 		mainPanel.posX = mainPanel.posY = 0;
-		buttonClose.posX = width - 18 * 1;
+		buttonClose.posX = width - 18;
 		scroll.posX = width - 16;
 		scroll.height = height - 20;
 		configPanel.posY = 20;

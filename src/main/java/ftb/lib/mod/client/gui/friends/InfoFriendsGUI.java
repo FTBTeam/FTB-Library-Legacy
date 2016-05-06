@@ -4,6 +4,7 @@ import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.ForgePlayerComparators;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.info.InfoPage;
+import ftb.lib.api.info.InfoPageTheme;
 import latmod.lib.LMColor;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,6 +24,7 @@ public class InfoFriendsGUI extends InfoPage
 	{
 		super("friends_gui");
 		setTitle(new TextComponentString("FriendsGUI"));
+		theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
 		
 		List<ForgePlayer> tempPlayerList = new ArrayList<>();
 		tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());
@@ -41,16 +43,4 @@ public class InfoFriendsGUI extends InfoPage
 			addSub(new InfoFriendsGUIPage(p.toPlayerSP()));
 		}
 	}
-	
-	@Override
-	public LMColor getBackgroundColor()
-	{ return new LMColor.RGB(30, 30, 30); }
-	
-	@Override
-	public LMColor getTextColor()
-	{ return new LMColor.RGB(200, 200, 200); }
-	
-	@Override
-	public Boolean useUnicodeFont()
-	{ return Boolean.FALSE; }
 }

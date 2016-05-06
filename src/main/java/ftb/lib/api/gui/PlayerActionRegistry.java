@@ -27,7 +27,7 @@ public class PlayerActionRegistry
 		return (entry == null) || entry.getAsBoolean();
 	}
 	
-	public static void add(final PlayerAction a)
+	public static PlayerAction add(final PlayerAction a)
 	{
 		if(a != null)
 		{
@@ -45,6 +45,8 @@ public class PlayerActionRegistry
 				configGroup.entryMap.put(a.getID(), entry);
 			}
 		}
+		
+		return a;
 	}
 	
 	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ForgePlayer self, ForgePlayer other, boolean sort, boolean ignoreConfig)

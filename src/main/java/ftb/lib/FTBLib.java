@@ -37,7 +37,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
@@ -59,6 +58,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +74,21 @@ public class FTBLib
 	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
 	
-	public static final TextFormatting[] chatColors = new TextFormatting[] {TextFormatting.BLACK, TextFormatting.DARK_BLUE, TextFormatting.DARK_GREEN, TextFormatting.DARK_AQUA, TextFormatting.DARK_RED, TextFormatting.DARK_PURPLE, TextFormatting.GOLD, TextFormatting.GRAY, TextFormatting.DARK_GRAY, TextFormatting.BLUE, TextFormatting.GREEN, TextFormatting.AQUA, TextFormatting.RED, TextFormatting.LIGHT_PURPLE, TextFormatting.YELLOW, TextFormatting.WHITE,};
+	public static final Comparator<ResourceLocation> comparatorResourceLocation = new Comparator<ResourceLocation>()
+	{
+		@Override
+		public int compare(ResourceLocation o1, ResourceLocation o2)
+		{
+			int i = o1.getResourceDomain().compareTo(o2.getResourceDomain());
+			
+			if(i == 0)
+			{
+				i = o1.getResourcePath().compareTo(o2.getResourcePath());
+			}
+			
+			return i;
+		}
+	};
 	
 	public static File folderConfig;
 	public static File folderMinecraft;
@@ -194,7 +208,7 @@ public class FTBLib
 		
 		List<EntityPlayerMP> list = new ArrayList<>();
 		list.addAll(l);
-		if(except != null) { list.remove(except); }
+		list.remove(except);
 		return list;
 	}
 	

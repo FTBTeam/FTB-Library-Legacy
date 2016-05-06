@@ -80,6 +80,7 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	public static void writeTag(ByteBuf io, NBTTagCompound tag)
 	{ ByteBufUtils.writeTag(io, tag); }
 	
+	//TODO: Improve me
 	public static JsonElement readJsonElement(ByteBuf io)
 	{
 		byte[] b = new byte[io.readInt()];
@@ -89,6 +90,7 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 		return JsonElementIO.read(stream);
 	}
 	
+	//TODO: Improve me
 	public static void writeJsonElement(ByteBuf io, JsonElement e)
 	{
 		ByteIOStream stream = new ByteIOStream();

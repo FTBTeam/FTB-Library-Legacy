@@ -1,5 +1,6 @@
 package ftb.lib.api.permissions;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 
@@ -12,11 +13,15 @@ import java.util.Map;
 public class RankConfigEnum<E extends Enum<E>> extends RankConfig
 {
 	private final Map<String, E> enumMap;
+	private JsonElement defPlayer, defOP;
 	
 	public RankConfigEnum(String id, E defPlayerValue, E defOPValue, E[] validEnums, boolean addNull)
 	{
-		super(id, new JsonPrimitive(getName(defPlayerValue)), new JsonPrimitive(getName(defOPValue)));
+		super(id);
 		enumMap = new HashMap<>();
+		
+		defPlayer = new JsonPrimitive(getName(defPlayerValue));
+		defOP = new JsonPrimitive(getName(defOPValue));
 		
 		for(E e : validEnums)
 		{
@@ -33,7 +38,9 @@ public class RankConfigEnum<E extends Enum<E>> extends RankConfig
 	{ return e == null ? "-" : e.name().toLowerCase(); }
 	
 	public E getEnum(GameProfile profile)
-	{
-		return enumMap.get(get(profile).getAsString());
-	}
+	{ return enumMap.get(get(profile).getAsString()); }
+	
+	@Override
+	public JsonElement getDefaultValue(boolean op)
+	{ return op ? defOP : defPlayer; }
 }

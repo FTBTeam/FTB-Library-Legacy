@@ -16,7 +16,6 @@ import java.util.Map;
 public abstract class ItemMaterialsLM extends ItemLM
 {
 	public final Map<Integer, MaterialItem> materials;
-	private String folder;
 	
 	public ItemMaterialsLM()
 	{
@@ -25,8 +24,8 @@ public abstract class ItemMaterialsLM extends ItemLM
 		setMaxDamage(0);
 	}
 	
-	public void setFolder(String s)
-	{ if(s == null || !s.isEmpty()) { folder = s; } }
+	public String getFolder()
+	{ return null; }
 	
 	public final void add(MaterialItem m)
 	{
@@ -38,10 +37,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 	{
 		try
 		{
-			for(MaterialItem m : LMUtils.getObjects(MaterialItem.class, c, null))
-			{
-				add(m);
-			}
+			LMUtils.getObjects(MaterialItem.class, c, null).forEach(this::add);
 		}
 		catch(Exception ex)
 		{
@@ -52,11 +48,12 @@ public abstract class ItemMaterialsLM extends ItemLM
 	@Override
 	public String getUnlocalizedName(ItemStack is)
 	{
-		MaterialItem m = materials.get(is.getItemDamage());
+		MaterialItem m = materials.get(is.getMetadata());
 		
 		if(m != null)
 		{
-			return getMod().getItemName(getPath(m.getID(), '.'));
+			String s = getFolder();
+			return (s == null || s.isEmpty()) ? getMod().getItemName(m.getID()) : getMod().getItemName(s + '.' + m.getID());
 		}
 		
 		return "unknown";
@@ -90,11 +87,5 @@ public abstract class ItemMaterialsLM extends ItemLM
 		{
 			l.add(m.getStack(1));
 		}
-	}
-	
-	public String getPath(String id, char c)
-	{
-		if(folder == null) { return id; }
-		return folder + c + id;
 	}
 }

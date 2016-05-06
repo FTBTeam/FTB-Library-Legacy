@@ -1,6 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.TextureCoords;
+import ftb.lib.api.GuiLang;
 import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
@@ -10,12 +11,13 @@ import ftb.lib.api.gui.widgets.PanelLM;
 import ftb.lib.api.gui.widgets.SliderLM;
 import ftb.lib.api.gui.widgets.WidgetLM;
 import ftb.lib.api.info.InfoPage;
-import ftb.lib.api.info.InfoTextLine;
-import latmod.lib.LMColor;
+import ftb.lib.api.info.InfoPageTheme;
+import ftb.lib.api.info.lines.InfoTextLine;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GuiInfo extends GuiLM implements IClientActionGui
@@ -36,17 +38,16 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	public static final TextureCoords tex_bg_NP = new TextureCoords(tex, 0, 16, 13, 13, 64, 64);
 	public static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
 	
-	public int panelWidth;
-	
 	public final GuiInfo parentGui;
 	public final InfoPage page;
 	public final String pageTitle;
 	public InfoPage selectedPage;
 	
 	public final SliderLM sliderPages, sliderText;
-	public final ButtonLM buttonBack;
+	public final ButtonLM buttonBack, buttonSpecial;
 	
 	public final PanelLM panelPages, panelText;
+	public int panelWidth;
 	public int colorText, colorBackground;
 	public boolean useUnicodeFont;
 	
@@ -91,7 +92,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 			{
 				FTBLibClient.playClickSound();
 				
-				if(selectedPage == page || page.getFormattedText().isEmpty())
+				if(selectedPage == page || page.getUnformattedText().isEmpty())
 				{
 					if(parentGui == null) { mc.thePlayer.closeScreen(); }
 					else
@@ -163,24 +164,33 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 				sliderText.scrollStep = 30F / (float) height;
 			}
 		};
+		
+		buttonSpecial = page.createSpecialButton(this);
 	}
 	
 	@Override
 	public void addWidgets()
 	{
+		page.refreshGuiTree(GuiInfo.this);
+		
 		mainPanel.add(sliderPages);
 		mainPanel.add(sliderText);
 		mainPanel.add(buttonBack);
 		mainPanel.add(panelPages);
 		mainPanel.add(panelText);
+		mainPanel.add(buttonSpecial);
+		
+		buttonBack.title = (parentGui == null) ? GuiLang.button_close.format() : GuiLang.button_back.format();
 	}
 	
 	@Override
 	public void initLMGui()
 	{
-		mainPanel.width = width;
-		mainPanel.height = height;
-		panelWidth = mainPanel.width / 7 * 2;
+		mainPanel.posX = InfoClientSettings.border_width.getAsInt();
+		mainPanel.posY = InfoClientSettings.border_height.getAsInt();
+		mainPanel.width = width - InfoClientSettings.border_width.getAsInt() * 2;
+		mainPanel.height = height - InfoClientSettings.border_height.getAsInt() * 2;
+		panelWidth = (int) (mainPanel.width * 2D / 7D);
 		
 		panelPages.posX = 10;
 		panelPages.posY = 46;
@@ -189,7 +199,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		panelText.posX = panelWidth + 10;
 		panelText.posY = 10;
-		panelText.width = width - panelWidth - 20 - sliderText.width;
+		panelText.width = mainPanel.width - panelWidth - 20 - sliderText.width;
 		panelText.height = mainPanel.height - 20;
 		
 		sliderPages.posX = panelWidth - sliderPages.width - 10;
@@ -198,25 +208,30 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		
 		sliderText.posY = 10;
 		sliderText.height = mainPanel.height - 20;
-		sliderText.posX = panelText.getAX() + panelText.width + 1;
+		sliderText.posX = mainPanel.width - 10 - sliderText.width;
 		
 		buttonBack.posX = 12;
 		buttonBack.posY = 12;
 		
-		LMColor c = page.getTextColor();
-		if(c == null) { c = InfoClientSettings.text_color.value; }
-		colorText = 0xFF000000 | c.color();
+		InfoPageTheme theme = page.getTheme();
 		
-		c = page.getBackgroundColor();
-		if(c == null) { c = InfoClientSettings.bg_color.value; }
-		colorBackground = 0xFF000000 | c.color();
+		colorText = 0xFF000000 | theme.textColor.color();
+		colorBackground = 0xFF000000 | theme.backgroundColor.color();
 		
-		Boolean b = page.useUnicodeFont();
-		useUnicodeFont = (b == null) ? InfoClientSettings.unicode.getAsBoolean() : b.booleanValue();
+		if(theme.useUnicodeFont == null)
+		{
+			useUnicodeFont = InfoClientSettings.unicode.getAsBoolean();
+		}
+		else
+		{
+			useUnicodeFont = theme.useUnicodeFont;
+		}
 		
-		//
-		
-		page.initGUI(this);
+		if(buttonSpecial != null)
+		{
+			buttonSpecial.posX = panelWidth - 24;
+			buttonSpecial.posY = 10;
+		}
 	}
 	
 	@Override
@@ -250,6 +265,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 			panelText.posY = (int) (10F - (sliderText.value * (panelText.height - (mainPanel.height - 20F))));
 		}
 		
+		//GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		//scissor(20, 20, mainPanel.width - 40, mainPanel.height - 40);
+		
 		super.drawBackground();
 		
 		FTBLibClient.setTexture(texture);
@@ -257,16 +275,22 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
 		renderFilling(panelWidth, 0, mainPanel.width - panelWidth, mainPanel.height, InfoClientSettings.transparency.getAsInt());
-		renderFilling(0, 36, panelWidth, mainPanel.height - 32, 255);
+		renderFilling(0, 36, panelWidth, mainPanel.height - 36, 255);
 		
 		boolean uni = fontRendererObj.getUnicodeFlag();
 		fontRendererObj.setUnicodeFlag(useUnicodeFont);
 		
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		scissor(panelText.getAX(), mainPanel.posY + 4, panelText.width, mainPanel.height - 8);
 		panelText.renderWidget();
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		
 		fontRendererObj.setUnicodeFlag(uni);
 		
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		scissor(panelPages.getAX(), mainPanel.posY + 40, panelPages.width, mainPanel.height - 44);
 		panelPages.renderWidget();
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		
@@ -281,6 +305,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		buttonBack.render((parentGui == null) ? tex_close : tex_back);
 		
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		if(buttonSpecial != null) { buttonSpecial.renderWidget(); }
+		
 		fontRendererObj.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, mainPanel.posY + 14, colorText);
 	}
 	
@@ -292,6 +318,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	private void renderBorders(int px, int py, int w, int h)
 	{
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		px += mainPanel.posX;
+		py += mainPanel.posY;
+		
 		render(tex_bg_NN, px, py, zLevel, 13, 13);
 		render(tex_bg_NP, px, py + h - 13, zLevel, 13, 13);
 		render(tex_bg_PN, px + w - 13, py, zLevel, 13, 13);
@@ -306,16 +335,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 	private void renderFilling(int px, int py, int w, int h, int a)
 	{
 		FTBLibClient.setGLColor(colorBackground, a);
-		drawBlankRect(px + 4, py + 4, zLevel, w - 8, h - 8);
+		drawBlankRect(mainPanel.posX + px + 4, mainPanel.posY + py + 4, zLevel, w - 8, h - 8);
 	}
 	
 	@Override
 	public void onClientDataChanged()
 	{
-		if(selectedPage instanceof IClientActionGui)
-		{
-			selectedPage.onClientDataChanged();
-			refreshWidgets();
-		}
+		refreshWidgets();
 	}
 }

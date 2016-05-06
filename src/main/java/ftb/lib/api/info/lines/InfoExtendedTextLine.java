@@ -1,19 +1,24 @@
-package ftb.lib.api.info;
+package ftb.lib.api.info.lines;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import ftb.lib.JsonHelper;
+import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.notification.ClickAction;
 import ftb.lib.mod.client.gui.info.ButtonInfoExtendedTextLine;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,6 +34,21 @@ public class InfoExtendedTextLine extends InfoTextLine
 	{
 		super(c, null);
 		text = cc;
+		
+		if(text != null)
+		{
+			ClickEvent clickEvent = text.getStyle().getClickEvent();
+			if(clickEvent != null)
+			{
+				clickAction = ClickAction.from(clickEvent);
+			}
+			
+			HoverEvent hoverEvent = text.getStyle().getHoverEvent();
+			if(hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_TEXT)
+			{
+				hover = Collections.singletonList(hoverEvent.getValue());
+			}
+		}
 	}
 	
 	@Override
@@ -48,7 +68,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 	{ return clickAction != null; }
 	
 	@SideOnly(Side.CLIENT)
-	public void onClicked()
+	public void onClicked(MouseButton button)
 	{
 		if(clickAction != null)
 		{

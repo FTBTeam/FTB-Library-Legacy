@@ -1,8 +1,9 @@
-package ftb.lib.api.info;
+package ftb.lib.api.info.lines;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.util.IJsonSerializable;
@@ -34,6 +35,10 @@ public class InfoTextLine implements IJsonSerializable
 			{
 				l = new InfoImageLine(c);
 			}
+			//else if(o.has("recipe"))
+			//{
+			//	l = new InfoRecipeLine(c);
+			//}
 			else
 			{
 				l = new InfoExtendedTextLine(c, null);
@@ -67,4 +72,7 @@ public class InfoTextLine implements IJsonSerializable
 	@Override
 	public JsonElement getSerializableElement()
 	{ return new JsonPrimitive(text); }
+	
+	public final InfoTextLine copy(InfoPage p)
+	{ return get(p, getSerializableElement()); }
 }

@@ -1,4 +1,4 @@
-package ftb.lib.api.info;
+package ftb.lib.api.info.lines;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import ftb.lib.FTBLib;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
+import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.ButtonInfoImage;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
 import ftb.lib.mod.client.gui.info.GuiInfo;
@@ -45,9 +46,9 @@ public class InfoImageLine extends InfoExtendedTextLine
 		try
 		{
 			File file = new File(FTBLib.folderModpack, "images/" + imageURL);
-			if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath()); }
+			if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading InfoGUI image: " + file.getAbsolutePath()); }
 			BufferedImage img = ImageIO.read(file);
-			ResourceLocation tex = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
+			ResourceLocation tex = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbl_info/" + imageURL, new DynamicTexture(img));
 			texture = new TextureCoords(tex, 0D, 0D, img.getWidth(), img.getHeight(), img.getWidth(), img.getHeight());
 		}
 		catch(Exception e)
@@ -68,19 +69,28 @@ public class InfoImageLine extends InfoExtendedTextLine
 		return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
 	}
 	
-	public void setImage(String img)
+	public InfoImageLine setImage(String img)
 	{
 		String imageURL0 = imageURL == null ? null : (imageURL + "");
 		imageURL = img;
 		if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true)) { texture = null; }
 		if(imageURL != null) { text = null; }
+		return this;
 	}
 	
-	public void setImage(TextureCoords t)
+	public InfoImageLine setImage(TextureCoords t)
 	{
 		texture = t;
 		imageURL = null;
 		text = null;
+		return this;
+	}
+	
+	public InfoImageLine setSize(double w, double h)
+	{
+		displayW = w;
+		displayH = h;
+		return this;
 	}
 	
 	@Override

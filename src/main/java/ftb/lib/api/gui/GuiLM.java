@@ -285,4 +285,10 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 	
 	public static void render(TextureCoords tc, double x, double y, double z)
 	{ if(tc != null && tc.isValid()) { render(tc, x, y, z, tc.width, tc.height); } }
+	
+	public void scissor(int x, int y, int w, int h)
+	{
+		int scale = FTBLibClient.computeGuiScale();
+		GL11.glScissor(x * scale, (height - y - h) * scale, w * scale, h * scale);
+	}
 }

@@ -1,10 +1,8 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.api.MouseButton;
-import ftb.lib.api.gui.GuiLM;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.lib.api.info.InfoTextLine;
-import net.minecraft.client.renderer.GlStateManager;
+import ftb.lib.api.info.lines.InfoTextLine;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -63,23 +61,14 @@ public class ButtonInfoTextLine extends ButtonLM
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
-		
-		boolean mouseOver = mouseOver();
 		
 		if(text != null)
 		{
 			for(int i = 0; i < text.size(); i++)
 			{
-				guiInfo.getFontRenderer().drawString(text.get(i), ax, ay + i * 10, guiInfo.colorText);
+				guiInfo.getFontRenderer().drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
 			}
-		}
-		
-		if(mouseOver)
-		{
-			GlStateManager.color(0F, 0F, 0F, 0.101F);
-			GuiLM.drawBlankRect(ax, ay, guiInfo.getZLevel(), width, height);
 		}
 	}
 }

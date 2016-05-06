@@ -5,6 +5,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -66,7 +67,28 @@ public class ClickAction implements IJsonSerializable
 	@Override
 	public String toString()
 	{
-		if(data == null) { return type.getID(); }
-		return data.toString();
+		return (data == null) ? type.getID() : data.toString();
+	}
+	
+	public static ClickAction from(ClickEvent e)
+	{
+		if(e != null)
+		{
+			JsonPrimitive p = new JsonPrimitive(e.getValue());
+			
+			switch(e.getAction())
+			{
+				case RUN_COMMAND:
+					return new ClickAction(ClickActionType.CMD, p);
+				case OPEN_FILE:
+					return new ClickAction(ClickActionType.FILE, p);
+				case SUGGEST_COMMAND:
+					return new ClickAction(ClickActionType.SHOW_CMD, p);
+				case OPEN_URL:
+					return new ClickAction(ClickActionType.URL, p);
+			}
+		}
+		
+		return null;
 	}
 }

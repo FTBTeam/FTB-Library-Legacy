@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.info;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.info.InfoImageLine;
+import ftb.lib.api.info.lines.InfoImageLine;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,7 +34,6 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
 		
 		boolean mouseOver = mouseOver();

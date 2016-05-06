@@ -1,9 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.api.MouseButton;
-import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.info.InfoExtendedTextLine;
-import net.minecraft.client.renderer.GlStateManager;
+import ftb.lib.api.info.lines.InfoExtendedTextLine;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,42 +45,27 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 	@Override
 	public void addMouseOverText(List<String> l)
 	{
-		if(hover != null)
-		{
-			l.addAll(hover);
-		}
+		if(hover != null) { l.addAll(hover); }
 	}
 	
 	@Override
 	public void onClicked(MouseButton button)
 	{
-		if(line != null)
-		{
-			line.onClicked();
-		}
+		if(line != null) { line.onClicked(button); }
 	}
 	
 	@Override
 	public void renderWidget()
 	{
 		int ay = getAY();
-		if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
 		int ax = getAX();
-		
-		boolean mouseOver = mouseOver();
 		
 		if(text != null && !text.isEmpty())
 		{
 			for(int i = 0; i < text.size(); i++)
 			{
-				gui.getFontRenderer().drawString(text.get(i), ax, ay + i * 10, guiInfo.colorText);
+				gui.getFontRenderer().drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
 			}
-		}
-		
-		if(mouseOver)
-		{
-			GlStateManager.color(0F, 0F, 0F, 0.101F);
-			GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
 		}
 	}
 }
