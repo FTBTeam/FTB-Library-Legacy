@@ -16,7 +16,6 @@ import ftb.lib.mod.FTBLibLang;
 import ftb.lib.mod.FTBLibMod;
 import ftb.lib.mod.client.FTBLibModClient;
 import io.netty.buffer.ByteBuf;
-import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
@@ -97,7 +96,7 @@ public class MessageReload extends MessageLM<MessageReload>
 	@SideOnly(Side.CLIENT)
 	public IMessage onMessage(MessageReload m, MessageContext ctx)
 	{
-		long ms = LMUtils.millis();
+		long ms = System.currentTimeMillis();
 		
 		ConfigGroup syncedGroup = new ConfigGroup(ConfigRegistry.synced.getID());
 		syncedGroup.readFromNBT(m.syncedData, false);
@@ -133,7 +132,7 @@ public class MessageReload extends MessageLM<MessageReload>
 	@SideOnly(Side.CLIENT)
 	public static void reloadClient(long ms, boolean printMessage, boolean modeChanged)
 	{
-		if(ms == 0L) { ms = LMUtils.millis(); }
+		if(ms == 0L) { ms = System.currentTimeMillis(); }
 		GameModes.reload();
 		EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
 		ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, true, modeChanged);
@@ -142,7 +141,7 @@ public class MessageReload extends MessageLM<MessageReload>
 		
 		if(printMessage)
 		{
-			FTBLibLang.reload_client.printChat(ep, (LMUtils.millis() - ms) + "ms");
+			FTBLibLang.reload_client.printChat(ep, (System.currentTimeMillis() - ms) + "ms");
 		}
 	}
 }

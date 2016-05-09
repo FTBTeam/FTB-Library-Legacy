@@ -125,7 +125,6 @@ public class ForgePlayerMP extends ForgePlayer
 	public void getInfo(ForgePlayerMP owner, List<ITextComponent> info)
 	{
 		refreshStats();
-		long ms = LMUtils.millis();
 		
 		if(!equalsPlayer(owner))
 		{

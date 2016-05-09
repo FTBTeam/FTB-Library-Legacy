@@ -1,9 +1,7 @@
-package ftb.lib.api.info.lines;
+package ftb.lib.api.info;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import net.minecraft.util.IJsonSerializable;
@@ -17,38 +15,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class InfoTextLine implements IJsonSerializable
 {
-	public static InfoTextLine get(InfoPage c, JsonElement e)
-	{
-		if(e == null || e.isJsonNull()) { return null; }
-		else if(e.isJsonPrimitive())
-		{
-			String s = e.getAsString();
-			return s.trim().isEmpty() ? null : new InfoTextLine(c, s);
-		}
-		else
-		{
-			JsonObject o = e.getAsJsonObject();
-			
-			InfoExtendedTextLine l;
-			
-			if(o.has("image"))
-			{
-				l = new InfoImageLine(c);
-			}
-			//else if(o.has("recipe"))
-			//{
-			//	l = new InfoRecipeLine(c);
-			//}
-			else
-			{
-				l = new InfoExtendedTextLine(c, null);
-			}
-			
-			l.fromJson(o);
-			return l;
-		}
-	}
-	
 	public final InfoPage page;
 	private String text;
 	
@@ -74,5 +40,5 @@ public class InfoTextLine implements IJsonSerializable
 	{ return new JsonPrimitive(text); }
 	
 	public final InfoTextLine copy(InfoPage p)
-	{ return get(p, getSerializableElement()); }
+	{ return p.createLine(getSerializableElement()); }
 }

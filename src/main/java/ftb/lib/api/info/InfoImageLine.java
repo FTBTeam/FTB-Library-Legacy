@@ -1,12 +1,10 @@
-package ftb.lib.api.info.lines;
+package ftb.lib.api.info;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import ftb.lib.FTBLib;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.info.InfoPage;
 import ftb.lib.mod.client.gui.info.ButtonInfoImage;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;
 import ftb.lib.mod.client.gui.info.GuiInfo;
@@ -16,16 +14,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
 public class InfoImageLine extends InfoExtendedTextLine
 {
-	private String imageURL;
+	public String imageURL;
 	private TextureCoords texture;
 	private double displayW, displayH, displayS;
 	
@@ -39,16 +35,15 @@ public class InfoImageLine extends InfoExtendedTextLine
 	{
 		if(texture == TextureCoords.nullTexture) { return null; }
 		else if(texture != null) { return texture; }
-		else if(imageURL == null) { return null; }
 		
 		texture = TextureCoords.nullTexture;
 		
 		try
 		{
-			File file = new File(FTBLib.folderModpack, "images/" + imageURL);
-			if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading InfoGUI image: " + file.getAbsolutePath()); }
-			BufferedImage img = ImageIO.read(file);
-			ResourceLocation tex = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbl_info/" + imageURL, new DynamicTexture(img));
+			//File file = new File(FTBLib.folderModpack, "images/" + imageURL);
+			//if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath()); }
+			BufferedImage img = page.getResourceProvider().getConnection(imageURL).connect().asImage();
+			ResourceLocation tex = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
 			texture = new TextureCoords(tex, 0D, 0D, img.getWidth(), img.getHeight(), img.getWidth(), img.getHeight());
 		}
 		catch(Exception e)

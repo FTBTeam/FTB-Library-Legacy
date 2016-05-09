@@ -1,7 +1,6 @@
 package ftb.lib;
 
 import ftb.lib.api.item.IItemLM;
-import latmod.lib.LMUtils;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -45,7 +44,7 @@ public class CreativeTabLM extends CreativeTabs
 		if(!iconItems.isEmpty())
 		{
 			if(iconItems.size() == 1) { return iconItems.get(0); }
-			return iconItems.get((int) ((LMUtils.millis() / 1000L) % iconItems.size()));
+			return iconItems.get((int) ((System.currentTimeMillis() / 1000L) % iconItems.size()));
 		}
 		
 		return new ItemStack(Items.DIAMOND);

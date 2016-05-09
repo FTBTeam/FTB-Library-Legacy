@@ -5,9 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import ftb.lib.JsonHelper;
+import ftb.lib.api.events.InfoGuiLineEvent;
 import ftb.lib.api.gui.widgets.ButtonLM;
-import ftb.lib.api.info.lines.InfoExtendedTextLine;
-import ftb.lib.api.info.lines.InfoTextLine;
 import ftb.lib.mod.client.gui.info.ButtonInfoPage;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import ftb.lib.mod.net.MessageDisplayInfo;
@@ -19,30 +18,26 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InfoPage extends FinalIDObject implements IJsonSerializable // GuideFile
 {
-	private static final RemoveFilter<Map.Entry<String, InfoPage>> cleanupFilter = new RemoveFilter<Map.Entry<String, InfoPage>>()
-	{
-		@Override
-		public boolean remove(Map.Entry<String, InfoPage> entry)
-		{ return entry.getValue().childPages.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty(); }
-	};
+	private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().childPages.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty();
 	
 	public InfoPage parent = null;
 	private ITextComponent title;
 	public final List<InfoTextLine> text;
 	public final LinkedHashMap<String, InfoPage> childPages;
 	public InfoPageTheme theme;
+	public IResourceProvider resourceProvider;
 	
 	public InfoPage(String id)
 	{
@@ -67,6 +62,36 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	{
 		if(parent == null) { return this; }
 		return parent.getOwner();
+	}
+	
+	public InfoTextLine createLine(JsonElement e)
+	{
+		if(e == null || e.isJsonNull()) { return null; }
+		else if(e.isJsonPrimitive())
+		{
+			String s = e.getAsString();
+			return s.trim().isEmpty() ? null : new InfoTextLine(this, s);
+		}
+		else
+		{
+			JsonObject o = e.getAsJsonObject();
+			
+			InfoExtendedTextLine l;
+			
+			if(o.has("image"))
+			{
+				l = new InfoImageLine(this);
+			}
+			else
+			{
+				InfoGuiLineEvent event = new InfoGuiLineEvent(this, o);
+				MinecraftForge.EVENT_BUS.post(event);
+				l = (event.line == null) ? new InfoExtendedTextLine(this, null) : event.line;
+			}
+			
+			l.fromJson(o);
+			return l;
+		}
 	}
 	
 	public void println(ITextComponent c)
@@ -131,19 +156,13 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	
 	public void cleanup()
 	{
-		for(InfoPage c : childPages.values()) c.cleanup();
-		LMMapUtils.removeAll(childPages, cleanupFilter);
+		childPages.values().forEach(InfoPage::cleanup);
+		LMMapUtils.removeAll(childPages, CLEANUP_FILTER);
 	}
 	
 	public void sortAll()
 	{
-		LMMapUtils.sortMap(childPages, new Comparator<Map.Entry<String, InfoPage>>()
-		{
-			@Override
-			public int compare(Map.Entry<String, InfoPage> o1, Map.Entry<String, InfoPage> o2)
-			{ return o1.getValue().compareTo(o2.getValue()); }
-		});
-		
+		LMMapUtils.sortMap(childPages, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
 		for(InfoPage c : childPages.values()) c.sortAll();
 	}
 	
@@ -225,7 +244,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		{
 			JsonArray a = o.get("T").getAsJsonArray();
 			for(int i = 0; i < a.size(); i++)
-				text.add(InfoTextLine.get(this, a.get(i)));
+			{
+				text.add(createLine(a.get(i)));
+			}
 		}
 		
 		if(o.has("S"))
@@ -261,6 +282,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	
 	public final InfoPageTheme getTheme()
 	{ return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : parent.getTheme()) : theme; }
+	
+	public final IResourceProvider getResourceProvider()
+	{ return (resourceProvider == null) ? ((parent == null) ? URLResourceProvider.INSTANCE : parent.getResourceProvider()) : resourceProvider; }
 	
 	@SideOnly(Side.CLIENT)
 	public final void refreshGuiTree(GuiInfo gui)
@@ -299,7 +323,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 	{
 		for(JsonElement e : LMJsonUtils.deserializeText(list))
 		{
-			text.add(InfoTextLine.get(this, e));
+			text.add(createLine(e));
 		}
 	}
 }

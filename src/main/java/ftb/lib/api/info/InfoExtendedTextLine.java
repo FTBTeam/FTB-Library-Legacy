@@ -1,4 +1,4 @@
-package ftb.lib.api.info.lines;
+package ftb.lib.api.info;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import ftb.lib.JsonHelper;
 import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.notification.ClickAction;
 import ftb.lib.mod.client.gui.info.ButtonInfoExtendedTextLine;
 import ftb.lib.mod.client.gui.info.ButtonInfoTextLine;

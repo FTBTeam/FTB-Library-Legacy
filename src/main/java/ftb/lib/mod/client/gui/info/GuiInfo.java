@@ -12,7 +12,7 @@ import ftb.lib.api.gui.widgets.SliderLM;
 import ftb.lib.api.gui.widgets.WidgetLM;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.info.InfoPageTheme;
-import ftb.lib.api.info.lines.InfoTextLine;
+import ftb.lib.api.info.InfoTextLine;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

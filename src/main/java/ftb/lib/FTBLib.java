@@ -18,7 +18,7 @@ import ftb.lib.mod.net.MessageNotifyPlayer;
 import ftb.lib.mod.net.MessageOpenGuiTile;
 import ftb.lib.mod.net.MessageReload;
 import latmod.lib.LMUtils;
-import latmod.lib.net.LMURLConnection;
+import latmod.lib.net.LMConnection;
 import latmod.lib.net.RequestMethod;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -120,7 +120,7 @@ public class FTBLib
 		if(ForgeWorldMP.inst == null) { return; }
 		String mode0 = ForgeWorldMP.inst.getMode().getID();
 		
-		long ms = LMUtils.millis();
+		long ms = System.currentTimeMillis();
 		ConfigRegistry.reload();
 		GameModes.reload();
 		
@@ -135,7 +135,7 @@ public class FTBLib
 		
 		if(printMessage)
 		{
-			FTBLibLang.reload_server.printChat(BroadcastSender.inst, (LMUtils.millis() - ms) + "ms");
+			FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
 		}
 		
 		if(hasOnlinePlayers())
@@ -318,7 +318,7 @@ public class FTBLib
 			
 			try
 			{
-				JsonElement e = new LMURLConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asJson();
+				JsonElement e = new LMConnection(RequestMethod.GET, "https://api.mojang.com/users/profiles/minecraft/" + s).connect().asJson();
 				cachedUUIDs.put(key, LMUtils.fromString(e.getAsJsonObject().get("id").getAsString()));
 			}
 			catch(Exception e) { }

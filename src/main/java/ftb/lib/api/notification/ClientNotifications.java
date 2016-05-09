@@ -2,7 +2,6 @@ package ftb.lib.api.notification;
 
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -150,7 +149,7 @@ public class ClientNotifications
 		{
 			super(n.getID());
 			notification = n;
-			timeAdded = LMUtils.millis();
+			timeAdded = System.currentTimeMillis();
 		}
 		
 		@Override

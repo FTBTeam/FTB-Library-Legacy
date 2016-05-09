@@ -1,7 +1,6 @@
 package ftb.lib.api;
 
 import latmod.lib.LMStringUtils;
-import latmod.lib.LMUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsFile;
@@ -26,7 +25,7 @@ public class ForgePlayerStats
 		StatisticsFile file = player.getStatFile(force);
 		if(file == null) { return; }
 		
-		long ms = LMUtils.millis();
+		long ms = System.currentTimeMillis();
 		
 		timePlayed = file.readStat(StatList.PLAY_ONE_MINUTE) * 50L;
 		deaths = file.readStat(StatList.DEATHS);
@@ -87,11 +86,11 @@ public class ForgePlayerStats
 	}
 	
 	public long getLastSeen(ForgePlayerMP p)
-	{ return p.isOnline() ? LMUtils.millis() : lastSeen; }
+	{ return p.isOnline() ? System.currentTimeMillis() : lastSeen; }
 	
 	public double getLastSeenDeltaInHours(ForgePlayerMP p)
 	{
 		if(p.isOnline()) { return 0D; }
-		return (LMUtils.millis() - getLastSeen(p)) / 3600000D;
+		return (System.currentTimeMillis() - getLastSeen(p)) / 3600000D;
 	}
 }

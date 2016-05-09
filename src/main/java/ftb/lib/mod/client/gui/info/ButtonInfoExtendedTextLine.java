@@ -1,7 +1,7 @@
 package ftb.lib.mod.client.gui.info;
 
 import ftb.lib.api.MouseButton;
-import ftb.lib.api.info.lines.InfoExtendedTextLine;
+import ftb.lib.api.info.InfoExtendedTextLine;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

@@ -3,7 +3,7 @@ package ftb.lib.mod.client.gui.info;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.GuiLM;
-import ftb.lib.api.info.lines.InfoImageLine;
+import ftb.lib.api.info.InfoImageLine;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,16 +33,11 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 	@Override
 	public void renderWidget()
 	{
-		int ay = getAY();
-		int ax = getAX();
-		
-		boolean mouseOver = mouseOver();
-		
 		if(texture != null)
 		{
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			FTBLibClient.setTexture(texture.texture);
-			GuiLM.render(texture, ax, ay, gui.getZLevel(), texture.width, texture.height);
+			GuiLM.render(texture, getAX(), getAY(), gui.getZLevel(), texture.width, texture.height);
 		}
 	}
 }

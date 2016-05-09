@@ -7,7 +7,6 @@ import ftb.lib.api.IWorldTick;
 import ftb.lib.api.ServerTickCallback;
 import ftb.lib.api.item.ICreativeSafeItem;
 import ftb.lib.api.tile.ISecureTile;
-import latmod.lib.LMUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -120,7 +119,7 @@ public class FTBLibEventHandler
 			if(e.world instanceof WorldServer && !ticking.isEmpty())
 			{
 				WorldServer ws = (WorldServer) e.world;
-				long now = LMUtils.millis();
+				long now = System.currentTimeMillis();
 				
 				for(IWorldTick t : ticking)
 				{
