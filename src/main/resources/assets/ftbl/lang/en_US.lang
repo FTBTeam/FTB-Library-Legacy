@@ -39,31 +39,14 @@ gui_lm.label.friend.joined=Joined %s ago
 gui_lm.label.friend.last_seen=Last seen %s ago
 gui_lm.label.friend.deaths=Deaths: %s
 
-## Colors
-ftbl.color.black=Black
-ftbl.color.red=Red
-ftbl.color.green=Green
-ftbl.color.brown=Brown
-ftbl.color.blue=Blue
-ftbl.color.purple=Purple
-ftbl.color.cyan=Cyan
-ftbl.color.lightgray=Light Gray
-ftbl.color.gray=Dark Gray
-ftbl.color.pink=Pink
-ftbl.color.lime=Lime
-ftbl.color.yellow=Yellow
-ftbl.color.lightblue=Light Blue
-ftbl.color.magenta=Magenta
-ftbl.color.orange=Orange
-ftbl.color.white=White
-
 ## Sides
-ftbl.side.down=Down
-ftbl.side.up=Up
-ftbl.side.north=North
-ftbl.side.south=South
-ftbl.side.west=West
-ftbl.side.east=East
+facing.down=Down
+facing.up=Up
+facing.north=North
+facing.south=South
+facing.west=West
+facing.east=East
+
 ftbl.dside.bottom=Bottom
 ftbl.dside.top=Top
 ftbl.dside.back=Back

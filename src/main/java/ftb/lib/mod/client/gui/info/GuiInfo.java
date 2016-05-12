@@ -180,7 +180,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 		mainPanel.add(panelText);
 		mainPanel.add(buttonSpecial);
 		
-		buttonBack.title = (parentGui == null) ? GuiLang.button_close.format() : GuiLang.button_back.format();
+		buttonBack.title = (parentGui == null) ? GuiLang.button_close.translate() : GuiLang.button_back.translate();
 	}
 	
 	@Override

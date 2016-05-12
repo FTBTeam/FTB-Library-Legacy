@@ -1,6 +1,6 @@
 package ftb.lib.mod.client.gui;
 
-import ftb.lib.EnumMCColor;
+import ftb.lib.EnumDyeColorHelper;
 import ftb.lib.TextureCoords;
 import ftb.lib.api.GuiLang;
 import ftb.lib.api.MouseButton;
@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -72,7 +73,7 @@ public class GuiSelectColor extends GuiLM
 			@Override
 			public void addMouseOverText(List<String> s)
 			{
-				s.add(GuiLang.button_cancel.format());
+				s.add(GuiLang.button_cancel.translate());
 				s.add(initCol.toString());
 			}
 		};
@@ -86,57 +87,65 @@ public class GuiSelectColor extends GuiLM
 			@Override
 			public void addMouseOverText(List<String> s)
 			{
-				s.add(GuiLang.button_accept.format());
+				s.add(GuiLang.button_accept.translate());
 				s.add(currentColor.toString());
 			}
 		};
 		
 		sliderRed = new SliderLM(this, 6, 6, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.RGB((int) (value * 255F), currentColor.green(), currentColor.blue()));
 			}
 		};
 		sliderRed.displayMax = 255;
-		sliderRed.title = EnumMCColor.RED.toString();
+		sliderRed.title = EnumDyeColorHelper.get(EnumDyeColor.RED).toString();
 		sliderRed.scrollStep = 1F / 255F;
 		
 		sliderGreen = new SliderLM(this, 6, 19, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.RGB(currentColor.red(), (int) (value * 255F), currentColor.blue()));
 			}
 		};
+		
 		sliderGreen.displayMax = 255;
-		sliderGreen.title = EnumMCColor.GREEN.toString();
+		sliderGreen.title = EnumDyeColorHelper.get(EnumDyeColor.GREEN).toString();
 		sliderGreen.scrollStep = 1F / 255F;
 		
 		sliderBlue = new SliderLM(this, 6, 32, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.RGB(currentColor.red(), currentColor.green(), (int) (value * 255F)));
 			}
 		};
+		
 		sliderBlue.displayMax = 255;
-		sliderBlue.title = EnumMCColor.BLUE.toString();
+		sliderBlue.title = EnumDyeColorHelper.get(EnumDyeColor.BLUE).toString();
 		sliderBlue.scrollStep = 1F / 255F;
 		
 		sliderHue = new SliderLM(this, 6, 51, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.HSB(value, currentColor.saturation(), currentColor.brightness()));
 			}
 		};
+		
 		sliderHue.displayMax = 255;
 		sliderHue.title = "Hue";
 		sliderHue.scrollStep = 1F / 255F;
 		
 		sliderSaturation = new SliderLM(this, 6, 64, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.HSB(currentColor.hue(), value, currentColor.brightness()));
@@ -148,6 +157,7 @@ public class GuiSelectColor extends GuiLM
 		
 		sliderBrightness = new SliderLM(this, 6, 77, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
 		{
+			@Override
 			public void onMoved()
 			{
 				setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), value));

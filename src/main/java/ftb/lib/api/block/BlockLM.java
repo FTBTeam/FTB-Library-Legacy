@@ -10,7 +10,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -150,24 +149,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 		}
 		
 		return false;
-	}
-	
-	@Override
-	public boolean recolorBlock(World w, BlockPos pos, EnumFacing side, EnumDyeColor color)
-	{
-		if(hasTileEntity(w.getBlockState(pos)))
-		{
-			TileLM t = getTile(w, pos);
-			if(t != null)
-			{
-				if(t.recolourBlock(side, color))
-				{
-					return true;
-				}
-			}
-		}
-		
-		return super.recolorBlock(w, pos, side, color);
 	}
 	
 	@Override

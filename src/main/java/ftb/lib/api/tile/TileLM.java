@@ -13,7 +13,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -60,7 +59,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public boolean isLoaded = false;
 	public UUID ownerID;
 	public boolean redstonePowered = false;
-	public IBlockState currentState;
+	private IBlockState currentState;
 	
 	public boolean useOwnerID()
 	{ return true; }
@@ -181,7 +180,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	{
 		if(worldObj != null)
 		{
-			currentState = worldObj.getBlockState(pos);
+			updateContainingBlockInfo();
 			
 			if(getSync().sync())
 			{
@@ -196,6 +195,23 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 				worldObj.updateComparatorOutputLevel(pos, getBlockType());
 			}
 		}
+	}
+	
+	@Override
+	public void updateContainingBlockInfo()
+	{
+		super.updateContainingBlockInfo();
+		currentState = null;
+	}
+	
+	public IBlockState getBlockState()
+	{
+		if(currentState == null)
+		{
+			currentState = worldObj.getBlockState(getPos());
+		}
+		
+		return currentState;
 	}
 	
 	public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
@@ -213,9 +229,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public void onBroken(IBlockState state)
 	{
 	}
-	
-	public boolean recolourBlock(EnumFacing side, EnumDyeColor col)
-	{ return false; }
 	
 	public PrivacyLevel getPrivacyLevel()
 	{ return PrivacyLevel.PUBLIC; }
@@ -280,13 +293,8 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		if(worldObj != null)
 		{
 			redstonePowered = worldObj.isBlockPowered(getPos());
-			updateBlockState();
+			updateContainingBlockInfo();
 		}
-	}
-	
-	public final void updateBlockState()
-	{
-		currentState = (worldObj != null) ? worldObj.getBlockState(getPos()) : null;
 	}
 	
 	public void setName(String s) { }

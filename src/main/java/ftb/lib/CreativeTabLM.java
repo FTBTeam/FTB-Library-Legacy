@@ -18,6 +18,7 @@ public class CreativeTabLM extends CreativeTabs
 {
 	private LMMod mod;
 	private final List<ItemStack> iconItems;
+	private long timer = 1000L;
 	
 	public CreativeTabLM(String label)
 	{
@@ -37,6 +38,12 @@ public class CreativeTabLM extends CreativeTabs
 		return this;
 	}
 	
+	public CreativeTabLM setTimer(long t)
+	{
+		timer = Math.max(50, t);
+		return this;
+	}
+	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getIconItemStack()
@@ -44,7 +51,7 @@ public class CreativeTabLM extends CreativeTabs
 		if(!iconItems.isEmpty())
 		{
 			if(iconItems.size() == 1) { return iconItems.get(0); }
-			return iconItems.get((int) ((System.currentTimeMillis() / 1000L) % iconItems.size()));
+			return iconItems.get((int) ((System.currentTimeMillis() / timer) % iconItems.size()));
 		}
 		
 		return new ItemStack(Items.DIAMOND);

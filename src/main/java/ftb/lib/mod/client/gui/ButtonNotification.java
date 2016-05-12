@@ -82,7 +82,7 @@ public class ButtonNotification extends ButtonLM
 		int ax = getAX();
 		if(mouseOver(ax, getAY()) && gui.mouse().x >= ax + width - 16)
 		{
-			l.add(GuiLang.button_close.format());
+			l.add(GuiLang.button_close.translate());
 			return;
 		}
 		

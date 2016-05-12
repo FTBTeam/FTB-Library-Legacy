@@ -47,7 +47,7 @@ public class GuiSelectField extends GuiLM
 			}
 		};
 		
-		buttonCancel.title = GuiLang.button_cancel.format();
+		buttonCancel.title = GuiLang.button_cancel.translate();
 		
 		buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
 		{
@@ -62,7 +62,7 @@ public class GuiSelectField extends GuiLM
 			}
 		};
 		
-		buttonAccept.title = GuiLang.button_accept.format();
+		buttonAccept.title = GuiLang.button_accept.translate();
 		
 		textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
 		{

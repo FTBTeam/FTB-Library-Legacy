@@ -27,7 +27,7 @@ public class SliderLM extends WidgetLM
 		sliderSize = ss;
 	}
 	
-	public boolean update()
+	public void update()
 	{
 		float v0 = value;
 		
@@ -36,21 +36,37 @@ public class SliderLM extends WidgetLM
 			if(Mouse.isButtonDown(0))
 			{
 				if(isVertical)
-				{ value = (float) (gui.mouse().y - (gui.getMainPanel().posY + posY + (sliderSize / 2))) / (float) (height - sliderSize); }
-				else
-				{ value = (float) (gui.mouse().x - (gui.getMainPanel().posY + posX + (sliderSize / 2))) / (float) (width - sliderSize); }
-				value = MathHelperLM.clampFloat(value, 0F, 1F);
+				{
+					value = (gui.mouse().y - (getAY() + (sliderSize / 2F))) / (float) (height - sliderSize);
+				}
+				else { value = (gui.mouse().x - (getAX() + (sliderSize / 2F))) / (float) (width - sliderSize); }
 			}
-			else { isGrabbed = false; }
+			else
+			{
+				isGrabbed = false;
+				onReleased();
+			}
 		}
 		
 		if(gui.mouse().dwheel != 0 && canMouseScroll())
 		{
 			value += (gui.mouse().dwheel < 0) ? scrollStep : -scrollStep;
-			value = MathHelperLM.clampFloat(value, 0F, 1F);
 		}
 		
-		return v0 != value;
+		value = MathHelperLM.clampFloat(value, 0F, 1F);
+		
+		if(v0 != value)
+		{
+			onMoved();
+		}
+	}
+	
+	public void onMoved()
+	{
+	}
+	
+	public void onReleased()
+	{
 	}
 	
 	public boolean canMouseScroll()

@@ -138,7 +138,7 @@ public class FTBLibEventHandler
 		{ e.setCanceled(true); }
 		else if(FTBLib.ftbu != null && e.getEntityPlayer() instanceof EntityPlayerMP)
 		{
-			if(!FTBLib.ftbu.canPlayerInteract((EntityPlayerMP) e.getEntityPlayer(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
+			if(!FTBLib.ftbu.canPlayerInteract(ForgeWorldMP.inst.getPlayer(e.getEntityPlayer()), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
 			{ e.setCanceled(true); }
 		}
 	}
@@ -161,9 +161,10 @@ public class FTBLibEventHandler
 			if(state.getBlock().hasTileEntity(state))
 			{
 				TileEntity te = ep.worldObj.getTileEntity(pos);
-				if(te instanceof ISecureTile && !((ISecureTile) te).canPlayerInteract(ep, leftClick))
+				ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
+				if(te instanceof ISecureTile && !((ISecureTile) te).canPlayerInteract(player, leftClick))
 				{
-					((ISecureTile) te).onPlayerNotOwner(ep, leftClick);
+					((ISecureTile) te).onPlayerNotOwner(player, leftClick);
 					return false;
 				}
 			}
