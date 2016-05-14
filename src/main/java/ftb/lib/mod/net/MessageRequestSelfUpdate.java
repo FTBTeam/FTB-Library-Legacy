@@ -3,12 +3,11 @@ package ftb.lib.mod.net;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
 
-public class MessageRequestSelfUpdate extends MessageLM<MessageRequestSelfUpdate>
+public class MessageRequestSelfUpdate extends MessageToServer<MessageRequestSelfUpdate>
 {
 	public MessageRequestSelfUpdate() { }
 	
@@ -27,9 +26,9 @@ public class MessageRequestSelfUpdate extends MessageLM<MessageRequestSelfUpdate
 	}
 	
 	@Override
-	public IMessage onMessage(MessageRequestSelfUpdate m, MessageContext ctx)
+	public void onMessage(MessageRequestSelfUpdate m, EntityPlayerMP ep)
 	{
-		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
-		return new MessageLMPlayerUpdate(p, true);
+		ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
+		new MessageLMPlayerUpdate(p, true).sendTo(ep);
 	}
 }

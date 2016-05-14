@@ -4,16 +4,15 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgePlayerSP;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
-public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut>
+public class MessageLMPlayerLoggedOut extends MessageToClient<MessageLMPlayerLoggedOut>
 {
 	public UUID playerID;
 	
@@ -42,11 +41,10 @@ public class MessageLMPlayerLoggedOut extends MessageLM<MessageLMPlayerLoggedOut
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageLMPlayerLoggedOut m, MessageContext ctx)
+	public void onMessage(MessageLMPlayerLoggedOut m, Minecraft mc)
 	{
 		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
 		p.onLoggedOut();
 		p.isOnline = false;
-		return null;
 	}
 }

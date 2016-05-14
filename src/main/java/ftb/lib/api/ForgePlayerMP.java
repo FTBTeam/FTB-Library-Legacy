@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import ftb.lib.BlockDimPos;
 import ftb.lib.EntityDimPos;
 import ftb.lib.FTBLib;
+import ftb.lib.ReloadType;
 import ftb.lib.api.events.ForgePlayerMPInfoEvent;
 import ftb.lib.api.item.LMInvUtils;
 import ftb.lib.api.notification.ClickAction;
@@ -370,7 +371,7 @@ public class ForgePlayerMP extends ForgePlayer
 		super.onLoggedIn(firstLogin);
 		
 		EntityPlayerMP ep = getPlayer();
-		new MessageReload(this, true, true, false).sendTo(ep);
+		new MessageReload(ReloadType.CLIENT_ONLY, ep, true).sendTo(ep);
 		
 		new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
 		for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))

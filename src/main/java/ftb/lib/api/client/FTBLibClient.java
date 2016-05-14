@@ -2,8 +2,6 @@ package ftb.lib.api.client;
 
 import ftb.lib.TextureCoords;
 import ftb.lib.api.gui.IClientActionGui;
-import ftb.lib.api.gui.callback.ClientTickCallback;
-import ftb.lib.mod.client.FTBLibRenderHandler;
 import latmod.lib.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -73,9 +71,6 @@ public class FTBLibClient
 		ClientRegistry.registerKeyBinding(k);
 		return k;
 	}
-	
-	public static void addClientTickCallback(ClientTickCallback e)
-	{ FTBLibRenderHandler.callbacks.add(e); }
 	
 	// -- //
 	

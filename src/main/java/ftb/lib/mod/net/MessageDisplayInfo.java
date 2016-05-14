@@ -4,15 +4,14 @@ import com.google.gson.JsonElement;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.info.InfoPage;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import ftb.lib.mod.client.gui.info.GuiInfo;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MessageDisplayInfo extends MessageLM<MessageDisplayInfo>
+public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
 	public String infoID;
 	public JsonElement json;
@@ -45,11 +44,10 @@ public class MessageDisplayInfo extends MessageLM<MessageDisplayInfo>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageDisplayInfo m, MessageContext ctx)
+	public void onMessage(MessageDisplayInfo m, Minecraft mc)
 	{
 		InfoPage page = new InfoPage(m.infoID);
 		page.fromJson(m.json);
 		FTBLibClient.openGui(new GuiInfo(null, page));
-		return null;
 	}
 }

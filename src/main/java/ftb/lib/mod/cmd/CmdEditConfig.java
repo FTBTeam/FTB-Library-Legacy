@@ -2,6 +2,7 @@ package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
+import ftb.lib.ReloadType;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.api.config.ConfigEntry;
@@ -71,7 +72,7 @@ public class CmdEditConfig extends CommandLM
 				throw FTBLibLang.raw.commandError("Invalid file: '" + args[0] + "'!");
 			}
 			
-			new MessageEditConfig(LMAccessToken.generate(ep), true, file).sendTo(ep);
+			new MessageEditConfig(LMAccessToken.generate(ep), ReloadType.SERVER_ONLY, file).sendTo(ep);
 			return;
 		}
 		
@@ -102,7 +103,7 @@ public class CmdEditConfig extends CommandLM
 			{
 				entry.fromJson(LMJsonUtils.fromJson(json));
 				file.save();
-				FTBLib.reload(ics, true, false);
+				FTBLib.reload(ics, ReloadType.SERVER_ONLY, false);
 				ics.addChatMessage(new TextComponentString(args[2] + " set to " + entry.getSerializableElement()));
 				return;
 			}

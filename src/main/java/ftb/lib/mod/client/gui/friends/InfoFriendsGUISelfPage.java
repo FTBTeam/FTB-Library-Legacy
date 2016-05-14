@@ -1,5 +1,6 @@
 package ftb.lib.mod.client.gui.friends;
 
+import ftb.lib.api.EnumSelf;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.gui.PlayerActionRegistry;
@@ -37,7 +38,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 		text.add(new InfoPlayerActionLine(this, playerLM, FTBLibActions.my_server_settings));
 		text.add(null);
 		
-		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, true, true))
+		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, true, true))
 		{
 			if(a != FTBLibActions.my_server_settings)
 			{

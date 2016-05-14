@@ -2,15 +2,13 @@ package ftb.lib.mod.net;
 
 import ftb.lib.api.item.IClientActionItem;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
+public class MessageClientItemAction extends MessageToServer<MessageClientItemAction>
 {
 	public String action;
 	public NBTTagCompound data;
@@ -42,10 +40,8 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 	}
 	
 	@Override
-	public IMessage onMessage(MessageClientItemAction m, MessageContext ctx)
+	public void onMessage(MessageClientItemAction m, EntityPlayerMP ep)
 	{
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		
 		ItemStack is = ep.inventory.mainInventory[ep.inventory.currentItem];
 		
 		if(is != null && is.getItem() instanceof IClientActionItem)
@@ -56,6 +52,5 @@ public class MessageClientItemAction extends MessageLM<MessageClientItemAction>
 		ep.inventory.mainInventory[ep.inventory.currentItem] = (is == null) ? null : is.copy();
 		ep.inventory.markDirty();
 		ep.openContainer.detectAndSendChanges();
-		return null;
 	}
 }

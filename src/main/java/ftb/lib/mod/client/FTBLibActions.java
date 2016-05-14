@@ -2,6 +2,7 @@ package ftb.lib.mod.client;
 
 import ftb.lib.EventBusHelper;
 import ftb.lib.TextureCoords;
+import ftb.lib.api.EnumSelf;
 import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.ForgePlayerSP;
 import ftb.lib.api.ForgeWorldSP;
@@ -81,7 +82,7 @@ public class FTBLibActions
 		});
 	}
 	
-	public static final PlayerAction notifications = new PlayerAction(PlayerAction.Type.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
+	public static final PlayerAction notifications = new PlayerAction(EnumSelf.SELF, "ftbl.notifications", 1000, GuiIcons.chat)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -108,7 +109,7 @@ public class FTBLibActions
 		}
 	};
 	
-	public static final PlayerAction friends_gui = new PlayerAction(PlayerAction.Type.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/gui/friendsbutton.png"), 256))
+	public static final PlayerAction friends_gui = new PlayerAction(EnumSelf.SELF, "ftbl.friends_gui", 950, TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/gui/friendsbutton.png"), 256))
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -119,14 +120,14 @@ public class FTBLibActions
 		{ return "FriendsGUI"; }
 	};
 	
-	public static final PlayerAction settings = new PlayerAction(PlayerAction.Type.SELF, "ftbl.settings", -1000, GuiIcons.settings)
+	public static final PlayerAction settings = new PlayerAction(EnumSelf.SELF, "ftbl.settings", -1000, GuiIcons.settings)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
 		{ FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider())); }
 	};
 	
-	public static final PlayerAction my_server_settings = new PlayerAction(PlayerAction.Type.SELF, "ftbu.my_server_settings", -1000, GuiIcons.settings)
+	public static final PlayerAction my_server_settings = new PlayerAction(EnumSelf.SELF, "ftbu.my_server_settings", -1000, GuiIcons.settings)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -175,7 +176,7 @@ public class FTBLibActions
 		{ return Boolean.FALSE; }
 	};
 	
-	public static final PlayerAction toggle_gamemode = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_gamemode", -10, GuiIcons.toggle_gamemode)
+	public static final PlayerAction toggle_gamemode = new PlayerAction(EnumSelf.SELF, "ftbl.toggle_gamemode", -10, GuiIcons.toggle_gamemode)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -189,7 +190,7 @@ public class FTBLibActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction toggle_rain = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
+	public static final PlayerAction toggle_rain = new PlayerAction(EnumSelf.SELF, "ftbl.toggle_rain", -11, GuiIcons.toggle_rain)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -200,7 +201,7 @@ public class FTBLibActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction toggle_day = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
+	public static final PlayerAction toggle_day = new PlayerAction(EnumSelf.SELF, "ftbl.toggle_day", -12, GuiIcons.toggle_day)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -211,7 +212,7 @@ public class FTBLibActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction toggle_night = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
+	public static final PlayerAction toggle_night = new PlayerAction(EnumSelf.SELF, "ftbl.toggle_night", -13, GuiIcons.toggle_night)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -222,7 +223,7 @@ public class FTBLibActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction heal = new PlayerAction(PlayerAction.Type.SELF, "ftbl.heal", -16, GuiIcons.heart)
+	public static final PlayerAction heal = new PlayerAction(EnumSelf.SELF, "ftbl.heal", -16, GuiIcons.heart)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -233,7 +234,7 @@ public class FTBLibActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction toggle_chunk_bounds = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_chunk_bounds", -17, GuiIcons.toggle_chunk_bounds)
+	public static final PlayerAction toggle_chunk_bounds = new PlayerAction(EnumSelf.SELF, "ftbl.toggle_chunk_bounds", -17, GuiIcons.toggle_chunk_bounds)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -244,7 +245,7 @@ public class FTBLibActions
 		{ return Boolean.TRUE; }
 	};
 	
-	public static final PlayerAction toggle_light_values = new PlayerAction(PlayerAction.Type.SELF, "ftbl.toggle_light_values", -18, GuiIcons.toggle_light_values)
+	public static final PlayerAction toggle_light_values = new PlayerAction(EnumSelf.SELF, "ftbl.toggle_light_values", -18, GuiIcons.toggle_light_values)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -257,7 +258,7 @@ public class FTBLibActions
 	
 	// Other //
 	
-	public static final PlayerAction friend_add = new PlayerAction(PlayerAction.Type.OTHER, "ftbul.add_friend", 1, GuiIcons.add)
+	public static final PlayerAction friend_add = new PlayerAction(EnumSelf.OTHER, "ftbul.add_friend", 1, GuiIcons.add)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -268,7 +269,7 @@ public class FTBLibActions
 		{ return !self.isFriendRaw(other); }
 	};
 	
-	public static final PlayerAction friend_remove = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.rem_friend", -1, GuiIcons.remove)
+	public static final PlayerAction friend_remove = new PlayerAction(EnumSelf.OTHER, "ftbl.rem_friend", -1, GuiIcons.remove)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -279,7 +280,7 @@ public class FTBLibActions
 		{ return self.isFriendRaw(other); }
 	};
 	
-	public static final PlayerAction friend_deny = new PlayerAction(PlayerAction.Type.OTHER, "ftbl.deny_friend", -1, GuiIcons.remove)
+	public static final PlayerAction friend_deny = new PlayerAction(EnumSelf.OTHER, "ftbl.deny_friend", -1, GuiIcons.remove)
 	{
 		@Override
 		public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -298,7 +299,7 @@ public class FTBLibActions
 		if(e.getGui() instanceof InventoryEffectRenderer)
 		{
 			ForgePlayerSP p = ForgeWorldSP.inst.clientPlayer;
-			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(PlayerAction.Type.SELF, p, p, false, false);
+			List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, p, p, false, false);
 			
 			if(!buttons.isEmpty())
 			{

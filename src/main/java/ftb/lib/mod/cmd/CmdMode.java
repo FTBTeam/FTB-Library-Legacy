@@ -1,6 +1,7 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
+import ftb.lib.ReloadType;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.cmd.CommandLM;
@@ -73,7 +74,7 @@ public class CmdMode extends CommandSubLM
 			{
 				c = FTBLibLang.mode_loaded.textComponent(args[0]);
 				c.getStyle().setColor(TextFormatting.GREEN);
-				FTBLib.reload(ics, true, true);
+				FTBLib.reload(ics, ReloadType.SERVER_AND_CLIENT, true);
 			}
 			
 			ics.addChatMessage(c);

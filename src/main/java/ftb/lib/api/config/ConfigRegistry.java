@@ -3,6 +3,7 @@ package ftb.lib.api.config;
 import com.google.gson.JsonElement;
 import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
+import ftb.lib.ReloadType;
 import ftb.lib.mod.net.MessageEditConfig;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMUtils;
@@ -15,7 +16,6 @@ import java.util.Map;
 public class ConfigRegistry
 {
 	public static final Map<String, ConfigFile> map = new HashMap<>();
-	public static final ConfigGroup synced = new ConfigGroup("synced");
 	private static final Map<String, ConfigFile> tempServerConfig = new HashMap<>();
 	
 	public static void add(ConfigFile f)
@@ -23,9 +23,6 @@ public class ConfigRegistry
 		if(f != null)
 		{
 			map.put(f.getID(), f);
-			
-			ConfigGroup g1 = f.generateSynced(false);
-			if(!g1.entryMap.isEmpty()) { synced.add(g1, false); }
 		}
 	}
 	
@@ -55,8 +52,7 @@ public class ConfigRegistry
 			}
 		}
 		
-		for(ConfigFile f : map.values())
-			f.save();
+		map.values().forEach(ConfigFile::save);
 	}
 	
 	public static ConfigFile createTempConfig(EntityPlayerMP ep)
@@ -71,10 +67,12 @@ public class ConfigRegistry
 		return null;
 	}
 	
-	public static void editTempConfig(EntityPlayerMP ep, ConfigFile file, boolean reload)
+	public static void editTempConfig(EntityPlayerMP ep, ConfigFile file, ReloadType reload)
 	{
 		if(ep != null && file != null && tempServerConfig.containsValue(file))
-		{ new MessageEditConfig(LMAccessToken.generate(ep), reload, file).sendTo(ep); }
+		{
+			new MessageEditConfig(LMAccessToken.generate(ep), reload, file).sendTo(ep);
+		}
 	}
 	
 	public static ConfigFile getTempConfig(String id)

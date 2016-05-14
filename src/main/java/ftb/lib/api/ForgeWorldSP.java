@@ -52,6 +52,11 @@ public final class ForgeWorldSP extends ForgeWorld
 		return (p == null) ? null : p.toPlayerSP();
 	}
 	
+	public void setModeRaw(String mode)
+	{
+		currentMode = new GameMode(mode);
+	}
+	
 	public void readDataFromNet(NBTTagCompound tag, boolean login)
 	{
 		worldID = new UUID(tag.getLong("IDM"), tag.getLong("IDL"));

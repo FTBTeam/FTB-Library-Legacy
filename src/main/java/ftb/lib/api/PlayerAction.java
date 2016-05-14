@@ -10,34 +10,14 @@ import java.util.List;
 
 public abstract class PlayerAction extends FinalIDObject
 {
-	public enum Type
-	{
-		SELF,
-		OTHER,
-		BOTH;
-		
-		public boolean isSelf()
-		{ return this == SELF || this == BOTH; }
-		
-		public boolean isOther()
-		{ return this == OTHER || this == BOTH; }
-		
-		public boolean equalsType(Type t)
-		{
-			if(t == null || t == BOTH) { return true; }
-			else if(t == SELF) { return isSelf(); }
-			else { return isOther(); }
-		}
-	}
-	
-	public final Type type;
+	public final EnumSelf type;
 	public final int priority;
 	public final TextureCoords icon;
 	
-	public PlayerAction(Type t, String id, int p, TextureCoords c)
+	public PlayerAction(EnumSelf t, String id, int p, TextureCoords c)
 	{
 		super(id);
-		type = (t == null) ? Type.SELF : t;
+		type = (t == null) ? EnumSelf.SELF : t;
 		priority = p;
 		icon = c;
 	}

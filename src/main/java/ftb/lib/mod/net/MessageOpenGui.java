@@ -1,17 +1,17 @@
 package ftb.lib.mod.net;
 
-import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.gui.LMGuiHandler;
 import ftb.lib.api.gui.LMGuiHandlerRegistry;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import ftb.lib.mod.FTBLibMod;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MessageOpenGui extends MessageLM<MessageOpenGui>
+public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
 	public String modID;
 	public int guiID;
@@ -51,11 +51,14 @@ public class MessageOpenGui extends MessageLM<MessageOpenGui>
 	}
 	
 	@Override
-	public IMessage onMessage(MessageOpenGui m, MessageContext ctx)
+	@SideOnly(Side.CLIENT)
+	public void onMessage(MessageOpenGui m, Minecraft mc)
 	{
 		LMGuiHandler h = LMGuiHandlerRegistry.get(m.modID);
-		if(h != null && FTBLibMod.proxy.openClientGui(FTBLibClient.mc.thePlayer, m.modID, m.guiID, m.data))
-		{ FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID; }
-		return null;
+		
+		if(h != null && FTBLibMod.proxy.openClientGui(mc.thePlayer, m.modID, m.guiID, m.data))
+		{
+			mc.thePlayer.openContainer.windowId = m.windowID;
+		}
 	}
 }

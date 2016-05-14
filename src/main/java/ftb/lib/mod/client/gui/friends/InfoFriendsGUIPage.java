@@ -1,5 +1,6 @@
 package ftb.lib.mod.client.gui.friends;
 
+import ftb.lib.api.EnumSelf;
 import ftb.lib.api.ForgePlayerSP;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.MouseButton;
@@ -43,7 +44,7 @@ public class InfoFriendsGUIPage extends InfoPage
 			text.add(null);
 		}
 		
-		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(PlayerAction.Type.OTHER, ForgeWorldSP.inst.clientPlayer, playerLM, true, true))
+		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.OTHER, ForgeWorldSP.inst.clientPlayer, playerLM, true, true))
 		{
 			text.add(new InfoPlayerActionLine(this, playerLM, a));
 		}

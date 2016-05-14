@@ -4,7 +4,6 @@ import ftb.lib.FTBLib;
 import ftb.lib.api.client.CubeRenderer;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.client.LMFrustrumUtils;
-import ftb.lib.api.gui.callback.ClientTickCallback;
 import ftb.lib.api.notification.ClientNotifications;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.ScaledResolution;
@@ -44,7 +43,6 @@ public class FTBLibRenderHandler
 	}
 	
 	public static final FTBLibRenderHandler instance = new FTBLibRenderHandler();
-	public static final List<ClientTickCallback> callbacks = new ArrayList<>();
 	private static final CubeRenderer chunkBorderRenderer = new CubeRenderer().setHasTexture().setHasNormals();
 	public static final ResourceLocation chunkBorderTexture = new ResourceLocation("ftbl", "textures/world/chunk_border.png");
 	public static boolean renderChunkBounds = false;
@@ -81,16 +79,6 @@ public class FTBLibRenderHandler
 		if(e.phase == TickEvent.Phase.END && FTBLibClient.isIngame()) { ClientNotifications.renderTemp(); }
 		
 		GlStateManager.popMatrix();
-	}
-	
-	@SubscribeEvent
-	public void clientTick(TickEvent.ClientTickEvent e)
-	{
-		if(e.phase == TickEvent.Phase.END && !callbacks.isEmpty())
-		{
-			for(ClientTickCallback callback : callbacks) callback.onCallback();
-			callbacks.clear();
-		}
 	}
 	
 	@SubscribeEvent

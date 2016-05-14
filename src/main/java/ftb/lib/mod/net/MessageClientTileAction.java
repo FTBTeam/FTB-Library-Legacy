@@ -1,30 +1,30 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
-import ftb.lib.api.tile.IClientActionTile;
+import ftb.lib.api.net.MessageToServer;
+import ftb.lib.api.tile.TileClientAction;
+import ftb.lib.api.tile.TileClientActionRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
+public class MessageClientTileAction extends MessageToServer<MessageClientTileAction>
 {
 	public int posX, posY, posZ;
-	public String action;
+	public ResourceLocation action;
 	public NBTTagCompound data;
 	
-	public MessageClientTileAction() { }
+	MessageClientTileAction() { }
 	
-	public MessageClientTileAction(TileEntity t, String s, NBTTagCompound tag)
+	public MessageClientTileAction(TileEntity t, TileClientAction a, NBTTagCompound tag)
 	{
 		posX = t.getPos().getX();
 		posY = t.getPos().getY();
 		posZ = t.getPos().getZ();
-		action = (s == null) ? "" : s;
+		action = a.getResourceLocation();
 		data = tag;
 	}
 	
@@ -38,7 +38,7 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		posX = io.readInt();
 		posY = io.readInt();
 		posZ = io.readInt();
-		action = readString(io);
+		action = new ResourceLocation(readString(io));
 		data = readTag(io);
 	}
 	
@@ -48,18 +48,23 @@ public class MessageClientTileAction extends MessageLM<MessageClientTileAction>
 		io.writeInt(posX);
 		io.writeInt(posY);
 		io.writeInt(posZ);
-		writeString(io, action);
+		writeString(io, action.toString());
 		writeTag(io, data);
 	}
 	
 	@Override
-	public IMessage onMessage(MessageClientTileAction m, MessageContext ctx)
+	public void onMessage(MessageClientTileAction m, EntityPlayerMP ep)
 	{
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		TileEntity te = ep.worldObj.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
+		TileClientAction action = TileClientActionRegistry.map.get(m.action);
 		
-		if(te instanceof IClientActionTile) { ((IClientActionTile) te).onClientAction(ep, m.action, m.data); }
-		
-		return null;
+		if(action != null)
+		{
+			TileEntity te = ep.worldObj.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
+			
+			if(te != null)
+			{
+				action.onAction(te, m.data, ep);
+			}
+		}
 	}
 }

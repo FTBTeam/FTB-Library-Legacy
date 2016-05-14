@@ -4,14 +4,13 @@ import ftb.lib.api.ForgePlayerSP;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied>
+public class MessageLMPlayerDied extends MessageToClient<MessageLMPlayerDied>
 {
 	public MessageLMPlayerDied() { }
 	
@@ -31,11 +30,12 @@ public class MessageLMPlayerDied extends MessageLM<MessageLMPlayerDied>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageLMPlayerDied m, MessageContext ctx)
+	public void onMessage(MessageLMPlayerDied m, Minecraft mc)
 	{
-		if(ForgeWorldSP.inst == null) { return null; }
-		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(FTBLibClient.mc.thePlayer);
-		p.onDeath();
-		return null;
+		if(ForgeWorldSP.inst != null)
+		{
+			ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(FTBLibClient.mc.thePlayer);
+			p.onDeath();
+		}
 	}
 }

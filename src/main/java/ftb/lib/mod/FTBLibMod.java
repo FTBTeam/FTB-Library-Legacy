@@ -4,6 +4,7 @@ import ftb.lib.EventBusHelper;
 import ftb.lib.FTBLib;
 import ftb.lib.JsonHelper;
 import ftb.lib.LMMod;
+import ftb.lib.ReloadType;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.config.ConfigRegistry;
@@ -126,7 +127,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent e)
 	{
-		FTBLib.reload(FTBLib.getServer(), false, false);
+		FTBLib.reload(FTBLib.getServer(), ReloadType.SERVER_ONLY, false);
 	}
 	
 	@Mod.EventHandler

@@ -4,14 +4,13 @@ import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.UUID;
 
-public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
+public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
 {
 	public static final byte ADD = 0;
 	public static final byte REMOVE = 1;
@@ -26,7 +25,7 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 	public MessageModifyFriends(byte a, UUID id)
 	{
 		actionID = a;
-		playerID = (id == null) ? new UUID(0L, 0L) : id;
+		playerID = id;
 	}
 	
 	@Override
@@ -37,23 +36,24 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 	public void fromBytes(ByteBuf io)
 	{
 		actionID = io.readByte();
-		long msb = io.readLong();
-		long lsb = io.readLong();
-		playerID = new UUID(msb, lsb);
+		playerID = actionID == ADD_ALL ? null : readUUID(io);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeByte(actionID);
-		io.writeLong(playerID.getMostSignificantBits());
-		io.writeLong(playerID.getLeastSignificantBits());
+		
+		if(actionID != ADD_ALL)
+		{
+			writeUUID(io, playerID);
+		}
 	}
 	
 	@Override
-	public IMessage onMessage(MessageModifyFriends m, MessageContext ctx)
+	public void onMessage(MessageModifyFriends m, EntityPlayerMP ep)
 	{
-		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ctx.getServerHandler().playerEntity);
+		ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ep);
 		
 		if(m.actionID == ADD_ALL)
 		{
@@ -69,49 +69,57 @@ public class MessageModifyFriends extends MessageLM<MessageModifyFriends>
 		else
 		{
 			ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
-			if(p == null || p.equalsPlayer(owner)) { return null; }
+			if(p == null || p.equalsPlayer(owner)) { return; }
 			
-			if(m.actionID == ADD)
+			switch(m.actionID)
 			{
-				if(!owner.isFriendRaw(p))
+				case ADD:
 				{
-					owner.friends.add(p.getProfile().getId());
-					owner.sendUpdate();
-					p.sendUpdate();
-					p.checkNewFriends();
+					if(!owner.isFriendRaw(p))
+					{
+						owner.friends.add(p.getProfile().getId());
+						owner.sendUpdate();
+						p.sendUpdate();
+						p.checkNewFriends();
+						
+						p.sendInfoUpdate(owner);
+						owner.sendInfoUpdate(owner);
+					}
 					
-					p.sendInfoUpdate(owner);
-					owner.sendInfoUpdate(owner);
+					break;
 				}
-			}
-			else if(m.actionID == REMOVE)
-			{
-				if(owner.friends.contains(p.getProfile().getId()))
+				case REMOVE:
 				{
-					owner.friends.remove(p.getProfile().getId());
-					owner.sendUpdate();
-					p.sendUpdate();
-					p.checkNewFriends();
+					if(owner.friends.contains(p.getProfile().getId()))
+					{
+						owner.friends.remove(p.getProfile().getId());
+						owner.sendUpdate();
+						p.sendUpdate();
+						p.checkNewFriends();
+						
+						p.sendInfoUpdate(owner);
+						owner.sendInfoUpdate(owner);
+					}
 					
-					p.sendInfoUpdate(owner);
-					owner.sendInfoUpdate(owner);
+					break;
 				}
-			}
-			else if(m.actionID == DENY)
-			{
-				if(p.friends.contains(owner.getProfile().getId()))
+				case DENY:
 				{
-					p.friends.remove(owner.getProfile().getId());
-					owner.sendUpdate();
-					p.sendUpdate();
+					if(p.friends.contains(owner.getProfile().getId()))
+					{
+						p.friends.remove(owner.getProfile().getId());
+						owner.sendUpdate();
+						p.sendUpdate();
+						
+						p.sendInfoUpdate(owner);
+						owner.sendInfoUpdate(owner);
+					}
 					
-					p.sendInfoUpdate(owner);
-					owner.sendInfoUpdate(owner);
+					break;
 				}
 			}
 		}
 		
 		owner.sendUpdate();
-		return null;
 	}
 }

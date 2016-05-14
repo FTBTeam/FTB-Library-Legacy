@@ -1,6 +1,7 @@
 package ftb.lib.mod.cmd;
 
 import ftb.lib.FTBLib;
+import ftb.lib.ReloadType;
 import ftb.lib.api.cmd.CommandLM;
 import ftb.lib.api.cmd.CommandLevel;
 import ftb.lib.mod.config.FTBLibConfigCmd;
@@ -16,6 +17,6 @@ public class CmdReload extends CommandLM
 	@Override
 	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
 	{
-		FTBLib.reload(ics, true, false);
+		FTBLib.reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT, false);
 	}
 }

@@ -1,5 +1,6 @@
 package ftb.lib.api.gui;
 
+import ftb.lib.api.EnumSelf;
 import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.PlayerAction;
 import ftb.lib.api.config.ConfigEntry;
@@ -49,7 +50,7 @@ public class PlayerActionRegistry
 		return a;
 	}
 	
-	public static List<PlayerAction> getPlayerActions(PlayerAction.Type t, ForgePlayer self, ForgePlayer other, boolean sort, boolean ignoreConfig)
+	public static List<PlayerAction> getPlayerActions(EnumSelf t, ForgePlayer self, ForgePlayer other, boolean sort, boolean ignoreConfig)
 	{
 		List<PlayerAction> l = new ArrayList<>();
 		

@@ -2,33 +2,34 @@ package ftb.lib.mod.net;
 
 import ftb.lib.FTBLib;
 import ftb.lib.LMAccessToken;
+import ftb.lib.ReloadType;
 import ftb.lib.api.config.ConfigFile;
 import ftb.lib.api.config.ConfigGroup;
 import ftb.lib.api.config.ConfigRegistry;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToServer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageEditConfigResponse extends MessageLM<MessageEditConfigResponse>
+public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
 {
 	public long token;
-	public String configID;
-	public boolean reload;
-	public NBTTagCompound nbt;
+	public int typeID;
+	public String groupID;
+	public NBTTagCompound tag;
 	
 	public MessageEditConfigResponse() { }
 	
-	public MessageEditConfigResponse(long t, boolean r, ConfigGroup o)
+	public MessageEditConfigResponse(long adminToken, ReloadType reload, ConfigGroup group)
 	{
-		token = t;
-		configID = o.getID();
-		reload = r;
-		nbt = new NBTTagCompound();
-		o.writeToNBT(nbt, false);
+		token = adminToken;
+		typeID = reload.ordinal();
+		groupID = group.getID();
+		tag = new NBTTagCompound();
+		group.writeToNBT(tag, false);
+		
+		if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Response TX: " + group.getSerializableElement()); }
 	}
 	
 	@Override
@@ -39,42 +40,37 @@ public class MessageEditConfigResponse extends MessageLM<MessageEditConfigRespon
 	public void fromBytes(ByteBuf io)
 	{
 		token = io.readLong();
-		configID = readString(io);
-		reload = io.readBoolean();
-		nbt = readTag(io);
+		typeID = io.readUnsignedByte();
+		groupID = readString(io);
+		tag = readTag(io);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf io)
 	{
 		io.writeLong(token);
-		writeString(io, configID);
-		io.writeBoolean(reload);
-		writeTag(io, nbt);
+		io.writeByte(typeID);
+		writeString(io, groupID);
+		writeTag(io, tag);
 	}
 	
 	@Override
-	public IMessage onMessage(MessageEditConfigResponse m, MessageContext ctx)
+	public void onMessage(MessageEditConfigResponse m, EntityPlayerMP ep)
 	{
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		if(!LMAccessToken.equals(ep, m.token, true)) { return null; }
+		if(!LMAccessToken.equals(ep, m.token, false)) { return; }
 		
-		ConfigFile file = ConfigRegistry.map.containsKey(m.configID) ? ConfigRegistry.map.get(m.configID) : ConfigRegistry.getTempConfig(m.configID);
-		if(file == null) { return null; }
+		ConfigFile file = ConfigRegistry.map.containsKey(m.groupID) ? ConfigRegistry.map.get(m.groupID) : ConfigRegistry.getTempConfig(m.groupID);
+		if(file == null) { return; }
 		
-		ConfigGroup group = new ConfigGroup(m.configID);
-		group.readFromNBT(m.nbt, false);
+		ConfigGroup group = new ConfigGroup(m.groupID);
+		group.readFromNBT(m.tag, false);
 		
 		if(file.loadFromGroup(group, true) > 0)
 		{
 			file.save();
-			
-			if(m.reload)
-			{
-				FTBLib.reload(ep, true, false);
-			}
+			FTBLib.reload(ep, ReloadType.values()[m.typeID], false);
 		}
 		
-		return null;
+		if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Response RX: " + file.getSerializableElement()); }
 	}
 }

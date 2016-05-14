@@ -1,17 +1,14 @@
 package ftb.lib.api.tile;
 
 import ftb.lib.BlockDimPos;
-import ftb.lib.FTBLib;
 import ftb.lib.LMNBTUtils;
 import ftb.lib.PrivacyLevel;
 import ftb.lib.api.MouseButton;
 import ftb.lib.api.client.FTBLibClient;
-import ftb.lib.mod.net.FTBLibNetHandler;
 import ftb.lib.mod.net.MessageClientTileAction;
 import ftb.lib.mod.net.MessageMarkTileDirty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,12 +31,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
-public class TileLM extends TileEntity implements ITileEntity, IClientActionTile, IWorldNameable, ITickable
+public class TileLM extends TileEntity implements ITileEntity, IWorldNameable, ITickable
 {
-	public static final String ACTION_BUTTON_PRESSED = "button";
-	public static final String ACTION_OPEN_GUI = "open_gui";
-	public static final String ACTION_CUSTOM_NAME = "custom_name";
-	
 	protected enum EnumSync
 	{
 		OFF,
@@ -52,8 +45,6 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 		boolean rerender()
 		{ return this == RERENDER; }
 	}
-	
-	public static final int[] NO_SLOTS = new int[0];
 	
 	private boolean isDirty = true;
 	public boolean isLoaded = false;
@@ -184,8 +175,7 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 			
 			if(getSync().sync())
 			{
-				//TODO: Improve this?
-				FTBLibNetHandler.NET.sendToDimension(new MessageMarkTileDirty(this), worldObj.provider.getDimensionType().getId());
+				new MessageMarkTileDirty(this).sendToDimension(worldObj.provider.getDimensionType());
 			}
 			
 			worldObj.markChunkDirty(pos, this);
@@ -236,50 +226,26 @@ public class TileLM extends TileEntity implements ITileEntity, IClientActionTile
 	public boolean isExplosionResistant()
 	{ return !getPrivacyLevel().isPublic(); }
 	
-	public final void sendClientAction(String action, NBTTagCompound data)
+	public final void sendClientAction(TileClientAction action, NBTTagCompound data)
 	{ new MessageClientTileAction(this, action, data).sendToServer(); }
 	
-	public void clientPressButton(String button, MouseButton mouseButton, NBTTagCompound data)
+	public void clientPressButton(int button, MouseButton mouseButton, NBTTagCompound data)
 	{
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("ID", button);
+		tag.setInteger("I", button);
 		tag.setByte("MB", (byte) mouseButton.ordinal());
-		if(data != null) { tag.setTag("D", data); }
-		sendClientAction(ACTION_BUTTON_PRESSED, tag);
+		if(data != null && !data.hasNoTags()) { tag.setTag("D", data); }
+		sendClientAction(TileClientActionRegistry.BUTTON_PRESSED, tag);
 	}
 	
 	public void clientOpenGui(NBTTagCompound data)
-	{ sendClientAction(ACTION_OPEN_GUI, data); }
+	{ sendClientAction(TileClientActionRegistry.OPEN_GUI, data); }
 	
 	public void clientCustomName(String name)
 	{
 		NBTTagCompound data = new NBTTagCompound();
-		data.setString("Name", name);
-		sendClientAction(ACTION_CUSTOM_NAME, data);
-	}
-	
-	@Override
-	public void onClientAction(EntityPlayerMP ep, String action, NBTTagCompound data)
-	{
-		switch(action)
-		{
-			case ACTION_BUTTON_PRESSED:
-				handleButton(data.getString("ID"), MouseButton.values()[data.getByte("MB")], data.getCompoundTag("D"), ep);
-				markDirty();
-				break;
-			case ACTION_OPEN_GUI:
-				FTBLib.openGui(ep, (IGuiTile) this, data);
-				break;
-			case ACTION_CUSTOM_NAME:
-				String name = data.getString("Name");
-				if(!name.isEmpty()) { setName(name); }
-				markDirty();
-				break;
-		}
-	}
-	
-	public void handleButton(String button, MouseButton mouseButton, NBTTagCompound data, EntityPlayerMP ep)
-	{
+		data.setString("N", name);
+		sendClientAction(TileClientActionRegistry.CUSTOM_NAME, data);
 	}
 	
 	public final Side getSide()

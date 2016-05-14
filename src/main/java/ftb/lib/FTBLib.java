@@ -2,7 +2,6 @@ package ftb.lib;
 
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import ftb.lib.api.ForgePlayer;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.GameModes;
 import ftb.lib.api.ServerTickCallback;
@@ -115,35 +114,33 @@ public class FTBLib
 		{ FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName()); }
 	}
 	
-	public static void reload(ICommandSender sender, boolean printMessage, boolean reloadClient)
+	public static void reload(ICommandSender sender, ReloadType type, boolean login)
 	{
 		if(ForgeWorldMP.inst == null) { return; }
-		String mode0 = ForgeWorldMP.inst.getMode().getID();
 		
 		long ms = System.currentTimeMillis();
-		ConfigRegistry.reload();
-		GameModes.reload();
 		
-		for(ForgePlayer p : ForgeWorldMP.inst.playerMap.values())
-			p.toPlayerMP().stats.refresh(p.toPlayerMP(), false);
-		
-		boolean modeChanged = !ForgeWorldMP.inst.getMode().getID().equals(mode0);
-		
-		ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, reloadClient, modeChanged);
-		if(ftbu != null) { ftbu.onReloaded(event); }
-		MinecraftForge.EVENT_BUS.post(event);
-		
-		if(printMessage)
+		if(type.reload(Side.SERVER))
 		{
-			FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
+			ConfigRegistry.reload();
+			GameModes.reload();
+			
+			ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, type, login);
+			if(ftbu != null) { ftbu.onReloaded(event); }
+			MinecraftForge.EVENT_BUS.post(event);
 		}
 		
 		if(hasOnlinePlayers())
 		{
 			for(EntityPlayerMP ep : getAllOnlinePlayers(null))
 			{
-				new MessageReload(ForgeWorldMP.inst.getPlayer(ep), false, reloadClient, modeChanged).sendTo(ep);
+				new MessageReload(type, ep, login).sendTo(ep);
 			}
+		}
+		
+		if(!login && type.reload(Side.SERVER))
+		{
+			FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
 		}
 	}
 	

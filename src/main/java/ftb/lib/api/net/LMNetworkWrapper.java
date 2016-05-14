@@ -3,11 +3,11 @@ package ftb.lib.api.net;
 import io.netty.channel.ChannelFutureListener;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleChannelHandlerWrapper;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleIndexedCodec;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,16 +34,14 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
 	private FMLEmbeddedChannel get(Side s)
 	{ return s.isServer() ? serverChannels : clientChannels; }
 	
-	@SuppressWarnings("all")
-	public void register(Class<? extends MessageLM> c, int discriminator, Side s)
+	public void register(MessageLM<?> m, int discriminator)
 	{
 		try
 		{
-			IMessageHandler<MessageLM, IMessage> h = c.newInstance();
-			packetCodec.addDiscriminator(discriminator, c);
-			FMLEmbeddedChannel channel = get(s);
+			packetCodec.addDiscriminator(discriminator, m.getClass());
+			FMLEmbeddedChannel channel = get(m.getReceivingSide());
 			String type = channel.findChannelHandlerNameForType(SimpleIndexedCodec.class);
-			channel.pipeline().addAfter(type, h.getClass().getName(), new SimpleChannelHandlerWrapper(h, s, c));
+			channel.pipeline().addAfter(type, m.getClass().getName(), new SimpleChannelHandlerWrapper(m, m.getReceivingSide(), m.getClass()));
 		}
 		catch(Exception e)
 		{
@@ -74,10 +72,10 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
 		serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 	
-	public void sendToDimension(IMessage message, int dimensionId)
+	public void sendToDimension(IMessage message, DimensionType dimensionId)
 	{
 		serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-		serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId);
+		serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId.ordinal());
 		serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 	

@@ -5,7 +5,7 @@ import net.minecraft.util.text.TextFormatting;
 /**
  * Created by LatvianModder on 15.01.2016.
  */
-public enum FriendStatus
+public enum EnumFriendStatus
 {
 	NONE(TextFormatting.WHITE),
 	FRIEND(TextFormatting.GREEN),
@@ -14,7 +14,7 @@ public enum FriendStatus
 	
 	public final TextFormatting color;
 	
-	FriendStatus(TextFormatting c)
+	EnumFriendStatus(TextFormatting c)
 	{
 		color = c;
 	}
@@ -25,7 +25,7 @@ public enum FriendStatus
 	public boolean isFriendRaw()
 	{ return this == FRIEND || this == INVITING; }
 	
-	public static FriendStatus get(ForgePlayer p1, ForgePlayer p2)
+	public static EnumFriendStatus get(ForgePlayer p1, ForgePlayer p2)
 	{
 		if(p1 == null || p2 == null) { return NONE; }
 		
@@ -40,8 +40,8 @@ public enum FriendStatus
 	
 	public static int compare(ForgePlayer owner, ForgePlayer p1, ForgePlayer p2)
 	{
-		FriendStatus s0 = get(owner, p1);
-		FriendStatus s1 = get(owner, p2);
+		EnumFriendStatus s0 = get(owner, p1);
+		EnumFriendStatus s1 = get(owner, p2);
 		
 		if(s0 == NONE && s1 != NONE) { return 1; }
 		if(s0 != NONE && s1 == NONE) { return -1; }

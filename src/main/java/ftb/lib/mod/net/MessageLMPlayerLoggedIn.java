@@ -5,17 +5,16 @@ import ftb.lib.api.ForgePlayerMP;
 import ftb.lib.api.ForgePlayerSP;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
-public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
+public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLoggedIn>
 {
 	public UUID playerID;
 	public String playerName;
@@ -57,16 +56,16 @@ public class MessageLMPlayerLoggedIn extends MessageLM<MessageLMPlayerLoggedIn>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageLMPlayerLoggedIn m, MessageContext ctx)
+	public void onMessage(MessageLMPlayerLoggedIn m, Minecraft mc)
 	{
-		if(ForgeWorldSP.inst == null) { return null; }
-		
-		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
-		if(p == null) { p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName)); }
-		p.init();
-		p.readFromNet(m.data, p.isMCPlayer());
-		ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
-		p.onLoggedIn(m.isFirst);
-		return null;
+		if(ForgeWorldSP.inst != null)
+		{
+			ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
+			if(p == null) { p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName)); }
+			p.init();
+			p.readFromNet(m.data, p.isMCPlayer());
+			ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
+			p.onLoggedIn(m.isFirst);
+		}
 	}
 }

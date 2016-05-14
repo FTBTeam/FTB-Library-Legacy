@@ -25,8 +25,8 @@ public class ForgePlayerComparators
 		{
 			int output = 0;
 			
-			FriendStatus f1 = FriendStatus.get(self, p1);
-			FriendStatus f2 = FriendStatus.get(self, p2);
+			EnumFriendStatus f1 = EnumFriendStatus.get(self, p1);
+			EnumFriendStatus f2 = EnumFriendStatus.get(self, p2);
 			
 			boolean o1 = p1.isOnline();
 			boolean o2 = p2.isOnline();
@@ -34,12 +34,12 @@ public class ForgePlayerComparators
 			if(f1 == f2) { output = 0; }
 			else
 			{
-				if(f1 == FriendStatus.FRIEND) { output = -1; }
-				else if(f2 == FriendStatus.FRIEND) { output = 1; }
+				if(f1 == EnumFriendStatus.FRIEND) { output = -1; }
+				else if(f2 == EnumFriendStatus.FRIEND) { output = 1; }
 				else
 				{
-					if(f1 == FriendStatus.NONE) { return 1; }
-					else if(f2 == FriendStatus.NONE) { return -1; }
+					if(f1 == EnumFriendStatus.NONE) { return 1; }
+					else if(f2 == EnumFriendStatus.NONE) { return -1; }
 				}
 			}
 			

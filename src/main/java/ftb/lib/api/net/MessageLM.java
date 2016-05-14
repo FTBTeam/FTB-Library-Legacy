@@ -4,32 +4,36 @@ import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.ByteIOStream;
 import latmod.lib.json.JsonElementIO;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
 public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMessageHandler<E, IMessage>
 {
+	MessageLM()
+	{
+	}
+	
 	public abstract LMNetworkWrapper getWrapper();
-	
-	@Override
-	public abstract void fromBytes(ByteBuf io);
-	
+	abstract Side getReceivingSide();
 	
 	@Override
 	public abstract void toBytes(ByteBuf io);
 	
+	@Override
+	public abstract void fromBytes(ByteBuf io);
+	
 	/*
-	public void fromBytes(ByteBuf io)
+	public void toBytes(ByteBuf io)
 	{
 	}
 	
-	public void toBytes(ByteBuf io)
+	public void fromBytes(ByteBuf io)
 	{
 	}
 	*/
@@ -40,18 +44,8 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 		return null;
 	}
 	
-	public final void sendTo(EntityPlayerMP ep)
-	{
-		//if(FTBLibFinals.DEV) FTBLib.logger.info("[S] Message sent: " + getClass().getName());
-		if(ep != null) { getWrapper().sendTo(this, ep); }
-		else { getWrapper().sendToAll(this); }
-	}
-	
-	public final void sendToServer()
-	{
-		//if(FTBLibFinals.DEV) FTBLib.logger.info("[C] Message sent: " + getClass().getName());
-		getWrapper().sendToServer(this);
-	}
+	public final void register(int id)
+	{ getWrapper().register(this, id); }
 	
 	// Helper methods //
 	

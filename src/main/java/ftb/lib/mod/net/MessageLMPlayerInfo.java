@@ -5,26 +5,25 @@ import ftb.lib.api.ForgePlayerSP;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
+public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 {
 	public UUID playerID;
 	public String[] info;
 	public ItemStack[] armor;
 	
-	public MessageLMPlayerInfo() { }
+	MessageLMPlayerInfo() {}
 	
 	public MessageLMPlayerInfo(ForgePlayerMP owner, ForgePlayerMP p)
 	{
@@ -88,11 +87,18 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageLMPlayerInfo m, MessageContext ctx)
+	public void onMessage(MessageLMPlayerInfo m, Minecraft mc)
 	{
-		if(ForgeWorldSP.inst == null) { return null; }
+		if(ForgeWorldSP.inst == null)
+		{
+			return;
+		}
+		
 		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
-		if(p == null) { return null; }
+		if(p == null)
+		{
+			return;
+		}
 		
 		ArrayList<ITextComponent> info = new ArrayList<>();
 		for(int i = 0; i < m.info.length; i++)
@@ -110,6 +116,5 @@ public class MessageLMPlayerInfo extends MessageLM<MessageLMPlayerInfo>
 		}
 		
 		FTBLibClient.onGuiClientAction();
-		return null;
 	}
 }

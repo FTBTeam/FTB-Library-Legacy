@@ -1,7 +1,6 @@
 package ftb.lib.mod.net;
 
 import ftb.lib.api.net.LMNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class FTBLibNetHandler
 {
@@ -10,24 +9,24 @@ public class FTBLibNetHandler
 	
 	public static void init()
 	{
-		NET.register(MessageReload.class, 1, Side.CLIENT);
-		NET.register(MessageEditConfig.class, 2, Side.CLIENT);
-		NET.register(MessageEditConfigResponse.class, 3, Side.SERVER);
-		NET.register(MessageModifyFriends.class, 4, Side.SERVER);
-		NET.register(MessageLMPlayerUpdate.class, 5, Side.CLIENT);
-		NET.register(MessageLMPlayerLoggedIn.class, 6, Side.CLIENT);
-		NET.register(MessageLMPlayerLoggedOut.class, 7, Side.CLIENT);
-		NET.register(MessageLMPlayerDied.class, 8, Side.CLIENT);
-		NET.register(MessageRequestSelfUpdate.class, 9, Side.SERVER);
-		NET.register(MessageMarkTileDirty.class, 10, Side.CLIENT);
+		new MessageReload().register(1);
+		new MessageEditConfig().register(2);
+		new MessageEditConfigResponse().register(3);
+		new MessageModifyFriends().register(4);
+		new MessageLMPlayerUpdate().register(5);
+		new MessageLMPlayerLoggedIn().register(6);
+		new MessageLMPlayerLoggedOut().register(7);
+		new MessageLMPlayerDied().register(8);
+		new MessageRequestSelfUpdate().register(9);
+		new MessageMarkTileDirty().register(10);
 		
-		NET_INFO.register(MessageOpenGui.class, 1, Side.CLIENT);
-		NET_INFO.register(MessageOpenGuiTile.class, 2, Side.CLIENT);
-		NET_INFO.register(MessageClientTileAction.class, 3, Side.SERVER);
-		NET_INFO.register(MessageClientItemAction.class, 4, Side.SERVER);
-		NET_INFO.register(MessageNotifyPlayer.class, 5, Side.CLIENT);
-		NET_INFO.register(MessageLMPlayerInfo.class, 6, Side.CLIENT);
-		NET_INFO.register(MessageRequestPlayerInfo.class, 7, Side.SERVER);
-		NET_INFO.register(MessageDisplayInfo.class, 8, Side.CLIENT);
+		new MessageOpenGui().register(1);
+		new MessageOpenGuiTile().register(2);
+		new MessageClientTileAction().register(3);
+		new MessageClientItemAction().register(4);
+		new MessageNotifyPlayer().register(5);
+		new MessageLMPlayerInfo().register(6);
+		new MessageRequestPlayerInfo().register(7);
+		new MessageDisplayInfo().register(8);
 	}
 }

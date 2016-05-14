@@ -2,19 +2,18 @@ package ftb.lib.mod.net;
 
 import ftb.lib.api.client.FTBLibClient;
 import ftb.lib.api.net.LMNetworkWrapper;
-import ftb.lib.api.net.MessageLM;
+import ftb.lib.api.net.MessageToClient;
 import ftb.lib.api.tile.IGuiTile;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
+public class MessageOpenGuiTile extends MessageToClient<MessageOpenGuiTile>
 {
 	public int posX, posY, posZ, windowID;
 	public NBTTagCompound data;
@@ -56,21 +55,19 @@ public class MessageOpenGuiTile extends MessageLM<MessageOpenGuiTile>
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public IMessage onMessage(MessageOpenGuiTile m, MessageContext ctx)
+	public void onMessage(MessageOpenGuiTile m, Minecraft mc)
 	{
-		TileEntity te = FTBLibClient.mc.theWorld.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
+		TileEntity te = mc.theWorld.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
 		
 		if(te != null && !te.isInvalid() && te instanceof IGuiTile)
 		{
-			GuiScreen gui = ((IGuiTile) te).getGui(FTBLibClient.mc.thePlayer, m.data);
+			GuiScreen gui = ((IGuiTile) te).getGui(mc.thePlayer, m.data);
 			
 			if(gui != null)
 			{
 				FTBLibClient.openGui(gui);
-				FTBLibClient.mc.thePlayer.openContainer.windowId = m.windowID;
+				mc.thePlayer.openContainer.windowId = m.windowID;
 			}
 		}
-		
-		return null;
 	}
 }
