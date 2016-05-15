@@ -5,6 +5,7 @@ import io.netty.buffer.ByteBuf;
 import latmod.lib.ByteIOStream;
 import latmod.lib.json.JsonElementIO;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -67,6 +68,19 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	
 	public static void writeString(ByteBuf io, String s)
 	{ ByteBufUtils.writeUTF8String(io, s); }
+	
+	public static ResourceLocation readResourceLocation(ByteBuf io)
+	{
+		String d = readString(io);
+		String p = readString(io);
+		return new ResourceLocation(d, p);
+	}
+	
+	public static void writeResourceLocation(ByteBuf io, ResourceLocation r)
+	{
+		writeString(io, r.getResourceDomain());
+		writeString(io, r.getResourcePath());
+	}
 	
 	public static NBTTagCompound readTag(ByteBuf io)
 	{ return ByteBufUtils.readTag(io); }

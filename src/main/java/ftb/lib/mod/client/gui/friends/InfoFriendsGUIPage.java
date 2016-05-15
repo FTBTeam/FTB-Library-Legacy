@@ -39,7 +39,9 @@ public class InfoFriendsGUIPage extends InfoPage
 		if(!playerLM.clientInfo.isEmpty())
 		{
 			for(String s : playerLM.clientInfo)
+			{
 				printlnText(s);
+			}
 			
 			text.add(null);
 		}

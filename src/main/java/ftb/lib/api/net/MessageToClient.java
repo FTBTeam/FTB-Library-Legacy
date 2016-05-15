@@ -33,7 +33,6 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
 	
 	public final void sendTo(EntityPlayerMP ep)
 	{
-		//if(FTBLibFinals.DEV) FTBLib.logger.info("[S] Message sent: " + getClass().getName());
 		if(ep != null)
 		{
 			getWrapper().sendTo(this, ep);

@@ -38,7 +38,7 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
 		posX = io.readInt();
 		posY = io.readInt();
 		posZ = io.readInt();
-		action = new ResourceLocation(readString(io));
+		action = readResourceLocation(io);
 		data = readTag(io);
 	}
 	
@@ -48,7 +48,7 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
 		io.writeInt(posX);
 		io.writeInt(posY);
 		io.writeInt(posZ);
-		writeString(io, action.toString());
+		writeResourceLocation(io, action);
 		writeTag(io, data);
 	}
 	

@@ -5,8 +5,8 @@ import ftb.lib.ReloadType;
 import ftb.lib.api.ForgeWorldMP;
 import ftb.lib.api.ForgeWorldSP;
 import ftb.lib.api.GameModes;
-import ftb.lib.api.events.EventFTBSync;
 import ftb.lib.api.events.ReloadEvent;
+import ftb.lib.api.events.SyncEvent;
 import ftb.lib.api.net.LMNetworkWrapper;
 import ftb.lib.api.net.MessageToClient;
 import ftb.lib.api.notification.ClientNotifications;
@@ -39,7 +39,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 		typeID = t.ordinal();
 		login = l;
 		modeID = ForgeWorldMP.inst.getMode().getID();
-		tag = EventFTBSync.generateData(ep, login);
+		tag = SyncEvent.generateData(ep, login);
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 		if(first) { ForgeWorldSP.inst = new ForgeWorldSP(mc.getSession().getProfile()); }
 		
 		ForgeWorldSP.inst.setModeRaw(m.modeID);
-		EventFTBSync.readData(m.tag, m.login);
+		SyncEvent.readData(m.tag, m.login);
 		
 		//TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 		
