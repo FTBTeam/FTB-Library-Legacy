@@ -259,4 +259,11 @@ public class MathHelperMC
 		
 		return boxes;
 	}
+	
+	public static RayTraceResult rayTrace(BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		Vec3d vec = new Vec3d(hitX, hitY, hitZ);
+		vec.addVector(pos.getX(), pos.getY(), pos.getZ());
+		return new RayTraceResult(vec, facing, pos);
+	}
 }

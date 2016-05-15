@@ -47,7 +47,7 @@ public class FTBLibMod
 	@Mod.Instance(FTBLibFinals.MOD_ID)
 	public static FTBLibMod inst;
 	
-	@SidedProxy(serverSide = "com.feed_the_beast.ftbl.mod.FTBLibModCommon", clientSide = "FTBLibModClient")
+	@SidedProxy(serverSide = "com.feed_the_beast.ftbl.FTBLibModCommon", clientSide = "com.feed_the_beast.ftbl.client.FTBLibModClient")
 	public static FTBLibModCommon proxy;
 	
 	public static final Logger logger = LogManager.getLogger("FTBLib");

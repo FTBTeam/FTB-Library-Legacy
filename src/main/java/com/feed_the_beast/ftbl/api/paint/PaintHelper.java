@@ -26,7 +26,7 @@ public class PaintHelper
 		return (!state.getBlock().hasTileEntity(state) && state.isFullCube()) ? state : null;
 	}
 	
-	public static ActionResult<ItemStack> onItemRightClick(IPainterItem i, ItemStack is, EntityPlayer ep)
+	public static ActionResult<ItemStack> onItemRightClick(ItemStack is, EntityPlayer ep)
 	{
 		if(!ep.worldObj.isRemote && ep.isSneaking() && is.hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
 		{
