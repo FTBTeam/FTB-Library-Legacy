@@ -131,3 +131,7 @@ click_action.show_cmd=Show Command
 click_action.url=Open URL
 click_action.file=Open File
 click_action.gui=Open Gui
+
+# Paint
+ftbl.paint.texture_set=Paint texture set to %s
+ftbl.paint.texture_cleared=Paint texture cleared

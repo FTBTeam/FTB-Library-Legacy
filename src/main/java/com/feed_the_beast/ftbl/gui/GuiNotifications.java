@@ -1,0 +1,78 @@
+package com.feed_the_beast.ftbl.gui;
+
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.client.FTBLibModClient;
+import latmod.lib.MathHelperLM;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+@SideOnly(Side.CLIENT)
+public class GuiNotifications extends GuiLM
+{
+	public final ArrayList<ButtonNotification> buttonList;
+	
+	public GuiNotifications(GuiScreen parent)
+	{
+		super(parent, null);
+		mainPanel.height = 25 * 7;
+		
+		buttonList = new ArrayList<>();
+	}
+	
+	@Override
+	public void initLMGui()
+	{
+		mainPanel.width = 0;
+		
+		buttonList.clear();
+		
+		Collections.sort(ClientNotifications.Perm.list, null);
+		
+		int s = Math.min(ClientNotifications.Perm.list.size(), 7);
+		
+		for(int i = 0; i < s; i++)
+		{
+			ClientNotifications.Perm p = ClientNotifications.Perm.list.get(i);
+			ButtonNotification b = new ButtonNotification(this, p);
+			buttonList.add(b);
+			mainPanel.width = Math.max(mainPanel.width, b.width);
+		}
+		
+		mainPanel.width = MathHelperLM.clampInt(mainPanel.width, 200, 300);
+		
+		for(ButtonNotification b : buttonList)
+			b.width = mainPanel.width;
+	}
+	
+	@Override
+	public void addWidgets()
+	{
+		mainPanel.addAll(buttonList);
+	}
+	
+	@Override
+	public void drawBackground()
+	{
+		super.drawBackground();
+		
+		fontRendererObj.drawString(I18n.format(FTBLibModClient.notifications.getFullID()), mainPanel.posX + 4, mainPanel.posY - 11, 0xFFFFFFFF);
+		
+		GlStateManager.color(0F, 0F, 0F, 0.4F);
+		drawBlankRect(mainPanel.posX, mainPanel.posY, zLevel, mainPanel.width, mainPanel.height);
+		
+		for(int i = 1; i < 7; i++)
+			drawBlankRect(mainPanel.posX, mainPanel.posY + i * 25 - 1, zLevel, mainPanel.width, 1);
+		
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		
+		for(ButtonNotification b : buttonList)
+			b.renderWidget();
+	}
+}
