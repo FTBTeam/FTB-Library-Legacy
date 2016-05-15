@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 
@@ -47,7 +48,7 @@ public class PaintHelper
 	{
 		if(ep.worldObj.isRemote || !is.hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
 		{
-			return EnumActionResult.PASS;
+			return EnumActionResult.SUCCESS;
 		}
 		
 		IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null);
@@ -57,20 +58,25 @@ public class PaintHelper
 		if(te != null && te.hasCapability(FTBLibCapabilities.PAINTABLE_TILE_CAPABILITY, hit.sideHit))
 		{
 			IPaintable paintable = te.getCapability(FTBLibCapabilities.PAINTABLE_TILE_CAPABILITY, hit.sideHit);
-			
 			IBlockState paint = painterItem.getPaint();
 			
-			if(ep.capabilities.isCreativeMode || painterItem.canPaintBlocks(is))
+			if(ep.isSneaking())
 			{
-				if(paintable.canSetPaint(ep, hit, paint))
+				for(EnumFacing f : EnumFacing.VALUES)
+				{
+					if(painterItem.canPaintBlocks(is) && paintable.canSetPaint(ep, f, paint))
+					{
+						paintable.setPaint(f, paint);
+						painterItem.damagePainter(is, ep);
+					}
+				}
+			}
+			else
+			{
+				if(painterItem.canPaintBlocks(is) && paintable.canSetPaint(ep, hit.sideHit, paint))
 				{
 					paintable.setPaint(hit.sideHit, paint);
-					
-					if(!ep.capabilities.isCreativeMode)
-					{
-						painterItem.damagePainter(is, ep);
-						return EnumActionResult.SUCCESS;
-					}
+					painterItem.damagePainter(is, ep);
 				}
 			}
 		}
@@ -86,11 +92,10 @@ public class PaintHelper
 				{
 					painterItem.setPaint(blockPaint);
 					texture_set.printChat(ep, new ItemStack(blockPaint.getBlock(), 1, blockPaint.getBlock().getMetaFromState(blockPaint)).getDisplayName());
-					return EnumActionResult.SUCCESS;
 				}
 			}
 		}
 		
-		return EnumActionResult.PASS;
+		return EnumActionResult.SUCCESS;
 	}
 }
