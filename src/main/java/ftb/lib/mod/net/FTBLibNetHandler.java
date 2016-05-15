@@ -5,28 +5,26 @@ import ftb.lib.api.net.LMNetworkWrapper;
 public class FTBLibNetHandler
 {
 	public static final LMNetworkWrapper NET = LMNetworkWrapper.newWrapper("FTBL");
-	public static final LMNetworkWrapper NET_INFO = LMNetworkWrapper.newWrapper("FTBLI");
 	
 	public static void init()
 	{
-		new MessageReload().register(1);
-		new MessageEditConfig().register(2);
-		new MessageEditConfigResponse().register(3);
-		new MessageModifyFriends().register(4);
-		new MessageLMPlayerUpdate().register(5);
-		new MessageLMPlayerLoggedIn().register(6);
-		new MessageLMPlayerLoggedOut().register(7);
-		new MessageLMPlayerDied().register(8);
-		new MessageRequestSelfUpdate().register(9);
-		new MessageMarkTileDirty().register(10);
-		
-		new MessageOpenGui().register(1);
-		new MessageOpenGuiTile().register(2);
-		new MessageClientTileAction().register(3);
-		new MessageClientItemAction().register(4);
-		new MessageNotifyPlayer().register(5);
-		new MessageLMPlayerInfo().register(6);
-		new MessageRequestPlayerInfo().register(7);
-		new MessageDisplayInfo().register(8);
+		NET.register(1, new MessageReload());
+		NET.register(2, new MessageEditConfig());
+		NET.register(3, new MessageEditConfigResponse());
+		NET.register(4, new MessageModifyFriends());
+		NET.register(5, new MessageLMPlayerUpdate());
+		NET.register(6, new MessageLMPlayerLoggedIn());
+		NET.register(7, new MessageLMPlayerLoggedOut());
+		NET.register(8, new MessageLMPlayerDied());
+		NET.register(9, new MessageRequestSelfUpdate());
+		NET.register(10, new MessageMarkTileDirty());
+		NET.register(11, new MessageOpenGui());
+		NET.register(12, new MessageOpenGuiTile());
+		NET.register(13, new MessageClientTileAction());
+		NET.register(14, new MessageClientItemAction());
+		NET.register(15, new MessageNotifyPlayer());
+		NET.register(16, new MessageLMPlayerInfo());
+		NET.register(17, new MessageRequestPlayerInfo());
+		NET.register(18, new MessageDisplayInfo());
 	}
 }

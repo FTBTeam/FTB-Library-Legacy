@@ -26,7 +26,7 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_INFO; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)

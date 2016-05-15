@@ -34,7 +34,7 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
 	private FMLEmbeddedChannel get(Side s)
 	{ return s.isServer() ? serverChannels : clientChannels; }
 	
-	public void register(MessageLM<?> m, int discriminator)
+	public void register(int discriminator, MessageLM<?> m)
 	{
 		try
 		{

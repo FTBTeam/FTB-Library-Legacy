@@ -7,7 +7,6 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 14.05.2016.
@@ -23,10 +22,15 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
 		mc.addScheduledTask(() -> onMessage(m, mc));
+		
+		if(MessageLM.logMessages())
+		{
+			
+		}
+		
 		return null;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public void onMessage(E m, Minecraft mc)
 	{
 	}

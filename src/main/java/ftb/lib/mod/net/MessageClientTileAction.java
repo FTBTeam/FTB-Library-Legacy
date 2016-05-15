@@ -30,7 +30,7 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_INFO; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)

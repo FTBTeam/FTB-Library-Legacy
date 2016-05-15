@@ -20,6 +20,9 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	{
 	}
 	
+	static boolean logMessages()
+	{ return true; }
+	
 	public abstract LMNetworkWrapper getWrapper();
 	abstract Side getReceivingSide();
 	
@@ -44,9 +47,6 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	{
 		return null;
 	}
-	
-	public final void register(int id)
-	{ getWrapper().register(this, id); }
 	
 	// Helper methods //
 	

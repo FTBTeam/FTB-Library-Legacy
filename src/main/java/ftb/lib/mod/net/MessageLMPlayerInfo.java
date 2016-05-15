@@ -48,7 +48,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 	
 	@Override
 	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET_INFO; }
+	{ return FTBLibNetHandler.NET; }
 	
 	@Override
 	public void fromBytes(ByteBuf io)
