@@ -78,7 +78,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent e)
 	{
-		FMLInterModComms.sendMessage("Waila", "register", "EventRegisterWaila.registerHandlers");
+		FMLInterModComms.sendMessage("Waila", "register", "com.feed_the_beast.ftbl.api.waila.EventRegisterWaila.registerHandlers");
 	}
 	
 	@Mod.EventHandler

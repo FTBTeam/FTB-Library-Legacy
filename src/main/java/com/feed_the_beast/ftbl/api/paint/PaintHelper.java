@@ -62,12 +62,23 @@ public class PaintHelper
 			
 			if(ep.isSneaking())
 			{
-				for(EnumFacing f : EnumFacing.VALUES)
+				if(painterItem.canPaintBlocks(is))
 				{
-					if(painterItem.canPaintBlocks(is) && paintable.canSetPaint(ep, f, paint))
+					boolean b = false;
+					
+					for(EnumFacing f : EnumFacing.VALUES)
 					{
-						paintable.setPaint(f, paint);
+						if(paintable.canSetPaint(ep, f, paint))
+						{
+							paintable.setPaint(f, paint);
+							b = true;
+						}
+					}
+					
+					if(b)
+					{
 						painterItem.damagePainter(is, ep);
+						te.markDirty();
 					}
 				}
 			}
@@ -77,6 +88,7 @@ public class PaintHelper
 				{
 					paintable.setPaint(hit.sideHit, paint);
 					painterItem.damagePainter(is, ep);
+					te.markDirty();
 				}
 			}
 		}
