@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.notification;
 
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
@@ -138,7 +139,7 @@ public class ClientNotifications
 		}
 	}
 	
-	public static class Perm extends FinalIDObject
+	public static class Perm extends FinalIDObject implements Comparable<Perm>
 	{
 		public static final List<Perm> list = new ArrayList<>();
 		
@@ -153,12 +154,15 @@ public class ClientNotifications
 		}
 		
 		@Override
-		public int compareTo(Object o)
-		{ return Long.compare(((Perm) o).timeAdded, timeAdded); }
+		public int compareTo(Perm o)
+		{ return Long.compare(o.timeAdded, timeAdded); }
 		
-		public void onClicked()
+		public void onClicked(MouseButton button)
 		{
-			if(notification.mouse != null && notification.mouse.click != null) { notification.mouse.click.onClicked(); }
+			if(notification.mouse != null && notification.mouse.click != null)
+			{
+				notification.mouse.click.onClicked(button);
+			}
 		}
 	}
 }

@@ -16,7 +16,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,15 +140,13 @@ public abstract class ForgeWorld
 	{
 		List<ForgePlayer> list = online ? getOnlinePlayers() : LMListUtils.clone(playerMap.values());
 		
-		Collections.sort(list, new Comparator<ForgePlayer>()
-		{
-			@Override
-			public int compare(ForgePlayer o1, ForgePlayer o2)
+		Collections.sort(list, (o1, o2) -> {
+			if(o1.isOnline() == o2.isOnline())
 			{
-				if(o1.isOnline() == o2.isOnline())
-				{ return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName()); }
-				return Boolean.compare(o2.isOnline(), o1.isOnline());
+				return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
 			}
+			
+			return Boolean.compare(o2.isOnline(), o1.isOnline());
 		});
 		
 		return LMListUtils.toStringArray(list);

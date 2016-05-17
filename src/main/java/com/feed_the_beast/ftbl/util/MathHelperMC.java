@@ -248,13 +248,13 @@ public class MathHelperMC
 		return new AxisAlignedBB(1D - bb.minZ, bb.minY, bb.minX, 1D - bb.maxZ, bb.maxY, bb.maxX);
 	}
 	
-	public static AxisAlignedBB[] getRotatedBoxes(AxisAlignedBB bb, boolean invert)
+	public static AxisAlignedBB[] getRotatedBoxes(AxisAlignedBB bb)
 	{
 		AxisAlignedBB[] boxes = new AxisAlignedBB[6];
 		
 		for(EnumFacing f : EnumFacing.VALUES)
 		{
-			boxes[f.ordinal()] = rotateAABB(bb, invert ? f.getOpposite() : f);
+			boxes[f.ordinal()] = rotateAABB(bb, f);
 		}
 		
 		return boxes;

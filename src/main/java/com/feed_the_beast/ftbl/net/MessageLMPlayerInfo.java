@@ -23,7 +23,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 	public String[] info;
 	public ItemStack[] armor;
 	
-	MessageLMPlayerInfo() {}
+	public MessageLMPlayerInfo() {}
 	
 	public MessageLMPlayerInfo(ForgePlayerMP owner, ForgePlayerMP p)
 	{

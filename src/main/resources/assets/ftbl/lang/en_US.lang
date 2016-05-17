@@ -94,16 +94,16 @@ client_config.ftbl.sort_friends_az=Sort Friends A-Z
 client_config.sidebar_buttons=Sidebar Buttons
 
 # PlayerActions
-player_action.ftbl.settings=Client Settings
-player_action.ftbl.my_server_settings=My Server Settings
-player_action.ftbl.notifications=Notifications
-player_action.ftbl.toggle_gamemode=Toggle Gamemode
-player_action.ftbl.toggle_rain=Toggle Rain
-player_action.ftbl.toggle_day=Set time to Day
-player_action.ftbl.toggle_night=Set time to Night
-player_action.ftbl.heal=Heal
-player_action.ftbl.toggle_chunk_bounds=Toggle Chunk Bounds
-player_action.ftbl.toggle_light_values=Toggle Light Values
+player_action.ftbl:settings=Client Settings
+player_action.ftbl:my_server_settings=My Server Settings
+player_action.ftbl:notifications=Notifications
+player_action.ftbl:toggle_gamemode=Toggle Gamemode
+player_action.ftbl:toggle_rain=Toggle Rain
+player_action.ftbl:set_day=Set time to Day
+player_action.ftbl:set_night=Set time to Night
+player_action.ftbl:heal=Heal
+player_action.ftbl:toggle_chunk_bounds=Toggle Chunk Bounds
+player_action.ftbl:toggle_light_values=Toggle Light Values
 
 # Security Mode
 ftbl.security=Security

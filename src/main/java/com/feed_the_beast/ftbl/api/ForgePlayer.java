@@ -100,7 +100,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 		else if(o == this) { return true; }
 		else if(o instanceof UUID) { return gameProfile.getId().equals(o); }
 		else if(o instanceof ForgePlayer) { return equalsPlayer((ForgePlayer) o); }
-		return false;
+		return equalsPlayer(getWorld().getPlayer(o));
 	}
 	
 	public boolean equalsPlayer(ForgePlayer p)

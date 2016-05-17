@@ -72,7 +72,7 @@ public class InfoExtendedTextLine extends InfoTextLine
 		if(clickAction != null)
 		{
 			FTBLibClient.playClickSound();
-			clickAction.onClicked();
+			clickAction.onClicked(button);
 		}
 	}
 	

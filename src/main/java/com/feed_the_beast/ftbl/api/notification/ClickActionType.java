@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
@@ -19,93 +20,89 @@ import java.net.URI;
 
 public abstract class ClickActionType extends FinalIDObject
 {
-	public ClickActionType(String s)
+	public ClickActionType(String id)
 	{
-		super(s);
+		super(id);
 	}
 	
-	@SideOnly(Side.CLIENT)
-	public abstract void onClicked(JsonElement data);
-	
-	public String getDisplayID()
-	{ return "click_action." + getID(); }
+	public abstract void onClicked(JsonElement data, MouseButton button);
 	
 	// Static //
 	
-	public static final ClickActionType ACTION = new ClickActionType("action")
+	public static final ClickActionType ACTION = ClickActionRegistry.register(new ClickActionType("action")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{
 			PlayerAction a = PlayerActionRegistry.get(data.getAsString());
 			if(a != null && a.type.isSelf())
 			{ a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer); }
 		}
-	};
+	});
 	
-	public static final ClickActionType CMD = new ClickActionType("cmd")
+	public static final ClickActionType CMD = ClickActionRegistry.register(new ClickActionType("cmd")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{ FTBLibClient.execClientCommand("/" + data.getAsString()); }
-	};
+	});
 	
-	public static final ClickActionType SHOW_CMD = new ClickActionType("show_cmd")
+	public static final ClickActionType SHOW_CMD = ClickActionRegistry.register(new ClickActionType("show_cmd")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{ FTBLibClient.openGui(new GuiChat(data.getAsString())); }
-	};
+	});
 	
-	public static final ClickActionType URL = new ClickActionType("url")
+	public static final ClickActionType URL = ClickActionRegistry.register(new ClickActionType("url")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{
 			try { LMUtils.openURI(new URI(data.getAsString())); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
-	};
+	});
 	
-	public static final ClickActionType FILE = new ClickActionType("file")
+	public static final ClickActionType FILE = ClickActionRegistry.register(new ClickActionType("file")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{
 			try { LMUtils.openURI(new File(data.getAsString()).toURI()); }
 			catch(Exception ex) { ex.printStackTrace(); }
 		}
-	};
+	});
 	
-	public static final ClickActionType GUI = new ClickActionType("gui")
+	public static final ClickActionType GUI = ClickActionRegistry.register(new ClickActionType("gui")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{
 			GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc.thePlayer, data.getAsString());
 			if(gui != null) { FTBLibClient.openGui(gui); }
 		}
-	};
+	});
 	
-	public static final ClickActionType FRIEND_ADD = new ClickActionType("friend_add")
+	public static final ClickActionType FRIEND_ADD = ClickActionRegistry.register(new ClickActionType("friend_add")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{ new MessageModifyFriends(MessageModifyFriends.ADD, LMUtils.fromString(data.getAsString())).sendToServer(); }
-	};
+	});
 	
-	public static final ClickActionType FRIEND_ADD_ALL = new ClickActionType("friend_add_all")
+	public static final ClickActionType FRIEND_ADD_ALL = ClickActionRegistry.register(new ClickActionType("friend_add_all")
 	{
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void onClicked(JsonElement data)
+		public void onClicked(JsonElement data, MouseButton button)
 		{ new MessageModifyFriends(MessageModifyFriends.ADD_ALL, null).sendToServer();}
-	};
+	});
 }

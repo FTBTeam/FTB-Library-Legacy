@@ -34,11 +34,11 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by LatvianModder on 09.02.2016.
@@ -339,14 +339,9 @@ public class ForgePlayerMP extends ForgePlayer
 	{
 		if(isOnline())
 		{
-			ArrayList<String> requests = new ArrayList<>();
+			List<String> requests = getWorld().playerMap.values().stream().filter(p -> p.isFriendRaw(this) && !isFriendRaw(p)).map(p -> p.getProfile().getName()).collect(Collectors.toList());
 			
-			for(ForgePlayer p : getWorld().playerMap.values())
-			{
-				if(p.isFriendRaw(this) && !isFriendRaw(p)) { requests.add(p.getProfile().getName()); }
-			}
-			
-			if(requests.size() > 0)
+			if(!requests.isEmpty())
 			{
 				ITextComponent cc = GuiLang.label_friend_new.textComponent();
 				cc.getStyle().setColor(TextFormatting.GREEN);

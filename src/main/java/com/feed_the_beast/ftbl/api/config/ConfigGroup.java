@@ -36,7 +36,7 @@ public class ConfigGroup extends ConfigEntry
 	{
 		List<ConfigEntry> list = new ArrayList<>();
 		list.addAll(entryMap.values());
-		Collections.sort(list, null);
+		Collections.sort(list, LMUtils.ID_COMPARATOR);
 		return list;
 	}
 	

@@ -69,7 +69,7 @@ public class ButtonNotification extends ButtonLM
 	{
 		FTBLibClient.playClickSound();
 		
-		if(gui.mouse().x < getAX() + width - 16) { notification.onClicked(); }
+		if(gui.mouse().x < getAX() + width - 16) { notification.onClicked(button); }
 		ClientNotifications.Perm.list.remove(notification.notification);
 		
 		gui.initLMGui();

@@ -73,20 +73,15 @@ public class FTBLib
 	private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
 	public static FTBUIntegration ftbu = null;
 	
-	public static final Comparator<ResourceLocation> comparatorResourceLocation = new Comparator<ResourceLocation>()
-	{
-		@Override
-		public int compare(ResourceLocation o1, ResourceLocation o2)
+	public static final Comparator<ResourceLocation> RESOURCE_LOCATION_COMPARATOR = (o1, o2) -> {
+		int i = o1.getResourceDomain().compareTo(o2.getResourceDomain());
+		
+		if(i == 0)
 		{
-			int i = o1.getResourceDomain().compareTo(o2.getResourceDomain());
-			
-			if(i == 0)
-			{
-				i = o1.getResourcePath().compareTo(o2.getResourcePath());
-			}
-			
-			return i;
+			i = o1.getResourcePath().compareTo(o2.getResourcePath());
 		}
+		
+		return i;
 	};
 	
 	public static File folderConfig;

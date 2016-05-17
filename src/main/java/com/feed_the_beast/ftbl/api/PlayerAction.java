@@ -2,19 +2,20 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.TextureCoords;
-import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
-public abstract class PlayerAction extends FinalIDObject
+public abstract class PlayerAction extends FinalResourceLocationObject implements Comparable<PlayerAction>
 {
 	public final EnumSelf type;
 	public final int priority;
 	public final TextureCoords icon;
 	
-	public PlayerAction(EnumSelf t, String id, int p, TextureCoords c)
+	public PlayerAction(EnumSelf t, ResourceLocation id, int p, TextureCoords c)
 	{
 		super(id);
 		type = (t == null) ? EnumSelf.SELF : t;
@@ -40,10 +41,10 @@ public abstract class PlayerAction extends FinalIDObject
 	}
 	
 	@Override
-	public int compareTo(Object o)
+	public int compareTo(PlayerAction a)
 	{
-		int i = Integer.compare(((PlayerAction) o).priority, priority);
-		return (i == 0) ? super.compareTo(o) : i;
+		int i = Integer.compare(a.priority, priority);
+		return (i == 0) ? FTBLib.RESOURCE_LOCATION_COMPARATOR.compare(getResourceLocation(), a.getResourceLocation()) : i;
 	}
 	
 	public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)

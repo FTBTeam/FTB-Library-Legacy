@@ -28,7 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InfoPage extends FinalIDObject implements IJsonSerializable // GuideFile
+public class InfoPage extends FinalIDObject implements IJsonSerializable, Comparable<InfoPage> // GuideFile
 {
 	private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().childPages.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty();
 	
@@ -325,5 +325,11 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable // Guid
 		{
 			text.add(createLine(e));
 		}
+	}
+	
+	@Override
+	public int compareTo(InfoPage o)
+	{
+		return getTitleComponent().getFormattedText().compareToIgnoreCase(o.getTitleComponent().getFormattedText());
 	}
 }

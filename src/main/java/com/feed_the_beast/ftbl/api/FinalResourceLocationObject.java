@@ -1,14 +1,30 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.IIDObject;
 import latmod.lib.LMUtils;
 import net.minecraft.util.ResourceLocation;
+
+import java.util.Comparator;
 
 /**
  * Created by LatvianModder on 14.05.2016.
  */
 public class FinalResourceLocationObject implements IResourceLocationObject, IIDObject
 {
+	public static final Comparator<Object> COMPARATOR = (o1, o2) -> FTBLib.RESOURCE_LOCATION_COMPARATOR.compare(getResourceLocation(o1), getResourceLocation(o2));
+	
+	public static ResourceLocation getResourceLocation(Object o)
+	{
+		if(o == null) { return null; }
+		else if(o instanceof ResourceLocation)
+		{ return (ResourceLocation) o; }
+		else if(o instanceof IResourceLocationObject)
+		{ return ((IResourceLocationObject) o).getResourceLocation(); }
+		
+		return null;
+	}
+	
 	private final ResourceLocation ID;
 	
 	public FinalResourceLocationObject(ResourceLocation id)

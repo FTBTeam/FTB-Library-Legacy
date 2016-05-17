@@ -34,7 +34,6 @@ public class InfoPlayerViewLine extends InfoTextLine
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
 	public ButtonInfoTextLine createWidget(GuiInfo gui)
 	{ return new ButtonInfoPlayerView(gui, this); }
 	
@@ -95,12 +94,12 @@ public class InfoPlayerViewLine extends InfoTextLine
 			
 			FTBLibClient.setTexture(player.getLocationSkin());
 			GlStateManager.translate(0F, 0F, 100F);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			GuiInventory.drawEntityOnScreen(playerX, playerY, pheight, playerX - gui.mouse().x, playerY - (pheight + (pheight / 1.625F)) - gui.mouse().y, player);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.popMatrix();
 		}
 		
-		//FIXME
 		public class Player extends AbstractClientPlayer
 		{
 			public Player(ForgePlayerSP p)

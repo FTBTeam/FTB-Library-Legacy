@@ -7,21 +7,21 @@ import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.util.EnumScreen;
+import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
-import latmod.lib.LMJsonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 {
-	public String json;
+	public JsonElement json;
 	
 	public MessageNotifyPlayer() { }
 	
 	public MessageNotifyPlayer(Notification n)
 	{
-		json = LMJsonUtils.toJson(n.getSerializableElement());
+		json = n.getSerializableElement();
 	}
 	
 	@Override
@@ -31,13 +31,13 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 	@Override
 	public void fromBytes(ByteBuf io)
 	{
-		json = readString(io);
+		json = readJsonElement(io);
 	}
 	
 	@Override
 	public void toBytes(ByteBuf io)
 	{
-		writeString(io, json);
+		writeJsonElement(io, json);
 	}
 	
 	@Override
@@ -46,7 +46,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 	{
 		if(FTBLibModClient.notifications.get() != EnumScreen.OFF)
 		{
-			Notification n = Notification.deserialize(LMJsonUtils.fromJson(m.json));
+			Notification n = Notification.deserialize(m.json);
 			
 			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) { ClientNotifications.add(n); }
 			else

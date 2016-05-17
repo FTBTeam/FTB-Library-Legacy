@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api.gui;
 import latmod.lib.LMListUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,9 +16,9 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class GuiScreenRegistry
 {
-	private static final Map<String, Entry> map = new HashMap<>();
+	private static final Map<ResourceLocation, Entry> map = new HashMap<>();
 	
-	public static void register(String s, Entry e)
+	public static void register(ResourceLocation s, Entry e)
 	{
 		if(s != null && e != null && !map.containsKey(s)) { map.put(s, e); }
 	}

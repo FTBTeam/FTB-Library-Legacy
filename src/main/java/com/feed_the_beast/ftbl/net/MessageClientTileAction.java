@@ -17,7 +17,7 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
 	public ResourceLocation action;
 	public NBTTagCompound data;
 	
-	MessageClientTileAction() { }
+	public MessageClientTileAction() { }
 	
 	public MessageClientTileAction(TileEntity t, TileClientAction a, NBTTagCompound tag)
 	{
