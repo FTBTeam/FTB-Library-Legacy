@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerSPInfoEvent;
-import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
@@ -17,8 +16,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -105,7 +105,7 @@ public class ForgePlayerSP extends ForgePlayer
 			}
 		}
 		
-		List<UUID> otherFriends = new ArrayList<>();
+		Collection<UUID> otherFriends = new HashSet<>();
 		tagList = (NBTTagList) tag.getTag("OF");
 		
 		if(tagList != null)
@@ -129,13 +129,6 @@ public class ForgePlayerSP extends ForgePlayer
 			}
 		}
 		
-		if(!customData.isEmpty() && tag.hasKey("C"))
-		{
-			for(Map.Entry<String, NBTBase> e : LMNBTUtils.entrySet(tag.getCompoundTag("C")))
-			{
-				ForgePlayerData data = customData.get(e.getKey());
-				if(data != null) { data.readFromNet((NBTTagCompound) e.getValue(), self); }
-			}
-		}
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, tag.getCompoundTag("SY"), self));
 	}
 }

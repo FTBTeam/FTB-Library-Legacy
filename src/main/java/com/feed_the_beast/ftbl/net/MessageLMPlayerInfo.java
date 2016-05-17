@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -15,13 +16,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 {
 	public UUID playerID;
 	public String[] info;
-	public ItemStack[] armor;
+	public Map<EntityEquipmentSlot, ItemStack> armor;
 	
 	public MessageLMPlayerInfo() {}
 	
@@ -29,7 +33,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 	{
 		playerID = p.getProfile().getId();
 		
-		ArrayList<ITextComponent> info0 = new ArrayList<>();
+		List<ITextComponent> info0 = new ArrayList<>();
 		p.getInfo(owner, info0);
 		
 		info = new String[Math.min(255, info0.size())];
@@ -39,11 +43,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 			info[i] = ITextComponent.Serializer.componentToJson(info0.get(i));
 		}
 		
-		armor = new ItemStack[5];
-		for(int i = 0; i < armor.length; i++)
-		{
-			armor[i] = p.lastArmor.get(i);
-		}
+		armor = p.lastArmor;
 	}
 	
 	@Override
@@ -58,13 +58,17 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 		info = new String[io.readUnsignedByte()];
 		for(int i = 0; i < info.length; i++)
 		{
-			info[i] = ByteBufUtils.readUTF8String(io);
+			info[i] = readString(io);
 		}
 		
-		armor = new ItemStack[5];
-		for(int i = 0; i < armor.length; i++)
+		armor = new HashMap<>();
+		int s = io.readUnsignedByte();
+		
+		for(int i = 0; i < s; i++)
 		{
-			armor[i] = ByteBufUtils.readItemStack(io);
+			EntityEquipmentSlot e = EntityEquipmentSlot.values()[io.readByte()];
+			ItemStack is = ByteBufUtils.readItemStack(io);
+			armor.put(e, is);
 		}
 	}
 	
@@ -76,12 +80,15 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 		io.writeByte(info.length);
 		for(String anInfo : info)
 		{
-			ByteBufUtils.writeUTF8String(io, anInfo);
+			writeString(io, anInfo);
 		}
 		
-		for(ItemStack anArmor : armor)
+		io.writeByte(armor.size());
+		
+		for(Map.Entry<EntityEquipmentSlot, ItemStack> e : armor.entrySet())
 		{
-			ByteBufUtils.writeItemStack(io, anArmor);
+			io.writeByte(e.getKey().ordinal());
+			ByteBufUtils.writeItemStack(io, e.getValue());
 		}
 	}
 	
@@ -100,7 +107,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 			return;
 		}
 		
-		ArrayList<ITextComponent> info = new ArrayList<>();
+		List<ITextComponent> info = new ArrayList<>();
 		for(int i = 0; i < m.info.length; i++)
 		{
 			info.add(ITextComponent.Serializer.jsonToComponent(m.info[i]));
@@ -109,11 +116,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 		p.receiveInfo(info);
 		
 		p.lastArmor.clear();
-		
-		for(int i = 0; i < m.armor.length; i++)
-		{
-			if(m.armor[i] != null) { p.lastArmor.put(i, m.armor[i].copy()); }
-		}
+		p.lastArmor.putAll(m.armor);
 		
 		FTBLibClient.onGuiClientAction();
 	}

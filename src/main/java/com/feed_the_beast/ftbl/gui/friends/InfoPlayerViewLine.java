@@ -12,12 +12,16 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
+
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 23.03.2016.
@@ -75,10 +79,12 @@ public class InfoPlayerViewLine extends InfoTextLine
 				}
 				else
 				{
-					for(int i = 0; i < 4; i++)
-						player.inventory.armorInventory[i] = playerLM.lastArmor.get(i);
-					player.inventory.mainInventory[0] = playerLM.lastArmor.get(4);
-					player.inventory.currentItem = 0;
+					player.inventory.clear();
+					
+					for(Map.Entry<EntityEquipmentSlot, ItemStack> e : playerLM.lastArmor.entrySet())
+					{
+						player.setItemStackToSlot(e.getKey(), e.getValue());
+					}
 				}
 			}
 			

@@ -1,54 +1,57 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.api.events.ForgePlayerDataEvent;
+import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityDispatcher;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public abstract class ForgePlayer implements Comparable<ForgePlayer>
+public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilityProvider
 {
 	private GameProfile gameProfile;
-	public final List<UUID> friends;
-	public final Map<Integer, ItemStack> lastArmor;
-	Map<String, ForgePlayerData> customData;
+	public final Collection<UUID> friends;
+	public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
+	CapabilityDispatcher capabilities;
 	
 	ForgePlayer(GameProfile p)
 	{
 		setProfile(p);
-		friends = new ArrayList<>();
+		friends = new HashSet<>();
 		lastArmor = new HashMap<>();
 	}
 	
 	public void init()
 	{
-		customData = new HashMap<>();
-		ForgePlayerDataEvent event = new ForgePlayerDataEvent(this);
+		ForgePlayerEvent.AttachCapabilities event = new ForgePlayerEvent.AttachCapabilities(this);
 		MinecraftForge.EVENT_BUS.post(event);
-		customData = Collections.unmodifiableMap(event.getMap());
+		capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
 	}
 	
-	public final Collection<ForgePlayerData> customData()
-	{ return customData.values(); }
-	
-	public final ForgePlayerData getData(String id)
+	@Override
+	public final boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
 	{
-		if(id == null || id.isEmpty()) { return null; }
-		return customData.get(id);
+		return capabilities != null && capabilities.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public final <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
+	{
+		return capabilities == null ? null : capabilities.getCapability(capability, facing);
 	}
 	
 	public abstract Side getSide();
@@ -106,9 +109,9 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	public boolean equalsPlayer(ForgePlayer p)
 	{ return p != null && (p == this || gameProfile.getId().equals(p.gameProfile.getId())); }
 	
-	public List<ForgePlayer> getFriends()
+	public Collection<ForgePlayer> getFriends()
 	{
-		ArrayList<ForgePlayer> list = new ArrayList<>();
+		Collection<ForgePlayer> c = new HashSet<>();
 		
 		for(UUID id : friends)
 		{
@@ -116,26 +119,26 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 			
 			if(p != null)
 			{
-				list.add(p);
+				c.add(p);
 			}
 		}
 		
-		return list;
+		return c;
 	}
 	
-	public List<ForgePlayer> getOtherFriends()
+	public Collection<ForgePlayer> getOtherFriends()
 	{
-		List<ForgePlayer> l = new ArrayList<>();
+		Collection<ForgePlayer> c = new HashSet<>();
 		
 		for(ForgePlayer p : getWorld().playerMap.values())
 		{
 			if(!p.equalsPlayer(this) && p.isFriendRaw(this))
 			{
-				l.add(p);
+				c.add(p);
 			}
 		}
 		
-		return l;
+		return c;
 	}
 	
 	public boolean isMCPlayer()
@@ -148,17 +151,14 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 			lastArmor.clear();
 			EntityPlayer ep = getPlayer();
 			
-			for(int i = 0; i < 4; i++)
+			for(EntityEquipmentSlot e : EntityEquipmentSlot.values())
 			{
-				if(ep.inventory.armorInventory[i] != null)
+				ItemStack is = ep.getItemStackFromSlot(e);
+				
+				if(is != null)
 				{
-					lastArmor.put(i, ep.inventory.armorInventory[i].copy());
+					lastArmor.put(e, is.copy());
 				}
-			}
-			
-			if(ep.inventory.getCurrentItem() != null)
-			{
-				lastArmor.put(4, ep.inventory.getCurrentItem().copy());
 			}
 		}
 	}
@@ -166,31 +166,19 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>
 	public void onLoggedIn(boolean firstTime)
 	{
 		updateArmor();
-		
-		for(ForgePlayerData d : customData.values())
-		{
-			d.onLoggedIn(firstTime);
-		}
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedIn(this, firstTime));
 	}
 	
 	public void onLoggedOut()
 	{
 		updateArmor();
-		
-		for(ForgePlayerData d : customData.values())
-		{
-			d.onLoggedOut();
-		}
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedOut(this));
 	}
 	
 	public void onDeath()
 	{
 		updateArmor();
-		
-		for(ForgePlayerData d : customData.values())
-		{
-			d.onDeath();
-		}
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.OnDeath(this));
 	}
 	
 	public void sendUpdate()

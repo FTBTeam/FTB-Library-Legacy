@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerMPInfoEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
@@ -20,6 +21,7 @@ import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -34,6 +36,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -183,18 +186,23 @@ public class ForgePlayerMP extends ForgePlayer
 			}
 		}
 		
+		if(capabilities != null)
+		{
+			capabilities.deserializeNBT(tag.getCompoundTag("Caps"));
+		}
+		
 		lastArmor.clear();
 		
 		if(tag.hasKey("LastItems"))
 		{
-			ItemStack[] lastArmorItems = new ItemStack[5];
-			LMInvUtils.readItemsFromNBT(lastArmorItems, tag, "LastItems");
+			ItemStack[] lastArmorItems = new ItemStack[EntityEquipmentSlot.values().length];
+			LMInvUtils.readItemsFromNBT(lastArmorItems, tag, "Armor");
 			
-			for(int i = 0; i < 5; i++)
+			for(int i = 0; i < lastArmorItems.length; i++)
 			{
 				if(lastArmorItems[i] != null)
 				{
-					lastArmor.put(i, lastArmorItems[i]);
+					lastArmor.put(EntityEquipmentSlot.values()[i], lastArmorItems[i]);
 				}
 			}
 		}
@@ -232,37 +240,20 @@ public class ForgePlayerMP extends ForgePlayer
 			tag.setTag("Friends", tagList);
 		}
 		
-		if(!customData.isEmpty())
+		if(capabilities != null)
 		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			NBTTagCompound tag2;
-			
-			for(ForgePlayerData d : customData.values())
-			{
-				tag2 = new NBTTagCompound();
-				d.writeToServer(tag2);
-				
-				if(!tag2.hasNoTags())
-				{
-					tag1.setTag(d.getID(), tag2);
-				}
-			}
-			
-			if(!tag1.hasNoTags())
-			{
-				tag.setTag("Custom", tag1);
-			}
+			tag.setTag("Caps", capabilities.serializeNBT());
 		}
 		
 		if(!lastArmor.isEmpty())
 		{
-			ItemStack[] lastArmorItems = new ItemStack[5];
-			for(Map.Entry<Integer, ItemStack> e : lastArmor.entrySet())
+			ItemStack[] lastArmorItems = new ItemStack[EntityEquipmentSlot.values().length];
+			for(Map.Entry<EntityEquipmentSlot, ItemStack> e : lastArmor.entrySet())
 			{
-				lastArmorItems[e.getKey()] = e.getValue();
+				lastArmorItems[e.getKey().ordinal()] = e.getValue();
 			}
 			
-			LMInvUtils.writeItemsToNBT(lastArmorItems, tag, "LastItems");
+			LMInvUtils.writeItemsToNBT(lastArmorItems, tag, "Armor");
 		}
 		
 		stats.save(tag);
@@ -282,26 +273,12 @@ public class ForgePlayerMP extends ForgePlayer
 	{
 		refreshStats();
 		
-		if(!customData.isEmpty())
+		NBTTagCompound syncData = new NBTTagCompound();
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, syncData, self));
+		
+		if(!syncData.hasNoTags())
 		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			NBTTagCompound tag2;
-			
-			for(ForgePlayerData d : customData.values())
-			{
-				tag2 = new NBTTagCompound();
-				d.writeToNet(tag2, self);
-				
-				if(!tag2.hasNoTags())
-				{
-					tag1.setTag(d.getID(), tag2);
-				}
-			}
-			
-			if(!tag1.hasNoTags())
-			{
-				tag.setTag("C", tag1);
-			}
+			tag.setTag("SY", syncData);
 		}
 		
 		//Rank rank = getRank();
@@ -320,7 +297,7 @@ public class ForgePlayerMP extends ForgePlayer
 			tag.setTag("F", list);
 		}
 		
-		List<ForgePlayer> otherFriends = getOtherFriends();
+		Collection<ForgePlayer> otherFriends = getOtherFriends();
 		
 		if(!otherFriends.isEmpty())
 		{
