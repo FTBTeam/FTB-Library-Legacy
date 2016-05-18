@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl;
+package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.paint.IPaintable;
 import com.feed_the_beast.ftbl.api.paint.IPainterItem;

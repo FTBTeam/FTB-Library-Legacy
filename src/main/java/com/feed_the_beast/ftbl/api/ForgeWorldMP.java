@@ -78,8 +78,8 @@ public final class ForgeWorldMP extends ForgeWorld
         NBTTagCompound nbt = LMNBTUtils.readTag(new File(latmodFolder, "LMWorld.dat"));
         
         playerMap.clear();
-        
-        if(capabilities != null)
+    
+        if (capabilities != null && nbt != null)
         {
             capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
         }
@@ -116,7 +116,7 @@ public final class ForgeWorldMP extends ForgeWorld
         FTBLib.dev_logger.info("ForgeWorldMP Saved: " + group);
         
 		/*
-		
+        
 		if(!customData.isEmpty())
 		{
 			JsonObject customGroup = new JsonObject();

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.paint;
 
-import com.feed_the_beast.ftbl.FTBLibCapabilities;
+import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.LangKey;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

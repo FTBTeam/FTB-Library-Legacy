@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.GameModes;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
