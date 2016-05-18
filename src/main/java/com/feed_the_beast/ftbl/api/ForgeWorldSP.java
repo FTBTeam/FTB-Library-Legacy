@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.mojang.authlib.GameProfile;
@@ -8,6 +9,7 @@ import latmod.lib.LMUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -101,22 +103,6 @@ public final class ForgeWorldSP extends ForgeWorld
 		}
 		
 		serverDataIDs.clear();
-		
-		if(tag.hasKey("SFWD"))
-		{
-			NBTTagCompound tag1 = tag.getCompoundTag("SFWD");
-			serverDataIDs.addAll(tag1.getKeySet());
-			
-			for(String s : serverDataIDs)
-			{
-				if(customData.containsKey(s))
-				{
-					NBTTagCompound tag2 = tag1.getCompoundTag(s);
-					customData.get(s).readFromNet(tag2, login);
-				}
-			}
-		}
-		
-		//customCommonData.read(io);
+		MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.Sync(this, tag.getCompoundTag("SY"), clientPlayer, login));
 	}
 }

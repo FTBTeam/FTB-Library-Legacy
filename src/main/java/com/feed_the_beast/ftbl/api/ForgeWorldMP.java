@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.FTBLibEventHandler;
+import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.google.gson.JsonElement;
@@ -9,10 +9,10 @@ import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMUtils;
-import latmod.lib.util.Phase;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,7 +21,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,20 +36,6 @@ public final class ForgeWorldMP extends ForgeWorld
 		super(Side.SERVER);
 		latmodFolder = f;
 		currentMode = GameModes.instance().defaultMode;
-	}
-	
-	@Override
-	public void init()
-	{
-		super.init();
-		
-		for(ForgeWorldData d : customData.values())
-		{
-			if(d instanceof IWorldTick)
-			{
-				FTBLibEventHandler.ticking.add((IWorldTick) d);
-			}
-		}
 	}
 	
 	@Override
@@ -88,27 +73,9 @@ public final class ForgeWorldMP extends ForgeWorld
 		}
 		
 		NBTTagCompound nbt = LMNBTUtils.readTag(new File(latmodFolder, "LMWorld.dat"));
-		Set<Map.Entry<String, NBTBase>> customDataSet = null;
 		
 		playerMap.clear();
-		
-		if(nbt != null)
-		{
-			customDataSet = LMNBTUtils.entrySet(nbt.getCompoundTag("Custom"));
-			
-			if(!customData.isEmpty() && !customDataSet.isEmpty())
-			{
-				for(Map.Entry<String, NBTBase> entry : customDataSet)
-				{
-					ForgeWorldData d = customData.get(entry.getKey());
-					
-					if(d != null)
-					{
-						d.loadData((NBTTagCompound) entry.getValue(), Phase.PRE);
-					}
-				}
-			}
-		}
+		capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
 		
 		for(Map.Entry<String, NBTBase> entry : LMNBTUtils.entrySet(LMNBTUtils.readTag(new File(latmodFolder, "LMPlayers.dat"))))
 		{
@@ -129,21 +96,7 @@ public final class ForgeWorldMP extends ForgeWorld
 			}
 		}
 		
-		if(nbt != null && customDataSet != null)
-		{
-			if(!customData.isEmpty() && !customDataSet.isEmpty())
-			{
-				for(Map.Entry<String, NBTBase> entry : customDataSet)
-				{
-					ForgeWorldData d = customData.get(entry.getKey());
-					
-					if(d != null)
-					{
-						d.loadData((NBTTagCompound) entry.getValue(), Phase.POST);
-					}
-				}
-			}
-		}
+		MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnPostLoaded(this));
 	}
 	
 	public void save() throws Exception
@@ -261,24 +214,12 @@ public final class ForgeWorldMP extends ForgeWorld
 			}
 		}
 		
-		if(!customData.isEmpty())
+		NBTTagCompound syncedData = new NBTTagCompound();
+		MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.Sync(this, syncedData, self, login));
+		
+		if(!syncedData.hasNoTags())
 		{
-			tag1 = new NBTTagCompound();
-			
-			for(ForgeWorldData d : customData.values())
-			{
-				if(d.syncID())
-				{
-					tag2 = new NBTTagCompound();
-					d.writeToNet(tag2, self, login);
-					tag1.setTag(d.getID(), tag2);
-				}
-			}
-			
-			if(!tag1.hasNoTags())
-			{
-				tag.setTag("SFWD", tag1);
-			}
+			tag.setTag("SY", syncedData);
 		}
 	}
 	

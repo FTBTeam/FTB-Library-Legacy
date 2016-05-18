@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
-import com.feed_the_beast.ftbl.api.events.ForgePlayerSPInfoEvent;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
@@ -81,12 +80,12 @@ public class ForgePlayerSP extends ForgePlayer
 	{
 		clientInfo.clear();
 		
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info));
+		
 		for(ITextComponent c : info)
 		{
 			clientInfo.add(c.getFormattedText());
 		}
-		
-		MinecraftForge.EVENT_BUS.post(new ForgePlayerSPInfoEvent(this, clientInfo));
 	}
 	
 	public void readFromNet(NBTTagCompound tag, boolean self)

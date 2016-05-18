@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
-import com.feed_the_beast.ftbl.api.events.ForgePlayerMPInfoEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
@@ -50,7 +49,7 @@ public class ForgePlayerMP extends ForgePlayer
 {
 	public final ForgePlayerStats stats;
 	public BlockDimPos lastPos, lastDeath;
-	private EntityPlayerMP entityPlayer = null;
+	private EntityPlayerMP entityPlayer;
 	
 	public static ForgePlayerMP get(Object o) throws CommandException
 	{
@@ -149,7 +148,7 @@ public class ForgePlayerMP extends ForgePlayer
 			}
 		}
 		
-		MinecraftForge.EVENT_BUS.post(new ForgePlayerMPInfoEvent(this, info));
+		MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info));
 		
 		/*
 		if(owner.getRank().config.show_rank.get())

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.events.ForgeWorldDataEvent;
+import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMListUtils;
@@ -9,12 +9,13 @@ import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.CapabilityDispatcher;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,13 +25,13 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public abstract class ForgeWorld
+public abstract class ForgeWorld implements ICapabilityProvider
 {
 	public final Side side;
 	protected UUID worldID;
 	protected GameMode currentMode;
 	public final Map<UUID, ForgePlayer> playerMap;
-	final Map<String, ForgeWorldData> customData;
+	CapabilityDispatcher capabilities;
 	
 	public static ForgeWorld getFrom(Side side)
 	{
@@ -48,10 +49,6 @@ public abstract class ForgeWorld
 		worldID = null;
 		currentMode = new GameMode("default");
 		playerMap = new HashMap<>();
-		
-		ForgeWorldDataEvent event = new ForgeWorldDataEvent(this);
-		MinecraftForge.EVENT_BUS.post(event);
-		customData = Collections.unmodifiableMap(event.getMap());
 	}
 	
 	public final UUID getID()
@@ -64,22 +61,24 @@ public abstract class ForgeWorld
 		return worldID;
 	}
 	
-	public final Collection<ForgeWorldData> customData()
-	{ return customData.values(); }
-	
-	public final ForgeWorldData getData(String id)
-	{
-		if(id == null || id.isEmpty()) { return null; }
-		return customData.get(id);
-	}
-	
 	public void init()
 	{
-		for(ForgeWorldData d : customData.values())
-		{
-			d.isLoaded = true;
-			d.onLoaded(this);
-		}
+		ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
+		MinecraftForge.EVENT_BUS.post(event);
+		capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
+		MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnLoaded(this));
+	}
+	
+	@Override
+	public final boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
+	{
+		return capabilities != null && capabilities.hasCapability(capability, facing);
+	}
+	
+	@Override
+	public final <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
+	{
+		return capabilities == null ? null : capabilities.getCapability(capability, facing);
 	}
 	
 	public abstract World getMCWorld();
@@ -169,12 +168,7 @@ public abstract class ForgeWorld
 	
 	public void onClosed()
 	{
-		for(ForgeWorldData d : customData.values())
-		{
-			d.onClosed();
-			d.isLoaded = false;
-		}
-		
+		MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnClosed(this));
 		playerMap.clear();
 	}
 }

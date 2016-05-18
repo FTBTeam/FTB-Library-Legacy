@@ -2,8 +2,11 @@ package com.feed_the_beast.ftbl.api.events;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+
+import java.util.List;
 
 /**
  * Created by LatvianModder on 18.05.2016.
@@ -65,6 +68,17 @@ public abstract class ForgePlayerEvent extends Event
 		public OnDeath(ForgePlayer p)
 		{
 			super(p);
+		}
+	}
+	
+	public static class AddInfo extends ForgePlayerEvent
+	{
+		public final List<ITextComponent> list;
+		
+		public AddInfo(ForgePlayer p, List<ITextComponent> l)
+		{
+			super(p);
+			list = l;
 		}
 	}
 }
