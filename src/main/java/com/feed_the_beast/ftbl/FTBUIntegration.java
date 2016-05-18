@@ -7,8 +7,8 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public interface FTBUIntegration // FTBLIntegration
 {
-	void onReloaded(ReloadEvent e);
-	void renderWorld(float pt);
-	void onTooltip(ItemTooltipEvent e);
-	boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick);
+    void onReloaded(ReloadEvent e);
+    void renderWorld(float pt);
+    void onTooltip(ItemTooltipEvent e);
+    boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick);
 }

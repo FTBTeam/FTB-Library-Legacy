@@ -13,72 +13,72 @@ import java.util.List;
  */
 public abstract class ForgePlayerEvent extends Event
 {
-	public final ForgePlayer player;
-	
-	public ForgePlayerEvent(ForgePlayer p)
-	{
-		player = p;
-	}
-	
-	public static class AttachCapabilities extends AttachCapabilitiesEvent
-	{
-		public final ForgePlayer player;
-		
-		public AttachCapabilities(ForgePlayer p)
-		{
-			super(p);
-			player = p;
-		}
-	}
-	
-	public static class Sync extends ForgePlayerEvent
-	{
-		public final boolean self;
-		public final NBTTagCompound data;
-		
-		public Sync(ForgePlayer p, NBTTagCompound d, boolean s)
-		{
-			super(p);
-			data = d;
-			self = s;
-		}
-	}
-	
-	public static class LoggedIn extends ForgePlayerEvent
-	{
-		public final boolean first;
-		
-		public LoggedIn(ForgePlayer p, boolean f)
-		{
-			super(p);
-			first = f;
-		}
-	}
-	
-	public static class LoggedOut extends ForgePlayerEvent
-	{
-		public LoggedOut(ForgePlayer p)
-		{
-			super(p);
-		}
-	}
-	
-	public static class OnDeath extends ForgePlayerEvent
-	{
-		public OnDeath(ForgePlayer p)
-		{
-			super(p);
-		}
-	}
-	
-	public static class AddInfo extends ForgePlayerEvent
-	{
-		public final List<ITextComponent> list;
-		
-		public AddInfo(ForgePlayer p, List<ITextComponent> l)
-		{
-			super(p);
-			list = l;
-		}
-	}
+    public final ForgePlayer player;
+    
+    public ForgePlayerEvent(ForgePlayer p)
+    {
+        player = p;
+    }
+    
+    public static class AttachCapabilities extends AttachCapabilitiesEvent
+    {
+        public final ForgePlayer player;
+        
+        public AttachCapabilities(ForgePlayer p)
+        {
+            super(p);
+            player = p;
+        }
+    }
+    
+    public static class Sync extends ForgePlayerEvent
+    {
+        public final boolean self;
+        public final NBTTagCompound data;
+        
+        public Sync(ForgePlayer p, NBTTagCompound d, boolean s)
+        {
+            super(p);
+            data = d;
+            self = s;
+        }
+    }
+    
+    public static class LoggedIn extends ForgePlayerEvent
+    {
+        public final boolean first;
+        
+        public LoggedIn(ForgePlayer p, boolean f)
+        {
+            super(p);
+            first = f;
+        }
+    }
+    
+    public static class LoggedOut extends ForgePlayerEvent
+    {
+        public LoggedOut(ForgePlayer p)
+        {
+            super(p);
+        }
+    }
+    
+    public static class OnDeath extends ForgePlayerEvent
+    {
+        public OnDeath(ForgePlayer p)
+        {
+            super(p);
+        }
+    }
+    
+    public static class AddInfo extends ForgePlayerEvent
+    {
+        public final List<ITextComponent> list;
+        
+        public AddInfo(ForgePlayer p, List<ITextComponent> l)
+        {
+            super(p);
+            list = l;
+        }
+    }
 }

@@ -15,45 +15,45 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 {
-	public JsonElement json;
-	
-	public MessageNotifyPlayer() { }
-	
-	public MessageNotifyPlayer(Notification n)
-	{
-		json = n.getSerializableElement();
-	}
-	
-	@Override
-	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET; }
-	
-	@Override
-	public void fromBytes(ByteBuf io)
-	{
-		json = readJsonElement(io);
-	}
-	
-	@Override
-	public void toBytes(ByteBuf io)
-	{
-		writeJsonElement(io, json);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onMessage(MessageNotifyPlayer m, Minecraft mc)
-	{
-		if(FTBLibModClient.notifications.get() != EnumScreen.OFF)
-		{
-			Notification n = Notification.deserialize(m.json);
-			
-			if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) { ClientNotifications.add(n); }
-			else
-			{
-				FTBLibClient.mc.thePlayer.addChatMessage(n.title);
-				if(n.desc != null) { FTBLibClient.mc.thePlayer.addChatMessage(n.desc); }
-			}
-		}
-	}
+    public JsonElement json;
+    
+    public MessageNotifyPlayer() { }
+    
+    public MessageNotifyPlayer(Notification n)
+    {
+        json = n.getSerializableElement();
+    }
+    
+    @Override
+    public LMNetworkWrapper getWrapper()
+    { return FTBLibNetHandler.NET; }
+    
+    @Override
+    public void fromBytes(ByteBuf io)
+    {
+        json = readJsonElement(io);
+    }
+    
+    @Override
+    public void toBytes(ByteBuf io)
+    {
+        writeJsonElement(io, json);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onMessage(MessageNotifyPlayer m, Minecraft mc)
+    {
+        if(FTBLibModClient.notifications.get() != EnumScreen.OFF)
+        {
+            Notification n = Notification.deserialize(m.json);
+            
+            if(FTBLibModClient.notifications.get() == EnumScreen.SCREEN) { ClientNotifications.add(n); }
+            else
+            {
+                FTBLibClient.mc.thePlayer.addChatMessage(n.title);
+                if(n.desc != null) { FTBLibClient.mc.thePlayer.addChatMessage(n.desc); }
+            }
+        }
+    }
 }

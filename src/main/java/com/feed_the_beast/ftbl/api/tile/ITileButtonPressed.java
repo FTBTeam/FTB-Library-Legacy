@@ -9,5 +9,5 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public interface ITileButtonPressed
 {
-	void handleButton(EntityPlayerMP player, int ID, MouseButton button, NBTTagCompound data);
+    void handleButton(EntityPlayerMP player, int ID, MouseButton button, NBTTagCompound data);
 }

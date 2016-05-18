@@ -7,5 +7,5 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface IResourceLocationObject
 {
-	ResourceLocation getResourceLocation();
+    ResourceLocation getResourceLocation();
 }

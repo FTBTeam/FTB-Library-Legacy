@@ -18,59 +18,59 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
  */
 public class FTBLibCapabilities
 {
-	private static boolean enabled = false;
-	
-	@CapabilityInject(IPaintable.class)
-	public static Capability<IPaintable> PAINTABLE_TILE_CAPABILITY = null;
-	
-	@CapabilityInject(IPainterItem.class)
-	public static Capability<IPainterItem> PAINTER_ITEM_CAPABILITY = null;
-	
-	public static void enable()
-	{
-		if(enabled)
-		{
-			return;
-		}
-		
-		enabled = true;
-		
-		CapabilityManager.INSTANCE.register(IPaintable.class, new Capability.IStorage<IPaintable>()
-		{
-			@Override
-			public NBTBase writeNBT(Capability<IPaintable> capability, IPaintable instance, EnumFacing side)
-			{
-				IBlockState paint = instance.getPaint(side);
-				return new NBTTagInt(paint == null ? 0 : Block.getStateId(paint));
-			}
-			
-			@Override
-			public void readNBT(Capability<IPaintable> capability, IPaintable instance, EnumFacing side, NBTBase base)
-			{
-				int paint = ((NBTTagInt) base).getInt();
-				instance.setPaint(side, paint == 0 ? null : Block.getStateById(paint));
-			}
-		}, () -> {
-			return new SinglePaintStorage();
-		});
-		
-		CapabilityManager.INSTANCE.register(IPainterItem.class, new Capability.IStorage<IPainterItem>()
-		{
-			@Override
-			public NBTBase writeNBT(Capability<IPainterItem> capability, IPainterItem instance, EnumFacing side)
-			{
-				IBlockState paint = instance.getPaint();
-				return new NBTTagInt(paint == null ? 0 : Block.getStateId(paint));
-			}
-			
-			@Override
-			public void readNBT(Capability<IPainterItem> capability, IPainterItem instance, EnumFacing side, NBTBase base)
-			{
-				int paint = ((NBTTagInt) base).getInt();
-				instance.setPaint(paint == 0 ? null : Block.getStateById(paint));
-			}
-		}, () -> {
-			return new PainterItemStorage();
-		});
-	}
+    private static boolean enabled = false;
+    
+    @CapabilityInject(IPaintable.class)
+    public static Capability<IPaintable> PAINTABLE_TILE_CAPABILITY = null;
+    
+    @CapabilityInject(IPainterItem.class)
+    public static Capability<IPainterItem> PAINTER_ITEM_CAPABILITY = null;
+    
+    public static void enable()
+    {
+        if(enabled)
+        {
+            return;
+        }
+        
+        enabled = true;
+        
+        CapabilityManager.INSTANCE.register(IPaintable.class, new Capability.IStorage<IPaintable>()
+        {
+            @Override
+            public NBTBase writeNBT(Capability<IPaintable> capability, IPaintable instance, EnumFacing side)
+            {
+                IBlockState paint = instance.getPaint(side);
+                return new NBTTagInt(paint == null ? 0 : Block.getStateId(paint));
+            }
+            
+            @Override
+            public void readNBT(Capability<IPaintable> capability, IPaintable instance, EnumFacing side, NBTBase base)
+            {
+                int paint = ((NBTTagInt) base).getInt();
+                instance.setPaint(side, paint == 0 ? null : Block.getStateById(paint));
+            }
+        }, () -> {
+            return new SinglePaintStorage();
+        });
+        
+        CapabilityManager.INSTANCE.register(IPainterItem.class, new Capability.IStorage<IPainterItem>()
+        {
+            @Override
+            public NBTBase writeNBT(Capability<IPainterItem> capability, IPainterItem instance, EnumFacing side)
+            {
+                IBlockState paint = instance.getPaint();
+                return new NBTTagInt(paint == null ? 0 : Block.getStateId(paint));
+            }
+            
+            @Override
+            public void readNBT(Capability<IPainterItem> capability, IPainterItem instance, EnumFacing side, NBTBase base)
+            {
+                int paint = ((NBTTagInt) base).getInt();
+                instance.setPaint(paint == 0 ? null : Block.getStateById(paint));
+            }
+        }, () -> {
+            return new PainterItemStorage();
+        });
+    }
 }

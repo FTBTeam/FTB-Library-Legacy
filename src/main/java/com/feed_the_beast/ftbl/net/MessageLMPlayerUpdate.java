@@ -17,47 +17,47 @@ import java.util.UUID;
 
 public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate>
 {
-	public UUID playerID;
-	public boolean isSelf;
-	public NBTTagCompound data;
-	
-	public MessageLMPlayerUpdate() { }
-	
-	public MessageLMPlayerUpdate(ForgePlayerMP p, boolean self)
-	{
-		this();
-		playerID = p.getProfile().getId();
-		isSelf = self;
-		data = new NBTTagCompound();
-		p.writeToNet(data, self);
-	}
-	
-	@Override
-	public LMNetworkWrapper getWrapper()
-	{ return FTBLibNetHandler.NET; }
-	
-	@Override
-	public void fromBytes(ByteBuf io)
-	{
-		playerID = readUUID(io);
-		isSelf = io.readBoolean();
-		data = ByteBufUtils.readTag(io);
-	}
-	
-	@Override
-	public void toBytes(ByteBuf io)
-	{
-		writeUUID(io, playerID);
-		io.writeBoolean(isSelf);
-		writeTag(io, data);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void onMessage(MessageLMPlayerUpdate m, Minecraft mc)
-	{
-		ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
-		p.readFromNet(m.data, m.isSelf);
-		FTBLibClient.onGuiClientAction();
-	}
+    public UUID playerID;
+    public boolean isSelf;
+    public NBTTagCompound data;
+    
+    public MessageLMPlayerUpdate() { }
+    
+    public MessageLMPlayerUpdate(ForgePlayerMP p, boolean self)
+    {
+        this();
+        playerID = p.getProfile().getId();
+        isSelf = self;
+        data = new NBTTagCompound();
+        p.writeToNet(data, self);
+    }
+    
+    @Override
+    public LMNetworkWrapper getWrapper()
+    { return FTBLibNetHandler.NET; }
+    
+    @Override
+    public void fromBytes(ByteBuf io)
+    {
+        playerID = readUUID(io);
+        isSelf = io.readBoolean();
+        data = ByteBufUtils.readTag(io);
+    }
+    
+    @Override
+    public void toBytes(ByteBuf io)
+    {
+        writeUUID(io, playerID);
+        io.writeBoolean(isSelf);
+        writeTag(io, data);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void onMessage(MessageLMPlayerUpdate m, Minecraft mc)
+    {
+        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
+        p.readFromNet(m.data, m.isSelf);
+        FTBLibClient.onGuiClientAction();
+    }
 }

@@ -11,12 +11,12 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdReload extends CommandLM
 {
-	public CmdReload()
-	{ super(FTBLibConfigCmd.reload_name.getAsString(), CommandLevel.OP); }
-	
-	@Override
-	public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
-	{
-		FTBLib.reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT, false);
-	}
+    public CmdReload()
+    { super(FTBLibConfigCmd.reload_name.getAsString(), CommandLevel.OP); }
+    
+    @Override
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    {
+        FTBLib.reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT, false);
+    }
 }

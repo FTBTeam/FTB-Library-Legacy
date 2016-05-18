@@ -7,5 +7,5 @@ import latmod.lib.net.LMConnection;
  */
 public interface IResourceProvider
 {
-	LMConnection getConnection(String s);
+    LMConnection getConnection(String s);
 }

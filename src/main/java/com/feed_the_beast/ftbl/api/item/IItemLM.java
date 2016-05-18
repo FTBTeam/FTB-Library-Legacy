@@ -7,10 +7,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface IItemLM extends IIDObject
 {
-	Item getItem();
-	void onPostLoaded();
-	void loadRecipes();
-	
-	@SideOnly(Side.CLIENT)
-	void loadModels();
+    Item getItem();
+    void onPostLoaded();
+    void loadRecipes();
+    
+    @SideOnly(Side.CLIENT)
+    void loadModels();
 }

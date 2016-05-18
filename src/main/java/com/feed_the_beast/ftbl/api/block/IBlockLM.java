@@ -5,6 +5,6 @@ import net.minecraft.item.ItemBlock;
 
 public interface IBlockLM extends IItemLM
 {
-	ItemBlock createItemBlock();
-	void loadTiles();
+    ItemBlock createItemBlock();
+    void loadTiles();
 }

@@ -15,30 +15,30 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class InfoTextLine implements IJsonSerializable
 {
-	public final InfoPage page;
-	private String text;
-	
-	public InfoTextLine(InfoPage c, String s)
-	{
-		page = c;
-		text = s;
-	}
-	
-	public ITextComponent getText()
-	{ return new TextComponentString(text); }
-	
-	@SideOnly(Side.CLIENT)
-	public ButtonInfoTextLine createWidget(GuiInfo gui)
-	{ return new ButtonInfoTextLine(gui, this); }
-	
-	@Override
-	public void fromJson(JsonElement e)
-	{ text = e.getAsString(); }
-	
-	@Override
-	public JsonElement getSerializableElement()
-	{ return new JsonPrimitive(text); }
-	
-	public final InfoTextLine copy(InfoPage p)
-	{ return p.createLine(getSerializableElement()); }
+    public final InfoPage page;
+    private String text;
+    
+    public InfoTextLine(InfoPage c, String s)
+    {
+        page = c;
+        text = s;
+    }
+    
+    public ITextComponent getText()
+    { return new TextComponentString(text); }
+    
+    @SideOnly(Side.CLIENT)
+    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    { return new ButtonInfoTextLine(gui, this); }
+    
+    @Override
+    public void fromJson(JsonElement e)
+    { text = e.getAsString(); }
+    
+    @Override
+    public JsonElement getSerializableElement()
+    { return new JsonPrimitive(text); }
+    
+    public final InfoTextLine copy(InfoPage p)
+    { return p.createLine(getSerializableElement()); }
 }

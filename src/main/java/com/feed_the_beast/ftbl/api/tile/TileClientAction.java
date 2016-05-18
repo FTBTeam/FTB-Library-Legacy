@@ -11,10 +11,10 @@ import net.minecraft.util.ResourceLocation;
  */
 public abstract class TileClientAction extends FinalResourceLocationObject
 {
-	public TileClientAction(ResourceLocation id)
-	{
-		super(id);
-	}
-	
-	public abstract void onAction(TileEntity te, NBTTagCompound data, EntityPlayerMP player);
+    public TileClientAction(ResourceLocation id)
+    {
+        super(id);
+    }
+    
+    public abstract void onAction(TileEntity te, NBTTagCompound data, EntityPlayerMP player);
 }

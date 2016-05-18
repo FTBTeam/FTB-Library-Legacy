@@ -9,10 +9,10 @@ import java.util.Comparator;
  */
 public class ResourceLocationComparator implements Comparator<ResourceLocation>
 {
-	@Override
-	public int compare(ResourceLocation o1, ResourceLocation o2)
-	{
-		int i = o1.getResourceDomain().compareToIgnoreCase(o2.getResourceDomain());
-		return (i == 0) ? o1.getResourcePath().compareToIgnoreCase(o2.getResourcePath()) : i;
-	}
+    @Override
+    public int compare(ResourceLocation o1, ResourceLocation o2)
+    {
+        int i = o1.getResourceDomain().compareToIgnoreCase(o2.getResourceDomain());
+        return (i == 0) ? o1.getResourcePath().compareToIgnoreCase(o2.getResourcePath()) : i;
+    }
 }

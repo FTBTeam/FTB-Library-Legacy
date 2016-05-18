@@ -13,36 +13,36 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ForgePlayerSPSelf extends ForgePlayerSP
 {
-	public ForgePlayerSPSelf(GameProfile p)
-	{
-		super(p);
-	}
-	
-	@Override
-	public boolean isClientPlayer()
-	{ return true; }
-	
-	@Override
-	public boolean isOnline()
-	{ return true; }
-	
-	@Override
-	public EntityPlayer getPlayer()
-	{ return Minecraft.getMinecraft().thePlayer; }
-	
-	@Override
-	public ForgePlayerSPSelf toPlayerSPSelf()
-	{ return this; }
-	
+    public ForgePlayerSPSelf(GameProfile p)
+    {
+        super(p);
+    }
+    
+    @Override
+    public boolean isClientPlayer()
+    { return true; }
+    
+    @Override
+    public boolean isOnline()
+    { return true; }
+    
+    @Override
+    public EntityPlayer getPlayer()
+    { return Minecraft.getMinecraft().thePlayer; }
+    
+    @Override
+    public ForgePlayerSPSelf toPlayerSPSelf()
+    { return this; }
+    
 	/*public Rank getRank()
 	{
 		if(rank == null) rank = new Rank("Client");
 		return rank;
 	}*/
-	
-	@Override
-	public void readFromNet(NBTTagCompound tag, boolean self) // LMPlayerServer
-	{
-		super.readFromNet(tag, self);
-	}
+    
+    @Override
+    public void readFromNet(NBTTagCompound tag, boolean self) // LMPlayerServer
+    {
+        super.readFromNet(tag, self);
+    }
 }

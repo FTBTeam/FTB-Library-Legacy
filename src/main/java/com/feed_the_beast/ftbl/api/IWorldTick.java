@@ -7,5 +7,5 @@ import net.minecraft.world.WorldServer;
  */
 public interface IWorldTick
 {
-	void onTick(WorldServer w, long now);
+    void onTick(WorldServer w, long now);
 }

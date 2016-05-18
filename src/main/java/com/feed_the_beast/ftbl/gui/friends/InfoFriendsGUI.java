@@ -20,27 +20,27 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class InfoFriendsGUI extends InfoPage
 {
-	public InfoFriendsGUI()
-	{
-		super("friends_gui");
-		setTitle(new TextComponentString("FriendsGUI"));
-		theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
-		
-		List<ForgePlayer> tempPlayerList = new ArrayList<>();
-		tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());
-		
-		tempPlayerList.remove(ForgeWorldSP.inst.clientPlayer);
-		
-		//if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
-		//else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
-		
-		Collections.sort(tempPlayerList, new ForgePlayerComparators.ByStatus(ForgeWorldSP.inst.clientPlayer));
-		
-		addSub(new InfoFriendsGUISelfPage());
-		
-		for(ForgePlayer p : tempPlayerList)
-		{
-			addSub(new InfoFriendsGUIPage(p.toPlayerSP()));
-		}
-	}
+    public InfoFriendsGUI()
+    {
+        super("friends_gui");
+        setTitle(new TextComponentString("FriendsGUI"));
+        theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
+        
+        List<ForgePlayer> tempPlayerList = new ArrayList<>();
+        tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());
+        
+        tempPlayerList.remove(ForgeWorldSP.inst.clientPlayer);
+        
+        //if(FTBUClient.sort_friends_az.get()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
+        //else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
+        
+        Collections.sort(tempPlayerList, new ForgePlayerComparators.ByStatus(ForgeWorldSP.inst.clientPlayer));
+        
+        addSub(new InfoFriendsGUISelfPage());
+        
+        for(ForgePlayer p : tempPlayerList)
+        {
+            addSub(new InfoFriendsGUIPage(p.toPlayerSP()));
+        }
+    }
 }

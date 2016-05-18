@@ -13,40 +13,40 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public abstract class MessageToClient<E extends MessageToClient<E>> extends MessageLM<E>
 {
-	@Override
-	final Side getReceivingSide()
-	{ return Side.CLIENT; }
-	
-	@Override
-	public final IMessage onMessage(E m, MessageContext ctx)
-	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-		mc.addScheduledTask(() -> onMessage(m, mc));
-		
-		if(MessageLM.logMessages())
-		{
-			
-		}
-		
-		return null;
-	}
-	
-	public void onMessage(E m, Minecraft mc)
-	{
-	}
-	
-	public final void sendTo(EntityPlayerMP ep)
-	{
-		if(ep != null)
-		{
-			getWrapper().sendTo(this, ep);
-		}
-		else
-		{
-			getWrapper().sendToAll(this);
-		}
-	}
-	
-	public final void sendToDimension(DimensionType dim)
-	{ getWrapper().sendToDimension(this, dim); }
+    @Override
+    final Side getReceivingSide()
+    { return Side.CLIENT; }
+    
+    @Override
+    public final IMessage onMessage(E m, MessageContext ctx)
+    {
+        Minecraft mc = FMLClientHandler.instance().getClient();
+        mc.addScheduledTask(() -> onMessage(m, mc));
+        
+        if(MessageLM.logMessages())
+        {
+            
+        }
+        
+        return null;
+    }
+    
+    public void onMessage(E m, Minecraft mc)
+    {
+    }
+    
+    public final void sendTo(EntityPlayerMP ep)
+    {
+        if(ep != null)
+        {
+            getWrapper().sendTo(this, ep);
+        }
+        else
+        {
+            getWrapper().sendToAll(this);
+        }
+    }
+    
+    public final void sendToDimension(DimensionType dim)
+    { getWrapper().sendToDimension(this, dim); }
 }

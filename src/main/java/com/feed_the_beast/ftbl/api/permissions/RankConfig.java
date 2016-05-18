@@ -12,29 +12,29 @@ import latmod.lib.util.FinalIDObject;
  */
 public abstract class RankConfig extends FinalIDObject
 {
-	public RankConfig(String id)
-	{
-		super(ForgePermissionRegistry.getID(id));
-	}
-	
-	public abstract JsonElement getDefaultValue(boolean op);
-	
-	
-	/**
-	 * Player can't be null, but it can be FakePlayer, if implementation supports that
-	 */
-	public final JsonElement get(GameProfile profile)
-	{
-		if(profile == null)
-		{
-			throw new RuntimeException("GameProfile can't be null!");
-		}
-		
-		if(ForgePermissionRegistry.getPermissionHandler() != null)
-		{
-			return ForgePermissionRegistry.getPermissionHandler().handleRankConfig(this, profile);
-		}
-		
-		return getDefaultValue(FTBLib.isOP(profile));
-	}
+    public RankConfig(String id)
+    {
+        super(ForgePermissionRegistry.getID(id));
+    }
+    
+    public abstract JsonElement getDefaultValue(boolean op);
+    
+    
+    /**
+     * Player can't be null, but it can be FakePlayer, if implementation supports that
+     */
+    public final JsonElement get(GameProfile profile)
+    {
+        if(profile == null)
+        {
+            throw new RuntimeException("GameProfile can't be null!");
+        }
+        
+        if(ForgePermissionRegistry.getPermissionHandler() != null)
+        {
+            return ForgePermissionRegistry.getPermissionHandler().handleRankConfig(this, profile);
+        }
+        
+        return getDefaultValue(FTBLib.isOP(profile));
+    }
 }

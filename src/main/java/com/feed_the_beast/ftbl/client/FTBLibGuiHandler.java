@@ -13,25 +13,25 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBLibGuiHandler extends LMGuiHandler
 {
-	public static final FTBLibGuiHandler instance = new FTBLibGuiHandler("FTBL");
-	
-	public static final int DISPLAY_ITEM = 1;
-	public static final int SECURITY = 2;
-	
-	public FTBLibGuiHandler(String s)
-	{ super(s); }
-	
-	@Override
-	public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
-	{
-		return new ContainerEmpty(ep, null);
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
-	{
-		if(id == DISPLAY_ITEM) { return new GuiDisplayItem(ItemDisplay.readFromNBT(data)); }
-		return null;
-	}
+    public static final FTBLibGuiHandler instance = new FTBLibGuiHandler("FTBL");
+    
+    public static final int DISPLAY_ITEM = 1;
+    public static final int SECURITY = 2;
+    
+    public FTBLibGuiHandler(String s)
+    { super(s); }
+    
+    @Override
+    public Container getContainer(EntityPlayer ep, int id, NBTTagCompound data)
+    {
+        return new ContainerEmpty(ep, null);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data)
+    {
+        if(id == DISPLAY_ITEM) { return new GuiDisplayItem(ItemDisplay.readFromNBT(data)); }
+        return null;
+    }
 }

@@ -10,24 +10,24 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public abstract class MessageToServer<E extends MessageToServer<E>> extends MessageLM<E>
 {
-	@Override
-	final Side getReceivingSide()
-	{ return Side.SERVER; }
-	
-	@Override
-	public final IMessage onMessage(E m, MessageContext ctx)
-	{
-		EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
-		ep.mcServer.addScheduledTask(() -> onMessage(m, ep));
-		return null;
-	}
-	
-	public void onMessage(E m, EntityPlayerMP mp)
-	{
-	}
-	
-	public final void sendToServer()
-	{
-		getWrapper().sendToServer(this);
-	}
+    @Override
+    final Side getReceivingSide()
+    { return Side.SERVER; }
+    
+    @Override
+    public final IMessage onMessage(E m, MessageContext ctx)
+    {
+        EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
+        ep.mcServer.addScheduledTask(() -> onMessage(m, ep));
+        return null;
+    }
+    
+    public void onMessage(E m, EntityPlayerMP mp)
+    {
+    }
+    
+    public final void sendToServer()
+    {
+        getWrapper().sendToServer(this);
+    }
 }

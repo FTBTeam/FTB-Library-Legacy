@@ -8,5 +8,5 @@ import net.minecraft.world.IWorldNameable;
  */
 public interface IEditableName extends IWorldNameable
 {
-	boolean setName(String name, ICommandSender player);
+    boolean setName(String name, ICommandSender player);
 }

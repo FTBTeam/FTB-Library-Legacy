@@ -7,16 +7,16 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class ReloadEvent extends Event
 {
-	public final ForgeWorld world;
-	public final ICommandSender sender;
-	public final ReloadType type;
-	public final boolean login;
-	
-	public ReloadEvent(ForgeWorld w, ICommandSender ics, ReloadType t, boolean b)
-	{
-		world = w;
-		sender = ics;
-		type = t;
-		login = b;
-	}
+    public final ForgeWorld world;
+    public final ICommandSender sender;
+    public final ReloadType type;
+    public final boolean login;
+    
+    public ReloadEvent(ForgeWorld w, ICommandSender ics, ReloadType t, boolean b)
+    {
+        world = w;
+        sender = ics;
+        type = t;
+        login = b;
+    }
 }

@@ -9,11 +9,11 @@ import net.minecraft.world.World;
 
 public class WailaDataAccessor
 {
-	public EntityPlayer player;
-	public World world;
-	public RayTraceResult position;
-	public TileEntity tile;
-	public Block block;
-	public int meta;
-	public EnumFacing side;
+    public EntityPlayer player;
+    public World world;
+    public RayTraceResult position;
+    public TileEntity tile;
+    public Block block;
+    public int meta;
+    public EnumFacing side;
 }

@@ -7,30 +7,30 @@ import java.util.List;
 
 public class ShapelessStackArray implements IStackArray
 {
-	public StackArray[] items;
-	
-	public ShapelessStackArray(StackArray... se)
-	{
-		items = se;
-	}
-	
-	public ShapelessStackArray(Object... o)
-	{ this(StackArray.convert(o)); }
-	
-	@Override
-	public boolean matches(ItemStack[] ai)
-	{
-		if(items == null || ai == null) { return false; }
-		if(items.length != ai.length) { return false; }
-		
-		List<StackArray> itemsList = Arrays.asList(items);
-		
-		for(ItemStack anAi : ai) itemsList.remove(anAi);
-		
-		return itemsList.isEmpty();
-	}
-	
-	@Override
-	public StackArray[] getItems()
-	{ return items; }
+    public StackArray[] items;
+    
+    public ShapelessStackArray(StackArray... se)
+    {
+        items = se;
+    }
+    
+    public ShapelessStackArray(Object... o)
+    { this(StackArray.convert(o)); }
+    
+    @Override
+    public boolean matches(ItemStack[] ai)
+    {
+        if(items == null || ai == null) { return false; }
+        if(items.length != ai.length) { return false; }
+        
+        List<StackArray> itemsList = Arrays.asList(items);
+        
+        for(ItemStack anAi : ai) itemsList.remove(anAi);
+        
+        return itemsList.isEmpty();
+    }
+    
+    @Override
+    public StackArray[] getItems()
+    { return items; }
 }

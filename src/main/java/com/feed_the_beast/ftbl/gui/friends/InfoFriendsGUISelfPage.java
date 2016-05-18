@@ -14,31 +14,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 {
-	public InfoFriendsGUISelfPage()
-	{
-		super(ForgeWorldSP.inst.clientPlayer);
-	}
-	
-	@Override
-	public void refreshGui(GuiInfo gui)
-	{
-		clear();
-		
-		text.add(new InfoPlayerViewLine(this, playerLM));
-		
-		if(!playerLM.clientInfo.isEmpty())
-		{
-			for(String s : playerLM.clientInfo)
-				printlnText(s);
-			
-			text.add(null);
-		}
-		
-		text.add(null);
-		
-		for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, true, true))
-		{
-			text.add(new InfoPlayerActionLine(this, playerLM, a));
-		}
-	}
+    public InfoFriendsGUISelfPage()
+    {
+        super(ForgeWorldSP.inst.clientPlayer);
+    }
+    
+    @Override
+    public void refreshGui(GuiInfo gui)
+    {
+        clear();
+        
+        text.add(new InfoPlayerViewLine(this, playerLM));
+        
+        if(!playerLM.clientInfo.isEmpty())
+        {
+            for(String s : playerLM.clientInfo)
+                printlnText(s);
+            
+            text.add(null);
+        }
+        
+        text.add(null);
+        
+        for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, true, true))
+        {
+            text.add(new InfoPlayerActionLine(this, playerLM, a));
+        }
+    }
 }

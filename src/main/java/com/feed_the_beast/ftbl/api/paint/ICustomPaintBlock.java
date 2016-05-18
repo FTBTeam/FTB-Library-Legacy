@@ -6,5 +6,5 @@ import net.minecraft.world.IBlockAccess;
 
 public interface ICustomPaintBlock
 {
-	IBlockState getCustomPaint(IBlockAccess w, IBlockState state, RayTraceResult hit);
+    IBlockState getCustomPaint(IBlockAccess w, IBlockState state, RayTraceResult hit);
 }

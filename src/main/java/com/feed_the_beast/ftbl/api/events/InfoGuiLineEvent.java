@@ -12,13 +12,13 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 @Cancelable
 public class InfoGuiLineEvent extends Event
 {
-	public final InfoPage page;
-	public final JsonObject json;
-	public InfoExtendedTextLine line;
-	
-	public InfoGuiLineEvent(InfoPage p, JsonObject o)
-	{
-		page = p;
-		json = o;
-	}
+    public final InfoPage page;
+    public final JsonObject json;
+    public InfoExtendedTextLine line;
+    
+    public InfoGuiLineEvent(InfoPage p, JsonObject o)
+    {
+        page = p;
+        json = o;
+    }
 }
