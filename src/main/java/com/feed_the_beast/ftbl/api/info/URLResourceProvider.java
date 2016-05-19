@@ -9,8 +9,10 @@ import latmod.lib.net.RequestMethod;
 public class URLResourceProvider implements IResourceProvider
 {
     public static final URLResourceProvider INSTANCE = new URLResourceProvider();
-    
+
     @Override
     public LMConnection getConnection(String s)
-    { return new LMConnection(RequestMethod.SIMPLE_GET, s); }
+    {
+        return new LMConnection(RequestMethod.SIMPLE_GET, s);
+    }
 }

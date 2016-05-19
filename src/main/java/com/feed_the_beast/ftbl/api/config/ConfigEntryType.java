@@ -18,14 +18,29 @@ public enum ConfigEntryType
     INT_ARRAY(8),
     STRING_ARRAY(9),
     COLOR(10);
-    
+
+    private static final ConfigEntryType[] types = new ConfigEntryType[32];
+
+    static
+    {
+        for(ConfigEntryType t : values())
+        {
+            types[t.ID] = t;
+        }
+    }
+
     public final byte ID;
-    
+
     ConfigEntryType(int i)
     {
         ID = (byte) i;
     }
-    
+
+    public static ConfigEntryType getFromID(byte id)
+    {
+        return types[id];
+    }
+
     public ConfigEntry createNew(String id)
     {
         switch(this)
@@ -54,17 +69,4 @@ public enum ConfigEntryType
                 return null;
         }
     }
-    
-    private static final ConfigEntryType[] types = new ConfigEntryType[32];
-    
-    static
-    {
-        for(ConfigEntryType t : values())
-        {
-            types[t.ID] = t;
-        }
-    }
-    
-    public static ConfigEntryType getFromID(byte id)
-    { return types[id]; }
 }

@@ -7,7 +7,7 @@ public class OtherMods
     public static final String MCMP = "mcmultipart";
     public static final String WAILA = "Waila";
     public static final String BAUBLES = "Baubles";
-    
+
     // Item / Block mods //
     //public static final String THERMAL_EXPANSION = "ThermalExpansion";
     //public static final String THERMAL_FOUNDATION = "ThermalFoundation";

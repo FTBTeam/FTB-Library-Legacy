@@ -10,8 +10,10 @@ import net.minecraft.server.MinecraftServer;
 public class CmdHeal extends CommandLM
 {
     public CmdHeal()
-    { super("heal", CommandLevel.OP); }
-    
+    {
+        super("heal", CommandLevel.OP);
+    }
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {

@@ -11,7 +11,7 @@ public class ReloadEvent extends Event
     public final ICommandSender sender;
     public final ReloadType type;
     public final boolean login;
-    
+
     public ReloadEvent(ForgeWorld w, ICommandSender ics, ReloadType t, boolean b)
     {
         world = w;

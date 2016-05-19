@@ -9,20 +9,14 @@ public enum MouseButton
     RIGHT(1),
     MIDDLE(2),
     OTHER(3);
-    
+
     public final byte ID;
-    
+
     MouseButton(int b)
     {
         ID = (byte) b;
     }
-    
-    public boolean isLeft()
-    { return this == LEFT; }
-    
-    public boolean isRight()
-    { return this == RIGHT; }
-    
+
     public static MouseButton get(int i)
     {
         switch(i)
@@ -36,5 +30,15 @@ public enum MouseButton
             default:
                 return OTHER;
         }
+    }
+
+    public boolean isLeft()
+    {
+        return this == LEFT;
+    }
+
+    public boolean isRight()
+    {
+        return this == RIGHT;
     }
 }

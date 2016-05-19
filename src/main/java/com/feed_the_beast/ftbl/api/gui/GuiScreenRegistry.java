@@ -15,23 +15,29 @@ import java.util.Map;
 public class GuiScreenRegistry
 {
     public static final Map<ResourceLocation, Entry> map = new HashMap<>();
-    
-    public static void register(ResourceLocation s, Entry e)
-    {
-        if(s != null && e != null && !map.containsKey(s)) { map.put(s, e); }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static GuiScreen openGui(EntityPlayer ep, ResourceLocation id)
-    {
-        Entry e = map.get(id);
-        if(e != null) { return e.openGui(ep); }
-        return null;
-    }
-    
+
     public interface Entry
     {
         @SideOnly(Side.CLIENT)
         GuiScreen openGui(EntityPlayer ep);
+    }
+
+    public static void register(ResourceLocation s, Entry e)
+    {
+        if(s != null && e != null && !map.containsKey(s))
+        {
+            map.put(s, e);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static GuiScreen openGui(EntityPlayer ep, ResourceLocation id)
+    {
+        Entry e = map.get(id);
+        if(e != null)
+        {
+            return e.openGui(ep);
+        }
+        return null;
     }
 }

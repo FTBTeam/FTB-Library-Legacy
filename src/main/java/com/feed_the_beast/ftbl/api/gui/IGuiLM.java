@@ -13,12 +13,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IGuiLM
 {
     GuiScreen getGui();
+
     PanelLM getMainPanel();
+
     MouseLM mouse();
+
     void initLMGui();
+
     void refreshWidgets();
+
     float getZLevel();
+
     void setZLevel(float z);
+
     FontRenderer getFontRenderer();
+
     void close(GuiScreen g);
 }

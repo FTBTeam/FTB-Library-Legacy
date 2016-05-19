@@ -8,13 +8,17 @@ public enum EnumSelf
     SELF,
     OTHER,
     BOTH;
-    
+
     public boolean isSelf()
-    { return this == SELF || this == BOTH; }
-    
+    {
+        return this == SELF || this == BOTH;
+    }
+
     public boolean isOther()
-    { return this == OTHER || this == BOTH; }
-    
+    {
+        return this == OTHER || this == BOTH;
+    }
+
     public boolean equalsType(EnumSelf t)
     {
         switch(t)

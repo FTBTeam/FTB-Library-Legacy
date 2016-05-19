@@ -16,9 +16,11 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
     public int posX, posY, posZ;
     public ResourceLocation action;
     public NBTTagCompound data;
-    
-    public MessageClientTileAction() { }
-    
+
+    public MessageClientTileAction()
+    {
+    }
+
     public MessageClientTileAction(TileEntity t, TileClientAction a, NBTTagCompound tag)
     {
         posX = t.getPos().getX();
@@ -27,11 +29,13 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
         action = a.getResourceLocation();
         data = tag;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -41,7 +45,7 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
         action = readResourceLocation(io);
         data = readTag(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -51,16 +55,16 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
         writeResourceLocation(io, action);
         writeTag(io, data);
     }
-    
+
     @Override
     public void onMessage(MessageClientTileAction m, EntityPlayerMP ep)
     {
         TileClientAction action = TileClientActionRegistry.map.get(m.action);
-        
+
         if(action != null)
         {
             TileEntity te = ep.worldObj.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
-            
+
             if(te != null)
             {
                 action.onAction(te, m.data, ep);

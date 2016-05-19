@@ -16,23 +16,25 @@ import java.util.Map;
 public abstract class ItemMaterialsLM extends ItemLM
 {
     public final Map<Integer, MaterialItem> materials;
-    
+
     public ItemMaterialsLM()
     {
         materials = new HashMap<>();
         setHasSubtypes(true);
         setMaxDamage(0);
     }
-    
+
     public String getFolder()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public final void add(MaterialItem m)
     {
         m.setItem(this);
         materials.put(m.damage, m);
     }
-    
+
     public final void addAll(Class<?> c)
     {
         try
@@ -44,31 +46,31 @@ public abstract class ItemMaterialsLM extends ItemLM
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public String getUnlocalizedName(ItemStack is)
     {
         MaterialItem m = materials.get(is.getMetadata());
-        
+
         if(m != null)
         {
             String s = getFolder();
             return (s == null || s.isEmpty()) ? getMod().getItemName(m.getID()) : getMod().getItemName(s + '.' + m.getID());
         }
-        
+
         return "unknown";
     }
-    
+
     @Override
     public void onPostLoaded()
     {
     }
-    
+
     @Override
     public void loadRecipes()
     {
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void loadModels()
@@ -78,7 +80,7 @@ public abstract class ItemMaterialsLM extends ItemLM
             ModelLoader.setCustomModelResourceLocation(this, i.damage, new ModelResourceLocation(getRegistryName(), "variant=" + i.getID()));
         }
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)

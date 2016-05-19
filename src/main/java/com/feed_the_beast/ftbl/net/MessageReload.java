@@ -31,9 +31,11 @@ public class MessageReload extends MessageToClient<MessageReload>
     public boolean login;
     public String modeID;
     public NBTTagCompound tag;
-    
-    public MessageReload() { }
-    
+
+    public MessageReload()
+    {
+    }
+
     public MessageReload(ReloadType t, EntityPlayerMP ep, boolean l)
     {
         typeID = t.ordinal();
@@ -41,11 +43,36 @@ public class MessageReload extends MessageToClient<MessageReload>
         modeID = ForgeWorldMP.inst.getMode().getID();
         tag = SyncWorldEvent.generateData(ep, login);
     }
-    
+
+    public static void reloadClient(long ms, ReloadType type, boolean login)
+    {
+        if(ms == 0L)
+        {
+            ms = System.currentTimeMillis();
+        }
+        GameModes.reload();
+        EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
+        ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, type, login);
+        if(FTBLib.ftbu != null)
+        {
+            FTBLib.ftbu.onReloaded(event);
+        }
+        MinecraftForge.EVENT_BUS.post(event);
+
+        if(!login)
+        {
+            FTBLibLang.reload_client.printChat(ep, (System.currentTimeMillis() - ms) + "ms");
+        }
+
+        FTBLibMod.logger.info("Current Mode: " + ForgeWorldSP.inst.getMode());
+    }
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -54,7 +81,7 @@ public class MessageReload extends MessageToClient<MessageReload>
         modeID = readString(io);
         tag = readTag(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -63,26 +90,26 @@ public class MessageReload extends MessageToClient<MessageReload>
         writeString(io, modeID);
         writeTag(io, tag);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageReload m, Minecraft mc)
     {
         long ms = System.currentTimeMillis();
-        
+
         ReloadType type = ReloadType.values()[m.typeID];
-        
+
         boolean first = ForgeWorldSP.inst == null;
         if(first)
         {
             ForgeWorldSP.inst = new ForgeWorldSP(mc.getSession().getProfile());
         }
-        
+
         ForgeWorldSP.inst.setModeRaw(m.modeID);
         SyncWorldEvent.readData(m.tag, m.login);
-        
+
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
-        
+
         if(type.reload(Side.CLIENT))
         {
             reloadClient(ms, type, m.login);
@@ -95,22 +122,5 @@ public class MessageReload extends MessageToClient<MessageReload>
             n.setColor(0xFF333333);
             ClientNotifications.add(n);
         }
-    }
-    
-    public static void reloadClient(long ms, ReloadType type, boolean login)
-    {
-        if(ms == 0L) { ms = System.currentTimeMillis(); }
-        GameModes.reload();
-        EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-        ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, type, login);
-        if(FTBLib.ftbu != null) { FTBLib.ftbu.onReloaded(event); }
-        MinecraftForge.EVENT_BUS.post(event);
-        
-        if(!login)
-        {
-            FTBLibLang.reload_client.printChat(ep, (System.currentTimeMillis() - ms) + "ms");
-        }
-        
-        FTBLibMod.logger.info("Current Mode: " + ForgeWorldSP.inst.getMode());
     }
 }

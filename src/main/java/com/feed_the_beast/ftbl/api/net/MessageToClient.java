@@ -15,26 +15,28 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
 {
     @Override
     final Side getReceivingSide()
-    { return Side.CLIENT; }
-    
+    {
+        return Side.CLIENT;
+    }
+
     @Override
     public final IMessage onMessage(E m, MessageContext ctx)
     {
         Minecraft mc = FMLClientHandler.instance().getClient();
         mc.addScheduledTask(() -> onMessage(m, mc));
-        
+
         if(MessageLM.logMessages())
         {
-            
+
         }
-        
+
         return null;
     }
-    
+
     public void onMessage(E m, Minecraft mc)
     {
     }
-    
+
     public final void sendTo(EntityPlayerMP ep)
     {
         if(ep != null)
@@ -46,7 +48,9 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
             getWrapper().sendToAll(this);
         }
     }
-    
+
     public final void sendToDimension(DimensionType dim)
-    { getWrapper().sendToDimension(this, dim); }
+    {
+        getWrapper().sendToDimension(this, dim);
+    }
 }

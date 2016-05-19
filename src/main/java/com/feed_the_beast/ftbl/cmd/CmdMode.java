@@ -20,23 +20,19 @@ import java.util.List;
 
 public class CmdMode extends CommandSubLM
 {
-    public CmdMode()
-    {
-        super("ftb_mode", CommandLevel.OP);
-        add(new CmdSet("set"));
-        add(new CmdGet("get"));
-        add(new CmdList("list"));
-    }
-    
     public static class CmdSet extends CommandLM
     {
         public CmdSet(String s)
-        { super(s, CommandLevel.OP); }
-        
+        {
+            super(s, CommandLevel.OP);
+        }
+
         @Override
         public String getCommandUsage(ICommandSender ics)
-        { return '/' + commandName + " <modeID>"; }
-        
+        {
+            return '/' + commandName + " <modeID>";
+        }
+
         @Override
         public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
         {
@@ -44,10 +40,10 @@ public class CmdMode extends CommandSubLM
             {
                 return getListOfStringsMatchingLastWord(args, GameModes.instance().modes.keySet());
             }
-            
+
             return super.getTabCompletionOptions(server, ics, args, pos);
         }
-        
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -55,11 +51,11 @@ public class CmdMode extends CommandSubLM
             {
                 throw FTBLibLang.raw.commandError(getCommandUsage(ics));
             }
-            
+
             ITextComponent c;
-            
+
             int i = ForgeWorldMP.inst.setMode(args[0]);
-            
+
             if(i == 1)
             {
                 c = FTBLibLang.mode_not_found.textComponent();
@@ -76,16 +72,18 @@ public class CmdMode extends CommandSubLM
                 c.getStyle().setColor(TextFormatting.GREEN);
                 FTBLib.reload(ics, ReloadType.SERVER_AND_CLIENT, true);
             }
-            
+
             ics.addChatMessage(c);
         }
     }
-    
+
     public static class CmdGet extends CommandLM
     {
         public CmdGet(String s)
-        { super(s, CommandLevel.OP); }
-        
+        {
+            super(s, CommandLevel.OP);
+        }
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -94,12 +92,14 @@ public class CmdMode extends CommandSubLM
             ics.addChatMessage(c);
         }
     }
-    
+
     public static class CmdList extends CommandLM
     {
         public CmdList(String s)
-        { super(s, CommandLevel.OP); }
-        
+        {
+            super(s, CommandLevel.OP);
+        }
+
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
@@ -107,5 +107,13 @@ public class CmdMode extends CommandSubLM
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
+    }
+
+    public CmdMode()
+    {
+        super("ftb_mode", CommandLevel.OP);
+        add(new CmdSet("set"));
+        add(new CmdGet("get"));
+        add(new CmdList("list"));
     }
 }

@@ -11,15 +11,15 @@ import latmod.lib.annotations.NumberBounds;
 public class InfoClientSettings
 {
     public static final ConfigEntryBool unicode = new ConfigEntryBool("unicode", true);
-    
+
     @Flags(Flags.USE_SLIDER)
     @NumberBounds(min = 100, max = 255)
     public static final ConfigEntryInt transparency = new ConfigEntryInt("transparency", 255);
-    
+
     @Flags(Flags.USE_SLIDER)
     @NumberBounds(min = 0, max = 200)
     public static final ConfigEntryInt border_width = new ConfigEntryInt("border_width", 15);
-    
+
     @Flags(Flags.USE_SLIDER)
     @NumberBounds(min = 0, max = 50)
     public static final ConfigEntryInt border_height = new ConfigEntryInt("border_height", 15);

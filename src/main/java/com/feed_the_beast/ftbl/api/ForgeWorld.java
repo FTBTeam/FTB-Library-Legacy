@@ -27,85 +27,105 @@ import java.util.UUID;
  */
 public abstract class ForgeWorld implements ICapabilityProvider
 {
-    protected UUID worldID;
-    protected GameMode currentMode;
     public final Map<UUID, ForgePlayer> playerMap;
     final CapabilityDispatcher capabilities;
-    
+    protected UUID worldID;
+    protected GameMode currentMode;
+
+    ForgeWorld()
+    {
+        worldID = null;
+        currentMode = new GameMode("default");
+        playerMap = new HashMap<>();
+
+        ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
+        MinecraftForge.EVENT_BUS.post(event);
+        capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
+        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnLoaded(this));
+    }
+
     public static ForgeWorld getFrom(Side side)
     {
         if(side == null)
         {
             return getFrom(FTBLib.getEffectiveSide());
         }
-        
+
         return side.isServer() ? ForgeWorldMP.inst : FTBLibMod.proxy.getClientLMWorld();
     }
-    
-    ForgeWorld()
-    {
-        worldID = null;
-        currentMode = new GameMode("default");
-        playerMap = new HashMap<>();
-        
-        ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
-        MinecraftForge.EVENT_BUS.post(event);
-        capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnLoaded(this));
-    }
-    
+
     public abstract Side getSide();
-    
+
     public final UUID getID()
     {
         if(worldID == null || (worldID.getLeastSignificantBits() == 0L && worldID.getMostSignificantBits() == 0L))
         {
             worldID = UUID.randomUUID();
         }
-        
+
         return worldID;
     }
-    
+
     @Override
     public final boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
     {
         return capabilities != null && capabilities.hasCapability(capability, facing);
     }
-    
+
     @Override
     public final <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }
-    
+
     public abstract World getMCWorld();
-    
+
     public abstract ForgeWorldMP toWorldMP();
-    
+
     @SideOnly(Side.CLIENT)
     public abstract ForgeWorldSP toWorldSP();
-    
+
     public GameMode getMode()
-    { return currentMode; }
-    
+    {
+        return currentMode;
+    }
+
     public ForgePlayer getPlayer(Object o)
     {
-        if(o == null || o instanceof FakePlayer) { return null; }
+        if(o == null || o instanceof FakePlayer)
+        {
+            return null;
+        }
         else if(o instanceof UUID)
         {
             UUID id = (UUID) o;
-            if(id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L) { return null; }
+            if(id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L)
+            {
+                return null;
+            }
             return playerMap.get(id);
         }
-        else if(o instanceof ForgePlayer) { return getPlayer(((ForgePlayer) o).getProfile().getId()); }
-        else if(o instanceof EntityPlayer) { return getPlayer(((EntityPlayer) o).getGameProfile().getId()); }
-        else if(o instanceof GameProfile) { return getPlayer(((GameProfile) o).getId()); }
+        else if(o instanceof ForgePlayer)
+        {
+            return getPlayer(((ForgePlayer) o).getProfile().getId());
+        }
+        else if(o instanceof EntityPlayer)
+        {
+            return getPlayer(((EntityPlayer) o).getGameProfile().getId());
+        }
+        else if(o instanceof GameProfile)
+        {
+            return getPlayer(((GameProfile) o).getId());
+        }
         else if(o instanceof CharSequence)
         {
             String s = o.toString();
-            
-            if(s == null || s.isEmpty()) { return null; }
-            
+
+            if(s == null || s.isEmpty())
+            {
+                return null;
+            }
+
             for(ForgePlayer p : playerMap.values())
             {
                 if(p.getProfile().getName().equalsIgnoreCase(s))
@@ -113,56 +133,65 @@ public abstract class ForgeWorld implements ICapabilityProvider
                     return p;
                 }
             }
-            
+
             return getPlayer(LMUtils.fromString(s));
         }
-        
+
         return null;
     }
-    
+
     public final List<ForgePlayer> getOnlinePlayers()
     {
         ArrayList<ForgePlayer> l = new ArrayList<>();
-        
+
         for(ForgePlayer p : playerMap.values())
         {
-            if(p.isOnline()) { l.add(p); }
+            if(p.isOnline())
+            {
+                l.add(p);
+            }
         }
-        
+
         return l;
     }
-    
+
     public String[] getAllPlayerNames(boolean online)
     {
         List<ForgePlayer> list = online ? getOnlinePlayers() : LMListUtils.clone(playerMap.values());
-        
+
         Collections.sort(list, (o1, o2) -> {
             if(o1.isOnline() == o2.isOnline())
             {
                 return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
             }
-            
+
             return Boolean.compare(o2.isOnline(), o1.isOnline());
         });
-        
+
         return LMListUtils.toStringArray(list);
     }
-    
+
     /**
      * 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true)
      */
     public final int setMode(String mode)
     {
         GameMode m = GameModes.instance().modes.get(mode);
-        
-        if(m == null) { return 1; }
-        if(m.equals(currentMode)) { return 2; }
-        
+
+        if(m == null)
+        {
+            return 1;
+        }
+        if(m.equals(currentMode))
+        {
+            return 2;
+        }
+
         currentMode = m;
-        
+
         return 0;
     }
-    
+
     public void onClosed()
     {
         MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnClosed(this));

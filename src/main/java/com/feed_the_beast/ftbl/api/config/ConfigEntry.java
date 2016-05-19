@@ -18,40 +18,51 @@ import java.util.List;
 public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
     public ConfigGroup parentGroup;
-    private String[] info;
     protected byte flags = 0;
-    
+    private String[] info;
+
     ConfigEntry(String id)
     {
         super(id);
     }
-    
+
     public abstract ConfigEntryType getConfigType();
-    
+
     @Override
     public abstract void fromJson(JsonElement o);
-    
+
     @Override
     public abstract JsonElement getSerializableElement();
-    
+
     public int getColor()
-    { return 0x999999; }
-    
+    {
+        return 0x999999;
+    }
+
     public String getFullID()
     {
-        if(parentGroup == null) { return getID(); }
+        if(parentGroup == null)
+        {
+            return getID();
+        }
         return parentGroup.getFullID() + '.' + getID();
     }
-    
+
     public String getDefValueString()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public String getMinValueString()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public String getMaxValueString()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public ConfigEntry copy()
     {
         ConfigEntry e = getConfigType().createNew(getID());
@@ -60,80 +71,105 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
         e.readFromNBT(tag, true);
         return e;
     }
-    
+
     @Override
     public final String toString()
-    { return getAsString(); }
-    
+    {
+        return getAsString();
+    }
+
     public abstract String getAsString();
-    
+
     public boolean getAsBoolean()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     public int getAsInt()
-    { return 0; }
-    
+    {
+        return 0;
+    }
+
     public double getAsDouble()
-    { return 0D; }
-    
+    {
+        return 0D;
+    }
+
     public IntList getAsIntList()
-    { return new IntList(new int[] {getAsInt()}); }
-    
+    {
+        return new IntList(new int[] {getAsInt()});
+    }
+
     public List<String> getAsStringList()
-    { return Collections.singletonList(getAsString()); }
-    
+    {
+        return Collections.singletonList(getAsString());
+    }
+
     public ConfigGroup getAsGroup()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     @Override
     public final void setFlag(byte flag, boolean b)
-    { flags = Bits.setBit(flags, flag, b); }
-    
+    {
+        flags = Bits.setBit(flags, flag, b);
+    }
+
     @Override
     public final boolean getFlag(byte flag)
-    { return Bits.getBit(flags, flag); }
-    
-    @Override
-    public final void setInfo(String[] s)
-    { info = (s != null && s.length > 0) ? s : null; }
-    
+    {
+        return Bits.getBit(flags, flag);
+    }
+
     @Override
     public final String[] getInfo()
-    { return info; }
-    
+    {
+        return info;
+    }
+
+    @Override
+    public final void setInfo(String[] s)
+    {
+        info = (s != null && s.length > 0) ? s : null;
+    }
+
     public void writeToNBT(NBTTagCompound tag, boolean extended)
     {
         if(extended)
         {
-            if(flags != 0) { tag.setByte("F", flags); }
-            
+            if(flags != 0)
+            {
+                tag.setByte("F", flags);
+            }
+
             if(info != null && info.length > 0)
             {
                 NBTTagList list = new NBTTagList();
-                
+
                 for(int i = 0; i < info.length; i++)
                 {
                     list.appendTag(new NBTTagString(info[i]));
                 }
-                
+
                 tag.setTag("I", list);
             }
         }
     }
-    
+
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         if(extended)
         {
             flags = tag.getByte("F");
             info = null;
-            
+
             if(tag.hasKey("I"))
             {
                 NBTTagList list = tag.getTagList("I", Constants.NBT.TAG_STRING);
-                
+
                 info = new String[list.tagCount()];
-                
+
                 for(int i = 0; i < info.length; i++)
                 {
                     info[i] = list.getStringTagAt(i);

@@ -18,24 +18,24 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
     {
         super(ForgeWorldSP.inst.clientPlayer);
     }
-    
+
     @Override
     public void refreshGui(GuiInfo gui)
     {
         clear();
-        
+
         text.add(new InfoPlayerViewLine(this, playerLM));
-        
+
         if(!playerLM.clientInfo.isEmpty())
         {
             for(String s : playerLM.clientInfo)
-                printlnText(s);
-            
+            { printlnText(s); }
+
             text.add(null);
         }
-        
+
         text.add(null);
-        
+
         for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, true, true))
         {
             text.add(new InfoPlayerActionLine(this, playerLM, a));

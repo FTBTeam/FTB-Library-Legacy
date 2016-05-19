@@ -18,59 +18,68 @@ import java.util.Map;
  */
 public class PlayerActionRegistry
 {
-    private static final Map<String, PlayerAction> map = new HashMap<>();
-    
     public static final ConfigGroup configGroup = new ConfigGroup("sidebar_buttons");
-    
+    private static final Map<String, PlayerAction> map = new HashMap<>();
+
     public static boolean enabled(String id)
     {
         ConfigEntry entry = configGroup.entryMap.get(id);
         return (entry == null) || entry.getAsBoolean();
     }
-    
+
     public static PlayerAction add(final PlayerAction a)
     {
         if(a != null)
         {
             map.put(a.getID(), a);
-            
+
             if(a.configDefault() != null)
             {
                 ConfigEntryBool entry = new ConfigEntryBool(a.getID(), a.configDefault())
                 {
                     @Override
                     public String getFullID()
-                    { return "player_action." + a.getID(); }
+                    {
+                        return "player_action." + a.getID();
+                    }
                 };
-                
+
                 configGroup.entryMap.put(a.getID(), entry);
             }
         }
-        
+
         return a;
     }
-    
+
     public static List<PlayerAction> getPlayerActions(EnumSelf t, ForgePlayer self, ForgePlayer other, boolean sort, boolean ignoreConfig)
     {
         List<PlayerAction> l = new ArrayList<>();
-        
+
         for(PlayerAction a : map.values())
         {
             if(a.type.equalsType(t) && a.isVisibleFor(self, other))
             {
                 if(!ignoreConfig && a.configDefault() != null)
                 {
-                    if(!enabled(a.getID())) { continue; }
+                    if(!enabled(a.getID()))
+                    {
+                        continue;
+                    }
                 }
-                
+
                 l.add(a);
             }
         }
-        
-        if(sort) { Collections.sort(l); }
+
+        if(sort)
+        {
+            Collections.sort(l);
+        }
         return l;
     }
-    
+
     public static PlayerAction get(String key)
-    { return map.get(key); }
+    {
+        return map.get(key);
+    }
 }

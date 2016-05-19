@@ -8,7 +8,7 @@ public class ColorSelected
     public final boolean set;
     public final LMColor color;
     public final boolean closeGui;
-    
+
     public ColorSelected(Object id, boolean s, LMColor c, boolean g)
     {
         ID = id;

@@ -15,9 +15,11 @@ public class MessageMarkTileDirty extends MessageToClient<MessageMarkTileDirty>
 {
     public int posX, posY, posZ;
     public NBTTagCompound data;
-    
-    public MessageMarkTileDirty() { }
-    
+
+    public MessageMarkTileDirty()
+    {
+    }
+
     public MessageMarkTileDirty(TileLM t)
     {
         posX = t.getPos().getX();
@@ -25,17 +27,19 @@ public class MessageMarkTileDirty extends MessageToClient<MessageMarkTileDirty>
         posZ = t.getPos().getZ();
         data = new NBTTagCompound();
         t.writeTileClientData(data);
-        
+
         if(t.ownerID != null && t.useOwnerID())
         {
             LMNBTUtils.setUUID(data, "OID", t.ownerID, false);
         }
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -44,7 +48,7 @@ public class MessageMarkTileDirty extends MessageToClient<MessageMarkTileDirty>
         posZ = io.readInt();
         data = readTag(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -53,12 +57,12 @@ public class MessageMarkTileDirty extends MessageToClient<MessageMarkTileDirty>
         io.writeInt(posZ);
         writeTag(io, data);
     }
-    
+
     @Override
     public void onMessage(MessageMarkTileDirty m, Minecraft mc)
     {
         TileEntity te = FTBLibClient.mc.theWorld.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
-        
+
         if(te instanceof TileLM)
         {
             TileLM t = (TileLM) te;

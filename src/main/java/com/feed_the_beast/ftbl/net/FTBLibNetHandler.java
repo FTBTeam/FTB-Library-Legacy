@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 public class FTBLibNetHandler
 {
     public static final LMNetworkWrapper NET = LMNetworkWrapper.newWrapper("FTBL");
-    
+
     public static void init()
     {
         NET.register(1, new MessageReload());

@@ -19,21 +19,37 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
     MessageLM()
     {
     }
-    
+
     static boolean logMessages()
-    { return true; }
-    
-    public abstract LMNetworkWrapper getWrapper();
-    abstract Side getReceivingSide();
-    
-    @Override
-    public abstract void toBytes(ByteBuf io);
-    
-    @Override
-    public abstract void fromBytes(ByteBuf io);
+    {
+        return true;
+    }
+
+    public static UUID readUUID(ByteBuf io)
+    {
+        long msb = io.readLong();
+        long lsb = io.readLong();
+        return new UUID(msb, lsb);
+    }
+
+    public static void writeUUID(ByteBuf io, UUID id)
+    {
+        io.writeLong(id.getMostSignificantBits());
+        io.writeLong(id.getLeastSignificantBits());
+    }
+
+    public static String readString(ByteBuf io)
+    {
+        return ByteBufUtils.readUTF8String(io);
+    }
+
+    public static void writeString(ByteBuf io, String s)
+    {
+        ByteBufUtils.writeUTF8String(io, s);
+    }
     
 	/*
-	public void toBytes(ByteBuf io)
+    public void toBytes(ByteBuf io)
 	{
 	}
 	
@@ -41,53 +57,32 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 	{
 	}
 	*/
-    
-    @Override
-    public IMessage onMessage(E m, MessageContext ctx)
-    {
-        return null;
-    }
-    
-    // Helper methods //
-    
-    public static UUID readUUID(ByteBuf io)
-    {
-        long msb = io.readLong();
-        long lsb = io.readLong();
-        return new UUID(msb, lsb);
-    }
-    
-    public static void writeUUID(ByteBuf io, UUID id)
-    {
-        io.writeLong(id.getMostSignificantBits());
-        io.writeLong(id.getLeastSignificantBits());
-    }
-    
-    public static String readString(ByteBuf io)
-    { return ByteBufUtils.readUTF8String(io); }
-    
-    public static void writeString(ByteBuf io, String s)
-    { ByteBufUtils.writeUTF8String(io, s); }
-    
+
     public static ResourceLocation readResourceLocation(ByteBuf io)
     {
         String d = readString(io);
         String p = readString(io);
         return new ResourceLocation(d, p);
     }
-    
+
+    // Helper methods //
+
     public static void writeResourceLocation(ByteBuf io, ResourceLocation r)
     {
         writeString(io, r.getResourceDomain());
         writeString(io, r.getResourcePath());
     }
-    
+
     public static NBTTagCompound readTag(ByteBuf io)
-    { return ByteBufUtils.readTag(io); }
-    
+    {
+        return ByteBufUtils.readTag(io);
+    }
+
     public static void writeTag(ByteBuf io, NBTTagCompound tag)
-    { ByteBufUtils.writeTag(io, tag); }
-    
+    {
+        ByteBufUtils.writeTag(io, tag);
+    }
+
     //TODO: Improve me
     public static JsonElement readJsonElement(ByteBuf io)
     {
@@ -97,7 +92,7 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
         stream.setCompressedData(b);
         return JsonElementIO.read(stream);
     }
-    
+
     //TODO: Improve me
     public static void writeJsonElement(ByteBuf io, JsonElement e)
     {
@@ -106,5 +101,21 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
         byte[] b = stream.toCompressedByteArray();
         io.writeInt(b.length);
         io.writeBytes(b, 0, b.length);
+    }
+
+    public abstract LMNetworkWrapper getWrapper();
+
+    abstract Side getReceivingSide();
+
+    @Override
+    public abstract void toBytes(ByteBuf io);
+
+    @Override
+    public abstract void fromBytes(ByteBuf io);
+
+    @Override
+    public IMessage onMessage(E m, MessageContext ctx)
+    {
+        return null;
     }
 }

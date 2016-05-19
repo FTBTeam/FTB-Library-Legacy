@@ -13,9 +13,9 @@ import java.util.List;
 public class GuiDisplayItem extends GuiLM
 {
     public static final ResourceLocation texture = new ResourceLocation("ftbl", "textures/gui/displayitem.png");
-    
+
     public ItemDisplay itemDisplay;
-    
+
     public GuiDisplayItem(ItemDisplay i)
     {
         super(null, texture);
@@ -23,17 +23,17 @@ public class GuiDisplayItem extends GuiLM
         mainPanel.height = 182;
         itemDisplay = i;
     }
-    
+
     @Override
     public void addWidgets()
     {
     }
-    
+
     @Override
     public void drawBackground()
     {
         super.drawBackground();
-        
+
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.pushMatrix();
         GlStateManager.translate(mainPanel.posX + mainPanel.width / 2F, mainPanel.posY + mainPanel.height / 2F, 0F);
@@ -42,18 +42,23 @@ public class GuiDisplayItem extends GuiLM
         GuiLM.drawItem(this, itemDisplay.item, -8, -8);
         GlStateManager.popMatrix();
     }
-    
+
     @Override
     public void drawText(List<String> l)
     {
         if(itemDisplay.title != null && !itemDisplay.title.isEmpty())
-        { drawCenteredString(fontRendererObj, itemDisplay.title, mainPanel.posX + mainPanel.width / 2, mainPanel.posY + 6, 0xFFFFFFFF); }
-        if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty()) { l.addAll(itemDisplay.desc); }
+        {
+            drawCenteredString(fontRendererObj, itemDisplay.title, mainPanel.posX + mainPanel.width / 2, mainPanel.posY + 6, 0xFFFFFFFF);
+        }
+        if(itemDisplay.desc != null && !itemDisplay.desc.isEmpty())
+        {
+            l.addAll(itemDisplay.desc);
+        }
         super.drawText(l);
     }
     
 	/*
-	public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
+    public boolean handleDragNDrop(GuiContainer g, int x, int y, ItemStack is, int b)
 	{
 		if(is != null && x > mainPanel.posX && x < mainPanel.posX + mainPanel.width && y > mainPanel.posY && y < mainPanel.posY + mainPanel.height)
 		{

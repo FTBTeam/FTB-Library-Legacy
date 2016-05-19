@@ -12,11 +12,13 @@ import java.util.Map;
 public class SidedPaintStorage implements IPaintable
 {
     private Map<EnumFacing, IBlockState> paintMap = new HashMap<>();
-    
+
     @Override
     public IBlockState getPaint(EnumFacing facing)
-    { return paintMap.get(facing); }
-    
+    {
+        return paintMap.get(facing);
+    }
+
     @Override
     public void setPaint(EnumFacing facing, IBlockState p)
     {

@@ -11,17 +11,27 @@ import java.util.List;
 public class CmdHelpOverride extends CommandHelp
 {
     public CmdHelpOverride()
-    { super(); }
-    
+    {
+        super();
+    }
+
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + getCommandName() + " [command]"; }
-    
+    {
+        return '/' + getCommandName() + " [command]";
+    }
+
     @Override
     protected List<ICommand> getSortedPossibleCommands(ICommandSender sender, MinecraftServer server)
     {
         List<ICommand> list = server.getCommandManager().getPossibleCommands(sender);
-        try { Collections.sort(list); } catch(Exception e) { }
+        try
+        {
+            Collections.sort(list);
+        }
+        catch(Exception e)
+        {
+        }
         return list;
     }
 }

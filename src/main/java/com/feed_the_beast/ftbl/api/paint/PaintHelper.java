@@ -16,23 +16,23 @@ public class PaintHelper
 {
     public static final LangKey texture_set = new LangKey("ftbl.paint.texture_set");
     public static final LangKey texture_cleared = new LangKey("ftbl.paint.texture_cleared");
-    
+
     public static IBlockState getPaintFromBlock(IBlockAccess w, IBlockState state, RayTraceResult hit)
     {
         if(state.getBlock() instanceof ICustomPaintBlock)
         {
             return ((ICustomPaintBlock) state.getBlock()).getCustomPaint(w, state, hit);
         }
-        
+
         return (!state.getBlock().hasTileEntity(state) && state.isFullCube()) ? state : null;
     }
-    
+
     public static ActionResult<ItemStack> onItemRightClick(ItemStack is, EntityPlayer ep)
     {
         if(!ep.worldObj.isRemote && ep.isSneaking() && is.hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
         {
             IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null);
-            
+
             if(painterItem.getPaint() != null)
             {
                 painterItem.setPaint(null);
@@ -40,32 +40,32 @@ public class PaintHelper
                 return new ActionResult<>(EnumActionResult.SUCCESS, is);
             }
         }
-        
+
         return new ActionResult<>(EnumActionResult.PASS, is);
     }
-    
+
     public static EnumActionResult onItemUse(ItemStack is, EntityPlayer ep, RayTraceResult hit)
     {
         if(ep.worldObj.isRemote || !is.hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
         {
             return EnumActionResult.SUCCESS;
         }
-        
+
         IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null);
-        
+
         TileEntity te = ep.worldObj.getTileEntity(hit.getBlockPos());
-        
+
         if(te != null && te.hasCapability(FTBLibCapabilities.PAINTABLE_TILE_CAPABILITY, hit.sideHit))
         {
             IPaintable paintable = te.getCapability(FTBLibCapabilities.PAINTABLE_TILE_CAPABILITY, hit.sideHit);
             IBlockState paint = painterItem.getPaint();
-            
+
             if(ep.isSneaking())
             {
                 if(painterItem.canPaintBlocks(is))
                 {
                     boolean b = false;
-                    
+
                     for(EnumFacing f : EnumFacing.VALUES)
                     {
                         if(paintable.canSetPaint(ep, f, paint))
@@ -74,7 +74,7 @@ public class PaintHelper
                             b = true;
                         }
                     }
-                    
+
                     if(b)
                     {
                         painterItem.damagePainter(is, ep);
@@ -95,11 +95,11 @@ public class PaintHelper
         else if(ep.isSneaking() && !ep.worldObj.isAirBlock(hit.getBlockPos()))
         {
             IBlockState state = ep.worldObj.getBlockState(hit.getBlockPos());
-            
+
             if(state.isFullCube())
             {
                 IBlockState blockPaint = getPaintFromBlock(ep.worldObj, state, hit);
-                
+
                 if(blockPaint != painterItem.getPaint())
                 {
                     painterItem.setPaint(blockPaint);
@@ -107,7 +107,7 @@ public class PaintHelper
                 }
             }
         }
-        
+
         return EnumActionResult.SUCCESS;
     }
 }

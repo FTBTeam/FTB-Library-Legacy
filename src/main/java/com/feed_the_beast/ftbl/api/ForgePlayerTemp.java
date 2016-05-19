@@ -12,36 +12,48 @@ public final class ForgePlayerTemp extends ForgePlayer
 {
     public final Side side;
     public final EntityPlayer player;
-    
+
     public ForgePlayerTemp(EntityPlayer ep)
     {
         super(ep.getGameProfile());
         side = (ep instanceof EntityPlayerMP) ? Side.SERVER : Side.CLIENT;
         player = ep;
     }
-    
+
     @Override
     public Side getSide()
-    { return side; }
-    
+    {
+        return side;
+    }
+
     @Override
     public boolean isOnline()
-    { return player != null; }
-    
+    {
+        return player != null;
+    }
+
     @Override
     public EntityPlayer getPlayer()
-    { return player; }
-    
+    {
+        return player;
+    }
+
     @Override
     public ForgePlayerMP toPlayerMP()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public ForgePlayerSP toPlayerSP()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     @Override
     public ForgeWorld getWorld()
-    { return ForgeWorld.getFrom(side); }
+    {
+        return ForgeWorld.getFrom(side);
+    }
 }

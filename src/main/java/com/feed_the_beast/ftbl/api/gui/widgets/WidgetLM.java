@@ -15,7 +15,7 @@ public class WidgetLM
     public int posX, posY, width, height;
     public PanelLM parentPanel = null;
     public String title = null;
-    
+
     public WidgetLM(IGuiLM g, int x, int y, int w, int h)
     {
         gui = g;
@@ -24,48 +24,69 @@ public class WidgetLM
         width = w;
         height = h;
     }
-    
+
     public boolean isEnabled()
-    { return true; }
-    
+    {
+        return true;
+    }
+
     public int getAX()
-    { return (parentPanel == null) ? posX : (parentPanel.getAX() + posX); }
-    
+    {
+        return (parentPanel == null) ? posX : (parentPanel.getAX() + posX);
+    }
+
     public int getAY()
-    { return (parentPanel == null) ? posY : (parentPanel.getAY() + posY); }
-    
+    {
+        return (parentPanel == null) ? posY : (parentPanel.getAY() + posY);
+    }
+
     public final int endX()
-    { return getAX() + width; }
-    
+    {
+        return getAX() + width;
+    }
+
     public final int endY()
-    { return getAY() + height; }
-    
+    {
+        return getAY() + height;
+    }
+
     protected boolean mouseOver(int ax, int ay)
-    { return gui.mouse().isInside(ax, ay, width, height); }
-    
+    {
+        return gui.mouse().isInside(ax, ay, width, height);
+    }
+
     public boolean mouseOver()
-    { return mouseOver(getAX(), getAY()); }
-    
+    {
+        return mouseOver(getAX(), getAY());
+    }
+
     public final void render(TextureCoords icon, double rw, double rh)
-    { GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), (int) (width * rw), (int) (height * rh)); }
-    
+    {
+        GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), (int) (width * rw), (int) (height * rh));
+    }
+
     public final void render(TextureCoords icon)
-    { GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height); }
-    
+    {
+        GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height);
+    }
+
     public void mousePressed(int b)
     {
     }
-    
+
     public boolean keyPressed(int key, char keyChar)
     {
         return false;
     }
-    
+
     public void addMouseOverText(List<String> l)
     {
-        if(title != null) { l.add(title); }
+        if(title != null)
+        {
+            l.add(title);
+        }
     }
-    
+
     public void renderWidget()
     {
     }

@@ -15,58 +15,74 @@ public class FTBLibModCommon // FTBLibModClient
     public void preInit()
     {
     }
-    
+
     public void postInit()
     {
     }
-    
+
     public boolean isShiftDown()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     public boolean isCtrlDown()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     public boolean isTabDown()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     public boolean inGameHasFocus()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     public EntityPlayer getClientPlayer()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public EntityPlayer getClientPlayer(UUID id)
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public World getClientWorld()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public double getReachDist(EntityPlayer ep)
     {
         if(ep instanceof EntityPlayerMP)
         {
             return ((EntityPlayerMP) ep).interactionManager.getBlockReachDistance();
         }
-        
+
         return 0D;
     }
-    
+
     public void spawnDust(World worldObj, double x, double y, double z, int i)
     {
     }
-    
+
     public boolean openClientGui(EntityPlayer ep, String mod, int ID, NBTTagCompound data)
     {
         return false;
     }
-    
+
     public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
     {
     }
-    
+
     public ForgeWorld getClientLMWorld()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     public void loadModels(IItemLM i)
     {
     }

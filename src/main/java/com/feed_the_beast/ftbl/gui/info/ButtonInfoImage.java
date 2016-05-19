@@ -15,21 +15,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 {
     public TextureCoords texture;
-    
+
     public ButtonInfoImage(GuiInfo g, InfoImageLine l)
     {
         super(g, l);
-        
+
         texture = l.getDisplayImage();
-        
+
         double w = Math.min(guiInfo.panelText.width, texture.width);
         double h = texture.getHeight(w);
         texture = new TextureCoords(texture.texture, 0, 0, w, h, w, h);
-        
+
         width = texture.widthI();
         height = texture.heightI() + 1;
     }
-    
+
     @Override
     public void renderWidget()
     {

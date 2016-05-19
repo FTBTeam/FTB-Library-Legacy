@@ -8,9 +8,11 @@ public enum WailaType
     HEAD(IWailaTile.Head.class),
     BODY(IWailaTile.Body.class),
     TAIL(IWailaTile.Tail.class);
-    
+
     public final Class<? extends IWailaTile> typeClass;
-    
+
     WailaType(Class<? extends IWailaTile> c)
-    { typeClass = c; }
+    {
+        typeClass = c;
+    }
 }

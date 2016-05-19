@@ -29,37 +29,84 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class InfoPlayerViewLine extends InfoTextLine
 {
-    public final ForgePlayerSP playerLM;
-    
-    public InfoPlayerViewLine(InfoPage c, ForgePlayerSP p)
-    {
-        super(c, null);
-        playerLM = p;
-    }
-    
-    @Override
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
-    { return new ButtonInfoPlayerView(gui, this); }
-    
     public class ButtonInfoPlayerView extends ButtonInfoTextLine
     {
+        public class Player extends AbstractClientPlayer
+        {
+            public Player(ForgePlayerSP p)
+            {
+                super(Minecraft.getMinecraft().theWorld, p.getProfile());
+            }
+
+            @Override
+            public boolean equals(Object o)
+            {
+                return playerLM.equals(o);
+            }
+
+            @Override
+            public void addChatMessage(ITextComponent i)
+            {
+            }
+
+            @Override
+            public boolean canCommandSenderUseCommand(int i, String s)
+            {
+                return false;
+            }
+
+            @Override
+            public BlockPos getPosition()
+            {
+                return BlockPos.ORIGIN;
+            }
+
+            @Override
+            public boolean isInvisibleToPlayer(EntityPlayer ep)
+            {
+                return true;
+            }
+
+            @Override
+            public ResourceLocation getLocationSkin()
+            {
+                return playerLM.getSkin();
+            }
+
+            //FIXME: Cape
+            //@Override
+            //public boolean hasCape()
+            //{ return false; }
+
+            @Override
+            public ResourceLocation getLocationCape()
+            {
+                return null;
+            }
+        }
         private Player player;
-        
+
         public ButtonInfoPlayerView(GuiInfo g, InfoPlayerViewLine w)
         {
             super(g, null);
             height = 1;
         }
-        
+
         @Override
         public void renderWidget()
         {
             int ay = getAY();
-            if(ay < -height || ay > guiInfo.mainPanel.height) { return; }
+            if(ay < -height || ay > guiInfo.mainPanel.height)
+            {
+                return;
+            }
             int ax = getAX();
-            
-            if(player == null) { player = new Player(ForgeWorldSP.inst.clientPlayer); }
-            
+
+            if(player == null)
+            {
+                player = new Player(ForgeWorldSP.inst.clientPlayer);
+            }
+
             if(mouseOver() && Mouse.isButtonDown(1))
             {
                 for(int i = 0; i < player.inventory.armorInventory.length; i++)
@@ -70,7 +117,7 @@ public class InfoPlayerViewLine extends InfoTextLine
             else
             {
                 EntityPlayer ep1 = playerLM.getPlayer();
-                
+
                 if(ep1 != null)
                 {
                     System.arraycopy(ep1.inventory.mainInventory, 0, player.inventory.mainInventory, 0, player.inventory.mainInventory.length);
@@ -80,24 +127,24 @@ public class InfoPlayerViewLine extends InfoTextLine
                 else
                 {
                     player.inventory.clear();
-                    
+
                     for(Map.Entry<EntityEquipmentSlot, ItemStack> e : playerLM.lastArmor.entrySet())
                     {
                         player.setItemStackToSlot(e.getKey(), e.getValue());
                     }
                 }
             }
-            
+
             GlStateManager.pushMatrix();
-            
+
             int pheight = 120;
             int pwidth = (int) (pheight / 1.625F);
-            
+
             int playerX = guiInfo.mainPanel.width - pwidth / 2 - 30;
             int playerY = ay + pheight + 10;
-            
+
             pheight = pheight / 2;
-            
+
             FTBLibClient.setTexture(player.getLocationSkin());
             GlStateManager.translate(0F, 0F, 100F);
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -105,45 +152,18 @@ public class InfoPlayerViewLine extends InfoTextLine
             GlStateManager.color(1F, 1F, 1F, 1F);
             GlStateManager.popMatrix();
         }
-        
-        public class Player extends AbstractClientPlayer
-        {
-            public Player(ForgePlayerSP p)
-            {
-                super(Minecraft.getMinecraft().theWorld, p.getProfile());
-            }
-            
-            @Override
-            public boolean equals(Object o)
-            { return playerLM.equals(o); }
-            
-            @Override
-            public void addChatMessage(ITextComponent i) { }
-            
-            @Override
-            public boolean canCommandSenderUseCommand(int i, String s)
-            { return false; }
-            
-            @Override
-            public BlockPos getPosition()
-            { return BlockPos.ORIGIN; }
-            
-            @Override
-            public boolean isInvisibleToPlayer(EntityPlayer ep)
-            { return true; }
-            
-            @Override
-            public ResourceLocation getLocationSkin()
-            { return playerLM.getSkin(); }
-            
-            //FIXME: Cape
-            //@Override
-            //public boolean hasCape()
-            //{ return false; }
-            
-            @Override
-            public ResourceLocation getLocationCape()
-            { return null; }
-        }
+    }
+    public final ForgePlayerSP playerLM;
+
+    public InfoPlayerViewLine(InfoPage c, ForgePlayerSP p)
+    {
+        super(c, null);
+        playerLM = p;
+    }
+
+    @Override
+    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    {
+        return new ButtonInfoPlayerView(gui, this);
     }
 }

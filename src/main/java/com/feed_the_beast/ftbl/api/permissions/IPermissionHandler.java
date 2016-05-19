@@ -12,7 +12,7 @@ public interface IPermissionHandler
      * Return null for default value, otherwise override to true of false
      */
     Boolean handlePermission(String permission, GameProfile profile);
-    
+
     /**
      * Return null or JsonNull.INSTANCE for default value, otherwise override
      */

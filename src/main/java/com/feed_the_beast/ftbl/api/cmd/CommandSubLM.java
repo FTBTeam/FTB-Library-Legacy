@@ -19,20 +19,35 @@ import java.util.Map;
 public class CommandSubLM extends CommandLM implements ICustomCommandInfo
 {
     public final Map<String, ICommand> subCommands;
-    
+
     public CommandSubLM(String s, CommandLevel l)
     {
         super(s, l);
         subCommands = new HashMap<>();
     }
-    
+
+    private static ITextComponent tree(ITextComponent sibling, int level)
+    {
+        if(level == 0)
+        {
+            return sibling;
+        }
+        char[] chars = new char[level * 2];
+        Arrays.fill(chars, ' ');
+        return new TextComponentString(new String(chars)).appendSibling(sibling);
+    }
+
     public void add(ICommand c)
-    { subCommands.put(c.getCommandName(), c); }
-    
+    {
+        subCommands.put(c.getCommandName(), c);
+    }
+
     @Override
     public String getCommandUsage(ICommandSender ics)
-    { return '/' + commandName + " [subcommand]"; }
-    
+    {
+        return '/' + commandName + " [subcommand]";
+    }
+
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {
@@ -40,29 +55,32 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
         {
             return getListOfStringsMatchingLastWord(args, subCommands.keySet());
         }
-        
+
         ICommand cmd = subCommands.get(args[0]);
-        
+
         if(cmd != null)
         {
             return cmd.getTabCompletionOptions(server, ics, LMStringUtils.shiftArray(args), pos);
         }
-        
+
         return super.getTabCompletionOptions(server, ics, args, pos);
     }
-    
+
     @Override
     public boolean isUsernameIndex(String[] args, int i)
     {
         if(i > 0 && args.length > 1)
         {
             ICommand cmd = subCommands.get(args[0]);
-            if(cmd != null) { return cmd.isUsernameIndex(LMStringUtils.shiftArray(args), i - 1); }
+            if(cmd != null)
+            {
+                return cmd.isUsernameIndex(LMStringUtils.shiftArray(args), i - 1);
+            }
         }
-        
+
         return false;
     }
-    
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
@@ -73,7 +91,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
         else
         {
             ICommand cmd = subCommands.get(args[0]);
-            
+
             if(cmd == null)
             {
                 throw FTBLibLang.invalid_subcmd.commandError(args[0]);
@@ -84,7 +102,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
             }
         }
     }
-    
+
     @Override
     public void addInfo(List<ITextComponent> list, ICommandSender sender)
     {
@@ -92,15 +110,7 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
         list.add(null);
         addCommandUsage(sender, list, 0);
     }
-    
-    private static ITextComponent tree(ITextComponent sibling, int level)
-    {
-        if(level == 0) { return sibling; }
-        char[] chars = new char[level * 2];
-        Arrays.fill(chars, ' ');
-        return new TextComponentString(new String(chars)).appendSibling(sibling);
-    }
-    
+
     private void addCommandUsage(ICommandSender ics, List<ITextComponent> list, int level)
     {
         for(ICommand c : subCommands.values())

@@ -14,15 +14,20 @@ import java.util.List;
 
 public class WailaDataProvider implements IWailaDataProvider
 {
-    public final BasicWailaHandler handler;
     private static WailaDataAccessor dataAccessor = null;
-    
+    public final BasicWailaHandler handler;
+
     public WailaDataProvider(BasicWailaHandler h)
-    { handler = h; }
-    
+    {
+        handler = h;
+    }
+
     private static WailaDataAccessor getData(IWailaDataAccessor i)
     {
-        if(dataAccessor == null) { dataAccessor = new WailaDataAccessor(); }
+        if(dataAccessor == null)
+        {
+            dataAccessor = new WailaDataAccessor();
+        }
         dataAccessor.player = i.getPlayer();
         dataAccessor.world = i.getWorld();
         dataAccessor.position = i.getMOP();
@@ -32,24 +37,34 @@ public class WailaDataProvider implements IWailaDataProvider
         dataAccessor.side = dataAccessor.position.sideHit;
         return dataAccessor;
     }
-    
+
     @Override
     public ItemStack getWailaStack(IWailaDataAccessor data, IWailaConfigHandler config)
-    { return handler.getWailaStack(getData(data)); }
-    
+    {
+        return handler.getWailaStack(getData(data));
+    }
+
     @Override
     public List<String> getWailaHead(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
-    { return handler.getWailaHead(is, l, getData(data)); }
-    
+    {
+        return handler.getWailaHead(is, l, getData(data));
+    }
+
     @Override
     public List<String> getWailaBody(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
-    { return handler.getWailaBody(is, l, getData(data)); }
-    
+    {
+        return handler.getWailaBody(is, l, getData(data));
+    }
+
     @Override
     public List<String> getWailaTail(ItemStack is, List<String> l, IWailaDataAccessor data, IWailaConfigHandler config)
-    { return handler.getWailaTail(is, l, getData(data)); }
-    
+    {
+        return handler.getWailaTail(is, l, getData(data));
+    }
+
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP entityPlayerMP, TileEntity tileEntity, NBTTagCompound nbtTagCompound, World world, BlockPos blockPos)
-    { return null; }
+    {
+        return null;
+    }
 }

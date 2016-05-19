@@ -20,9 +20,11 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public int typeID;
     public String groupID;
     public NBTTagCompound tag;
-    
-    public MessageEditConfig() { }
-    
+
+    public MessageEditConfig()
+    {
+    }
+
     public MessageEditConfig(long t, ReloadType reload, ConfigGroup group)
     {
         token = t;
@@ -30,14 +32,19 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         groupID = group.getID();
         tag = new NBTTagCompound();
         group.writeToNBT(tag, true);
-        
-        if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("TX Send: " + group.getSerializableElement()); }
+
+        if(FTBLib.DEV_ENV)
+        {
+            FTBLib.dev_logger.info("TX Send: " + group.getSerializableElement());
+        }
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -46,7 +53,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         groupID = readString(io);
         tag = readTag(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -55,16 +62,19 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         writeString(io, groupID);
         writeTag(io, tag);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageEditConfig m, Minecraft mc)
     {
         ConfigGroup group = new ConfigGroup(m.groupID);
         group.readFromNBT(m.tag, true);
-        
-        if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("RX Send: " + group.getSerializableElement()); }
-        
+
+        if(FTBLib.DEV_ENV)
+        {
+            FTBLib.dev_logger.info("RX Send: " + group.getSerializableElement());
+        }
+
         FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(m.token, ReloadType.values()[m.typeID], group)));
     }
 }

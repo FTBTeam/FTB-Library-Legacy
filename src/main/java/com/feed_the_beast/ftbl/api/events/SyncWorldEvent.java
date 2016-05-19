@@ -22,7 +22,7 @@ public class SyncWorldEvent extends Event
     public final EntityPlayer player;
     public final NBTTagCompound syncData;
     public final boolean login;
-    
+
     private SyncWorldEvent(ForgeWorld w, EntityPlayer ep, NBTTagCompound t, boolean b)
     {
         world = w;
@@ -30,23 +30,29 @@ public class SyncWorldEvent extends Event
         syncData = t;
         login = b;
     }
-    
+
     public static NBTTagCompound generateData(EntityPlayerMP ep, boolean login)
     {
         SyncWorldEvent event = new SyncWorldEvent(ForgeWorldMP.inst, ep, new NBTTagCompound(), login);
         MinecraftForge.EVENT_BUS.post(event);
-        
-        if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Synced data TX: " + event.syncData); }
-        
+
+        if(FTBLib.DEV_ENV)
+        {
+            FTBLib.dev_logger.info("Synced data TX: " + event.syncData);
+        }
+
         return event.syncData;
     }
-    
+
     @SideOnly(Side.CLIENT)
     public static void readData(NBTTagCompound data, boolean login)
     {
         SyncWorldEvent event = new SyncWorldEvent(ForgeWorldSP.inst, FTBLibClient.mc.thePlayer, data, login);
         MinecraftForge.EVENT_BUS.post(event);
-        
-        if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Synced data RX: " + data); }
+
+        if(FTBLib.DEV_ENV)
+        {
+            FTBLib.dev_logger.info("Synced data RX: " + data);
+        }
     }
 }

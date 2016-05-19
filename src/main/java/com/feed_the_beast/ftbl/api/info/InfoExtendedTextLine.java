@@ -28,12 +28,12 @@ public class InfoExtendedTextLine extends InfoTextLine
     protected ITextComponent text;
     private ClickAction clickAction;
     private List<ITextComponent> hover;
-    
+
     public InfoExtendedTextLine(InfoPage c, ITextComponent cc)
     {
         super(c, null);
         text = cc;
-        
+
         if(text != null)
         {
             ClickEvent clickEvent = text.getStyle().getClickEvent();
@@ -41,7 +41,7 @@ public class InfoExtendedTextLine extends InfoTextLine
             {
                 clickAction = ClickAction.from(clickEvent);
             }
-            
+
             HoverEvent hoverEvent = text.getStyle().getHoverEvent();
             if(hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_TEXT)
             {
@@ -49,23 +49,44 @@ public class InfoExtendedTextLine extends InfoTextLine
             }
         }
     }
-    
+
     @Override
     public ITextComponent getText()
-    { return text; }
-    
+    {
+        return text;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public ButtonInfoTextLine createWidget(GuiInfo gui)
-    { return new ButtonInfoExtendedTextLine(gui, this); }
-    
+    {
+        return new ButtonInfoExtendedTextLine(gui, this);
+    }
+
     public List<ITextComponent> getHover()
-    { return hover; }
-    
+    {
+        return hover;
+    }
+
+    public void setHover(List<ITextComponent> h)
+    {
+        if(h == null || h.isEmpty())
+        {
+            hover = null;
+        }
+        else
+        {
+            hover = new ArrayList<>(h.size());
+            hover.addAll(h);
+        }
+    }
+
     @SideOnly(Side.CLIENT)
     public boolean hasClickAction()
-    { return clickAction != null; }
-    
+    {
+        return clickAction != null;
+    }
+
     @SideOnly(Side.CLIENT)
     public void onClicked(MouseButton button)
     {
@@ -75,28 +96,34 @@ public class InfoExtendedTextLine extends InfoTextLine
             clickAction.onClicked(button);
         }
     }
-    
+
     @Override
     public void fromJson(JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
-        
+
         text = o.has("text") ? JsonHelper.deserializeICC(o.get("text")) : null;
-        
+
         if(o.has("click"))
         {
             clickAction = new ClickAction();
             clickAction.fromJson(o.get("click"));
         }
-        else { clickAction = null; }
-        
+        else
+        {
+            clickAction = null;
+        }
+
         if(o.has("hover"))
         {
             hover = new ArrayList<>();
-            
+
             JsonElement e1 = o.get("hover");
-            
-            if(e1.isJsonPrimitive()) { hover.add(JsonHelper.deserializeICC(e1)); }
+
+            if(e1.isJsonPrimitive())
+            {
+                hover.add(JsonHelper.deserializeICC(e1));
+            }
             else
             {
                 for(JsonElement e2 : o.get("hover").getAsJsonArray())
@@ -104,23 +131,32 @@ public class InfoExtendedTextLine extends InfoTextLine
                     hover.add(JsonHelper.deserializeICC(e2));
                 }
             }
-            
-            if(hover.isEmpty()) { hover = null; }
+
+            if(hover.isEmpty())
+            {
+                hover = null;
+            }
         }
-        else { hover = null; }
+        else
+        {
+            hover = null;
+        }
     }
-    
+
     @Override
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
-        if(text != null) { o.add("text", JsonHelper.serializeICC(text)); }
-        
+        if(text != null)
+        {
+            o.add("text", JsonHelper.serializeICC(text));
+        }
+
         if(clickAction != null)
         {
             o.add("click", clickAction.getSerializableElement());
         }
-        
+
         if(hover != null && !hover.isEmpty())
         {
             if(hover.size() == 1)
@@ -134,24 +170,16 @@ public class InfoExtendedTextLine extends InfoTextLine
                 {
                     a.add(JsonHelper.serializeICC(c));
                 }
-                
+
                 o.add("hover", a);
             }
         }
-        
+
         return o;
     }
-    
+
     public void setClickAction(ClickAction a)
-    { clickAction = a; }
-    
-    public void setHover(List<ITextComponent> h)
     {
-        if(h == null || h.isEmpty()) { hover = null; }
-        else
-        {
-            hover = new ArrayList<>(h.size());
-            hover.addAll(h);
-        }
+        clickAction = a;
     }
 }

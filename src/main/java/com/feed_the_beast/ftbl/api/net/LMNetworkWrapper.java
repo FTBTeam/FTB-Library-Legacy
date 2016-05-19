@@ -16,13 +16,9 @@ import java.util.Map;
 
 public class LMNetworkWrapper // SimpleNetworkWrapper
 {
-    public static LMNetworkWrapper newWrapper(String ID)
-    { return new LMNetworkWrapper(ID); }
-    
     private final SimpleIndexedCodec packetCodec;
     private final FMLEmbeddedChannel serverChannels;
     private final FMLEmbeddedChannel clientChannels;
-    
     private LMNetworkWrapper(String s)
     {
         packetCodec = new SimpleIndexedCodec();
@@ -30,10 +26,17 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
         serverChannels = channels.get(Side.SERVER);
         clientChannels = channels.get(Side.CLIENT);
     }
-    
+
+    public static LMNetworkWrapper newWrapper(String ID)
+    {
+        return new LMNetworkWrapper(ID);
+    }
+
     private FMLEmbeddedChannel get(Side s)
-    { return s.isServer() ? serverChannels : clientChannels; }
-    
+    {
+        return s.isServer() ? serverChannels : clientChannels;
+    }
+
     public void register(int discriminator, MessageLM<?> m)
     {
         try
@@ -48,37 +51,39 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
             e.printStackTrace();
         }
     }
-    
+
     public Packet getPacketFrom(IMessage message)
-    { return serverChannels.generatePacketFrom(message); }
-    
+    {
+        return serverChannels.generatePacketFrom(message);
+    }
+
     public void sendToAll(IMessage message)
     {
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
         serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
-    
+
     public void sendTo(IMessage message, EntityPlayerMP player)
     {
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
         serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
-    
+
     public void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point)
     {
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
         serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
-    
+
     public void sendToDimension(IMessage message, DimensionType dimensionId)
     {
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId.ordinal());
         serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
-    
+
     public void sendToServer(IMessage message)
     {
         clientChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);

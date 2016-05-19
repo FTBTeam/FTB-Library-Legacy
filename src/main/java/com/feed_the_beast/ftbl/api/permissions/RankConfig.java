@@ -16,10 +16,10 @@ public abstract class RankConfig extends FinalIDObject
     {
         super(ForgePermissionRegistry.getID(id));
     }
-    
+
     public abstract JsonElement getDefaultValue(boolean op);
-    
-    
+
+
     /**
      * Player can't be null, but it can be FakePlayer, if implementation supports that
      */
@@ -29,12 +29,12 @@ public abstract class RankConfig extends FinalIDObject
         {
             throw new RuntimeException("GameProfile can't be null!");
         }
-        
+
         if(ForgePermissionRegistry.getPermissionHandler() != null)
         {
             return ForgePermissionRegistry.getPermissionHandler().handleRankConfig(this, profile);
         }
-        
+
         return getDefaultValue(FTBLib.isOP(profile));
     }
 }

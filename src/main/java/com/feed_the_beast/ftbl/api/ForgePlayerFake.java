@@ -15,24 +15,36 @@ public final class ForgePlayerFake extends ForgePlayerMP
         super(p.getGameProfile());
         setPlayer(p);
     }
-    
+
     @Override
     public boolean isFake()
-    { return true; }
-    
+    {
+        return true;
+    }
+
     @Override
-    public void sendUpdate() { }
-    
+    public void sendUpdate()
+    {
+    }
+
     @Override
     public boolean isOP()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     @Override
-    public void getInfo(ForgePlayerMP owner, List<ITextComponent> info) { }
-    
+    public void getInfo(ForgePlayerMP owner, List<ITextComponent> info)
+    {
+    }
+
     @Override
-    public void refreshStats() { }
-    
+    public void refreshStats()
+    {
+    }
+
     @Override
-    public void checkNewFriends() { }
+    public void checkNewFriends()
+    {
+    }
 }

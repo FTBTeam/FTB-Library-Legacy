@@ -15,7 +15,7 @@ public class InfoGuiLineEvent extends Event
     public final InfoPage page;
     public final JsonObject json;
     public InfoExtendedTextLine line;
-    
+
     public InfoGuiLineEvent(InfoPage p, JsonObject o)
     {
         page = p;

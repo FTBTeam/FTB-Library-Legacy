@@ -16,45 +16,49 @@ public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
     public static final byte REMOVE = 1;
     public static final byte ADD_ALL = 2;
     public static final byte DENY = 3;
-    
+
     public byte actionID;
     public UUID playerID;
-    
-    public MessageModifyFriends() { }
-    
+
+    public MessageModifyFriends()
+    {
+    }
+
     public MessageModifyFriends(byte a, UUID id)
     {
         actionID = a;
         playerID = id;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
         actionID = io.readByte();
         playerID = actionID == ADD_ALL ? null : readUUID(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
         io.writeByte(actionID);
-        
+
         if(actionID != ADD_ALL)
         {
             writeUUID(io, playerID);
         }
     }
-    
+
     @Override
     public void onMessage(MessageModifyFriends m, EntityPlayerMP ep)
     {
         ForgePlayerMP owner = ForgeWorldMP.inst.getPlayer(ep);
-        
+
         if(m.actionID == ADD_ALL)
         {
             for(ForgePlayer p : owner.getWorld().playerMap.values())
@@ -69,8 +73,11 @@ public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
         else
         {
             ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
-            if(p == null || p.equalsPlayer(owner)) { return; }
-            
+            if(p == null || p.equalsPlayer(owner))
+            {
+                return;
+            }
+
             switch(m.actionID)
             {
                 case ADD:
@@ -81,11 +88,11 @@ public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
                         owner.sendUpdate();
                         p.sendUpdate();
                         p.checkNewFriends();
-                        
+
                         p.sendInfoUpdate(owner);
                         owner.sendInfoUpdate(owner);
                     }
-                    
+
                     break;
                 }
                 case REMOVE:
@@ -96,11 +103,11 @@ public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
                         owner.sendUpdate();
                         p.sendUpdate();
                         p.checkNewFriends();
-                        
+
                         p.sendInfoUpdate(owner);
                         owner.sendInfoUpdate(owner);
                     }
-                    
+
                     break;
                 }
                 case DENY:
@@ -110,16 +117,16 @@ public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
                         p.friends.remove(owner.getProfile().getId());
                         owner.sendUpdate();
                         p.sendUpdate();
-                        
+
                         p.sendInfoUpdate(owner);
                         owner.sendInfoUpdate(owner);
                     }
-                    
+
                     break;
                 }
             }
         }
-        
+
         owner.sendUpdate();
     }
 }

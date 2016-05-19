@@ -19,17 +19,6 @@ import java.net.URI;
 
 public abstract class ClickActionType extends FinalIDObject
 {
-    public ClickActionType(String id)
-    {
-        super(id);
-    }
-    
-    public abstract void onClicked(JsonElement data, MouseButton button);
-    
-    // Static //
-    
-    public static void init() {}
-    
     public static final ClickActionType ACTION = ClickActionRegistry.register(new ClickActionType("action")
     {
         @Override
@@ -37,10 +26,11 @@ public abstract class ClickActionType extends FinalIDObject
         {
             PlayerAction a = PlayerActionRegistry.get(data.getAsString());
             if(a != null && a.type.isSelf())
-            { a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer); }
+            {
+                a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer);
+            }
         }
     });
-    
     public static final ClickActionType CMD = ClickActionRegistry.register(new ClickActionType("cmd")
     {
         @Override
@@ -49,7 +39,8 @@ public abstract class ClickActionType extends FinalIDObject
             FTBLibClient.execClientCommand("/" + data.getAsString());
         }
     });
-    
+
+    // Static //
     public static final ClickActionType SHOW_CMD = ClickActionRegistry.register(new ClickActionType("show_cmd")
     {
         @Override
@@ -58,37 +49,48 @@ public abstract class ClickActionType extends FinalIDObject
             FTBLibClient.openGui(new GuiChat(data.getAsString()));
         }
     });
-    
     public static final ClickActionType URL = ClickActionRegistry.register(new ClickActionType("url")
     {
         @Override
         public void onClicked(JsonElement data, MouseButton button)
         {
-            try { LMUtils.openURI(new URI(data.getAsString())); }
-            catch(Exception ex) { ex.printStackTrace(); }
+            try
+            {
+                LMUtils.openURI(new URI(data.getAsString()));
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
     });
-    
     public static final ClickActionType FILE = ClickActionRegistry.register(new ClickActionType("file")
     {
         @Override
         public void onClicked(JsonElement data, MouseButton button)
         {
-            try { LMUtils.openURI(new File(data.getAsString()).toURI()); }
-            catch(Exception ex) { ex.printStackTrace(); }
+            try
+            {
+                LMUtils.openURI(new File(data.getAsString()).toURI());
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
     });
-    
     public static final ClickActionType GUI = ClickActionRegistry.register(new ClickActionType("gui")
     {
         @Override
         public void onClicked(JsonElement data, MouseButton button)
         {
             GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc.thePlayer, new ResourceLocation(data.getAsString()));
-            if(gui != null) { FTBLibClient.openGui(gui); }
+            if(gui != null)
+            {
+                FTBLibClient.openGui(gui);
+            }
         }
     });
-    
     public static final ClickActionType FRIEND_ADD = ClickActionRegistry.register(new ClickActionType("friend_add")
     {
         @Override
@@ -97,7 +99,6 @@ public abstract class ClickActionType extends FinalIDObject
             new MessageModifyFriends(MessageModifyFriends.ADD, LMUtils.fromString(data.getAsString())).sendToServer();
         }
     });
-    
     public static final ClickActionType FRIEND_ADD_ALL = ClickActionRegistry.register(new ClickActionType("friend_add_all")
     {
         @Override
@@ -106,4 +107,15 @@ public abstract class ClickActionType extends FinalIDObject
             new MessageModifyFriends(MessageModifyFriends.ADD_ALL, null).sendToServer();
         }
     });
+
+    public ClickActionType(String id)
+    {
+        super(id);
+    }
+
+    public static void init()
+    {
+    }
+
+    public abstract void onClicked(JsonElement data, MouseButton button);
 }

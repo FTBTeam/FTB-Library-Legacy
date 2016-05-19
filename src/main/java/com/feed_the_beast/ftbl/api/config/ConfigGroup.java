@@ -21,17 +21,19 @@ public class ConfigGroup extends ConfigEntry
 {
     public final LinkedHashMap<String, ConfigEntry> entryMap;
     private String displayName;
-    
+
     public ConfigGroup(String s)
     {
         super(s);
         entryMap = new LinkedHashMap<>();
     }
-    
+
     @Override
     public ConfigEntryType getConfigType()
-    { return ConfigEntryType.GROUP; }
-    
+    {
+        return ConfigEntryType.GROUP;
+    }
+
     public final List<ConfigEntry> sortedEntries()
     {
         List<ConfigEntry> list = new ArrayList<>();
@@ -39,10 +41,12 @@ public class ConfigGroup extends ConfigEntry
         Collections.sort(list, LMUtils.ID_COMPARATOR);
         return list;
     }
-    
+
     public ConfigFile getConfigFile()
-    { return (parentGroup != null) ? parentGroup.getConfigFile() : null; }
-    
+    {
+        return (parentGroup != null) ? parentGroup.getConfigFile() : null;
+    }
+
     public ConfigGroup add(ConfigEntry e, boolean copy)
     {
         if(e != null)
@@ -59,16 +63,16 @@ public class ConfigGroup extends ConfigEntry
                 e.parentGroup = this;
             }
         }
-        
+
         return this;
     }
-    
+
     public ConfigGroup addAll(Class<?> c, Object parent, boolean copy)
     {
         try
         {
             Field f[] = c.getDeclaredFields();
-            
+
             if(f != null && f.length > 0)
             {
                 for(Field aF : f)
@@ -86,7 +90,9 @@ public class ConfigGroup extends ConfigEntry
                             }
                         }
                     }
-                    catch(Exception e1) { }
+                    catch(Exception e1)
+                    {
+                    }
                 }
             }
         }
@@ -94,46 +100,49 @@ public class ConfigGroup extends ConfigEntry
         {
             e.printStackTrace();
         }
-        
+
         return this;
     }
-    
+
     @Override
     public ConfigEntry copy()
     {
         ConfigGroup g = new ConfigGroup(getID());
         for(ConfigEntry e : entryMap.values())
-            g.add(e, true);
+        { g.add(e, true); }
         return g;
     }
-    
+
     @Override
     public final void fromJson(JsonElement o0)
     {
-        if(o0 == null || !o0.isJsonObject()) { return; }
-        
+        if(o0 == null || !o0.isJsonObject())
+        {
+            return;
+        }
+
         entryMap.clear();
-        
+
         JsonObject o = o0.getAsJsonObject();
-        
+
         for(Map.Entry<String, JsonElement> e : o.entrySet())
         {
             ConfigEntry entry = new ConfigEntryCustom(e.getKey());
-            
+
             if(!e.getValue().isJsonNull())
             {
                 entry.fromJson(e.getValue());
             }
-            
+
             add(entry, false);
         }
     }
-    
+
     @Override
     public final JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
-        
+
         for(ConfigEntry e : entryMap.values())
         {
             if(!e.getFlag(Flags.EXCLUDED))
@@ -141,14 +150,16 @@ public class ConfigGroup extends ConfigEntry
                 o.add(e.getID(), e.getSerializableElement());
             }
         }
-        
+
         return o;
     }
-    
+
     @Override
     public String getAsString()
-    { return getSerializableElement().toString(); }
-    
+    {
+        return getSerializableElement().toString();
+    }
+
     @Override
     public List<String> getAsStringList()
     {
@@ -157,38 +168,46 @@ public class ConfigGroup extends ConfigEntry
         {
             list.add(e.getAsString());
         }
-        
+
         return list;
     }
-    
+
     @Override
     public boolean getAsBoolean()
-    { return !entryMap.isEmpty(); }
-    
+    {
+        return !entryMap.isEmpty();
+    }
+
     @Override
     public int getAsInt()
-    { return entryMap.size(); }
-    
-    public final void setDisplayName(String s)
-    { displayName = (s == null || s.isEmpty()) ? null : s; }
-    
+    {
+        return entryMap.size();
+    }
+
     public final String getDisplayName()
-    { return displayName == null ? LMStringUtils.firstUppercase(getID()) : displayName; }
-    
+    {
+        return displayName == null ? LMStringUtils.firstUppercase(getID()) : displayName;
+    }
+
+    public final void setDisplayName(String s)
+    {
+        displayName = (s == null || s.isEmpty()) ? null : s;
+    }
+
     @Override
     public void writeToNBT(NBTTagCompound tag, boolean extended)
     {
         super.writeToNBT(tag, extended);
-        
+
         if(extended && displayName != null)
         {
             tag.setString("N", displayName);
         }
-        
+
         if(!entryMap.isEmpty())
         {
             NBTTagCompound tag1 = new NBTTagCompound();
-            
+
             for(ConfigEntry e : entryMap.values())
             {
                 NBTTagCompound tag2 = new NBTTagCompound();
@@ -196,30 +215,30 @@ public class ConfigGroup extends ConfigEntry
                 tag2.setByte("T", e.getConfigType().ID);
                 tag1.setTag(e.getID(), tag2);
             }
-            
+
             tag.setTag("V", tag1);
         }
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         super.readFromNBT(tag, extended);
-        
+
         if(extended)
         {
             displayName = tag.hasKey("N") ? tag.getString("N") : null;
         }
-        
+
         entryMap.clear();
-        
+
         if(tag.hasKey("V"))
         {
             for(Map.Entry<String, NBTBase> entry : LMNBTUtils.entrySet((NBTTagCompound) tag.getTag("V")))
             {
                 NBTTagCompound tag2 = (NBTTagCompound) entry.getValue();
                 ConfigEntryType t = ConfigEntryType.getFromID(tag2.getByte("T"));
-                
+
                 if(t != null)
                 {
                     ConfigEntry e = t.createNew(entry.getKey());
@@ -229,23 +248,26 @@ public class ConfigGroup extends ConfigEntry
             }
         }
     }
-    
+
     public int loadFromGroup(ConfigGroup l, boolean isNBT)
     {
-        if(l == null || l.entryMap.isEmpty()) { return 0; }
-        
+        if(l == null || l.entryMap.isEmpty())
+        {
+            return 0;
+        }
+
         int result = 0;
-        
+
         for(ConfigEntry e1 : l.entryMap.values())
         {
             ConfigEntry e0 = entryMap.get(e1.getID());
-            
+
             if(e0 != null)
             {
                 if(e0.getAsGroup() != null)
                 {
                     ConfigGroup g1 = new ConfigGroup(e1.getID());
-                    
+
                     if(isNBT)
                     {
                         NBTTagCompound tag = new NBTTagCompound();
@@ -256,7 +278,7 @@ public class ConfigGroup extends ConfigEntry
                     {
                         g1.fromJson(e1.getSerializableElement());
                     }
-                    
+
                     result += e0.getAsGroup().loadFromGroup(g1, isNBT);
                 }
                 else
@@ -273,7 +295,7 @@ public class ConfigGroup extends ConfigEntry
                         {
                             e0.fromJson(e1.getSerializableElement());
                         }
-                        
+
                         result++;
                     }
                     catch(Exception ex)
@@ -284,55 +306,75 @@ public class ConfigGroup extends ConfigEntry
                 }
             }
         }
-        
-        if(result > 0) { onLoadedFromGroup(l); }
+
+        if(result > 0)
+        {
+            onLoadedFromGroup(l);
+        }
         return result;
     }
-    
+
     protected void onLoadedFromGroup(ConfigGroup l)
     {
     }
-    
+
     public boolean hasKey(Object key)
-    { return entryMap.containsKey(LMUtils.getID(key)); }
-    
+    {
+        return entryMap.containsKey(LMUtils.getID(key));
+    }
+
     public ConfigEntry getEntry(Object key)
-    { return entryMap.get(LMUtils.getID(key)); }
-    
+    {
+        return entryMap.get(LMUtils.getID(key));
+    }
+
     public ConfigGroup getGroup(Object key)
     {
         ConfigEntry e = getEntry(key);
         return (e == null) ? null : e.getAsGroup();
     }
-    
+
     public List<ConfigGroup> getGroups()
     {
         ArrayList<ConfigGroup> list = new ArrayList<>();
         for(ConfigEntry e : entryMap.values())
         {
             ConfigGroup g = e.getAsGroup();
-            if(g != null) { list.add(g); }
+            if(g != null)
+            {
+                list.add(g);
+            }
         }
         return list;
     }
-    
+
     @Override
     public ConfigGroup getAsGroup()
-    { return this; }
-    
+    {
+        return this;
+    }
+
     public int getTotalEntryCount()
     {
         int count = 0;
-        
+
         for(ConfigEntry e : entryMap.values())
         {
-            if(e.getAsGroup() == null) { count++; }
-            else { count += e.getAsGroup().getTotalEntryCount(); }
+            if(e.getAsGroup() == null)
+            {
+                count++;
+            }
+            else
+            {
+                count += e.getAsGroup().getTotalEntryCount();
+            }
         }
-        
+
         return count;
     }
-    
+
     public int getDepth()
-    { return (parentGroup == null) ? 0 : (parentGroup.getDepth() + 1); }
+    {
+        return (parentGroup == null) ? 0 : (parentGroup.getDepth() + 1);
+    }
 }

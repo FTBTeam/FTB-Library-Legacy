@@ -10,7 +10,7 @@ import net.minecraft.util.text.Style;
 public class JsonHelper
 {
     public static Gson chatComponentGson;
-    
+
     public static void init()
     {
         GsonBuilder gb = new GsonBuilder();
@@ -19,16 +19,22 @@ public class JsonHelper
         gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
         chatComponentGson = gb.create();
     }
-    
+
     public static JsonElement serializeICC(ITextComponent c)
     {
-        if(c == null) { return null; }
+        if(c == null)
+        {
+            return null;
+        }
         return chatComponentGson.toJsonTree(c, ITextComponent.class);
     }
-    
+
     public static ITextComponent deserializeICC(JsonElement e)
     {
-        if(e == null || e.isJsonNull()) { return null; }
+        if(e == null || e.isJsonNull())
+        {
+            return null;
+        }
         return chatComponentGson.fromJson(e, ITextComponent.class);
     }
 }

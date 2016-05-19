@@ -9,5 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 public interface ITileEntity
 {
     TileEntity getTile();
+
     BlockDimPos getDimPos();
 }

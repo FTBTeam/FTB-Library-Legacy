@@ -12,35 +12,39 @@ import java.util.UUID;
 public class MessageRequestPlayerInfo extends MessageToServer<MessageRequestPlayerInfo>
 {
     public UUID playerID;
-    
-    public MessageRequestPlayerInfo() { }
-    
+
+    public MessageRequestPlayerInfo()
+    {
+    }
+
     public MessageRequestPlayerInfo(UUID player)
     {
         playerID = player;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
         playerID = readUUID(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
         writeUUID(io, playerID);
     }
-    
+
     @Override
     public void onMessage(MessageRequestPlayerInfo m, EntityPlayerMP ep)
     {
         ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
-        
+
         if(p != null)
         {
             new MessageLMPlayerInfo(ForgeWorldMP.inst.getPlayer(ep), p).sendTo(ep);

@@ -17,9 +17,11 @@ public class MessageOpenGuiTile extends MessageToClient<MessageOpenGuiTile>
 {
     public int posX, posY, posZ, windowID;
     public NBTTagCompound data;
-    
-    public MessageOpenGuiTile() { }
-    
+
+    public MessageOpenGuiTile()
+    {
+    }
+
     public MessageOpenGuiTile(TileEntity t, NBTTagCompound tag, int wid)
     {
         posX = t.getPos().getX();
@@ -28,11 +30,13 @@ public class MessageOpenGuiTile extends MessageToClient<MessageOpenGuiTile>
         data = tag;
         windowID = wid;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -42,7 +46,7 @@ public class MessageOpenGuiTile extends MessageToClient<MessageOpenGuiTile>
         data = readTag(io);
         windowID = io.readUnsignedByte();
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -52,17 +56,17 @@ public class MessageOpenGuiTile extends MessageToClient<MessageOpenGuiTile>
         writeTag(io, data);
         io.writeByte(windowID);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGuiTile m, Minecraft mc)
     {
         TileEntity te = mc.theWorld.getTileEntity(new BlockPos(m.posX, m.posY, m.posZ));
-        
+
         if(te != null && !te.isInvalid() && te instanceof IGuiTile)
         {
             GuiScreen gui = ((IGuiTile) te).getGui(mc.thePlayer, m.data);
-            
+
             if(gui != null)
             {
                 FTBLibClient.openGui(gui);

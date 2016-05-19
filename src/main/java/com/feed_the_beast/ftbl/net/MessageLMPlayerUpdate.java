@@ -20,9 +20,11 @@ public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate
     public UUID playerID;
     public boolean isSelf;
     public NBTTagCompound data;
-    
-    public MessageLMPlayerUpdate() { }
-    
+
+    public MessageLMPlayerUpdate()
+    {
+    }
+
     public MessageLMPlayerUpdate(ForgePlayerMP p, boolean self)
     {
         this();
@@ -31,11 +33,13 @@ public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate
         data = new NBTTagCompound();
         p.writeToNet(data, self);
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -43,7 +47,7 @@ public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate
         isSelf = io.readBoolean();
         data = ByteBufUtils.readTag(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -51,7 +55,7 @@ public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate
         io.writeBoolean(isSelf);
         writeTag(io, data);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageLMPlayerUpdate m, Minecraft mc)

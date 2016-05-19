@@ -13,7 +13,7 @@ public enum ReloadType
     CLIENT_ONLY,
     SERVER_AND_CLIENT,
     SERVER_ONLY_NOTIFY_CLIENT;
-    
+
     public boolean reload(Side side)
     {
         if(side == Side.SERVER)

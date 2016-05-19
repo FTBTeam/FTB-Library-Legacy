@@ -12,22 +12,26 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageLMPlayerDied extends MessageToClient<MessageLMPlayerDied>
 {
-    public MessageLMPlayerDied() { }
-    
+    public MessageLMPlayerDied()
+    {
+    }
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageLMPlayerDied m, Minecraft mc)

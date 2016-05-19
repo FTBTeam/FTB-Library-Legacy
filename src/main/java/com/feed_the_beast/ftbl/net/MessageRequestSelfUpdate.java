@@ -9,22 +9,26 @@ import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageRequestSelfUpdate extends MessageToServer<MessageRequestSelfUpdate>
 {
-    public MessageRequestSelfUpdate() { }
-    
+    public MessageRequestSelfUpdate()
+    {
+    }
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
     }
-    
+
     @Override
     public void onMessage(MessageRequestSelfUpdate m, EntityPlayerMP ep)
     {

@@ -7,8 +7,11 @@ import net.minecraft.util.EnumFacing;
 public interface IPaintable
 {
     IBlockState getPaint(EnumFacing facing);
+
     void setPaint(EnumFacing facing, IBlockState paint);
-    
+
     default boolean canSetPaint(EntityPlayer player, EnumFacing facing, IBlockState paint)
-    { return getPaint(facing) != paint; }
+    {
+        return getPaint(facing) != paint;
+    }
 }

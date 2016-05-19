@@ -9,7 +9,7 @@ public class Tool
         public static final String AXE = "axe";
         public static final String WRENCH = "wrench";
     }
-    
+
     public static class Level
     {
         public static final int BASIC = 0;

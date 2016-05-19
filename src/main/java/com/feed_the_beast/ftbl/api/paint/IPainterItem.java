@@ -7,7 +7,10 @@ import net.minecraft.item.ItemStack;
 public interface IPainterItem
 {
     IBlockState getPaint();
+
     void setPaint(IBlockState paint);
+
     boolean canPaintBlocks(ItemStack is);
+
     void damagePainter(ItemStack is, EntityPlayer ep);
 }

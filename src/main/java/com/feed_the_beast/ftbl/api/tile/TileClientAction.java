@@ -15,6 +15,6 @@ public abstract class TileClientAction extends FinalResourceLocationObject
     {
         super(id);
     }
-    
+
     public abstract void onAction(TileEntity te, NBTTagCompound data, EntityPlayerMP player);
 }

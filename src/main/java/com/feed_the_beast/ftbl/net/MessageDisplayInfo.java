@@ -15,33 +15,37 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
     public String infoID;
     public JsonElement json;
-    
-    public MessageDisplayInfo() { }
-    
+
+    public MessageDisplayInfo()
+    {
+    }
+
     public MessageDisplayInfo(InfoPage page)
     {
         infoID = page.getID();
         json = page.getSerializableElement();
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
         infoID = readString(io);
         json = readJsonElement(io);
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
         writeString(io, infoID);
         writeJsonElement(io, json);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageDisplayInfo m, Minecraft mc)

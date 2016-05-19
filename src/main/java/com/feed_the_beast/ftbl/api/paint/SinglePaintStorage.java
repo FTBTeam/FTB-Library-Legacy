@@ -9,12 +9,16 @@ import net.minecraft.util.EnumFacing;
 public class SinglePaintStorage implements IPaintable
 {
     private IBlockState paint;
-    
+
     @Override
     public IBlockState getPaint(EnumFacing facing)
-    { return paint; }
-    
+    {
+        return paint;
+    }
+
     @Override
     public void setPaint(EnumFacing facing, IBlockState p)
-    { paint = p; }
+    {
+        paint = p;
+    }
 }

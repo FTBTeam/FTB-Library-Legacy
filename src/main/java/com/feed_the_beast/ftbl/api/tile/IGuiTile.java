@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IGuiTile extends ITileEntity
 {
     Container getContainer(EntityPlayer ep, NBTTagCompound data);
-    
+
     @SideOnly(Side.CLIENT)
     GuiScreen getGui(EntityPlayer ep, NBTTagCompound data);
 }

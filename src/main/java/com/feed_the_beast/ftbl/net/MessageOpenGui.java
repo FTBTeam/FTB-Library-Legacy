@@ -17,9 +17,11 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     public int guiID;
     public NBTTagCompound data;
     public int windowID;
-    
-    public MessageOpenGui() { }
-    
+
+    public MessageOpenGui()
+    {
+    }
+
     public MessageOpenGui(String mod, int id, NBTTagCompound tag, int wid)
     {
         modID = mod;
@@ -27,11 +29,13 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
         data = tag;
         windowID = wid;
     }
-    
+
     @Override
     public LMNetworkWrapper getWrapper()
-    { return FTBLibNetHandler.NET; }
-    
+    {
+        return FTBLibNetHandler.NET;
+    }
+
     @Override
     public void fromBytes(ByteBuf io)
     {
@@ -40,7 +44,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
         data = readTag(io);
         windowID = io.readUnsignedByte();
     }
-    
+
     @Override
     public void toBytes(ByteBuf io)
     {
@@ -49,13 +53,13 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
         writeTag(io, data);
         io.writeByte(windowID);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m, Minecraft mc)
     {
         LMGuiHandler h = LMGuiHandlerRegistry.get(m.modID);
-        
+
         if(h != null && FTBLibMod.proxy.openClientGui(mc.thePlayer, m.modID, m.guiID, m.data))
         {
             mc.thePlayer.openContainer.windowId = m.windowID;

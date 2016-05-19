@@ -15,8 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CmdReloadClient extends CommandLM
 {
     public CmdReloadClient()
-    { super(FTBLibModClient.reload_client_cmd.getAsString(), CommandLevel.OP); }
-    
+    {
+        super(FTBLibModClient.reload_client_cmd.getAsString(), CommandLevel.OP);
+    }
+
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {

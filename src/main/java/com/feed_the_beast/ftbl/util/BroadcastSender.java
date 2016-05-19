@@ -13,55 +13,77 @@ import net.minecraft.world.World;
 public class BroadcastSender implements ICommandSender
 {
     public static final BroadcastSender inst = new BroadcastSender();
-    
+
     public static final BroadcastSender mute = new BroadcastSender()
     {
         @Override
-        public void addChatMessage(ITextComponent ics) { }
+        public void addChatMessage(ITextComponent ics)
+        {
+        }
     };
-    
+
     @Override
     public String getName()
-    { return "[Server]"; }
-    
+    {
+        return "[Server]";
+    }
+
     @Override
     public ITextComponent getDisplayName()
-    { return new TextComponentString(getName()); }
-    
+    {
+        return new TextComponentString(getName());
+    }
+
     @Override
     public void addChatMessage(ITextComponent component)
-    { FTBLib.getServer().getPlayerList().sendChatMsgImpl(component, true); }
-    
+    {
+        FTBLib.getServer().getPlayerList().sendChatMsgImpl(component, true);
+    }
+
     @Override
     public boolean canCommandSenderUseCommand(int permLevel, String commandName)
-    { return true; }
-    
+    {
+        return true;
+    }
+
     @Override
     public BlockPos getPosition()
-    { return FTBLib.getServerWorld().getSpawnCoordinate(); }
-    
+    {
+        return FTBLib.getServerWorld().getSpawnCoordinate();
+    }
+
     @Override
     public Vec3d getPositionVector()
-    { return new Vec3d(getPosition()); }
-    
+    {
+        return new Vec3d(getPosition());
+    }
+
     @Override
     public World getEntityWorld()
-    { return FTBLib.getServerWorld(); }
-    
+    {
+        return FTBLib.getServerWorld();
+    }
+
     @Override
     public Entity getCommandSenderEntity()
-    { return null; }
-    
+    {
+        return null;
+    }
+
     @Override
     public boolean sendCommandFeedback()
-    { return false; }
-    
+    {
+        return false;
+    }
+
     @Override
     public void setCommandStat(CommandResultStats.Type type, int amount)
     {
     }
-    
+
     @Override
     public MinecraftServer getServer()
-    { return FTBLib.getServer(); }
+    {
+        return FTBLib.getServer();
+    }
 }

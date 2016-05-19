@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 public class ItemBlockLM extends ItemBlock
 {
     public final IBlockLM blockLM;
-    
+
     public ItemBlockLM(IBlockLM b)
     {
         super((Block) b);
@@ -15,12 +15,16 @@ public class ItemBlockLM extends ItemBlock
         setHasSubtypes(true);
         setMaxDamage(0);
     }
-    
+
     @Override
     public int getMetadata(int m)
-    { return m; }
-    
+    {
+        return m;
+    }
+
     @Override
     public String getUnlocalizedName(ItemStack stack)
-    { return super.getUnlocalizedName(stack); }
+    {
+        return super.getUnlocalizedName(stack);
+    }
 }

@@ -16,15 +16,17 @@ public abstract class ButtonSimpleLM extends ButtonLM
     public int colorText = 0xFFFFFFFF;
     public int colorButton = 0xFF888888;
     public int colorButtonOver = 0xFF999999;
-    
+
     public ButtonSimpleLM(IGuiLM g, int x, int y, int w, int h)
-    { super(g, x, y, w, h); }
-    
+    {
+        super(g, x, y, w, h);
+    }
+
     @Override
     public void addMouseOverText(List<String> l)
     {
     }
-    
+
     @Override
     public void renderWidget()
     {

@@ -15,43 +15,49 @@ import java.util.List;
 public abstract class ItemLM extends Item implements IItemLM
 {
     public abstract LMMod getMod();
-    
+
     @Override
     public final Item getItem()
-    { return this; }
-    
+    {
+        return this;
+    }
+
     @Override
     public final String getID()
-    { return getRegistryName().toString(); }
-    
+    {
+        return getRegistryName().toString();
+    }
+
     @Override
     public void onPostLoaded()
     {
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void loadModels()
     {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }
-    
+
     @Override
     public void loadRecipes()
     {
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
     {
         l.add(new ItemStack(item, 1, 0));
     }
-    
+
     @Override
     public String getUnlocalizedName(ItemStack is)
-    { return getMod().getItemName(getRegistryName().getResourcePath()); }
-    
+    {
+        return getMod().getItemName(getRegistryName().getResourcePath());
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)

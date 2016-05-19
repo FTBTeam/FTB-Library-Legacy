@@ -2,9 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 public class GuiLang
 {
-    private static LangKey get(String s)
-    { return new LangKey("gui_lm." + s); }
-    
     public static final LangKey button_settings = get("button.settings");
     public static final LangKey button_back = get("button.back");
     public static final LangKey button_up = get("button.up");
@@ -20,7 +17,6 @@ public class GuiLang
     public static final LangKey button_refresh = get("button.refresh");
     public static final LangKey button_edit = get("button.edit");
     public static final LangKey button_info = get("button.info");
-    
     public static final LangKey label_server_forced = get("label.server_forced");
     public static final LangKey label_true = get("label.true");
     public static final LangKey label_false = get("label.false");
@@ -32,13 +28,16 @@ public class GuiLang
     public static final LangKey label_offline = get("label.offline");
     public static final LangKey label_whitelist = get("label.whitelist");
     public static final LangKey label_blacklist = get("label.blacklist");
-    
     public static final LangKey label_friend = get("label.friend");
     public static final LangKey label_friend_pending = get("label.friend.pending");
     public static final LangKey label_friend_new = get("label.friend.new");
     public static final LangKey label_friend_new_click = get("label.friend.new_click");
-    
     public static final LangKey label_friend_joined = get("label.friend.joined");
     public static final LangKey label_friend_last_seen = get("label.friend.last_seen");
     public static final LangKey label_friend_deaths = get("label.friend.deaths");
+
+    private static LangKey get(String s)
+    {
+        return new LangKey("gui_lm." + s);
+    }
 }

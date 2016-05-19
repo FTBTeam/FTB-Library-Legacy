@@ -2,15 +2,19 @@ package com.feed_the_beast.ftbl.api;
 
 public abstract class ServerTickCallback
 {
-    private int ticks = 0;
     public final int maxTick;
-    
+    private int ticks = 0;
+
     public ServerTickCallback(int i)
-    { maxTick = Math.max(0, i); }
-    
+    {
+        maxTick = Math.max(0, i);
+    }
+
     public ServerTickCallback()
-    { this(1); }
-    
+    {
+        this(1);
+    }
+
     public boolean incAndCheck()
     {
         ticks++;
@@ -19,9 +23,9 @@ public abstract class ServerTickCallback
             onCallback();
             return true;
         }
-        
+
         return false;
     }
-    
+
     public abstract void onCallback();
 }

@@ -24,20 +24,26 @@ public class InfoImageLine extends InfoExtendedTextLine
     public String imageURL;
     private TextureCoords texture;
     private double displayW, displayH, displayS;
-    
+
     public InfoImageLine(InfoPage c)
     {
         super(c, null);
     }
-    
+
     @SideOnly(Side.CLIENT)
     public TextureCoords getImage()
     {
-        if(texture == TextureCoords.nullTexture) { return null; }
-        else if(texture != null) { return texture; }
-        
+        if(texture == TextureCoords.nullTexture)
+        {
+            return null;
+        }
+        else if(texture != null)
+        {
+            return texture;
+        }
+
         texture = TextureCoords.nullTexture;
-        
+
         try
         {
             //File file = new File(FTBLib.folderModpack, "images/" + imageURL);
@@ -50,29 +56,10 @@ public class InfoImageLine extends InfoExtendedTextLine
         {
             e.printStackTrace();
         }
-        
+
         return texture;
     }
-    
-    @SideOnly(Side.CLIENT)
-    public TextureCoords getDisplayImage()
-    {
-        TextureCoords img = getImage();
-        if(img == null) { return null; }
-        double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
-        double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
-        return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
-    }
-    
-    public InfoImageLine setImage(String img)
-    {
-        String imageURL0 = imageURL == null ? null : (imageURL + "");
-        imageURL = img;
-        if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true)) { texture = null; }
-        if(imageURL != null) { text = null; }
-        return this;
-    }
-    
+
     public InfoImageLine setImage(TextureCoords t)
     {
         texture = t;
@@ -80,33 +67,64 @@ public class InfoImageLine extends InfoExtendedTextLine
         text = null;
         return this;
     }
-    
+
+    @SideOnly(Side.CLIENT)
+    public TextureCoords getDisplayImage()
+    {
+        TextureCoords img = getImage();
+        if(img == null)
+        {
+            return null;
+        }
+        double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
+        double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
+        return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
+    }
+
+    public InfoImageLine setImage(String img)
+    {
+        String imageURL0 = imageURL == null ? null : (imageURL + "");
+        imageURL = img;
+        if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true))
+        {
+            texture = null;
+        }
+        if(imageURL != null)
+        {
+            text = null;
+        }
+        return this;
+    }
+
     public InfoImageLine setSize(double w, double h)
     {
         displayW = w;
         displayH = h;
         return this;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public ButtonInfoTextLine createWidget(GuiInfo gui)
     {
-        if(getImage() == null) { return null; }
+        if(getImage() == null)
+        {
+            return null;
+        }
         return new ButtonInfoImage(gui, this);
     }
-    
+
     @Override
     public void fromJson(JsonElement e)
     {
         super.fromJson(e);
-        
+
         displayW = displayH = displayS = 0D;
-        
+
         JsonObject o = e.getAsJsonObject();
-        
+
         setImage(o.has("image") ? o.get("image").getAsString() : null);
-        
+
         if(o.has("scale"))
         {
             displayS = o.get("scale").getAsDouble();
@@ -117,21 +135,24 @@ public class InfoImageLine extends InfoExtendedTextLine
             {
                 displayW = o.get("width").getAsDouble();
             }
-            
+
             if(o.has("height"))
             {
                 displayH = o.get("height").getAsDouble();
             }
         }
     }
-    
+
     @Override
     public JsonElement getSerializableElement()
     {
         JsonObject o = (JsonObject) super.getSerializableElement();
-        
-        if(imageURL != null && !imageURL.isEmpty()) { o.add("image", new JsonPrimitive(imageURL)); }
-        
+
+        if(imageURL != null && !imageURL.isEmpty())
+        {
+            o.add("image", new JsonPrimitive(imageURL));
+        }
+
         return o;
     }
 }

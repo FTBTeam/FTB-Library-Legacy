@@ -17,13 +17,6 @@ import java.util.Map;
 public class TileClientActionRegistry
 {
     public static final Map<ResourceLocation, TileClientAction> map = new HashMap<>();
-    
-    public static TileClientAction register(TileClientAction a)
-    {
-        map.put(a.getResourceLocation(), a);
-        return a;
-    }
-    
     public static final TileClientAction OPEN_GUI = register(new TileClientAction(new ResourceLocation("ftbl", "open_gui"))
     {
         @Override
@@ -35,7 +28,6 @@ public class TileClientActionRegistry
             }
         }
     });
-    
     public static final TileClientAction BUTTON_PRESSED = register(new TileClientAction(new ResourceLocation("ftbl", "button"))
     {
         @Override
@@ -47,7 +39,6 @@ public class TileClientActionRegistry
             }
         }
     });
-    
     public static final TileClientAction CUSTOM_NAME = register(new TileClientAction(new ResourceLocation("ftbl", "custom_name"))
     {
         @Override
@@ -55,13 +46,18 @@ public class TileClientActionRegistry
         {
             if(te instanceof IEditableName)
             {
-                String name = data.getString("N");
-                
-                if(((IEditableName) te).setName(name, player))
+                if(((IEditableName) te).canSetName(player))
                 {
+                    ((IEditableName) te).setName(data.getString("N"));
                     te.markDirty();
                 }
             }
         }
     });
+
+    public static TileClientAction register(TileClientAction a)
+    {
+        map.put(a.getResourceLocation(), a);
+        return a;
+    }
 }

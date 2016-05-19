@@ -11,17 +11,17 @@ public interface IWailaTile extends ITileEntity
     {
         ItemStack getWailaStack(WailaDataAccessor data);
     }
-    
+
     interface Head extends IWailaTile
     {
         void addWailaHead(WailaDataAccessor data, List<String> info);
     }
-    
+
     interface Body extends IWailaTile
     {
         void addWailaBody(WailaDataAccessor data, List<String> info);
     }
-    
+
     interface Tail extends IWailaTile
     {
         void addWailaTail(WailaDataAccessor data, List<String> info);

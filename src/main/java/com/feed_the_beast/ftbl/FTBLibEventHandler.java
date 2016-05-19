@@ -34,7 +34,7 @@ public class FTBLibEventHandler
     public static final List<ServerTickCallback> callbacks = new ArrayList<>();
     public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
     public static final List<IWorldTick> ticking = new ArrayList<>();
-    
+
     @SubscribeEvent
     public void onWorldSaved(WorldEvent.Save event)
     {
@@ -50,18 +50,18 @@ public class FTBLibEventHandler
             }
         }
     }
-    
+
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
     {
         if(e.player instanceof EntityPlayerMP)
         {
             EntityPlayerMP ep = (EntityPlayerMP) e.player;
-            
+
             ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-            
+
             boolean firstLogin = p == null;
-            
+
             if(firstLogin)
             {
                 p = new ForgePlayerMP(ep.getGameProfile());
@@ -72,12 +72,12 @@ public class FTBLibEventHandler
             {
                 p.setProfile(ep.getGameProfile());
             }
-            
+
             p.setPlayer(ep);
             p.onLoggedIn(firstLogin);
         }
     }
-    
+
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
     {
@@ -86,7 +86,7 @@ public class FTBLibEventHandler
             ForgeWorldMP.inst.getPlayer(e.player).onLoggedOut();
         }
     }
-    
+
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent e)
     {
@@ -95,7 +95,7 @@ public class FTBLibEventHandler
             ForgeWorldMP.inst.getPlayer(e.getEntity()).onDeath();
         }
     }
-    
+
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent e)
     {
@@ -108,19 +108,24 @@ public class FTBLibEventHandler
                     callbacks.addAll(pendingCallbacks);
                     pendingCallbacks.clear();
                 }
-                
+
                 if(!callbacks.isEmpty())
                 {
                     for(int i = callbacks.size() - 1; i >= 0; i--)
-                        if(callbacks.get(i).incAndCheck()) { callbacks.remove(i); }
+                    {
+                        if(callbacks.get(i).incAndCheck())
+                        {
+                            callbacks.remove(i);
+                        }
+                    }
                 }
             }
-            
+
             if(e.world instanceof WorldServer && !ticking.isEmpty())
             {
                 WorldServer ws = (WorldServer) e.world;
                 long now = System.currentTimeMillis();
-                
+
                 for(IWorldTick t : ticking)
                 {
                     t.onTick(ws, now);
@@ -128,36 +133,46 @@ public class FTBLibEventHandler
             }
         }
     }
-    
+
     //FIXME: Right click / left click needs a rewrite
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent e)
     {
-        if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty) { return; }
+        if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty)
+        {
+            return;
+        }
         else if(!canInteract(e.getEntityPlayer(), e.getHand(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
-        { e.setCanceled(true); }
+        {
+            e.setCanceled(true);
+        }
         else if(FTBLib.ftbu != null && e.getEntityPlayer() instanceof EntityPlayerMP)
         {
             if(!FTBLib.ftbu.canPlayerInteract(ForgeWorldMP.inst.getPlayer(e.getEntityPlayer()), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
-            { e.setCanceled(true); }
+            {
+                e.setCanceled(true);
+            }
         }
     }
-    
+
     private boolean canInteract(EntityPlayer ep, EnumHand hand, BlockPos pos, boolean leftClick)
     {
         ItemStack heldItem = ep.getHeldItem(hand);
-        
+
         if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
         {
-            if(!ep.worldObj.isRemote) { ep.worldObj.markBlockRangeForRenderUpdate(pos, pos); }
+            if(!ep.worldObj.isRemote)
+            {
+                ep.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+            }
             //FIXME: else ep.worldObj.markChunkDirty(pos, null);
             return false;
         }
-        
+
         if(!ep.worldObj.isRemote)
         {
             IBlockState state = ep.worldObj.getBlockState(pos);
-            
+
             if(state.getBlock().hasTileEntity(state))
             {
                 TileEntity te = ep.worldObj.getTileEntity(pos);
@@ -169,7 +184,7 @@ public class FTBLibEventHandler
                 }
             }
         }
-        
+
         return true;
     }
 }

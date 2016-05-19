@@ -10,39 +10,70 @@ public enum CommandLevel
     NONE,
     ALL,
     OP;
-    
+
     public static final CommandLevel[] VALUES = {NONE, ALL, OP};
     public static final String[] LEVEL_STRINGS = {"NONE", "ALL", "OP"};
-    
+
     public static CommandLevel get(String s)
     {
-        if(s.toUpperCase().equals("ALL")) { return ALL; }
-        if(s.toUpperCase().equals("OP")) { return OP; }
+        if(s.toUpperCase().equals("ALL"))
+        {
+            return ALL;
+        }
+        if(s.toUpperCase().equals("OP"))
+        {
+            return OP;
+        }
         return NONE;
     }
-    
+
     public boolean isEnabled()
-    { return this != NONE; }
-    
+    {
+        return this != NONE;
+    }
+
     public boolean isOP()
-    { return this == OP; }
-    
+    {
+        return this == OP;
+    }
+
     public int requiredPermsLevel()
     {
-        if(this == NONE) { return 5; }
-        if(this == ALL) { return 0; }
-        if(this == OP) { return 2; }
+        if(this == NONE)
+        {
+            return 5;
+        }
+        if(this == ALL)
+        {
+            return 0;
+        }
+        if(this == OP)
+        {
+            return 2;
+        }
         return 0;
     }
-    
+
     public boolean hasLevel(ICommandSender s)
     {
-        if(this == NONE) { return false; }
-        else if(this == ALL) { return true; }
+        if(this == NONE)
+        {
+            return false;
+        }
+        else if(this == ALL)
+        {
+            return true;
+        }
         else
         {
-            if(s instanceof MinecraftServer) { return true; }
-            else { return !(s instanceof EntityPlayerMP) || FTBLib.isOP(((EntityPlayerMP) s).getGameProfile()); }
+            if(s instanceof MinecraftServer)
+            {
+                return true;
+            }
+            else
+            {
+                return !(s instanceof EntityPlayerMP) || FTBLib.isOP(((EntityPlayerMP) s).getGameProfile());
+            }
         }
     }
 }

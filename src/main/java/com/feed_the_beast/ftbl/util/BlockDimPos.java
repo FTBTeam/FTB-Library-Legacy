@@ -13,16 +13,18 @@ public final class BlockDimPos
 {
     public final BlockPos pos;
     public final DimensionType dim;
-    
+
     public BlockDimPos(BlockPos p, DimensionType d, boolean copy)
     {
         pos = copy ? new BlockPos(p.getX(), p.getY(), p.getZ()) : p;
         dim = d;
     }
-    
+
     public BlockDimPos(BlockPos p, DimensionType d)
-    { this(p, d, true); }
-    
+    {
+        this(p, d, true);
+    }
+
     public BlockDimPos(int[] ai)
     {
         if(ai == null || ai.length < 4)
@@ -36,46 +38,76 @@ public final class BlockDimPos
             dim = DimensionType.getById(ai[3]);
         }
     }
-    
+
     public int[] toIntArray()
-    { return new int[] {pos.getX(), pos.getY(), pos.getZ(), dim.getId()}; }
-    
+    {
+        return new int[] {pos.getX(), pos.getY(), pos.getZ(), dim.getId()};
+    }
+
     @Override
     public String toString()
-    { return "[" + dim.getName() + '@' + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + ']'; }
-    
+    {
+        return "[" + dim.getName() + '@' + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + ']';
+    }
+
     @Override
     public boolean equals(Object o)
     {
-        if(o == null) { return false; }
-        else { return o == this || equalsPos((BlockDimPos) o); }
+        if(o == null)
+        {
+            return false;
+        }
+        else
+        {
+            return o == this || equalsPos((BlockDimPos) o);
+        }
     }
-    
+
     @Override
     public int hashCode()
-    { return LMUtils.hashCode(pos, dim); }
-    
+    {
+        return LMUtils.hashCode(pos, dim);
+    }
+
     public Vec3d toVec()
-    { return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D); }
-    
+    {
+        return new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+    }
+
     public EntityDimPos toEntityPos()
-    { return new EntityDimPos(toVec(), dim); }
-    
+    {
+        return new EntityDimPos(toVec(), dim);
+    }
+
     public BlockDimPos copy()
-    { return new BlockDimPos(pos, dim); }
-    
+    {
+        return new BlockDimPos(pos, dim);
+    }
+
     public int chunkX()
-    { return MathHelperLM.chunk(pos.getX()); }
-    
+    {
+        return MathHelperLM.chunk(pos.getX());
+    }
+
     public int chunkY()
-    { return MathHelperLM.chunk(pos.getY()); }
-    
+    {
+        return MathHelperLM.chunk(pos.getY());
+    }
+
     public int chunkZ()
-    { return MathHelperLM.chunk(pos.getZ()); }
-    
+    {
+        return MathHelperLM.chunk(pos.getZ());
+    }
+
     public boolean equalsPos(BlockDimPos p)
     {
-        if(p == null) { return false; }
-        else { return p == this || (p.dim == dim && p.pos.equals(pos)); }
+        if(p == null)
+        {
+            return false;
+        }
+        else
+        {
+            return p == this || (p.dim == dim && p.pos.equals(pos));
+        }
     }
 }

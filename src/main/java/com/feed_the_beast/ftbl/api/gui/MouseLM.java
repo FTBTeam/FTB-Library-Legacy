@@ -12,22 +12,22 @@ public class MouseLM
     public int lastClickButton;
     public boolean lastClickState;
     public int lastClickX, lastClickY;
-    
+
     public void onUpdate(int mx, int my)
     {
         px = x;
         py = y;
-        
+
         x = mx;
         y = my;
-        
+
         dx = x - px;
         dy = y - py;
-        
+
         dwheel = Mouse.getDWheel();
         wheel += dwheel;
     }
-    
+
     public void onClicked(int b, boolean s)
     {
         lastClickButton = b;
@@ -35,7 +35,9 @@ public class MouseLM
         lastClickX = x;
         lastClickY = y;
     }
-    
+
     public boolean isInside(int ax, int ay, int width, int height)
-    { return x >= ax && y >= ay && x < ax + width && y < ay + height; }
+    {
+        return x >= ax && y >= ay && x < ax + width && y < ay + height;
+    }
 }
