@@ -64,7 +64,7 @@ public class LMFrustrumUtils
             float px = OBJECTCOORDS.get(0);
             float py = OBJECTCOORDS.get(1);
             return new Pos2D(px, py);
-            //if(px >= 0 && py >= 0 && px < VIEWPORT.get(2) && py < VIEWPORT.get(3)) return new Pos2D(px, py);
+            //if(px >= 0 && py >= 0 && px < VIEWPORT.getMode(2) && py < VIEWPORT.getMode(3)) return new Pos2D(px, py);
         }
 
         return null;

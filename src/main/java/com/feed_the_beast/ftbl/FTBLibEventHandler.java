@@ -1,12 +1,18 @@
 package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.IWorldTick;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.item.ICreativeSafeItem;
+import com.feed_the_beast.ftbl.api.tile.IInfoTile;
 import com.feed_the_beast.ftbl.api.tile.ISecureTile;
+import com.feed_the_beast.ftbl.api.tile.TileInfoDataAccessor;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.util.MathHelperMC;
+import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
+import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,10 +26,12 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.silentchaos512.wit.api.WitBlockInfoEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +56,37 @@ public class FTBLibEventHandler
             {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    @Optional.Method(modid = "WIT")
+    @SubscribeEvent
+    public void onWIT(WitBlockInfoEvent event)
+    {
+        if(event.blockState.getBlock().hasTileEntity(event.blockState))
+        {
+            TileEntity te = event.getWorld().getTileEntity(event.pos);
+
+            if(te instanceof IInfoTile)
+            {
+                TileInfoDataAccessor.inst.player = event.player;
+                TileInfoDataAccessor.inst.world = event.getWorld();
+                TileInfoDataAccessor.inst.hit = MathHelperMC.rayTrace(event.player);
+                TileInfoDataAccessor.inst.state = event.blockState;
+                ((IInfoTile) te).getInfo(TileInfoDataAccessor.inst, event.lines, event.advanced);
+            }
+        }
+    }
+
+    @Optional.Method(modid = "forgeanalytics")
+    @SubscribeEvent
+    public void onAnalytics(AnalyticsEvent event)
+    {
+        ForgeWorld w = ForgeWorld.getFrom(event.side);
+
+        if(w != null)
+        {
+            ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", w.getMode().getID());
         }
     }
 

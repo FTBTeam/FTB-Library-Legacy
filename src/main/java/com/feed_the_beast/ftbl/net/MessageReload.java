@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.GameModes;
+import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.SyncWorldEvent;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
@@ -50,7 +50,7 @@ public class MessageReload extends MessageToClient<MessageReload>
         {
             ms = System.currentTimeMillis();
         }
-        GameModes.reload();
+        PackModes.reload();
         EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
         ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, type, login);
         if(FTBLib.ftbu != null)

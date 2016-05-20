@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMListUtils;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +28,12 @@ public abstract class ForgeWorld implements ICapabilityProvider
     public final Map<UUID, ForgePlayer> playerMap;
     final CapabilityDispatcher capabilities;
     protected UUID worldID;
-    protected GameMode currentMode;
+    protected PackMode currentMode;
 
     ForgeWorld()
     {
         worldID = null;
-        currentMode = new GameMode("default");
+        currentMode = new PackMode("default");
         playerMap = new HashMap<>();
 
         ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
@@ -85,7 +83,7 @@ public abstract class ForgeWorld implements ICapabilityProvider
     @SideOnly(Side.CLIENT)
     public abstract ForgeWorldSP toWorldSP();
 
-    public GameMode getMode()
+    public PackMode getMode()
     {
         return currentMode;
     }
@@ -155,28 +153,12 @@ public abstract class ForgeWorld implements ICapabilityProvider
         return l;
     }
 
-    public String[] getAllPlayerNames(boolean online)
-    {
-        List<ForgePlayer> list = online ? getOnlinePlayers() : LMListUtils.clone(playerMap.values());
-
-        Collections.sort(list, (o1, o2) -> {
-            if(o1.isOnline() == o2.isOnline())
-            {
-                return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
-            }
-
-            return Boolean.compare(o2.isOnline(), o1.isOnline());
-        });
-
-        return LMListUtils.toStringArray(list);
-    }
-
     /**
      * 0 = OK, 1 - Mode is invalid, 2 - Mode already set (will be ignored and return 0, if forced == true)
      */
     public final int setMode(String mode)
     {
-        GameMode m = GameModes.instance().modes.get(mode);
+        PackMode m = PackModes.instance().getRawMode(mode);
 
         if(m == null)
         {

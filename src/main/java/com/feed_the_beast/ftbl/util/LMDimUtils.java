@@ -97,7 +97,7 @@ public class LMDimUtils
             server.getPlayerList().transferPlayerToDimension(player, dim, new TeleporterBlank(toDim));
             if(from == 1 && entity.isEntityAlive())
             {
-                // get around vanilla End hacks
+                // getMode around vanilla End hacks
                 toDim.spawnEntityInWorld(entity);
                 toDim.updateEntityWithOptionalForce(entity, false);
             }

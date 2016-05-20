@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.GameModes;
+import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
@@ -38,7 +38,7 @@ public class CmdMode extends CommandSubLM
         {
             if(args.length == 1)
             {
-                return getListOfStringsMatchingLastWord(args, GameModes.instance().modes.keySet());
+                return getListOfStringsMatchingLastWord(args, PackModes.instance().getModes());
             }
 
             return super.getTabCompletionOptions(server, ics, args, pos);
@@ -103,7 +103,7 @@ public class CmdMode extends CommandSubLM
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(GameModes.instance().modes.keySet()));
+            ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(PackModes.instance().getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
@@ -113,7 +113,7 @@ public class CmdMode extends CommandSubLM
     {
         super("ftb_mode", CommandLevel.OP);
         add(new CmdSet("set"));
-        add(new CmdGet("get"));
+        add(new CmdGet("getMode"));
         add(new CmdList("list"));
     }
 }

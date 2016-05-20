@@ -34,7 +34,7 @@ public final class ForgeWorldMP extends ForgeWorld
     public ForgeWorldMP(File f)
     {
         latmodFolder = f;
-        currentMode = GameModes.instance().defaultMode;
+        currentMode = PackModes.instance().getDefault();
     }
 
     @Override
@@ -83,7 +83,7 @@ public final class ForgeWorldMP extends ForgeWorld
             worldID = group.has("world_id") ? LMUtils.fromString(group.get("world_id").getAsString()) : null;
             getID();
 
-            currentMode = group.has("mode") ? GameModes.instance().get(group.get("mode").getAsString()) : GameModes.instance().defaultMode;
+            currentMode = group.has("mode") ? PackModes.instance().getMode(group.get("mode").getAsString()) : PackModes.instance().getDefault();
         }
 
         NBTTagCompound nbt = LMNBTUtils.readTag(new File(latmodFolder, "LMWorld.dat"));

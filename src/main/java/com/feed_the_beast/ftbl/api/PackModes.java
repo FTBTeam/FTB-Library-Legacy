@@ -3,56 +3,61 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import latmod.lib.LMFileUtils;
 import latmod.lib.LMJsonUtils;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameModes
+public class PackModes
 {
-    private static GameModes inst = null;
-    public final Map<String, GameMode> modes;
-    public final GameMode defaultMode;
-    public final GameMode commonMode;
-    public final Map<String, String> customData;
+    private static PackModes inst = null;
+    private final Map<String, PackMode> modes;
+    private final PackMode defaultMode;
+    private final PackMode commonMode;
+    private final Map<String, JsonElement> customData;
 
-    public GameModes(JsonElement el)
+    public PackModes(JsonElement el)
     {
         JsonObject o = isValid(el) ? el.getAsJsonObject() : createDefault();
 
-        Map<String, GameMode> modes0 = new HashMap<>();
+        Map<String, PackMode> modes0 = new HashMap<>();
 
         JsonArray a = o.get("modes").getAsJsonArray();
 
         for(int i = 0; i < a.size(); i++)
         {
-            GameMode m = new GameMode(a.get(i).getAsString());
+            PackMode m = new PackMode(a.get(i).getAsString());
             modes0.put(m.getID(), m);
         }
 
         defaultMode = modes0.get(o.get("default").getAsString());
 
-        String common = o.get("common").getAsString();
-        if(modes0.containsKey(common))
+        if(modes0.containsKey("common"))
         {
-            throw new RuntimeException("FTBLib: common mode name can't be one of 'modes'!");
+            throw new RuntimeException("FTBLib: 'common' can't be one of 'modes'!");
         }
-        commonMode = new GameMode(common);
+
+        commonMode = new PackMode("common");
 
         modes = Collections.unmodifiableMap(modes0);
 
-        HashMap<String, String> customData0 = new HashMap<>();
+        Map<String, JsonElement> customData0 = new HashMap<>();
 
         if(o.has("custom"))
         {
             JsonObject o1 = o.get("custom").getAsJsonObject();
+
             for(Map.Entry<String, JsonElement> e : o1.entrySet())
-            { customData0.put(e.getKey(), e.getValue().getAsString()); }
+            {
+                customData0.put(e.getKey(), e.getValue());
+            }
         }
 
         customData = Collections.unmodifiableMap(customData0);
@@ -83,12 +88,12 @@ public class GameModes
 
     public static void reload()
     {
-        File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "gamemodes.json"));
-        inst = new GameModes(LMJsonUtils.fromJson(file));
+        File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "packmodes.json"));
+        inst = new PackModes(LMJsonUtils.fromJson(file));
         LMJsonUtils.toJson(file, inst.toJsonObject());
     }
 
-    public static GameModes instance()
+    public static PackModes instance()
     {
         if(inst == null)
         {
@@ -102,8 +107,12 @@ public class GameModes
         JsonObject o = new JsonObject();
 
         JsonArray a = new JsonArray();
-        for(GameMode m : modes.values())
-        { a.add(new JsonPrimitive(m.getID())); }
+
+        for(PackMode m : modes.values())
+        {
+            a.add(new JsonPrimitive(m.getID()));
+        }
+
         o.add("modes", a);
 
         o.add("default", new JsonPrimitive(defaultMode.getID()));
@@ -112,21 +121,51 @@ public class GameModes
         if(!customData.isEmpty())
         {
             JsonObject o1 = new JsonObject();
-            for(Map.Entry<String, String> e : customData.entrySet())
-            { o1.add(e.getKey(), new JsonPrimitive(e.getValue())); }
+
+            for(Map.Entry<String, JsonElement> e : customData.entrySet())
+            {
+                o1.add(e.getKey(), e.getValue());
+            }
+
             o.add("custom", o1);
         }
 
         return o;
     }
 
-    public GameMode get(String s)
+    public Collection<String> getModes()
+    {
+        return modes.keySet();
+    }
+
+    public PackMode getRawMode(String s)
+    {
+        return (s == null || s.isEmpty()) ? null : modes.get(s);
+    }
+
+    public PackMode getMode(String s)
     {
         if(s == null || s.isEmpty())
         {
             return defaultMode;
         }
-        GameMode m = modes.get(s);
+
+        PackMode m = modes.get(s);
         return (m == null) ? defaultMode : m;
+    }
+
+    public PackMode getDefault()
+    {
+        return defaultMode;
+    }
+
+    public PackMode getCommon()
+    {
+        return commonMode;
+    }
+
+    public JsonElement getCustomData(String s)
+    {
+        return (s != null && !s.isEmpty() && customData.containsKey(s)) ? customData.get(s) : JsonNull.INSTANCE;
     }
 }

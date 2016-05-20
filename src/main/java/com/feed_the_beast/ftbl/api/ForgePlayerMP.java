@@ -177,11 +177,11 @@ public class ForgePlayerMP extends ForgePlayer
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info));
         
 		/*
-        if(owner.getRank().config.show_rank.get())
+        if(owner.getRank().config.show_rank.getMode())
 		{
 			Rank rank = getRank();
 			IChatComponent rankC = new ChatComponentText("[" + rank.ID + "]");
-			rankC.getChatStyle().setColor(rank.color.get());
+			rankC.getChatStyle().setColor(rank.color.getMode());
 			info.add(rankC);
 		}
 		*/

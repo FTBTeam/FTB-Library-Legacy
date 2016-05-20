@@ -99,10 +99,10 @@ public class FTBLibActions
                     /*
                     PersonalSettings ps = LMWorldClient.inst.clientPlayer.getSettings();
 					
-					booleanCommand("chat_links", ps.get(PersonalSettings.CHAT_LINKS));
+					booleanCommand("chat_links", ps.getMode(PersonalSettings.CHAT_LINKS));
 					booleanCommand("render_badge", LMWorldClient.inst.clientPlayer.renderBadge);
-					booleanCommand("explosions", ps.get(PersonalSettings.EXPLOSIONS));
-					booleanCommand("fake_players", ps.get(PersonalSettings.FAKE_PLAYERS));
+					booleanCommand("explosions", ps.getMode(PersonalSettings.EXPLOSIONS));
+					booleanCommand("fake_players", ps.getMode(PersonalSettings.FAKE_PLAYERS));
 					
 					IChatComponent text1 = ps.blocks.lang.chatComponent();
 					text1.getChatStyle().setColor(ps.blocks == PrivacyLevel.FRIENDS ? EnumChatFormatting.BLUE : (ps.blocks == PrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));

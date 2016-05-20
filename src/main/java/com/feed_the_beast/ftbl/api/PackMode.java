@@ -8,9 +8,9 @@ import java.io.File;
 /**
  * Created by LatvianModder on 07.01.2016.
  */
-public class GameMode extends FinalIDObject
+public class PackMode extends FinalIDObject
 {
-    public GameMode(String id)
+    public PackMode(String id)
     {
         super(id);
     }

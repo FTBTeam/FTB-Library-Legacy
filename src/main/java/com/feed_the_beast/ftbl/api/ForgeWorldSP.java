@@ -67,13 +67,13 @@ public final class ForgeWorldSP extends ForgeWorld
 
     public void setModeRaw(String mode)
     {
-        currentMode = new GameMode(mode);
+        currentMode = new PackMode(mode);
     }
 
     public void readDataFromNet(NBTTagCompound tag, boolean login)
     {
         worldID = new UUID(tag.getLong("IDM"), tag.getLong("IDL"));
-        currentMode = new GameMode(tag.getString("M"));
+        currentMode = new PackMode(tag.getString("M"));
 
         if(login)
         {

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.GameModes;
+import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
@@ -86,13 +86,13 @@ public class FTBLibMod
     @Mod.EventHandler
     public void init(FMLInitializationEvent e)
     {
-        FMLInterModComms.sendMessage("Waila", "register", "com.feed_the_beast.ftbl.api.waila.EventRegisterWaila.registerHandlers");
+        FMLInterModComms.sendMessage("Waila", "register", "com.feed_the_beast.ftbl.WailaDataProvider.registerHandlers");
     }
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent e)
     {
-        GameModes.reload();
+        PackModes.reload();
         ConfigRegistry.reload();
         proxy.postInit();
     }
@@ -133,7 +133,7 @@ public class FTBLibMod
     public void onServerStarted(FMLServerAboutToStartEvent e)
     {
         ConfigRegistry.reload();
-        GameModes.reload();
+        PackModes.reload();
 
         ForgeWorldMP.inst = new ForgeWorldMP(new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName() + "/LatMod/"));
 

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBUIntegration;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.GameModes;
+import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -132,7 +132,7 @@ public class FTBLib
         if(type.reload(Side.SERVER))
         {
             ConfigRegistry.reload();
-            GameModes.reload();
+            PackModes.reload();
 
             ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, type, login);
             if(ftbu != null)
