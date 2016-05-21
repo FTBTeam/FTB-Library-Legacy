@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.paint.IPaintable;
 import com.feed_the_beast.ftbl.api.paint.IPainterItem;
+import com.feed_the_beast.ftbl.api.paint.PaintStorage;
 import com.feed_the_beast.ftbl.api.paint.PainterItemStorage;
-import com.feed_the_beast.ftbl.api.paint.SinglePaintStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTBase;
@@ -19,9 +19,9 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 public class FTBLibCapabilities
 {
     @CapabilityInject(IPaintable.class)
-    public static Capability<IPaintable> PAINTABLE_TILE_CAPABILITY = null;
+    public static Capability<IPaintable> PAINTABLE_TILE = null;
     @CapabilityInject(IPainterItem.class)
-    public static Capability<IPainterItem> PAINTER_ITEM_CAPABILITY = null;
+    public static Capability<IPainterItem> PAINTER_ITEM = null;
     private static boolean enabled = false;
 
     public static void enable()
@@ -38,7 +38,7 @@ public class FTBLibCapabilities
             @Override
             public NBTBase writeNBT(Capability<IPaintable> capability, IPaintable instance, EnumFacing side)
             {
-                IBlockState paint = instance.getPaint(side);
+                IBlockState paint = instance.getPaint();
                 return new NBTTagInt(paint == null ? 0 : Block.getStateId(paint));
             }
 
@@ -46,10 +46,10 @@ public class FTBLibCapabilities
             public void readNBT(Capability<IPaintable> capability, IPaintable instance, EnumFacing side, NBTBase base)
             {
                 int paint = ((NBTTagInt) base).getInt();
-                instance.setPaint(side, paint == 0 ? null : Block.getStateById(paint));
+                instance.setPaint(paint == 0 ? null : Block.getStateById(paint));
             }
         }, () -> {
-            return new SinglePaintStorage();
+            return new PaintStorage();
         });
 
         CapabilityManager.INSTANCE.register(IPainterItem.class, new Capability.IStorage<IPainterItem>()

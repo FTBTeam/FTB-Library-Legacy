@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -52,12 +51,12 @@ public class LMDimUtils
 
     public static boolean teleportPlayer(Entity entity, EntityDimPos pos)
     {
-        return pos != null && teleportPlayer(entity, pos.pos, pos.dim.getId());
+        return pos != null && teleportPlayer(entity, pos.pos, pos.dim);
     }
 
     public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
     {
-        return pos != null && teleportPlayer(entity, pos.toVec(), pos.dim.getId());
+        return pos != null && teleportPlayer(entity, pos.toVec(), pos.dim);
     }
 
     public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
@@ -138,20 +137,20 @@ public class LMDimUtils
         return true;
     }
 
-    public static World getWorld(DimensionType dim)
+    public static World getWorld(int dim)
     {
-        return DimensionManager.getWorld(dim.getId());
+        return DimensionManager.getWorld(dim);
     }
 
-    public static double getMovementFactor(DimensionType dim)
+    public static double getMovementFactor(int dim)
     {
         switch(dim)
         {
-            case OVERWORLD:
+            case 0:
                 return 1D;
-            case NETHER:
+            case -1:
                 return 8D;
-            case THE_END:
+            case 1:
                 return 1D;
             default:
             {
@@ -161,7 +160,7 @@ public class LMDimUtils
         }
     }
 
-    public static BlockDimPos getSpawnPoint(DimensionType dim)
+    public static BlockDimPos getSpawnPoint(int dim)
     {
         World w = getWorld(dim);
         if(w == null)
@@ -176,9 +175,9 @@ public class LMDimUtils
         return new BlockDimPos(c, dim);
     }
 
-    public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, DimensionType dim)
+    public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
     {
-        BlockPos c = ep.getBedLocation(dim.getId());
+        BlockPos c = ep.getBedLocation(dim);
         if(c == null)
         {
             return getSpawnPoint(dim);

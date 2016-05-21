@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.util;
 
 import latmod.lib.LMUtils;
 import latmod.lib.MathHelperLM;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.DimensionType;
 
 /**
  * Created by LatvianModder on 29.01.2016.
@@ -12,15 +12,15 @@ import net.minecraft.world.DimensionType;
 public final class BlockDimPos
 {
     public final BlockPos pos;
-    public final DimensionType dim;
+    public final int dim;
 
-    public BlockDimPos(BlockPos p, DimensionType d, boolean copy)
+    public BlockDimPos(BlockPos p, int d, boolean copy)
     {
         pos = copy ? new BlockPos(p.getX(), p.getY(), p.getZ()) : p;
         dim = d;
     }
 
-    public BlockDimPos(BlockPos p, DimensionType d)
+    public BlockDimPos(BlockPos p, int d)
     {
         this(p, d, true);
     }
@@ -30,24 +30,24 @@ public final class BlockDimPos
         if(ai == null || ai.length < 4)
         {
             pos = new BlockPos(0, 0, 0);
-            dim = DimensionType.OVERWORLD;
+            dim = 0;
         }
         else
         {
             pos = new BlockPos(ai[0], ai[1], ai[2]);
-            dim = DimensionType.getById(ai[3]);
+            dim = ai[3];
         }
     }
 
     public int[] toIntArray()
     {
-        return new int[] {pos.getX(), pos.getY(), pos.getZ(), dim.getId()};
+        return new int[] {pos.getX(), pos.getY(), pos.getZ(), dim};
     }
 
     @Override
     public String toString()
     {
-        return "[" + dim.getName() + '@' + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + ']';
+        return "[" + dim + '@' + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + ']';
     }
 
     @Override
@@ -109,5 +109,10 @@ public final class BlockDimPos
         {
             return p == this || (p.dim == dim && p.pos.equals(pos));
         }
+    }
+
+    public BlockDimPos offset(EnumFacing facing)
+    {
+        return new BlockDimPos(pos.offset(facing), dim, false);
     }
 }

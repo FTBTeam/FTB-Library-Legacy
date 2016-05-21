@@ -5,14 +5,13 @@ import latmod.lib.MathHelperLM;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.DimensionType;
 
 public final class EntityDimPos
 {
     public final Vec3d pos;
-    public final DimensionType dim;
+    public final int dim;
 
-    public EntityDimPos(Vec3d p, DimensionType d)
+    public EntityDimPos(Vec3d p, int d)
     {
         pos = new Vec3d(p.xCoord, p.yCoord, p.zCoord);
         dim = d;
@@ -20,7 +19,7 @@ public final class EntityDimPos
 
     public EntityDimPos(Entity e)
     {
-        this(e.getPositionVector(), DimensionType.getById(e.dimension));
+        this(e.getPositionVector(), e.dimension);
     }
 
     @Override
@@ -32,12 +31,12 @@ public final class EntityDimPos
     @Override
     public String toString()
     {
-        return "[" + dim.getName() + '@' + pos.xCoord + ',' + pos.yCoord + ',' + pos.zCoord + ']';
+        return "[" + dim + '@' + pos.xCoord + ',' + pos.yCoord + ',' + pos.zCoord + ']';
     }
 
     public boolean equalsPos(Entity e)
     {
-        return pos.xCoord == e.posX && pos.yCoord == e.posY && pos.zCoord == e.posZ && dim.getId() == e.dimension;
+        return pos.xCoord == e.posX && pos.yCoord == e.posY && pos.zCoord == e.posZ && dim == e.dimension;
     }
 
     public boolean equalsPos(EntityDimPos p)

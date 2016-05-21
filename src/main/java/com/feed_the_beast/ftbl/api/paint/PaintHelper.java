@@ -29,9 +29,9 @@ public class PaintHelper
 
     public static ActionResult<ItemStack> onItemRightClick(ItemStack is, EntityPlayer ep)
     {
-        if(!ep.worldObj.isRemote && ep.isSneaking() && is.hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
+        if(!ep.worldObj.isRemote && ep.isSneaking() && is.hasCapability(FTBLibCapabilities.PAINTER_ITEM, null))
         {
-            IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null);
+            IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM, null);
 
             if(painterItem.getPaint() != null)
             {
@@ -46,18 +46,17 @@ public class PaintHelper
 
     public static EnumActionResult onItemUse(ItemStack is, EntityPlayer ep, RayTraceResult hit)
     {
-        if(ep.worldObj.isRemote || !is.hasCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null))
+        if(ep.worldObj.isRemote || !is.hasCapability(FTBLibCapabilities.PAINTER_ITEM, null))
         {
             return EnumActionResult.SUCCESS;
         }
 
-        IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM_CAPABILITY, null);
+        IPainterItem painterItem = is.getCapability(FTBLibCapabilities.PAINTER_ITEM, null);
 
         TileEntity te = ep.worldObj.getTileEntity(hit.getBlockPos());
 
-        if(te != null && te.hasCapability(FTBLibCapabilities.PAINTABLE_TILE_CAPABILITY, hit.sideHit))
+        if(te != null)
         {
-            IPaintable paintable = te.getCapability(FTBLibCapabilities.PAINTABLE_TILE_CAPABILITY, hit.sideHit);
             IBlockState paint = painterItem.getPaint();
 
             if(ep.isSneaking())
@@ -68,10 +67,15 @@ public class PaintHelper
 
                     for(EnumFacing f : EnumFacing.VALUES)
                     {
-                        if(paintable.canSetPaint(ep, f, paint))
+                        if(te.hasCapability(FTBLibCapabilities.PAINTABLE_TILE, f))
                         {
-                            paintable.setPaint(f, paint);
-                            b = true;
+                            IPaintable paintable = te.getCapability(FTBLibCapabilities.PAINTABLE_TILE, f);
+
+                            if(paintable.canSetPaint(ep, paint))
+                            {
+                                paintable.setPaint(paint);
+                                b = true;
+                            }
                         }
                     }
 
@@ -81,14 +85,23 @@ public class PaintHelper
                         te.markDirty();
                     }
                 }
+
+                return EnumActionResult.SUCCESS;
             }
             else
             {
-                if(painterItem.canPaintBlocks(is) && paintable.canSetPaint(ep, hit.sideHit, paint))
+                if(painterItem.canPaintBlocks(is) && te.hasCapability(FTBLibCapabilities.PAINTABLE_TILE, hit.sideHit))
                 {
-                    paintable.setPaint(hit.sideHit, paint);
-                    painterItem.damagePainter(is, ep);
-                    te.markDirty();
+                    IPaintable paintable = te.getCapability(FTBLibCapabilities.PAINTABLE_TILE, hit.sideHit);
+
+                    if(paintable.canSetPaint(ep, paint))
+                    {
+                        paintable.setPaint(paint);
+                        painterItem.damagePainter(is, ep);
+                        te.markDirty();
+                    }
+                    
+                    return EnumActionResult.SUCCESS;
                 }
             }
         }

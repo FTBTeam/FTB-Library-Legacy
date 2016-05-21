@@ -8,30 +8,30 @@ import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-@SideOnly(Side.CLIENT)
 public final class ForgeWorldSP extends ForgeWorld
 {
     public static ForgeWorldSP inst = null;
     public final ForgePlayerSPSelf clientPlayer;
-    public List<String> serverDataIDs;
+    public Collection<ResourceLocation> serverDataIDs;
 
     public ForgeWorldSP(GameProfile p)
     {
         clientPlayer = new ForgePlayerSPSelf(p);
-        serverDataIDs = new ArrayList<>();
+        serverDataIDs = new HashSet<>();
     }
 
     @Override
@@ -41,6 +41,7 @@ public final class ForgeWorldSP extends ForgeWorld
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public World getMCWorld()
     {
         return FTBLibClient.mc.theWorld;
@@ -79,9 +80,8 @@ public final class ForgeWorldSP extends ForgeWorld
         {
             playerMap.clear();
 
-            GameProfile gp = FTBLibClient.mc.getSession().getProfile();
+            //GameProfile gp = FTBLibClient.mc.getSession().getProfile();
             //TODO: Improve this
-            clientPlayer.init();
 
             NBTTagCompound tag1 = tag.getCompoundTag("PM");
 
@@ -96,9 +96,7 @@ public final class ForgeWorldSP extends ForgeWorld
                 }
                 else
                 {
-                    ForgePlayerSP p = new ForgePlayerSP(new GameProfile(uuid, name));
-                    p.init();
-                    playerMap.put(uuid, p);
+                    playerMap.put(uuid, new ForgePlayerSP(new GameProfile(uuid, name)));
                 }
             }
 

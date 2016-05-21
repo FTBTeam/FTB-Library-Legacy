@@ -10,7 +10,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-@SideOnly(Side.CLIENT)
 public class ForgePlayerSPSelf extends ForgePlayerSP
 {
     public ForgePlayerSPSelf(GameProfile p)
@@ -31,6 +30,7 @@ public class ForgePlayerSPSelf extends ForgePlayerSP
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public EntityPlayer getPlayer()
     {
         return Minecraft.getMinecraft().thePlayer;

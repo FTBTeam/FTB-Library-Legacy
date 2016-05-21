@@ -33,10 +33,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         setProfile(p);
         friends = new HashSet<>();
         lastArmor = new HashMap<>();
-    }
 
-    public void init()
-    {
         ForgePlayerEvent.AttachCapabilities event = new ForgePlayerEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;

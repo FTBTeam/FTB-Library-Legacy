@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -25,7 +24,7 @@ public class LMFrustrumUtils
     public static final FloatBuffer PROJECTION = GLAllocation.createDirectFloatBuffer(16);
     public static final FloatBuffer OBJECTCOORDS = GLAllocation.createDirectFloatBuffer(3);
     public static boolean isFirstPerson;
-    public static DimensionType currentDim;
+    public static int currentDim;
     public static double playerX, playerY, playerZ;
     public static double renderX, renderY, renderZ;
     public static long playerPosHash;

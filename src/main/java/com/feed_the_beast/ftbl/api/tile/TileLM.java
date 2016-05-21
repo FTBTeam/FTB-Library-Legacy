@@ -50,6 +50,7 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
             return this == RERENDER;
         }
     }
+
     public boolean isLoaded = false;
     public UUID ownerID;
     public boolean redstonePowered = false;
@@ -336,6 +337,6 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
     @Override
     public BlockDimPos getDimPos()
     {
-        return new BlockDimPos(pos, worldObj == null ? null : worldObj.provider.getDimensionType());
+        return new BlockDimPos(pos, hasWorldObj() ? worldObj.provider.getDimension() : 0);
     }
 }

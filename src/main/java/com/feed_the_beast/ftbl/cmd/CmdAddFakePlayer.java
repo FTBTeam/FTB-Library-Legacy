@@ -53,7 +53,6 @@ public class CmdAddFakePlayer extends CommandLM
         }
 
         ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, args[1]));
-        p.init();
         ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
         p.refreshStats();
 

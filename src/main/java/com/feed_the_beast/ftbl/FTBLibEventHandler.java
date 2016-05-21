@@ -34,6 +34,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.silentchaos512.wit.api.WitBlockInfoEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 public class FTBLibEventHandler
@@ -41,7 +43,7 @@ public class FTBLibEventHandler
     public static final FTBLibEventHandler instance = new FTBLibEventHandler();
     public static final List<ServerTickCallback> callbacks = new ArrayList<>();
     public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
-    public static final List<IWorldTick> ticking = new ArrayList<>();
+    public static final Collection<IWorldTick> ticking = new HashSet<>();
 
     @SubscribeEvent
     public void onWorldSaved(WorldEvent.Save event)
@@ -105,7 +107,6 @@ public class FTBLibEventHandler
             {
                 p = new ForgePlayerMP(ep.getGameProfile());
                 ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
-                p.init();
             }
             else if(!p.getProfile().getName().equals(ep.getName()))
             {

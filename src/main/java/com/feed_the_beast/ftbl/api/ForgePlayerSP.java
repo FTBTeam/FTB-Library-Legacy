@@ -23,7 +23,6 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-@SideOnly(Side.CLIENT)
 public class ForgePlayerSP extends ForgePlayer
 {
     public final List<String> clientInfo;
@@ -54,6 +53,7 @@ public class ForgePlayerSP extends ForgePlayer
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public EntityPlayer getPlayer()
     {
         return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null;
@@ -77,6 +77,7 @@ public class ForgePlayerSP extends ForgePlayer
         return ForgeWorldSP.inst;
     }
 
+    @SideOnly(Side.CLIENT)
     public ResourceLocation getSkin()
     {
         return FTBLibClient.getSkinTexture(getProfile().getName());

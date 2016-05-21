@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -83,9 +82,9 @@ public class FTBLibClient
         return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null;
     }
 
-    public static DimensionType getDim()
+    public static int getDim()
     {
-        return isIngame() ? mc.theWorld.provider.getDimensionType() : null;
+        return isIngame() ? mc.theWorld.provider.getDimension() : 0;
     }
 
     public static UUID getUUID()

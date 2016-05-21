@@ -69,7 +69,7 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
             {
                 p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName));
             }
-            p.init();
+            
             p.readFromNet(m.data, p.isMCPlayer());
             ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
             p.onLoggedIn(m.isFirst);
