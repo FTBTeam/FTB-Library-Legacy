@@ -6,6 +6,8 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.JsonHelper;
+import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -24,7 +26,7 @@ import java.util.UUID;
 public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 {
     public UUID playerID;
-    public String[] info;
+    public JsonElement[] info;
     public Map<EntityEquipmentSlot, ItemStack> armor;
 
     public MessageLMPlayerInfo()
@@ -38,13 +40,14 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
         List<ITextComponent> info0 = new ArrayList<>();
         p.getInfo(owner, info0);
 
-        info = new String[Math.min(255, info0.size())];
+        info = new JsonElement[Math.min(255, info0.size())];
 
         for(int i = 0; i < info.length; i++)
         {
-            info[i] = ITextComponent.Serializer.componentToJson(info0.get(i));
+            info[i] = JsonHelper.serializeICC(info0.get(i));
         }
 
+        p.updateArmor();
         armor = p.lastArmor;
     }
 
@@ -59,10 +62,10 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     {
         playerID = readUUID(io);
 
-        info = new String[io.readUnsignedByte()];
+        info = new JsonElement[io.readUnsignedByte()];
         for(int i = 0; i < info.length; i++)
         {
-            info[i] = readString(io);
+            info[i] = readJsonElement(io);
         }
 
         armor = new HashMap<>();
@@ -82,9 +85,9 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
         writeUUID(io, playerID);
 
         io.writeByte(info.length);
-        for(String anInfo : info)
+        for(JsonElement anInfo : info)
         {
-            writeString(io, anInfo);
+            writeJsonElement(io, anInfo);
         }
 
         io.writeByte(armor.size());
@@ -105,7 +108,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
             return;
         }
 
-        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
+        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toSP();
         if(p == null)
         {
             return;
@@ -114,7 +117,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
         List<ITextComponent> info = new ArrayList<>();
         for(int i = 0; i < m.info.length; i++)
         {
-            info.add(ITextComponent.Serializer.jsonToComponent(m.info[i]));
+            info.add(JsonHelper.deserializeICC(m.info[i]));
         }
 
         p.receiveInfo(info);

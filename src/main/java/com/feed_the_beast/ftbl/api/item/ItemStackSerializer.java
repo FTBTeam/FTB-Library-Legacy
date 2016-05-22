@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import latmod.lib.LMStringUtils;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemStackSerializer
@@ -96,6 +98,21 @@ public class ItemStackSerializer
         else if(e.isJsonPrimitive())
         {
             return parseItem(e.getAsString());
+        }
+        else if(e.isJsonObject())
+        {
+            try
+            {
+                NBTTagCompound nbt = JsonToNBT.getTagFromJson(e.toString());
+
+                if(nbt != null)
+                {
+                    return ItemStack.loadItemStackFromNBT(nbt);
+                }
+            }
+            catch(Exception ex)
+            {
+            }
         }
         return null;
     }

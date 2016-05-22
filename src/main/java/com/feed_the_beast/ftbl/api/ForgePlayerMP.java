@@ -25,13 +25,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.stats.StatisticsFile;
+import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -45,7 +46,7 @@ import java.util.stream.Collectors;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public class ForgePlayerMP extends ForgePlayer
+public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTagCompound>
 {
     public final ForgePlayerStats stats;
     public BlockDimPos lastPos, lastDeath;
@@ -91,14 +92,14 @@ public class ForgePlayerMP extends ForgePlayer
     }
 
     @Override
-    public final ForgePlayerMP toPlayerMP()
+    public final ForgePlayerMP toMP()
     {
         return this;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public final ForgePlayerSP toPlayerSP()
+    public final ForgePlayerSP toSP()
     {
         return null;
     }
@@ -154,6 +155,7 @@ public class ForgePlayerMP extends ForgePlayer
     public void getInfo(ForgePlayerMP owner, List<ITextComponent> info)
     {
         refreshStats();
+        long currentTime = System.currentTimeMillis();
 
         if(!equalsPlayer(owner))
         {
@@ -174,8 +176,6 @@ public class ForgePlayerMP extends ForgePlayer
             }
         }
 
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info));
-        
 		/*
         if(owner.getRank().config.show_rank.getMode())
 		{
@@ -185,7 +185,9 @@ public class ForgePlayerMP extends ForgePlayer
 			info.add(rankC);
 		}
 		*/
-        //stats.getInfo(info, ms);
+
+        stats.getInfo(this, info, currentTime);
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info, currentTime));
     }
 
     public void refreshStats()
@@ -197,7 +199,8 @@ public class ForgePlayerMP extends ForgePlayer
         }
     }
 
-    public void readFromServer(NBTTagCompound tag)
+    @Override
+    public void deserializeNBT(NBTTagCompound tag)
     {
         friends.clear();
 
@@ -252,9 +255,12 @@ public class ForgePlayerMP extends ForgePlayer
         NBTTagCompound settingsTag = tag.getCompoundTag("Settings");
     }
 
-    public void writeToServer(NBTTagCompound tag)
+    @Override
+    public NBTTagCompound serializeNBT()
     {
         refreshStats();
+
+        NBTTagCompound tag = new NBTTagCompound();
 
         if(!friends.isEmpty())
         {
@@ -295,6 +301,8 @@ public class ForgePlayerMP extends ForgePlayer
         {
             tag.setIntArray("LastDeath", lastDeath.toIntArray());
         }
+
+        return tag;
     }
 
     public void writeToNet(NBTTagCompound tag, boolean self)
@@ -374,7 +382,7 @@ public class ForgePlayerMP extends ForgePlayer
         super.onLoggedIn(firstLogin);
 
         EntityPlayerMP ep = getPlayer();
-        new MessageReload(ReloadType.CLIENT_ONLY, ep, true).sendTo(ep);
+        new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
 
         new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
         for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
@@ -396,7 +404,7 @@ public class ForgePlayerMP extends ForgePlayer
         new MessageLMPlayerDied().sendTo(getPlayer());
     }
 
-    public StatisticsFile getStatFile(boolean force)
+    public StatisticsManagerServer getStatFile(boolean force)
     {
         if(isOnline())
         {

@@ -134,8 +134,9 @@ public class FTBLibMod
     {
         ConfigRegistry.reload();
         PackModes.reload();
+        FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
 
-        ForgeWorldMP.inst = new ForgeWorldMP(new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName() + "/LatMod/"));
+        ForgeWorldMP.inst = new ForgeWorldMP();
 
         try
         {

@@ -23,6 +23,7 @@ public class EnumDyeColorHelper // ItemDye
     public final String dyeName;
     public final String glassName;
     public final String paneName;
+
     EnumDyeColorHelper(EnumDyeColor col)
     {
         dye = col;
@@ -47,7 +48,7 @@ public class EnumDyeColorHelper // ItemDye
     @Override
     public String toString()
     {
-        return langKey.translate();
+        return dye.getName();
     }
 
     @Override

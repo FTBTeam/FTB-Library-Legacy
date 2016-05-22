@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 public class ForgePlayerSP extends ForgePlayer
 {
-    public final List<String> clientInfo;
+    public final List<ITextComponent> clientInfo;
     public boolean isOnline;
 
     public ForgePlayerSP(GameProfile p)
@@ -60,13 +60,13 @@ public class ForgePlayerSP extends ForgePlayer
     }
 
     @Override
-    public final ForgePlayerMP toPlayerMP()
+    public final ForgePlayerMP toMP()
     {
         return null;
     }
 
     @Override
-    public final ForgePlayerSP toPlayerSP()
+    public final ForgePlayerSP toSP()
     {
         return this;
     }
@@ -100,13 +100,8 @@ public class ForgePlayerSP extends ForgePlayer
     public void receiveInfo(List<ITextComponent> info)
     {
         clientInfo.clear();
-
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info));
-
-        for(ITextComponent c : info)
-        {
-            clientInfo.add(c.getFormattedText());
-        }
+        clientInfo.addAll(info);
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, clientInfo, System.currentTimeMillis()));
     }
 
     public void readFromNet(NBTTagCompound tag, boolean self)

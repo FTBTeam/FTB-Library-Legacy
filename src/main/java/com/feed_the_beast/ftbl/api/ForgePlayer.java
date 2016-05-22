@@ -57,10 +57,10 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 
     public abstract EntityPlayer getPlayer();
 
-    public abstract ForgePlayerMP toPlayerMP();
+    public abstract ForgePlayerMP toMP();
 
     @SideOnly(Side.CLIENT)
-    public abstract ForgePlayerSP toPlayerSP();
+    public abstract ForgePlayerSP toSP();
 
     public abstract ForgeWorld getWorld();
 

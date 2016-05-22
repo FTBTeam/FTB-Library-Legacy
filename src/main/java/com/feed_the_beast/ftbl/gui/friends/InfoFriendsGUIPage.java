@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageRequestPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -93,6 +94,7 @@ public class InfoFriendsGUIPage extends InfoPage
             gui.getFontRenderer().drawString(title, ax + 22, ay + 6, playerLM.isOnline() ? 0xFF11FF11 : 0xFFFFFFFF);
         }
     }
+
     public final ForgePlayerSP playerLM;
 
     public InfoFriendsGUIPage(ForgePlayerSP p)
@@ -110,9 +112,9 @@ public class InfoFriendsGUIPage extends InfoPage
 
         if(!playerLM.clientInfo.isEmpty())
         {
-            for(String s : playerLM.clientInfo)
+            for(ITextComponent s : playerLM.clientInfo)
             {
-                printlnText(s);
+                println(s);
             }
 
             text.add(null);

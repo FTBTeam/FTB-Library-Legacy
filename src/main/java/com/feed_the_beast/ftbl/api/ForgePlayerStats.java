@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api;
 import latmod.lib.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
-import net.minecraft.stats.StatisticsFile;
+import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -22,7 +22,7 @@ public class ForgePlayerStats
 
     public void refresh(ForgePlayerMP player, boolean force)
     {
-        StatisticsFile file = player.getStatFile(force);
+        StatisticsManagerServer file = player.getStatFile(force);
         if(file == null)
         {
             return;

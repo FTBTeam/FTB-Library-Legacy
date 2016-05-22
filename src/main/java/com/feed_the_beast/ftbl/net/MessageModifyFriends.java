@@ -66,7 +66,7 @@ public class MessageModifyFriends extends MessageToServer<MessageModifyFriends>
                 if(!p.equalsPlayer(owner) && p.isFriendRaw(owner) && !owner.isFriendRaw(p))
                 {
                     owner.friends.add(p.getProfile().getId());
-                    p.toPlayerMP().sendUpdate();
+                    p.toMP().sendUpdate();
                 }
             }
         }

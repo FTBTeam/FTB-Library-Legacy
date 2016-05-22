@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
+import javax.annotation.Nonnull;
+
 public class LMDimUtils
 {
     private static class TeleporterBlank extends Teleporter
@@ -34,7 +36,7 @@ public class LMDimUtils
         }
 
         @Override
-        public void placeInPortal(Entity entity, float f)
+        public void placeInPortal(@Nonnull Entity entity, float f)
         {
             entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
             entity.motionX = 0D;
@@ -78,7 +80,7 @@ public class LMDimUtils
 
             if(player != null)
             {
-                player.playerNetServerHandler.setPlayerLocation(pos.xCoord, pos.yCoord, pos.zCoord, player.rotationYaw, player.rotationPitch);
+                player.connection.setPlayerLocation(pos.xCoord, pos.yCoord, pos.zCoord, player.rotationYaw, player.rotationPitch);
                 return true;
             }
         }

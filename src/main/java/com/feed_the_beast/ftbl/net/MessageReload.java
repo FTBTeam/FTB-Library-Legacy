@@ -2,11 +2,12 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.PackModes;
+import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.SyncWorldEvent;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
@@ -17,7 +18,6 @@ import com.feed_the_beast.ftbl.util.ReloadType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -30,18 +30,21 @@ public class MessageReload extends MessageToClient<MessageReload>
     public int typeID;
     public boolean login;
     public String modeID;
-    public NBTTagCompound tag;
+    public NBTTagCompound syncData;
+    public NBTTagCompound worldData;
 
     public MessageReload()
     {
     }
 
-    public MessageReload(ReloadType t, EntityPlayerMP ep, boolean l)
+    public MessageReload(ReloadType t, ForgePlayerMP self, boolean l)
     {
         typeID = t.ordinal();
         login = l;
         modeID = ForgeWorldMP.inst.getMode().getID();
-        tag = SyncWorldEvent.generateData(ep, login);
+        worldData = new NBTTagCompound();
+        ForgeWorldMP.inst.writeDataToNet(worldData, self, l);
+        syncData = ForgeWorldEvent.Sync.generateData(self, login);
     }
 
     public static void reloadClient(long ms, ReloadType type, boolean login)
@@ -79,7 +82,8 @@ public class MessageReload extends MessageToClient<MessageReload>
         typeID = io.readUnsignedByte();
         login = io.readBoolean();
         modeID = readString(io);
-        tag = readTag(io);
+        worldData = readTag(io);
+        syncData = readTag(io);
     }
 
     @Override
@@ -88,7 +92,8 @@ public class MessageReload extends MessageToClient<MessageReload>
         io.writeByte(typeID);
         io.writeBoolean(login);
         writeString(io, modeID);
-        writeTag(io, tag);
+        writeTag(io, worldData);
+        writeTag(io, syncData);
     }
 
     @Override
@@ -106,7 +111,8 @@ public class MessageReload extends MessageToClient<MessageReload>
         }
 
         ForgeWorldSP.inst.setModeRaw(m.modeID);
-        SyncWorldEvent.readData(m.tag, m.login);
+        ForgeWorldSP.inst.readDataFromNet(m.worldData, m.login);
+        ForgeWorldEvent.Sync.readData(m.syncData, m.login);
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 

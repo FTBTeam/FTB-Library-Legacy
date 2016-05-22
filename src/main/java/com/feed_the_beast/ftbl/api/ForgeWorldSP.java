@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.mojang.authlib.GameProfile;
@@ -10,7 +9,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -63,7 +61,7 @@ public final class ForgeWorldSP extends ForgeWorld
     public ForgePlayerSP getPlayer(Object o)
     {
         ForgePlayer p = super.getPlayer(o);
-        return (p == null) ? null : p.toPlayerSP();
+        return (p == null) ? null : p.toSP();
     }
 
     public void setModeRaw(String mode)
@@ -90,15 +88,13 @@ public final class ForgeWorldSP extends ForgeWorld
                 UUID uuid = LMUtils.fromString(s);
                 String name = tag1.getString(s);
 
-                if(uuid.equals(clientPlayer.getProfile().getId()))
-                {
-                    playerMap.put(uuid, clientPlayer);
-                }
-                else
+                if(!uuid.equals(clientPlayer.getProfile().getId()))
                 {
                     playerMap.put(uuid, new ForgePlayerSP(new GameProfile(uuid, name)));
                 }
             }
+
+            playerMap.put(clientPlayer.getProfile().getId(), clientPlayer);
 
             FTBLib.dev_logger.info("Client player ID: " + clientPlayer.getProfile().getId() + " and " + (playerMap.size() - 1) + " other players");
 
@@ -109,12 +105,11 @@ public final class ForgeWorldSP extends ForgeWorld
 
             for(Map.Entry<String, NBTBase> e : map1.entrySet())
             {
-                ForgePlayerSP p = playerMap.get(LMUtils.fromString(e.getKey())).toPlayerSP();
+                ForgePlayerSP p = playerMap.get(LMUtils.fromString(e.getKey())).toSP();
                 p.readFromNet((NBTTagCompound) e.getValue(), false);
             }
         }
 
         serverDataIDs.clear();
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.Sync(this, tag.getCompoundTag("SY"), clientPlayer, login));
     }
 }

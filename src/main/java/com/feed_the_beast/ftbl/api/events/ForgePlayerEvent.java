@@ -67,13 +67,16 @@ public abstract class ForgePlayerEvent extends Event
     public static class AddInfo extends ForgePlayerEvent
     {
         public final List<ITextComponent> list;
+        public final long currentTime;
 
-        public AddInfo(ForgePlayer p, List<ITextComponent> l)
+        public AddInfo(ForgePlayer p, List<ITextComponent> l, long t)
         {
             super(p);
             list = l;
+            currentTime = t;
         }
     }
+
     public final ForgePlayer player;
 
     public ForgePlayerEvent(ForgePlayer p)

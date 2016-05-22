@@ -45,7 +45,7 @@ public abstract class LMGuiHandler
             epM.closeContainer();
             epM.openContainer = c;
             epM.openContainer.windowId = epM.currentWindowId;
-            epM.openContainer.onCraftGuiOpened(epM);
+            epM.openContainer.addListener(epM);
             new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
         }
         else if(!FTBLib.getEffectiveSide().isServer())

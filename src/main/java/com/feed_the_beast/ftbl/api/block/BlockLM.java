@@ -28,6 +28,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class BlockLM extends Block implements IBlockLM
@@ -48,6 +49,7 @@ public abstract class BlockLM extends Block implements IBlockLM
         return new ItemBlockLM(this);
     }
 
+    @Nonnull
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
@@ -60,6 +62,7 @@ public abstract class BlockLM extends Block implements IBlockLM
         return getRegistryName().toString();
     }
 
+    @Nonnull
     @Override
     public String getUnlocalizedName()
     {
@@ -107,7 +110,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(Item item, CreativeTabs c, List<ItemStack> l)
+    public void getSubBlocks(@Nonnull Item item, CreativeTabs c, List<ItemStack> l)
     {
         l.add(new ItemStack(item, 1, 0));
     }
@@ -128,14 +131,14 @@ public abstract class BlockLM extends Block implements IBlockLM
     }
 
     @Override
-    public float getExplosionResistance(World w, BlockPos pos, Entity e, Explosion ex)
+    public float getExplosionResistance(World w, BlockPos pos, @Nonnull Entity e, Explosion ex)
     {
         if(hasTileEntity(w.getBlockState(pos)))
         {
             TileLM tile = getTile(w, pos);
             if(tile != null && tile.isExplosionResistant())
             {
-                return 1000000F;
+                return Float.MAX_VALUE;
             }
         }
 
@@ -143,7 +146,7 @@ public abstract class BlockLM extends Block implements IBlockLM
     }
 
     @Override
-    public void breakBlock(World w, BlockPos pos, IBlockState state)
+    public void breakBlock(@Nonnull World w, @Nonnull BlockPos pos, @Nonnull IBlockState state)
     {
         if(!w.isRemote && hasTileEntity(state))
         {
@@ -168,7 +171,8 @@ public abstract class BlockLM extends Block implements IBlockLM
     }
 
     @Override
-    public boolean onBlockEventReceived(World w, BlockPos pos, IBlockState state, int eventID, int param)
+    @Deprecated
+    public boolean eventReceived(IBlockState state, World w, BlockPos pos, int eventID, int param)
     {
         if(hasTileEntity(state))
         {
@@ -212,12 +216,14 @@ public abstract class BlockLM extends Block implements IBlockLM
         return Item.getItemFromBlock(this);
     }
 
+    @Nonnull
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return FULL_BLOCK_AABB;
     }
 
+    @Nonnull
     @Override
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
@@ -234,6 +240,7 @@ public abstract class BlockLM extends Block implements IBlockLM
         return null;
     }
 
+    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()

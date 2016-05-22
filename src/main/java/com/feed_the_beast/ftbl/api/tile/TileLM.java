@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.net.MessageMarkTileDirty;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
+import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +16,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -30,8 +30,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class TileLM extends TileEntity implements ITileEntity, IEditableName, ITickable
 {
     protected enum EnumSync
@@ -69,7 +72,7 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
     }
 
     @Override
-    public final void writeToNBT(NBTTagCompound tag)
+    public final NBTTagCompound writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
         writeTileData(tag);
@@ -78,6 +81,8 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
         {
             LMNBTUtils.setUUID(tag, "OwnerID", ownerID, true);
         }
+
+        return tag;
     }
 
     @Override
@@ -89,7 +94,7 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
     }
 
     @Override
-    public final Packet getDescriptionPacket()
+    public final SPacketUpdateTileEntity getUpdatePacket()
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeTileClientData(tag);

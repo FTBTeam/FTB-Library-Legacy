@@ -39,14 +39,14 @@ public final class ForgePlayerTemp extends ForgePlayer
     }
 
     @Override
-    public ForgePlayerMP toPlayerMP()
+    public ForgePlayerMP toMP()
     {
         return null;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ForgePlayerSP toPlayerSP()
+    public ForgePlayerSP toSP()
     {
         return null;
     }

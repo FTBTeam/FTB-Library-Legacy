@@ -3,12 +3,12 @@ package com.feed_the_beast.ftbl.util;
 import latmod.lib.LMUtils;
 import latmod.lib.MathHelperLM;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 
 /**
  * Created by LatvianModder on 14.03.2016.
  */
-public class ChunkDimPos extends ChunkCoordIntPair
+public class ChunkDimPos extends ChunkPos
 {
     public final int dim;
 
@@ -29,17 +29,22 @@ public class ChunkDimPos extends ChunkCoordIntPair
         {
             return true;
         }
-        else if(o instanceof ChunkDimPos)
+        else if(o instanceof ChunkPos)
         {
-            return equalsChunk((ChunkDimPos) o);
-        }
-        else if(o instanceof ChunkCoordIntPair)
-        {
-            ChunkCoordIntPair c = (ChunkCoordIntPair) o;
-            return c.chunkXPos == chunkXPos && c.chunkZPos == chunkZPos;
+            ChunkPos c = (ChunkPos) o;
+
+            if(c.chunkXPos == chunkXPos && c.chunkZPos == chunkZPos)
+            {
+                if(o instanceof ChunkDimPos)
+                {
+                    return ((ChunkDimPos) o).dim == dim;
+                }
+
+                return true;
+            }
         }
 
-        return o.equals(this);
+        return false;
     }
 
     public boolean equalsChunk(ChunkDimPos p)

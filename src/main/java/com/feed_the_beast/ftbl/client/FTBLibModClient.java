@@ -22,7 +22,7 @@ import latmod.lib.LMColorUtils;
 import latmod.lib.LMUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
-import net.minecraft.client.particle.EntityReddustFX;
+import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -141,7 +141,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void spawnDust(World w, double x, double y, double z, int col)
     {
-        EntityReddustFX fx = new EntityReddustFX(w, x, y, z, 0F, 0F, 0F)
+        ParticleRedstone fx = new ParticleRedstone(w, x, y, z, 0F, 0F, 0F)
         { };
 
         float alpha = LMColorUtils.getAlpha(col) / 255F;

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.util;
 
 import latmod.lib.ByteIOStream;
+import latmod.lib.LMFileUtils;
 import latmod.lib.LMListUtils;
 import latmod.lib.LMUtils;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -71,7 +72,7 @@ public class LMNBTUtils
     {
         try
         {
-            CompressedStreamTools.write(tag, f);
+            CompressedStreamTools.write(tag, LMFileUtils.newFile(f));
         }
         catch(Exception e)
         {

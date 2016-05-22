@@ -10,7 +10,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -92,7 +92,7 @@ public class FTBLibClient
         return mc.getSession().getProfile().getId();
     }
 
-    public static void spawnPart(EntityFX e)
+    public static void spawnPart(Particle e)
     {
         mc.effectRenderer.addEffect(e);
     }

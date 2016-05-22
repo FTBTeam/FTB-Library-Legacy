@@ -86,6 +86,7 @@ public class FTBLib
     public static File folderMinecraft;
     public static File folderModpack;
     public static File folderLocal;
+    public static File folderWorld;
 
     public static void init(File configFolder)
     {
@@ -146,7 +147,7 @@ public class FTBLib
         {
             for(EntityPlayerMP ep : getAllOnlinePlayers(null))
             {
-                new MessageReload(type, ep, login).sendTo(ep);
+                new MessageReload(type, ForgeWorldMP.inst.getPlayer(ep), login).sendTo(ep);
             }
         }
 
@@ -339,7 +340,7 @@ public class FTBLib
             epM.closeContainer();
             epM.openContainer = c;
             epM.openContainer.windowId = epM.currentWindowId;
-            epM.openContainer.onCraftGuiOpened(epM);
+            epM.openContainer.addListener(epM);
             new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
         }
         else if(!getEffectiveSide().isServer())

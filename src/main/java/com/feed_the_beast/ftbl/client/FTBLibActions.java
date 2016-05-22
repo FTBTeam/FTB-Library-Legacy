@@ -22,10 +22,10 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import latmod.lib.LMColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,7 +42,7 @@ public class FTBLibActions
         @Override
         public String getDisplayName()
         {
-            return I18n.translateToLocal(FTBLibModClient.notifications.getFullID());
+            return I18n.format(FTBLibModClient.notifications.getFullID());
         }
 
         @Override

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,15 +27,17 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 
         text.add(new InfoPlayerViewLine(this, playerLM));
 
+        System.out.println(playerLM.clientInfo);
+
         if(!playerLM.clientInfo.isEmpty())
         {
-            for(String s : playerLM.clientInfo)
-            { printlnText(s); }
+            for(ITextComponent s : playerLM.clientInfo)
+            {
+                println(s);
+            }
 
             text.add(null);
         }
-
-        text.add(null);
 
         for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, true, true))
         {

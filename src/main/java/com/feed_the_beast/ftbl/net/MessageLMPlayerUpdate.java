@@ -60,7 +60,7 @@ public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageLMPlayerUpdate m, Minecraft mc)
     {
-        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toPlayerSP();
+        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toSP();
         p.readFromNet(m.data, m.isSelf);
         FTBLibClient.onGuiClientAction();
     }

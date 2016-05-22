@@ -55,6 +55,8 @@ public class InfoPlayerActionLine extends InfoTextLine
             int ax = getAX();
             float z = gui.getZLevel();
 
+            GlStateManager.enableBlend();
+
             if(mouseOver())
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
@@ -71,6 +73,7 @@ public class InfoPlayerActionLine extends InfoTextLine
             gui.getFontRenderer().drawString(title, ax + (action.icon == null ? 4 : 20), ay + 5, guiInfo.colorText);
         }
     }
+
     public final ForgePlayerSP playerLM;
     public final PlayerAction action;
 

@@ -40,7 +40,7 @@ public class InfoFriendsGUI extends InfoPage
 
         for(ForgePlayer p : tempPlayerList)
         {
-            addSub(new InfoFriendsGUIPage(p.toPlayerSP()));
+            addSub(new InfoFriendsGUIPage(p.toSP()));
         }
     }
 }
