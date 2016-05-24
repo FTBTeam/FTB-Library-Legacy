@@ -51,6 +51,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 
     @Nonnull
     @Override
+    @Deprecated
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return EnumBlockRenderType.MODEL;
@@ -218,6 +219,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 
     @Nonnull
     @Override
+    @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return FULL_BLOCK_AABB;
@@ -225,6 +227,7 @@ public abstract class BlockLM extends Block implements IBlockLM
 
     @Nonnull
     @Override
+    @Deprecated
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return getStateFromMeta(meta);

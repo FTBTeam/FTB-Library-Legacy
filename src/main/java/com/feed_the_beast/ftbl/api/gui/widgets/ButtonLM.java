@@ -9,37 +9,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class ButtonLM extends WidgetLM implements IClickable
 {
-    private long lastClickMillis;
-
     public ButtonLM(IGuiLM g, int x, int y, int w, int h)
     {
         super(g, x, y, w, h);
-        lastClickMillis = System.currentTimeMillis();
-    }
-
-    public boolean isDoubleClickRequired()
-    {
-        return false;
     }
 
     @Override
-    public void mousePressed(int b)
+    public void mousePressed(MouseButton b)
     {
         if(mouseOver())
         {
-            if(isDoubleClickRequired())
-            {
-                long l = System.currentTimeMillis();
-                if(l - lastClickMillis < 300)
-                {
-                    onClicked(MouseButton.get(b));
-                }
-                lastClickMillis = l;
-            }
-            else
-            {
-                onClicked(MouseButton.get(b));
-            }
+            onClicked(b);
         }
     }
 }

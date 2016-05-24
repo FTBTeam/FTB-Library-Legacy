@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import net.minecraft.client.gui.FontRenderer;
@@ -138,7 +139,7 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
     protected final void mouseClicked(int mx, int my, int b) throws IOException
     {
         mouse.onClicked(b, true);
-        mainPanel.mousePressed(b);
+        mainPanel.mousePressed(MouseButton.get(b));
         super.mouseClicked(mx, my, b);
         mouseClicked();
     }

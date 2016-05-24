@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.gui.IGuiLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -25,7 +26,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(int b)
+    public void mousePressed(MouseButton b)
     {
         if(charLimit == 0)
         {
@@ -37,7 +38,7 @@ public class TextBoxLM extends WidgetLM
             isSelected = true;
             Keyboard.enableRepeatEvents(true);
 
-            if(b == 1 && getText().length() > 0)
+            if(b.isRight() && getText().length() > 0)
             {
                 clear();
                 textChanged();

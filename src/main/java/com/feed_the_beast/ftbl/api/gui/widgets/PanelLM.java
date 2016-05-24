@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.gui.IGuiLM;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,22 +36,15 @@ public abstract class PanelLM extends WidgetLM // GuiLM
         }
     }
 
-    public void addAll(WidgetLM[] l)
+    public void addAll(Iterable<? extends WidgetLM> l)
     {
-        if(l == null || l.length == 0)
+        if(l != null)
         {
-            return;
+            for(WidgetLM w : l)
+            {
+                add(w);
+            }
         }
-        for(WidgetLM aL : l) { add(aL); }
-    }
-
-    public void addAll(List<? extends WidgetLM> l)
-    {
-        if(l == null || l.isEmpty())
-        {
-            return;
-        }
-        for(WidgetLM w : l) { add(w); }
     }
 
     public void refreshWidgets()
@@ -66,6 +60,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
         {
             l.add(title);
         }
+
         for(WidgetLM w : widgets)
         {
             if(w.isEnabled() && w.mouseOver())
@@ -76,7 +71,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
     }
 
     @Override
-    public void mousePressed(int b)
+    public void mousePressed(MouseButton b)
     {
         for(WidgetLM w : widgets)
         {

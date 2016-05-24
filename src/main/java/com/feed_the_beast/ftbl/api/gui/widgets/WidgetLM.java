@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IGuiLM;
 import com.feed_the_beast.ftbl.util.TextureCoords;
@@ -70,7 +71,7 @@ public class WidgetLM
         GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height);
     }
 
-    public void mousePressed(int b)
+    public void mousePressed(MouseButton b)
     {
     }
 

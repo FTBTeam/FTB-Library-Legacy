@@ -101,14 +101,15 @@ public class GuiSelectColor extends GuiLM
         }
 
         @Override
-        public void mousePressed(int b)
+        public void mousePressed(MouseButton b)
         {
-            if(b == 0 && mouseOver())
+            if(b.isLeft() && mouseOver())
             {
                 grabbed = true;
             }
         }
     }
+
     public final IColorCallback callback;
     public final LMColor.HSB initCol;
     public final Object colorID;

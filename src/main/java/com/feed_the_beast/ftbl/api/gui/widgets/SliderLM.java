@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
+import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IGuiLM;
 import com.feed_the_beast.ftbl.util.TextureCoords;
@@ -95,9 +96,9 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(int b)
+    public void mousePressed(MouseButton b)
     {
-        if(mouseOver() && b == 0)
+        if(mouseOver() && b.isLeft())
         {
             isGrabbed = true;
         }

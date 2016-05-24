@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.api.events;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -74,6 +76,17 @@ public abstract class ForgePlayerEvent extends Event
             super(p);
             list = l;
             currentTime = t;
+        }
+    }
+
+    public static class MyServerSettings extends ForgePlayerEvent
+    {
+        public final ConfigGroup settings;
+
+        public MyServerSettings(ForgePlayerMP p, ConfigGroup g)
+        {
+            super(p);
+            settings = g;
         }
     }
 
