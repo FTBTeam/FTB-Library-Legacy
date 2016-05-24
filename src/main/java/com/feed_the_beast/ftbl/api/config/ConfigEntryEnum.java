@@ -93,7 +93,9 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
             NBTTagList list = new NBTTagList();
 
             for(String s : enumMap.keySet())
-            { list.appendTag(new NBTTagString(s)); }
+            {
+                list.appendTag(new NBTTagString(s));
+            }
 
             tag.setTag("VL", list);
         }

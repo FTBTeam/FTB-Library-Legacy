@@ -48,7 +48,9 @@ public class GuiNotifications extends GuiLM
         mainPanel.width = MathHelperLM.clampInt(mainPanel.width, 200, 300);
 
         for(ButtonNotification b : buttonList)
-        { b.width = mainPanel.width; }
+        {
+            b.width = mainPanel.width;
+        }
     }
 
     @Override
@@ -68,11 +70,15 @@ public class GuiNotifications extends GuiLM
         drawBlankRect(mainPanel.posX, mainPanel.posY, zLevel, mainPanel.width, mainPanel.height);
 
         for(int i = 1; i < 7; i++)
-        { drawBlankRect(mainPanel.posX, mainPanel.posY + i * 25 - 1, zLevel, mainPanel.width, 1); }
+        {
+            drawBlankRect(mainPanel.posX, mainPanel.posY + i * 25 - 1, zLevel, mainPanel.width, 1);
+        }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         for(ButtonNotification b : buttonList)
-        { b.renderWidget(); }
+        {
+            b.renderWidget();
+        }
     }
 }

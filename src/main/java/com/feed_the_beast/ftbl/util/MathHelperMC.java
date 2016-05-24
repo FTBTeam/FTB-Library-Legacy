@@ -196,7 +196,10 @@ public class MathHelperMC
     public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, List<AxisAlignedBB> boxes)
     {
         AxisAlignedBB[] boxesa = new AxisAlignedBB[boxes.size()];
-        for(int i = 0; i < boxesa.length; i++) { boxesa[i] = boxes.get(i).addCoord(0D, 0D, 0D); }
+        for(int i = 0; i < boxesa.length; i++)
+        {
+            boxesa[i] = boxes.get(i).addCoord(0D, 0D, 0D);
+        }
         return collisionRayTrace(w, blockPos, start, end, boxesa);
     }
 

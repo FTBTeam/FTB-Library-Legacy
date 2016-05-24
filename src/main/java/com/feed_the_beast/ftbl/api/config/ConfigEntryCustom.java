@@ -78,7 +78,9 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
         }
         List<String> list = new ArrayList<>();
         for(JsonElement e1 : e.getAsJsonArray())
-        { list.add(e1.getAsString()); }
+        {
+            list.add(e1.getAsString());
+        }
         return list;
     }
 
@@ -114,7 +116,9 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
         JsonArray a = e.getAsJsonArray();
         IntList l = new IntList(a.size());
         for(int i = 0; i < l.size(); i++)
-        { l.set(i, a.get(i).getAsInt()); }
+        {
+            l.set(i, a.get(i).getAsInt());
+        }
         return l;
     }
 

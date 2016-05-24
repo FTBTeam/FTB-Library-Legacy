@@ -13,7 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +21,6 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 {
-    private static final ArrayList<String> tempTextList = new ArrayList<>();
     public final ResourceLocation texture;
     public final ContainerLM container;
     public final PanelLM mainPanel;
@@ -118,9 +116,9 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
     }
 
     @Override
-    public final void close(GuiScreen g)
+    public final void closeGui()
     {
-        FTBLibClient.openGui(g);
+        mc.thePlayer.closeScreen();
     }
 
     @Override
@@ -155,16 +153,23 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
         {
             return;
         }
+
         if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode())
         {
-            onClosedByKey();
+            if(onClosedByKey())
+            {
+                closeGui();
+            }
+
+            return;
         }
+
         super.keyTyped(keyChar, key);
     }
 
-    public void onClosedByKey()
+    public boolean onClosedByKey()
     {
-        close(null);
+        return true;
     }
 
     @Override
@@ -212,12 +217,12 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
 
-        tempTextList.clear();
-        drawText(tempTextList);
-        if(!tempTextList.isEmpty())
+        drawText(GuiLM.tempTextList);
+        if(!GuiLM.tempTextList.isEmpty())
         {
-            drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
+            drawHoveringText(GuiLM.tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
         }
+        GuiLM.tempTextList.clear();
 
         GlStateManager.disableLighting();
         GlStateManager.color(1F, 1F, 1F, 1F);

@@ -33,7 +33,10 @@ public class ShapelessStackArray implements IStackArray
 
         List<StackArray> itemsList = Arrays.asList(items);
 
-        for(ItemStack anAi : ai) { itemsList.remove(anAi); }
+        for(ItemStack anAi : ai)
+        {
+            itemsList.remove(anAi);
+        }
 
         return itemsList.isEmpty();
     }

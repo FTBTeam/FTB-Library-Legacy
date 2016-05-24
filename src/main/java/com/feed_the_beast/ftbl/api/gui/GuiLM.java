@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -28,13 +29,12 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public abstract class GuiLM extends GuiScreen implements IGuiLM
 {
-    private static final ArrayList<String> tempTextList = new ArrayList<>();
+    static final ArrayList<String> tempTextList = new ArrayList<>();
 
     // GuiLM //
-
-    public final GuiScreen parentScreen;
     public final ResourceLocation texture;
     public final PanelLM mainPanel;
+    private final GuiScreen parentScreen;
     private final MouseLM mouse;
     public float delta;
 
@@ -203,9 +203,9 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
     }
 
     @Override
-    public final void close(GuiScreen g)
+    public final void closeGui()
     {
-        FTBLibClient.openGui((g == null) ? parentScreen : g);
+        mc.displayGuiScreen(parentScreen);
     }
 
     @Override
@@ -249,16 +249,23 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
         {
             return;
         }
-        if(key == 1 || key == mc.gameSettings.keyBindInventory.getKeyCode())
+
+        if(key == Keyboard.KEY_ESCAPE || key == mc.gameSettings.keyBindInventory.getKeyCode())
         {
-            onClosedByKey();
+            if(onClosedByKey())
+            {
+                closeGui();
+            }
+
+            return;
         }
+
         super.keyTyped(keyChar, key);
     }
 
-    public void onClosedByKey()
+    public boolean onClosedByKey()
     {
-        close(null);
+        return true;
     }
 
     public void drawBackground()
@@ -299,12 +306,12 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
-        tempTextList.clear();
         drawText(tempTextList);
         if(!tempTextList.isEmpty())
         {
             drawHoveringText(tempTextList, mouse.x, Math.max(mouse.y, 18), fontRendererObj);
         }
+        tempTextList.clear();
         GlStateManager.disableLighting();
         drawForeground();
         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -344,7 +351,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 
     public void scissor(int x, int y, int w, int h)
     {
-        int scale = FTBLibClient.computeGuiScale();
+        int scale = new ScaledResolution(mc).getScaleFactor();
         GL11.glScissor(x * scale, (height - y - h) * scale, w * scale, h * scale);
     }
 }

@@ -61,6 +61,7 @@ public class GuiPlayerActions extends GuiLM
         {
         }
     }
+
     public final ForgePlayer self, other;
     public final List<PlayerAction> actions;
 
@@ -90,7 +91,9 @@ public class GuiPlayerActions extends GuiLM
         }
 
         for(WidgetLM w : mainPanel.widgets)
-        { w.width = mainPanel.width; }
+        {
+            w.width = mainPanel.width;
+        }
 
         mainPanel.posY -= 20;
     }
@@ -99,6 +102,8 @@ public class GuiPlayerActions extends GuiLM
     public void drawBackground()
     {
         for(WidgetLM w : mainPanel.widgets)
-        { w.renderWidget(); }
+        {
+            w.renderWidget();
+        }
     }
 }

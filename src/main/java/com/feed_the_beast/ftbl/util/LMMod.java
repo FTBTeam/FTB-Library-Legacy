@@ -22,6 +22,7 @@ public class LMMod extends FinalIDObject
     private final String modAssets;
     public LMRecipes recipes;
     private ModContainer modContainer;
+
     public LMMod(String id)
     {
         super(id);

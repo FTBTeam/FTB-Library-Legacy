@@ -19,6 +19,7 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
     private final SimpleIndexedCodec packetCodec;
     private final FMLEmbeddedChannel serverChannels;
     private final FMLEmbeddedChannel clientChannels;
+
     private LMNetworkWrapper(String s)
     {
         packetCodec = new SimpleIndexedCodec();

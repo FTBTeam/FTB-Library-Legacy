@@ -275,6 +275,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
         }
     }
+
     public final IConfigProvider provider;
     public final String title;
     public final List<ButtonConfigEntry> configEntryButtons;
@@ -300,14 +301,18 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             {
                 height = 0;
                 for(ButtonConfigEntry b : configEntryButtons)
-                { addCE(b); }
+                {
+                    addCE(b);
+                }
             }
 
             @Override
             public void renderWidget()
             {
                 for(int i = 0; i < widgets.size(); i++)
-                { widgets.get(i).renderWidget(); }
+                {
+                    widgets.get(i).renderWidget();
+                }
             }
 
             private void addCE(ButtonConfigEntry e)
@@ -318,7 +323,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                 if(e.expanded)
                 {
                     for(ButtonConfigEntry b : e.subButtons)
-                    { addCE(b); }
+                    {
+                        addCE(b);
+                    }
                 }
             }
         };
@@ -330,7 +337,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             {
                 FTBLibClient.playClickSound();
                 shouldClose = true;
-                close(null);
+                closeGui();
             }
         };
 
@@ -341,7 +348,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             {
                 FTBLibClient.playClickSound();
                 for(ButtonConfigEntry e : configEntryButtons)
-                { expandAll(e); }
+                {
+                    expandAll(e);
+                }
                 gui.refreshWidgets();
             }
 
@@ -351,7 +360,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                 {
                     e.expanded = true;
                     for(ButtonConfigEntry e1 : e.subButtons)
-                    { expandAll(e1); }
+                    {
+                        expandAll(e1);
+                    }
                 }
             }
         };
@@ -375,7 +386,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                 {
                     e.expanded = false;
                     for(ButtonConfigEntry e1 : e.subButtons)
-                    { collapseAll(e1); }
+                    {
+                        collapseAll(e1);
+                    }
                 }
             }
         };
@@ -409,7 +422,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             configEntryButtons.clear();
 
             for(ConfigEntry entry : provider.getConfigGroup().sortedEntries())
-            { addCE(null, entry, 0); }
+            {
+                addCE(null, entry, 0);
+            }
         }
     }
 
@@ -434,7 +449,9 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             if(g != null)
             {
                 for(ConfigEntry entry : g.sortedEntries())
-                { addCE(b, entry, level + 1); }
+                {
+                    addCE(b, entry, level + 1);
+                }
             }
         }
     }
@@ -463,10 +480,10 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
     }
 
     @Override
-    public void onClosedByKey()
+    public boolean onClosedByKey()
     {
         shouldClose = true;
-        super.onClosedByKey();
+        return false;
     }
 
     public void onChanged()

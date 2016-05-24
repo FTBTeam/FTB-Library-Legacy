@@ -33,7 +33,7 @@ public class PaintStorage implements IPaintable
     {
         setPaint(id == 0 ? null : Block.getStateById(id));
     }
-    
+
     public int getPaintID()
     {
         IBlockState p = getPaint();

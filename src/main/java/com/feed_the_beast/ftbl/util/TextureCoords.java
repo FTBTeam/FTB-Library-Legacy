@@ -128,7 +128,9 @@ public final class TextureCoords
         double ds = (double) s;
         double d = width / ds;
         for(int i = 0; i < s; i++)
-        { l[i] = new TextureCoords(texture, posX + d * i, posY, d, height, textureW, textureH); }
+        {
+            l[i] = new TextureCoords(texture, posX + d * i, posY, d, height, textureW, textureH);
+        }
         return l;
     }
 
@@ -138,7 +140,9 @@ public final class TextureCoords
         double ds = (double) s;
         double d = height / ds;
         for(int i = 0; i < s; i++)
-        { l[i] = new TextureCoords(texture, posX, posY + d * i, width, d, textureW, textureH); }
+        {
+            l[i] = new TextureCoords(texture, posX, posY + d * i, width, d, textureW, textureH);
+        }
         return l;
     }
 }

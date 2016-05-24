@@ -54,7 +54,10 @@ public class LMInvUtils
         }
 
         int[] ai = new int[inv.getSizeInventory()];
-        for(int i = 0; i < ai.length; i++) { ai[i] = i; }
+        for(int i = 0; i < ai.length; i++)
+        {
+            ai[i] = i;
+        }
         return ai;
     }
 
@@ -262,7 +265,10 @@ public class LMInvUtils
         {
             return null;
         }
-        for(String tag1 : tags) { tag.removeTag(tag1); }
+        for(String tag1 : tags)
+        {
+            tag.removeTag(tag1);
+        }
         if(tag.hasNoTags())
         {
             tag = null;
@@ -305,7 +311,9 @@ public class LMInvUtils
     {
         ItemStack[] stacks = new ItemStack[inventory.getSizeInventory()];
         for(int i = 0; i < stacks.length; i++)
-        { stacks[i] = inventory.getStackInSlot(i); }
+        {
+            stacks[i] = inventory.getStackInSlot(i);
+        }
         writeItemsToNBT(stacks, tag, s);
     }
 
@@ -336,7 +344,9 @@ public class LMInvUtils
         ItemStack[] stacks = new ItemStack[inventory.getSizeInventory()];
         readItemsFromNBT(stacks, tag, s);
         for(int i = 0; i < stacks.length; i++)
-        { inventory.setInventorySlotContents(i, stacks[i]); }
+        {
+            inventory.setInventorySlotContents(i, stacks[i]);
+        }
     }
 
     public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
@@ -508,7 +518,9 @@ public class LMInvUtils
             return ai;
         }
         for(int i = 0; i < ai.length; i++)
-        { ai[i] = inv.getStackInSlot(slots[i]); }
+        {
+            ai[i] = inv.getStackInSlot(slots[i]);
+        }
         return ai;
     }
 
@@ -543,7 +555,10 @@ public class LMInvUtils
     public static int[] getPlayerSlots(EntityPlayer ep)
     {
         int[] ai = new int[ep.inventory.mainInventory.length];
-        for(int i = 0; i < ai.length; i++) { ai[i] = i; }
+        for(int i = 0; i < ai.length; i++)
+        {
+            ai[i] = i;
+        }
         return ai;
     }
 

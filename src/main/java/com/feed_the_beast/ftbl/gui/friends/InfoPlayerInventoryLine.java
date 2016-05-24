@@ -81,6 +81,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
             }
         }
     }
+
     public final ForgePlayerSP playerLM;
 
     public InfoPlayerInventoryLine(InfoPage c, ForgePlayerSP p)

@@ -109,7 +109,9 @@ public class ConfigGroup extends ConfigEntry
     {
         ConfigGroup g = new ConfigGroup(getID());
         for(ConfigEntry e : entryMap.values())
-        { g.add(e, true); }
+        {
+            g.add(e, true);
+        }
         return g;
     }
 
@@ -301,7 +303,7 @@ public class ConfigGroup extends ConfigEntry
                     catch(Exception ex)
                     {
                         System.err.println("Can't set value " + e1.getAsString() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
-                        System.err.println(ex.toString());
+                        System.err.println(ex);
                     }
                 }
             }

@@ -29,7 +29,9 @@ public class ConfigRegistry
     public static void reload()
     {
         for(ConfigFile f : map.values())
-        { f.load(); }
+        {
+            f.load();
+        }
 
         FTBLib.dev_logger.info("Loading override configs");
         JsonElement overridesE = LMJsonUtils.fromJson(new File(FTBLib.folderModpack, "overrides.json"));

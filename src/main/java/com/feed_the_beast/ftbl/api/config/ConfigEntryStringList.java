@@ -58,7 +58,9 @@ public class ConfigEntryStringList extends ConfigEntry
         JsonArray a = o.getAsJsonArray();
         value.clear();
         for(int i = 0; i < a.size(); i++)
-        { value.add(a.get(i).getAsString()); }
+        {
+            value.add(a.get(i).getAsString());
+        }
         set(LMListUtils.clone(value));
     }
 
@@ -91,7 +93,9 @@ public class ConfigEntryStringList extends ConfigEntry
         List<String> list = getAsStringList();
         IntList l = new IntList(list.size());
         for(int i = 0; i < list.size(); i++)
-        { l.add(Integer.parseInt(value.get(i))); }
+        {
+            l.add(Integer.parseInt(value.get(i)));
+        }
         return l;
     }
 

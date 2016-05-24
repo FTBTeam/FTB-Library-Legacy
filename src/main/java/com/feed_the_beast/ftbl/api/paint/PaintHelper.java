@@ -100,7 +100,7 @@ public class PaintHelper
                         painterItem.damagePainter(is, ep);
                         te.markDirty();
                     }
-                    
+
                     return EnumActionResult.SUCCESS;
                 }
             }

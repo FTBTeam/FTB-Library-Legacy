@@ -119,7 +119,9 @@ public class LMNBTUtils
     {
         l.clear();
         for(int i = 0; i < tag.tagCount(); i++)
-        { l.add(tag.getStringTagAt(i)); }
+        {
+            l.add(tag.getStringTagAt(i));
+        }
     }
 
     public static List<String> toStringList(NBTTagList tag)

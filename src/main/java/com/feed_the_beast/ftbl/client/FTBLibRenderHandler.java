@@ -38,6 +38,7 @@ public class FTBLibRenderHandler
     private static boolean renderLightValues = false;
     private static boolean needsLightUpdate = true;
     private static int lastX, lastY = -1, lastZ;
+
     public enum LightValueTexture
     {
         O,

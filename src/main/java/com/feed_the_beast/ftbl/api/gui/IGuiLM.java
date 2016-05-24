@@ -28,5 +28,5 @@ public interface IGuiLM
 
     FontRenderer getFontRenderer();
 
-    void close(GuiScreen g);
+    void closeGui();
 }

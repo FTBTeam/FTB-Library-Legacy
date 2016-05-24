@@ -12,14 +12,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiViewImage extends GuiLM
 {
-    public final GuiScreen parent;
     public final TextureCoords texCoords;
     public final ButtonLM buttonClose;
 
     public GuiViewImage(GuiScreen p, TextureCoords t)
     {
-        super(null, null);
-        parent = p;
+        super(p, null);
         texCoords = t;
 
         buttonClose = new ButtonLM(this, 0, 0, 0, 0)
@@ -27,7 +25,7 @@ public class GuiViewImage extends GuiLM
             @Override
             public void onClicked(MouseButton button)
             {
-                close(parent);
+                closeGui();
             }
         };
     }

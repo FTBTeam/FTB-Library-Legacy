@@ -35,7 +35,9 @@ public class StackArray implements IStackArray
         }
         StackArray[] se = new StackArray[o.length];
         for(int i = 0; i < o.length; i++)
-        { se[i] = (o[i] == null) ? null : new StackArray(o[i]); }
+        {
+            se[i] = (o[i] == null) ? null : new StackArray(o[i]);
+        }
         return se;
     }
 
@@ -47,7 +49,9 @@ public class StackArray implements IStackArray
         }
         StackArray[] se = new StackArray[o.length];
         for(int i = 0; i < o.length; i++)
-        { se[i] = (o[i] == null) ? null : new StackArray(o[i]); }
+        {
+            se[i] = (o[i] == null) ? null : new StackArray(o[i]);
+        }
         return se;
     }
 
@@ -134,7 +138,7 @@ public class StackArray implements IStackArray
     @Override
     public String toString()
     {
-        return "StackEntry: " + items.toString();
+        return "StackEntry: " + items;
     }
 
     @Override

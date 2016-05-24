@@ -84,6 +84,7 @@ public class InfoPlayerViewLine extends InfoTextLine
                 return null;
             }
         }
+
         private Player player;
 
         public ButtonInfoPlayerView(GuiInfo g, InfoPlayerViewLine w)
@@ -153,6 +154,7 @@ public class InfoPlayerViewLine extends InfoTextLine
             GlStateManager.popMatrix();
         }
     }
+
     public final ForgePlayerSP playerLM;
 
     public InfoPlayerViewLine(InfoPage c, ForgePlayerSP p)

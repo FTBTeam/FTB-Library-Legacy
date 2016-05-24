@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 public class TileInfoDataAccessor
 {
     public static final TileInfoDataAccessor inst = new TileInfoDataAccessor();
-    
+
     public EntityPlayer player;
     public World world;
     public RayTraceResult hit;

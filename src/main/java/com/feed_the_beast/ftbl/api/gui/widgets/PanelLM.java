@@ -98,6 +98,9 @@ public abstract class PanelLM extends WidgetLM // GuiLM
     @Override
     public void renderWidget()
     {
-        for(WidgetLM widget : widgets) { widget.renderWidget(); }
+        for(WidgetLM widget : widgets)
+        {
+            widget.renderWidget();
+        }
     }
 }

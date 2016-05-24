@@ -34,7 +34,9 @@ public class MouseAction implements IJsonSerializable
         {
             JsonArray h = new JsonArray();
             for(ITextComponent c : hover)
-            { h.add(JsonHelper.serializeICC(c)); }
+            {
+                h.add(JsonHelper.serializeICC(c));
+            }
             o.add("hover", h);
         }
 
@@ -66,7 +68,9 @@ public class MouseAction implements IJsonSerializable
             JsonArray a = o1.get("hover").getAsJsonArray();
             hover.clear();
             for(int i = 0; i < a.size(); i++)
-            { hover.add(JsonHelper.deserializeICC(a.get(i))); }
+            {
+                hover.add(JsonHelper.deserializeICC(a.get(i)));
+            }
         }
     }
 

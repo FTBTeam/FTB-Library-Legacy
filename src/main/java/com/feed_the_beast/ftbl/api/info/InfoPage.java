@@ -195,7 +195,10 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
     public void sortAll()
     {
         LMMapUtils.sortMap(childPages, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
-        for(InfoPage c : childPages.values()) { c.sortAll(); }
+        for(InfoPage c : childPages.values())
+        {
+            c.sortAll();
+        }
     }
 
     public void copyFrom(InfoPage c)
@@ -243,7 +246,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         {
             JsonArray a = new JsonArray();
             for(InfoTextLine c : text)
-            { a.add(c == null ? JsonNull.INSTANCE : c.getSerializableElement()); }
+            {
+                a.add(c == null ? JsonNull.INSTANCE : c.getSerializableElement());
+            }
             o.add("T", a);
         }
 
@@ -251,7 +256,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         {
             JsonObject o1 = new JsonObject();
             for(InfoPage c : childPages.values())
-            { o1.add(c.getID(), c.getSerializableElement()); }
+            {
+                o1.add(c.getID(), c.getSerializableElement());
+            }
             o.add("S", o1);
         }
 
@@ -339,7 +346,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
     {
         refreshGui(gui);
         for(InfoPage p : childPages.values())
-        { p.refreshGuiTree(gui); }
+        {
+            p.refreshGuiTree(gui);
+        }
     }
 
     @SideOnly(Side.CLIENT)

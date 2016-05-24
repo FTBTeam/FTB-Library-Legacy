@@ -68,19 +68,6 @@ public class InfoImageLine extends InfoExtendedTextLine
         return this;
     }
 
-    @SideOnly(Side.CLIENT)
-    public TextureCoords getDisplayImage()
-    {
-        TextureCoords img = getImage();
-        if(img == null)
-        {
-            return null;
-        }
-        double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
-        double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
-        return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
-    }
-
     public InfoImageLine setImage(String img)
     {
         String imageURL0 = imageURL == null ? null : (imageURL + "");
@@ -94,6 +81,19 @@ public class InfoImageLine extends InfoExtendedTextLine
             text = null;
         }
         return this;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public TextureCoords getDisplayImage()
+    {
+        TextureCoords img = getImage();
+        if(img == null)
+        {
+            return null;
+        }
+        double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
+        double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
+        return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
     }
 
     public InfoImageLine setSize(double w, double h)

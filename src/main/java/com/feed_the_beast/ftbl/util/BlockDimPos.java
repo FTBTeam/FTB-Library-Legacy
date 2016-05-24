@@ -81,7 +81,7 @@ public final class BlockDimPos
 
     public BlockDimPos copy()
     {
-        return new BlockDimPos(pos, dim);
+        return new BlockDimPos(pos, dim, true);
     }
 
     public int chunkX()

@@ -143,10 +143,12 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     public BlockDimPos getPos()
     {
         EntityPlayerMP ep = getPlayer();
+
         if(ep != null)
         {
             lastPos = new EntityDimPos(ep).toBlockDimPos();
         }
+
         return lastPos;
     }
 
@@ -368,7 +370,10 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
                 mouse.click = new ClickAction(ClickActionType.FRIEND_ADD_ALL, null);
                 Collections.sort(requests, null);
 
-                for(String s : requests) { mouse.hover.add(new TextComponentString(s)); }
+                for(String s : requests)
+                {
+                    mouse.hover.add(new TextComponentString(s));
+                }
                 n.setMouseAction(mouse);
 
                 FTBLib.notifyPlayer(getPlayer(), n);
@@ -386,7 +391,9 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
         new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
         for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
-        { new MessageLMPlayerLoggedIn(this, firstLogin, false).sendTo(ep1); }
+        {
+            new MessageLMPlayerLoggedIn(this, firstLogin, false).sendTo(ep1);
+        }
 
         checkNewFriends();
     }

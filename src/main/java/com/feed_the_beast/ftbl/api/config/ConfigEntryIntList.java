@@ -49,7 +49,9 @@ public class ConfigEntryIntList extends ConfigEntry
         JsonArray a = o.getAsJsonArray();
         IntList l = new IntList(a.size());
         for(int i = 0; i < l.size(); i++)
-        { l.set(i, a.get(i).getAsInt()); }
+        {
+            l.set(i, a.get(i).getAsInt());
+        }
         set(l);
     }
 
@@ -59,7 +61,9 @@ public class ConfigEntryIntList extends ConfigEntry
         JsonArray a = new JsonArray();
         value = getAsIntList();
         for(int i = 0; i < value.size(); i++)
-        { a.add(new JsonPrimitive(value.get(i))); }
+        {
+            a.add(new JsonPrimitive(value.get(i)));
+        }
         return a;
     }
 
@@ -74,7 +78,9 @@ public class ConfigEntryIntList extends ConfigEntry
     {
         List<String> l = new ArrayList<>();
         for(Integer i : getAsIntList())
-        { l.add(i.toString()); }
+        {
+            l.add(i.toString());
+        }
         return l;
     }
 

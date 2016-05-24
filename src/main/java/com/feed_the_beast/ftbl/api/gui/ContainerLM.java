@@ -85,7 +85,9 @@ public abstract class ContainerLM extends Container
         for(int y = 0; y < 3; y++)
         {
             for(int x = 0; x < 9; x++)
-            { addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18)); }
+            {
+                addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
+            }
         }
 
         int i = ignoreCurrent ? player.inventory.currentItem : -1;

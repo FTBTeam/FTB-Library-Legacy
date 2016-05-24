@@ -12,7 +12,6 @@ public class CmdHelpOverride extends CommandHelp
 {
     public CmdHelpOverride()
     {
-        super();
     }
 
     @Override
