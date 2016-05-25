@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.util;
 import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
+import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 
 public enum PrivacyLevel
 {
@@ -87,7 +87,7 @@ public enum PrivacyLevel
         {
             return true;
         }
-        if(player.isOnline() && ForgePermissionRegistry.hasPermission(FTBLibPermissions.interact_secure, player.getProfile()))
+        if(player.isOnline() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false))
         {
             return true;
         }

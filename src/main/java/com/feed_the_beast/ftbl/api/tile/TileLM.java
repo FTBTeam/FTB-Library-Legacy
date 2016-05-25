@@ -135,17 +135,17 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
         readTileData(tag);
     }
 
+    public EnumSync getSync()
+    {
+        return EnumSync.SYNC;
+    }
+
     public void onUpdatePacket()
     {
         if(getSync().rerender())
         {
             worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
         }
-    }
-
-    public EnumSync getSync()
-    {
-        return EnumSync.SYNC;
     }
 
     public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, EnumHand hand, float x, float y, float z)

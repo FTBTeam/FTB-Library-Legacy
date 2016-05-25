@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.block;
 
 import com.feed_the_beast.ftbl.api.tile.TileLM;
+import com.feed_the_beast.ftbl.util.BlockStateSerializer;
 import com.feed_the_beast.ftbl.util.LMMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -18,7 +19,6 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -79,22 +79,12 @@ public abstract class BlockLM extends Block implements IBlockLM
     @SideOnly(Side.CLIENT)
     public void loadModels()
     {
-        ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getModelName(), getModelState()));
+        ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getRegistryName(), BlockStateSerializer.getString(getDefaultState())));
     }
 
     @Override
     public void loadTiles()
     {
-    }
-
-    public ResourceLocation getModelName()
-    {
-        return getRegistryName();
-    }
-
-    public String getModelState()
-    {
-        return "normal";
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.api.permissions;
 
-import com.google.gson.JsonElement;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,15 +15,11 @@ import java.util.Map;
 public class RankConfigEnum<E extends Enum<E>> extends RankConfig
 {
     private final Map<String, E> enumMap;
-    private JsonElement defPlayer, defOP;
 
-    public RankConfigEnum(String id, E defPlayerValue, E defOPValue, E[] validEnums, boolean addNull)
+    public RankConfigEnum(String id, @Nullable E defPlayerValue, @Nullable E defOPValue, @Nonnull E[] validEnums, boolean addNull)
     {
-        super(id);
+        super(id, new JsonPrimitive(getName(defPlayerValue)), new JsonPrimitive(getName(defOPValue)));
         enumMap = new HashMap<>();
-
-        defPlayer = new JsonPrimitive(getName(defPlayerValue));
-        defOP = new JsonPrimitive(getName(defOPValue));
 
         for(E e : validEnums)
         {
@@ -39,14 +37,14 @@ public class RankConfigEnum<E extends Enum<E>> extends RankConfig
         return e == null ? "-" : e.name().toLowerCase();
     }
 
-    public E getEnum(GameProfile profile)
+    public E get(@Nonnull GameProfile profile)
     {
-        return enumMap.get(get(profile).getAsString());
+        return enumMap.get(getJson(profile).getAsString());
     }
 
     @Override
-    public JsonElement getDefaultValue(boolean op)
+    public ConfigEntryType getType()
     {
-        return op ? defOP : defPlayer;
+        return ConfigEntryType.ENUM;
     }
 }

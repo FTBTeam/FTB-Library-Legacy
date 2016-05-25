@@ -2,23 +2,27 @@ package com.feed_the_beast.ftbl.util;
 
 import latmod.lib.LMUtils;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
 
 import java.util.AbstractMap;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 29.04.2016.
  */
 public class BlockStateSerializer
 {
-    public static class StateEntry extends AbstractMap.SimpleImmutableEntry<IProperty<?>, Object> implements Comparable<StateEntry>
+    public static class StateEntry extends AbstractMap.SimpleImmutableEntry<IProperty<?>, Comparable<?>> implements Comparable<StateEntry>
     {
         public final String valueString;
 
-        public StateEntry(IProperty<?> key, Object value)
+        public StateEntry(IProperty<?> key, Comparable<?> value)
         {
             super(key, value);
-            valueString = value instanceof String ? value.toString() : getKey().getName(LMUtils.convert(getValue()));
+            valueString = value instanceof String ? value.toString() : getKey().getName(LMUtils.convert(value));
         }
 
         @Override
@@ -34,24 +38,31 @@ public class BlockStateSerializer
         }
     }
 
-    public static String getString(Object... o)
+    public static String getString(IBlockState state)
     {
-        StateEntry[] entries = new StateEntry[o.length / 2];
-
-        for(int i = 0; i < entries.length; i++)
+        if(state == null)
         {
-            entries[i] = new StateEntry((IProperty<?>) o[i * 2], o[i * 2 + 1]);
+            return "normal";
         }
 
-        Arrays.sort(entries);
+        int size = state.getProperties().size();
+
+        List<StateEntry> entries = new ArrayList<>(size);
+
+        for(Map.Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
+        {
+            entries.add(new StateEntry(entry.getKey(), entry.getValue()));
+        }
+
+        Collections.sort(entries, null);
 
         StringBuilder sb = new StringBuilder();
 
-        for(int i = 0; i < entries.length; i++)
+        for(int i = 0; i < size; i++)
         {
-            sb.append(entries[i]);
+            sb.append(entries.get(i));
 
-            if(i != entries.length - 1)
+            if(i != size - 1)
             {
                 sb.append(',');
             }

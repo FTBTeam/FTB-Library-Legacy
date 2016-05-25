@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.permissions.ForgePermissionRegistry;
 import latmod.lib.annotations.Info;
 
 /**
@@ -9,7 +8,7 @@ import latmod.lib.annotations.Info;
 public class FTBLibPermissions
 {
     @Info("Enabled access to protected blocks / chunks")
-    public static final String interact_secure = ForgePermissionRegistry.registerPermission("ftbl.interact_secure", false);
+    public static final String interact_secure = "ftbl.interact_secure";
 
     public static void init()
     {

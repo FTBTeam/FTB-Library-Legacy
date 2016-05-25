@@ -1,40 +1,57 @@
 package com.feed_the_beast.ftbl.api.permissions;
 
+import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.util.FinalIDObject;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by LatvianModder on 13.02.2016.
- * <br>Examples of a permission node ID:
- * <br>"xpt.level_crossdim", "latblocks.allow_paint", etc.
  */
-public abstract class RankConfig extends FinalIDObject
+public class RankConfig extends FinalIDObject
 {
-    public RankConfig(String id)
+    private JsonElement defaultPlayerValue;
+    private JsonElement defaultOPValue;
+
+    public RankConfig(String id, @Nonnull JsonElement player, @Nonnull JsonElement op)
     {
-        super(ForgePermissionRegistry.getID(id));
+        super(id);
+        setDefaultValue(false, player);
+        setDefaultValue(true, op);
     }
 
-    public abstract JsonElement getDefaultValue(boolean op);
-
-
-    /**
-     * Player can't be null, but it can be FakePlayer, if implementation supports that
-     */
-    public final JsonElement get(GameProfile profile)
+    public final void setDefaultValue(boolean op, @Nonnull JsonElement value)
     {
-        if(profile == null)
+        if(op)
         {
-            throw new RuntimeException("GameProfile can't be null!");
+            defaultOPValue = value;
         }
-
-        if(ForgePermissionRegistry.getPermissionHandler() != null)
+        else
         {
-            return ForgePermissionRegistry.getPermissionHandler().handleRankConfig(this, profile);
+            defaultPlayerValue = value;
+        }
+    }
+
+    public final JsonElement getDefaultValue(boolean op)
+    {
+        return op ? defaultOPValue : defaultPlayerValue;
+    }
+
+    public JsonElement getJson(@Nonnull GameProfile profile)
+    {
+        if(RankConfigAPI.rankConfigHandler != null)
+        {
+            return RankConfigAPI.rankConfigHandler.getRankConfig(profile, this);
         }
 
         return getDefaultValue(FTBLib.isOP(profile));
+    }
+
+    public ConfigEntryType getType()
+    {
+        return ConfigEntryType.CUSTOM;
     }
 }
