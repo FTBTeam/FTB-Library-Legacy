@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.permissions;
+package com.feed_the_beast.ftbl.api.permissions.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.google.gson.JsonPrimitive;
@@ -11,30 +11,30 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 25.05.2016.
  */
-public final class RankConfigInt extends RankConfig
+public final class RankConfigDouble extends RankConfig
 {
-    private final int minVal, maxVal;
+    private final double minVal, maxVal;
 
-    public RankConfigInt(String id, int player, int op, @Nullable Integer min, @Nullable Integer max)
+    public RankConfigDouble(String id, double player, double op, @Nullable Double min, @Nullable Double max)
     {
         super(id, new JsonPrimitive(player), new JsonPrimitive(op));
         minVal = min == null ? Integer.MIN_VALUE : min;
         maxVal = max == null ? Integer.MAX_VALUE : max;
     }
 
-    public void setDefaultValue(boolean op, int value)
+    public void setDefaultValue(boolean op, double value)
     {
         setDefaultValue(op, new JsonPrimitive(value));
     }
 
-    public int get(@Nonnull GameProfile profile)
+    public double get(@Nonnull GameProfile profile)
     {
-        return MathHelper.clamp_int(getJson(profile).getAsInt(), minVal, maxVal);
+        return MathHelper.clamp_double(getJson(profile).getAsDouble(), minVal, maxVal);
     }
 
     @Override
     public ConfigEntryType getType()
     {
-        return ConfigEntryType.INT;
+        return ConfigEntryType.DOUBLE;
     }
 }
