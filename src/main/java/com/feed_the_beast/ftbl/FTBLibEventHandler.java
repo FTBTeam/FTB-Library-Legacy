@@ -188,7 +188,7 @@ public class FTBLibEventHandler
         }
         else if(FTBLib.ftbu != null && e.getEntityPlayer() instanceof EntityPlayerMP)
         {
-            if(!FTBLib.ftbu.canPlayerInteract(ForgeWorldMP.inst.getPlayer(e.getEntityPlayer()), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
+            if(!FTBLib.ftbu.canPlayerInteract(ForgeWorldMP.inst.getPlayer(e.getEntityPlayer()), e instanceof PlayerInteractEvent.LeftClickBlock, e.getPos()))
             {
                 e.setCanceled(true);
             }

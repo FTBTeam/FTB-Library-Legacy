@@ -13,5 +13,5 @@ public interface FTBUIntegration // FTBLIntegration
 
     void onTooltip(ItemTooltipEvent e);
 
-    boolean canPlayerInteract(ForgePlayerMP player, BlockPos pos, boolean leftClick);
+    boolean canPlayerInteract(ForgePlayerMP player, boolean leftClick, BlockPos pos);
 }

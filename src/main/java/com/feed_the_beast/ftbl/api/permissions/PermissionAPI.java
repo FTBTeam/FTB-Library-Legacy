@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nonnull;
 
@@ -13,14 +12,9 @@ import javax.annotation.Nonnull;
  */
 public class PermissionAPI
 {
-    private static Handler permissionHandler;
+    private static PermissionHandler permissionHandler;
 
-    public interface Handler
-    {
-        Event.Result hasPermission(@Nonnull GameProfile profile, @Nonnull String permission);
-    }
-
-    public static void setHandler(@Nonnull Handler handler)
+    public static void setPermissionHandler(@Nonnull PermissionHandler handler)
     {
         if(permissionHandler != null)
         {
@@ -34,15 +28,11 @@ public class PermissionAPI
      * @param profile          GameProfile of the player who is requesting permission
      * @param permission       Permission node, best if lowercase and contains '.'
      * @param defaultForPlayer Default value for players
+     * @param context          Context for this permission. Do not use null, when there is no context available, use Context.EMPTY!
      * @return true, if player has permission, false if he does not.
      */
-    public static boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer)
+    public static boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull Context context)
     {
-        if(permissionHandler == null)
-        {
-            return defaultForPlayer;
-        }
-
         if(permission.isEmpty())
         {
             throw new NullPointerException("Permission string can't be empty!");
@@ -60,7 +50,12 @@ public class PermissionAPI
             return true;
         }
 
-        switch(permissionHandler.hasPermission(profile, permission))
+        if(permissionHandler == null)
+        {
+            return defaultForPlayer;
+        }
+
+        switch(permissionHandler.hasPermission(profile, permission, context))
         {
             case ALLOW:
             {
