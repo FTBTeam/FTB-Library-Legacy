@@ -27,6 +27,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -36,6 +37,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
@@ -51,11 +53,13 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -69,6 +73,7 @@ public class FTBLib
     public static final Logger dev_logger = LogManager.getLogger("FTBLibDev");
     public static final String FORMATTING = "\u00a7";
     public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
+
     public static final Comparator<ResourceLocation> RESOURCE_LOCATION_COMPARATOR = (o1, o2) -> {
         int i = o1.getResourceDomain().compareTo(o2.getResourceDomain());
 
@@ -79,14 +84,37 @@ public class FTBLib
 
         return i;
     };
+
     private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
     public static FTBUIntegration ftbu = null;
-    public static File folderConfig;
-    public static File folderMinecraft;
-    public static File folderModpack;
-    public static File folderLocal;
-    public static File folderWorld;
+    public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
+    private static TextFormatting[] dyeToTextFormattingMap;
+
+    public static TextFormatting getFromDyeColor(EnumDyeColor color)
+    {
+        if(dyeToTextFormattingMap == null)
+        {
+            dyeToTextFormattingMap = new TextFormatting[16];
+
+            for(EnumDyeColor col : EnumDyeColor.values())
+            {
+                try
+                {
+                    Field field = ReflectionHelper.findField(EnumDyeColor.class, "chatColor", "field_176793_x");
+                    field.setAccessible(true);
+                    dyeToTextFormattingMap[col.ordinal()] = (TextFormatting) field.get(col);
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                    dyeToTextFormattingMap[col.ordinal()] = TextFormatting.BLACK;
+                }
+            }
+        }
+
+        return dyeToTextFormattingMap[color.ordinal()];
+    }
 
     public static void init(File configFolder)
     {

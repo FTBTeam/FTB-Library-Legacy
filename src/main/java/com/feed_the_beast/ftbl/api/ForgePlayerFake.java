@@ -28,6 +28,11 @@ public final class ForgePlayerFake extends ForgePlayerMP
     }
 
     @Override
+    public void sendInfoUpdate(ForgePlayer p)
+    {
+    }
+
+    @Override
     public boolean isOP()
     {
         return false;
@@ -40,11 +45,6 @@ public final class ForgePlayerFake extends ForgePlayerMP
 
     @Override
     public void refreshStats()
-    {
-    }
-
-    @Override
-    public void checkNewFriends()
     {
     }
 }

@@ -93,9 +93,6 @@ public class ButtonInfoPage extends ButtonLM
     @Override
     public void renderWidget()
     {
-        int ay = getAY();
-        int ax = getAX();
-
         boolean mouseOver = mouseOver();
 
         if(prevMouseOver != mouseOver)
@@ -103,6 +100,9 @@ public class ButtonInfoPage extends ButtonLM
             updateTitle();
             prevMouseOver = mouseOver;
         }
+
+        int ay = getAY();
+        int ax = getAX();
 
         if(icon != null)
         {

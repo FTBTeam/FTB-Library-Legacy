@@ -100,7 +100,10 @@ public abstract class PanelLM extends WidgetLM // GuiLM
     {
         for(WidgetLM widget : widgets)
         {
-            widget.renderWidget();
+            if(widget.shouldRender())
+            {
+                widget.renderWidget();
+            }
         }
     }
 }

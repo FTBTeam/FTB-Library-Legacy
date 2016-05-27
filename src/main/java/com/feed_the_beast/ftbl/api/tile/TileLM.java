@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.net.MessageMarkTileDirty;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,12 +29,12 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 @ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
-public class TileLM extends TileEntity implements ITileEntity, IEditableName, ITickable
+public class TileLM extends TileEntity implements IEditableName, ITickable
 {
     protected enum EnumSync
     {
@@ -66,12 +65,6 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
     }
 
     @Override
-    public final TileEntity getTile()
-    {
-        return this;
-    }
-
-    @Override
     public final NBTTagCompound writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
@@ -94,10 +87,10 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
     }
 
     @Override
+    @Nullable
     public final SPacketUpdateTileEntity getUpdatePacket()
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeTileClientData(tag);
+        NBTTagCompound tag = getUpdateTag();
 
         if(ownerID != null && useOwnerID())
         {
@@ -105,6 +98,14 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
         }
 
         return new SPacketUpdateTileEntity(getPos(), 0, tag);
+    }
+
+    @Override
+    public final NBTTagCompound getUpdateTag()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeTileClientData(tag);
+        return tag;
     }
 
     @Override
@@ -254,13 +255,15 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
 
     public boolean isExplosionResistant()
     {
-        return !getPrivacyLevel().isPublic();
+        return getPrivacyLevel() != PrivacyLevel.PUBLIC;
     }
 
     public final void sendClientAction(TileClientAction action, NBTTagCompound data)
     {
         new MessageClientTileAction(this, action, data).sendToServer();
     }
+
+    //sendClientAction(TileClientActionRegistry.OPEN_GUI, data);
 
     public void clientPressButton(int button, MouseButton mouseButton, NBTTagCompound data)
     {
@@ -272,11 +275,6 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
             tag.setTag("D", data);
         }
         sendClientAction(TileClientActionRegistry.BUTTON_PRESSED, tag);
-    }
-
-    public void clientOpenGui(NBTTagCompound data)
-    {
-        sendClientAction(TileClientActionRegistry.OPEN_GUI, data);
     }
 
     public void clientCustomName(String name)
@@ -339,7 +337,6 @@ public class TileLM extends TileEntity implements ITileEntity, IEditableName, IT
         worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch);
     }
 
-    @Override
     public BlockDimPos getDimPos()
     {
         return new BlockDimPos(pos, hasWorldObj() ? worldObj.provider.getDimension() : 0);

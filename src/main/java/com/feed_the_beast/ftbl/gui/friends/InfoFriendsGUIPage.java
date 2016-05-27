@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.EnumSelf;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.PlayerAction;
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
@@ -54,10 +56,6 @@ public class InfoFriendsGUIPage extends InfoPage
         public void renderWidget()
         {
             int ay = getAY();
-            if(ay < -height || ay > guiInfo.mainPanel.height)
-            {
-                return;
-            }
             int ax = getAX();
 
             double z = gui.getZLevel();
@@ -68,24 +66,8 @@ public class InfoFriendsGUIPage extends InfoPage
                 GuiLM.drawBlankRect(ax, ay, z, width, height);
             }
 
-            boolean raw1 = playerLM.isFriendRaw(ForgeWorldSP.inst.clientPlayer);
-            boolean raw2 = ForgeWorldSP.inst.clientPlayer.isFriendRaw(playerLM);
-
-            GlStateManager.color(0F, 0F, 0F, 1F);
-            if(raw1 && raw2)
-            {
-                GlStateManager.color(0.18F, 0.74F, 0.18F, 1F);
-            }
-            //else if(raw1 || raw2) GlStateManager.color(raw1 ? 0xFFE0BE00 : 0xFF00B6ED);
-            else if(raw1)
-            {
-                GlStateManager.color(0.87F, 0.74F, 0F, 1F);
-            }
-            else if(raw2)
-            {
-                GlStateManager.color(0F, 0.71F, 0.92F, 1F);
-            }
-
+            EnumTeamStatus status = ForgeWorldSP.inst.clientPlayer.getTeam().getStatusOf(playerLM);
+            FTBLibClient.setGLColor(status.color.getMapColor().colorValue, 255);
             GuiLM.drawBlankRect(ax + 1, ay + 1, z, 18, 18);
 
             GlStateManager.color(1F, 1F, 1F, 1F);

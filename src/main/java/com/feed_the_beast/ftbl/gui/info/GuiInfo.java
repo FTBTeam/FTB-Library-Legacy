@@ -64,12 +64,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 return gui.mouse().x < panelWidth;
             }
-
-            @Override
-            public boolean isEnabled()
-            {
-                return true;
-            }
         };
 
         sliderPages.isVertical = true;
@@ -80,12 +74,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             public boolean canMouseScroll()
             {
                 return gui.mouse().x > panelWidth;
-            }
-
-            @Override
-            public boolean isEnabled()
-            {
-                return true;
             }
         };
 

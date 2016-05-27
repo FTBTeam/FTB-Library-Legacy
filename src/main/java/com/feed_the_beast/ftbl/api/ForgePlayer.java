@@ -6,15 +6,15 @@ import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,15 +23,15 @@ import java.util.UUID;
  */
 public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilityProvider
 {
-    public final Collection<UUID> friends;
     public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
     CapabilityDispatcher capabilities;
+    private UUID teamID;
+    private Team personalTeam;
     private GameProfile gameProfile;
 
     ForgePlayer(GameProfile p)
     {
         setProfile(p);
-        friends = new HashSet<>();
         lastArmor = new HashMap<>();
 
         ForgePlayerEvent.AttachCapabilities event = new ForgePlayerEvent.AttachCapabilities(this);
@@ -39,19 +39,43 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
     }
 
+    public boolean isInAnotherTeam()
+    {
+        return teamID != null;
+    }
+
+    public Team getTeam()
+    {
+        if(teamID == null)
+        {
+            if(personalTeam == null)
+            {
+                personalTeam = new Team(this);
+            }
+
+            return personalTeam;
+        }
+
+        return getWorld().getPlayer(teamID).getTeam();
+    }
+
+    public void setTeamID(UUID id)
+    {
+        teamID = id;
+        personalTeam = null;
+    }
+
     @Override
-    public final boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
+    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
         return capabilities != null && capabilities.hasCapability(capability, facing);
     }
 
     @Override
-    public final <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
+    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }
-
-    public abstract Side getSide();
 
     public abstract boolean isOnline();
 
@@ -80,16 +104,6 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
     public final String getStringUUID()
     {
         return LMUtils.fromUUID(gameProfile.getId());
-    }
-
-    public boolean isFriendRaw(ForgePlayer p)
-    {
-        return p != null && (equalsPlayer(this) || friends.contains(p.getProfile().getId()));
-    }
-
-    public boolean isFriend(ForgePlayer p)
-    {
-        return p != null && isFriendRaw(p) && p.isFriendRaw(this);
     }
 
     @Override
@@ -137,38 +151,6 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         return p != null && (p == this || gameProfile.getId().equals(p.gameProfile.getId()));
     }
 
-    public Collection<ForgePlayer> getFriends()
-    {
-        Collection<ForgePlayer> c = new HashSet<>();
-
-        for(UUID id : friends)
-        {
-            ForgePlayer p = getWorld().getPlayer(id);
-
-            if(p != null)
-            {
-                c.add(p);
-            }
-        }
-
-        return c;
-    }
-
-    public Collection<ForgePlayer> getOtherFriends()
-    {
-        Collection<ForgePlayer> c = new HashSet<>();
-
-        for(ForgePlayer p : getWorld().playerMap.values())
-        {
-            if(!p.equalsPlayer(this) && p.isFriendRaw(this))
-            {
-                c.add(p);
-            }
-        }
-
-        return c;
-    }
-
     public boolean isMCPlayer()
     {
         return false;
@@ -176,7 +158,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 
     public void updateArmor()
     {
-        if(getSide().isServer() && isOnline())
+        if(getWorld().getSide().isServer() && isOnline())
         {
             lastArmor.clear();
             EntityPlayer ep = getPlayer();
@@ -212,6 +194,10 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
     }
 
     public void sendUpdate()
+    {
+    }
+
+    public void sendInfoUpdate(ForgePlayer p)
     {
     }
 }

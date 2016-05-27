@@ -6,8 +6,10 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.FakePlayer;
@@ -65,13 +67,13 @@ public abstract class ForgeWorld implements ICapabilityProvider
     }
 
     @Override
-    public final boolean hasCapability(net.minecraftforge.common.capabilities.Capability<?> capability, net.minecraft.util.EnumFacing facing)
+    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
     {
         return capabilities != null && capabilities.hasCapability(capability, facing);
     }
 
     @Override
-    public final <T> T getCapability(net.minecraftforge.common.capabilities.Capability<T> capability, net.minecraft.util.EnumFacing facing)
+    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }

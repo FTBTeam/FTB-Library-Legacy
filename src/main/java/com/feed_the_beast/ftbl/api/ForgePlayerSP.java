@@ -3,11 +3,9 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,8 +13,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,12 +34,6 @@ public class ForgePlayerSP extends ForgePlayer
     public boolean isClientPlayer()
     {
         return getProfile().equals(Minecraft.getMinecraft().thePlayer.getGameProfile());
-    }
-
-    @Override
-    public final Side getSide()
-    {
-        return Side.CLIENT;
     }
 
     @Override
@@ -108,40 +98,13 @@ public class ForgePlayerSP extends ForgePlayer
     {
         isOnline = tag.hasKey("O");
 
-        friends.clear();
-
-        NBTTagList tagList = (NBTTagList) tag.getTag("F");
-
-        if(tagList != null)
+        if(tag.hasKey("TM"))
         {
-            for(int i = 0; i < tagList.tagCount(); i++)
-            {
-                friends.add(LMUtils.fromString(tagList.getStringTagAt(i)));
-            }
+            setTeamID(new UUID(tag.getLong("TM"), tag.getLong("TL")));
         }
-
-        Collection<UUID> otherFriends = new HashSet<>();
-        tagList = (NBTTagList) tag.getTag("OF");
-
-        if(tagList != null)
+        else
         {
-            for(int i = 0; i < tagList.tagCount(); i++)
-            {
-                otherFriends.add(LMUtils.fromString(tagList.getStringTagAt(i)));
-            }
-        }
-
-        for(ForgePlayer p : getWorld().playerMap.values())
-        {
-            if(!p.equalsPlayer(this))
-            {
-                p.friends.clear();
-                if(otherFriends.contains(p.getProfile().getId()))
-                {
-                    p.friends.add(getProfile().getId());
-                    otherFriends.remove(p.getProfile().getId());
-                }
-            }
+            setTeamID(null);
         }
 
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, tag.getCompoundTag("SY"), self));

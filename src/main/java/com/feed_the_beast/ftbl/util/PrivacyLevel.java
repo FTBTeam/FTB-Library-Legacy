@@ -10,9 +10,9 @@ public enum PrivacyLevel
 {
     PUBLIC,
     PRIVATE,
-    FRIENDS;
+    TEAM;
 
-    public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, FRIENDS};
+    public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, TEAM};
     public static final PrivacyLevel[] VALUES_2 = new PrivacyLevel[] {PUBLIC, PRIVATE};
     public static final String enumLangKey = "ftbl.security";
 
@@ -29,40 +29,15 @@ public enum PrivacyLevel
         {
             return PUBLIC;
         }
-        else if(s.equalsIgnoreCase("friends"))
+        else if(s.equalsIgnoreCase("team"))
         {
-            return FRIENDS;
+            return TEAM;
         }
         else if(s.equalsIgnoreCase("private"))
         {
             return PRIVATE;
         }
         return PUBLIC;
-    }
-
-    public boolean isPublic()
-    {
-        return this == PUBLIC;
-    }
-
-    public boolean isRestricted()
-    {
-        return this == FRIENDS;
-    }
-
-    public PrivacyLevel next(PrivacyLevel[] l)
-    {
-        return l[(ordinal() + 1) % l.length];
-    }
-
-    public PrivacyLevel prev(PrivacyLevel[] l)
-    {
-        int id = ordinal() - 1;
-        if(id < 0)
-        {
-            id = l.length - 1;
-        }
-        return l[id];
     }
 
     public TextureCoords getIcon()
@@ -76,22 +51,23 @@ public enum PrivacyLevel
         {
             return true;
         }
-        if(player == null)
+        else if(player == null)
         {
             return false;
         }
-        if(owner.equalsPlayer(player))
+        else if(owner.equalsPlayer(player))
         {
             return true;
         }
-        if(player.isOnline() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false, context))
+        else if(player.isOnline() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false, context))
         {
             return true;
         }
-        if(this == PrivacyLevel.PRIVATE)
+        else if(this == PrivacyLevel.PRIVATE)
         {
             return false;
         }
-        return this == PrivacyLevel.FRIENDS && owner.isFriend(player);
+
+        return this == PrivacyLevel.TEAM && owner.getTeam().isMember(player);
     }
 }

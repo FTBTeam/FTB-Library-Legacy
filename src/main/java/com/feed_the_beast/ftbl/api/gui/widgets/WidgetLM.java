@@ -31,6 +31,20 @@ public class WidgetLM
         return true;
     }
 
+    public boolean shouldRender()
+    {
+        int i = getAY();
+
+        if(i < -height || i > gui.getMainPanel().height)
+        {
+            return false;
+        }
+
+        i = getAX();
+
+        return i >= -width && i <= gui.getMainPanel().width;
+    }
+
     public int getAX()
     {
         return (parentPanel == null) ? posX : (parentPanel.getAX() + posX);

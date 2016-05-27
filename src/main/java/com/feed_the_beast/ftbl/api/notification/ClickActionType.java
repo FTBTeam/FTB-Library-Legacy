@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
-import com.feed_the_beast.ftbl.net.MessageModifyFriends;
 import com.google.gson.JsonElement;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
@@ -31,6 +30,7 @@ public abstract class ClickActionType extends FinalIDObject
             }
         }
     });
+
     public static final ClickActionType CMD = ClickActionRegistry.register(new ClickActionType("cmd")
     {
         @Override
@@ -49,6 +49,7 @@ public abstract class ClickActionType extends FinalIDObject
             FTBLibClient.openGui(new GuiChat(data.getAsString()));
         }
     });
+
     public static final ClickActionType URL = ClickActionRegistry.register(new ClickActionType("url")
     {
         @Override
@@ -64,6 +65,7 @@ public abstract class ClickActionType extends FinalIDObject
             }
         }
     });
+
     public static final ClickActionType FILE = ClickActionRegistry.register(new ClickActionType("file")
     {
         @Override
@@ -79,6 +81,7 @@ public abstract class ClickActionType extends FinalIDObject
             }
         }
     });
+
     public static final ClickActionType GUI = ClickActionRegistry.register(new ClickActionType("gui")
     {
         @Override
@@ -89,22 +92,6 @@ public abstract class ClickActionType extends FinalIDObject
             {
                 FTBLibClient.openGui(gui);
             }
-        }
-    });
-    public static final ClickActionType FRIEND_ADD = ClickActionRegistry.register(new ClickActionType("friend_add")
-    {
-        @Override
-        public void onClicked(JsonElement data, MouseButton button)
-        {
-            new MessageModifyFriends(MessageModifyFriends.ADD, LMUtils.fromString(data.getAsString())).sendToServer();
-        }
-    });
-    public static final ClickActionType FRIEND_ADD_ALL = ClickActionRegistry.register(new ClickActionType("friend_add_all")
-    {
-        @Override
-        public void onClicked(JsonElement data, MouseButton button)
-        {
-            new MessageModifyFriends(MessageModifyFriends.ADD_ALL, null).sendToServer();
         }
     });
 

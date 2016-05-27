@@ -21,12 +21,6 @@ public final class ForgePlayerTemp extends ForgePlayer
     }
 
     @Override
-    public Side getSide()
-    {
-        return side;
-    }
-
-    @Override
     public boolean isOnline()
     {
         return player != null;

@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IGuiTile extends ITileEntity
+public interface IGuiTile
 {
     Container getContainer(EntityPlayer ep, NBTTagCompound data);
 
