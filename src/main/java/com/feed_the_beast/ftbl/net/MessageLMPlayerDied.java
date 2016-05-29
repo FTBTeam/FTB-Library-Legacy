@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
@@ -38,7 +37,7 @@ public class MessageLMPlayerDied extends MessageToClient<MessageLMPlayerDied>
     {
         if(ForgeWorldSP.inst != null)
         {
-            ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(FTBLibClient.mc.thePlayer);
+            ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(mc.thePlayer);
             p.onDeath();
         }
     }

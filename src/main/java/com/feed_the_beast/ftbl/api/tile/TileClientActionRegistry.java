@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.IEditableName;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.entity.player.EntityPlayerMP;

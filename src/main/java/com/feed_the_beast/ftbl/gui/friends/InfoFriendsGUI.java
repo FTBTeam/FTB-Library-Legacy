@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerComparators;
+import com.feed_the_beast.ftbl.api.ForgePlayerNameComparator;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
@@ -34,7 +34,7 @@ public class InfoFriendsGUI extends InfoPage
         //if(FTBUClient.sort_friends_az.getMode()) Collections.sort(tempPlayerList, LMPNameComparator.instance);
         //else Collections.sort(tempPlayerList, new LMPStatusComparator(LMWorldClient.inst.clientPlayer));
 
-        Collections.sort(tempPlayerList, new ForgePlayerComparators.ByStatus(ForgeWorldSP.inst.clientPlayer));
+        Collections.sort(tempPlayerList, ForgePlayerNameComparator.INSTANCE);
 
         addSub(new InfoFriendsGUISelfPage());
 

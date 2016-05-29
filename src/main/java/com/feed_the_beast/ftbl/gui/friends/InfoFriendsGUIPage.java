@@ -5,9 +5,9 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
@@ -66,8 +66,16 @@ public class InfoFriendsGUIPage extends InfoPage
                 GuiLM.drawBlankRect(ax, ay, z, width, height);
             }
 
-            EnumTeamStatus status = ForgeWorldSP.inst.clientPlayer.getTeam().getStatusOf(playerLM);
-            FTBLibClient.setGLColor(status.color.getMapColor().colorValue, 255);
+            if(ForgeWorldSP.inst.clientPlayer.hasTeam())
+            {
+                EnumTeamStatus status = ForgeWorldSP.inst.clientPlayer.getTeam().getStatus(playerLM);
+                FTBLibClient.setGLColor(status.color.getMapColor().colorValue, 255);
+            }
+            else
+            {
+                GlStateManager.color(0F, 0F, 0F, 1F);
+            }
+
             GuiLM.drawBlankRect(ax + 1, ay + 1, z, 18, 18);
 
             GlStateManager.color(1F, 1F, 1F, 1F);

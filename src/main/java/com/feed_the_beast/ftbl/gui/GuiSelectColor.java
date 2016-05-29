@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.GuiLang;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.callback.ColorSelected;
 import com.feed_the_beast.ftbl.api.gui.callback.IColorCallback;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
@@ -373,6 +373,7 @@ public class GuiSelectColor extends GuiLM
         blue = LMColorUtils.getBlue(colRight);
         buffer.pos(x + w, y + h, zLevel).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
         buffer.pos(x + w, y, zLevel).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+        tessellator.draw();
     }
 
     public void closeGui(boolean set)

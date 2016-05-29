@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,17 +42,22 @@ public class ClientNotifications
             {
                 time = Minecraft.getSystemTime();
             }
+
             if(title == null)
             {
                 title = notification.title.getFormattedText();
             }
+
             if(desc == null)
             {
                 desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
             }
+
+            FontRenderer font = FTBLibClient.mc().fontRendererObj;
+
             if(width == 0)
             {
-                width = 20 + Math.max(FTBLibClient.mc.fontRendererObj.getStringWidth(title), FTBLibClient.mc.fontRendererObj.getStringWidth(desc));
+                width = 20 + Math.max(font.getStringWidth(title), font.getStringWidth(desc));
                 if(notification.item != null)
                 {
                     width += 20;
@@ -85,21 +91,21 @@ public class ClientNotifications
                 d1 *= d1;
                 d1 *= d1;
 
+                int displayW = new ScaledResolution(FTBLibClient.mc()).getScaledWidth();
+
                 GlStateManager.disableDepth();
                 GlStateManager.pushMatrix();
                 GlStateManager.depthMask(false);
-                GlStateManager.translate(FTBLibClient.displayW - width, -d1 * 36D, 0F);
+                GlStateManager.translate(displayW - width, -d1 * 36D, 0F);
 
                 GlStateManager.disableTexture2D();
                 GlStateManager.disableLighting();
                 FTBLibClient.setGLColor(notification.color, 230);
-                GuiLM.drawBlankRect(0D, 0D, 0D, FTBLibClient.displayW, 32D);
+                GuiLM.drawBlankRect(0D, 0D, 0D, displayW, 32D);
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(1F, 1F, 1F, 1F);
 
                 int w = notification.item == null ? 10 : 30;
-
-                FontRenderer font = FTBLibClient.mc.fontRendererObj;
 
                 if(desc == null)
                 {
@@ -113,7 +119,7 @@ public class ClientNotifications
 
                 if(notification.item != null)
                 {
-                    FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc.getRenderItem(), font, 8, 8);
+                    FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc().getRenderItem(), font, 8, 8);
                 }
 
                 GlStateManager.depthMask(true);

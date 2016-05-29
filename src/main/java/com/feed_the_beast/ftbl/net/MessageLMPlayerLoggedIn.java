@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
+import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
@@ -18,18 +19,19 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
 {
     public UUID playerID;
     public String playerName;
-    public boolean isFirst;
+    public boolean isFirst, self;
     public NBTTagCompound data;
 
     public MessageLMPlayerLoggedIn()
     {
     }
 
-    public MessageLMPlayerLoggedIn(ForgePlayerMP p, boolean first, boolean self)
+    public MessageLMPlayerLoggedIn(ForgePlayerMP p, boolean first, boolean s)
     {
         playerID = p.getProfile().getId();
         playerName = p.getProfile().getName();
         isFirst = first;
+        self = s;
         data = new NBTTagCompound();
         p.writeToNet(data, self);
     }
@@ -46,6 +48,7 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
         playerID = readUUID(io);
         playerName = readString(io);
         isFirst = io.readBoolean();
+        self = io.readBoolean();
         data = readTag(io);
     }
 
@@ -55,6 +58,7 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
         writeUUID(io, playerID);
         writeString(io, playerName);
         io.writeBoolean(isFirst);
+        io.writeBoolean(self);
         writeTag(io, data);
     }
 
@@ -62,17 +66,21 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageLMPlayerLoggedIn m, Minecraft mc)
     {
-        if(ForgeWorldSP.inst != null)
+        if(m.self)
         {
-            ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
-            if(p == null)
-            {
-                p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName));
-            }
-
-            p.readFromNet(m.data, p.isMCPlayer());
-            ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
-            p.onLoggedIn(m.isFirst);
+            ForgeWorldSP.inst = new ForgeWorldSP();
+            ForgeWorldSP.inst.clientPlayer = new ForgePlayerSPSelf(mc.getSession().getProfile());
+            ForgeWorldSP.inst.playerMap.put(ForgeWorldSP.inst.clientPlayer.getProfile().getId(), ForgeWorldSP.inst.clientPlayer);
         }
+
+        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
+        if(p == null)
+        {
+            p = new ForgePlayerSP(new GameProfile(m.playerID, m.playerName));
+        }
+
+        p.readFromNet(m.data, p.isMCPlayer());
+        ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
+        p.onLoggedIn(m.isFirst);
     }
 }

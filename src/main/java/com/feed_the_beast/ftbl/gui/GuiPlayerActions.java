@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,7 +33,7 @@ public class GuiPlayerActions extends GuiLM
         @Override
         public void onClicked(MouseButton button)
         {
-            FTBLibClient.mc.thePlayer.closeScreen();
+            FTBLibClient.mc().thePlayer.closeScreen();
             action.onClicked(gui.self, gui.other);
         }
 

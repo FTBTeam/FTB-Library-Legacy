@@ -10,12 +10,12 @@ import java.util.Comparator;
 /**
  * Created by LatvianModder on 14.05.2016.
  */
-public class FinalResourceLocationObject implements IResourceLocationObject, IIDObject
+public class ResourceLocationObject implements IIDObject
 {
     public static final Comparator<Object> COMPARATOR = (o1, o2) -> FTBLib.RESOURCE_LOCATION_COMPARATOR.compare(getResourceLocation(o1), getResourceLocation(o2));
     private final ResourceLocation ID;
 
-    public FinalResourceLocationObject(ResourceLocation id)
+    public ResourceLocationObject(ResourceLocation id)
     {
         if(id == null)
         {
@@ -35,15 +35,14 @@ public class FinalResourceLocationObject implements IResourceLocationObject, IID
         {
             return (ResourceLocation) o;
         }
-        else if(o instanceof IResourceLocationObject)
+        else if(o instanceof ResourceLocationObject)
         {
-            return ((IResourceLocationObject) o).getResourceLocation();
+            return ((ResourceLocationObject) o).getResourceLocation();
         }
 
         return null;
     }
 
-    @Override
     public final ResourceLocation getResourceLocation()
     {
         return ID;
@@ -72,9 +71,9 @@ public class FinalResourceLocationObject implements IResourceLocationObject, IID
         {
             return true;
         }
-        else if(o instanceof IResourceLocationObject)
+        else if(o instanceof ResourceLocationObject)
         {
-            return ((IResourceLocationObject) o).getResourceLocation().equals(ID);
+            return ((ResourceLocationObject) o).getResourceLocation().equals(ID);
         }
         else if(o instanceof ResourceLocation)
         {

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
@@ -69,7 +68,7 @@ public class MessageOpenGuiTile extends MessageToClient<MessageOpenGuiTile>
 
             if(gui != null)
             {
-                FTBLibClient.openGui(gui);
+                mc.displayGuiScreen(gui);
                 mc.thePlayer.openContainer.windowId = m.windowID;
             }
         }

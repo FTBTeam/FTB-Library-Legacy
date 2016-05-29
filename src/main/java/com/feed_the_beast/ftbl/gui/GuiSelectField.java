@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.GuiLang;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.LMGuis;
 import com.feed_the_beast.ftbl.api.gui.callback.FieldSelected;
 import com.feed_the_beast.ftbl.api.gui.callback.IFieldCallback;

@@ -29,7 +29,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 {
     public int typeID;
     public boolean login;
-    public String modeID;
     public NBTTagCompound syncData;
     public NBTTagCompound worldData;
 
@@ -41,7 +40,6 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         typeID = t.ordinal();
         login = l;
-        modeID = ForgeWorldMP.inst.getMode().getID();
         worldData = new NBTTagCompound();
         ForgeWorldMP.inst.writeDataToNet(worldData, self, l);
         syncData = ForgeWorldEvent.Sync.generateData(self, login);
@@ -53,13 +51,16 @@ public class MessageReload extends MessageToClient<MessageReload>
         {
             ms = System.currentTimeMillis();
         }
+
         PackModes.reload();
         EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
         ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, type, login);
+
         if(FTBLib.ftbu != null)
         {
             FTBLib.ftbu.onReloaded(event);
         }
+
         MinecraftForge.EVENT_BUS.post(event);
 
         if(!login)
@@ -81,7 +82,6 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         typeID = io.readUnsignedByte();
         login = io.readBoolean();
-        modeID = readString(io);
         worldData = readTag(io);
         syncData = readTag(io);
     }
@@ -91,7 +91,6 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         io.writeByte(typeID);
         io.writeBoolean(login);
-        writeString(io, modeID);
         writeTag(io, worldData);
         writeTag(io, syncData);
     }
@@ -104,13 +103,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         ReloadType type = ReloadType.values()[m.typeID];
 
-        boolean first = ForgeWorldSP.inst == null;
-        if(first)
-        {
-            ForgeWorldSP.inst = new ForgeWorldSP(mc.getSession().getProfile());
-        }
-
-        ForgeWorldSP.inst.setModeRaw(m.modeID);
         ForgeWorldSP.inst.readDataFromNet(m.worldData, m.login);
         ForgeWorldEvent.Sync.readData(m.syncData, m.login);
 

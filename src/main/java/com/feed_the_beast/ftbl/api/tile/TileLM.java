@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.IEditableName;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.net.MessageClientTileAction;
-import com.feed_the_beast.ftbl.net.MessageMarkTileDirty;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.util.PrivacyLevel;
@@ -145,7 +143,8 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     {
         if(getSync().rerender())
         {
-            worldObj.markBlockRangeForRenderUpdate(getPos(), getPos());
+            IBlockState state = getBlockState();
+            worldObj.notifyBlockUpdate(pos, state, state, 3); //TODO: Check if this works
         }
     }
 
@@ -200,7 +199,8 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
 
             if(getSync().sync())
             {
-                new MessageMarkTileDirty(this).sendToDimension(worldObj.provider.getDimensionType());
+                IBlockState state = getBlockState();
+                worldObj.notifyBlockUpdate(pos, state, state, 3);
             }
 
             worldObj.markChunkDirty(pos, this);

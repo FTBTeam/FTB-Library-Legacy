@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
@@ -58,10 +57,10 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
             }
             else
             {
-                FTBLibClient.mc.thePlayer.addChatMessage(n.title);
+                mc.thePlayer.addChatMessage(n.title);
                 if(n.desc != null)
                 {
-                    FTBLibClient.mc.thePlayer.addChatMessage(n.desc);
+                    mc.thePlayer.addChatMessage(n.desc);
                 }
             }
         }

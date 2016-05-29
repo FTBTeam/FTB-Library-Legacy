@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
+import com.feed_the_beast.ftbl.cmd.CmdAdmin;
 import com.feed_the_beast.ftbl.cmd.CmdEditConfig;
 import com.feed_the_beast.ftbl.cmd.CmdHeal;
 import com.feed_the_beast.ftbl.cmd.CmdHelpOverride;
@@ -13,7 +14,6 @@ import com.feed_the_beast.ftbl.cmd.CmdInv;
 import com.feed_the_beast.ftbl.cmd.CmdListOverride;
 import com.feed_the_beast.ftbl.cmd.CmdMode;
 import com.feed_the_beast.ftbl.cmd.CmdNotify;
-import com.feed_the_beast.ftbl.cmd.CmdReload;
 import com.feed_the_beast.ftbl.cmd.CmdSetItemName;
 import com.feed_the_beast.ftbl.config.FTBLibConfig;
 import com.feed_the_beast.ftbl.config.FTBLibConfigCmd;
@@ -76,7 +76,6 @@ public class FTBLibMod
 
         FTBLibConfig.load();
         EventBusHelper.register(FTBLibEventHandler.instance);
-        FTBLibPermissions.init();
         FTBLibCapabilities.enable();
         ClickActionType.init();
 
@@ -102,7 +101,7 @@ public class FTBLibMod
     {
         FTBLibEventHandler.ticking.clear();
 
-        FTBLib.addCommand(e, new CmdReload());
+        FTBLib.addCommand(e, new CmdAdmin());
         FTBLib.addCommand(e, new CmdMode());
         FTBLib.addCommand(e, new CmdNotify());
         FTBLib.addCommand(e, new CmdInv());
@@ -111,18 +110,22 @@ public class FTBLibMod
         {
             FTBLib.addCommand(e, new CmdListOverride());
         }
+
         if(FTBLibConfigCmd.override_help.getAsBoolean())
         {
             FTBLib.addCommand(e, new CmdHelpOverride());
         }
+
         if(FTBLibConfigCmd.set_item_name.getAsBoolean())
         {
             FTBLib.addCommand(e, new CmdSetItemName());
         }
+
         if(FTBLibConfigCmd.heal.getAsBoolean())
         {
             FTBLib.addCommand(e, new CmdHeal());
         }
+
         if(FTBLibConfigCmd.edit_config.getAsBoolean())
         {
             FTBLib.addCommand(e, new CmdEditConfig());

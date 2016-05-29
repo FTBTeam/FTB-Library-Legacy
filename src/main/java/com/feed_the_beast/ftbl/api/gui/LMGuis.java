@@ -12,41 +12,37 @@ public class LMGuis
 {
     public enum FieldType
     {
-        STRING
-                {
-                    @Override
-                    public boolean isValid(String s)
-                    {
-                        return true;
-                    }
-                },
-        INTEGER
-                {
-                    @Override
-                    public boolean isValid(String s)
-                    {
-                        return Converter.canParseInt(s);
-                    }
-                },
-        DOUBLE
-                {
-                    @Override
-                    public boolean isValid(String s)
-                    {
-                        return Converter.canParseDouble(s);
-                    }
-                };
+        STRING,
+        INTEGER,
+        DOUBLE;
 
-        public abstract boolean isValid(String s);
+        public boolean isValid(String s)
+        {
+            switch(this)
+            {
+                case INTEGER:
+                {
+                    return Converter.canParseInt(s);
+                }
+                case DOUBLE:
+                {
+                    return Converter.canParseDouble(s);
+                }
+                default:
+                {
+                    return true;
+                }
+            }
+        }
     }
 
     public static void displayColorSelector(IColorCallback cb, LMColor col, Object id, boolean instant)
     {
-        FTBLibClient.openGui(new GuiSelectColor(cb, col, id, instant));
+        FTBLibClient.mc().displayGuiScreen(new GuiSelectColor(cb, col, id, instant));
     }
 
     public static void displayFieldSelector(Object id, FieldType typ, Object d, IFieldCallback c)
     {
-        FTBLibClient.openGui(new GuiSelectField(id, typ, String.valueOf(d), c));
+        FTBLibClient.mc().displayGuiScreen(new GuiSelectField(id, typ, String.valueOf(d), c));
     }
 }

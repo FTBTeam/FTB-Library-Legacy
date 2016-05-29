@@ -14,7 +14,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.
@@ -97,16 +96,7 @@ public class ForgePlayerSP extends ForgePlayer
     public void readFromNet(NBTTagCompound tag, boolean self)
     {
         isOnline = tag.hasKey("O");
-
-        if(tag.hasKey("TM"))
-        {
-            setTeamID(new UUID(tag.getLong("TM"), tag.getLong("TL")));
-        }
-        else
-        {
-            setTeamID(null);
-        }
-
+        setTeamID(tag.getInteger("T"));
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, tag.getCompoundTag("SY"), self));
     }
 }

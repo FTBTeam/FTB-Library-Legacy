@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.net;
 
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import latmod.lib.ByteIOStream;
@@ -22,7 +23,7 @@ public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMe
 
     static boolean logMessages()
     {
-        return true;
+        return FTBLib.DEV_ENV;
     }
 
     public static UUID readUUID(ByteBuf io)

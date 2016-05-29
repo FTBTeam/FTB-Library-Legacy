@@ -34,7 +34,7 @@ public abstract class GuiContainerLM extends GuiContainer implements IGuiLM
 
         texture = tex;
         container = c;
-        mc = FTBLibClient.mc;
+        mc = FTBLibClient.mc();
 
         mainPanel = new PanelLM(this, 0, 0, 176, 166)
         {

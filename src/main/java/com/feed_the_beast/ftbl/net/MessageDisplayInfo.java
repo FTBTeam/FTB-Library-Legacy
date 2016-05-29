@@ -52,6 +52,6 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     {
         InfoPage page = new InfoPage(m.infoID);
         page.fromJson(m.json);
-        FTBLibClient.openGui(new GuiInfo(null, page));
+        FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, page));
     }
 }

@@ -7,8 +7,10 @@ import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,12 +25,11 @@ import java.util.UUID;
 public final class ForgeWorldSP extends ForgeWorld
 {
     public static ForgeWorldSP inst = null;
-    public final ForgePlayerSPSelf clientPlayer;
+    public ForgePlayerSPSelf clientPlayer;
     public Collection<ResourceLocation> serverDataIDs;
 
-    public ForgeWorldSP(GameProfile p)
+    public ForgeWorldSP()
     {
-        clientPlayer = new ForgePlayerSPSelf(p);
         serverDataIDs = new HashSet<>();
     }
 
@@ -42,7 +43,7 @@ public final class ForgeWorldSP extends ForgeWorld
     @SideOnly(Side.CLIENT)
     public World getMCWorld()
     {
-        return FTBLibClient.mc.theWorld;
+        return FTBLibClient.mc().theWorld;
     }
 
     @Override
@@ -62,11 +63,6 @@ public final class ForgeWorldSP extends ForgeWorld
     {
         ForgePlayer p = super.getPlayer(o);
         return (p == null) ? null : p.toSP();
-    }
-
-    public void setModeRaw(String mode)
-    {
-        currentMode = new PackMode(mode);
     }
 
     public void readDataFromNet(NBTTagCompound tag, boolean login)
@@ -107,6 +103,22 @@ public final class ForgeWorldSP extends ForgeWorld
             {
                 ForgePlayerSP p = playerMap.get(LMUtils.fromString(e.getKey())).toSP();
                 p.readFromNet((NBTTagCompound) e.getValue(), false);
+            }
+
+            teams.clear();
+            NBTTagList teamsTag = tag.getTagList("TMS", Constants.NBT.TAG_COMPOUND);
+
+            for(int i = 0; i < teamsTag.tagCount(); i++)
+            {
+                NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
+                ForgePlayer player = getPlayer(LMUtils.fromString(tag2.getString("O")));
+
+                if(player != null)
+                {
+                    ForgeTeam team = new ForgeTeam(tag2.getInteger("ID"), player);
+                    team.deserializeNBTFromNet(tag2);
+                    teams.put(team.teamID, team);
+                }
             }
         }
 

@@ -8,9 +8,5 @@ import latmod.lib.annotations.Info;
 public class FTBLibPermissions
 {
     @Info("Enabled access to protected blocks / chunks")
-    public static final String interact_secure = "ftbl.interact_secure";
-
-    public static void init()
-    {
-    }
+    public static final String INTERACT_SECURE = "ftbl.interact_secure";
 }

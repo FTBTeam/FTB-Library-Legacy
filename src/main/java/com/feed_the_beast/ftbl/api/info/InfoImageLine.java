@@ -49,7 +49,7 @@ public class InfoImageLine extends InfoExtendedTextLine
             //File file = new File(FTBLib.folderModpack, "images/" + imageURL);
             //if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath()); }
             BufferedImage img = page.getResourceProvider().getConnection(imageURL).connect().asImage();
-            ResourceLocation tex = FTBLibClient.mc.getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
+            ResourceLocation tex = FTBLibClient.mc().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
             texture = new TextureCoords(tex, 0D, 0D, img.getWidth(), img.getHeight(), img.getWidth(), img.getHeight());
         }
         catch(Exception e)

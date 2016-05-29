@@ -14,6 +14,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -25,8 +26,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 {
     public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
     CapabilityDispatcher capabilities;
-    private UUID teamID;
-    private Team personalTeam;
+    private int teamID;
     private GameProfile gameProfile;
 
     ForgePlayer(GameProfile p)
@@ -39,30 +39,27 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
     }
 
-    public boolean isInAnotherTeam()
+    public final boolean hasTeam()
     {
-        return teamID != null;
+        int id = getTeamID();
+        return id > 0 && getWorld().teams.containsKey(id);
     }
 
-    public Team getTeam()
+    @Nullable
+    public final ForgeTeam getTeam()
     {
-        if(teamID == null)
-        {
-            if(personalTeam == null)
-            {
-                personalTeam = new Team(this);
-            }
-
-            return personalTeam;
-        }
-
-        return getWorld().getPlayer(teamID).getTeam();
+        int id = getTeamID();
+        return id > 0 ? getWorld().teams.get(getTeamID()) : null;
     }
 
-    public void setTeamID(UUID id)
+    public int getTeamID()
+    {
+        return teamID;
+    }
+
+    public void setTeamID(int id)
     {
         teamID = id;
-        personalTeam = null;
     }
 
     @Override

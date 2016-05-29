@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.util.EntityDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -143,9 +142,9 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         refreshStats();
         long currentTime = System.currentTimeMillis();
 
-        if(isInAnotherTeam())
+        if(hasTeam())
         {
-            Team team = getTeam();
+            ForgeTeam team = getTeam();
 
             ITextComponent c = new TextComponentString("[" + team.getTitle() + "]");
             c.getStyle().setColor(FTBLib.getFromDyeColor(team.getColor())).setUnderlined(true);
@@ -175,15 +174,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        //FIXME: Load team
-        if(tag.hasKey("TeamID"))
-        {
-            setTeamID(LMUtils.fromString(tag.getString("TeamID")));
-        }
-        else
-        {
-            setTeamID(null);
-        }
+        setTeamID(tag.getInteger("TeamID"));
 
         if(capabilities != null)
         {
@@ -219,8 +210,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         {
             lastDeath = new BlockDimPos(tag.getIntArray("LastDeath"));
         }
-
-        NBTTagCompound settingsTag = tag.getCompoundTag("Settings");
     }
 
     @Override
@@ -230,7 +219,10 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
         NBTTagCompound tag = new NBTTagCompound();
 
-        //FIXME: Save Team
+        if(hasTeam())
+        {
+            tag.setInteger("TeamID", getTeamID());
+        }
 
         if(capabilities != null)
         {
@@ -282,9 +274,9 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             tag.setBoolean("O", true);
         }
 
-        if(isInAnotherTeam())
+        if(hasTeam())
         {
-            tag.setTag("T", getTeam().serializeNBTForNet());
+            tag.setInteger("T", getTeamID());
         }
     }
 
@@ -294,9 +286,11 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         super.onLoggedIn(firstLogin);
 
         EntityPlayerMP ep = getPlayer();
-        new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
 
         new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
+
+        new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
+
         for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
         {
             new MessageLMPlayerLoggedIn(this, firstLogin, false).sendTo(ep1);

@@ -6,17 +6,16 @@ package com.feed_the_beast.ftbl.api;
 public enum EnumSelf
 {
     SELF,
-    OTHER,
-    BOTH;
+    OTHER;
 
     public boolean isSelf()
     {
-        return this == SELF || this == BOTH;
+        return this == SELF;
     }
 
     public boolean isOther()
     {
-        return this == OTHER || this == BOTH;
+        return this == OTHER;
     }
 
     public boolean equalsType(EnumSelf t)
@@ -27,10 +26,8 @@ public enum EnumSelf
                 return isSelf();
             case OTHER:
                 return isOther();
-            case BOTH:
-                return true;
             default:
-                return false;
+                return true;
         }
     }
 }

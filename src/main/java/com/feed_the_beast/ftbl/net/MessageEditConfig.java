@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.ServerConfigProvider;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
@@ -75,6 +74,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             FTBLib.dev_logger.info("RX Send: " + group.getSerializableElement());
         }
 
-        FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, new ServerConfigProvider(m.token, ReloadType.values()[m.typeID], group)));
+        mc.displayGuiScreen(new GuiEditConfig(mc.currentScreen, new ServerConfigProvider(m.token, ReloadType.values()[m.typeID], group)));
     }
 }

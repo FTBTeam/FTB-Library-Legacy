@@ -9,7 +9,6 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
@@ -42,6 +41,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,11 +50,14 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class FTBLibClient
 {
-    public static final Minecraft mc = FMLClientHandler.instance().getClient();
     private static final Map<String, ResourceLocation> cachedSkins = new HashMap<>();
-    public static int displayW, displayH;
     private static float lastBrightnessX, lastBrightnessY;
     private static EntityItem entityItem;
+
+    public static final Minecraft mc()
+    {
+        return FMLClientHandler.instance().getClient();
+    }
 
     // - Registry - //
 
@@ -77,31 +80,22 @@ public class FTBLibClient
 
     // -- //
 
-    public static boolean isIngame()
-    {
-        return mc.theWorld != null && mc.thePlayer != null && mc.thePlayer.worldObj != null;
-    }
-
     public static int getDim()
     {
-        return isIngame() ? mc.theWorld.provider.getDimension() : 0;
-    }
-
-    public static UUID getUUID()
-    {
-        return mc.getSession().getProfile().getId();
+        Minecraft mc = mc();
+        return mc.thePlayer != null ? mc.theWorld.provider.getDimension() : 0;
     }
 
     public static void spawnPart(Particle e)
     {
-        mc.effectRenderer.addEffect(e);
+        mc().effectRenderer.addEffect(e);
     }
 
     public static void onGuiClientAction()
     {
-        if(mc.currentScreen instanceof IClientActionGui)
+        if(mc().currentScreen instanceof IClientActionGui)
         {
-            ((IClientActionGui) mc.currentScreen).onClientDataChanged();
+            ((IClientActionGui) mc().currentScreen).onClientDataChanged();
         }
     }
 
@@ -121,7 +115,9 @@ public class FTBLibClient
     {
         //getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
 
-        if(uuid == null)
+        Minecraft mc = mc();
+
+        if(uuid == null || uuid.equals(mc.thePlayer.getGameProfile().getId()))
         {
             return mc.thePlayer;
         }
@@ -140,7 +136,7 @@ public class FTBLibClient
 
     public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, IImageBuffer buffer)
     {
-        TextureManager t = mc.getTextureManager();
+        TextureManager t = mc().getTextureManager();
         ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);
 
         if(img == null)
@@ -154,7 +150,7 @@ public class FTBLibClient
 
     public static void playClickSound()
     {
-        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+        mc().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
     public static void setGLColor(int c, int a)
@@ -193,6 +189,8 @@ public class FTBLibClient
 
     public static void execClientCommand(String s)
     {
+        Minecraft mc = mc();
+
         mc.ingameGUI.getChatGUI().addToSentMessages(s);
         if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0)
         {
@@ -222,20 +220,14 @@ public class FTBLibClient
         return r;
     }
 
-    public static void setTexture(TextureCoords tex)
+    public static void setTexture(@Nonnull TextureCoords tex)
     {
-        if(tex != null)
-        {
-            setTexture(tex.texture);
-        }
+        setTexture(tex.texture);
     }
 
-    public static void setTexture(ResourceLocation tex)
+    public static void setTexture(@Nonnull ResourceLocation tex)
     {
-        if(tex != null)
-        {
-            mc.getTextureManager().bindTexture(tex);
-        }
+        mc().getTextureManager().bindTexture(tex);
     }
 
     public static void clearCachedData()
@@ -245,6 +237,7 @@ public class FTBLibClient
 
     public static boolean canRenderGui()
     {
+        Minecraft mc = mc();
         return mc.currentScreen == null || mc.currentScreen instanceof GuiChat;
     }
 
@@ -261,7 +254,7 @@ public class FTBLibClient
         entityItem.worldObj = w;
         entityItem.hoverStart = 0F;
         entityItem.setEntityItemStack(is);
-        mc.getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
+        mc().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
     }
 
     public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
@@ -312,17 +305,5 @@ public class FTBLibClient
         GlStateManager.color(1F, 1F, 1F, 1F);
         itemRender.renderItem(is, itemRender.getItemModelMesher().getItemModel(is));
         GlStateManager.popMatrix();
-    }
-
-    public static void openGui(GuiScreen gui)
-    {
-        if(gui == null && mc.thePlayer != null)
-        {
-            mc.thePlayer.closeScreen();
-        }
-        else
-        {
-            mc.displayGuiScreen(gui);
-        }
     }
 }

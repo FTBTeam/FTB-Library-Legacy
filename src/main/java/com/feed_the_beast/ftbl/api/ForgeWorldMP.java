@@ -156,68 +156,6 @@ public final class ForgeWorldMP extends ForgeWorld
         tag.setTag("Players", tagPlayers);
 
         LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), tag);
-        
-		/*
-        
-		if(!customData.isEmpty())
-		{
-			JsonObject customGroup = new JsonObject();
-			JsonObject group1;
-			
-			for(ForgeWorldData d : customData.values())
-			{
-				group1 = new JsonObject();
-				d.saveData(group1);
-				
-				if(!group1.entrySet().isEmpty())
-				{
-					customGroup.add(d.getID(), group1);
-				}
-			}
-			
-			if(!customGroup.entrySet().isEmpty())
-			{
-				group.add("custom", customGroup);
-			}
-		}
-		
-		JsonObject group = new JsonObject();
-		ForgeWorldMP.inst.save(group);
-		LMJsonUtils.toJson(new File(ForgeWorldMP.inst.latmodFolder, "world.json"), group);
-		
-		NBTTagCompound tag = new NBTTagCompound();
-		
-		for(ForgePlayer p : LMMapUtils.values(ForgeWorldMP.inst.playerMap, null))
-		{
-			NBTTagCompound tag1 = new NBTTagCompound();
-			p.toPlayerMP().writeToServer(tag1);
-			tag1.setString("Name", p.getProfile().getName());
-			tag.setTag(p.getStringUUID(), tag1);
-		}
-		
-		LMNBTUtils.writeTag(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.dat"), tag);
-		
-		// Export player list //
-		
-		try
-		{
-			ArrayList<String> l = new ArrayList<>();
-			ArrayList<ForgePlayer> players1 = new ArrayList<>();
-			players1.addAll(ForgeWorldMP.inst.playerMap.values());
-			Collections.sort(players1);
-			
-			for(ForgePlayer p : players1)
-			{
-				l.add(p.getStringUUID() + " :: " + p.getProfile().getName());
-			}
-			
-			LMFileUtils.save(new File(ForgeWorldMP.inst.latmodFolder, "LMPlayers.txt"), l);
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
-		*/
     }
 
     public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self, boolean login)
@@ -264,6 +202,15 @@ public final class ForgeWorldMP extends ForgeWorld
             {
                 tag.setTag("PMD", tag1);
             }
+
+            NBTTagList teamsTag = new NBTTagList();
+
+            for(ForgeTeam team : teams.values())
+            {
+                teamsTag.appendTag(team.serializeNBTForNet());
+            }
+
+            tag.setTag("TMS", teamsTag);
         }
     }
 

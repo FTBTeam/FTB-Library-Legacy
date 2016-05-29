@@ -13,31 +13,32 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by LatvianModder on 26.05.2016.
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContainer
+public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagContainer
 {
     public static final byte ALLOW_INVITE_MEMBERS = 0;
 
+    public final int teamID;
     public final ForgePlayer owner;
-    private Map<UUID, EnumTeamStatus> specialStatus;
+    private Map<Integer, EnumTeamStatus> specialStatus;
     private EnumDyeColor color;
     private String title;
     private String desc;
     private byte flags;
 
-    public Team(ForgePlayer o)
+    public ForgeTeam(int id, ForgePlayer o)
     {
+        teamID = id;
         owner = o;
     }
 
     @Override
-    public boolean equals(Object o)
+    public final boolean equals(Object o)
     {
         if(o == null)
         {
@@ -47,24 +48,24 @@ public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContai
         {
             return true;
         }
-        else if(o instanceof Team)
+        else if(o instanceof ForgeTeam)
         {
-            return ((Team) o).owner.equalsPlayer(owner);
+            return o.hashCode() == teamID;
         }
 
         return owner.equals(o);
     }
 
     @Override
-    public int hashCode()
+    public final int hashCode()
     {
-        return owner.hashCode();
+        return teamID;
     }
 
     @Override
     public String toString()
     {
-        return owner.toString();
+        return Integer.toString(teamID);
     }
 
     public String getTitle()
@@ -98,35 +99,35 @@ public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContai
         color = col;
     }
 
-    public EnumTeamStatus getStatusOf(ForgePlayer player)
+    public EnumTeamStatus getStatus(ForgePlayer player)
     {
-        if(player.equalsPlayer(owner))
+        if(player == null)
+        {
+            return EnumTeamStatus.NONE;
+        }
+        else if(player.equalsPlayer(owner))
         {
             return EnumTeamStatus.OWNER;
         }
-
-        UUID id = player.getProfile().getId();
-
-        if(specialStatus.containsKey(id))
+        else if(player.hasTeam())
         {
-            return specialStatus.get(id);
-        }
+            ForgeTeam team = player.getTeam();
 
-        if(player.getTeam().equals(this))
-        {
-            return EnumTeamStatus.MEMBER;
+            if(team.equals(this))
+            {
+                return EnumTeamStatus.MEMBER;
+            }
+
+            if(specialStatus != null && specialStatus.containsKey(team.teamID))
+            {
+                return specialStatus.get(team.teamID);
+            }
         }
 
         return EnumTeamStatus.NONE;
     }
 
-    public EnumTeamStatus getSpecialStatus(UUID player)
-    {
-        EnumTeamStatus status = specialStatus.get(player);
-        return (status == null) ? EnumTeamStatus.NONE : status;
-    }
-
-    public void setSpecialStatus(UUID player, EnumTeamStatus status)
+    public void setSpecialStatus(int team, EnumTeamStatus status)
     {
         if(status.isSpecialStatus())
         {
@@ -134,7 +135,7 @@ public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContai
             {
                 if(specialStatus != null)
                 {
-                    specialStatus.remove(player);
+                    specialStatus.remove(team);
 
                     if(specialStatus.isEmpty())
                     {
@@ -149,20 +150,8 @@ public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContai
                     specialStatus = new HashMap<>();
                 }
 
-                specialStatus.put(player, status);
+                specialStatus.put(team, status);
             }
-        }
-    }
-
-    public boolean isMember(ForgePlayer player)
-    {
-        if(owner.equals(player))
-        {
-            return true;
-        }
-        else
-        {
-            return player.getTeam().equals(this);
         }
     }
 
@@ -172,7 +161,14 @@ public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContai
 
         for(ForgePlayer p : owner.getWorld().playerMap.values())
         {
-            if((!excludeOwner || !p.equalsPlayer(owner)) && isMember(p))
+            if(p.equalsPlayer(owner))
+            {
+                if(!excludeOwner)
+                {
+                    c.add(p);
+                }
+            }
+            else if(getStatus(p).isMember())
             {
                 c.add(p);
             }
@@ -196,11 +192,17 @@ public final class Team implements INBTSerializable<NBTTagCompound>, IFlagContai
     public NBTTagCompound serializeNBTForNet()
     {
         NBTTagCompound tag = new NBTTagCompound();
+        tag.setInteger("ID", teamID);
+        tag.setString("O", owner.getStringUUID());
+
+        tag.setByte("F", flags);
+
         return tag;
     }
 
     public void deserializeNBTFromNet(NBTTagCompound nbt)
     {
+        flags = nbt.getByte("F");
     }
 
     @Override

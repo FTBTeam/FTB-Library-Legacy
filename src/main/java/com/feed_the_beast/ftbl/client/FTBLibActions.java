@@ -3,13 +3,13 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.PlayerAction;
-import com.feed_the_beast.ftbl.api.Team;
+import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
@@ -37,7 +37,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
-            FTBLibClient.openGui(new GuiNotifications(FTBLibClient.mc.currentScreen));
+            FTBLibClient.mc().displayGuiScreen(new GuiNotifications(FTBLibClient.mc().currentScreen));
         }
 
         @Override
@@ -56,12 +56,12 @@ public class FTBLibActions
         public void postRender(int ax, int ay, double z)
         {
             String n = String.valueOf(ClientNotifications.Perm.list.size());
-            int nw = FTBLibClient.mc.fontRendererObj.getStringWidth(n);
+            int nw = FTBLibClient.mc().fontRendererObj.getStringWidth(n);
             int width = 16;
             GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
             GuiLM.drawBlankRect(ax + width - nw, ay - 4, z, nw + 1, 9);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
+            FTBLibClient.mc().fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
         }
     });
 
@@ -70,7 +70,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
-            FTBLibClient.openGui(new GuiInfo(null, new InfoFriendsGUI()));
+            FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, new InfoFriendsGUI()));
         }
 
         @Override
@@ -85,11 +85,11 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
-            FTBLibClient.openGui(new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider()));
+            FTBLibClient.mc().displayGuiScreen(new GuiEditConfig(FTBLibClient.mc().currentScreen, ClientConfigRegistry.provider()));
         }
     });
 
-    public static final PlayerAction MY_SERVER_SETTINGS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.settings)
+    public static final PlayerAction MY_SERVER_SETTINGS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.settings_red)
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
@@ -130,7 +130,7 @@ public class FTBLibActions
 
             page.setTitle(new TextComponentTranslation("player_action." + MY_SERVER_SETTINGS.getID()));
             page.theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
-            FTBLibClient.openGui(new GuiInfo(null, page));
+            FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, page));
         }
 
         @Override
@@ -257,7 +257,7 @@ public class FTBLibActions
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
         {
-            return !self.isInAnotherTeam() || self.getTeam().getFlag(Team.ALLOW_INVITE_MEMBERS);
+            return !self.hasTeam() || self.getTeam().getFlag(ForgeTeam.ALLOW_INVITE_MEMBERS);
         }
     });
 
@@ -273,7 +273,7 @@ public class FTBLibActions
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
         {
-            return !self.isInAnotherTeam();
+            return !self.hasTeam();
         }
     });
 
@@ -318,7 +318,7 @@ public class FTBLibActions
             @SideOnly(Side.CLIENT)
             public GuiScreen openGui(EntityPlayer ep)
             {
-                return new GuiNotifications(FTBLibClient.mc.currentScreen);
+                return new GuiNotifications(FTBLibClient.mc().currentScreen);
             }
         });
 
@@ -338,7 +338,7 @@ public class FTBLibActions
             @SideOnly(Side.CLIENT)
             public GuiScreen openGui(EntityPlayer ep)
             {
-                return new GuiEditConfig(FTBLibClient.mc.currentScreen, ClientConfigRegistry.provider());
+                return new GuiEditConfig(FTBLibClient.mc().currentScreen, ClientConfigRegistry.provider());
             }
         });
     }

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.PlayerAction;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import net.minecraft.util.text.ITextComponent;

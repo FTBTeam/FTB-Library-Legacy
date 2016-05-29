@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;

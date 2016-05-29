@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.gui.info;
 
-import com.feed_the_beast.ftbl.api.GuiLang;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
@@ -97,7 +97,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                         parentGui.selectedPage = parentGui.page;
                         parentGui.sliderText.value = 0F;
                         parentGui.panelText.posY = 10;
-                        FTBLibClient.openGui(parentGui);
+                        mc.displayGuiScreen(parentGui);
                     }
                 }
                 else
@@ -264,12 +264,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             panelText.posY = (int) (10F - (sliderText.value * (panelText.height - (mainPanel.height - 20F))));
         }
 
-        //GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        //scissor(20, 20, mainPanel.width - 40, mainPanel.height - 40);
-
         super.drawBackground();
 
-        FTBLibClient.setTexture(texture);
+        FTBLibClient.setTexture(tex);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 

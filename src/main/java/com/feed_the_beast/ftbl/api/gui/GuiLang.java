@@ -1,4 +1,6 @@
-package com.feed_the_beast.ftbl.api;
+package com.feed_the_beast.ftbl.api.gui;
+
+import com.feed_the_beast.ftbl.api.LangKey;
 
 public class GuiLang
 {

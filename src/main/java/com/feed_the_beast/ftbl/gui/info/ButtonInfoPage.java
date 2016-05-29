@@ -55,7 +55,7 @@ public class ButtonInfoPage extends ButtonLM
         }
         else
         {
-            FTBLibClient.openGui(new GuiInfo(guiInfo, page));
+            FTBLibClient.mc().displayGuiScreen(new GuiInfo(guiInfo, page));
         }
     }
 

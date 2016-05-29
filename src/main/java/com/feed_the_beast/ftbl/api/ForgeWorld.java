@@ -28,6 +28,7 @@ import java.util.UUID;
 public abstract class ForgeWorld implements ICapabilityProvider
 {
     public final Map<UUID, ForgePlayer> playerMap;
+    public final Map<Integer, ForgeTeam> teams;
     final CapabilityDispatcher capabilities;
     protected UUID worldID;
     protected PackMode currentMode;
@@ -37,6 +38,7 @@ public abstract class ForgeWorld implements ICapabilityProvider
         worldID = null;
         currentMode = new PackMode("default");
         playerMap = new HashMap<>();
+        teams = new HashMap<>();
 
         ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);

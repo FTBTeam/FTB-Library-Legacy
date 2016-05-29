@@ -1,15 +1,15 @@
-package com.feed_the_beast.ftbl.api;
+package com.feed_the_beast.ftbl.api.gui;
 
+import com.feed_the_beast.ftbl.api.EnumSelf;
+import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ResourceLocationObject;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.List;
-
-public abstract class PlayerAction extends FinalResourceLocationObject implements Comparable<PlayerAction>
+public abstract class PlayerAction extends ResourceLocationObject implements Comparable<PlayerAction>
 {
     public final EnumSelf type;
     public final int priority;
@@ -33,10 +33,6 @@ public abstract class PlayerAction extends FinalResourceLocationObject implement
     public String getDisplayName()
     {
         return I18n.format(getLangKey());
-    }
-
-    public void addMouseOverText(List<String> l)
-    {
     }
 
     public void render(int ax, int ay, double z)

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.api.IClickable;
 import com.feed_the_beast.ftbl.api.MouseButton;
+import com.feed_the_beast.ftbl.api.gui.IClickable;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;

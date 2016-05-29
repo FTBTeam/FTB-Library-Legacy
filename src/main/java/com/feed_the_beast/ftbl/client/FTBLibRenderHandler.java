@@ -6,14 +6,13 @@ import com.feed_the_beast.ftbl.api.client.LMFrustrumUtils;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.MathHelperLM;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -83,14 +82,7 @@ public class FTBLibRenderHandler
     {
         GlStateManager.pushMatrix();
 
-        if(e.phase == TickEvent.Phase.START)
-        {
-            ScaledResolution sr = new ScaledResolution(FTBLibClient.mc);
-            FTBLibClient.displayW = sr.getScaledWidth();
-            FTBLibClient.displayH = sr.getScaledHeight();
-        }
-
-        if(e.phase == TickEvent.Phase.END && FTBLibClient.isIngame())
+        if(e.phase == TickEvent.Phase.END && FTBLibClient.mc().theWorld != null)
         {
             ClientNotifications.renderTemp();
         }
@@ -114,6 +106,7 @@ public class FTBLibRenderHandler
 
         if(renderChunkBounds || renderLightValues)
         {
+            Minecraft mc = FTBLibClient.mc();
             int x = MathHelperLM.unchunk(MathHelperLM.chunk(LMFrustrumUtils.playerX));
             int z = MathHelperLM.unchunk(MathHelperLM.chunk(LMFrustrumUtils.playerZ));
 
@@ -152,7 +145,6 @@ public class FTBLibRenderHandler
                 {
                     needsLightUpdate = false;
                     lightList.clear();
-                    World w = FTBLibClient.mc.theWorld;
 
                     lastX = MathHelperLM.floor(LMFrustrumUtils.playerX);
                     lastY = MathHelperLM.floor(LMFrustrumUtils.playerY);
@@ -165,13 +157,13 @@ public class FTBLibRenderHandler
                             for(int bz = lastZ - 16; bz <= lastZ + 16; bz++)
                             {
                                 BlockPos pos = new BlockPos(bx, by, bz);
-                                Boolean b = FTBLib.canMobSpawn(w, pos);
+                                Boolean b = FTBLib.canMobSpawn(mc.theWorld, pos);
                                 if(b != null)
                                 {
                                     int lv = 0;
-                                    if(FTBLibClient.mc.gameSettings.showDebugInfo)
+                                    if(mc.gameSettings.showDebugInfo)
                                     {
-                                        lv = w.getLight(pos, true);
+                                        lv = mc.theWorld.getLight(pos, true);
                                     }
                                     lightList.add(new MobSpawnPos(pos, b == Boolean.TRUE, lv));
                                 }
@@ -208,7 +200,7 @@ public class FTBLibRenderHandler
 
                     GlStateManager.color(1F, 1F, 1F, 1F);
 
-                    if(FTBLibClient.mc.gameSettings.showDebugInfo)
+                    if(mc.gameSettings.showDebugInfo)
                     {
                         for(MobSpawnPos pos : lightList)
                         {
@@ -227,7 +219,7 @@ public class FTBLibRenderHandler
                                 GlStateManager.scale(-scale, -scale, 1F);
 
                                 String s = Integer.toString(pos.lightValue);
-                                FTBLibClient.mc.fontRendererObj.drawString(s, -FTBLibClient.mc.fontRendererObj.getStringWidth(s) / 2, -5, 0xFFFFFFFF);
+                                mc.fontRendererObj.drawString(s, -mc.fontRendererObj.getStringWidth(s) / 2, -5, 0xFFFFFFFF);
                                 GlStateManager.popMatrix();
                             }
                         }

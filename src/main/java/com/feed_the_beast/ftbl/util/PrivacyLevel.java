@@ -59,7 +59,7 @@ public enum PrivacyLevel
         {
             return true;
         }
-        else if(player.isOnline() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.interact_secure, false, context))
+        else if(player.isOnline() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, context))
         {
             return true;
         }
@@ -68,6 +68,6 @@ public enum PrivacyLevel
             return false;
         }
 
-        return this == PrivacyLevel.TEAM && owner.getTeam().isMember(player);
+        return this == PrivacyLevel.TEAM && owner.hasTeam() && owner.getTeam().getStatus(player).isAlly();
     }
 }

@@ -44,7 +44,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
     {
         parentScreen = parent;
         texture = tex;
-        mc = FTBLibClient.mc;
+        mc = FTBLibClient.mc();
 
         if(parent != null)
         {
@@ -128,7 +128,7 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
         FTBLibClient.setTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         float z0 = gui.getZLevel();
         gui.setZLevel(z0 + 200F);
-        RenderItem itemRender = FTBLibClient.mc.getRenderItem();
+        RenderItem itemRender = FTBLibClient.mc().getRenderItem();
         itemRender.zLevel = 200F;
         FTBLibClient.renderGuiItem(is, itemRender, gui.getFontRenderer(), x, y);
         itemRender.zLevel = 0F;

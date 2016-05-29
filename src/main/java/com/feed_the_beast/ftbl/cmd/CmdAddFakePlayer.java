@@ -19,9 +19,9 @@ import java.util.UUID;
  */
 public class CmdAddFakePlayer extends CommandLM
 {
-    public CmdAddFakePlayer(String s)
+    public CmdAddFakePlayer()
     {
-        super(s, CommandLevel.OP);
+        super("add_fake_player", CommandLevel.OP);
     }
 
     @Override

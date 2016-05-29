@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.api.net;
 
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,12 +23,12 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
     @Override
     public final IMessage onMessage(E m, MessageContext ctx)
     {
-        Minecraft mc = FMLClientHandler.instance().getClient();
+        Minecraft mc = FTBLibClient.mc();
         mc.addScheduledTask(() -> onMessage(m, mc));
 
         if(MessageLM.logMessages())
         {
-
+            FTBLib.dev_logger.info("RX MessageLM: " + this);
         }
 
         return null;

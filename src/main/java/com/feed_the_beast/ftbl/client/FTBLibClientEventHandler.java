@@ -2,11 +2,10 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -62,12 +61,14 @@ public class FTBLibClientEventHandler
     {
         public final List<ButtonInvLM> buttons;
         private final GuiContainerCreative creativeContainer;
+        private Minecraft mc;
 
         public ButtonInvLMRenderer(int id, GuiScreen g)
         {
             super(id, -1000, -1000, 0, 0, "");
             buttons = new ArrayList<>();
             creativeContainer = (g instanceof GuiContainerCreative) ? (GuiContainerCreative) g : null;
+            mc = FTBLibClient.mc();
         }
 
         @Override
@@ -106,7 +107,7 @@ public class FTBLibClientEventHandler
                     double my1 = my - 12D;
 
                     String s = b.action.getDisplayName();
-                    int tw = FTBLibClient.mc.fontRendererObj.getStringWidth(s);
+                    int tw = mc.fontRendererObj.getStringWidth(s);
 
                     if(!FTBLibModClient.action_buttons_on_top.getAsBoolean())
                     {
@@ -130,7 +131,7 @@ public class FTBLibClientEventHandler
                     GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
                     GuiLM.drawBlankRect(-3, -2, zLevel, tw + 6, 12);
                     GlStateManager.color(1F, 1F, 1F, 1F);
-                    FTBLibClient.mc.fontRendererObj.drawString(s, 0, 0, 0xFFFFFFFF);
+                    mc.fontRendererObj.drawString(s, 0, 0, 0xFFFFFFFF);
                     GlStateManager.popMatrix();
                 }
             }
@@ -199,7 +200,7 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void onDrawDebugText(RenderGameOverlayEvent.Text e)
     {
-        if(!FTBLibClient.mc.gameSettings.showDebugInfo)
+        if(!FTBLibClient.mc().gameSettings.showDebugInfo)
         {
             if(FTBLib.DEV_ENV)
             {
@@ -211,15 +212,14 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
     {
-        if(!FTBLibClient.isIngame())
+        if(ForgeWorldSP.inst == null)
         {
             return;
         }
 
         if(e.getGui() instanceof InventoryEffectRenderer)
         {
-            ForgePlayerSP p = ForgeWorldSP.inst.clientPlayer;
-            List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, p, p, false, false);
+            List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, false, false);
 
             if(!buttons.isEmpty())
             {

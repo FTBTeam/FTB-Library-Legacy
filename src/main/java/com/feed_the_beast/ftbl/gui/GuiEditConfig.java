@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.IClickable;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
@@ -13,6 +12,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.IConfigProvider;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IClickable;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.LMGuis;
 import com.feed_the_beast.ftbl.api.gui.callback.ColorSelected;
@@ -151,7 +151,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
                         if(c.closeGui)
                         {
-                            FTBLibClient.openGui(gui);
+                            gui.mc.displayGuiScreen(gui);
                         }
                     }
                 }, ((ConfigEntryColor) entry).value, 0, false);
@@ -171,7 +171,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
                         if(c.closeGui)
                         {
-                            FTBLibClient.openGui(gui);
+                            gui.mc.displayGuiScreen(gui);
                         }
                     }
                 });
@@ -191,7 +191,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
                         if(c.closeGui)
                         {
-                            FTBLibClient.openGui(gui);
+                            gui.mc.displayGuiScreen(gui);
                         }
                     }
                 });
@@ -211,7 +211,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
                         if(c.closeGui)
                         {
-                            FTBLibClient.openGui(gui);
+                            gui.mc.displayGuiScreen(gui);
                         }
                     }
                 });
@@ -231,7 +231,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
                         if(c.closeGui)
                         {
-                            FTBLibClient.openGui(gui);
+                            gui.mc.displayGuiScreen(gui);
                         }
                     }
                 });
@@ -249,7 +249,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                 {
                     for(String s : info)
                     {
-                        l.addAll(FTBLibClient.mc.fontRendererObj.listFormattedStringToWidth(s, 230));
+                        l.addAll(gui.mc.fontRendererObj.listFormattedStringToWidth(s, 230));
                     }
                 }
             }

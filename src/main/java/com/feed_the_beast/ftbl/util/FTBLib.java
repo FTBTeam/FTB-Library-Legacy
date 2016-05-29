@@ -61,8 +61,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -168,35 +170,33 @@ public class FTBLib
             {
                 ftbu.onReloaded(event);
             }
+
             MinecraftForge.EVENT_BUS.post(event);
         }
 
-        if(hasOnlinePlayers())
+        if(!login)
         {
-            for(EntityPlayerMP ep : getAllOnlinePlayers(null))
+            if(hasOnlinePlayers())
             {
-                new MessageReload(type, ForgeWorldMP.inst.getPlayer(ep), login).sendTo(ep);
+                for(EntityPlayerMP ep : getAllOnlinePlayers(null))
+                {
+                    new MessageReload(type, ForgeWorldMP.inst.getPlayer(ep), login).sendTo(ep);
+                }
+            }
+
+            if(type.reload(Side.SERVER))
+            {
+                FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
             }
         }
-
-        if(!login && type.reload(Side.SERVER))
-        {
-            FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
-        }
-    }
-
-    public static ITextComponent getChatComponent(Object o)
-    {
-        return (o != null && o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString("" + o);
     }
 
     public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)
     {
-        if(c == null || id == null)
+        if(c != null && id != null)
         {
-            return;
+            GameRegistry.registerTileEntity(c, id.toString().replace(':', '.'));
         }
-        GameRegistry.registerTileEntity(c, id.toString().replace(':', '.'));
     }
 
     public static void addEntity(Class<? extends Entity> c, String s, int id, Object mod)
@@ -226,6 +226,11 @@ public class FTBLib
         {
             e.registerServerCommand(c);
         }
+    }
+
+    public static ITextComponent getChatComponent(Object o)
+    {
+        return (o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString(String.valueOf(o));
     }
 
     /**
@@ -399,18 +404,15 @@ public class FTBLib
         new MessageNotifyPlayer(n).sendTo(ep);
     }
 
-    public static List<ICommand> getAllCommands(ICommandSender sender)
+    public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
     {
-        ArrayList<ICommand> commands = new ArrayList<>();
-        ArrayList<String> cmdIDs = new ArrayList<>();
+        Collection<ICommand> commands = new HashSet<>();
 
-        for(Object o : getServer().getCommandManager().getPossibleCommands(sender))
+        for(ICommand c : server.getCommandManager().getCommands().values())
         {
-            ICommand c = (ICommand) o;
-            if(!cmdIDs.contains(c.getCommandName()))
+            if(c.checkPermission(server, sender))
             {
                 commands.add(c);
-                cmdIDs.add(c.getCommandName());
             }
         }
 

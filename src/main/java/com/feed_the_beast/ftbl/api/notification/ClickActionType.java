@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
+import com.feed_the_beast.ftbl.api.gui.PlayerAction;
 import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.google.gson.JsonElement;
 import latmod.lib.LMUtils;
@@ -46,7 +46,7 @@ public abstract class ClickActionType extends FinalIDObject
         @Override
         public void onClicked(JsonElement data, MouseButton button)
         {
-            FTBLibClient.openGui(new GuiChat(data.getAsString()));
+            FTBLibClient.mc().displayGuiScreen(new GuiChat(data.getAsString()));
         }
     });
 
@@ -87,10 +87,11 @@ public abstract class ClickActionType extends FinalIDObject
         @Override
         public void onClicked(JsonElement data, MouseButton button)
         {
-            GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc.thePlayer, new ResourceLocation(data.getAsString()));
+            GuiScreen gui = GuiScreenRegistry.openGui(FTBLibClient.mc().thePlayer, new ResourceLocation(data.getAsString()));
+
             if(gui != null)
             {
-                FTBLibClient.openGui(gui);
+                FTBLibClient.mc().displayGuiScreen(gui);
             }
         }
     });

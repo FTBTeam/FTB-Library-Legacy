@@ -17,7 +17,7 @@ public class FTBLibNetHandler
         NET.register(7, new MessageLMPlayerLoggedOut());
         NET.register(8, new MessageLMPlayerDied());
         NET.register(9, new MessageRequestSelfUpdate());
-        NET.register(10, new MessageMarkTileDirty());
+        //10
         NET.register(11, new MessageOpenGui());
         NET.register(12, new MessageOpenGuiTile());
         NET.register(13, new MessageClientTileAction());

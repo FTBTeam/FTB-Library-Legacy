@@ -63,7 +63,7 @@ public class FTBLibModClient extends FTBLibModCommon
         LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 
         //For Dev reasons, see DevConsole
-        FTBLib.userIsLatvianModder = FTBLibClient.mc.getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
+        FTBLib.userIsLatvianModder = FTBLibClient.mc().getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
@@ -102,7 +102,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public boolean inGameHasFocus()
     {
-        return FTBLibClient.mc.inGameHasFocus;
+        return FTBLibClient.mc().inGameHasFocus;
     }
 
     @Override
@@ -134,15 +134,14 @@ public class FTBLibModClient extends FTBLibModCommon
         {
             return super.getReachDist(ep);
         }
-        PlayerControllerMP c = FTBLibClient.mc.playerController;
+        PlayerControllerMP c = FTBLibClient.mc().playerController;
         return (c == null) ? 0D : c.getBlockReachDistance();
     }
 
     @Override
     public void spawnDust(World w, double x, double y, double z, int col)
     {
-        ParticleRedstone fx = new ParticleRedstone(w, x, y, z, 0F, 0F, 0F)
-        { };
+        ParticleRedstone fx = new ParticleRedstone(w, x, y, z, 0F, 0F, 0F) { };
 
         float alpha = LMColorUtils.getAlpha(col) / 255F;
         float red = LMColorUtils.getRed(col) / 255F;
@@ -155,7 +154,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
         fx.setRBGColorF(red, green, blue);
         fx.setAlphaF(alpha);
-        FTBLibClient.mc.effectRenderer.addEffect(fx);
+        FTBLibClient.mc().effectRenderer.addEffect(fx);
     }
 
     @Override
@@ -169,7 +168,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
             if(g != null)
             {
-                FTBLibClient.openGui(g);
+                FTBLibClient.mc().displayGuiScreen(g);
                 return true;
             }
         }
@@ -185,7 +184,7 @@ public class FTBLibModClient extends FTBLibModCommon
             GuiScreen g = t.getGui(ep, data);
             if(g != null)
             {
-                FTBLibClient.openGui(g);
+                FTBLibClient.mc().displayGuiScreen(g);
             }
         }
     }

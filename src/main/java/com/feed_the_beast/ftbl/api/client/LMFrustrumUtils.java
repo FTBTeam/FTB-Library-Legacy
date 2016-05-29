@@ -31,8 +31,8 @@ public class LMFrustrumUtils
 
     public static void update()
     {
-        Minecraft mc = FTBLibClient.mc;
-        isFirstPerson = FTBLibClient.mc.gameSettings.thirdPersonView == 0;
+        Minecraft mc = FTBLibClient.mc();
+        isFirstPerson = mc.gameSettings.thirdPersonView == 0;
         currentDim = FTBLibClient.getDim();
         //mc.thePlayer.posX
 

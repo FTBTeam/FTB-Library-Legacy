@@ -22,6 +22,7 @@ public class GuiIcons
     public static final TextureCoords remove_gray = getIcon("remove_gray");
     public static final TextureCoords info_gray = getIcon("info_gray");
     public static final TextureCoords settings = getIcon("settings");
+    public static final TextureCoords settings_red = getIcon("settings_red");
     public static final TextureCoords cancel = getIcon("cancel");
     public static final TextureCoords back = getIcon("back");
     public static final TextureCoords close = getIcon("close");
