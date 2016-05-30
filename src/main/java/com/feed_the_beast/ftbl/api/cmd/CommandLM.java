@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
             throw new NullPointerException("Command ID can't be null!");
         }
 
-        if(l == null || l == CommandLevel.NONE)
+        if(l == null)
         {
             throw new NullPointerException();
         }
@@ -104,8 +103,9 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
 
         if(player == null)
         {
-            return new ArrayList<>();
+            return Collections.EMPTY_LIST;
         }
+
         return Collections.singletonList(player);
     }
 
@@ -118,7 +118,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender ics)
     {
-        return FTBLib.getEffectiveSide().isClient() || level != CommandLevel.NONE && (level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics));
+        return FTBLib.getEffectiveSide().isClient() || level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
     }
 
     @Override

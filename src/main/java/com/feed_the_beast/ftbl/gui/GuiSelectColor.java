@@ -4,8 +4,6 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.gui.callback.ColorSelected;
-import com.feed_the_beast.ftbl.api.gui.callback.IColorCallback;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
@@ -14,6 +12,7 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import latmod.lib.LMColor;
 import latmod.lib.LMColorUtils;
 import latmod.lib.MathHelperLM;
+import latmod.lib.ObjectCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -110,7 +109,7 @@ public class GuiSelectColor extends GuiLM
         }
     }
 
-    public final IColorCallback callback;
+    public final ObjectCallback.Handler callback;
     public final LMColor.HSB initCol;
     public final Object colorID;
     public final boolean isInstant;
@@ -120,7 +119,7 @@ public class GuiSelectColor extends GuiLM
     public final SliderLM sliderHue, sliderSaturation, sliderBrightness;
     public final ColorSelector colorSelector;
 
-    public GuiSelectColor(IColorCallback cb, LMColor col, Object id, boolean instant)
+    public GuiSelectColor(ObjectCallback.Handler cb, LMColor col, Object id, boolean instant)
     {
         super(null, tex);
         callback = cb;
@@ -283,7 +282,7 @@ public class GuiSelectColor extends GuiLM
 
         if(isInstant)
         {
-            callback.onColorSelected(new ColorSelected(colorID, true, currentColor, false));
+            callback.onCallback(new ObjectCallback(colorID, true, false, currentColor));
         }
     }
 
@@ -379,6 +378,6 @@ public class GuiSelectColor extends GuiLM
     public void closeGui(boolean set)
     {
         FTBLibClient.playClickSound();
-        callback.onColorSelected(new ColorSelected(colorID, set, set ? currentColor : initCol, true));
+        callback.onCallback(new ObjectCallback(colorID, set, true, set ? currentColor : initCol));
     }
 }

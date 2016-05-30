@@ -1,11 +1,18 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import latmod.lib.Bits;
+import latmod.lib.LMUtils;
 import latmod.lib.annotations.IFlagContainer;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityDispatcher;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -13,32 +20,53 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 26.05.2016.
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagContainer
+public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>, IFlagContainer
 {
-    public static final byte ALLOW_INVITE_MEMBERS = 0;
+    public static final byte FREE_TO_JOIN = 0;
+    public static final byte HIDDEN = 1;
 
+    public final ForgeWorld world;
     public final int teamID;
-    public final ForgePlayer owner;
+    CapabilityDispatcher capabilities;
+    private ForgePlayer owner;
     private Map<Integer, EnumTeamStatus> specialStatus;
     private EnumDyeColor color;
     private String title;
     private String desc;
     private byte flags;
+    private Collection<ForgePlayerMP> invited;
 
-    public ForgeTeam(int id, ForgePlayer o)
+    public ForgeTeam(ForgeWorld w, int id)
     {
+        world = w;
         teamID = id;
-        owner = o;
+
+        ForgeTeamEvent.AttachCapabilities event = new ForgeTeamEvent.AttachCapabilities(this);
+        MinecraftForge.EVENT_BUS.post(event);
+        capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
     }
 
     @Override
-    public final boolean equals(Object o)
+    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    {
+        return capabilities != null && capabilities.hasCapability(capability, facing);
+    }
+
+    @Override
+    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    {
+        return capabilities == null ? null : capabilities.getCapability(capability, facing);
+    }
+
+    @Override
+    public final boolean equals(@Nullable Object o)
     {
         if(o == null)
         {
@@ -48,12 +76,12 @@ public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagC
         {
             return true;
         }
-        else if(o instanceof ForgeTeam)
+        else if(o instanceof ForgeTeam || o instanceof Integer)
         {
             return o.hashCode() == teamID;
         }
 
-        return owner.equals(o);
+        return false;
     }
 
     @Override
@@ -66,6 +94,73 @@ public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagC
     public String toString()
     {
         return Integer.toString(teamID);
+    }
+
+    @Override
+    public void setFlag(byte flag, boolean b)
+    {
+        flags = Bits.setBit(flags, flag, b);
+    }
+
+    @Override
+    public boolean getFlag(byte flag)
+    {
+        return Bits.getBit(flags, flag);
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setString("Owner", LMUtils.fromUUID(owner.getProfile().getId()));
+        tag.setByte("Flags", flags);
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt)
+    {
+        owner = world.getPlayer(LMUtils.fromString(nbt.getString("Owner")));
+        flags = nbt.getByte("Flags");
+    }
+
+    public NBTTagCompound serializeNBTForNet()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setLong("OM", owner.getProfile().getId().getMostSignificantBits());
+        tag.setLong("OL", owner.getProfile().getId().getLeastSignificantBits());
+
+        if(flags != 0)
+        {
+            tag.setByte("F", flags);
+        }
+
+        NBTTagCompound sync = new NBTTagCompound();
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.SERVER, sync));
+
+        if(!sync.hasNoTags())
+        {
+            tag.setTag("SY", sync);
+        }
+
+        return tag;
+    }
+
+    public void deserializeNBTFromNet(NBTTagCompound nbt)
+    {
+        owner = world.getPlayer(new UUID(nbt.getLong("OM"), nbt.getLong("OL")));
+
+        flags = nbt.getByte("F");
+
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.CLIENT, nbt.getCompoundTag("SY")));
+    }
+
+    public ForgePlayer getOwner()
+    {
+        return owner;
     }
 
     public String getTitle()
@@ -99,13 +194,13 @@ public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagC
         color = col;
     }
 
-    public EnumTeamStatus getStatus(ForgePlayer player)
+    public EnumTeamStatus getStatus(@Nullable ForgePlayer player)
     {
         if(player == null)
         {
             return EnumTeamStatus.NONE;
         }
-        else if(player.equalsPlayer(owner))
+        else if(owner.equalsPlayer(player))
         {
             return EnumTeamStatus.OWNER;
         }
@@ -155,20 +250,13 @@ public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagC
         }
     }
 
-    public Collection<ForgePlayer> getMembers(boolean excludeOwner)
+    public Collection<ForgePlayer> getMembers()
     {
         Collection<ForgePlayer> c = new HashSet<>();
 
-        for(ForgePlayer p : owner.getWorld().playerMap.values())
+        for(ForgePlayer p : world.playerMap.values())
         {
-            if(p.equalsPlayer(owner))
-            {
-                if(!excludeOwner)
-                {
-                    c.add(p);
-                }
-            }
-            else if(getStatus(p).isMember())
+            if(getStatus(p).isMember())
             {
                 c.add(p);
             }
@@ -177,43 +265,58 @@ public final class ForgeTeam implements INBTSerializable<NBTTagCompound>, IFlagC
         return c;
     }
 
-    @Override
-    public NBTTagCompound serializeNBT()
+    public void addPlayer(ForgePlayerMP player)
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        return tag;
+        if(player.getTeamID() != teamID)
+        {
+            player.setTeamID(teamID);
+            MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(this, player));
+        }
     }
 
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void removePlayer(ForgePlayerMP player)
     {
+        if(player.getTeamID() == teamID)
+        {
+            player.setTeamID(0);
+            MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerLeft(this, player));
+        }
     }
 
-    public NBTTagCompound serializeNBTForNet()
+    public void inviteMember(ForgePlayerMP player)
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("ID", teamID);
-        tag.setString("O", owner.getStringUUID());
+        if(player != null && (invited == null || !invited.contains(player)) && !player.hasTeam())
+        {
+            if(invited == null)
+            {
+                invited = new HashSet<>();
+            }
 
-        tag.setByte("F", flags);
-
-        return tag;
+            invited.add(player);
+        }
     }
 
-    public void deserializeNBTFromNet(NBTTagCompound nbt)
+    public boolean isInvited(ForgePlayerMP player)
     {
-        flags = nbt.getByte("F");
+        return player != null && invited != null && invited.contains(player);
     }
 
-    @Override
-    public void setFlag(byte flag, boolean b)
+    public void changeOwner(ForgePlayerMP newOwner)
     {
-        flags = Bits.setBit(flags, flag, b);
-    }
+        if(owner == null)
+        {
+            owner = newOwner;
+            newOwner.setTeamID(teamID);
+        }
+        else
+        {
+            ForgePlayerMP oldOwner = owner.toMP();
 
-    @Override
-    public boolean getFlag(byte flag)
-    {
-        return Bits.getBit(flags, flag);
+            if(!oldOwner.equalsPlayer(newOwner) && newOwner.getTeamID() == teamID)
+            {
+                owner = newOwner;
+                MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.OwnerChanged(this, oldOwner, newOwner));
+            }
+        }
     }
 }

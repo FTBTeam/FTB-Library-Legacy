@@ -61,7 +61,7 @@ public class ForgePlayerSP extends ForgePlayer
     }
 
     @Override
-    public final ForgeWorld getWorld()
+    public final ForgeWorldSP getWorld()
     {
         return ForgeWorldSP.inst;
     }

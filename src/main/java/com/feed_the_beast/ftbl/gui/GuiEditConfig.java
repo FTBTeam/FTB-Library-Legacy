@@ -15,13 +15,10 @@ import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IClickable;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.LMGuis;
-import com.feed_the_beast.ftbl.api.gui.callback.ColorSelected;
-import com.feed_the_beast.ftbl.api.gui.callback.FieldSelected;
-import com.feed_the_beast.ftbl.api.gui.callback.IColorCallback;
-import com.feed_the_beast.ftbl.api.gui.callback.IFieldCallback;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
+import latmod.lib.LMColor;
 import latmod.lib.LMColorUtils;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.annotations.Flags;
@@ -138,101 +135,81 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.COLOR)
             {
-                LMGuis.displayColorSelector(new IColorCallback()
+                LMGuis.displayColorSelector(0, false, ((ConfigEntryColor) entry).value, c ->
                 {
-                    @Override
-                    public void onColorSelected(ColorSelected c)
+                    if(c.set)
                     {
-                        if(c.set)
-                        {
-                            ((ConfigEntryColor) entry).value.set(c.color);
-                            gui.onChanged();
-                        }
-
-                        if(c.closeGui)
-                        {
-                            gui.mc.displayGuiScreen(gui);
-                        }
+                        ((ConfigEntryColor) entry).value.set((LMColor) c.object);
+                        gui.onChanged();
                     }
-                }, ((ConfigEntryColor) entry).value, 0, false);
+
+                    if(c.close)
+                    {
+                        gui.mc.displayGuiScreen(gui);
+                    }
+                });
             }
             else if(type == ConfigEntryType.INT)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, entry.getAsInt(), new IFieldCallback()
+                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, entry.getAsInt(), c ->
                 {
-                    @Override
-                    public void onFieldSelected(FieldSelected c)
+                    if(c.set)
                     {
-                        if(c.set)
-                        {
-                            ((ConfigEntryInt) entry).set(c.resultI());
-                            gui.onChanged();
-                        }
+                        ((ConfigEntryInt) entry).set((Integer) c.object);
+                        gui.onChanged();
+                    }
 
-                        if(c.closeGui)
-                        {
-                            gui.mc.displayGuiScreen(gui);
-                        }
+                    if(c.close)
+                    {
+                        gui.mc.displayGuiScreen(gui);
                     }
                 });
             }
             else if(type == ConfigEntryType.DOUBLE)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, entry.getAsDouble(), new IFieldCallback()
+                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, entry.getAsDouble(), c ->
                 {
-                    @Override
-                    public void onFieldSelected(FieldSelected c)
+                    if(c.set)
                     {
-                        if(c.set)
-                        {
-                            ((ConfigEntryDouble) entry).set(c.resultD());
-                            gui.onChanged();
-                        }
+                        ((ConfigEntryDouble) entry).set((Double) c.object);
+                        gui.onChanged();
+                    }
 
-                        if(c.closeGui)
-                        {
-                            gui.mc.displayGuiScreen(gui);
-                        }
+                    if(c.close)
+                    {
+                        gui.mc.displayGuiScreen(gui);
                     }
                 });
             }
             else if(type == ConfigEntryType.STRING)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getAsString(), new IFieldCallback()
+                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getAsString(), c ->
                 {
-                    @Override
-                    public void onFieldSelected(FieldSelected c)
+                    if(c.set)
                     {
-                        if(c.set)
-                        {
-                            ((ConfigEntryString) entry).set(c.result);
-                            gui.onChanged();
-                        }
+                        ((ConfigEntryString) entry).set(c.toString());
+                        gui.onChanged();
+                    }
 
-                        if(c.closeGui)
-                        {
-                            gui.mc.displayGuiScreen(gui);
-                        }
+                    if(c.close)
+                    {
+                        gui.mc.displayGuiScreen(gui);
                     }
                 });
             }
             else if(type == ConfigEntryType.CUSTOM || type == ConfigEntryType.INT_ARRAY || type == ConfigEntryType.STRING_ARRAY)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), new IFieldCallback()
+                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), c ->
                 {
-                    @Override
-                    public void onFieldSelected(FieldSelected c)
+                    if(c.set)
                     {
-                        if(c.set)
-                        {
-                            entry.fromJson(LMJsonUtils.fromJson(c.result));
-                            gui.onChanged();
-                        }
+                        entry.fromJson(LMJsonUtils.fromJson(c.object.toString()));
+                        gui.onChanged();
+                    }
 
-                        if(c.closeGui)
-                        {
-                            gui.mc.displayGuiScreen(gui);
-                        }
+                    if(c.close)
+                    {
+                        gui.mc.displayGuiScreen(gui);
                     }
                 });
             }

@@ -16,6 +16,8 @@ public class FTBLibLang
     public static final LangKey reload_client = get("reload_client");
     public static final LangKey reload_client_config = get("reload_client_config");
     //@Deprecated
+
+    public static final LangKey no_permission = new LangKey("commands.generic.permission");
     public static final LangKey raw = get("raw");
     public static final LangKey missing_args = get("missing_args");
     public static final LangKey feature_disabled = get("feature_disabled");
@@ -27,6 +29,20 @@ public class FTBLibLang
     public static final LangKey commands = get("commands");
     public static final LangKey my_permissions = get("my_permissions");
     public static final LangKey difficulty = get("difficulty");
+
+    public static final LangKey team_created = get("team.created");
+    public static final LangKey team_deleted = get("team.deleted");
+    public static final LangKey team_member_left = get("team.member_left");
+    public static final LangKey team_member_joined = get("team.member_joined");
+    public static final LangKey team_transfered_ownership = get("team.transfered_ownership");
+    public static final LangKey team_invite = get("team.invite");
+    public static final LangKey team_cancel_invite = get("team.cancel_invite");
+
+    public static final LangKey team_no_team = get("team.no_team");
+    public static final LangKey team_must_leave = get("team.must_leave");
+    public static final LangKey team_not_owner = get("team.not_owner");
+    public static final LangKey team_not_member = get("team.not_member");
+    public static final LangKey team_must_transfer_ownership = get("team.must_transfer_ownership");
 
     public static LangKey get(String s)
     {

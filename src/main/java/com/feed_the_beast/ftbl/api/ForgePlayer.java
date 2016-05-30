@@ -59,7 +59,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 
     public void setTeamID(int id)
     {
-        teamID = id;
+        teamID = Math.max(0, id);
     }
 
     @Override
@@ -172,22 +172,19 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         }
     }
 
-    public void onLoggedIn(boolean firstTime)
+    public void onLoggedIn(boolean firstLogin)
     {
         updateArmor();
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedIn(this, firstTime));
     }
 
     public void onLoggedOut()
     {
         updateArmor();
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedOut(this));
     }
 
     public void onDeath()
     {
         updateArmor();
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.OnDeath(this));
     }
 
     public void sendUpdate()

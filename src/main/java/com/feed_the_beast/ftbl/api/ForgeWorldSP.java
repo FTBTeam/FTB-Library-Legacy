@@ -111,14 +111,9 @@ public final class ForgeWorldSP extends ForgeWorld
             for(int i = 0; i < teamsTag.tagCount(); i++)
             {
                 NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-                ForgePlayer player = getPlayer(LMUtils.fromString(tag2.getString("O")));
-
-                if(player != null)
-                {
-                    ForgeTeam team = new ForgeTeam(tag2.getInteger("ID"), player);
-                    team.deserializeNBTFromNet(tag2);
-                    teams.put(team.teamID, team);
-                }
+                ForgeTeam team = new ForgeTeam(this, tag2.getInteger("ID"));
+                team.deserializeNBTFromNet(tag2);
+                teams.put(team.teamID, team);
             }
         }
 

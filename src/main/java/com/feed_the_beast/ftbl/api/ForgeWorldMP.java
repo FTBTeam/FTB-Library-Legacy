@@ -34,6 +34,7 @@ public final class ForgeWorldMP extends ForgeWorld
      * Only used for capabilities, so they know which player currently is being saved / loaded
      */
     public static ForgePlayerMP currentPlayer;
+    private int nextTeamID = 0;
 
     public ForgeWorldMP()
     {
@@ -76,6 +77,11 @@ public final class ForgeWorldMP extends ForgeWorld
         return (p == null) ? null : p.toMP();
     }
 
+    public ForgeTeam newTeam()
+    {
+        return new ForgeTeam(this, ++nextTeamID);
+    }
+
     public void load() throws Exception
     {
         JsonElement worldData = LMJsonUtils.fromJson(new File(FTBLib.folderWorld, "world_data.json"));
@@ -100,7 +106,7 @@ public final class ForgeWorldMP extends ForgeWorld
                 capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
             }
 
-            MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnLoadedBeforePlayers(this));
+            MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.LoadedBeforePlayers(this));
 
             NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
 
@@ -120,7 +126,20 @@ public final class ForgeWorldMP extends ForgeWorld
 
             currentPlayer = null;
 
-            MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnPostLoaded(this));
+            nextTeamID = nbt.getInteger("NextTeamID");
+
+            teams.clear();
+            NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
+
+            for(int i = 0; i < teamsTag.tagCount(); i++)
+            {
+                NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
+                ForgeTeam team = new ForgeTeam(this, tag2.getInteger("ID"));
+                team.deserializeNBT(tag2);
+                teams.put(team.teamID, team);
+            }
+
+            MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.PostLoaded(this));
         }
     }
 
@@ -134,6 +153,7 @@ public final class ForgeWorldMP extends ForgeWorld
         FTBLib.dev_logger.info("ForgeWorldMP Saved: " + group);
 
         NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound tag2;
 
         if(capabilities != null)
         {
@@ -145,15 +165,28 @@ public final class ForgeWorldMP extends ForgeWorld
         for(ForgePlayer p : playerMap.values())
         {
             currentPlayer = p.toMP();
-            NBTTagCompound tagP = p.toMP().serializeNBT();
-            tagP.setString("Name", p.getProfile().getName());
-            tagP.setString("UUID", p.getStringUUID());
-            tagPlayers.appendTag(tagP);
+            tag2 = p.toMP().serializeNBT();
+            tag2.setString("Name", p.getProfile().getName());
+            tag2.setString("UUID", p.getStringUUID());
+            tagPlayers.appendTag(tag2);
         }
 
         currentPlayer = null;
 
         tag.setTag("Players", tagPlayers);
+
+        tag.setInteger("NextTeamID", nextTeamID);
+
+        NBTTagList teamsTag = new NBTTagList();
+
+        for(ForgeTeam team : teams.values())
+        {
+            tag2 = team.serializeNBT();
+            tag2.setInteger("ID", team.teamID);
+            teamsTag.appendTag(tag2);
+        }
+
+        tag.setTag("Teams", teamsTag);
 
         LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), tag);
     }
@@ -207,20 +240,12 @@ public final class ForgeWorldMP extends ForgeWorld
 
             for(ForgeTeam team : teams.values())
             {
-                teamsTag.appendTag(team.serializeNBTForNet());
+                tag2 = team.serializeNBTForNet();
+                tag2.setInteger("ID", team.teamID);
+                teamsTag.appendTag(tag2);
             }
 
             tag.setTag("TMS", teamsTag);
         }
-    }
-
-    public Collection<ForgePlayerMP> getServerPlayers()
-    {
-        Collection<ForgePlayerMP> list = new HashSet<>();
-        for(ForgePlayer p : playerMap.values())
-        {
-            list.add(p.toMP());
-        }
-        return list;
     }
 }

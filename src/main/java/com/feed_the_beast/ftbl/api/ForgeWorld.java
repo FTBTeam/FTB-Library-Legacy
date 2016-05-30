@@ -43,7 +43,7 @@ public abstract class ForgeWorld implements ICapabilityProvider
         ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnLoaded(this));
+        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.Loaded(this));
     }
 
     public static ForgeWorld getFrom(Side side)
@@ -180,7 +180,7 @@ public abstract class ForgeWorld implements ICapabilityProvider
 
     public void onClosed()
     {
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.OnClosed(this));
+        MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.Closed(this));
         playerMap.clear();
     }
 }

@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.callback.IColorCallback;
-import com.feed_the_beast.ftbl.api.gui.callback.IFieldCallback;
 import com.feed_the_beast.ftbl.gui.GuiSelectColor;
 import com.feed_the_beast.ftbl.gui.GuiSelectField;
 import latmod.lib.Converter;
 import latmod.lib.LMColor;
+import latmod.lib.ObjectCallback;
 
 public class LMGuis
 {
@@ -36,12 +35,12 @@ public class LMGuis
         }
     }
 
-    public static void displayColorSelector(IColorCallback cb, LMColor col, Object id, boolean instant)
+    public static void displayColorSelector(Object id, boolean instant, LMColor col, ObjectCallback.Handler cb)
     {
         FTBLibClient.mc().displayGuiScreen(new GuiSelectColor(cb, col, id, instant));
     }
 
-    public static void displayFieldSelector(Object id, FieldType typ, Object d, IFieldCallback c)
+    public static void displayFieldSelector(Object id, FieldType typ, Object d, ObjectCallback.Handler c)
     {
         FTBLibClient.mc().displayGuiScreen(new GuiSelectField(id, typ, String.valueOf(d), c));
     }

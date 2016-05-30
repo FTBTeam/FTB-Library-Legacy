@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
 import com.feed_the_beast.ftbl.cmd.CmdAdmin;
 import com.feed_the_beast.ftbl.cmd.CmdEditConfig;
+import com.feed_the_beast.ftbl.cmd.CmdFTBLib;
 import com.feed_the_beast.ftbl.cmd.CmdHeal;
 import com.feed_the_beast.ftbl.cmd.CmdHelpOverride;
 import com.feed_the_beast.ftbl.cmd.CmdInv;
@@ -101,6 +102,7 @@ public class FTBLibMod
     {
         FTBLibEventHandler.ticking.clear();
 
+        FTBLib.addCommand(e, new CmdFTBLib());
         FTBLib.addCommand(e, new CmdAdmin());
         FTBLib.addCommand(e, new CmdMode());
         FTBLib.addCommand(e, new CmdNotify());

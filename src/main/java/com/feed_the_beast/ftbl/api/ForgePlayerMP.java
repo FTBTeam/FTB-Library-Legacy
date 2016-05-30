@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.net.MessageLMPlayerDied;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerInfo;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerLoggedIn;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerUpdate;
@@ -87,7 +86,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     }
 
     @Override
-    public final ForgeWorld getWorld()
+    public final ForgeWorldMP getWorld()
     {
         return ForgeWorldMP.inst;
     }
@@ -283,18 +282,26 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public void onLoggedIn(boolean firstLogin)
     {
-        super.onLoggedIn(firstLogin);
-
         EntityPlayerMP ep = getPlayer();
 
-        new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
+        super.onLoggedIn(firstLogin);
 
+        new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
         new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
 
         for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
         {
             new MessageLMPlayerLoggedIn(this, firstLogin, false).sendTo(ep1);
         }
+
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedIn(this, firstLogin));
+    }
+
+    @Override
+    public void onLoggedOut()
+    {
+        super.onLoggedOut();
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedOut(this));
     }
 
     @Override
@@ -304,10 +311,13 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         {
             return;
         }
+
         lastDeath = new EntityDimPos(getPlayer()).toBlockDimPos();
         stats.refresh(this, false);
+
         super.onDeath();
-        new MessageLMPlayerDied().sendTo(getPlayer());
+
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.OnDeath(this));
     }
 
     public StatisticsManagerServer getStatFile(boolean force)

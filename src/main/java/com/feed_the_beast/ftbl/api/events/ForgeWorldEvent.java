@@ -69,33 +69,33 @@ public abstract class ForgeWorldEvent extends Event
         }
     }
 
-    public static class OnLoaded extends ForgeWorldEvent
+    public static class Loaded extends ForgeWorldEvent
     {
-        public OnLoaded(ForgeWorld w)
+        public Loaded(ForgeWorld w)
         {
             super(w);
         }
     }
 
-    public static class OnLoadedBeforePlayers extends ForgeWorldEvent
+    public static class LoadedBeforePlayers extends ForgeWorldEvent
     {
-        public OnLoadedBeforePlayers(ForgeWorld w)
+        public LoadedBeforePlayers(ForgeWorld w)
         {
             super(w);
         }
     }
 
-    public static class OnPostLoaded extends ForgeWorldEvent
+    public static class PostLoaded extends ForgeWorldEvent
     {
-        public OnPostLoaded(ForgeWorld w)
+        public PostLoaded(ForgeWorld w)
         {
             super(w);
         }
     }
 
-    public static class OnClosed extends ForgeWorldEvent
+    public static class Closed extends ForgeWorldEvent
     {
-        public OnClosed(ForgeWorld w)
+        public Closed(ForgeWorld w)
         {
             super(w);
         }

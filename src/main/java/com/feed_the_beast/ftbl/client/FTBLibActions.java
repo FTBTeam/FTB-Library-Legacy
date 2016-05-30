@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
@@ -18,7 +17,6 @@ import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiNotifications;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
-import com.feed_the_beast.ftbl.net.MessageModifyTeam;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import latmod.lib.LMColor;
 import net.minecraft.client.gui.GuiScreen;
@@ -246,60 +244,42 @@ public class FTBLibActions
         }
     });
 
-    public static final PlayerAction INVITE_TEAM = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "invite_team"), 1, GuiIcons.add)
-    {
-        @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
-        {
-            new MessageModifyTeam(MessageModifyTeam.INVITE, other.getProfile().getId()).sendToServer();
-        }
-
-        @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        {
-            return !self.hasTeam() || self.getTeam().getFlag(ForgeTeam.ALLOW_INVITE_MEMBERS);
-        }
-    });
-
-    public static final PlayerAction JOIN_TEAM = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "join_team"), 1, GuiIcons.add)
+    public static final PlayerAction LEAVE_TEAM = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "team_leave"), -1, GuiIcons.remove)
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
             //TODO: Ask for confirmation
-            new MessageModifyTeam(MessageModifyTeam.JOIN, other.getProfile().getId()).sendToServer();
         }
 
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
         {
-            return !self.hasTeam();
+            return self.hasTeam();
         }
     });
 
     // Other //
-    public static final PlayerAction LEAVE_TEAM = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "leave_team"), -1, GuiIcons.remove)
+
+    public static final PlayerAction TEAM_INVITE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "team_invite"), 1, GuiIcons.add)
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
-            //TODO: Ask for confirmation
-            new MessageModifyTeam(MessageModifyTeam.LEAVE, self.getProfile().getId()).sendToServer();
         }
-/*
+
         @Override
         public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
         {
-            return self.isFriendRaw(other);
+            return !self.hasTeam() || self.getTeam().getStatus(self).isOwner();
         }
-        */
     });
-    public static final PlayerAction DENY_TEAM_INVITE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "deny_team_invite"), -1, GuiIcons.remove)
+
+    public static final PlayerAction TEAM_DENY_INVITE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "team_deny_invite"), -1, GuiIcons.remove)
     {
         @Override
         public void onClicked(ForgePlayer self, ForgePlayer other)
         {
-            new MessageModifyTeam(MessageModifyTeam.LEAVE, other.getProfile().getId()).sendToServer();
         }
 /*
         @Override

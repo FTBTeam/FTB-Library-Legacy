@@ -39,28 +39,31 @@ public abstract class ForgePlayerEvent extends Event
         }
     }
 
+    // @SideOnly(Side.SERVER)
     public static class LoggedIn extends ForgePlayerEvent
     {
         public final boolean first;
 
-        public LoggedIn(ForgePlayer p, boolean f)
+        public LoggedIn(ForgePlayerMP p, boolean f)
         {
             super(p);
             first = f;
         }
     }
 
+    // @SideOnly(Side.SERVER)
     public static class LoggedOut extends ForgePlayerEvent
     {
-        public LoggedOut(ForgePlayer p)
+        public LoggedOut(ForgePlayerMP p)
         {
             super(p);
         }
     }
 
+    // @SideOnly(Side.SERVER)
     public static class OnDeath extends ForgePlayerEvent
     {
-        public OnDeath(ForgePlayer p)
+        public OnDeath(ForgePlayerMP p)
         {
             super(p);
         }

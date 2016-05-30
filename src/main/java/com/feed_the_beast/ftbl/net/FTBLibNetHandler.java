@@ -11,11 +11,11 @@ public class FTBLibNetHandler
         NET.register(1, new MessageReload());
         NET.register(2, new MessageEditConfig());
         NET.register(3, new MessageEditConfigResponse());
-        NET.register(4, new MessageModifyTeam());
+        //4
         NET.register(5, new MessageLMPlayerUpdate());
         NET.register(6, new MessageLMPlayerLoggedIn());
         NET.register(7, new MessageLMPlayerLoggedOut());
-        NET.register(8, new MessageLMPlayerDied());
+        NET.register(8, new MessageUpdateTeam());
         NET.register(9, new MessageRequestSelfUpdate());
         //10
         NET.register(11, new MessageOpenGui());

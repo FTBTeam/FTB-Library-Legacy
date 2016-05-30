@@ -5,10 +5,9 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.LMGuis;
-import com.feed_the_beast.ftbl.api.gui.callback.FieldSelected;
-import com.feed_the_beast.ftbl.api.gui.callback.IFieldCallback;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
+import latmod.lib.ObjectCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,12 +18,12 @@ public class GuiSelectField extends GuiLM
     public final Object ID;
     public final LMGuis.FieldType type;
     public final String def;
-    public final IFieldCallback callback;
+    public final ObjectCallback.Handler callback;
 
     public final ButtonSimpleLM buttonCancel, buttonAccept;
     public final TextBoxLM textBox;
 
-    public GuiSelectField(Object id, LMGuis.FieldType typ, String d, IFieldCallback c)
+    public GuiSelectField(Object id, LMGuis.FieldType typ, String d, ObjectCallback.Handler c)
     {
         super(null, null);
         ID = id;
@@ -43,7 +42,7 @@ public class GuiSelectField extends GuiLM
             public void onClicked(MouseButton button)
             {
                 FTBLibClient.playClickSound();
-                callback.onFieldSelected(new FieldSelected(ID, false, def, true));
+                callback.onCallback(new ObjectCallback(ID, false, true, def));
             }
         };
 
@@ -57,7 +56,7 @@ public class GuiSelectField extends GuiLM
                 FTBLibClient.playClickSound();
                 if(textBox.isValid())
                 {
-                    callback.onFieldSelected(new FieldSelected(ID, true, textBox.getText(), true));
+                    callback.onCallback(new ObjectCallback(ID, true, true, textBox.getText()));
                 }
             }
         };
