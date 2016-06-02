@@ -32,6 +32,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -66,6 +67,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -87,7 +89,7 @@ public class FTBLib
         return i;
     };
 
-    private static final HashMap<String, UUID> cachedUUIDs = new HashMap<>();
+    private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
     public static FTBUIntegration ftbu = null;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
@@ -376,7 +378,7 @@ public class FTBLib
             epM.openContainer.addListener(epM);
             new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
         }
-        else if(!getEffectiveSide().isServer())
+        else if(ep.worldObj.isRemote)
         {
             FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
         }
@@ -488,5 +490,20 @@ public class FTBLib
         }
 
         return null;
+    }
+
+    public static void registerServerTickable(MinecraftServer server, ITickable tickable)
+    {
+        try
+        {
+            Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
+            field.setAccessible(true);
+            List<ITickable> list = (List<ITickable>) field.get(server);
+            list.add(tickable);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 }

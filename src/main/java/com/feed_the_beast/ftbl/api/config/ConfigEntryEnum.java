@@ -8,32 +8,30 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements IClickable // EnumTypeAdapterFactory
+public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements IClickable // EnumTypeAdapterFactory
 {
-    public final E defValue;
-    private final LinkedHashMap<String, E> enumMap;
-    private E value;
+    public final int defValue;
+    private final List<E> array;
+    private int index;
 
     public ConfigEntryEnum(String id, E[] val, E def, boolean addNull)
     {
         super(id);
 
-        enumMap = new LinkedHashMap<>();
-
-        for(E e : val)
-        {
-            enumMap.put(getName(e), e);
-        }
+        array = new ArrayList<>(addNull ? val.length + 1 : val.length);
+        array.addAll(Arrays.asList(val));
 
         if(addNull)
         {
-            enumMap.put("-", null);
+            array.add(null);
         }
 
         set(def);
-        defValue = def;
+        defValue = indexOf(def);
     }
 
     public static String getName(Enum<?> e)
@@ -53,29 +51,67 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
         return 0x0094FF;
     }
 
+    public final int indexOf(Object o)
+    {
+        return array.indexOf(o);
+    }
+
     public void set(Object o)
     {
-        value = (E) o;
+        index = indexOf(o);
     }
 
     public E get()
     {
-        return value;
+        return array.get(index);
     }
 
-    private E fromString(String s)
+    public int getIndex()
     {
-        return enumMap.get(s.toLowerCase());
+        return index;
+    }
+
+    public void setIndex(int idx)
+    {
+        index = idx;
+
+        if(index < 0 || index >= array.size())
+        {
+            throw new ArrayIndexOutOfBoundsException(index);
+        }
+    }
+
+    public E fromIndex(int idx)
+    {
+        return array.get(idx);
+    }
+
+    public E fromString(String s)
+    {
+        if(s.isEmpty() || s.charAt(0) == '-')
+        {
+            return null;
+        }
+
+        for(E e : array)
+        {
+            if(e != null && e.name().equalsIgnoreCase(s))
+            {
+                return e;
+            }
+        }
+
+        return null;
     }
 
     @Override
-    public final void fromJson(JsonElement o)
+    public void fromJson(JsonElement o)
     {
         set(fromString(o.getAsString()));
     }
 
     @Override
-    public final JsonElement getSerializableElement()
+    public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getName(get()));
     }
@@ -84,20 +120,23 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
     public void writeToNBT(NBTTagCompound tag, boolean extended)
     {
         super.writeToNBT(tag, extended);
-        tag.setString("V", getName(get()));
 
         if(extended)
         {
-            tag.setString("D", getName(defValue));
-
             NBTTagList list = new NBTTagList();
 
-            for(String s : enumMap.keySet())
+            for(E e : array)
             {
-                list.appendTag(new NBTTagString(s));
+                list.appendTag(new NBTTagString(getName(e)));
             }
 
             tag.setTag("VL", list);
+            tag.setShort("V", (short) index);
+            tag.setShort("D", (short) defValue);
+        }
+        else
+        {
+            tag.setString("V", getName(get()));
         }
     }
 
@@ -105,7 +144,15 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         super.readFromNBT(tag, extended);
-        set(fromString(tag.getString("V")));
+
+        if(extended)
+        {
+            index = tag.getShort("V");
+        }
+        else
+        {
+            index = indexOf(fromString(tag.getString("V")));
+        }
     }
 
     @Override
@@ -113,11 +160,14 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
     {
         if(button.isLeft())
         {
-            set(getFromIndex((getIndex() + 1) % enumMap.size()));
+            index = (index + 1) % array.size();
         }
         else
         {
-            set(getFromIndex((getIndex() - 1) & (enumMap.size() - 1)));
+            if(--index < 0)
+            {
+                index = array.size() - 1;
+            }
         }
     }
 
@@ -133,66 +183,20 @@ public class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implements I
         return get() != null;
     }
 
-    private E getFromIndex(int index)
-    {
-        if(index < 0 || index >= enumMap.size())
-        {
-            throw new ArrayIndexOutOfBoundsException(index);
-        }
-
-        int idx0 = 0;
-        for(E e : enumMap.values())
-        {
-            if(index == idx0)
-            {
-                return e;
-            }
-            idx0++;
-        }
-
-        return null;
-    }
-
-    private int getIndex()
-    {
-        int idx0 = 0;
-        E e0 = get();
-        for(E e : enumMap.values())
-        {
-            if(e == e0)
-            {
-                return idx0;
-            }
-            idx0++;
-        }
-
-        return -1;
-    }
-
-    private int getDefaultIndex()
-    {
-        int idx0 = 0;
-        for(E e : enumMap.values())
-        {
-            if(e == defValue)
-            {
-                return idx0;
-            }
-            idx0++;
-        }
-
-        return -1;
-    }
-
     @Override
     public int getAsInt()
     {
-        return enumMap.size();
+        return getIndex();
     }
 
     @Override
     public String getDefValueString()
     {
-        return getName(defValue);
+        return getName(fromIndex(defValue));
+    }
+
+    public boolean isDefault()
+    {
+        return index == defValue;
     }
 }

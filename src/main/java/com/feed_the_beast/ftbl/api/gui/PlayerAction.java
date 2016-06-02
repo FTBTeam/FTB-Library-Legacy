@@ -37,8 +37,8 @@ public abstract class PlayerAction extends ResourceLocationObject implements Com
 
     public void render(int ax, int ay, double z)
     {
-        FTBLibClient.setTexture(icon);
-        GuiLM.drawTexturedRectD(ax, ay, z, 16, 16, icon.minU, icon.minV, icon.maxU, icon.maxV);
+        FTBLibClient.setTexture(icon.texture);
+        GuiLM.drawTexturedRectD(ax, ay, z, 16, 16, 0D, 0D, 1D, 1D);
     }
 
     public void postRender(int ax, int ay, double z)

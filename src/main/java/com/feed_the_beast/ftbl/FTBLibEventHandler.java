@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.IWorldTick;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.item.ICreativeSafeItem;
 import com.feed_the_beast.ftbl.api.tile.IInfoTile;
@@ -19,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
@@ -29,21 +29,16 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import net.silentchaos512.wit.api.WitBlockInfoEvent;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
-public class FTBLibEventHandler
+public class FTBLibEventHandler implements ITickable
 {
     public static final FTBLibEventHandler instance = new FTBLibEventHandler();
     public static final List<ServerTickCallback> callbacks = new ArrayList<>();
     public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
-    public static final Collection<IWorldTick> ticking = new HashSet<>();
 
     @SubscribeEvent
     public void onWorldSaved(WorldEvent.Save event)
@@ -136,39 +131,22 @@ public class FTBLibEventHandler
         }
     }
 
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent e)
+    @Override
+    public void update()
     {
-        if(!e.world.isRemote && e.side == Side.SERVER && e.phase == TickEvent.Phase.END && e.type == TickEvent.Type.WORLD)
+        if(!pendingCallbacks.isEmpty())
         {
-            if(e.world.provider.getDimensionType() == DimensionType.OVERWORLD)
+            callbacks.addAll(pendingCallbacks);
+            pendingCallbacks.clear();
+        }
+
+        if(!callbacks.isEmpty())
+        {
+            for(int i = callbacks.size() - 1; i >= 0; i--)
             {
-                if(!pendingCallbacks.isEmpty())
+                if(callbacks.get(i).incAndCheck())
                 {
-                    callbacks.addAll(pendingCallbacks);
-                    pendingCallbacks.clear();
-                }
-
-                if(!callbacks.isEmpty())
-                {
-                    for(int i = callbacks.size() - 1; i >= 0; i--)
-                    {
-                        if(callbacks.get(i).incAndCheck())
-                        {
-                            callbacks.remove(i);
-                        }
-                    }
-                }
-            }
-
-            if(e.world instanceof WorldServer && !ticking.isEmpty())
-            {
-                WorldServer ws = (WorldServer) e.world;
-                long now = System.currentTimeMillis();
-
-                for(IWorldTick t : ticking)
-                {
-                    t.onTick(ws, now);
+                    callbacks.remove(i);
                 }
             }
         }
@@ -176,9 +154,9 @@ public class FTBLibEventHandler
 
     //FIXME: Right click / left click needs a rewrite
     @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent e)
+    public void onPlayerInteract(PlayerInteractEvent e)
     {
-        if(e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty)
+        if(e.getEntity().worldObj.isRemote || e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty)
         {
             return;
         }

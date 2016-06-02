@@ -1,35 +1,28 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-public enum InvMode
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.util.TextureCoords;
+
+public enum EnumInvMode
 {
     ENABLED("enabled"),
     ONLY_IN("onlyin"),
     ONLY_OUT("onlyout"),
     DISABLED("disabled");
 
-    public static final InvMode[] VALUES = values();
+    public static final EnumInvMode[] VALUES = values();
     public static final String enumLangKey = "ftbl.invmode";
 
     public final String langKey;
 
-    InvMode(String s)
+    EnumInvMode(String s)
     {
         langKey = enumLangKey + '.' + s;
     }
 
-    public InvMode next()
+    public TextureCoords getIcon()
     {
-        return VALUES[(ordinal() + 1) % VALUES.length];
-    }
-
-    public InvMode prev()
-    {
-        int id = ordinal() - 1;
-        if(id < 0)
-        {
-            id = VALUES.length - 1;
-        }
-        return VALUES[id];
+        return GuiIcons.inv[ordinal()];
     }
 
     public boolean canInsertItem()

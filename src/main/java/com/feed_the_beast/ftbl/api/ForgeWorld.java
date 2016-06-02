@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.mojang.authlib.GameProfile;
@@ -16,9 +15,9 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,7 +34,6 @@ public abstract class ForgeWorld implements ICapabilityProvider
 
     ForgeWorld()
     {
-        worldID = null;
         currentMode = new PackMode("default");
         playerMap = new HashMap<>();
         teams = new HashMap<>();
@@ -52,8 +50,14 @@ public abstract class ForgeWorld implements ICapabilityProvider
         {
             return getFrom(FTBLib.getEffectiveSide());
         }
-
-        return side.isServer() ? ForgeWorldMP.inst : FTBLibMod.proxy.getClientLMWorld();
+        else if(side.isServer())
+        {
+            return ForgeWorldMP.inst;
+        }
+        else
+        {
+            return ForgeWorldSP.inst;
+        }
     }
 
     public abstract Side getSide();
@@ -142,9 +146,9 @@ public abstract class ForgeWorld implements ICapabilityProvider
         return null;
     }
 
-    public final List<ForgePlayer> getOnlinePlayers()
+    public final Collection<ForgePlayer> getOnlinePlayers()
     {
-        ArrayList<ForgePlayer> l = new ArrayList<>();
+        Collection<ForgePlayer> l = new HashSet<>();
 
         for(ForgePlayer p : playerMap.values())
         {

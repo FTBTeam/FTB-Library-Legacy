@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import net.minecraft.entity.player.EntityPlayer;
@@ -76,11 +75,6 @@ public class FTBLibModCommon // FTBLibModClient
 
     public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
     {
-    }
-
-    public ForgeWorld getClientLMWorld()
-    {
-        return null;
     }
 
     public void loadModels(IItemLM i)

@@ -100,8 +100,6 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent e)
     {
-        FTBLibEventHandler.ticking.clear();
-
         FTBLib.addCommand(e, new CmdFTBLib());
         FTBLib.addCommand(e, new CmdAdmin());
         FTBLib.addCommand(e, new CmdMode());
@@ -151,6 +149,8 @@ public class FTBLibMod
         {
             ex.printStackTrace();
         }
+
+        FTBLib.registerServerTickable(e.getServer(), FTBLibEventHandler.instance);
     }
 
     @Mod.EventHandler
@@ -164,7 +164,6 @@ public class FTBLibMod
     {
         ForgeWorldMP.inst.onClosed();
         ForgeWorldMP.inst = null;
-        FTBLibEventHandler.ticking.clear();
     }
 
     @NetworkCheckHandler

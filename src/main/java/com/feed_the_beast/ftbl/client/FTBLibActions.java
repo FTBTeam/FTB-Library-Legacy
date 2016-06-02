@@ -107,7 +107,7 @@ public class FTBLibActions
 					booleanCommand("fake_players", ps.getMode(PersonalSettings.FAKE_PLAYERS));
 					
 					IChatComponent text1 = ps.blocks.lang.chatComponent();
-					text1.getChatStyle().setColor(ps.blocks == PrivacyLevel.TEAM ? EnumChatFormatting.BLUE : (ps.blocks == PrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
+					text1.getChatStyle().setColor(ps.blocks == EnumPrivacyLevel.TEAM ? EnumChatFormatting.BLUE : (ps.blocks == EnumPrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
 					InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting.security_level").appendText(": ").appendSibling(text1));
 					line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings block_security toggle")));
 					text.add(line);

@@ -69,7 +69,7 @@ public class ButtonNotification extends ButtonLM
             }
 
             GlStateManager.color(1F, 1F, 1F, alpha);
-            GuiLM.render(GuiIcons.close, ax + width - 18, ay + 4, gui.getZLevel());
+            GuiLM.render(GuiIcons.close, ax + width - 18, ay + 4, gui.getZLevel(), 32, 32);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }

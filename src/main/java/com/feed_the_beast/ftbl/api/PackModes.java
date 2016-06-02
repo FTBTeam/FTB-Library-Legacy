@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PackModes
+public final class PackModes
 {
     private static PackModes inst = null;
     private final Map<String, PackMode> modes;

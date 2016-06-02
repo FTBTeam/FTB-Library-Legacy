@@ -283,15 +283,6 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                 }
             }
 
-            @Override
-            public void renderWidget()
-            {
-                for(int i = 0; i < widgets.size(); i++)
-                {
-                    widgets.get(i).renderWidget();
-                }
-            }
-
             private void addCE(ButtonConfigEntry e)
             {
                 add(e);

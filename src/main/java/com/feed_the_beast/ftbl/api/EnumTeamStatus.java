@@ -43,9 +43,4 @@ public enum EnumTeamStatus
     {
         return this == OWNER;
     }
-
-    public boolean isSpecialStatus()
-    {
-        return this == NONE || this == ENEMY || this == ALLY;
-    }
 }

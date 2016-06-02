@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Created by LatvianModder on 07.01.2016.
  */
-public class PackMode extends FinalIDObject
+public final class PackMode extends FinalIDObject
 {
     public PackMode(String id)
     {

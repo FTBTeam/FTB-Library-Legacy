@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.api.tile;
 
+import com.feed_the_beast.ftbl.api.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.net.MessageClientTileAction;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
-import com.feed_the_beast.ftbl.util.PrivacyLevel;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -248,14 +248,14 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     {
     }
 
-    public PrivacyLevel getPrivacyLevel()
+    public EnumPrivacyLevel getPrivacyLevel()
     {
-        return PrivacyLevel.PUBLIC;
+        return EnumPrivacyLevel.PUBLIC;
     }
 
     public boolean isExplosionResistant()
     {
-        return getPrivacyLevel() != PrivacyLevel.PUBLIC;
+        return getPrivacyLevel() != EnumPrivacyLevel.PUBLIC;
     }
 
     public final void sendClientAction(TileClientAction action, NBTTagCompound data)

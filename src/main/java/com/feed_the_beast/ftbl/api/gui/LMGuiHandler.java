@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,7 +47,7 @@ public abstract class LMGuiHandler
             epM.openContainer.addListener(epM);
             new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
         }
-        else if(!FTBLib.getEffectiveSide().isServer())
+        else if(ep.worldObj.isRemote)
         {
             FTBLibMod.proxy.openClientGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, ID, id, data);
         }

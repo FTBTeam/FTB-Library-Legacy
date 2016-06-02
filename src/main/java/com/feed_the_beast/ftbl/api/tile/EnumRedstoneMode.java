@@ -1,21 +1,23 @@
 package com.feed_the_beast.ftbl.api.tile;
 
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum RedstoneMode
+public enum EnumRedstoneMode
 {
     DISABLED("disabled"),
     ACTIVE_HIGH("high"),
     ACTIVE_LOW("low");
 
-    public static final RedstoneMode[] VALUES = values();
+    public static final EnumRedstoneMode[] VALUES = values();
 
     public final int ID;
     public final String uname;
 
-    RedstoneMode(String s)
+    EnumRedstoneMode(String s)
     {
         ID = ordinal();
         uname = s;
@@ -34,19 +36,9 @@ public enum RedstoneMode
         return this == ACTIVE_LOW && b;
     }
 
-    public RedstoneMode next()
+    public TextureCoords getIcon()
     {
-        return VALUES[(ID + 1) % VALUES.length];
-    }
-
-    public RedstoneMode prev()
-    {
-        int id = ID - 1;
-        if(id < 0)
-        {
-            id = VALUES.length - 1;
-        }
-        return VALUES[id];
+        return GuiIcons.redstone[ordinal()];
     }
 
     @SideOnly(Side.CLIENT)

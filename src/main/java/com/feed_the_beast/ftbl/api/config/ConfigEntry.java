@@ -18,7 +18,7 @@ import java.util.List;
 public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
     public ConfigGroup parentGroup;
-    protected byte flags = 0;
+    private Byte flags;
     private String[] info;
 
     ConfigEntry(String id)
@@ -113,13 +113,18 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
     @Override
     public final void setFlag(byte flag, boolean b)
     {
-        flags = Bits.setBit(flags, flag, b);
+        flags = Bits.setBit(flags == null ? 0 : flags, flag, b);
+
+        if(flags == 0)
+        {
+            flags = null;
+        }
     }
 
     @Override
     public final boolean getFlag(byte flag)
     {
-        return Bits.getBit(flags, flag);
+        return flags != null && Bits.getBit(flags, flag);
     }
 
     @Override
@@ -138,7 +143,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
     {
         if(extended)
         {
-            if(flags != 0)
+            if(flags != null)
             {
                 tag.setByte("F", flags);
             }
@@ -161,7 +166,7 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
     {
         if(extended)
         {
-            flags = tag.getByte("F");
+            flags = tag.hasKey("F") ? tag.getByte("F") : null;
             info = null;
 
             if(tag.hasKey("I"))

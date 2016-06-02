@@ -189,6 +189,7 @@ public final class ForgeWorldMP extends ForgeWorld
         tag.setTag("Teams", teamsTag);
 
         LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), tag);
+        FTBLib.dev_logger.info("ForgeWorldMP Saved: " + tag);
     }
 
     public void writeDataToNet(NBTTagCompound tag, ForgePlayerMP self, boolean login)
@@ -240,7 +241,7 @@ public final class ForgeWorldMP extends ForgeWorld
 
             for(ForgeTeam team : teams.values())
             {
-                tag2 = team.serializeNBTForNet();
+                tag2 = team.serializeNBTForNet(self);
                 tag2.setInteger("ID", team.teamID);
                 teamsTag.appendTag(tag2);
             }

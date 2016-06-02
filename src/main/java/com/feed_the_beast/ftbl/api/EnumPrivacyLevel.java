@@ -1,29 +1,28 @@
-package com.feed_the_beast.ftbl.util;
+package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.FTBLibPermissions;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
+import com.feed_the_beast.ftbl.util.TextureCoords;
 
-public enum PrivacyLevel
+public enum EnumPrivacyLevel
 {
     PUBLIC,
     PRIVATE,
     TEAM;
 
-    public static final PrivacyLevel[] VALUES_3 = new PrivacyLevel[] {PUBLIC, PRIVATE, TEAM};
-    public static final PrivacyLevel[] VALUES_2 = new PrivacyLevel[] {PUBLIC, PRIVATE};
+    public static final EnumPrivacyLevel[] VALUES = values();
     public static final String enumLangKey = "ftbl.security";
 
     public final String langKey;
 
-    PrivacyLevel()
+    EnumPrivacyLevel()
     {
         langKey = enumLangKey + '.' + name().toLowerCase();
     }
 
-    public static PrivacyLevel get(String s)
+    public static EnumPrivacyLevel get(String s)
     {
         if(s == null || s.isEmpty())
         {
@@ -47,7 +46,7 @@ public enum PrivacyLevel
 
     public boolean canInteract(ForgePlayer owner, ForgePlayer player, Context context)
     {
-        if(this == PrivacyLevel.PUBLIC || owner == null)
+        if(this == EnumPrivacyLevel.PUBLIC || owner == null)
         {
             return true;
         }
@@ -63,11 +62,11 @@ public enum PrivacyLevel
         {
             return true;
         }
-        else if(this == PrivacyLevel.PRIVATE)
+        else if(this == EnumPrivacyLevel.PRIVATE)
         {
             return false;
         }
 
-        return this == PrivacyLevel.TEAM && owner.hasTeam() && owner.getTeam().getStatus(player).isAlly();
+        return this == EnumPrivacyLevel.TEAM && owner.hasTeam() && owner.getTeam().getStatus(player).isAlly();
     }
 }

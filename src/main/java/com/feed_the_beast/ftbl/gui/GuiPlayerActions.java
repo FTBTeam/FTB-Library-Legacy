@@ -45,7 +45,7 @@ public class GuiPlayerActions extends GuiLM
 
             GlStateManager.color(0.46F, 0.46F, 0.46F, 0.53F);
             GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
-            GuiLM.render(action.icon, ax + 1, ay + 1, gui.getZLevel());
+            GuiLM.render(action.icon, ax + 1, ay + 1, gui.getZLevel(), width, height);
 
             gui.getFontRenderer().drawString(title, ax + 20, ay + 6, 0xFFFFFFFF);
             GlStateManager.color(1F, 1F, 1F, 0.2F);
@@ -53,6 +53,7 @@ public class GuiPlayerActions extends GuiLM
             {
                 GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
             }
+            
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
 

@@ -121,35 +121,25 @@ public abstract class GuiLM extends GuiScreen implements IGuiLM
 
     public static void drawItem(IGuiLM gui, ItemStack is, int x, int y)
     {
-        if(is == null)
+        if(is != null)
         {
-            return;
+            FTBLibClient.setTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+            float z0 = gui.getZLevel();
+            gui.setZLevel(z0 + 200F);
+            RenderItem itemRender = FTBLibClient.mc().getRenderItem();
+            itemRender.zLevel = 200F;
+            FTBLibClient.renderGuiItem(is, itemRender, gui.getFontRenderer(), x, y);
+            itemRender.zLevel = 0F;
+            gui.setZLevel(z0);
         }
-        FTBLibClient.setTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        float z0 = gui.getZLevel();
-        gui.setZLevel(z0 + 200F);
-        RenderItem itemRender = FTBLibClient.mc().getRenderItem();
-        itemRender.zLevel = 200F;
-        FTBLibClient.renderGuiItem(is, itemRender, gui.getFontRenderer(), x, y);
-        itemRender.zLevel = 0F;
-        gui.setZLevel(z0);
     }
 
     public static void render(TextureCoords tc, double x, double y, double z, double w, double h)
     {
-        if(tc == null || !tc.isValid())
-        {
-            return;
-        }
-        FTBLibClient.setTexture(tc.texture);
-        GuiLM.drawTexturedRectD(x, y, z, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
-    }
-
-    public static void render(TextureCoords tc, double x, double y, double z)
-    {
         if(tc != null && tc.isValid())
         {
-            render(tc, x, y, z, tc.width, tc.height);
+            FTBLibClient.setTexture(tc.texture);
+            GuiLM.drawTexturedRectD(x, y, z, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
         }
     }
 

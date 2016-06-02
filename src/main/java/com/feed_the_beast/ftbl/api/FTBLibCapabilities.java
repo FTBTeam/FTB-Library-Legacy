@@ -20,8 +20,10 @@ public class FTBLibCapabilities
 {
     @CapabilityInject(IPaintable.class)
     public static Capability<IPaintable> PAINTABLE_TILE = null;
+
     @CapabilityInject(IPainterItem.class)
     public static Capability<IPainterItem> PAINTER_ITEM = null;
+
     private static boolean enabled = false;
 
     public static void enable()

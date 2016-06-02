@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.ForgeWorld;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
@@ -187,12 +185,6 @@ public class FTBLibModClient extends FTBLibModCommon
                 FTBLibClient.mc().displayGuiScreen(g);
             }
         }
-    }
-
-    @Override
-    public ForgeWorld getClientLMWorld()
-    {
-        return ForgeWorldSP.inst;
     }
 
     @Override

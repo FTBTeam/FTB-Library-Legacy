@@ -8,6 +8,8 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
@@ -52,7 +54,7 @@ public class CmdFTBLib extends CommandSubLM
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Created(team));
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(team, p));
 
-                new MessageUpdateTeam(team).sendTo(null);
+                new MessageUpdateTeam(p, team).sendTo(null);
 
                 FTBLibLang.team_created.printChat(sender, String.valueOf(team.teamID));
             }
@@ -194,7 +196,7 @@ public class CmdFTBLib extends CommandSubLM
                 team.changeOwner(p1);
                 FTBLibLang.team_transfered_ownership.printChat(sender, p1.getProfile().getName());
 
-                new MessageUpdateTeam(team).sendTo(null);
+                new MessageUpdateTeam(p, team).sendTo(null);
             }
         }
 
@@ -276,10 +278,36 @@ public class CmdFTBLib extends CommandSubLM
         }
     }
 
+    public static class CmdMyServerSettings extends CommandLM
+    {
+        public CmdMyServerSettings()
+        {
+            super("my_settings", CommandLevel.ALL);
+        }
+
+        @Override
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+        {
+            ForgePlayerMP player = ForgePlayerMP.get(sender);
+            checkArgs(args, 1);
+
+            ConfigGroup group = new ConfigGroup("my_server_settings");
+            MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.GetSettings(player, group));
+
+            if(args.length >= 2)
+            {
+            }
+            else
+            {
+            }
+        }
+    }
+
     public CmdFTBLib()
     {
         super("ftblib", CommandLevel.ALL);
 
         add(new CmdTeam());
+        add(new CmdMyServerSettings());
     }
 }

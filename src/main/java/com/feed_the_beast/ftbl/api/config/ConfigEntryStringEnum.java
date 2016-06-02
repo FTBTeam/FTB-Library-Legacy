@@ -11,23 +11,23 @@ import net.minecraft.nbt.NBTTagString;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ConfigEntryEnumExtended extends ConfigEntry implements IClickable
+public final class ConfigEntryStringEnum extends ConfigEntry implements IClickable
 {
-    private final List<String> values;
-    private String value;
-    private String defValue;
+    private final List<String> array;
+    private int index;
+    private int defValue;
 
-    public ConfigEntryEnumExtended(String id)
+    public ConfigEntryStringEnum(String id)
     {
         super(id);
-        values = new ArrayList<>();
+        array = new ArrayList<>();
     }
 
-    public ConfigEntryEnumExtended(String id, List<String> vals, String def)
+    public ConfigEntryStringEnum(String id, List<String> vals, String def)
     {
         super(id);
-        values = vals;
-        value = defValue = def;
+        array = vals;
+        index = defValue = array.indexOf(def);
     }
 
     @Override
@@ -44,12 +44,17 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 
     public void set(String s)
     {
-        value = s;
+        index = array.indexOf(s);
     }
 
     public int getIndex()
     {
-        return values.indexOf(getAsString());
+        return index;
+    }
+
+    public void setIndex(int idx)
+    {
+        index = idx;
     }
 
     @Override
@@ -68,17 +73,17 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
     public void writeToNBT(NBTTagCompound tag, boolean extended)
     {
         super.writeToNBT(tag, extended);
-        tag.setString("V", getAsString());
 
         if(extended)
         {
-            tag.setString("D", defValue);
+            tag.setShort("V", (short) index);
+            tag.setShort("D", (short) defValue);
 
-            if(!values.isEmpty())
+            if(!array.isEmpty())
             {
                 NBTTagList list = new NBTTagList();
 
-                for(String s : values)
+                for(String s : array)
                 {
                     list.appendTag(new NBTTagString(s));
                 }
@@ -86,19 +91,23 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
                 tag.setTag("VL", list);
             }
         }
+        else
+        {
+            tag.setString("V", getAsString());
+        }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         super.readFromNBT(tag, extended);
-        set(tag.getString("V"));
 
         if(extended)
         {
-            defValue = tag.getString("D");
+            index = tag.getShort("V") & 0xFFFF;
+            defValue = tag.getShort("D") & 0xFFFF;
 
-            values.clear();
+            array.clear();
 
             if(tag.hasKey("VL"))
             {
@@ -106,31 +115,36 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
 
                 for(int i = 0; i < list.tagCount(); i++)
                 {
-                    values.add(list.getStringTagAt(i));
+                    array.add(list.getStringTagAt(i));
                 }
             }
+        }
+        else
+        {
+            index = array.indexOf(tag.getString("V"));
         }
     }
 
     @Override
     public void onClicked(MouseButton button)
     {
-        int i = getIndex() + (button.isLeft() ? 1 : -1);
-        if(i < 0)
+        if(button.isLeft())
         {
-            i = values.size() - 1;
+            index = (index + 1) % array.size();
         }
-        if(i >= values.size())
+        else
         {
-            i = 0;
+            if(--index < 0)
+            {
+                index = array.size() - 1;
+            }
         }
-        set(values.get(i));
     }
 
     @Override
     public String getAsString()
     {
-        return value;
+        return array.get(index);
     }
 
     @Override
@@ -148,6 +162,6 @@ public final class ConfigEntryEnumExtended extends ConfigEntry implements IClick
     @Override
     public String getDefValueString()
     {
-        return defValue;
+        return array.get(defValue);
     }
 }

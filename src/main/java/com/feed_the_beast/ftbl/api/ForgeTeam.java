@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
+import gnu.trove.TIntCollection;
+import gnu.trove.set.hash.TIntHashSet;
 import latmod.lib.Bits;
 import latmod.lib.LMUtils;
 import latmod.lib.annotations.IFlagContainer;
@@ -17,9 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -36,7 +36,8 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     public final int teamID;
     CapabilityDispatcher capabilities;
     private ForgePlayer owner;
-    private Map<Integer, EnumTeamStatus> specialStatus;
+    private TIntCollection allies;
+    private Collection<UUID> enemies;
     private EnumDyeColor color;
     private String title;
     private String desc;
@@ -126,7 +127,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         flags = nbt.getByte("Flags");
     }
 
-    public NBTTagCompound serializeNBTForNet()
+    public NBTTagCompound serializeNBTForNet(ForgePlayerMP to)
     {
         NBTTagCompound tag = new NBTTagCompound();
 
@@ -139,7 +140,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         }
 
         NBTTagCompound sync = new NBTTagCompound();
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.SERVER, sync));
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.SERVER, sync, to));
 
         if(!sync.hasNoTags())
         {
@@ -155,7 +156,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
         flags = nbt.getByte("F");
 
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.CLIENT, nbt.getCompoundTag("SY")));
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.CLIENT, nbt.getCompoundTag("SY"), ForgeWorldSP.inst.clientPlayer));
     }
 
     public ForgePlayer getOwner()
@@ -204,6 +205,10 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         {
             return EnumTeamStatus.OWNER;
         }
+        else if(enemies.contains(player.getProfile().getId()))
+        {
+            return EnumTeamStatus.ENEMY;
+        }
         else if(player.hasTeam())
         {
             ForgeTeam team = player.getTeam();
@@ -213,39 +218,63 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
                 return EnumTeamStatus.MEMBER;
             }
 
-            if(specialStatus != null && specialStatus.containsKey(team.teamID))
+            if(allies.contains(team.teamID))
             {
-                return specialStatus.get(team.teamID);
+                return EnumTeamStatus.ALLY;
             }
         }
 
         return EnumTeamStatus.NONE;
     }
 
-    public void setSpecialStatus(int team, EnumTeamStatus status)
+    public void addAllyTeam(int team)
     {
-        if(status.isSpecialStatus())
+        if(allies == null || !allies.contains(team))
         {
-            if(status == EnumTeamStatus.NONE)
+            if(allies == null)
             {
-                if(specialStatus != null)
-                {
-                    specialStatus.remove(team);
-
-                    if(specialStatus.isEmpty())
-                    {
-                        specialStatus = null;
-                    }
-                }
+                allies = new TIntHashSet();
             }
-            else
-            {
-                if(specialStatus == null)
-                {
-                    specialStatus = new HashMap<>();
-                }
 
-                specialStatus.put(team, status);
+            allies.add(team);
+        }
+    }
+
+    public void removeAllyTeam(int team)
+    {
+        if(allies != null && allies.contains(team))
+        {
+            allies.remove(team);
+
+            if(allies.isEmpty())
+            {
+                allies = null;
+            }
+        }
+    }
+
+    public void addEnemy(UUID player)
+    {
+        if(enemies == null || !enemies.contains(player))
+        {
+            if(enemies == null)
+            {
+                enemies = new HashSet<>();
+            }
+
+            enemies.add(player);
+        }
+    }
+
+    public void removeEnemy(UUID player)
+    {
+        if(enemies != null && enemies.contains(player))
+        {
+            enemies.remove(player);
+
+            if(enemies.isEmpty())
+            {
+                enemies = null;
             }
         }
     }
@@ -316,6 +345,29 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 owner = newOwner;
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.OwnerChanged(this, oldOwner, newOwner));
+            }
+        }
+    }
+
+    public boolean canInteract(ForgePlayer player, EnumTeamPrivacyLevel level)
+    {
+        switch(level)
+        {
+            case EVERYONE:
+            {
+                return true;
+            }
+            case MEMBERS:
+            {
+                return getStatus(player).isMember();
+            }
+            case ALLIES:
+            {
+                return getStatus(player).isAlly();
+            }
+            default:
+            {
+                return false;
             }
         }
     }

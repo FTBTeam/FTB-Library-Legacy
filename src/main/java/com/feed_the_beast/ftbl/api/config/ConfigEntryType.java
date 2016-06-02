@@ -58,7 +58,7 @@ public enum ConfigEntryType
             case STRING:
                 return new ConfigEntryString(id, null);
             case ENUM:
-                return new ConfigEntryEnumExtended(id);
+                return new ConfigEntryStringEnum(id);
             case INT_ARRAY:
                 return new ConfigEntryIntList(id, (IntList) null);
             case STRING_ARRAY:

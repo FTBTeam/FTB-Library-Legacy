@@ -82,11 +82,11 @@ public abstract class ForgePlayerEvent extends Event
         }
     }
 
-    public static class MyServerSettings extends ForgePlayerEvent
+    public static class GetSettings extends ForgePlayerEvent
     {
         public final ConfigGroup settings;
 
-        public MyServerSettings(ForgePlayerMP p, ConfigGroup g)
+        public GetSettings(ForgePlayerMP p, ConfigGroup g)
         {
             super(p);
             settings = g;

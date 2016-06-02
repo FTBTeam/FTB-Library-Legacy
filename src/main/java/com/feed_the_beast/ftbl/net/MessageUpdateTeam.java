@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
@@ -22,10 +23,10 @@ public class MessageUpdateTeam extends MessageToClient<MessageUpdateTeam>
     {
     }
 
-    public MessageUpdateTeam(ForgeTeam team)
+    public MessageUpdateTeam(ForgePlayerMP to, ForgeTeam team)
     {
         teamID = team.teamID;
-        data = team.serializeNBTForNet();
+        data = team.serializeNBTForNet(to);
     }
 
     public MessageUpdateTeam(int id)

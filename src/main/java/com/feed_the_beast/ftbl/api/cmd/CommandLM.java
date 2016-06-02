@@ -118,7 +118,7 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender ics)
     {
-        return FTBLib.getEffectiveSide().isClient() || level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
+        return level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
     }
 
     @Override

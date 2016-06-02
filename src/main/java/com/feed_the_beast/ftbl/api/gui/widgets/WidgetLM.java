@@ -75,11 +75,6 @@ public class WidgetLM
         return mouseOver(getAX(), getAY());
     }
 
-    public final void render(TextureCoords icon, double rw, double rh)
-    {
-        GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), (int) (width * rw), (int) (height * rh));
-    }
-
     public final void render(TextureCoords icon)
     {
         GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height);

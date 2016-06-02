@@ -44,9 +44,10 @@ public class GuiIcons
     public static final TextureCoords controller = getIcon("controller");
     public static final TextureCoords feather = getIcon("feather");
     public static final TextureCoords camera = getIcon("camera");
-    public static final TextureCoords[] inv = {getIcon("inv_io"), getIcon("inv_in"), getIcon("inv_out"), getIcon("inv_none"),};
-    public static final TextureCoords[] redstone = {getIcon("rs_none"), getIcon("rs_high"), getIcon("rs_low"), getIcon("rs_pulse"),};
-    public static final TextureCoords[] security = {getIcon("security_public"), getIcon("security_private"), getIcon("security_friends"), getIcon("security_group"),};
+    public static final TextureCoords[] inv = {getIcon("inv_io"), getIcon("inv_in"), getIcon("inv_out"), getIcon("inv_none")};
+    public static final TextureCoords[] redstone = {getIcon("rs_none"), getIcon("rs_high"), getIcon("rs_low")};
+    public static final TextureCoords redstone_pulse = getIcon("rs_pulse");
+    public static final TextureCoords[] security = {getIcon("security_public"), getIcon("security_private"), getIcon("security_team")};
     public static final TextureCoords color_blank = getIcon("color_blank");
     public static final TextureCoords color_hsb = getIcon("color_hsb");
     public static final TextureCoords color_rgb = getIcon("color_rgb");
@@ -75,8 +76,8 @@ public class GuiIcons
 
     private static TextureCoords getIcon(String s)
     {
-        TextureCoords t = new TextureCoords(new ResourceLocation("ftbl", "textures/icons/" + s + ".png"), 0, 0, 16, 16, 16, 16);
-        iconMap.put(s, t);
-        return t;
+        TextureCoords r = TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/icons/" + s + ".png"), 32);
+        iconMap.put(s, r);
+        return r;
     }
 }
