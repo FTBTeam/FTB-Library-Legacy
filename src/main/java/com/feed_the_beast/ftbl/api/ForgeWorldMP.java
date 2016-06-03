@@ -179,7 +179,7 @@ public final class ForgeWorldMP extends ForgeWorld
 
         NBTTagList teamsTag = new NBTTagList();
 
-        for(ForgeTeam team : teams.values())
+        for(ForgeTeam team : teams.valueCollection())
         {
             tag2 = team.serializeNBT();
             tag2.setInteger("ID", team.teamID);
@@ -239,7 +239,7 @@ public final class ForgeWorldMP extends ForgeWorld
 
             NBTTagList teamsTag = new NBTTagList();
 
-            for(ForgeTeam team : teams.values())
+            for(ForgeTeam team : teams.valueCollection())
             {
                 tag2 = team.serializeNBTForNet(self);
                 tag2.setInteger("ID", team.teamID);

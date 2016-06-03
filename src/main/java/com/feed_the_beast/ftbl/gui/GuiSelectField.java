@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.gui.LMGuis;
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonSimpleLM;
-import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.client.gui.LMGuis;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonSimpleLM;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
 import latmod.lib.ObjectCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;

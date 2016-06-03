@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.client;
 
-import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
 import latmod.lib.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;

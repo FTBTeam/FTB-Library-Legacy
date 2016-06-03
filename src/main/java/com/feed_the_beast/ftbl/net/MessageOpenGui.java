@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.gui.LMGuiHandler;
-import com.feed_the_beast.ftbl.api.gui.LMGuiHandlerRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
+import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;

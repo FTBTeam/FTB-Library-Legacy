@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 
 public enum EnumInvMode

@@ -1,8 +1,8 @@
-package com.feed_the_beast.ftbl.api.gui.widgets;
+package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.IGuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

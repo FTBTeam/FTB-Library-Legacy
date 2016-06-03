@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import latmod.lib.util.FinalIDObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

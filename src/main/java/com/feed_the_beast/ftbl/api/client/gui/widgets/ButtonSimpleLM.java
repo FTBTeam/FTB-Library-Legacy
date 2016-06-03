@@ -1,9 +1,9 @@
-package com.feed_the_beast.ftbl.api.gui.widgets;
+package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.IGuiLM;
-import net.minecraft.client.gui.GuiScreen;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,6 +35,7 @@ public abstract class ButtonSimpleLM extends ButtonLM
         FTBLibClient.setGLColor(mouseOver(ax, ay) ? colorButtonOver : colorButton);
         GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        ((GuiScreen) gui).drawCenteredString(gui.getFontRenderer(), title, ax + width / 2, ay + (height - gui.getFontRenderer().FONT_HEIGHT) / 2, colorText);
+        FontRenderer font = gui.getFontRenderer();
+        font.drawStringWithShadow(title, ax + (width - font.getStringWidth(title)) / 2, ay + (height - gui.getFontRenderer().FONT_HEIGHT) / 2, colorText);
     }
 }

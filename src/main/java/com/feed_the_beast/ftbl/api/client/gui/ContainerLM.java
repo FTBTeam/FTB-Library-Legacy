@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.gui;
+package com.feed_the_beast.ftbl.api.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

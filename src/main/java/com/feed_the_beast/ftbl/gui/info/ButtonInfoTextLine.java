@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.gui.info;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.InfoTextLine;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;

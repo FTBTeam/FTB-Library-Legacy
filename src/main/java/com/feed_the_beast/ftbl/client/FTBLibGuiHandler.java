@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.gui.ContainerEmpty;
-import com.feed_the_beast.ftbl.api.gui.LMGuiHandler;
+import com.feed_the_beast.ftbl.api.client.gui.ContainerEmpty;
+import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
 import com.feed_the_beast.ftbl.api.item.ItemDisplay;
 import com.feed_the_beast.ftbl.gui.GuiDisplayItem;
 import net.minecraft.client.gui.GuiScreen;

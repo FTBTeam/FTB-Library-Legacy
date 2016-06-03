@@ -1,8 +1,8 @@
-package com.feed_the_beast.ftbl.api.gui;
+package com.feed_the_beast.ftbl.api.client.gui;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;

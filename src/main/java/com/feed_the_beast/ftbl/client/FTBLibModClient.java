@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
+import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
-import com.feed_the_beast.ftbl.api.gui.LMGuiHandler;
-import com.feed_the_beast.ftbl.api.gui.LMGuiHandlerRegistry;
-import com.feed_the_beast.ftbl.api.gui.PlayerActionRegistry;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import com.feed_the_beast.ftbl.cmd.CmdReloadClient;

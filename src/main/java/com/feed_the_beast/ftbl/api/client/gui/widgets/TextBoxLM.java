@@ -1,7 +1,7 @@
-package com.feed_the_beast.ftbl.api.gui.widgets;
+package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.gui.IGuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;

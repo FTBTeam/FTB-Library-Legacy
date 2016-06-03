@@ -241,7 +241,7 @@ public class CmdFTBLib extends CommandSubLM
 
                 InfoPage page = new InfoPage("teams");
 
-                for(ForgeTeam team : ForgeWorldMP.inst.teams.values())
+                for(ForgeTeam team : ForgeWorldMP.inst.teams.valueCollection())
                 {
                     InfoPage page1 = page.getSub(String.valueOf(team.teamID));
 

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import latmod.lib.MathHelperLM;

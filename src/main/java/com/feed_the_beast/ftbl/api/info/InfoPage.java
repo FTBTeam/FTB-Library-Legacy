@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.events.InfoGuiLineEvent;
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
