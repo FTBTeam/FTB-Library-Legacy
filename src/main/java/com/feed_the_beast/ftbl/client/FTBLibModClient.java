@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
@@ -14,18 +14,21 @@ import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import com.feed_the_beast.ftbl.cmd.CmdReloadClient;
 import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.EnumScreen;
-import com.feed_the_beast.ftbl.util.EventBusHelper;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.LMColorUtils;
 import latmod.lib.LMUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleRedstone;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,8 +44,11 @@ public class FTBLibModClient extends FTBLibModCommon
     public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
     public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
     public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
-    public static final ConfigEntryEnum<FTBLibRenderHandler.LightValueTexture> light_value_texture = new ConfigEntryEnum<>("light_value_texture", FTBLibRenderHandler.LightValueTexture.values(), FTBLibRenderHandler.LightValueTexture.O, false);
-    public static final ConfigEntryBool sort_friends_az = new ConfigEntryBool("sort_friends_az", false);
+    public static final ConfigEntryBool light_value_texture_x = new ConfigEntryBool("light_value_texture_x", false);
+
+    public static final String KEY_CATEGORY = "key.categories.ftbm";
+    public static final KeyBinding KEY_LIGHT_VALUES = FTBLibClient.addKeyBinding(new KeyBinding("key.ftbl.light_values", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY));
+    public static final KeyBinding KEY_CHUNK_BORDER = FTBLibClient.addKeyBinding(new KeyBinding("key.ftbl.chunk_border", KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_NONE, KEY_CATEGORY));
     
 	/*
     public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
@@ -56,8 +62,7 @@ public class FTBLibModClient extends FTBLibModCommon
     public void preInit()
     {
         //JsonHelper.initClient();
-        EventBusHelper.register(FTBLibClientEventHandler.instance);
-        EventBusHelper.register(FTBLibRenderHandler.instance);
+        MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.instance);
         LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 
         //For Dev reasons, see DevConsole
@@ -66,7 +71,7 @@ public class FTBLibModClient extends FTBLibModCommon
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
 
-        ClientConfigRegistry.add(PlayerActionRegistry.configGroup);
+        ClientConfigRegistry.add(ActionButtonRegistry.configGroup);
 
         ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
 

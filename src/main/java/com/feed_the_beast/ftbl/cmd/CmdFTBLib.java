@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.util.FTBLibReflection;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -218,12 +219,25 @@ public class CmdFTBLib extends CommandSubLM
                     throw FTBLibLang.team_no_team.commandError();
                 }
 
-                if(!p.getTeam().getStatus(p).isOwner())
+                ForgeTeam team = p.getTeam();
+
+                if(!team.getStatus(p).isOwner())
                 {
                     throw FTBLibLang.team_not_owner.commandError();
                 }
 
                 checkArgs(args, 2);
+
+                switch(args[0])
+                {
+                    case "color":
+                        team.setColor(FTBLib.DYE_COLORS.get(args[1]));
+                        break;
+                    default:
+                        throw FTBLibLang.raw.commandError("Unknown config entry: " + args[0]); //TODO: Lang
+                }
+
+                new MessageUpdateTeam(p, team).sendTo(p.getPlayer());
             }
         }
 
@@ -246,7 +260,7 @@ public class CmdFTBLib extends CommandSubLM
                     InfoPage page1 = page.getSub(String.valueOf(team.teamID));
 
                     ITextComponent title = new TextComponentString(team.getTitle());
-                    title.getStyle().setColor(FTBLib.getFromDyeColor(team.getColor()));
+                    title.getStyle().setColor(FTBLibReflection.getFromDyeColor(team.getColor()));
                     page1.setTitle(title);
 
                     if(team.getDesc() != null)

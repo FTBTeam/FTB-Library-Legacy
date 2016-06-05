@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.gui;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.item.ItemDisplay;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +13,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiDisplayItem extends GuiLM
 {
-    public static final ResourceLocation texture = new ResourceLocation("ftbl", "textures/gui/displayitem.png");
+    public static final ResourceLocation texture = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/displayitem.png");
 
     public ItemDisplay itemDisplay;
 

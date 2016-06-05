@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerAction;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.google.gson.JsonElement;
 import latmod.lib.LMUtils;
 import latmod.lib.util.FinalIDObject;
@@ -18,15 +18,16 @@ import java.net.URI;
 
 public abstract class ClickActionType extends FinalIDObject
 {
-    public static final ClickActionType ACTION = ClickActionRegistry.register(new ClickActionType("action")
+    public static final ClickActionType SIDEBAR_BUTTON = ClickActionRegistry.register(new ClickActionType("sidebar_button")
     {
         @Override
         public void onClicked(JsonElement data, MouseButton button)
         {
-            PlayerAction a = PlayerActionRegistry.get(data.getAsString());
-            if(a != null && a.type.isSelf())
+            ActionButton a = ActionButtonRegistry.get(new ResourceLocation(data.getAsString()));
+
+            if(a != null && a.isVisibleFor(ForgeWorldSP.inst.clientPlayer))
             {
-                a.onClicked(ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer);
+                a.onClicked(ForgeWorldSP.inst.clientPlayer);
             }
         }
     });

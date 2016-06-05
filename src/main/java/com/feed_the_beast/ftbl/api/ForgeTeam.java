@@ -205,7 +205,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         {
             return EnumTeamStatus.OWNER;
         }
-        else if(enemies.contains(player.getProfile().getId()))
+        else if(enemies != null && enemies.contains(player.getProfile().getId()))
         {
             return EnumTeamStatus.ENEMY;
         }
@@ -218,7 +218,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
                 return EnumTeamStatus.MEMBER;
             }
 
-            if(allies.contains(team.teamID))
+            if(allies != null && allies.contains(team.teamID))
             {
                 return EnumTeamStatus.ALLY;
             }

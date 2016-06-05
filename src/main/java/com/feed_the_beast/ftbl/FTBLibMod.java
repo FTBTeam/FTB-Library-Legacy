@@ -19,12 +19,12 @@ import com.feed_the_beast.ftbl.cmd.CmdSetItemName;
 import com.feed_the_beast.ftbl.config.FTBLibConfig;
 import com.feed_the_beast.ftbl.config.FTBLibConfigCmd;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
-import com.feed_the_beast.ftbl.util.EventBusHelper;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import latmod.lib.util.OS;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -76,7 +76,7 @@ public class FTBLibMod
         ODItems.preInit();
 
         FTBLibConfig.load();
-        EventBusHelper.register(FTBLibEventHandler.instance);
+        MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
         FTBLibCapabilities.enable();
         ClickActionType.init();
 

@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.net.MessageReload;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.EntityDimPos;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.util.FTBLibReflection;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
@@ -146,7 +147,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             ForgeTeam team = getTeam();
 
             ITextComponent c = new TextComponentString("[" + team.getTitle() + "]");
-            c.getStyle().setColor(FTBLib.getFromDyeColor(team.getColor())).setUnderlined(true);
+            c.getStyle().setColor(FTBLibReflection.getFromDyeColor(team.getColor())).setUnderlined(true);
             info.add(c);
 
             if(team.getDesc() != null)

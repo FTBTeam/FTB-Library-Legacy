@@ -1,14 +1,15 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.EnumSelf;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerAction;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.PlayerAction;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
@@ -21,7 +22,6 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import latmod.lib.LMColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -30,28 +30,28 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBLibActions
 {
-    public static final PlayerAction NOTIFICATIONS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), 1000, GuiIcons.chat)
+    public static final ActionButton NOTIFICATIONS = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), 1000, GuiIcons.chat, null)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.mc().displayGuiScreen(new GuiNotifications(FTBLibClient.mc().currentScreen));
         }
 
         @Override
-        public String getDisplayName()
+        public String getLangKey()
         {
-            return I18n.format(FTBLibModClient.notifications.getFullID());
+            return FTBLibModClient.notifications.getFullID();
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
             return !ClientNotifications.Perm.list.isEmpty();
         }
 
         @Override
-        public void postRender(int ax, int ay, double z)
+        public void postRender(int ax, int ay, float z)
         {
             String n = String.valueOf(ClientNotifications.Perm.list.size());
             int nw = FTBLibClient.mc().fontRendererObj.getStringWidth(n);
@@ -63,10 +63,10 @@ public class FTBLibActions
         }
     });
 
-    public static final PlayerAction FRIENDS_GUI = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), 995, TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/gui/friendsbutton.png"), 256))
+    public static final ActionButton FRIENDS_GUI = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), 995, TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/gui/friendsbutton.png"), 256), null)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, new InfoFriendsGUI()));
         }
@@ -78,19 +78,19 @@ public class FTBLibActions
         }
     });
 
-    public static final PlayerAction CLIENT_SETTINGS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), 990, GuiIcons.settings)
+    public static final ActionButton CLIENT_SETTINGS = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), 990, GuiIcons.settings, null)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.mc().displayGuiScreen(new GuiEditConfig(FTBLibClient.mc().currentScreen, ClientConfigRegistry.provider()));
         }
     });
 
-    public static final PlayerAction MY_SERVER_SETTINGS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.settings_red)
+    public static final ActionButton MY_SERVER_SETTINGS = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.settings_red, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             InfoPage page = new InfoPage("my_server_settings")
             {
@@ -130,155 +130,89 @@ public class FTBLibActions
             page.theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
             FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, page));
         }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
     });
 
-    public static final PlayerAction HEAL = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), 200, GuiIcons.heart)
+    public static final ActionButton HEAL = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), 200, GuiIcons.heart, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/heal");
         }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
     });
 
-    public static final PlayerAction TOGGLE_GAMEMODE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), 195, GuiIcons.toggle_gamemode)
+    public static final ActionButton TOGGLE_GAMEMODE = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), 195, GuiIcons.toggle_gamemode, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
-            int i = self.getPlayer().capabilities.isCreativeMode ? 0 : 1;
+            int i = player.getPlayer().capabilities.isCreativeMode ? 0 : 1;
             FTBLibClient.execClientCommand("/gamemode " + i);
         }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
     });
 
-    public static final PlayerAction TOGGLE_RAIN = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), 190, GuiIcons.toggle_rain)
+    public static final ActionButton TOGGLE_RAIN = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), 190, GuiIcons.toggle_rain, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/toggledownfall");
         }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
     });
 
-    public static final PlayerAction SET_DAY = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), 185, GuiIcons.toggle_day)
+    public static final ActionButton SET_DAY = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), 185, GuiIcons.toggle_day, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/time set 6000");
         }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
     });
 
-    public static final PlayerAction SET_NIGHT = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), 180, GuiIcons.toggle_night)
+    public static final ActionButton SET_NIGHT = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), 180, GuiIcons.toggle_night, true)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/time set 18000");
         }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
     });
 
-    public static final PlayerAction TOGGLE_CHUNK_BOUNDS = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_chunk_bounds"), 100, GuiIcons.toggle_chunk_bounds)
+    public static final ActionButton LEAVE_TEAM = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "team_leave"), -1, GuiIcons.remove, false)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
-        {
-            FTBLibRenderHandler.renderChunkBounds = !FTBLibRenderHandler.renderChunkBounds;
-        }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
-    });
-
-    public static final PlayerAction TOGGLE_LIGHT_VALUES = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_light_values"), 90, GuiIcons.toggle_light_values)
-    {
-        @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
-        {
-            FTBLibRenderHandler.toggleLightLevel();
-        }
-
-        @Override
-        public Boolean configDefault()
-        {
-            return Boolean.TRUE;
-        }
-    });
-
-    public static final PlayerAction LEAVE_TEAM = PlayerActionRegistry.add(new PlayerAction(EnumSelf.SELF, new ResourceLocation(FTBLibFinals.MOD_ID, "team_leave"), -1, GuiIcons.remove)
-    {
-        @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
             //TODO: Ask for confirmation
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return self.hasTeam();
+            return super.isVisibleFor(player) && player.hasTeam();
         }
     });
 
     // Other //
 
-    public static final PlayerAction TEAM_INVITE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "team_invite"), 1, GuiIcons.add)
+    public static final ActionButton TEAM_INVITE = ActionButtonRegistry.add(new PlayerAction(new ResourceLocation(FTBLibFinals.MOD_ID, "team_invite"), 1, GuiIcons.add)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
         }
 
         @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
+        public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return !self.hasTeam() || self.getTeam().getStatus(self).isOwner();
+            return super.isVisibleFor(player) && (!player.hasTeam() || player.getTeam().getStatus(player).isOwner());
         }
     });
 
-    public static final PlayerAction TEAM_DENY_INVITE = PlayerActionRegistry.add(new PlayerAction(EnumSelf.OTHER, new ResourceLocation(FTBLibFinals.MOD_ID, "team_deny_invite"), -1, GuiIcons.remove)
+    public static final ActionButton TEAM_DENY_INVITE = ActionButtonRegistry.add(new PlayerAction(new ResourceLocation(FTBLibFinals.MOD_ID, "team_deny_invite"), -1, GuiIcons.remove)
     {
         @Override
-        public void onClicked(ForgePlayer self, ForgePlayer other)
+        public void onClicked(ForgePlayerSP player)
         {
         }
 /*

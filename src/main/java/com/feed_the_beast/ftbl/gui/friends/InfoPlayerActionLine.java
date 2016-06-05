@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerAction;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
@@ -41,7 +40,7 @@ public class InfoPlayerActionLine extends InfoTextLine
         public void onClicked(MouseButton button)
         {
             FTBLibClient.playClickSound();
-            action.onClicked(ForgeWorldSP.inst.clientPlayer, playerLM);
+            action.onClicked(playerLM);
         }
 
         @Override
@@ -65,19 +64,17 @@ public class InfoPlayerActionLine extends InfoTextLine
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
-            if(action.icon != null)
-            {
-                action.render(ax + 1, ay + 1, z);
-            }
+            action.render(ax + 1, ay + 1, z);
+            action.postRender(ax + 1, ay + 1, z);
 
             gui.getFontRenderer().drawString(title, ax + (action.icon == null ? 4 : 20), ay + 5, guiInfo.colorText);
         }
     }
 
     public final ForgePlayerSP playerLM;
-    public final PlayerAction action;
+    public final ActionButton action;
 
-    public InfoPlayerActionLine(InfoPage c, ForgePlayerSP p, PlayerAction a)
+    public InfoPlayerActionLine(InfoPage c, ForgePlayerSP p, ActionButton a)
     {
         super(c, null);
         playerLM = p;

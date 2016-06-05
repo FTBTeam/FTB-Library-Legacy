@@ -70,9 +70,8 @@ public class FTBLibClient
         ClientRegistry.bindTileEntitySpecialRenderer(c, r);
     }
 
-    public static KeyBinding addKeyBinding(String name, int key, String cat)
+    public static KeyBinding addKeyBinding(KeyBinding k)
     {
-        KeyBinding k = new KeyBinding(name, key, cat);
         ClientRegistry.registerKeyBinding(k);
         return k;
     }

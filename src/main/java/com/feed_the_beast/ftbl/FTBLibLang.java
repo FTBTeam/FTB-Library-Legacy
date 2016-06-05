@@ -37,12 +37,11 @@ public class FTBLibLang
     public static final LangKey team_transfered_ownership = get("team.transfered_ownership");
     public static final LangKey team_invite = get("team.invite");
     public static final LangKey team_cancel_invite = get("team.cancel_invite");
-
-    public static final LangKey team_no_team = get("team.no_team");
-    public static final LangKey team_must_leave = get("team.must_leave");
-    public static final LangKey team_not_owner = get("team.not_owner");
-    public static final LangKey team_not_member = get("team.not_member");
-    public static final LangKey team_must_transfer_ownership = get("team.must_transfer_ownership");
+    public static final LangKey team_no_team = get("team.error.no_team");
+    public static final LangKey team_must_leave = get("team.error.must_leave");
+    public static final LangKey team_not_owner = get("team.error.not_owner");
+    public static final LangKey team_not_member = get("team.error.not_member");
+    public static final LangKey team_must_transfer_ownership = get("team.error.must_transfer_ownership");
 
     public static LangKey get(String s)
     {

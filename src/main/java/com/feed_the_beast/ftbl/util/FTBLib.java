@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
+import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
@@ -38,7 +39,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
@@ -78,7 +78,8 @@ public class FTBLib
     public static final String FORMATTING = "\u00a7";
     public static final Pattern textFormattingPattern = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 
-    public static final Comparator<ResourceLocation> RESOURCE_LOCATION_COMPARATOR = (o1, o2) -> {
+    public static final Comparator<ResourceLocation> RESOURCE_LOCATION_COMPARATOR = (o1, o2) ->
+    {
         int i = o1.getResourceDomain().compareTo(o2.getResourceDomain());
 
         if(i == 0)
@@ -88,37 +89,11 @@ public class FTBLib
 
         return i;
     };
-
+    public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(EnumDyeColor.values());
     private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
     public static FTBUIntegration ftbu = null;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
-    private static TextFormatting[] dyeToTextFormattingMap;
-
-    public static TextFormatting getFromDyeColor(EnumDyeColor color)
-    {
-        if(dyeToTextFormattingMap == null)
-        {
-            dyeToTextFormattingMap = new TextFormatting[16];
-
-            for(EnumDyeColor col : EnumDyeColor.values())
-            {
-                try
-                {
-                    Field field = ReflectionHelper.findField(EnumDyeColor.class, "chatColor", "field_176793_x");
-                    field.setAccessible(true);
-                    dyeToTextFormattingMap[col.ordinal()] = (TextFormatting) field.get(col);
-                }
-                catch(Exception ex)
-                {
-                    ex.printStackTrace();
-                    dyeToTextFormattingMap[col.ordinal()] = TextFormatting.BLACK;
-                }
-            }
-        }
-
-        return dyeToTextFormattingMap[color.ordinal()];
-    }
 
     public static void init(File configFolder)
     {

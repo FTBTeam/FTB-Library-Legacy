@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.gui;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
@@ -29,15 +30,15 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiSelectColor extends GuiLM
 {
-    public static final ResourceLocation tex = new ResourceLocation("ftbl", "textures/gui/colselector.png");
-    public static final ResourceLocation tex_wheel = new ResourceLocation("ftbl", "textures/gui/colselector_wheel.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector.png");
+    public static final ResourceLocation TEXTURE_WHEEL = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector_wheel.png");
 
-    public static final TextureCoords col_tex = new TextureCoords(tex, 145, 10, 29, 16);
-    public static final TextureCoords cursor_tex = new TextureCoords(tex, 145, 36, 8, 8);
+    public static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, 29, 16);
+    public static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8);
 
     public static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
-    public static final TextureCoords slider_tex = new TextureCoords(tex, 145, 26, SLIDER_W, SLIDER_H);
-    public static final TextureCoords slider_col_tex = new TextureCoords(tex, 145, 0, SLIDER_BAR_W, SLIDER_H);
+    public static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H);
+    public static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H);
 
     public static class ColorSelector extends WidgetLM
     {
@@ -88,7 +89,7 @@ public class GuiSelectColor extends GuiLM
 
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.setTexture(tex_wheel);
+            FTBLibClient.setTexture(TEXTURE_WHEEL);
             GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
 
             if(cursorPosX >= 0D && cursorPosY >= 0D)
@@ -121,7 +122,7 @@ public class GuiSelectColor extends GuiLM
 
     public GuiSelectColor(ObjectCallback.Handler cb, LMColor col, Object id, boolean instant)
     {
-        super(null, tex);
+        super(null, TEXTURE);
         callback = cb;
         initCol = new LMColor.HSB();
         initCol.set(col);
@@ -305,7 +306,7 @@ public class GuiSelectColor extends GuiLM
         colorCurrent.render(col_tex);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        FTBLibClient.setTexture(tex);
+        FTBLibClient.setTexture(TEXTURE);
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 

@@ -1,26 +1,39 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.EnumSelf;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
+import com.feed_the_beast.ftbl.api.client.CubeRenderer;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.client.LMFrustrumUtils;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerAction;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
+import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import latmod.lib.MathHelperLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,20 +48,32 @@ import java.util.List;
 public class FTBLibClientEventHandler
 {
     public static final FTBLibClientEventHandler instance = new FTBLibClientEventHandler();
-    
-	/*@SubscribeEvent
-    public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
-	{
-	}*/
+    public static final ResourceLocation chunkBorderTexture = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/world/chunk_border.png");
+    public static final ResourceLocation textureLightValueX = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/world/light_value_x.png");
+    public static final ResourceLocation textureLightValueO = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/world/light_value_o.png");
+
+    private static class MobSpawnPos
+    {
+        public final BlockPos pos;
+        public final boolean alwaysSpawns;
+        public final int lightValue;
+
+        public MobSpawnPos(BlockPos p, boolean b, int lv)
+        {
+            pos = p;
+            alwaysSpawns = b;
+            lightValue = lv;
+        }
+    }
 
     private static class ButtonInvLM extends GuiButton
     {
-        public final PlayerAction action;
+        public final ActionButton button;
 
-        public ButtonInvLM(int id, PlayerAction b, int x, int y)
+        public ButtonInvLM(int id, ActionButton b, int x, int y)
         {
             super(id, x, y, 16, 16, "");
-            action = b;
+            button = b;
         }
 
         @Override
@@ -86,7 +111,7 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.action.render(b.xPosition, b.yPosition, zLevel);
+                b.button.render(b.xPosition, b.yPosition, zLevel);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
@@ -98,7 +123,7 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.action.postRender(b.xPosition, b.yPosition, 0D);
+                b.button.postRender(b.xPosition, b.yPosition, 0F);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
@@ -106,7 +131,7 @@ public class FTBLibClientEventHandler
                     double mx1 = mx - 4D;
                     double my1 = my - 12D;
 
-                    String s = b.action.getDisplayName();
+                    String s = b.button.getDisplayName();
                     int tw = mc.fontRendererObj.getStringWidth(s);
 
                     if(!FTBLibModClient.action_buttons_on_top.getAsBoolean())
@@ -140,8 +165,34 @@ public class FTBLibClientEventHandler
         }
     }
 
+    public boolean renderChunkBounds = false;
+    private CubeRenderer chunkBorderRenderer = new CubeRenderer().setHasTexture().setHasNormals();
+    private List<MobSpawnPos> lightList = new ArrayList<>();
+    private boolean renderLightValues = false;
+    private boolean needsLightUpdate = true;
+    private int lastX, lastY = -1, lastZ;
+
+    public void toggleLightLevel()
+    {
+        renderLightValues = !renderLightValues;
+        needsLightUpdate = renderLightValues;
+
+        if(!renderLightValues)
+        {
+            needsLightUpdate = false;
+            lightList.clear();
+        }
+    }
+    
+    /*
     @SubscribeEvent
-    public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent e)
+    public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
+    {
+    }
+    */
+
+    @SubscribeEvent
+    public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         if(ForgeWorldSP.inst != null)
         {
@@ -149,94 +200,77 @@ public class FTBLibClientEventHandler
             ForgeWorldSP.inst = null;
         }
     }
-    
-	/*
-    @SubscribeEvent
-	public void onKeyEvent(InputEvent.KeyInputEvent e)
-	{
-		if(Keyboard.getEventKeyState())
-		{
-			Shortcuts.onKeyPressed(Keyboard.getEventKey());
-		}
-	}
-	*/
 
     @SubscribeEvent
-    public void onTooltip(ItemTooltipEvent e)
+    public void onTooltip(ItemTooltipEvent event)
     {
-        if(e.getItemStack() == null || e.getItemStack().getItem() == null)
-        {
-            return;
-        }
-        
-		/*
-        if(FTBLibModClient.item_reg_names.getAsBoolean())
-		{
-			e.getToolTip().add(LMInvUtils.getRegName(e.getItemStack()).toString());
-		}
-		*/
-
         if(FTBLibModClient.item_ore_names.getAsBoolean())
         {
-            Collection<String> ores = ODItems.getOreNames(e.getItemStack());
+            Collection<String> ores = ODItems.getOreNames(event.getItemStack());
 
             if(!ores.isEmpty())
             {
-                e.getToolTip().add("Ore Dictionary names:");
+                event.getToolTip().add("Ore Dictionary names:");
 
                 for(String or : ores)
                 {
-                    e.getToolTip().add("> " + or);
+                    event.getToolTip().add("> " + or);
                 }
             }
-        }
-
-        if(FTBLib.ftbu != null)
-        {
-            FTBLib.ftbu.onTooltip(e);
         }
     }
 
     @SubscribeEvent
-    public void onDrawDebugText(RenderGameOverlayEvent.Text e)
+    public void onKeyEvent(InputEvent.KeyInputEvent event)
+    {
+        if(FTBLibModClient.KEY_CHUNK_BORDER.isPressed())
+        {
+            renderChunkBounds = !renderChunkBounds;
+        }
+
+        if(FTBLibModClient.KEY_LIGHT_VALUES.isPressed())
+        {
+            toggleLightLevel();
+        }
+    }
+
+    @SubscribeEvent
+    public void onDrawDebugText(RenderGameOverlayEvent.Text event)
     {
         if(!FTBLibClient.mc().gameSettings.showDebugInfo)
         {
             if(FTBLib.DEV_ENV)
             {
-                e.getLeft().add("[MC " + TextFormatting.GOLD + Loader.MC_VERSION + TextFormatting.WHITE + " DevEnv]");
+                event.getLeft().add("[MC " + TextFormatting.GOLD + Loader.MC_VERSION + TextFormatting.WHITE + " DevEnv]");
             }
         }
     }
 
-    @SubscribeEvent
-    public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post e)
-    {
-        if(ForgeWorldSP.inst == null)
-        {
-            return;
-        }
+    // Add Sidebar Buttons //
 
-        if(e.getGui() instanceof InventoryEffectRenderer)
+    @SubscribeEvent
+    public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
+    {
+        if(ForgeWorldSP.inst != null && event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<PlayerAction> buttons = PlayerActionRegistry.getPlayerActions(EnumSelf.SELF, ForgeWorldSP.inst.clientPlayer, ForgeWorldSP.inst.clientPlayer, false, false);
+            List<ActionButton> buttons = ActionButtonRegistry.getButtons(ForgeWorldSP.inst.clientPlayer, false, false);
 
             if(!buttons.isEmpty())
             {
                 Collections.sort(buttons);
 
-                ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, e.getGui());
-                e.getButtonList().add(renderer);
+                ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
+                event.getButtonList().add(renderer);
 
                 if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
                 {
                     for(int i = 0; i < buttons.size(); i++)
                     {
-                        PlayerAction a = buttons.get(i);
+                        ActionButton a = buttons.get(i);
                         int x = i % 4;
                         int y = i / 4;
                         ButtonInvLM b = new ButtonInvLM(495830 + i, a, 4 + x * 18, 4 + y * 18);
-                        e.getButtonList().add(b);
+                        event.getButtonList().add(b);
                         renderer.buttons.add(b);
                     }
                 }
@@ -247,21 +281,21 @@ public class FTBLibClientEventHandler
                     int buttonX = -17;
                     int buttonY = 8;
 
-                    if(e.getGui() instanceof GuiContainerCreative)
+                    if(event.getGui() instanceof GuiContainerCreative)
                     {
                         xSize = 195;
                         ySize = 136;
                         buttonY = 6;
                     }
-                    boolean hasPotions = !e.getGui().mc.thePlayer.getActivePotionEffects().isEmpty();
+                    boolean hasPotions = !event.getGui().mc.thePlayer.getActivePotionEffects().isEmpty();
                     if(hasPotions)
                     {
                         buttonX -= 4;
                         buttonY -= 26;
                     }
 
-                    int guiLeft = (e.getGui().width - xSize) / 2;
-                    int guiTop = (e.getGui().height - ySize) / 2;
+                    int guiLeft = (event.getGui().width - xSize) / 2;
+                    int guiTop = (event.getGui().height - ySize) / 2;
 
                     if(hasPotions)
                     {
@@ -270,7 +304,7 @@ public class FTBLibClientEventHandler
 
                     for(int i = 0; i < buttons.size(); i++)
                     {
-                        PlayerAction a = buttons.get(i);
+                        ActionButton a = buttons.get(i);
                         ButtonInvLM b;
 
                         if(hasPotions)
@@ -286,7 +320,7 @@ public class FTBLibClientEventHandler
                             b = new ButtonInvLM(495830 + i, a, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
                         }
 
-                        e.getButtonList().add(b);
+                        event.getButtonList().add(b);
                         renderer.buttons.add(b);
                     }
                 }
@@ -295,13 +329,178 @@ public class FTBLibClientEventHandler
     }
 
     @SubscribeEvent
-    public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post e)
+    public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
     {
-        if(e.getButton() instanceof ButtonInvLM)
+        if(event.getButton() instanceof ButtonInvLM)
         {
-            PlayerAction b = ((ButtonInvLM) e.getButton()).action;
-            ForgePlayer p = ForgeWorldSP.inst.clientPlayer;
-            b.onClicked(p, p);
+            ActionButton b = ((ButtonInvLM) event.getButton()).button;
+            b.onClicked(ForgeWorldSP.inst.clientPlayer);
+        }
+    }
+
+    // Render 2D //
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void renderTick(TickEvent.RenderTickEvent e)
+    {
+        GlStateManager.pushMatrix();
+
+        if(e.phase == TickEvent.Phase.END && FTBLibClient.mc().theWorld != null)
+        {
+            ClientNotifications.renderTemp();
+        }
+
+        GlStateManager.popMatrix();
+    }
+
+    // Render 3D //
+
+    @SubscribeEvent
+    public void blockChanged(BlockEvent e)
+    {
+        if(MathHelperLM.distSq(e.getPos().getX() + 0.5D, e.getPos().getY() + 0.5D, e.getPos().getZ() + 0.5D, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) <= 4096D)
+        {
+            needsLightUpdate = true;
+        }
+    }
+
+    @SubscribeEvent
+    public void renderWorld(RenderWorldLastEvent e)
+    {
+        LMFrustrumUtils.update();
+
+        if(renderChunkBounds || renderLightValues)
+        {
+            Minecraft mc = FTBLibClient.mc();
+            int x = MathHelperLM.unchunk(MathHelperLM.chunk(LMFrustrumUtils.playerX));
+            int z = MathHelperLM.unchunk(MathHelperLM.chunk(LMFrustrumUtils.playerZ));
+
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(-LMFrustrumUtils.renderX, -LMFrustrumUtils.renderY, -LMFrustrumUtils.renderZ);
+
+            FTBLibClient.pushMaxBrightness();
+
+            GlStateManager.enableBlend();
+            GlStateManager.shadeModel(GL11.GL_SMOOTH);
+            GlStateManager.disableCull();
+            GlStateManager.depthMask(false);
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.enableTexture2D();
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.01F);
+
+            if(renderChunkBounds)
+            {
+                double d = 0.02D;
+                FTBLibClient.setTexture(chunkBorderTexture);
+                chunkBorderRenderer.setTessellator(Tessellator.getInstance());
+                chunkBorderRenderer.setSize(x + d, 0D, z + d, x + 16D - d, 256D, z + 16D - d);
+                chunkBorderRenderer.setUV(0D, 0D, 16D, 256D);
+                chunkBorderRenderer.renderSides();
+            }
+
+            if(renderLightValues && LMFrustrumUtils.playerY >= 0D)
+            {
+                if(lastY == -1D || MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, lastX + 0.5D, lastY + 0.5D, lastZ + 0.5D) >= MathHelperLM.SQRT_2 * 2D)
+                {
+                    needsLightUpdate = true;
+                }
+
+                if(needsLightUpdate)
+                {
+                    needsLightUpdate = false;
+                    lightList.clear();
+
+                    lastX = MathHelperLM.floor(LMFrustrumUtils.playerX);
+                    lastY = MathHelperLM.floor(LMFrustrumUtils.playerY);
+                    lastZ = MathHelperLM.floor(LMFrustrumUtils.playerZ);
+
+                    for(int by = lastY - 16; by <= lastY + 16; by++)
+                    {
+                        for(int bx = lastX - 16; bx <= lastX + 16; bx++)
+                        {
+                            for(int bz = lastZ - 16; bz <= lastZ + 16; bz++)
+                            {
+                                BlockPos pos = new BlockPos(bx, by, bz);
+                                Boolean b = FTBLib.canMobSpawn(mc.theWorld, pos);
+                                if(b != null)
+                                {
+                                    int lv = 0;
+                                    if(mc.gameSettings.showDebugInfo)
+                                    {
+                                        lv = mc.theWorld.getLight(pos, true);
+                                    }
+                                    lightList.add(new MobSpawnPos(pos, b == Boolean.TRUE, lv));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(!lightList.isEmpty())
+                {
+                    GlStateManager.enableCull();
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                    FTBLibClient.setTexture(FTBLibModClient.light_value_texture_x.getAsBoolean() ? textureLightValueX : textureLightValueO);
+
+                    Tessellator tessellator = Tessellator.getInstance();
+                    VertexBuffer buffer = tessellator.getBuffer();
+
+                    buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+                    for(MobSpawnPos pos : lightList)
+                    {
+                        double bx = pos.pos.getX();
+                        double by = pos.pos.getY() + 0.03D;
+                        double bz = pos.pos.getZ();
+
+                        float green = pos.alwaysSpawns ? 0.2F : 1F;
+                        buffer.pos(bx, by, bz).tex(0D, 0D).color(1F, green, 0.2F, 1F).endVertex();
+                        buffer.pos(bx, by, bz + 1D).tex(0D, 1D).color(1F, green, 0.2F, 1F).endVertex();
+                        buffer.pos(bx + 1D, by, bz + 1D).tex(1D, 1D).color(1F, green, 0.2F, 1F).endVertex();
+                        buffer.pos(bx + 1D, by, bz).tex(1D, 0D).color(1F, green, 0.2F, 1F).endVertex();
+                    }
+
+                    tessellator.draw();
+
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+
+                    if(mc.gameSettings.showDebugInfo)
+                    {
+                        for(MobSpawnPos pos : lightList)
+                        {
+                            double bx = pos.pos.getX() + 0.5D;
+                            double by = pos.pos.getY() + 0.14D;
+                            double bz = pos.pos.getZ() + 0.5D;
+
+                            if(MathHelperLM.distSq(LMFrustrumUtils.playerX, LMFrustrumUtils.playerY, LMFrustrumUtils.playerZ, bx, by, bz) <= 144D)
+                            {
+                                GlStateManager.pushMatrix();
+                                GlStateManager.translate(bx, by, bz);
+                                GlStateManager.rotate((float) (-Math.atan2(bz - LMFrustrumUtils.playerZ, bx - LMFrustrumUtils.playerX) * 180D / Math.PI) + 90F, 0F, 1F, 0F);
+                                GlStateManager.rotate(40F, 1F, 0F, 0F);
+
+                                float scale = 1F / 32F;
+                                GlStateManager.scale(-scale, -scale, 1F);
+
+                                String s = Integer.toString(pos.lightValue);
+                                mc.fontRendererObj.drawString(s, -mc.fontRendererObj.getStringWidth(s) / 2, -5, 0xFFFFFFFF);
+                                GlStateManager.popMatrix();
+                            }
+                        }
+                    }
+                }
+            }
+
+            GlStateManager.color(1F, 1F, 1F, 1F);
+
+            GlStateManager.enableCull();
+            GlStateManager.depthMask(true);
+            GlStateManager.shadeModel(GL11.GL_FLAT);
+
+            FTBLibClient.popMaxBrightness();
+            GlStateManager.popMatrix();
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         }
     }
 }

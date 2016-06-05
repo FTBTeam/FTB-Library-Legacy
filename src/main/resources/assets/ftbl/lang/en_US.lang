@@ -77,6 +77,19 @@ ftbl.lang.commands=Commands
 ftbl.lang.my_permissions=My Permissions
 ftbl.lang.difficulty=Difficulty: %s
 
+ftbl.lang.team.created=Team created
+ftbl.lang.team.deleted=Team deleted
+ftbl.lang.team.member_left=%s left your team!
+ftbl.lang.team.member_joined=%s joined your team!
+ftbl.lang.team.transfered_ownership=New owner now is %s
+ftbl.lang.team.invite=Invite to my Team
+ftbl.lang.team.cancel_invite=Cancel invite
+ftbl.lang.team.error.no_team=You must be in a Team to do that!
+ftbl.lang.team.error.must_leave=You must leave your Team to do that!
+ftbl.lang.team.error.not_owner=You are not the owner of this Team!
+ftbl.lang.team.error.not_member=You are not a member of this Team!
+ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
+
 # ClientConfig
 client_config=Client Config
 client_config.ftbl=FTBLib
@@ -88,25 +101,26 @@ client_config.ftbl.action_buttons_on_top=Action Buttons On Top
 client_config.ftbl.player_options_shortcut=Player Options Shortcut
 client_config.ftbl.key_bindings=Key Bindings
 client_config.ftbl.edit_shortcuts=Edit Shortcuts
-client_config.ftbl.light_value_texture=Light Value Texture
-client_config.ftbl.sort_friends_az=Sort Friends A-Z
+client_config.ftbl.light_value_texture_x=Light Value Texture Is 'X'
 
 client_config.sidebar_buttons=Sidebar Buttons
 
-# PlayerActions
-player_action.ftbl:settings=Client Settings
-player_action.ftbl:my_server_settings=My Server Settings
-player_action.ftbl:notifications=Notifications
-player_action.ftbl:add_friend=Add as Friend
-player_action.ftbl:rem_friend=Remove from Friends
-player_action.ftbl:deny_friend=Deny Friend Request
-player_action.ftbl:toggle_gamemode=Toggle Gamemode
-player_action.ftbl:toggle_rain=Toggle Rain
-player_action.ftbl:set_day=Set time to Day
-player_action.ftbl:set_night=Set time to Night
-player_action.ftbl:heal=Heal
-player_action.ftbl:toggle_chunk_bounds=Toggle Chunk Bounds
-player_action.ftbl:toggle_light_values=Toggle Light Values
+# Action Buttons
+sidebar_button.ftbl:settings=Client Settings
+sidebar_button.ftbl:my_server_settings=My Server Settings
+sidebar_button.ftbl:notifications=Notifications
+sidebar_button.ftbl:toggle_gamemode=Toggle Gamemode
+sidebar_button.ftbl:toggle_rain=Toggle Rain
+sidebar_button.ftbl:set_day=Set time to Day
+sidebar_button.ftbl:set_night=Set time to Night
+sidebar_button.ftbl:heal=Heal
+player_action.ftbl:team_invite=Invate To My Team
+player_action.ftbl:team_deny_invite=Deny Invite
+
+# Keys
+key.categories.ftbm=FTBMods
+key.ftbl.chunk_border=Toggle Chunk Border
+key.ftbl.light_values=Toggle Light Values
 
 # Security Mode
 ftbl.security=Security

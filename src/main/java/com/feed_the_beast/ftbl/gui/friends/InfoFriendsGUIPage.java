@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.EnumSelf;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerAction;
-import com.feed_the_beast.ftbl.api.client.gui.PlayerActionRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
+import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
@@ -110,7 +109,7 @@ public class InfoFriendsGUIPage extends InfoPage
             text.add(null);
         }
 
-        for(PlayerAction a : PlayerActionRegistry.getPlayerActions(EnumSelf.OTHER, ForgeWorldSP.inst.clientPlayer, playerLM, true, true))
+        for(ActionButton a : ActionButtonRegistry.getButtons(playerLM, true, true))
         {
             text.add(new InfoPlayerActionLine(this, playerLM, a));
         }

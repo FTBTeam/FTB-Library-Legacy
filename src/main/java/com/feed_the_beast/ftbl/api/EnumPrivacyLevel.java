@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.FTBLibPermissions;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.permissions.Context;
-import com.feed_the_beast.ftbl.api.permissions.PermissionAPI;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 
 public enum EnumPrivacyLevel
@@ -55,10 +53,6 @@ public enum EnumPrivacyLevel
             return false;
         }
         else if(owner.equalsPlayer(player))
-        {
-            return true;
-        }
-        else if(player.isOnline() && PermissionAPI.hasPermission(player.getProfile(), FTBLibPermissions.INTERACT_SECURE, false, context))
         {
             return true;
         }

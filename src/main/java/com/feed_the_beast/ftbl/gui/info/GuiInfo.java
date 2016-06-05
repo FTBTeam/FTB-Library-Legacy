@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.gui.info;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
@@ -22,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
-    public static final ResourceLocation tex = new ResourceLocation("ftbl", "textures/gui/info.png");
+    public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
     public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
     public static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
     public static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);

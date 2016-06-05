@@ -6,13 +6,11 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.item.ICreativeSafeItem;
 import com.feed_the_beast.ftbl.api.tile.IInfoTile;
-import com.feed_the_beast.ftbl.api.tile.ISecureTile;
 import com.feed_the_beast.ftbl.api.tile.TileInfoDataAccessor;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.MathHelperMC;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -185,22 +183,6 @@ public class FTBLibEventHandler implements ITickable
             }
             //FIXME: else ep.worldObj.markChunkDirty(pos, null);
             return false;
-        }
-
-        if(!ep.worldObj.isRemote)
-        {
-            IBlockState state = ep.worldObj.getBlockState(pos);
-
-            if(state.getBlock().hasTileEntity(state))
-            {
-                TileEntity te = ep.worldObj.getTileEntity(pos);
-                ForgePlayerMP player = ForgeWorldMP.inst.getPlayer(ep);
-                if(te instanceof ISecureTile && !((ISecureTile) te).canPlayerInteract(player, leftClick))
-                {
-                    ((ISecureTile) te).onPlayerNotOwner(player, leftClick);
-                    return false;
-                }
-            }
         }
 
         return true;

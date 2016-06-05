@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.client.gui;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.util.ResourceLocation;
 
@@ -71,12 +72,10 @@ public class GuiIcons
     public static final TextureCoords toggle_rain = getIcon("toggle_rain");
     public static final TextureCoords toggle_day = getIcon("toggle_day");
     public static final TextureCoords toggle_night = getIcon("toggle_night");
-    public static final TextureCoords toggle_chunk_bounds = getIcon("toggle_chunk_bounds");
-    public static final TextureCoords toggle_light_values = getIcon("toggle_light_values");
 
     private static TextureCoords getIcon(String s)
     {
-        TextureCoords r = TextureCoords.getSquareIcon(new ResourceLocation("ftbl", "textures/icons/" + s + ".png"), 32);
+        TextureCoords r = TextureCoords.getSquareIcon(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/icons/" + s + ".png"), 32);
         iconMap.put(s, r);
         return r;
     }
