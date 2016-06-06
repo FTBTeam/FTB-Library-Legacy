@@ -4,12 +4,14 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgePlayerSPSelf;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
+import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -81,6 +83,12 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
 
         p.readFromNet(m.data, p.isMCPlayer());
         ForgeWorldSP.inst.playerMap.put(p.getProfile().getId(), p);
+
         p.onLoggedIn(m.isFirst);
+
+        if(p.equalsPlayer(ForgeWorldSP.inst.clientPlayer))
+        {
+            MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedIn(p, m.isFirst));
+        }
     }
 }

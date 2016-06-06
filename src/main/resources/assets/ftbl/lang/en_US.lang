@@ -117,11 +117,6 @@ sidebar_button.ftbl:heal=Heal
 player_action.ftbl:team_invite=Invate To My Team
 player_action.ftbl:team_deny_invite=Deny Invite
 
-# Keys
-key.categories.ftbm=FTBMods
-key.ftbl.chunk_border=Toggle Chunk Border
-key.ftbl.light_values=Toggle Light Values
-
 # Security Mode
 ftbl.security=Security
 ftbl.security.public=Public

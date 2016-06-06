@@ -94,7 +94,7 @@ public class CmdEditConfig extends CommandLM
             throw FTBLibLang.raw.commandError("Can only edit files!");
         }
 
-        boolean success = false;
+        //boolean success = false;
         ConfigGroup group = file.getGroup(args[1]);
         ConfigEntry entry = (group == null) ? null : group.entryMap.get(args[2]);
 

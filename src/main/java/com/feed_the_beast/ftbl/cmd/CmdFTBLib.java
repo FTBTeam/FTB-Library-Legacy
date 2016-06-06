@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
@@ -13,8 +14,6 @@ import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.FTBLibReflection;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -231,7 +230,7 @@ public class CmdFTBLib extends CommandSubLM
                 switch(args[0])
                 {
                     case "color":
-                        team.setColor(FTBLib.DYE_COLORS.get(args[1]));
+                        team.setColor(EnumTeamColor.NAME_MAP.get(args[1]));
                         break;
                     default:
                         throw FTBLibLang.raw.commandError("Unknown config entry: " + args[0]); //TODO: Lang
@@ -260,7 +259,7 @@ public class CmdFTBLib extends CommandSubLM
                     InfoPage page1 = page.getSub(String.valueOf(team.teamID));
 
                     ITextComponent title = new TextComponentString(team.getTitle());
-                    title.getStyle().setColor(FTBLibReflection.getFromDyeColor(team.getColor()));
+                    title.getStyle().setColor(team.getColor().textFormatting);
                     page1.setTitle(title);
 
                     if(team.getDesc() != null)

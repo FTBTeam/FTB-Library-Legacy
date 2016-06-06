@@ -7,7 +7,6 @@ import latmod.lib.Bits;
 import latmod.lib.LMUtils;
 import latmod.lib.annotations.IFlagContainer;
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,7 +37,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     private ForgePlayer owner;
     private TIntCollection allies;
     private Collection<UUID> enemies;
-    private EnumDyeColor color;
+    private EnumTeamColor color;
     private String title;
     private String desc;
     private byte flags;
@@ -112,12 +111,27 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     @Override
     public NBTTagCompound serializeNBT()
     {
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound nbt = new NBTTagCompound();
 
-        tag.setString("Owner", LMUtils.fromUUID(owner.getProfile().getId()));
-        tag.setByte("Flags", flags);
+        nbt.setString("Owner", LMUtils.fromUUID(owner.getProfile().getId()));
+        nbt.setByte("Flags", flags);
 
-        return tag;
+        if(color != null)
+        {
+            nbt.setString("Color", color.getName());
+        }
+
+        if(title != null)
+        {
+            nbt.setString("Title", title);
+        }
+
+        if(desc != null)
+        {
+            nbt.setString("Desc", desc);
+        }
+
+        return nbt;
     }
 
     @Override
@@ -125,6 +139,9 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     {
         owner = world.getPlayer(LMUtils.fromString(nbt.getString("Owner")));
         flags = nbt.getByte("Flags");
+        color = nbt.hasKey("Color") ? EnumTeamColor.NAME_MAP.get(nbt.getString("Color")) : null;
+        title = nbt.hasKey("Title") ? nbt.getString("Title") : null;
+        desc = nbt.hasKey("Desc") ? nbt.getString("Desc") : null;
     }
 
     public NBTTagCompound serializeNBTForNet(ForgePlayerMP to)
@@ -137,6 +154,21 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         if(flags != 0)
         {
             tag.setByte("F", flags);
+        }
+
+        if(color != null)
+        {
+            tag.setByte("C", (byte) color.ordinal());
+        }
+
+        if(title != null)
+        {
+            tag.setString("T", title);
+        }
+
+        if(desc != null)
+        {
+            tag.setString("D", desc);
         }
 
         NBTTagCompound sync = new NBTTagCompound();
@@ -153,8 +185,10 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     public void deserializeNBTFromNet(NBTTagCompound nbt)
     {
         owner = world.getPlayer(new UUID(nbt.getLong("OM"), nbt.getLong("OL")));
-
         flags = nbt.getByte("F");
+        color = nbt.hasKey("C") ? EnumTeamColor.values()[nbt.getByte("C")] : null;
+        title = nbt.hasKey("T") ? nbt.getString("T") : null;
+        desc = nbt.hasKey("D") ? nbt.getString("D") : null;
 
         MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Sync(this, Side.CLIENT, nbt.getCompoundTag("SY"), ForgeWorldSP.inst.clientPlayer));
     }
@@ -185,12 +219,12 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         desc = (s == null || s.isEmpty()) ? null : s;
     }
 
-    public EnumDyeColor getColor()
+    public EnumTeamColor getColor()
     {
-        return color == null ? EnumDyeColor.GREEN : color;
+        return color == null ? EnumTeamColor.GRAY : color;
     }
 
-    public void setColor(EnumDyeColor col)
+    public void setColor(EnumTeamColor col)
     {
         color = col;
     }

@@ -44,7 +44,7 @@ public abstract class ForgePlayerEvent extends Event
     {
         public final boolean first;
 
-        public LoggedIn(ForgePlayerMP p, boolean f)
+        public LoggedIn(ForgePlayer p, boolean f)
         {
             super(p);
             first = f;

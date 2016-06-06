@@ -67,7 +67,7 @@ public final class CubeRenderer
     {
         if(color == null)
         {
-            color = new LMColor.RGB();
+            color = new LMColor.RGBA();
             format.addElement(DefaultVertexFormats.COLOR_4UB);
         }
 
