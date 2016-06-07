@@ -56,7 +56,18 @@ public class GuiSelectField extends GuiLM
                 FTBLibClient.playClickSound();
                 if(textBox.isValid())
                 {
-                    callback.onCallback(new ObjectCallback(ID, true, true, textBox.getText()));
+                    switch(type)
+                    {
+                        case STRING:
+                            callback.onCallback(new ObjectCallback(ID, true, true, textBox.getText()));
+                            break;
+                        case INTEGER:
+                            callback.onCallback(new ObjectCallback(ID, true, true, Integer.parseInt(textBox.getText())));
+                            break;
+                        case DOUBLE:
+                            callback.onCallback(new ObjectCallback(ID, true, true, Double.parseDouble(textBox.getText())));
+                            break;
+                    }
                 }
             }
         };

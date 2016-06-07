@@ -83,7 +83,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiEditConfig(FTBLibClient.mc().currentScreen, ClientConfigRegistry.provider()));
+            FTBLibClient.mc().displayGuiScreen(new GuiEditConfig(FTBLibClient.mc().currentScreen, null, ClientConfigRegistry.CONTAINER));
         }
     });
 
@@ -252,7 +252,7 @@ public class FTBLibActions
             @SideOnly(Side.CLIENT)
             public GuiScreen openGui(EntityPlayer ep)
             {
-                return new GuiEditConfig(FTBLibClient.mc().currentScreen, ClientConfigRegistry.provider());
+                return new GuiEditConfig(FTBLibClient.mc().currentScreen, null, ClientConfigRegistry.CONTAINER);
             }
         });
     }

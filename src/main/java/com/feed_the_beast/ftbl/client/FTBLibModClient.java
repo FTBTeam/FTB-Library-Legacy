@@ -37,7 +37,7 @@ import java.util.UUID;
 public class FTBLibModClient extends FTBLibModCommon
 {
     public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
-    public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.values(), EnumScreen.SCREEN, false);
+    public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.SCREEN, EnumScreen.NAME_MAP);
     public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
     public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
     
@@ -72,7 +72,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void postInit()
     {
-        ClientConfigRegistry.provider().save();
+        ClientConfigRegistry.CONTAINER.createGroup().getConfigFile().save();
     }
 
     @Override

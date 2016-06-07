@@ -25,7 +25,7 @@ import java.util.UUID;
 public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilityProvider
 {
     public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
-    CapabilityDispatcher capabilities;
+    final CapabilityDispatcher capabilities;
     private int teamID;
     private GameProfile gameProfile;
 

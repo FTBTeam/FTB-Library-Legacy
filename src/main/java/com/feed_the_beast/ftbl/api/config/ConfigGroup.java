@@ -12,7 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,12 @@ public class ConfigGroup extends ConfigEntry
     public ConfigGroup(String s)
     {
         super(s);
-        entryMap = new LinkedHashMap<>();
+        entryMap = createEntryMap();
+    }
+
+    protected LinkedHashMap<String, ConfigEntry> createEntryMap()
+    {
+        return new LinkedHashMap<>();
     }
 
     @Override
@@ -34,12 +40,23 @@ public class ConfigGroup extends ConfigEntry
         return ConfigEntryType.GROUP;
     }
 
-    public final List<ConfigEntry> sortedEntries()
+    public ConfigEntry getEntryFromFullID(String id)
     {
-        List<ConfigEntry> list = new ArrayList<>();
-        list.addAll(entryMap.values());
-        Collections.sort(list, LMUtils.ID_COMPARATOR);
-        return list;
+        int idx = id.indexOf('.');
+
+        if(idx == -1)
+        {
+            return entryMap.get(id);
+        }
+
+        ConfigEntry group = entryMap.get(id.substring(0, idx));
+
+        if(group != null && group.getAsGroup() != null)
+        {
+            return group.getAsGroup().getEntryFromFullID(id.substring(idx + 1));
+        }
+
+        return null;
     }
 
     public ConfigFile getConfigFile()
@@ -302,8 +319,8 @@ public class ConfigGroup extends ConfigEntry
                     }
                     catch(Exception ex)
                     {
-                        System.err.println("Can't set value " + e1.getAsString() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
                         System.err.println(ex);
+                        System.err.println("Can't set value " + e1.getAsString() + " for '" + e0.parentGroup.getID() + "." + e0.getID() + "' (type:" + e0.getConfigType() + ")");
                     }
                 }
             }
@@ -313,6 +330,7 @@ public class ConfigGroup extends ConfigEntry
         {
             onLoadedFromGroup(l);
         }
+
         return result;
     }
 
@@ -378,5 +396,29 @@ public class ConfigGroup extends ConfigEntry
     public int getDepth()
     {
         return (parentGroup == null) ? 0 : (parentGroup.getDepth() + 1);
+    }
+
+    public Collection<String> getAllKeys(boolean includeGroupID)
+    {
+        Collection<String> c = new HashSet<>();
+
+        for(ConfigEntry e : entryMap.values())
+        {
+            if(e.getAsGroup() != null)
+            {
+                if(includeGroupID)
+                {
+                    c.add(e.getFullID());
+                }
+
+                c.addAll(e.getAsGroup().getAllKeys(includeGroupID));
+            }
+            else
+            {
+                c.add(e.getFullID());
+            }
+        }
+
+        return c;
     }
 }

@@ -89,7 +89,7 @@ public class FTBLib
 
         return i;
     };
-    public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(EnumDyeColor.values());
+    public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(false, EnumDyeColor.values());
     private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
     public static FTBUIntegration ftbu = null;

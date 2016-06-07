@@ -1,7 +1,12 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,41 +17,33 @@ public final class ClientConfigRegistry
 {
     private static final ConfigFile file = new ConfigFile("client_config");
 
-    public static IConfigProvider provider()
+    public static final ConfigContainer CONTAINER = new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"))
     {
-        return new IConfigProvider()
+        @Override
+        public ConfigGroup createGroup()
         {
-            @Override
-            public String getGroupTitle(ConfigGroup g)
+            if(file.getFile() == null)
             {
-                return I18n.format(g.getID());
+                file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+                file.load();
             }
 
-            @Override
-            public String getEntryTitle(ConfigEntry e)
-            {
-                return I18n.format(e.getFullID());
-            }
+            return file;
+        }
 
-            @Override
-            public ConfigFile getConfigGroup()
-            {
-                if(file.getFile() == null)
-                {
-                    file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
-                    file.load();
-                }
+        @Override
+        public ITextComponent getConfigTitle()
+        {
+            return new TextComponentTranslation("client_config");
+        }
 
-                return file;
-            }
-
-            @Override
-            public void save()
-            {
-                getConfigGroup().save();
-            }
-        };
-    }
+        @Override
+        public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+        {
+            file.loadFromGroup(config, false);
+            file.save();
+        }
+    };
 
     /**
      * Do this before postInit()

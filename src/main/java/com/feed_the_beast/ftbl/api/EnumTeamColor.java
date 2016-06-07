@@ -20,7 +20,7 @@ public enum EnumTeamColor implements IStringSerializable
     PURPLE("purple", TextFormatting.DARK_PURPLE, 0x7F00FF),
     GRAY("gray", TextFormatting.GRAY, 0xC0C0C0);
 
-    public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(EnumTeamColor.values());
+    public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(false, EnumTeamColor.values());
 
     public final String name;
     public final TextFormatting textFormatting;

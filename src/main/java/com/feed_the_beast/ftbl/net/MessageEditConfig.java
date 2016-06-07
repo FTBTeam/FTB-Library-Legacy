@@ -1,40 +1,43 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.config.ServerConfigProvider;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.ReloadType;
+import com.feed_the_beast.ftbl.util.JsonHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
-    public long token;
-    public int typeID;
-    public String groupID;
-    public NBTTagCompound tag;
+    public ResourceLocation id;
+    public NBTTagCompound groupData;
+    public NBTTagCompound extraNBT;
+    public ITextComponent title;
 
     public MessageEditConfig()
     {
     }
 
-    public MessageEditConfig(long t, ReloadType reload, ConfigGroup group)
+    public MessageEditConfig(NBTTagCompound nbt, ConfigContainer c)
     {
-        token = t;
-        typeID = reload.ordinal();
-        groupID = group.getID();
-        tag = new NBTTagCompound();
-        group.writeToNBT(tag, true);
+        id = c.getResourceLocation();
+        groupData = new NBTTagCompound();
+        c.createGroup().writeToNBT(groupData, true);
+        extraNBT = nbt;
+        title = c.getConfigTitle();
 
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("TX Send: " + group.getSerializableElement());
+            FTBLib.dev_logger.info("TX Send: " + id + " :: " + groupData);
         }
     }
 
@@ -47,33 +50,51 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void fromBytes(ByteBuf io)
     {
-        token = io.readLong();
-        typeID = io.readUnsignedByte();
-        groupID = readString(io);
-        tag = readTag(io);
+        id = readResourceLocation(io);
+        groupData = readTag(io);
+        extraNBT = readTag(io);
+        title = JsonHelper.deserializeICC(readJsonElement(io));
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeLong(token);
-        io.writeByte(typeID);
-        writeString(io, groupID);
-        writeTag(io, tag);
+        writeResourceLocation(io, id);
+        writeTag(io, groupData);
+        writeTag(io, extraNBT);
+        writeJsonElement(io, JsonHelper.serializeICC(title));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onMessage(MessageEditConfig m, Minecraft mc)
+    public void onMessage(final MessageEditConfig m, Minecraft mc)
     {
-        ConfigGroup group = new ConfigGroup(m.groupID);
-        group.readFromNBT(m.tag, true);
-
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("RX Send: " + group.getSerializableElement());
+            FTBLib.dev_logger.info("RX Send: " + m.id + " :: " + m.groupData);
         }
 
-        mc.displayGuiScreen(new GuiEditConfig(mc.currentScreen, new ServerConfigProvider(m.token, ReloadType.values()[m.typeID], group)));
+        mc.displayGuiScreen(new GuiEditConfig(mc.currentScreen, m.extraNBT, new ConfigContainer(m.id)
+        {
+            @Override
+            public ConfigGroup createGroup()
+            {
+                ConfigGroup group = new ConfigGroup("/");
+                group.readFromNBT(m.groupData, true);
+                return group;
+            }
+
+            @Override
+            public ITextComponent getConfigTitle()
+            {
+                return m.title;
+            }
+
+            @Override
+            public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+            {
+                new MessageEditConfigResponse(m.id, nbt, config).sendToServer();
+            }
+        }));
     }
 }

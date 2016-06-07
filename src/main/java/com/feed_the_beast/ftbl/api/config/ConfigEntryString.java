@@ -28,9 +28,9 @@ public class ConfigEntryString extends ConfigEntry
         return 0xFFAA49;
     }
 
-    public void set(String o)
+    public void set(String v)
     {
-        value = o == null ? "" : o;
+        value = v == null ? "" : v;
     }
 
     @Override

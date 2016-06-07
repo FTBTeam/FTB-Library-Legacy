@@ -6,6 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ConfigEntryBool extends ConfigEntry implements IClickable
 {
     public boolean defValue;
@@ -105,5 +108,11 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
         {
             defValue = tag.getBoolean("D");
         }
+    }
+
+    @Override
+    public List<String> getVariants()
+    {
+        return Arrays.asList("true", "false");
     }
 }

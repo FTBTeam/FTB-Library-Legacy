@@ -1,5 +1,10 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import gnu.trove.TIntCollection;
 import gnu.trove.set.hash.TIntHashSet;
@@ -33,11 +38,11 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
     public final ForgeWorld world;
     public final int teamID;
-    CapabilityDispatcher capabilities;
+    final CapabilityDispatcher capabilities;
+    private final ConfigEntryEnum<EnumTeamColor> color;
     private ForgePlayer owner;
     private TIntCollection allies;
     private Collection<UUID> enemies;
-    private EnumTeamColor color;
     private String title;
     private String desc;
     private byte flags;
@@ -47,6 +52,8 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     {
         world = w;
         teamID = id;
+
+        color = new ConfigEntryEnum<>("color", EnumTeamColor.GRAY, EnumTeamColor.NAME_MAP);
 
         ForgeTeamEvent.AttachCapabilities event = new ForgeTeamEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);
@@ -115,11 +122,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
         nbt.setString("Owner", LMUtils.fromUUID(owner.getProfile().getId()));
         nbt.setByte("Flags", flags);
-
-        if(color != null)
-        {
-            nbt.setString("Color", color.getName());
-        }
+        nbt.setString("Color", EnumNameMap.getEnumName(color.get()));
 
         if(title != null)
         {
@@ -139,7 +142,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     {
         owner = world.getPlayer(LMUtils.fromString(nbt.getString("Owner")));
         flags = nbt.getByte("Flags");
-        color = nbt.hasKey("Color") ? EnumTeamColor.NAME_MAP.get(nbt.getString("Color")) : null;
+        color.set(nbt.hasKey("Color") ? EnumTeamColor.NAME_MAP.get(nbt.getString("Color")) : EnumTeamColor.GRAY);
         title = nbt.hasKey("Title") ? nbt.getString("Title") : null;
         desc = nbt.hasKey("Desc") ? nbt.getString("Desc") : null;
     }
@@ -156,10 +159,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             tag.setByte("F", flags);
         }
 
-        if(color != null)
-        {
-            tag.setByte("C", (byte) color.ordinal());
-        }
+        tag.setByte("C", (byte) color.getIndex());
 
         if(title != null)
         {
@@ -186,7 +186,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     {
         owner = world.getPlayer(new UUID(nbt.getLong("OM"), nbt.getLong("OL")));
         flags = nbt.getByte("F");
-        color = nbt.hasKey("C") ? EnumTeamColor.values()[nbt.getByte("C")] : null;
+        color.setIndex(nbt.getByte("C"));
         title = nbt.hasKey("T") ? nbt.getString("T") : null;
         desc = nbt.hasKey("D") ? nbt.getString("D") : null;
 
@@ -221,12 +221,12 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
     public EnumTeamColor getColor()
     {
-        return color == null ? EnumTeamColor.GRAY : color;
+        return color.get();
     }
 
     public void setColor(EnumTeamColor col)
     {
-        color = col;
+        color.set(col);
     }
 
     public EnumTeamStatus getStatus(@Nullable ForgePlayer player)
@@ -404,5 +404,70 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
                 return false;
             }
         }
+    }
+
+    public void getSettings(ConfigGroup group)
+    {
+        group.add(color, false);
+
+        group.add(new ConfigEntryString("title", "")
+        {
+            @Override
+            public void set(String v)
+            {
+                setTitle(v.trim());
+            }
+
+            @Override
+            public String getAsString()
+            {
+                return title == null ? "" : title;
+            }
+        }, false);
+
+        group.add(new ConfigEntryString("title", "")
+        {
+            @Override
+            public void set(String v)
+            {
+                setTitle(v.trim());
+            }
+
+            @Override
+            public String getAsString()
+            {
+                return desc == null ? "" : desc;
+            }
+        }, false);
+
+        group.add(new ConfigEntryBool("free_to_join", false)
+        {
+            @Override
+            public void set(boolean v)
+            {
+                setFlag(FREE_TO_JOIN, v);
+            }
+
+            @Override
+            public boolean getAsBoolean()
+            {
+                return getFlag(FREE_TO_JOIN);
+            }
+        }, false);
+
+        group.add(new ConfigEntryBool("is_hidden", false)
+        {
+            @Override
+            public void set(boolean v)
+            {
+                setFlag(HIDDEN, v);
+            }
+
+            @Override
+            public boolean getAsBoolean()
+            {
+                return getFlag(HIDDEN);
+            }
+        }, false);
     }
 }

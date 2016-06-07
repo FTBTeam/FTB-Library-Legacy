@@ -4,12 +4,14 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuis;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
+import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryColor;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
@@ -17,18 +19,21 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.config.IConfigProvider;
 import latmod.lib.LMColor;
 import latmod.lib.LMColorUtils;
 import latmod.lib.LMJsonUtils;
+import latmod.lib.LMUtils;
 import latmod.lib.annotations.Flags;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -46,7 +51,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             super(g, 0, g.configPanel.height, g.width - 16, 16);
             gui = g;
             entry = e;
-            title = g.provider.getEntryTitle(entry);
+            title = g.configContainer.translateEntryNames() ? I18n.format("config." + entry.getFullID()) : entry.getID();
             subButtons = new ArrayList<>();
         }
 
@@ -187,7 +192,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                 {
                     if(c.set)
                     {
-                        ((ConfigEntryString) entry).set(c.toString());
+                        ((ConfigEntryString) entry).set(c.object.toString());
                         gui.onChanged();
                     }
 
@@ -218,7 +223,12 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         @Override
         public void addMouseOverText(List<String> l)
         {
-            if(gui.mouse().x < gui.fontRendererObj.getStringWidth(title) + 10)
+            if(gui.mouse().y <= 18)
+            {
+                return;
+            }
+
+            if(gui.mouse().x < getAX() + gui.fontRendererObj.getStringWidth(title) + 10)
             {
                 String[] info = entry.getInfo();
 
@@ -253,21 +263,25 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         }
     }
 
-    public final IConfigProvider provider;
+    public final ConfigContainer configContainer;
+    public final ConfigGroup configGroup;
+    public final NBTTagCompound extraNBT;
+
     public final String title;
     public final List<ButtonConfigEntry> configEntryButtons;
     public final PanelLM configPanel;
-    public final ButtonLM buttonClose, buttonExpandAll, buttonCollapseAll;
+    public final ButtonLM buttonAccept, buttonCancel, buttonExpandAll, buttonCollapseAll;
     public final SliderLM scroll;
     private boolean changed = false;
-    private boolean shouldClose = false;
+    private int shouldClose = 0;
 
-    public GuiEditConfig(GuiScreen g, IConfigProvider p)
+    public GuiEditConfig(GuiScreen g, NBTTagCompound nbt, ConfigContainer cc)
     {
         super(g, null);
-        provider = p;
-
-        title = p.getConfigGroup().getDisplayName();
+        configContainer = cc;
+        title = configContainer.getConfigTitle().getFormattedText();
+        configGroup = (ConfigGroup) configContainer.createGroup().copy();
+        extraNBT = nbt;
 
         configEntryButtons = new ArrayList<>();
 
@@ -298,16 +312,31 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
         };
 
-        buttonClose = new ButtonLM(this, 0, 2, 16, 16)
+        buttonAccept = new ButtonLM(this, 0, 2, 16, 16)
         {
             @Override
             public void onClicked(MouseButton button)
             {
                 FTBLibClient.playClickSound();
-                shouldClose = true;
+                shouldClose = 1;
                 closeGui();
             }
         };
+
+        buttonAccept.title = GuiLang.button_accept.translate();
+
+        buttonCancel = new ButtonLM(this, 0, 2, 16, 16)
+        {
+            @Override
+            public void onClicked(MouseButton button)
+            {
+                FTBLibClient.playClickSound();
+                shouldClose = 2;
+                closeGui();
+            }
+        };
+
+        buttonCancel.title = GuiLang.button_cancel.translate();
 
         buttonExpandAll = new ButtonLM(this, 2, 2, 16, 16)
         {
@@ -335,6 +364,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
         };
 
+        buttonExpandAll.title = "Expand All";
+
         buttonCollapseAll = new ButtonLM(this, 20, 2, 16, 16)
         {
             @Override
@@ -361,6 +392,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
         };
 
+        buttonCollapseAll.title = "Collapse All";
+
         scroll = new SliderLM(this, -16, 20, 16, 0, 10)
         {
             @Override
@@ -379,7 +412,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         mainPanel.width = width;
         mainPanel.height = height;
         mainPanel.posX = mainPanel.posY = 0;
-        buttonClose.posX = width - 18;
+        buttonAccept.posX = width - 18;
+        buttonCancel.posX = width - 38;
         scroll.posX = width - 16;
         scroll.height = height - 20;
         configPanel.posY = 20;
@@ -389,7 +423,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         {
             configEntryButtons.clear();
 
-            for(ConfigEntry entry : provider.getConfigGroup().sortedEntries())
+            List<ConfigEntry> list = new ArrayList<>();
+            list.addAll(configGroup.entryMap.values());
+            Collections.sort(list, LMUtils.ID_COMPARATOR);
+
+            for(ConfigEntry entry : list)
             {
                 addCE(null, entry, 0);
             }
@@ -414,9 +452,14 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
 
             ConfigGroup g = e.getAsGroup();
+
             if(g != null)
             {
-                for(ConfigEntry entry : g.sortedEntries())
+                List<ConfigEntry> list = new ArrayList<>();
+                list.addAll(g.entryMap.values());
+                Collections.sort(list, LMUtils.ID_COMPARATOR);
+
+                for(ConfigEntry entry : list)
                 {
                     addCE(b, entry, level + 1);
                 }
@@ -431,7 +474,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         configPanel.width = width;
         configPanel.posX = 0;
         configPanel.posY = 20;
-        mainPanel.add(buttonClose);
+        mainPanel.add(buttonAccept);
+        mainPanel.add(buttonCancel);
         mainPanel.add(buttonExpandAll);
         mainPanel.add(buttonCollapseAll);
         mainPanel.add(configPanel);
@@ -441,16 +485,19 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
     @Override
     public void onLMGuiClosed()
     {
-        if(shouldClose && changed)
+        if(shouldClose > 0)
         {
-            provider.save();
+            if(changed && shouldClose == 1)
+            {
+                configContainer.saveConfig(mc.thePlayer, extraNBT, configGroup);
+            }
         }
     }
 
     @Override
     public boolean onClosedByKey()
     {
-        shouldClose = true;
+        shouldClose = 2;
         return false;
     }
 
@@ -491,7 +538,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        buttonClose.render(GuiIcons.accept);
+        buttonAccept.render(GuiIcons.accept);
+        buttonCancel.render(GuiIcons.cancel);
         buttonExpandAll.render(GuiIcons.add);
         buttonCollapseAll.render(GuiIcons.remove);
     }

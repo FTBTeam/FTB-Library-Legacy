@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public final class ConfigEntryStringEnum extends ConfigEntry implements IClickable
@@ -23,10 +24,11 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
         array = new ArrayList<>();
     }
 
-    public ConfigEntryStringEnum(String id, List<String> vals, String def)
+    public ConfigEntryStringEnum(String id, Collection<String> vals, String def)
     {
         super(id);
-        array = vals;
+        array = new ArrayList<>();
+        array.addAll(vals);
         index = defValue = array.indexOf(def);
     }
 
@@ -54,7 +56,12 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
 
     public void setIndex(int idx)
     {
-        index = idx;
+        index = idx % array.size();
+
+        if(index < 0)
+        {
+            index = array.size() - 1;
+        }
     }
 
     @Override
@@ -76,9 +83,6 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
 
         if(extended)
         {
-            tag.setShort("V", (short) index);
-            tag.setShort("D", (short) defValue);
-
             if(!array.isEmpty())
             {
                 NBTTagList list = new NBTTagList();
@@ -90,11 +94,16 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
 
                 tag.setTag("VL", list);
             }
+
+            tag.setShort("V", (short) index);
+            tag.setShort("D", (short) defValue);
         }
         else
         {
             tag.setString("V", getAsString());
         }
+
+        System.out.println(getFullID() + ": TX " + tag);
     }
 
     @Override
@@ -102,11 +111,10 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     {
         super.readFromNBT(tag, extended);
 
+        System.out.println(getFullID() + ": RX " + tag);
+
         if(extended)
         {
-            index = tag.getShort("V") & 0xFFFF;
-            defValue = tag.getShort("D") & 0xFFFF;
-
             array.clear();
 
             if(tag.hasKey("VL"))
@@ -118,10 +126,13 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
                     array.add(list.getStringTagAt(i));
                 }
             }
+
+            index = tag.getShort("V");
+            defValue = tag.getShort("D");
         }
         else
         {
-            index = array.indexOf(tag.getString("V"));
+            set(tag.getString("V"));
         }
     }
 
@@ -130,14 +141,11 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     {
         if(button.isLeft())
         {
-            index = (index + 1) % array.size();
+            setIndex(getIndex() + 1);
         }
         else
         {
-            if(--index < 0)
-            {
-                index = array.size() - 1;
-            }
+            setIndex(getIndex() - 1);
         }
     }
 
@@ -156,12 +164,20 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     @Override
     public int getAsInt()
     {
-        return getIndex();
+        return index;
     }
 
     @Override
     public String getDefValueString()
     {
         return array.get(defValue);
+    }
+
+    @Override
+    public List<String> getVariants()
+    {
+        List<String> list = new ArrayList<>(array.size());
+        list.addAll(array);
+        return list;
     }
 }

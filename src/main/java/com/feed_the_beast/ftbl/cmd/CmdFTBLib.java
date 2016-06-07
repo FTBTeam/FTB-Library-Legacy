@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
+import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
@@ -16,8 +17,11 @@ import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
@@ -200,7 +204,7 @@ public class CmdFTBLib extends CommandSubLM
             }
         }
 
-        public static class CmdConfig extends CommandLM
+        public static class CmdConfig extends CmdEditConfigBase
         {
             public CmdConfig()
             {
@@ -208,7 +212,7 @@ public class CmdFTBLib extends CommandSubLM
             }
 
             @Override
-            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+            public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
             {
                 EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
                 ForgePlayerMP p = ForgePlayerMP.get(ep);
@@ -225,18 +229,29 @@ public class CmdFTBLib extends CommandSubLM
                     throw FTBLibLang.team_not_owner.commandError();
                 }
 
-                checkArgs(args, 2);
+                final ConfigGroup group = new ConfigGroup("/");
+                team.getSettings(group);
 
-                switch(args[0])
+                return new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "team_config"))
                 {
-                    case "color":
-                        team.setColor(EnumTeamColor.NAME_MAP.get(args[1]));
-                        break;
-                    default:
-                        throw FTBLibLang.raw.commandError("Unknown config entry: " + args[0]); //TODO: Lang
-                }
+                    @Override
+                    public ConfigGroup createGroup()
+                    {
+                        return group;
+                    }
 
-                new MessageUpdateTeam(p, team).sendTo(p.getPlayer());
+                    @Override
+                    public ITextComponent getConfigTitle()
+                    {
+                        return new TextComponentString("Team Config");
+                    }
+
+                    @Override
+                    public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+                    {
+                        group.loadFromGroup(config, false);
+                    }
+                };
             }
         }
 

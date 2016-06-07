@@ -2,25 +2,45 @@ package com.feed_the_beast.ftbl.api.config;
 
 import net.minecraft.util.IStringSerializable;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by LatvianModder on 05.06.2016.
  */
-public class EnumNameMap<E extends Enum<E>>
+public final class EnumNameMap<E extends Enum<E>>
 {
-    public final List<E> values;
-    public final Map<String, E> map;
+    private static String NULL_VALUE = "-";
+    public final int size;
+    private final Map<String, E> map;
+    private final List<E> values;
 
-    public EnumNameMap(E[] v)
+    public EnumNameMap(boolean addNull, E[] v)
     {
-        values = Collections.unmodifiableList(Arrays.asList(v));
-        HashMap<String, E> map1 = new HashMap<>();
+        List<E> list = new ArrayList<>();
+
+        for(E e : v)
+        {
+            if(e != null)
+            {
+                list.add(e);
+            }
+        }
+
+        if(addNull)
+        {
+            list.add(null);
+        }
+
+        values = Collections.unmodifiableList(list);
+        size = values.size();
+
+        Map<String, E> map1 = new HashMap<>(size);
 
         for(E e : values)
         {
@@ -34,7 +54,7 @@ public class EnumNameMap<E extends Enum<E>>
     {
         if(e == null)
         {
-            return "-";
+            return NULL_VALUE;
         }
         else if(e instanceof IStringSerializable)
         {
@@ -56,5 +76,30 @@ public class EnumNameMap<E extends Enum<E>>
         {
             return map.get(s);
         }
+    }
+
+    public E getFromIndex(int index)
+    {
+        return values.get(index);
+    }
+
+    public int getIndex(Object e)
+    {
+        return values.indexOf(e);
+    }
+
+    public int getStringIndex(String s)
+    {
+        return getIndex(map.get(s));
+    }
+
+    public Set<String> getKeys()
+    {
+        return map.keySet();
+    }
+
+    public List<E> getValues()
+    {
+        return values;
     }
 }

@@ -41,10 +41,11 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
 
     public String getFullID()
     {
-        if(parentGroup == null)
+        if(parentGroup == null || parentGroup.getID().charAt(0) == '/')
         {
             return getID();
         }
+
         return parentGroup.getFullID() + '.' + getID();
     }
 
@@ -181,5 +182,10 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
                 }
             }
         }
+    }
+
+    public List<String> getVariants()
+    {
+        return null;
     }
 }

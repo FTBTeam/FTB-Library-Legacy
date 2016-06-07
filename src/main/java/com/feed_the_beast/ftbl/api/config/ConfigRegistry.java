@@ -1,28 +1,55 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.net.MessageEditConfig;
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.LMAccessToken;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
 import latmod.lib.LMJsonUtils;
-import latmod.lib.LMUtils;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ConfigRegistry
 {
-    public static final Map<String, ConfigFile> map = new HashMap<>();
-    private static final Map<String, ConfigFile> tempServerConfig = new HashMap<>();
+    public static final Map<UUID, ConfigContainer> tempServerConfig = new HashMap<>();
+    private static final Map<String, ConfigFile> map = new HashMap<>();
+    private static final ConfigGroup mainGroup = new ConfigGroup("/");
+
+    public static final ConfigContainer CONTAINER = new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "config"))
+    {
+        @Override
+        public ConfigGroup createGroup()
+        {
+            return mainGroup;
+        }
+
+        @Override
+        public ITextComponent getConfigTitle()
+        {
+            return new TextComponentString("Server Config"); //TODO: Lang
+        }
+
+        @Override
+        public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+        {
+            mainGroup.loadFromGroup(config, false);
+            FTBLib.reload(player, ReloadType.SERVER_ONLY, false);
+        }
+    };
 
     public static void add(ConfigFile f)
     {
         if(f != null)
         {
             map.put(f.getID(), f);
+            mainGroup.add(f, false);
         }
     }
 
@@ -58,40 +85,5 @@ public class ConfigRegistry
         }
 
         map.values().forEach(ConfigFile::save);
-    }
-
-    public static ConfigFile createTempConfig(EntityPlayerMP ep)
-    {
-        if(ep != null)
-        {
-            ConfigFile group = new ConfigFile(LMUtils.fromUUID(ep.getGameProfile().getId()));
-            tempServerConfig.put(group.getID(), group);
-            return group;
-        }
-
-        return null;
-    }
-
-    public static void editTempConfig(EntityPlayerMP ep, ConfigFile file, ReloadType reload)
-    {
-        if(ep != null && file != null && tempServerConfig.containsValue(file))
-        {
-            new MessageEditConfig(LMAccessToken.generate(ep), reload, file).sendTo(ep);
-        }
-    }
-
-    public static ConfigFile getTempConfig(String id)
-    {
-        ConfigFile group = tempServerConfig.get(id);
-        if(group != null)
-        {
-            tempServerConfig.remove(id);
-        }
-        return group;
-    }
-
-    public static void clearTemp()
-    {
-        tempServerConfig.clear();
     }
 }
