@@ -79,6 +79,11 @@ public final class BlockDimPos
         return new EntityDimPos(toVec(), dim);
     }
 
+    public ChunkDimPos toChunkPos()
+    {
+        return new ChunkDimPos(dim, MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ()));
+    }
+
     public BlockDimPos copy()
     {
         return new BlockDimPos(pos, dim, true);
