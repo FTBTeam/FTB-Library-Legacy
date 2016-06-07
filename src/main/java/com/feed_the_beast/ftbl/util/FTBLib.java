@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibEventHandler;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBUIntegration;
+import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
@@ -12,7 +13,6 @@ import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
-import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageOpenGuiTile;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
@@ -378,7 +378,22 @@ public class FTBLib
 
     public static void notifyPlayer(EntityPlayerMP ep, Notification n)
     {
-        new MessageNotifyPlayer(n).sendTo(ep);
+        if(ep == null)
+        {
+            for(EntityPlayerMP ep1 : getAllOnlinePlayers(null))
+            {
+                notifyPlayer(ep1, n);
+            }
+        }
+        else
+        {
+            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
+
+            if(p != null)
+            {
+                p.notifications.get().displayNotification(ep, n);
+            }
+        }
     }
 
     public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)

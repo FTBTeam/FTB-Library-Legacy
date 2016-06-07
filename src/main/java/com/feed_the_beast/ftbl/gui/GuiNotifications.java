@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
-import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import latmod.lib.MathHelperLM;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -64,7 +63,7 @@ public class GuiNotifications extends GuiLM
     {
         super.drawBackground();
 
-        fontRendererObj.drawString(I18n.format(FTBLibModClient.notifications.getFullID()), mainPanel.posX + 4, mainPanel.posY - 11, 0xFFFFFFFF);
+        fontRendererObj.drawString(I18n.format("client_config.notifications"), mainPanel.posX + 4, mainPanel.posY - 11, 0xFFFFFFFF);
 
         GlStateManager.color(0F, 0F, 0F, 0.4F);
         drawBlankRect(mainPanel.posX, mainPanel.posY, zLevel, mainPanel.width, mainPanel.height);

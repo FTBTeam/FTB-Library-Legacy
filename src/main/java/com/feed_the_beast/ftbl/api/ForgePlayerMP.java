@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
+import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerInfo;
@@ -8,6 +10,7 @@ import com.feed_the_beast.ftbl.net.MessageLMPlayerUpdate;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import com.feed_the_beast.ftbl.util.EntityDimPos;
+import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.mojang.authlib.GameProfile;
@@ -36,6 +39,7 @@ import java.util.Map;
 public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTagCompound>
 {
     public final ForgePlayerStats stats;
+    public final ConfigEntryEnum<EnumNotificationDisplay> notifications;
     public BlockDimPos lastPos, lastDeath;
     private EntityPlayerMP entityPlayer;
 
@@ -43,6 +47,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     {
         super(p);
         stats = new ForgePlayerStats();
+        notifications = new ConfigEntryEnum<>("notifications", EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
     }
 
     public static ForgePlayerMP get(Object o) throws CommandException
@@ -327,5 +332,18 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             return getPlayer().getStatFile();
         }
         return force ? FTBLib.getServer().getPlayerList().getPlayerStatsFile(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
+    }
+
+    public void getSettings(ConfigGroup group)
+    {
+        group.add(notifications, false);
+
+        ConfigGroup group1 = new ConfigGroup("mods");
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.GetSettings(this, group1));
+
+        if(!group1.entryMap.isEmpty())
+        {
+            group.add(group1, false);
+        }
     }
 }

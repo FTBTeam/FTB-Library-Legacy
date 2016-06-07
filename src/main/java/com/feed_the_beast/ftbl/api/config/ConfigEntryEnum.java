@@ -96,8 +96,6 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
         {
             tag.setString("V", EnumNameMap.getEnumName(get()));
         }
-
-        System.out.println(getFullID() + ": TXE " + tag);
     }
 
     @Override

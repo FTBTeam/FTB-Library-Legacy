@@ -7,13 +7,11 @@ import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import com.feed_the_beast.ftbl.cmd.CmdReloadClient;
 import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
-import com.feed_the_beast.ftbl.util.EnumScreen;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.LMColorUtils;
 import latmod.lib.LMUtils;
@@ -37,7 +35,6 @@ import java.util.UUID;
 public class FTBLibModClient extends FTBLibModCommon
 {
     public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
-    public static final ConfigEntryEnum<EnumScreen> notifications = new ConfigEntryEnum<>("notifications", EnumScreen.SCREEN, EnumScreen.NAME_MAP);
     public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
     public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
     

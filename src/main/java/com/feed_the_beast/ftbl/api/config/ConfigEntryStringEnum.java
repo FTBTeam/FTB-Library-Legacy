@@ -102,16 +102,12 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
         {
             tag.setString("V", getAsString());
         }
-
-        System.out.println(getFullID() + ": TX " + tag);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         super.readFromNBT(tag, extended);
-
-        System.out.println(getFullID() + ": RX " + tag);
 
         if(extended)
         {

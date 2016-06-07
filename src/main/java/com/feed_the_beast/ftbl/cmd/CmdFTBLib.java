@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
@@ -306,7 +305,7 @@ public class CmdFTBLib extends CommandSubLM
         }
     }
 
-    public static class CmdMyServerSettings extends CommandLM
+    public static class CmdMyServerSettings extends CmdEditConfigBase
     {
         public CmdMyServerSettings()
         {
@@ -314,20 +313,34 @@ public class CmdFTBLib extends CommandSubLM
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+        public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
         {
-            ForgePlayerMP player = ForgePlayerMP.get(sender);
-            checkArgs(args, 1);
+            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+            ForgePlayerMP p = ForgePlayerMP.get(ep);
 
-            ConfigGroup group = new ConfigGroup("my_server_settings");
-            MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.GetSettings(player, group));
+            final ConfigGroup group = new ConfigGroup("/");
+            p.getSettings(group);
 
-            if(args.length >= 2)
+            return new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"))
             {
-            }
-            else
-            {
-            }
+                @Override
+                public ConfigGroup createGroup()
+                {
+                    return group;
+                }
+
+                @Override
+                public ITextComponent getConfigTitle()
+                {
+                    return new TextComponentString("My Server Settings");
+                }
+
+                @Override
+                public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+                {
+                    group.loadFromGroup(config, false);
+                }
+            };
         }
     }
 

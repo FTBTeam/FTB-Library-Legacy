@@ -18,7 +18,7 @@ public abstract class ConfigContainer extends ResourceLocationObject
 
     public abstract ConfigGroup createGroup();
 
-    public abstract ITextComponent getConfigTitle();
+    public abstract ITextComponent getConfigTitle(); //TODO: Lang
 
     public abstract void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config);
 

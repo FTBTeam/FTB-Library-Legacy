@@ -11,20 +11,16 @@ import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiNotifications;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.util.TextureCoords;
-import latmod.lib.LMColor;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,7 +37,7 @@ public class FTBLibActions
         @Override
         public String getLangKey()
         {
-            return FTBLibModClient.notifications.getFullID();
+            return "client_config.notifications";
         }
 
         @Override
@@ -92,43 +88,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            InfoPage page = new InfoPage("my_server_settings")
-            {
-                @Override
-                public void refreshGui(GuiInfo gui)
-                {
-                    clear();
-                    /*
-                    PersonalSettings ps = LMWorldClient.inst.clientPlayer.getSettings();
-					
-					booleanCommand("chat_links", ps.getMode(PersonalSettings.CHAT_LINKS));
-					booleanCommand("render_badge", LMWorldClient.inst.clientPlayer.renderBadge);
-					booleanCommand("explosions", ps.getMode(PersonalSettings.EXPLOSIONS));
-					booleanCommand("fake_players", ps.getMode(PersonalSettings.FAKE_PLAYERS));
-					
-					IChatComponent text1 = ps.blocks.lang.chatComponent();
-					text1.getChatStyle().setColor(ps.blocks == EnumPrivacyLevel.TEAM ? EnumChatFormatting.BLUE : (ps.blocks == EnumPrivacyLevel.PUBLIC ? EnumChatFormatting.GREEN : EnumChatFormatting.RED));
-					InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting.security_level").appendText(": ").appendSibling(text1));
-					line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings block_security toggle")));
-					text.add(line);
-					*/
-                }
-                
-				/*
-                private void booleanCommand(String s, boolean current)
-				{
-					ChatComponentText text1 = new ChatComponentText(Boolean.toString(current));
-					text1.getChatStyle().setColor(current ? EnumChatFormatting.GREEN : EnumChatFormatting.RED);
-					InfoExtendedTextLine line = new InfoExtendedTextLine(this, new ChatComponentTranslation("ftbu.player_setting." + s).appendText(": ").appendSibling(text1));
-					line.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("lmplayer_settings " + s + " toggle")));
-					text.add(line);
-				}
-				*/
-            };
-
-            page.setTitle(new TextComponentTranslation("player_action." + MY_SERVER_SETTINGS.getID()));
-            page.theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
-            FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, page));
+            FTBLibClient.execClientCommand("/ftblib my_settings");
         }
     });
 
