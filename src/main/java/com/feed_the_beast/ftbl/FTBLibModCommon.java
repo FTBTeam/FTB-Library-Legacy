@@ -7,8 +7,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.util.UUID;
-
 public class FTBLibModCommon // FTBLibModClient
 {
     public void preInit()
@@ -19,37 +17,7 @@ public class FTBLibModCommon // FTBLibModClient
     {
     }
 
-    public boolean isShiftDown()
-    {
-        return false;
-    }
-
-    public boolean isCtrlDown()
-    {
-        return false;
-    }
-
-    public boolean isTabDown()
-    {
-        return false;
-    }
-
-    public boolean inGameHasFocus()
-    {
-        return false;
-    }
-
     public EntityPlayer getClientPlayer()
-    {
-        return null;
-    }
-
-    public EntityPlayer getClientPlayer(UUID id)
-    {
-        return null;
-    }
-
-    public World getClientWorld()
     {
         return null;
     }

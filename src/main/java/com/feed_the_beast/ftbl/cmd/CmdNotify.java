@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
@@ -27,7 +26,13 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
 {
     public CmdNotify()
     {
-        super("ftb_notify", CommandLevel.OP);
+        super("notify");
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override
@@ -64,7 +69,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
     }
 
     @Override
-    public void addInfo(List<ITextComponent> list, ICommandSender sender)
+    public void addInfo(MinecraftServer server, ICommandSender sender, List<ITextComponent> list)
     {
         list.add(new TextComponentString("/" + commandName));
         list.add(null);

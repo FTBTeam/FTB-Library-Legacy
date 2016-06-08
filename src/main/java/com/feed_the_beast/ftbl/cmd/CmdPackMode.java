@@ -4,8 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
+import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import latmod.lib.LMStringUtils;
@@ -18,13 +17,13 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
-public class CmdMode extends CommandSubLM
+public class CmdPackMode extends CommandSubBase
 {
     public static class CmdSet extends CommandLM
     {
         public CmdSet(String s)
         {
-            super(s, CommandLevel.OP);
+            super(s);
         }
 
         @Override
@@ -81,7 +80,13 @@ public class CmdMode extends CommandSubLM
     {
         public CmdGet(String s)
         {
-            super(s, CommandLevel.OP);
+            super(s);
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
         }
 
         @Override
@@ -97,7 +102,13 @@ public class CmdMode extends CommandSubLM
     {
         public CmdList(String s)
         {
-            super(s, CommandLevel.OP);
+            super(s);
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
         }
 
         @Override
@@ -109,11 +120,17 @@ public class CmdMode extends CommandSubLM
         }
     }
 
-    public CmdMode()
+    public CmdPackMode()
     {
-        super("ftb_mode", CommandLevel.OP);
+        super("packmode");
         add(new CmdSet("set"));
         add(new CmdGet("getMode"));
         add(new CmdList("list"));
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 }

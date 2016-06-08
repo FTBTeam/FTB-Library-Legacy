@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,7 +12,13 @@ public class CmdSetItemName extends CommandLM
 {
     public CmdSetItemName()
     {
-        super("set_item_name", CommandLevel.OP);
+        super("set_item_name");
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

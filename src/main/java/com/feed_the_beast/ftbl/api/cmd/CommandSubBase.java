@@ -11,30 +11,21 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommandSubLM extends CommandLM implements ICustomCommandInfo
+public class CommandSubBase extends CommandLM implements ICustomCommandInfo
 {
     public final Map<String, ICommand> subCommands;
 
-    public CommandSubLM(String s, CommandLevel l)
+    public CommandSubBase(String s)
     {
-        super(s, l);
+        super(s);
         subCommands = new HashMap<>();
-    }
-
-    private static ITextComponent tree(ITextComponent sibling, int level)
-    {
-        if(level == 0)
-        {
-            return sibling;
-        }
-        char[] chars = new char[level * 2];
-        Arrays.fill(chars, ' ');
-        return new TextComponentString(new String(chars)).appendSibling(sibling);
     }
 
     public void add(ICommand c)
@@ -53,7 +44,18 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, subCommands.keySet());
+            List<String> keys = new ArrayList<>();
+
+            for(ICommand c : subCommands.values())
+            {
+                if(c.checkPermission(server, ics))
+                {
+                    keys.add(c.getCommandName());
+                }
+            }
+
+            Collections.sort(keys, null);
+            return getListOfStringsMatchingLastWord(args, keys);
         }
 
         ICommand cmd = subCommands.get(args[0]);
@@ -96,6 +98,10 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
             {
                 throw FTBLibLang.invalid_subcmd.commandError(args[0]);
             }
+            else if(!cmd.checkPermission(server, ics))
+            {
+                throw new CommandException("commands.generic.permission");
+            }
             else
             {
                 cmd.execute(server, ics, LMStringUtils.shiftArray(args));
@@ -104,25 +110,25 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
     }
 
     @Override
-    public void addInfo(List<ITextComponent> list, ICommandSender sender)
+    public void addInfo(MinecraftServer server, ICommandSender sender, List<ITextComponent> list)
     {
         list.add(new TextComponentString('/' + commandName));
         list.add(null);
-        addCommandUsage(sender, list, 0);
+        addCommandUsage(server, sender, list, 0);
     }
 
-    private void addCommandUsage(ICommandSender ics, List<ITextComponent> list, int level)
+    private void addCommandUsage(MinecraftServer server, ICommandSender sender, List<ITextComponent> list, int level)
     {
         for(ICommand c : subCommands.values())
         {
-            if(c instanceof CommandSubLM)
+            if(c instanceof CommandSubBase)
             {
                 list.add(tree(new TextComponentString('/' + c.getCommandName()), level));
-                ((CommandSubLM) c).addCommandUsage(ics, list, level + 1);
+                ((CommandSubBase) c).addCommandUsage(server, sender, list, level + 1);
             }
             else
             {
-                String usage = c.getCommandUsage(ics);
+                String usage = c.getCommandUsage(sender);
                 if(usage.indexOf('/') != -1 || usage.indexOf('%') != -1)
                 {
                     list.add(tree(new TextComponentString(usage), level));
@@ -133,5 +139,16 @@ public class CommandSubLM extends CommandLM implements ICustomCommandInfo
                 }
             }
         }
+    }
+
+    private ITextComponent tree(ITextComponent sibling, int level)
+    {
+        if(level == 0)
+        {
+            return sibling;
+        }
+        char[] chars = new char[level * 2];
+        Arrays.fill(chars, ' ');
+        return new TextComponentString(new String(chars)).appendSibling(sibling);
     }
 }

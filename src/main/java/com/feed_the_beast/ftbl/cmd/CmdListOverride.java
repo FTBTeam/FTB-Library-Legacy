@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
@@ -15,7 +14,13 @@ public class CmdListOverride extends CommandLM
 {
     public CmdListOverride()
     {
-        super("list", CommandLevel.ALL);
+        super("list");
+    }
+
+    @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
     }
 
     @Override

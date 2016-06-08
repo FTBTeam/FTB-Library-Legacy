@@ -7,10 +7,8 @@ import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
-import com.feed_the_beast.ftbl.cmd.CmdReloadClient;
 import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.LMColorUtils;
@@ -22,29 +20,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
-
-import java.util.UUID;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
 {
     public static final ConfigEntryBool item_ore_names = new ConfigEntryBool(false);
-    public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client");
     public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool(true);
-    
-	/*
-    public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
-	{
-		public void onClicked()
-		{ FTBLibClient.openGui(new GuiEditShortcuts()); }
-	};
-	*/
 
     @Override
     public void preInit()
@@ -60,8 +45,6 @@ public class FTBLibModClient extends FTBLibModCommon
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
         ClientConfigRegistry.addGroup("sidebar_buttons", ActionButtonRegistry.configGroup);
 
-        ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
-
         FTBLibActions.init();
     }
 
@@ -72,45 +55,9 @@ public class FTBLibModClient extends FTBLibModCommon
     }
 
     @Override
-    public boolean isShiftDown()
-    {
-        return GuiScreen.isShiftKeyDown();
-    }
-
-    @Override
-    public boolean isCtrlDown()
-    {
-        return GuiScreen.isCtrlKeyDown();
-    }
-
-    @Override
-    public boolean isTabDown()
-    {
-        return Keyboard.isKeyDown(Keyboard.KEY_TAB);
-    }
-
-    @Override
-    public boolean inGameHasFocus()
-    {
-        return FTBLibClient.mc().inGameHasFocus;
-    }
-
-    @Override
     public EntityPlayer getClientPlayer()
     {
         return FMLClientHandler.instance().getClientPlayerEntity();
-    }
-
-    @Override
-    public EntityPlayer getClientPlayer(UUID id)
-    {
-        return FTBLibClient.getPlayerSP(id);
-    }
-
-    @Override
-    public World getClientWorld()
-    {
-        return FMLClientHandler.instance().getWorldClient();
     }
 
     @Override

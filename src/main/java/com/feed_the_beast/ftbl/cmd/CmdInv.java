@@ -2,8 +2,7 @@ package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubLM;
+import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.util.BaublesHelper;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -18,13 +17,13 @@ import net.minecraft.server.MinecraftServer;
 
 import java.io.File;
 
-public class CmdInv extends CommandSubLM
+public class CmdInv extends CommandSubBase
 {
     public static class CmdSave extends CommandLM
     {
         public CmdSave(String s)
         {
-            super(s, CommandLevel.OP);
+            super(s);
         }
 
         @Override
@@ -99,7 +98,7 @@ public class CmdInv extends CommandSubLM
     {
         public CmdList(String s)
         {
-            super(s, CommandLevel.OP);
+            super(s);
         }
 
         @Override
@@ -110,6 +109,6 @@ public class CmdInv extends CommandSubLM
 
     public CmdInv()
     {
-        super("ftb_inv", CommandLevel.OP);
+        super("ftb_inv");
     }
 }

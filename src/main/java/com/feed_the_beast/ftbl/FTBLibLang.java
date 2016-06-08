@@ -17,7 +17,6 @@ public class FTBLibLang
     public static final LangKey reload_client_config = get("reload_client_config");
     //@Deprecated
 
-    public static final LangKey no_permission = new LangKey("commands.generic.permission");
     public static final LangKey raw = get("raw");
     public static final LangKey missing_args = get("missing_args");
     public static final LangKey feature_disabled = get("feature_disabled");

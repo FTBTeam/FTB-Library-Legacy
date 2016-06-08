@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.PlayerAction;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
@@ -139,52 +138,6 @@ public class FTBLibActions
         {
             FTBLibClient.execClientCommand("/time set 18000");
         }
-    });
-
-    public static final ActionButton LEAVE_TEAM = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "team_leave"), -1, GuiIcons.remove, false)
-    {
-        @Override
-        public void onClicked(ForgePlayerSP player)
-        {
-            //TODO: Ask for confirmation
-        }
-
-        @Override
-        public boolean isVisibleFor(ForgePlayerSP player)
-        {
-            return super.isVisibleFor(player) && player.hasTeam();
-        }
-    });
-
-    // Other //
-
-    public static final ActionButton TEAM_INVITE = ActionButtonRegistry.add(new PlayerAction(new ResourceLocation(FTBLibFinals.MOD_ID, "team_invite"), 1, GuiIcons.add)
-    {
-        @Override
-        public void onClicked(ForgePlayerSP player)
-        {
-        }
-
-        @Override
-        public boolean isVisibleFor(ForgePlayerSP player)
-        {
-            return super.isVisibleFor(player) && (!player.hasTeam() || player.getTeam().getStatus(player).isOwner());
-        }
-    });
-
-    public static final ActionButton TEAM_DENY_INVITE = ActionButtonRegistry.add(new PlayerAction(new ResourceLocation(FTBLibFinals.MOD_ID, "team_deny_invite"), -1, GuiIcons.remove)
-    {
-        @Override
-        public void onClicked(ForgePlayerSP player)
-        {
-        }
-/*
-        @Override
-        public boolean isVisibleFor(ForgePlayer self, ForgePlayer other)
-        {
-            return !self.isFriendRaw(other) && other.isFriendRaw(self);
-        }
-        */
     });
 
     public static void init()

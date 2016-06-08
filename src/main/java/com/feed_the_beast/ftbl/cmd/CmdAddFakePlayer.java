@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.mojang.authlib.GameProfile;
 import latmod.lib.LMUtils;
 import net.minecraft.command.CommandException;
@@ -21,7 +20,7 @@ public class CmdAddFakePlayer extends CommandLM
 {
     public CmdAddFakePlayer()
     {
-        super("add_fake_player", CommandLevel.OP);
+        super("add_fake_player");
     }
 
     @Override

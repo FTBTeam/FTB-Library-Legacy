@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
-import com.feed_the_beast.ftbl.client.FTBLibModClient;
-import com.feed_the_beast.ftbl.net.MessageReload;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -16,12 +14,18 @@ public class CmdReloadClient extends CommandLM
 {
     public CmdReloadClient()
     {
-        super(FTBLibModClient.reload_client_cmd.getAsString(), CommandLevel.OP);
+        super("reload_client");
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public int getRequiredPermissionLevel()
     {
-        MessageReload.reloadClient(0L, ReloadType.CLIENT_ONLY, false);
+        return 0;
+    }
+
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    {
+        FTBLib.reload(sender, ReloadType.CLIENT_ONLY, false);
     }
 }

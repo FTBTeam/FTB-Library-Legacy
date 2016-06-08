@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.api.notification.Notification;
-import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import io.netty.buffer.ByteBuf;
@@ -116,7 +115,7 @@ public class MessageReload extends MessageToClient<MessageReload>
         {
             Notification n = new Notification("reload_client_config", FTBLibLang.reload_client_config.textComponent(), 7000);
             n.title.getStyle().setColor(TextFormatting.WHITE);
-            n.desc = new TextComponentString('/' + FTBLibModClient.reload_client_cmd.getAsString());
+            n.desc = new TextComponentString("/ftb reload_client");
             n.setColor(0xFF333333);
             ClientNotifications.add(n);
         }

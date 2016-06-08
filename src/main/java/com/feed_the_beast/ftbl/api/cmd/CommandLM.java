@@ -10,25 +10,18 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 
-public abstract class CommandLM extends CommandBase // CommandSubLM
+public abstract class CommandLM extends CommandBase
 {
     public final String commandName;
-    public final CommandLevel level;
 
-    public CommandLM(String s, CommandLevel l)
+    public CommandLM(String s)
     {
         if(s == null || s.isEmpty() || s.indexOf(' ') != -1)
         {
             throw new NullPointerException("Command ID can't be null!");
         }
 
-        if(l == null)
-        {
-            throw new NullPointerException();
-        }
-
         commandName = s;
-        level = l;
     }
 
     public static void checkArgs(String[] args, int i) throws CommandException
@@ -42,13 +35,13 @@ public abstract class CommandLM extends CommandBase // CommandSubLM
     @Override
     public int getRequiredPermissionLevel()
     {
-        return level.requiredPermsLevel();
+        return 2;
     }
 
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender ics)
     {
-        return level == CommandLevel.ALL || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
+        return getRequiredPermissionLevel() == 0 || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
     }
 
     @Override

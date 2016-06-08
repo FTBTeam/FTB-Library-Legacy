@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandLevel;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
@@ -27,9 +26,9 @@ import java.util.List;
  */
 public abstract class CmdEditConfigBase extends CommandLM
 {
-    public CmdEditConfigBase(String s, CommandLevel l)
+    public CmdEditConfigBase(String s)
     {
-        super(s, l);
+        super(s);
     }
 
     @Override
