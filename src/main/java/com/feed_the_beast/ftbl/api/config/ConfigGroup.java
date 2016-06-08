@@ -64,27 +64,18 @@ public class ConfigGroup extends ConfigEntry
         return (parentGroup != null) ? parentGroup.getConfigFile() : null;
     }
 
-    public ConfigGroup add(ConfigEntry e, boolean copy)
+    public ConfigGroup add(ConfigEntry e)
     {
         if(e != null)
         {
-            if(copy)
-            {
-                ConfigEntry e1 = e.copy();
-                entryMap.put(e1.getID(), e1);
-                e1.parentGroup = this;
-            }
-            else
-            {
-                entryMap.put(e.getID(), e);
-                e.parentGroup = this;
-            }
+            entryMap.put(e.getID(), e);
+            e.parentGroup = this;
         }
 
         return this;
     }
 
-    public ConfigGroup addAll(Class<?> c, Object parent, boolean copy)
+    public ConfigGroup addAll(Class<?> c, Object parent)
     {
         try
         {
@@ -103,7 +94,7 @@ public class ConfigGroup extends ConfigEntry
                             if(entry != null && entry != this && !(entry instanceof ConfigFile))
                             {
                                 AnnotationHelper.inject(aF, parent, entry);
-                                add(entry, copy);
+                                add(entry);
                             }
                         }
                     }
@@ -127,7 +118,7 @@ public class ConfigGroup extends ConfigEntry
         ConfigGroup g = new ConfigGroup(getID());
         for(ConfigEntry e : entryMap.values())
         {
-            g.add(e, true);
+            g.add(e.copy());
         }
         return g;
     }
@@ -153,7 +144,7 @@ public class ConfigGroup extends ConfigEntry
                 entry.fromJson(e.getValue());
             }
 
-            add(entry, false);
+            add(entry);
         }
     }
 

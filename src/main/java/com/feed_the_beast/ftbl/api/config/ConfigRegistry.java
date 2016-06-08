@@ -49,7 +49,7 @@ public class ConfigRegistry
         if(f != null)
         {
             map.put(f.getID(), f);
-            mainGroup.add(f, false);
+            mainGroup.add(f);
         }
     }
 

@@ -336,14 +336,14 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
     public void getSettings(ConfigGroup group)
     {
-        group.add(notifications, false);
+        group.add(notifications);
 
         ConfigGroup group1 = new ConfigGroup("mods");
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.GetSettings(this, group1));
 
         if(!group1.entryMap.isEmpty())
         {
-            group.add(group1, false);
+            group.add(group1);
         }
     }
 }

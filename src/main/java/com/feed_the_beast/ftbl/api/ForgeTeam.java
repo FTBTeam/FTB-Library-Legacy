@@ -408,7 +408,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
     public void getSettings(ConfigGroup group)
     {
-        group.add(color, false);
+        group.add(color);
 
         group.add(new ConfigEntryString("title", "")
         {
@@ -423,7 +423,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 return title == null ? "" : title;
             }
-        }, false);
+        });
 
         group.add(new ConfigEntryString("title", "")
         {
@@ -438,7 +438,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 return desc == null ? "" : desc;
             }
-        }, false);
+        });
 
         group.add(new ConfigEntryBool("free_to_join", false)
         {
@@ -453,7 +453,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 return getFlag(FREE_TO_JOIN);
             }
-        }, false);
+        });
 
         group.add(new ConfigEntryBool("is_hidden", false)
         {
@@ -468,6 +468,6 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 return getFlag(HIDDEN);
             }
-        }, false);
+        });
     }
 }

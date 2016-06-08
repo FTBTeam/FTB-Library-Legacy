@@ -55,6 +55,6 @@ public final class ClientConfigRegistry
 
     public static void add(ConfigGroup group)
     {
-        file.add(group, false);
+        file.add(group);
     }
 }

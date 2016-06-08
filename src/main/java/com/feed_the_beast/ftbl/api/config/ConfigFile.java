@@ -53,6 +53,6 @@ public class ConfigFile extends ConfigGroup
 
     public void addGroup(String id, Class<?> c)
     {
-        add(new ConfigGroup(id).addAll(c, null, false), false);
+        add(new ConfigGroup(id).addAll(c, null));
     }
 }
