@@ -53,7 +53,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         world = w;
         teamID = id;
 
-        color = new ConfigEntryEnum<>("color", EnumTeamColor.GRAY, EnumTeamColor.NAME_MAP);
+        color = new ConfigEntryEnum<>(EnumTeamColor.GRAY, EnumTeamColor.NAME_MAP);
 
         ForgeTeamEvent.AttachCapabilities event = new ForgeTeamEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);
@@ -134,6 +134,11 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             nbt.setString("Desc", desc);
         }
 
+        if(capabilities != null)
+        {
+            nbt.setTag("Caps", capabilities.serializeNBT());
+        }
+
         return nbt;
     }
 
@@ -145,6 +150,11 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         color.set(nbt.hasKey("Color") ? EnumTeamColor.NAME_MAP.get(nbt.getString("Color")) : EnumTeamColor.GRAY);
         title = nbt.hasKey("Title") ? nbt.getString("Title") : null;
         desc = nbt.hasKey("Desc") ? nbt.getString("Desc") : null;
+
+        if(capabilities != null)
+        {
+            capabilities.deserializeNBT(nbt.getCompoundTag("Caps"));
+        }
     }
 
     public NBTTagCompound serializeNBTForNet(ForgePlayerMP to)
@@ -408,9 +418,9 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
     public void getSettings(ConfigGroup group)
     {
-        group.add(color);
+        group.add("color", color);
 
-        group.add(new ConfigEntryString("title", "")
+        group.add("title", new ConfigEntryString(title == null ? "" : title)
         {
             @Override
             public void set(String v)
@@ -425,12 +435,12 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             }
         });
 
-        group.add(new ConfigEntryString("title", "")
+        group.add("desc", new ConfigEntryString(desc == null ? "" : desc)
         {
             @Override
             public void set(String v)
             {
-                setTitle(v.trim());
+                setDesc(v.trim());
             }
 
             @Override
@@ -440,7 +450,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             }
         });
 
-        group.add(new ConfigEntryBool("free_to_join", false)
+        group.add("free_to_join", new ConfigEntryBool(getFlag(FREE_TO_JOIN))
         {
             @Override
             public void set(boolean v)
@@ -455,7 +465,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             }
         });
 
-        group.add(new ConfigEntryBool("is_hidden", false)
+        group.add("is_hidden", new ConfigEntryBool(getFlag(HIDDEN))
         {
             @Override
             public void set(boolean v)

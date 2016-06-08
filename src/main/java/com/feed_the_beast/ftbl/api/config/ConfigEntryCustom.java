@@ -15,9 +15,8 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
 {
     private JsonElement value;
 
-    public ConfigEntryCustom(String id)
+    public ConfigEntryCustom()
     {
-        super(id);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
         }
         else if(e.isJsonObject())
         {
-            ConfigGroup group = new ConfigGroup(getID());
+            ConfigGroup group = new ConfigGroup();
             group.fromJson(e);
             return group;
         }

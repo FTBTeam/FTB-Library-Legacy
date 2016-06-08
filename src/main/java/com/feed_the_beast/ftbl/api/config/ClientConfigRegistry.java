@@ -15,7 +15,7 @@ import java.io.File;
 @SideOnly(Side.CLIENT)
 public final class ClientConfigRegistry
 {
-    private static final ConfigFile file = new ConfigFile("client_config");
+    private static final ConfigFile file = new ConfigFile();
 
     public static final ConfigContainer CONTAINER = new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"))
     {
@@ -53,8 +53,8 @@ public final class ClientConfigRegistry
         file.addGroup(id, c);
     }
 
-    public static void add(ConfigGroup group)
+    public static void addGroup(String id, ConfigGroup group)
     {
-        file.add(group);
+        file.add(id, group);
     }
 }

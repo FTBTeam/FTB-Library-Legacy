@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
+import com.google.gson.JsonElement;
 import latmod.lib.LMJsonUtils;
 import latmod.lib.LMStringUtils;
 import net.minecraft.command.CommandException;
@@ -94,19 +95,20 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         if(entry == null)
         {
-            throw FTBLibLang.raw.commandError("Can't find config entry '" + args[0] + "'!");
+            throw FTBLibLang.raw.commandError("Can't find config entry '" + args[0] + "'!"); //TODO: Lang
         }
 
         if(args.length >= 2)
         {
             String json = LMStringUtils.unsplitSpaceUntilEnd(1, args);
 
-            FTBLibMod.logger.info("Setting " + entry.getFullID() + " to " + json);
+            FTBLibMod.logger.info("Setting " + args[0] + " to " + json); //TODO: Lang
 
             try
             {
-                sender.addChatMessage(new TextComponentString(entry.getFullID() + " set to " + entry.getSerializableElement()));
-                entry.fromJson(LMJsonUtils.fromJson(json));
+                JsonElement value = LMJsonUtils.fromJson(json);
+                sender.addChatMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
+                entry.fromJson(value);
                 cc.saveConfig((EntityPlayerMP) sender, null, group);
                 return;
             }

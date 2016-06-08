@@ -47,7 +47,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     {
         super(p);
         stats = new ForgePlayerStats();
-        notifications = new ConfigEntryEnum<>("notifications", EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
+        notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
     }
 
     public static ForgePlayerMP get(Object o) throws CommandException
@@ -105,14 +105,19 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     public void sendUpdate()
     {
         //new EventLMPlayerServer.UpdateSent(this).post();
+        EntityPlayerMP player = getPlayer();
+
         if(isOnline())
         {
-            new MessageLMPlayerUpdate(this, true).sendTo(getPlayer());
+            new MessageLMPlayerUpdate(this, true).sendTo(player);
         }
 
-        for(EntityPlayerMP ep : FTBLib.getAllOnlinePlayers(getPlayer()))
+        for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
         {
-            new MessageLMPlayerUpdate(this, false).sendTo(ep);
+            if(ep != player)
+            {
+                new MessageLMPlayerUpdate(this, false).sendTo(ep);
+            }
         }
     }
 
@@ -294,9 +299,12 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
         new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
 
-        for(EntityPlayerMP ep1 : FTBLib.getAllOnlinePlayers(ep))
+        for(EntityPlayerMP ep1 : FTBLib.getServer().getPlayerList().getPlayerList())
         {
-            new MessageLMPlayerLoggedIn(this, firstLogin, false).sendTo(ep1);
+            if(ep1 != ep)
+            {
+                new MessageLMPlayerLoggedIn(this, firstLogin, false).sendTo(ep1);
+            }
         }
 
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedIn(this, firstLogin));
@@ -336,14 +344,14 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
     public void getSettings(ConfigGroup group)
     {
-        group.add(notifications);
+        group.add("notifications", notifications);
 
-        ConfigGroup group1 = new ConfigGroup("mods");
+        ConfigGroup group1 = new ConfigGroup();
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.GetSettings(this, group1));
 
         if(!group1.entryMap.isEmpty())
         {
-            group.add(group1);
+            group.add("mods", group1);
         }
     }
 }

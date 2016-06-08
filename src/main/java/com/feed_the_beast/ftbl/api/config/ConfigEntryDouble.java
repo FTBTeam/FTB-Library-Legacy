@@ -13,9 +13,8 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
     private double value;
     private Double minValue, maxValue;
 
-    public ConfigEntryDouble(String id, double d)
+    public ConfigEntryDouble(double d)
     {
-        super(id);
         defValue = d;
         set(d);
     }

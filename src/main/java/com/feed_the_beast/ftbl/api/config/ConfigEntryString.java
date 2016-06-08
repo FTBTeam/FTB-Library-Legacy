@@ -9,9 +9,8 @@ public class ConfigEntryString extends ConfigEntry
     public String defValue;
     private String value;
 
-    public ConfigEntryString(String id, String def)
+    public ConfigEntryString(String def)
     {
-        super(id);
         set(def);
         defValue = def == null ? "" : def;
     }

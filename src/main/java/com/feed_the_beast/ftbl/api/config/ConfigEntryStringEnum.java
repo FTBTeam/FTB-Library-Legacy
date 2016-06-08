@@ -18,15 +18,13 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     private int index;
     private int defValue;
 
-    public ConfigEntryStringEnum(String id)
+    public ConfigEntryStringEnum()
     {
-        super(id);
         array = new ArrayList<>();
     }
 
-    public ConfigEntryStringEnum(String id, Collection<String> vals, String def)
+    public ConfigEntryStringEnum(Collection<String> vals, String def)
     {
-        super(id);
         array = new ArrayList<>();
         array.addAll(vals);
         index = defValue = array.indexOf(def);

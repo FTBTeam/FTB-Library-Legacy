@@ -4,6 +4,8 @@ import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public abstract class PlayerAction extends ActionButton
 {
@@ -13,9 +15,9 @@ public abstract class PlayerAction extends ActionButton
     }
 
     @Override
-    public String getLangKey()
+    protected ITextComponent getDisplayName()
     {
-        return "player_action." + getID();
+        return new TextComponentTranslation("player_action." + getID());
     }
 
     @Override

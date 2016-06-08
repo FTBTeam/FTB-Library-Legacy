@@ -41,30 +41,30 @@ public enum ConfigEntryType
         return types[id];
     }
 
-    public ConfigEntry createNew(String id)
+    public ConfigEntry createNew()
     {
         switch(this)
         {
             case CUSTOM:
-                return new ConfigEntryCustom(id);
+                return new ConfigEntryCustom();
             case GROUP:
-                return new ConfigGroup(id);
+                return new ConfigGroup();
             case BOOLEAN:
-                return new ConfigEntryBool(id, false);
+                return new ConfigEntryBool(false);
             case INT:
-                return new ConfigEntryInt(id, 0);
+                return new ConfigEntryInt(0);
             case DOUBLE:
-                return new ConfigEntryDouble(id, 0D);
+                return new ConfigEntryDouble(0D);
             case STRING:
-                return new ConfigEntryString(id, null);
+                return new ConfigEntryString(null);
             case ENUM:
-                return new ConfigEntryStringEnum(id);
+                return new ConfigEntryStringEnum();
             case INT_ARRAY:
-                return new ConfigEntryIntList(id, (IntList) null);
+                return new ConfigEntryIntList((IntList) null);
             case STRING_ARRAY:
-                return new ConfigEntryStringList(id, null);
+                return new ConfigEntryStringList(null);
             case COLOR:
-                return new ConfigEntryColor(id, new LMColor.RGB());
+                return new ConfigEntryColor(new LMColor.RGB());
             default:
                 return null;
         }

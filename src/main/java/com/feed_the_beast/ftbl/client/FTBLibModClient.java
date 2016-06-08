@@ -34,9 +34,9 @@ import java.util.UUID;
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
 {
-    public static final ConfigEntryBool item_ore_names = new ConfigEntryBool("item_ore_names", false);
-    public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client_cmd", "reload_client");
-    public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool("action_buttons_on_top", true);
+    public static final ConfigEntryBool item_ore_names = new ConfigEntryBool(false);
+    public static final ConfigEntryString reload_client_cmd = new ConfigEntryString("reload_client");
+    public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool(true);
     
 	/*
     public static final ConfigEntryBlank edit_shortcuts = new ConfigEntryBlank("edit_shortcuts")
@@ -58,8 +58,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
-
-        ClientConfigRegistry.add(ActionButtonRegistry.configGroup);
+        ClientConfigRegistry.addGroup("sidebar_buttons", ActionButtonRegistry.configGroup);
 
         ClientCommandHandler.instance.registerCommand(new CmdReloadClient());
 
@@ -69,7 +68,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void postInit()
     {
-        ClientConfigRegistry.CONTAINER.createGroup().getConfigFile().save();
+        ClientConfigRegistry.CONTAINER.createGroup().asConfigFile().save();
     }
 
     @Override

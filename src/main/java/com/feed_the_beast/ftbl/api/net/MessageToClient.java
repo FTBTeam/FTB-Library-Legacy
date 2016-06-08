@@ -28,7 +28,7 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
 
         if(MessageLM.logMessages())
         {
-            FTBLib.dev_logger.info("RX MessageLM: " + this);
+            FTBLib.dev_logger.info("RX MessageLM: " + getClass().getName());
         }
 
         return null;

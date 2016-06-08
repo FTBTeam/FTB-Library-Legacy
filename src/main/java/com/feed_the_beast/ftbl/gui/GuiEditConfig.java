@@ -22,11 +22,9 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import latmod.lib.LMColor;
 import latmod.lib.LMColorUtils;
 import latmod.lib.LMJsonUtils;
-import latmod.lib.LMUtils;
 import latmod.lib.annotations.Flags;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,11 +32,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM implements IClientActionGui
 {
+    public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareToIgnoreCase(o2.getKey());
+
     public static class ButtonConfigEntry extends ButtonLM
     {
         public final GuiEditConfig gui;
@@ -46,12 +48,12 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         public final ArrayList<ButtonConfigEntry> subButtons;
         public boolean expanded = false;
 
-        public ButtonConfigEntry(GuiEditConfig g, ConfigEntry e)
+        public ButtonConfigEntry(GuiEditConfig g, String id, ConfigEntry e)
         {
             super(g, 0, g.configPanel.height, g.width - 16, 16);
             gui = g;
             entry = e;
-            title = g.configContainer.translateEntryNames() ? I18n.format("config." + entry.getFullID()) : entry.getID();
+            title = e.getDisplayName() == null ? id : e.getDisplayName().getFormattedText();
             subButtons = new ArrayList<>();
         }
 
@@ -156,7 +158,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.INT)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.INTEGER, entry.getAsInt(), c ->
+                LMGuis.displayFieldSelector(null, LMGuis.FieldType.INTEGER, entry.getAsInt(), c ->
                 {
                     if(c.set)
                     {
@@ -172,7 +174,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.DOUBLE)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.DOUBLE, entry.getAsDouble(), c ->
+                LMGuis.displayFieldSelector(null, LMGuis.FieldType.DOUBLE, entry.getAsDouble(), c ->
                 {
                     if(c.set)
                     {
@@ -188,7 +190,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.STRING)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getAsString(), c ->
+                LMGuis.displayFieldSelector(null, LMGuis.FieldType.STRING, entry.getAsString(), c ->
                 {
                     if(c.set)
                     {
@@ -204,7 +206,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.CUSTOM || type == ConfigEntryType.INT_ARRAY || type == ConfigEntryType.STRING_ARRAY)
             {
-                LMGuis.displayFieldSelector(entry.getFullID(), LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), c ->
+                LMGuis.displayFieldSelector(null, LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), c ->
                 {
                     if(c.set)
                     {
@@ -423,22 +425,22 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         {
             configEntryButtons.clear();
 
-            List<ConfigEntry> list = new ArrayList<>();
-            list.addAll(configGroup.entryMap.values());
-            Collections.sort(list, LMUtils.ID_COMPARATOR);
+            List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
+            list.addAll(configGroup.entryMap.entrySet());
+            Collections.sort(list, COMPARATOR);
 
-            for(ConfigEntry entry : list)
+            for(Map.Entry<String, ConfigEntry> entry : list)
             {
-                addCE(null, entry, 0);
+                addCE(null, entry.getKey(), entry.getValue(), 0);
             }
         }
     }
 
-    private void addCE(ButtonConfigEntry parent, ConfigEntry e, int level)
+    private void addCE(ButtonConfigEntry parent, String id, ConfigEntry e, int level)
     {
         if(!e.getFlag(Flags.HIDDEN))
         {
-            ButtonConfigEntry b = new ButtonConfigEntry(this, e);
+            ButtonConfigEntry b = new ButtonConfigEntry(this, id, e);
             b.posX += level * 12;
             b.width -= level * 12;
             if(parent == null)
@@ -455,13 +457,13 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
             if(g != null)
             {
-                List<ConfigEntry> list = new ArrayList<>();
-                list.addAll(g.entryMap.values());
-                Collections.sort(list, LMUtils.ID_COMPARATOR);
+                List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
+                list.addAll(g.entryMap.entrySet());
+                Collections.sort(list, COMPARATOR);
 
-                for(ConfigEntry entry : list)
+                for(Map.Entry<String, ConfigEntry> entry : list)
                 {
-                    addCE(b, entry, level + 1);
+                    addCE(b, entry.getKey(), entry.getValue(), level + 1);
                 }
             }
         }

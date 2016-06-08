@@ -10,13 +10,12 @@ public class ConfigFile extends ConfigGroup
 {
     private File file;
 
-    public ConfigFile(String id)
+    public ConfigFile()
     {
-        super(id);
     }
 
     @Override
-    public ConfigFile getConfigFile()
+    public ConfigFile asConfigFile()
     {
         return this;
     }
@@ -37,7 +36,7 @@ public class ConfigFile extends ConfigGroup
 
         if(e.isJsonObject())
         {
-            ConfigGroup g = new ConfigGroup(getID());
+            ConfigGroup g = new ConfigGroup();
             g.fromJson(e.getAsJsonObject());
             loadFromGroup(g, false);
         }
@@ -53,6 +52,6 @@ public class ConfigFile extends ConfigGroup
 
     public void addGroup(String id, Class<?> c)
     {
-        add(new ConfigGroup(id).addAll(c, null));
+        add(id, new ConfigGroup().addAll(c, null));
     }
 }

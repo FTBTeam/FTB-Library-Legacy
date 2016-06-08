@@ -5,14 +5,15 @@ import com.feed_the_beast.ftbl.api.ResourceLocationObject;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.TextureCoords;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class ActionButton extends ResourceLocationObject implements Comparable<ActionButton>
 {
     public final int priority;
     public final TextureCoords icon;
     public final Boolean configDefault;
+    public final ITextComponent displayName;
 
     public ActionButton(ResourceLocation id, int p, TextureCoords c, Boolean b)
     {
@@ -20,16 +21,12 @@ public abstract class ActionButton extends ResourceLocationObject implements Com
         priority = p;
         icon = c;
         configDefault = b;
+        displayName = getDisplayName();
     }
+
+    protected abstract ITextComponent getDisplayName();
 
     public abstract void onClicked(ForgePlayerSP player);
-
-    public abstract String getLangKey();
-
-    public String getDisplayName()
-    {
-        return I18n.format(getLangKey());
-    }
 
     @Override
     public int compareTo(ActionButton a)

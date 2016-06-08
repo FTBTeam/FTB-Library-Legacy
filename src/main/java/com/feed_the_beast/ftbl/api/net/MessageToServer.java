@@ -25,7 +25,7 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
 
         if(MessageLM.logMessages())
         {
-            FTBLib.dev_logger.info("TX MessageLM: " + this);
+            FTBLib.dev_logger.info("TX MessageLM: " + getClass().getName());
         }
 
         return null;

@@ -68,7 +68,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 
         if(cc != null && cc.getResourceLocation().equals(m.id))
         {
-            ConfigGroup group = new ConfigGroup("/");
+            ConfigGroup group = new ConfigGroup();
             group.readFromNBT(m.groupData, false);
             cc.saveConfig(ep, m.extraNBT, group);
             ConfigRegistry.tempServerConfig.remove(ep.getGameProfile().getId());

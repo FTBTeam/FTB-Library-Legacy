@@ -56,16 +56,11 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
+        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         checkArgs(args, 2);
-
         String s = LMStringUtils.unsplitSpaceUntilEnd(1, args);
-
         Notification n = Notification.deserialize(LMJsonUtils.fromJson(s));
-
-        for(EntityPlayerMP ep : findPlayers(ics, args[0]))
-        {
-            FTBLib.notifyPlayer(ep, n);
-        }
+        FTBLib.notifyPlayer(ep, n);
     }
 
     @Override

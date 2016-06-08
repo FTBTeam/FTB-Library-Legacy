@@ -17,9 +17,8 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     public final EnumNameMap<E> nameMap;
     private int index;
 
-    public ConfigEntryEnum(String id, E def, EnumNameMap<E> map)
+    public ConfigEntryEnum(E def, EnumNameMap<E> map)
     {
-        super(id);
         nameMap = map;
         defValue = nameMap.getIndex(def);
         index = defValue;

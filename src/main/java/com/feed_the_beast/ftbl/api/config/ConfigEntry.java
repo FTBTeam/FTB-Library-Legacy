@@ -5,25 +5,24 @@ import latmod.lib.Bits;
 import latmod.lib.IntList;
 import latmod.lib.annotations.IFlagContainer;
 import latmod.lib.annotations.IInfoContainer;
-import latmod.lib.util.FinalIDObject;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class ConfigEntry extends FinalIDObject implements IInfoContainer, IFlagContainer, IJsonSerializable
+public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
-    public ConfigGroup parentGroup;
     private Byte flags;
     private String[] info;
+    private ITextComponent displayName;
 
-    ConfigEntry(String id)
+    ConfigEntry()
     {
-        super(id);
     }
 
     public abstract ConfigEntryType getConfigType();
@@ -37,16 +36,6 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
     public int getColor()
     {
         return 0x999999;
-    }
-
-    public String getFullID()
-    {
-        if(parentGroup == null || parentGroup.getID().charAt(0) == '/')
-        {
-            return getID();
-        }
-
-        return parentGroup.getFullID() + '.' + getID();
     }
 
     public String getDefValueString()
@@ -64,9 +53,19 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
         return null;
     }
 
+    public ITextComponent getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName(ITextComponent c)
+    {
+        displayName = c;
+    }
+
     public ConfigEntry copy()
     {
-        ConfigEntry e = getConfigType().createNew(getID());
+        ConfigEntry e = getConfigType().createNew();
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag, true);
         e.readFromNBT(tag, true);
@@ -149,6 +148,11 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
                 tag.setByte("F", flags);
             }
 
+            if(displayName != null)
+            {
+                tag.setString("N", ITextComponent.Serializer.componentToJson(displayName));
+            }
+
             if(info != null && info.length > 0)
             {
                 NBTTagList list = new NBTTagList();
@@ -168,6 +172,9 @@ public abstract class ConfigEntry extends FinalIDObject implements IInfoContaine
         if(extended)
         {
             flags = tag.hasKey("F") ? tag.getByte("F") : null;
+
+            displayName = tag.hasKey("N") ? ITextComponent.Serializer.fromJsonLenient(tag.getString("N")) : null;
+
             info = null;
 
             if(tag.hasKey("I"))

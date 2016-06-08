@@ -17,9 +17,8 @@ public class ConfigEntryStringList extends ConfigEntry
     public final List<String> defValue;
     private List<String> value;
 
-    public ConfigEntryStringList(String id, List<String> def)
+    public ConfigEntryStringList(List<String> def)
     {
-        super(id);
         value = new ArrayList<>();
         defValue = new ArrayList<>();
 
@@ -174,8 +173,6 @@ public class ConfigEntryStringList extends ConfigEntry
 
             if(list != null)
             {
-                List<String> l = new ArrayList<>(list.tagCount());
-
                 for(int i = 0; i < list.tagCount(); i++)
                 {
                     defValue.add(list.getStringTagAt(i));

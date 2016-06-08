@@ -27,7 +27,7 @@ public class InfoPlayerActionLine extends InfoTextLine
         {
             super(g, null);
             height = 18;
-            title = action.getDisplayName();
+            title = action.displayName.getFormattedText();
             width = (action.icon == null ? 8 : 24) + g.getFontRenderer().getStringWidth(title);
         }
 

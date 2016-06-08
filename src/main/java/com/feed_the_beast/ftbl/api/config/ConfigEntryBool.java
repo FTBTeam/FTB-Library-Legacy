@@ -14,9 +14,8 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     public boolean defValue;
     private boolean value;
 
-    public ConfigEntryBool(String id, boolean def)
+    public ConfigEntryBool(boolean def)
     {
-        super(id);
         set(def);
         defValue = def;
     }

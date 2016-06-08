@@ -14,16 +14,15 @@ public class ConfigEntryIntList extends ConfigEntry
     public final IntList defValue;
     private IntList value;
 
-    public ConfigEntryIntList(String id, IntList def)
+    public ConfigEntryIntList(IntList def)
     {
-        super(id);
         defValue = def == null ? new IntList() : def.copy();
         value = defValue.copy();
     }
 
-    public ConfigEntryIntList(String id, int[] def)
+    public ConfigEntryIntList(int[] def)
     {
-        this(id, IntList.asList(def));
+        this(IntList.asList(def));
     }
 
     @Override

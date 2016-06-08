@@ -34,6 +34,7 @@ public final class ForgeWorldMP extends ForgeWorld
      * Only used for capabilities, so they know which player currently is being saved / loaded
      */
     public static ForgePlayerMP currentPlayer;
+    public static ForgeTeam currentTeam;
     private int nextTeamID = 0;
 
     public ForgeWorldMP()
@@ -135,9 +136,12 @@ public final class ForgeWorldMP extends ForgeWorld
             {
                 NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
                 ForgeTeam team = new ForgeTeam(this, tag2.getInteger("ID"));
+                currentTeam = team;
                 team.deserializeNBT(tag2);
                 teams.put(team.teamID, team);
             }
+
+            currentTeam = null;
 
             MinecraftForge.EVENT_BUS.post(new ForgeWorldEvent.PostLoaded(this));
         }
@@ -181,10 +185,13 @@ public final class ForgeWorldMP extends ForgeWorld
 
         for(ForgeTeam team : teams.valueCollection())
         {
+            currentTeam = team;
             tag2 = team.serializeNBT();
             tag2.setInteger("ID", team.teamID);
             teamsTag.appendTag(tag2);
         }
+
+        currentTeam = null;
 
         tag.setTag("Teams", teamsTag);
 

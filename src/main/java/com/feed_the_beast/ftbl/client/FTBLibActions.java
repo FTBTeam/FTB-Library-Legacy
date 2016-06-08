@@ -21,6 +21,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,9 +38,9 @@ public class FTBLibActions
         }
 
         @Override
-        public String getLangKey()
+        protected ITextComponent getDisplayName()
         {
-            return "client_config.notifications";
+            return new TextComponentTranslation("client_config.notifications");
         }
 
         @Override
@@ -68,9 +71,9 @@ public class FTBLibActions
         }
 
         @Override
-        public String getDisplayName()
+        protected ITextComponent getDisplayName()
         {
-            return "FriendsGUI";
+            return new TextComponentString("FriendsGUI");
         }
     });
 

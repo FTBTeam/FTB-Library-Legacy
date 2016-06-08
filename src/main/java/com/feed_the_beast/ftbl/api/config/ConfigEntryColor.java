@@ -10,9 +10,8 @@ public class ConfigEntryColor extends ConfigEntry
     public final LMColor.RGB value;
     public final LMColor.RGB defValue;
 
-    public ConfigEntryColor(String id, LMColor def)
+    public ConfigEntryColor(LMColor def)
     {
-        super(id);
         value = new LMColor.RGB();
         value.set(def);
 

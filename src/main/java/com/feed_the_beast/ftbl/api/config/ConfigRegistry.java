@@ -20,7 +20,7 @@ public class ConfigRegistry
 {
     public static final Map<UUID, ConfigContainer> tempServerConfig = new HashMap<>();
     private static final Map<String, ConfigFile> map = new HashMap<>();
-    private static final ConfigGroup mainGroup = new ConfigGroup("/");
+    private static final ConfigGroup mainGroup = new ConfigGroup();
 
     public static final ConfigContainer CONTAINER = new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "config"))
     {
@@ -44,12 +44,12 @@ public class ConfigRegistry
         }
     };
 
-    public static void add(ConfigFile f)
+    public static void add(String id, ConfigFile f)
     {
         if(f != null)
         {
-            map.put(f.getID(), f);
-            mainGroup.add(f);
+            map.put(id, f);
+            mainGroup.add(id, f);
         }
     }
 
@@ -67,11 +67,11 @@ public class ConfigRegistry
         {
             for(Map.Entry<String, JsonElement> e : overridesE.getAsJsonObject().entrySet())
             {
-                ConfigGroup ol = new ConfigGroup(e.getKey());
+                ConfigGroup ol = new ConfigGroup();
                 ol.fromJson(e.getValue());
 
                 int result;
-                ConfigFile f = map.get(ol.getID());
+                ConfigFile f = map.get(e.getKey());
                 if(f != null && (result = f.loadFromGroup(ol, false)) > 0)
                 {
                     FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);

@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class ActionButtonRegistry
 {
-    public static final ConfigGroup configGroup = new ConfigGroup("sidebar_buttons");
+    public static final ConfigGroup configGroup = new ConfigGroup();
     private static final Map<ResourceLocation, ActionButton> map = new HashMap<>();
 
     public static ActionButton add(final ActionButton a)
@@ -28,15 +28,8 @@ public class ActionButtonRegistry
 
             if(a.configDefault != null)
             {
-                ConfigEntryBool entry = new ConfigEntryBool(a.getID(), a.configDefault)
-                {
-                    @Override
-                    public String getFullID()
-                    {
-                        return a.getLangKey();
-                    }
-                };
-
+                ConfigEntryBool entry = new ConfigEntryBool(a.configDefault);
+                entry.setDisplayName(a.displayName);
                 configGroup.entryMap.put(a.getID(), entry);
             }
         }

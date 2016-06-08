@@ -12,9 +12,8 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     private int value;
     private Integer minValue, maxValue;
 
-    public ConfigEntryInt(String id, int def)
+    public ConfigEntryInt(int def)
     {
-        super(id);
         defValue = def;
         set(def);
     }

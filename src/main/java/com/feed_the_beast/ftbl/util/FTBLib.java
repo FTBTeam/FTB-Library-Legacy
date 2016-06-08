@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
+import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageOpenGuiTile;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
@@ -61,7 +62,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -155,7 +155,7 @@ public class FTBLib
         {
             if(hasOnlinePlayers())
             {
-                for(EntityPlayerMP ep : getAllOnlinePlayers(null))
+                for(EntityPlayerMP ep : getServer().getPlayerList().getPlayerList())
                 {
                     new MessageReload(type, ForgeWorldMP.inst.getPlayer(ep), login).sendTo(ep);
                 }
@@ -248,38 +248,6 @@ public class FTBLib
     public static boolean hasOnlinePlayers()
     {
         return getServer() != null && !getServer().getPlayerList().getPlayerList().isEmpty();
-    }
-
-    public static List<EntityPlayerMP> getAllOnlinePlayers(EntityPlayerMP except)
-    {
-        if(getServer() == null)
-        {
-            return new ArrayList<>();
-        }
-        else if(except == null)
-        {
-            return getServer().getPlayerList().getPlayerList();
-        }
-
-        List<EntityPlayerMP> l = getServer().getPlayerList().getPlayerList();
-        if(l.isEmpty())
-        {
-            return l;
-        }
-
-        List<EntityPlayerMP> list = new ArrayList<>();
-        list.addAll(l);
-        list.remove(except);
-        return list;
-    }
-
-    public static EntityPlayerMP getPlayerMP(UUID id)
-    {
-        if(!hasOnlinePlayers())
-        {
-            return null;
-        }
-        return getServer().getPlayerList().getPlayerByUUID(id);
     }
 
     public static boolean isModInstalled(String s)
@@ -380,9 +348,12 @@ public class FTBLib
     {
         if(ep == null)
         {
-            for(EntityPlayerMP ep1 : getAllOnlinePlayers(null))
+            if(hasOnlinePlayers())
             {
-                notifyPlayer(ep1, n);
+                for(EntityPlayerMP ep1 : getServer().getPlayerList().getPlayerList())
+                {
+                    notifyPlayer(ep1, n);
+                }
             }
         }
         else
@@ -391,7 +362,12 @@ public class FTBLib
 
             if(p != null)
             {
-                p.notifications.get().displayNotification(ep, n);
+                EnumNotificationDisplay e = p.notifications.get();
+
+                if(e != EnumNotificationDisplay.OFF)
+                {
+                    new MessageNotifyPlayer(n, e).sendTo(ep);
+                }
             }
         }
     }

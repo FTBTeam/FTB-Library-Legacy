@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -221,14 +222,14 @@ public class CmdFTBLib extends CommandSubLM
                     throw FTBLibLang.team_no_team.commandError();
                 }
 
-                ForgeTeam team = p.getTeam();
+                final ForgeTeam team = p.getTeam();
 
                 if(!team.getStatus(p).isOwner())
                 {
                     throw FTBLibLang.team_not_owner.commandError();
                 }
 
-                final ConfigGroup group = new ConfigGroup("/");
+                final ConfigGroup group = new ConfigGroup();
                 team.getSettings(group);
 
                 return new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "team_config"))
@@ -240,7 +241,7 @@ public class CmdFTBLib extends CommandSubLM
                     }
 
                     @Override
-                    public ITextComponent getConfigTitle()
+                    public ITextComponent getConfigTitle() //TODO: Lang
                     {
                         return new TextComponentString("Team Config");
                     }
@@ -249,6 +250,11 @@ public class CmdFTBLib extends CommandSubLM
                     public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
                     {
                         group.loadFromGroup(config, false);
+
+                        for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
+                        {
+                            new MessageUpdateTeam(ForgeWorldMP.inst.getPlayer(ep), team).sendTo(null);
+                        }
                     }
                 };
             }
@@ -318,7 +324,7 @@ public class CmdFTBLib extends CommandSubLM
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             ForgePlayerMP p = ForgePlayerMP.get(ep);
 
-            final ConfigGroup group = new ConfigGroup("/");
+            final ConfigGroup group = new ConfigGroup();
             p.getSettings(group);
 
             return new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"))
@@ -330,7 +336,7 @@ public class CmdFTBLib extends CommandSubLM
                 }
 
                 @Override
-                public ITextComponent getConfigTitle()
+                public ITextComponent getConfigTitle() //TODO: Lang
                 {
                     return new TextComponentString("My Server Settings");
                 }

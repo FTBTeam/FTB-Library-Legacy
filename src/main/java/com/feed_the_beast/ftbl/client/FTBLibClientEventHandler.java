@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.LMFrustrumUtils;
+import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
@@ -100,7 +100,7 @@ public class FTBLibClientEventHandler
                     double mx1 = mx - 4D;
                     double my1 = my - 12D;
 
-                    String s = b.button.getDisplayName();
+                    String s = b.button.displayName.getFormattedText();
                     int tw = mc.fontRendererObj.getStringWidth(s);
 
                     if(!FTBLibModClient.action_buttons_on_top.getAsBoolean())
@@ -180,6 +180,31 @@ public class FTBLibClientEventHandler
                 event.getLeft().add("[MC " + TextFormatting.GOLD + Loader.MC_VERSION + TextFormatting.WHITE + " DevEnv]");
             }
         }
+
+        /*
+        Minecraft mc = FTBLibClient.mc();
+        ScaledResolution scaledResolution = new ScaledResolution(mc);
+        double width2 = scaledResolution.getScaledWidth_double();
+        double height2 = scaledResolution.getScaledHeight_double();
+
+        for(Entity entity : mc.theWorld.loadedEntityList)
+        {
+            if(entity != mc.thePlayer && entity.getDistanceSqToEntity(mc.thePlayer) <= 256D)
+            {
+                Vector4f pos = LMFrustumUtils.worldToViewport((float) entity.posX, (float) entity.posY, (float) entity.posZ);
+
+                //if(pos.z >= 0D)
+                {
+                    //GuiLM.drawBlankRect(width2 + pos.getX() * 30D - 8D, height2 + pos.getY() * 30D - 8D, 0F, 16D, 16D);
+                    GuiLM.drawBlankRect(width2 + pos.getX() * width2 - 4D, height2 + pos.getY() * height2 - 4D, 0F, 8D, 8D);
+
+                    event.getRight().add(pos.toString());
+
+                    //System.out.println(pos);
+                }
+            }
+        }
+        */
     }
 
     // Add Sidebar Buttons //
@@ -290,6 +315,6 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent e)
     {
-        LMFrustrumUtils.update();
+        LMFrustumUtils.update();
     }
 }

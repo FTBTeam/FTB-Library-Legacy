@@ -7,14 +7,14 @@ import latmod.lib.annotations.Info;
 public class FTBLibConfigCmd
 {
     @Info("A new layout for /list command")
-    public static final ConfigEntryBool override_list = new ConfigEntryBool("override_list", true);
+    public static final ConfigEntryBool override_list = new ConfigEntryBool(true);
 
     @Info("Can fix some /help problems")
-    public static final ConfigEntryBool override_help = new ConfigEntryBool("override_help", true);
+    public static final ConfigEntryBool override_help = new ConfigEntryBool(true);
 
-    public static final ConfigEntryString name_admin = new ConfigEntryString("name_admin", "admin");
+    public static final ConfigEntryString name_admin = new ConfigEntryString("admin");
 
-    public static final ConfigEntryBool edit_config = new ConfigEntryBool("edit_config", true);
-    public static final ConfigEntryBool set_item_name = new ConfigEntryBool("set_item_name", true);
-    public static final ConfigEntryBool heal = new ConfigEntryBool("heal", true);
+    public static final ConfigEntryBool edit_config = new ConfigEntryBool(true);
+    public static final ConfigEntryBool set_item_name = new ConfigEntryBool(true);
+    public static final ConfigEntryBool heal = new ConfigEntryBool(true);
 }

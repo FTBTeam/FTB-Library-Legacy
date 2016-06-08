@@ -79,7 +79,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             @Override
             public ConfigGroup createGroup()
             {
-                ConfigGroup group = new ConfigGroup("/");
+                ConfigGroup group = new ConfigGroup();
                 group.readFromNBT(m.groupData, true);
                 return group;
             }
