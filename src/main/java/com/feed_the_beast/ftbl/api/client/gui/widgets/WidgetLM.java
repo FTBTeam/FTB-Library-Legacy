@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -12,18 +11,16 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class WidgetLM
 {
-    public final IGuiLM gui;
-    public int posX, posY, width, height;
+    public double posX, posY, widthW, heightW;
     public PanelLM parentPanel = null;
     public String title = null;
 
-    public WidgetLM(IGuiLM g, int x, int y, int w, int h)
+    public WidgetLM(double x, double y, double w, double h)
     {
-        gui = g;
         posX = x;
         posY = y;
-        width = w;
-        height = h;
+        widthW = w;
+        heightW = h;
     }
 
     public boolean isEnabled()
@@ -31,65 +28,36 @@ public class WidgetLM
         return true;
     }
 
-    public boolean shouldRender()
+    public boolean shouldRender(GuiLM gui)
     {
-        int i = getAY();
-
-        if(i < -height || i > gui.getMainPanel().height)
-        {
-            return false;
-        }
-
-        i = getAX();
-
-        return i >= -width && i <= gui.getMainPanel().width;
+        return gui.isVisible(this);
     }
 
-    public int getAX()
+    public double getAX()
     {
         return (parentPanel == null) ? posX : (parentPanel.getAX() + posX);
     }
 
-    public int getAY()
+    public double getAY()
     {
         return (parentPanel == null) ? posY : (parentPanel.getAY() + posY);
     }
 
-    public final int endX()
-    {
-        return getAX() + width;
-    }
-
-    public final int endY()
-    {
-        return getAY() + height;
-    }
-
-    protected boolean mouseOver(int ax, int ay)
-    {
-        return gui.mouse().isInside(ax, ay, width, height);
-    }
-
-    public boolean mouseOver()
-    {
-        return mouseOver(getAX(), getAY());
-    }
-
     public final void render(TextureCoords icon)
     {
-        GuiLM.render(icon, getAX(), getAY(), gui.getZLevel(), width, height);
+        GuiLM.render(icon, getAX(), getAY(), widthW, heightW);
     }
 
-    public void mousePressed(MouseButton b)
+    public void mousePressed(GuiLM gui, MouseButton b)
     {
     }
 
-    public boolean keyPressed(int key, char keyChar)
+    public boolean keyPressed(GuiLM gui, int key, char keyChar)
     {
         return false;
     }
 
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
         if(title != null)
         {
@@ -97,7 +65,7 @@ public class WidgetLM
         }
     }
 
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
     }
 }

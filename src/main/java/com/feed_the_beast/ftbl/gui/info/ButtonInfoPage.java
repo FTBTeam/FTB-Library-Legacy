@@ -26,11 +26,11 @@ public class ButtonInfoPage extends ButtonLM
 
     public ButtonInfoPage(GuiInfo g, InfoPage p, TextureCoords t)
     {
-        super(g, 0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
+        super(0, g.panelPages.heightW, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
         page = p;
         icon = t;
-        updateTitle();
+        updateTitle(g);
     }
 
     public ButtonInfoPage setIconBlur()
@@ -40,7 +40,7 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void onClicked(MouseButton button)
+    public void onClicked(GuiLM gui, MouseButton button)
     {
         FTBLibClient.playClickSound();
 
@@ -55,11 +55,11 @@ public class ButtonInfoPage extends ButtonLM
         }
         else
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiInfo(guiInfo, page));
+            new GuiInfo(guiInfo, page).openGui();
         }
     }
 
-    public void updateTitle()
+    public void updateTitle(GuiLM gui)
     {
         ITextComponent titleC = page.getTitleComponent().createCopy();
         if(guiInfo.selectedPage == page)
@@ -67,7 +67,7 @@ public class ButtonInfoPage extends ButtonLM
             titleC.getStyle().setBold(true);
         }
 
-        if(mouseOver())
+        if(gui.isMouseOver(this))
         {
             titleC.getStyle().setUnderlined(true);
         }
@@ -75,14 +75,14 @@ public class ButtonInfoPage extends ButtonLM
         title = titleC.getFormattedText();
         hover = null;
 
-        if(gui.getFontRenderer().getStringWidth(title) > width)
+        if(guiInfo.font.getStringWidth(title) > widthW)
         {
             hover = page.getTitleComponent().getFormattedText();
         }
     }
 
     @Override
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
         if(hover != null)
         {
@@ -91,18 +91,18 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
-        boolean mouseOver = mouseOver();
+        boolean mouseOver = gui.isMouseOver(this);
 
         if(prevMouseOver != mouseOver)
         {
-            updateTitle();
+            updateTitle(gui);
             prevMouseOver = mouseOver;
         }
 
-        int ay = getAY();
-        int ax = getAX();
+        double ay = getAY();
+        double ax = getAX();
 
         if(icon != null)
         {
@@ -115,7 +115,7 @@ public class ButtonInfoPage extends ButtonLM
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
             }
 
-            GuiLM.render(icon, ax + 1, ay + 1, gui.getZLevel(), 16, 16);
+            GuiLM.render(icon, ax + 1, ay + 1, 16, 16);
 
             if(iconBlur)
             {
@@ -123,12 +123,12 @@ public class ButtonInfoPage extends ButtonLM
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             }
 
-            guiInfo.getFontRenderer().drawString(title, ax + 19, ay + 6, guiInfo.colorText);
+            guiInfo.font.drawString(title, (int) ax + 19, (int) ay + 6, guiInfo.colorText);
         }
         else
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            guiInfo.getFontRenderer().drawString(title, ax + 1, ay + 1, guiInfo.colorText);
+            guiInfo.font.drawString(title, (int) ax + 1, (int) ay + 1, guiInfo.colorText);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

@@ -8,7 +8,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="LatLib" exported="" />
     <orderEntry type="module" module-name="ProjMC_9" exported="" />
     <orderEntry type="module-library" exported="" scope="PROVIDED">
       <library>
@@ -20,5 +19,6 @@
         <jarDirectory url="file://$MODULE_DIR$/../../../ProjMC_9/run/mods/dev" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="LatLib" exported="" />
   </component>
 </module>

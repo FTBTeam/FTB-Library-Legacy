@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,15 +11,10 @@ public abstract class ItemButtonLM extends ButtonLM
 {
     public ItemStack item;
 
-    public ItemButtonLM(IGuiLM g, int x, int y, int w, int h, ItemStack is)
+    public ItemButtonLM(double x, double y, double w, double h, ItemStack is)
     {
-        super(g, x, y, w, h);
+        super(x, y, w, h);
         item = is;
-    }
-
-    public ItemButtonLM(IGuiLM g, int x, int y, int w, int h)
-    {
-        this(g, x, y, w, h, null);
     }
 
     public void setItem(ItemStack is)
@@ -28,11 +23,11 @@ public abstract class ItemButtonLM extends ButtonLM
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
         if(item != null)
         {
-            GuiLM.drawItem(gui, item, getAX(), getAY());
+            FTBLibClient.renderGuiItem(item, getAX(), getAY());
         }
     }
 }

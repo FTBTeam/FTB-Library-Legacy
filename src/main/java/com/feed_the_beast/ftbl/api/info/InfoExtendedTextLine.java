@@ -37,6 +37,7 @@ public class InfoExtendedTextLine extends InfoTextLine
         if(text != null)
         {
             ClickEvent clickEvent = text.getStyle().getClickEvent();
+
             if(clickEvent != null)
             {
                 clickAction = ClickAction.from(clickEvent);

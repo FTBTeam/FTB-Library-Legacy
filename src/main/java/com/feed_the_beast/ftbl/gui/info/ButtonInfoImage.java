@@ -22,22 +22,22 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 
         texture = l.getDisplayImage();
 
-        double w = Math.min(guiInfo.panelText.width, texture.width);
+        double w = Math.min(guiInfo.panelText.widthW, texture.width);
         double h = texture.getHeight(w);
         texture = new TextureCoords(texture.texture, 0, 0, w, h, w, h);
 
-        width = texture.widthI();
-        height = texture.heightI() + 1;
+        widthW = texture.widthI();
+        heightW = texture.heightI() + 1;
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
         if(texture != null)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.setTexture(texture.texture);
-            GuiLM.render(texture, getAX(), getAY(), gui.getZLevel(), texture.width, texture.height);
+            GuiLM.render(texture, getAX(), getAY(), texture.width, texture.height);
         }
     }
 }

@@ -1,19 +1,21 @@
 package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
+import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.event.ClickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 23.01.2016.
  */
-public class ClickAction implements IJsonSerializable
+public class ClickAction implements IJsonSerializable, IClickable
 {
     public ClickActionType type;
     public JsonElement data;
@@ -22,35 +24,35 @@ public class ClickAction implements IJsonSerializable
     {
     }
 
-    public ClickAction(ClickActionType t, JsonElement d)
+    public ClickAction(@Nonnull ClickActionType t, @Nullable JsonElement d)
     {
         type = t;
-        data = d;
+        data = d == null ? JsonNull.INSTANCE : d;
     }
 
-    public static ClickAction from(ClickEvent e)
+    public static ClickAction from(@Nonnull ClickEvent e)
     {
-        if(e != null)
+        JsonPrimitive p = new JsonPrimitive(e.getValue());
+
+        switch(e.getAction())
         {
-            JsonPrimitive p = new JsonPrimitive(e.getValue());
-
-            switch(e.getAction())
-            {
-                case RUN_COMMAND:
-                    return new ClickAction(ClickActionType.CMD, p);
-                case OPEN_FILE:
-                    return new ClickAction(ClickActionType.FILE, p);
-                case SUGGEST_COMMAND:
-                    return new ClickAction(ClickActionType.SHOW_CMD, p);
-                case OPEN_URL:
-                    return new ClickAction(ClickActionType.URL, p);
-            }
+            case RUN_COMMAND:
+                return new ClickAction(ClickActionType.CMD, p);
+            case OPEN_FILE:
+                return new ClickAction(ClickActionType.FILE, p);
+            case SUGGEST_COMMAND:
+                return new ClickAction(ClickActionType.SHOW_CMD, p);
+            case OPEN_URL:
+                return new ClickAction(ClickActionType.URL, p);
+            case CHANGE_PAGE:
+                return new ClickAction(ClickActionType.CHANGE_INFO_PAGE, p);
+            default:
+                return null;
         }
-
-        return null;
     }
 
     @Override
+    @Nonnull
     public JsonElement getSerializableElement()
     {
         if(data == null || data.isJsonNull())
@@ -65,7 +67,7 @@ public class ClickAction implements IJsonSerializable
     }
 
     @Override
-    public void fromJson(JsonElement e)
+    public void fromJson(@Nonnull JsonElement e)
     {
         if(e.isJsonPrimitive())
         {
@@ -85,8 +87,8 @@ public class ClickAction implements IJsonSerializable
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void onClicked(MouseButton button)
+    @Override
+    public void onClicked(@Nonnull MouseButton button)
     {
         if(type != null)
         {

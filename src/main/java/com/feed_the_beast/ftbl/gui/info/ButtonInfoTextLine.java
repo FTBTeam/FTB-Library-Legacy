@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.gui.info;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.InfoTextLine;
 import net.minecraft.util.text.ITextComponent;
@@ -20,7 +21,7 @@ public class ButtonInfoTextLine extends ButtonLM
 
     public ButtonInfoTextLine(GuiInfo g, InfoTextLine l)
     {
-        super(g, 0, g.panelText.height, 0, 0);
+        super(0, g.panelText.heightW, 0, 0);
         guiInfo = g;
 
         if(l != null)
@@ -29,7 +30,7 @@ public class ButtonInfoTextLine extends ButtonLM
 
             if(c != null)
             {
-                text = guiInfo.getFontRenderer().listFormattedStringToWidth(c.getFormattedText(), g.panelText.width);
+                text = guiInfo.font.listFormattedStringToWidth(c.getFormattedText(), (int) g.panelText.widthW);
                 if(text.isEmpty())
                 {
                     text = null;
@@ -41,42 +42,42 @@ public class ButtonInfoTextLine extends ButtonLM
         {
             if(text.size() > 1)
             {
-                width = g.panelText.width;
+                widthW = g.panelText.widthW;
             }
             else
             {
-                width = g.getFontRenderer().getStringWidth(text.get(0));
+                widthW = g.font.getStringWidth(text.get(0));
             }
-            height = 10 * text.size();
+            heightW = 10 * text.size();
         }
         else
         {
-            width = 0;
-            height = 11;
+            widthW = 0;
+            heightW = 11;
         }
     }
 
     @Override
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
     }
 
     @Override
-    public void onClicked(MouseButton button)
+    public void onClicked(GuiLM gui, MouseButton button)
     {
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
-        int ay = getAY();
-        int ax = getAX();
+        int ay = (int) getAY();
+        int ax = (int) getAX();
 
         if(text != null)
         {
             for(int i = 0; i < text.size(); i++)
             {
-                guiInfo.getFontRenderer().drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
+                guiInfo.font.drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
             }
         }
     }

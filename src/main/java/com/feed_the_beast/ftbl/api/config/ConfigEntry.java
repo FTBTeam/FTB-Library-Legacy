@@ -14,8 +14,11 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.IntSupplier;
 
-public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable
+public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable, BooleanSupplier, IntSupplier, DoubleSupplier
 {
     private Byte flags;
     private String[] info;
@@ -80,16 +83,19 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
 
     public abstract String getAsString();
 
+    @Override
     public boolean getAsBoolean()
     {
         return false;
     }
 
+    @Override
     public int getAsInt()
     {
         return 0;
     }
 
+    @Override
     public double getAsDouble()
     {
         return 0D;

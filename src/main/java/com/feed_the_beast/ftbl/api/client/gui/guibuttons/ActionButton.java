@@ -40,12 +40,12 @@ public abstract class ActionButton extends ResourceLocationObject implements Com
         return true;
     }
 
-    public void render(int ax, int ay, float z)
+    public void render(double ax, double ay)
     {
-        GuiLM.render(icon, ax, ay, z, 16D, 16D);
+        GuiLM.render(icon, ax, ay, 16D, 16D);
     }
 
-    public void postRender(int ax, int ay, float z)
+    public void postRender(double ax, double ay)
     {
     }
 }

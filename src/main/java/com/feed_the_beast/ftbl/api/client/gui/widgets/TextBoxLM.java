@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -14,26 +14,25 @@ public class TextBoxLM extends WidgetLM
 {
     public boolean isSelected = false;
     public int charLimit = -1;
-    public int textRenderX = 4, textRenderY = 4;
+    public double textRenderX = 4, textRenderY = 4;
     public int textColor = 0xFFFFFFFF;
     private String text = "";
-    private boolean isValid = true;
 
-    public TextBoxLM(IGuiLM g, int x, int y, int w, int h)
+    public TextBoxLM(double x, double y, double w, double h)
     {
-        super(g, x, y, w, h);
+        super(x, y, w, h);
         text = getText();
     }
 
     @Override
-    public void mousePressed(MouseButton b)
+    public void mousePressed(GuiLM gui, MouseButton b)
     {
         if(charLimit == 0)
         {
             return;
         }
 
-        if(mouseOver())
+        if(gui.isMouseOver(this))
         {
             isSelected = true;
             Keyboard.enableRepeatEvents(true);
@@ -52,7 +51,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public boolean keyPressed(int key, char keyChar)
+    public boolean keyPressed(GuiLM gui, int key, char keyChar)
     {
         if(charLimit == 0)
         {
@@ -141,7 +140,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
         String s = getText();
 
@@ -162,11 +161,11 @@ public class TextBoxLM extends WidgetLM
 
             if(textRenderX == -1)
             {
-                gui.getFontRenderer().drawString(ns, getAX() + textRenderX - (gui.getFontRenderer().getStringWidth(s) / 2) + width / 2, getAY() + textRenderY, col);
+                gui.font.drawString(ns, (int) (getAX() + textRenderX - (gui.font.getStringWidth(s) / 2D) + widthW / 2D), (int) (getAY() + textRenderY), col);
             }
             else
             {
-                gui.getFontRenderer().drawString(ns, getAX() + textRenderX, getAY() + textRenderY, col);
+                gui.font.drawString(ns, (int) (getAX() + textRenderX), (int) (getAY() + textRenderY), col);
             }
         }
     }

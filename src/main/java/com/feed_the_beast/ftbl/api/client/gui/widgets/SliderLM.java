@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import latmod.lib.MathHelperLM;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,23 +13,23 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class SliderLM extends WidgetLM
 {
-    public final int sliderSize;
+    public final double sliderSize;
     public boolean isGrabbed;
-    public float value;
+    public double value;
     public int displayMin = 0;
     public int displayMax = 0;
     public boolean isVertical = false;
-    public float scrollStep = 0.1F;
+    public double scrollStep = 0.1D;
 
-    public SliderLM(IGuiLM g, int x, int y, int w, int h, int ss)
+    public SliderLM(double x, double y, double w, double h, double ss)
     {
-        super(g, x, y, w, h);
+        super(x, y, w, h);
         sliderSize = ss;
     }
 
-    public void update()
+    public void update(GuiLM gui)
     {
-        float v0 = value;
+        double v0 = value;
 
         if(isGrabbed)
         {
@@ -38,74 +37,74 @@ public class SliderLM extends WidgetLM
             {
                 if(isVertical)
                 {
-                    value = (gui.mouse().y - (getAY() + (sliderSize / 2F))) / (float) (height - sliderSize);
+                    value = (gui.mouseY - (getAY() + (sliderSize / 2F))) / (heightW - sliderSize);
                 }
                 else
                 {
-                    value = (gui.mouse().x - (getAX() + (sliderSize / 2F))) / (float) (width - sliderSize);
+                    value = (gui.mouseX - (getAX() + (sliderSize / 2F))) / (widthW - sliderSize);
                 }
             }
             else
             {
                 isGrabbed = false;
-                onReleased();
+                onReleased(gui);
             }
         }
 
-        if(gui.mouse().dwheel != 0 && canMouseScroll())
+        if(gui.dmouseWheel != 0 && canMouseScroll(gui))
         {
-            value += (gui.mouse().dwheel < 0) ? scrollStep : -scrollStep;
+            value += (gui.dmouseWheel < 0) ? scrollStep : -scrollStep;
         }
 
-        value = MathHelperLM.clampFloat(value, 0F, 1F);
+        value = MathHelperLM.clamp(value, 0D, 1D);
 
         if(v0 != value)
         {
-            onMoved();
+            onMoved(gui);
         }
     }
 
-    public void onMoved()
+    public void onMoved(GuiLM gui)
     {
     }
 
-    public void onReleased()
+    public void onReleased(GuiLM gui)
     {
     }
 
-    public boolean canMouseScroll()
+    public boolean canMouseScroll(GuiLM gui)
     {
-        return mouseOver();
+        return gui.isMouseOver(this);
     }
 
     public int getValueI()
     {
-        return (int) (value * ((isVertical ? height : width) - sliderSize));
+        return (int) (value * ((isVertical ? heightW : widthW) - sliderSize));
     }
 
     public void renderSlider(TextureCoords tc)
     {
         if(isVertical)
         {
-            GuiLM.render(tc, getAX(), getAY() + getValueI(), gui.getZLevel(), width, sliderSize);
+            GuiLM.render(tc, getAX(), getAY() + getValueI(), widthW, sliderSize);
         }
         else
         {
-            GuiLM.render(tc, getAX() + getValueI(), getAY(), gui.getZLevel(), sliderSize, height);
+            GuiLM.render(tc, getAX() + getValueI(), getAY(), sliderSize, heightW);
         }
     }
 
     @Override
-    public void mousePressed(MouseButton b)
+    public void mousePressed(GuiLM gui, MouseButton b)
     {
-        if(mouseOver() && b.isLeft())
+        if(b.isLeft() && gui.isMouseOver(this))
         {
             isGrabbed = true;
         }
     }
 
     @Override
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
         if(displayMin == 0 && displayMax == 0)
         {

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
@@ -52,6 +51,6 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     {
         InfoPage page = new InfoPage(m.infoID);
         page.fromJson(m.json);
-        FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, page));
+        new GuiInfo(null, page).openGui();
     }
 }

@@ -16,15 +16,11 @@ import com.feed_the_beast.ftbl.gui.GuiNotifications;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.util.TextureCoords;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTBLibActions
 {
@@ -33,7 +29,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiNotifications(FTBLibClient.mc().currentScreen));
+            new GuiNotifications().openGui();
         }
 
         @Override
@@ -49,15 +45,15 @@ public class FTBLibActions
         }
 
         @Override
-        public void postRender(int ax, int ay, float z)
+        public void postRender(double ax, double ay)
         {
             String n = String.valueOf(ClientNotifications.Perm.list.size());
             int nw = FTBLibClient.mc().fontRendererObj.getStringWidth(n);
             int width = 16;
             GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
-            GuiLM.drawBlankRect(ax + width - nw, ay - 4, z, nw + 1, 9);
+            GuiLM.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.mc().fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
+            FTBLibClient.mc().fontRendererObj.drawString(n, (int) (ax + width - nw + 1), (int) (ay - 3), 0xFFFFFFFF);
         }
     });
 
@@ -66,7 +62,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiInfo(null, new InfoFriendsGUI()));
+            new GuiInfo(null, new InfoFriendsGUI()).openGui();
         }
 
         @Override
@@ -81,7 +77,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiEditConfig(FTBLibClient.mc().currentScreen, null, ClientConfigRegistry.CONTAINER));
+            new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).openGui();
         }
     });
 
@@ -99,7 +95,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.execClientCommand("/heal");
+            FTBLibClient.execClientCommand("/ftb heal");
         }
     });
 
@@ -142,34 +138,8 @@ public class FTBLibActions
 
     public static void init()
     {
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), new GuiScreenRegistry.Entry()
-        {
-            @Override
-            @SideOnly(Side.CLIENT)
-            public GuiScreen openGui(EntityPlayer ep)
-            {
-                return new GuiNotifications(FTBLibClient.mc().currentScreen);
-            }
-        });
-
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new GuiScreenRegistry.Entry()
-        {
-            @Override
-            @SideOnly(Side.CLIENT)
-            public GuiScreen openGui(EntityPlayer ep)
-            {
-                return new GuiInfo(null, new InfoFriendsGUI());
-            }
-        });
-
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"), new GuiScreenRegistry.Entry()
-        {
-            @Override
-            @SideOnly(Side.CLIENT)
-            public GuiScreen openGui(EntityPlayer ep)
-            {
-                return new GuiEditConfig(FTBLibClient.mc().currentScreen, null, ClientConfigRegistry.CONTAINER);
-            }
-        });
+        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), () -> new GuiNotifications().getWrapper());
+        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo(null, new InfoFriendsGUI()).getWrapper());
+        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"), () -> new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).getWrapper());
     }
 }

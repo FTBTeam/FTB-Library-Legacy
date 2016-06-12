@@ -80,19 +80,19 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.render(b.xPosition, b.yPosition, zLevel);
+                b.button.render(b.xPosition, b.yPosition);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
                     GlStateManager.color(1F, 1F, 1F, 0.3F);
-                    GuiLM.drawBlankRect(b.xPosition, b.yPosition, 0D, b.width, b.height);
+                    GuiLM.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height);
                     GlStateManager.color(1F, 1F, 1F, 1F);
                 }
             }
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.postRender(b.xPosition, b.yPosition, 0F);
+                b.button.postRender(b.xPosition, b.yPosition);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
@@ -123,7 +123,7 @@ public class FTBLibClientEventHandler
                     GlStateManager.enableBlend();
                     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
-                    GuiLM.drawBlankRect(-3, -2, zLevel, tw + 6, 12);
+                    GuiLM.drawBlankRect(-3, -2, tw + 6, 12);
                     GlStateManager.color(1F, 1F, 1F, 1F);
                     mc.fontRendererObj.drawString(s, 0, 0, 0xFFFFFFFF);
                     GlStateManager.popMatrix();

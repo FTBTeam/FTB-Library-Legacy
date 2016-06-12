@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public abstract class PanelLM extends WidgetLM // GuiLM
+public abstract class PanelLM extends WidgetLM
 {
     public final List<WidgetLM> widgets;
 
-    public PanelLM(IGuiLM g, int x, int y, int w, int h)
+    public PanelLM(int x, int y, int w, int h)
     {
-        super(g, x, y, w, h);
+        super(x, y, w, h);
         widgets = new ArrayList<>();
     }
 
@@ -23,16 +23,15 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 
     public void add(WidgetLM w)
     {
-        if(w == null)
+        if(w != null)
         {
-            return;
-        }
-        w.parentPanel = this;
-        widgets.add(w);
+            w.parentPanel = this;
+            widgets.add(w);
 
-        if(w instanceof PanelLM)
-        {
-            ((PanelLM) w).refreshWidgets();
+            if(w instanceof PanelLM)
+            {
+                ((PanelLM) w).refreshWidgets();
+            }
         }
     }
 
@@ -54,7 +53,7 @@ public abstract class PanelLM extends WidgetLM // GuiLM
     }
 
     @Override
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
         if(title != null)
         {
@@ -63,46 +62,47 @@ public abstract class PanelLM extends WidgetLM // GuiLM
 
         for(WidgetLM w : widgets)
         {
-            if(w.isEnabled() && w.mouseOver())
+            if(w.isEnabled() && gui.isMouseOver(w))
             {
-                w.addMouseOverText(l);
+                w.addMouseOverText(gui, l);
             }
         }
     }
 
     @Override
-    public void mousePressed(MouseButton b)
+    public void mousePressed(GuiLM gui, MouseButton b)
     {
         for(WidgetLM w : widgets)
         {
             if(w.isEnabled())
             {
-                w.mousePressed(b);
+                w.mousePressed(gui, b);
             }
         }
     }
 
     @Override
-    public boolean keyPressed(int key, char keyChar)
+    public boolean keyPressed(GuiLM gui, int key, char keyChar)
     {
         for(WidgetLM w : widgets)
         {
-            if(w.isEnabled() && w.keyPressed(key, keyChar))
+            if(w.isEnabled() && w.keyPressed(gui, key, keyChar))
             {
                 return true;
             }
         }
+
         return false;
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
         for(WidgetLM widget : widgets)
         {
-            if(widget.shouldRender())
+            if(widget.shouldRender(gui))
             {
-                widget.renderWidget();
+                widget.renderWidget(gui);
             }
         }
     }

@@ -28,41 +28,39 @@ public class InfoFriendsGUIPage extends InfoPage
         public Button(GuiInfo g, InfoFriendsGUIPage p)
         {
             super(g, p, null);
-            height = 20;
+            heightW = 20;
         }
 
         @Override
-        public void updateTitle()
+        public void updateTitle(GuiLM gui)
         {
             title = playerLM.getProfile().getName();
             hover = null;
 
-            if(gui.getFontRenderer().getStringWidth(title) > width - 24)
+            if(guiInfo.font.getStringWidth(title) > widthW - 24)
             {
                 hover = title + "";
-                title = gui.getFontRenderer().trimStringToWidth(title, width - 22) + "...";
+                title = guiInfo.font.trimStringToWidth(title, (int) widthW - 22) + "...";
             }
         }
 
         @Override
-        public void onClicked(MouseButton button)
+        public void onClicked(GuiLM gui, MouseButton button)
         {
             new MessageRequestPlayerInfo(playerLM.getProfile().getId()).sendToServer();
-            super.onClicked(button);
+            super.onClicked(gui, button);
         }
 
         @Override
-        public void renderWidget()
+        public void renderWidget(GuiLM gui)
         {
-            int ay = getAY();
-            int ax = getAX();
+            double ay = getAY();
+            double ax = getAX();
 
-            double z = gui.getZLevel();
-
-            if(mouseOver())
+            if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
-                GuiLM.drawBlankRect(ax, ay, z, width, height);
+                GuiLM.drawBlankRect(ax, ay, widthW, heightW);
             }
 
             if(ForgeWorldSP.inst.clientPlayer.hasTeam())
@@ -75,12 +73,12 @@ public class InfoFriendsGUIPage extends InfoPage
                 GlStateManager.color(0F, 0F, 0F, 1F);
             }
 
-            GuiLM.drawBlankRect(ax + 1, ay + 1, z, 18, 18);
+            GuiLM.drawBlankRect(ax + 1, ay + 1, 18, 18);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
-            GuiLM.drawPlayerHead(playerLM.getProfile().getName(), ax + 2, ay + 2, 16, 16, z);
+            GuiLM.drawPlayerHead(playerLM.getProfile().getName(), ax + 2, ay + 2, 16, 16);
 
-            gui.getFontRenderer().drawString(title, ax + 22, ay + 6, playerLM.isOnline() ? 0xFF11FF11 : 0xFFFFFFFF);
+            guiInfo.font.drawString(title, (int) ax + 22, (int) ay + 6, playerLM.isOnline() ? 0xFF11FF11 : 0xFFFFFFFF);
         }
     }
 

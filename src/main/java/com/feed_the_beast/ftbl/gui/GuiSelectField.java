@@ -25,21 +25,20 @@ public class GuiSelectField extends GuiLM
 
     public GuiSelectField(Object id, LMGuis.FieldType typ, String d, ObjectCallback.Handler c)
     {
-        super(null, null);
         ID = id;
         type = typ;
         def = d;
         callback = c;
 
-        mainPanel.width = 100;
-        mainPanel.height = 40;
+        widthW = 100;
+        heightW = 40;
 
-        int bsize = mainPanel.width / 2 - 4;
+        double bsize = widthW / 2D - 4D;
 
-        buttonCancel = new ButtonSimpleLM(this, 2, mainPanel.height - 18, bsize, 16)
+        buttonCancel = new ButtonSimpleLM(2, heightW - 18, bsize, 16)
         {
             @Override
-            public void onClicked(MouseButton button)
+            public void onClicked(GuiLM gui, MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 callback.onCallback(new ObjectCallback(ID, false, true, def));
@@ -48,10 +47,10 @@ public class GuiSelectField extends GuiLM
 
         buttonCancel.title = GuiLang.button_cancel.translate();
 
-        buttonAccept = new ButtonSimpleLM(this, mainPanel.width - bsize - 2, mainPanel.height - 18, bsize, 16)
+        buttonAccept = new ButtonSimpleLM(widthW - bsize - 2, heightW - 18, bsize, 16)
         {
             @Override
-            public void onClicked(MouseButton button)
+            public void onClicked(GuiLM gui, MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 if(textBox.isValid())
@@ -74,7 +73,7 @@ public class GuiSelectField extends GuiLM
 
         buttonAccept.title = GuiLang.button_accept.translate();
 
-        textBox = new TextBoxLM(this, 2, 2, mainPanel.width - 4, 18)
+        textBox = new TextBoxLM(2, 2, widthW - 4, 18)
         {
             @Override
             public boolean isValid()
@@ -85,7 +84,7 @@ public class GuiSelectField extends GuiLM
             @Override
             public void returnPressed()
             {
-                buttonAccept.onClicked(MouseButton.LEFT);
+                buttonAccept.onClicked(GuiSelectField.this, MouseButton.LEFT);
             }
         };
 
@@ -104,32 +103,32 @@ public class GuiSelectField extends GuiLM
     @Override
     public void addWidgets()
     {
-        mainPanel.add(buttonCancel);
-        mainPanel.add(buttonAccept);
-        mainPanel.add(textBox);
+        add(buttonCancel);
+        add(buttonAccept);
+        add(textBox);
     }
 
     @Override
     public void drawBackground()
     {
-        int size = 8 + getFontRenderer().getStringWidth(textBox.getText());
-        if(size > mainPanel.width)
+        int size = 8 + font.getStringWidth(textBox.getText());
+        if(size > widthW)
         {
-            mainPanel.width = size;
+            widthW = size;
             int bsize = size / 2 - 4;
-            buttonAccept.width = buttonCancel.width = bsize;
-            buttonAccept.posX = mainPanel.width - bsize - 2;
-            textBox.width = mainPanel.width - 4;
+            buttonAccept.widthW = buttonCancel.widthW = bsize;
+            buttonAccept.posX = widthW - bsize - 2;
+            textBox.widthW = widthW - 4;
             initGui();
         }
 
         GlStateManager.color(0.4F, 0.4F, 0.4F, 0.66F);
-        drawBlankRect(mainPanel.posX, mainPanel.posY, zLevel, mainPanel.width, mainPanel.height);
+        drawBlankRect(posX, posY, widthW, heightW);
         GlStateManager.color(0.2F, 0.2F, 0.2F, 1F);
-        drawBlankRect(textBox.getAX(), textBox.getAY(), zLevel, textBox.width, textBox.height);
+        drawBlankRect(textBox.getAX(), textBox.getAY(), textBox.widthW, textBox.heightW);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        buttonAccept.renderWidget();
-        buttonCancel.renderWidget();
-        textBox.renderWidget();
+        buttonAccept.renderWidget(this);
+        buttonCancel.renderWidget(this);
+        textBox.renderWidget(this);
     }
 }

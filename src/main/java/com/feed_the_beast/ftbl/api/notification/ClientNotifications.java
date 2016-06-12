@@ -101,7 +101,7 @@ public class ClientNotifications
                 GlStateManager.disableTexture2D();
                 GlStateManager.disableLighting();
                 FTBLibClient.setGLColor(notification.color, 230);
-                GuiLM.drawBlankRect(0D, 0D, 0D, displayW, 32D);
+                GuiLM.drawBlankRect(0D, 0D, displayW, 32D);
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(1F, 1F, 1F, 1F);
 
@@ -119,7 +119,7 @@ public class ClientNotifications
 
                 if(notification.item != null)
                 {
-                    FTBLibClient.renderGuiItem(notification.item, FTBLibClient.mc().getRenderItem(), font, 8, 8);
+                    FTBLibClient.renderGuiItem(notification.item, 8D, 8D);
                 }
 
                 GlStateManager.depthMask(true);

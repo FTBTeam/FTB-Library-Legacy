@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoTextLine;
@@ -25,42 +26,37 @@ public class InfoPlayerInventoryLine extends InfoTextLine
         public ButtonInfoPlayerInventory(GuiInfo g, InfoPlayerInventoryLine w)
         {
             super(g, null);
-            width = 18 * 9;
-            height = 18 * 4 + 4;
+            widthW = 18 * 9;
+            heightW = 18 * 4 + 4;
         }
 
         @Override
-        public void addMouseOverText(List<String> l)
+        public void addMouseOverText(GuiLM gui, List<String> l)
         {
         }
 
         @Override
-        public void onClicked(MouseButton button)
+        public void onClicked(GuiLM gui, MouseButton button)
         {
         }
 
         @Override
-        public void renderWidget()
+        public void renderWidget(GuiLM gui)
         {
-            int ay = getAY();
-            if(ay < -height || ay > guiInfo.mainPanel.height)
-            {
-                return;
-            }
-            int ax = getAX();
-            float z = gui.getZLevel();
+            double ay = getAY();
+            double ax = getAX();
 
             GlStateManager.color(1F, 1F, 1F, 0.2F);
-            GuiLM.drawBlankRect(ax, ay, z, width, height);
+            GuiLM.drawBlankRect(ax, ay, widthW, heightW);
 
             for(int i = 0; i < 9 * 3; i++)
             {
-                GuiLM.drawBlankRect(ax + (i % 9) * 18 + 1, ay + (i / 9) * 18 + 1, z, 16, 16);
+                GuiLM.drawBlankRect(ax + (i % 9) * 18 + 1, ay + (i / 9) * 18 + 1, 16, 16);
             }
 
             for(int i = 0; i < 9; i++)
             {
-                GuiLM.drawBlankRect(ax + i * 18 + 1, ay + 18 * 3 + 5, z, 16, 16);
+                GuiLM.drawBlankRect(ax + i * 18 + 1, ay + 18 * 3 + 5, 16, 16);
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -71,12 +67,18 @@ public class InfoPlayerInventoryLine extends InfoTextLine
             {
                 for(int i = 0; i < ep.inventory.mainInventory.length - 9; i++)
                 {
-                    GuiLM.drawItem(gui, ep.inventory.mainInventory[i + 9], ax + (i % 9) * 18 + 1, ay + (i / 9) * 18 + 1);
+                    if(ep.inventory.mainInventory[i + 9] != null)
+                    {
+                        FTBLibClient.renderGuiItem(ep.inventory.mainInventory[i + 9], ax + (i % 9) * 18 + 1, ay + (i / 9) * 18 + 1);
+                    }
                 }
 
                 for(int i = 0; i < 9; i++)
                 {
-                    GuiLM.drawItem(gui, ep.inventory.mainInventory[i], ax + i * 18 + 1, ay + 18 * 3 + 5);
+                    if(ep.inventory.mainInventory[i] != null)
+                    {
+                        FTBLibClient.renderGuiItem(ep.inventory.mainInventory[i], ax + i * 18 + 1, ay + 18 * 3 + 5);
+                    }
                 }
             }
         }

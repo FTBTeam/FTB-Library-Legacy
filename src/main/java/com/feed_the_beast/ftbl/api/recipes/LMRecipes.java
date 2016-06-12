@@ -24,7 +24,6 @@ public class LMRecipes
         return is1;
     }
 
-    @SuppressWarnings("unchecked")
     public IRecipe addIRecipe(IRecipe r)
     {
         CraftingManager.getInstance().getRecipeList().add(r);

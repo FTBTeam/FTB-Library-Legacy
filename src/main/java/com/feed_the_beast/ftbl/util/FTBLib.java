@@ -464,7 +464,10 @@ public class FTBLib
         {
             Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
             field.setAccessible(true);
+
+            @SuppressWarnings("unchecked")
             List<ITickable> list = (List<ITickable>) field.get(server);
+
             list.add(tickable);
         }
         catch(Exception ex)

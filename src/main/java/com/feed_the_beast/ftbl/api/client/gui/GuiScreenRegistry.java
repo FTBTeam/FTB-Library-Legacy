@@ -1,43 +1,36 @@
 package com.feed_the_beast.ftbl.api.client.gui;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Created by LatvianModder on 17.01.2016.
  */
 public class GuiScreenRegistry
 {
-    public static final Map<ResourceLocation, Entry> map = new HashMap<>();
+    public static final Map<ResourceLocation, Supplier<GuiScreen>> map = new HashMap<>();
 
-    public interface Entry
+    public static void register(@Nonnull ResourceLocation id, @Nonnull Supplier<GuiScreen> s)
     {
-        @SideOnly(Side.CLIENT)
-        GuiScreen openGui(EntityPlayer ep);
-    }
-
-    public static void register(ResourceLocation s, Entry e)
-    {
-        if(s != null && e != null && !map.containsKey(s))
+        if(!map.containsKey(id))
         {
-            map.put(s, e);
+            map.put(id, s);
         }
     }
 
+    @Nullable
     @SideOnly(Side.CLIENT)
-    public static GuiScreen openGui(EntityPlayer ep, ResourceLocation id)
+    public static GuiScreen openGui(@Nonnull ResourceLocation id)
     {
-        Entry e = map.get(id);
-        if(e != null)
-        {
-            return e.openGui(ep);
-        }
-        return null;
+        Supplier<GuiScreen> e = map.get(id);
+        return (e == null) ? null : e.get();
     }
 }

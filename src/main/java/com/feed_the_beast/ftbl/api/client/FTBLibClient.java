@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbl.api.client;
 
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.api.client.gui.IGuiWrapper;
 import latmod.lib.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
@@ -41,6 +42,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,24 +55,25 @@ public class FTBLibClient
     private static float lastBrightnessX, lastBrightnessY;
     private static EntityItem entityItem;
 
-    public static final Minecraft mc()
+    public static Minecraft mc()
     {
         return FMLClientHandler.instance().getClient();
     }
 
     // - Registry - //
 
-    public static <T extends Entity> void addEntityRenderer(Class<T> c, IRenderFactory<? super T> r)
+    public static <T extends Entity> void addEntityRenderer(@Nonnull Class<T> c, @Nonnull IRenderFactory<? super T> r)
     {
         RenderingRegistry.registerEntityRenderingHandler(c, r);
     }
 
-    public static <T extends TileEntity> void addTileRenderer(Class<T> c, TileEntitySpecialRenderer<? super T> r)
+    public static <T extends TileEntity> void addTileRenderer(@Nonnull Class<T> c, @Nonnull TileEntitySpecialRenderer<? super T> r)
     {
         ClientRegistry.bindTileEntitySpecialRenderer(c, r);
     }
 
-    public static KeyBinding addKeyBinding(KeyBinding k)
+    @Nonnull
+    public static KeyBinding addKeyBinding(@Nonnull KeyBinding k)
     {
         ClientRegistry.registerKeyBinding(k);
         return k;
@@ -84,7 +87,7 @@ public class FTBLibClient
         return mc.thePlayer != null ? mc.theWorld.provider.getDimension() : 0;
     }
 
-    public static void spawnPart(Particle e)
+    public static void spawnPart(@Nonnull Particle e)
     {
         mc().effectRenderer.addEffect(e);
     }
@@ -109,7 +112,8 @@ public class FTBLibClient
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
     }
 
-    public static EntityPlayerSP getPlayerSP(UUID uuid)
+    @Nullable
+    public static EntityPlayerSP getPlayerSP(@Nullable UUID uuid)
     {
         //getMinecraft().getIntegratedServer().getConfigurationManager().playerEntityList
 
@@ -132,7 +136,7 @@ public class FTBLibClient
         return null;
     }
 
-    public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, IImageBuffer buffer)
+    public static ThreadDownloadImageData getDownloadImage(@Nonnull ResourceLocation out, @Nonnull String url, ResourceLocation def, @Nullable IImageBuffer buffer)
     {
         TextureManager t = mc().getTextureManager();
         ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);
@@ -164,12 +168,9 @@ public class FTBLibClient
         setGLColor(c, LMColorUtils.getAlpha(c));
     }
 
-    public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
+    @Nonnull
+    public static ByteBuffer toByteBuffer(@Nonnull int pixels[], boolean alpha)
     {
-        if(pixels == null)
-        {
-            return null;
-        }
         ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
         byte alpha255 = (byte) 255;
 
@@ -185,7 +186,7 @@ public class FTBLibClient
         return bb;
     }
 
-    public static void execClientCommand(String s)
+    public static void execClientCommand(@Nonnull String s)
     {
         Minecraft mc = mc();
 
@@ -196,7 +197,8 @@ public class FTBLibClient
         }
     }
 
-    public static ResourceLocation getSkinTexture(String username)
+    @Nonnull
+    public static ResourceLocation getSkinTexture(@Nonnull String username)
     {
         ResourceLocation r = cachedSkins.get(username);
 
@@ -228,29 +230,20 @@ public class FTBLibClient
         cachedSkins.clear();
     }
 
-    public static boolean canRenderGui()
+    public static void renderItem(@Nonnull World w, @Nonnull ItemStack is)
     {
-        Minecraft mc = mc();
-        return mc.currentScreen == null || mc.currentScreen instanceof GuiChat;
-    }
-
-    public static void renderItem(World w, ItemStack is)
-    {
-        if(w == null || is == null)
-        {
-            return;
-        }
         if(entityItem == null)
         {
             entityItem = new EntityItem(w);
         }
+
         entityItem.worldObj = w;
         entityItem.hoverStart = 0F;
         entityItem.setEntityItemStack(is);
         mc().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
     }
 
-    public static void drawOutlinedBoundingBoxGL(AxisAlignedBB bb)
+    public static void drawOutlinedBoundingBox(@Nonnull AxisAlignedBB bb)
     {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
@@ -283,12 +276,11 @@ public class FTBLibClient
         tessellator.draw();
     }
 
-    public static void renderGuiItem(ItemStack is, RenderItem itemRender, FontRenderer font, int x, int y)
+    public static void renderGuiItem(@Nonnull ItemStack is, double x, double y)
     {
-        if(is == null || is.getItem() == null)
-        {
-            return;
-        }
+        RenderItem itemRender = mc().getRenderItem();
+        itemRender.zLevel = 200F;
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 0F);
         GlStateManager.enableLighting();
@@ -298,5 +290,29 @@ public class FTBLibClient
         GlStateManager.color(1F, 1F, 1F, 1F);
         itemRender.renderItem(is, itemRender.getItemModelMesher().getItemModel(is));
         GlStateManager.popMatrix();
+
+        itemRender.zLevel = 0F;
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <E extends GuiLM> E getWrappedGui(@Nullable GuiScreen gui, @Nullable Class<E> c)
+    {
+        if(gui == null)
+        {
+            gui = mc().currentScreen;
+        }
+
+        if(gui instanceof IGuiWrapper)
+        {
+            GuiLM g = ((IGuiWrapper) gui).getWrappedGui();
+
+            if(g != null && (c == null || c.isAssignableFrom(g.getClass())))
+            {
+                return (E) g;
+            }
+        }
+
+        return null;
     }
 }

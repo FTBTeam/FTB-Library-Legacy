@@ -36,7 +36,6 @@ public class FTBLibModClient extends FTBLibModCommon
     {
         //JsonHelper.initClient();
         MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.instance);
-        LMGuiHandlerRegistry.add(FTBLibGuiHandler.instance);
 
         //For Dev reasons, see DevConsole
         FTBLib.userIsLatvianModder = FTBLibClient.mc().getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.gui.friends;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
@@ -90,25 +91,21 @@ public class InfoPlayerViewLine extends InfoTextLine
         public ButtonInfoPlayerView(GuiInfo g, InfoPlayerViewLine w)
         {
             super(g, null);
-            height = 1;
+            heightW = 1;
         }
 
         @Override
-        public void renderWidget()
+        public void renderWidget(GuiLM gui)
         {
-            int ay = getAY();
-            if(ay < -height || ay > guiInfo.mainPanel.height)
-            {
-                return;
-            }
-            int ax = getAX();
+            double ay = getAY();
+            //double ax = getAX();
 
             if(player == null)
             {
                 player = new Player(ForgeWorldSP.inst.clientPlayer);
             }
 
-            if(mouseOver() && Mouse.isButtonDown(1))
+            if(gui.isMouseOver(this) && Mouse.isButtonDown(1))
             {
                 for(int i = 0; i < player.inventory.armorInventory.length; i++)
                 {
@@ -138,18 +135,19 @@ public class InfoPlayerViewLine extends InfoTextLine
 
             GlStateManager.pushMatrix();
 
-            int pheight = 120;
-            int pwidth = (int) (pheight / 1.625F);
+            double pheight = 120D;
+            double pwidth = pheight / 1.625D;
 
-            int playerX = guiInfo.mainPanel.width - pwidth / 2 - 30;
-            int playerY = ay + pheight + 10;
+            double playerX = guiInfo.widthW - pwidth / 2 - 30;
+            double playerY = ay + pheight + 10;
 
             pheight = pheight / 2;
+            pwidth = pheight / 1.625D;
 
             FTBLibClient.setTexture(player.getLocationSkin());
             GlStateManager.translate(0F, 0F, 100F);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            GuiInventory.drawEntityOnScreen(playerX, playerY, pheight, playerX - gui.mouse().x, playerY - (pheight + (pheight / 1.625F)) - gui.mouse().y, player);
+            GuiInventory.drawEntityOnScreen((int) playerX, (int) playerY, (int) pheight, (float) playerX - guiInfo.mouseX, (float) (playerY - (pheight + pwidth) - guiInfo.mouseY), player);
             GlStateManager.color(1F, 1F, 1F, 1F);
             GlStateManager.popMatrix();
         }

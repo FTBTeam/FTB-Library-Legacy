@@ -3,9 +3,7 @@ package com.feed_the_beast.ftbl.gui;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.util.TextureCoords;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -13,34 +11,27 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiViewImage extends GuiLM
 {
     public final TextureCoords texCoords;
-    public final ButtonLM buttonClose;
 
-    public GuiViewImage(GuiScreen p, TextureCoords t)
+    public GuiViewImage(TextureCoords t)
     {
-        super(p, null);
         texCoords = t;
-
-        buttonClose = new ButtonLM(this, 0, 0, 0, 0)
-        {
-            @Override
-            public void onClicked(MouseButton button)
-            {
-                closeGui();
-            }
-        };
     }
 
     @Override
-    public void initLMGui()
+    public void onInit()
     {
-        mainPanel.width = buttonClose.width = width;
-        mainPanel.height = buttonClose.height = height;
+        setFullscreen();
     }
 
     @Override
     public void addWidgets()
     {
-        mainPanel.add(buttonClose);
+    }
+
+    @Override
+    public void mousePressed(GuiLM gui, MouseButton b)
+    {
+        closeGui();
     }
 
     @Override
@@ -55,19 +46,19 @@ public class GuiViewImage extends GuiLM
             double w = texCoords.width;
             double h = texCoords.height;
 
-            if(w > width)
+            if(w > widthW)
             {
-                w = width;
+                w = widthW;
                 h = texCoords.getHeight(w);
             }
 
-            if(h > height)
+            if(h > heightW)
             {
-                h = height;
+                h = heightW;
                 w = texCoords.getWidth(h);
             }
 
-            GuiLM.render(texCoords, (width - w) / 2, (height - h) / 2, zLevel, w, h);
+            GuiLM.render(texCoords, (widthW - w) / 2, (heightW - h) / 2, w, h);
         }
     }
 }

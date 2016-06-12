@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ButtonNotification extends ButtonLM
@@ -18,82 +19,83 @@ public class ButtonNotification extends ButtonLM
 
     public ButtonNotification(GuiNotifications g, ClientNotifications.Perm n)
     {
-        super(g, 0, 0, 0, 24);
+        super(0, 0, 0, 24);
         notification = n;
         posY += g.buttonList.size() * 25;
         title = n.notification.title.getFormattedText();
-        width = gui.getFontRenderer().getStringWidth(n.notification.title.getFormattedText());
+        widthW = g.font.getStringWidth(n.notification.title.getFormattedText());
         if(n.notification.desc != null)
         {
-            width = Math.max(width, gui.getFontRenderer().getStringWidth(n.notification.desc.getFormattedText()));
+            widthW = Math.max(widthW, g.font.getStringWidth(n.notification.desc.getFormattedText()));
         }
         if(n.notification.item != null)
         {
-            width += 20;
+            widthW += 20;
         }
-        width += 8;
+        widthW += 8;
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
-        int ax = getAX();
-        int ay = getAY();
+        double ax = getAX();
+        double ay = getAY();
 
         int tx = 4;
         ItemStack is = notification.notification.item;
         if(is != null)
         {
             tx += 20;
-            GuiLM.drawItem(gui, is, ax + 4, ay + 4);
+            FTBLibClient.renderGuiItem(is, ax + 4D, ay + 4D);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        FTBLibClient.setGLColor(notification.notification.color, mouseOver(ax, ay) ? 255 : 185);
-        GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), parentPanel.width, height);
+        FTBLibClient.setGLColor(notification.notification.color, gui.isMouseOver(this) ? 255 : 185);
+        GuiLM.drawBlankRect(ax, ay, parentPanel.widthW, heightW);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        gui.getFontRenderer().drawString(title, ax + tx, ay + 4, 0xFFFFFFFF);
+        gui.font.drawString(title, (int) (ax + tx), (int) ay + 4, 0xFFFFFFFF);
         if(notification.notification.desc != null)
         {
-            gui.getFontRenderer().drawString(notification.notification.desc.getFormattedText(), ax + tx, ay + 14, 0xFFFFFFFF);
+            gui.font.drawString(notification.notification.desc.getFormattedText(), (int) (ax + tx), (int) ay + 14, 0xFFFFFFFF);
         }
 
-        if(mouseOver(ax, ay))
+        if(gui.isMouseOver(this))
         {
             float alpha = 0.4F;
-            if(gui.mouse().x >= ax + width - 16)
+            if(gui.mouseX >= ax + widthW - 16)
             {
                 alpha = 1F;
             }
 
             GlStateManager.color(1F, 1F, 1F, alpha);
-            GuiLM.render(GuiIcons.close, ax + width - 18, ay + 4, gui.getZLevel(), 32, 32);
+            GuiLM.render(GuiIcons.close, ax + widthW - 18, ay + 4, 32, 32);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
 
     @Override
-    public void onClicked(MouseButton button)
+    public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
     {
         FTBLibClient.playClickSound();
 
-        if(gui.mouse().x < getAX() + width - 16)
+        if(gui.mouseX < getAX() + widthW - 16)
         {
             notification.onClicked(button);
         }
         ClientNotifications.Perm.list.remove(notification.notification);
 
-        gui.initLMGui();
+        gui.onInit();
         gui.refreshWidgets();
     }
 
     @Override
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
-        int ax = getAX();
-        if(mouseOver(ax, getAY()) && gui.mouse().x >= ax + width - 16)
+        double ax = getAX();
+
+        if(gui.isMouseOver(this) && gui.mouseX >= ax + widthW - 16)
         {
             l.add(GuiLang.button_close.translate());
             return;

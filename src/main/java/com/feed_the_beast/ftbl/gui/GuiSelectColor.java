@@ -40,25 +40,23 @@ public class GuiSelectColor extends GuiLM
     public static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H);
     public static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H);
 
-    public static class ColorSelector extends WidgetLM
+    public class ColorSelector extends WidgetLM
     {
-        public final GuiSelectColor gui;
         public boolean grabbed = false;
         public double cursorPosX = 0D;
         public double cursorPosY = 0D;
 
-        public ColorSelector(GuiSelectColor g, int x, int y, int w, int h)
+        public ColorSelector(int x, int y, int w, int h)
         {
-            super(g, x, y, w, h);
-            gui = g;
+            super(x, y, w, h);
             cursorPosX = cursorPosY = -1D;
         }
 
         @Override
-        public void renderWidget()
+        public void renderWidget(GuiLM gui)
         {
-            int ax = getAX();
-            int ay = getAY();
+            double ax = getAX();
+            double ay = getAY();
 
             if(grabbed && !Mouse.isButtonDown(0))
             {
@@ -67,8 +65,8 @@ public class GuiSelectColor extends GuiLM
 
             if(grabbed)
             {
-                cursorPosX = (gui.mouse().x - ax) / (double) width;
-                cursorPosY = (gui.mouse().y - ay) / (double) height;
+                cursorPosX = (mouseX - ax) / widthW;
+                cursorPosY = (mouseY - ay) / heightW;
 
                 double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 
@@ -84,26 +82,26 @@ public class GuiSelectColor extends GuiLM
 
                 double h = Math.atan2(cursorPosY - 0.5D, cursorPosX - 0.5D) / MathHelperLM.TWO_PI;
 
-                gui.setColor(new LMColor.HSB((float) h, (float) s, gui.sliderBrightness.value));
+                setColor(new LMColor.HSB((float) h, (float) s, (float) sliderBrightness.value));
             }
 
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.setTexture(TEXTURE_WHEEL);
-            GuiLM.drawTexturedRectD(ax, ay, gui.zLevel, width, height, 0D, 0D, 1D, 1D);
+            drawTexturedRect(ax, ay, widthW, heightW, 0D, 0D, 1D, 1D);
 
             if(cursorPosX >= 0D && cursorPosY >= 0D)
             {
-                GlStateManager.color(1F - gui.sliderRed.value, 1F - gui.sliderGreen.value, 1F - gui.sliderBlue.value, 1F);
-                GuiLM.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, gui.getZLevel(), 4, 4);
+                GlStateManager.color((float) (1F - sliderRed.value), (float) (1F - sliderGreen.value), (float) (1F - sliderBlue.value), 1F);
+                GuiLM.render(cursor_tex, ax + cursorPosX * widthW - 2, ay + cursorPosY * heightW - 2, 4, 4);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
 
         @Override
-        public void mousePressed(MouseButton b)
+        public void mousePressed(GuiLM gui, MouseButton b)
         {
-            if(b.isLeft() && mouseOver())
+            if(b.isLeft() && gui.isMouseOver(this))
             {
                 grabbed = true;
             }
@@ -122,7 +120,6 @@ public class GuiSelectColor extends GuiLM
 
     public GuiSelectColor(ObjectCallback.Handler cb, LMColor col, Object id, boolean instant)
     {
-        super(null, TEXTURE);
         callback = cb;
         initCol = new LMColor.HSB();
         initCol.set(col);
@@ -130,45 +127,45 @@ public class GuiSelectColor extends GuiLM
         colorID = id;
         isInstant = instant;
 
-        mainPanel.width = 143;
-        mainPanel.height = 93;
+        widthW = 143;
+        heightW = 93;
 
-        colorInit = new ButtonLM(this, 76, 71, col_tex.widthI(), col_tex.heightI())
+        colorInit = new ButtonLM(76, 71, col_tex.widthI(), col_tex.heightI())
         {
             @Override
-            public void onClicked(MouseButton button)
+            public void onClicked(GuiLM gui, MouseButton button)
             {
                 closeGui(false);
             }
 
             @Override
-            public void addMouseOverText(List<String> s)
+            public void addMouseOverText(GuiLM gui, List<String> s)
             {
                 s.add(GuiLang.button_cancel.translate());
                 s.add(initCol.toString());
             }
         };
 
-        colorCurrent = new ButtonLM(this, 109, 71, col_tex.widthI(), col_tex.heightI())
+        colorCurrent = new ButtonLM(109, 71, col_tex.widthI(), col_tex.heightI())
         {
             @Override
-            public void onClicked(MouseButton button)
+            public void onClicked(GuiLM gui, MouseButton button)
             {
                 closeGui(true);
             }
 
             @Override
-            public void addMouseOverText(List<String> s)
+            public void addMouseOverText(GuiLM gui, List<String> s)
             {
                 s.add(GuiLang.button_accept.translate());
                 s.add(currentColor.toString());
             }
         };
 
-        sliderRed = new SliderLM(this, 6, 6, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
+        sliderRed = new SliderLM(6, 6, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
         {
             @Override
-            public void onMoved()
+            public void onMoved(GuiLM gui)
             {
                 setColor(new LMColor.RGB((int) (value * 255F), currentColor.green(), currentColor.blue()));
             }
@@ -177,10 +174,10 @@ public class GuiSelectColor extends GuiLM
         sliderRed.title = EnumDyeColorHelper.get(EnumDyeColor.RED).toString();
         sliderRed.scrollStep = 1F / 255F;
 
-        sliderGreen = new SliderLM(this, 6, 19, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
+        sliderGreen = new SliderLM(6, 19, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
         {
             @Override
-            public void onMoved()
+            public void onMoved(GuiLM gui)
             {
                 setColor(new LMColor.RGB(currentColor.red(), (int) (value * 255F), currentColor.blue()));
             }
@@ -190,10 +187,10 @@ public class GuiSelectColor extends GuiLM
         sliderGreen.title = EnumDyeColorHelper.get(EnumDyeColor.GREEN).toString();
         sliderGreen.scrollStep = 1F / 255F;
 
-        sliderBlue = new SliderLM(this, 6, 32, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
+        sliderBlue = new SliderLM(6, 32, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
         {
             @Override
-            public void onMoved()
+            public void onMoved(GuiLM gui)
             {
                 setColor(new LMColor.RGB(currentColor.red(), currentColor.green(), (int) (value * 255F)));
             }
@@ -203,12 +200,12 @@ public class GuiSelectColor extends GuiLM
         sliderBlue.title = EnumDyeColorHelper.get(EnumDyeColor.BLUE).toString();
         sliderBlue.scrollStep = 1F / 255F;
 
-        sliderHue = new SliderLM(this, 6, 51, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
+        sliderHue = new SliderLM(6, 51, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
         {
             @Override
-            public void onMoved()
+            public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.HSB(value, currentColor.saturation(), currentColor.brightness()));
+                setColor(new LMColor.HSB((float) value, currentColor.saturation(), currentColor.brightness()));
             }
         };
 
@@ -216,31 +213,31 @@ public class GuiSelectColor extends GuiLM
         sliderHue.title = "Hue";
         sliderHue.scrollStep = 1F / 255F;
 
-        sliderSaturation = new SliderLM(this, 6, 64, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
+        sliderSaturation = new SliderLM(6, 64, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
         {
             @Override
-            public void onMoved()
+            public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.HSB(currentColor.hue(), value, currentColor.brightness()));
+                setColor(new LMColor.HSB(currentColor.hue(), (float) value, currentColor.brightness()));
             }
         };
         sliderSaturation.displayMax = 255;
         sliderSaturation.title = "Saturation";
         sliderSaturation.scrollStep = 1F / 255F;
 
-        sliderBrightness = new SliderLM(this, 6, 77, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
+        sliderBrightness = new SliderLM(6, 77, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
         {
             @Override
-            public void onMoved()
+            public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), value));
+                setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), (float) value));
             }
         };
         sliderBrightness.displayMax = 255;
         sliderBrightness.title = "Brightness";
         sliderBrightness.scrollStep = 1F / 255F;
 
-        colorSelector = new ColorSelector(this, 75, 5, 64, 64);
+        colorSelector = new ColorSelector(75, 5, 64, 64);
 
         setColor(initCol);
     }
@@ -248,18 +245,18 @@ public class GuiSelectColor extends GuiLM
     @Override
     public void addWidgets()
     {
-        mainPanel.add(colorInit);
-        mainPanel.add(colorCurrent);
+        add(colorInit);
+        add(colorCurrent);
 
-        mainPanel.add(sliderRed);
-        mainPanel.add(sliderGreen);
-        mainPanel.add(sliderBlue);
+        add(sliderRed);
+        add(sliderGreen);
+        add(sliderBlue);
 
-        mainPanel.add(sliderHue);
-        mainPanel.add(sliderSaturation);
-        mainPanel.add(sliderBrightness);
+        add(sliderHue);
+        add(sliderSaturation);
+        add(sliderBrightness);
 
-        mainPanel.add(colorSelector);
+        add(colorSelector);
     }
 
     public void setColor(LMColor col)
@@ -290,13 +287,13 @@ public class GuiSelectColor extends GuiLM
     @Override
     public void drawBackground()
     {
-        sliderRed.update();
-        sliderGreen.update();
-        sliderBlue.update();
+        sliderRed.update(this);
+        sliderGreen.update(this);
+        sliderBlue.update(this);
 
-        sliderHue.update();
-        sliderSaturation.update();
-        sliderBrightness.update();
+        sliderHue.update(this);
+        sliderSaturation.update(this);
+        sliderBrightness.update(this);
 
         super.drawBackground();
 
@@ -343,7 +340,7 @@ public class GuiSelectColor extends GuiLM
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.shadeModel(GL11.GL_FLAT);
 
-        colorSelector.renderWidget();
+        colorSelector.renderWidget(this);
 
         sliderRed.renderSlider(slider_tex);
         sliderGreen.renderSlider(slider_tex);
@@ -356,23 +353,23 @@ public class GuiSelectColor extends GuiLM
 
     public void renderSlider(WidgetLM widget, int colLeft, int colRight)
     {
-        int x = widget.getAX();
-        int y = widget.getAY();
-        double w = widget.width;
-        double h = widget.height;
+        double x = widget.getAX();
+        double y = widget.getAY();
+        double w = widget.widthW;
+        double h = widget.heightW;
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
         int red = LMColorUtils.getRed(colLeft);
         int green = LMColorUtils.getGreen(colLeft);
         int blue = LMColorUtils.getBlue(colLeft);
-        buffer.pos(x, y, zLevel).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
-        buffer.pos(x, y + h, zLevel).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
+        buffer.pos(x, y, 0D).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+        buffer.pos(x, y + h, 0D).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
         red = LMColorUtils.getRed(colRight);
         green = LMColorUtils.getGreen(colRight);
         blue = LMColorUtils.getBlue(colRight);
-        buffer.pos(x + w, y + h, zLevel).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
-        buffer.pos(x + w, y, zLevel).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+        buffer.pos(x + w, y + h, 0D).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
+        buffer.pos(x + w, y, 0D).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
         tessellator.draw();
     }
 

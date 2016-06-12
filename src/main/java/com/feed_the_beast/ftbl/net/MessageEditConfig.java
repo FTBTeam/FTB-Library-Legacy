@@ -74,7 +74,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             FTBLib.dev_logger.info("RX Send: " + m.id + " :: " + m.groupData);
         }
 
-        mc.displayGuiScreen(new GuiEditConfig(mc.currentScreen, m.extraNBT, new ConfigContainer(m.id)
+        new GuiEditConfig(m.extraNBT, new ConfigContainer(m.id)
         {
             @Override
             public ConfigGroup createGroup()
@@ -95,6 +95,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             {
                 new MessageEditConfigResponse(m.id, nbt, config).sendToServer();
             }
-        }));
+        }).openGui();
     }
 }

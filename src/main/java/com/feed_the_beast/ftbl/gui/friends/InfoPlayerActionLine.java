@@ -26,48 +26,43 @@ public class InfoPlayerActionLine extends InfoTextLine
         public ButtonInfoPlayerAction(GuiInfo g, InfoPlayerActionLine w)
         {
             super(g, null);
-            height = 18;
+            heightW = 18;
             title = action.displayName.getFormattedText();
-            width = (action.icon == null ? 8 : 24) + g.getFontRenderer().getStringWidth(title);
+            widthW = (action.icon == null ? 8 : 24) + g.font.getStringWidth(title);
         }
 
         @Override
-        public void addMouseOverText(List<String> l)
+        public void addMouseOverText(GuiLM gui, List<String> l)
         {
         }
 
         @Override
-        public void onClicked(MouseButton button)
+        public void onClicked(GuiLM gui, MouseButton button)
         {
             FTBLibClient.playClickSound();
             action.onClicked(playerLM);
         }
 
         @Override
-        public void renderWidget()
+        public void renderWidget(GuiLM gui)
         {
-            int ay = getAY();
-            if(ay < -height || ay > guiInfo.mainPanel.height)
-            {
-                return;
-            }
-            int ax = getAX();
-            float z = gui.getZLevel();
+            double ay = getAY();
+            double ax = getAX();
 
             GlStateManager.enableBlend();
 
-            if(mouseOver())
+            if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
-                GuiLM.drawBlankRect(ax, ay, z, width, height);
+                GuiLM.drawBlankRect(ax, ay, widthW, heightW);
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
-            action.render(ax + 1, ay + 1, z);
-            action.postRender(ax + 1, ay + 1, z);
+            action.render(ax + 1, ay + 1);
+            action.postRender(ax + 1, ay + 1);
 
-            gui.getFontRenderer().drawString(title, ax + (action.icon == null ? 4 : 20), ay + 5, guiInfo.colorText);
+            guiInfo.font.drawString(title, (int) ax + (action.icon == null ? 4 : 20), (int) ay + 5, guiInfo.colorText);
         }
     }
 

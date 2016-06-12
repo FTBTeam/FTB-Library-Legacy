@@ -2,8 +2,6 @@ package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.IGuiLM;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,25 +15,24 @@ public abstract class ButtonSimpleLM extends ButtonLM
     public int colorButton = 0xFF888888;
     public int colorButtonOver = 0xFF999999;
 
-    public ButtonSimpleLM(IGuiLM g, int x, int y, int w, int h)
+    public ButtonSimpleLM(double x, double y, double w, double h)
     {
-        super(g, x, y, w, h);
+        super(x, y, w, h);
     }
 
     @Override
-    public void addMouseOverText(List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
     }
 
     @Override
-    public void renderWidget()
+    public void renderWidget(GuiLM gui)
     {
-        int ax = getAX();
-        int ay = getAY();
-        FTBLibClient.setGLColor(mouseOver(ax, ay) ? colorButtonOver : colorButton);
-        GuiLM.drawBlankRect(ax, ay, gui.getZLevel(), width, height);
+        double ax = getAX();
+        double ay = getAY();
+        FTBLibClient.setGLColor(gui.isMouseOver(this) ? colorButtonOver : colorButton);
+        GuiLM.drawBlankRect(ax, ay, widthW, heightW);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        FontRenderer font = gui.getFontRenderer();
-        font.drawStringWithShadow(title, ax + (width - font.getStringWidth(title)) / 2, ay + (height - gui.getFontRenderer().FONT_HEIGHT) / 2, colorText);
+        gui.font.drawStringWithShadow(title, (int) (ax + (widthW - gui.font.getStringWidth(title)) / 2D), (int) (ay + (heightW - gui.font.FONT_HEIGHT) / 2D), colorText);
     }
 }
