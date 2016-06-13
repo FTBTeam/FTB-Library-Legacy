@@ -407,4 +407,37 @@ public class ConfigGroup extends ConfigEntry
             }
         }
     }
+
+    @Override
+    public boolean hasDiff(ConfigEntry entry)
+    {
+        ConfigGroup group = entry.getAsGroup();
+
+        if(group == null || group.entryMap.size() != entryMap.size() || !group.entryMap.keySet().equals(entryMap.keySet()))
+        {
+            return true;
+        }
+
+        for(String k : entryMap.keySet())
+        {
+            if(entryMap.get(k).hasDiff(group.entryMap.get(k)))
+            {
+                return true;
+            }
+        }
+
+        return true;
+    }
+
+    public ConfigGroup calcDiff(ConfigGroup group)
+    {
+        ConfigGroup g = new ConfigGroup();
+
+        for(ConfigEntry e : entryMap.values())
+        {
+            //FIXME: Diff calculator
+        }
+
+        return g;
+    }
 }

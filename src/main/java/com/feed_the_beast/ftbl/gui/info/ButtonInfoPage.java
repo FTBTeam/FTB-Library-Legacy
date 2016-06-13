@@ -26,7 +26,7 @@ public class ButtonInfoPage extends ButtonLM
 
     public ButtonInfoPage(GuiInfo g, InfoPage p, TextureCoords t)
     {
-        super(0, g.panelPages.heightW, g.panelWidth - 36, t == null ? 13 : 18);
+        super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
         page = p;
         icon = t;
@@ -75,7 +75,7 @@ public class ButtonInfoPage extends ButtonLM
         title = titleC.getFormattedText();
         hover = null;
 
-        if(guiInfo.font.getStringWidth(title) > widthW)
+        if(guiInfo.font.getStringWidth(title) > width)
         {
             hover = page.getTitleComponent().getFormattedText();
         }
@@ -88,6 +88,12 @@ public class ButtonInfoPage extends ButtonLM
         {
             l.add(hover);
         }
+    }
+
+    @Override
+    public boolean shouldRender(GuiLM gui)
+    {
+        return parentPanel.isInside(this);
     }
 
     @Override
@@ -111,16 +117,16 @@ public class ButtonInfoPage extends ButtonLM
 
             if(iconBlur)
             {
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
             }
 
             GuiLM.render(icon, ax + 1, ay + 1, 16, 16);
 
             if(iconBlur)
             {
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             }
 
             guiInfo.font.drawString(title, (int) ax + 19, (int) ay + 6, guiInfo.colorText);

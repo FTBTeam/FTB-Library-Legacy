@@ -161,7 +161,7 @@ public class TextBoxLM extends WidgetLM
 
             if(textRenderX == -1)
             {
-                gui.font.drawString(ns, (int) (getAX() + textRenderX - (gui.font.getStringWidth(s) / 2D) + widthW / 2D), (int) (getAY() + textRenderY), col);
+                gui.font.drawString(ns, (int) (getAX() + textRenderX - (gui.font.getStringWidth(s) / 2D) + width / 2D), (int) (getAY() + textRenderY), col);
             }
             else
             {

@@ -5,7 +5,8 @@ import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import latmod.lib.IntList;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public IntList getAsIntList()
+    public TIntList getAsIntList()
     {
         JsonElement e = getSerializableElement();
         if(e.isJsonNull())
@@ -113,7 +114,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
             return null;
         }
         JsonArray a = e.getAsJsonArray();
-        IntList l = new IntList(a.size());
+        TIntList l = new TIntArrayList(a.size());
         for(int i = 0; i < l.size(); i++)
         {
             l.set(i, a.get(i).getAsInt());

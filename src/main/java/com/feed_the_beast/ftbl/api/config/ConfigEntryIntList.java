@@ -3,7 +3,8 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.IntList;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -11,18 +12,19 @@ import java.util.List;
 
 public class ConfigEntryIntList extends ConfigEntry
 {
-    public final IntList defValue;
-    private IntList value;
+    public final TIntList defValue;
+    private TIntList value;
 
-    public ConfigEntryIntList(IntList def)
+    public ConfigEntryIntList(TIntList def)
     {
-        defValue = def == null ? new IntList() : def.copy();
-        value = defValue.copy();
+        defValue = def == null ? new TIntArrayList() : def;
+        value = new TIntArrayList();
+        value.addAll(defValue);
     }
 
     public ConfigEntryIntList(int[] def)
     {
-        this(IntList.asList(def));
+        this(TIntArrayList.wrap(def));
     }
 
     @Override
@@ -37,20 +39,26 @@ public class ConfigEntryIntList extends ConfigEntry
         return 0xAA5AE8;
     }
 
-    public void set(IntList l)
+    public void set(TIntList l)
     {
-        value = (l == null || l.isEmpty()) ? new IntList() : l.copy();
+        value.clear();
+
+        if(l != null && !l.isEmpty())
+        {
+            value.addAll(l);
+        }
     }
 
     @Override
     public void fromJson(JsonElement o)
     {
         JsonArray a = o.getAsJsonArray();
-        IntList l = new IntList(a.size());
+        TIntList l = new TIntArrayList(a.size());
         for(int i = 0; i < l.size(); i++)
         {
             l.set(i, a.get(i).getAsInt());
         }
+
         set(l);
     }
 
@@ -75,16 +83,20 @@ public class ConfigEntryIntList extends ConfigEntry
     @Override
     public List<String> getAsStringList()
     {
-        List<String> l = new ArrayList<>();
-        for(Integer i : getAsIntList())
+        TIntList list = getAsIntList();
+
+        List<String> l = new ArrayList<>(list.size());
+
+        for(int i = 0; i < list.size(); i++)
         {
-            l.add(i.toString());
+            l.add(Integer.toString(list.get(i)));
         }
+
         return l;
     }
 
     @Override
-    public IntList getAsIntList()
+    public TIntList getAsIntList()
     {
         return value;
     }
@@ -117,7 +129,7 @@ public class ConfigEntryIntList extends ConfigEntry
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         super.readFromNBT(tag, extended);
-        set(tag.hasKey("V") ? new IntList(tag.getIntArray("V")) : null);
+        set(tag.hasKey("V") ? TIntArrayList.wrap(tag.getIntArray("V")) : null);
 
         if(extended)
         {
@@ -128,5 +140,27 @@ public class ConfigEntryIntList extends ConfigEntry
                 defValue.addAll(tag.getIntArray("D"));
             }
         }
+    }
+
+    @Override
+    public boolean hasDiff(ConfigEntry entry)
+    {
+        TIntList l = entry.getAsIntList();
+        value = getAsIntList();
+
+        if(l.size() != value.size())
+        {
+            return true;
+        }
+
+        for(int i = 0; i < value.size(); i++)
+        {
+            if(l.get(i) != value.get(i))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

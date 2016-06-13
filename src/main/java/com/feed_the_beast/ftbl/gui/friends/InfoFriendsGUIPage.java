@@ -28,7 +28,7 @@ public class InfoFriendsGUIPage extends InfoPage
         public Button(GuiInfo g, InfoFriendsGUIPage p)
         {
             super(g, p, null);
-            heightW = 20;
+            height = 20;
         }
 
         @Override
@@ -37,10 +37,10 @@ public class InfoFriendsGUIPage extends InfoPage
             title = playerLM.getProfile().getName();
             hover = null;
 
-            if(guiInfo.font.getStringWidth(title) > widthW - 24)
+            if(guiInfo.font.getStringWidth(title) > width - 24)
             {
                 hover = title + "";
-                title = guiInfo.font.trimStringToWidth(title, (int) widthW - 22) + "...";
+                title = guiInfo.font.trimStringToWidth(title, (int) width - 22) + "...";
             }
         }
 
@@ -60,7 +60,7 @@ public class InfoFriendsGUIPage extends InfoPage
             if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
-                GuiLM.drawBlankRect(ax, ay, widthW, heightW);
+                GuiLM.drawBlankRect(ax, ay, width, height);
             }
 
             if(ForgeWorldSP.inst.clientPlayer.hasTeam())

@@ -3,7 +3,8 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.IntList;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import latmod.lib.LMListUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -87,14 +88,15 @@ public class ConfigEntryStringList extends ConfigEntry
     }
 
     @Override
-    public IntList getAsIntList()
+    public TIntList getAsIntList()
     {
         List<String> list = getAsStringList();
-        IntList l = new IntList(list.size());
+        TIntList l = new TIntArrayList(list.size());
         for(int i = 0; i < list.size(); i++)
         {
             l.add(Integer.parseInt(value.get(i)));
         }
+
         return l;
     }
 
@@ -179,5 +181,27 @@ public class ConfigEntryStringList extends ConfigEntry
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasDiff(ConfigEntry entry)
+    {
+        List<String> l = entry.getAsStringList();
+        value = getAsStringList();
+
+        if(l.size() != value.size())
+        {
+            return true;
+        }
+
+        for(int i = 0; i < value.size(); i++)
+        {
+            if(!l.get(i).equals(value.get(i)))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

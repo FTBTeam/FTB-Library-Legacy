@@ -21,7 +21,7 @@ public class ButtonInfoTextLine extends ButtonLM
 
     public ButtonInfoTextLine(GuiInfo g, InfoTextLine l)
     {
-        super(0, g.panelText.heightW, 0, 0);
+        super(0, g.panelText.height, 0, 0);
         guiInfo = g;
 
         if(l != null)
@@ -30,7 +30,7 @@ public class ButtonInfoTextLine extends ButtonLM
 
             if(c != null)
             {
-                text = guiInfo.font.listFormattedStringToWidth(c.getFormattedText(), (int) g.panelText.widthW);
+                text = guiInfo.font.listFormattedStringToWidth(c.getFormattedText(), (int) g.panelText.width);
                 if(text.isEmpty())
                 {
                     text = null;
@@ -42,18 +42,18 @@ public class ButtonInfoTextLine extends ButtonLM
         {
             if(text.size() > 1)
             {
-                widthW = g.panelText.widthW;
+                width = g.panelText.width;
             }
             else
             {
-                widthW = g.font.getStringWidth(text.get(0));
+                width = g.font.getStringWidth(text.get(0));
             }
-            heightW = 10 * text.size();
+            height = 10 * text.size();
         }
         else
         {
-            widthW = 0;
-            heightW = 11;
+            width = 0;
+            height = 11;
         }
     }
 

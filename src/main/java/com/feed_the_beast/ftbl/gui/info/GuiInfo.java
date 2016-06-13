@@ -24,6 +24,7 @@ import org.lwjgl.opengl.GL11;
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
     public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
+
     public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
     public static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
     public static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);
@@ -57,7 +58,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         pageTitle = page.getTitleComponent().getFormattedText();
         selectedPage = page;
 
-        sliderPages = new SliderLM(0, 0, tex_slider.widthI(), 0, tex_slider.heightI())
+        sliderPages = new SliderLM(0, 0, 12, 0, 18)
         {
             @Override
             public boolean canMouseScroll(GuiLM gui)
@@ -68,7 +69,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         sliderPages.isVertical = true;
 
-        sliderText = new SliderLM(0, 0, tex_slider.widthI(), 0, tex_slider.heightI())
+        sliderText = new SliderLM(0, 0, 12, 0, 18)
         {
             @Override
             public boolean canMouseScroll(GuiLM gui)
@@ -79,7 +80,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         sliderText.isVertical = true;
 
-        buttonBack = new ButtonLM(0, 0, tex_back.widthI(), tex_back.heightI())
+        buttonBack = new ButtonLM(0, 0, 14, 11)
         {
             @Override
             public void onClicked(GuiLM gui, MouseButton button)
@@ -116,16 +117,16 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void addWidgets()
             {
-                heightW = 0;
+                height = 0;
 
                 for(InfoPage c : page.childPages.values())
                 {
                     ButtonInfoPage b = c.createButton(GuiInfo.this);
 
-                    if(b != null && b.heightW > 0)
+                    if(b != null && b.height > 0)
                     {
                         add(b);
-                        heightW += b.heightW;
+                        height += b.height;
                     }
                 }
             }
@@ -141,7 +142,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                     ((ButtonInfoPage) w).updateTitle(GuiInfo.this);
                 }
 
-                heightW = 0;
+                height = 0;
 
                 boolean uni = font.getUnicodeFlag();
                 font.setUnicodeFlag(useUnicodeFont);
@@ -150,15 +151,15 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 {
                     ButtonInfoTextLine l = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this);
 
-                    if(l != null && l.heightW > 0)
+                    if(l != null && l.height > 0)
                     {
-                        heightW += l.heightW;
+                        height += l.height;
                         add(l);
                     }
                 }
 
                 font.setUnicodeFlag(uni);
-                sliderText.scrollStep = 30F / (float) heightW;
+                sliderText.scrollStep = 30F / (float) height;
             }
         };
 
@@ -185,27 +186,27 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     {
         posX = InfoClientSettings.border_width.getAsInt();
         posY = InfoClientSettings.border_height.getAsInt();
-        widthW = screen.getScaledWidth_double() - InfoClientSettings.border_width.getAsInt() * 2;
-        heightW = screen.getScaledHeight_double() - InfoClientSettings.border_height.getAsInt() * 2;
-        panelWidth = (int) (widthW * 2D / 7D);
+        width = screen.getScaledWidth_double() - InfoClientSettings.border_width.getAsInt() * 2;
+        height = screen.getScaledHeight_double() - InfoClientSettings.border_height.getAsInt() * 2;
+        panelWidth = (int) (width * 2D / 7D);
 
         panelPages.posX = 10;
         panelPages.posY = 46;
-        panelPages.widthW = panelWidth - 20;
-        panelPages.heightW = heightW - 56;
+        panelPages.width = panelWidth - 20;
+        panelPages.height = height - 56;
 
         panelText.posX = panelWidth + 10;
         panelText.posY = 10;
-        panelText.widthW = widthW - panelWidth - 20 - sliderText.widthW;
-        panelText.heightW = heightW - 20;
+        panelText.width = width - panelWidth - 20 - sliderText.width;
+        panelText.height = height - 20;
 
-        sliderPages.posX = panelWidth - sliderPages.widthW - 10;
+        sliderPages.posX = panelWidth - sliderPages.width - 10;
         sliderPages.posY = 46;
-        sliderPages.heightW = heightW - 56;
+        sliderPages.height = height - 56;
 
         sliderText.posY = 10;
-        sliderText.heightW = heightW - 20;
-        sliderText.posX = widthW - 10 - sliderText.widthW;
+        sliderText.height = height - 20;
+        sliderText.posX = width - 10 - sliderText.width;
 
         buttonBack.posX = 12;
         buttonBack.posY = 12;
@@ -236,26 +237,26 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     {
         sliderPages.update(this);
 
-        if(sliderPages.value == 0F || panelPages.heightW - (heightW - 56F) <= 0F)
+        if(sliderPages.value == 0F || panelPages.height - (height - 56F) <= 0F)
         {
             panelPages.posY = 46;
             sliderPages.value = 0F;
         }
         else
         {
-            panelPages.posY = (int) (46F - (sliderPages.value * (panelPages.heightW - (heightW - 56F))));
+            panelPages.posY = (int) (46F - (sliderPages.value * (panelPages.height - (height - 56F))));
         }
 
         sliderText.update(this);
 
-        if(sliderText.value == 0F || panelText.heightW - (heightW - 20F) <= 0F)
+        if(sliderText.value == 0F || panelText.height - (height - 20F) <= 0F)
         {
             panelText.posY = 10;
             sliderText.value = 0F;
         }
         else
         {
-            panelText.posY = (int) (10F - (sliderText.value * (panelText.heightW - (heightW - 20F))));
+            panelText.posY = (int) (10F - (sliderText.value * (panelText.height - (height - 20F))));
         }
 
         super.drawBackground();
@@ -264,28 +265,28 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        renderFilling(panelWidth, 0, widthW - panelWidth, heightW, InfoClientSettings.transparency.getAsInt());
-        renderFilling(0, 36, panelWidth, heightW - 36, 255);
+        renderFilling(panelWidth, 0, width - panelWidth, height, InfoClientSettings.transparency.getAsInt());
+        renderFilling(0, 36, panelWidth, height - 36, 255);
 
         boolean uni = font.getUnicodeFlag();
         font.setUnicodeFlag(useUnicodeFont);
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        scissor(panelText.getAX(), posY + 4, panelText.widthW, heightW - 8);
+        scissor(panelText.getAX(), posY + 4, panelText.width, height - 8);
         panelText.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         font.setUnicodeFlag(uni);
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        scissor(panelPages.getAX(), posY + 40, panelPages.widthW, heightW - 44);
+        scissor(panelPages.getAX(), posY + 40, panelPages.width, height - 44);
         panelPages.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        renderBorders(panelWidth, 0, widthW - panelWidth, heightW);
-        renderBorders(0, 36, panelWidth, heightW - 36);
+        renderBorders(panelWidth, 0, width - panelWidth, height);
+        renderBorders(0, 36, panelWidth, height - 36);
         renderFilling(0, 0, panelWidth, 36, 255);
         renderBorders(0, 0, panelWidth, 36);
 
@@ -300,7 +301,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.renderWidget(this);
         }
 
-        font.drawString(pageTitle, (int) (buttonBack.getAX() + buttonBack.widthW + 5), (int) (posY + 14), colorText);
+        font.drawString(pageTitle, (int) (buttonBack.getAX() + buttonBack.width + 5), (int) (posY + 14), colorText);
     }
 
     @Override

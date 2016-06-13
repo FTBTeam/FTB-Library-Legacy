@@ -23,16 +23,16 @@ public class ButtonNotification extends ButtonLM
         notification = n;
         posY += g.buttonList.size() * 25;
         title = n.notification.title.getFormattedText();
-        widthW = g.font.getStringWidth(n.notification.title.getFormattedText());
+        width = g.font.getStringWidth(n.notification.title.getFormattedText());
         if(n.notification.desc != null)
         {
-            widthW = Math.max(widthW, g.font.getStringWidth(n.notification.desc.getFormattedText()));
+            width = Math.max(width, g.font.getStringWidth(n.notification.desc.getFormattedText()));
         }
         if(n.notification.item != null)
         {
-            widthW += 20;
+            width += 20;
         }
-        widthW += 8;
+        width += 8;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ButtonNotification extends ButtonLM
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         FTBLibClient.setGLColor(notification.notification.color, gui.isMouseOver(this) ? 255 : 185);
-        GuiLM.drawBlankRect(ax, ay, parentPanel.widthW, heightW);
+        GuiLM.drawBlankRect(ax, ay, parentPanel.width, height);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         gui.font.drawString(title, (int) (ax + tx), (int) ay + 4, 0xFFFFFFFF);
@@ -64,13 +64,13 @@ public class ButtonNotification extends ButtonLM
         if(gui.isMouseOver(this))
         {
             float alpha = 0.4F;
-            if(gui.mouseX >= ax + widthW - 16)
+            if(gui.mouseX >= ax + width - 16)
             {
                 alpha = 1F;
             }
 
             GlStateManager.color(1F, 1F, 1F, alpha);
-            GuiLM.render(GuiIcons.close, ax + widthW - 18, ay + 4, 32, 32);
+            GuiLM.render(GuiIcons.close, ax + width - 18, ay + 4, 32, 32);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
@@ -80,7 +80,7 @@ public class ButtonNotification extends ButtonLM
     {
         FTBLibClient.playClickSound();
 
-        if(gui.mouseX < getAX() + widthW - 16)
+        if(gui.mouseX < getAX() + width - 16)
         {
             notification.onClicked(button);
         }
@@ -95,7 +95,7 @@ public class ButtonNotification extends ButtonLM
     {
         double ax = getAX();
 
-        if(gui.isMouseOver(this) && gui.mouseX >= ax + widthW - 16)
+        if(gui.isMouseOver(this) && gui.mouseX >= ax + width - 16)
         {
             l.add(GuiLang.button_close.translate());
             return;

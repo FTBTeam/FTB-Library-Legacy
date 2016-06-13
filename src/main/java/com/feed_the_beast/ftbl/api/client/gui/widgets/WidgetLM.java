@@ -11,7 +11,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class WidgetLM
 {
-    public double posX, posY, widthW, heightW;
+    public double posX, posY, width, height;
     public PanelLM parentPanel = null;
     public String title = null;
 
@@ -19,8 +19,8 @@ public class WidgetLM
     {
         posX = x;
         posY = y;
-        widthW = w;
-        heightW = h;
+        width = w;
+        height = h;
     }
 
     public boolean isEnabled()
@@ -30,7 +30,7 @@ public class WidgetLM
 
     public boolean shouldRender(GuiLM gui)
     {
-        return gui.isVisible(this);
+        return gui.isInside(this);
     }
 
     public double getAX()
@@ -45,7 +45,7 @@ public class WidgetLM
 
     public final void render(TextureCoords icon)
     {
-        GuiLM.render(icon, getAX(), getAY(), widthW, heightW);
+        GuiLM.render(icon, getAX(), getAY(), width, height);
     }
 
     public void mousePressed(GuiLM gui, MouseButton b)

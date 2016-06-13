@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.gui.info;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.info.InfoImage;
 import com.feed_the_beast.ftbl.api.info.InfoImageLine;
-import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,20 +14,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 {
-    public TextureCoords texture;
+    public InfoImage texture;
 
     public ButtonInfoImage(GuiInfo g, InfoImageLine l)
     {
         super(g, l);
 
-        texture = l.getDisplayImage();
+        InfoImage img = l.getDisplayImage();
 
-        double w = Math.min(guiInfo.panelText.widthW, texture.width);
-        double h = texture.getHeight(w);
-        texture = new TextureCoords(texture.texture, 0, 0, w, h, w, h);
+        double w = Math.min(guiInfo.panelText.width, img.width);
+        double h = img.height * (w / img.width);
+        img = new InfoImage(texture.texture, w, h);
 
-        widthW = texture.widthI();
-        heightW = texture.heightI() + 1;
+        width = img.width;
+        height = img.height + 1;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.setTexture(texture.texture);
-            GuiLM.render(texture, getAX(), getAY(), texture.width, texture.height);
+            GuiLM.drawTexturedRect(getAX(), getAY(), texture.width, texture.height, 0D, 0D, 1D, 1D);
         }
     }
 }

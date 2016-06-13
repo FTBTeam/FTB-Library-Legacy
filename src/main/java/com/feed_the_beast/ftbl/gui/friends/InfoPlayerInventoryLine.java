@@ -26,8 +26,8 @@ public class InfoPlayerInventoryLine extends InfoTextLine
         public ButtonInfoPlayerInventory(GuiInfo g, InfoPlayerInventoryLine w)
         {
             super(g, null);
-            widthW = 18 * 9;
-            heightW = 18 * 4 + 4;
+            width = 18 * 9;
+            height = 18 * 4 + 4;
         }
 
         @Override
@@ -47,7 +47,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
             double ax = getAX();
 
             GlStateManager.color(1F, 1F, 1F, 0.2F);
-            GuiLM.drawBlankRect(ax, ay, widthW, heightW);
+            GuiLM.drawBlankRect(ax, ay, width, height);
 
             for(int i = 0; i < 9 * 3; i++)
             {

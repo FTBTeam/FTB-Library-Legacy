@@ -37,11 +37,11 @@ public class SliderLM extends WidgetLM
             {
                 if(isVertical)
                 {
-                    value = (gui.mouseY - (getAY() + (sliderSize / 2F))) / (heightW - sliderSize);
+                    value = (gui.mouseY - (getAY() + (sliderSize / 2F))) / (height - sliderSize);
                 }
                 else
                 {
-                    value = (gui.mouseX - (getAX() + (sliderSize / 2F))) / (widthW - sliderSize);
+                    value = (gui.mouseX - (getAX() + (sliderSize / 2F))) / (width - sliderSize);
                 }
             }
             else
@@ -79,18 +79,18 @@ public class SliderLM extends WidgetLM
 
     public int getValueI()
     {
-        return (int) (value * ((isVertical ? heightW : widthW) - sliderSize));
+        return (int) (value * ((isVertical ? height : width) - sliderSize));
     }
 
     public void renderSlider(TextureCoords tc)
     {
         if(isVertical)
         {
-            GuiLM.render(tc, getAX(), getAY() + getValueI(), widthW, sliderSize);
+            GuiLM.render(tc, getAX(), getAY() + getValueI(), width, sliderSize);
         }
         else
         {
-            GuiLM.render(tc, getAX() + getValueI(), getAY(), sliderSize, heightW);
+            GuiLM.render(tc, getAX() + getValueI(), getAY(), sliderSize, height);
         }
     }
 

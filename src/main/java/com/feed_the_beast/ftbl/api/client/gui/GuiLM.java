@@ -112,8 +112,8 @@ public abstract class GuiLM extends PanelLM
     {
         screen = new ScaledResolution(mc);
         onInit();
-        posX = (screen.getScaledWidth_double() - widthW) / 2D;
-        posY = (screen.getScaledHeight_double() - heightW) / 2D;
+        posX = (screen.getScaledWidth_double() - width) / 2D;
+        posY = (screen.getScaledHeight_double() - height) / 2D;
         refreshWidgets();
     }
 
@@ -149,8 +149,8 @@ public abstract class GuiLM extends PanelLM
 
     public void setFullscreen()
     {
-        widthW = screen.getScaledWidth_double();
-        heightW = screen.getScaledHeight_double();
+        width = screen.getScaledWidth_double();
+        height = screen.getScaledHeight_double();
         posX = posY = 0D;
     }
 
@@ -192,6 +192,21 @@ public abstract class GuiLM extends PanelLM
         super.renderWidget(this);
     }
 
+    @Override
+    public boolean isInside(WidgetLM w)
+    {
+        double a = w.getAY();
+
+        if(a < -w.height || a > screen.getScaledHeight_double())
+        {
+            return false;
+        }
+
+        a = w.getAX();
+
+        return a >= -w.width && a <= screen.getScaledWidth_double();
+    }
+
     public boolean drawDefaultBackground()
     {
         return true;
@@ -208,25 +223,11 @@ public abstract class GuiLM extends PanelLM
         tempTextList.clear();
     }
 
-    public boolean isVisible(WidgetLM w)
-    {
-        double a = w.getAY();
-
-        if(a < -w.heightW || a > screen.getScaledHeight_double())
-        {
-            return false;
-        }
-
-        a = w.getAX();
-
-        return a >= -w.widthW && a <= screen.getScaledWidth_double();
-    }
-
     public final boolean isMouseOver(WidgetLM w)
     {
         double ax = w.getAX();
         double ay = w.getAY();
-        return mouseX >= ax && mouseY >= ay && mouseX < ax + w.widthW && mouseY < ay + w.heightW;
+        return mouseX >= ax && mouseY >= ay && mouseX < ax + w.width && mouseY < ay + w.height;
     }
 
     public GuiScreen getWrapper()

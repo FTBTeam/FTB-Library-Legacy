@@ -75,7 +75,7 @@ public class GuiIcons
 
     private static TextureCoords getIcon(String s)
     {
-        TextureCoords r = TextureCoords.getSquareIcon(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/icons/" + s + ".png"), 32);
+        TextureCoords r = TextureCoords.getSquareIcon(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/icons/" + s + ".png"));
         iconMap.put(s, r);
         return r;
     }

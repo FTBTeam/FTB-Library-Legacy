@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import latmod.lib.IntList;
+import gnu.trove.list.TIntList;
 import latmod.lib.LMColor;
 
 /**
@@ -60,7 +60,7 @@ public enum ConfigEntryType
             case ENUM:
                 return new ConfigEntryStringEnum();
             case INT_ARRAY:
-                return new ConfigEntryIntList((IntList) null);
+                return new ConfigEntryIntList((TIntList) null);
             case STRING_ARRAY:
                 return new ConfigEntryStringList(null);
             case COLOR:

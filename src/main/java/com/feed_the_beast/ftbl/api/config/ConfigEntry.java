@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.google.gson.JsonElement;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import latmod.lib.Bits;
-import latmod.lib.IntList;
 import latmod.lib.annotations.IFlagContainer;
 import latmod.lib.annotations.IInfoContainer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -101,9 +102,9 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         return 0D;
     }
 
-    public IntList getAsIntList()
+    public TIntList getAsIntList()
     {
-        return new IntList(new int[] {getAsInt()});
+        return TIntArrayList.wrap(new int[] {getAsInt()});
     }
 
     public List<String> getAsStringList()
@@ -200,5 +201,10 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     public List<String> getVariants()
     {
         return null;
+    }
+
+    public boolean hasDiff(ConfigEntry entry)
+    {
+        return !entry.getAsString().equals(getAsString());
     }
 }

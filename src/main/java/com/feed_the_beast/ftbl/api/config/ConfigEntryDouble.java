@@ -169,4 +169,10 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
             setBounds(tag.hasKey("MN") ? tag.getDouble("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getDouble("MX") : Double.POSITIVE_INFINITY);
         }
     }
+
+    @Override
+    public boolean hasDiff(ConfigEntry entry)
+    {
+        return entry.getAsDouble() != getAsDouble();
+    }
 }

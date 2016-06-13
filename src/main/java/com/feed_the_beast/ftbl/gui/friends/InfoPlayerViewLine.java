@@ -91,7 +91,7 @@ public class InfoPlayerViewLine extends InfoTextLine
         public ButtonInfoPlayerView(GuiInfo g, InfoPlayerViewLine w)
         {
             super(g, null);
-            heightW = 1;
+            height = 1;
         }
 
         @Override
@@ -138,7 +138,7 @@ public class InfoPlayerViewLine extends InfoTextLine
             double pheight = 120D;
             double pwidth = pheight / 1.625D;
 
-            double playerX = guiInfo.widthW - pwidth / 2 - 30;
+            double playerX = guiInfo.width - pwidth / 2 - 30;
             double playerY = ay + pheight + 10;
 
             pheight = pheight / 2;

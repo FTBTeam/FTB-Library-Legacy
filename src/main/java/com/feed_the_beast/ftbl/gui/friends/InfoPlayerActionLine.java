@@ -26,9 +26,9 @@ public class InfoPlayerActionLine extends InfoTextLine
         public ButtonInfoPlayerAction(GuiInfo g, InfoPlayerActionLine w)
         {
             super(g, null);
-            heightW = 18;
+            height = 18;
             title = action.displayName.getFormattedText();
-            widthW = (action.icon == null ? 8 : 24) + g.font.getStringWidth(title);
+            width = (action.icon == null ? 8 : 24) + g.font.getStringWidth(title);
         }
 
         @Override
@@ -54,7 +54,7 @@ public class InfoPlayerActionLine extends InfoTextLine
             if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
-                GuiLM.drawBlankRect(ax, ay, widthW, heightW);
+                GuiLM.drawBlankRect(ax, ay, width, height);
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);

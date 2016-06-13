@@ -48,7 +48,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
 
         public ButtonConfigEntry(String id, ConfigEntry e)
         {
-            super(0, configPanel.heightW, screen.getScaledWidth() - 16, 16);
+            super(0, configPanel.height, screen.getScaledWidth() - 16, 16);
             entry = e;
             title = e.getDisplayName() == null ? id : e.getDisplayName().getFormattedText();
             subButtons = new ArrayList<>();
@@ -57,7 +57,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         public boolean isVisible()
         {
             double ay = getAY();
-            return ay > -heightW && ay < screen.getScaledHeight();
+            return ay > -height && ay < screen.getScaledHeight();
         }
 
         @Override
@@ -77,7 +77,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             if(mouseOver)
             {
                 GlStateManager.color(1F, 1F, 1F, 0.13F);
-                drawBlankRect(ax, ay, widthW, heightW);
+                drawBlankRect(ax, ay, width, height);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
@@ -101,10 +101,10 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
                     textCol = LMColorUtils.addBrightness(textCol, 60);
                 }
 
-                if(mouseOver && mouseX > ax + widthW - slen - 9)
+                if(mouseOver && mouseX > ax + width - slen - 9)
                 {
                     GlStateManager.color(1F, 1F, 1F, 0.13F);
-                    drawBlankRect(ax + widthW - slen - 8, ay, slen + 8, heightW);
+                    drawBlankRect(ax + width - slen - 8, ay, slen + 8, height);
                     GlStateManager.color(1F, 1F, 1F, 1F);
                 }
 
@@ -290,7 +290,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             @Override
             public void addWidgets()
             {
-                heightW = 0;
+                height = 0;
                 for(ButtonConfigEntry b : configEntryButtons)
                 {
                     addCE(b);
@@ -300,8 +300,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             private void addCE(ButtonConfigEntry e)
             {
                 add(e);
-                e.posY = heightW;
-                heightW += e.heightW;
+                e.posY = height;
+                height += e.height;
                 if(e.expanded)
                 {
                     for(ButtonConfigEntry b : e.subButtons)
@@ -414,10 +414,10 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
     public void onInit()
     {
         setFullscreen();
-        buttonAccept.posX = widthW - 18;
-        buttonCancel.posX = widthW - 38;
-        scroll.posX = widthW - 16;
-        scroll.heightW = heightW - 20;
+        buttonAccept.posX = width - 18;
+        buttonCancel.posX = width - 38;
+        scroll.posX = width - 16;
+        scroll.height = height - 20;
         configPanel.posY = 20;
         scroll.value = 0F;
 
@@ -442,7 +442,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         {
             ButtonConfigEntry b = new ButtonConfigEntry(id, e);
             b.posX += level * 12;
-            b.widthW -= level * 12;
+            b.width -= level * 12;
             if(parent == null)
             {
                 b.expanded = true;
@@ -472,8 +472,8 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
     @Override
     public void addWidgets()
     {
-        configPanel.heightW = 20;
-        configPanel.widthW = widthW;
+        configPanel.height = 20;
+        configPanel.width = width;
         configPanel.posX = 0;
         configPanel.posY = 20;
 
@@ -516,11 +516,11 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        if(configPanel.heightW + 20D > screen.getScaledHeight_double())
+        if(configPanel.height + 20D > screen.getScaledHeight_double())
         {
-            scroll.scrollStep = 40D / (configPanel.heightW + 20D);
+            scroll.scrollStep = 40D / (configPanel.height + 20D);
             scroll.update(this);
-            configPanel.posY = scroll.value * (screen.getScaledHeight_double() - configPanel.heightW - 20D) + 20D;
+            configPanel.posY = scroll.value * (screen.getScaledHeight_double() - configPanel.height - 20D) + 20D;
         }
         else
         {
@@ -531,15 +531,15 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         configPanel.renderWidget(this);
 
         FTBLibClient.setGLColor(0x99333333);
-        drawBlankRect(0, 0, (int) widthW, 20);
+        drawBlankRect(0, 0, (int) width, 20);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        drawCenteredString(font, title, widthW / 2D, 6, 0xFFFFFFFF);
+        drawCenteredString(font, title, width / 2D, 6, 0xFFFFFFFF);
 
         FTBLibClient.setGLColor(0x99333333);
-        drawBlankRect(scroll.posX, scroll.posY, scroll.widthW, scroll.heightW);
-        int sy = (int) (scroll.posY + scroll.value * (scroll.heightW - scroll.sliderSize));
+        drawBlankRect(scroll.posX, scroll.posY, scroll.width, scroll.height);
+        int sy = (int) (scroll.posY + scroll.value * (scroll.height - scroll.sliderSize));
         FTBLibClient.setGLColor(0x99666666);
-        drawBlankRect(scroll.posX, sy, scroll.widthW, scroll.sliderSize);
+        drawBlankRect(scroll.posX, sy, scroll.width, scroll.sliderSize);
 
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();

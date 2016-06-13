@@ -19,14 +19,14 @@ public class GuiNotifications extends GuiLM
 
     public GuiNotifications()
     {
-        heightW = 25 * 7;
+        height = 25 * 7;
         buttonList = new ArrayList<>();
     }
 
     @Override
     public void onInit()
     {
-        widthW = 0;
+        width = 0;
 
         buttonList.clear();
 
@@ -39,14 +39,14 @@ public class GuiNotifications extends GuiLM
             ClientNotifications.Perm p = ClientNotifications.Perm.list.get(i);
             ButtonNotification b = new ButtonNotification(this, p);
             buttonList.add(b);
-            widthW = Math.max(widthW, b.widthW);
+            width = Math.max(width, b.width);
         }
 
-        widthW = MathHelperLM.clamp(widthW, 200D, 300D);
+        width = MathHelperLM.clamp(width, 200D, 300D);
 
         for(ButtonNotification b : buttonList)
         {
-            b.widthW = widthW;
+            b.width = width;
         }
     }
 
@@ -64,11 +64,11 @@ public class GuiNotifications extends GuiLM
         font.drawString(FTBLibActions.NOTIFICATIONS.displayName.getFormattedText(), (int) posX + 4, (int) posY - 11, 0xFFFFFFFF);
 
         GlStateManager.color(0F, 0F, 0F, 0.4F);
-        drawBlankRect(posX, posY, widthW, heightW);
+        drawBlankRect(posX, posY, width, height);
 
         for(int i = 1; i < 7; i++)
         {
-            drawBlankRect(posX, posY + i * 25 - 1, widthW, 1);
+            drawBlankRect(posX, posY + i * 25 - 1, width, 1);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

@@ -33,7 +33,10 @@ public class GuiSelectColor extends GuiLM
     public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector.png");
     public static final ResourceLocation TEXTURE_WHEEL = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector_wheel.png");
 
-    public static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, 29, 16);
+    public static final int COL_TEX_W = 29;
+    public static final int COL_TEX_H = 16;
+
+    public static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H);
     public static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8);
 
     public static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
@@ -65,8 +68,8 @@ public class GuiSelectColor extends GuiLM
 
             if(grabbed)
             {
-                cursorPosX = (mouseX - ax) / widthW;
-                cursorPosY = (mouseY - ay) / heightW;
+                cursorPosX = (mouseX - ax) / width;
+                cursorPosY = (mouseY - ay) / height;
 
                 double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 
@@ -88,12 +91,12 @@ public class GuiSelectColor extends GuiLM
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.setTexture(TEXTURE_WHEEL);
-            drawTexturedRect(ax, ay, widthW, heightW, 0D, 0D, 1D, 1D);
+            drawTexturedRect(ax, ay, width, height, 0D, 0D, 1D, 1D);
 
             if(cursorPosX >= 0D && cursorPosY >= 0D)
             {
                 GlStateManager.color((float) (1F - sliderRed.value), (float) (1F - sliderGreen.value), (float) (1F - sliderBlue.value), 1F);
-                GuiLM.render(cursor_tex, ax + cursorPosX * widthW - 2, ay + cursorPosY * heightW - 2, 4, 4);
+                GuiLM.render(cursor_tex, ax + cursorPosX * width - 2, ay + cursorPosY * height - 2, 4, 4);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
@@ -127,10 +130,10 @@ public class GuiSelectColor extends GuiLM
         colorID = id;
         isInstant = instant;
 
-        widthW = 143;
-        heightW = 93;
+        width = 143;
+        height = 93;
 
-        colorInit = new ButtonLM(76, 71, col_tex.widthI(), col_tex.heightI())
+        colorInit = new ButtonLM(76, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
             public void onClicked(GuiLM gui, MouseButton button)
@@ -146,7 +149,7 @@ public class GuiSelectColor extends GuiLM
             }
         };
 
-        colorCurrent = new ButtonLM(109, 71, col_tex.widthI(), col_tex.heightI())
+        colorCurrent = new ButtonLM(109, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
             public void onClicked(GuiLM gui, MouseButton button)
@@ -355,8 +358,8 @@ public class GuiSelectColor extends GuiLM
     {
         double x = widget.getAX();
         double y = widget.getAY();
-        double w = widget.widthW;
-        double h = widget.heightW;
+        double w = widget.width;
+        double h = widget.height;
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);

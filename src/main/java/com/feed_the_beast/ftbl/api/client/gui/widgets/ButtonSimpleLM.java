@@ -31,8 +31,8 @@ public abstract class ButtonSimpleLM extends ButtonLM
         double ax = getAX();
         double ay = getAY();
         FTBLibClient.setGLColor(gui.isMouseOver(this) ? colorButtonOver : colorButton);
-        GuiLM.drawBlankRect(ax, ay, widthW, heightW);
+        GuiLM.drawBlankRect(ax, ay, width, height);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        gui.font.drawStringWithShadow(title, (int) (ax + (widthW - gui.font.getStringWidth(title)) / 2D), (int) (ay + (heightW - gui.font.FONT_HEIGHT) / 2D), colorText);
+        gui.font.drawStringWithShadow(title, (int) (ax + (width - gui.font.getStringWidth(title)) / 2D), (int) (ay + (height - gui.font.FONT_HEIGHT) / 2D), colorText);
     }
 }

@@ -30,12 +30,12 @@ public class GuiSelectField extends GuiLM
         def = d;
         callback = c;
 
-        widthW = 100;
-        heightW = 40;
+        width = 100;
+        height = 40;
 
-        double bsize = widthW / 2D - 4D;
+        double bsize = width / 2D - 4D;
 
-        buttonCancel = new ButtonSimpleLM(2, heightW - 18, bsize, 16)
+        buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16)
         {
             @Override
             public void onClicked(GuiLM gui, MouseButton button)
@@ -47,7 +47,7 @@ public class GuiSelectField extends GuiLM
 
         buttonCancel.title = GuiLang.button_cancel.translate();
 
-        buttonAccept = new ButtonSimpleLM(widthW - bsize - 2, heightW - 18, bsize, 16)
+        buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16)
         {
             @Override
             public void onClicked(GuiLM gui, MouseButton button)
@@ -73,7 +73,7 @@ public class GuiSelectField extends GuiLM
 
         buttonAccept.title = GuiLang.button_accept.translate();
 
-        textBox = new TextBoxLM(2, 2, widthW - 4, 18)
+        textBox = new TextBoxLM(2, 2, width - 4, 18)
         {
             @Override
             public boolean isValid()
@@ -112,20 +112,20 @@ public class GuiSelectField extends GuiLM
     public void drawBackground()
     {
         int size = 8 + font.getStringWidth(textBox.getText());
-        if(size > widthW)
+        if(size > width)
         {
-            widthW = size;
+            width = size;
             int bsize = size / 2 - 4;
-            buttonAccept.widthW = buttonCancel.widthW = bsize;
-            buttonAccept.posX = widthW - bsize - 2;
-            textBox.widthW = widthW - 4;
+            buttonAccept.width = buttonCancel.width = bsize;
+            buttonAccept.posX = width - bsize - 2;
+            textBox.width = width - 4;
             initGui();
         }
 
         GlStateManager.color(0.4F, 0.4F, 0.4F, 0.66F);
-        drawBlankRect(posX, posY, widthW, heightW);
+        drawBlankRect(posX, posY, width, height);
         GlStateManager.color(0.2F, 0.2F, 0.2F, 1F);
-        drawBlankRect(textBox.getAX(), textBox.getAY(), textBox.widthW, textBox.heightW);
+        drawBlankRect(textBox.getAX(), textBox.getAY(), textBox.width, textBox.height);
         GlStateManager.color(1F, 1F, 1F, 1F);
         buttonAccept.renderWidget(this);
         buttonCancel.renderWidget(this);

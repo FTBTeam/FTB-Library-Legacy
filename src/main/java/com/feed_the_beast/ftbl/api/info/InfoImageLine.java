@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoImage;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
-import com.feed_the_beast.ftbl.util.TextureCoords;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -22,7 +21,7 @@ import java.awt.image.BufferedImage;
 public class InfoImageLine extends InfoExtendedTextLine
 {
     public String imageURL;
-    private TextureCoords texture;
+    private InfoImage texture;
     private double displayW, displayH, displayS;
 
     public InfoImageLine(InfoPage c)
@@ -30,10 +29,16 @@ public class InfoImageLine extends InfoExtendedTextLine
         super(c, null);
     }
 
-    @SideOnly(Side.CLIENT)
-    public TextureCoords getImage()
+    public InfoImageLine(InfoPage c, InfoImage img)
     {
-        if(texture == TextureCoords.nullTexture)
+        this(c);
+        texture = img;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public InfoImage getImage()
+    {
+        if(texture == InfoImage.NULL)
         {
             return null;
         }
@@ -42,7 +47,7 @@ public class InfoImageLine extends InfoExtendedTextLine
             return texture;
         }
 
-        texture = TextureCoords.nullTexture;
+        texture = InfoImage.NULL;
 
         try
         {
@@ -50,7 +55,7 @@ public class InfoImageLine extends InfoExtendedTextLine
             //if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath()); }
             BufferedImage img = page.getResourceProvider().getConnection(imageURL).connect().asImage();
             ResourceLocation tex = FTBLibClient.mc().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
-            texture = new TextureCoords(tex, 0D, 0D, img.getWidth(), img.getHeight(), img.getWidth(), img.getHeight());
+            texture = new InfoImage(tex, img.getWidth(), img.getHeight());
         }
         catch(Exception e)
         {
@@ -60,40 +65,37 @@ public class InfoImageLine extends InfoExtendedTextLine
         return texture;
     }
 
-    public InfoImageLine setImage(TextureCoords t)
-    {
-        texture = t;
-        imageURL = null;
-        text = null;
-        return this;
-    }
-
     public InfoImageLine setImage(String img)
     {
         String imageURL0 = imageURL == null ? null : (imageURL + "");
         imageURL = img;
+
         if(!LMUtils.areObjectsEqual(imageURL0, imageURL, true))
         {
             texture = null;
         }
+
         if(imageURL != null)
         {
             text = null;
         }
+
         return this;
     }
 
     @SideOnly(Side.CLIENT)
-    public TextureCoords getDisplayImage()
+    public InfoImage getDisplayImage()
     {
-        TextureCoords img = getImage();
+        InfoImage img = getImage();
+
         if(img == null)
         {
             return null;
         }
+
         double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
         double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
-        return new TextureCoords(texture.texture, 0D, 0D, w, h, w, h);
+        return new InfoImage(texture.texture, w, h);
     }
 
     public InfoImageLine setSize(double w, double h)
