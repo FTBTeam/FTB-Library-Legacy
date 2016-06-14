@@ -12,51 +12,17 @@ import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
-import com.feed_the_beast.ftbl.gui.GuiNotifications;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.util.TextureCoords;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 public class FTBLibActions
 {
-    public static final ActionButton NOTIFICATIONS = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), 1000, GuiIcons.chat, null)
-    {
-        @Override
-        public void onClicked(ForgePlayerSP player)
-        {
-            new GuiNotifications().openGui();
-        }
-
-        @Override
-        protected ITextComponent getDisplayName()
-        {
-            return new TextComponentTranslation("client_config.notifications");
-        }
-
-        @Override
-        public boolean isVisibleFor(ForgePlayerSP player)
-        {
-            return !ClientNotifications.Perm.map.isEmpty();
-        }
-
-        @Override
-        public void postRender(double ax, double ay)
-        {
-            String n = String.valueOf(ClientNotifications.Perm.map.size());
-            int nw = FTBLibClient.mc().fontRendererObj.getStringWidth(n);
-            int width = 16;
-            GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
-            GuiLM.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.mc().fontRendererObj.drawString(n, (int) (ax + width - nw + 1), (int) (ay - 3), 0xFFFFFFFF);
-        }
-    });
-
     public static final ActionButton FRIENDS_GUI = ActionButtonRegistry.add(new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), 995, TextureCoords.getSquareIcon(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
     {
         @Override
@@ -69,6 +35,18 @@ public class FTBLibActions
         protected ITextComponent getDisplayName()
         {
             return new TextComponentString("FriendsGUI");
+        }
+
+        @Override
+        public void postRender(Minecraft mc, double ax, double ay)
+        {
+            String n = String.valueOf(ClientNotifications.Perm.map.size());
+            int nw = mc.fontRendererObj.getStringWidth(n);
+            int width = 16;
+            GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
+            GuiLM.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            mc.fontRendererObj.drawString(n, (int) (ax + width - nw + 1), (int) (ay - 3), 0xFFFFFFFF);
         }
     });
 
@@ -138,7 +116,6 @@ public class FTBLibActions
 
     public static void init()
     {
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), () -> new GuiNotifications().getWrapper());
         GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo(null, new InfoFriendsGUI()).getWrapper());
         GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"), () -> new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).getWrapper());
     }

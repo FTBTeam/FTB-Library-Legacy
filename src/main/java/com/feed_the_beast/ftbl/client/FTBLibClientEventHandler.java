@@ -81,7 +81,7 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.render(b.xPosition, b.yPosition);
+                b.button.render(mc, b.xPosition, b.yPosition);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
@@ -93,7 +93,7 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.postRender(b.xPosition, b.yPosition);
+                b.button.postRender(mc, b.xPosition, b.yPosition);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.ResourceLocationObject;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.TextureCoords;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -42,12 +43,12 @@ public abstract class ActionButton extends ResourceLocationObject implements Com
         return true;
     }
 
-    public void render(double ax, double ay)
+    public void render(Minecraft mc, double ax, double ay)
     {
         GuiLM.render(icon, ax, ay, 16D, 16D);
     }
 
-    public void postRender(double ax, double ay)
+    public void postRender(Minecraft mc, double ax, double ay)
     {
     }
 }

@@ -55,6 +55,11 @@ public class ClickAction implements IJsonSerializable, IClickable
     @Nonnull
     public JsonElement getSerializableElement()
     {
+        if(type == null)
+        {
+            return JsonNull.INSTANCE;
+        }
+
         if(data == null || data.isJsonNull())
         {
             return new JsonPrimitive(type.getID());
@@ -69,7 +74,12 @@ public class ClickAction implements IJsonSerializable, IClickable
     @Override
     public void fromJson(@Nonnull JsonElement e)
     {
-        if(e.isJsonPrimitive())
+        if(e.isJsonNull())
+        {
+            type = null;
+            data = null;
+        }
+        else if(e.isJsonPrimitive())
         {
             type = ClickActionRegistry.get(e.getAsString());
             data = null;

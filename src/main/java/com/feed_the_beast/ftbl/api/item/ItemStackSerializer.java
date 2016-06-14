@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.item;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import latmod.lib.util.LMStringUtils;
 import net.minecraft.item.ItemStack;
@@ -36,6 +37,7 @@ public class ItemStackSerializer
         {
             return null;
         }
+
         s = s.trim();
         if(s.isEmpty())
         {
@@ -43,7 +45,8 @@ public class ItemStackSerializer
         }
 
         String[] s1 = s.split(getParseRegex(s));
-        if(s1.length <= 0)
+
+        if(s1.length == 0)
         {
             return null;
         }
@@ -73,25 +76,17 @@ public class ItemStackSerializer
 
     public static String toString(ItemStack is)
     {
-        if(is == null)
-        {
-            return null;
-        }
-        return LMInvUtils.getRegName(is).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
+        return (is == null) ? null : LMInvUtils.getRegName(is).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
     }
 
     public static JsonElement serialize(ItemStack is)
     {
-        if(is == null || is.getItem() == null)
-        {
-            return null;
-        }
-        return new JsonPrimitive(toString(is));
+        return (is == null) ? JsonNull.INSTANCE : new JsonPrimitive(toString(is));
     }
 
     public static ItemStack deserialize(JsonElement e)
     {
-        if(e == null)
+        if(e == null || e.isJsonNull())
         {
             return null;
         }
@@ -99,21 +94,17 @@ public class ItemStackSerializer
         {
             return parseItem(e.getAsString());
         }
-        else if(e.isJsonObject())
+        else
         {
             try
             {
                 NBTTagCompound nbt = JsonToNBT.getTagFromJson(e.toString());
-
-                if(nbt != null)
-                {
-                    return ItemStack.loadItemStackFromNBT(nbt);
-                }
+                return ItemStack.loadItemStackFromNBT(nbt);
             }
             catch(Exception ex)
             {
+                return null;
             }
         }
-        return null;
     }
 }

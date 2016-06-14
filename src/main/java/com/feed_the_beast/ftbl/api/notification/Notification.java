@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -14,8 +13,10 @@ import com.google.gson.JsonPrimitive;
 import latmod.lib.FinalIDObject;
 import latmod.lib.util.LMColorUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IJsonSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -45,18 +46,19 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 
     public static Notification deserialize(JsonElement e)
     {
-        if(e == null || !e.isJsonObject())
+        if(e != null && e.isJsonObject())
         {
-            return null;
+            JsonObject o = e.getAsJsonObject();
+
+            if(o.has("id"))
+            {
+                Notification n = new Notification(o.get("id").getAsString());
+                n.fromJson(o);
+                return n;
+            }
         }
-        JsonObject o = e.getAsJsonObject();
-        if(!o.has("id") || !o.has("title"))
-        {
-            return null;
-        }
-        Notification n = new Notification(o.get("id").getAsString());
-        n.fromJson(o);
-        return n;
+
+        return null;
     }
 
     private void setDefaults()
@@ -151,7 +153,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 
         if(item != null)
         {
-            o.add("item", ItemStackSerializer.serialize(item));
+            o.add("item", new JsonPrimitive(item.getItem().getRegistryName().toString() + ' ' + item.stackSize + ' ' + item.getMetadata()));
         }
 
         if(color != 0xA0A0A0)
@@ -192,7 +194,32 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 
             if(o.has("item"))
             {
-                setItem(ItemStackSerializer.deserialize(o.get("item")));
+                if(o.get("item").isJsonPrimitive())
+                {
+                    String[] s = o.get("item").getAsString().split(" ");
+                    if(s.length > 0)
+                    {
+                        Item item = Item.REGISTRY.getObject(new ResourceLocation(s[0]));
+
+                        if(item != null)
+                        {
+                            int size = 1;
+                            int dmg = 0;
+
+                            if(s.length > 1)
+                            {
+                                size = Integer.parseInt(s[1]);
+                            }
+
+                            if(s.length > 2)
+                            {
+                                dmg = Integer.parseInt(s[2]);
+                            }
+
+                            setItem(new ItemStack(item, size, dmg));
+                        }
+                    }
+                }
             }
 
             if(o.has("click"))

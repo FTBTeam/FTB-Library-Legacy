@@ -60,8 +60,8 @@ public class InfoPlayerActionLine extends InfoTextLine
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
-            action.render(ax + 1, ay + 1);
-            action.postRender(ax + 1, ay + 1);
+            action.render(gui.mc, ax + 1, ay + 1);
+            action.postRender(gui.mc, ax + 1, ay + 1);
 
             guiInfo.font.drawString(title, (int) ax + (action.icon == null ? 4 : 20), (int) ay + 5, guiInfo.colorText);
         }

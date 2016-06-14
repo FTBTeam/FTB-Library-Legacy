@@ -47,7 +47,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, "{\"id\":\"test\", \"title\":\"Title\", \"mouse\":{}}");
+            return getListOfStringsMatchingLastWord(args, "{\"id\":\"test\", \"text\":[\"Title\"], \"click\":null}");
         }
 
         return super.getTabCompletionOptions(server, ics, args, pos);
@@ -62,8 +62,8 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
         checkArgs(args, 2);
+        EntityPlayerMP ep = getPlayer(server, ics, args[0]);
         String s = LMStringUtils.unsplitSpaceUntilEnd(1, args);
         Notification.deserialize(LMJsonUtils.fromJson(s)).sendTo(ep);
     }

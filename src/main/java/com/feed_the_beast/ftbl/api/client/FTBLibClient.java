@@ -8,12 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -276,21 +276,22 @@ public class FTBLibClient
         tessellator.draw();
     }
 
-    public static void renderGuiItem(@Nonnull ItemStack is, double x, double y)
+    public static void renderGuiItem(@Nonnull ItemStack stack, double x, double y)
     {
         RenderItem itemRender = mc().getRenderItem();
         itemRender.zLevel = 200F;
-
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 0F);
-        GlStateManager.enableLighting();
-        RenderHelper.enableGUIStandardItemLighting();
-        GlStateManager.enableRescaleNormal();
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        itemRender.renderItem(is, itemRender.getItemModelMesher().getItemModel(is));
-        GlStateManager.popMatrix();
+        GlStateManager.translate(x, y, 32F);
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
 
+        if(font == null)
+        {
+            font = mc().fontRendererObj;
+        }
+
+        itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
+        itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+        GlStateManager.popMatrix();
         itemRender.zLevel = 0F;
     }
 
