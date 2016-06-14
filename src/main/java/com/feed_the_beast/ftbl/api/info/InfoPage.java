@@ -10,10 +10,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import latmod.lib.LMJsonUtils;
-import latmod.lib.LMMapUtils;
+import latmod.lib.FinalIDObject;
 import latmod.lib.RemoveFilter;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.json.LMJsonUtils;
+import latmod.lib.util.LMMapUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
@@ -23,6 +23,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -232,6 +233,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         return parent.getParentTop();
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -276,7 +278,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
     }
 
     @Override
-    public void fromJson(JsonElement e)
+    public void fromJson(@Nonnull JsonElement e)
     {
         clear();
 
@@ -395,7 +397,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
     }
 
     @Override
-    public int compareTo(InfoPage o)
+    public int compareTo(@Nonnull InfoPage o)
     {
         return getTitleComponent().getFormattedText().compareToIgnoreCase(o.getTitleComponent().getFormattedText());
     }

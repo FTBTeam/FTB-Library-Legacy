@@ -51,7 +51,6 @@ public abstract class ForgeTeamEvent extends Event
         }
     }
 
-    //TODO: Implement me
     public static class Created extends ForgeTeamEvent
     {
         public Created(ForgeTeam t)
@@ -81,7 +80,6 @@ public abstract class ForgeTeamEvent extends Event
         }
     }
 
-    //TODO: Implement me
     public static class PlayerJoined extends ForgeTeamEvent
     {
         public final ForgePlayerMP player;
@@ -93,7 +91,6 @@ public abstract class ForgeTeamEvent extends Event
         }
     }
 
-    //TODO: Implement me
     public static class PlayerLeft extends ForgeTeamEvent
     {
         public final ForgePlayerMP player;

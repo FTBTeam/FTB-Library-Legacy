@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -63,11 +64,12 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     }
 
     @Override
-    public void fromJson(JsonElement o)
+    public void fromJson(@Nonnull JsonElement o)
     {
         set(o.getAsString());
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -131,7 +133,7 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     }
 
     @Override
-    public void onClicked(MouseButton button)
+    public void onClicked(@Nonnull MouseButton button)
     {
         if(button.isLeft())
         {

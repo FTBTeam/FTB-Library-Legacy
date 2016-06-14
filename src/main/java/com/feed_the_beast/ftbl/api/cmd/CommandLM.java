@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class CommandLM extends CommandBase
@@ -44,18 +45,21 @@ public abstract class CommandLM extends CommandBase
         return getRequiredPermissionLevel() == 0 || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
     }
 
+    @Nonnull
     @Override
     public final String getCommandName()
     {
         return commandName;
     }
 
+    @Nonnull
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getCommandUsage(@Nonnull ICommandSender ics)
     {
         return '/' + commandName;
     }
 
+    @Nonnull
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
     {

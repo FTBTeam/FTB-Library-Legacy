@@ -29,6 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +51,7 @@ public class FTBLibClientEventHandler
         }
 
         @Override
-        public void drawButton(Minecraft mc, int mx, int my)
+        public void drawButton(@Nonnull Minecraft mc, int mx, int my)
         {
         }
     }
@@ -66,7 +67,7 @@ public class FTBLibClientEventHandler
         }
 
         @Override
-        public void drawButton(Minecraft mc, int mx, int my)
+        public void drawButton(@Nonnull Minecraft mc, int mx, int my)
         {
             //if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
             //	return;

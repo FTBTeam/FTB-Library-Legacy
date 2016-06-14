@@ -50,9 +50,7 @@ public class FTBLibCapabilities
                 int paint = ((NBTTagInt) base).getInt();
                 instance.setPaint(paint == 0 ? null : Block.getStateById(paint));
             }
-        }, () -> {
-            return new PaintStorage();
-        });
+        }, PaintStorage::new);
 
         CapabilityManager.INSTANCE.register(IPainterItem.class, new Capability.IStorage<IPainterItem>()
         {
@@ -69,8 +67,6 @@ public class FTBLibCapabilities
                 int paint = ((NBTTagInt) base).getInt();
                 instance.setPaint(paint == 0 ? null : Block.getStateById(paint));
             }
-        }, () -> {
-            return new PainterItemStorage();
-        });
+        }, PainterItemStorage::new);
     }
 }

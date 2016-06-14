@@ -16,6 +16,7 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,7 +100,7 @@ public class InfoExtendedTextLine extends InfoTextLine
     }
 
     @Override
-    public void fromJson(JsonElement e)
+    public void fromJson(@Nonnull JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
 
@@ -144,6 +145,7 @@ public class InfoExtendedTextLine extends InfoTextLine
         }
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

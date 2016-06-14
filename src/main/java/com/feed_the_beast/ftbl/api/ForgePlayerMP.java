@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerInfo;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerLoggedIn;
+import com.feed_the_beast.ftbl.net.MessageLMPlayerLoggedOut;
 import com.feed_the_beast.ftbl.net.MessageLMPlayerUpdate;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
@@ -315,6 +316,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     {
         super.onLoggedOut();
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedOut(this));
+        new MessageLMPlayerLoggedOut(this).sendTo(null);
     }
 
     @Override

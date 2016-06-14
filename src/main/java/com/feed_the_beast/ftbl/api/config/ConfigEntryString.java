@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 public class ConfigEntryString extends ConfigEntry
 {
     public String defValue;
@@ -33,11 +35,12 @@ public class ConfigEntryString extends ConfigEntry
     }
 
     @Override
-    public final void fromJson(JsonElement o)
+    public final void fromJson(@Nonnull JsonElement o)
     {
         set(o.getAsString());
     }
 
+    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

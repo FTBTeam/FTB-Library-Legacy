@@ -7,6 +7,7 @@ import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class ConfigEntryIntList extends ConfigEntry
     }
 
     @Override
-    public void fromJson(JsonElement o)
+    public void fromJson(@Nonnull JsonElement o)
     {
         JsonArray a = o.getAsJsonArray();
         TIntList l = new TIntArrayList(a.size());
@@ -62,6 +63,7 @@ public class ConfigEntryIntList extends ConfigEntry
         set(l);
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

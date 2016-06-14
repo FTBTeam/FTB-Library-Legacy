@@ -4,17 +4,18 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.util.BaublesHelper;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.util.OtherMods;
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.Loader;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 public class CmdInv extends CommandSubBase
@@ -26,8 +27,9 @@ public class CmdInv extends CommandSubBase
             super(s);
         }
 
+        @Nonnull
         @Override
-        public String getCommandUsage(ICommandSender ics)
+        public String getCommandUsage(@Nonnull ICommandSender ics)
         {
             return '/' + commandName + " <player> <file_id>";
         }
@@ -39,7 +41,7 @@ public class CmdInv extends CommandSubBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
             checkArgs(args, 2);
             EntityPlayerMP ep = getPlayer(server, ics, args[0]);
@@ -64,9 +66,9 @@ public class CmdInv extends CommandSubBase
             NBTTagCompound tag = new NBTTagCompound();
             LMInvUtils.writeItemsToNBT(ep.inventory, tag, "Inventory");
 
-            if(FTBLib.isModInstalled(OtherMods.BAUBLES))
+            if(Loader.isModLoaded(OtherMods.BAUBLES))
             {
-                LMInvUtils.writeItemsToNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+                LMInvUtils.writeItemsToNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
             }
 
             LMNBTUtils.writeTag(file, tag);
@@ -87,9 +89,9 @@ public class CmdInv extends CommandSubBase
 
             LMInvUtils.readItemsFromNBT(ep.inventory, tag, "Inventory");
 
-            if(FTBLib.isModInstalled(OtherMods.BAUBLES))
+            if(Loader.isModLoaded(OtherMods.BAUBLES))
             {
-                LMInvUtils.readItemsFromNBT(BaublesHelper.getBaubles(ep), tag, "Baubles");
+                LMInvUtils.readItemsFromNBT(LMInvUtils.getBaubles(ep), tag, "Baubles");
             }
         }
     }
@@ -102,7 +104,7 @@ public class CmdInv extends CommandSubBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
         }
     }

@@ -20,7 +20,6 @@ public class MessageLMPlayerLoggedOut extends MessageToClient<MessageLMPlayerLog
     {
     }
 
-    //FIXME: Unused Message
     public MessageLMPlayerLoggedOut(ForgePlayerMP p)
     {
         playerID = p.getProfile().getId();

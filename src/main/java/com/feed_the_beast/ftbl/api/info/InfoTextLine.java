@@ -10,6 +10,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by LatvianModder on 20.03.2016.
  */
@@ -36,11 +38,12 @@ public class InfoTextLine implements IJsonSerializable
     }
 
     @Override
-    public void fromJson(JsonElement e)
+    public void fromJson(@Nonnull JsonElement e)
     {
         text = e.getAsString();
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

@@ -20,6 +20,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
@@ -83,7 +85,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack = new ButtonLM(0, 0, 14, 11)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
 

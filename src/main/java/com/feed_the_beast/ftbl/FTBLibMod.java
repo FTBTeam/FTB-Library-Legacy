@@ -16,7 +16,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.ReloadType;
-import latmod.lib.util.OS;
+import latmod.lib.OS;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -59,7 +59,7 @@ public class FTBLibMod
             logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
         }
 
-        logger.info("OS: " + OS.current + ", 64bit: " + OS.is64);
+        logger.info("OS: " + OS.current + ", 64bit: " + OS.IS_64_ARCH);
 
         mod = LMMod.create(FTBLibFinals.MOD_ID);
 

@@ -22,16 +22,14 @@ public class ButtonNotification extends ButtonLM
         super(0, 0, 0, 24);
         notification = n;
         posY += g.buttonList.size() * 25;
-        title = n.notification.title.getFormattedText();
-        width = g.font.getStringWidth(n.notification.title.getFormattedText());
-        if(n.notification.desc != null)
-        {
-            width = Math.max(width, g.font.getStringWidth(n.notification.desc.getFormattedText()));
-        }
-        if(n.notification.item != null)
+        title = n.notification.text.get(0).getFormattedText();
+        width = g.font.getStringWidth(title);
+
+        if(n.notification.hasItem())
         {
             width += 20;
         }
+
         width += 8;
     }
 
@@ -42,7 +40,7 @@ public class ButtonNotification extends ButtonLM
         double ay = getAY();
 
         int tx = 4;
-        ItemStack is = notification.notification.item;
+        ItemStack is = notification.notification.getItem();
         if(is != null)
         {
             tx += 20;
@@ -51,14 +49,14 @@ public class ButtonNotification extends ButtonLM
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        FTBLibClient.setGLColor(notification.notification.color, gui.isMouseOver(this) ? 255 : 185);
+        FTBLibClient.setGLColor(notification.notification.getColor(), gui.isMouseOver(this) ? 255 : 185);
         GuiLM.drawBlankRect(ax, ay, parentPanel.width, height);
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         gui.font.drawString(title, (int) (ax + tx), (int) ay + 4, 0xFFFFFFFF);
-        if(notification.notification.desc != null)
+        if(notification.notification.text.size() > 1)
         {
-            gui.font.drawString(notification.notification.desc.getFormattedText(), (int) (ax + tx), (int) ay + 14, 0xFFFFFFFF);
+            gui.font.drawString(notification.notification.text.get(1).getFormattedText(), (int) (ax + tx), (int) ay + 14, 0xFFFFFFFF);
         }
 
         if(gui.isMouseOver(this))
@@ -84,7 +82,8 @@ public class ButtonNotification extends ButtonLM
         {
             notification.onClicked(button);
         }
-        ClientNotifications.Perm.list.remove(notification.notification);
+
+        ClientNotifications.Perm.map.remove(notification.notification.getID());
 
         gui.onInit();
         gui.refreshWidgets();
@@ -93,17 +92,9 @@ public class ButtonNotification extends ButtonLM
     @Override
     public void addMouseOverText(GuiLM gui, List<String> l)
     {
-        double ax = getAX();
-
-        if(gui.isMouseOver(this) && gui.mouseX >= ax + width - 16)
+        if(gui.isMouseOver(this) && gui.mouseX >= getAX() + width - 16)
         {
             l.add(GuiLang.button_close.translate());
-            return;
-        }
-
-        if(notification.notification.mouse != null)
-        {
-            notification.notification.mouse.addHoverText(l);
         }
     }
 }

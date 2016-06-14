@@ -3,13 +3,13 @@ package com.feed_the_beast.ftbl.gui;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
-import latmod.lib.MathHelperLM;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMMapUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -27,19 +27,22 @@ public class GuiNotifications extends GuiLM
     public void onInit()
     {
         width = 0;
-
         buttonList.clear();
+        LMMapUtils.sortMap(ClientNotifications.Perm.map, (o1, o2) -> Long.compare(o2.getValue().timeAdded, o1.getValue().timeAdded));
 
-        Collections.sort(ClientNotifications.Perm.list, null);
+        int s = 0;
 
-        int s = Math.min(ClientNotifications.Perm.list.size(), 7);
-
-        for(int i = 0; i < s; i++)
+        for(ClientNotifications.Perm p : ClientNotifications.Perm.map.values())
         {
-            ClientNotifications.Perm p = ClientNotifications.Perm.list.get(i);
             ButtonNotification b = new ButtonNotification(this, p);
             buttonList.add(b);
             width = Math.max(width, b.width);
+            s++;
+
+            if(s == 7)
+            {
+                break;
+            }
         }
 
         width = MathHelperLM.clamp(width, 200D, 300D);

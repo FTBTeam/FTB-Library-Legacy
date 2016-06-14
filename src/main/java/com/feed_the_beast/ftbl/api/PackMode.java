@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.util.FTBLib;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.FinalIDObject;
 
 import java.io.File;
 

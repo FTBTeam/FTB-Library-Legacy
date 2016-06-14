@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void onClicked(GuiLM gui, MouseButton button)
+    public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
     {
         FTBLibClient.playClickSound();
 

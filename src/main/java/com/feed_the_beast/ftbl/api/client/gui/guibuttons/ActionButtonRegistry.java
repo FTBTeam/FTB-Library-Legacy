@@ -39,7 +39,7 @@ public class ActionButtonRegistry
 
     public static boolean enabled(ResourceLocation id)
     {
-        ConfigEntry entry = configGroup.entryMap.get(id);
+        ConfigEntry entry = configGroup.entryMap.get(id.toString());
         return (entry == null) || entry.getAsBoolean();
     }
 

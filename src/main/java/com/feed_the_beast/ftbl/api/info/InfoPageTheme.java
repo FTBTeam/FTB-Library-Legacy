@@ -6,6 +6,8 @@ import com.google.gson.JsonPrimitive;
 import latmod.lib.LMColor;
 import net.minecraft.util.IJsonSerializable;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by LatvianModder on 07.05.2016.
  */
@@ -41,7 +43,7 @@ public final class InfoPageTheme implements IJsonSerializable
     }
 
     @Override
-    public void fromJson(JsonElement json)
+    public void fromJson(@Nonnull JsonElement json)
     {
         JsonObject o = json.getAsJsonObject();
         backgroundColor = o.has("CBG") ? new LMColor.ImmutableColor(o.get("CBG").getAsInt()) : null;
@@ -49,6 +51,7 @@ public final class InfoPageTheme implements IJsonSerializable
         useUnicodeFont = o.has("UUF") ? o.get("UUF").getAsBoolean() : null;
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.item;
 
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.FinalIDObject;
 import net.minecraft.item.ItemStack;
 
 public final class MaterialItem extends FinalIDObject

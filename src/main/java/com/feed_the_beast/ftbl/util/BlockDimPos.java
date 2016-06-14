@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.LMUtils;
-import latmod.lib.MathHelperLM;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -53,14 +53,7 @@ public final class BlockDimPos
     @Override
     public boolean equals(Object o)
     {
-        if(o == null)
-        {
-            return false;
-        }
-        else
-        {
-            return o == this || equalsPos((BlockDimPos) o);
-        }
+        return o != null && (o == this || equalsPos((BlockDimPos) o));
     }
 
     @Override
@@ -106,14 +99,7 @@ public final class BlockDimPos
 
     public boolean equalsPos(BlockDimPos p)
     {
-        if(p == null)
-        {
-            return false;
-        }
-        else
-        {
-            return p == this || (p.dim == dim && p.pos.equals(pos));
-        }
+        return p != null && (p == this || (p.dim == dim && p.pos.equals(pos)));
     }
 
     public BlockDimPos offset(EnumFacing facing)

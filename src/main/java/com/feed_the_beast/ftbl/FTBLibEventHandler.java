@@ -4,25 +4,17 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
-import com.feed_the_beast.ftbl.api.item.ICreativeSafeItem;
 import com.feed_the_beast.ftbl.api.tile.IInfoTile;
 import com.feed_the_beast.ftbl.api.tile.TileInfoDataAccessor;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.MathHelperMC;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -150,41 +142,10 @@ public class FTBLibEventHandler implements ITickable
         }
     }
 
-    //FIXME: Right click / left click needs a rewrite
+    /*
     @SubscribeEvent
     public void onPlayerInteract(PlayerInteractEvent e)
     {
-        if(e.getEntity().worldObj.isRemote || e.getEntityPlayer() instanceof FakePlayer || e instanceof PlayerInteractEvent.RightClickEmpty)
-        {
-            return;
-        }
-        else if(!canInteract(e.getEntityPlayer(), e.getHand(), e.getPos(), e instanceof PlayerInteractEvent.LeftClickBlock))
-        {
-            e.setCanceled(true);
-        }
-        else if(FTBLib.ftbu != null && e.getEntityPlayer() instanceof EntityPlayerMP)
-        {
-            if(!FTBLib.ftbu.canPlayerInteract(ForgeWorldMP.inst.getPlayer(e.getEntityPlayer()), e instanceof PlayerInteractEvent.LeftClickBlock, e.getPos()))
-            {
-                e.setCanceled(true);
-            }
-        }
     }
-
-    private boolean canInteract(EntityPlayer ep, EnumHand hand, BlockPos pos, boolean leftClick)
-    {
-        ItemStack heldItem = ep.getHeldItem(hand);
-
-        if(ep.capabilities.isCreativeMode && leftClick && heldItem != null && heldItem.getItem() instanceof ICreativeSafeItem)
-        {
-            if(!ep.worldObj.isRemote)
-            {
-                ep.worldObj.markBlockRangeForRenderUpdate(pos, pos);
-            }
-            //FIXME: else ep.worldObj.markChunkDirty(pos, null);
-            return false;
-        }
-
-        return true;
-    }
+    */
 }

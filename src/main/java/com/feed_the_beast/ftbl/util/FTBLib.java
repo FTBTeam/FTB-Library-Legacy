@@ -3,24 +3,20 @@ package com.feed_the_beast.ftbl.util;
 import com.feed_the_beast.ftbl.FTBLibEventHandler;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.FTBUIntegration;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.api.tile.IGuiTile;
-import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageOpenGuiTile;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMUtils;
-import latmod.lib.net.LMConnection;
-import latmod.lib.net.RequestMethod;
+import latmod.lib.io.LMConnection;
+import latmod.lib.io.RequestMethod;
+import latmod.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -51,7 +47,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -60,6 +55,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -92,7 +89,6 @@ public class FTBLib
     public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(false, EnumDyeColor.values());
     private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
-    public static FTBUIntegration ftbu = null;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
 
     public static void init(File configFolder)
@@ -141,14 +137,7 @@ public class FTBLib
         {
             ConfigRegistry.reload();
             PackModes.reload();
-
-            ReloadEvent event = new ReloadEvent(ForgeWorldMP.inst, sender, type, login);
-            if(ftbu != null)
-            {
-                ftbu.onReloaded(event);
-            }
-
-            MinecraftForge.EVENT_BUS.post(event);
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent(ForgeWorldMP.inst, sender, type, login));
         }
 
         if(!login)
@@ -250,11 +239,6 @@ public class FTBLib
         return getServer() != null && !getServer().getPlayerList().getPlayerList().isEmpty();
     }
 
-    public static boolean isModInstalled(String s)
-    {
-        return Loader.isModLoaded(s);
-    }
-
     public static String removeFormatting(String s)
     {
         if(s == null)
@@ -299,31 +283,30 @@ public class FTBLib
         return runCommand(ics, sb.toString());
     }
 
-    public static void openGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
+    public static void openGui(@Nonnull EntityPlayer ep, @Nonnull IGuiTile t, @Nullable NBTTagCompound data)
     {
-        if(t == null || !(t instanceof TileEntity) || ep instanceof FakePlayer)
+        if(t instanceof TileEntity && !(ep instanceof FakePlayer))
         {
-            return;
-        }
-        else if(ep instanceof EntityPlayerMP)
-        {
-            Container c = t.getContainer(ep, data);
-            if(c == null)
+            if(ep.worldObj.isRemote)
             {
-                return;
+                FTBLibMod.proxy.openClientTileGui(ep, t, data);
             }
+            else
+            {
+                Container c = t.getContainer(ep, data);
+                if(c == null)
+                {
+                    return;
+                }
 
-            EntityPlayerMP epM = (EntityPlayerMP) ep;
-            epM.getNextWindowId();
-            epM.closeContainer();
-            epM.openContainer = c;
-            epM.openContainer.windowId = epM.currentWindowId;
-            epM.openContainer.addListener(epM);
-            new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
-        }
-        else if(ep.worldObj.isRemote)
-        {
-            FTBLibMod.proxy.openClientTileGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, t, data);
+                EntityPlayerMP epM = (EntityPlayerMP) ep;
+                epM.getNextWindowId();
+                epM.closeContainer();
+                epM.openContainer = c;
+                epM.openContainer.windowId = epM.currentWindowId;
+                epM.openContainer.addListener(epM);
+                new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
+            }
         }
     }
 
@@ -342,34 +325,6 @@ public class FTBLib
     public static boolean isOP(GameProfile p)
     {
         return !isDedicatedServer() || getServerWorld() != null && getServer().getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0;
-    }
-
-    public static void notifyPlayer(EntityPlayerMP ep, Notification n)
-    {
-        if(ep == null)
-        {
-            if(hasOnlinePlayers())
-            {
-                for(EntityPlayerMP ep1 : getServer().getPlayerList().getPlayerList())
-                {
-                    notifyPlayer(ep1, n);
-                }
-            }
-        }
-        else
-        {
-            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-
-            if(p != null)
-            {
-                EnumNotificationDisplay e = p.notifications.get();
-
-                if(e != EnumNotificationDisplay.OFF)
-                {
-                    new MessageNotifyPlayer(n, e).sendTo(ep);
-                }
-            }
-        }
     }
 
     public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)

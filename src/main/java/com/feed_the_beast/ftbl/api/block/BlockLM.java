@@ -57,6 +57,7 @@ public abstract class BlockLM extends Block implements IBlockLM
         return EnumBlockRenderType.MODEL;
     }
 
+    @Nonnull
     @Override
     public final String getID()
     {

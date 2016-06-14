@@ -5,6 +5,8 @@ import com.google.gson.JsonPrimitive;
 import latmod.lib.LMColor;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 public class ConfigEntryColor extends ConfigEntry
 {
     public final LMColor.RGB value;
@@ -32,11 +34,12 @@ public class ConfigEntryColor extends ConfigEntry
     }
 
     @Override
-    public void fromJson(JsonElement o)
+    public void fromJson(@Nonnull JsonElement o)
     {
         value.setRGBA(o.getAsInt());
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

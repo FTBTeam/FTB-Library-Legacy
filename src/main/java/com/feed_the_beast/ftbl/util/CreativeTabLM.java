@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +48,7 @@ public class CreativeTabLM extends CreativeTabs
         return this;
     }
 
+    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public ItemStack getIconItemStack()
@@ -63,6 +65,7 @@ public class CreativeTabLM extends CreativeTabs
         return new ItemStack(Items.DIAMOND);
     }
 
+    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public Item getTabIconItem()
@@ -79,7 +82,7 @@ public class CreativeTabLM extends CreativeTabs
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(List<ItemStack> l)
+    public void displayAllRelevantItems(@Nonnull List<ItemStack> l)
     {
         if(mod == null)
         {

@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.api.client.gui;
 
 import com.feed_the_beast.ftbl.gui.GuiSelectColor;
 import com.feed_the_beast.ftbl.gui.GuiSelectField;
-import latmod.lib.Converter;
 import latmod.lib.LMColor;
 import latmod.lib.ObjectCallback;
+import latmod.lib.math.Converter;
 
 public class LMGuis
 {

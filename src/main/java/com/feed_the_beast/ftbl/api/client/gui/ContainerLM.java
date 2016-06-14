@@ -6,6 +6,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public abstract class ContainerLM extends Container
 {
     public final EntityPlayer player;
@@ -60,6 +62,7 @@ public abstract class ContainerLM extends Container
         return is;
     }
 
+    @Nonnull
     @Override
     public Slot getSlot(int i)
     {
@@ -107,7 +110,7 @@ public abstract class ContainerLM extends Container
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer ep)
+    public boolean canInteractWith(@Nonnull EntityPlayer ep)
     {
         return true;
     }

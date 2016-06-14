@@ -9,6 +9,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class CmdReloadClient extends CommandLM
 {
@@ -24,7 +26,7 @@ public class CmdReloadClient extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
     {
         FTBLib.reload(sender, ReloadType.CLIENT_ONLY, false);
     }

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.item;
 
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -9,6 +9,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public abstract class ItemMaterialsLM extends ItemLM
         }
     }
 
+    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack is)
     {
@@ -83,7 +85,7 @@ public abstract class ItemMaterialsLM extends ItemLM
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
+    public void getSubItems(@Nonnull Item item, CreativeTabs c, List<ItemStack> l)
     {
         for(MaterialItem m : materials.values())
         {

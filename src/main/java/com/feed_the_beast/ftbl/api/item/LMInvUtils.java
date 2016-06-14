@@ -4,11 +4,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,7 +14,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.FMLLog;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public class LMInvUtils
 {
+    private static Method baublesMethod = null;
+
     public static ItemStack singleCopy(ItemStack is)
     {
         if(is == null || is.stackSize <= 0)
@@ -39,11 +41,7 @@ public class LMInvUtils
 
     public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
     {
-        if(is1 == null && is2 == null)
-        {
-            return true;
-        }
-        return !(is1 == null || is2 == null) && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (!nbt || ItemStack.areItemStackTagsEqual(is1, is2)) && (!size || (is1.stackSize == is2.stackSize));
+        return is1 == null && is2 == null || !(is1 == null || is2 == null) && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (!nbt || ItemStack.areItemStackTagsEqual(is1, is2)) && (!size || (is1.stackSize == is2.stackSize));
     }
 
     public static int[] getAllSlots(IInventory inv, EnumFacing side)
@@ -651,8 +649,30 @@ public class LMInvUtils
         }
     }
 
-    public static boolean isAir(Item item)
+    /**
+     * Retrieves the baubles inventory for the supplied player
+     *
+     * @author Azanor
+     */
+    public static IInventory getBaubles(EntityPlayer player)
     {
-        return item != null && item instanceof ItemBlock && Block.getBlockFromItem(item) == Blocks.AIR;
+        IInventory ot = null;
+
+        try
+        {
+            if(baublesMethod == null)
+            {
+                Class<?> fake = Class.forName("baubles.common.lib.PlayerHandler");
+                baublesMethod = fake.getMethod("getPlayerBaubles", EntityPlayer.class);
+            }
+
+            ot = (IInventory) baublesMethod.invoke(null, player);
+        }
+        catch(Exception ex)
+        {
+            FMLLog.warning("[Baubles API] Could not invoke baubles.common.lib.PlayerHandler method getPlayerBaubles");
+        }
+
+        return ot;
     }
 }

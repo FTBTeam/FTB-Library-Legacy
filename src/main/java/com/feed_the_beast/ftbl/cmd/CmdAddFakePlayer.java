@@ -5,12 +5,13 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -23,8 +24,9 @@ public class CmdAddFakePlayer extends CommandLM
         super("add_fake_player");
     }
 
+    @Nonnull
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getCommandUsage(@Nonnull ICommandSender ics)
     {
         return '/' + commandName + " <player>";
     }
@@ -36,7 +38,7 @@ public class CmdAddFakePlayer extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
         checkArgs(args, 2);
 

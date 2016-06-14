@@ -17,6 +17,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by LatvianModder on 24.03.2016.
  */
@@ -45,7 +47,7 @@ public class InfoFriendsGUIPage extends InfoPage
         }
 
         @Override
-        public void onClicked(GuiLM gui, MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
             new MessageRequestPlayerInfo(playerLM.getProfile().getId()).sendToServer();
             super.onClicked(gui, button);

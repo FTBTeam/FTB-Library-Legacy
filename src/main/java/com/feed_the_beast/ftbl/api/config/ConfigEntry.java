@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonElement;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import latmod.lib.Bits;
 import latmod.lib.annotations.IFlagContainer;
 import latmod.lib.annotations.IInfoContainer;
+import latmod.lib.io.Bits;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -13,6 +13,7 @@ import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -32,8 +33,9 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     public abstract ConfigEntryType getConfigType();
 
     @Override
-    public abstract void fromJson(JsonElement o);
+    public abstract void fromJson(@Nonnull JsonElement o);
 
+    @Nonnull
     @Override
     public abstract JsonElement getSerializableElement();
 
@@ -164,9 +166,9 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
             {
                 NBTTagList list = new NBTTagList();
 
-                for(int i = 0; i < info.length; i++)
+                for(String s : info)
                 {
-                    list.appendTag(new NBTTagString(info[i]));
+                    list.appendTag(new NBTTagString(s));
                 }
 
                 tag.setTag("I", list);

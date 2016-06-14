@@ -9,6 +9,7 @@ import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,12 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void fromJson(JsonElement o)
+    public void fromJson(@Nonnull JsonElement o)
     {
         value = o == JsonNull.INSTANCE ? null : o;
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -123,7 +125,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void onClicked(MouseButton button)
+    public void onClicked(@Nonnull MouseButton button)
     {
     }
 

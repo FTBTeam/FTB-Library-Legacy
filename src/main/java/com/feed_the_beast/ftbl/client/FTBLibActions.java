@@ -41,13 +41,13 @@ public class FTBLibActions
         @Override
         public boolean isVisibleFor(ForgePlayerSP player)
         {
-            return !ClientNotifications.Perm.list.isEmpty();
+            return !ClientNotifications.Perm.map.isEmpty();
         }
 
         @Override
         public void postRender(double ax, double ay)
         {
-            String n = String.valueOf(ClientNotifications.Perm.list.size());
+            String n = String.valueOf(ClientNotifications.Perm.map.size());
             int nw = FTBLibClient.mc().fontRendererObj.getStringWidth(n);
             int width = 16;
             GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);

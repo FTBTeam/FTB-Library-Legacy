@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -14,6 +14,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -104,7 +105,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
     }
 
     @Override
-    public final int compareTo(ForgePlayer o)
+    public final int compareTo(@Nonnull ForgePlayer o)
     {
         return getProfile().getName().compareToIgnoreCase(o.getProfile().getName());
     }

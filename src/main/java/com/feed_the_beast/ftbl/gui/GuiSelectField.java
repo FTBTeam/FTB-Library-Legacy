@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
 {
@@ -38,7 +40,7 @@ public class GuiSelectField extends GuiLM
         buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 callback.onCallback(new ObjectCallback(ID, false, true, def));
@@ -50,7 +52,7 @@ public class GuiSelectField extends GuiLM
         buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 if(textBox.isValid())

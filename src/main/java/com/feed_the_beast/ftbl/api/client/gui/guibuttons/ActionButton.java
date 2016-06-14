@@ -8,6 +8,8 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nonnull;
+
 public abstract class ActionButton extends ResourceLocationObject implements Comparable<ActionButton>
 {
     public final int priority;
@@ -29,7 +31,7 @@ public abstract class ActionButton extends ResourceLocationObject implements Com
     public abstract void onClicked(ForgePlayerSP player);
 
     @Override
-    public int compareTo(ActionButton a)
+    public int compareTo(@Nonnull ActionButton a)
     {
         int i = Integer.compare(a.priority, priority);
         return (i == 0) ? FTBLib.RESOURCE_LOCATION_COMPARATOR.compare(getResourceLocation(), a.getResourceLocation()) : i;

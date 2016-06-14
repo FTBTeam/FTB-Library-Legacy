@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class ItemLM extends Item implements IItemLM
@@ -22,6 +23,7 @@ public abstract class ItemLM extends Item implements IItemLM
         return this;
     }
 
+    @Nonnull
     @Override
     public final String getID()
     {
@@ -47,11 +49,12 @@ public abstract class ItemLM extends Item implements IItemLM
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
+    public void getSubItems(@Nonnull Item item, CreativeTabs c, List<ItemStack> l)
     {
         l.add(new ItemStack(item, 1, 0));
     }
 
+    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack is)
     {

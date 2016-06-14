@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
+
 public class BasicInventory implements IInventory
 {
     public final ItemStack[] items;
@@ -57,23 +59,23 @@ public class BasicInventory implements IInventory
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer ep)
+    public boolean isUseableByPlayer(@Nonnull EntityPlayer ep)
     {
         return true;
     }
 
     @Override
-    public void openInventory(EntityPlayer player)
+    public void openInventory(@Nonnull EntityPlayer player)
     {
     }
 
     @Override
-    public void closeInventory(EntityPlayer player)
+    public void closeInventory(@Nonnull EntityPlayer player)
     {
     }
 
     @Override
-    public boolean isItemValidForSlot(int i, ItemStack is)
+    public boolean isItemValidForSlot(int i, @Nonnull ItemStack is)
     {
         return true;
     }
@@ -101,6 +103,7 @@ public class BasicInventory implements IInventory
         LMInvUtils.clear(this);
     }
 
+    @Nonnull
     @Override
     public String getName()
     {
@@ -113,6 +116,7 @@ public class BasicInventory implements IInventory
         return false;
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName()
     {

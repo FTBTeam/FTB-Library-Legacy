@@ -29,11 +29,7 @@ public enum EnumRedstoneMode
         {
             return false;
         }
-        if(this == ACTIVE_HIGH && !b)
-        {
-            return true;
-        }
-        return this == ACTIVE_LOW && b;
+        return this == ACTIVE_HIGH && !b || this == ACTIVE_LOW && b;
     }
 
     public TextureCoords getIcon()

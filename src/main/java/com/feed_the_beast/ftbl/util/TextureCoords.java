@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.util.ResourceLocation;
 
 public final class TextureCoords

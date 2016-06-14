@@ -7,12 +7,13 @@ import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.awt.image.BufferedImage;
 
 /**
@@ -117,7 +118,7 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @Override
-    public void fromJson(JsonElement e)
+    public void fromJson(@Nonnull JsonElement e)
     {
         super.fromJson(e);
 
@@ -145,6 +146,7 @@ public class InfoImageLine extends InfoExtendedTextLine
         }
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

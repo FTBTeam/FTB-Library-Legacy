@@ -2,9 +2,11 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.MathHelperLM;
 import latmod.lib.annotations.INumberBoundsContainer;
+import latmod.lib.math.MathHelperLM;
 import net.minecraft.nbt.NBTTagCompound;
+
+import javax.annotation.Nonnull;
 
 public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContainer
 {
@@ -60,11 +62,12 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     }
 
     @Override
-    public final void fromJson(JsonElement o)
+    public final void fromJson(@Nonnull JsonElement o)
     {
         set((o == null || o.isJsonNull()) ? defValue : o.getAsInt());
     }
 
+    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

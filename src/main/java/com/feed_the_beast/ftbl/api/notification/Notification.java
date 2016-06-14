@@ -1,33 +1,46 @@
 package com.feed_the_beast.ftbl.api.notification;
 
+import com.feed_the_beast.ftbl.api.ForgePlayerMP;
+import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.item.ItemStackSerializer;
+import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
+import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.LMColorUtils;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.FinalIDObject;
+import latmod.lib.util.LMColorUtils;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Notification extends FinalIDObject implements IJsonSerializable
 {
-    public ITextComponent title, desc;
-    public int timer, color;
-    public ItemStack item;
-    public MouseAction mouse;
+    public final List<ITextComponent> text;
+    private ItemStack item;
+    private ClickAction clickAction;
+    private int timer, color;
 
-    public Notification(String s)
+    public Notification(@Nonnull String s)
     {
         super(s);
+        text = new ArrayList<>();
     }
 
-    public Notification(String s, ITextComponent t, int l)
+    public static Notification error(@Nonnull String id, @Nonnull ITextComponent title)
     {
-        super(s);
-        title = t;
-        timer = l;
+        title.getStyle().setColor(TextFormatting.WHITE);
+        return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959);
     }
 
     public static Notification deserialize(JsonElement e)
@@ -48,102 +61,180 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 
     private void setDefaults()
     {
-        title = null;
-        desc = null;
+        text.clear();
         timer = 3000;
-        color = 0xFFA0A0A0;
+        color = 0xA0A0A0;
         item = null;
-        mouse = null;
+        clickAction = null;
     }
 
-    public void setDesc(ITextComponent c)
+    public Notification addText(ITextComponent t)
     {
-        desc = c;
+        text.add(t);
+        return this;
     }
 
-    public void setItem(ItemStack is)
+    public ItemStack getItem()
+    {
+        return item;
+    }
+
+    public Notification setItem(ItemStack is)
     {
         item = is;
+        return this;
     }
 
-    public void setColor(int c)
+    public boolean hasItem()
     {
-        color = c;
+        return item != null;
     }
 
-    public void setMouseAction(MouseAction e)
+    public ClickAction getClickAction()
     {
-        mouse = e;
+        return clickAction;
+    }
+
+    public Notification setClickAction(ClickAction e)
+    {
+        clickAction = e;
+        return this;
     }
 
     public boolean isTemp()
     {
-        return mouse == null;
+        return clickAction == null;
     }
 
+    public int getTimer()
+    {
+        return timer;
+    }
+
+    public Notification setTimer(int t)
+    {
+        timer = t;
+        return this;
+    }
+
+    public int getColor()
+    {
+        return color;
+    }
+
+    public Notification setColor(int c)
+    {
+        color = 0x00FFFFFF & c;
+        return this;
+    }
+
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
         o.add("id", new JsonPrimitive(getID()));
-        o.add("title", JsonHelper.serializeICC(title));
+
+        JsonArray a = new JsonArray();
+
+        for(ITextComponent t : text)
+        {
+            a.add(JsonHelper.serializeICC(t));
+        }
+
+        o.add("text", a);
+
         if(timer != 3000)
         {
             o.add("timer", new JsonPrimitive(timer));
         }
-        if(desc != null)
-        {
-            o.add("desc", JsonHelper.serializeICC(desc));
-        }
+
         if(item != null)
         {
             o.add("item", ItemStackSerializer.serialize(item));
         }
-        if(color != 0xFFA0A0A0)
+
+        if(color != 0xA0A0A0)
         {
             o.add("color", LMColorUtils.serialize(color));
         }
-        if(mouse != null)
+
+        if(clickAction != null)
         {
-            o.add("mouse", mouse.getSerializableElement());
+            o.add("click", clickAction.getSerializableElement());
         }
+
         return o;
     }
 
     @Override
-    public void fromJson(JsonElement e)
+    public void fromJson(@Nonnull JsonElement e)
     {
-        if(e == null || !e.isJsonObject())
+        if(e.isJsonObject())
         {
-            return;
-        }
-        setDefaults();
-        JsonObject o = e.getAsJsonObject();
-        title = JsonHelper.deserializeICC(o.get("title"));
-        timer = o.has("timer") ? o.get("timer").getAsInt() : 3000;
-        if(o.has("desc"))
-        {
-            setDesc(JsonHelper.deserializeICC(o.get("desc")));
-        }
-        if(o.has("color"))
-        {
-            setColor(LMColorUtils.deserialize(o.get("color")));
-        }
-        if(o.has("item"))
-        {
-            setItem(ItemStackSerializer.deserialize(o.get("item")));
-        }
-        if(o.has("mouse"))
-        {
-            MouseAction m = new MouseAction();
-            m.fromJson(o.get("mouse"));
-            setMouseAction(m);
+            setDefaults();
+            JsonObject o = e.getAsJsonObject();
+
+            if(o.has("text"))
+            {
+                for(JsonElement e1 : o.get("text").getAsJsonArray())
+                {
+                    text.add(JsonHelper.deserializeICC(e1));
+                }
+            }
+
+            timer = o.has("timer") ? o.get("timer").getAsInt() : 3000;
+
+            if(o.has("color"))
+            {
+                setColor(LMColorUtils.deserialize(o.get("color")));
+            }
+
+            if(o.has("item"))
+            {
+                setItem(ItemStackSerializer.deserialize(o.get("item")));
+            }
+
+            if(o.has("click"))
+            {
+                clickAction = new ClickAction();
+                clickAction.fromJson(o.get("click"));
+            }
         }
     }
 
+    @Nonnull
     @Override
     public String toString()
     {
         return getSerializableElement().toString();
+    }
+
+    public void sendTo(@Nullable EntityPlayerMP ep)
+    {
+        if(ep == null)
+        {
+            if(FTBLib.hasOnlinePlayers())
+            {
+                for(EntityPlayerMP ep1 : FTBLib.getServer().getPlayerList().getPlayerList())
+                {
+                    sendTo(ep1);
+                }
+            }
+        }
+        else
+        {
+            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
+
+            if(p != null)
+            {
+                EnumNotificationDisplay e = p.notifications.get();
+
+                if(e != EnumNotificationDisplay.OFF)
+                {
+                    new MessageNotifyPlayer(this, e).sendTo(ep);
+                }
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
-import latmod.lib.LMStringUtils;
+import latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class CmdPackMode extends CommandSubBase
@@ -26,12 +27,14 @@ public class CmdPackMode extends CommandSubBase
             super(s);
         }
 
+        @Nonnull
         @Override
-        public String getCommandUsage(ICommandSender ics)
+        public String getCommandUsage(@Nonnull ICommandSender ics)
         {
             return '/' + commandName + " <modeID>";
         }
 
+        @Nonnull
         @Override
         public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
         {
@@ -44,7 +47,7 @@ public class CmdPackMode extends CommandSubBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
             if(args.length == 0)
             {
@@ -90,7 +93,7 @@ public class CmdPackMode extends CommandSubBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
             ITextComponent c = FTBLibLang.mode_current.textComponent(ForgeWorldMP.inst.getMode().getID());
             c.getStyle().setColor(TextFormatting.AQUA);
@@ -112,7 +115,7 @@ public class CmdPackMode extends CommandSubBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
             ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(PackModes.instance().getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);

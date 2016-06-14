@@ -11,9 +11,9 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.util.EnumDyeColorHelper;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import latmod.lib.LMColor;
-import latmod.lib.LMColorUtils;
-import latmod.lib.MathHelperLM;
 import latmod.lib.ObjectCallback;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -25,6 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -136,7 +137,7 @@ public class GuiSelectColor extends GuiLM
         colorInit = new ButtonLM(76, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 closeGui(false);
             }
@@ -152,7 +153,7 @@ public class GuiSelectColor extends GuiLM
         colorCurrent = new ButtonLM(109, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 closeGui(true);
             }

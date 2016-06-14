@@ -27,6 +27,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
@@ -62,6 +63,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         return true;
     }
 
+    @Nonnull
     @Override
     public final NBTTagCompound writeToNBT(NBTTagCompound tag)
     {
@@ -98,6 +100,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         return new SPacketUpdateTileEntity(getPos(), 0, tag);
     }
 
+    @Nonnull
     @Override
     public final NBTTagCompound getUpdateTag()
     {
@@ -144,7 +147,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         if(getSync().rerender())
         {
             IBlockState state = getBlockState();
-            worldObj.notifyBlockUpdate(pos, state, state, 3); //TODO: Check if this works
+            worldObj.notifyBlockUpdate(pos, state, state, 3);
         }
     }
 
@@ -309,6 +312,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         return true;
     }
 
+    @Nonnull
     @Override
     public String getName()
     {
@@ -326,6 +330,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         return !getName().isEmpty();
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName()
     {

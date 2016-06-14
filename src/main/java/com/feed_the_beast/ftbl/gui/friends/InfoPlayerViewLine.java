@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -56,6 +57,7 @@ public class InfoPlayerViewLine extends InfoTextLine
                 return false;
             }
 
+            @Nonnull
             @Override
             public BlockPos getPosition()
             {
@@ -63,11 +65,12 @@ public class InfoPlayerViewLine extends InfoTextLine
             }
 
             @Override
-            public boolean isInvisibleToPlayer(EntityPlayer ep)
+            public boolean isInvisibleToPlayer(@Nonnull EntityPlayer ep)
             {
                 return true;
             }
 
+            @Nonnull
             @Override
             public ResourceLocation getLocationSkin()
             {

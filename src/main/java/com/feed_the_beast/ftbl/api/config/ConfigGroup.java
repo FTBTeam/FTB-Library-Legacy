@@ -3,13 +3,14 @@ package com.feed_the_beast.ftbl.api.config;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import latmod.lib.LMUtils;
 import latmod.lib.annotations.AnnotationHelper;
 import latmod.lib.annotations.Flags;
 import latmod.lib.annotations.ID;
+import latmod.lib.util.LMUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,8 +93,7 @@ public class ConfigGroup extends ConfigEntry
                             ConfigEntry entry = (ConfigEntry) aF.get(parent);
                             if(entry != null && entry != this && !(entry instanceof ConfigFile))
                             {
-                                AnnotationHelper.inject(aF, parent, entry);
-
+                                AnnotationHelper.inject(aF, entry);
                                 add(id, entry);
                             }
                         }
@@ -124,7 +124,7 @@ public class ConfigGroup extends ConfigEntry
     }
 
     @Override
-    public final void fromJson(JsonElement o0)
+    public final void fromJson(@Nonnull JsonElement o0)
     {
         if(o0 == null || !o0.isJsonObject())
         {
@@ -148,6 +148,7 @@ public class ConfigGroup extends ConfigEntry
         }
     }
 
+    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

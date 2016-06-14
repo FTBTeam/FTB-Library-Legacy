@@ -12,14 +12,12 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.api.notification.Notification;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,14 +51,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         PackModes.reload();
         EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-        ReloadEvent event = new ReloadEvent(ForgeWorldSP.inst, ep, type, login);
-
-        if(FTBLib.ftbu != null)
-        {
-            FTBLib.ftbu.onReloaded(event);
-        }
-
-        MinecraftForge.EVENT_BUS.post(event);
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent(ForgeWorldSP.inst, ep, type, login));
 
         if(!login)
         {
@@ -113,9 +104,10 @@ public class MessageReload extends MessageToClient<MessageReload>
         }
         else if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT)
         {
-            Notification n = new Notification("reload_client_config", FTBLibLang.reload_client_config.textComponent(), 7000);
-            n.title.getStyle().setColor(TextFormatting.WHITE);
-            n.desc = new TextComponentString("/ftb reload_client");
+            Notification n = new Notification("reload_client_config");
+            n.addText(FTBLibLang.reload_client_config.textComponent());
+            n.addText(new TextComponentString("/ftb reload_client"));
+            n.setTimer(7000);
             n.setColor(0xFF333333);
             ClientNotifications.add(n);
         }

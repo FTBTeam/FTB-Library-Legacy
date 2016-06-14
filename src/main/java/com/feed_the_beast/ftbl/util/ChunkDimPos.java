@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.LMUtils;
-import latmod.lib.MathHelperLM;
+import latmod.lib.math.MathHelperLM;
+import latmod.lib.util.LMUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.ChunkPos;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by LatvianModder on 14.03.2016.
@@ -35,12 +37,8 @@ public class ChunkDimPos extends ChunkPos
 
             if(c.chunkXPos == chunkXPos && c.chunkZPos == chunkZPos)
             {
-                if(o instanceof ChunkDimPos)
-                {
-                    return ((ChunkDimPos) o).dim == dim;
-                }
+                return !(o instanceof ChunkDimPos) || ((ChunkDimPos) o).dim == dim;
 
-                return true;
             }
         }
 
@@ -52,6 +50,7 @@ public class ChunkDimPos extends ChunkPos
         return p == this || (p != null && p.dim == dim && p.chunkXPos == chunkXPos && p.chunkZPos == chunkZPos);
     }
 
+    @Nonnull
     @Override
     public String toString()
     {

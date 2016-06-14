@@ -4,6 +4,8 @@ import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by LatvianModder on 07.06.2016.
  */
@@ -35,6 +37,7 @@ public enum EnumTeamColor implements IStringSerializable
         langKey = new LangKey("ftbl.lang.team_color." + name);
     }
 
+    @Nonnull
     @Override
     public String getName()
     {

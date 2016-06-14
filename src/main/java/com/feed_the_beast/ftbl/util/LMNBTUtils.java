@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.ByteIOStream;
-import latmod.lib.LMFileUtils;
-import latmod.lib.LMListUtils;
-import latmod.lib.LMUtils;
+import latmod.lib.io.ByteIOStream;
+import latmod.lib.util.LMFileUtils;
+import latmod.lib.util.LMListUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
@@ -108,11 +108,7 @@ public class LMNBTUtils
         {
             return false;
         }
-        if(tag1 == null && tag2 != null)
-        {
-            return false;
-        }
-        return tag1.equals(tag2);
+        return !(tag1 == null && tag2 != null) && tag1.equals(tag2);
     }
 
     public static void toStringList(List<String> l, NBTTagList tag)

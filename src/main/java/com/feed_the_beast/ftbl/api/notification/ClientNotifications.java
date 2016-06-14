@@ -3,15 +3,18 @@ package com.feed_the_beast.ftbl.api.notification;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import latmod.lib.util.FinalIDObject;
+import latmod.lib.FinalIDObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -25,8 +28,7 @@ public class ClientNotifications
 
         private long time;
         private Notification notification;
-        private String title;
-        private String desc;
+        private List<String> text;
         private int width;
 
         private Temp(Notification n)
@@ -43,22 +45,24 @@ public class ClientNotifications
                 time = Minecraft.getSystemTime();
             }
 
-            if(title == null)
-            {
-                title = notification.title.getFormattedText();
-            }
-
-            if(desc == null)
-            {
-                desc = (notification.desc == null) ? null : notification.desc.getFormattedText();
-            }
-
             FontRenderer font = FTBLibClient.mc().fontRendererObj;
 
-            if(width == 0)
+            if(text == null)
             {
-                width = 20 + Math.max(font.getStringWidth(title), font.getStringWidth(desc));
-                if(notification.item != null)
+                text = new ArrayList<>();
+                width = 0;
+
+                for(ITextComponent t : notification.text)
+                {
+                    String s = t.getFormattedText();
+                    text.add(s);
+
+                    width = Math.max(width, font.getStringWidth(s));
+                }
+
+                width += 20;
+
+                if(notification.hasItem())
                 {
                     width += 20;
                 }
@@ -66,7 +70,7 @@ public class ClientNotifications
 
             if(time > 0L)
             {
-                double d0 = (double) (Minecraft.getSystemTime() - time) / (double) notification.timer;
+                double d0 = (double) (Minecraft.getSystemTime() - time) / (double) notification.getTimer();
 
                 if(d0 < 0D || d0 > 1D)
                 {
@@ -100,26 +104,33 @@ public class ClientNotifications
 
                 GlStateManager.disableTexture2D();
                 GlStateManager.disableLighting();
-                FTBLibClient.setGLColor(notification.color, 230);
+                FTBLibClient.setGLColor(notification.getColor(), 230);
                 GuiLM.drawBlankRect(0D, 0D, displayW, 32D);
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(1F, 1F, 1F, 1F);
 
-                int w = notification.item == null ? 10 : 30;
+                int w = notification.hasItem() ? 10 : 30;
 
-                if(desc == null)
+                if(text.size() == 1)
                 {
-                    font.drawString(title, w, 12, 0xFFFFFFFF);
+                    font.drawString(text.get(0), w, 12, 0xFFFFFFFF);
+                }
+                else if(text.size() == 2)
+                {
+                    font.drawString(text.get(0), w, 7, 0xFFFFFFFF);
+                    font.drawString(text.get(1), w, 18, 0xFFFFFFFF);
                 }
                 else
                 {
-                    font.drawString(title, w, 7, 0xFFFFFFFF);
-                    font.drawString(desc, w, 18, 0xFFFFFFFF);
+                    for(int i = 0; i < text.size(); i++)
+                    {
+                        font.drawString(text.get(i), w, 4 + i * 12, 0xFFFFFFFF);
+                    }
                 }
 
-                if(notification.item != null)
+                if(notification.hasItem())
                 {
-                    FTBLibClient.renderGuiItem(notification.item, 8D, 8D);
+                    FTBLibClient.renderGuiItem(notification.getItem(), 8D, 8D);
                 }
 
                 GlStateManager.depthMask(true);
@@ -134,7 +145,7 @@ public class ClientNotifications
 
     public static class Perm extends FinalIDObject implements Comparable<Perm>
     {
-        public static final List<Perm> list = new ArrayList<>();
+        public static final LinkedHashMap<String, Perm> map = new LinkedHashMap<>();
 
         public final Notification notification;
         public final long timeAdded;
@@ -147,16 +158,16 @@ public class ClientNotifications
         }
 
         @Override
-        public int compareTo(Perm o)
+        public int compareTo(@Nonnull Perm o)
         {
             return Long.compare(o.timeAdded, timeAdded);
         }
 
         public void onClicked(MouseButton button)
         {
-            if(notification.mouse != null && notification.mouse.click != null)
+            if(notification.getClickAction() != null)
             {
-                notification.mouse.click.onClicked(button);
+                notification.getClickAction().onClicked(button);
             }
         }
     }
@@ -184,7 +195,7 @@ public class ClientNotifications
             return;
         }
         Temp.list.remove(n);
-        Perm.list.remove(n);
+        Perm.map.remove(n);
         if(current != null && current.equals(n))
         {
             current = null;
@@ -193,14 +204,14 @@ public class ClientNotifications
         Temp.list.add(new Temp(n));
         if(!n.isTemp())
         {
-            Perm.list.add(new Perm(n));
+            Perm.map.put(n.getID(), new Perm(n));
         }
     }
 
     public static void init()
     {
         current = null;
-        Perm.list.clear();
+        Perm.map.clear();
         Temp.list.clear();
     }
 }

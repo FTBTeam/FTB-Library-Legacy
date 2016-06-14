@@ -9,6 +9,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+
 public class TileInvLM extends TileLM
 {
     public ItemStackHandler itemHandler;
@@ -33,7 +35,7 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing facing)
     {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
@@ -42,8 +44,9 @@ public class TileInvLM extends TileLM
         return super.hasCapability(capability, facing);
     }
 
+    @Nonnull
     @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing)
     {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
@@ -53,21 +56,21 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public void readTileData(NBTTagCompound tag)
+    public void readTileData(@Nonnull NBTTagCompound tag)
     {
         super.readTileData(tag);
         itemHandler.deserializeNBT(tag.getCompoundTag("Items"));
     }
 
     @Override
-    public void writeTileData(NBTTagCompound tag)
+    public void writeTileData(@Nonnull NBTTagCompound tag)
     {
         super.writeTileData(tag);
         tag.setTag("Items", itemHandler.serializeNBT());
     }
 
     @Override
-    public void onBroken(IBlockState state)
+    public void onBroken(@Nonnull IBlockState state)
     {
         if(dropItems && getSide().isServer() && itemHandler != null && itemHandler.getSlots() > 0)
         {

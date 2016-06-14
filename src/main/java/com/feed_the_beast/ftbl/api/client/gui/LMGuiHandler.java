@@ -7,9 +7,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class LMGuiHandler
 {
@@ -20,18 +22,18 @@ public abstract class LMGuiHandler
         ID = s;
     }
 
-    public abstract Container getContainer(EntityPlayer ep, int id, NBTTagCompound data);
+    public abstract Container getContainer(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data);
 
     @SideOnly(Side.CLIENT)
-    public abstract GuiScreen getGui(EntityPlayer ep, int id, NBTTagCompound data);
+    public abstract GuiScreen getGui(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data);
 
-    public void openGui(EntityPlayer ep, int id, NBTTagCompound data)
+    public void openGui(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data)
     {
-        if(ep instanceof FakePlayer)
+        if(ep.worldObj.isRemote)
         {
-            return;
+            FTBLibMod.proxy.openClientGui(ep, ID, id, data);
         }
-        else if(ep instanceof EntityPlayerMP)
+        else
         {
             Container c = getContainer(ep, id, data);
             if(c == null)
@@ -46,10 +48,6 @@ public abstract class LMGuiHandler
             epM.openContainer.windowId = epM.currentWindowId;
             epM.openContainer.addListener(epM);
             new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
-        }
-        else if(ep.worldObj.isRemote)
-        {
-            FTBLibMod.proxy.openClientGui((ep == null) ? FTBLibMod.proxy.getClientPlayer() : ep, ID, id, data);
         }
     }
 }

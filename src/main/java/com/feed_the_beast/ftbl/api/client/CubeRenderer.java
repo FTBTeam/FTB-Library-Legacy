@@ -138,33 +138,26 @@ public final class CubeRenderer
 
     public void renderFace(EnumFacing f)
     {
-        if(f == null)
+        switch(f)
         {
-            return;
-        }
-        else if(f == EnumFacing.DOWN)
-        {
-            renderDown();
-        }
-        else if(f == EnumFacing.UP)
-        {
-            renderUp();
-        }
-        else if(f == EnumFacing.SOUTH)
-        {
-            renderSouth();
-        }
-        else if(f == EnumFacing.NORTH)
-        {
-            renderNorth();
-        }
-        else if(f == EnumFacing.WEST)
-        {
-            renderWest();
-        }
-        else if(f == EnumFacing.EAST)
-        {
-            renderEast();
+            case DOWN:
+                renderDown();
+                break;
+            case UP:
+                renderUp();
+                break;
+            case SOUTH:
+                renderSouth();
+                break;
+            case NORTH:
+                renderNorth();
+                break;
+            case WEST:
+                renderWest();
+                break;
+            case EAST:
+                renderEast();
+                break;
         }
     }
 

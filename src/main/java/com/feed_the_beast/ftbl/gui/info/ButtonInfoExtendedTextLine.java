@@ -7,6 +7,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void onClicked(GuiLM gui, MouseButton button)
+    public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
     {
         if(line != null)
         {

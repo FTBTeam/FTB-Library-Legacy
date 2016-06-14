@@ -20,15 +20,16 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import latmod.lib.LMColor;
-import latmod.lib.LMColorUtils;
-import latmod.lib.LMJsonUtils;
 import latmod.lib.annotations.Flags;
+import latmod.lib.json.LMJsonUtils;
+import latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -113,7 +114,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         }
 
         @Override
-        public void onClicked(GuiLM gui, MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
             if(mouseY < 20)
             {
@@ -315,7 +316,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         buttonAccept = new ButtonLM(0, 2, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 shouldClose = 1;
@@ -328,7 +329,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         buttonCancel = new ButtonLM(0, 2, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 shouldClose = 2;
@@ -341,7 +342,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         buttonExpandAll = new ButtonLM(2, 2, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
 
@@ -371,7 +372,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
         buttonCollapseAll = new ButtonLM(20, 2, 16, 16)
         {
             @Override
-            public void onClicked(GuiLM gui, MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
                 for(ButtonConfigEntry e : configEntryButtons)

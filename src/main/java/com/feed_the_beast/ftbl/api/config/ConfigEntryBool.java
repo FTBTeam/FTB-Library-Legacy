@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,11 +39,12 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void fromJson(JsonElement o)
+    public void fromJson(@Nonnull JsonElement o)
     {
         set(o.getAsBoolean());
     }
 
+    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -50,7 +52,7 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void onClicked(MouseButton button)
+    public void onClicked(@Nonnull MouseButton button)
     {
         set(!getAsBoolean());
     }

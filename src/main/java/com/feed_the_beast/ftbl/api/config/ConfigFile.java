@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.google.gson.JsonElement;
-import latmod.lib.LMFileUtils;
-import latmod.lib.LMJsonUtils;
+import latmod.lib.json.LMJsonUtils;
+import latmod.lib.util.LMFileUtils;
 
 import java.io.File;
 

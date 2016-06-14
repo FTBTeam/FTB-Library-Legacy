@@ -10,6 +10,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class BroadcastSender implements ICommandSender
 {
     public static final BroadcastSender inst = new BroadcastSender();
@@ -17,17 +19,19 @@ public class BroadcastSender implements ICommandSender
     public static final BroadcastSender mute = new BroadcastSender()
     {
         @Override
-        public void addChatMessage(ITextComponent ics)
+        public void addChatMessage(@Nonnull ITextComponent ics)
         {
         }
     };
 
+    @Nonnull
     @Override
     public String getName()
     {
         return "[Server]";
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName()
     {
@@ -35,29 +39,32 @@ public class BroadcastSender implements ICommandSender
     }
 
     @Override
-    public void addChatMessage(ITextComponent component)
+    public void addChatMessage(@Nonnull ITextComponent component)
     {
         FTBLib.getServer().getPlayerList().sendChatMsgImpl(component, true);
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(int permLevel, String commandName)
+    public boolean canCommandSenderUseCommand(int permLevel, @Nonnull String commandName)
     {
         return true;
     }
 
+    @Nonnull
     @Override
     public BlockPos getPosition()
     {
         return FTBLib.getServerWorld().getSpawnCoordinate();
     }
 
+    @Nonnull
     @Override
     public Vec3d getPositionVector()
     {
         return new Vec3d(getPosition());
     }
 
+    @Nonnull
     @Override
     public World getEntityWorld()
     {
@@ -77,7 +84,7 @@ public class BroadcastSender implements ICommandSender
     }
 
     @Override
-    public void setCommandStat(CommandResultStats.Type type, int amount)
+    public void setCommandStat(@Nonnull CommandResultStats.Type type, int amount)
     {
     }
 

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.net;
 
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
-import latmod.lib.ByteIOStream;
+import latmod.lib.io.ByteIOStream;
 import latmod.lib.json.JsonElementIO;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;

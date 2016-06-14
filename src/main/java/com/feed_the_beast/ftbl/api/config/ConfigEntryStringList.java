@@ -5,11 +5,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import latmod.lib.LMListUtils;
+import latmod.lib.util.LMListUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class ConfigEntryStringList extends ConfigEntry
     }
 
     @Override
-    public final void fromJson(JsonElement o)
+    public final void fromJson(@Nonnull JsonElement o)
     {
         JsonArray a = o.getAsJsonArray();
         value.clear();
@@ -64,6 +65,7 @@ public class ConfigEntryStringList extends ConfigEntry
         set(LMListUtils.clone(value));
     }
 
+    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

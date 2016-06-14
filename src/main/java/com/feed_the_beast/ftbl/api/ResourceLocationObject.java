@@ -2,9 +2,10 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.util.FTBLib;
 import latmod.lib.IIDObject;
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.Comparator;
 
 /**
@@ -48,6 +49,7 @@ public class ResourceLocationObject implements IIDObject
         return ID;
     }
 
+    @Nonnull
     @Override
     public final String getID()
     {

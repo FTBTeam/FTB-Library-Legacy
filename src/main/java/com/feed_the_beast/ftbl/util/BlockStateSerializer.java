@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.LMUtils;
+import latmod.lib.util.LMUtils;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 
+import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class BlockStateSerializer
         }
 
         @Override
-        public int compareTo(StateEntry o)
+        public int compareTo(@Nonnull StateEntry o)
         {
             return getKey().getName().compareTo(o.getKey().getName());
         }

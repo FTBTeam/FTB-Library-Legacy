@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public class ContainerEmpty extends ContainerLM
 {
     public ContainerEmpty(EntityPlayer ep, Object inv)
@@ -42,7 +44,7 @@ public class ContainerEmpty extends ContainerLM
     }
 
     @Override
-    public void putStackInSlot(int i, ItemStack is)
+    public void putStackInSlot(int i, @Nonnull ItemStack is)
     {
     }
 
