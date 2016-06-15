@@ -13,6 +13,7 @@ import com.google.gson.JsonPrimitive;
 import latmod.lib.FinalIDObject;
 import latmod.lib.util.LMColorUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IJsonSerializable;
@@ -41,7 +42,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
     public static Notification error(@Nonnull String id, @Nonnull ITextComponent title)
     {
         title.getStyle().setColor(TextFormatting.WHITE);
-        return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959);
+        return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959).setItem(new ItemStack(Blocks.BARRIER));
     }
 
     public static Notification deserialize(JsonElement e)

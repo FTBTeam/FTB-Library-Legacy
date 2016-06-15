@@ -21,19 +21,68 @@ public class ClientNotifications
 {
     private static Temp current = null;
 
+    public static class NotificationWidget
+    {
+        public final Notification notification;
+        public final List<String> text;
+        public final double height;
+        public double width;
+
+        public NotificationWidget(Notification n)
+        {
+            notification = n;
+            text = new ArrayList<>();
+            width = 0;
+
+            for(ITextComponent t : notification.text)
+            {
+                String s = t.getFormattedText();
+                text.add(s);
+            }
+
+            if(notification.text.size() > 2)
+            {
+                height = 4 + notification.text.size() * 12;
+            }
+            else
+            {
+                height = 32;
+            }
+        }
+
+        public void render(FontRenderer font, double ax, double ay)
+        {
+            GlStateManager.enableBlend();
+
+            FTBLibClient.setGLColor(notification.getColor(), 255);
+            GuiLM.drawBlankRect(ax, ay, width, height);
+
+            GlStateManager.color(1F, 1F, 1F, 1F);
+
+            if(notification.hasItem())
+            {
+                FTBLibClient.renderGuiItem(notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
+            }
+
+            for(int i = 0; i < text.size(); i++)
+            {
+                font.drawString(text.get(i), (int) ax + (notification.hasItem() ? 30 : 10), (int) (ay + i * 11D + (height - text.size() * 10D) / 2D), 0xFFFFFFFF);
+            }
+        }
+    }
+
     public static class Temp extends FinalIDObject
     {
-        public static final List<Temp> list = new ArrayList<>();
+        public static final LinkedHashMap<String, Temp> map = new LinkedHashMap<>();
 
         private long time;
-        private Notification notification;
-        private List<String> text;
-        private int width;
+        private NotificationWidget widget;
 
         private Temp(Notification n)
         {
             super(n.getID());
-            notification = n;
+            widget = new NotificationWidget(n);
+            widget.width = 0;
             time = -1L;
         }
 
@@ -46,31 +95,25 @@ public class ClientNotifications
 
             FontRenderer font = FTBLibClient.mc().fontRendererObj;
 
-            if(text == null)
+            if(widget.width == 0)
             {
-                text = new ArrayList<>();
-                width = 0;
-
-                for(ITextComponent t : notification.text)
+                for(String s : widget.text)
                 {
-                    String s = t.getFormattedText();
-                    text.add(s);
-
-                    width = Math.max(width, font.getStringWidth(s));
+                    widget.width = Math.max(widget.width, font.getStringWidth(s));
                 }
 
-                width += 20;
+                widget.width += 20;
 
-                if(notification.hasItem())
+                if(widget.notification.hasItem())
                 {
-                    width += 20;
+                    widget.width += 20;
                 }
             }
 
             if(time > 0L)
             {
                 int timeExisted = (int) (System.currentTimeMillis() - time);
-                int timer = notification.getTimer();
+                int timer = widget.notification.getTimer();
 
                 if(timeExisted > timer)
                 {
@@ -90,50 +133,12 @@ public class ClientNotifications
                     d1 = timeExisted / 300D;
                 }
 
-                int displayW = new ScaledResolution(FTBLibClient.mc()).getScaledWidth();
-
                 GlStateManager.disableDepth();
-                GlStateManager.pushMatrix();
                 GlStateManager.depthMask(false);
-                GlStateManager.translate(displayW - width - 4, d1 * 36D - 36D, 0F);
-
-                GlStateManager.disableTexture2D();
                 GlStateManager.disableLighting();
-                FTBLibClient.setGLColor(notification.getColor(), 230);
-                GuiLM.drawBlankRect(0D, 0D, width, 32D);
-                GlStateManager.enableTexture2D();
-                GlStateManager.color(1F, 1F, 1F, 1F);
-
-                if(!text.isEmpty())
-                {
-                    float w = notification.hasItem() ? 30F : 10F;
-
-                    if(text.size() == 1)
-                    {
-                        font.drawString(text.get(0), w, 12F, 0xFFFFFFFF, false);
-                    }
-                    else if(text.size() == 2)
-                    {
-                        font.drawString(text.get(0), w, 7F, 0xFFFFFFFF, false);
-                        font.drawString(text.get(1), w, 18F, 0xFFFFFFFF, false);
-                    }
-                    else
-                    {
-                        for(int i = 0; i < text.size(); i++)
-                        {
-                            font.drawString(text.get(i), w, 4F + i * 12F, 0xFFFFFFFF, false);
-                        }
-                    }
-                }
-
-                if(notification.hasItem())
-                {
-                    FTBLibClient.renderGuiItem(notification.getItem(), 8D, 8D);
-                }
-
+                widget.render(font, new ScaledResolution(FTBLibClient.mc()).getScaledWidth() - widget.width - 4, d1 * widget.height - widget.height);
                 GlStateManager.depthMask(true);
                 GlStateManager.color(1F, 1F, 1F, 1F);
-                GlStateManager.popMatrix();
                 GlStateManager.enableLighting();
             }
 
@@ -179,10 +184,10 @@ public class ClientNotifications
                 current = null;
             }
         }
-        else if(!Temp.list.isEmpty())
+        else if(!Temp.map.isEmpty())
         {
-            current = Temp.list.get(0);
-            Temp.list.remove(0);
+            current = Temp.map.values().iterator().next();
+            Temp.map.remove(current.getID());
         }
     }
 
@@ -190,7 +195,7 @@ public class ClientNotifications
     {
         if(n != null)
         {
-            Temp.list.remove(n);
+            Temp.map.remove(n.getID());
             Perm.map.remove(n.getID());
 
             if(current != null && current.getID().equals(n.getID()))
@@ -198,7 +203,8 @@ public class ClientNotifications
                 current = null;
             }
 
-            Temp.list.add(new Temp(n));
+            Temp.map.put(n.getID(), new Temp(n));
+
             if(!n.isTemp())
             {
                 Perm.map.put(n.getID(), new Perm(n));
@@ -210,6 +216,6 @@ public class ClientNotifications
     {
         current = null;
         Perm.map.clear();
-        Temp.list.clear();
+        Temp.map.clear();
     }
 }

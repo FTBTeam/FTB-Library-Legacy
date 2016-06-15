@@ -14,6 +14,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -289,6 +290,11 @@ public class FTBLibClient
             font = mc().fontRendererObj;
         }
 
+        GlStateManager.enableLighting();
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableRescaleNormal();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
         itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
         GlStateManager.popMatrix();

@@ -155,7 +155,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                     if(l != null && l.height > 0)
                     {
-                        height += l.height;
+                        height += l.height + 1;
                         add(l);
                     }
                 }

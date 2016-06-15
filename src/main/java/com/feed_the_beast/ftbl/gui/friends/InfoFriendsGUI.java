@@ -26,6 +26,8 @@ public class InfoFriendsGUI extends InfoPage
         setTitle(new TextComponentString("FriendsGUI"));
         theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
 
+        addSub(new InfoNotificationsPage());
+
         List<ForgePlayer> tempPlayerList = new ArrayList<>();
         tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());
 

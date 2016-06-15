@@ -40,13 +40,16 @@ public class FTBLibActions
         @Override
         public void postRender(Minecraft mc, double ax, double ay)
         {
-            String n = String.valueOf(ClientNotifications.Perm.map.size());
-            int nw = mc.fontRendererObj.getStringWidth(n);
-            int width = 16;
-            GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
-            GuiLM.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            mc.fontRendererObj.drawString(n, (int) (ax + width - nw + 1), (int) (ay - 3), 0xFFFFFFFF);
+            if(!ClientNotifications.Perm.map.isEmpty())
+            {
+                String n = String.valueOf(ClientNotifications.Perm.map.size());
+                int nw = mc.fontRendererObj.getStringWidth(n);
+                int width = 16;
+                GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
+                GuiLM.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
+                GlStateManager.color(1F, 1F, 1F, 1F);
+                mc.fontRendererObj.drawString(n, (int) (ax + width - nw + 1), (int) (ay - 3), 0xFFFFFFFF);
+            }
         }
     });
 
