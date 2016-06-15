@@ -13,6 +13,8 @@ import latmod.lib.util.LMUtils;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -23,6 +25,7 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType SIDEBAR_BUTTON = ClickActionRegistry.register(new ClickActionType("sidebar_button")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             ActionButton a = ActionButtonRegistry.get(new ResourceLocation(data.getAsString()));
@@ -37,6 +40,7 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType CMD = ClickActionRegistry.register(new ClickActionType("cmd")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             FTBLibClient.execClientCommand("/" + data.getAsString());
@@ -47,6 +51,7 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType SHOW_CMD = ClickActionRegistry.register(new ClickActionType("show_cmd")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             FTBLibClient.mc().displayGuiScreen(new GuiChat(data.getAsString()));
@@ -56,6 +61,7 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType URL = ClickActionRegistry.register(new ClickActionType("url")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             try
@@ -72,6 +78,7 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType FILE = ClickActionRegistry.register(new ClickActionType("file")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             try
@@ -88,6 +95,7 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType GUI = ClickActionRegistry.register(new ClickActionType("gui")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             GuiScreen gui = GuiScreenRegistry.openGui(new ResourceLocation(data.getAsString()));
@@ -102,12 +110,14 @@ public abstract class ClickActionType extends FinalIDObject
     public static final ClickActionType CHANGE_INFO_PAGE = ClickActionRegistry.register(new ClickActionType("change_page")
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
             GuiInfo gui = FTBLibClient.getWrappedGui(FTBLibClient.mc().currentScreen, GuiInfo.class);
 
             if(gui != null)
             {
+                //FIXME change current info page
             }
         }
     });
@@ -121,5 +131,6 @@ public abstract class ClickActionType extends FinalIDObject
     {
     }
 
+    @SideOnly(Side.CLIENT)
     public abstract void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button);
 }

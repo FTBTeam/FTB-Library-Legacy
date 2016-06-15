@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 23.01.2016.
  */
-public class ClickAction implements IJsonSerializable, IClickable
+public class ClickAction implements IJsonSerializable
 {
     public ClickActionType type;
     public JsonElement data;
@@ -97,7 +98,7 @@ public class ClickAction implements IJsonSerializable, IClickable
         }
     }
 
-    @Override
+    @SideOnly(Side.CLIENT)
     public void onClicked(@Nonnull MouseButton button)
     {
         if(type != null)

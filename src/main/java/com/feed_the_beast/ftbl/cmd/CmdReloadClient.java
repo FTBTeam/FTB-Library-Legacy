@@ -6,12 +6,9 @@ import com.feed_the_beast.ftbl.util.ReloadType;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-@SideOnly(Side.CLIENT)
 public class CmdReloadClient extends CommandLM
 {
     public CmdReloadClient()
