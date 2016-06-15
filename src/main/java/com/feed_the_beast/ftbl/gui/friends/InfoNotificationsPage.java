@@ -29,11 +29,16 @@ public class InfoNotificationsPage extends InfoPage
     public void refreshGui(GuiInfo gui)
     {
         ITextComponent title = new TextComponentTranslation("client_config.ftbl.notifications");
-        title.appendText(" [");
-        ITextComponent num = new TextComponentString(Integer.toString(ClientNotifications.Perm.map.size()));
-        num.getStyle().setColor(TextFormatting.RED);
-        title.appendSibling(num);
-        title.appendText("]");
+
+        if(!ClientNotifications.Perm.map.isEmpty())
+        {
+            title.appendText(" [");
+            ITextComponent num = new TextComponentString(Integer.toString(ClientNotifications.Perm.map.size()));
+            num.getStyle().setColor(TextFormatting.RED);
+            title.appendSibling(num);
+            title.appendText("]");
+        }
+
         setTitle(title);
 
         clear();

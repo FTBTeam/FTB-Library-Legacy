@@ -166,6 +166,8 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
                 c.getStyle().setColor(TextFormatting.GRAY).setItalic(true);
                 info.add(c);
             }
+
+            info.add(null);
         }
 
         stats.getInfo(this, info, currentTime);

@@ -187,7 +187,7 @@ public abstract class GuiLM extends PanelLM
         renderWidgets();
     }
 
-    public final void renderWidgets()
+    public void renderWidgets()
     {
         super.renderWidget(this);
     }

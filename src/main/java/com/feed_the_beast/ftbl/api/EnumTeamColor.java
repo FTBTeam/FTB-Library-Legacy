@@ -12,11 +12,11 @@ import javax.annotation.Nonnull;
 public enum EnumTeamColor implements IStringSerializable
 {
     BLUE("blue", TextFormatting.BLUE, 0x007FFF),
-    CYAN("cyan", TextFormatting.AQUA, 0x00FFDD),
-    GREEN("green", TextFormatting.GREEN, 0x00FF3F),
+    CYAN("cyan", TextFormatting.AQUA, 0x00F2D1),
+    GREEN("green", TextFormatting.GREEN, 0x3FD300),
     YELLOW("yellow", TextFormatting.YELLOW, 0xFFD800),
     ORANGE("orange", TextFormatting.GOLD, 0xFF7F00),
-    RED("red", TextFormatting.RED, 0xFF0000),
+    RED("red", TextFormatting.RED, 0xFF5E5E),
     PINK("pink", TextFormatting.LIGHT_PURPLE, 0xFF7CBD),
     MAGENTA("magenta", TextFormatting.LIGHT_PURPLE, 0xFF00FF),
     PURPLE("purple", TextFormatting.DARK_PURPLE, 0x7F00FF),

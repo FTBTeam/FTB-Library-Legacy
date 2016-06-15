@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.command.CommandException;
@@ -26,6 +27,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 29.05.2016.
@@ -307,7 +311,8 @@ public class CmdTeam extends CommandSubBase
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-            InfoPage page = new InfoPage("teams");
+            InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
+            page.theme = InfoPageTheme.DARK_NON_UNICODE;
 
             for(ForgeTeam team : ForgeWorldMP.inst.teams.valueCollection())
             {
@@ -319,13 +324,36 @@ public class CmdTeam extends CommandSubBase
 
                 if(team.getDesc() != null)
                 {
-                    page1.printlnText(team.getDesc());
+                    ITextComponent desc = new TextComponentString(team.getDesc());
+                    desc.getStyle().setItalic(true);
+                    page1.println(desc);
                     page1.text.add(null);
                 }
 
+                ForgePlayer owner = team.getOwner();
+                page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
+
+                List<String> members = new ArrayList<>();
+
                 for(ForgePlayer player : team.getMembers())
                 {
-                    page1.printlnText(player.getProfile().getName());
+                    if(player != owner)
+                    {
+                        members.add(player.getProfile().getName());
+                    }
+                }
+
+                if(!members.isEmpty())
+                {
+                    page1.text.add(null);
+                    page1.printlnText("Members:"); //TODO: Lang
+
+                    Collections.sort(members);
+
+                    for(String s : members)
+                    {
+                        page1.printlnText(s);
+                    }
                 }
             }
 

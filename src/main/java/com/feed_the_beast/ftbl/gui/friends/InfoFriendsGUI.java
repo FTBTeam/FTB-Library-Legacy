@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerNameComparator;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
-import latmod.lib.LMColor;
+import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,9 +24,12 @@ public class InfoFriendsGUI extends InfoPage
     {
         super("friends_gui");
         setTitle(new TextComponentString("FriendsGUI"));
-        theme = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
+        theme = InfoPageTheme.DARK_NON_UNICODE;
 
-        addSub(new InfoNotificationsPage());
+        if(!ClientNotifications.Perm.map.isEmpty())
+        {
+            addSub(new InfoNotificationsPage());
+        }
 
         List<ForgePlayer> tempPlayerList = new ArrayList<>();
         tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());

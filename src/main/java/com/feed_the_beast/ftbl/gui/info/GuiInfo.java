@@ -155,8 +155,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                     if(l != null && l.height > 0)
                     {
-                        height += l.height + 1;
                         add(l);
+                        height += l.height + 1;
                     }
                 }
 
@@ -232,6 +232,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.posX = panelWidth - 24;
             buttonSpecial.posY = 10;
         }
+    }
+
+    @Override
+    public void renderWidgets()
+    {
     }
 
     @Override

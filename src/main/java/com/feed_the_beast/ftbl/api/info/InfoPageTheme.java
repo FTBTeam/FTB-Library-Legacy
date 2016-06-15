@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 public final class InfoPageTheme implements IJsonSerializable
 {
     public static final InfoPageTheme DEFAULT = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(247, 244, 218)).setTextColor(new LMColor.RGB(123, 101, 52)).setUseUnicodeFont(null);
+    public static final InfoPageTheme DARK_NON_UNICODE = new InfoPageTheme().setBackgroundColor(new LMColor.RGB(30, 30, 30)).setTextColor(new LMColor.RGB(200, 200, 200)).setUseUnicodeFont(false);
 
     public LMColor.RGB backgroundColor;
     public LMColor.RGB textColor;
