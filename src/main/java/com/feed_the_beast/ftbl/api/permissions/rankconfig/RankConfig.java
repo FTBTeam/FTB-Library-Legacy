@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.FinalIDObject;
+import com.latmod.lib.FinalIDObject;
 
 import javax.annotation.Nonnull;
 

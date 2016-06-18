@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.item;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;

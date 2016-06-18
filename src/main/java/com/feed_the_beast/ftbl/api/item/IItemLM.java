@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.item;
 
-import latmod.lib.IIDObject;
+import com.latmod.lib.IIDObject;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

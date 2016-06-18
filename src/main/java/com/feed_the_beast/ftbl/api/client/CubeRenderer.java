@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.client;
 
-import latmod.lib.LMColor;
+import com.latmod.lib.LMColor;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;

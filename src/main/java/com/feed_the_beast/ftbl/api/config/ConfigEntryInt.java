@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.annotations.INumberBoundsContainer;
-import latmod.lib.math.MathHelperLM;
+import com.latmod.lib.annotations.INumberBoundsContainer;
+import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;

@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.block.IBlockLM;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
 import com.feed_the_beast.ftbl.api.recipes.LMRecipes;
-import latmod.lib.FinalIDObject;
+import com.latmod.lib.FinalIDObject;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;

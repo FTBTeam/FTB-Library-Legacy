@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.gui.info;
 
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
-import latmod.lib.annotations.Flags;
-import latmod.lib.annotations.NumberBounds;
+import com.latmod.lib.annotations.Flags;
+import com.latmod.lib.annotations.NumberBounds;
 
 /**
  * Created by LatvianModder on 22.03.2016.

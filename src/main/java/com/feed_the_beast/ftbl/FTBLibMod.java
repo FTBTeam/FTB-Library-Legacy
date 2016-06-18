@@ -16,7 +16,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.ReloadType;
-import latmod.lib.OS;
+import com.latmod.lib.OS;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.math.MathHelperLM;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.math.MathHelperLM;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;

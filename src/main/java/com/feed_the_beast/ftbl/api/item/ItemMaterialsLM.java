@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.item;
 
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

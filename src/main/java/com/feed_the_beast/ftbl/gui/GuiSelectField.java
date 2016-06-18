@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuis;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
-import latmod.lib.ObjectCallback;
+import com.latmod.lib.ObjectCallback;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

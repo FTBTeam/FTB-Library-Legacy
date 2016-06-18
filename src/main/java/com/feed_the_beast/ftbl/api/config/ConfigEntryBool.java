@@ -17,8 +17,8 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
 
     public ConfigEntryBool(boolean def)
     {
-        set(def);
         defValue = def;
+        value = def;
     }
 
     @Override

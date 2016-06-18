@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbl.api.config;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import latmod.lib.annotations.AnnotationHelper;
-import latmod.lib.annotations.Flags;
-import latmod.lib.annotations.ID;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.annotations.AnnotationHelper;
+import com.latmod.lib.annotations.Flags;
+import com.latmod.lib.annotations.ID;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 

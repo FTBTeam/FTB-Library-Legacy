@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.mojang.authlib.GameProfile;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;

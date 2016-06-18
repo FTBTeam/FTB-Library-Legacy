@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.util;
 
-import latmod.lib.io.ByteIOStream;
-import latmod.lib.util.LMFileUtils;
-import latmod.lib.util.LMListUtils;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.io.ByteIOStream;
+import com.latmod.lib.util.LMFileUtils;
+import com.latmod.lib.util.LMListUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;

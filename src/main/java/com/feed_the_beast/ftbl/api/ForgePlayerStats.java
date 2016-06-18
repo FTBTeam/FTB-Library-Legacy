@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.info;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.LMColor;
+import com.latmod.lib.LMColor;
 import net.minecraft.util.IJsonSerializable;
 
 import javax.annotation.Nonnull;

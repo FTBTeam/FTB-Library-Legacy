@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import latmod.lib.util.LMListUtils;
+import com.latmod.lib.util.LMListUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;

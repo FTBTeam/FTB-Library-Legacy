@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.config;
 
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import latmod.lib.annotations.Info;
+import com.latmod.lib.annotations.Info;
 
 public class FTBLibConfigCmd
 {

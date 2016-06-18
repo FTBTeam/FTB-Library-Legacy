@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.util;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import latmod.lib.math.MathHelperLM;
+import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import latmod.lib.io.LMConnection;
-import latmod.lib.io.RequestMethod;
+import com.latmod.lib.io.LMConnection;
+import com.latmod.lib.io.RequestMethod;
 
 /**
  * Created by LatvianModder on 09.05.2016.

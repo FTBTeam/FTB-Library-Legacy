@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.client;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.client.gui.IGuiWrapper;
-import latmod.lib.util.LMColorUtils;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;

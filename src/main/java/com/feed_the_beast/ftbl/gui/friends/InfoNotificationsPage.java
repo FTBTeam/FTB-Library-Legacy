@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
-import latmod.lib.util.LMMapUtils;
+import com.latmod.lib.util.LMMapUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;

@@ -1,6 +1,6 @@
 [
 {
-  "modid": "FTBL",
+  "modid": "ftbl",
   "name": "FTBLib",
   "description": "FTBLib",
   "version": "${version}",

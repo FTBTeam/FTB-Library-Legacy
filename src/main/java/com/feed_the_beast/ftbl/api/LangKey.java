@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
-import latmod.lib.FinalIDObject;
+import com.latmod.lib.FinalIDObject;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

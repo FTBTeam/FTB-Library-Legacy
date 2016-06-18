@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.notification;
 
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMStringUtils;
 
 import java.util.Collection;
 import java.util.HashMap;

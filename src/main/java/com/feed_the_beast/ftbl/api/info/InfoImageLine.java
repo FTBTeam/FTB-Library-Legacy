@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

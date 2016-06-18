@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;

@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
-import latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;

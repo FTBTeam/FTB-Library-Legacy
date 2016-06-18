@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.client;
 
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;

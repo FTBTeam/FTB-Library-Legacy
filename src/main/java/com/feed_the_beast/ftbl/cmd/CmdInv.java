@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.util.OtherMods;
-import latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;

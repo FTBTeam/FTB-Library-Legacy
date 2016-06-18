@@ -6,8 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import latmod.lib.json.LMJsonUtils;
-import latmod.lib.util.LMFileUtils;
+import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMFileUtils;
 
 import java.io.File;
 import java.util.Collection;

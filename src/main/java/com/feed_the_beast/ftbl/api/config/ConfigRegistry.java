@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
-import latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
