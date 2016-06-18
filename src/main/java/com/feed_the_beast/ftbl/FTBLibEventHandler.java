@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.util.MathHelperMC;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
@@ -46,27 +45,22 @@ public class FTBLibEventHandler implements ITickable
         }
     }
 
-    @Optional.Method(modid = "WIT")
     @SubscribeEvent
+    @Optional.Method(modid = "WIT")
     public void onWIT(WitBlockInfoEvent event)
     {
-        if(event.blockState.getBlock().hasTileEntity(event.blockState))
+        if(event.tileEntity instanceof IInfoTile)
         {
-            TileEntity te = event.getWorld().getTileEntity(event.pos);
-
-            if(te instanceof IInfoTile)
-            {
-                TileInfoDataAccessor.inst.player = event.player;
-                TileInfoDataAccessor.inst.world = event.getWorld();
-                TileInfoDataAccessor.inst.hit = MathHelperMC.rayTrace(event.player);
-                TileInfoDataAccessor.inst.state = event.blockState;
-                ((IInfoTile) te).getInfo(TileInfoDataAccessor.inst, event.lines, event.advanced);
-            }
+            TileInfoDataAccessor.inst.player = event.player;
+            TileInfoDataAccessor.inst.world = event.getWorld();
+            TileInfoDataAccessor.inst.hit = MathHelperMC.rayTrace(event.player);
+            TileInfoDataAccessor.inst.state = event.blockState;
+            ((IInfoTile) event.tileEntity).getInfo(TileInfoDataAccessor.inst, event.lines, event.advanced);
         }
     }
 
-    @Optional.Method(modid = "forgeanalytics")
     @SubscribeEvent
+    @Optional.Method(modid = "forgeanalytics")
     public void onAnalytics(AnalyticsEvent event)
     {
         ForgeWorld w = ForgeWorld.getFrom(event.side);
