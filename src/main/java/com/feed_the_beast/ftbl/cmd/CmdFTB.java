@@ -10,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class CmdFTB extends CommandSubBase
 {
-    public CmdFTB()
+    public CmdFTB(boolean dedi)
     {
         super("ftb");
 
@@ -30,7 +30,7 @@ public class CmdFTB extends CommandSubBase
             add(new CmdAddFakePlayer());
         }
 
-        MinecraftForge.EVENT_BUS.post(new RegisterFTBCommandsEvent(this));
+        MinecraftForge.EVENT_BUS.post(new RegisterFTBCommandsEvent(this, dedi));
     }
 
     @Override

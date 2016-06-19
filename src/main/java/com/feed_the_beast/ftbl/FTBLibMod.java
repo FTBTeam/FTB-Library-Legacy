@@ -93,16 +93,16 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent e)
     {
-        FTBLib.addCommand(e, new CmdFTB());
+        e.registerServerCommand(new CmdFTB(e.getServer().isDedicatedServer()));
 
         if(FTBLibConfigCmd.override_list.getAsBoolean())
         {
-            FTBLib.addCommand(e, new CmdListOverride());
+            e.registerServerCommand(new CmdListOverride());
         }
 
         if(FTBLibConfigCmd.override_help.getAsBoolean())
         {
-            FTBLib.addCommand(e, new CmdHelpOverride());
+            e.registerServerCommand(new CmdHelpOverride());
         }
     }
 

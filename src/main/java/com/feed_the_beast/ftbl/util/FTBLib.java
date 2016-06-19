@@ -13,10 +13,10 @@ import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import com.feed_the_beast.ftbl.net.MessageOpenGuiTile;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
-import com.mojang.authlib.GameProfile;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 import com.latmod.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -47,7 +47,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -184,14 +183,6 @@ public class FTBLib
         }
         FluidRegistry.registerFluid(f);
         return f;
-    }
-
-    public static void addCommand(FMLServerStartingEvent e, ICommand c)
-    {
-        if(c != null && !c.getCommandName().isEmpty())
-        {
-            e.registerServerCommand(c);
-        }
     }
 
     public static ITextComponent getChatComponent(Object o)
