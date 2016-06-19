@@ -501,7 +501,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
     @Override
     public boolean onClosedByKey()
     {
-        shouldClose = 2;
+        buttonCancel.onClicked(this, MouseButton.LEFT);
         return false;
     }
 

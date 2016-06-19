@@ -6,11 +6,11 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
-import gnu.trove.TIntCollection;
-import gnu.trove.set.hash.TIntHashSet;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMUtils;
+import gnu.trove.TIntCollection;
+import gnu.trove.set.hash.TIntHashSet;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -271,9 +271,9 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         return EnumTeamStatus.NONE;
     }
 
-    public void addAllyTeam(int team)
+    public boolean addAllyTeam(int team)
     {
-        if(allies == null || !allies.contains(team))
+        if(!isAllyTeam(team))
         {
             if(allies == null)
             {
@@ -281,12 +281,15 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             }
 
             allies.add(team);
+            return true;
         }
+
+        return false;
     }
 
-    public void removeAllyTeam(int team)
+    public boolean removeAllyTeam(int team)
     {
-        if(allies != null && allies.contains(team))
+        if(isAllyTeam(team))
         {
             allies.remove(team);
 
@@ -294,12 +297,21 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 allies = null;
             }
+
+            return true;
         }
+
+        return false;
     }
 
-    public void addEnemy(UUID player)
+    public boolean isAllyTeam(int team)
     {
-        if(enemies == null || !enemies.contains(player))
+        return allies != null && allies.contains(team);
+    }
+
+    public boolean addEnemy(UUID player)
+    {
+        if(!isEnemy(player))
         {
             if(enemies == null)
             {
@@ -307,12 +319,15 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             }
 
             enemies.add(player);
+            return true;
         }
+
+        return false;
     }
 
-    public void removeEnemy(UUID player)
+    public boolean removeEnemy(UUID player)
     {
-        if(enemies != null && enemies.contains(player))
+        if(isEnemy(player))
         {
             enemies.remove(player);
 
@@ -320,7 +335,16 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
             {
                 enemies = null;
             }
+
+            return true;
         }
+
+        return false;
+    }
+
+    public boolean isEnemy(UUID player)
+    {
+        return enemies != null && enemies.contains(player);
     }
 
     public Collection<ForgePlayer> getMembers()
@@ -371,7 +395,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
     public boolean isInvited(ForgePlayerMP player)
     {
-        return player != null && invited != null && invited.contains(player);
+        return player != null && (getFlag(FREE_TO_JOIN) || invited != null && invited.contains(player));
     }
 
     public void changeOwner(ForgePlayerMP newOwner)
