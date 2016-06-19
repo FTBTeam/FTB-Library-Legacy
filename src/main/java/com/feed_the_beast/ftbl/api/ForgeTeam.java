@@ -6,11 +6,10 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
+import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMUtils;
-import gnu.trove.TIntCollection;
-import gnu.trove.set.hash.TIntHashSet;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -31,27 +30,26 @@ import java.util.UUID;
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>, IFlagContainer
+public final class ForgeTeam extends FinalIDObject implements ICapabilitySerializable<NBTTagCompound>, IFlagContainer
 {
     public static final byte FREE_TO_JOIN = 0;
     public static final byte HIDDEN = 1;
 
     public final ForgeWorld world;
-    public final int teamID;
-    final CapabilityDispatcher capabilities;
+    private final CapabilityDispatcher capabilities;
     private final ConfigEntryEnum<EnumTeamColor> color;
     private ForgePlayer owner;
-    private TIntCollection allies;
+    private Collection<String> allies;
     private Collection<UUID> enemies;
     private String title;
     private String desc;
     private byte flags;
     private Collection<ForgePlayerMP> invited;
 
-    public ForgeTeam(ForgeWorld w, int id)
+    public ForgeTeam(ForgeWorld w, String id)
     {
+        super(id);
         world = w;
-        teamID = id;
 
         color = new ConfigEntryEnum<>(EnumTeamColor.GRAY, EnumTeamColor.NAME_MAP);
 
@@ -70,37 +68,6 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
     public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
-    }
-
-    @Override
-    public final boolean equals(@Nullable Object o)
-    {
-        if(o == null)
-        {
-            return false;
-        }
-        else if(o == this)
-        {
-            return true;
-        }
-        else if(o instanceof ForgeTeam || o instanceof Integer)
-        {
-            return o.hashCode() == teamID;
-        }
-
-        return false;
-    }
-
-    @Override
-    public final int hashCode()
-    {
-        return teamID;
-    }
-
-    @Override
-    public String toString()
-    {
-        return Integer.toString(teamID);
     }
 
     @Override
@@ -262,7 +229,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
                 return EnumTeamStatus.MEMBER;
             }
 
-            if(allies != null && allies.contains(team.teamID))
+            if(allies != null && allies.contains(team.getID()))
             {
                 return EnumTeamStatus.ALLY;
             }
@@ -271,13 +238,13 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         return EnumTeamStatus.NONE;
     }
 
-    public boolean addAllyTeam(int team)
+    public boolean addAllyTeam(String team)
     {
         if(!isAllyTeam(team))
         {
             if(allies == null)
             {
-                allies = new TIntHashSet();
+                allies = new HashSet<>();
             }
 
             allies.add(team);
@@ -287,7 +254,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         return false;
     }
 
-    public boolean removeAllyTeam(int team)
+    public boolean removeAllyTeam(String team)
     {
         if(isAllyTeam(team))
         {
@@ -304,7 +271,7 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         return false;
     }
 
-    public boolean isAllyTeam(int team)
+    public boolean isAllyTeam(String team)
     {
         return allies != null && allies.contains(team);
     }
@@ -364,25 +331,25 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
 
     public void addPlayer(ForgePlayerMP player)
     {
-        if(player.getTeamID() != teamID)
+        if(!player.isMemberOf(this))
         {
-            player.setTeamID(teamID);
+            player.setTeamID(getID());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(this, player));
         }
     }
 
     public void removePlayer(ForgePlayerMP player)
     {
-        if(player.getTeamID() == teamID)
+        if(player.isMemberOf(this))
         {
-            player.setTeamID(0);
+            player.setTeamID(null);
             MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerLeft(this, player));
         }
     }
 
-    public void inviteMember(ForgePlayerMP player)
+    public void inviteMember(@Nullable ForgePlayerMP player)
     {
-        if(player != null && (invited == null || !invited.contains(player)) && !player.hasTeam())
+        if(!isInvited(player))
         {
             if(invited == null)
             {
@@ -393,9 +360,9 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         }
     }
 
-    public boolean isInvited(ForgePlayerMP player)
+    public boolean isInvited(@Nullable ForgePlayerMP player)
     {
-        return player != null && (getFlag(FREE_TO_JOIN) || invited != null && invited.contains(player));
+        return player != null && (getFlag(FREE_TO_JOIN) || invited != null && invited.contains(player) && !player.hasTeam());
     }
 
     public void changeOwner(ForgePlayerMP newOwner)
@@ -403,13 +370,13 @@ public final class ForgeTeam implements ICapabilitySerializable<NBTTagCompound>,
         if(owner == null)
         {
             owner = newOwner;
-            newOwner.setTeamID(teamID);
+            newOwner.setTeamID(getID());
         }
         else
         {
             ForgePlayerMP oldOwner = owner.toMP();
 
-            if(!oldOwner.equalsPlayer(newOwner) && newOwner.getTeamID() == teamID)
+            if(!oldOwner.equalsPlayer(newOwner) && newOwner.isMemberOf(this))
             {
                 owner = newOwner;
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.OwnerChanged(this, oldOwner, newOwner));

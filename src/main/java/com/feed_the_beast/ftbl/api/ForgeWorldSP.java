@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.LMNBTUtils;
-import com.mojang.authlib.GameProfile;
 import com.latmod.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -110,9 +110,9 @@ public final class ForgeWorldSP extends ForgeWorld
             for(int i = 0; i < teamsTag.tagCount(); i++)
             {
                 NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-                ForgeTeam team = new ForgeTeam(this, tag2.getInteger("ID"));
+                ForgeTeam team = new ForgeTeam(this, tag2.getString("ID"));
                 team.deserializeNBTFromNet(tag2);
-                teams.put(team.teamID, team);
+                teams.put(team.getID(), team);
             }
         }
 

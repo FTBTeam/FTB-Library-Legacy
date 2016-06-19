@@ -36,7 +36,7 @@ public abstract class CmdEditConfigBase extends CommandLM
     @Override
     public String getCommandUsage(@Nonnull ICommandSender ics)
     {
-        return "/" + commandName + " <id> [value]";
+        return "/" + commandName + " [id] [value]";
     }
 
     @Nonnull

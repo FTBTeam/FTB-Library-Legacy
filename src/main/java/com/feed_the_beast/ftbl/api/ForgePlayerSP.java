@@ -96,7 +96,7 @@ public class ForgePlayerSP extends ForgePlayer
     public void readFromNet(NBTTagCompound tag, boolean self)
     {
         isOnline = tag.hasKey("O");
-        setTeamID(tag.getInteger("T"));
+        setTeamID(tag.getString("T"));
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, tag.getCompoundTag("SY"), self));
     }
 }

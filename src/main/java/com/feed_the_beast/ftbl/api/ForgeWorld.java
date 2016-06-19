@@ -2,10 +2,8 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.mojang.authlib.GameProfile;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import com.latmod.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -29,7 +27,7 @@ import java.util.UUID;
 public abstract class ForgeWorld implements ICapabilityProvider
 {
     public final Map<UUID, ForgePlayer> playerMap;
-    public final TIntObjectMap<ForgeTeam> teams;
+    public final Map<String, ForgeTeam> teams;
     final CapabilityDispatcher capabilities;
     protected UUID worldID;
     protected PackMode currentMode;
@@ -38,7 +36,7 @@ public abstract class ForgeWorld implements ICapabilityProvider
     {
         currentMode = new PackMode("default");
         playerMap = new HashMap<>();
-        teams = new TIntObjectHashMap<>();
+        teams = new HashMap<>();
 
         ForgeWorldEvent.AttachCapabilities event = new ForgeWorldEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);

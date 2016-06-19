@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
-import com.mojang.authlib.GameProfile;
 import com.latmod.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,7 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 {
     public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
     final CapabilityDispatcher capabilities;
-    private int teamID;
+    private String teamID;
     private GameProfile gameProfile;
 
     ForgePlayer(GameProfile p)
@@ -40,27 +40,30 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
     }
 
+    public final String getTeamID()
+    {
+        return teamID;
+    }
+
+    public final void setTeamID(String id)
+    {
+        teamID = (id == null || id.isEmpty()) ? null : id;
+    }
+
+    public final boolean isMemberOf(ForgeTeam team)
+    {
+        return teamID != null && team != null && team.getID().equals(teamID);
+    }
+
     public final boolean hasTeam()
     {
-        int id = getTeamID();
-        return id > 0 && getWorld().teams.containsKey(id);
+        return teamID != null && getWorld().teams.containsKey(teamID);
     }
 
     @Nullable
     public final ForgeTeam getTeam()
     {
-        int id = getTeamID();
-        return id > 0 ? getWorld().teams.get(getTeamID()) : null;
-    }
-
-    public int getTeamID()
-    {
-        return teamID;
-    }
-
-    public void setTeamID(int id)
-    {
-        teamID = Math.max(0, id);
+        return teamID != null ? getWorld().teams.get(teamID) : null;
     }
 
     @Override

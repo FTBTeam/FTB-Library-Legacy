@@ -186,7 +186,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public void deserializeNBT(NBTTagCompound tag)
     {
-        setTeamID(tag.getInteger("TeamID"));
+        setTeamID(tag.getString("TeamID"));
 
         if(capabilities != null)
         {
@@ -233,7 +233,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
         if(hasTeam())
         {
-            tag.setInteger("TeamID", getTeamID());
+            tag.setString("TeamID", getTeamID());
         }
 
         if(capabilities != null)
@@ -288,7 +288,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
         if(hasTeam())
         {
-            tag.setInteger("T", getTeamID());
+            tag.setString("T", getTeamID());
         }
     }
 

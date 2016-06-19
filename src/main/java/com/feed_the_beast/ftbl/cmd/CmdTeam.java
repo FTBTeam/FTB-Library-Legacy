@@ -36,6 +36,137 @@ import java.util.List;
  */
 public class CmdTeam extends CommandSubBase
 {
+    public static class CmdConfig extends CmdEditConfigBase
+    {
+        public CmdConfig()
+        {
+            super("config");
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
+        }
+
+        @Override
+        public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+        {
+            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+            ForgePlayerMP p = ForgePlayerMP.get(ep);
+
+            if(!p.hasTeam())
+            {
+                throw FTBLibLang.team_no_team.commandError();
+            }
+
+            final ForgeTeam team = p.getTeam();
+
+            if(!team.getStatus(p).isOwner())
+            {
+                throw FTBLibLang.team_not_owner.commandError();
+            }
+
+            final ConfigGroup group = new ConfigGroup();
+            team.getSettings(group);
+
+            return new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "team_config"))
+            {
+                @Override
+                public ConfigGroup createGroup()
+                {
+                    return group;
+                }
+
+                @Override
+                public ITextComponent getConfigTitle() //TODO: Lang
+                {
+                    return new TextComponentString("Team Config: " + team.getID());
+                }
+
+                @Override
+                public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+                {
+                    group.loadFromGroup(config, false);
+
+                    for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
+                    {
+                        new MessageUpdateTeam(ForgeWorldMP.inst.getPlayer(ep), team).sendTo(null);
+                    }
+                }
+            };
+        }
+    }
+
+    public static class CmdListTeams extends CommandLM
+    {
+        public CmdListTeams()
+        {
+            super("list");
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
+        }
+
+        @Override
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        {
+            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+
+            InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
+            page.theme = InfoPageTheme.DARK_NON_UNICODE;
+
+            for(ForgeTeam team : ForgeWorldMP.inst.teams.values())
+            {
+                InfoPage page1 = page.getSub(team.getID());
+
+                ITextComponent title = new TextComponentString(team.getTitle());
+                title.getStyle().setColor(team.getColor().textFormatting);
+                page1.setTitle(title);
+
+                if(team.getDesc() != null)
+                {
+                    ITextComponent desc = new TextComponentString(team.getDesc());
+                    desc.getStyle().setItalic(true);
+                    page1.println(desc);
+                    page1.text.add(null);
+                }
+
+                page1.printlnText("ID: " + team.getID());
+                ForgePlayer owner = team.getOwner();
+                page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
+
+                List<String> members = new ArrayList<>();
+
+                for(ForgePlayer player : team.getMembers())
+                {
+                    if(player != owner)
+                    {
+                        members.add(player.getProfile().getName());
+                    }
+                }
+
+                if(!members.isEmpty())
+                {
+                    page1.text.add(null);
+                    page1.printlnText("Members:"); //TODO: Lang
+
+                    Collections.sort(members);
+
+                    for(String s : members)
+                    {
+                        page1.printlnText(s);
+                    }
+                }
+            }
+
+            page.displayGuide(ep);
+        }
+    }
+
     public static class CmdCreate extends CommandLM
     {
         public CmdCreate()
@@ -60,16 +191,18 @@ public class CmdTeam extends CommandSubBase
                 throw FTBLibLang.team_must_leave.commandError();
             }
 
-            ForgeTeam team = ForgeWorldMP.inst.newTeam();
+            checkArgs(args, 1);
+
+            ForgeTeam team = new ForgeTeam(ForgeWorldMP.inst, args[0]);
             team.changeOwner(p);
-            ForgeWorldMP.inst.teams.put(team.teamID, team);
+            ForgeWorldMP.inst.teams.put(team.getID(), team);
 
             MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Created(team));
             MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(team, p));
 
             new MessageUpdateTeam(p, team).sendTo(null);
 
-            FTBLibLang.team_created.printChat(sender, String.valueOf(team.teamID));
+            FTBLibLang.team_created.printChat(sender, team.getID());
         }
     }
 
@@ -101,7 +234,7 @@ public class CmdTeam extends CommandSubBase
 
             if(team.getMembers().size() == 1)
             {
-                int teamID = team.teamID;
+                String teamID = team.getID() + "";
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Deleted(team));
                 team.removePlayer(p);
                 ForgeWorldMP.inst.teams.remove(teamID);
@@ -160,7 +293,7 @@ public class CmdTeam extends CommandSubBase
 
             ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
 
-            if(p1.getTeamID() != team.teamID)
+            if(!p1.isMemberOf(team))
             {
                 throw FTBLibLang.team_not_member.commandError();
             }
@@ -169,8 +302,8 @@ public class CmdTeam extends CommandSubBase
             {
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Deleted(team));
                 team.removePlayer(p);
-                ForgeWorldMP.inst.teams.remove(team.teamID);
-                new MessageUpdateTeam(team.teamID).sendTo(null);
+                ForgeWorldMP.inst.teams.remove(team.getID());
+                new MessageUpdateTeam(team.getID()).sendTo(null);
 
                 FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
                 FTBLibLang.team_deleted.printChat(sender, team.getTitle());
@@ -231,73 +364,11 @@ public class CmdTeam extends CommandSubBase
         }
     }
 
-    public static class CmdConfig extends CmdEditConfigBase
+    public static class CmdInvite extends CommandLM
     {
-        public CmdConfig()
+        public CmdInvite()
         {
-            super("config");
-        }
-
-        @Override
-        public int getRequiredPermissionLevel()
-        {
-            return 0;
-        }
-
-        @Override
-        public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
-        {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ForgePlayerMP p = ForgePlayerMP.get(ep);
-
-            if(!p.hasTeam())
-            {
-                throw FTBLibLang.team_no_team.commandError();
-            }
-
-            final ForgeTeam team = p.getTeam();
-
-            if(!team.getStatus(p).isOwner())
-            {
-                throw FTBLibLang.team_not_owner.commandError();
-            }
-
-            final ConfigGroup group = new ConfigGroup();
-            team.getSettings(group);
-
-            return new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "team_config"))
-            {
-                @Override
-                public ConfigGroup createGroup()
-                {
-                    return group;
-                }
-
-                @Override
-                public ITextComponent getConfigTitle() //TODO: Lang
-                {
-                    return new TextComponentString("Team Config");
-                }
-
-                @Override
-                public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
-                {
-                    group.loadFromGroup(config, false);
-
-                    for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
-                    {
-                        new MessageUpdateTeam(ForgeWorldMP.inst.getPlayer(ep), team).sendTo(null);
-                    }
-                }
-            };
-        }
-    }
-
-    public static class CmdListTeams extends CommandLM
-    {
-        public CmdListTeams()
-        {
-            super("list");
+            super("invite");
         }
 
         @Override
@@ -310,54 +381,106 @@ public class CmdTeam extends CommandSubBase
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+            ForgePlayerMP p = ForgePlayerMP.get(ep);
 
-            InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
-            page.theme = InfoPageTheme.DARK_NON_UNICODE;
-
-            for(ForgeTeam team : ForgeWorldMP.inst.teams.valueCollection())
+            if(!p.hasTeam())
             {
-                InfoPage page1 = page.getSub(String.valueOf(team.teamID));
-
-                ITextComponent title = new TextComponentString(team.getTitle());
-                title.getStyle().setColor(team.getColor().textFormatting);
-                page1.setTitle(title);
-
-                if(team.getDesc() != null)
-                {
-                    ITextComponent desc = new TextComponentString(team.getDesc());
-                    desc.getStyle().setItalic(true);
-                    page1.println(desc);
-                    page1.text.add(null);
-                }
-
-                ForgePlayer owner = team.getOwner();
-                page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
-
-                List<String> members = new ArrayList<>();
-
-                for(ForgePlayer player : team.getMembers())
-                {
-                    if(player != owner)
-                    {
-                        members.add(player.getProfile().getName());
-                    }
-                }
-
-                if(!members.isEmpty())
-                {
-                    page1.text.add(null);
-                    page1.printlnText("Members:"); //TODO: Lang
-
-                    Collections.sort(members);
-
-                    for(String s : members)
-                    {
-                        page1.printlnText(s);
-                    }
-                }
+                throw FTBLibLang.team_no_team.commandError();
             }
 
-            page.displayGuide(ep);
+            ForgeTeam team = p.getTeam();
+
+            if(!team.getStatus(p).isOwner())
+            {
+                throw FTBLibLang.team_not_owner.commandError();
+            }
+
+            checkArgs(args, 1);
+
+            ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
+
+            if(!p1.isMemberOf(team))
+            {
+                throw FTBLibLang.team_not_member.commandError();
+            }
+
+            if(team.getMembers().size() > 1 && !p1.equalsPlayer(p))
+            {
+                MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Deleted(team));
+                team.removePlayer(p);
+                ForgeWorldMP.inst.teams.remove(team.getID());
+                new MessageUpdateTeam(team.getID()).sendTo(null);
+
+                FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
+                FTBLibLang.team_deleted.printChat(sender, team.getTitle());
+            }
+            else
+            {
+                throw FTBLibLang.team_must_transfer_ownership.commandError();
+            }
+
+            p.sendUpdate();
+        }
+    }
+
+    public static class CmdJoin extends CommandLM
+    {
+        public CmdJoin()
+        {
+            super("join");
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
+        }
+
+        @Override
+        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+        {
+            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+            ForgePlayerMP p = ForgePlayerMP.get(ep);
+
+            if(p.hasTeam())
+            {
+                throw FTBLibLang.team_must_leave.commandError();
+            }
+
+            checkArgs(args, 1);
+
+            ForgeTeam team = getTeam(args[0]);
+
+            if(!team.getStatus(p).isOwner())
+            {
+                throw FTBLibLang.team_not_owner.commandError();
+            }
+
+            checkArgs(args, 1);
+
+            ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
+
+            if(!p1.isMemberOf(team))
+            {
+                throw FTBLibLang.team_not_member.commandError();
+            }
+
+            if(team.getMembers().size() > 1 && !p1.equalsPlayer(p))
+            {
+                MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Deleted(team));
+                team.removePlayer(p);
+                ForgeWorldMP.inst.teams.remove(team.getID());
+                new MessageUpdateTeam(team.getID()).sendTo(null);
+
+                FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
+                FTBLibLang.team_deleted.printChat(sender, team.getTitle());
+            }
+            else
+            {
+                throw FTBLibLang.team_must_transfer_ownership.commandError();
+            }
+
+            p.sendUpdate();
         }
     }
 
@@ -365,12 +488,19 @@ public class CmdTeam extends CommandSubBase
     {
         super("team");
 
+        add(new CmdConfig());
+        add(new CmdListTeams());
         add(new CmdCreate());
         add(new CmdLeave());
-        add(new CmdConfig());
         add(new CmdTransferOwnership());
-        add(new CmdListTeams());
         add(new CmdKick());
+        add(new CmdInvite());
+        add(new CmdJoin());
+    }
+
+    public static ForgeTeam getTeam(String s) throws CommandException
+    {
+        throw FTBLibLang.team_not_found.commandError();
     }
 
     @Override

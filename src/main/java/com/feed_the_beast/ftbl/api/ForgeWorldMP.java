@@ -6,9 +6,9 @@ import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
@@ -35,7 +35,6 @@ public final class ForgeWorldMP extends ForgeWorld
      */
     public static ForgePlayerMP currentPlayer;
     public static ForgeTeam currentTeam;
-    private int nextTeamID = 0;
 
     public ForgeWorldMP()
     {
@@ -76,11 +75,6 @@ public final class ForgeWorldMP extends ForgeWorld
         }
         ForgePlayer p = super.getPlayer(o);
         return (p == null) ? null : p.toMP();
-    }
-
-    public ForgeTeam newTeam()
-    {
-        return new ForgeTeam(this, ++nextTeamID);
     }
 
     public void load() throws Exception
@@ -127,18 +121,16 @@ public final class ForgeWorldMP extends ForgeWorld
 
             currentPlayer = null;
 
-            nextTeamID = nbt.getInteger("NextTeamID");
-
             teams.clear();
             NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
 
             for(int i = 0; i < teamsTag.tagCount(); i++)
             {
                 NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-                ForgeTeam team = new ForgeTeam(this, tag2.getInteger("ID"));
+                ForgeTeam team = new ForgeTeam(this, tag2.getString("ID"));
                 currentTeam = team;
                 team.deserializeNBT(tag2);
-                teams.put(team.teamID, team);
+                teams.put(team.getID(), team);
             }
 
             currentTeam = null;
@@ -179,15 +171,13 @@ public final class ForgeWorldMP extends ForgeWorld
 
         tag.setTag("Players", tagPlayers);
 
-        tag.setInteger("NextTeamID", nextTeamID);
-
         NBTTagList teamsTag = new NBTTagList();
 
-        for(ForgeTeam team : teams.valueCollection())
+        for(ForgeTeam team : teams.values())
         {
             currentTeam = team;
             tag2 = team.serializeNBT();
-            tag2.setInteger("ID", team.teamID);
+            tag2.setString("ID", team.getID());
             teamsTag.appendTag(tag2);
         }
 
@@ -246,10 +236,10 @@ public final class ForgeWorldMP extends ForgeWorld
 
             NBTTagList teamsTag = new NBTTagList();
 
-            for(ForgeTeam team : teams.valueCollection())
+            for(ForgeTeam team : teams.values())
             {
                 tag2 = team.serializeNBTForNet(self);
-                tag2.setInteger("ID", team.teamID);
+                tag2.setString("ID", team.getID());
                 teamsTag.appendTag(tag2);
             }
 

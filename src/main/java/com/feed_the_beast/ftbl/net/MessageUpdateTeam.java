@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class MessageUpdateTeam extends MessageToClient<MessageUpdateTeam>
 {
-    public int teamID;
+    public String teamID;
     public NBTTagCompound data;
 
     public MessageUpdateTeam()
@@ -25,11 +25,11 @@ public class MessageUpdateTeam extends MessageToClient<MessageUpdateTeam>
 
     public MessageUpdateTeam(ForgePlayerMP to, ForgeTeam team)
     {
-        teamID = team.teamID;
+        teamID = team.getID();
         data = team.serializeNBTForNet(to);
     }
 
-    public MessageUpdateTeam(int id)
+    public MessageUpdateTeam(String id)
     {
         teamID = id;
         data = null;
@@ -44,14 +44,14 @@ public class MessageUpdateTeam extends MessageToClient<MessageUpdateTeam>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeInt(teamID);
+        writeString(io, teamID);
         writeTag(io, data);
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
-        teamID = io.readInt();
+        teamID = readString(io);
         data = readTag(io);
     }
 
