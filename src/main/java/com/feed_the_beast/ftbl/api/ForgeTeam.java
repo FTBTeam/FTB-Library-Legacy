@@ -415,6 +415,8 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
 
     public void getSettings(ConfigGroup group)
     {
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.GetSettings(this, group));
+        
         group.add("color", color);
 
         group.add("title", new ConfigEntryString(title == null ? "" : title)
@@ -476,13 +478,5 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
                 return getFlag(HIDDEN);
             }
         });
-
-        ConfigGroup group1 = new ConfigGroup();
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.GetSettings(this, group1));
-
-        if(!group1.entryMap.isEmpty())
-        {
-            group.add("mods", group1);
-        }
     }
 }

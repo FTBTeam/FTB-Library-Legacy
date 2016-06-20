@@ -361,7 +361,7 @@ public class ConfigGroup extends ConfigEntry
 
             if(vg != null)
             {
-                vg.getAllKeys0(keys, prevID == null ? null : (prevID + '.' + id));
+                vg.getAllKeys0(keys, prevID == null ? id : (prevID + '.' + id));
             }
             else
             {
