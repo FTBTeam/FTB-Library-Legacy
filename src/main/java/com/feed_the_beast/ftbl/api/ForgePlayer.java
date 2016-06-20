@@ -67,13 +67,13 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capabilities != null && capabilities.hasCapability(capability, facing);
     }
 
     @Override
-    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }

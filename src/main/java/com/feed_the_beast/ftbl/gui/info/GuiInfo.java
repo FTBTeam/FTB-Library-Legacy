@@ -215,8 +215,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         InfoPageTheme theme = page.getTheme();
 
-        colorText = 0xFF000000 | theme.textColor.color();
-        colorBackground = 0xFF000000 | theme.backgroundColor.color();
+        colorText = 0xFF000000 | theme.textColor;
+        colorBackground = 0xFF000000 | theme.backgroundColor;
 
         if(theme.useUnicodeFont == null)
         {
@@ -272,8 +272,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        renderFilling(panelWidth, 0, width - panelWidth, height, InfoClientSettings.transparency.getAsInt());
-        renderFilling(0, 36, panelWidth, height - 36, 255);
+        renderFilling(panelWidth, 0, width - panelWidth, height);
+        renderFilling(0, 36, panelWidth, height - 36);
 
         boolean uni = font.getUnicodeFlag();
         font.setUnicodeFlag(useUnicodeFont);
@@ -294,7 +294,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         renderBorders(panelWidth, 0, width - panelWidth, height);
         renderBorders(0, 36, panelWidth, height - 36);
-        renderFilling(0, 0, panelWidth, 36, 255);
+        renderFilling(0, 0, panelWidth, 36);
         renderBorders(0, 0, panelWidth, 36);
 
         sliderPages.renderSlider(tex_slider);
@@ -334,9 +334,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         render(tex_bg_ML, px, py + 13, 13, h - 25);
     }
 
-    private void renderFilling(double px, double py, double w, double h, int a)
+    private void renderFilling(double px, double py, double w, double h)
     {
-        FTBLibClient.setGLColor(colorBackground, a);
+        FTBLibClient.setGLColor(colorBackground, 255);
         drawBlankRect(posX + px + 4, posY + py + 4, w - 8, h - 8);
     }
 

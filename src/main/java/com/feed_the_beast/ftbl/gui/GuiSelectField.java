@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.LMGuis;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
 import com.latmod.lib.ObjectCallback;
+import com.latmod.lib.math.Converter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,15 +17,41 @@ import javax.annotation.Nonnull;
 @SideOnly(Side.CLIENT)
 public class GuiSelectField extends GuiLM
 {
+    public enum FieldType
+    {
+        STRING,
+        INTEGER,
+        DOUBLE;
+
+        public boolean isValid(String s)
+        {
+            switch(this)
+            {
+                case INTEGER:
+                {
+                    return Converter.canParseInt(s);
+                }
+                case DOUBLE:
+                {
+                    return Converter.canParseDouble(s);
+                }
+                default:
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
     public final Object ID;
-    public final LMGuis.FieldType type;
+    public final FieldType type;
     public final String def;
     public final ObjectCallback.Handler callback;
 
     public final ButtonSimpleLM buttonCancel, buttonAccept;
     public final TextBoxLM textBox;
 
-    public GuiSelectField(Object id, LMGuis.FieldType typ, String d, ObjectCallback.Handler c)
+    public GuiSelectField(Object id, FieldType typ, String d, ObjectCallback.Handler c)
     {
         ID = id;
         type = typ;
@@ -94,6 +120,11 @@ public class GuiSelectField extends GuiLM
         textBox.textRenderX = -1;
         textBox.textRenderY = 6;
         textBox.textColor = 0xFFEEEEEE;
+    }
+
+    public static void display(Object id, FieldType type, Object d, ObjectCallback.Handler c)
+    {
+        new GuiSelectField(id, type, String.valueOf(d), c).openGui();
     }
 
     public GuiSelectField setCharLimit(int i)

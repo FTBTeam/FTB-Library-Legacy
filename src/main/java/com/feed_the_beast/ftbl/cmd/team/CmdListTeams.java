@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -78,7 +79,7 @@ public class CmdListTeams extends CommandLM
                 page1.text.add(null);
                 page1.printlnText("Members:"); //TODO: Lang
 
-                Collections.sort(members);
+                Collections.sort(members, LMStringUtils.IGNORE_CASE_COMPARATOR);
 
                 for(String s : members)
                 {

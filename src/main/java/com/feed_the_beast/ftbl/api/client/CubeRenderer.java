@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.client;
 
-import com.latmod.lib.LMColor;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -13,24 +12,38 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public final class CubeRenderer
 {
-    public static final CubeRenderer instance = new CubeRenderer();
     private static final float[] normalsX = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
     private static final float[] normalsY = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
     private static final float[] normalsZ = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
+    public final boolean hasTexture, hasNormals;
+    public final Color4F color;
+    private final VertexFormat format;
     public boolean beginAndEnd = true;
-    public LMColor color = null;
     private Tessellator tessellator;
     private VertexBuffer buffer;
-    private VertexFormat format;
-    private boolean hasTexture = false;
-    private boolean hasNormals = false;
     private double minX, minY, minZ, maxX, maxY, maxZ;
     private double minU, minV, maxU, maxV;
 
-    public CubeRenderer()
+    public CubeRenderer(boolean tex, boolean norm)
     {
+        hasTexture = tex;
+        hasNormals = norm;
+
+        color = new Color4F();
         format = new VertexFormat();
         format.addElement(DefaultVertexFormats.POSITION_3F);
+        format.addElement(DefaultVertexFormats.COLOR_4UB);
+
+        if(hasTexture)
+        {
+            format.addElement(DefaultVertexFormats.TEX_2F);
+        }
+
+        if(hasNormals)
+        {
+            format.addElement(DefaultVertexFormats.NORMAL_3B);
+            format.addElement(DefaultVertexFormats.PADDING_1B);
+        }
     }
 
     public CubeRenderer setTessellator(Tessellator t)
@@ -38,48 +51,6 @@ public final class CubeRenderer
         tessellator = t;
         buffer = (t == null) ? null : tessellator.getBuffer();
         return this;
-    }
-
-    public CubeRenderer setHasTexture()
-    {
-        if(!hasTexture)
-        {
-            hasTexture = true;
-            format.addElement(DefaultVertexFormats.TEX_2F);
-        }
-
-        return this;
-    }
-
-    public CubeRenderer setHasNormals()
-    {
-        if(!hasNormals)
-        {
-            hasNormals = true;
-            format.addElement(DefaultVertexFormats.NORMAL_3B);
-            format.addElement(DefaultVertexFormats.PADDING_1B);
-        }
-
-        return this;
-    }
-
-    public CubeRenderer setHasColor()
-    {
-        if(color == null)
-        {
-            color = new LMColor.RGBA();
-            format.addElement(DefaultVertexFormats.COLOR_4UB);
-        }
-
-        return this;
-    }
-
-    public void setColor(LMColor c)
-    {
-        if(c != null && color != null)
-        {
-            color = c;
-        }
     }
 
     public void setSize(double x0, double y0, double z0, double x1, double y1, double z1)
@@ -180,18 +151,18 @@ public final class CubeRenderer
     private void vertex(int i, double x, double y, double z, double u, double v)
     {
         buffer.pos(x, y, z);
+        buffer.color(color.red, color.green, color.blue, color.alpha);
+
         if(hasTexture)
         {
             buffer.tex(u, v);
         }
+
         if(hasNormals)
         {
             buffer.normal(normalsX[i], normalsY[i], normalsZ[i]);
         }
-        if(color != null)
-        {
-            buffer.color(color.red(), color.green(), color.blue(), color.alpha());
-        }
+
         buffer.endVertex();
     }
 

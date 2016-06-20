@@ -248,6 +248,6 @@ public abstract class GuiLM extends PanelLM
     public final void scissor(double x, double y, double w, double h)
     {
         int scale = screen.getScaleFactor();
-        GL11.glScissor((int) (x * scale), (int) ((screen.getScaledHeight() - y - h) * scale), (int) (w * scale), (int) (h * scale));
+        GL11.glScissor((int) (x * scale), screen.getScaledHeight() - (int) ((y - h) * scale), (int) (w * scale), (int) (h * scale));
     }
 }

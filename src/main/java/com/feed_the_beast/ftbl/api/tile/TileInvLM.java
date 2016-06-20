@@ -10,6 +10,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileInvLM extends TileLM
 {
@@ -35,7 +36,7 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nonnull EnumFacing facing)
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
@@ -46,7 +47,7 @@ public class TileInvLM extends TileLM
 
     @Nonnull
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nonnull EnumFacing facing)
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
     {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {

@@ -13,10 +13,6 @@ public class InfoClientSettings
     public static final ConfigEntryBool unicode = new ConfigEntryBool(true);
 
     @Flags(Flags.USE_SLIDER)
-    @NumberBounds(min = 100, max = 255)
-    public static final ConfigEntryInt transparency = new ConfigEntryInt(255);
-
-    @Flags(Flags.USE_SLIDER)
     @NumberBounds(min = 0, max = 200)
     public static final ConfigEntryInt border_width = new ConfigEntryInt(15);
 

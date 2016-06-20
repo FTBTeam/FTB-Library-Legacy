@@ -51,7 +51,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
         super(id);
         world = w;
 
-        color = new ConfigEntryEnum<>(EnumTeamColor.GRAY, EnumTeamColor.NAME_MAP);
+        color = new ConfigEntryEnum<>(EnumTeamColor.BLUE, EnumTeamColor.NAME_MAP);
 
         ForgeTeamEvent.AttachCapabilities event = new ForgeTeamEvent.AttachCapabilities(this);
         MinecraftForge.EVENT_BUS.post(event);
@@ -59,13 +59,13 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capabilities != null && capabilities.hasCapability(capability, facing);
     }
 
     @Override
-    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }

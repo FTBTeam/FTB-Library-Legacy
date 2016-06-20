@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,13 +74,13 @@ public abstract class ForgeWorld implements ICapabilityProvider
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capabilities != null && capabilities.hasCapability(capability, facing);
     }
 
     @Override
-    public final <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }

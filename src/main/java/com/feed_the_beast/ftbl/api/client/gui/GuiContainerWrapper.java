@@ -13,7 +13,7 @@ import java.io.IOException;
  * Created by LatvianModder on 09.06.2016.
  */
 @SideOnly(Side.CLIENT)
-public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
+public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IClientActionGui
 {
     private GuiLM wrappedGui;
 
@@ -94,5 +94,14 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
     public GuiLM getWrappedGui()
     {
         return wrappedGui;
+    }
+
+    @Override
+    public void onClientDataChanged()
+    {
+        if(wrappedGui instanceof IClientActionGui)
+        {
+            ((IClientActionGui) wrappedGui).onClientDataChanged();
+        }
     }
 }

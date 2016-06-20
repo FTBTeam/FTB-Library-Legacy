@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
-import com.feed_the_beast.ftbl.api.client.gui.LMGuis;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
@@ -44,7 +43,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
     public class ButtonConfigEntry extends ButtonLM
     {
         public final ConfigEntry entry;
-        public final ArrayList<ButtonConfigEntry> subButtons;
+        public final List<ButtonConfigEntry> subButtons;
         public boolean expanded = false;
 
         public ButtonConfigEntry(String id, ConfigEntry e)
@@ -142,7 +141,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.COLOR)
             {
-                LMGuis.displayColorSelector(0, false, ((ConfigEntryColor) entry).value, c ->
+                GuiSelectColor.display(0, false, ((ConfigEntryColor) entry).value, c ->
                 {
                     if(c.set)
                     {
@@ -158,7 +157,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.INT)
             {
-                LMGuis.displayFieldSelector(null, LMGuis.FieldType.INTEGER, entry.getAsInt(), c ->
+                GuiSelectField.display(null, GuiSelectField.FieldType.INTEGER, entry.getAsInt(), c ->
                 {
                     if(c.set)
                     {
@@ -174,7 +173,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.DOUBLE)
             {
-                LMGuis.displayFieldSelector(null, LMGuis.FieldType.DOUBLE, entry.getAsDouble(), c ->
+                GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, entry.getAsDouble(), c ->
                 {
                     if(c.set)
                     {
@@ -190,7 +189,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.STRING)
             {
-                LMGuis.displayFieldSelector(null, LMGuis.FieldType.STRING, entry.getAsString(), c ->
+                GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getAsString(), c ->
                 {
                     if(c.set)
                     {
@@ -206,7 +205,7 @@ public class GuiEditConfig extends GuiLM implements IClientActionGui
             }
             else if(type == ConfigEntryType.CUSTOM || type == ConfigEntryType.INT_ARRAY || type == ConfigEntryType.STRING_ARRAY)
             {
-                LMGuis.displayFieldSelector(null, LMGuis.FieldType.STRING, entry.getSerializableElement().toString(), c ->
+                GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getSerializableElement().toString(), c ->
                 {
                     if(c.set)
                     {
