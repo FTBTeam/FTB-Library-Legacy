@@ -5,16 +5,17 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Created by LatvianModder on 24.05.2016.
  */
+@ParametersAreNonnullByDefault
 public class PermissionAPI
 {
     private static PermissionHandler permissionHandler;
 
-    public static void setPermissionHandler(@Nonnull PermissionHandler handler)
+    public static void setPermissionHandler(PermissionHandler handler)
     {
         if(permissionHandler != null)
         {
@@ -31,7 +32,7 @@ public class PermissionAPI
      * @param context          Context for this permission. Do not use null, when there is no context available, use Context.EMPTY!
      * @return true, if player has permission, false if he does not.
      */
-    public static boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull Context context)
+    public static boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, Context context)
     {
         if(permission.isEmpty())
         {
