@@ -95,13 +95,10 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
                 tag.setTag("VL", list);
             }
 
-            tag.setShort("V", (short) index);
             tag.setShort("D", (short) defValue);
         }
-        else
-        {
-            tag.setString("V", getAsString());
-        }
+
+        tag.setString("V", getAsString());
     }
 
     @Override
@@ -123,13 +120,10 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
                 }
             }
 
-            index = tag.getShort("V");
             defValue = tag.getShort("D");
         }
-        else
-        {
-            set(tag.getString("V"));
-        }
+
+        set(tag.getString("V"));
     }
 
     @Override

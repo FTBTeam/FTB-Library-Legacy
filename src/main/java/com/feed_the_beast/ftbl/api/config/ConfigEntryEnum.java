@@ -90,28 +90,17 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
             }
 
             tag.setTag("VL", list);
-            tag.setShort("V", (short) index);
             tag.setShort("D", (short) defValue);
         }
-        else
-        {
-            tag.setString("V", EnumNameMap.getEnumName(get()));
-        }
+
+        tag.setString("V", EnumNameMap.getEnumName(get()));
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag, boolean extended)
     {
         super.readFromNBT(tag, extended);
-
-        if(extended)
-        {
-            index = tag.getShort("V");
-        }
-        else
-        {
-            index = nameMap.getStringIndex(tag.getString("V"));
-        }
+        index = nameMap.getStringIndex(tag.getString("V"));
     }
 
     @Override

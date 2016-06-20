@@ -476,5 +476,13 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
                 return getFlag(HIDDEN);
             }
         });
+
+        ConfigGroup group1 = new ConfigGroup();
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.GetSettings(this, group1));
+
+        if(!group1.entryMap.isEmpty())
+        {
+            group.add("mods", group1);
+        }
     }
 }

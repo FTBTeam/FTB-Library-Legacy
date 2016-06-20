@@ -345,14 +345,14 @@ public class ConfigGroup extends ConfigEntry
         return count;
     }
 
-    public Collection<String> getAllKeys(boolean includeGroupID)
+    public Collection<String> getAllKeys()
     {
         Collection<String> c = new HashSet<>();
-        getAllKeys0(c, null, includeGroupID);
+        getAllKeys0(c, null);
         return c;
     }
 
-    private void getAllKeys0(Collection<String> keys, String prevID, boolean includeGroupID)
+    private void getAllKeys0(Collection<String> keys, String prevID)
     {
         for(Map.Entry<String, ConfigEntry> e : entryMap.entrySet())
         {
@@ -361,19 +361,7 @@ public class ConfigGroup extends ConfigEntry
 
             if(vg != null)
             {
-                if(includeGroupID)
-                {
-                    if(prevID == null)
-                    {
-                        keys.add(id);
-                    }
-                    else
-                    {
-                        keys.add(prevID + '.' + id);
-                    }
-                }
-
-                vg.getAllKeys0(keys, id, includeGroupID);
+                vg.getAllKeys0(keys, prevID == null ? null : (prevID + '.' + id));
             }
             else
             {
@@ -408,17 +396,5 @@ public class ConfigGroup extends ConfigEntry
         }
 
         return true;
-    }
-
-    public ConfigGroup calcDiff(ConfigGroup group)
-    {
-        ConfigGroup g = new ConfigGroup();
-
-        for(ConfigEntry e : entryMap.values())
-        {
-            //FIXME: Diff calculator
-        }
-
-        return g;
     }
 }

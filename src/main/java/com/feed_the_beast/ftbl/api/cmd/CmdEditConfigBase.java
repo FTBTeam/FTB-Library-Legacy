@@ -1,8 +1,7 @@
-package com.feed_the_beast.ftbl.cmd;
+package com.feed_the_beast.ftbl.api.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
@@ -50,7 +49,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             if(args.length == 1)
             {
                 List<String> keys = new ArrayList<>();
-                keys.addAll(group.getAllKeys(false));
+                keys.addAll(group.getAllKeys());
                 Collections.sort(keys, null);
                 return getListOfStringsMatchingLastWord(args, keys);
             }
