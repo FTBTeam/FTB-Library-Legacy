@@ -55,7 +55,7 @@ public class CmdMyServerSettings extends CmdEditConfigBase
             @Override
             public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
             {
-                group.loadFromGroup(config, false);
+                group.loadFromGroup(config);
             }
         };
     }

@@ -39,7 +39,7 @@ public class ConfigRegistry
         @Override
         public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
         {
-            mainGroup.loadFromGroup(config, false);
+            mainGroup.loadFromGroup(config);
             FTBLib.reload(player, ReloadType.SERVER_ONLY, false);
         }
     };
@@ -72,7 +72,7 @@ public class ConfigRegistry
 
                 int result;
                 ConfigFile f = map.get(e.getKey());
-                if(f != null && (result = f.loadFromGroup(ol, false)) > 0)
+                if(f != null && (result = f.loadFromGroup(ol)) > 0)
                 {
                     FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
                     f.save();

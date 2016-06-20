@@ -329,13 +329,16 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
         return c;
     }
 
-    public void addPlayer(ForgePlayerMP player)
+    public boolean addPlayer(ForgePlayerMP player)
     {
-        if(!player.isMemberOf(this))
+        if(!player.isMemberOf(this) && isInvited(player))
         {
             player.setTeamID(getID());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(this, player));
+            return true;
         }
+
+        return false;
     }
 
     public void removePlayer(ForgePlayerMP player)
@@ -347,7 +350,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
         }
     }
 
-    public void inviteMember(@Nullable ForgePlayerMP player)
+    public boolean inviteMember(@Nullable ForgePlayerMP player)
     {
         if(!isInvited(player))
         {
@@ -357,7 +360,10 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
             }
 
             invited.add(player);
+            return true;
         }
+
+        return false;
     }
 
     public boolean isInvited(@Nullable ForgePlayerMP player)

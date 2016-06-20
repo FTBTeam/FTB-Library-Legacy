@@ -29,19 +29,21 @@ public class FTBLibLang
     public static final LangKey my_permissions = get("my_permissions");
     public static final LangKey difficulty = get("difficulty");
 
+    public static final LangKey team_config = get("team.config");
     public static final LangKey team_created = get("team.created");
     public static final LangKey team_deleted = get("team.deleted");
     public static final LangKey team_member_left = get("team.member_left");
     public static final LangKey team_member_joined = get("team.member_joined");
     public static final LangKey team_transfered_ownership = get("team.transfered_ownership");
-    public static final LangKey team_invite = get("team.invite");
-    public static final LangKey team_cancel_invite = get("team.cancel_invite");
-    public static final LangKey team_not_found = get("team.error.team_not_found");
+    public static final LangKey team_invited = get("team.invited");
+    public static final LangKey team_not_found = get("team.error.not_found");
     public static final LangKey team_no_team = get("team.error.no_team");
     public static final LangKey team_must_leave = get("team.error.must_leave");
     public static final LangKey team_not_owner = get("team.error.not_owner");
     public static final LangKey team_not_member = get("team.error.not_member");
     public static final LangKey team_must_transfer_ownership = get("team.error.must_transfer_ownership");
+    public static final LangKey team_already_invited = get("team.error.already_invited");
+    public static final LangKey team_failed_to_join = get("team.error.failed_to_join");
 
     public static LangKey get(String s)
     {

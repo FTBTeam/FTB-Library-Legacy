@@ -77,18 +77,22 @@ ftbl.lang.commands=Commands
 ftbl.lang.my_permissions=My Permissions
 ftbl.lang.difficulty=Difficulty: %s
 
-ftbl.lang.team.created=Team created
-ftbl.lang.team.deleted=Team deleted
+ftbl.lang.team.config='%s' team config
+ftbl.lang.team.created=Team '%s' created
+ftbl.lang.team.deleted=Team '%s' deleted
 ftbl.lang.team.member_left=%s left your team!
 ftbl.lang.team.member_joined=%s joined your team!
 ftbl.lang.team.transfered_ownership=New owner now is %s
-ftbl.lang.team.invite=Invite to my Team
+ftbl.lang.team.invite=Invited %s to '%s'
 ftbl.lang.team.cancel_invite=Cancel invite
+ftbl.lang.team.error.not_found=Team '%s' not found!
 ftbl.lang.team.error.no_team=You must be in a Team to do that!
 ftbl.lang.team.error.must_leave=You must leave your Team to do that!
 ftbl.lang.team.error.not_owner=You are not the owner of this Team!
 ftbl.lang.team.error.not_member=You are not a member of this Team!
 ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
+ftbl.lang.team.error.already_invited=%s already is invited!
+ftbl.lang.team.error.failed_to_join=Can't join this team!
 
 # ClientConfig
 client_config=Client Config

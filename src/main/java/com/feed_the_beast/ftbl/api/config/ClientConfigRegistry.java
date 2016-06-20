@@ -40,7 +40,7 @@ public final class ClientConfigRegistry
         @Override
         public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
         {
-            file.loadFromGroup(config, false);
+            file.loadFromGroup(config);
             file.save();
         }
     };

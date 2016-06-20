@@ -61,7 +61,7 @@ public abstract class CommandLM extends CommandBase
 
     @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if(args.length == 0)
         {
@@ -72,7 +72,7 @@ public abstract class CommandLM extends CommandBase
             return getListOfStringsMatchingLastWord(args, server.getAllUsernames());
         }
 
-        return super.getTabCompletionOptions(server, ics, args, pos);
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 
     @Override

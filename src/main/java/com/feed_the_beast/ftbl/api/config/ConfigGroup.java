@@ -240,7 +240,7 @@ public class ConfigGroup extends ConfigEntry
         }
     }
 
-    public int loadFromGroup(ConfigGroup l, boolean isNBT)
+    public int loadFromGroup(ConfigGroup l)
     {
         if(l == null || l.entryMap.isEmpty())
         {
@@ -258,34 +258,14 @@ public class ConfigGroup extends ConfigEntry
                 if(e0.getAsGroup() != null)
                 {
                     ConfigGroup g1 = new ConfigGroup();
-
-                    if(isNBT)
-                    {
-                        NBTTagCompound tag = new NBTTagCompound();
-                        entry.getValue().writeToNBT(tag, false);
-                        g1.readFromNBT(tag, false);
-                    }
-                    else
-                    {
-                        g1.fromJson(entry.getValue().getSerializableElement());
-                    }
-
-                    result += e0.getAsGroup().loadFromGroup(g1, isNBT);
+                    g1.fromJson(entry.getValue().getSerializableElement());
+                    result += e0.getAsGroup().loadFromGroup(g1);
                 }
                 else
                 {
                     try
                     {
-                        if(isNBT)
-                        {
-                            NBTTagCompound tag = new NBTTagCompound();
-                            entry.getValue().writeToNBT(tag, false);
-                            e0.readFromNBT(tag, false);
-                        }
-                        else
-                        {
-                            e0.fromJson(entry.getValue().getSerializableElement());
-                        }
+                        e0.fromJson(entry.getValue().getSerializableElement());
 
                         result++;
                     }

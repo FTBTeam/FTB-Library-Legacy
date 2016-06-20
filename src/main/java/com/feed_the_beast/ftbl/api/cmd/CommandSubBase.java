@@ -43,7 +43,7 @@ public class CommandSubBase extends CommandLM implements ICustomCommandInfo
 
     @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender ics, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -51,7 +51,7 @@ public class CommandSubBase extends CommandLM implements ICustomCommandInfo
 
             for(ICommand c : subCommands.values())
             {
-                if(c.checkPermission(server, ics))
+                if(c.checkPermission(server, sender))
                 {
                     keys.add(c.getCommandName());
                 }
@@ -65,10 +65,10 @@ public class CommandSubBase extends CommandLM implements ICustomCommandInfo
 
         if(cmd != null)
         {
-            return cmd.getTabCompletionOptions(server, ics, LMStringUtils.shiftArray(args), pos);
+            return cmd.getTabCompletionOptions(server, sender, LMStringUtils.shiftArray(args), pos);
         }
 
-        return super.getTabCompletionOptions(server, ics, args, pos);
+        return super.getTabCompletionOptions(server, sender, args, pos);
     }
 
     @Override
