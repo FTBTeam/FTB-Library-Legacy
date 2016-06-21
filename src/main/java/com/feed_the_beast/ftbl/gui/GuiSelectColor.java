@@ -111,6 +111,7 @@ public class GuiSelectColor extends GuiLM
             }
         }
     }
+
     public final ObjectCallback.Handler callback;
     public final LMColor.HSB initCol;
     public final Object colorID;
@@ -120,6 +121,7 @@ public class GuiSelectColor extends GuiLM
     public final SliderLM sliderRed, sliderGreen, sliderBlue;
     public final SliderLM sliderHue, sliderSaturation, sliderBrightness;
     public final ColorSelector colorSelector;
+
     public GuiSelectColor(ObjectCallback.Handler cb, LMColor col, Object id, boolean instant)
     {
         callback = cb;

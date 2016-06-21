@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import gnu.trove.list.TIntList;
 import com.latmod.lib.LMColor;
+import gnu.trove.list.TIntList;
 
 /**
  * Created by LatvianModder on 30.03.2016.

@@ -416,7 +416,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
     public void getSettings(ConfigGroup group)
     {
         MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.GetSettings(this, group));
-        
+
         group.add("color", color);
 
         group.add("title", new ConfigEntryString(title == null ? "" : title)

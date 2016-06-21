@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.api.permissions.rankconfig;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
-import com.mojang.authlib.GameProfile;
 import com.latmod.lib.FinalIDObject;
+import com.mojang.authlib.GameProfile;
 
 import javax.annotation.Nonnull;
 

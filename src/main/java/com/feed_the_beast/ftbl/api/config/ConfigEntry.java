@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.google.gson.JsonElement;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.annotations.IInfoContainer;
 import com.latmod.lib.io.Bits;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;

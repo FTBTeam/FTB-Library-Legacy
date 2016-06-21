@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
  */
 public class RegisterFTBCommandsEvent extends Event
 {
-    private CommandSubBase command;
     public final boolean isDedi;
+    private CommandSubBase command;
 
     public RegisterFTBCommandsEvent(CommandSubBase c, boolean dedi)
     {
