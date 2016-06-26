@@ -74,7 +74,7 @@ public class FTBLibEventHandler implements ITickable
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
     {
-        if(e.player instanceof EntityPlayerMP)
+        if(e.player instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
         {
             EntityPlayerMP ep = (EntityPlayerMP) e.player;
 
@@ -100,7 +100,7 @@ public class FTBLibEventHandler implements ITickable
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
     {
-        if(e.player instanceof EntityPlayerMP)
+        if(e.player instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
         {
             ForgeWorldMP.inst.getPlayer(e.player).onLoggedOut();
         }
@@ -109,7 +109,7 @@ public class FTBLibEventHandler implements ITickable
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent e)
     {
-        if(e.getEntity() instanceof EntityPlayerMP)
+        if(e.getEntity() instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
         {
             ForgeWorldMP.inst.getPlayer(e.getEntity()).onDeath();
         }

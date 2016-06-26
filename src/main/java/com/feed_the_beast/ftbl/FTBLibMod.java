@@ -37,14 +37,17 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.Map;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP, acceptedMinecraftVersions = "[1.9, 1.10)")
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP)
 public class FTBLibMod
 {
     public static final Logger logger = LogManager.getLogger("FTBLib");
+
     @Mod.Instance(FTBLibFinals.MOD_ID)
     public static FTBLibMod inst;
+
     @SidedProxy(serverSide = "com.feed_the_beast.ftbl.FTBLibModCommon", clientSide = "com.feed_the_beast.ftbl.client.FTBLibModClient")
     public static FTBLibModCommon proxy;
+
     public static LMMod mod;
 
     @Mod.EventHandler

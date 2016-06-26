@@ -73,6 +73,7 @@ public final class ForgeWorldMP extends ForgeWorld
         {
             return new ForgePlayerFake((FakePlayer) o);
         }
+
         ForgePlayer p = super.getPlayer(o);
         return (p == null) ? null : p.toMP();
     }
