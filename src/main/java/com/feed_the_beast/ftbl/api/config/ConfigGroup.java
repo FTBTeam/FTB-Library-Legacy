@@ -65,6 +65,16 @@ public class ConfigGroup extends ConfigEntry
 
     public ConfigGroup add(String s, ConfigEntry e)
     {
+        for(int i = 0; i < s.length(); i++)
+        {
+            char c = s.charAt(i);
+
+            if(!(c == '-' || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')))
+            {
+                throw new IllegalArgumentException("ConfigID can only contain '.' and 'a'-'z'!");
+            }
+        }
+
         if(e != null)
         {
             entryMap.put(s, e);
@@ -100,6 +110,7 @@ public class ConfigGroup extends ConfigEntry
                     }
                     catch(Exception e1)
                     {
+                        e1.printStackTrace();
                     }
                 }
             }
@@ -126,25 +137,23 @@ public class ConfigGroup extends ConfigEntry
     @Override
     public final void fromJson(@Nonnull JsonElement o0)
     {
-        if(o0 == null || !o0.isJsonObject())
-        {
-            return;
-        }
-
         entryMap.clear();
 
-        JsonObject o = o0.getAsJsonObject();
-
-        for(Map.Entry<String, JsonElement> e : o.entrySet())
+        if(o0.isJsonObject())
         {
-            ConfigEntry entry = new ConfigEntryCustom();
+            JsonObject o = o0.getAsJsonObject();
 
-            if(!e.getValue().isJsonNull())
+            for(Map.Entry<String, JsonElement> e : o.entrySet())
             {
-                entry.fromJson(e.getValue());
-            }
+                ConfigEntry entry = new ConfigEntryCustom();
 
-            add(e.getKey(), entry);
+                if(!e.getValue().isJsonNull())
+                {
+                    entry.fromJson(e.getValue());
+                }
+
+                add(e.getKey(), entry);
+            }
         }
     }
 
@@ -324,25 +333,6 @@ public class ConfigGroup extends ConfigEntry
     public ConfigGroup getAsGroup()
     {
         return this;
-    }
-
-    public int getTotalEntryCount()
-    {
-        int count = 0;
-
-        for(ConfigEntry e : entryMap.values())
-        {
-            if(e.getAsGroup() == null)
-            {
-                count++;
-            }
-            else
-            {
-                count += e.getAsGroup().getTotalEntryCount();
-            }
-        }
-
-        return count;
     }
 
     public Collection<String> getAllKeys()

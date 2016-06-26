@@ -30,7 +30,7 @@ public class PermissionAPI
      * @param permission       Permission node, best if lowercase and contains '.'
      * @param defaultForPlayer Default value for players
      * @param context          Context for this permission. Do not use null, when there is no context available, use Context.EMPTY!
-     * @return true, if player has permission, false if he does not.
+     * @return true, if player has permission (or if it is singleplayer world or the player is an OP), false if he does not.
      */
     public static boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, Context context)
     {

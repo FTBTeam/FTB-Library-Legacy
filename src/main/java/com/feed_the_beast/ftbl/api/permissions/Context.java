@@ -17,7 +17,7 @@ public class Context
     /**
      * Not recommended, only used when there really is no context available
      */
-    public static final Context EMPTY = new Context();
+    public static final Context NO_CONTEXT = new Context();
 
     private IBlockAccess blockAccess;
     private Entity entity;
