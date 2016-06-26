@@ -29,7 +29,7 @@ public class LMMod extends FinalIDObject
         lowerCaseModID = getID().toLowerCase();
         modAssets = lowerCaseModID + '.';
         itemsAndBlocks = new ArrayList<>();
-        recipes = LMRecipes.defaultInstance;
+        recipes = LMRecipes.INSTANCE;
     }
 
     public static LMMod create(String s)
