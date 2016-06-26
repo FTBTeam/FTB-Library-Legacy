@@ -65,7 +65,7 @@ public class CmdCreate extends CommandLM
             throw FTBLibLang.team_must_leave.commandError();
         }
 
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<ID>");
 
         if(!isValidTeamID(args[0]))
         {

@@ -35,7 +35,7 @@ public abstract class CmdEditConfigBase extends CommandLM
     @Override
     public String getCommandUsage(@Nonnull ICommandSender ics)
     {
-        return "/" + commandName + " [id] [value]";
+        return "/" + commandName + " [ID] [value]";
     }
 
     @Nonnull
@@ -88,7 +88,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             return;
         }
 
-        checkArgs(args, 1);
+        checkArgs(args, 1, "[ID] [value]");
 
         ConfigContainer cc = getConfigContainer(sender);
         ConfigGroup group = (ConfigGroup) cc.createGroup().copy();

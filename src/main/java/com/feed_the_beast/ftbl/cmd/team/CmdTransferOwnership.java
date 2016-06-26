@@ -46,7 +46,7 @@ public class CmdTransferOwnership extends CommandLM
             throw FTBLibLang.team_not_owner.commandError();
         }
 
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<player>");
 
         ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
 

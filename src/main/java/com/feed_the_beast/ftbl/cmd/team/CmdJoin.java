@@ -54,7 +54,7 @@ public class CmdJoin extends CommandLM
             throw FTBLibLang.team_must_leave.commandError();
         }
 
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<ID>");
 
         ForgeTeam team = CmdTeam.getTeam(args[0]);
 

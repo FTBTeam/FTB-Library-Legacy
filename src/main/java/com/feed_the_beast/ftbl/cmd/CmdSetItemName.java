@@ -33,7 +33,7 @@ public class CmdSetItemName extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 1);
+        checkArgs(args, 1, "<player>");
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
 
         if(ep.inventory.getCurrentItem() != null)

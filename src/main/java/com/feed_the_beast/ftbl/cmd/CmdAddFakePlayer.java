@@ -40,7 +40,7 @@ public class CmdAddFakePlayer extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 2);
+        checkArgs(args, 2, "<uuid> <name>");
 
         UUID id = LMUtils.fromString(args[0]);
         if(id == null)

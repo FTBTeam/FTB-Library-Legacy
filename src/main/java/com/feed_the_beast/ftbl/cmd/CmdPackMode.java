@@ -49,10 +49,7 @@ public class CmdPackMode extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
-            if(args.length == 0)
-            {
-                throw FTBLibLang.raw.commandError(getCommandUsage(ics));
-            }
+            checkArgs(args, 1, "<modeID>");
 
             ITextComponent c;
 

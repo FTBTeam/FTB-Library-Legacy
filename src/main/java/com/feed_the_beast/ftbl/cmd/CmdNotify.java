@@ -62,7 +62,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        checkArgs(args, 2);
+        checkArgs(args, 2, "<player> <json>");
         EntityPlayerMP ep = getPlayer(server, ics, args[0]);
         String s = LMStringUtils.unsplitSpaceUntilEnd(1, args);
         Notification.deserialize(LMJsonUtils.fromJson(s)).sendTo(ep);

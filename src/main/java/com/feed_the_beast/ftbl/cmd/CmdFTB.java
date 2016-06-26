@@ -21,7 +21,6 @@ public class CmdFTB extends CommandSubBase
         add(new CmdTeam());
         add(new CmdPackMode());
         add(new CmdNotify());
-        add(new CmdInv());
         add(new CmdSetItemName());
         add(new CmdHeal());
         add(new CmdEditConfig());
