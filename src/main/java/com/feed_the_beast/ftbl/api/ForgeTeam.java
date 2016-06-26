@@ -335,6 +335,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
         {
             player.setTeamID(getID());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(this, player));
+            invited.remove(player);
             return true;
         }
 

@@ -19,6 +19,7 @@ public class FTBLibLang
 
     public static final LangKey raw = get("raw");
     public static final LangKey missing_args = get("missing_args");
+    public static final LangKey missing_args_desc = get("missing_args_desc");
     public static final LangKey feature_disabled = get("feature_disabled");
     public static final LangKey invalid_subcmd = get("invalid_subcmd");
     public static final LangKey client_config = new LangKey("client_config");
@@ -36,6 +37,7 @@ public class FTBLibLang
     public static final LangKey team_member_joined = get("team.member_joined");
     public static final LangKey team_transfered_ownership = get("team.transfered_ownership");
     public static final LangKey team_invited = get("team.invited");
+    public static final LangKey team_invited_you = get("team.invited_you");
     public static final LangKey team_not_found = get("team.error.not_found");
     public static final LangKey team_no_team = get("team.error.no_team");
     public static final LangKey team_must_leave = get("team.error.must_leave");

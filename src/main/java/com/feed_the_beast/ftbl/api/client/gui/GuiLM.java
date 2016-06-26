@@ -29,7 +29,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public abstract class GuiLM extends PanelLM
 {
-    private static final List<String> tempTextList = new ArrayList<>();
+    private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
 
     public final Minecraft mc;
     public final FontRenderer font;
@@ -218,9 +218,9 @@ public abstract class GuiLM extends PanelLM
 
     public void drawForeground()
     {
-        addMouseOverText(this, tempTextList);
-        GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
-        tempTextList.clear();
+        addMouseOverText(this, TEMP_TEXT_LIST);
+        GuiUtils.drawHoveringText(TEMP_TEXT_LIST, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
+        TEMP_TEXT_LIST.clear();
     }
 
     public final boolean isMouseOver(WidgetLM w)

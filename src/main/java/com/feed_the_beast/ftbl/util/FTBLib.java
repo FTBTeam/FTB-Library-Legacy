@@ -85,6 +85,7 @@ public class FTBLib
 
         return i;
     };
+
     public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(false, EnumDyeColor.values());
     private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
@@ -315,7 +316,7 @@ public class FTBLib
 
     public static boolean isOP(GameProfile p)
     {
-        return !isDedicatedServer() || getServerWorld() != null && getServer().getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0;
+        return !isDedicatedServer() || (p != null && p.getId() != null && getServerWorld() != null && getServer().getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0);
     }
 
     public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)

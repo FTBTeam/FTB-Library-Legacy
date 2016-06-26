@@ -66,7 +66,8 @@ ftbl.lang.reload_client=FTBLib: Client reloaded in %s
 ftbl.lang.reload_client_config=Server Reloaded. You can
 
 ftbl.lang.raw=%s
-ftbl.lang.missing_args=Missing Arguments!
+ftbl.lang.missing_args=Missing Arguments: %s more!
+ftbl.lang.missing_args_desc=Missing Arguments: %s!
 ftbl.lang.feature_disabled=This feature is disabled!
 ftbl.lang.invalid_subcmd=Invalid subcommand: '%s'!
 
@@ -83,7 +84,8 @@ ftbl.lang.team.deleted=Team '%s' deleted
 ftbl.lang.team.member_left=%s left your team!
 ftbl.lang.team.member_joined=%s joined your team!
 ftbl.lang.team.transfered_ownership=New owner now is %s
-ftbl.lang.team.invite=Invited %s to '%s'
+ftbl.lang.team.invited=Invited %s to '%s'
+ftbl.lang.team.invited_you=You have been invited to '%s' by %s
 ftbl.lang.team.cancel_invite=Cancel invite
 ftbl.lang.team.error.not_found=Team '%s' not found!
 ftbl.lang.team.error.no_team=You must be in a Team to do that!

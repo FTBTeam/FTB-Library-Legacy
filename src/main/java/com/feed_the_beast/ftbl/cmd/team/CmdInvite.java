@@ -52,6 +52,11 @@ public class CmdInvite extends CommandLM
         if(team.inviteMember(p1))
         {
             FTBLibLang.team_invited.printChat(sender, p1.getProfile().getName());
+
+            if(p1.isOnline())
+            {
+                FTBLibLang.team_invited_you.printChat(p1.getPlayer(), team.getID(), ep.getName());
+            }
         }
         else
         {

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -25,11 +26,18 @@ public abstract class CommandLM extends CommandBase
         commandName = s;
     }
 
-    public static void checkArgs(String[] args, int i) throws CommandException
+    public static void checkArgs(String[] args, int i, String... s) throws CommandException
     {
         if(args == null || args.length < i)
         {
-            throw FTBLibLang.missing_args.commandError();
+            if(s == null || s.length == 0)
+            {
+                throw FTBLibLang.missing_args.commandError(Integer.toString(i - (args == null ? 0 : args.length)));
+            }
+            else
+            {
+                throw FTBLibLang.missing_args_desc.commandError(LMStringUtils.unsplit(s, " "));
+            }
         }
     }
 
