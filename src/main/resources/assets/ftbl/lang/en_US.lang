@@ -96,21 +96,6 @@ ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
 ftbl.lang.team.error.already_invited=%s already is invited!
 ftbl.lang.team.error.failed_to_join=Can't join this team!
 
-# ClientConfig
-client_config=Client Config
-client_config.ftbl=FTBLib
-client_config.ftbl.item_ore_names=Item OreDict Names
-client_config.ftbl.item_reg_names=Item Registry Names
-client_config.ftbl.notifications=Notifications
-client_config.ftbl.reload_client_cmd=Client Reloading Command
-client_config.ftbl.action_buttons_on_top=Action Buttons On Top
-client_config.ftbl.player_options_shortcut=Player Options Shortcut
-client_config.ftbl.key_bindings=Key Bindings
-client_config.ftbl.edit_shortcuts=Edit Shortcuts
-client_config.ftbl.light_value_texture_x=Light Value Texture Is 'X'
-
-client_config.sidebar_buttons=Sidebar Buttons
-
 # Action Buttons
 sidebar_button.ftbl:settings=Client Settings
 sidebar_button.ftbl:my_server_settings=My Server Settings

@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.client.FTBLibActions;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonObject;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,19 +23,13 @@ public final class ClientConfigRegistry
         @Override
         public ConfigGroup createGroup()
         {
-            if(file.getFile() == null)
-            {
-                file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
-                file.load();
-            }
-
             return file;
         }
 
         @Override
         public ITextComponent getConfigTitle()
         {
-            return new TextComponentTranslation("client_config");
+            return FTBLibActions.CLIENT_SETTINGS.displayName;
         }
 
         @Override
@@ -48,6 +42,12 @@ public final class ClientConfigRegistry
 
     public static void saveConfig()
     {
+        if(file.getFile() == null)
+        {
+            file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+            file.load();
+        }
+
         file.save();
     }
 

@@ -24,9 +24,11 @@ import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ public class GuiEditConfig extends GuiLM
             super(0, 0, 0, 16);
             ID = id;
             entry = e;
-            title = e.getDisplayName() == null ? ID : e.getDisplayName().getFormattedText();
+            title = entry.getDisplayName() == null ? ID : entry.getDisplayName().getFormattedText();
         }
 
         @Override
@@ -238,7 +240,10 @@ public class GuiEditConfig extends GuiLM
     public GuiEditConfig(NBTTagCompound nbt, ConfigContainer cc)
     {
         configContainer = cc;
-        title = configContainer.getConfigTitle().getFormattedText();
+
+        ITextComponent title0 = configContainer.getConfigTitle().createCopy();
+        title0.getStyle().setBold(true);
+        title = title0.getFormattedText() + TextFormatting.DARK_GRAY + " [WIP GUI]";
         extraNBT = nbt;
         modifiedConfig = new JsonObject();
 
@@ -366,17 +371,22 @@ public class GuiEditConfig extends GuiLM
     }
 
     @Override
+    public void renderWidgets()
+    {
+    }
+
+    @Override
     public void drawBackground()
     {
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        if(configPanel.height + 20D > screen.getScaledHeight_double())
+        if(configPanel.height + 20D > height)
         {
             scroll.scrollStep = 40D / (configPanel.height + 20D);
             scroll.update(this);
-            configPanel.posY = scroll.value * (screen.getScaledHeight_double() - configPanel.height - 20D) + 20D;
+            configPanel.posY = scroll.value * (height - configPanel.height - 20D) + 20D;
         }
         else
         {
@@ -384,7 +394,10 @@ public class GuiEditConfig extends GuiLM
             configPanel.posY = 20D;
         }
 
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        scissor(0, 20, width, height - 20);
         configPanel.renderWidget(this);
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         FTBLibClient.setGLColor(0x99333333);
         drawBlankRect(0, 0, width, 20);

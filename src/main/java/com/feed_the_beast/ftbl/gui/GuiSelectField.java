@@ -142,6 +142,11 @@ public class GuiSelectField extends GuiLM
     }
 
     @Override
+    public void renderWidgets()
+    {
+    }
+
+    @Override
     public void drawBackground()
     {
         int size = 8 + font.getStringWidth(textBox.getText());

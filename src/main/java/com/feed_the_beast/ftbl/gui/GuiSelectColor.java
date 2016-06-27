@@ -287,6 +287,11 @@ public class GuiSelectColor extends GuiLM
     }
 
     @Override
+    public void renderWidgets()
+    {
+    }
+
+    @Override
     public void drawBackground()
     {
         sliderRed.update(this);
