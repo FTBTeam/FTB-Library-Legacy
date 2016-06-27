@@ -36,9 +36,7 @@ public class ConfigFile extends ConfigGroup
 
         if(e.isJsonObject())
         {
-            ConfigGroup g = new ConfigGroup();
-            g.fromJson(e.getAsJsonObject());
-            loadFromGroup(g);
+            loadFromGroup(e.getAsJsonObject());
         }
     }
 

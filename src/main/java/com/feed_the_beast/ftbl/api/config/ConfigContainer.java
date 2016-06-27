@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.ResourceLocationObject;
+import com.google.gson.JsonObject;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -20,5 +21,5 @@ public abstract class ConfigContainer extends ResourceLocationObject
 
     public abstract ITextComponent getConfigTitle();
 
-    public abstract void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config);
+    public abstract void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json);
 }

@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -48,9 +49,9 @@ public class CmdTeamConfig extends CmdEditConfigBase
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
-            group.loadFromGroup(config);
+            group.loadFromGroup(json);
 
             for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
             {

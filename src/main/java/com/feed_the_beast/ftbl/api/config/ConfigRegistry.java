@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,9 +38,9 @@ public class ConfigRegistry
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
-            mainGroup.loadFromGroup(config);
+            mainGroup.loadFromGroup(json);
             FTBLib.reload(sender, ReloadType.SERVER_ONLY, false);
         }
     };
@@ -65,21 +66,15 @@ public class ConfigRegistry
 
         if(overridesE.isJsonObject())
         {
-            for(Map.Entry<String, JsonElement> e : overridesE.getAsJsonObject().entrySet())
-            {
-                ConfigGroup ol = new ConfigGroup();
-                ol.fromJson(e.getValue());
+            int result = mainGroup.loadFromGroup(overridesE.getAsJsonObject());
 
-                int result;
-                ConfigFile f = map.get(e.getKey());
-                if(f != null && (result = f.loadFromGroup(ol)) > 0)
+            if(result > 0)
+            {
+                FTBLib.dev_logger.info("Loaded " + result + " config overrides");
+
+                for(ConfigFile f : map.values())
                 {
-                    FTBLib.dev_logger.info("Config '" + e.getKey() + "' overriden: " + result);
                     f.save();
-                }
-                else
-                {
-                    FTBLib.dev_logger.info("Didnt load anything from " + e.getKey());
                 }
             }
         }

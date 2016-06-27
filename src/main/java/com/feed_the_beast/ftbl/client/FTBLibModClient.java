@@ -50,7 +50,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void postInit()
     {
-        ClientConfigRegistry.CONTAINER.createGroup().asConfigFile().save();
+        ClientConfigRegistry.saveConfig();
     }
 
     @Override

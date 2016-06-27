@@ -29,7 +29,7 @@ public class ActionButtonRegistry
             if(a.configDefault != null)
             {
                 ConfigEntryBool entry = new ConfigEntryBool(a.configDefault);
-                entry.setDisplayName(a.displayName);
+                //entry.setDisplayName(a.displayName);
                 configGroup.entryMap.put(a.getID(), entry);
             }
         }

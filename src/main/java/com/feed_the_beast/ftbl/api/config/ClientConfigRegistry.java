@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.google.gson.JsonObject;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -38,12 +39,17 @@ public final class ClientConfigRegistry
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
-            file.loadFromGroup(config);
-            file.save();
+            file.loadFromGroup(json);
+            ClientConfigRegistry.saveConfig();
         }
     };
+
+    public static void saveConfig()
+    {
+        file.save();
+    }
 
     /**
      * Do this before postInit()

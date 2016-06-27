@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,9 +45,9 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
-            group.loadFromGroup(config);
+            group.loadFromGroup(json);
         }
     }
 

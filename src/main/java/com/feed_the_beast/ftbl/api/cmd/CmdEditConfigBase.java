@@ -5,8 +5,10 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
@@ -84,15 +86,16 @@ public abstract class CmdEditConfigBase extends CommandLM
         if(args.length == 0 && sender instanceof EntityPlayerMP)
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            new MessageEditConfig(null, getConfigContainer(sender)).sendTo(ep);
+            ConfigContainer cc = getConfigContainer(sender);
+            ConfigRegistry.tempServerConfig.put(ep.getGameProfile().getId(), cc);
+            new MessageEditConfig(null, cc).sendTo(ep);
             return;
         }
 
         checkArgs(args, 1, "[ID] [value]");
 
         ConfigContainer cc = getConfigContainer(sender);
-        ConfigGroup group = (ConfigGroup) cc.createGroup().copy();
-        ConfigEntry entry = group.getEntryFromFullID(args[0]);
+        ConfigEntry entry = cc.createGroup().getEntryFromFullID(args[0]);
 
         if(entry == null)
         {
@@ -109,8 +112,9 @@ public abstract class CmdEditConfigBase extends CommandLM
             {
                 JsonElement value = LMJsonUtils.fromJson(json);
                 sender.addChatMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
-                entry.fromJson(value);
-                cc.saveConfig(sender, null, group);
+                JsonObject json1 = new JsonObject();
+                json1.add(args[0], value);
+                cc.saveConfig(sender, null, json1);
                 return;
             }
             catch(Exception ex)

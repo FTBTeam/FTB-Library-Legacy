@@ -263,53 +263,39 @@ public class ConfigGroup extends ConfigEntry
         }
     }
 
-    public int loadFromGroup(ConfigGroup l)
+    public int loadFromGroup(JsonObject json)
     {
-        if(l == null || l.entryMap.isEmpty())
+        if(json == null)
         {
             return 0;
         }
 
         int result = 0;
 
-        for(Map.Entry<String, ConfigEntry> entry : l.entryMap.entrySet())
+        for(Map.Entry<String, JsonElement> entry : json.entrySet())
         {
-            ConfigEntry e0 = entryMap.get(entry.getKey());
+            ConfigEntry e0 = getEntryFromFullID(entry.getKey());
 
             if(e0 != null)
             {
-                if(e0.getAsGroup() != null)
+                try
                 {
-                    ConfigGroup g1 = new ConfigGroup();
-                    g1.fromJson(entry.getValue().getSerializableElement());
-                    result += e0.getAsGroup().loadFromGroup(g1);
+                    e0.fromJson(entry.getValue());
+                    result++;
                 }
-                else
+                catch(Exception ex)
                 {
-                    try
-                    {
-                        e0.fromJson(entry.getValue().getSerializableElement());
-
-                        result++;
-                    }
-                    catch(Exception ex)
-                    {
-                        System.err.println(ex);
-                        System.err.println("Can't set value " + entry.getValue().getAsString() + " for '" + entry.getKey() + "' (type:" + e0.getConfigType() + ")");
-                    }
+                    System.err.println(ex);
+                    System.err.println("Can't set value " + entry.getValue().getAsString() + " for '" + entry.getKey() + "' (type:" + e0.getConfigType() + ")");
                 }
             }
         }
 
-        if(result > 0)
-        {
-            onLoadedFromGroup(l);
-        }
-
+        onLoadedFromGroup(json, result);
         return result;
     }
 
-    protected void onLoadedFromGroup(ConfigGroup l)
+    protected void onLoadedFromGroup(JsonObject json, int loaded)
     {
     }
 

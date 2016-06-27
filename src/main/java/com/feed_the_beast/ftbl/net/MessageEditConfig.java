@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
+import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -74,13 +75,14 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             FTBLib.dev_logger.info("RX Send: " + m.id + " :: " + m.groupData);
         }
 
+        final ConfigGroup group = new ConfigGroup();
+        group.readFromNBT(m.groupData, true);
+
         new GuiEditConfig(m.extraNBT, new ConfigContainer(m.id)
         {
             @Override
             public ConfigGroup createGroup()
             {
-                ConfigGroup group = new ConfigGroup();
-                group.readFromNBT(m.groupData, true);
                 return group;
             }
 
@@ -91,9 +93,9 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             }
 
             @Override
-            public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
+            public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
             {
-                new MessageEditConfigResponse(m.id, nbt, config).sendToServer();
+                new MessageEditConfigResponse(m.id, nbt, json).sendToServer();
             }
         }).openGui();
     }

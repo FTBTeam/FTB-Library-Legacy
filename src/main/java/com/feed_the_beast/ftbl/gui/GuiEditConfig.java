@@ -16,7 +16,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.json.LMJsonUtils;
@@ -114,7 +115,7 @@ public class GuiEditConfig extends GuiLM
                 if(entry instanceof IClickable)
                 {
                     ((IClickable) entry).onClicked(button);
-                    GuiEditConfig.this.onChanged();
+                    GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
                 }
                 else
                 {
@@ -125,7 +126,7 @@ public class GuiEditConfig extends GuiLM
                             GuiSelectColor.display(null, ((ConfigEntryColor) entry).value, (id, val) ->
                             {
                                 ((ConfigEntryColor) entry).value.set((LMColor) val);
-                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
                                 GuiEditConfig.this.openGui();
                             });
 
@@ -136,7 +137,7 @@ public class GuiEditConfig extends GuiLM
                             GuiSelectField.display(null, GuiSelectField.FieldType.INTEGER, entry.getAsInt(), (id, val) ->
                             {
                                 ((ConfigEntryInt) entry).set((Integer) val);
-                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
                                 GuiEditConfig.this.openGui();
                             });
 
@@ -147,7 +148,7 @@ public class GuiEditConfig extends GuiLM
                             GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, entry.getAsDouble(), (id, val) ->
                             {
                                 ((ConfigEntryDouble) entry).set((Double) val);
-                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
                                 GuiEditConfig.this.openGui();
                             });
 
@@ -158,7 +159,7 @@ public class GuiEditConfig extends GuiLM
                             GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getAsString(), (id, val) ->
                             {
                                 ((ConfigEntryString) entry).set(val.toString());
-                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
                                 GuiEditConfig.this.openGui();
                             });
 
@@ -171,7 +172,7 @@ public class GuiEditConfig extends GuiLM
                             GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getSerializableElement().toString(), (id, val) ->
                             {
                                 entry.fromJson(LMJsonUtils.fromJson(val.toString()));
-                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
                                 GuiEditConfig.this.openGui();
                             });
 
@@ -224,35 +225,34 @@ public class GuiEditConfig extends GuiLM
     }
 
     public final ConfigContainer configContainer;
-    public final ConfigGroup configGroup;
     public final NBTTagCompound extraNBT;
+    public final JsonObject modifiedConfig;
 
     public final String title;
     public final List<ButtonConfigEntry> configEntryButtons;
     public final PanelLM configPanel;
     public final ButtonLM buttonAccept, buttonCancel;
     public final SliderLM scroll;
-    private boolean changed = false;
     private int shouldClose = 0;
 
     public GuiEditConfig(NBTTagCompound nbt, ConfigContainer cc)
     {
         configContainer = cc;
         title = configContainer.getConfigTitle().getFormattedText();
-        configGroup = (ConfigGroup) configContainer.createGroup().copy();
         extraNBT = nbt;
+        modifiedConfig = new JsonObject();
 
         configEntryButtons = new ArrayList<>();
 
         List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
-        list.addAll(configGroup.getFullEntryMap().entrySet());
+        list.addAll(configContainer.createGroup().getFullEntryMap().entrySet());
         Collections.sort(list, COMPARATOR);
 
         for(Map.Entry<String, ConfigEntry> entry : list)
         {
             if(!entry.getValue().getFlag(Flags.HIDDEN))
             {
-                configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue()));
+                configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue().copy()));
             }
         }
 
@@ -346,9 +346,9 @@ public class GuiEditConfig extends GuiLM
     {
         if(shouldClose > 0)
         {
-            if(changed && shouldClose == 1)
+            if(!modifiedConfig.entrySet().isEmpty() && shouldClose == 1)
             {
-                configContainer.saveConfig(mc.thePlayer, extraNBT, configGroup);
+                configContainer.saveConfig(mc.thePlayer, extraNBT, modifiedConfig);
             }
         }
     }
@@ -360,9 +360,9 @@ public class GuiEditConfig extends GuiLM
         return false;
     }
 
-    public void onChanged()
+    public void onChanged(String id, JsonElement val)
     {
-        changed = true;
+        modifiedConfig.add(id, val);
     }
 
     @Override
@@ -387,13 +387,13 @@ public class GuiEditConfig extends GuiLM
         configPanel.renderWidget(this);
 
         FTBLibClient.setGLColor(0x99333333);
-        drawBlankRect(0, 0, (int) width, 20);
+        drawBlankRect(0, 0, width, 20);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        drawCenteredString(font, title, width / 2D, 6, 0xFFFFFFFF);
+        font.drawString(title, 6, 6, 0xFFFFFFFF);
 
         FTBLibClient.setGLColor(0x99333333);
         drawBlankRect(scroll.posX, scroll.posY, scroll.width, scroll.height);
-        int sy = (int) (scroll.posY + scroll.value * (scroll.height - scroll.sliderSize));
+        double sy = scroll.posY + scroll.value * (scroll.height - scroll.sliderSize);
         FTBLibClient.setGLColor(0x99666666);
         drawBlankRect(scroll.posX, sy, scroll.width, scroll.sliderSize);
 
