@@ -66,8 +66,8 @@ ftbl.lang.reload_client=FTBLib: Client reloaded in %s
 ftbl.lang.reload_client_config=Server Reloaded. You can
 
 ftbl.lang.raw=%s
-ftbl.lang.missing_args=Missing Arguments: %s more!
-ftbl.lang.missing_args_desc=Missing Arguments: %s!
+ftbl.lang.missing_args=Missing Arguments: %s!
+ftbl.lang.missing_args_num=Missing Arguments: %s more!
 ftbl.lang.feature_disabled=This feature is disabled!
 ftbl.lang.invalid_subcmd=Invalid subcommand: '%s'!
 

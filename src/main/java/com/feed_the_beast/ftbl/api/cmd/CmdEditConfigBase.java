@@ -110,7 +110,7 @@ public abstract class CmdEditConfigBase extends CommandLM
                 JsonElement value = LMJsonUtils.fromJson(json);
                 sender.addChatMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
                 entry.fromJson(value);
-                cc.saveConfig((EntityPlayerMP) sender, null, group);
+                cc.saveConfig(sender, null, group);
                 return;
             }
             catch(Exception ex)

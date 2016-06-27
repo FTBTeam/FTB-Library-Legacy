@@ -99,9 +99,6 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
     @Override
     public void onClientDataChanged()
     {
-        if(wrappedGui instanceof IClientActionGui)
-        {
-            ((IClientActionGui) wrappedGui).onClientDataChanged();
-        }
+        wrappedGui.onClientDataChanged();
     }
 }

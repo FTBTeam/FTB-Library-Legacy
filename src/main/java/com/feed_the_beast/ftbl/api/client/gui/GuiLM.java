@@ -27,7 +27,7 @@ import java.util.List;
  * Created by LatvianModder on 09.06.2016.
  */
 @SideOnly(Side.CLIENT)
-public abstract class GuiLM extends PanelLM
+public abstract class GuiLM extends PanelLM implements IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
 
@@ -250,5 +250,10 @@ public abstract class GuiLM extends PanelLM
         int scale = screen.getScaleFactor();
         int h1 = screen.getScaledHeight() * scale;
         GL11.glScissor((int) (x * scale), h1 - (int) (y * scale + h * scale), (int) (w * scale), (int) (h * scale));
+    }
+
+    @Override
+    public void onClientDataChanged()
+    {
     }
 }

@@ -83,9 +83,6 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
     @Override
     public void onClientDataChanged()
     {
-        if(wrappedGui instanceof IClientActionGui)
-        {
-            ((IClientActionGui) wrappedGui).onClientDataChanged();
-        }
+        wrappedGui.onClientDataChanged();
     }
 }

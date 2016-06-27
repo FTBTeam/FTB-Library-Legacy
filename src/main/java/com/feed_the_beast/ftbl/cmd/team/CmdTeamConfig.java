@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +48,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
         }
 
         @Override
-        public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
         {
             group.loadFromGroup(config);
 

@@ -31,11 +31,11 @@ public abstract class CommandLM extends CommandBase
         {
             if(desc == null || desc.isEmpty())
             {
-                throw FTBLibLang.missing_args.commandError(Integer.toString(i - (args == null ? 0 : args.length)));
+                throw FTBLibLang.missing_args_num.commandError(Integer.toString(i - (args == null ? 0 : args.length)));
             }
             else
             {
-                throw FTBLibLang.missing_args_desc.commandError(desc);
+                throw FTBLibLang.missing_args.commandError(desc);
             }
         }
     }

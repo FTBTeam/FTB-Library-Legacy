@@ -28,6 +28,21 @@ public class ConfigGroup extends ConfigEntry
         entryMap = createEntryMap();
     }
 
+    private static boolean isValidChar(char c)
+    {
+        switch(c)
+        {
+            case '_':
+                return true;
+            case ':':
+                return true;
+            default:
+            {
+                return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
+            }
+        }
+    }
+
     protected LinkedHashMap<String, ConfigEntry> createEntryMap()
     {
         return new LinkedHashMap<>();
@@ -67,11 +82,9 @@ public class ConfigGroup extends ConfigEntry
     {
         for(int i = 0; i < s.length(); i++)
         {
-            char c = s.charAt(i);
-
-            if(!(c == '-' || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')))
+            if(!isValidChar(s.charAt(i)))
             {
-                throw new IllegalArgumentException("ConfigID can only contain '.' and 'a'-'z'!");
+                throw new IllegalArgumentException("Invalid ID: " + s + " - it can only contain '_', ':', 'a'-'z' and '0'-'9'!");
             }
         }
 

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -38,7 +38,7 @@ public final class ClientConfigRegistry
         }
 
         @Override
-        public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
         {
             file.loadFromGroup(config);
             file.save();

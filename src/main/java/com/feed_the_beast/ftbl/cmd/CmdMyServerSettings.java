@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -45,7 +44,7 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         }
 
         @Override
-        public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
         {
             group.loadFromGroup(config);
         }

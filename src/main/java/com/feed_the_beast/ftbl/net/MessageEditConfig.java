@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -91,7 +91,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             }
 
             @Override
-            public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+            public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
             {
                 new MessageEditConfigResponse(m.id, nbt, config).sendToServer();
             }

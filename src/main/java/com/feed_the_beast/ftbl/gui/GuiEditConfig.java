@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
-import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
@@ -36,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
-public class GuiEditConfig extends GuiLM implements IClientActionGui
+public class GuiEditConfig extends GuiLM
 {
     public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareToIgnoreCase(o2.getKey());
 

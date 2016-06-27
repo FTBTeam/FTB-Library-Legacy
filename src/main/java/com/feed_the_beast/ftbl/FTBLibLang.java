@@ -19,7 +19,7 @@ public class FTBLibLang
 
     public static final LangKey raw = get("raw");
     public static final LangKey missing_args = get("missing_args");
-    public static final LangKey missing_args_desc = get("missing_args_desc");
+    public static final LangKey missing_args_num = get("missing_args_num");
     public static final LangKey feature_disabled = get("feature_disabled");
     public static final LangKey invalid_subcmd = get("invalid_subcmd");
     public static final LangKey client_config = new LangKey("client_config");

@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
 import com.latmod.lib.json.LMJsonUtils;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -37,10 +37,10 @@ public class ConfigRegistry
         }
 
         @Override
-        public void saveConfig(EntityPlayer player, NBTTagCompound nbt, ConfigGroup config)
+        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, ConfigGroup config)
         {
             mainGroup.loadFromGroup(config);
-            FTBLib.reload(player, ReloadType.SERVER_ONLY, false);
+            FTBLib.reload(sender, ReloadType.SERVER_ONLY, false);
         }
     };
 
