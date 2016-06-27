@@ -7,10 +7,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.notification.ClickActionType;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
-import com.feed_the_beast.ftbl.cmd.CmdHelpOverride;
-import com.feed_the_beast.ftbl.cmd.CmdListOverride;
-import com.feed_the_beast.ftbl.config.FTBLibConfig;
-import com.feed_the_beast.ftbl.config.FTBLibConfigCmd;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
@@ -71,7 +67,6 @@ public class FTBLibMod
         FTBLibNetHandler.init();
         ODItems.preInit();
 
-        FTBLibConfig.load();
         MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
         FTBLibCapabilities.enable();
         ClickActionType.init();
@@ -97,16 +92,6 @@ public class FTBLibMod
     public void onServerStarting(FMLServerStartingEvent e)
     {
         e.registerServerCommand(new CmdFTB(e.getServer().isDedicatedServer()));
-
-        if(FTBLibConfigCmd.override_list.getAsBoolean())
-        {
-            e.registerServerCommand(new CmdListOverride());
-        }
-
-        if(FTBLibConfigCmd.override_help.getAsBoolean())
-        {
-            e.registerServerCommand(new CmdHelpOverride());
-        }
     }
 
     @Mod.EventHandler
