@@ -59,6 +59,8 @@ public class InfoFriendsGUIPage extends InfoPage
             double ay = getAY();
             double ax = getAX();
 
+            GlStateManager.enableBlend();
+
             if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);

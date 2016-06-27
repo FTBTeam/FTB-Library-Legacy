@@ -371,6 +371,12 @@ public class ConfigGroup extends ConfigEntry
     {
         Map<String, ConfigEntry> m = new HashMap<>();
         getFullEntryMap0(m, null);
+
+        for(Map.Entry<String, ConfigEntry> entry : m.entrySet())
+        {
+            System.out.println(entry.getKey() + ": " + entry.getValue().getConfigType() + ": " + entry.getValue().getSerializableElement());
+        }
+
         return m;
     }
 
@@ -397,26 +403,5 @@ public class ConfigGroup extends ConfigEntry
                 }
             }
         }
-    }
-
-    @Override
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        ConfigGroup group = entry.getAsGroup();
-
-        if(group == null || group.entryMap.size() != entryMap.size() || !group.entryMap.keySet().equals(entryMap.keySet()))
-        {
-            return true;
-        }
-
-        for(String k : entryMap.keySet())
-        {
-            if(entryMap.get(k).hasDiff(group.entryMap.get(k)))
-            {
-                return true;
-            }
-        }
-
-        return true;
     }
 }

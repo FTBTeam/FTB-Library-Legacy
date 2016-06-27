@@ -116,10 +116,4 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     {
         return Arrays.asList("true", "false");
     }
-
-    @Override
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        return entry.getAsBoolean() != getAsBoolean();
-    }
 }

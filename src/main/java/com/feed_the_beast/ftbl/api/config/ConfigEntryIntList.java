@@ -143,26 +143,4 @@ public class ConfigEntryIntList extends ConfigEntry
             }
         }
     }
-
-    @Override
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        TIntList l = entry.getAsIntList();
-        value = getAsIntList();
-
-        if(l.size() != value.size())
-        {
-            return true;
-        }
-
-        for(int i = 0; i < value.size(); i++)
-        {
-            if(l.get(i) != value.get(i))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

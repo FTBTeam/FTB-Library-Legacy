@@ -204,9 +204,4 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     {
         return null;
     }
-
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        return !entry.getAsString().equals(getAsString());
-    }
 }

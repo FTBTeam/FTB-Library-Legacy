@@ -6,6 +6,8 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class PlayerAction extends ActionButton
 {
@@ -21,6 +23,7 @@ public abstract class PlayerAction extends ActionButton
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public boolean isVisibleFor(ForgePlayerSP player)
     {
         return !player.equalsPlayer(ForgeWorldSP.inst.clientPlayer);

@@ -28,6 +28,7 @@ public class FTBLibActions
     public static final ActionButton FRIENDS_GUI = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), 995, TextureCoords.getSquareIcon(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             new GuiInfo(null, new InfoFriendsGUI()).openGui();
@@ -40,6 +41,7 @@ public class FTBLibActions
         }
 
         @Override
+        @SideOnly(Side.CLIENT)
         public void postRender(Minecraft mc, double ax, double ay)
         {
             if(!ClientNotifications.Perm.map.isEmpty())
@@ -58,6 +60,7 @@ public class FTBLibActions
     public static final ActionButton CLIENT_SETTINGS = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), 990, GuiIcons.settings, null)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).openGui();
@@ -67,6 +70,7 @@ public class FTBLibActions
     public static final ActionButton MY_SERVER_SETTINGS = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.settings_red, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/ftb my_settings", false);
@@ -76,6 +80,7 @@ public class FTBLibActions
     public static final ActionButton HEAL = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), 200, GuiIcons.heart, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/ftb heal", false);
@@ -85,6 +90,7 @@ public class FTBLibActions
     public static final ActionButton TOGGLE_GAMEMODE = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), 195, GuiIcons.toggle_gamemode, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             int i = player.getPlayer().capabilities.isCreativeMode ? 0 : 1;
@@ -95,6 +101,7 @@ public class FTBLibActions
     public static final ActionButton TOGGLE_RAIN = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), 190, GuiIcons.toggle_rain, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/toggledownfall", false);
@@ -104,6 +111,7 @@ public class FTBLibActions
     public static final ActionButton SET_DAY = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), 185, GuiIcons.toggle_day, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/time set 6000", false);
@@ -113,6 +121,7 @@ public class FTBLibActions
     public static final ActionButton SET_NIGHT = new SidebarButton(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), 180, GuiIcons.toggle_night, true)
     {
         @Override
+        @SideOnly(Side.CLIENT)
         public void onClicked(ForgePlayerSP player)
         {
             FTBLibClient.execClientCommand("/time set 18000", false);

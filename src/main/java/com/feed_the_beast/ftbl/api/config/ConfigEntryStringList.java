@@ -184,26 +184,4 @@ public class ConfigEntryStringList extends ConfigEntry
             }
         }
     }
-
-    @Override
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        List<String> l = entry.getAsStringList();
-        value = getAsStringList();
-
-        if(l.size() != value.size())
-        {
-            return true;
-        }
-
-        for(int i = 0; i < value.size(); i++)
-        {
-            if(!l.get(i).equals(value.get(i)))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

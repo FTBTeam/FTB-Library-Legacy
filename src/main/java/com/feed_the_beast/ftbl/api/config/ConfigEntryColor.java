@@ -87,10 +87,4 @@ public class ConfigEntryColor extends ConfigEntry
             defValue.setRGBA(tag.getInteger("D"));
         }
     }
-
-    @Override
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        return entry.getAsBoolean() != getAsBoolean();
-    }
 }

@@ -23,6 +23,6 @@ public abstract class SidebarButton extends ActionButton
     @Override
     public boolean isVisibleFor(ForgePlayerSP player)
     {
-        return player.equalsPlayer(ForgeWorldSP.inst.clientPlayer);
+        return ForgeWorldSP.inst == null || ForgeWorldSP.inst.clientPlayer == null || player.equalsPlayer(ForgeWorldSP.inst.clientPlayer);
     }
 }

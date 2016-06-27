@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 public class ActionButtonRegistry
 {
     public static final ConfigGroup configGroup = new ConfigGroup();
-    private static final Map<ResourceLocation, ActionButton> map = new HashMap<>();
+    private static final Map<ResourceLocation, ActionButton> map = new LinkedHashMap<>();
 
     public static ActionButton add(final ActionButton a)
     {

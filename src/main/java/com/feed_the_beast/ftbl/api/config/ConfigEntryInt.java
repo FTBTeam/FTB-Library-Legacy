@@ -168,10 +168,4 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
             setBounds(tag.hasKey("MN") ? tag.getInteger("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getInteger("MX") : Double.POSITIVE_INFINITY);
         }
     }
-
-    @Override
-    public boolean hasDiff(ConfigEntry entry)
-    {
-        return entry.getAsInt() != getAsInt();
-    }
 }
