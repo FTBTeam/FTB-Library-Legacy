@@ -187,11 +187,15 @@ public class FTBLibClient
         return bb;
     }
 
-    public static void execClientCommand(@Nonnull String s)
+    public static void execClientCommand(@Nonnull String s, boolean printChat)
     {
         Minecraft mc = mc();
 
-        mc.ingameGUI.getChatGUI().addToSentMessages(s);
+        if(printChat)
+        {
+            mc.ingameGUI.getChatGUI().addToSentMessages(s);
+        }
+
         if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0)
         {
             mc.thePlayer.sendChatMessage(s);

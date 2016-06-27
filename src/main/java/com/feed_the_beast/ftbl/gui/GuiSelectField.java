@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
-import com.latmod.lib.ObjectCallback;
+import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.math.Converter;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,12 +46,12 @@ public class GuiSelectField extends GuiLM
     public final Object ID;
     public final FieldType type;
     public final String def;
-    public final ObjectCallback.Handler callback;
+    public final ObjectCallbackHandler callback;
 
     public final ButtonSimpleLM buttonCancel, buttonAccept;
     public final TextBoxLM textBox;
 
-    public GuiSelectField(Object id, FieldType typ, String d, ObjectCallback.Handler c)
+    public GuiSelectField(Object id, FieldType typ, String d, ObjectCallbackHandler c)
     {
         ID = id;
         type = typ;
@@ -69,7 +69,7 @@ public class GuiSelectField extends GuiLM
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 FTBLibClient.playClickSound();
-                callback.onCallback(new ObjectCallback(ID, false, true, def));
+                callback.onCallback(ID, def);
             }
         };
 
@@ -86,13 +86,13 @@ public class GuiSelectField extends GuiLM
                     switch(type)
                     {
                         case STRING:
-                            callback.onCallback(new ObjectCallback(ID, true, true, textBox.getText()));
+                            callback.onCallback(ID, textBox.getText());
                             break;
                         case INTEGER:
-                            callback.onCallback(new ObjectCallback(ID, true, true, Integer.parseInt(textBox.getText())));
+                            callback.onCallback(ID, Integer.parseInt(textBox.getText()));
                             break;
                         case DOUBLE:
-                            callback.onCallback(new ObjectCallback(ID, true, true, Double.parseDouble(textBox.getText())));
+                            callback.onCallback(ID, Double.parseDouble(textBox.getText()));
                             break;
                     }
                 }
@@ -122,7 +122,7 @@ public class GuiSelectField extends GuiLM
         textBox.textColor = 0xFFEEEEEE;
     }
 
-    public static void display(Object id, FieldType type, Object d, ObjectCallback.Handler c)
+    public static void display(Object id, FieldType type, Object d, ObjectCallbackHandler c)
     {
         new GuiSelectField(id, type, String.valueOf(d), c).openGui();
     }

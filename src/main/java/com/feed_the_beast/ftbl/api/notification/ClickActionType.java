@@ -43,7 +43,7 @@ public abstract class ClickActionType extends FinalIDObject
         @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
-            FTBLibClient.execClientCommand("/" + data.getAsString());
+            FTBLibClient.execClientCommand("/" + data.getAsString(), false);
         }
     });
 

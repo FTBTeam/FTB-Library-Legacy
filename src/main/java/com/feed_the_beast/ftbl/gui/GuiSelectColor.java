@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.util.EnumDyeColorHelper;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import com.latmod.lib.LMColor;
-import com.latmod.lib.ObjectCallback;
+import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -112,24 +112,22 @@ public class GuiSelectColor extends GuiLM
         }
     }
 
-    public final ObjectCallback.Handler callback;
+    public final ObjectCallbackHandler callback;
     public final LMColor.HSB initCol;
     public final Object colorID;
-    public final boolean isInstant;
     public final LMColor currentColor;
     public final ButtonLM colorInit, colorCurrent;
     public final SliderLM sliderRed, sliderGreen, sliderBlue;
     public final SliderLM sliderHue, sliderSaturation, sliderBrightness;
     public final ColorSelector colorSelector;
 
-    public GuiSelectColor(ObjectCallback.Handler cb, LMColor col, Object id, boolean instant)
+    public GuiSelectColor(ObjectCallbackHandler cb, LMColor col, Object id)
     {
         callback = cb;
         initCol = new LMColor.HSB();
         initCol.set(col);
         currentColor = new LMColor.RGB();
         colorID = id;
-        isInstant = instant;
 
         width = 143;
         height = 93;
@@ -246,9 +244,9 @@ public class GuiSelectColor extends GuiLM
         setColor(initCol);
     }
 
-    public static void display(Object id, boolean instant, LMColor col, ObjectCallback.Handler cb)
+    public static void display(Object id, LMColor col, ObjectCallbackHandler cb)
     {
-        new GuiSelectColor(cb, col, id, instant).openGui();
+        new GuiSelectColor(cb, col, id).openGui();
     }
 
     @Override
@@ -286,11 +284,6 @@ public class GuiSelectColor extends GuiLM
 
         colorSelector.cursorPosX = (Math.cos(sliderHue.value * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.value + 0.5D;
         colorSelector.cursorPosY = (Math.sin(sliderHue.value * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.value + 0.5D;
-
-        if(isInstant)
-        {
-            callback.onCallback(new ObjectCallback(colorID, true, false, currentColor));
-        }
     }
 
     @Override
@@ -385,6 +378,6 @@ public class GuiSelectColor extends GuiLM
     public void closeGui(boolean set)
     {
         FTBLibClient.playClickSound();
-        callback.onCallback(new ObjectCallback(colorID, set, true, set ? currentColor : initCol));
+        callback.onCallback(colorID, set ? currentColor : initCol);
     }
 }

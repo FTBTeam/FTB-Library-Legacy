@@ -67,7 +67,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.execClientCommand("/ftblib my_settings");
+            FTBLibClient.execClientCommand("/ftb my_settings", false);
         }
     });
 
@@ -76,7 +76,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.execClientCommand("/ftb heal");
+            FTBLibClient.execClientCommand("/ftb heal", false);
         }
     });
 
@@ -86,7 +86,7 @@ public class FTBLibActions
         public void onClicked(ForgePlayerSP player)
         {
             int i = player.getPlayer().capabilities.isCreativeMode ? 0 : 1;
-            FTBLibClient.execClientCommand("/gamemode " + i);
+            FTBLibClient.execClientCommand("/gamemode " + i, false);
         }
     });
 
@@ -95,7 +95,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.execClientCommand("/toggledownfall");
+            FTBLibClient.execClientCommand("/toggledownfall", false);
         }
     });
 
@@ -104,7 +104,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.execClientCommand("/time set 6000");
+            FTBLibClient.execClientCommand("/time set 6000", false);
         }
     });
 
@@ -113,7 +113,7 @@ public class FTBLibActions
         @Override
         public void onClicked(ForgePlayerSP player)
         {
-            FTBLibClient.execClientCommand("/time set 18000");
+            FTBLibClient.execClientCommand("/time set 18000", false);
         }
     });
 

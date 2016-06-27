@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -375,6 +376,38 @@ public class ConfigGroup extends ConfigEntry
                 else
                 {
                     keys.add(prevID + '.' + id);
+                }
+            }
+        }
+    }
+
+    public Map<String, ConfigEntry> getFullEntryMap()
+    {
+        Map<String, ConfigEntry> m = new HashMap<>();
+        getFullEntryMap0(m, null);
+        return m;
+    }
+
+    private void getFullEntryMap0(Map<String, ConfigEntry> map, String prevID)
+    {
+        for(Map.Entry<String, ConfigEntry> e : entryMap.entrySet())
+        {
+            String id = e.getKey();
+            ConfigGroup vg = e.getValue().getAsGroup();
+
+            if(vg != null)
+            {
+                vg.getFullEntryMap0(map, prevID == null ? id : (prevID + '.' + id));
+            }
+            else
+            {
+                if(prevID == null)
+                {
+                    map.put(id, e.getValue());
+                }
+                else
+                {
+                    map.put(prevID + '.' + id, e.getValue());
                 }
             }
         }

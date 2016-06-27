@@ -37,23 +37,23 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM
 {
-    public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareToIgnoreCase(o2.getKey());
+    public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareTo(o2.getKey());
 
     public class ButtonConfigEntry extends ButtonLM
     {
+        public final String ID;
         public final ConfigEntry entry;
-        public final List<ButtonConfigEntry> subButtons;
-        public boolean expanded = false;
 
         public ButtonConfigEntry(String id, ConfigEntry e)
         {
-            super(0, configPanel.height, screen.getScaledWidth() - 16, 16);
+            super(0, 0, 0, 16);
+            ID = id;
             entry = e;
-            title = e.getDisplayName() == null ? id : e.getDisplayName().getFormattedText();
-            subButtons = new ArrayList<>();
+            title = e.getDisplayName() == null ? ID : e.getDisplayName().getFormattedText();
         }
 
-        public boolean isVisible()
+        @Override
+        public boolean shouldRender(GuiLM gui)
         {
             double ay = getAY();
             return ay > -height && ay < screen.getScaledHeight();
@@ -62,16 +62,10 @@ public class GuiEditConfig extends GuiLM
         @Override
         public void renderWidget(GuiLM gui)
         {
-            if(!isVisible())
-            {
-                return;
-            }
-
             boolean mouseOver = mouseY >= 20 && gui.isMouseOver(this);
 
             double ax = getAX();
             double ay = getAY();
-            boolean isGroup = entry.getAsGroup() != null;
 
             if(mouseOver)
             {
@@ -80,184 +74,150 @@ public class GuiEditConfig extends GuiLM
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            font.drawString(isGroup ? (((expanded ? "[-] " : "[+] ") + title)) : title, (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : (isGroup ? 0xFFCCCCCC : 0xFF999999));
+            font.drawString(title, (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
 
-            if(!isGroup)
+            String s = entry.getAsString();
+
+            int slen = font.getStringWidth(s);
+
+            if(slen > 150)
             {
-                String s = entry.getAsString();
-
-                int slen = font.getStringWidth(s);
-
-                if(slen > 150)
-                {
-                    s = font.trimStringToWidth(s, 150) + "...";
-                    slen = 152;
-                }
-
-                int textCol = 0xFF000000 | entry.getColor();
-                if(mouseOver)
-                {
-                    textCol = LMColorUtils.addBrightness(textCol, 60);
-                }
-
-                if(mouseOver && mouseX > ax + width - slen - 9)
-                {
-                    GlStateManager.color(1F, 1F, 1F, 0.13F);
-                    drawBlankRect(ax + width - slen - 8, ay, slen + 8, height);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
-                }
-
-                font.drawString(s, screen.getScaledWidth() - (slen + 20), (int) (ay + 4D), textCol);
+                s = font.trimStringToWidth(s, 150) + "...";
+                slen = 152;
             }
+
+            int textCol = 0xFF000000 | entry.getColor();
+            if(mouseOver)
+            {
+                textCol = LMColorUtils.addBrightness(textCol, 60);
+            }
+
+            if(mouseOver && mouseX > ax + width - slen - 9)
+            {
+                GlStateManager.color(1F, 1F, 1F, 0.13F);
+                drawBlankRect(ax + width - slen - 8, ay, slen + 8, height);
+                GlStateManager.color(1F, 1F, 1F, 1F);
+            }
+
+            font.drawString(s, screen.getScaledWidth() - (slen + 20), (int) (ay + 4D), textCol);
         }
 
         @Override
         public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
-            if(mouseY < 20)
+            if(mouseY >= 20 && !entry.getFlag(Flags.CANT_EDIT))
             {
-                return;
-            }
+                FTBLibClient.playClickSound();
 
-            FTBLibClient.playClickSound();
+                ConfigEntryType type = entry.getConfigType();
 
-            if(entry.getFlag(Flags.CANT_EDIT))
-            {
-                return;
-            }
-
-            ConfigEntryType type = entry.getConfigType();
-
-            if(entry instanceof IClickable)
-            {
-                ((IClickable) entry).onClicked(button);
-                GuiEditConfig.this.onChanged();
-            }
-            else if(entry.getAsGroup() != null)
-            {
-                expanded = !expanded;
-                GuiEditConfig.this.refreshWidgets();
-            }
-            else if(type == ConfigEntryType.COLOR)
-            {
-                GuiSelectColor.display(0, false, ((ConfigEntryColor) entry).value, c ->
+                if(entry instanceof IClickable)
                 {
-                    if(c.set)
-                    {
-                        ((ConfigEntryColor) entry).value.set((LMColor) c.object);
-                        GuiEditConfig.this.onChanged();
-                    }
-
-                    if(c.close)
-                    {
-                        GuiEditConfig.this.openGui();
-                    }
-                });
-            }
-            else if(type == ConfigEntryType.INT)
-            {
-                GuiSelectField.display(null, GuiSelectField.FieldType.INTEGER, entry.getAsInt(), c ->
+                    ((IClickable) entry).onClicked(button);
+                    GuiEditConfig.this.onChanged();
+                }
+                else
                 {
-                    if(c.set)
+                    switch(type)
                     {
-                        ((ConfigEntryInt) entry).set((Integer) c.object);
-                        GuiEditConfig.this.onChanged();
-                    }
+                        case COLOR:
+                        {
+                            GuiSelectColor.display(null, ((ConfigEntryColor) entry).value, (id, val) ->
+                            {
+                                ((ConfigEntryColor) entry).value.set((LMColor) val);
+                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.openGui();
+                            });
 
-                    if(c.close)
-                    {
-                        GuiEditConfig.this.openGui();
-                    }
-                });
-            }
-            else if(type == ConfigEntryType.DOUBLE)
-            {
-                GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, entry.getAsDouble(), c ->
-                {
-                    if(c.set)
-                    {
-                        ((ConfigEntryDouble) entry).set((Double) c.object);
-                        GuiEditConfig.this.onChanged();
-                    }
+                            break;
+                        }
+                        case INT:
+                        {
+                            GuiSelectField.display(null, GuiSelectField.FieldType.INTEGER, entry.getAsInt(), (id, val) ->
+                            {
+                                ((ConfigEntryInt) entry).set((Integer) val);
+                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.openGui();
+                            });
 
-                    if(c.close)
-                    {
-                        GuiEditConfig.this.openGui();
-                    }
-                });
-            }
-            else if(type == ConfigEntryType.STRING)
-            {
-                GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getAsString(), c ->
-                {
-                    if(c.set)
-                    {
-                        ((ConfigEntryString) entry).set(c.object.toString());
-                        GuiEditConfig.this.onChanged();
-                    }
+                            break;
+                        }
+                        case DOUBLE:
+                        {
+                            GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, entry.getAsDouble(), (id, val) ->
+                            {
+                                ((ConfigEntryDouble) entry).set((Double) val);
+                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.openGui();
+                            });
 
-                    if(c.close)
-                    {
-                        GuiEditConfig.this.openGui();
-                    }
-                });
-            }
-            else if(type == ConfigEntryType.CUSTOM || type == ConfigEntryType.INT_ARRAY || type == ConfigEntryType.STRING_ARRAY)
-            {
-                GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getSerializableElement().toString(), c ->
-                {
-                    if(c.set)
-                    {
-                        entry.fromJson(LMJsonUtils.fromJson(c.object.toString()));
-                        GuiEditConfig.this.onChanged();
-                    }
+                            break;
+                        }
+                        case STRING:
+                        {
+                            GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getAsString(), (id, val) ->
+                            {
+                                ((ConfigEntryString) entry).set(val.toString());
+                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.openGui();
+                            });
 
-                    if(c.close)
-                    {
-                        GuiEditConfig.this.openGui();
+                            break;
+                        }
+                        case CUSTOM:
+                        case INT_ARRAY:
+                        case STRING_ARRAY:
+                        {
+                            GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getSerializableElement().toString(), (id, val) ->
+                            {
+                                entry.fromJson(LMJsonUtils.fromJson(val.toString()));
+                                GuiEditConfig.this.onChanged();
+                                GuiEditConfig.this.openGui();
+                            });
+
+                            break;
+                        }
                     }
-                });
+                }
             }
         }
 
         @Override
         public void addMouseOverText(GuiLM gui, List<String> l)
         {
-            if(mouseY <= 18)
+            if(mouseY > 18)
             {
-                return;
-            }
-
-            if(mouseX < getAX() + font.getStringWidth(title) + 10)
-            {
-                String[] info = entry.getInfo();
-
-                if(info != null && info.length > 0)
+                if(mouseX < getAX() + font.getStringWidth(title) + 10)
                 {
-                    for(String s : info)
+                    String[] info = entry.getInfo();
+
+                    if(info != null && info.length > 0)
                     {
-                        l.addAll(font.listFormattedStringToWidth(s, 230));
+                        for(String s : info)
+                        {
+                            l.addAll(font.listFormattedStringToWidth(s, 230));
+                        }
                     }
                 }
-            }
 
-            if(entry.getAsGroup() == null && mouseX > screen.getScaledWidth() - (Math.min(150, font.getStringWidth(entry.getAsString())) + 25))
-            {
-                String def = entry.getDefValueString();
-                String min = entry.getMinValueString();
-                String max = entry.getMaxValueString();
+                if(entry.getAsGroup() == null && mouseX > screen.getScaledWidth() - (Math.min(150, font.getStringWidth(entry.getAsString())) + 25))
+                {
+                    String def = entry.getDefValueString();
+                    String min = entry.getMinValueString();
+                    String max = entry.getMaxValueString();
 
-                if(def != null)
-                {
-                    l.add(TextFormatting.AQUA + "Def: " + def);
-                }
-                if(min != null)
-                {
-                    l.add(TextFormatting.AQUA + "Min: " + min);
-                }
-                if(max != null)
-                {
-                    l.add(TextFormatting.AQUA + "Max: " + max);
+                    if(def != null)
+                    {
+                        l.add(TextFormatting.AQUA + "Def: " + def);
+                    }
+                    if(min != null)
+                    {
+                        l.add(TextFormatting.AQUA + "Min: " + min);
+                    }
+                    if(max != null)
+                    {
+                        l.add(TextFormatting.AQUA + "Max: " + max);
+                    }
                 }
             }
         }
@@ -270,7 +230,7 @@ public class GuiEditConfig extends GuiLM
     public final String title;
     public final List<ButtonConfigEntry> configEntryButtons;
     public final PanelLM configPanel;
-    public final ButtonLM buttonAccept, buttonCancel, buttonExpandAll, buttonCollapseAll;
+    public final ButtonLM buttonAccept, buttonCancel;
     public final SliderLM scroll;
     private boolean changed = false;
     private int shouldClose = 0;
@@ -284,6 +244,18 @@ public class GuiEditConfig extends GuiLM
 
         configEntryButtons = new ArrayList<>();
 
+        List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
+        list.addAll(configGroup.getFullEntryMap().entrySet());
+        Collections.sort(list, COMPARATOR);
+
+        for(Map.Entry<String, ConfigEntry> entry : list)
+        {
+            if(!entry.getValue().getFlag(Flags.HIDDEN))
+            {
+                configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue()));
+            }
+        }
+
         configPanel = new PanelLM(0, 0, 0, 20)
         {
             @Override
@@ -292,21 +264,9 @@ public class GuiEditConfig extends GuiLM
                 height = 0;
                 for(ButtonConfigEntry b : configEntryButtons)
                 {
-                    addCE(b);
-                }
-            }
-
-            private void addCE(ButtonConfigEntry e)
-            {
-                add(e);
-                e.posY = height;
-                height += e.height;
-                if(e.expanded)
-                {
-                    for(ButtonConfigEntry b : e.subButtons)
-                    {
-                        addCE(b);
-                    }
+                    b.posY = height;
+                    add(b);
+                    height += b.height;
                 }
             }
         };
@@ -337,65 +297,6 @@ public class GuiEditConfig extends GuiLM
 
         buttonCancel.title = GuiLang.button_cancel.translate();
 
-        buttonExpandAll = new ButtonLM(2, 2, 16, 16)
-        {
-            @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
-            {
-                FTBLibClient.playClickSound();
-
-                for(ButtonConfigEntry e : configEntryButtons)
-                {
-                    expandAll(e);
-                }
-
-                GuiEditConfig.this.refreshWidgets();
-            }
-
-            private void expandAll(ButtonConfigEntry e)
-            {
-                if(e.entry.getAsGroup() != null)
-                {
-                    e.expanded = true;
-                    for(ButtonConfigEntry e1 : e.subButtons)
-                    {
-                        expandAll(e1);
-                    }
-                }
-            }
-        };
-
-        buttonExpandAll.title = "Expand All";
-
-        buttonCollapseAll = new ButtonLM(20, 2, 16, 16)
-        {
-            @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
-            {
-                FTBLibClient.playClickSound();
-                for(ButtonConfigEntry e : configEntryButtons)
-                {
-                    collapseAll(e);
-                }
-
-                GuiEditConfig.this.refreshWidgets();
-            }
-
-            private void collapseAll(ButtonConfigEntry e)
-            {
-                if(e.entry.getAsGroup() != null)
-                {
-                    e.expanded = false;
-                    for(ButtonConfigEntry e1 : e.subButtons)
-                    {
-                        collapseAll(e1);
-                    }
-                }
-            }
-        };
-
-        buttonCollapseAll.title = "Collapse All";
-
         scroll = new SliderLM(-16, 20, 16, 0, 10)
         {
             @Override
@@ -420,51 +321,9 @@ public class GuiEditConfig extends GuiLM
         configPanel.posY = 20;
         scroll.value = 0F;
 
-        if(configEntryButtons.isEmpty())
+        for(ButtonConfigEntry b : configEntryButtons)
         {
-            configEntryButtons.clear();
-
-            List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
-            list.addAll(configGroup.entryMap.entrySet());
-            Collections.sort(list, COMPARATOR);
-
-            for(Map.Entry<String, ConfigEntry> entry : list)
-            {
-                addCE(null, entry.getKey(), entry.getValue(), 0);
-            }
-        }
-    }
-
-    private void addCE(ButtonConfigEntry parent, String id, ConfigEntry e, int level)
-    {
-        if(!e.getFlag(Flags.HIDDEN))
-        {
-            ButtonConfigEntry b = new ButtonConfigEntry(id, e);
-            b.posX += level * 12;
-            b.width -= level * 12;
-            if(parent == null)
-            {
-                b.expanded = true;
-                configEntryButtons.add(b);
-            }
-            else
-            {
-                parent.subButtons.add(b);
-            }
-
-            ConfigGroup g = e.getAsGroup();
-
-            if(g != null)
-            {
-                List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
-                list.addAll(g.entryMap.entrySet());
-                Collections.sort(list, COMPARATOR);
-
-                for(Map.Entry<String, ConfigEntry> entry : list)
-                {
-                    addCE(b, entry.getKey(), entry.getValue(), level + 1);
-                }
-            }
+            b.width = width - 16;
         }
     }
 
@@ -478,8 +337,6 @@ public class GuiEditConfig extends GuiLM
 
         add(buttonAccept);
         add(buttonCancel);
-        add(buttonExpandAll);
-        add(buttonCollapseAll);
         add(configPanel);
         add(scroll);
     }
@@ -546,8 +403,6 @@ public class GuiEditConfig extends GuiLM
 
         buttonAccept.render(GuiIcons.accept);
         buttonCancel.render(GuiIcons.cancel);
-        buttonExpandAll.render(GuiIcons.add);
-        buttonCollapseAll.render(GuiIcons.remove);
     }
 
     @Override
