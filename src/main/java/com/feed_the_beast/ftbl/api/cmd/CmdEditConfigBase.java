@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
@@ -22,6 +21,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 07.06.2016.
@@ -46,18 +46,18 @@ public abstract class CmdEditConfigBase extends CommandLM
     {
         try
         {
-            ConfigGroup group = getConfigContainer(sender).createGroup();
+            Map<String, ConfigEntry> map = getConfigContainer(sender).createGroup().getFullEntryMap();
 
             if(args.length == 1)
             {
                 List<String> keys = new ArrayList<>();
-                keys.addAll(group.getAllKeys());
+                keys.addAll(map.keySet());
                 Collections.sort(keys, null);
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)
             {
-                ConfigEntry entry = group.getEntryFromFullID(args[0]);
+                ConfigEntry entry = map.get(args[0]);
 
                 if(entry != null)
                 {

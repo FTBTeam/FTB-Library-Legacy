@@ -13,9 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -333,38 +331,6 @@ public class ConfigGroup extends ConfigEntry
     public ConfigGroup getAsGroup()
     {
         return this;
-    }
-
-    public Collection<String> getAllKeys()
-    {
-        Collection<String> c = new HashSet<>();
-        getAllKeys0(c, null);
-        return c;
-    }
-
-    private void getAllKeys0(Collection<String> keys, String prevID)
-    {
-        for(Map.Entry<String, ConfigEntry> e : entryMap.entrySet())
-        {
-            String id = e.getKey();
-            ConfigGroup vg = e.getValue().getAsGroup();
-
-            if(vg != null)
-            {
-                vg.getAllKeys0(keys, prevID == null ? id : (prevID + '.' + id));
-            }
-            else
-            {
-                if(prevID == null)
-                {
-                    keys.add(id);
-                }
-                else
-                {
-                    keys.add(prevID + '.' + id);
-                }
-            }
-        }
     }
 
     public Map<String, ConfigEntry> getFullEntryMap()
