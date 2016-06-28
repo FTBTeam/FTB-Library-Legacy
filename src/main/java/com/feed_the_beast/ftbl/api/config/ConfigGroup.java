@@ -261,30 +261,52 @@ public class ConfigGroup extends ConfigEntry
         }
     }
 
-    public int loadFromGroup(JsonObject json)
+    private Map<String, JsonElement> getFullMapFromObject(Map<String, JsonElement> map, JsonObject obj, String parent)
     {
-        if(json == null)
+        for(Map.Entry<String, JsonElement> entry : obj.entrySet())
         {
-            return 0;
+            JsonElement e = entry.getValue();
+
+            if(e != null && e.isJsonObject())
+            {
+                getFullMapFromObject(map, e.getAsJsonObject(), entry.getKey());
+            }
+            else
+            {
+                map.put((parent == null) ? entry.getKey() : (parent + '.' + entry.getKey()), e);
+            }
         }
 
+        return map;
+    }
+
+    public int loadFromGroup(JsonObject json)
+    {
         int result = 0;
 
-        for(Map.Entry<String, JsonElement> entry : json.entrySet())
+        if(json != null)
         {
-            ConfigEntry e0 = getEntryFromFullID(entry.getKey());
+            Map<String, JsonElement> map1 = getFullMapFromObject(new HashMap<>(), json, null);
 
-            if(e0 != null)
+            if(!map1.isEmpty())
             {
-                try
+                for(Map.Entry<String, JsonElement> entry : map1.entrySet())
                 {
-                    e0.fromJson(entry.getValue());
-                    result++;
-                }
-                catch(Exception ex)
-                {
-                    System.err.println(ex);
-                    System.err.println("Can't set value " + entry.getValue().getAsString() + " for '" + entry.getKey() + "' (type:" + e0.getConfigType() + ")");
+                    ConfigEntry e0 = getEntryFromFullID(entry.getKey());
+
+                    if(e0 != null)
+                    {
+                        try
+                        {
+                            e0.fromJson(entry.getValue());
+                            result++;
+                        }
+                        catch(Exception ex)
+                        {
+                            System.err.println(ex);
+                            System.err.println("Can't set value " + entry.getValue().getAsString() + " for '" + entry.getKey() + "' (type:" + e0.getConfigType() + ")");
+                        }
+                    }
                 }
             }
         }
@@ -335,18 +357,10 @@ public class ConfigGroup extends ConfigEntry
 
     public Map<String, ConfigEntry> getFullEntryMap()
     {
-        Map<String, ConfigEntry> m = new HashMap<>();
-        getFullEntryMap0(m, null);
-
-        for(Map.Entry<String, ConfigEntry> entry : m.entrySet())
-        {
-            System.out.println(entry.getKey() + ": " + entry.getValue().getConfigType() + ": " + entry.getValue().getSerializableElement());
-        }
-
-        return m;
+        return getFullEntryMap0(new HashMap<>(), null);
     }
 
-    private void getFullEntryMap0(Map<String, ConfigEntry> map, String prevID)
+    private Map<String, ConfigEntry> getFullEntryMap0(Map<String, ConfigEntry> map, String prevID)
     {
         for(Map.Entry<String, ConfigEntry> e : entryMap.entrySet())
         {
@@ -369,5 +383,7 @@ public class ConfigGroup extends ConfigEntry
                 }
             }
         }
+
+        return map;
     }
 }
