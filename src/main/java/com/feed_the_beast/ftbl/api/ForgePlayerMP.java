@@ -142,7 +142,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             lastPos = new EntityDimPos(ep).toBlockDimPos();
         }
 
-        return lastPos;
+        return lastPos == null ? null : lastPos.copy();
     }
 
     // Reading / Writing //

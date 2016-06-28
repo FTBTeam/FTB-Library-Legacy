@@ -29,6 +29,12 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
     }
 
     @Override
+    public boolean doesGuiPauseGame()
+    {
+        return wrappedGui.doesGuiPauseGame();
+    }
+
+    @Override
     protected final void mouseClicked(int mx, int my, int b) throws IOException
     {
         wrappedGui.mousePressed(wrappedGui, MouseButton.get(b));

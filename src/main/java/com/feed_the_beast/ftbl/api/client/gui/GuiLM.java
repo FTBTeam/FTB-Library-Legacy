@@ -136,6 +136,11 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
     {
     }
 
+    public boolean doesGuiPauseGame()
+    {
+        return false;
+    }
+
     protected FontRenderer createFont(Minecraft mc)
     {
         return mc.fontRendererObj;

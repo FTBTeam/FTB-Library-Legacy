@@ -41,6 +41,7 @@ public class ConfigRegistry
         public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
             mainGroup.loadFromGroup(json);
+            map.values().forEach(ConfigFile::save);
             FTBLib.reload(sender, ReloadType.SERVER_ONLY, false);
         }
     };
@@ -56,10 +57,7 @@ public class ConfigRegistry
 
     public static void reload()
     {
-        for(ConfigFile f : map.values())
-        {
-            f.load();
-        }
+        map.values().forEach(ConfigFile::load);
 
         FTBLib.dev_logger.info("Loading override configs");
         JsonElement overridesE = LMJsonUtils.fromJson(new File(FTBLib.folderModpack, "overrides.json"));
