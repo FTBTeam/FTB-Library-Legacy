@@ -78,8 +78,6 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }
 
-    public abstract boolean isOnline();
-
     public abstract EntityPlayer getPlayer();
 
     public abstract ForgePlayerMP toMP();
@@ -159,18 +157,22 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 
     public void updateArmor()
     {
-        if(getWorld().getSide().isServer() && isOnline())
+        if(getWorld().getSide().isServer())
         {
-            lastArmor.clear();
             EntityPlayer ep = getPlayer();
 
-            for(EntityEquipmentSlot e : EntityEquipmentSlot.values())
+            if(ep != null)
             {
-                ItemStack is = ep.getItemStackFromSlot(e);
+                lastArmor.clear();
 
-                if(is != null)
+                for(EntityEquipmentSlot e : EntityEquipmentSlot.values())
                 {
-                    lastArmor.put(e, is.copy());
+                    ItemStack is = ep.getItemStackFromSlot(e);
+
+                    if(is != null)
+                    {
+                        lastArmor.put(e, is.copy());
+                    }
                 }
             }
         }

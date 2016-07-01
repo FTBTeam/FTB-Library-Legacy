@@ -61,7 +61,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         return p;
     }
 
-    @Override
     public boolean isOnline()
     {
         return getPlayer() != null;
@@ -280,11 +279,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         }
 
         //Rank rank = getRank();
-
-        if(isOnline())
-        {
-            tag.setBoolean("O", true);
-        }
 
         if(hasTeam())
         {

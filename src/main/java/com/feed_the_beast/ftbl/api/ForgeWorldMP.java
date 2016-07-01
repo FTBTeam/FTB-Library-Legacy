@@ -206,7 +206,7 @@ public final class ForgeWorldMP extends ForgeWorld
             for(ForgePlayer p : playerMap.values())
             {
                 tag1.setString(p.getStringUUID(), p.getProfile().getName());
-                if(p.isOnline() && !p.equalsPlayer(self))
+                if(p.toMP().isOnline() && !p.equalsPlayer(self))
                 {
                     onlinePlayers.add(p.toMP());
                 }
@@ -246,5 +246,22 @@ public final class ForgeWorldMP extends ForgeWorld
 
             tag.setTag("TMS", teamsTag);
         }
+    }
+
+    public Collection<ForgePlayerMP> getOnlinePlayers()
+    {
+        Collection<ForgePlayerMP> l = new HashSet<>();
+
+        for(ForgePlayer p : playerMap.values())
+        {
+            ForgePlayerMP pmp = p.toMP();
+
+            if(pmp.isOnline())
+            {
+                l.add(pmp);
+            }
+        }
+
+        return l;
     }
 }

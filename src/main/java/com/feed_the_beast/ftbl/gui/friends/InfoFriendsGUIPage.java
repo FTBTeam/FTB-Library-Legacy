@@ -70,7 +70,7 @@ public class InfoFriendsGUIPage extends InfoPage
             if(ForgeWorldSP.inst.clientPlayer.hasTeam())
             {
                 EnumTeamStatus status = ForgeWorldSP.inst.clientPlayer.getTeam().getStatus(playerLM);
-                FTBLibClient.setGLColor(status.color.getMapColor().colorValue, 255);
+                FTBLibClient.setGLColor((status == EnumTeamStatus.NONE) ? 0xFF000000 : status.color.getMapColor().colorValue, 255);
             }
             else
             {
@@ -82,7 +82,7 @@ public class InfoFriendsGUIPage extends InfoPage
             GlStateManager.color(1F, 1F, 1F, 1F);
             GuiLM.drawPlayerHead(playerLM.getProfile().getName(), ax + 2, ay + 2, 16, 16);
 
-            guiInfo.font.drawString(title, (int) ax + 22, (int) ay + 6, playerLM.isOnline() ? 0xFF11FF11 : 0xFFFFFFFF);
+            guiInfo.font.drawString(title, (int) ax + 22, (int) ay + 6, 0xFFFFFFFF);
         }
     }
 

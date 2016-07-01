@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,24 @@ public class RankConfigAPI
 
         map.put(rankConfig.getID(), rankConfig);
         return rankConfig;
+    }
+
+    public static void registerAll(Class<?> c)
+    {
+        try
+        {
+            for(Field f : c.getDeclaredFields())
+            {
+                if(RankConfig.class.isAssignableFrom(f.getType()))
+                {
+                    register((RankConfig) f.get(null));
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     public static Collection<RankConfig> getRankConfigValues()

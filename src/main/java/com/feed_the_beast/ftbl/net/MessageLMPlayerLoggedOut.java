@@ -48,7 +48,10 @@ public class MessageLMPlayerLoggedOut extends MessageToClient<MessageLMPlayerLog
     public void onMessage(MessageLMPlayerLoggedOut m, Minecraft mc)
     {
         ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID);
-        p.onLoggedOut();
-        p.isOnline = false;
+
+        if(p != null)
+        {
+            p.onLoggedOut();
+        }
     }
 }

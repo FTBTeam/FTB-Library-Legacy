@@ -24,12 +24,6 @@ public class ForgePlayerSPSelf extends ForgePlayerSP
     }
 
     @Override
-    public boolean isOnline()
-    {
-        return true;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public EntityPlayer getPlayer()
     {

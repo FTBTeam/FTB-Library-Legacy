@@ -21,13 +21,11 @@ import java.util.List;
 public class ForgePlayerSP extends ForgePlayer
 {
     public final List<ITextComponent> clientInfo;
-    public boolean isOnline;
 
     public ForgePlayerSP(GameProfile p)
     {
         super(p);
         clientInfo = new ArrayList<>();
-        isOnline = false;
     }
 
     public boolean isClientPlayer()
@@ -36,16 +34,10 @@ public class ForgePlayerSP extends ForgePlayer
     }
 
     @Override
-    public boolean isOnline()
-    {
-        return isOnline;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public EntityPlayer getPlayer()
     {
-        return isOnline() ? FTBLibClient.getPlayerSP(getProfile().getId()) : null;
+        return FTBLibClient.getPlayerSP(getProfile().getId());
     }
 
     @Override
@@ -95,7 +87,6 @@ public class ForgePlayerSP extends ForgePlayer
 
     public void readFromNet(NBTTagCompound tag, boolean self)
     {
-        isOnline = tag.hasKey("O");
         setTeamID(tag.getString("T"));
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, tag.getCompoundTag("SY"), self));
     }

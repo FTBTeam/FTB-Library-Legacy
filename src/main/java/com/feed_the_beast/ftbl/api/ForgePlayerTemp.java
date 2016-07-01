@@ -21,12 +21,6 @@ public final class ForgePlayerTemp extends ForgePlayer
     }
 
     @Override
-    public boolean isOnline()
-    {
-        return player != null;
-    }
-
-    @Override
     public EntityPlayer getPlayer()
     {
         return player;

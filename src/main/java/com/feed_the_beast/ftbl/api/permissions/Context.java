@@ -15,9 +15,15 @@ import java.util.Map;
 public class Context
 {
     /**
-     * Not recommended, only used when there really is no context available
+     * Not recommended, only used when there really is no context available. Don't use null!
      */
     public static final Context NO_CONTEXT = new Context();
+
+    //Some default custom map keys
+    public static final String CHUNK = "chunk";
+    public static final String OTHER_ENTITY = "entity2";
+    public static final String OTHER_BLOCK_POS = "block2";
+    public static final String BLOCK_STATE = "blockstate";
 
     private IBlockAccess blockAccess;
     private Entity entity;

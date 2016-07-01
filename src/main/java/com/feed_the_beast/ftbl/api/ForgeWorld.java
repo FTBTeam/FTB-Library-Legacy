@@ -16,9 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -145,21 +143,6 @@ public abstract class ForgeWorld implements ICapabilityProvider
         }
 
         return null;
-    }
-
-    public final Collection<ForgePlayer> getOnlinePlayers()
-    {
-        Collection<ForgePlayer> l = new HashSet<>();
-
-        for(ForgePlayer p : playerMap.values())
-        {
-            if(p.isOnline())
-            {
-                l.add(p);
-            }
-        }
-
-        return l;
     }
 
     /**

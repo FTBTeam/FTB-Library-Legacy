@@ -102,7 +102,12 @@ public class FTBLibEventHandler implements ITickable
     {
         if(e.player instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
         {
-            ForgeWorldMP.inst.getPlayer(e.player).onLoggedOut();
+            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(e.player);
+
+            if(p != null)
+            {
+                p.onLoggedOut();
+            }
         }
     }
 

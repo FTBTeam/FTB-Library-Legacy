@@ -64,7 +64,7 @@ public class CmdJoin extends CommandLM
 
             for(ForgePlayer p1 : team.getMembers())
             {
-                if(p1.isOnline())
+                if(p1.toMP().isOnline())
                 {
                     FTBLibLang.team_member_joined.printChat(p1.getPlayer(), p.getProfile().getName());
                 }
