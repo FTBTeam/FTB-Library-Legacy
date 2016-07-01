@@ -1,30 +1,14 @@
 # GuiLM
 ## Buttons
-gui_lm.button.settings=Settings
-gui_lm.button.back=Back
-gui_lm.button.up=Up
-gui_lm.button.down=Down
-gui_lm.button.prev=Previous
-gui_lm.button.next=Next
-gui_lm.button.cancel=Cancel
 gui_lm.button.accept=Accept
-gui_lm.button.remove=Remove
 gui_lm.button.add=Add
 gui_lm.button.close=Close
 gui_lm.button.save=Save
-gui_lm.button.refresh=Refresh
-gui_lm.button.other=Other
-gui_lm.button.edit=Edit
 gui_lm.button.info=Info
 
 ## Labels
+gui_lm.label.other=Other
 gui_lm.label.server_forced=Server Forced: %s
-gui_lm.label.true=True
-gui_lm.label.false=False
-gui_lm.label.enabled=Enabled
-gui_lm.label.disabled=Disabled
-gui_lm.label.on=On
-gui_lm.label.off=Off
 gui_lm.label.online=Online
 gui_lm.label.offline=Offline
 gui_lm.label.whitelist=Whitelist
