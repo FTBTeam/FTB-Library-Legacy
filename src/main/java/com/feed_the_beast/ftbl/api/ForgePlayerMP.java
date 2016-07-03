@@ -213,13 +213,15 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         lastPos = null;
         if(tag.hasKey("Pos"))
         {
-            lastPos = new BlockDimPos(tag.getIntArray("LastPos"));
+            int[] ai = tag.getIntArray("LastPos");
+            lastPos = (ai.length == 4) ? new BlockDimPos(ai) : null;
         }
 
         lastDeath = null;
         if(tag.hasKey("LastDeath"))
         {
-            lastDeath = new BlockDimPos(tag.getIntArray("LastDeath"));
+            int[] ai = tag.getIntArray("LastDeath");
+            lastDeath = (ai.length == 4) ? new BlockDimPos(ai) : null;
         }
     }
 
