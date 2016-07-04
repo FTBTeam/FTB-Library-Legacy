@@ -42,9 +42,4 @@ public final class ForgePlayerFake extends ForgePlayerMP
     public void getInfo(ForgePlayerMP owner, List<ITextComponent> info)
     {
     }
-
-    @Override
-    public void refreshStats()
-    {
-    }
 }

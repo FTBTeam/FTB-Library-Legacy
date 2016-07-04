@@ -66,6 +66,7 @@ public class FTBLibMod
         JsonHelper.init();
         FTBLibNetHandler.init();
         ODItems.preInit();
+        FTBLibStats.init();
 
         MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
         FTBLibCapabilities.enable();

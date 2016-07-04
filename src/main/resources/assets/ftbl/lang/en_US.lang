@@ -19,9 +19,9 @@ gui_lm.label.friend=Friend
 gui_lm.label.friend.pending=Pending Friend
 gui_lm.label.friend.new=New friend requests!
 gui_lm.label.friend.new_click=Click to accept all requests
-gui_lm.label.friend.joined=Joined %s ago
 gui_lm.label.friend.last_seen=Last seen %s ago
 gui_lm.label.friend.deaths=Deaths: %s
+ftbl.stat.last_seen=Last Seen
 
 ## Sides
 facing.down=Down

@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.FTBLibStats;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
@@ -14,6 +16,7 @@ import com.feed_the_beast.ftbl.util.EntityDimPos;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
+import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.PlayerNotFoundException;
@@ -21,6 +24,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -31,6 +35,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +44,14 @@ import java.util.Map;
  */
 public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTagCompound>
 {
-    public final ForgePlayerStats stats;
     public final ConfigEntryEnum<EnumNotificationDisplay> notifications;
     public BlockDimPos lastPos, lastDeath;
+    private StatisticsManagerServer statsManager;
     private EntityPlayerMP entityPlayer;
 
     public ForgePlayerMP(GameProfile p)
     {
         super(p);
-        stats = new ForgePlayerStats();
         notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
     }
 
@@ -148,13 +152,11 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
     public void getInfo(ForgePlayerMP owner, List<ITextComponent> info)
     {
-        refreshStats();
-        long currentTime = System.currentTimeMillis();
+        long ms = System.currentTimeMillis();
+        ForgeTeam team = getTeam();
 
-        if(hasTeam())
+        if(team != null)
         {
-            ForgeTeam team = getTeam();
-
             ITextComponent c = new TextComponentString("[" + team.getTitle() + "]");
             c.getStyle().setColor(team.getColor().textFormatting).setUnderlined(true);
             info.add(c);
@@ -169,17 +171,26 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             info.add(null);
         }
 
-        stats.getInfo(this, info, currentTime);
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info, currentTime));
-    }
+        StatisticsManagerServer stats = stats();
 
-    public void refreshStats()
-    {
-        if(isOnline())
+        if(!owner.isOnline() && stats.readStat(FTBLibStats.LAST_SEEN) > 0)
         {
-            stats.refresh(this, false);
-            getPos();
+            info.add(GuiLang.label_friend_last_seen.textComponent(LMStringUtils.getTimeString(ms - stats.readStat(FTBLibStats.LAST_SEEN))));
         }
+
+        if(stats.readStat(StatList.DEATHS) > 0)
+        {
+            info.add(GuiLang.label_friend_deaths.textComponent(Integer.toString(stats.readStat(StatList.DEATHS))));
+        }
+
+        if(stats.readStat(StatList.PLAY_ONE_MINUTE) > 0L)
+        {
+            ITextComponent c = StatList.PLAY_ONE_MINUTE.getStatName();
+            c.getStyle().setColor(null);
+            info.add(c.appendSibling(new TextComponentString(": " + LMStringUtils.getTimeString(stats.readStat(StatList.PLAY_ONE_MINUTE) * 50L))));
+        }
+
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.AddInfo(this, info, ms));
     }
 
     @Override
@@ -208,8 +219,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             }
         }
 
-        stats.load(tag);
-
         lastPos = null;
         if(tag.hasKey("Pos"))
         {
@@ -228,8 +237,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public NBTTagCompound serializeNBT()
     {
-        refreshStats();
-
         NBTTagCompound tag = new NBTTagCompound();
 
         if(hasTeam())
@@ -253,9 +260,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             LMInvUtils.writeItemsToNBT(lastArmorItems, tag, "Armor");
         }
 
-        stats.save(tag);
-
-        if(lastPos != null)
+        if(getPos() != null)
         {
             tag.setIntArray("Pos", lastPos.toIntArray());
         }
@@ -270,8 +275,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
     public void writeToNet(NBTTagCompound tag, boolean self)
     {
-        refreshStats();
-
         NBTTagCompound syncData = new NBTTagCompound();
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.Sync(this, syncData, self));
 
@@ -320,26 +323,23 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public void onDeath()
     {
-        if(!isOnline())
-        {
-            return;
-        }
-
-        lastDeath = new EntityDimPos(getPlayer()).toBlockDimPos();
-        stats.refresh(this, false);
-
-        super.onDeath();
-
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.OnDeath(this));
-    }
-
-    public StatisticsManagerServer getStatFile(boolean force)
-    {
         if(isOnline())
         {
-            return getPlayer().getStatFile();
+            lastDeath = new EntityDimPos(getPlayer()).toBlockDimPos();
+            super.onDeath();
+            MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.OnDeath(this));
         }
-        return force ? FTBLib.getServer().getPlayerList().getPlayerStatsFile(new FakePlayer(FTBLib.getServerWorld(), getProfile())) : null;
+    }
+
+    @Nonnull
+    public StatisticsManagerServer stats()
+    {
+        if(statsManager == null)
+        {
+            statsManager = FTBLib.getServer().getPlayerList().getPlayerStatsFile(entityPlayer == null ? new FakePlayer(FTBLib.getServerWorld(), getProfile()) : entityPlayer);
+        }
+
+        return statsManager;
     }
 
     public void getSettings(ConfigGroup group)

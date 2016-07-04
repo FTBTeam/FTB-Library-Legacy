@@ -55,7 +55,6 @@ public class CmdAddFakePlayer extends CommandLM
 
         ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, args[1]));
         ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
-        p.refreshStats();
 
         ics.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
     }
