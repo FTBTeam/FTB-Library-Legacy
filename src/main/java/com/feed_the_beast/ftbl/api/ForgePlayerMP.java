@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.FTBLibStats;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
@@ -28,6 +27,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
@@ -173,14 +173,26 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
 
         StatisticsManagerServer stats = stats();
 
-        if(!owner.isOnline() && stats.readStat(FTBLibStats.LAST_SEEN) > 0)
+        if(!owner.isOnline())
         {
-            info.add(GuiLang.label_friend_last_seen.textComponent(LMStringUtils.getTimeString(ms - stats.readStat(FTBLibStats.LAST_SEEN))));
+            long lastSeen = FTBLibStats.getLastSeen(stats, false);
+
+            if(lastSeen > 0L)
+            {
+                info.add(new TextComponentTranslation(FTBLibStats.LAST_SEEN.statId).appendText(": " + LMStringUtils.getTimeString(ms - lastSeen)));
+            }
+        }
+
+        long firstJoined = FTBLibStats.getFirstJoined(stats);
+
+        if(firstJoined > 0L)
+        {
+            info.add(new TextComponentTranslation(FTBLibStats.FIRST_JOINED.statId).appendText(": " + LMStringUtils.getTimeString(ms - firstJoined)));
         }
 
         if(stats.readStat(StatList.DEATHS) > 0)
         {
-            info.add(GuiLang.label_friend_deaths.textComponent(Integer.toString(stats.readStat(StatList.DEATHS))));
+            info.add(new TextComponentTranslation(StatList.DEATHS.statId).appendText(": " + stats.readStat(StatList.DEATHS)));
         }
 
         if(stats.readStat(StatList.PLAY_ONE_MINUTE) > 0L)
@@ -283,8 +295,6 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
             tag.setTag("SY", syncData);
         }
 
-        //Rank rank = getRank();
-
         if(hasTeam())
         {
             tag.setString("T", getTeamID());
@@ -294,10 +304,10 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public void onLoggedIn(boolean firstLogin)
     {
-        EntityPlayerMP ep = getPlayer();
-
         super.onLoggedIn(firstLogin);
+        FTBLibStats.updateLastSeen(stats());
 
+        EntityPlayerMP ep = getPlayer();
         new MessageLMPlayerLoggedIn(this, firstLogin, true).sendTo(ep);
         new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
 
@@ -315,6 +325,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
     @Override
     public void onLoggedOut()
     {
+        FTBLibStats.updateLastSeen(stats());
         super.onLoggedOut();
         MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.LoggedOut(this));
         new MessageLMPlayerLoggedOut(this).sendTo(null);
@@ -327,6 +338,7 @@ public class ForgePlayerMP extends ForgePlayer implements INBTSerializable<NBTTa
         {
             lastDeath = new EntityDimPos(getPlayer()).toBlockDimPos();
             super.onDeath();
+            FTBLibStats.updateLastSeen(stats());
             MinecraftForge.EVENT_BUS.post(new ForgePlayerEvent.OnDeath(this));
         }
     }

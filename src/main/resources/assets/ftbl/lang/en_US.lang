@@ -14,14 +14,10 @@ gui_lm.label.offline=Offline
 gui_lm.label.whitelist=Whitelist
 gui_lm.label.blacklist=Blacklist
 
-## Friends
-gui_lm.label.friend=Friend
-gui_lm.label.friend.pending=Pending Friend
-gui_lm.label.friend.new=New friend requests!
-gui_lm.label.friend.new_click=Click to accept all requests
-gui_lm.label.friend.last_seen=Last seen %s ago
-gui_lm.label.friend.deaths=Deaths: %s
+## Stats
+ftbl.stat.time_played=Time Played
 ftbl.stat.last_seen=Last Seen
+ftbl.stat.first_joined=First Joined
 
 ## Sides
 facing.down=Down

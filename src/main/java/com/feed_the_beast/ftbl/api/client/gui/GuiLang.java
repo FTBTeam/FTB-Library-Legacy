@@ -38,6 +38,4 @@ public class GuiLang
     public static final LangKey label_offline = new LangKey("gui_lm.label.offline");
     public static final LangKey label_whitelist = new LangKey("gui_lm.label.whitelist");
     public static final LangKey label_blacklist = new LangKey("gui_lm.label.blacklist");
-    public static final LangKey label_friend_last_seen = new LangKey("gui_lm.label.friend.last_seen");
-    public static final LangKey label_friend_deaths = new LangKey("gui_lm.label.friend.deaths");
 }
