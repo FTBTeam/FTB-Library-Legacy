@@ -15,6 +15,12 @@ public abstract class ButtonLM extends WidgetLM
         super(x, y, w, h);
     }
 
+    public ButtonLM(double x, double y, double w, double h, String t)
+    {
+        this(x, y, w, h);
+        title = t;
+    }
+
     @Override
     public void mousePressed(@Nonnull GuiLM gui, @Nonnull MouseButton b)
     {

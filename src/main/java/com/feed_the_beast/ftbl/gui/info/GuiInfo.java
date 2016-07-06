@@ -82,7 +82,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         sliderText.isVertical = true;
 
-        buttonBack = new ButtonLM(0, 0, 14, 11)
+        buttonBack = new ButtonLM(0, 0, 14, 11, parentGui == null ? GuiLang.button_close.translate() : GuiLang.button_back.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)

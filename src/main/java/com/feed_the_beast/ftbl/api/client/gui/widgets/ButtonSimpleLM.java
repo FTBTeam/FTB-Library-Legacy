@@ -15,9 +15,9 @@ public abstract class ButtonSimpleLM extends ButtonLM
     public int colorButton = 0xFF888888;
     public int colorButtonOver = 0xFF999999;
 
-    public ButtonSimpleLM(double x, double y, double w, double h)
+    public ButtonSimpleLM(double x, double y, double w, double h, String t)
     {
-        super(x, y, w, h);
+        super(x, y, w, h, t);
     }
 
     @Override

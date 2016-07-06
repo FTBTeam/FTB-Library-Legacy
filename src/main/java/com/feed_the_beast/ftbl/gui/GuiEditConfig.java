@@ -49,10 +49,9 @@ public class GuiEditConfig extends GuiLM
 
         public ButtonConfigEntry(String id, ConfigEntry e)
         {
-            super(0, 0, 0, 16);
+            super(0, 0, 0, 16, e.getDisplayName() == null ? id : e.getDisplayName().getFormattedText());
             ID = id;
             entry = e;
-            title = entry.getDisplayName() == null ? ID : entry.getDisplayName().getFormattedText();
         }
 
         @Override
@@ -276,7 +275,7 @@ public class GuiEditConfig extends GuiLM
             }
         };
 
-        buttonAccept = new ButtonLM(0, 2, 16, 16)
+        buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.button_accept.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
@@ -287,9 +286,7 @@ public class GuiEditConfig extends GuiLM
             }
         };
 
-        buttonAccept.title = GuiLang.button_accept.translate();
-
-        buttonCancel = new ButtonLM(0, 2, 16, 16)
+        buttonCancel = new ButtonLM(0, 2, 16, 16, GuiLang.button_cancel.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
@@ -299,8 +296,6 @@ public class GuiEditConfig extends GuiLM
                 closeGui();
             }
         };
-
-        buttonCancel.title = GuiLang.button_cancel.translate();
 
         scroll = new SliderLM(-16, 20, 16, 0, 10)
         {

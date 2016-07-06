@@ -63,7 +63,7 @@ public class GuiSelectField extends GuiLM
 
         double bsize = width / 2D - 4D;
 
-        buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16)
+        buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16, GuiLang.button_cancel.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
@@ -73,9 +73,7 @@ public class GuiSelectField extends GuiLM
             }
         };
 
-        buttonCancel.title = GuiLang.button_cancel.translate();
-
-        buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16)
+        buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16, GuiLang.button_accept.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
@@ -98,8 +96,6 @@ public class GuiSelectField extends GuiLM
                 }
             }
         };
-
-        buttonAccept.title = GuiLang.button_accept.translate();
 
         textBox = new TextBoxLM(2, 2, width - 4, 18)
         {
