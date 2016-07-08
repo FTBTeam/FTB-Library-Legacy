@@ -16,6 +16,23 @@ public class GuiLoading extends GuiLM
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/loading.png");
 
+    public static void renderLoading(double x, double y, double w, double h)
+    {
+        FTBLibClient.setTexture(TEXTURE);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + w / 2D, y + h / 2D, 0D);
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate(((System.currentTimeMillis() % 7200L) * 0.3F) % 360F, 0F, 0F, 1F);
+        drawTexturedRect(-w / 2D, -h / 2D, w, h, 0D, 0D, 1D, 1D);
+        GlStateManager.popMatrix();
+        GlStateManager.pushMatrix();
+        GlStateManager.rotate(-((System.currentTimeMillis() % 7200L) * 0.13F) % 360F, 0F, 0F, 1F);
+        GlStateManager.scale(0.5D, 0.5D, 1D);
+        drawTexturedRect(-w / 2D, -h / 2D, w, h, 0D, 0D, 1D, 1D);
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
+    }
+
     @Override
     public void onInit()
     {
@@ -31,18 +48,6 @@ public class GuiLoading extends GuiLM
     @Override
     public void drawBackground()
     {
-        FTBLibClient.setTexture(TEXTURE);
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(screen.getScaledWidth_double() / 2D, screen.getScaledHeight_double() / 2D, 0D);
-        GlStateManager.pushMatrix();
-        GlStateManager.rotate(((System.currentTimeMillis() % 7200L) * 0.3F) % 360F, 0F, 0F, 1F);
-        drawTexturedRect(-width / 2D, -height / 2D, width, height, 0D, 0D, 1D, 1D);
-        GlStateManager.popMatrix();
-        GlStateManager.pushMatrix();
-        GlStateManager.rotate(-((System.currentTimeMillis() % 7200L) * 0.13F) % 360F, 0F, 0F, 1F);
-        GlStateManager.scale(0.5D, 0.5D, 1D);
-        drawTexturedRect(-width / 2D, -height / 2D, width, height, 0D, 0D, 1D, 1D);
-        GlStateManager.popMatrix();
-        GlStateManager.popMatrix();
+        renderLoading(getAX(), getAY(), width, height);
     }
 }
