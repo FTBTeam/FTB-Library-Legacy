@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
 import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.annotations.IFlagContainer;
-import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMUtils;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
@@ -455,13 +454,13 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
             @Override
             public void set(boolean v)
             {
-                setFlags(Bits.setFlag(getFlags(), FREE_TO_JOIN, v));
+                setFlag(FREE_TO_JOIN, v);
             }
 
             @Override
             public boolean getAsBoolean()
             {
-                return Bits.getFlag(getFlags(), FREE_TO_JOIN);
+                return getFlag(FREE_TO_JOIN);
             }
         });
 
@@ -470,13 +469,13 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
             @Override
             public void set(boolean v)
             {
-                setFlags(Bits.setFlag(getFlags(), HIDDEN, v));
+                setFlag(HIDDEN, v);
             }
 
             @Override
             public boolean getAsBoolean()
             {
-                return Bits.getFlag(getFlags(), HIDDEN);
+                return getFlag(HIDDEN);
             }
         });
     }
