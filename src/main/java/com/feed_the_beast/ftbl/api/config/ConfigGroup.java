@@ -177,7 +177,7 @@ public class ConfigGroup extends ConfigEntry
 
         for(Map.Entry<String, ConfigEntry> entry : entryMap.entrySet())
         {
-            if(!entry.getValue().getFlag(Flags.EXCLUDED))
+            if((entry.getValue().getFlags() & Flags.EXCLUDED) == 0)
             {
                 o.add(entry.getKey(), entry.getValue().getSerializableElement());
             }

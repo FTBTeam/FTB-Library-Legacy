@@ -32,8 +32,8 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public final class ForgeTeam extends FinalIDObject implements ICapabilitySerializable<NBTTagCompound>, IFlagContainer
 {
-    public static final byte FREE_TO_JOIN = 0;
-    public static final byte HIDDEN = 1;
+    public static final byte FREE_TO_JOIN = 1;
+    public static final byte HIDDEN = 2;
 
     public final ForgeWorld world;
     private final CapabilityDispatcher capabilities;
@@ -43,7 +43,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
     private Collection<UUID> enemies;
     private String title;
     private String desc;
-    private byte flags;
+    private int flags;
     private Collection<ForgePlayerMP> invited;
 
     public ForgeTeam(ForgeWorld w, String id)
@@ -71,15 +71,15 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
     }
 
     @Override
-    public void setFlag(byte flag, boolean b)
+    public int getFlags()
     {
-        flags = Bits.setBit(flags, flag, b);
+        return flags;
     }
 
     @Override
-    public boolean getFlag(byte flag)
+    public void setFlags(int f)
     {
-        return Bits.getBit(flags, flag);
+        flags = f;
     }
 
     @Override
@@ -88,7 +88,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
         NBTTagCompound nbt = new NBTTagCompound();
 
         nbt.setString("Owner", LMUtils.fromUUID(owner.getProfile().getId()));
-        nbt.setByte("Flags", flags);
+        nbt.setByte("Flags", (byte) flags);
         nbt.setString("Color", EnumNameMap.getEnumName(color.get()));
 
         if(title != null)
@@ -133,7 +133,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
 
         if(flags != 0)
         {
-            tag.setByte("F", flags);
+            tag.setByte("F", (byte) flags);
         }
 
         tag.setByte("C", (byte) color.getIndex());
@@ -369,7 +369,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
 
     public boolean isInvited(@Nullable ForgePlayerMP player)
     {
-        return player != null && (getFlag(FREE_TO_JOIN) || invited != null && invited.contains(player) && !player.hasTeam());
+        return player != null && (((getFlags() & FREE_TO_JOIN) != 0) || invited != null && invited.contains(player) && !player.hasTeam());
     }
 
     public void changeOwner(ForgePlayerMP newOwner)
@@ -450,33 +450,33 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
             }
         });
 
-        group.add("free_to_join", new ConfigEntryBool(getFlag(FREE_TO_JOIN))
+        group.add("free_to_join", new ConfigEntryBool(false)
         {
             @Override
             public void set(boolean v)
             {
-                setFlag(FREE_TO_JOIN, v);
+                setFlags(Bits.setFlag(getFlags(), FREE_TO_JOIN, v));
             }
 
             @Override
             public boolean getAsBoolean()
             {
-                return getFlag(FREE_TO_JOIN);
+                return Bits.getFlag(getFlags(), FREE_TO_JOIN);
             }
         });
 
-        group.add("is_hidden", new ConfigEntryBool(getFlag(HIDDEN))
+        group.add("is_hidden", new ConfigEntryBool(false)
         {
             @Override
             public void set(boolean v)
             {
-                setFlag(HIDDEN, v);
+                setFlags(Bits.setFlag(getFlags(), HIDDEN, v));
             }
 
             @Override
             public boolean getAsBoolean()
             {
-                return getFlag(HIDDEN);
+                return Bits.getFlag(getFlags(), HIDDEN);
             }
         });
     }

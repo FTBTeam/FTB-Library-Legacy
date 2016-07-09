@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonElement;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.annotations.IInfoContainer;
-import com.latmod.lib.io.Bits;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +21,7 @@ import java.util.function.IntSupplier;
 
 public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable, BooleanSupplier, IntSupplier, DoubleSupplier
 {
-    private Byte flags;
+    private int flags;
     private String[] info;
     private ITextComponent displayName;
 
@@ -120,20 +119,15 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     }
 
     @Override
-    public final void setFlag(byte flag, boolean b)
+    public final int getFlags()
     {
-        flags = Bits.setBit(flags == null ? 0 : flags, flag, b);
-
-        if(flags == 0)
-        {
-            flags = null;
-        }
+        return flags;
     }
 
     @Override
-    public final boolean getFlag(byte flag)
+    public final void setFlags(int f)
     {
-        return flags != null && Bits.getBit(flags, flag);
+        flags = f;
     }
 
     @Override
@@ -152,9 +146,11 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     {
         if(extended)
         {
-            if(flags != null)
+            flags = getFlags();
+            
+            if(flags != 0)
             {
-                tag.setByte("F", flags);
+                tag.setByte("F", (byte) flags);
             }
 
             if(displayName != null)

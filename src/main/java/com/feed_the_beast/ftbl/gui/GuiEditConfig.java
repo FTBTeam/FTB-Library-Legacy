@@ -20,6 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.annotations.Flags;
+import com.latmod.lib.io.Bits;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -107,7 +108,7 @@ public class GuiEditConfig extends GuiLM
         @Override
         public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
-            if(mouseY >= 20 && !entry.getFlag(Flags.CANT_EDIT))
+            if(mouseY >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
             {
                 FTBLibClient.playClickSound();
 
@@ -254,7 +255,7 @@ public class GuiEditConfig extends GuiLM
 
         for(Map.Entry<String, ConfigEntry> entry : list)
         {
-            if(!entry.getValue().getFlag(Flags.HIDDEN))
+            if(!Bits.getFlag(entry.getValue().getFlags(), Flags.HIDDEN))
             {
                 configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue().copy()));
             }
