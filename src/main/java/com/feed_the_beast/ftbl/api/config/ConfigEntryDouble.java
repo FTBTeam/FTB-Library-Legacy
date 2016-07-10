@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 
@@ -126,50 +126,39 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
+        ConfigEntryDouble entry = new ConfigEntryDouble(defValue);
+        entry.set(getAsDouble());
+        return entry;
+    }
 
-        double d = getAsDouble();
-
-        if(d != 0D)
-        {
-            tag.setDouble("V", d);
-        }
+    @Override
+    public void writeData(ByteBuf io, boolean extended)
+    {
+        super.writeData(io, extended);
+        io.writeDouble(getAsDouble());
 
         if(extended)
         {
-            if(defValue != 0D)
-            {
-                tag.setDouble("D", defValue);
-            }
-
-            d = getMin();
-
-            if(d != Double.NEGATIVE_INFINITY)
-            {
-                tag.setDouble("MN", d);
-            }
-
-            d = getMax();
-
-            if(d != Double.POSITIVE_INFINITY)
-            {
-                tag.setDouble("MX", d);
-            }
+            io.writeDouble(defValue);
+            io.writeDouble(getMin());
+            io.writeDouble(getMax());
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
-        set(tag.getDouble("V"));
+        super.readData(io, extended);
+        set(io.readDouble());
 
         if(extended)
         {
-            defValue = tag.getDouble("D");
-            setBounds(tag.hasKey("MN") ? tag.getDouble("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getDouble("MX") : Double.POSITIVE_INFINITY);
+            defValue = io.readDouble();
+            double min = io.readDouble();
+            double max = io.readDouble();
+            setBounds(min, max);
         }
     }
 }

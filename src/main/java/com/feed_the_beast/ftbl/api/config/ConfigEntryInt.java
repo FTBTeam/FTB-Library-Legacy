@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
 import com.latmod.lib.math.MathHelperLM;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 
@@ -131,41 +131,39 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
-        tag.setInteger("V", getAsInt());
+        ConfigEntryInt entry = new ConfigEntryInt(defValue);
+        entry.set(getAsInt());
+        return entry;
+    }
+
+    @Override
+    public void writeData(ByteBuf io, boolean extended)
+    {
+        super.writeData(io, extended);
+        io.writeInt(getAsInt());
 
         if(extended)
         {
-            tag.setInteger("D", defValue);
-
-            double d = getMin();
-
-            if(d != Double.NEGATIVE_INFINITY)
-            {
-                tag.setInteger("MN", (int) d);
-            }
-
-            d = getMax();
-
-            if(d != Double.POSITIVE_INFINITY)
-            {
-                tag.setInteger("MX", (int) d);
-            }
+            io.writeInt(defValue);
+            io.writeDouble(getMin());
+            io.writeDouble(getMax());
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
-        set(tag.getInteger("V"));
+        super.readData(io, extended);
+        set(io.readInt());
 
         if(extended)
         {
-            defValue = tag.getInteger("D");
-            setBounds(tag.hasKey("MN") ? tag.getInteger("MN") : Double.NEGATIVE_INFINITY, tag.hasKey("MX") ? tag.getInteger("MX") : Double.POSITIVE_INFINITY);
+            defValue = io.readInt();
+            double min = io.readDouble();
+            double max = io.readDouble();
+            setBounds(min, max);
         }
     }
 }

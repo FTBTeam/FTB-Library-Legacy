@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import com.feed_the_beast.ftbl.api.net.MessageLM;
+import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonElement;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.annotations.IInfoContainer;
+import com.latmod.lib.io.Bits;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -68,14 +68,7 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         displayName = c;
     }
 
-    public ConfigEntry copy()
-    {
-        ConfigEntry e = getConfigType().createNew();
-        NBTTagCompound tag = new NBTTagCompound();
-        writeToNBT(tag, true);
-        e.readFromNBT(tag, true);
-        return e;
-    }
+    public abstract ConfigEntry copy();
 
     @Override
     public final String toString()
@@ -142,55 +135,64 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         info = (s != null && s.length > 0) ? s : null;
     }
 
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public void writeData(ByteBuf io, boolean extended)
     {
         if(extended)
         {
             flags = getFlags();
-            
-            if(flags != 0)
-            {
-                tag.setByte("F", (byte) flags);
-            }
 
             if(displayName != null)
             {
-                tag.setString("N", ITextComponent.Serializer.componentToJson(displayName));
+                flags = Bits.setFlag(flags, 512, true);
             }
 
             if(info != null && info.length > 0)
             {
-                NBTTagList list = new NBTTagList();
+                flags = Bits.setFlag(flags, 1024, true);
+            }
+
+            io.writeShort(flags);
+
+            if(displayName != null)
+            {
+                MessageLM.writeJsonElement(io, JsonHelper.serializeICC(displayName));
+            }
+
+            if(info != null && info.length > 0)
+            {
+                io.writeShort(info.length);
 
                 for(String s : info)
                 {
-                    list.appendTag(new NBTTagString(s));
+                    MessageLM.writeString(io, s);
                 }
-
-                tag.setTag("I", list);
             }
         }
     }
 
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
         if(extended)
         {
-            flags = tag.hasKey("F") ? tag.getByte("F") : null;
-
-            displayName = tag.hasKey("N") ? ITextComponent.Serializer.fromJsonLenient(tag.getString("N")) : null;
-
+            flags = io.readUnsignedShort();
+            setFlags(flags & 0xFF);
+            displayName = null;
             info = null;
 
-            if(tag.hasKey("I"))
+            if(Bits.getFlag(flags, 512))
             {
-                NBTTagList list = tag.getTagList("I", Constants.NBT.TAG_STRING);
+                displayName = JsonHelper.deserializeICC(MessageLM.readJsonElement(io));
+            }
 
-                info = new String[list.tagCount()];
+            if(Bits.getFlag(flags, 1024))
+            {
+                int s = io.readUnsignedByte();
 
-                for(int i = 0; i < info.length; i++)
+                info = new String[s];
+
+                for(int i = 0; i < s; i++)
                 {
-                    info[i] = list.getStringTagAt(i);
+                    info[i] = MessageLM.readString(io);
                 }
             }
         }

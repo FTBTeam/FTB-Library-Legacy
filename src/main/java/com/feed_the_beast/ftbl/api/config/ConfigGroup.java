@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.util.LMNBTUtils;
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.annotations.AnnotationHelper;
 import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.annotations.ID;
 import com.latmod.lib.util.LMUtils;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -217,47 +216,39 @@ public class ConfigGroup extends ConfigEntry
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public void writeData(ByteBuf io, boolean extended)
     {
-        super.writeToNBT(tag, extended);
+        super.writeData(io, extended);
+
+        io.writeShort(entryMap.size());
 
         if(!entryMap.isEmpty())
         {
-            NBTTagCompound tag1 = new NBTTagCompound();
-
             for(Map.Entry<String, ConfigEntry> entry : entryMap.entrySet())
             {
-                NBTTagCompound tag2 = new NBTTagCompound();
-                entry.getValue().writeToNBT(tag2, extended);
-                tag2.setByte("T", entry.getValue().getConfigType().ID);
-                tag1.setTag(entry.getKey(), tag2);
+                io.writeByte(entry.getValue().getConfigType().ID);
+                MessageLM.writeString(io, entry.getKey());
+                entry.getValue().writeData(io, extended);
             }
-
-            tag.setTag("V", tag1);
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
+        super.readData(io, extended);
 
         entryMap.clear();
 
-        if(tag.hasKey("V"))
-        {
-            for(Map.Entry<String, NBTBase> entry : LMNBTUtils.entrySet((NBTTagCompound) tag.getTag("V")))
-            {
-                NBTTagCompound tag2 = (NBTTagCompound) entry.getValue();
-                ConfigEntryType t = ConfigEntryType.getFromID(tag2.getByte("T"));
+        int s = io.readUnsignedShort();
 
-                if(t != null)
-                {
-                    ConfigEntry e = t.createNew();
-                    e.readFromNBT(tag2, extended);
-                    entryMap.put(entry.getKey(), e);
-                }
-            }
+        for(int i = 0; i < s; i++)
+        {
+            ConfigEntryType t = ConfigEntryType.getFromID(io.readByte());
+            String id = MessageLM.readString(io);
+            ConfigEntry entry = t.createNew();
+            entry.readData(io, extended);
+            entryMap.put(id, entry);
         }
     }
 

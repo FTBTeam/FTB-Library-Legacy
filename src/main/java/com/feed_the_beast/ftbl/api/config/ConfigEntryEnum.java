@@ -2,11 +2,10 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -76,31 +75,41 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
-
-        if(extended)
-        {
-            NBTTagList list = new NBTTagList();
-
-            for(E e : nameMap.getValues())
-            {
-                list.appendTag(new NBTTagString(EnumNameMap.getEnumName(e)));
-            }
-
-            tag.setTag("VL", list);
-            tag.setShort("D", (short) defValue);
-        }
-
-        tag.setString("V", EnumNameMap.getEnumName(get()));
+        ConfigEntryEnum<E> entry = new ConfigEntryEnum<E>(nameMap.getFromIndex(getIndex()), nameMap);
+        entry.setIndex(getIndex());
+        return entry;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void writeData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
-        index = nameMap.getStringIndex(tag.getString("V"));
+        super.writeData(io, extended);
+
+        if(extended)
+        {
+            io.writeByte(nameMap.size);
+            
+            for(int i = 0; i < nameMap.size; i++)
+            {
+                for(E e : nameMap.getValues())
+                {
+                    MessageLM.writeString(io, EnumNameMap.getEnumName(e));
+                }
+            }
+
+            io.writeShort(defValue);
+        }
+
+        MessageLM.writeString(io, EnumNameMap.getEnumName(get()));
+    }
+
+    @Override
+    public void readData(ByteBuf io, boolean extended)
+    {
+        super.readData(io, extended);
+        index = nameMap.getStringIndex(MessageLM.readString(io));
     }
 
     @Override

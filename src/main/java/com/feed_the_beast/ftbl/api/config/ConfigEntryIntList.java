@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -110,36 +110,72 @@ public class ConfigEntryIntList extends ConfigEntry
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
+        ConfigEntryIntList entry = new ConfigEntryIntList(defValue);
+        entry.set(getAsIntList());
+        return entry;
+    }
 
-        int[] ai = getAsIntList().toArray();
+    @Override
+    public void writeData(ByteBuf io, boolean extended)
+    {
+        super.writeData(io, extended);
+        TIntList list = getAsIntList();
+        int s = list.size();
 
-        if(ai.length > 0)
+        io.writeInt(s);
+
+        for(int i = 0; i < s; i++)
         {
-            tag.setIntArray("V", ai);
+            io.writeInt(list.get(i));
         }
 
-        if(extended && !defValue.isEmpty())
+        if(extended)
         {
-            tag.setIntArray("D", defValue.toArray());
+            s = defValue.size();
+            io.writeInt(s);
+
+            for(int i = 0; i < s; i++)
+            {
+                io.writeInt(defValue.get(i));
+            }
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
-        set(tag.hasKey("V") ? TIntArrayList.wrap(tag.getIntArray("V")) : null);
+        super.readData(io, extended);
+        int s = io.readInt();
+
+        if(s == 0)
+        {
+            set(null);
+        }
+        else
+        {
+            TIntList list = new TIntArrayList(s);
+            for(int i = 0; i < s; i++)
+            {
+                list.add(io.readInt());
+            }
+
+            set(list);
+        }
 
         if(extended)
         {
             defValue.clear();
 
-            if(tag.hasKey("D"))
+            s = io.readInt();
+
+            if(s > 0)
             {
-                defValue.addAll(tag.getIntArray("D"));
+                for(int i = 0; i < s; i++)
+                {
+                    defValue.add(io.readInt());
+                }
             }
         }
     }

@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 
@@ -78,31 +79,34 @@ public class ConfigEntryString extends ConfigEntry
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
+        ConfigEntryString entry = new ConfigEntryString(defValue);
+        entry.set(getAsString());
+        return entry;
+    }
 
-        String s = getAsString();
-        if(!s.isEmpty())
-        {
-            tag.setString("V", s);
-        }
+    @Override
+    public void writeData(ByteBuf io, boolean extended)
+    {
+        super.writeData(io, extended);
+        MessageLM.writeString(io, getAsString());
 
-        if(extended && !defValue.isEmpty())
+        if(extended)
         {
-            tag.setString("D", defValue);
+            MessageLM.writeString(io, defValue);
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
-        set(tag.getString("V"));
+        super.readData(io, extended);
+        set(MessageLM.readString(io));
 
         if(extended)
         {
-            defValue = tag.getString("D");
+            defValue = MessageLM.readString(io);
         }
     }
 }

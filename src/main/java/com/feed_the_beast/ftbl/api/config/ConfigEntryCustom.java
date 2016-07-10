@@ -2,12 +2,13 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -130,14 +131,24 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
+        ConfigEntryCustom entry = new ConfigEntryCustom();
+        entry.fromJson(getSerializableElement());
+        return entry;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void writeData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
+        super.writeData(io, extended);
+        MessageLM.writeJsonElement(io, getSerializableElement());
+    }
+
+    @Override
+    public void readData(ByteBuf io, boolean extended)
+    {
+        super.readData(io, extended);
+        fromJson(MessageLM.readJsonElement(io));
     }
 }

@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
     public ResourceLocation id;
-    public NBTTagCompound groupData;
+    public ConfigGroup group;
     public NBTTagCompound extraNBT;
     public ITextComponent title;
 
@@ -31,14 +31,13 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public MessageEditConfig(NBTTagCompound nbt, ConfigContainer c)
     {
         id = c.getResourceLocation();
-        groupData = new NBTTagCompound();
-        c.createGroup().writeToNBT(groupData, true);
+        group = c.createGroup();
         extraNBT = nbt;
         title = c.getConfigTitle();
 
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("TX Send: " + id + " :: " + groupData);
+            FTBLib.dev_logger.info("TX Send: " + id + " :: " + group);
         }
     }
 
@@ -52,7 +51,8 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public void fromBytes(ByteBuf io)
     {
         id = readResourceLocation(io);
-        groupData = readTag(io);
+        group = new ConfigGroup();
+        group.readData(io, true);
         extraNBT = readTag(io);
         title = JsonHelper.deserializeICC(readJsonElement(io));
     }
@@ -61,7 +61,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public void toBytes(ByteBuf io)
     {
         writeResourceLocation(io, id);
-        writeTag(io, groupData);
+        group.writeData(io, true);
         writeTag(io, extraNBT);
         writeJsonElement(io, JsonHelper.serializeICC(title));
     }
@@ -72,18 +72,15 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("RX Send: " + m.id + " :: " + m.groupData);
+            FTBLib.dev_logger.info("RX Send: " + m.id + " :: " + m.group);
         }
-
-        final ConfigGroup group = new ConfigGroup();
-        group.readFromNBT(m.groupData, true);
 
         new GuiEditConfig(m.extraNBT, new ConfigContainer(m.id)
         {
             @Override
             public ConfigGroup createGroup()
             {
-                return group;
+                return m.group;
             }
 
             @Override

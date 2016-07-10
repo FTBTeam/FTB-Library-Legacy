@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMListUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -94,9 +93,9 @@ public class ConfigEntryStringList extends ConfigEntry
     {
         List<String> list = getAsStringList();
         TIntList l = new TIntArrayList(list.size());
-        for(int i = 0; i < list.size(); i++)
+        for(String s : getAsStringList())
         {
-            l.add(Integer.parseInt(value.get(i)));
+            l.add(Integer.parseInt(s));
         }
 
         return l;
@@ -115,71 +114,71 @@ public class ConfigEntryStringList extends ConfigEntry
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
+        ConfigEntryStringList entry = new ConfigEntryStringList(defValue);
+        entry.set(getAsStringList());
+        return entry;
+    }
 
+    @Override
+    public void writeData(ByteBuf io, boolean extended)
+    {
+        super.writeData(io, extended);
         List<String> list = getAsStringList();
+        int s = list.size();
 
-        if(!list.isEmpty())
+        io.writeInt(s);
+
+        for(int i = 0; i < s; i++)
         {
-            NBTTagList l = new NBTTagList();
-
-            for(String s : list)
-            {
-                l.appendTag(new NBTTagString(s));
-            }
-
-            tag.setTag("V", l);
+            MessageLM.writeString(io, list.get(i));
         }
 
-        if(extended && !defValue.isEmpty())
+        if(extended)
         {
-            NBTTagList l = new NBTTagList();
+            s = defValue.size();
+            io.writeInt(s);
 
-            for(String s : defValue)
+            for(int i = 0; i < s; i++)
             {
-                l.appendTag(new NBTTagString(s));
+                MessageLM.writeString(io, defValue.get(i));
             }
-
-            tag.setTag("D", l);
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
+        super.readData(io, extended);
+        int s = io.readInt();
 
-        NBTTagList list = (NBTTagList) tag.getTag("V");
-
-        if(list != null)
+        if(s == 0)
         {
-            List<String> l = new ArrayList<>(list.tagCount());
-
-            for(int i = 0; i < list.tagCount(); i++)
-            {
-                l.add(list.getStringTagAt(i));
-            }
-
-            set(l);
+            set(null);
         }
         else
         {
-            set(null);
+            List<String> list = new ArrayList<>(s);
+            for(int i = 0; i < s; i++)
+            {
+                list.add(MessageLM.readString(io));
+            }
+
+            set(list);
         }
 
         if(extended)
         {
             defValue.clear();
 
-            list = (NBTTagList) tag.getTag("D");
+            s = io.readInt();
 
-            if(list != null)
+            if(s > 0)
             {
-                for(int i = 0; i < list.tagCount(); i++)
+                for(int i = 0; i < s; i++)
                 {
-                    defValue.add(list.getStringTagAt(i));
+                    defValue.add(MessageLM.readString(io));
                 }
             }
         }

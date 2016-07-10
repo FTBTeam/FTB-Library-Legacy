@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.nbt.NBTTagCompound;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -88,26 +88,35 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
-        tag.setBoolean("V", getAsBoolean());
+        ConfigEntryBool entry = new ConfigEntryBool(defValue);
+        entry.set(getAsBoolean());
+        return entry;
+    }
+
+    @Override
+    public void writeData(ByteBuf io, boolean extended)
+    {
+        super.writeData(io, extended);
+        io.writeBoolean(getAsBoolean());
 
         if(extended)
         {
-            tag.setBoolean("D", defValue);
+            io.writeBoolean(defValue);
         }
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void readData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
-        set(tag.getBoolean("V"));
+        super.readData(io, extended);
+
+        set(io.readBoolean());
 
         if(extended)
         {
-            defValue = tag.getBoolean("D");
+            defValue = io.readBoolean();
         }
     }
 

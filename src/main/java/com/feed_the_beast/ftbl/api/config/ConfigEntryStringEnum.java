@@ -2,11 +2,10 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -77,53 +76,56 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag, boolean extended)
+    public ConfigEntry copy()
     {
-        super.writeToNBT(tag, extended);
-
-        if(extended)
-        {
-            if(!array.isEmpty())
-            {
-                NBTTagList list = new NBTTagList();
-
-                for(String s : array)
-                {
-                    list.appendTag(new NBTTagString(s));
-                }
-
-                tag.setTag("VL", list);
-            }
-
-            tag.setShort("D", (short) defValue);
-        }
-
-        tag.setString("V", getAsString());
+        ConfigEntryStringEnum entry = new ConfigEntryStringEnum(array, array.get(defValue));
+        entry.setIndex(getIndex());
+        return entry;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag, boolean extended)
+    public void writeData(ByteBuf io, boolean extended)
     {
-        super.readFromNBT(tag, extended);
+        super.writeData(io, extended);
+
+        if(extended)
+        {
+            io.writeShort(array.size());
+
+            if(!array.isEmpty())
+            {
+                for(String s : array)
+                {
+                    MessageLM.writeString(io, s);
+                }
+            }
+
+            io.writeShort(defValue);
+        }
+
+        MessageLM.writeString(io, getAsString());
+    }
+
+    @Override
+    public void readData(ByteBuf io, boolean extended)
+    {
+        super.readData(io, extended);
 
         if(extended)
         {
             array.clear();
 
-            if(tag.hasKey("VL"))
-            {
-                NBTTagList list = (NBTTagList) tag.getTag("VL");
+            int s = io.readUnsignedShort();
 
-                for(int i = 0; i < list.tagCount(); i++)
-                {
-                    array.add(list.getStringTagAt(i));
-                }
+            for(int i = 0; i < s; i++)
+            {
+                array.add(MessageLM.readString(io));
             }
 
-            defValue = tag.getShort("D");
+            defValue = io.readShort();
         }
 
-        set(tag.getString("V"));
+        set(MessageLM.readString(io));
     }
 
     @Override
