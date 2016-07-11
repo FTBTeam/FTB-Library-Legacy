@@ -151,7 +151,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         }
     }
 
-    public boolean onRightClick(EntityPlayer ep, ItemStack is, EnumFacing side, EnumHand hand, float x, float y, float z)
+    public boolean onRightClick(@Nonnull EntityPlayer ep, @Nullable ItemStack is, @Nonnull EnumFacing side, @Nonnull EnumHand hand, float x, float y, float z)
     {
         return false;
     }
@@ -247,7 +247,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         markDirty();
     }
 
-    public void onBroken(IBlockState state)
+    public void onBroken(@Nonnull IBlockState state)
     {
     }
 

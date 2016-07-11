@@ -27,11 +27,18 @@ public class ODItems
     public static final String STONE = "stone";
     public static final String COBBLE = "cobblestone";
     public static final String SAND = "sand";
-    public static final ItemStack OBSIDIAN = new ItemStack(Blocks.OBSIDIAN);
+    public static final String OBSIDIAN = "obsidian";
     public static final ItemStack WOOL = new ItemStack(Blocks.WOOL, 1, ANY);
     public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
+    public static final String CHEST = "chest";
+    public static final String CHEST_WOOD = "chestWood";
+    public static final String QUARTZ_BLOCK = "blockQuartz";
 
     public static final String SLIMEBALL = "slimeball";
+    public static final String STRING = "string";
+    public static final String LEATHER = "leather";
+    public static final String GUNPOWDER = "gunpowder";
+    public static final String PAPER = "paper";
     public static final String MEAT_RAW = "listAllmeatraw";
     public static final String MEAT_COOKED = "listAllmeatcooked";
     public static final String RUBBER = "itemRubber";
@@ -42,6 +49,8 @@ public class ODItems
     public static final String GLOWSTONE = "dustGlowstone";
     public static final String QUARTZ = "gemQuartz";
     public static final String LAPIS = "gemLapis";
+    public static final String ENDERPEARL = "enderpearl";
+    public static final String NETHERSTAR = "netherStar";
 
     public static final String IRON = "ingotIron";
     public static final String GOLD = "ingotGold";

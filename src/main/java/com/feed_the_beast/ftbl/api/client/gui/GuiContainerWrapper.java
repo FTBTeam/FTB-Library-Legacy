@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.client.gui;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,6 +29,10 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
     {
         super.initGui();
         wrappedGui.initGui();
+        guiLeft = (int) wrappedGui.getAX();
+        guiTop = (int) wrappedGui.getAY();
+        xSize = (int) wrappedGui.width;
+        ySize = (int) wrappedGui.height;
     }
 
     @Override
@@ -76,8 +81,11 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
     @Override
     protected void drawGuiContainerForegroundLayer(int mx, int my)
     {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(-guiLeft, -guiTop, 0D);
         GuiLM.setupDrawing();
         wrappedGui.drawForeground();
+        GlStateManager.popMatrix();
     }
 
     @Override

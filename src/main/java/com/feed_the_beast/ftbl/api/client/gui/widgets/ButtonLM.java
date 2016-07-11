@@ -22,13 +22,13 @@ public abstract class ButtonLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(@Nonnull GuiLM gui, @Nonnull MouseButton b)
+    public void mousePressed(@Nonnull GuiLM gui, @Nonnull MouseButton button)
     {
         if(gui.isMouseOver(this))
         {
-            onClicked(gui, b);
+            onClicked(gui, button);
         }
     }
 
-    public abstract void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton b);
+    public abstract void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button);
 }

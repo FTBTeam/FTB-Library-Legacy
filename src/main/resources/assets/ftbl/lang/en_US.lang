@@ -13,6 +13,7 @@ gui_lm.label.online=Online
 gui_lm.label.offline=Offline
 gui_lm.label.whitelist=Whitelist
 gui_lm.label.blacklist=Blacklist
+gui_lm.label.color=Color
 
 ## Stats
 ftbl.stat.time_played=Time Played
@@ -88,12 +89,11 @@ sidebar_button.ftbl:heal=Heal
 player_action.ftbl:team_invite=Invate To My Team
 player_action.ftbl:team_deny_invite=Deny Invite
 
-# Security Mode
-ftbl.security=Security
-ftbl.security.public=Public
-ftbl.security.private=Private
-ftbl.security.friends=Friends
-ftbl.security.group=Group
+# Privacy Level
+ftbl.privacy=Privacy
+ftbl.privacy.public=Public
+ftbl.privacy.private=Private
+ftbl.privacy.team=Team
 
 # Redstone Mode
 ftbl.redstonemode=Redstone Mode

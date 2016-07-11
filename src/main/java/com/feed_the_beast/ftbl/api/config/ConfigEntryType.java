@@ -19,7 +19,7 @@ public enum ConfigEntryType
     STRING_ARRAY(9),
     COLOR(10);
 
-    private static final ConfigEntryType[] types = new ConfigEntryType[32];
+    private static final ConfigEntryType[] types = new ConfigEntryType[values().length];
 
     static
     {

@@ -30,6 +30,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -87,6 +88,8 @@ public class FTBLib
     };
 
     public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(false, EnumDyeColor.values());
+    public static final EnumNameMap<EnumFacing> FACINGS = new EnumNameMap<>(false, EnumFacing.VALUES);
+    
     private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
@@ -286,15 +289,16 @@ public class FTBLib
             else
             {
                 Container c = t.getContainer(ep, data);
-                if(c == null)
-                {
-                    return;
-                }
 
                 EntityPlayerMP epM = (EntityPlayerMP) ep;
                 epM.getNextWindowId();
                 epM.closeContainer();
-                epM.openContainer = c;
+
+                if(c != null)
+                {
+                    epM.openContainer = c;
+                }
+
                 epM.openContainer.windowId = epM.currentWindowId;
                 epM.openContainer.addListener(epM);
                 new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);

@@ -5,6 +5,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
@@ -18,59 +19,84 @@ public abstract class ContainerLM extends Container
     {
         player = ep;
         inv = i;
-        iinv = (inv != null && inv instanceof IInventory) ? (IInventory) inv : null;
+        iinv = null;
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer ep, int i)
     {
-        if(iinv == null)
+        if(inv instanceof IInventory)
         {
-            return null;
-        }
+            IInventory iinv = ((IInventory) inv);
+            ItemStack is = null;
+            Slot slot = inventorySlots.get(i);
 
-        ItemStack is = null;
-        Slot slot = inventorySlots.get(i);
-
-        if(slot != null && slot.getHasStack())
-        {
-            ItemStack is1 = slot.getStack();
-            is = is1.copy();
-
-            if(i < iinv.getSizeInventory())
+            if(slot != null && slot.getHasStack())
             {
-                if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
+                ItemStack is1 = slot.getStack();
+                is = is1.copy();
+
+                if(i < iinv.getSizeInventory())
+                {
+                    if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
+                    {
+                        return null;
+                    }
+                }
+                else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
                 {
                     return null;
                 }
-            }
-            else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
-            {
-                return null;
+
+                if(is1.stackSize == 0)
+                {
+                    slot.putStack(null);
+                }
+                else
+                {
+                    slot.onSlotChanged();
+                }
             }
 
-            if(is1.stackSize == 0)
-            {
-                slot.putStack(null);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
+            return is;
         }
-
-        return is;
-    }
-
-    @Nonnull
-    @Override
-    public Slot getSlot(int i)
-    {
-        if(i < 0 || i >= inventorySlots.size())
+        else if(inv instanceof IItemHandler)
         {
-            return null;
+            IItemHandler iinv = ((IItemHandler) inv);
+            ItemStack is = null;
+            Slot slot = inventorySlots.get(i);
+
+            if(slot != null && slot.getHasStack())
+            {
+                ItemStack is1 = slot.getStack();
+                is = is1.copy();
+
+                if(i < iinv.getSlots())
+                {
+                    if(!mergeItemStack(is1, iinv.getSlots(), inventorySlots.size(), true))
+                    {
+                        return null;
+                    }
+                }
+                else if(!mergeItemStack(is1, 0, iinv.getSlots(), false))
+                {
+                    return null;
+                }
+
+                if(is1.stackSize == 0)
+                {
+                    slot.putStack(null);
+                }
+                else
+                {
+                    slot.onSlotChanged();
+                }
+            }
+
+            return is;
         }
-        return super.getSlot(i);
+
+        return null;
     }
 
     public void addPlayerSlots(int posX, int posY)
@@ -80,26 +106,24 @@ public abstract class ContainerLM extends Container
 
     public void addPlayerSlots(int posX, int posY, boolean ignoreCurrent)
     {
-        if(player == null || player.inventory == null)
+        if(player != null && player.inventory != null)
         {
-            return;
-        }
+            for(int y = 0; y < 3; y++)
+            {
+                for(int x = 0; x < 9; x++)
+                {
+                    addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
+                }
+            }
 
-        for(int y = 0; y < 3; y++)
-        {
+            int i = ignoreCurrent ? player.inventory.currentItem : -1;
+
             for(int x = 0; x < 9; x++)
             {
-                addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
-            }
-        }
-
-        int i = ignoreCurrent ? player.inventory.currentItem : -1;
-
-        for(int x = 0; x < 9; x++)
-        {
-            if(x != i)
-            {
-                addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
+                if(x != i)
+                {
+                    addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
+                }
             }
         }
     }
@@ -119,9 +143,10 @@ public abstract class ContainerLM extends Container
     public void onContainerClosed(EntityPlayer ep)
     {
         super.onContainerClosed(ep);
-        if(iinv != null)
+
+        if(inv instanceof IInventory)
         {
-            iinv.closeInventory(ep);
+            ((IInventory) inv).closeInventory(ep);
         }
     }
 

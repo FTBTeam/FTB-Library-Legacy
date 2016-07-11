@@ -72,6 +72,11 @@ public class CmdCreate extends CommandLM
             throw FTBLibLang.raw.commandError("ID can only contain lowercase a-z, _ and |!");
         }
 
+        if(ForgeWorldMP.inst.teams.containsKey(args[0]))
+        {
+            throw FTBLibLang.raw.commandError("ID already registred!");
+        }
+
         ForgeTeam team = new ForgeTeam(ForgeWorldMP.inst, args[0]);
         team.changeOwner(p);
         ForgeWorldMP.inst.teams.put(team.getID(), team);

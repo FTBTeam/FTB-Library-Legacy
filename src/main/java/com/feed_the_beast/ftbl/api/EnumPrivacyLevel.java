@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.permissions.Context;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 
 public enum EnumPrivacyLevel
@@ -11,13 +10,13 @@ public enum EnumPrivacyLevel
     TEAM;
 
     public static final EnumPrivacyLevel[] VALUES = values();
-    public static final String enumLangKey = "ftbl.security";
+    public static final LangKey enumLangKey = new LangKey("ftbl.privacy");
 
-    public final String langKey;
+    public final LangKey langKey;
 
     EnumPrivacyLevel()
     {
-        langKey = enumLangKey + '.' + name().toLowerCase();
+        langKey = new LangKey("ftbl.privacy." + name().toLowerCase());
     }
 
     public static EnumPrivacyLevel get(String s)
@@ -42,7 +41,7 @@ public enum EnumPrivacyLevel
         return GuiIcons.security[ordinal()];
     }
 
-    public boolean canInteract(ForgePlayer owner, ForgePlayer player, Context context)
+    public boolean canInteract(ForgePlayer owner, ForgePlayer player)
     {
         if(this == EnumPrivacyLevel.PUBLIC || owner == null)
         {

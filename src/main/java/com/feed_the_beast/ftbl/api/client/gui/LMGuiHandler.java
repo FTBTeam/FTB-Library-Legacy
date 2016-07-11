@@ -36,15 +36,16 @@ public abstract class LMGuiHandler
         else
         {
             Container c = getContainer(ep, id, data);
-            if(c == null)
-            {
-                return;
-            }
 
             EntityPlayerMP epM = (EntityPlayerMP) ep;
             epM.getNextWindowId();
             epM.closeContainer();
-            epM.openContainer = c;
+
+            if(c != null)
+            {
+                epM.openContainer = c;
+            }
+
             epM.openContainer.windowId = epM.currentWindowId;
             epM.openContainer.addListener(epM);
             new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
