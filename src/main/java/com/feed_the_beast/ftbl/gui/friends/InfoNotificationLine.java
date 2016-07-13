@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
@@ -46,7 +45,7 @@ public class InfoNotificationLine extends InfoTextLine
         @Override
         public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
-            FTBLibClient.playClickSound();
+            GuiLM.playClickSound();
 
             if(gui.mouseX < getAX() + width - 32 && notification.notification.getClickAction() != null)
             {
@@ -65,7 +64,7 @@ public class InfoNotificationLine extends InfoTextLine
             double ay = getAY();
             double ax = getAX();
 
-            widget.render(gui.font, ax, ay);
+            widget.render(gui.mc, ax, ay);
 
             if(gui.isMouseOver(this))
             {

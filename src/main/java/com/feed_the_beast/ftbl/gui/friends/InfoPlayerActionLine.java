@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
@@ -40,7 +39,7 @@ public class InfoPlayerActionLine extends InfoTextLine
         @Override
         public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
         {
-            FTBLibClient.playClickSound();
+            GuiLM.playClickSound();
             action.onClicked(playerLM);
         }
 

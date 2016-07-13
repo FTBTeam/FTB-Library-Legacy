@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.info.InfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -66,11 +66,13 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 
             if(ep != null)
             {
+                RenderItem renderItem = gui.mc.getRenderItem();
+
                 for(int i = 0; i < ep.inventory.mainInventory.length - 9; i++)
                 {
                     if(ep.inventory.mainInventory[i + 9] != null)
                     {
-                        FTBLibClient.renderGuiItem(ep.inventory.mainInventory[i + 9], ax + (i % 9) * 18 + 1, ay + (i / 9) * 18 + 1);
+                        GuiLM.renderGuiItem(renderItem, ep.inventory.mainInventory[i + 9], ax + (i % 9) * 18 + 1, ay + (i / 9) * 18 + 1);
                     }
                 }
 
@@ -78,7 +80,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
                 {
                     if(ep.inventory.mainInventory[i] != null)
                     {
-                        FTBLibClient.renderGuiItem(ep.inventory.mainInventory[i], ax + i * 18 + 1, ay + 18 * 3 + 5);
+                        GuiLM.renderGuiItem(renderItem, ep.inventory.mainInventory[i], ax + i * 18 + 1, ay + 18 * 3 + 5);
                     }
                 }
             }

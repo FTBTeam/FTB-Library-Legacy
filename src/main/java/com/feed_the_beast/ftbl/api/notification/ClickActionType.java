@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api.notification;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
@@ -10,6 +11,7 @@ import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.google.gson.JsonElement;
 import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.util.LMUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -54,7 +56,7 @@ public abstract class ClickActionType extends FinalIDObject
         @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
-            FTBLibClient.mc().displayGuiScreen(new GuiChat(data.getAsString()));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiChat(data.getAsString()));
         }
     });
 
@@ -102,7 +104,7 @@ public abstract class ClickActionType extends FinalIDObject
 
             if(gui != null)
             {
-                FTBLibClient.mc().displayGuiScreen(gui);
+                Minecraft.getMinecraft().displayGuiScreen(gui);
             }
         }
     });
@@ -113,7 +115,7 @@ public abstract class ClickActionType extends FinalIDObject
         @SideOnly(Side.CLIENT)
         public void onClicked(@Nonnull JsonElement data, @Nonnull MouseButton button)
         {
-            GuiInfo gui = FTBLibClient.getWrappedGui(FTBLibClient.mc().currentScreen, GuiInfo.class);
+            GuiInfo gui = GuiLM.getWrappedGui(Minecraft.getMinecraft().currentScreen, GuiInfo.class);
 
             if(gui != null)
             {

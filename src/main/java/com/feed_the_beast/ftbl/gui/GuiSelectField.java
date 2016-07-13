@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonSimpleLM;
@@ -68,7 +67,7 @@ public class GuiSelectField extends GuiLM
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
                 callback.onCallback(ID, def);
             }
         };
@@ -78,7 +77,7 @@ public class GuiSelectField extends GuiLM
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
                 if(textBox.isValid())
                 {
                     switch(type)

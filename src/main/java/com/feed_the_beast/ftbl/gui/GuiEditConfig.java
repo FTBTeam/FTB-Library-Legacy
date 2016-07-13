@@ -110,7 +110,7 @@ public class GuiEditConfig extends GuiLM
         {
             if(mouseY >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
 
                 ConfigEntryType type = entry.getConfigType();
 
@@ -281,7 +281,7 @@ public class GuiEditConfig extends GuiLM
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
                 shouldClose = 1;
                 closeGui();
             }
@@ -292,7 +292,7 @@ public class GuiEditConfig extends GuiLM
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
                 shouldClose = 2;
                 closeGui();
             }

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
+import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.util.LMUtils;

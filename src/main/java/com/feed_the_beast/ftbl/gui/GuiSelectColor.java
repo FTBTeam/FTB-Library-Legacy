@@ -14,6 +14,7 @@ import com.latmod.lib.LMColor;
 import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMColorUtils;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -37,12 +38,12 @@ public class GuiSelectColor extends GuiLM
     public static final int COL_TEX_W = 29;
     public static final int COL_TEX_H = 16;
 
-    public static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H);
-    public static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8);
+    public static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
+    public static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
 
     public static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
-    public static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H);
-    public static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H);
+    public static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
+    public static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
 
     public class ColorSelector extends WidgetLM
     {
@@ -302,15 +303,15 @@ public class GuiSelectColor extends GuiLM
         sliderSaturation.update(this);
         sliderBrightness.update(this);
 
-        super.drawBackground();
+        FTBLibClient.setTexture(TEXTURE);
+
+        GuiScreen.drawModalRectWithCustomSizedTexture((int) getAX(), (int) getAY(), 0F, 0F, (int) width, (int) height, 256F, 256F);
 
         FTBLibClient.setGLColor(initCol.color(), 255);
         colorInit.render(col_tex);
         FTBLibClient.setGLColor(currentColor.color(), 255);
         colorCurrent.render(col_tex);
-        GlStateManager.color(1F, 1F, 1F, 1F);
 
-        FTBLibClient.setTexture(TEXTURE);
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
@@ -382,7 +383,7 @@ public class GuiSelectColor extends GuiLM
 
     public void closeGui(boolean set)
     {
-        FTBLibClient.playClickSound();
+        GuiLM.playClickSound();
         callback.onCallback(colorID, set ? currentColor : initCol);
     }
 }

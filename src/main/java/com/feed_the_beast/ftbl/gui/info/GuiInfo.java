@@ -87,7 +87,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
-                FTBLibClient.playClickSound();
+                GuiLM.playClickSound();
 
                 if(selectedPage == page || page.getUnformattedText().isEmpty())
                 {

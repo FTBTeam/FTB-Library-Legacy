@@ -10,9 +10,14 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,6 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +49,7 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
     public GuiLM()
     {
         super(0, 0, 300, 200);
-        mc = FTBLibClient.mc();
+        mc = Minecraft.getMinecraft();
         font = createFont(mc);
     }
 
@@ -106,6 +113,56 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
     public static void drawCenteredString(FontRenderer font, String txt, double x, double y, int color)
     {
         font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - font.FONT_HEIGHT / 2D), color);
+    }
+
+    public static void playClickSound()
+    {
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+    }
+
+    public static void renderGuiItem(@Nonnull RenderItem itemRender, @Nonnull ItemStack stack, double x, double y)
+    {
+        itemRender.zLevel = 200F;
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 32F);
+        FontRenderer font = stack.getItem().getFontRenderer(stack);
+
+        if(font == null)
+        {
+            font = Minecraft.getMinecraft().fontRendererObj;
+        }
+
+        GlStateManager.enableLighting();
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.enableRescaleNormal();
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
+        itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+        GlStateManager.popMatrix();
+        itemRender.zLevel = 0F;
+    }
+
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <E extends GuiLM> E getWrappedGui(@Nullable GuiScreen gui, @Nullable Class<E> c)
+    {
+        if(gui == null)
+        {
+            gui = Minecraft.getMinecraft().currentScreen;
+        }
+
+        if(gui instanceof IGuiWrapper)
+        {
+            GuiLM g = ((IGuiWrapper) gui).getWrappedGui();
+
+            if(g != null && (c == null || c.isAssignableFrom(g.getClass())))
+            {
+                return (E) g;
+            }
+        }
+
+        return null;
     }
 
     public final void initGui()

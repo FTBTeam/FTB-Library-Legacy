@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoImage;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
@@ -8,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,7 +55,7 @@ public class InfoImageLine extends InfoExtendedTextLine
             //File file = new File(FTBLib.folderModpack, "images/" + imageURL);
             //if(FTBLib.DEV_ENV) { FTBLib.dev_logger.info("Loading Guide image: " + file.getAbsolutePath()); }
             BufferedImage img = page.getResourceProvider().getConnection(imageURL).connect().asImage();
-            ResourceLocation tex = FTBLibClient.mc().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
+            ResourceLocation tex = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("ftbu_guide/" + imageURL, new DynamicTexture(img));
             texture = new InfoImage(tex, img.getWidth(), img.getHeight());
         }
         catch(Exception e)

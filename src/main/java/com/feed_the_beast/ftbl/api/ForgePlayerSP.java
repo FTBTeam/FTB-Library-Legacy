@@ -34,10 +34,9 @@ public class ForgePlayerSP extends ForgePlayer
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public EntityPlayer getPlayer()
     {
-        return FTBLibClient.getPlayerSP(getProfile().getId());
+        return null;
     }
 
     @Override

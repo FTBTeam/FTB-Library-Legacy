@@ -151,7 +151,7 @@ public class TextBoxLM extends WidgetLM
             ns += '_';
         }
 
-        if(s.length() > 0)
+        if(ns.length() > 0)
         {
             int col = textColor;
             if(!isValid())

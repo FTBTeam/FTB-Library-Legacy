@@ -43,7 +43,7 @@ public class ButtonInfoPage extends ButtonLM
     @Override
     public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
     {
-        FTBLibClient.playClickSound();
+        GuiLM.playClickSound();
 
         page.refreshGui(guiInfo);
 

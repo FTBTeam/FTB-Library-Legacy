@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -12,96 +12,61 @@ import javax.annotation.Nonnull;
 public abstract class ContainerLM extends Container
 {
     public final EntityPlayer player;
-    public final Object inv;
-    public final IInventory iinv;
+    public final IItemHandler itemHandler;
 
-    public ContainerLM(EntityPlayer ep, Object i)
+    public ContainerLM(EntityPlayer ep, IItemHandler i)
     {
         player = ep;
-        inv = i;
-        iinv = null;
+        itemHandler = i;
+    }
+
+    public void updateMainHandItem()
+    {
+        updateSlot(player.inventory.currentItem);
+    }
+
+    public void updateSlot(int i)
+    {
+        for(IContainerListener l : listeners)
+        {
+            l.sendSlotContents(this, i, getSlot(i).getStack());
+        }
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer ep, int i)
     {
-        if(inv instanceof IInventory)
+        ItemStack is = null;
+        Slot slot = inventorySlots.get(i);
+
+        if(slot != null && slot.getHasStack())
         {
-            IInventory iinv = ((IInventory) inv);
-            ItemStack is = null;
-            Slot slot = inventorySlots.get(i);
+            ItemStack is1 = slot.getStack();
+            is = is1.copy();
 
-            if(slot != null && slot.getHasStack())
+            if(i < itemHandler.getSlots())
             {
-                ItemStack is1 = slot.getStack();
-                is = is1.copy();
-
-                if(i < iinv.getSizeInventory())
-                {
-                    if(!mergeItemStack(is1, iinv.getSizeInventory(), inventorySlots.size(), true))
-                    {
-                        return null;
-                    }
-                }
-                else if(!mergeItemStack(is1, 0, iinv.getSizeInventory(), false))
+                if(!mergeItemStack(is1, itemHandler.getSlots(), inventorySlots.size(), true))
                 {
                     return null;
                 }
-
-                if(is1.stackSize == 0)
-                {
-                    slot.putStack(null);
-                }
-                else
-                {
-                    slot.onSlotChanged();
-                }
             }
-
-            return is;
-        }
-        else if(inv instanceof IItemHandler)
-        {
-            IItemHandler iinv = ((IItemHandler) inv);
-            ItemStack is = null;
-            Slot slot = inventorySlots.get(i);
-
-            if(slot != null && slot.getHasStack())
+            else if(!mergeItemStack(is1, 0, itemHandler.getSlots(), false))
             {
-                ItemStack is1 = slot.getStack();
-                is = is1.copy();
-
-                if(i < iinv.getSlots())
-                {
-                    if(!mergeItemStack(is1, iinv.getSlots(), inventorySlots.size(), true))
-                    {
-                        return null;
-                    }
-                }
-                else if(!mergeItemStack(is1, 0, iinv.getSlots(), false))
-                {
-                    return null;
-                }
-
-                if(is1.stackSize == 0)
-                {
-                    slot.putStack(null);
-                }
-                else
-                {
-                    slot.onSlotChanged();
-                }
+                return null;
             }
 
-            return is;
+            if(is1.stackSize == 0)
+            {
+                slot.putStack(null);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
         }
 
-        return null;
-    }
-
-    public void addPlayerSlots(int posX, int posY)
-    {
-        addPlayerSlots(posX, posY, false);
+        return is;
     }
 
     public void addPlayerSlots(int posX, int posY, boolean ignoreCurrent)
@@ -124,30 +89,25 @@ public abstract class ContainerLM extends Container
                 {
                     addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
                 }
+                else
+                {
+                    addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58)
+                    {
+                        @Override
+                        public boolean canTakeStack(EntityPlayer ep)
+                        {
+                            return false;
+                        }
+                    });
+                }
             }
         }
-    }
-
-    public void addPlayerSlots(int posY)
-    {
-        addPlayerSlots(8, posY);
     }
 
     @Override
     public boolean canInteractWith(@Nonnull EntityPlayer ep)
     {
         return true;
-    }
-
-    @Override
-    public void onContainerClosed(EntityPlayer ep)
-    {
-        super.onContainerClosed(ep);
-
-        if(inv instanceof IInventory)
-        {
-            ((IInventory) inv).closeInventory(ep);
-        }
     }
 
     @Override

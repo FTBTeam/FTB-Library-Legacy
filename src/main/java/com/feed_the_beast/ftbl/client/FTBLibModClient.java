@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
 import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
@@ -13,6 +12,7 @@ import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleRedstone;
@@ -38,7 +38,7 @@ public class FTBLibModClient extends FTBLibModCommon
         MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.instance);
 
         //For Dev reasons, see DevConsole
-        FTBLib.userIsLatvianModder = FTBLibClient.mc().getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
+        FTBLib.userIsLatvianModder = Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
@@ -70,7 +70,7 @@ public class FTBLibModClient extends FTBLibModCommon
         {
             return super.getReachDist(ep);
         }
-        PlayerControllerMP c = FTBLibClient.mc().playerController;
+        PlayerControllerMP c = Minecraft.getMinecraft().playerController;
         return (c == null) ? 0D : c.getBlockReachDistance();
     }
 
@@ -90,7 +90,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
         fx.setRBGColorF(red, green, blue);
         fx.setAlphaF(alpha);
-        FTBLibClient.mc().effectRenderer.addEffect(fx);
+        Minecraft.getMinecraft().effectRenderer.addEffect(fx);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
             if(g != null)
             {
-                FTBLibClient.mc().displayGuiScreen(g);
+                Minecraft.getMinecraft().displayGuiScreen(g);
                 return true;
             }
         }
@@ -120,7 +120,7 @@ public class FTBLibModClient extends FTBLibModCommon
             GuiScreen g = t.getGui(ep, data);
             if(g != null)
             {
-                FTBLibClient.mc().displayGuiScreen(g);
+                Minecraft.getMinecraft().displayGuiScreen(g);
             }
         }
     }

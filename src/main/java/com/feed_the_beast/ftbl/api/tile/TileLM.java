@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.security.Security;
 import com.feed_the_beast.ftbl.net.MessageClientTileAction;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
-import com.feed_the_beast.ftbl.util.LMNBTUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,13 +23,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public class TileLM extends TileEntity implements IEditableName, ITickable
@@ -52,15 +49,15 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
         }
     }
 
+    public final Security security = createSecurity();
     public boolean isLoaded = false;
-    public UUID ownerID;
     public boolean redstonePowered = false;
     private boolean isDirty = true;
     private IBlockState currentState;
 
-    public boolean useOwnerID()
+    protected Security createSecurity()
     {
-        return true;
+        return new Security(true, false);
     }
 
     @Nonnull
@@ -69,12 +66,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     {
         super.writeToNBT(tag);
         writeTileData(tag);
-
-        if(ownerID != null && useOwnerID())
-        {
-            LMNBTUtils.setUUID(tag, "OwnerID", ownerID, true);
-        }
-
+        tag.setTag("Security", security.serializeNBT());
         return tag;
     }
 
@@ -82,7 +74,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     public final void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        ownerID = useOwnerID() ? LMNBTUtils.getUUID(tag, "OwnerID", true) : null;
+        security.deserializeNBT(tag.getTag("Security"));
         readTileData(tag);
     }
 
@@ -90,14 +82,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     @Nullable
     public final SPacketUpdateTileEntity getUpdatePacket()
     {
-        NBTTagCompound tag = getUpdateTag();
-
-        if(ownerID != null && useOwnerID())
-        {
-            LMNBTUtils.setUUID(tag, "OID", ownerID, false);
-        }
-
-        return new SPacketUpdateTileEntity(getPos(), 0, tag);
+        return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
     }
 
     @Nonnull
@@ -105,6 +90,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     public final NBTTagCompound getUpdateTag()
     {
         NBTTagCompound tag = new NBTTagCompound();
+        tag.setTag("Security", security.serializeNBT());
         writeTileClientData(tag);
         return tag;
     }
@@ -112,9 +98,9 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     @Override
     public final void onDataPacket(NetworkManager m, SPacketUpdateTileEntity p)
     {
-        NBTTagCompound data = p.getNbtCompound();
-        ownerID = useOwnerID() ? LMNBTUtils.getUUID(data, "OID", false) : null;
-        readTileClientData(data);
+        NBTTagCompound tag = p.getNbtCompound();
+        security.deserializeNBT(tag.getTag("Security"));
+        readTileClientData(tag);
         onUpdatePacket();
         FTBLibClient.onGuiClientAction();
     }
@@ -234,10 +220,7 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
 
     public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
     {
-        if(!(ep instanceof FakePlayer))
-        {
-            ownerID = ep.getGameProfile().getId();
-        }
+        security.setOwner(ep.getGameProfile().getId());
 
         if(is.hasDisplayName())
         {
@@ -251,14 +234,9 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     {
     }
 
-    public EnumPrivacyLevel getPrivacyLevel()
-    {
-        return EnumPrivacyLevel.PUBLIC;
-    }
-
     public boolean isExplosionResistant()
     {
-        return getPrivacyLevel() != EnumPrivacyLevel.PUBLIC;
+        return !security.getPrivacyLevel().isPublic();
     }
 
     public final void sendClientAction(TileClientAction action, NBTTagCompound data)

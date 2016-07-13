@@ -69,7 +69,7 @@ public class FTBLibMod
         FTBLibStats.init();
 
         MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
-        FTBLibCapabilities.enable();
+        FTBLibCapabilities.init();
         ClickActionType.init();
 
         proxy.preInit();

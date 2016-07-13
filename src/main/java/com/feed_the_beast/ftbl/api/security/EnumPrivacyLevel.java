@@ -1,6 +1,9 @@
-package com.feed_the_beast.ftbl.api;
+package com.feed_the_beast.ftbl.api.security;
 
+import com.feed_the_beast.ftbl.api.ForgePlayer;
+import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 
 public enum EnumPrivacyLevel
@@ -11,6 +14,7 @@ public enum EnumPrivacyLevel
 
     public static final EnumPrivacyLevel[] VALUES = values();
     public static final LangKey enumLangKey = new LangKey("ftbl.privacy");
+    public static final EnumNameMap<EnumPrivacyLevel> NAME_MAP = new EnumNameMap<>(false, EnumPrivacyLevel.VALUES);
 
     public final LangKey langKey;
 
@@ -39,6 +43,11 @@ public enum EnumPrivacyLevel
     public TextureCoords getIcon()
     {
         return GuiIcons.security[ordinal()];
+    }
+
+    public boolean isPublic()
+    {
+        return this == PUBLIC;
     }
 
     public boolean canInteract(ForgePlayer owner, ForgePlayer player)

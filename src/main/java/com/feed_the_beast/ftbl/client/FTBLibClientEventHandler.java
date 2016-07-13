@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
@@ -23,7 +22,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -174,7 +172,7 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void onDrawDebugText(RenderGameOverlayEvent.Text event)
     {
-        if(!FTBLibClient.mc().gameSettings.showDebugInfo)
+        if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
         {
             if(FTBLib.DEV_ENV)
             {
@@ -301,13 +299,13 @@ public class FTBLibClientEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderTick(TickEvent.RenderTickEvent e)
+    public void renderGui(RenderGameOverlayEvent event)
     {
         GlStateManager.pushMatrix();
 
-        if(e.phase == TickEvent.Phase.END && FTBLibClient.mc().theWorld != null)
+        if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
         {
-            ClientNotifications.renderTemp();
+            ClientNotifications.renderTemp(event);
         }
 
         GlStateManager.popMatrix();

@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.latmod.lib.LMColor;
 import gnu.trove.list.TIntList;
+import gnu.trove.map.TByteObjectMap;
+import gnu.trove.map.hash.TByteObjectHashMap;
 
 /**
  * Created by LatvianModder on 30.03.2016.
@@ -19,13 +21,13 @@ public enum ConfigEntryType
     STRING_ARRAY(9),
     COLOR(10);
 
-    private static final ConfigEntryType[] types = new ConfigEntryType[values().length];
+    private static final TByteObjectMap<ConfigEntryType> TYPE_MAP = new TByteObjectHashMap<>();
 
     static
     {
         for(ConfigEntryType t : values())
         {
-            types[t.ID] = t;
+            TYPE_MAP.put(t.ID, t);
         }
     }
 
@@ -38,7 +40,7 @@ public enum ConfigEntryType
 
     public static ConfigEntryType getFromID(byte id)
     {
-        return types[id];
+        return TYPE_MAP.get(id);
     }
 
     public ConfigEntry createNew()

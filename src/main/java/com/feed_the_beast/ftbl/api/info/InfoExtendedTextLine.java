@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoExtendedTextLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
@@ -94,7 +94,7 @@ public class InfoExtendedTextLine extends InfoTextLine
     {
         if(clickAction != null)
         {
-            FTBLibClient.playClickSound();
+            GuiLM.playClickSound();
             clickAction.onClicked(button);
         }
     }

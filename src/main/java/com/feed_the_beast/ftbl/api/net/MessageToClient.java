@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.net;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +23,7 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
     @Override
     public final IMessage onMessage(E m, MessageContext ctx)
     {
-        Minecraft mc = FTBLibClient.mc();
+        Minecraft mc = Minecraft.getMinecraft();
         mc.addScheduledTask(() -> onMessage(m, mc));
 
         if(MessageLM.logMessages())

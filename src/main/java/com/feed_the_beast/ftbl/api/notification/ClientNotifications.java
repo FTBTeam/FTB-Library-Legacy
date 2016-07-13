@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.latmod.lib.FinalIDObject;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,7 +50,7 @@ public class ClientNotifications
             }
         }
 
-        public void render(FontRenderer font, double ax, double ay)
+        public void render(Minecraft mc, double ax, double ay)
         {
             GlStateManager.enableBlend();
 
@@ -61,12 +61,12 @@ public class ClientNotifications
 
             if(notification.hasItem())
             {
-                FTBLibClient.renderGuiItem(notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
+                GuiLM.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
             }
 
             for(int i = 0; i < text.size(); i++)
             {
-                font.drawString(text.get(i), (int) ax + (notification.hasItem() ? 30 : 10), (int) (ay + i * 11D + (height - text.size() * 10D) / 2D), 0xFFFFFFFF);
+                mc.fontRendererObj.drawString(text.get(i), (int) ax + (notification.hasItem() ? 30 : 10), (int) (ay + i * 11D + (height - text.size() * 10D) / 2D), 0xFFFFFFFF);
             }
         }
     }
@@ -86,20 +86,20 @@ public class ClientNotifications
             time = -1L;
         }
 
-        public boolean render()
+        public boolean render(RenderGameOverlayEvent event)
         {
             if(time == -1L)
             {
                 time = System.currentTimeMillis();
             }
 
-            FontRenderer font = FTBLibClient.mc().fontRendererObj;
+            Minecraft mc = Minecraft.getMinecraft();
 
             if(widget.width == 0)
             {
                 for(String s : widget.text)
                 {
-                    widget.width = Math.max(widget.width, font.getStringWidth(s));
+                    widget.width = Math.max(widget.width, mc.fontRendererObj.getStringWidth(s));
                 }
 
                 widget.width += 20;
@@ -136,7 +136,7 @@ public class ClientNotifications
                 GlStateManager.disableDepth();
                 GlStateManager.depthMask(false);
                 GlStateManager.disableLighting();
-                widget.render(font, new ScaledResolution(FTBLibClient.mc()).getScaledWidth() - widget.width - 4, d1 * widget.height - widget.height);
+                widget.render(mc, event.getResolution().getScaledWidth() - widget.width - 4, d1 * widget.height - widget.height);
                 GlStateManager.depthMask(true);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 GlStateManager.enableLighting();
@@ -175,11 +175,11 @@ public class ClientNotifications
         }
     }
 
-    public static void renderTemp()
+    public static void renderTemp(RenderGameOverlayEvent event)
     {
         if(current != null)
         {
-            if(current.render())
+            if(current.render(event))
             {
                 current = null;
             }

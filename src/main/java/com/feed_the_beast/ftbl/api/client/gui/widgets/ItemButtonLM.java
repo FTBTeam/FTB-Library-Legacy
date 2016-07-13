@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.client.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -27,7 +26,7 @@ public abstract class ItemButtonLM extends ButtonLM
     {
         if(item != null)
         {
-            FTBLibClient.renderGuiItem(item, getAX(), getAY());
+            GuiLM.renderGuiItem(gui.mc.getRenderItem(), item, getAX(), getAY());
         }
     }
 }

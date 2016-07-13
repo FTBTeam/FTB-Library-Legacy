@@ -28,7 +28,7 @@ public class LMFrustumUtils
 
     public static void update()
     {
-        Minecraft mc = FTBLibClient.mc();
+        Minecraft mc = Minecraft.getMinecraft();
         isFirstPerson = mc.gameSettings.thirdPersonView == 0;
         currentDim = FTBLibClient.getDim();
         //mc.thePlayer.posX

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api;
+package com.feed_the_beast.ftbl.api.security;
 
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 
