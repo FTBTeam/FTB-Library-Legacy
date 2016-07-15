@@ -4,9 +4,6 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorld;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
-import com.feed_the_beast.ftbl.api.tile.IInfoTile;
-import com.feed_the_beast.ftbl.api.tile.TileInfoDataAccessor;
-import com.feed_the_beast.ftbl.util.MathHelperMC;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,7 +15,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.silentchaos512.wit.api.WitBlockInfoEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,20 +38,6 @@ public class FTBLibEventHandler implements ITickable
             {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    @SubscribeEvent
-    @Optional.Method(modid = "WIT")
-    public void onWIT(WitBlockInfoEvent event)
-    {
-        if(event.tileEntity instanceof IInfoTile)
-        {
-            TileInfoDataAccessor.inst.player = event.player;
-            TileInfoDataAccessor.inst.world = event.getWorld();
-            TileInfoDataAccessor.inst.hit = MathHelperMC.rayTrace(event.player);
-            TileInfoDataAccessor.inst.state = event.blockState;
-            ((IInfoTile) event.tileEntity).getInfo(TileInfoDataAccessor.inst, event.lines, event.advanced);
         }
     }
 

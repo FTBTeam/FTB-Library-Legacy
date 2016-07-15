@@ -17,8 +17,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
@@ -73,12 +71,6 @@ public class FTBLibMod
         ClickActionType.init();
 
         proxy.preInit();
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent e)
-    {
-        FMLInterModComms.sendMessage("Waila", "register", "com.feed_the_beast.ftbl.WailaDataProvider.registerHandlers");
     }
 
     @Mod.EventHandler
