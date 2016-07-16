@@ -31,7 +31,7 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
         return null;
     }
 
-    public void onMessage(E m, EntityPlayerMP mp)
+    public void onMessage(E m, EntityPlayerMP ep)
     {
     }
 

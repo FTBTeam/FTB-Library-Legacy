@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 public abstract class ContainerLM extends Container
 {
     public final EntityPlayer player;
-    public final IItemHandler itemHandler;
+    public IItemHandler itemHandler;
 
     public ContainerLM(EntityPlayer ep, IItemHandler i)
     {
