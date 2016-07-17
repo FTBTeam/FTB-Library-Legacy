@@ -16,7 +16,6 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class TileLM extends TileEntity implements IEditableName, ITickable
+public class TileLM extends TileEntity implements IEditableName
 {
     protected enum EnumSync
     {
@@ -155,29 +154,18 @@ public class TileLM extends TileEntity implements IEditableName, ITickable
     }
 
     @Override
-    public final void update()
-    {
-        onUpdate();
-
-        if(isDirty)
-        {
-            if(getSide().isServer())
-            {
-                sendDirtyUpdate();
-            }
-
-            isDirty = false;
-        }
-    }
-
-    public void onUpdate()
-    {
-    }
-
-    @Override
     public void markDirty()
     {
         isDirty = true;
+    }
+
+    public final void checkIfDirty()
+    {
+        if(isDirty)
+        {
+            sendDirtyUpdate();
+            isDirty = false;
+        }
     }
 
     public void sendDirtyUpdate()
