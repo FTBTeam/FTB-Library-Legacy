@@ -3,8 +3,9 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
+import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
+import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,11 +16,11 @@ import javax.annotation.Nonnull;
 /**
  * Created by LatvianModder on 20.06.2016.
  */
-public class CmdKick extends CommandLM
+public class CmdAddAlly extends CommandLM
 {
-    public CmdKick()
+    public CmdAddAlly()
     {
-        super("kick");
+        super("add_ally");
     }
 
     @Override
@@ -46,27 +47,18 @@ public class CmdKick extends CommandLM
             throw FTBLibLang.team_not_owner.commandError();
         }
 
-        checkArgs(args, 1, "<player>");
+        checkArgs(args, 1, "<teamID>");
 
-        ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
-
-        if(!p1.isMemberOf(team))
+        if(!ForgeWorldMP.inst.teams.containsKey(args[0]))
         {
-            throw FTBLibLang.team_not_member.commandError();
+            throw FTBLibLang.team_not_found.commandError();
         }
 
-        if(!p1.equalsPlayer(p))
+        if(team.addAllyTeam(args[0]))
         {
-            team.removePlayer(p);
-            new MessageUpdateTeam(team.getID()).sendTo(null);
-            FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
+            //TODO: Lang
+        }
 
-            p.sendUpdate();
-            p1.sendUpdate();
-        }
-        else
-        {
-            throw FTBLibLang.team_must_transfer_ownership.commandError();
-        }
+        FTBLib.printChat(ep, "Added ally team: " + args[0]);
     }
 }

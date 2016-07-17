@@ -99,7 +99,7 @@ public class FTBLibClient
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
     }
 
-    public static ThreadDownloadImageData getDownloadImage(@Nonnull ResourceLocation out, @Nonnull String url, ResourceLocation def, @Nullable IImageBuffer buffer)
+    public static ThreadDownloadImageData getDownloadImage(@Nonnull ResourceLocation out, @Nonnull String url, @Nonnull ResourceLocation def, @Nullable IImageBuffer buffer)
     {
         TextureManager t = Minecraft.getMinecraft().getTextureManager();
         ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);

@@ -23,6 +23,8 @@ public class CmdTeam extends CommandSubBase
         add(new CmdKick());
         add(new CmdInvite());
         add(new CmdJoin());
+        add(new CmdAddAlly());
+        add(new CmdRemAlly());
     }
 
     public static ForgeTeam getTeam(String s) throws CommandException
