@@ -6,6 +6,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +27,7 @@ import java.util.Map;
  */
 public class LMInvUtils
 {
+    public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
     private static Method baublesMethod = null;
 
     public static ItemStack singleCopy(ItemStack is)

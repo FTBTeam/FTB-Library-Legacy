@@ -2,40 +2,35 @@ package com.feed_the_beast.ftbl.api.client.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class ContainerLM extends Container
 {
     public final EntityPlayer player;
-    public IItemHandler itemHandler;
 
-    public ContainerLM(EntityPlayer ep, IItemHandler i)
+    public ContainerLM(EntityPlayer ep)
     {
         player = ep;
-        itemHandler = i;
     }
 
-    public void updateMainHandItem()
-    {
-        updateSlot(player.inventory.currentItem);
-    }
-
-    public void updateSlot(int i)
-    {
-        for(IContainerListener l : listeners)
-        {
-            l.sendSlotContents(this, i, getSlot(i).getStack());
-        }
-    }
+    @Nullable
+    public abstract IItemHandler getItemHandler();
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer ep, int i)
     {
+        IItemHandler itemHandler = getItemHandler();
+
+        if(itemHandler == null)
+        {
+            return null;
+        }
+
         ItemStack is = null;
         Slot slot = inventorySlots.get(i);
 
