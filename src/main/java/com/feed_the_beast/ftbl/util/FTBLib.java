@@ -9,8 +9,6 @@ import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.tile.IGuiTile;
-import com.feed_the_beast.ftbl.net.MessageOpenGuiTile;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
 import com.latmod.lib.io.LMConnection;
@@ -22,12 +20,9 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -43,7 +38,6 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -55,8 +49,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -89,7 +81,7 @@ public class FTBLib
 
     public static final EnumNameMap<EnumDyeColor> DYE_COLORS = new EnumNameMap<>(false, EnumDyeColor.values());
     public static final EnumNameMap<EnumFacing> FACINGS = new EnumNameMap<>(false, EnumFacing.VALUES);
-    
+
     private static final Map<String, UUID> cachedUUIDs = new HashMap<>();
     public static boolean userIsLatvianModder = false;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
@@ -276,34 +268,6 @@ public class FTBLib
         }
 
         return runCommand(ics, sb.toString());
-    }
-
-    public static void openGui(@Nonnull EntityPlayer ep, @Nonnull IGuiTile t, @Nullable NBTTagCompound data)
-    {
-        if(t instanceof TileEntity && !(ep instanceof FakePlayer))
-        {
-            if(ep.worldObj.isRemote)
-            {
-                FTBLibMod.proxy.openClientTileGui(ep, t, data);
-            }
-            else
-            {
-                Container c = t.getContainer(ep, data);
-
-                EntityPlayerMP epM = (EntityPlayerMP) ep;
-                epM.getNextWindowId();
-                epM.closeContainer();
-
-                if(c != null)
-                {
-                    epM.openContainer = c;
-                }
-
-                epM.openContainer.windowId = epM.currentWindowId;
-                epM.openContainer.addListener(epM);
-                new MessageOpenGuiTile((TileEntity) t, data, epM.currentWindowId).sendTo(epM);
-            }
-        }
     }
 
     public static void addCallback(ServerTickCallback c)

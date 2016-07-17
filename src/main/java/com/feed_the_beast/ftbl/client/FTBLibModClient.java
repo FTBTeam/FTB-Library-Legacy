@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
-import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
+import com.feed_the_beast.ftbl.api.client.gui.GuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
-import com.feed_the_beast.ftbl.api.tile.IGuiTile;
 import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMColorUtils;
@@ -96,7 +95,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
     {
-        LMGuiHandler h = LMGuiHandlerRegistry.get(mod);
+        GuiHandler h = GuiHandlerRegistry.get(mod);
 
         if(h != null)
         {
@@ -110,19 +109,6 @@ public class FTBLibModClient extends FTBLibModCommon
         }
 
         return false;
-    }
-
-    @Override
-    public void openClientTileGui(EntityPlayer ep, IGuiTile t, NBTTagCompound data)
-    {
-        if(ep != null && t != null)
-        {
-            GuiScreen g = t.getGui(ep, data);
-            if(g != null)
-            {
-                Minecraft.getMinecraft().displayGuiScreen(g);
-            }
-        }
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -17,17 +16,7 @@ import java.util.Map;
 public class TileClientActionRegistry
 {
     public static final Map<ResourceLocation, TileClientAction> map = new HashMap<>();
-    public static final TileClientAction OPEN_GUI = register(new TileClientAction(new ResourceLocation(FTBLibFinals.MOD_ID, "open_gui"))
-    {
-        @Override
-        public void onAction(TileEntity te, NBTTagCompound data, EntityPlayerMP player)
-        {
-            if(te instanceof IGuiTile)
-            {
-                FTBLib.openGui(player, (IGuiTile) te, data);
-            }
-        }
-    });
+
     public static final TileClientAction BUTTON_PRESSED = register(new TileClientAction(new ResourceLocation(FTBLibFinals.MOD_ID, "button"))
     {
         @Override
@@ -39,6 +28,7 @@ public class TileClientActionRegistry
             }
         }
     });
+
     public static final TileClientAction CUSTOM_NAME = register(new TileClientAction(new ResourceLocation(FTBLibFinals.MOD_ID, "custom_name"))
     {
         @Override

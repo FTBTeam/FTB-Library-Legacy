@@ -19,7 +19,7 @@ public class FTBLibNetHandler
         NET.register(9, new MessageRequestSelfUpdate());
         //10
         NET.register(11, new MessageOpenGui());
-        NET.register(12, new MessageOpenGuiTile());
+        //12
         NET.register(13, new MessageClientTileAction());
         NET.register(14, new MessageClientItemAction());
         NET.register(15, new MessageNotifyPlayer());

@@ -3,11 +3,11 @@ package com.feed_the_beast.ftbl.api.client.gui;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LMGuiHandlerRegistry
+public class GuiHandlerRegistry
 {
-    private static final Map<String, LMGuiHandler> map = new HashMap<>();
+    private static final Map<String, GuiHandler> map = new HashMap<>();
 
-    public static void add(LMGuiHandler h)
+    public static void add(GuiHandler h)
     {
         if(h != null && !map.containsKey(h.ID))
         {
@@ -15,7 +15,7 @@ public class LMGuiHandlerRegistry
         }
     }
 
-    public static LMGuiHandler get(String id)
+    public static GuiHandler get(String id)
     {
         return map.get(id);
     }

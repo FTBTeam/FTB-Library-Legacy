@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandler;
-import com.feed_the_beast.ftbl.api.client.gui.LMGuiHandlerRegistry;
+import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
+import com.feed_the_beast.ftbl.api.client.gui.GuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
@@ -58,7 +58,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m, Minecraft mc)
     {
-        LMGuiHandler h = LMGuiHandlerRegistry.get(m.modID);
+        GuiHandler h = GuiHandlerRegistry.get(m.modID);
 
         if(h != null && FTBLibMod.proxy.openClientGui(mc.thePlayer, m.modID, m.guiID, m.data))
         {
