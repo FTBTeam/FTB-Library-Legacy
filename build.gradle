@@ -23,7 +23,7 @@ plugins {
 */
 
 version = "1.9.4-" + version_mod
-group = "com.feed_the_beast.ftbl"
+group = "com.feed_the_beast.ftblib"
 archivesBaseName = "FTBLib"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,6 +37,7 @@ minecraft {
     replaceIn "FTBLibFinals.java"
 }
 
+/*
 repositories {
     maven { // The repo from which to get waila
         name "Mobius Repo"
@@ -47,10 +48,11 @@ repositories {
         url "http://chickenbones.net/maven/"
     }
 }
+*/
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-    compile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
+    //compile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
 }
 
 processResources
