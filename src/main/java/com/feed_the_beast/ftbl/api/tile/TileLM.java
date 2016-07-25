@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.security.Security;
 import com.feed_the_beast.ftbl.net.MessageClientTileAction;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -16,12 +15,10 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
@@ -29,28 +26,9 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class TileLM extends TileEntity implements IEditableName
+public class TileLM extends TileEntity
 {
-    protected enum EnumSync
-    {
-        OFF,
-        SYNC,
-        RERENDER;
-
-        boolean sync()
-        {
-            return this == SYNC || this == RERENDER;
-        }
-
-        boolean rerender()
-        {
-            return this == RERENDER;
-        }
-    }
-
     public final Security security = createSecurity();
-    public boolean isLoaded = false;
-    public boolean redstonePowered = false;
     private boolean isDirty = true;
     private IBlockState currentState;
 
@@ -144,13 +122,11 @@ public class TileLM extends TileEntity implements IEditableName
     @Override
     public void onLoad()
     {
-        isLoaded = true;
     }
 
     @Override
     public void onChunkUnload()
     {
-        isLoaded = false;
     }
 
     @Override
@@ -209,12 +185,6 @@ public class TileLM extends TileEntity implements IEditableName
     public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
     {
         security.setOwner(ep.getGameProfile().getId());
-
-        if(is.hasDisplayName())
-        {
-            setName(is.getDisplayName());
-        }
-
         markDirty();
     }
 
@@ -227,14 +197,14 @@ public class TileLM extends TileEntity implements IEditableName
         return !security.getPrivacyLevel().isPublic();
     }
 
-    public final void sendClientAction(TileClientAction action, NBTTagCompound data)
+    public final void sendClientAction(ResourceLocation rl, NBTTagCompound data)
     {
-        new MessageClientTileAction(this, action, data).sendToServer();
+        new MessageClientTileAction(this, rl, data).sendToServer();
     }
 
     //sendClientAction(TileClientActionRegistry.OPEN_GUI, data);
 
-    public void clientPressButton(int button, MouseButton mouseButton, NBTTagCompound data)
+    public void clientPressButton(int button, MouseButton mouseButton, @Nullable NBTTagCompound data)
     {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("I", button);
@@ -244,13 +214,6 @@ public class TileLM extends TileEntity implements IEditableName
             tag.setTag("D", data);
         }
         sendClientAction(TileClientActionRegistry.BUTTON_PRESSED, tag);
-    }
-
-    public void clientCustomName(String name)
-    {
-        NBTTagCompound data = new NBTTagCompound();
-        data.setString("N", name);
-        sendClientAction(TileClientActionRegistry.CUSTOM_NAME, data);
     }
 
     public final Side getSide()
@@ -267,40 +230,9 @@ public class TileLM extends TileEntity implements IEditableName
     {
         if(worldObj != null)
         {
-            redstonePowered = worldObj.isBlockPowered(getPos());
+            //redstonePowered = worldObj.isBlockPowered(getPos());
             updateContainingBlockInfo();
         }
-    }
-
-    @Override
-    public boolean canSetName(ICommandSender ics)
-    {
-        return true;
-    }
-
-    @Nonnull
-    @Override
-    public String getName()
-    {
-        return "";
-    }
-
-    @Override
-    public void setName(String s)
-    {
-    }
-
-    @Override
-    public boolean hasCustomName()
-    {
-        return !getName().isEmpty();
-    }
-
-    @Nonnull
-    @Override
-    public ITextComponent getDisplayName()
-    {
-        return hasCustomName() ? new TextComponentString(getName()) : new TextComponentTranslation(getBlockType().getLocalizedName() + ".name");
     }
 
     public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)

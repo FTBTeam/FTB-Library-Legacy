@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
@@ -8,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -23,7 +21,8 @@ public class ConfigRegistry
     private static final Map<String, ConfigFile> map = new HashMap<>();
     private static final ConfigGroup mainGroup = new ConfigGroup();
 
-    public static final ConfigContainer CONTAINER = new ConfigContainer(new ResourceLocation(FTBLibFinals.MOD_ID, "config"))
+    //new ResourceLocation(FTBLibFinals.MOD_ID, "config")
+    public static final ConfigContainer CONTAINER = new ConfigContainer()
     {
         @Override
         public ConfigGroup createGroup()

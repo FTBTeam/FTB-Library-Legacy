@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.info.InfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,7 +28,7 @@ public class InfoPlayerActionLine extends InfoTextLine
         {
             super(g, null);
             height = 18;
-            title = action.displayName.getFormattedText();
+            title = action.getDisplayName(actionID).getFormattedText();
             width = (action.icon == null ? 8 : 24) + g.font.getStringWidth(title);
         }
 
@@ -67,12 +68,14 @@ public class InfoPlayerActionLine extends InfoTextLine
     }
 
     public final ForgePlayerSP playerLM;
+    public final ResourceLocation actionID;
     public final ActionButton action;
 
-    public InfoPlayerActionLine(InfoPage c, ForgePlayerSP p, ActionButton a)
+    public InfoPlayerActionLine(InfoPage c, ForgePlayerSP p, ResourceLocation id, ActionButton a)
     {
         super(c, null);
         playerLM = p;
+        actionID = id;
         action = a;
     }
 

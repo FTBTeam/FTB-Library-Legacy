@@ -9,17 +9,21 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 public abstract class PlayerAction extends ActionButton
 {
-    public PlayerAction(ResourceLocation id, int p, TextureCoords c)
+    public PlayerAction(int p, TextureCoords c)
     {
-        super(id, p, c, null);
+        super(p, c, null);
     }
 
     @Override
-    protected ITextComponent getDisplayName()
+    @Nonnull
+    public ITextComponent getDisplayName(ResourceLocation id)
     {
-        return new TextComponentTranslation("player_action." + getID());
+        ITextComponent c = getDisplayNameOverride();
+        return (c == null) ? new TextComponentTranslation("player_action." + id) : c;
     }
 
     @Override

@@ -5,7 +5,8 @@ import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.api.notification.ClickActionType;
+import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
+import com.feed_the_beast.ftbl.api.tile.TileClientActionRegistry;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -68,7 +69,8 @@ public class FTBLibMod
 
         MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
         FTBLibCapabilities.init();
-        ClickActionType.init();
+        ClickActionTypeRegistry.init();
+        TileClientActionRegistry.init();
 
         proxy.preInit();
     }

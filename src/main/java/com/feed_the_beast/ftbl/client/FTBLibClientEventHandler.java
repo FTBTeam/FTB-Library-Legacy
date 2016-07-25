@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler
@@ -41,11 +43,13 @@ public class FTBLibClientEventHandler
     private static class ButtonInvLM extends GuiButton
     {
         public final ActionButton button;
+        public final String title;
 
-        public ButtonInvLM(int id, ActionButton b, int x, int y)
+        public ButtonInvLM(int id, ResourceLocation bID, ActionButton b, int x, int y)
         {
             super(id, x, y, 16, 16, "");
             button = b;
+            title = b.getDisplayName(bID).getFormattedText();
         }
 
         @Override
@@ -99,8 +103,7 @@ public class FTBLibClientEventHandler
                     double mx1 = mx - 4D;
                     double my1 = my - 12D;
 
-                    String s = b.button.displayName.getFormattedText();
-                    int tw = mc.fontRendererObj.getStringWidth(s);
+                    int tw = mc.fontRendererObj.getStringWidth(b.title);
 
                     if(!FTBLibModClient.action_buttons_on_top.getAsBoolean())
                     {
@@ -124,7 +127,7 @@ public class FTBLibClientEventHandler
                     GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
                     GuiLM.drawBlankRect(-3, -2, tw + 6, 12);
                     GlStateManager.color(1F, 1F, 1F, 1F);
-                    mc.fontRendererObj.drawString(s, 0, 0, 0xFFFFFFFF);
+                    mc.fontRendererObj.drawString(b.title, 0, 0, 0xFFFFFFFF);
                     GlStateManager.popMatrix();
                 }
             }
@@ -213,25 +216,26 @@ public class FTBLibClientEventHandler
     {
         if(ForgeWorldSP.inst != null && event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<ActionButton> buttons = ActionButtonRegistry.getButtons(ForgeWorldSP.inst.clientPlayer, false, false);
+            List<Map.Entry<ResourceLocation, ActionButton>> buttons = ActionButtonRegistry.getButtons(ForgeWorldSP.inst.clientPlayer, false);
 
             if(!buttons.isEmpty())
             {
-                Collections.sort(buttons);
+                Collections.sort(buttons, ActionButtonRegistry.COMPARATOR);
 
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
 
                 if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
                 {
-                    for(int i = 0; i < buttons.size(); i++)
+                    int i = 0;
+                    for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
                     {
-                        ActionButton a = buttons.get(i);
                         int x = i % 4;
                         int y = i / 4;
-                        ButtonInvLM b = new ButtonInvLM(495830 + i, a, 4 + x * 18, 4 + y * 18);
+                        ButtonInvLM b = new ButtonInvLM(495830 + i, entry.getKey(), entry.getValue(), 4 + x * 18, 4 + y * 18);
                         event.getButtonList().add(b);
                         renderer.buttons.add(b);
+                        i++;
                     }
                 }
                 else
@@ -262,26 +266,27 @@ public class FTBLibClientEventHandler
                         guiLeft += 60;
                     }
 
-                    for(int i = 0; i < buttons.size(); i++)
+                    int i = 0;
+                    for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
                     {
-                        ActionButton a = buttons.get(i);
                         ButtonInvLM b;
 
                         if(hasPotions)
                         {
                             int x = i % 8;
                             int y = i / 8;
-                            b = new ButtonInvLM(495830 + i, a, guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
+                            b = new ButtonInvLM(495830 + i, entry.getKey(), entry.getValue(), guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
                         }
                         else
                         {
                             int x = i / 8;
                             int y = i % 8;
-                            b = new ButtonInvLM(495830 + i, a, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
+                            b = new ButtonInvLM(495830 + i, entry.getKey(), entry.getValue(), guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
                         }
 
                         event.getButtonList().add(b);
                         renderer.buttons.add(b);
+                        i++;
                     }
                 }
             }

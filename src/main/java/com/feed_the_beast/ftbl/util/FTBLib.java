@@ -73,7 +73,7 @@ public class FTBLib
 
         if(i == 0)
         {
-            i = o1.getResourcePath().compareTo(o2.getResourcePath());
+            i = o1.getResourcePath().compareToIgnoreCase(o2.getResourcePath());
         }
 
         return i;

@@ -16,19 +16,19 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 23.01.2016.
  */
-public class ClickAction implements IJsonSerializable
+public final class ClickAction implements IJsonSerializable
 {
-    public ClickActionType type;
-    public JsonElement data;
+    private String typeID;
+    private JsonElement data;
 
     public ClickAction()
     {
     }
 
-    public ClickAction(@Nonnull ClickActionType t, @Nullable JsonElement d)
+    public ClickAction(@Nullable String t, @Nullable JsonElement d)
     {
-        type = t;
-        data = d == null ? JsonNull.INSTANCE : d;
+        typeID = t;
+        data = (d != null && d.isJsonNull()) ? null : d;
     }
 
     public static ClickAction from(@Nonnull ClickEvent e)
@@ -38,36 +38,42 @@ public class ClickAction implements IJsonSerializable
         switch(e.getAction())
         {
             case RUN_COMMAND:
-                return new ClickAction(ClickActionType.CMD, p);
+                return new ClickAction(ClickActionTypeRegistry.CMD, p);
             case OPEN_FILE:
-                return new ClickAction(ClickActionType.FILE, p);
+                return new ClickAction(ClickActionTypeRegistry.FILE, p);
             case SUGGEST_COMMAND:
-                return new ClickAction(ClickActionType.SHOW_CMD, p);
+                return new ClickAction(ClickActionTypeRegistry.SHOW_CMD, p);
             case OPEN_URL:
-                return new ClickAction(ClickActionType.URL, p);
+                return new ClickAction(ClickActionTypeRegistry.URL, p);
             case CHANGE_PAGE:
-                return new ClickAction(ClickActionType.CHANGE_INFO_PAGE, p);
+                return new ClickAction(ClickActionTypeRegistry.CHANGE_PAGE, p);
             default:
                 return null;
         }
+    }
+
+    @Nonnull
+    public JsonElement getData()
+    {
+        return data == null ? JsonNull.INSTANCE : data;
     }
 
     @Override
     @Nonnull
     public JsonElement getSerializableElement()
     {
-        if(type == null)
+        if(typeID == null)
         {
             return JsonNull.INSTANCE;
         }
 
-        if(data == null || data.isJsonNull())
+        if(data == null)
         {
-            return new JsonPrimitive(type.getID());
+            return new JsonPrimitive(typeID);
         }
 
         JsonObject o = new JsonObject();
-        o.add("type", new JsonPrimitive(type.getID()));
+        o.add("type", new JsonPrimitive(typeID));
         o.add("data", data);
         return o;
     }
@@ -77,21 +83,21 @@ public class ClickAction implements IJsonSerializable
     {
         if(e.isJsonNull())
         {
-            type = null;
+            typeID = null;
             data = null;
         }
         else if(e.isJsonPrimitive())
         {
-            type = ClickActionRegistry.get(e.getAsString());
+            typeID = e.getAsString();
             data = null;
         }
         else
         {
             JsonObject o = e.getAsJsonObject();
-            type = ClickActionRegistry.get(o.get("type").getAsString());
+            typeID = o.get("type").getAsString();
             data = o.get("data");
 
-            if(data == JsonNull.INSTANCE)
+            if(data != null && data.isJsonNull())
             {
                 data = null;
             }
@@ -101,15 +107,20 @@ public class ClickAction implements IJsonSerializable
     @SideOnly(Side.CLIENT)
     public void onClicked(@Nonnull MouseButton button)
     {
-        if(type != null)
+        if(typeID != null)
         {
-            type.onClicked(data == null ? JsonNull.INSTANCE : data, button);
+            IClickActionType type = ClickActionTypeRegistry.INSTANCE.get(typeID);
+
+            if(type != null)
+            {
+                type.onClicked(data == null ? JsonNull.INSTANCE : data, button);
+            }
         }
     }
 
     @Override
     public String toString()
     {
-        return (data == null) ? type.getID() : data.toString();
+        return (data == null) ? typeID : data.toString();
     }
 }

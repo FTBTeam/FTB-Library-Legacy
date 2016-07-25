@@ -9,11 +9,9 @@ import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
 {
-    public ResourceLocation id;
     public JsonObject groupData;
     public NBTTagCompound extraNBT;
 
@@ -21,15 +19,14 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     {
     }
 
-    public MessageEditConfigResponse(ResourceLocation r, NBTTagCompound nbt, JsonObject json)
+    public MessageEditConfigResponse(NBTTagCompound nbt, JsonObject json)
     {
-        id = r;
         groupData = json;
         extraNBT = nbt;
 
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("TX Response: " + id + " :: " + groupData);
+            FTBLib.dev_logger.info("TX Response: " + groupData);
         }
     }
 
@@ -42,7 +39,6 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void fromBytes(ByteBuf io)
     {
-        id = readResourceLocation(io);
         groupData = readJsonElement(io).getAsJsonObject();
         extraNBT = readTag(io);
     }
@@ -50,7 +46,6 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeResourceLocation(io, id);
         writeJsonElement(io, groupData);
         writeTag(io, extraNBT);
     }
@@ -60,11 +55,11 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     {
         ConfigContainer cc = ConfigRegistry.tempServerConfig.get(ep.getGameProfile().getId());
 
-        if(cc != null && cc.getResourceLocation().equals(m.id))
+        if(cc != null)
         {
             if(FTBLib.DEV_ENV)
             {
-                FTBLib.dev_logger.info("RX Response: " + m.id + " :: " + m.groupData);
+                FTBLib.dev_logger.info("RX Response: " + m.groupData);
             }
 
             cc.saveConfig(ep, m.extraNBT, m.groupData);

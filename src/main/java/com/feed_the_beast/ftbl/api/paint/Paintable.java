@@ -7,7 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Created by LatvianModder on 15.05.2016.
  */
-public class PaintStorage implements IPaintable
+public class Paintable implements IPaintable
 {
     private IBlockState paint;
 

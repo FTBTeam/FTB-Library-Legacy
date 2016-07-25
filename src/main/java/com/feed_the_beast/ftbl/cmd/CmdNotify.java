@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
-import com.feed_the_beast.ftbl.api.notification.ClickActionType;
+import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
@@ -84,7 +84,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
                 .setColor(0xFFFF0000)
                 .setItem(new ItemStack(Items.APPLE, 10));
 
-        n.setClickAction(new ClickAction(ClickActionType.CMD, new JsonPrimitive("ftb reload")));
+        n.setClickAction(new ClickAction(ClickActionTypeRegistry.CMD, new JsonPrimitive("ftb reload")));
 
         for(String s : LMJsonUtils.toJson(LMJsonUtils.GSON_PRETTY, n.getSerializableElement()).split("\n"))
         {

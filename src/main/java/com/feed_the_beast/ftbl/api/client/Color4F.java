@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.api.client;
 
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 20.06.2016.
@@ -17,10 +19,10 @@ public final class Color4F
 
     public Color4F(float r, float g, float b, float a)
     {
-        setF(r, g, b, a);
+        set(r, g, b, a);
     }
 
-    public void setF(float r, float g, float b, float a)
+    public void set(float r, float g, float b, float a)
     {
         red = r;
         green = g;
@@ -28,17 +30,17 @@ public final class Color4F
         alpha = a;
     }
 
-    public void setF(Color4F col)
+    public void set(Color4F col)
     {
-        setF(col.red, col.green, col.blue, col.alpha);
+        set(col.red, col.green, col.blue, col.alpha);
     }
 
     public void set(int col)
     {
-        setF(col, LMColorUtils.getAlphaF(col));
+        set(col, LMColorUtils.getAlphaF(col));
     }
 
-    public void setF(int col, float a)
+    public void set(int col, float a)
     {
         red = LMColorUtils.getRedF(col);
         green = LMColorUtils.getGreenF(col);
@@ -46,6 +48,7 @@ public final class Color4F
         alpha = a;
     }
 
+    @SideOnly(Side.CLIENT)
     public void bind()
     {
         GlStateManager.color(red, green, blue, alpha);

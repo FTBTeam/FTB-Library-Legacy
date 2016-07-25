@@ -12,14 +12,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
-    public ResourceLocation id;
     public ConfigGroup group;
     public NBTTagCompound extraNBT;
     public ITextComponent title;
@@ -30,14 +28,13 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 
     public MessageEditConfig(NBTTagCompound nbt, ConfigContainer c)
     {
-        id = c.getResourceLocation();
         group = c.createGroup();
         extraNBT = nbt;
         title = c.getConfigTitle();
 
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("TX Send: " + id + " :: " + group);
+            FTBLib.dev_logger.info("TX Send: " + group);
         }
     }
 
@@ -50,7 +47,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void fromBytes(ByteBuf io)
     {
-        id = readResourceLocation(io);
         group = new ConfigGroup();
         group.readData(io, true);
         extraNBT = readTag(io);
@@ -60,7 +56,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeResourceLocation(io, id);
         group.writeData(io, true);
         writeTag(io, extraNBT);
         writeJsonElement(io, JsonHelper.serializeICC(title));
@@ -72,10 +67,10 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("RX Send: " + m.id + " :: " + m.group);
+            FTBLib.dev_logger.info("RX Send: " + m.group);
         }
 
-        new GuiEditConfig(m.extraNBT, new ConfigContainer(m.id)
+        new GuiEditConfig(m.extraNBT, new ConfigContainer()
         {
             @Override
             public ConfigGroup createGroup()
@@ -92,7 +87,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             @Override
             public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
             {
-                new MessageEditConfigResponse(m.id, nbt, json).sendToServer();
+                new MessageEditConfigResponse(nbt, json).sendToServer();
             }
         }).openGui();
     }

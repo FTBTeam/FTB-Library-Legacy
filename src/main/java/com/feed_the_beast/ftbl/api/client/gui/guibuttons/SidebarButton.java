@@ -7,17 +7,21 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nonnull;
+
 public abstract class SidebarButton extends ActionButton
 {
-    public SidebarButton(ResourceLocation id, int p, TextureCoords c, Boolean b)
+    public SidebarButton(int p, TextureCoords c, Boolean b)
     {
-        super(id, p, c, b);
+        super(p, c, b);
     }
 
     @Override
-    protected ITextComponent getDisplayName()
+    @Nonnull
+    public ITextComponent getDisplayName(ResourceLocation id)
     {
-        return new TextComponentTranslation("sidebar_button." + getID());
+        ITextComponent c = getDisplayNameOverride();
+        return (c == null) ? new TextComponentTranslation("sidebar_button." + id) : c;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
@@ -15,7 +14,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 /**
@@ -28,9 +26,9 @@ public class CmdTeamConfig extends CmdEditConfigBase
         public final ForgeTeam team;
         public final ConfigGroup group;
 
+        //new ResourceLocation(FTBLibFinals.MOD_ID, "team_config")
         public TeamConfigContainer(ForgeTeam t)
         {
-            super(new ResourceLocation(FTBLibFinals.MOD_ID, "team_config"));
             team = t;
             group = new ConfigGroup();
             team.getSettings(group);

@@ -13,11 +13,15 @@ import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageRequestPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 24.03.2016.
@@ -111,9 +115,12 @@ public class InfoFriendsGUIPage extends InfoPage
             text.add(null);
         }
 
-        for(ActionButton a : ActionButtonRegistry.getButtons(playerLM, true, true))
+        List<Map.Entry<ResourceLocation, ActionButton>> buttons = ActionButtonRegistry.getButtons(playerLM, true);
+        Collections.sort(buttons, ActionButtonRegistry.COMPARATOR);
+
+        for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
         {
-            text.add(new InfoPlayerActionLine(this, playerLM, a));
+            text.add(new InfoPlayerActionLine(this, playerLM, entry.getKey(), entry.getValue()));
         }
         
 		/*

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.paint.IPaintable;
 import com.feed_the_beast.ftbl.api.paint.IPainterItem;
-import com.feed_the_beast.ftbl.api.paint.PaintStorage;
+import com.feed_the_beast.ftbl.api.paint.Paintable;
 import com.feed_the_beast.ftbl.api.paint.PainterItemStorage;
 import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.ISecureStorage;
@@ -53,7 +53,7 @@ public class FTBLibCapabilities
                     int paint = ((NBTTagInt) base).getInt();
                     instance.setPaint(paint == 0 ? null : Block.getStateById(paint));
                 }
-            }, PaintStorage::new);
+            }, Paintable::new);
 
             CapabilityManager.INSTANCE.register(IPainterItem.class, new Capability.IStorage<IPainterItem>()
             {

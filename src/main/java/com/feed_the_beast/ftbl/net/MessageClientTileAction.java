@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.feed_the_beast.ftbl.api.tile.TileClientAction;
+import com.feed_the_beast.ftbl.api.tile.ITileClientAction;
 import com.feed_the_beast.ftbl.api.tile.TileClientActionRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,12 +21,12 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
     {
     }
 
-    public MessageClientTileAction(TileEntity t, TileClientAction a, NBTTagCompound tag)
+    public MessageClientTileAction(TileEntity t, ResourceLocation rl, NBTTagCompound tag)
     {
         posX = t.getPos().getX();
         posY = t.getPos().getY();
         posZ = t.getPos().getZ();
-        action = a.getResourceLocation();
+        action = rl;
         data = tag;
     }
 
@@ -59,7 +59,7 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
     @Override
     public void onMessage(MessageClientTileAction m, EntityPlayerMP ep)
     {
-        TileClientAction action = TileClientActionRegistry.map.get(m.action);
+        ITileClientAction action = TileClientActionRegistry.INSTANCE.get(m.action);
 
         if(action != null)
         {

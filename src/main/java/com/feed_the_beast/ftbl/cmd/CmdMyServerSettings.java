@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
@@ -10,7 +9,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -24,9 +22,9 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         public final ForgePlayerMP player;
         public final ConfigGroup group;
 
+        //new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings")
         public MyServerSettingsContainer(ForgePlayerMP p)
         {
-            super(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"));
             player = p;
             group = new ConfigGroup();
             p.getSettings(group);
