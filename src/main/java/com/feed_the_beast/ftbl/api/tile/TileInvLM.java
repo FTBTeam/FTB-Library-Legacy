@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +14,6 @@ import javax.annotation.Nullable;
 public class TileInvLM extends TileLM
 {
     public ItemStackHandler itemHandler;
-    public boolean dropItems = true;
 
     public TileInvLM(int size)
     {
@@ -70,10 +68,9 @@ public class TileInvLM extends TileLM
         tag.setTag("Items", itemHandler.serializeNBT());
     }
 
-    @Override
-    public void onBroken(@Nonnull IBlockState state)
+    public void dropItems()
     {
-        if(dropItems && getSide().isServer() && itemHandler != null && itemHandler.getSlots() > 0)
+        if(getSide().isServer() && itemHandler != null && itemHandler.getSlots() > 0)
         {
             for(int i = 0; i < itemHandler.getSlots(); i++)
             {
@@ -85,8 +82,5 @@ public class TileInvLM extends TileLM
                 }
             }
         }
-
-        markDirty();
-        super.onBroken(state);
     }
 }

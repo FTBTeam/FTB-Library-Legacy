@@ -13,8 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -114,11 +112,6 @@ public class TileLM extends TileEntity
         }
     }
 
-    public boolean onRightClick(@Nonnull EntityPlayer ep, @Nullable ItemStack is, @Nonnull EnumFacing side, @Nonnull EnumHand hand, float x, float y, float z)
-    {
-        return false;
-    }
-
     @Override
     public void onLoad()
     {
@@ -182,14 +175,10 @@ public class TileLM extends TileEntity
         return currentState;
     }
 
-    public void onPlacedBy(EntityPlayer ep, ItemStack is, IBlockState state)
+    public void onPlacedBy(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull IBlockState state)
     {
         security.setOwner(ep.getGameProfile().getId());
         markDirty();
-    }
-
-    public void onBroken(@Nonnull IBlockState state)
-    {
     }
 
     public boolean isExplosionResistant()

@@ -18,7 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -39,6 +38,18 @@ public abstract class BlockLM extends Block implements IBlockLM
         setCreativeTab(CreativeTabs.MISC);
         setHardness(1.8F);
         setResistance(3F);
+    }
+
+    public static TileLM getTile(IBlockAccess w, BlockPos pos)
+    {
+        TileEntity te = w.getTileEntity(pos);
+
+        if(te != null && !te.isInvalid() && te instanceof TileLM)
+        {
+            return ((TileLM) te);
+        }
+
+        return null;
     }
 
     public abstract LMMod getMod();
@@ -138,31 +149,6 @@ public abstract class BlockLM extends Block implements IBlockLM
     }
 
     @Override
-    public void breakBlock(@Nonnull World w, @Nonnull BlockPos pos, @Nonnull IBlockState state)
-    {
-        if(!w.isRemote && hasTileEntity(state))
-        {
-            TileLM tile = getTile(w, pos);
-            if(tile != null)
-            {
-                tile.onBroken(state);
-            }
-        }
-        super.breakBlock(w, pos, state);
-    }
-
-    @Override
-    public boolean onBlockActivated(World w, BlockPos pos, IBlockState state, EntityPlayer ep, EnumHand hand, ItemStack item, EnumFacing s, float x1, float y1, float z1)
-    {
-        if(!hasTileEntity(state))
-        {
-            return false;
-        }
-        TileLM tile = getTile(w, pos);
-        return (tile != null) && tile.onRightClick(ep, item, s, hand, x1, y1, z1);
-    }
-
-    @Override
     @Deprecated
     public boolean eventReceived(IBlockState state, World w, BlockPos pos, int eventID, int param)
     {
@@ -180,12 +166,6 @@ public abstract class BlockLM extends Block implements IBlockLM
 
     @Override
     public void loadRecipes()
-    {
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack is, EntityPlayer ep, List<String> l, boolean b)
     {
     }
 
@@ -222,16 +202,6 @@ public abstract class BlockLM extends Block implements IBlockLM
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return getStateFromMeta(meta);
-    }
-
-    public TileLM getTile(IBlockAccess w, BlockPos pos)
-    {
-        TileEntity te = w.getTileEntity(pos);
-        if(te != null && !te.isInvalid() && te instanceof TileLM)
-        {
-            return ((TileLM) te);
-        }
-        return null;
     }
 
     @Nonnull

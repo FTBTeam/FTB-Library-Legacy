@@ -154,6 +154,12 @@ public class InfoPlayerViewLine extends InfoTextLine
             GlStateManager.color(1F, 1F, 1F, 1F);
             GlStateManager.popMatrix();
         }
+
+        @Override
+        public boolean shouldRender(GuiLM gui)
+        {
+            return true;
+        }
     }
 
     public final ForgePlayerSP playerLM;
