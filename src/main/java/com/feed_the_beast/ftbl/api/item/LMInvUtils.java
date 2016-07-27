@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.FMLLog;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -484,18 +485,16 @@ public class LMInvUtils
         }
     }
 
-    public static void dropAllItems(World w, double x, double y, double z, ItemStack[] items)
+    public static void dropAllItems(@Nonnull World w, double x, double y, double z, @Nonnull Iterable<ItemStack> items)
     {
-        if(w.isRemote || items == null || items.length == 0)
+        if(!w.isRemote)
         {
-            return;
-        }
-
-        for(ItemStack item : items)
-        {
-            if(item != null && item.stackSize > 0)
+            for(ItemStack item : items)
             {
-                dropItem(w, x, y, z, item, 10);
+                if(item != null && item.stackSize > 0)
+                {
+                    dropItem(w, x, y, z, item, 10);
+                }
             }
         }
     }
