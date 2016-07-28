@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.client.LMFrustumUtils;
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
@@ -319,6 +319,6 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void renderWorld(RenderWorldLastEvent e)
     {
-        LMFrustumUtils.update();
+        FTBLibClient.updateRenderInfo();
     }
 }

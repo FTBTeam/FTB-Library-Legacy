@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.item.IItemLM;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,9 +36,8 @@ public class FTBLibModCommon // FTBLibModClient
     {
     }
 
-    public boolean openClientGui(EntityPlayer ep, String mod, int ID, NBTTagCompound data)
+    public void openClientGui(GuiHandler handler, EntityPlayer ep, int ID, NBTTagCompound data, int wid)
     {
-        return false;
     }
 
     public void loadModels(IItemLM i)

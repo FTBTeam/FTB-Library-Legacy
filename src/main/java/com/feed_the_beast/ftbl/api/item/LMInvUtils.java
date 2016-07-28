@@ -616,12 +616,12 @@ public class LMInvUtils
 
     public static ResourceLocation getRegName(ItemStack is)
     {
-        return (is != null && is.getItem() != null) ? getRegName(is.getItem()) : null;
+        return (is != null) ? getRegName(is.getItem()) : null;
     }
 
     public static boolean isWrench(ItemStack is)
     {
-        return is != null && is.getItem() != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC;
+        return is != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC;
     }
 
     public static void removeDisplayName(ItemStack is)

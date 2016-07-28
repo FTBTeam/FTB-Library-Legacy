@@ -16,6 +16,6 @@ public class Tool
         public static final int STONE = 1;
         public static final int IRON = 2;
         public static final int DIAMOND = 3;
-        public static final int ALUMITE = 4;
+        public static final int COBALT = 4;
     }
 }

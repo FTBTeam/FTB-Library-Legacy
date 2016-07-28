@@ -40,7 +40,7 @@ public class TextBoxLM extends WidgetLM
             if(b.isRight() && getText().length() > 0)
             {
                 clear();
-                textChanged();
+                onTextChanged(gui);
             }
         }
         else
@@ -73,7 +73,7 @@ public class TextBoxLM extends WidgetLM
                     {
                         setText(text.substring(0, text.length() - 1));
                     }
-                    textChanged();
+                    onTextChanged(gui);
                 }
             }
             else if(key == Keyboard.KEY_ESCAPE)
@@ -84,7 +84,7 @@ public class TextBoxLM extends WidgetLM
             {
                 if(isValid())
                 {
-                    tabPressed();
+                    onTabPressed(gui);
                     isSelected = false;
                 }
             }
@@ -92,7 +92,7 @@ public class TextBoxLM extends WidgetLM
             {
                 if(isValid())
                 {
-                    returnPressed();
+                    onEnterPressed(gui);
                     isSelected = false;
                 }
             }
@@ -102,7 +102,7 @@ public class TextBoxLM extends WidgetLM
                 if((charLimit == -1 || text.length() + 1 <= charLimit) && ChatAllowedCharacters.isAllowedCharacter(keyChar))
                 {
                     setText(text + keyChar);
-                    textChanged();
+                    onTextChanged(gui);
                 }
             }
 
@@ -112,15 +112,15 @@ public class TextBoxLM extends WidgetLM
         return false;
     }
 
-    public void textChanged()
+    public void onTextChanged(GuiLM gui)
     {
     }
 
-    public void tabPressed()
+    public void onTabPressed(GuiLM gui)
     {
     }
 
-    public void returnPressed()
+    public void onEnterPressed(GuiLM gui)
     {
     }
 

@@ -9,13 +9,14 @@ import java.util.UUID;
  */
 public interface ISecure
 {
+    int SAVE_OWNER = 1;
+    int SAVE_PRIVACY_LEVEL = 2;
+
     @Nullable
     UUID getOwner();
 
     @Nonnull
     EnumPrivacyLevel getPrivacyLevel();
 
-    boolean saveOwner();
-
-    boolean savePrivacyLevel();
+    int getFlags();
 }

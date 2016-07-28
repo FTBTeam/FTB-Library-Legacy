@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
-import com.feed_the_beast.ftbl.api.client.gui.GuiHandlerRegistry;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
@@ -93,22 +92,16 @@ public class FTBLibModClient extends FTBLibModCommon
     }
 
     @Override
-    public boolean openClientGui(EntityPlayer ep, String mod, int id, NBTTagCompound data)
+    public void openClientGui(GuiHandler handler, EntityPlayer ep, int ID, NBTTagCompound data, int wid)
     {
-        GuiHandler h = GuiHandlerRegistry.get(mod);
+        GuiScreen g = handler.getGui(ep, ID, data);
 
-        if(h != null)
+        if(g != null)
         {
-            GuiScreen g = h.getGui(ep, id, data);
-
-            if(g != null)
-            {
-                Minecraft.getMinecraft().displayGuiScreen(g);
-                return true;
-            }
+            Minecraft mc = Minecraft.getMinecraft();
+            mc.displayGuiScreen(g);
+            mc.thePlayer.openContainer.windowId = wid;
         }
-
-        return false;
     }
 
     @Override

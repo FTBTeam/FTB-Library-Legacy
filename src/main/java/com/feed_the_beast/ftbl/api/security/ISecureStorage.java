@@ -20,8 +20,9 @@ public enum ISecureStorage implements Capability.IStorage<ISecure>
     @Override
     public NBTBase writeNBT(Capability<ISecure> capability, ISecure instance, EnumFacing side)
     {
-        boolean saveOwner = instance.saveOwner();
-        boolean saveLevel = instance.savePrivacyLevel();
+        int flags = instance.getFlags();
+        boolean saveOwner = (flags & ISecure.SAVE_OWNER) != 0;
+        boolean saveLevel = (flags & ISecure.SAVE_PRIVACY_LEVEL) != 0;
         UUID ownerID = instance.getOwner();
 
         if(saveOwner && !saveLevel)
@@ -56,13 +57,13 @@ public enum ISecureStorage implements Capability.IStorage<ISecure>
 
         if(nbt instanceof NBTTagString)
         {
-            sm.setOwner(instance.saveOwner() ? LMUtils.fromString(((NBTTagString) nbt).getString()) : null);
+            sm.setOwner(((instance.getFlags() & ISecure.SAVE_OWNER) != 0) ? LMUtils.fromString(((NBTTagString) nbt).getString()) : null);
         }
         else
         {
             NBTTagCompound tag = (NBTTagCompound) nbt;
             sm.setOwner(tag.hasKey("Owner") ? LMUtils.fromString(tag.getString("Owner")) : null);
-            sm.setPrivacyLevel((instance.savePrivacyLevel() && tag.hasKey("Level")) ? EnumPrivacyLevel.NAME_MAP.get(tag.getString("Level")) : EnumPrivacyLevel.PUBLIC);
+            sm.setPrivacyLevel((((instance.getFlags() & ISecure.SAVE_PRIVACY_LEVEL) != 0) && tag.hasKey("Level")) ? EnumPrivacyLevel.NAME_MAP.get(tag.getString("Level")) : EnumPrivacyLevel.PUBLIC);
         }
     }
 }

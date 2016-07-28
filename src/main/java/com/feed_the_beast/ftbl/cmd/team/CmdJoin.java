@@ -72,7 +72,7 @@ public class CmdJoin extends CommandLM
         }
         else
         {
-            throw FTBLibLang.team_not_member.commandError();
+            throw FTBLibLang.team_not_member.commandError(p.getProfile().getName());
         }
 
         p.sendUpdate();

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.Security;
 import com.feed_the_beast.ftbl.net.MessageClientTileAction;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
@@ -32,7 +33,7 @@ public class TileLM extends TileEntity
 
     protected Security createSecurity()
     {
-        return new Security(true, false);
+        return new Security(ISecure.SAVE_OWNER);
     }
 
     @Nonnull
@@ -188,7 +189,7 @@ public class TileLM extends TileEntity
 
     public final void sendClientAction(ResourceLocation rl, NBTTagCompound data)
     {
-        new MessageClientTileAction(this, rl, data).sendToServer();
+        new MessageClientTileAction(getPos(), rl, data).sendToServer();
     }
 
     //sendClientAction(TileClientActionRegistry.OPEN_GUI, data);

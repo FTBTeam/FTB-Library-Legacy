@@ -25,8 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +34,7 @@ import java.util.List;
  * Created by LatvianModder on 09.06.2016.
  */
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public abstract class GuiLM extends PanelLM implements IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
@@ -48,7 +49,7 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
 
     public GuiLM()
     {
-        super(0, 0, 300, 200);
+        super(0, 0, 200, 150);
         mc = Minecraft.getMinecraft();
         font = createFont(mc);
     }
@@ -103,7 +104,7 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
 
     public static void render(TextureCoords tc, double x, double y, double w, double h)
     {
-        if(tc != null && tc.isValid())
+        if(tc.isValid())
         {
             FTBLibClient.setTexture(tc.texture);
             drawTexturedRect(x, y, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
@@ -120,7 +121,7 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
-    public static void renderGuiItem(@Nonnull RenderItem itemRender, @Nonnull ItemStack stack, double x, double y)
+    public static void renderGuiItem(RenderItem itemRender, ItemStack stack, double x, double y)
     {
         itemRender.zLevel = 200F;
         GlStateManager.pushMatrix();

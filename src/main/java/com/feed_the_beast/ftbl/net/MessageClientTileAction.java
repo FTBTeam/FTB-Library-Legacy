@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 
 public class MessageClientTileAction extends MessageToServer<MessageClientTileAction>
 {
@@ -21,11 +22,11 @@ public class MessageClientTileAction extends MessageToServer<MessageClientTileAc
     {
     }
 
-    public MessageClientTileAction(TileEntity t, ResourceLocation rl, NBTTagCompound tag)
+    public MessageClientTileAction(Vec3i pos, ResourceLocation rl, NBTTagCompound tag)
     {
-        posX = t.getPos().getX();
-        posY = t.getPos().getY();
-        posZ = t.getPos().getZ();
+        posX = pos.getX();
+        posY = pos.getY();
+        posZ = pos.getZ();
         action = rl;
         data = tag;
     }

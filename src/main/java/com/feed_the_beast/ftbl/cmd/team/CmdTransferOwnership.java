@@ -50,9 +50,9 @@ public class CmdTransferOwnership extends CommandLM
 
         ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
 
-        if(p1.getTeamID() != p.getTeamID())
+        if(!p1.getTeamID().equals(p.getTeamID()))
         {
-            throw FTBLibLang.team_not_owner.commandError();
+            throw FTBLibLang.team_not_member.commandError(p1.getProfile().getName());
         }
 
         team.changeOwner(p1);

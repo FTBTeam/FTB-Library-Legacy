@@ -13,26 +13,19 @@ import java.util.UUID;
  */
 public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
 {
-    private final boolean saveOwner, savePrivacyLevel;
+    private final int flags;
     private UUID owner;
     private EnumPrivacyLevel level = EnumPrivacyLevel.PUBLIC;
 
-    public Security(boolean sOwner, boolean sPrivacyLevel)
+    public Security(int f)
     {
-        saveOwner = sOwner;
-        savePrivacyLevel = sPrivacyLevel;
+        flags = f;
     }
 
     @Override
-    public boolean saveOwner()
+    public int getFlags()
     {
-        return saveOwner;
-    }
-
-    @Override
-    public boolean savePrivacyLevel()
-    {
-        return savePrivacyLevel;
+        return flags;
     }
 
     @Nullable

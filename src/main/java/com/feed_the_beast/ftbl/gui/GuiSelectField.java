@@ -105,7 +105,7 @@ public class GuiSelectField extends GuiLM
             }
 
             @Override
-            public void returnPressed()
+            public void onEnterPressed(GuiLM gui)
             {
                 buttonAccept.onClicked(GuiSelectField.this, MouseButton.LEFT);
             }

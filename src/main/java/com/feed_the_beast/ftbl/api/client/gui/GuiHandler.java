@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.client.gui;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.api.RegistryBase;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,12 +19,7 @@ import javax.annotation.Nullable;
 
 public abstract class GuiHandler
 {
-    public final String ID;
-
-    public GuiHandler(String s)
-    {
-        ID = s;
-    }
+    public static final RegistryBase<String, GuiHandler> REGISTRY = new RegistryBase<>(RegistryBase.ALLOW_OVERRIDES);
 
     public static TileEntity getTileEntity(IBlockAccess world, NBTTagCompound tag)
     {
@@ -47,20 +43,17 @@ public abstract class GuiHandler
         return tag;
     }
 
-    public abstract Container getContainer(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data);
-
-    @SideOnly(Side.CLIENT)
-    public abstract GuiScreen getGui(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data);
-
-    public void openGui(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data)
+    public static void openGui(@Nonnull String modID, @Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data)
     {
+        GuiHandler handler = REGISTRY.get(modID);
+
         if(ep.worldObj.isRemote)
         {
-            FTBLibMod.proxy.openClientGui(ep, ID, id, data);
+            FTBLibMod.proxy.openClientGui(handler, ep, id, data, ep.openContainer.windowId);
         }
         else
         {
-            Container c = getContainer(ep, id, data);
+            Container c = (handler != null) ? handler.getContainer(ep, id, data) : null;
 
             EntityPlayerMP epM = (EntityPlayerMP) ep;
             epM.getNextWindowId();
@@ -73,7 +66,12 @@ public abstract class GuiHandler
 
             epM.openContainer.windowId = epM.currentWindowId;
             epM.openContainer.addListener(epM);
-            new MessageOpenGui(ID, id, data, epM.currentWindowId).sendTo(epM);
+            new MessageOpenGui(modID, id, data, epM.currentWindowId).sendTo(epM);
         }
     }
+
+    public abstract Container getContainer(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data);
+
+    @SideOnly(Side.CLIENT)
+    public abstract GuiScreen getGui(@Nonnull EntityPlayer ep, int id, @Nullable NBTTagCompound data);
 }

@@ -52,7 +52,7 @@ public class CmdKick extends CommandLM
 
         if(!p1.isMemberOf(team))
         {
-            throw FTBLibLang.team_not_member.commandError();
+            throw FTBLibLang.team_not_member.commandError(p1.getProfile().getName());
         }
 
         if(!p1.equalsPlayer(p))

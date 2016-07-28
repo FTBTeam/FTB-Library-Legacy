@@ -6,9 +6,11 @@ import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class WidgetLM
 {
     public double posX, posY, width, height;

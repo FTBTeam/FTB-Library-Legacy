@@ -5,9 +5,10 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public abstract class ButtonLM extends WidgetLM
 {
     public ButtonLM(double x, double y, double w, double h)
@@ -22,7 +23,7 @@ public abstract class ButtonLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+    public void mousePressed(GuiLM gui, MouseButton button)
     {
         if(gui.isMouseOver(this))
         {
@@ -30,5 +31,5 @@ public abstract class ButtonLM extends WidgetLM
         }
     }
 
-    public abstract void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button);
+    public abstract void onClicked(GuiLM gui, MouseButton button);
 }
