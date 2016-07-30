@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
+import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 
@@ -13,11 +13,13 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 {
     public double defValue;
     private double value;
-    private Double minValue, maxValue;
+    private double minValue, maxValue;
 
     public ConfigEntryDouble(double d)
     {
         defValue = d;
+        minValue = Double.NEGATIVE_INFINITY;
+        maxValue = Double.POSITIVE_INFINITY;
         set(d);
     }
 
@@ -36,20 +38,20 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
     @Override
     public void setBounds(double min, double max)
     {
-        minValue = min == Double.NEGATIVE_INFINITY ? null : min;
-        maxValue = max == Double.POSITIVE_INFINITY ? null : max;
+        minValue = min;
+        maxValue = max;
     }
 
     @Override
     public double getMin()
     {
-        return minValue == null ? Double.NEGATIVE_INFINITY : minValue;
+        return minValue;
     }
 
     @Override
     public double getMax()
     {
-        return maxValue == null ? Double.POSITIVE_INFINITY : maxValue;
+        return maxValue;
     }
 
     public void set(double v)
@@ -134,7 +136,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
         io.writeDouble(getAsDouble());
@@ -148,7 +150,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
         set(io.readDouble());

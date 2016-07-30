@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.util;
 
 import com.latmod.lib.math.MathHelperLM;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -9,20 +8,21 @@ import net.minecraft.util.math.Vec3i;
 /**
  * Created by LatvianModder on 29.01.2016.
  */
-public final class BlockDimPos extends BlockPos
+public final class BlockDimPos
 {
-    private int dim;
-
-    public BlockDimPos(Vec3i p, int d)
-    {
-        super(p);
-        dim = d;
-    }
+    public final int posX, posY, posZ, dim;
 
     public BlockDimPos(int x, int y, int z, int d)
     {
-        super(x, y, z);
+        posX = x;
+        posY = y;
+        posZ = z;
         dim = d;
+    }
+
+    public BlockDimPos(Vec3i p, int d)
+    {
+        this(p.getX(), p.getY(), p.getZ(), d);
     }
 
     public BlockDimPos(int[] ai)
@@ -30,20 +30,15 @@ public final class BlockDimPos extends BlockPos
         this(ai[0], ai[1], ai[2], ai[3]);
     }
 
-    public int getDim()
-    {
-        return dim;
-    }
-
     public int[] toIntArray()
     {
-        return new int[] {getX(), getY(), getZ(), dim};
+        return new int[] {posX, posY, posZ, dim};
     }
 
     @Override
     public String toString()
     {
-        return "[" + dim + '@' + getX() + ',' + getY() + ',' + getZ() + ']';
+        return "[" + dim + '@' + posX + ',' + posY + ',' + posZ + ']';
     }
 
     @Override
@@ -57,69 +52,47 @@ public final class BlockDimPos extends BlockPos
         {
             return true;
         }
-        else if(o instanceof BlockPos)
+        else if(o instanceof BlockDimPos)
         {
-            if(o instanceof BlockDimPos)
-            {
-                return equalsPos((BlockDimPos) o);
-            }
-            else
-            {
-                return super.equals(o);
-            }
+            return equalsPos((BlockDimPos) o);
         }
+
         return false;
     }
 
     @Override
     public int hashCode()
     {
-        return super.hashCode() * 31 + getDim();
+        return 31 * (31 * (31 * posX + posY) + posZ) + dim;
     }
 
     public Vec3d toVec()
     {
-        return new Vec3d(getX() + 0.5D, getY() + 0.5D, getZ() + 0.5D);
+        return new Vec3d(posX + 0.5D, posY + 0.5D, posZ + 0.5D);
     }
 
     public EntityDimPos toEntityPos()
     {
-        return new EntityDimPos(toVec(), getDim());
+        return new EntityDimPos(toVec(), dim);
     }
 
     public ChunkDimPos toChunkPos()
     {
-        return new ChunkDimPos(getDim(), MathHelperLM.chunk(getX()), MathHelperLM.chunk(getZ()));
+        return new ChunkDimPos(MathHelperLM.chunk(posX), MathHelperLM.chunk(posZ), dim);
+    }
+
+    public BlockPos getBlockPos()
+    {
+        return new BlockPos(posX, posY, posZ);
     }
 
     public BlockDimPos copy()
     {
-        return new BlockDimPos(getX(), getY(), getZ(), getDim());
-    }
-
-    public int chunkX()
-    {
-        return MathHelperLM.chunk(getX());
-    }
-
-    public int chunkY()
-    {
-        return MathHelperLM.chunk(getY());
-    }
-
-    public int chunkZ()
-    {
-        return MathHelperLM.chunk(getZ());
+        return new BlockDimPos(posX, posY, posZ, dim);
     }
 
     public boolean equalsPos(BlockDimPos p)
     {
-        return p != null && (p == this || (p.getDim() == getDim() && p.getX() == getX() && p.getY() == getY() && p.getZ() == getZ()));
-    }
-
-    @Override
-    public BlockDimPos offset(EnumFacing facing, int n)
-    {
-        return n == 0 ? this : new BlockDimPos(getX() + facing.getFrontOffsetX() * n, getY() + facing.getFrontOffsetY() * n, getZ() + facing.getFrontOffsetZ() * n, getDim());
+        return p != null && (p == this || (p.dim == dim && p.posX == posX && p.posY == posY && p.posZ == posZ));
     }
 }

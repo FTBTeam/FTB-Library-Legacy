@@ -23,14 +23,6 @@ public enum ConfigEntryType
 
     private static final TByteObjectMap<ConfigEntryType> TYPE_MAP = new TByteObjectHashMap<>();
 
-    static
-    {
-        for(ConfigEntryType t : values())
-        {
-            TYPE_MAP.put(t.ID, t);
-        }
-    }
-
     public final byte ID;
 
     ConfigEntryType(int i)
@@ -40,6 +32,14 @@ public enum ConfigEntryType
 
     public static ConfigEntryType getFromID(byte id)
     {
+        if(TYPE_MAP.isEmpty())
+        {
+            for(ConfigEntryType t : values())
+            {
+                TYPE_MAP.put(t.ID, t);
+            }
+        }
+
         return TYPE_MAP.get(id);
     }
 

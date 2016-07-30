@@ -2,10 +2,9 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
+import com.latmod.lib.io.ByteIOStream;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
 
@@ -96,18 +95,18 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
             {
                 for(String s : array)
                 {
-                    MessageLM.writeString(io, s);
+                    io.writeUTF(s);
                 }
             }
 
             io.writeShort(defValue);
         }
 
-        MessageLM.writeString(io, getAsString());
+        io.writeUTF(getAsString());
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
 
@@ -119,13 +118,13 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
 
             for(int i = 0; i < s; i++)
             {
-                array.add(MessageLM.readString(io));
+                array.add(io.readUTF());
             }
 
-            defValue = io.readShort();
+            defValue = io.readUnsignedShort();
         }
 
-        set(MessageLM.readString(io));
+        set(io.readUTF());
     }
 
     @Override

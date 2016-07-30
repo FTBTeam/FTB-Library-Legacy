@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
+import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.math.MathHelperLM;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 
@@ -12,7 +12,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 {
     public int defValue;
     private int value;
-    private Integer minValue, maxValue;
+    private int minValue, maxValue;
 
     public ConfigEntryInt(int def)
     {
@@ -35,20 +35,20 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     @Override
     public void setBounds(double min, double max)
     {
-        minValue = min == Double.NEGATIVE_INFINITY ? null : (int) min;
-        maxValue = max == Double.POSITIVE_INFINITY ? null : (int) max;
+        minValue = min == Double.NEGATIVE_INFINITY ? Integer.MIN_VALUE : (int) min;
+        maxValue = max == Double.POSITIVE_INFINITY ? Integer.MAX_VALUE : (int) max;
     }
 
     @Override
     public double getMin()
     {
-        return minValue == null ? Double.NEGATIVE_INFINITY : minValue.doubleValue();
+        return minValue == Integer.MIN_VALUE ? Double.NEGATIVE_INFINITY : minValue;
     }
 
     @Override
     public double getMax()
     {
-        return maxValue == null ? Double.POSITIVE_INFINITY : maxValue.doubleValue();
+        return maxValue == Integer.MAX_VALUE ? Double.POSITIVE_INFINITY : maxValue;
     }
 
     public void set(int v)
@@ -64,7 +64,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     @Override
     public final void fromJson(@Nonnull JsonElement o)
     {
-        set((o == null || o.isJsonNull()) ? defValue : o.getAsInt());
+        set(o.isJsonNull() ? defValue : o.getAsInt());
     }
 
     @Nonnull
@@ -139,7 +139,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
         io.writeInt(getAsInt());
@@ -153,7 +153,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
         set(io.readInt());

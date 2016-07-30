@@ -2,13 +2,13 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import com.latmod.lib.io.ByteIOStream;
+import com.latmod.lib.json.JsonElementIO;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -139,16 +139,16 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
-        MessageLM.writeJsonElement(io, getSerializableElement());
+        JsonElementIO.write(io, getSerializableElement());
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
-        fromJson(MessageLM.readJsonElement(io));
+        fromJson(JsonElementIO.read(io));
     }
 }

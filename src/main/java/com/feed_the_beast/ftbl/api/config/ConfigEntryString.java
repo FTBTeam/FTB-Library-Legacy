@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
+import com.latmod.lib.io.ByteIOStream;
 
 import javax.annotation.Nonnull;
 
@@ -87,26 +86,26 @@ public class ConfigEntryString extends ConfigEntry
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
-        MessageLM.writeString(io, getAsString());
+        io.writeUTF(getAsString());
 
         if(extended)
         {
-            MessageLM.writeString(io, defValue);
+            io.writeUTF(defValue);
         }
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
-        set(MessageLM.readString(io));
+        set(io.readUTF());
 
         if(extended)
         {
-            defValue = MessageLM.readString(io);
+            defValue = io.readUTF();
         }
     }
 }

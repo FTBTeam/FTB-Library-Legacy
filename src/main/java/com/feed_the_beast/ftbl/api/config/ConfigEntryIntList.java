@@ -3,9 +3,10 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.io.ByteCount;
+import com.latmod.lib.io.ByteIOStream;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -118,65 +119,28 @@ public class ConfigEntryIntList extends ConfigEntry
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
-        TIntList list = getAsIntList();
-        int s = list.size();
-
-        io.writeInt(s);
-
-        for(int i = 0; i < s; i++)
-        {
-            io.writeInt(list.get(i));
-        }
+        io.writeIntArray(getAsIntList().toArray(), ByteCount.INT);
 
         if(extended)
         {
-            s = defValue.size();
-            io.writeInt(s);
-
-            for(int i = 0; i < s; i++)
-            {
-                io.writeInt(defValue.get(i));
-            }
+            io.writeIntArray(defValue.toArray(), ByteCount.INT);
         }
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
-        int s = io.readInt();
 
-        if(s == 0)
-        {
-            set(null);
-        }
-        else
-        {
-            TIntList list = new TIntArrayList(s);
-            for(int i = 0; i < s; i++)
-            {
-                list.add(io.readInt());
-            }
-
-            set(list);
-        }
+        set(TIntArrayList.wrap(io.readIntArray(ByteCount.INT)));
 
         if(extended)
         {
             defValue.clear();
-
-            s = io.readInt();
-
-            if(s > 0)
-            {
-                for(int i = 0; i < s; i++)
-                {
-                    defValue.add(io.readInt());
-                }
-            }
+            defValue.add(io.readIntArray(ByteCount.INT));
         }
     }
 }

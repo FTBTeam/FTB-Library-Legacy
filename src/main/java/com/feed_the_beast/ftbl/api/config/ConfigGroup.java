@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.annotations.AnnotationHelper;
 import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.annotations.ID;
+import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMUtils;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -216,7 +215,7 @@ public class ConfigGroup extends ConfigEntry
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
 
@@ -227,14 +226,14 @@ public class ConfigGroup extends ConfigEntry
             for(Map.Entry<String, ConfigEntry> entry : entryMap.entrySet())
             {
                 io.writeByte(entry.getValue().getConfigType().ID);
-                MessageLM.writeString(io, entry.getKey());
+                io.writeUTF(entry.getKey());
                 entry.getValue().writeData(io, extended);
             }
         }
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
 
@@ -244,9 +243,10 @@ public class ConfigGroup extends ConfigEntry
 
         for(int i = 0; i < s; i++)
         {
-            ConfigEntryType t = ConfigEntryType.getFromID(io.readByte());
-            String id = MessageLM.readString(io);
-            ConfigEntry entry = t.createNew();
+            byte eid = io.readByte();
+            String id = io.readUTF();
+            System.out.println(eid + ": " + id);
+            ConfigEntry entry = ConfigEntryType.getFromID(eid).createNew();
             entry.readData(io, extended);
             entryMap.put(id, entry);
         }

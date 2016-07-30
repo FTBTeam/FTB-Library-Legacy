@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonElement;
 import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.annotations.IInfoContainer;
 import com.latmod.lib.io.Bits;
+import com.latmod.lib.io.ByteIOStream;
+import com.latmod.lib.json.JsonElementIO;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
 
@@ -21,7 +21,7 @@ import java.util.function.IntSupplier;
 
 public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable, BooleanSupplier, IntSupplier, DoubleSupplier
 {
-    private int flags;
+    private byte flags;
     private String[] info;
     private ITextComponent displayName;
 
@@ -120,7 +120,7 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     @Override
     public final void setFlags(int f)
     {
-        flags = f;
+        flags = (byte) f;
     }
 
     @Override
@@ -135,27 +135,19 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         info = (s != null && s.length > 0) ? s : null;
     }
 
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         if(extended)
         {
-            flags = getFlags();
+            io.writeByte(getFlags());
+            int extraFlags = 0;
+            Bits.setFlag(extraFlags, 1, displayName != null);
+            Bits.setFlag(extraFlags, 2, info != null && info.length > 0);
+            io.writeByte(extraFlags);
 
             if(displayName != null)
             {
-                flags = Bits.setFlag(flags, 512, true);
-            }
-
-            if(info != null && info.length > 0)
-            {
-                flags = Bits.setFlag(flags, 1024, true);
-            }
-
-            io.writeShort(flags);
-
-            if(displayName != null)
-            {
-                MessageLM.writeJsonElement(io, JsonHelper.serializeICC(displayName));
+                JsonElementIO.write(io, JsonHelper.serializeICC(displayName));
             }
 
             if(info != null && info.length > 0)
@@ -164,36 +156,41 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
 
                 for(String s : info)
                 {
-                    MessageLM.writeString(io, s);
+                    io.writeUTF(s);
                 }
             }
         }
     }
 
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         if(extended)
         {
-            flags = io.readUnsignedShort();
-            setFlags(flags & 0xFF);
-            displayName = null;
-            info = null;
+            setFlags(io.readByte());
+            int extraFlags = io.readByte();
 
-            if(Bits.getFlag(flags, 512))
+            if(Bits.getFlag(extraFlags, 1))
             {
-                displayName = JsonHelper.deserializeICC(MessageLM.readJsonElement(io));
+                displayName = JsonHelper.deserializeICC(JsonElementIO.read(io));
+            }
+            else
+            {
+                displayName = null;
             }
 
-            if(Bits.getFlag(flags, 1024))
+            if(Bits.getFlag(extraFlags, 2))
             {
                 int s = io.readUnsignedByte();
-
                 info = new String[s];
 
                 for(int i = 0; i < s; i++)
                 {
-                    info[i] = MessageLM.readString(io);
+                    info[i] = io.readUTF();
                 }
+            }
+            else
+            {
+                info = null;
             }
         }
     }

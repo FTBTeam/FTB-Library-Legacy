@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.LMColor;
-import io.netty.buffer.ByteBuf;
+import com.latmod.lib.io.ByteIOStream;
 
 import javax.annotation.Nonnull;
 
@@ -73,7 +73,7 @@ public class ConfigEntryColor extends ConfigEntry
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
         io.writeInt(value.color());
@@ -85,7 +85,7 @@ public class ConfigEntryColor extends ConfigEntry
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
         value.setRGBA(io.readInt());

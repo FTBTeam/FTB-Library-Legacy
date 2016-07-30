@@ -2,10 +2,9 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
+import com.latmod.lib.io.ByteIOStream;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -83,33 +82,30 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
 
         if(extended)
         {
-            io.writeByte(nameMap.size);
-            
-            for(int i = 0; i < nameMap.size; i++)
+            io.writeShort(nameMap.size);
+
+            for(E e : nameMap.getValues())
             {
-                for(E e : nameMap.getValues())
-                {
-                    MessageLM.writeString(io, EnumNameMap.getEnumName(e));
-                }
+                io.writeUTF(EnumNameMap.getEnumName(e));
             }
 
             io.writeShort(defValue);
         }
 
-        MessageLM.writeString(io, EnumNameMap.getEnumName(get()));
+        io.writeUTF(EnumNameMap.getEnumName(get()));
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
-        index = nameMap.getStringIndex(MessageLM.readString(io));
+        index = nameMap.getStringIndex(io.readUTF());
     }
 
     @Override

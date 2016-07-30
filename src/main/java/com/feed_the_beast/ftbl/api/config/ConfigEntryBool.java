@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.IClickable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
+import com.latmod.lib.io.ByteIOStream;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -96,27 +96,24 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
-        io.writeBoolean(getAsBoolean());
-
-        if(extended)
-        {
-            io.writeBoolean(defValue);
-        }
+        io.writeByte((getAsBoolean() ? 1 : 0) | ((defValue ? 1 : 0) << 1));
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
 
-        set(io.readBoolean());
+        byte i = io.readByte();
+
+        set((i & 1) != 0);
 
         if(extended)
         {
-            defValue = io.readBoolean();
+            defValue = (i & 2) != 0;
         }
     }
 

@@ -58,7 +58,7 @@ public class LMDimUtils
 
     public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
     {
-        return pos != null && teleportPlayer(entity, pos.toVec(), pos.getDim());
+        return pos != null && teleportPlayer(entity, pos.toVec(), pos.dim);
     }
 
     public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)

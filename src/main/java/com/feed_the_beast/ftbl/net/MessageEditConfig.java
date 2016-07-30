@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonObject;
+import com.latmod.lib.io.ByteIOStream;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -47,18 +48,28 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void fromBytes(ByteBuf io)
     {
-        group = new ConfigGroup();
-        group.readData(io, true);
         extraNBT = readTag(io);
         title = JsonHelper.deserializeICC(readJsonElement(io));
+        int s = io.readInt();
+        byte[] b = new byte[s];
+        io.readBytes(b, 0, s);
+        ByteIOStream bios = new ByteIOStream();
+        bios.setCompressedData(b);
+        group = new ConfigGroup();
+        group.readData(bios, true);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        group.writeData(io, true);
         writeTag(io, extraNBT);
         writeJsonElement(io, JsonHelper.serializeICC(title));
+        int s = io.readInt();
+        ByteIOStream bios = new ByteIOStream();
+        group.writeData(bios, true);
+        byte[] b = bios.toCompressedByteArray();
+        io.writeInt(b.length);
+        io.writeBytes(b, 0, b.length);
     }
 
     @Override

@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMListUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -122,33 +121,31 @@ public class ConfigEntryStringList extends ConfigEntry
     }
 
     @Override
-    public void writeData(ByteBuf io, boolean extended)
+    public void writeData(ByteIOStream io, boolean extended)
     {
         super.writeData(io, extended);
         List<String> list = getAsStringList();
-        int s = list.size();
 
-        io.writeInt(s);
+        io.writeInt(list.size());
 
-        for(int i = 0; i < s; i++)
+        for(String s : list)
         {
-            MessageLM.writeString(io, list.get(i));
+            io.writeUTF(s);
         }
 
         if(extended)
         {
-            s = defValue.size();
-            io.writeInt(s);
+            io.writeInt(defValue.size());
 
-            for(int i = 0; i < s; i++)
+            for(String s : defValue)
             {
-                MessageLM.writeString(io, defValue.get(i));
+                io.writeUTF(s);
             }
         }
     }
 
     @Override
-    public void readData(ByteBuf io, boolean extended)
+    public void readData(ByteIOStream io, boolean extended)
     {
         super.readData(io, extended);
         int s = io.readInt();
@@ -162,7 +159,7 @@ public class ConfigEntryStringList extends ConfigEntry
             List<String> list = new ArrayList<>(s);
             for(int i = 0; i < s; i++)
             {
-                list.add(MessageLM.readString(io));
+                list.add(io.readUTF());
             }
 
             set(list);
@@ -178,7 +175,7 @@ public class ConfigEntryStringList extends ConfigEntry
             {
                 for(int i = 0; i < s; i++)
                 {
-                    defValue.add(MessageLM.readString(io));
+                    defValue.add(io.readUTF());
                 }
             }
         }
