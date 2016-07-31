@@ -30,9 +30,9 @@ public class MessageRequestSelfUpdate extends MessageToServer<MessageRequestSelf
     }
 
     @Override
-    public void onMessage(MessageRequestSelfUpdate m, EntityPlayerMP ep)
+    public void onMessage(MessageRequestSelfUpdate m, EntityPlayerMP player)
     {
-        ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-        new MessageLMPlayerUpdate(p, true).sendTo(ep);
+        ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(player);
+        new MessageLMPlayerUpdate(p, true).sendTo(player);
     }
 }

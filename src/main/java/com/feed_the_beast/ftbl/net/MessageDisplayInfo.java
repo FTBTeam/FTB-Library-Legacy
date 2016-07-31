@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.info.InfoPage;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -36,15 +37,15 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        infoID = readString(io);
-        json = readJsonElement(io);
+        infoID = LMNetUtils.readString(io);
+        json = LMNetUtils.readJsonElement(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeString(io, infoID);
-        writeJsonElement(io, json);
+        LMNetUtils.writeString(io, infoID);
+        LMNetUtils.writeJsonElement(io, json);
     }
 
     @Override

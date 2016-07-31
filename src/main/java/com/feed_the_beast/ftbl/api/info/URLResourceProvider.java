@@ -6,9 +6,9 @@ import com.latmod.lib.io.RequestMethod;
 /**
  * Created by LatvianModder on 09.05.2016.
  */
-public class URLResourceProvider implements IResourceProvider
+public enum URLResourceProvider implements IResourceProvider
 {
-    public static final URLResourceProvider INSTANCE = new URLResourceProvider();
+    INSTANCE;
 
     @Override
     public LMConnection getConnection(String s)

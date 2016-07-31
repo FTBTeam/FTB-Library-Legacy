@@ -11,7 +11,7 @@ public class FTBLibNetHandler
         NET.register(1, new MessageReload());
         NET.register(2, new MessageEditConfig());
         NET.register(3, new MessageEditConfigResponse());
-        NET.register(4, new MessageUpdateHeldItem());
+        //4
         NET.register(5, new MessageLMPlayerUpdate());
         NET.register(6, new MessageLMPlayerLoggedIn());
         NET.register(7, new MessageLMPlayerLoggedOut());
@@ -20,8 +20,8 @@ public class FTBLibNetHandler
         //10
         NET.register(11, new MessageOpenGui());
         //12
-        NET.register(13, new MessageClientTileAction());
-        NET.register(14, new MessageClientItemAction());
+        //13
+        //14
         NET.register(15, new MessageNotifyPlayer());
         NET.register(16, new MessageLMPlayerInfo());
         NET.register(17, new MessageRequestPlayerInfo());

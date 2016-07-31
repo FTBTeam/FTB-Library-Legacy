@@ -87,8 +87,14 @@ public abstract class ForgePlayer implements Comparable<ForgePlayer>, ICapabilit
 
     public abstract ForgeWorld getWorld();
 
+    @Nonnull
     public final GameProfile getProfile()
     {
+        if(gameProfile == null)
+        {
+            throw new NullPointerException("GameProfile is null!");
+        }
+
         return gameProfile;
     }
 

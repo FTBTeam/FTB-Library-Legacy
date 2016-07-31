@@ -14,7 +14,7 @@ import java.io.File;
 @SideOnly(Side.CLIENT)
 public final class ClientConfigRegistry
 {
-    private static final ConfigFile file = new ConfigFile();
+    private static final ConfigFile FILE = new ConfigFile();
 
     //new ResourceLocation(FTBLibFinals.MOD_ID, "client_config")
     public static final ConfigContainer CONTAINER = new ConfigContainer()
@@ -22,7 +22,7 @@ public final class ClientConfigRegistry
         @Override
         public ConfigGroup createGroup()
         {
-            return file;
+            return FILE;
         }
 
         @Override
@@ -34,20 +34,20 @@ public final class ClientConfigRegistry
         @Override
         public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
-            file.loadFromGroup(json);
+            FILE.loadFromGroup(json);
             ClientConfigRegistry.saveConfig();
         }
     };
 
     public static void saveConfig()
     {
-        if(file.getFile() == null)
+        if(FILE.getFile() == null)
         {
-            file.setFile(new File(FTBLib.folderLocal, "client/config.json"));
-            file.load();
+            FILE.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+            FILE.load();
         }
 
-        file.save();
+        FILE.save();
     }
 
     /**
@@ -55,11 +55,11 @@ public final class ClientConfigRegistry
      */
     public static void addGroup(String id, Class<?> c)
     {
-        file.addGroup(id, c);
+        FILE.addGroup(id, c);
     }
 
     public static void addGroup(String id, ConfigGroup group)
     {
-        file.add(id, group);
+        FILE.add(id, group);
     }
 }

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,15 +45,15 @@ public class MessageUpdateTeam extends MessageToClient<MessageUpdateTeam>
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeString(io, teamID);
-        writeTag(io, data);
+        LMNetUtils.writeString(io, teamID);
+        LMNetUtils.writeTag(io, data);
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
-        teamID = readString(io);
-        data = readTag(io);
+        teamID = LMNetUtils.readString(io);
+        data = LMNetUtils.readTag(io);
     }
 
     @Override

@@ -229,7 +229,7 @@ public final class ForgeTeam extends FinalIDObject implements ICapabilitySeriali
                 return EnumTeamStatus.MEMBER;
             }
 
-            if(allies != null && allies.contains(team.getID()))
+            if(allies != null && allies.contains(team.getID()) && team.allies != null && team.allies.contains(getID()))
             {
                 return EnumTeamStatus.ALLY;
             }

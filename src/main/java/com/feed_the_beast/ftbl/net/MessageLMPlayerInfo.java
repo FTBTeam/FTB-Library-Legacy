@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.util.JsonHelper;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -60,12 +61,12 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerID = readUUID(io);
+        playerID = LMNetUtils.readUUID(io);
 
         info = new JsonElement[io.readUnsignedByte()];
         for(int i = 0; i < info.length; i++)
         {
-            info[i] = readJsonElement(io);
+            info[i] = LMNetUtils.readJsonElement(io);
         }
 
         armor = new HashMap<>();
@@ -82,12 +83,12 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeUUID(io, playerID);
+        LMNetUtils.writeUUID(io, playerID);
 
         io.writeByte(info.length);
         for(JsonElement anInfo : info)
         {
-            writeJsonElement(io, anInfo);
+            LMNetUtils.writeJsonElement(io, anInfo);
         }
 
         io.writeByte(armor.size());

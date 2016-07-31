@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,18 +39,18 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        modID = readString(io);
+        modID = LMNetUtils.readString(io);
         guiID = io.readInt();
-        data = readTag(io);
+        data = LMNetUtils.readTag(io);
         windowID = io.readUnsignedByte();
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeString(io, modID);
+        LMNetUtils.writeString(io, modID);
         io.writeInt(guiID);
-        writeTag(io, data);
+        LMNetUtils.writeTag(io, data);
         io.writeByte(windowID);
     }
 

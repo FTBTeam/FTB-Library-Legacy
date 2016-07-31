@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,21 +40,21 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void fromBytes(ByteBuf io)
     {
-        groupData = readJsonElement(io).getAsJsonObject();
-        extraNBT = readTag(io);
+        groupData = LMNetUtils.readJsonElement(io).getAsJsonObject();
+        extraNBT = LMNetUtils.readTag(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeJsonElement(io, groupData);
-        writeTag(io, extraNBT);
+        LMNetUtils.writeJsonElement(io, groupData);
+        LMNetUtils.writeTag(io, extraNBT);
     }
 
     @Override
-    public void onMessage(MessageEditConfigResponse m, EntityPlayerMP ep)
+    public void onMessage(MessageEditConfigResponse m, EntityPlayerMP player)
     {
-        ConfigContainer cc = ConfigRegistry.tempServerConfig.get(ep.getGameProfile().getId());
+        ConfigContainer cc = ConfigRegistry.tempServerConfig.get(player.getGameProfile().getId());
 
         if(cc != null)
         {
@@ -62,8 +63,8 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
                 FTBLib.dev_logger.info("RX Response: " + m.groupData);
             }
 
-            cc.saveConfig(ep, m.extraNBT, m.groupData);
-            ConfigRegistry.tempServerConfig.remove(ep.getGameProfile().getId());
+            cc.saveConfig(player, m.extraNBT, m.groupData);
+            ConfigRegistry.tempServerConfig.remove(player.getGameProfile().getId());
         }
     }
 }

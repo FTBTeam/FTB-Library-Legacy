@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonObject;
 import com.latmod.lib.io.ByteIOStream;
 import io.netty.buffer.ByteBuf;
@@ -48,28 +49,20 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void fromBytes(ByteBuf io)
     {
-        extraNBT = readTag(io);
-        title = JsonHelper.deserializeICC(readJsonElement(io));
-        int s = io.readInt();
-        byte[] b = new byte[s];
-        io.readBytes(b, 0, s);
-        ByteIOStream bios = new ByteIOStream();
-        bios.setCompressedData(b);
+        extraNBT = LMNetUtils.readTag(io);
+        title = JsonHelper.deserializeICC(LMNetUtils.readJsonElement(io));
         group = new ConfigGroup();
-        group.readData(bios, true);
+        group.readData(LMNetUtils.readCompressedByteIOStream(io), true);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeTag(io, extraNBT);
-        writeJsonElement(io, JsonHelper.serializeICC(title));
-        int s = io.readInt();
-        ByteIOStream bios = new ByteIOStream();
-        group.writeData(bios, true);
-        byte[] b = bios.toCompressedByteArray();
-        io.writeInt(b.length);
-        io.writeBytes(b, 0, b.length);
+        LMNetUtils.writeTag(io, extraNBT);
+        LMNetUtils.writeJsonElement(io, JsonHelper.serializeICC(title));
+        ByteIOStream stream = new ByteIOStream();
+        group.writeData(stream, true);
+        LMNetUtils.writeCompressedByteIOStream(io, stream);
     }
 
     @Override

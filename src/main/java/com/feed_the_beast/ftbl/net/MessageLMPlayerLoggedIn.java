@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.events.ForgePlayerEvent;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -47,21 +48,21 @@ public class MessageLMPlayerLoggedIn extends MessageToClient<MessageLMPlayerLogg
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerID = readUUID(io);
-        playerName = readString(io);
+        playerID = LMNetUtils.readUUID(io);
+        playerName = LMNetUtils.readString(io);
         isFirst = io.readBoolean();
         self = io.readBoolean();
-        data = readTag(io);
+        data = LMNetUtils.readTag(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeUUID(io, playerID);
-        writeString(io, playerName);
+        LMNetUtils.writeUUID(io, playerID);
+        LMNetUtils.writeString(io, playerName);
         io.writeBoolean(isFirst);
         io.writeBoolean(self);
-        writeTag(io, data);
+        LMNetUtils.writeTag(io, data);
     }
 
     @Override

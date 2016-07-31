@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.Security;
-import com.feed_the_beast.ftbl.net.MessageClientTileAction;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,10 +12,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
@@ -30,6 +28,21 @@ public class TileLM extends TileEntity
     public final Security security = createSecurity();
     private boolean isDirty = true;
     private IBlockState currentState;
+
+    public static TileEntity getTileEntityFromNBT(@Nonnull IBlockAccess world, @Nullable NBTTagCompound data)
+    {
+        if(data != null)
+        {
+            int[] ai = data.getIntArray("Pos");
+
+            if(ai.length == 3)
+            {
+                return world.getTileEntity(new BlockPos(ai[0], ai[1], ai[2]));
+            }
+        }
+
+        return null;
+    }
 
     protected Security createSecurity()
     {
@@ -185,25 +198,6 @@ public class TileLM extends TileEntity
     public boolean isExplosionResistant()
     {
         return !security.getPrivacyLevel().isPublic();
-    }
-
-    public final void sendClientAction(ResourceLocation rl, NBTTagCompound data)
-    {
-        new MessageClientTileAction(getPos(), rl, data).sendToServer();
-    }
-
-    //sendClientAction(TileClientActionRegistry.OPEN_GUI, data);
-
-    public void clientPressButton(int button, MouseButton mouseButton, @Nullable NBTTagCompound data)
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("I", button);
-        tag.setByte("MB", (byte) mouseButton.ordinal());
-        if(data != null && !data.hasNoTags())
-        {
-            tag.setTag("D", data);
-        }
-        sendClientAction(TileClientActionRegistry.BUTTON_PRESSED, tag);
     }
 
     public final Side getSide()

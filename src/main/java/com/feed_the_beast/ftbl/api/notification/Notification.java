@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -248,7 +248,7 @@ public final class Notification implements IJsonSerializable
 
         if((flags & NET_HAS_TEXT) != 0)
         {
-            for(JsonElement e1 : MessageLM.readJsonElement(io).getAsJsonArray())
+            for(JsonElement e1 : LMNetUtils.readJsonElement(io).getAsJsonArray())
             {
                 text.add(JsonHelper.deserializeICC(e1));
             }
@@ -272,7 +272,7 @@ public final class Notification implements IJsonSerializable
         if((flags & NET_HAS_CLICK) != 0)
         {
             clickAction = new ClickAction();
-            clickAction.fromJson(MessageLM.readJsonElement(io));
+            clickAction.fromJson(LMNetUtils.readJsonElement(io));
             setClickAction(clickAction);
         }
     }
@@ -298,7 +298,7 @@ public final class Notification implements IJsonSerializable
                 a.add(JsonHelper.serializeICC(t));
             }
 
-            MessageLM.writeJsonElement(io, a);
+            LMNetUtils.writeJsonElement(io, a);
         }
 
         if((flags & NET_HAS_TIMER) != 0)
@@ -318,7 +318,7 @@ public final class Notification implements IJsonSerializable
 
         if((flags & NET_HAS_CLICK) != 0)
         {
-            MessageLM.writeJsonElement(io, clickAction.getSerializableElement());
+            LMNetUtils.writeJsonElement(io, clickAction.getSerializableElement());
         }
     }
 

@@ -6,10 +6,10 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,17 +43,17 @@ public class MessageLMPlayerUpdate extends MessageToClient<MessageLMPlayerUpdate
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerID = readUUID(io);
+        playerID = LMNetUtils.readUUID(io);
         isSelf = io.readBoolean();
-        data = ByteBufUtils.readTag(io);
+        data = LMNetUtils.readTag(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeUUID(io, playerID);
+        LMNetUtils.writeUUID(io, playerID);
         io.writeBoolean(isSelf);
-        writeTag(io, data);
+        LMNetUtils.writeTag(io, data);
     }
 
     @Override

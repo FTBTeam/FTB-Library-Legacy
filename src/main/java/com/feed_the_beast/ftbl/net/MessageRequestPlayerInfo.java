@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 
@@ -31,23 +32,23 @@ public class MessageRequestPlayerInfo extends MessageToServer<MessageRequestPlay
     @Override
     public void fromBytes(ByteBuf io)
     {
-        playerID = readUUID(io);
+        playerID = LMNetUtils.readUUID(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeUUID(io, playerID);
+        LMNetUtils.writeUUID(io, playerID);
     }
 
     @Override
-    public void onMessage(MessageRequestPlayerInfo m, EntityPlayerMP ep)
+    public void onMessage(MessageRequestPlayerInfo m, EntityPlayerMP player)
     {
         ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(m.playerID);
 
         if(p != null)
         {
-            new MessageLMPlayerInfo(ForgeWorldMP.inst.getPlayer(ep), p).sendTo(ep);
+            new MessageLMPlayerInfo(ForgeWorldMP.inst.getPlayer(player), p).sendTo(player);
         }
     }
 }

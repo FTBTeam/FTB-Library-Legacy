@@ -23,7 +23,7 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
         EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
         ep.mcServer.addScheduledTask(() -> onMessage(m, ep));
 
-        if(MessageLM.logMessages())
+        if(MessageLM.LOG_NET)
         {
             FTBLib.dev_logger.info("TX MessageLM: " + getClass().getName());
         }
@@ -31,7 +31,7 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
         return null;
     }
 
-    public void onMessage(E m, EntityPlayerMP ep)
+    public void onMessage(E m, EntityPlayerMP player)
     {
     }
 

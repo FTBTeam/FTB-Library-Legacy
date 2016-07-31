@@ -26,7 +26,7 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
         Minecraft mc = Minecraft.getMinecraft();
         mc.addScheduledTask(() -> onMessage(m, mc));
 
-        if(MessageLM.logMessages())
+        if(MessageLM.LOG_NET)
         {
             FTBLib.dev_logger.info("RX MessageLM: " + getClass().getName());
         }
@@ -39,11 +39,11 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
     {
     }
 
-    public final void sendTo(EntityPlayerMP ep)
+    public final void sendTo(EntityPlayerMP player)
     {
-        if(ep != null)
+        if(player != null)
         {
-            getWrapper().sendTo(this, ep);
+            getWrapper().sendTo(this, player);
         }
         else
         {

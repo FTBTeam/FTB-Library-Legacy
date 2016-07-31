@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.api.notification.Notification;
+import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -73,8 +74,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         typeID = io.readUnsignedByte();
         login = io.readBoolean();
-        worldData = readTag(io);
-        syncData = readTag(io);
+        worldData = LMNetUtils.readTag(io);
+        syncData = LMNetUtils.readTag(io);
     }
 
     @Override
@@ -82,8 +83,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         io.writeByte(typeID);
         io.writeBoolean(login);
-        writeTag(io, worldData);
-        writeTag(io, syncData);
+        LMNetUtils.writeTag(io, worldData);
+        LMNetUtils.writeTag(io, syncData);
     }
 
     @Override
