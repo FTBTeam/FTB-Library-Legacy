@@ -131,6 +131,7 @@ public class ClientNotifications
                     d1 = timeExisted / 300D;
                 }
 
+                GlStateManager.pushMatrix();
                 GlStateManager.disableDepth();
                 GlStateManager.depthMask(false);
                 GlStateManager.disableLighting();
@@ -138,6 +139,7 @@ public class ClientNotifications
                 GlStateManager.depthMask(true);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 GlStateManager.enableLighting();
+                GlStateManager.popMatrix();
             }
 
             return time == 0L;
@@ -170,6 +172,11 @@ public class ClientNotifications
                 notification.getClickAction().onClicked(button);
             }
         }
+    }
+
+    public static boolean shouldRenderTemp()
+    {
+        return current != null || !Temp.map.isEmpty();
     }
 
     public static void renderTemp(ScaledResolution screen)

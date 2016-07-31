@@ -312,9 +312,10 @@ public class FTBLibClientEventHandler
         //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
         if(event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().theWorld != null)
         {
-            GlStateManager.pushMatrix();
-            ClientNotifications.renderTemp(new ScaledResolution(Minecraft.getMinecraft()));
-            GlStateManager.popMatrix();
+            if(ClientNotifications.shouldRenderTemp())
+            {
+                ClientNotifications.renderTemp(new ScaledResolution(Minecraft.getMinecraft()));
+            }
         }
     }
 
