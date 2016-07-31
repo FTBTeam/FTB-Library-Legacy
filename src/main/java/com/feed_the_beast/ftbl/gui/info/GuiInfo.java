@@ -21,6 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 public class GuiInfo extends GuiLM implements IClientActionGui
@@ -43,21 +44,21 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     public static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
 
     public final GuiInfo parentGui;
-    public final InfoPage page;
+    public final Map.Entry<String, InfoPage> page;
     public final String pageTitle;
     public final SliderLM sliderPages, sliderText;
     public final ButtonLM buttonBack, buttonSpecial;
     public final PanelLM panelPages, panelText;
-    public InfoPage selectedPage;
+    public Map.Entry<String, InfoPage> selectedPage;
     public int panelWidth;
     public int colorText, colorBackground;
     public boolean useUnicodeFont;
 
-    public GuiInfo(GuiInfo g, InfoPage c)
+    public GuiInfo(GuiInfo g, Map.Entry<String, InfoPage> c)
     {
         parentGui = g;
         page = c;
-        pageTitle = page.getTitleComponent().getFormattedText();
+        pageTitle = page.getValue().getTitleComponent(page.getKey()).getFormattedText();
         selectedPage = page;
 
         sliderPages = new SliderLM(0, 0, 12, 0, 18)
@@ -89,7 +90,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 GuiLM.playClickSound();
 
-                if(selectedPage == page || page.getUnformattedText().isEmpty())
+                if(selectedPage == page || page.getValue().getUnformattedText().isEmpty())
                 {
                     if(parentGui == null)
                     {
@@ -121,9 +122,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 height = 0;
 
-                for(InfoPage c : page.childPages.values())
+                for(InfoPage c : page.getValue().childPages.values())
                 {
-                    ButtonInfoPage b = c.createButton(GuiInfo.this);
+                    ButtonInfoPage b = c.createButton(GuiInfo.this, GuiInfo.this.page.getKey());
 
                     if(b != null && b.height > 0)
                     {
@@ -149,7 +150,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 boolean uni = font.getUnicodeFlag();
                 font.setUnicodeFlag(useUnicodeFont);
 
-                for(InfoTextLine line : selectedPage.text)
+                for(InfoTextLine line : selectedPage.getValue().text)
                 {
                     ButtonInfoTextLine l = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this);
 
@@ -165,13 +166,13 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
-        buttonSpecial = page.createSpecialButton(this);
+        buttonSpecial = page.getValue().createSpecialButton(this);
     }
 
     @Override
     public void addWidgets()
     {
-        page.refreshGuiTree(GuiInfo.this);
+        page.getValue().refreshGuiTree(GuiInfo.this);
 
         add(sliderPages);
         add(sliderText);
@@ -213,7 +214,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        InfoPageTheme theme = page.getTheme();
+        InfoPageTheme theme = page.getValue().getTheme();
 
         colorText = 0xFF000000 | theme.textColor;
         colorBackground = 0xFF000000 | theme.backgroundColor;

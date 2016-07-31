@@ -31,9 +31,9 @@ public class InfoFriendsGUIPage extends InfoPage
 {
     private class Button extends ButtonInfoPage
     {
-        public Button(GuiInfo g, InfoFriendsGUIPage p)
+        public Button(GuiInfo g, InfoFriendsGUIPage p, String id)
         {
-            super(g, p, null);
+            super(g, id, p, null);
             height = 20;
         }
 
@@ -94,7 +94,6 @@ public class InfoFriendsGUIPage extends InfoPage
 
     public InfoFriendsGUIPage(ForgePlayerSP p)
     {
-        super(p.getProfile().getName());
         playerLM = p;
     }
 
@@ -133,8 +132,8 @@ public class InfoFriendsGUIPage extends InfoPage
     }
 
     @Override
-    public ButtonInfoPage createButton(GuiInfo gui)
+    public ButtonInfoPage createButton(GuiInfo gui, String id)
     {
-        return new Button(gui, this);
+        return new Button(gui, this, id);
     }
 }

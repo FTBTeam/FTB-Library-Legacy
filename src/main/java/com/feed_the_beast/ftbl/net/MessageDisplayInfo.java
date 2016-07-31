@@ -10,6 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.AbstractMap;
+
 public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
     public String infoID;
@@ -19,9 +21,9 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     {
     }
 
-    public MessageDisplayInfo(InfoPage page)
+    public MessageDisplayInfo(String id, InfoPage page)
     {
-        infoID = page.getID();
+        infoID = id;
         json = page.getSerializableElement();
     }
 
@@ -49,8 +51,8 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageDisplayInfo m, Minecraft mc)
     {
-        InfoPage page = new InfoPage(m.infoID);
+        InfoPage page = new InfoPage();
         page.fromJson(m.json);
-        new GuiInfo(null, page).openGui();
+        new GuiInfo(null, new AbstractMap.SimpleEntry<>(m.infoID, page)).openGui();
     }
 }

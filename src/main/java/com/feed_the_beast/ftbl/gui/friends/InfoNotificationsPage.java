@@ -21,7 +21,6 @@ public class InfoNotificationsPage extends InfoPage
 {
     public InfoNotificationsPage()
     {
-        super("notifications");
         setTitle(new TextComponentTranslation("client_config.ftbl.notifications"));
     }
 
@@ -55,8 +54,8 @@ public class InfoNotificationsPage extends InfoPage
     }
 
     @Override
-    public ButtonInfoPage createButton(GuiInfo gui)
+    public ButtonInfoPage createButton(GuiInfo gui, String id)
     {
-        return new ButtonInfoPage(gui, this, GuiIcons.chat);
+        return new ButtonInfoPage(gui, id, this, GuiIcons.chat);
     }
 }

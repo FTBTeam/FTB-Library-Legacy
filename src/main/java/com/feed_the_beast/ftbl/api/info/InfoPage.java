@@ -10,7 +10,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.RemoveFilter;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMMapUtils;
@@ -25,12 +24,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InfoPage extends FinalIDObject implements IJsonSerializable, Comparable<InfoPage> // GuideFile
+public class InfoPage implements IJsonSerializable // GuideFile
 {
+    public static final Comparator<Map.Entry<String, InfoPage>> COMPARATOR = (o1, o2) -> o1.getValue().getTitleComponent(o1.getKey()).getFormattedText().compareToIgnoreCase(o2.getValue().getTitleComponent(o2.getKey()).getFormattedText());
     private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().childPages.isEmpty() && entry.getValue().getUnformattedText().trim().isEmpty();
     public final List<InfoTextLine> text;
     public final LinkedHashMap<String, InfoPage> childPages;
@@ -39,9 +40,8 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
     public IResourceProvider resourceProvider;
     private ITextComponent title;
 
-    public InfoPage(String id)
+    public InfoPage()
     {
-        super(id);
         text = new ArrayList<>();
         childPages = new LinkedHashMap<>();
     }
@@ -157,15 +157,15 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         return sb.toString();
     }
 
-    public void addSub(InfoPage c)
+    public void addSub(String id, InfoPage c)
     {
-        childPages.put(c.getID(), c);
+        childPages.put(id, c);
         c.setParent(this);
     }
 
-    public ITextComponent getTitleComponent()
+    public ITextComponent getTitleComponent(String id)
     {
-        return title == null ? new TextComponentString(getID()) : title;
+        return title == null ? new TextComponentString(id) : title;
     }
 
     public InfoPage getSub(String id)
@@ -173,7 +173,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         InfoPage c = childPages.get(id);
         if(c == null)
         {
-            c = new InfoPage(id);
+            c = new InfoPage();
             c.setParent(this);
             childPages.put(id, c);
         }
@@ -195,7 +195,7 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
 
     public void sortAll()
     {
-        LMMapUtils.sortMap(childPages, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
+        LMMapUtils.sortMap(childPages, COMPARATOR);
         for(InfoPage c : childPages.values())
         {
             c.sortAll();
@@ -209,17 +209,17 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
             text.add(l == null ? null : l.copy(this));
         }
 
-        for(InfoPage p : c.childPages.values())
+        for(Map.Entry<String, InfoPage> entry : c.childPages.entrySet())
         {
-            InfoPage p1 = new InfoPage(p.getID());
-            p1.copyFrom(p);
-            addSub(p1);
+            InfoPage p1 = new InfoPage();
+            p1.copyFrom(entry.getValue());
+            addSub(entry.getKey(), p1);
         }
     }
 
     public InfoPage copy()
     {
-        InfoPage page = new InfoPage(getID());
+        InfoPage page = new InfoPage();
         page.fromJson(getSerializableElement());
         return page;
     }
@@ -257,21 +257,16 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         if(!childPages.isEmpty())
         {
             JsonObject o1 = new JsonObject();
-            for(InfoPage c : childPages.values())
+            for(Map.Entry<String, InfoPage> entry : childPages.entrySet())
             {
-                o1.add(c.getID(), c.getSerializableElement());
+                o1.add(entry.getKey(), entry.getValue().getSerializableElement());
             }
             o.add("S", o1);
         }
 
         if(theme != null)
         {
-            JsonElement e = theme.getSerializableElement();
-
-            if(e != null)
-            {
-                o.add("C", e);
-            }
+            o.add("C", theme.getSerializableElement());
         }
 
         return o;
@@ -305,10 +300,10 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
 
             for(Map.Entry<String, JsonElement> entry : o1.entrySet())
             {
-                InfoPage c = new InfoPage(entry.getKey());
+                InfoPage c = new InfoPage();
                 c.setParent(this);
                 c.fromJson(entry.getValue());
-                childPages.put(c.getID(), c);
+                childPages.put(entry.getKey(), c);
             }
         }
 
@@ -323,9 +318,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         }
     }
 
-    public MessageDisplayInfo displayGuide(EntityPlayerMP ep)
+    public MessageDisplayInfo displayGuide(EntityPlayerMP ep, String id)
     {
-        MessageDisplayInfo m = new MessageDisplayInfo(this);
+        MessageDisplayInfo m = new MessageDisplayInfo(id, this);
         if(ep != null && !(ep instanceof FakePlayer))
         {
             m.sendTo(ep);
@@ -365,27 +360,9 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
     }
 
     @SideOnly(Side.CLIENT)
-    public ButtonInfoPage createButton(GuiInfo gui)
+    public ButtonInfoPage createButton(GuiInfo gui, String id)
     {
-        return new ButtonInfoPage(gui, this, null);
-    }
-
-    public String getFullID()
-    {
-        if(parent == null)
-        {
-            return getID();
-        }
-        return parent.getFullID() + '.' + getID();
-    }
-
-    public String getPath()
-    {
-        if(parent == null)
-        {
-            return getID();
-        }
-        return parent.getFullID() + '/' + getID();
+        return new ButtonInfoPage(gui, id, this, null);
     }
 
     public void loadText(List<String> list) throws Exception
@@ -394,11 +371,5 @@ public class InfoPage extends FinalIDObject implements IJsonSerializable, Compar
         {
             text.add(createLine(e));
         }
-    }
-
-    @Override
-    public int compareTo(@Nonnull InfoPage o)
-    {
-        return getTitleComponent().getFormattedText().compareToIgnoreCase(o.getTitleComponent().getFormattedText());
     }
 }

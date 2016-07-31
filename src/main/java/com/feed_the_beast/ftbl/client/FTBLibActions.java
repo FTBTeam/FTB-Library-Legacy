@@ -23,6 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.AbstractMap;
 
 public class FTBLibActions
 {
@@ -34,7 +35,7 @@ public class FTBLibActions
             @Override
             public void onClicked(ForgePlayerSP player)
             {
-                new GuiInfo(null, new InfoFriendsGUI()).openGui();
+                new GuiInfo(null, new AbstractMap.SimpleEntry<>("friends_gui", new InfoFriendsGUI())).openGui();
             }
 
             @Override
@@ -131,7 +132,7 @@ public class FTBLibActions
             }
         });
 
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo(null, new InfoFriendsGUI()).getWrapper());
+        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo(null, new AbstractMap.SimpleEntry<>("friends_gui", new InfoFriendsGUI())).getWrapper());
         GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"), () -> new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).getWrapper());
     }
 }

@@ -41,7 +41,7 @@ public class CmdListTeams extends CommandLM
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
+        InfoPage page = new InfoPage().setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.theme = InfoPageTheme.DARK_NON_UNICODE;
 
         for(ForgeTeam team : ForgeWorldMP.inst.teams.values())
@@ -88,6 +88,6 @@ public class CmdListTeams extends CommandLM
             }
         }
 
-        page.displayGuide(ep);
+        page.displayGuide(ep, "teams");
     }
 }

@@ -11,6 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import java.util.AbstractMap;
 import java.util.List;
 
 /**
@@ -19,16 +20,18 @@ import java.util.List;
 public class ButtonInfoPage extends ButtonLM
 {
     public final GuiInfo guiInfo;
+    public final String pageID;
     public final InfoPage page;
     public String hover;
     public TextureCoords icon;
     public boolean iconBlur = false;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, InfoPage p, TextureCoords t)
+    public ButtonInfoPage(GuiInfo g, String id, InfoPage p, TextureCoords t)
     {
         super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
+        pageID = id;
         page = p;
         icon = t;
         updateTitle(g);
@@ -49,20 +52,20 @@ public class ButtonInfoPage extends ButtonLM
 
         if(page.childPages.isEmpty())
         {
-            guiInfo.selectedPage = page;
+            guiInfo.selectedPage = new AbstractMap.SimpleEntry<>(pageID, page);
             guiInfo.sliderText.value = 0F;
             guiInfo.panelText.posY = 10;
             guiInfo.panelText.refreshWidgets();
         }
         else
         {
-            new GuiInfo(guiInfo, page).openGui();
+            new GuiInfo(guiInfo, new AbstractMap.SimpleEntry<>(pageID, page)).openGui();
         }
     }
 
     public void updateTitle(GuiLM gui)
     {
-        ITextComponent titleC = page.getTitleComponent().createCopy();
+        ITextComponent titleC = page.getTitleComponent(pageID).createCopy();
         if(guiInfo.selectedPage == page)
         {
             titleC.getStyle().setBold(true);
@@ -78,7 +81,7 @@ public class ButtonInfoPage extends ButtonLM
 
         if(guiInfo.font.getStringWidth(title) > width)
         {
-            hover = page.getTitleComponent().getFormattedText();
+            hover = page.getTitleComponent(pageID).getFormattedText();
         }
     }
 

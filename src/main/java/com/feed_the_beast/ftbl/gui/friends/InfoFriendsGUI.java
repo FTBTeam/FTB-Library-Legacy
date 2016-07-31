@@ -22,13 +22,12 @@ public class InfoFriendsGUI extends InfoPage
 {
     public InfoFriendsGUI()
     {
-        super("friends_gui");
         setTitle(new TextComponentString("FriendsGUI"));
         theme = InfoPageTheme.DARK_NON_UNICODE;
 
         if(!ClientNotifications.Perm.map.isEmpty())
         {
-            addSub(new InfoNotificationsPage());
+            addSub("notifications", new InfoNotificationsPage());
         }
 
         List<ForgePlayer> tempPlayerList = new ArrayList<>();
@@ -41,11 +40,11 @@ public class InfoFriendsGUI extends InfoPage
 
         Collections.sort(tempPlayerList, ForgePlayerNameComparator.INSTANCE);
 
-        addSub(new InfoFriendsGUISelfPage());
+        addSub(ForgeWorldSP.inst.clientPlayer.getProfile().getName(), new InfoFriendsGUISelfPage());
 
         for(ForgePlayer p : tempPlayerList)
         {
-            addSub(new InfoFriendsGUIPage(p.toSP()));
+            addSub(p.getProfile().getName(), new InfoFriendsGUIPage(p.toSP()));
         }
     }
 }
