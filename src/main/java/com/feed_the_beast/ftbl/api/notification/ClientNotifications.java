@@ -5,9 +5,9 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.latmod.lib.FinalIDObject;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -86,7 +86,7 @@ public class ClientNotifications
             time = -1L;
         }
 
-        public boolean render(RenderGameOverlayEvent event)
+        public boolean render(ScaledResolution screen)
         {
             if(time == -1L)
             {
@@ -136,7 +136,7 @@ public class ClientNotifications
                 GlStateManager.disableDepth();
                 GlStateManager.depthMask(false);
                 GlStateManager.disableLighting();
-                widget.render(mc, event.getResolution().getScaledWidth() - widget.width - 4, d1 * widget.height - widget.height);
+                widget.render(mc, screen.getScaledWidth() - widget.width - 4, d1 * widget.height - widget.height);
                 GlStateManager.depthMask(true);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 GlStateManager.enableLighting();
@@ -175,11 +175,11 @@ public class ClientNotifications
         }
     }
 
-    public static void renderTemp(RenderGameOverlayEvent event)
+    public static void renderTemp(ScaledResolution screen)
     {
         if(current != null)
         {
-            if(current.render(event))
+            if(current.render(screen))
             {
                 current = null;
             }

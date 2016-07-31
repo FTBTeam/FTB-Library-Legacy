@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
@@ -23,6 +24,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -304,16 +306,16 @@ public class FTBLibClientEventHandler
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderGui(RenderGameOverlayEvent event)
+    //public void renderGui(RenderGameOverlayEvent event) //TODO: Figure out how to properly do this
+    public void renderGui(TickEvent.RenderTickEvent event)
     {
-        GlStateManager.pushMatrix();
-
-        if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
+        //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
+        if(event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().theWorld != null)
         {
-            ClientNotifications.renderTemp(event);
+            GlStateManager.pushMatrix();
+            ClientNotifications.renderTemp(new ScaledResolution(Minecraft.getMinecraft()));
+            GlStateManager.popMatrix();
         }
-
-        GlStateManager.popMatrix();
     }
 
     @SubscribeEvent
