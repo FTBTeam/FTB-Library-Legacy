@@ -52,7 +52,7 @@ public class InfoNotificationLine extends InfoTextLine
                 notification.notification.getClickAction().onClicked(button);
             }
 
-            ClientNotifications.Perm.map.remove(widget.notification.getID());
+            ClientNotifications.Perm.map.remove(widget.notification.ID);
             guiInfo.refreshWidgets();
         }
 

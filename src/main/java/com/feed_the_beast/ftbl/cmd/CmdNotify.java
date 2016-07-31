@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.cmd.ICustomCommandInfo;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
 import com.feed_the_beast.ftbl.api.notification.Notification;
+import com.feed_the_beast.ftbl.api.notification.NotificationID;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -14,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -77,7 +80,7 @@ public class CmdNotify extends CommandLM implements ICustomCommandInfo
         list.add(new TextComponentString("Example:"));
         list.add(null);
 
-        Notification n = new Notification("example_id")
+        Notification n = new Notification(NotificationID.get(new ResourceLocation(FTBLibFinals.MOD_ID, "example_id")))
                 .addText(new TextComponentString("Example title"))
                 .addText(new TextComponentString("Example description"))
                 .setTimer(6500)

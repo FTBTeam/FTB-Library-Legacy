@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.notification;
 
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.net.MessageLM;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -10,8 +11,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.FinalIDObject;
+import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMColorUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -20,26 +22,33 @@ import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Notification extends FinalIDObject implements IJsonSerializable
+public final class Notification implements IJsonSerializable
 {
+    private static final int NET_HAS_TEXT = 1;
+    private static final int NET_HAS_TIMER = 2;
+    private static final int NET_HAS_ITEM = 4;
+    private static final int NET_HAS_COLOR = 8;
+    private static final int NET_HAS_CLICK = 16;
+    public final int ID;
     public final List<ITextComponent> text;
     private ItemStack item;
     private ClickAction clickAction;
     private int timer, color;
 
-    public Notification(@Nonnull String s)
+    public Notification(int id)
     {
-        super(s);
+        ID = id;
         text = new ArrayList<>();
     }
 
-    public static Notification error(@Nonnull String id, @Nonnull ITextComponent title)
+    public static Notification error(int id, @Nonnull ITextComponent title)
     {
         title.getStyle().setColor(TextFormatting.WHITE);
         return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959).setItem(new ItemStack(Blocks.BARRIER));
@@ -53,7 +62,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
 
             if(o.has("id"))
             {
-                Notification n = new Notification(o.get("id").getAsString());
+                Notification n = new Notification(NotificationID.get(new ResourceLocation(o.get("id").getAsString())));
                 n.fromJson(o);
                 return n;
             }
@@ -136,7 +145,7 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
-        o.add("id", new JsonPrimitive(getID()));
+        o.add("id", new JsonPrimitive(NotificationID.getResourceLocation(ID).toString()));
 
         JsonArray a = new JsonArray();
 
@@ -228,6 +237,88 @@ public final class Notification extends FinalIDObject implements IJsonSerializab
                 clickAction = new ClickAction();
                 clickAction.fromJson(o.get("click"));
             }
+        }
+    }
+
+    public void readFromNet(ByteBuf io)
+    {
+        int flags = io.readUnsignedByte();
+
+        setDefaults();
+
+        if((flags & NET_HAS_TEXT) != 0)
+        {
+            for(JsonElement e1 : MessageLM.readJsonElement(io).getAsJsonArray())
+            {
+                text.add(JsonHelper.deserializeICC(e1));
+            }
+        }
+
+        if((flags & NET_HAS_TIMER) != 0)
+        {
+            setTimer(io.readInt());
+        }
+
+        if((flags & NET_HAS_ITEM) != 0)
+        {
+            setItem(ByteBufUtils.readItemStack(io));
+        }
+
+        if((flags & NET_HAS_COLOR) != 0)
+        {
+            setColor(io.readInt());
+        }
+
+        if((flags & NET_HAS_CLICK) != 0)
+        {
+            clickAction = new ClickAction();
+            clickAction.fromJson(MessageLM.readJsonElement(io));
+            setClickAction(clickAction);
+        }
+    }
+
+    public void writeToNet(ByteBuf io)
+    {
+        int flags = 0;
+
+        flags = Bits.setFlag(flags, NET_HAS_TEXT, !text.isEmpty());
+        flags = Bits.setFlag(flags, NET_HAS_TIMER, timer != 3000);
+        flags = Bits.setFlag(flags, NET_HAS_ITEM, item != null);
+        flags = Bits.setFlag(flags, NET_HAS_COLOR, color != 0xA0A0A0);
+        flags = Bits.setFlag(flags, NET_HAS_CLICK, clickAction != null);
+
+        io.writeByte(flags);
+
+        if((flags & NET_HAS_TEXT) != 0)
+        {
+            JsonArray a = new JsonArray();
+
+            for(ITextComponent t : text)
+            {
+                a.add(JsonHelper.serializeICC(t));
+            }
+
+            MessageLM.writeJsonElement(io, a);
+        }
+
+        if((flags & NET_HAS_TIMER) != 0)
+        {
+            io.writeInt(timer);
+        }
+
+        if((flags & NET_HAS_ITEM) != 0)
+        {
+            ByteBufUtils.writeItemStack(io, item);
+        }
+
+        if((flags & NET_HAS_COLOR) != 0)
+        {
+            io.writeInt(color);
+        }
+
+        if((flags & NET_HAS_CLICK) != 0)
+        {
+            MessageLM.writeJsonElement(io, clickAction.getSerializableElement());
         }
     }
 

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
@@ -104,7 +105,7 @@ public class MessageReload extends MessageToClient<MessageReload>
         }
         else if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT)
         {
-            Notification n = new Notification("reload_client_config");
+            Notification n = new Notification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
             n.addText(FTBLibLang.reload_client_config.textComponent());
             n.addText(new TextComponentString("/ftb reload_client"));
             n.setTimer(7000);

@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.api.notification.Notification;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
-import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
@@ -15,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 {
-    public JsonElement json;
+    public Notification notification;
     public int displayType;
 
     public MessageNotifyPlayer()
@@ -24,7 +23,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
     public MessageNotifyPlayer(Notification n, EnumNotificationDisplay e)
     {
-        json = n.getSerializableElement();
+        notification = n;
         displayType = e.ordinal();
     }
 
@@ -37,14 +36,16 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        json = readJsonElement(io);
+        notification = new Notification(io.readInt());
+        notification.readFromNet(io);
         displayType = io.readUnsignedByte();
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        writeJsonElement(io, json);
+        io.writeInt(notification.ID);
+        notification.writeToNet(io);
         io.writeByte(displayType);
     }
 
@@ -53,28 +54,27 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     public void onMessage(MessageNotifyPlayer m, Minecraft mc)
     {
         EnumNotificationDisplay e = EnumNotificationDisplay.values()[m.displayType];
-        Notification n = Notification.deserialize(m.json);
 
         if(e == EnumNotificationDisplay.SCREEN)
         {
-            ClientNotifications.add(n);
+            ClientNotifications.add(m.notification);
         }
-        else if(e != EnumNotificationDisplay.OFF && !n.text.isEmpty())
+        else if(e != EnumNotificationDisplay.OFF && !m.notification.text.isEmpty())
         {
-            if(n.text.size() > 1)
+            if(m.notification.text.size() > 1)
             {
-                n.text.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, n.text.get(1)));
+                m.notification.text.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, m.notification.text.get(1)));
             }
 
             GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
 
             if(e == EnumNotificationDisplay.CHAT)
             {
-                chat.printChatMessageWithOptionalDeletion(n.text.get(0), 234927908);
+                chat.printChatMessageWithOptionalDeletion(m.notification.text.get(0), m.notification.ID);
             }
             else
             {
-                chat.printChatMessage(n.text.get(0));
+                chat.printChatMessage(m.notification.text.get(0));
             }
         }
     }

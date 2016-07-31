@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api.notification;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.latmod.lib.FinalIDObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -71,16 +70,15 @@ public class ClientNotifications
         }
     }
 
-    public static class Temp extends FinalIDObject
+    public static class Temp
     {
-        public static final LinkedHashMap<String, Temp> map = new LinkedHashMap<>();
+        public static final LinkedHashMap<Integer, Temp> map = new LinkedHashMap<>();
 
         private long time;
         private NotificationWidget widget;
 
         private Temp(Notification n)
         {
-            super(n.getID());
             widget = new NotificationWidget(n);
             widget.width = 0;
             time = -1L;
@@ -146,16 +144,15 @@ public class ClientNotifications
         }
     }
 
-    public static class Perm extends FinalIDObject implements Comparable<Perm>
+    public static class Perm implements Comparable<Perm>
     {
-        public static final LinkedHashMap<String, Perm> map = new LinkedHashMap<>();
+        public static final LinkedHashMap<Integer, Perm> map = new LinkedHashMap<>();
 
         public final Notification notification;
         public final long timeAdded;
 
         private Perm(Notification n)
         {
-            super(n.getID());
             notification = n;
             timeAdded = System.currentTimeMillis();
         }
@@ -187,7 +184,7 @@ public class ClientNotifications
         else if(!Temp.map.isEmpty())
         {
             current = Temp.map.values().iterator().next();
-            Temp.map.remove(current.getID());
+            Temp.map.remove(current.widget.notification.ID);
         }
     }
 
@@ -195,19 +192,19 @@ public class ClientNotifications
     {
         if(n != null)
         {
-            Temp.map.remove(n.getID());
-            Perm.map.remove(n.getID());
+            Temp.map.remove(n.ID);
+            Perm.map.remove(n.ID);
 
-            if(current != null && current.getID().equals(n.getID()))
+            if(current != null && current.widget.notification.ID == n.ID)
             {
                 current = null;
             }
 
-            Temp.map.put(n.getID(), new Temp(n));
+            Temp.map.put(n.ID, new Temp(n));
 
             if(!n.isTemp())
             {
-                Perm.map.put(n.getID(), new Perm(n));
+                Perm.map.put(n.ID, new Perm(n));
             }
         }
     }
