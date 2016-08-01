@@ -5,10 +5,13 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public abstract class PanelLM extends WidgetLM
 {
     public final List<WidgetLM> widgets;
@@ -21,7 +24,7 @@ public abstract class PanelLM extends WidgetLM
 
     public abstract void addWidgets();
 
-    public void add(WidgetLM w)
+    public void add(@Nullable WidgetLM w)
     {
         if(w != null)
         {
@@ -35,7 +38,7 @@ public abstract class PanelLM extends WidgetLM
         }
     }
 
-    public void addAll(Iterable<? extends WidgetLM> l)
+    public void addAll(@Nullable Iterable<? extends WidgetLM> l)
     {
         if(l != null)
         {

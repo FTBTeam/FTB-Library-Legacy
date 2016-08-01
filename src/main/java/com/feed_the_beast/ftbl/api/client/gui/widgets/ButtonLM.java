@@ -11,12 +11,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract class ButtonLM extends WidgetLM
 {
-    public ButtonLM(double x, double y, double w, double h)
+    public ButtonLM(int x, int y, int w, int h)
     {
         super(x, y, w, h);
     }
 
-    public ButtonLM(double x, double y, double w, double h, String t)
+    public ButtonLM(int x, int y, int w, int h, String t)
     {
         this(x, y, w, h);
         title = t;

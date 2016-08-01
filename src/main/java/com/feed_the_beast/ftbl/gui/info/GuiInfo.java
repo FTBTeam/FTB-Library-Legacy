@@ -21,34 +21,35 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
-    public static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
+    private static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
 
-    public static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
-    public static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
-    public static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);
-    public static final TextureCoords tex_bullet = new TextureCoords(tex, 0, 49, 6, 6, 64, 64);
+    private static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
+    private static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
+    private static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);
+    private static final TextureCoords tex_bullet = new TextureCoords(tex, 0, 49, 6, 6, 64, 64);
 
-    public static final TextureCoords tex_bg_MU = new TextureCoords(tex, 14, 0, 1, 13, 64, 64);
-    public static final TextureCoords tex_bg_MD = new TextureCoords(tex, 14, 16, 1, 13, 64, 64);
-    public static final TextureCoords tex_bg_ML = new TextureCoords(tex, 0, 14, 13, 1, 64, 64);
-    public static final TextureCoords tex_bg_MR = new TextureCoords(tex, 16, 14, 13, 1, 64, 64);
+    private static final TextureCoords tex_bg_MU = new TextureCoords(tex, 14, 0, 1, 13, 64, 64);
+    private static final TextureCoords tex_bg_MD = new TextureCoords(tex, 14, 16, 1, 13, 64, 64);
+    private static final TextureCoords tex_bg_ML = new TextureCoords(tex, 0, 14, 13, 1, 64, 64);
+    private static final TextureCoords tex_bg_MR = new TextureCoords(tex, 16, 14, 13, 1, 64, 64);
 
-    public static final TextureCoords tex_bg_NN = new TextureCoords(tex, 0, 0, 13, 13, 64, 64);
-    public static final TextureCoords tex_bg_PN = new TextureCoords(tex, 16, 0, 13, 13, 64, 64);
-    public static final TextureCoords tex_bg_NP = new TextureCoords(tex, 0, 16, 13, 13, 64, 64);
-    public static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
-
-    public final GuiInfo parentGui;
+    private static final TextureCoords tex_bg_NN = new TextureCoords(tex, 0, 0, 13, 13, 64, 64);
+    private static final TextureCoords tex_bg_PN = new TextureCoords(tex, 16, 0, 13, 13, 64, 64);
+    private static final TextureCoords tex_bg_NP = new TextureCoords(tex, 0, 16, 13, 13, 64, 64);
+    private static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
     public final Map.Entry<String, InfoPage> page;
-    public final String pageTitle;
     public final SliderLM sliderPages, sliderText;
-    public final ButtonLM buttonBack, buttonSpecial;
     public final PanelLM panelPages, panelText;
+    private final GuiInfo parentGui;
+    private final String pageTitle;
+    private final ButtonLM buttonBack, buttonSpecial;
     public Map.Entry<String, InfoPage> selectedPage;
     public int panelWidth;
     public int colorText, colorBackground;
@@ -56,6 +57,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
     public GuiInfo(GuiInfo g, Map.Entry<String, InfoPage> c)
     {
+        super(0, 0);
         parentGui = g;
         page = c;
         pageTitle = page.getValue().getTitleComponent(page.getKey()).getFormattedText();
@@ -189,8 +191,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     {
         posX = InfoClientSettings.border_width.getAsInt();
         posY = InfoClientSettings.border_height.getAsInt();
-        width = screen.getScaledWidth_double() - InfoClientSettings.border_width.getAsInt() * 2;
-        height = screen.getScaledHeight_double() - InfoClientSettings.border_height.getAsInt() * 2;
+        width = screen.getScaledWidth() - InfoClientSettings.border_width.getAsInt() * 2;
+        height = screen.getScaledHeight() - InfoClientSettings.border_height.getAsInt() * 2;
         panelWidth = (int) (width * 2D / 7D);
 
         panelPages.posX = 10;
@@ -233,6 +235,16 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.posX = panelWidth - 24;
             buttonSpecial.posY = 10;
         }
+    }
+
+    public GuiInfo getParentGui()
+    {
+        return parentGui;
+    }
+
+    public String getPageTitle()
+    {
+        return pageTitle;
     }
 
     @Override
@@ -309,7 +321,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.renderWidget(this);
         }
 
-        font.drawString(pageTitle, (int) (buttonBack.getAX() + buttonBack.width + 5), (int) (posY + 14), colorText);
+        font.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, posY + 14, colorText);
     }
 
     @Override

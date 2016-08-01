@@ -16,6 +16,11 @@ public class GuiLoading extends GuiLM
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/loading.png");
 
+    public GuiLoading()
+    {
+        super(128, 128);
+    }
+
     public static void renderLoading(double x, double y, double w, double h)
     {
         FTBLibClient.setTexture(TEXTURE);
@@ -31,13 +36,6 @@ public class GuiLoading extends GuiLM
         drawTexturedRect(-w / 2D, -h / 2D, w, h, 0D, 0D, 1D, 1D);
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
-    }
-
-    @Override
-    public void onInit()
-    {
-        width = 128;
-        height = 128;
     }
 
     @Override

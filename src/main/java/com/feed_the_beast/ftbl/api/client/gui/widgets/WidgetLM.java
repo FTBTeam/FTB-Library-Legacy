@@ -13,11 +13,11 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class WidgetLM
 {
-    public double posX, posY, width, height;
+    public int posX, posY, width, height;
     public PanelLM parentPanel = null;
     public String title = null;
 
-    public WidgetLM(double x, double y, double w, double h)
+    public WidgetLM(int x, int y, int w, int h)
     {
         posX = x;
         posY = y;
@@ -35,12 +35,12 @@ public class WidgetLM
         return gui.isInside(this);
     }
 
-    public double getAX()
+    public int getAX()
     {
         return (parentPanel == null) ? posX : (parentPanel.getAX() + posX);
     }
 
-    public double getAY()
+    public int getAY()
     {
         return (parentPanel == null) ? posY : (parentPanel.getAY() + posY);
     }

@@ -9,7 +9,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class TextBoxLM extends WidgetLM
 {
     public boolean isSelected = false;
@@ -18,7 +22,7 @@ public class TextBoxLM extends WidgetLM
     public int textColor = 0xFFFFFFFF;
     private String text = "";
 
-    public TextBoxLM(double x, double y, double w, double h)
+    public TextBoxLM(int x, int y, int w, int h)
     {
         super(x, y, w, h);
         text = getText();
@@ -134,7 +138,7 @@ public class TextBoxLM extends WidgetLM
         return text;
     }
 
-    public void setText(String s)
+    public void setText(@Nullable String s)
     {
         text = s == null ? "" : s;
     }

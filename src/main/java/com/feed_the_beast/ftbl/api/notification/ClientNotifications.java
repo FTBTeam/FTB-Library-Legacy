@@ -24,7 +24,7 @@ public class ClientNotifications
     {
         public final Notification notification;
         public final List<String> text;
-        public final double height;
+        public final int height;
         public double width;
 
         public NotificationWidget(Notification n)

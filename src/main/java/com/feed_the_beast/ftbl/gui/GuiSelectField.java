@@ -12,8 +12,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class GuiSelectField extends GuiLM
 {
     public enum FieldType
@@ -52,15 +54,13 @@ public class GuiSelectField extends GuiLM
 
     public GuiSelectField(Object id, FieldType typ, String d, ObjectCallbackHandler c)
     {
+        super(100, 40);
         ID = id;
         type = typ;
         def = d;
         callback = c;
 
-        width = 100;
-        height = 40;
-
-        double bsize = width / 2D - 4D;
+        int bsize = width / 2 - 4;
 
         buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16, GuiLang.button_cancel.translate())
         {

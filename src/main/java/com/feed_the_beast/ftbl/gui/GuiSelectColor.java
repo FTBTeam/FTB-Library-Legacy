@@ -27,31 +27,33 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class GuiSelectColor extends GuiLM
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector.png");
-    public static final ResourceLocation TEXTURE_WHEEL = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector_wheel.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector.png");
+    private static final ResourceLocation TEXTURE_WHEEL = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector_wheel.png");
 
-    public static final int COL_TEX_W = 29;
-    public static final int COL_TEX_H = 16;
+    private static final int COL_TEX_W = 29;
+    private static final int COL_TEX_H = 16;
 
-    public static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
-    public static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
+    private static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
+    private static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
 
-    public static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
-    public static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
-    public static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
+    private static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
+    private static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
+    private static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
 
-    public class ColorSelector extends WidgetLM
+    private class ColorSelector extends WidgetLM
     {
-        public boolean grabbed = false;
-        public double cursorPosX = 0D;
-        public double cursorPosY = 0D;
+        private boolean grabbed = false;
+        private double cursorPosX = 0D;
+        private double cursorPosY = 0D;
 
-        public ColorSelector(int x, int y, int w, int h)
+        private ColorSelector(int x, int y, int w, int h)
         {
             super(x, y, w, h);
             cursorPosX = cursorPosY = -1D;
@@ -113,25 +115,23 @@ public class GuiSelectColor extends GuiLM
         }
     }
 
-    public final ObjectCallbackHandler callback;
-    public final LMColor.HSB initCol;
-    public final Object colorID;
-    public final LMColor currentColor;
-    public final ButtonLM colorInit, colorCurrent;
-    public final SliderLM sliderRed, sliderGreen, sliderBlue;
-    public final SliderLM sliderHue, sliderSaturation, sliderBrightness;
-    public final ColorSelector colorSelector;
+    private final ObjectCallbackHandler callback;
+    private final LMColor.HSB initCol;
+    private final Object colorID;
+    private final LMColor currentColor;
+    private final ButtonLM colorInit, colorCurrent;
+    private final SliderLM sliderRed, sliderGreen, sliderBlue;
+    private final SliderLM sliderHue, sliderSaturation, sliderBrightness;
+    private final ColorSelector colorSelector;
 
-    public GuiSelectColor(ObjectCallbackHandler cb, LMColor col, Object id)
+    private GuiSelectColor(ObjectCallbackHandler cb, LMColor col, Object id)
     {
+        super(143, 93);
         callback = cb;
         initCol = new LMColor.HSB();
         initCol.set(col);
         currentColor = new LMColor.RGB();
         colorID = id;
-
-        width = 143;
-        height = 93;
 
         colorInit = new ButtonLM(76, 71, COL_TEX_W, COL_TEX_H)
         {
@@ -304,8 +304,7 @@ public class GuiSelectColor extends GuiLM
         sliderBrightness.update(this);
 
         FTBLibClient.setTexture(TEXTURE);
-
-        GuiScreen.drawModalRectWithCustomSizedTexture((int) getAX(), (int) getAY(), 0F, 0F, (int) width, (int) height, 256F, 256F);
+        GuiScreen.drawModalRectWithCustomSizedTexture(getAX(), getAY(), 0F, 0F, width, height, 256F, 256F);
 
         FTBLibClient.setGLColor(initCol.color(), 255);
         colorInit.render(col_tex);
@@ -359,7 +358,7 @@ public class GuiSelectColor extends GuiLM
         sliderBrightness.renderSlider(slider_tex);
     }
 
-    public void renderSlider(WidgetLM widget, int colLeft, int colRight)
+    private void renderSlider(WidgetLM widget, int colLeft, int colRight)
     {
         double x = widget.getAX();
         double y = widget.getAY();
@@ -381,7 +380,7 @@ public class GuiSelectColor extends GuiLM
         tessellator.draw();
     }
 
-    public void closeGui(boolean set)
+    private void closeGui(boolean set)
     {
         GuiLM.playClickSound();
         callback.onCallback(colorID, set ? currentColor : initCol);

@@ -96,7 +96,7 @@ public class InfoImageLine extends InfoExtendedTextLine
 
         double w = (displayW > 0D) ? displayW : (displayS == 0D ? texture.width : (displayS > 0D ? texture.width * displayS : (texture.width / -displayS)));
         double h = (displayH > 0D) ? displayH : (displayS == 0D ? texture.height : (displayS > 0D ? texture.height * displayS : (texture.height / -displayS)));
-        return new InfoImage(texture.texture, w, h);
+        return new InfoImage(texture.texture, (int) w, (int) h);
     }
 
     public InfoImageLine setSize(double w, double h)

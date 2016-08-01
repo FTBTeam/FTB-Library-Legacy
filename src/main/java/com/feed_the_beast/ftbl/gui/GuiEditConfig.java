@@ -32,6 +32,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class GuiEditConfig extends GuiLM
 {
     public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareTo(o2.getKey());
@@ -226,19 +228,20 @@ public class GuiEditConfig extends GuiLM
         }
     }
 
-    public final ConfigContainer configContainer;
-    public final NBTTagCompound extraNBT;
-    public final JsonObject modifiedConfig;
+    private final ConfigContainer configContainer;
+    private final NBTTagCompound extraNBT;
+    private final JsonObject modifiedConfig;
 
-    public final String title;
-    public final List<ButtonConfigEntry> configEntryButtons;
-    public final PanelLM configPanel;
-    public final ButtonLM buttonAccept, buttonCancel;
-    public final SliderLM scroll;
+    private final String title;
+    private final List<ButtonConfigEntry> configEntryButtons;
+    private final PanelLM configPanel;
+    private final ButtonLM buttonAccept, buttonCancel;
+    private final SliderLM scroll;
     private int shouldClose = 0;
 
     public GuiEditConfig(NBTTagCompound nbt, ConfigContainer cc)
     {
+        super(0, 0);
         configContainer = cc;
 
         ITextComponent title0 = configContainer.getConfigTitle().createCopy();
@@ -301,7 +304,7 @@ public class GuiEditConfig extends GuiLM
         scroll = new SliderLM(-16, 20, 16, 0, 10)
         {
             @Override
-            public boolean canMouseScroll(GuiLM gui)
+            public boolean canMouseScroll(@Nonnull GuiLM gui)
             {
                 return true;
             }
@@ -361,7 +364,7 @@ public class GuiEditConfig extends GuiLM
         return false;
     }
 
-    public void onChanged(String id, JsonElement val)
+    private void onChanged(String id, JsonElement val)
     {
         modifiedConfig.add(id, val);
     }
@@ -382,12 +385,12 @@ public class GuiEditConfig extends GuiLM
         {
             scroll.scrollStep = 40D / (configPanel.height + 20D);
             scroll.update(this);
-            configPanel.posY = scroll.value * (height - configPanel.height - 20D) + 20D;
+            configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20D) + 20D);
         }
         else
         {
             scroll.value = 0F;
-            configPanel.posY = 20D;
+            configPanel.posY = 20;
         }
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -412,6 +415,11 @@ public class GuiEditConfig extends GuiLM
 
         buttonAccept.render(GuiIcons.accept);
         buttonCancel.render(GuiIcons.cancel);
+    }
+
+    public String getTitle()
+    {
+        return title;
     }
 
     @Override

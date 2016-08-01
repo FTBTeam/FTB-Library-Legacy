@@ -10,9 +10,9 @@ public class InfoImage
     public static final InfoImage NULL = new InfoImage(null, 0, 0);
 
     public final ResourceLocation texture;
-    public final double width, height;
+    public final int width, height;
 
-    public InfoImage(ResourceLocation rl, double w, double h)
+    public InfoImage(ResourceLocation rl, int w, int h)
     {
         texture = rl;
         width = w;

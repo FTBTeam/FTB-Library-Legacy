@@ -8,20 +8,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
+@ParametersAreNonnullByDefault
 public class SliderLM extends WidgetLM
 {
-    public final double sliderSize;
-    public boolean isGrabbed;
+    public final int sliderSize;
     public double value;
     public int displayMin = 0;
     public int displayMax = 0;
     public boolean isVertical = false;
     public double scrollStep = 0.1D;
+    private boolean isGrabbed;
 
-    public SliderLM(double x, double y, double w, double h, double ss)
+    public SliderLM(int x, int y, int w, int h, int ss)
     {
         super(x, y, w, h);
         sliderSize = ss;
@@ -37,11 +39,11 @@ public class SliderLM extends WidgetLM
             {
                 if(isVertical)
                 {
-                    value = (gui.mouseY - (getAY() + (sliderSize / 2F))) / (height - sliderSize);
+                    value = (gui.mouseY - (getAY() + (sliderSize / 2D))) / (double) (height - sliderSize);
                 }
                 else
                 {
-                    value = (gui.mouseX - (getAX() + (sliderSize / 2F))) / (width - sliderSize);
+                    value = (gui.mouseX - (getAX() + (sliderSize / 2D))) / (double) (width - sliderSize);
                 }
             }
             else
@@ -62,6 +64,11 @@ public class SliderLM extends WidgetLM
         {
             onMoved(gui);
         }
+    }
+
+    public final boolean isGrabbed()
+    {
+        return isGrabbed;
     }
 
     public void onMoved(GuiLM gui)

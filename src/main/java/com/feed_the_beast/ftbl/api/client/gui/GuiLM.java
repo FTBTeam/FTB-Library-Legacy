@@ -47,9 +47,9 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
     public int mouseWheel, dmouseWheel;
     private boolean refreshWidgets;
 
-    public GuiLM()
+    public GuiLM(int w, int h)
     {
-        super(0, 0, 200, 150);
+        super(0, 0, w, h);
         mc = Minecraft.getMinecraft();
         font = createFont(mc);
     }
@@ -170,8 +170,8 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
     {
         screen = new ScaledResolution(mc);
         onInit();
-        posX = (screen.getScaledWidth_double() - width) / 2D;
-        posY = (screen.getScaledHeight_double() - height) / 2D;
+        posX = (screen.getScaledWidth() - width) / 2;
+        posY = (screen.getScaledHeight() - height) / 2;
         refreshWidgets();
     }
 
@@ -212,9 +212,9 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
 
     public void setFullscreen()
     {
-        width = screen.getScaledWidth_double();
-        height = screen.getScaledHeight_double();
-        posX = posY = 0D;
+        width = screen.getScaledWidth();
+        height = screen.getScaledHeight();
+        posX = posY = 0;
     }
 
     public final void updateGui(int mx, int my, float pt)

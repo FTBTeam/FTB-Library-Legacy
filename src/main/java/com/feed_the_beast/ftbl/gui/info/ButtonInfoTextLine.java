@@ -31,7 +31,7 @@ public class ButtonInfoTextLine extends ButtonLM
 
             if(c != null)
             {
-                text = guiInfo.font.listFormattedStringToWidth(c.getFormattedText(), (int) g.panelText.width);
+                text = guiInfo.font.listFormattedStringToWidth(c.getFormattedText(), g.panelText.width);
                 if(text.isEmpty())
                 {
                     text = null;
@@ -71,8 +71,8 @@ public class ButtonInfoTextLine extends ButtonLM
     @Override
     public void renderWidget(GuiLM gui)
     {
-        int ay = (int) getAY();
-        int ax = (int) getAX();
+        int ay = getAY();
+        int ax = getAX();
 
         if(text != null)
         {

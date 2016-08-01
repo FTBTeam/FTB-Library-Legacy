@@ -22,9 +22,9 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 
         InfoImage img = l.getDisplayImage();
 
-        double w = Math.min(guiInfo.panelText.width, img.width);
-        double h = img.height * (w / img.width);
-        img = new InfoImage(texture.texture, w, h);
+        int w = Math.min(guiInfo.panelText.width, img.width);
+        double h = img.height * (w / (double) img.width);
+        img = new InfoImage(texture.texture, w, (int) h);
 
         width = img.width;
         height = img.height + 1;
