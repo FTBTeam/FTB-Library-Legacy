@@ -2,11 +2,14 @@ package com.feed_the_beast.ftbl.gui.info;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.InfoImage;
-import com.feed_the_beast.ftbl.api.info.InfoImageLine;
+import com.feed_the_beast.ftbl.api.info.impl.InfoImage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoImageLine;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by LatvianModder on 04.03.2016.
@@ -16,22 +19,29 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 {
     public InfoImage texture;
 
-    public ButtonInfoImage(GuiInfo g, InfoImageLine l)
+    public ButtonInfoImage(GuiInfo g, @Nonnull InfoImageLine l, InfoImage img)
     {
         super(g, l);
 
-        InfoImage img = l.getDisplayImage();
+        if(img != null)
+        {
+            int w = Math.min(g.panelText.width, img.width);
+            double h = img.height * (w / (double) img.width);
+            texture = new InfoImage(img.texture, w, (int) h);
 
-        int w = Math.min(guiInfo.panelText.width, img.width);
-        double h = img.height * (w / (double) img.width);
-        img = new InfoImage(texture.texture, w, (int) h);
-
-        width = img.width;
-        height = img.height + 1;
+            width = texture.width;
+            height = texture.height + 1;
+        }
+        else
+        {
+            width = 64;
+            height = 64;
+            texture = new InfoImage(new ResourceLocation("minecraft:missing_texture"), 64, 64);
+        }
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(@Nonnull GuiLM gui)
     {
         if(texture != null)
         {

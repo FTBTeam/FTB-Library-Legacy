@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemStackSerializer
 {
@@ -63,7 +64,7 @@ public class ItemStackSerializer
 
         if(s1.length > 2)
         {
-            dmg = (s1[2].charAt(0) == '*') ? ODItems.ANY : Integer.parseInt(s1[2]);
+            dmg = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : Integer.parseInt(s1[2]);
         }
 
         if(s1.length > 3)

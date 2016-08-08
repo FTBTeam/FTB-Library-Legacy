@@ -5,8 +5,8 @@ import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -57,10 +57,10 @@ public class CmdListTeams extends CommandLM
                 ITextComponent desc = new TextComponentString(team.getDesc());
                 desc.getStyle().setItalic(true);
                 page1.println(desc);
-                page1.text.add(null);
+                page1.println(null);
             }
 
-            page1.printlnText("ID: " + team.getID());
+            page1.println("ID: " + team.getID());
             ForgePlayer owner = team.getOwner();
             page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
 
@@ -76,14 +76,14 @@ public class CmdListTeams extends CommandLM
 
             if(!members.isEmpty())
             {
-                page1.text.add(null);
-                page1.printlnText("Members:"); //TODO: Lang
+                page1.println(null);
+                page1.println("Members:"); //TODO: Lang
 
                 Collections.sort(members, LMStringUtils.IGNORE_CASE_COMPARATOR);
 
                 for(String s : members)
                 {
-                    page1.printlnText(s);
+                    page1.println(s);
                 }
             }
         }

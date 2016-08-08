@@ -14,8 +14,6 @@ import java.util.List;
 
 public class ODItems
 {
-    public static final int ANY = OreDictionary.WILDCARD_VALUE;
-
     public static final String WOOD = "logWood";
     public static final String SAPLING = "treeSapling";
     public static final String PLANKS = "plankWood";
@@ -28,7 +26,7 @@ public class ODItems
     public static final String COBBLE = "cobblestone";
     public static final String SAND = "sand";
     public static final String OBSIDIAN = "obsidian";
-    public static final ItemStack WOOL = new ItemStack(Blocks.WOOL, 1, ANY);
+    public static final ItemStack WOOL = new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE);
     public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
     public static final String CHEST = "chest";
     public static final String CHEST_WOOD = "chestWood";
@@ -108,19 +106,20 @@ public class ODItems
     public static Collection<String> getOreNames(ItemStack is)
     {
         int[] ai = OreDictionary.getOreIDs(is);
-        if(ai == null || ai.length == 0)
+
+        if(ai.length > 0)
         {
-            return Collections.EMPTY_SET;
+            Collection<String> l = new HashSet<>(ai.length);
+
+            for(int i : ai)
+            {
+                l.add(OreDictionary.getOreName(i));
+            }
+
+            return l;
         }
 
-        Collection<String> l = new HashSet<>(ai.length);
-
-        for(int i : ai)
-        {
-            l.add(OreDictionary.getOreName(i));
-        }
-
-        return l;
+        return Collections.emptySet();
     }
 
     public static List<ItemStack> getOres(String name)
@@ -141,5 +140,23 @@ public class ODItems
     public static boolean hasOre(String s)
     {
         return !getOres(s).isEmpty();
+    }
+
+    public static boolean itemHasOre(ItemStack is, String s)
+    {
+        int[] ai = OreDictionary.getOreIDs(is);
+
+        if(ai.length > 0)
+        {
+            for(int i : ai)
+            {
+                if(s.equals(OreDictionary.getOreName(i)))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

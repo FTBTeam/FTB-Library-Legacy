@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
@@ -12,6 +12,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by LatvianModder on 24.03.2016.
@@ -25,7 +27,7 @@ public class InfoNotificationsPage extends InfoPage
     }
 
     @Override
-    public void refreshGui(GuiInfo gui)
+    public void refreshGui(@Nonnull GuiInfo gui)
     {
         ITextComponent title = new TextComponentTranslation("client_config.ftbl.notifications");
 
@@ -48,7 +50,7 @@ public class InfoNotificationsPage extends InfoPage
 
             for(ClientNotifications.Perm p : ClientNotifications.Perm.map.values())
             {
-                text.add(new InfoNotificationLine(this, p));
+                println(new InfoNotificationLine(p));
             }
         }
     }

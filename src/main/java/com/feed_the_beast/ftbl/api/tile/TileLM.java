@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.Security;
 import com.feed_the_beast.ftbl.util.BlockDimPos;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -189,9 +189,9 @@ public class TileLM extends TileEntity
         return currentState;
     }
 
-    public void onPlacedBy(@Nonnull EntityPlayer ep, @Nonnull ItemStack is, @Nonnull IBlockState state)
+    public void onPlacedBy(@Nonnull EntityLivingBase el, @Nonnull ItemStack is, @Nonnull IBlockState state)
     {
-        security.setOwner(ep.getGameProfile().getId());
+        security.setOwner(el.getUniqueID());
         markDirty();
     }
 

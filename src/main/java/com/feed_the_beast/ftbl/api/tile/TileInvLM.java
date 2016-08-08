@@ -40,6 +40,7 @@ public class TileInvLM extends TileLM
         {
             return true;
         }
+
         return super.hasCapability(capability, facing);
     }
 

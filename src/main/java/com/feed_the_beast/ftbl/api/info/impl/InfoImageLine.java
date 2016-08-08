@@ -1,7 +1,8 @@
-package com.feed_the_beast.ftbl.api.info;
+package com.feed_the_beast.ftbl.api.info.impl;
 
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoImage;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,19 +26,14 @@ public class InfoImageLine extends InfoExtendedTextLine
     private InfoImage texture;
     private double displayW, displayH, displayS;
 
-    public InfoImageLine(InfoPage c)
+    public InfoImageLine(InfoImage img)
     {
-        super(c, null);
-    }
-
-    public InfoImageLine(InfoPage c, InfoImage img)
-    {
-        this(c);
+        super(null);
         texture = img;
     }
 
     @SideOnly(Side.CLIENT)
-    public InfoImage getImage()
+    public InfoImage getImage(IGuiInfoPage page)
     {
         if(texture == InfoImage.NULL)
         {
@@ -76,18 +72,13 @@ public class InfoImageLine extends InfoExtendedTextLine
             texture = null;
         }
 
-        if(imageURL != null)
-        {
-            text = null;
-        }
-
         return this;
     }
 
     @SideOnly(Side.CLIENT)
-    public InfoImage getDisplayImage()
+    public InfoImage getDisplayImage(IGuiInfoPage page)
     {
-        InfoImage img = getImage();
+        InfoImage img = getImage(page);
 
         if(img == null)
         {
@@ -99,7 +90,7 @@ public class InfoImageLine extends InfoExtendedTextLine
         return new InfoImage(texture.texture, (int) w, (int) h);
     }
 
-    public InfoImageLine setSize(double w, double h)
+    public InfoImageLine setDisplaySize(double w, double h)
     {
         displayW = w;
         displayH = h;
@@ -107,14 +98,11 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @Override
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
-        if(getImage() == null)
-        {
-            return null;
-        }
-        return new ButtonInfoImage(gui, this);
+        return new ButtonInfoImage(gui, this, getDisplayImage(page));
     }
 
     @Override

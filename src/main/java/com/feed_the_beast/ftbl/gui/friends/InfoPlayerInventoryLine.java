@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.gui.friends;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoTextLine;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,7 +20,7 @@ import java.util.List;
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class InfoPlayerInventoryLine extends InfoTextLine
+public class InfoPlayerInventoryLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerInventory extends ButtonInfoTextLine
     {
@@ -32,7 +32,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
         {
         }
 
@@ -42,7 +42,7 @@ public class InfoPlayerInventoryLine extends InfoTextLine
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(@Nonnull GuiLM gui)
         {
             double ay = getAY();
             double ax = getAX();
@@ -89,15 +89,15 @@ public class InfoPlayerInventoryLine extends InfoTextLine
 
     public final ForgePlayerSP playerLM;
 
-    public InfoPlayerInventoryLine(InfoPage c, ForgePlayerSP p)
+    public InfoPlayerInventoryLine(ForgePlayerSP p)
     {
-        super(c, null);
         playerLM = p;
     }
 
     @Override
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoPlayerInventory(gui, this);
     }

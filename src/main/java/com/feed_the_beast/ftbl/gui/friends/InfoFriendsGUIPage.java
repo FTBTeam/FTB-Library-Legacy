@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageRequestPlayerInfo;
@@ -38,7 +38,7 @@ public class InfoFriendsGUIPage extends InfoPage
         }
 
         @Override
-        public void updateTitle(GuiLM gui)
+        public void updateTitle(@Nonnull GuiLM gui)
         {
             title = playerLM.getProfile().getName();
             hover = null;
@@ -46,7 +46,7 @@ public class InfoFriendsGUIPage extends InfoPage
             if(guiInfo.font.getStringWidth(title) > width - 24)
             {
                 hover = title + "";
-                title = guiInfo.font.trimStringToWidth(title, (int) width - 22) + "...";
+                title = guiInfo.font.trimStringToWidth(title, width - 22) + "...";
             }
         }
 
@@ -58,7 +58,7 @@ public class InfoFriendsGUIPage extends InfoPage
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(@Nonnull GuiLM gui)
         {
             double ay = getAY();
             double ax = getAX();
@@ -98,11 +98,10 @@ public class InfoFriendsGUIPage extends InfoPage
     }
 
     @Override
-    public void refreshGui(GuiInfo gui)
+    public void refreshGui(@Nonnull GuiInfo gui)
     {
         clear();
-
-        text.add(new InfoPlayerViewLine(this, playerLM));
+        println(new InfoPlayerViewLine(playerLM));
 
         if(!playerLM.clientInfo.isEmpty())
         {
@@ -111,7 +110,7 @@ public class InfoFriendsGUIPage extends InfoPage
                 println(s);
             }
 
-            text.add(null);
+            println(null);
         }
 
         List<Map.Entry<ResourceLocation, ActionButton>> buttons = ActionButtonRegistry.getButtons(playerLM, true);
@@ -119,7 +118,7 @@ public class InfoFriendsGUIPage extends InfoPage
 
         for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
         {
-            text.add(new InfoPlayerActionLine(this, playerLM, entry.getKey(), entry.getValue()));
+            println(new InfoPlayerActionLine(playerLM, entry.getKey(), entry.getValue()));
         }
         
 		/*

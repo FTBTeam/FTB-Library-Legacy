@@ -4,8 +4,9 @@ import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoTextLine;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class InfoPlayerActionLine extends InfoTextLine
+public class InfoPlayerActionLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerAction extends ButtonInfoTextLine
     {
@@ -33,7 +34,7 @@ public class InfoPlayerActionLine extends InfoTextLine
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
         {
         }
 
@@ -45,7 +46,7 @@ public class InfoPlayerActionLine extends InfoTextLine
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(@Nonnull GuiLM gui)
         {
             double ay = getAY();
             double ax = getAX();
@@ -63,7 +64,7 @@ public class InfoPlayerActionLine extends InfoTextLine
             action.render(gui.mc, ax + 1, ay + 1);
             action.postRender(gui.mc, ax + 1, ay + 1);
 
-            guiInfo.font.drawString(title, (int) ax + (action.icon == null ? 4 : 20), (int) ay + 5, guiInfo.colorText);
+            gui.font.drawString(title, (int) ax + (action.icon == null ? 4 : 20), (int) ay + 5, ((GuiInfo) gui).colorText);
         }
     }
 
@@ -71,17 +72,17 @@ public class InfoPlayerActionLine extends InfoTextLine
     public final ResourceLocation actionID;
     public final ActionButton action;
 
-    public InfoPlayerActionLine(InfoPage c, ForgePlayerSP p, ResourceLocation id, ActionButton a)
+    public InfoPlayerActionLine(ForgePlayerSP p, ResourceLocation id, ActionButton a)
     {
-        super(c, null);
         playerLM = p;
         actionID = id;
         action = a;
     }
 
     @Override
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoPlayerAction(gui, this);
     }

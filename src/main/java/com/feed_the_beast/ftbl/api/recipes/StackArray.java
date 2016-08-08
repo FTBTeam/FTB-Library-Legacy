@@ -8,6 +8,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,7 +130,7 @@ public class StackArray implements IStackArray
         {
             int dmg1 = is1.getItemDamage();
             int dmg2 = is1.getItemDamage();
-            return dmg1 == dmg2 || dmg2 == ODItems.ANY;// || dmg1 == ODItems.ANY;
+            return dmg1 == dmg2 || dmg2 == OreDictionary.WILDCARD_VALUE;// || dmg1 == ODItems.ANY;
         }
 
         return false;

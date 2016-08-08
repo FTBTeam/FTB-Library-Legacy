@@ -40,18 +40,6 @@ public abstract class BlockLM extends Block implements IBlockLM
         setResistance(3F);
     }
 
-    public static TileLM getTile(IBlockAccess w, BlockPos pos)
-    {
-        TileEntity te = w.getTileEntity(pos);
-
-        if(te != null && !te.isInvalid() && te instanceof TileLM)
-        {
-            return ((TileLM) te);
-        }
-
-        return null;
-    }
-
     public abstract LMMod getMod();
 
     @Override
@@ -125,10 +113,11 @@ public abstract class BlockLM extends Block implements IBlockLM
 
         if(hasTileEntity(state) && el instanceof EntityPlayer)
         {
-            TileLM tile = getTile(w, pos);
-            if(tile != null)
+            TileEntity te = w.getTileEntity(pos);
+
+            if(te instanceof TileLM)
             {
-                tile.onPlacedBy((EntityPlayer) el, is, state);
+                ((TileLM) te).onPlacedBy(el, is, state);
             }
         }
     }
@@ -138,8 +127,9 @@ public abstract class BlockLM extends Block implements IBlockLM
     {
         if(hasTileEntity(w.getBlockState(pos)))
         {
-            TileLM tile = getTile(w, pos);
-            if(tile != null && tile.isExplosionResistant())
+            TileEntity te = w.getTileEntity(pos);
+
+            if(te instanceof TileLM && ((TileLM) te).isExplosionResistant())
             {
                 return Float.MAX_VALUE;
             }
@@ -154,10 +144,11 @@ public abstract class BlockLM extends Block implements IBlockLM
     {
         if(hasTileEntity(state))
         {
-            TileLM t = getTile(w, pos);
-            if(t != null)
+            TileEntity te = w.getTileEntity(pos);
+
+            if(te != null)
             {
-                return t.receiveClientEvent(eventID, param);
+                return te.receiveClientEvent(eventID, param);
             }
         }
 
@@ -174,10 +165,11 @@ public abstract class BlockLM extends Block implements IBlockLM
     {
         if(hasTileEntity(w.getBlockState(pos)))
         {
-            TileLM t = getTile(w, pos);
-            if(t != null)
+            TileEntity te = w.getTileEntity(pos);
+
+            if(te instanceof TileLM)
             {
-                t.onNeighborBlockChange(neighbor);
+                ((TileLM) te).onNeighborBlockChange(neighbor);
             }
         }
     }

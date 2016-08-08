@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoTextLine;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
@@ -20,13 +20,13 @@ import java.util.List;
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class InfoNotificationLine extends InfoTextLine
+public class InfoNotificationLine extends EmptyInfoPageLine
 {
     public class ButtonInfoNotification extends ButtonInfoTextLine
     {
         public ClientNotifications.NotificationWidget widget;
 
-        public ButtonInfoNotification(GuiInfo g, InfoNotificationLine w)
+        public ButtonInfoNotification(GuiInfo g)
         {
             super(g, null);
             widget = new ClientNotifications.NotificationWidget(notification.notification);
@@ -34,7 +34,7 @@ public class InfoNotificationLine extends InfoTextLine
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
         {
             if(gui.mouseX >= getAX() + width - 32)
             {
@@ -53,13 +53,13 @@ public class InfoNotificationLine extends InfoTextLine
             }
 
             ClientNotifications.Perm.map.remove(widget.notification.ID);
-            guiInfo.refreshWidgets();
+            gui.refreshWidgets();
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(@Nonnull GuiLM gui)
         {
-            widget.width = width = guiInfo.panelText.width - 4;
+            widget.width = width = ((GuiInfo) gui).panelText.width - 4;
 
             double ay = getAY();
             double ax = getAX();
@@ -84,16 +84,16 @@ public class InfoNotificationLine extends InfoTextLine
 
     public final ClientNotifications.Perm notification;
 
-    public InfoNotificationLine(InfoPage c, ClientNotifications.Perm p)
+    public InfoNotificationLine(ClientNotifications.Perm p)
     {
-        super(c, null);
         notification = p;
     }
 
     @Override
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPage page)
     {
-        return new ButtonInfoNotification(gui, this);
+        return new ButtonInfoNotification(gui);
     }
 }

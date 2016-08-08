@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbl.gui.info;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.InfoExtendedTextLine;
+import com.feed_the_beast.ftbl.api.info.impl.InfoExtendedTextLine;
+import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,41 +18,39 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 {
-    public final InfoExtendedTextLine line;
+    public ClickAction clickAction;
     public List<String> hover;
 
-    public ButtonInfoExtendedTextLine(GuiInfo g, InfoExtendedTextLine l)
+    public ButtonInfoExtendedTextLine(GuiInfo g, @Nonnull InfoExtendedTextLine l)
     {
-        super(g, l);
-        line = l;
+        super(g, l.getText() == null ? null : l.getText().getFormattedText());
 
-        if(l != null)
+        clickAction = l.getClickAction();
+
+        List<ITextComponent> h = l.getHover();
+
+        if(h != null)
         {
-            List<ITextComponent> h = l.getHover();
+            hover = new ArrayList<>();
 
-            if(h != null)
+            for(ITextComponent c1 : h)
             {
-                hover = new ArrayList<>();
-
-                for(ITextComponent c1 : h)
-                {
-                    hover.add(c1.getFormattedText());
-                }
-
-                if(hover.isEmpty())
-                {
-                    hover = null;
-                }
+                hover.add(c1.getFormattedText());
             }
-            else
+
+            if(hover.isEmpty())
             {
                 hover = null;
             }
         }
+        else
+        {
+            hover = null;
+        }
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
     {
         if(hover != null)
         {
@@ -62,23 +61,24 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     @Override
     public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
     {
-        if(line != null)
+        if(clickAction != null)
         {
-            line.onClicked(button);
+            GuiLM.playClickSound();
+            clickAction.onClicked(button);
         }
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(@Nonnull GuiLM gui)
     {
-        int ay = (int) getAY();
-        int ax = (int) getAX();
+        int ay = getAY();
+        int ax = getAX();
 
         if(text != null && !text.isEmpty())
         {
             for(int i = 0; i < text.size(); i++)
             {
-                guiInfo.font.drawString(text.get(i), ax, ay + i * 10 + 1, guiInfo.colorText);
+                gui.font.drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
             }
         }
     }

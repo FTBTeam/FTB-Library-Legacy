@@ -16,8 +16,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,13 +35,14 @@ public class LMInvUtils
 
     public static ItemStack singleCopy(ItemStack is)
     {
-        if(is == null || is.stackSize <= 0)
+        if(is != null && is.stackSize > 0)
         {
-            return null;
+            ItemStack is1 = is.copy();
+            is1.stackSize = 1;
+            return is1;
         }
-        ItemStack is1 = is.copy();
-        is1.stackSize = 1;
-        return is1;
+
+        return null;
     }
 
     public static boolean itemsEquals(ItemStack is1, ItemStack is2, boolean size, boolean nbt)
@@ -344,77 +347,45 @@ public class LMInvUtils
     {
         ItemStack[] stacks = new ItemStack[inventory.getSizeInventory()];
         readItemsFromNBT(stacks, tag, s);
+
         for(int i = 0; i < stacks.length; i++)
         {
             inventory.setInventorySlotContents(i, stacks[i]);
         }
     }
 
-    public static ItemStack decrStackSize(IInventory inv, int slot, int amt)
+    @Nullable
+    public static ItemStack getAndSplit(@Nonnull IItemHandlerModifiable itemHandler, int index, int amount)
     {
-        if(inv == null)
+        if(index >= 0 && index < itemHandler.getSlots() && itemHandler.getStackInSlot(index) != null && amount > 0)
         {
-            return null;
-        }
-        ItemStack stack = inv.getStackInSlot(slot);
-        if(stack != null)
-        {
-            if(stack.stackSize <= amt)
+            ItemStack itemstack = itemHandler.getStackInSlot(index).splitStack(amount);
+
+            if(itemHandler.getStackInSlot(index).stackSize == 0)
             {
-                inv.setInventorySlotContents(slot, null);
+                itemHandler.setStackInSlot(index, null);
             }
-            else
-            {
-                stack = stack.splitStack(amt);
-                if(stack.stackSize == 0)
-                {
-                    inv.setInventorySlotContents(slot, null);
-                }
-            }
-        }
 
-        return stack;
-    }
-
-    public static ItemStack removeStackFromSlot(IInventory inv, int i)
-    {
-        if(inv == null)
-        {
-            return null;
-        }
-        ItemStack is = inv.getStackInSlot(i);
-
-        if(is != null)
-        {
-            inv.setInventorySlotContents(i, null);
-            return (is.stackSize > 0) ? is : null;
+            return itemstack;
         }
 
         return null;
     }
 
-    public static boolean clear(IInventory inv)
+    @Nullable
+    public static ItemStack getAndRemove(@Nonnull IItemHandlerModifiable itemHandler, int index)
     {
-        if(inv == null)
-        {
-            return false;
-        }
-        boolean hadItems = false;
+        ItemStack itemStack = itemHandler.getStackInSlot(index);
+        itemHandler.setStackInSlot(index, null);
+        return itemStack;
+    }
 
-        for(int i = 0; i < inv.getSizeInventory(); i++)
+    public static void clear(@Nonnull IItemHandlerModifiable itemHandler)
+    {
+        for(int i = 0; i < itemHandler.getSlots(); i++)
         {
-            ItemStack is = removeStackFromSlot(inv, i);
-            if(!hadItems && is != null && is.stackSize > 0)
-            {
-                hadItems = true;
-            }
+            itemHandler.setStackInSlot(i, null);
         }
-
-        if(hadItems)
-        {
-            inv.markDirty();
-        }
-        return hadItems;
     }
 
     public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack is, int delay)

@@ -4,7 +4,8 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
@@ -21,13 +22,13 @@ public class ButtonInfoPage extends ButtonLM
 {
     public final GuiInfo guiInfo;
     public final String pageID;
-    public final InfoPage page;
+    public final IGuiInfoPage page;
     public String hover;
     public TextureCoords icon;
     public boolean iconBlur = false;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, String id, InfoPage p, TextureCoords t)
+    public ButtonInfoPage(GuiInfo g, String id, IGuiInfoPage p, TextureCoords t)
     {
         super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
@@ -50,7 +51,7 @@ public class ButtonInfoPage extends ButtonLM
 
         page.refreshGui(guiInfo);
 
-        if(page.childPages.isEmpty())
+        if(page.getPages().isEmpty())
         {
             guiInfo.selectedPage = new AbstractMap.SimpleEntry<>(pageID, page);
             guiInfo.sliderText.value = 0F;
@@ -63,9 +64,9 @@ public class ButtonInfoPage extends ButtonLM
         }
     }
 
-    public void updateTitle(GuiLM gui)
+    public void updateTitle(@Nonnull GuiLM gui)
     {
-        ITextComponent titleC = page.getTitleComponent(pageID).createCopy();
+        ITextComponent titleC = InfoPageHelper.getTitleComponent(page, pageID);
         if(guiInfo.selectedPage == page)
         {
             titleC.getStyle().setBold(true);
@@ -81,12 +82,12 @@ public class ButtonInfoPage extends ButtonLM
 
         if(guiInfo.font.getStringWidth(title) > width)
         {
-            hover = page.getTitleComponent(pageID).getFormattedText();
+            hover = InfoPageHelper.getTitleComponent(page, pageID).getFormattedText();
         }
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
     {
         if(hover != null)
         {
@@ -95,13 +96,13 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public boolean shouldRender(GuiLM gui)
+    public boolean shouldRender(@Nonnull GuiLM gui)
     {
         return parentPanel.isInside(this);
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(@Nonnull GuiLM gui)
     {
         boolean mouseOver = gui.isMouseOver(this);
 

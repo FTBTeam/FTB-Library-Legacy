@@ -10,9 +10,10 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoPageTheme;
-import com.feed_the_beast.ftbl.api.info.InfoTextLine;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -44,23 +45,24 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     private static final TextureCoords tex_bg_PN = new TextureCoords(tex, 16, 0, 13, 13, 64, 64);
     private static final TextureCoords tex_bg_NP = new TextureCoords(tex, 0, 16, 13, 13, 64, 64);
     private static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
-    public final Map.Entry<String, InfoPage> page;
+
+    public final Map.Entry<String, ? extends IGuiInfoPage> page;
     public final SliderLM sliderPages, sliderText;
     public final PanelLM panelPages, panelText;
     private final GuiInfo parentGui;
     private final String pageTitle;
     private final ButtonLM buttonBack, buttonSpecial;
-    public Map.Entry<String, InfoPage> selectedPage;
+    public Map.Entry<String, ? extends IGuiInfoPage> selectedPage;
     public int panelWidth;
     public int colorText, colorBackground;
     public boolean useUnicodeFont;
 
-    public GuiInfo(GuiInfo g, Map.Entry<String, InfoPage> c)
+    public GuiInfo(GuiInfo g, Map.Entry<String, ? extends IGuiInfoPage> c)
     {
         super(0, 0);
         parentGui = g;
         page = c;
-        pageTitle = page.getValue().getTitleComponent(page.getKey()).getFormattedText();
+        pageTitle = InfoPageHelper.getTitleComponent(page.getValue(), page.getKey()).getFormattedText();
         selectedPage = page;
 
         sliderPages = new SliderLM(0, 0, 12, 0, 18)
@@ -92,7 +94,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 GuiLM.playClickSound();
 
-                if(selectedPage == page || page.getValue().getUnformattedText().isEmpty())
+                if(selectedPage == page || InfoPageHelper.getUnformattedText(page.getValue()).isEmpty())
                 {
                     if(parentGui == null)
                     {
@@ -124,7 +126,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 height = 0;
 
-                for(InfoPage c : page.getValue().childPages.values())
+                for(IGuiInfoPage c : page.getValue().getPages().values())
                 {
                     ButtonInfoPage b = c.createButton(GuiInfo.this, GuiInfo.this.page.getKey());
 
@@ -152,15 +154,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 boolean uni = font.getUnicodeFlag();
                 font.setUnicodeFlag(useUnicodeFont);
 
-                for(InfoTextLine line : selectedPage.getValue().text)
+                for(IInfoTextLine line : selectedPage.getValue().getText())
                 {
-                    ButtonInfoTextLine l = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this);
-
-                    if(l != null && l.height > 0)
-                    {
-                        add(l);
-                        height += l.height + 1;
-                    }
+                    add(line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage.getValue()));
                 }
 
                 font.setUnicodeFlag(uni);
@@ -174,7 +170,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void addWidgets()
     {
-        page.getValue().refreshGuiTree(GuiInfo.this);
+        page.getValue().refreshGui(GuiInfo.this);
 
         add(sliderPages);
         add(sliderText);
@@ -216,19 +212,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        InfoPageTheme theme = page.getValue().getTheme();
+        IInfoPageTheme theme = page.getValue().getTheme();
 
-        colorText = 0xFF000000 | theme.textColor;
-        colorBackground = 0xFF000000 | theme.backgroundColor;
-
-        if(theme.useUnicodeFont == null)
-        {
-            useUnicodeFont = InfoClientSettings.unicode.getAsBoolean();
-        }
-        else
-        {
-            useUnicodeFont = theme.useUnicodeFont;
-        }
+        colorText = 0xFF000000 | theme.getTextColor();
+        colorBackground = 0xFF000000 | theme.getBackgroundColor();
+        useUnicodeFont = theme.getUseUnicodeFont();
 
         if(buttonSpecial != null)
         {

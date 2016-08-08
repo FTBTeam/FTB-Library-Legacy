@@ -1,0 +1,110 @@
+package com.feed_the_beast.ftbl.api.info.impl;
+
+import com.feed_the_beast.ftbl.api.events.InfoGuiLineEvent;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IInfoPage;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.latmod.lib.json.LMJsonUtils;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.MinecraftForge;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+/**
+ * Created by LatvianModder on 08.08.2016.
+ */
+public class InfoPageHelper
+{
+    public static ITextComponent getTitleComponent(IInfoPage page, String pageID)
+    {
+        ITextComponent c = page.getName();
+
+        if(c == null)
+        {
+            return new TextComponentString(pageID);
+        }
+
+        return c.createCopy();
+    }
+
+    @Nonnull
+    public static String getUnformattedText(@Nonnull IInfoPage page)
+    {
+        List<IInfoTextLine> text = page.getText();
+
+        if(text.isEmpty())
+        {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int s = text.size();
+        for(int i = 0; i < s; i++)
+        {
+            IInfoTextLine c = text.get(i);
+
+            if(c == null)
+            {
+                sb.append('\n');
+            }
+            else
+            {
+                String s1 = c.getUnformattedText();
+                sb.append((s1 == null || s1.isEmpty()) ? "\n" : s1);
+            }
+
+            if(i != s - 1)
+            {
+                sb.append('\n');
+            }
+        }
+        return sb.toString();
+    }
+
+    @Nullable
+    public static IInfoTextLine createLine(IGuiInfoPage page, JsonElement e)
+    {
+        if(e == null || e.isJsonNull())
+        {
+            return null;
+        }
+        else if(e.isJsonPrimitive())
+        {
+            String s = e.getAsString();
+            return s.trim().isEmpty() ? null : new InfoTextLineString(s);
+        }
+        else
+        {
+            JsonObject o = e.getAsJsonObject();
+
+            IInfoTextLine l;
+
+            if(o.has("image"))
+            {
+                l = new InfoImageLine(null);
+            }
+            else
+            {
+                InfoGuiLineEvent event = new InfoGuiLineEvent(page, o);
+                MinecraftForge.EVENT_BUS.post(event);
+                l = (event.getLine() == null) ? new InfoExtendedTextLine(null) : event.getLine();
+            }
+
+            l.fromJson(o);
+            return l;
+        }
+    }
+
+    public static void loadText(IGuiInfoPage page, List<String> list) throws Exception
+    {
+        for(JsonElement e : LMJsonUtils.deserializeText(list))
+        {
+            page.getText().add(InfoPageHelper.createLine(page, e));
+        }
+    }
+}

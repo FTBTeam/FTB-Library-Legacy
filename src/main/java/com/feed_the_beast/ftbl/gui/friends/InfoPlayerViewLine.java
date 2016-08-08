@@ -4,10 +4,12 @@ import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.InfoPage;
-import com.feed_the_beast.ftbl.api.info.InfoTextLine;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.google.gson.JsonElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -23,13 +25,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class InfoPlayerViewLine extends InfoTextLine
+public class InfoPlayerViewLine implements IInfoTextLine
 {
     public class ButtonInfoPlayerView extends ButtonInfoTextLine
     {
@@ -98,7 +101,7 @@ public class InfoPlayerViewLine extends InfoTextLine
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(@Nonnull GuiLM gui)
         {
             double ay = getAY();
             //double ax = getAX();
@@ -141,7 +144,7 @@ public class InfoPlayerViewLine extends InfoTextLine
             double pheight = 120D;
             double pwidth = pheight / 1.625D;
 
-            double playerX = guiInfo.width - pwidth / 2 - 30;
+            double playerX = gui.width - pwidth / 2 - 30;
             double playerY = ay + pheight + 10;
 
             pheight = pheight / 2;
@@ -150,13 +153,13 @@ public class InfoPlayerViewLine extends InfoTextLine
             FTBLibClient.setTexture(player.getLocationSkin());
             GlStateManager.translate(0F, 0F, 100F);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            GuiInventory.drawEntityOnScreen((int) playerX, (int) playerY, (int) pheight, (float) playerX - guiInfo.mouseX, (float) (playerY - (pheight + pwidth) - guiInfo.mouseY), player);
+            GuiInventory.drawEntityOnScreen((int) playerX, (int) playerY, (int) pheight, (float) playerX - gui.mouseX, (float) (playerY - (pheight + pwidth) - gui.mouseY), player);
             GlStateManager.color(1F, 1F, 1F, 1F);
             GlStateManager.popMatrix();
         }
 
         @Override
-        public boolean shouldRender(GuiLM gui)
+        public boolean shouldRender(@Nonnull GuiLM gui)
         {
             return true;
         }
@@ -164,15 +167,34 @@ public class InfoPlayerViewLine extends InfoTextLine
 
     public final ForgePlayerSP playerLM;
 
-    public InfoPlayerViewLine(InfoPage c, ForgePlayerSP p)
+    public InfoPlayerViewLine(ForgePlayerSP p)
     {
-        super(c, null);
         playerLM = p;
     }
 
     @Override
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    @Nullable
+    public String getUnformattedText()
+    {
+        return null;
+    }
+
+    @Override
+    @Nonnull
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoPlayerView(gui, this);
+    }
+
+    @Override
+    public void fromJson(@Nonnull JsonElement json)
+    {
+    }
+
+    @Override
+    @Nonnull
+    public JsonElement getSerializableElement()
+    {
+        return null;
     }
 }

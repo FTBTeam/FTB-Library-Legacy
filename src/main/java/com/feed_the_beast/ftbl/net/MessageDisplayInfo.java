@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.info.InfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;

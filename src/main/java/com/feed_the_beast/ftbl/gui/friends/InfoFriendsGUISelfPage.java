@@ -9,6 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +26,11 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
     }
 
     @Override
-    public void refreshGui(GuiInfo gui)
+    public void refreshGui(@Nonnull GuiInfo gui)
     {
         clear();
 
-        text.add(new InfoPlayerViewLine(this, playerLM));
+        println(new InfoPlayerViewLine(playerLM));
 
         if(!playerLM.clientInfo.isEmpty())
         {
@@ -38,7 +39,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
                 println(s);
             }
 
-            text.add(null);
+            println(null);
         }
 
         List<Map.Entry<ResourceLocation, ActionButton>> buttons = ActionButtonRegistry.getButtons(ForgeWorldSP.inst.clientPlayer, true);
@@ -46,7 +47,7 @@ public class InfoFriendsGUISelfPage extends InfoFriendsGUIPage
 
         for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
         {
-            text.add(new InfoPlayerActionLine(this, playerLM, entry.getKey(), entry.getValue()));
+            println(new InfoPlayerActionLine(playerLM, entry.getKey(), entry.getValue()));
         }
     }
 }

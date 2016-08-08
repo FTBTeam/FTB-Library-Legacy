@@ -1,10 +1,10 @@
-package com.feed_the_beast.ftbl.api.info;
+package com.feed_the_beast.ftbl.api.info.impl;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.gui.info.ButtonInfoExtendedTextLine;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonArray;
@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,15 +25,14 @@ import java.util.List;
 /**
  * Created by LatvianModder on 20.03.2016.
  */
-public class InfoExtendedTextLine extends InfoTextLine
+public class InfoExtendedTextLine implements IInfoTextLine
 {
-    protected ITextComponent text;
+    private ITextComponent text;
     private ClickAction clickAction;
     private List<ITextComponent> hover;
 
-    public InfoExtendedTextLine(InfoPage c, ITextComponent cc)
+    public InfoExtendedTextLine(ITextComponent cc)
     {
-        super(c, null);
         text = cc;
 
         if(text != null)
@@ -52,15 +52,23 @@ public class InfoExtendedTextLine extends InfoTextLine
         }
     }
 
-    @Override
+    @Nullable
     public ITextComponent getText()
     {
         return text;
     }
 
     @Override
+    @Nullable
+    public String getUnformattedText()
+    {
+        return text == null ? null : text.getUnformattedText();
+    }
+
+    @Override
+    @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoExtendedTextLine(gui, this);
     }
@@ -84,19 +92,14 @@ public class InfoExtendedTextLine extends InfoTextLine
     }
 
     @SideOnly(Side.CLIENT)
-    public boolean hasClickAction()
+    public ClickAction getClickAction()
     {
-        return clickAction != null;
+        return clickAction;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void onClicked(MouseButton button)
+    public void setClickAction(ClickAction a)
     {
-        if(clickAction != null)
-        {
-            GuiLM.playClickSound();
-            clickAction.onClicked(button);
-        }
+        clickAction = a;
     }
 
     @Override
@@ -179,10 +182,5 @@ public class InfoExtendedTextLine extends InfoTextLine
         }
 
         return o;
-    }
-
-    public void setClickAction(ClickAction a)
-    {
-        clickAction = a;
     }
 }

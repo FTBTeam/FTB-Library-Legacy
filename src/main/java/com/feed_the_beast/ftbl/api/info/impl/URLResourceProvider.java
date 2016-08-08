@@ -1,5 +1,6 @@
-package com.feed_the_beast.ftbl.api.info;
+package com.feed_the_beast.ftbl.api.info.impl;
 
+import com.feed_the_beast.ftbl.api.info.IResourceProvider;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 
