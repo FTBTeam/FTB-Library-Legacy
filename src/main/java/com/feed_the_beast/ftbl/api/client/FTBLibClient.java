@@ -16,13 +16,11 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -68,11 +66,6 @@ public class FTBLibClient
     public static <T extends Entity> void addEntityRenderer(@Nonnull Class<T> c, @Nonnull IRenderFactory<? super T> r)
     {
         RenderingRegistry.registerEntityRenderingHandler(c, r);
-    }
-
-    public static <T extends TileEntity> void addTileRenderer(@Nonnull Class<T> c, @Nonnull TileEntitySpecialRenderer<? super T> r)
-    {
-        ClientRegistry.bindTileEntitySpecialRenderer(c, r);
     }
 
     @Nonnull

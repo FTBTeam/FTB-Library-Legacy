@@ -73,17 +73,17 @@ public class ODItems
 
     public static void preInit()
     {
-        add(MEAT_RAW, new ItemStack(Items.BEEF));
-        add(MEAT_RAW, new ItemStack(Items.PORKCHOP));
-        add(MEAT_RAW, new ItemStack(Items.CHICKEN));
-        add(MEAT_RAW, new ItemStack(Items.MUTTON));
-        add(MEAT_RAW, new ItemStack(Items.RABBIT));
+        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.BEEF));
+        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.PORKCHOP));
+        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.CHICKEN));
+        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.MUTTON));
+        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.RABBIT));
 
-        add(MEAT_COOKED, new ItemStack(Items.COOKED_BEEF));
-        add(MEAT_COOKED, new ItemStack(Items.COOKED_PORKCHOP));
-        add(MEAT_COOKED, new ItemStack(Items.COOKED_CHICKEN));
-        add(MEAT_COOKED, new ItemStack(Items.COOKED_MUTTON));
-        add(MEAT_COOKED, new ItemStack(Items.COOKED_RABBIT));
+        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_BEEF));
+        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_PORKCHOP));
+        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_CHICKEN));
+        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_MUTTON));
+        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_RABBIT));
     }
 
     private static boolean addOreName(String item, int damage, String name)
@@ -91,16 +91,9 @@ public class ODItems
         Item i = LMInvUtils.getItemFromRegName(new ResourceLocation(item));
         if(i != null)
         {
-            add(name, new ItemStack(i, 1, damage));
+            OreDictionary.registerOre(name, new ItemStack(i, 1, damage));
         }
         return i != null;
-    }
-
-    public static ItemStack add(String name, ItemStack is)
-    {
-        ItemStack is1 = LMInvUtils.singleCopy(is);
-        OreDictionary.registerOre(name, is1);
-        return is1;
     }
 
     public static Collection<String> getOreNames(ItemStack is)

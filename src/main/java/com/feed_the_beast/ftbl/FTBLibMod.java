@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.JsonHelper;
-import com.feed_the_beast.ftbl.util.LMMod;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.latmod.lib.OS;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,8 +41,6 @@ public class FTBLibMod
     @SidedProxy(serverSide = "com.feed_the_beast.ftbl.FTBLibModCommon", clientSide = "com.feed_the_beast.ftbl.client.FTBLibModClient")
     public static FTBLibModCommon proxy;
 
-    public static LMMod mod;
-
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent e)
     {
@@ -57,8 +54,6 @@ public class FTBLibMod
         }
 
         logger.info("OS: " + OS.current + ", 64bit: " + OS.IS_64_ARCH);
-
-        mod = LMMod.create(FTBLibFinals.MOD_ID);
 
         FTBLib.init(e.getModConfigurationDirectory());
         JsonHelper.init();

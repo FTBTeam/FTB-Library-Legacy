@@ -15,7 +15,7 @@ public class LMRecipes
 {
     public static final LMRecipes INSTANCE = new LMRecipes();
 
-    public static boolean enableOreRecipes = true;
+    public boolean enableOreRecipes = true;
 
     public static ItemStack size(ItemStack is, int s)
     {

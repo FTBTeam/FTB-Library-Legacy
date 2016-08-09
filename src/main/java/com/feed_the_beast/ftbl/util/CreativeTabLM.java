@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.util;
 
-import com.feed_the_beast.ftbl.api.item.IItemLM;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,7 +17,6 @@ import java.util.List;
 public class CreativeTabLM extends CreativeTabs
 {
     private final List<ItemStack> iconItems;
-    private LMMod mod;
     private long timer = 1000L;
 
     public CreativeTabLM(String label)
@@ -27,18 +25,9 @@ public class CreativeTabLM extends CreativeTabs
         iconItems = new ArrayList<>();
     }
 
-    public CreativeTabLM setMod(LMMod m)
+    public CreativeTabLM addIcon(@Nonnull ItemStack is)
     {
-        mod = m;
-        return this;
-    }
-
-    public CreativeTabLM addIcon(ItemStack is)
-    {
-        if(is != null)
-        {
-            iconItems.add(is);
-        }
+        iconItems.add(is);
         return this;
     }
 
@@ -82,20 +71,15 @@ public class CreativeTabLM extends CreativeTabs
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void displayAllRelevantItems(@Nonnull List<ItemStack> l)
+    public void displayAllRelevantItems(@Nonnull List<ItemStack> list)
     {
-        if(mod == null)
+        for(Item item : Item.REGISTRY)
         {
-            super.displayAllRelevantItems(l);
-        }
-        else
-        {
-            for(IItemLM i : mod.itemsAndBlocks)
+            if(item != null)
             {
-                Item item = i.getItem();
                 if(item.getCreativeTab() == this)
                 {
-                    item.getSubItems(item, this, l);
+                    item.getSubItems(item, this, list);
                 }
             }
         }

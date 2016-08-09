@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.PackModes;
 import com.feed_the_beast.ftbl.api.ServerTickCallback;
+import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
 import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -22,6 +23,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -44,11 +46,13 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -150,6 +154,22 @@ public class FTBLib
                 FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
             }
         }
+    }
+
+    @Nonnull
+    public static <K extends IForgeRegistryEntry<?>> K register(@Nonnull ResourceLocation id, @Nonnull K object)
+    {
+        object.setRegistryName(id);
+        GameRegistry.register(object);
+
+        if(object instanceof IBlockWithItem)
+        {
+            ItemBlock ib = ((IBlockWithItem) object).createItemBlock();
+            ib.setRegistryName(id);
+            GameRegistry.register(ib);
+        }
+
+        return object;
     }
 
     public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)

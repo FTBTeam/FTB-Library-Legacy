@@ -5,15 +5,13 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ItemBlockLM extends ItemBlock
 {
-    public final IBlockLM blockLM;
-
-    public ItemBlockLM(IBlockLM b)
+    public ItemBlockLM(Block b)
     {
-        super((Block) b);
-        blockLM = b;
+        super(b);
         setHasSubtypes(true);
         setMaxDamage(0);
     }
@@ -28,6 +26,13 @@ public class ItemBlockLM extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        return super.getUnlocalizedName(stack);
+        String s = getNameFromVariant(stack.getMetadata());
+        return (s == null) ? getBlock().getUnlocalizedName() : (getRegistryName().getResourceDomain() + ".tile." + s);
+    }
+
+    @Nullable
+    public String getNameFromVariant(int meta)
+    {
+        return null;
     }
 }

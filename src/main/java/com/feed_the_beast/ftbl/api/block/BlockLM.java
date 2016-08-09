@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.block;
 
 import com.feed_the_beast.ftbl.api.tile.TileLM;
 import com.feed_the_beast.ftbl.util.BlockStateSerializer;
-import com.feed_the_beast.ftbl.util.LMMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -30,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public abstract class BlockLM extends Block implements IBlockLM
+public abstract class BlockLM extends Block implements IBlockWithItem
 {
     public BlockLM(Material m)
     {
@@ -39,8 +38,6 @@ public abstract class BlockLM extends Block implements IBlockLM
         setHardness(1.8F);
         setResistance(3F);
     }
-
-    public abstract LMMod getMod();
 
     @Override
     public ItemBlock createItemBlock()
@@ -58,33 +55,9 @@ public abstract class BlockLM extends Block implements IBlockLM
 
     @Nonnull
     @Override
-    public final String getID()
-    {
-        return getRegistryName().toString();
-    }
-
-    @Nonnull
-    @Override
     public String getUnlocalizedName()
     {
-        return getMod().getBlockName(getRegistryName().getResourcePath());
-    }
-
-    @Override
-    public void onPostLoaded()
-    {
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void loadModels()
-    {
-        ModelLoader.setCustomModelResourceLocation(getItem(), 0, new ModelResourceLocation(getRegistryName(), BlockStateSerializer.getString(getDefaultState())));
-    }
-
-    @Override
-    public void loadTiles()
-    {
+        return getRegistryName().getResourceDomain() + ".tile." + getRegistryName().getResourcePath();
     }
 
     @Override
@@ -156,11 +129,6 @@ public abstract class BlockLM extends Block implements IBlockLM
     }
 
     @Override
-    public void loadRecipes()
-    {
-    }
-
-    @Override
     public void onNeighborChange(IBlockAccess w, BlockPos pos, BlockPos neighbor)
     {
         if(hasTileEntity(w.getBlockState(pos)))
@@ -172,12 +140,6 @@ public abstract class BlockLM extends Block implements IBlockLM
                 ((TileLM) te).onNeighborBlockChange(neighbor);
             }
         }
-    }
-
-    @Override
-    public final Item getItem()
-    {
-        return Item.getItemFromBlock(this);
     }
 
     @Nonnull
@@ -202,5 +164,11 @@ public abstract class BlockLM extends Block implements IBlockLM
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.SOLID;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public final void addDefaultModel()
+    {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), BlockStateSerializer.getString(getDefaultState())));
     }
 }

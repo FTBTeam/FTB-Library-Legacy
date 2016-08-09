@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.recipes;
 
+import com.feed_the_beast.ftbl.api.item.IMaterial;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
-import com.feed_the_beast.ftbl.api.item.MaterialItem;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.IInventory;
@@ -105,14 +105,12 @@ public class StackArray implements IStackArray
         {
             return new ItemStack((Block) o);
         }
-        else if(o instanceof MaterialItem)
+        else if(o instanceof IMaterial)
         {
-            return ((MaterialItem) o).getStack(1);
+            return ((IMaterial) o).getStack(1);
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public static boolean itemsEquals(ItemStack is1, ItemStack is2)

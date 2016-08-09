@@ -1,27 +1,60 @@
 package com.feed_the_beast.ftbl.api.item;
 
-import com.latmod.lib.FinalIDObject;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 
-public final class MaterialItem extends FinalIDObject
+public class MaterialItem implements IMaterial
 {
-    public final int damage;
-    public ItemMaterialsLM item;
+    private final int metadata;
+    private final String name;
+    private Item item;
 
     public MaterialItem(int d, String s)
     {
-        super(s);
-        damage = d;
+        metadata = d;
+        name = s;
     }
 
-    public MaterialItem setItem(ItemMaterialsLM i)
+    @Override
+    public Item getItem()
+    {
+        return item;
+    }
+
+    @Override
+    public void setItem(Item i)
     {
         item = i;
-        return this;
     }
 
-    public ItemStack getStack(int s)
+    public int getMetadata()
     {
-        return new ItemStack(item, s, damage);
+        return metadata;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
+    }
+
+    @Override
+    public boolean isAdded()
+    {
+        return true;
+    }
+
+    public final boolean equals(Object o)
+    {
+        return o != null && (o == this || o.hashCode() == metadata);
+    }
+
+    public final int hashCode()
+    {
+        return metadata;
+    }
+
+    public final String toString()
+    {
+        return name;
     }
 }
