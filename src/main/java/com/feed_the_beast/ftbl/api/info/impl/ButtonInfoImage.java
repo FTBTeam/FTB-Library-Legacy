@@ -1,9 +1,8 @@
-package com.feed_the_beast.ftbl.gui.info;
+package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.impl.InfoImage;
-import com.feed_the_beast.ftbl.api.info.impl.InfoImageLine;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

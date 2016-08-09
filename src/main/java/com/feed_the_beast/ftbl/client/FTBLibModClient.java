@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
+import com.feed_the_beast.ftbl.gui.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMUtils;

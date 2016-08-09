@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraftforge.fml.relauncher.Side;
@@ -33,7 +32,7 @@ public class InfoTextLineString implements IInfoTextLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
     {
         return new ButtonInfoTextLine(gui, text);
     }

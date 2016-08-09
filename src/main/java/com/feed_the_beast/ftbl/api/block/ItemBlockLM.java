@@ -26,12 +26,12 @@ public class ItemBlockLM extends ItemBlock
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {
-        String s = getNameFromVariant(stack.getMetadata());
+        String s = getVariantName(stack.getMetadata());
         return (s == null) ? getBlock().getUnlocalizedName() : (getRegistryName().getResourceDomain() + ".tile." + s);
     }
 
     @Nullable
-    public String getNameFromVariant(int meta)
+    public String getVariantName(int meta)
     {
         return null;
     }

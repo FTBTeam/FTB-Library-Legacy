@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbl.gui.friends;
 import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +24,7 @@ public class InfoPlayerInventoryLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerInventory extends ButtonInfoTextLine
     {
-        public ButtonInfoPlayerInventory(GuiInfo g, InfoPlayerInventoryLine w)
+        public ButtonInfoPlayerInventory(GuiInfo g)
         {
             super(g, null);
             width = 18 * 9;
@@ -97,8 +97,8 @@ public class InfoPlayerInventoryLine extends EmptyInfoPageLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPage page)
+    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPageTree page)
     {
-        return new ButtonInfoPlayerInventory(gui, this);
+        return new ButtonInfoPlayerInventory(gui);
     }
 }

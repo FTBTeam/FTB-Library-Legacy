@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.gui.info;
+package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;

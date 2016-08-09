@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.info;
 
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,5 +31,5 @@ public interface IGuiInfoPage extends IInfoPage
     ButtonLM createSpecialButton(@Nonnull GuiInfo gui);
 
     @SideOnly(Side.CLIENT)
-    ButtonInfoPage createButton(@Nonnull GuiInfo guiInfo, @Nonnull String key);
+    ButtonInfoPage createButton(@Nonnull GuiInfo guiInfo, @Nonnull IGuiInfoPageTree page);
 }

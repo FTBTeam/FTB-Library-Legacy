@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -94,7 +94,7 @@ public class InfoPlayerViewLine implements IInfoTextLine
 
         private Player player;
 
-        public ButtonInfoPlayerView(GuiInfo g, InfoPlayerViewLine w)
+        public ButtonInfoPlayerView(GuiInfo g)
         {
             super(g, null);
             height = 1;
@@ -181,9 +181,9 @@ public class InfoPlayerViewLine implements IInfoTextLine
 
     @Override
     @Nonnull
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
     {
-        return new ButtonInfoPlayerView(gui, this);
+        return new ButtonInfoPlayerView(gui);
     }
 
     @Override

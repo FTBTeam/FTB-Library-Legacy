@@ -1,9 +1,9 @@
-package com.feed_the_beast.ftbl.gui.info;
+package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.info.impl.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

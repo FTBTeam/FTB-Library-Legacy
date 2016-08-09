@@ -11,11 +11,16 @@ public interface IMaterial extends IStringSerializable
 {
     Item getItem();
 
-    void setItem(Item item);
+    default void setItem(Item item)
+    {
+    }
 
     int getMetadata();
 
-    boolean isAdded();
+    default boolean isAdded()
+    {
+        return true;
+    }
 
     default ItemStack getStack(int size)
     {

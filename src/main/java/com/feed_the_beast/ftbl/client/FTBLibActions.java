@@ -11,8 +11,8 @@ import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,7 +23,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.AbstractMap;
 
 public class FTBLibActions
 {
@@ -35,7 +34,7 @@ public class FTBLibActions
             @Override
             public void onClicked(ForgePlayerSP player)
             {
-                new GuiInfo(null, new AbstractMap.SimpleEntry<>("friends_gui", new InfoFriendsGUI())).openGui();
+                new GuiInfo("friends_gui", new InfoFriendsGUI()).openGui();
             }
 
             @Override
@@ -132,7 +131,7 @@ public class FTBLibActions
             }
         });
 
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo(null, new AbstractMap.SimpleEntry<>("friends_gui", new InfoFriendsGUI())).getWrapper());
+        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo("friends_gui", new InfoFriendsGUI()).getWrapper());
         GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"), () -> new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).getWrapper());
     }
 }

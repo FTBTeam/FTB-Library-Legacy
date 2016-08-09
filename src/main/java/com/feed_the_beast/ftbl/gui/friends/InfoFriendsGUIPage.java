@@ -8,9 +8,10 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageRequestPlayerInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -31,9 +32,9 @@ public class InfoFriendsGUIPage extends InfoPage
 {
     private class Button extends ButtonInfoPage
     {
-        public Button(GuiInfo g, InfoFriendsGUIPage p, String id)
+        public Button(GuiInfo g, IGuiInfoPageTree p)
         {
-            super(g, id, p, null);
+            super(g, p, null);
             height = 20;
         }
 
@@ -131,8 +132,8 @@ public class InfoFriendsGUIPage extends InfoPage
     }
 
     @Override
-    public ButtonInfoPage createButton(GuiInfo gui, String id)
+    public ButtonInfoPage createButton(GuiInfo gui, IGuiInfoPageTree p)
     {
-        return new Button(gui, this, id);
+        return new Button(gui, p);
     }
 }

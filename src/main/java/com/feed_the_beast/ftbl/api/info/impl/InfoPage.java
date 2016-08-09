@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoPage;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.google.gson.JsonArray;
@@ -304,8 +304,8 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @SideOnly(Side.CLIENT)
-    public ButtonInfoPage createButton(GuiInfo gui, String id)
+    public ButtonInfoPage createButton(GuiInfo gui, IGuiInfoPageTree page)
     {
-        return new ButtonInfoPage(gui, id, this, null);
+        return new ButtonInfoPage(gui, page, null);
     }
 }

@@ -167,7 +167,7 @@ public abstract class BlockLM extends Block implements IBlockWithItem
     }
 
     @SideOnly(Side.CLIENT)
-    public final void addDefaultModel()
+    public final void registerDefaultModel()
     {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), BlockStateSerializer.getString(getDefaultState())));
     }

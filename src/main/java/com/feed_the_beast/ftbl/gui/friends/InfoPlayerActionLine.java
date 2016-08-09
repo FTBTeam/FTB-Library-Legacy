@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
-import com.feed_the_beast.ftbl.gui.info.ButtonInfoTextLine;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,7 +25,7 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerAction extends ButtonInfoTextLine
     {
-        public ButtonInfoPlayerAction(GuiInfo g, InfoPlayerActionLine w)
+        public ButtonInfoPlayerAction(GuiInfo g)
         {
             super(g, null);
             height = 18;
@@ -82,8 +82,8 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
     {
-        return new ButtonInfoPlayerAction(gui, this);
+        return new ButtonInfoPlayerAction(gui);
     }
 }

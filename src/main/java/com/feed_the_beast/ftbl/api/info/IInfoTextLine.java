@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
 import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,5 +19,5 @@ public interface IInfoTextLine extends IJsonSerializable
 
     @SideOnly(Side.CLIENT)
     @Nonnull
-    ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page);
+    ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page);
 }

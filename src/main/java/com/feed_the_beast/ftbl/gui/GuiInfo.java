@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.gui.info;
+package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.MouseButton;
@@ -11,9 +11,12 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.api.info.impl.InfoPageHelper;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
+import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
+import com.feed_the_beast.ftbl.api.info.impl.GuiInfoPageTree;
 import com.feed_the_beast.ftbl.util.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -22,48 +25,44 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Map;
 
 @SideOnly(Side.CLIENT)
 @ParametersAreNonnullByDefault
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
-    private static final ResourceLocation tex = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
 
-    private static final TextureCoords tex_slider = new TextureCoords(tex, 0, 30, 12, 18, 64, 64);
-    private static final TextureCoords tex_back = new TextureCoords(tex, 13, 30, 14, 11, 64, 64);
-    private static final TextureCoords tex_close = new TextureCoords(tex, 13, 41, 14, 11, 64, 64);
-    private static final TextureCoords tex_bullet = new TextureCoords(tex, 0, 49, 6, 6, 64, 64);
+    private static final TextureCoords TEX_SLIDER = new TextureCoords(TEXTURE, 0, 30, 12, 18, 64, 64);
+    private static final TextureCoords TEX_BACK = new TextureCoords(TEXTURE, 13, 30, 14, 11, 64, 64);
+    private static final TextureCoords TEX_CLOSE = new TextureCoords(TEXTURE, 13, 41, 14, 11, 64, 64);
+    private static final TextureCoords TEX_BULLET = new TextureCoords(TEXTURE, 0, 49, 6, 6, 64, 64);
 
-    private static final TextureCoords tex_bg_MU = new TextureCoords(tex, 14, 0, 1, 13, 64, 64);
-    private static final TextureCoords tex_bg_MD = new TextureCoords(tex, 14, 16, 1, 13, 64, 64);
-    private static final TextureCoords tex_bg_ML = new TextureCoords(tex, 0, 14, 13, 1, 64, 64);
-    private static final TextureCoords tex_bg_MR = new TextureCoords(tex, 16, 14, 13, 1, 64, 64);
+    private static final TextureCoords TEX_BG_MU = new TextureCoords(TEXTURE, 14, 0, 1, 13, 64, 64);
+    private static final TextureCoords TEX_BG_MD = new TextureCoords(TEXTURE, 14, 16, 1, 13, 64, 64);
+    private static final TextureCoords TEX_BG_ML = new TextureCoords(TEXTURE, 0, 14, 13, 1, 64, 64);
+    private static final TextureCoords TEX_BG_MR = new TextureCoords(TEXTURE, 16, 14, 13, 1, 64, 64);
 
-    private static final TextureCoords tex_bg_NN = new TextureCoords(tex, 0, 0, 13, 13, 64, 64);
-    private static final TextureCoords tex_bg_PN = new TextureCoords(tex, 16, 0, 13, 13, 64, 64);
-    private static final TextureCoords tex_bg_NP = new TextureCoords(tex, 0, 16, 13, 13, 64, 64);
-    private static final TextureCoords tex_bg_PP = new TextureCoords(tex, 16, 16, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_NN = new TextureCoords(TEXTURE, 0, 0, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_PN = new TextureCoords(TEXTURE, 16, 0, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_NP = new TextureCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_PP = new TextureCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
 
-    public final Map.Entry<String, ? extends IGuiInfoPage> page;
+    public final IGuiInfoPageTree pageTree;
     public final SliderLM sliderPages, sliderText;
     public final PanelLM panelPages, panelText;
-    private final GuiInfo parentGui;
-    private final String pageTitle;
     private final ButtonLM buttonBack, buttonSpecial;
-    public Map.Entry<String, ? extends IGuiInfoPage> selectedPage;
     public int panelWidth;
     public int colorText, colorBackground;
     public boolean useUnicodeFont;
+    private IGuiInfoPageTree selectedPage;
 
-    public GuiInfo(GuiInfo g, Map.Entry<String, ? extends IGuiInfoPage> c)
+    public GuiInfo(String id, IGuiInfoPage c)
     {
         super(0, 0);
-        parentGui = g;
-        page = c;
-        pageTitle = InfoPageHelper.getTitleComponent(page.getValue(), page.getKey()).getFormattedText();
-        selectedPage = page;
+        pageTree = new GuiInfoPageTree(id, null, c);
+        selectedPage = pageTree;
 
         sliderPages = new SliderLM(0, 0, 12, 0, 18)
         {
@@ -87,35 +86,13 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         sliderText.isVertical = true;
 
-        buttonBack = new ButtonLM(0, 0, 14, 11, parentGui == null ? GuiLang.button_close.translate() : GuiLang.button_back.translate())
+        buttonBack = new ButtonLM(0, 0, 14, 11, selectedPage.getParent() == null ? GuiLang.button_close.translate() : GuiLang.button_back.translate())
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
             {
                 GuiLM.playClickSound();
-
-                if(selectedPage == page || InfoPageHelper.getUnformattedText(page.getValue()).isEmpty())
-                {
-                    if(parentGui == null)
-                    {
-                        mc.thePlayer.closeScreen();
-                    }
-                    else
-                    {
-                        parentGui.selectedPage = parentGui.page;
-                        parentGui.sliderText.value = 0F;
-                        parentGui.panelText.posY = 10;
-                        parentGui.openGui();
-                    }
-                }
-                else
-                {
-                    selectedPage = page;
-                    sliderText.value = 0F;
-                    panelText.posY = 10;
-                    onInit();
-                    refreshWidgets();
-                }
+                setSelectedPage(selectedPage.getParent());
             }
         };
 
@@ -126,9 +103,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 height = 0;
 
-                for(IGuiInfoPage c : page.getValue().getPages().values())
+                for(IGuiInfoPageTree c : selectedPage.getPages())
                 {
-                    ButtonInfoPage b = c.createButton(GuiInfo.this, GuiInfo.this.page.getKey());
+                    ButtonInfoPage b = c.getPage().createButton(GuiInfo.this, c);
 
                     if(b != null && b.height > 0)
                     {
@@ -154,9 +131,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 boolean uni = font.getUnicodeFlag();
                 font.setUnicodeFlag(useUnicodeFont);
 
-                for(IInfoTextLine line : selectedPage.getValue().getText())
+                for(IInfoTextLine line : selectedPage.getPage().getText())
                 {
-                    add(line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage.getValue()));
+                    WidgetLM w = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage);
+                    add(w);
+                    height += w.height;
                 }
 
                 font.setUnicodeFlag(uni);
@@ -164,13 +143,37 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
-        buttonSpecial = page.getValue().createSpecialButton(this);
+        buttonSpecial = selectedPage.getPage().createSpecialButton(this);
+    }
+
+    public IGuiInfoPageTree getSelectedPage()
+    {
+        return selectedPage;
+    }
+
+    public void setSelectedPage(@Nullable IGuiInfoPageTree p)
+    {
+        sliderText.value = 0F;
+        panelText.posY = 10;
+
+        if(selectedPage != p)
+        {
+            if(p == null)
+            {
+                mc.thePlayer.closeScreen();
+            }
+            else
+            {
+                selectedPage = p;
+                refreshWidgets();
+            }
+        }
     }
 
     @Override
     public void addWidgets()
     {
-        page.getValue().refreshGui(GuiInfo.this);
+        selectedPage.getPage().refreshGui(this);
 
         add(sliderPages);
         add(sliderText);
@@ -179,7 +182,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         add(panelText);
         add(buttonSpecial);
 
-        buttonBack.title = (parentGui == null) ? GuiLang.button_close.translate() : GuiLang.button_back.translate();
+        buttonBack.title = (selectedPage.getParent() == null) ? GuiLang.button_close.translate() : GuiLang.button_back.translate();
     }
 
     @Override
@@ -212,7 +215,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        IInfoPageTheme theme = page.getValue().getTheme();
+        IInfoPageTheme theme = selectedPage.getPage().getTheme();
 
         colorText = 0xFF000000 | theme.getTextColor();
         colorBackground = 0xFF000000 | theme.getBackgroundColor();
@@ -223,16 +226,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.posX = panelWidth - 24;
             buttonSpecial.posY = 10;
         }
-    }
-
-    public GuiInfo getParentGui()
-    {
-        return parentGui;
-    }
-
-    public String getPageTitle()
-    {
-        return pageTitle;
     }
 
     @Override
@@ -259,8 +252,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         if(sliderText.value == 0F || panelText.height - (height - 20F) <= 0F)
         {
-            panelText.posY = 10;
-            sliderText.value = 0F;
+            setSelectedPage(selectedPage);
         }
         else
         {
@@ -269,7 +261,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         super.drawBackground();
 
-        FTBLibClient.setTexture(tex);
+        FTBLibClient.setTexture(TEXTURE);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
@@ -298,10 +290,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         renderFilling(0, 0, panelWidth, 36);
         renderBorders(0, 0, panelWidth, 36);
 
-        sliderPages.renderSlider(tex_slider);
-        sliderText.renderSlider(tex_slider);
+        sliderPages.renderSlider(TEX_SLIDER);
+        sliderText.renderSlider(TEX_SLIDER);
         FTBLibClient.setGLColor(colorText, 255);
-        buttonBack.render((parentGui == null) ? tex_close : tex_back);
+        buttonBack.render((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         if(buttonSpecial != null)
@@ -309,7 +301,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.renderWidget(this);
         }
 
-        font.drawString(pageTitle, buttonBack.getAX() + buttonBack.width + 5, posY + 14, colorText);
+        font.drawString(selectedPage.getFormattedTitle(), buttonBack.getAX() + buttonBack.width + 5, posY + 14, colorText);
     }
 
     @Override
@@ -324,15 +316,15 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         px += posX;
         py += posY;
 
-        render(tex_bg_NN, px, py, 13, 13);
-        render(tex_bg_NP, px, py + h - 13, 13, 13);
-        render(tex_bg_PN, px + w - 13, py, 13, 13);
-        render(tex_bg_PP, px + w - 13, py + h - 13, 13, 13);
+        render(TEX_BG_NN, px, py, 13, 13);
+        render(TEX_BG_NP, px, py + h - 13, 13, 13);
+        render(TEX_BG_PN, px + w - 13, py, 13, 13);
+        render(TEX_BG_PP, px + w - 13, py + h - 13, 13, 13);
 
-        render(tex_bg_MU, px + 13, py, w - 24, 13);
-        render(tex_bg_MR, px + w - 13, py + 13, 13, h - 25);
-        render(tex_bg_MD, px + 13, py + h - 13, w - 24, 13);
-        render(tex_bg_ML, px, py + 13, 13, h - 25);
+        render(TEX_BG_MU, px + 13, py, w - 24, 13);
+        render(TEX_BG_MR, px + w - 13, py + 13, 13, h - 25);
+        render(TEX_BG_MD, px + 13, py + h - 13, w - 24, 13);
+        render(TEX_BG_ML, px, py + 13, 13, h - 25);
     }
 
     private void renderFilling(double px, double py, double w, double h)

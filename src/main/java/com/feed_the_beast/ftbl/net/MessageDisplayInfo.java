@@ -3,15 +3,13 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.gui.info.GuiInfo;
+import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.AbstractMap;
 
 public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
@@ -54,6 +52,6 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     {
         InfoPage page = new InfoPage();
         page.fromJson(m.json);
-        new GuiInfo(null, new AbstractMap.SimpleEntry<>(m.infoID, page)).openGui();
+        new GuiInfo(m.infoID, page).openGui();
     }
 }

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
-import com.feed_the_beast.ftbl.gui.info.InfoClientSettings;
+import com.feed_the_beast.ftbl.gui.InfoClientSettings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
