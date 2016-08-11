@@ -17,7 +17,7 @@ import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.GuiInfoPageTree;
-import com.feed_the_beast.ftbl.util.TextureCoords;
+import com.latmod.lib.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -34,20 +34,20 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
 
-    private static final TextureCoords TEX_SLIDER = new TextureCoords(TEXTURE, 0, 30, 12, 18, 64, 64);
-    private static final TextureCoords TEX_BACK = new TextureCoords(TEXTURE, 13, 30, 14, 11, 64, 64);
-    private static final TextureCoords TEX_CLOSE = new TextureCoords(TEXTURE, 13, 41, 14, 11, 64, 64);
-    private static final TextureCoords TEX_BULLET = new TextureCoords(TEXTURE, 0, 49, 6, 6, 64, 64);
+    private static final TextureCoords TEX_SLIDER = TextureCoords.fromCoords(TEXTURE, 0, 30, 12, 18, 64, 64);
+    private static final TextureCoords TEX_BACK = TextureCoords.fromCoords(TEXTURE, 13, 30, 14, 11, 64, 64);
+    private static final TextureCoords TEX_CLOSE = TextureCoords.fromCoords(TEXTURE, 13, 41, 14, 11, 64, 64);
+    private static final TextureCoords TEX_BULLET = TextureCoords.fromCoords(TEXTURE, 0, 49, 6, 6, 64, 64);
 
-    private static final TextureCoords TEX_BG_MU = new TextureCoords(TEXTURE, 14, 0, 1, 13, 64, 64);
-    private static final TextureCoords TEX_BG_MD = new TextureCoords(TEXTURE, 14, 16, 1, 13, 64, 64);
-    private static final TextureCoords TEX_BG_ML = new TextureCoords(TEXTURE, 0, 14, 13, 1, 64, 64);
-    private static final TextureCoords TEX_BG_MR = new TextureCoords(TEXTURE, 16, 14, 13, 1, 64, 64);
+    private static final TextureCoords TEX_BG_MU = TextureCoords.fromCoords(TEXTURE, 14, 0, 1, 13, 64, 64);
+    private static final TextureCoords TEX_BG_MD = TextureCoords.fromCoords(TEXTURE, 14, 16, 1, 13, 64, 64);
+    private static final TextureCoords TEX_BG_ML = TextureCoords.fromCoords(TEXTURE, 0, 14, 13, 1, 64, 64);
+    private static final TextureCoords TEX_BG_MR = TextureCoords.fromCoords(TEXTURE, 16, 14, 13, 1, 64, 64);
 
-    private static final TextureCoords TEX_BG_NN = new TextureCoords(TEXTURE, 0, 0, 13, 13, 64, 64);
-    private static final TextureCoords TEX_BG_PN = new TextureCoords(TEXTURE, 16, 0, 13, 13, 64, 64);
-    private static final TextureCoords TEX_BG_NP = new TextureCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
-    private static final TextureCoords TEX_BG_PP = new TextureCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_NN = TextureCoords.fromCoords(TEXTURE, 0, 0, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_PN = TextureCoords.fromCoords(TEXTURE, 16, 0, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_NP = TextureCoords.fromCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
+    private static final TextureCoords TEX_BG_PP = TextureCoords.fromCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
 
     public final IGuiInfoPageTree pageTree;
     public final SliderLM sliderPages, sliderText;

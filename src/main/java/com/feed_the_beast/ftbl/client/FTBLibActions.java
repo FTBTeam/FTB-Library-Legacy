@@ -13,7 +13,7 @@ import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
-import com.feed_the_beast.ftbl.util.TextureCoords;
+import com.latmod.lib.TextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +29,7 @@ public class FTBLibActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.getSquareIcon(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
+        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
         {
             @Override
             public void onClicked(ForgePlayerSP player)

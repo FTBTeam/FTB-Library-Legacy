@@ -9,9 +9,7 @@ import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.JsonHelper;
 import com.feed_the_beast.ftbl.util.ReloadType;
-import com.latmod.lib.OS;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -53,10 +51,7 @@ public class FTBLibMod
             logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
         }
 
-        logger.info("OS: " + OS.current + ", 64bit: " + OS.IS_64_ARCH);
-
         FTBLib.init(e.getModConfigurationDirectory());
-        JsonHelper.init();
         FTBLibNetHandler.init();
         ODItems.preInit();
         FTBLibStats.init();

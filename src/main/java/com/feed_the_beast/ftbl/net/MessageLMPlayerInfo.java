@@ -6,9 +6,7 @@ import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.util.JsonHelper;
-import com.feed_the_beast.ftbl.util.LMNetUtils;
-import com.google.gson.JsonElement;
+import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -27,7 +25,7 @@ import java.util.UUID;
 public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 {
     public UUID playerID;
-    public JsonElement[] info;
+    public List<ITextComponent> info;
     public Map<EntityEquipmentSlot, ItemStack> armor;
 
     public MessageLMPlayerInfo()
@@ -38,15 +36,8 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     {
         playerID = p.getProfile().getId();
 
-        List<ITextComponent> info0 = new ArrayList<>();
-        p.getInfo(owner, info0);
-
-        info = new JsonElement[Math.min(255, info0.size())];
-
-        for(int i = 0; i < info.length; i++)
-        {
-            info[i] = JsonHelper.serializeICC(info0.get(i));
-        }
+        info = new ArrayList<>();
+        p.getInfo(owner, info);
 
         p.updateArmor();
         armor = p.lastArmor;
@@ -63,14 +54,17 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     {
         playerID = LMNetUtils.readUUID(io);
 
-        info = new JsonElement[io.readUnsignedByte()];
-        for(int i = 0; i < info.length; i++)
+        info = new ArrayList<>();
+
+        int s = io.readUnsignedByte();
+
+        for(int i = 0; i < s; i++)
         {
-            info[i] = LMNetUtils.readJsonElement(io);
+            info.add(LMNetUtils.readTextComponent(io));
         }
 
         armor = new HashMap<>();
-        int s = io.readUnsignedByte();
+        s = io.readUnsignedByte();
 
         for(int i = 0; i < s; i++)
         {
@@ -85,10 +79,11 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     {
         LMNetUtils.writeUUID(io, playerID);
 
-        io.writeByte(info.length);
-        for(JsonElement anInfo : info)
+        int infosize = Math.min(255, info.size());
+
+        for(int i = 0; i < infosize; i++)
         {
-            LMNetUtils.writeJsonElement(io, anInfo);
+            LMNetUtils.writeTextComponent(io, info.get(infosize));
         }
 
         io.writeByte(armor.size());
@@ -115,13 +110,8 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
             return;
         }
 
-        List<ITextComponent> info = new ArrayList<>();
-        for(int i = 0; i < m.info.length; i++)
-        {
-            info.add(JsonHelper.deserializeICC(m.info[i]));
-        }
 
-        p.receiveInfo(info);
+        p.receiveInfo(m.info);
 
         p.lastArmor.clear();
         p.lastArmor.putAll(m.armor);

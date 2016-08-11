@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
+import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 import com.latmod.lib.util.LMUtils;
@@ -151,7 +152,7 @@ public class FTBLib
 
             if(type.reload(Side.SERVER))
             {
-                FTBLibLang.reload_server.printChat(BroadcastSender.inst, (System.currentTimeMillis() - ms) + "ms");
+                FTBLibLang.reload_server.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
             }
         }
     }

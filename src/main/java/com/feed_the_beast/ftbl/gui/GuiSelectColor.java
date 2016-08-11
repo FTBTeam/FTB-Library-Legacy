@@ -9,9 +9,9 @@ import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.util.EnumDyeColorHelper;
-import com.feed_the_beast.ftbl.util.TextureCoords;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.ObjectCallbackHandler;
+import com.latmod.lib.TextureCoords;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.gui.GuiScreen;
@@ -40,12 +40,12 @@ public class GuiSelectColor extends GuiLM
     private static final int COL_TEX_W = 29;
     private static final int COL_TEX_H = 16;
 
-    private static final TextureCoords col_tex = new TextureCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
-    private static final TextureCoords cursor_tex = new TextureCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
+    private static final TextureCoords col_tex = TextureCoords.fromCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
+    private static final TextureCoords cursor_tex = TextureCoords.fromCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
 
     private static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
-    private static final TextureCoords slider_tex = new TextureCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
-    private static final TextureCoords slider_col_tex = new TextureCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
+    private static final TextureCoords slider_tex = TextureCoords.fromCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
+    private static final TextureCoords slider_col_tex = TextureCoords.fromCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
 
     private class ColorSelector extends WidgetLM
     {
@@ -173,8 +173,9 @@ public class GuiSelectColor extends GuiLM
                 setColor(new LMColor.RGB((int) (value * 255F), currentColor.green(), currentColor.blue()));
             }
         };
+
         sliderRed.displayMax = 255;
-        sliderRed.title = EnumDyeColorHelper.get(EnumDyeColor.RED).toString();
+        sliderRed.title = EnumDyeColorHelper.get(EnumDyeColor.RED).langKey.translate();
         sliderRed.scrollStep = 1F / 255F;
 
         sliderGreen = new SliderLM(6, 19, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
@@ -187,7 +188,7 @@ public class GuiSelectColor extends GuiLM
         };
 
         sliderGreen.displayMax = 255;
-        sliderGreen.title = EnumDyeColorHelper.get(EnumDyeColor.GREEN).toString();
+        sliderGreen.title = EnumDyeColorHelper.get(EnumDyeColor.GREEN).langKey.translate();
         sliderGreen.scrollStep = 1F / 255F;
 
         sliderBlue = new SliderLM(6, 32, SLIDER_BAR_W, SLIDER_H, SLIDER_W)
@@ -200,7 +201,7 @@ public class GuiSelectColor extends GuiLM
         };
 
         sliderBlue.displayMax = 255;
-        sliderBlue.title = EnumDyeColorHelper.get(EnumDyeColor.BLUE).toString();
+        sliderBlue.title = EnumDyeColorHelper.get(EnumDyeColor.BLUE).langKey.translate();
         sliderBlue.scrollStep = 1F / 255F;
 
         sliderHue = new SliderLM(6, 51, SLIDER_BAR_W, SLIDER_H, SLIDER_W)

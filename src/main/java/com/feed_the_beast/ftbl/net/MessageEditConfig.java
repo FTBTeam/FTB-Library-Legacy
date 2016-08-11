@@ -6,10 +6,9 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.JsonHelper;
-import com.feed_the_beast.ftbl.util.LMNetUtils;
 import com.google.gson.JsonObject;
 import com.latmod.lib.io.ByteIOStream;
+import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -50,7 +49,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public void fromBytes(ByteBuf io)
     {
         extraNBT = LMNetUtils.readTag(io);
-        title = JsonHelper.deserializeICC(LMNetUtils.readJsonElement(io));
+        title = LMNetUtils.readTextComponent(io);
         group = new ConfigGroup();
         group.readData(LMNetUtils.readCompressedByteIOStream(io), true);
     }
@@ -59,7 +58,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public void toBytes(ByteBuf io)
     {
         LMNetUtils.writeTag(io, extraNBT);
-        LMNetUtils.writeJsonElement(io, JsonHelper.serializeICC(title));
+        LMNetUtils.writeTextComponent(io, title);
         ByteIOStream stream = new ByteIOStream();
         group.writeData(stream, true);
         LMNetUtils.writeCompressedByteIOStream(io, stream);
