@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.api.notification;
 
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.RegistryBase;
+import com.feed_the_beast.ftbl.api.IRegistry;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
+import com.feed_the_beast.ftbl.api_impl.RegistryBase;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,7 @@ import java.net.URI;
 
 public class ClickActionTypeRegistry
 {
-    public static final RegistryBase<String, IClickActionType> INSTANCE = new RegistryBase<>(0);
+    public static final IRegistry<String, IClickActionType> INSTANCE = new RegistryBase<>(0);
     public static final String SIDEBAR_BUTTON = "sidebar_button";
     public static final String CMD = "cmd";
     public static final String SHOW_CMD = "show_cmd";
@@ -32,11 +32,11 @@ public class ClickActionTypeRegistry
     {
         INSTANCE.register(SIDEBAR_BUTTON, (data, button) ->
         {
-            ActionButton a = ActionButtonRegistry.INSTANCE.get(new ResourceLocation(data.getAsString()));
+            SidebarButton a = SidebarButtonRegistry.INSTANCE.get(new ResourceLocation(data.getAsString()));
 
-            if(a != null && a.isVisibleFor(ForgeWorldSP.inst.clientPlayer))
+            if(a != null && a.isVisible())
             {
-                a.onClicked(ForgeWorldSP.inst.clientPlayer);
+                a.onClicked(button);
             }
         });
 

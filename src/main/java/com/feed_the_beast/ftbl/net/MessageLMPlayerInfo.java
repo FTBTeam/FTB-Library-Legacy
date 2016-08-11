@@ -1,11 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -32,7 +29,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     {
     }
 
-    public MessageLMPlayerInfo(ForgePlayerMP owner, ForgePlayerMP p)
+    public MessageLMPlayerInfo(ForgePlayer owner, ForgePlayer p)
     {
         playerID = p.getProfile().getId();
 
@@ -99,23 +96,14 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageLMPlayerInfo m, Minecraft mc)
     {
-        if(ForgeWorldSP.inst == null)
-        {
-            return;
-        }
-
-        ForgePlayerSP p = ForgeWorldSP.inst.getPlayer(m.playerID).toSP();
-        if(p == null)
-        {
-            return;
-        }
-
-
+        //TODO: Open FriendsGUI
+        /*
         p.receiveInfo(m.info);
 
         p.lastArmor.clear();
         p.lastArmor.putAll(m.armor);
 
         FTBLibClient.onGuiClientAction();
+        */
     }
 }

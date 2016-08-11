@@ -1,18 +1,11 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerNameComparator;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by LatvianModder on 23.03.2016.
@@ -29,6 +22,8 @@ public class InfoFriendsGUI extends InfoPage
         {
             addSub("notifications", new InfoNotificationsPage());
         }
+        
+        /*
 
         List<ForgePlayer> tempPlayerList = new ArrayList<>();
         tempPlayerList.addAll(ForgeWorldSP.inst.playerMap.values());
@@ -46,5 +41,6 @@ public class InfoFriendsGUI extends InfoPage
         {
             addSub(p.getProfile().getName(), new InfoFriendsGUIPage(p.toSP()));
         }
+        */
     }
 }

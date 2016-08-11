@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
@@ -43,7 +43,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
         {
             GuiLM.playClickSound();
 

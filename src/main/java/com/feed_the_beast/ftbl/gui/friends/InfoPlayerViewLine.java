@@ -1,22 +1,18 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
-import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
+import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.google.gson.JsonElement;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -25,28 +21,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
 @SideOnly(Side.CLIENT)
-public class InfoPlayerViewLine implements IInfoTextLine
+public class InfoPlayerViewLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerView extends ButtonInfoTextLine
     {
         public class Player extends AbstractClientPlayer
         {
-            public Player(ForgePlayerSP p)
+            public Player(GameProfile profile)
             {
-                super(Minecraft.getMinecraft().theWorld, p.getProfile());
-            }
-
-            @Override
-            public boolean equals(Object o)
-            {
-                return playerLM.equals(o);
+                super(Minecraft.getMinecraft().theWorld, profile);
             }
 
             @Override
@@ -73,18 +61,6 @@ public class InfoPlayerViewLine implements IInfoTextLine
                 return true;
             }
 
-            @Nonnull
-            @Override
-            public ResourceLocation getLocationSkin()
-            {
-                return playerLM.getSkin();
-            }
-
-            //FIXME: Cape
-            //@Override
-            //public boolean hasCape()
-            //{ return false; }
-
             @Override
             public ResourceLocation getLocationCape()
             {
@@ -108,7 +84,7 @@ public class InfoPlayerViewLine implements IInfoTextLine
 
             if(player == null)
             {
-                player = new Player(ForgeWorldSP.inst.clientPlayer);
+                player = new Player(Minecraft.getMinecraft().getSession().getProfile());
             }
 
             if(gui.isMouseOver(this) && Mouse.isButtonDown(1))
@@ -120,6 +96,7 @@ public class InfoPlayerViewLine implements IInfoTextLine
             }
             else
             {
+                /*
                 EntityPlayer ep1 = playerLM.getPlayer();
 
                 if(ep1 != null)
@@ -137,6 +114,7 @@ public class InfoPlayerViewLine implements IInfoTextLine
                         player.setItemStackToSlot(e.getKey(), e.getValue());
                     }
                 }
+                */
             }
 
             GlStateManager.pushMatrix();
@@ -165,36 +143,10 @@ public class InfoPlayerViewLine implements IInfoTextLine
         }
     }
 
-    public final ForgePlayerSP playerLM;
-
-    public InfoPlayerViewLine(ForgePlayerSP p)
-    {
-        playerLM = p;
-    }
-
-    @Override
-    @Nullable
-    public String getUnformattedText()
-    {
-        return null;
-    }
-
     @Override
     @Nonnull
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
     {
         return new ButtonInfoPlayerView(gui);
-    }
-
-    @Override
-    public void fromJson(@Nonnull JsonElement json)
-    {
-    }
-
-    @Override
-    @Nonnull
-    public JsonElement getSerializableElement()
-    {
-        return null;
     }
 }

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.IClickable;
+import com.feed_the_beast.ftbl.api.gui.IClickable;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.io.ByteIOStream;
@@ -128,7 +128,7 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
     }
 
     @Override
-    public void onClicked(@Nonnull MouseButton button)
+    public void onClicked(@Nonnull IMouseButton button)
     {
         if(button.isLeft())
         {

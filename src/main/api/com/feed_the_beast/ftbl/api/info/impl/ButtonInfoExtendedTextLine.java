@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.util.text.ITextComponent;
@@ -59,7 +59,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+    public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
     {
         if(clickAction != null)
         {

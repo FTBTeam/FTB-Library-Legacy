@@ -1,28 +1,8 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
-import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.net.MessageRequestPlayerInfo;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 24.03.2016.
@@ -30,6 +10,7 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class InfoFriendsGUIPage extends InfoPage
 {
+    /*
     private class Button extends ButtonInfoPage
     {
         public Button(GuiInfo g, IGuiInfoPageTree p)
@@ -72,7 +53,7 @@ public class InfoFriendsGUIPage extends InfoPage
                 GuiLM.drawBlankRect(ax, ay, width, height);
             }
 
-            if(ForgeWorldSP.inst.clientPlayer.hasTeam())
+            if(ForgeWorldSP.inst.clientPlayer.getTeam() != null)
             {
                 EnumTeamStatus status = ForgeWorldSP.inst.clientPlayer.getTeam().getStatus(playerLM);
                 FTBLibClient.setGLColor((status == EnumTeamStatus.NONE) ? 0xFF000000 : status.color.getMapColor().colorValue, 255);
@@ -114,21 +95,13 @@ public class InfoFriendsGUIPage extends InfoPage
             println(null);
         }
 
-        List<Map.Entry<ResourceLocation, ActionButton>> buttons = ActionButtonRegistry.getButtons(playerLM, true);
-        Collections.sort(buttons, ActionButtonRegistry.COMPARATOR);
+        List<Map.Entry<ResourceLocation, ActionButton>> buttons = SidebarButtonRegistry.getButtons(playerLM, true);
+        Collections.sort(buttons, SidebarButtonRegistry.COMPARATOR);
 
         for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
         {
             println(new InfoPlayerActionLine(playerLM, entry.getKey(), entry.getValue()));
         }
-        
-		/*
-        if(LMWorldClient.inst.clientPlayer.isFriend(playerLM))
-		{
-			text.add(null);
-			text.add(new InfoPlayerInventoryLine(this, playerLM));
-		}
-		*/
     }
 
     @Override
@@ -136,4 +109,5 @@ public class InfoFriendsGUIPage extends InfoPage
     {
         return new Button(gui, p);
     }
+    */
 }

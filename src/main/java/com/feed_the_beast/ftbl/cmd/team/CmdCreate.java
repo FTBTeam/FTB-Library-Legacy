@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
-import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -58,9 +57,9 @@ public class CmdCreate extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
+        ForgePlayer p = getForgePlayer(ep);
 
-        if(p.hasTeam())
+        if(p.getTeam() != null)
         {
             throw FTBLibLang.team_must_leave.commandError();
         }
@@ -72,19 +71,17 @@ public class CmdCreate extends CommandLM
             throw FTBLibLang.raw.commandError("ID can only contain lowercase a-z, _ and |!");
         }
 
-        if(ForgeWorldMP.inst.teams.containsKey(args[0]))
+        if(p.getWorld().getTeam(args[0]) != null)
         {
             throw FTBLibLang.raw.commandError("ID already registred!");
         }
 
-        ForgeTeam team = new ForgeTeam(ForgeWorldMP.inst, args[0]);
+        ForgeTeam team = new ForgeTeam(p.getWorld(), args[0]);
         team.changeOwner(p);
-        ForgeWorldMP.inst.teams.put(team.getID(), team);
+        p.getWorld().teams.put(team.getID(), team);
 
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Created(team));
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.PlayerJoined(team, p));
-
-        new MessageUpdateTeam(p, team).sendTo(null);
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
 
         FTBLibLang.team_created.printChat(sender, team.getID());
     }

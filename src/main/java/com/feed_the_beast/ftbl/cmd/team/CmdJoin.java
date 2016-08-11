@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,7 +37,7 @@ public class CmdJoin extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, ForgeWorldMP.inst.teams.keySet());
+            return getListOfStringsMatchingLastWord(args, FTBLibAPI_Impl.INSTANCE.getWorld().teams.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -47,9 +47,9 @@ public class CmdJoin extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
+        ForgePlayer p = getForgePlayer(ep);
 
-        if(p.hasTeam())
+        if(p.getTeam() != null)
         {
             throw FTBLibLang.team_must_leave.commandError();
         }
@@ -60,11 +60,9 @@ public class CmdJoin extends CommandLM
 
         if(team.addPlayer(p))
         {
-            p.sendUpdate();
-
-            for(ForgePlayer p1 : team.getMembers())
+            for(IForgePlayer p1 : team.getMembers())
             {
-                if(p1.toMP().isOnline())
+                if(p1.isOnline())
                 {
                     FTBLibLang.team_member_joined.printChat(p1.getPlayer(), p.getProfile().getName());
                 }
@@ -74,7 +72,5 @@ public class CmdJoin extends CommandLM
         {
             throw FTBLibLang.team_not_member.commandError(p.getProfile().getName());
         }
-
-        p.sendUpdate();
     }
 }

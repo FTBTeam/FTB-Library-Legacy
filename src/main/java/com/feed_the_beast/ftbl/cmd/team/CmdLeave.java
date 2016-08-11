@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.events.ForgeTeamEvent;
-import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,22 +33,18 @@ public class CmdLeave extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
+        ForgePlayer p = getForgePlayer(ep);
+        ForgeTeam team = p.getTeam();
 
-        if(!p.hasTeam())
+        if(team == null)
         {
             throw FTBLibLang.team_no_team.commandError();
         }
-
-        ForgeTeam team = p.getTeam();
-
-        if(team.getMembers().size() == 1)
+        else if(team.getMembers().size() == 1)
         {
-            String teamID = team.getID() + "";
-            MinecraftForge.EVENT_BUS.post(new ForgeTeamEvent.Deleted(team));
+            MinecraftForge.EVENT_BUS.post(new ForgeTeamDeletedEvent(team));
             team.removePlayer(p);
-            ForgeWorldMP.inst.teams.remove(teamID);
-            new MessageUpdateTeam(teamID).sendTo(null);
+            p.getWorld().teams.remove(team.getID());
 
             FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
             FTBLibLang.team_deleted.printChat(sender, team.getTitle());
@@ -65,7 +59,5 @@ public class CmdLeave extends CommandLM
             team.removePlayer(p);
             FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
         }
-
-        p.sendUpdate();
     }
 }

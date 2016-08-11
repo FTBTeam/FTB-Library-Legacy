@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,23 +31,21 @@ public class CmdInvite extends CommandLM
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
+        ForgePlayer p = getForgePlayer(ep);
+        ForgeTeam team = p.getTeam();
 
-        if(!p.hasTeam())
+        if(team == null)
         {
             throw FTBLibLang.team_no_team.commandError();
         }
-
-        ForgeTeam team = p.getTeam();
-
-        if(!team.getStatus(p).isOwner())
+        else if(!team.getStatus(p).isOwner())
         {
             throw FTBLibLang.team_not_owner.commandError();
         }
 
         checkArgs(args, 1, "<player>");
 
-        ForgePlayerMP p1 = ForgePlayerMP.get(args[0]);
+        ForgePlayer p1 = getForgePlayer(args[0]);
 
         if(team.inviteMember(p1))
         {

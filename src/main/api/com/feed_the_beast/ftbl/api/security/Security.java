@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.security;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -35,12 +35,12 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
         {
             return ((EntityPlayer) o).getGameProfile().getId();
         }
-        else if(o instanceof ForgePlayer)
+        else if(o instanceof IForgePlayer)
         {
-            return ((ForgePlayer) o).getProfile().getId();
+            return ((IForgePlayer) o).getProfile().getId();
         }
 
-        return ForgeWorldMP.inst.getPlayer(o).getProfile().getId();
+        return FTBLibAPI.INSTANCE.getWorld().getPlayer(o).getProfile().getId();
     }
 
     @Override

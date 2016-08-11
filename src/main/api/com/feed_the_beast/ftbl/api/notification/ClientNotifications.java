@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.notification;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -165,7 +165,7 @@ public class ClientNotifications
             return Long.compare(o.timeAdded, timeAdded);
         }
 
-        public void onClicked(MouseButton button)
+        public void onClicked(IMouseButton button)
         {
             if(notification.getClickAction() != null)
             {

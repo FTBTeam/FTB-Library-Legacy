@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
-import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -87,7 +87,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             ConfigContainer cc = getConfigContainer(sender);
-            ConfigRegistry.tempServerConfig.put(ep.getGameProfile().getId(), cc);
+            FTBLibAPI_Impl.INSTANCE.tempServerConfig.put(ep.getGameProfile().getId(), cc);
             new MessageEditConfig(null, cc).sendTo(ep);
             return;
         }

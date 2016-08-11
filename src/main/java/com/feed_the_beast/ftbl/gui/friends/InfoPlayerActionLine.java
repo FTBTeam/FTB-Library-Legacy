@@ -1,16 +1,17 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +30,8 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
         {
             super(g, null);
             height = 18;
-            title = action.getDisplayName(actionID).getFormattedText();
+            ITextComponent c = action.getDisplayNameOverride();
+            title = ((c == null) ? new TextComponentTranslation("sidebar_button." + actionID) : c).getFormattedText();
             width = (action.icon == null ? 8 : 24) + g.font.getStringWidth(title);
         }
 
@@ -39,10 +41,10 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
         {
             GuiLM.playClickSound();
-            action.onClicked(playerLM);
+            action.onClicked(button);
         }
 
         @Override
@@ -68,13 +70,11 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
         }
     }
 
-    public final ForgePlayerSP playerLM;
     public final ResourceLocation actionID;
-    public final ActionButton action;
+    public final SidebarButton action;
 
-    public InfoPlayerActionLine(ForgePlayerSP p, ResourceLocation id, ActionButton a)
+    public InfoPlayerActionLine(ResourceLocation id, SidebarButton a)
     {
-        playerLM = p;
         actionID = id;
         action = a;
     }

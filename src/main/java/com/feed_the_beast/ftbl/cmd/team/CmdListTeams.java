@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayer;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
@@ -44,12 +44,12 @@ public class CmdListTeams extends CommandLM
         InfoPage page = new InfoPage().setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.theme = InfoPageTheme.DARK_NON_UNICODE;
 
-        for(ForgeTeam team : ForgeWorldMP.inst.teams.values())
+        for(IForgeTeam team : FTBLibAPI.INSTANCE.getWorld().getTeams())
         {
             InfoPage page1 = page.getSub(team.getID());
 
             ITextComponent title = new TextComponentString(team.getTitle());
-            title.getStyle().setColor(team.getColor().textFormatting);
+            title.getStyle().setColor(team.getColor().getTextFormatting());
             page1.setTitle(title);
 
             if(team.getDesc() != null)
@@ -61,12 +61,12 @@ public class CmdListTeams extends CommandLM
             }
 
             page1.println("ID: " + team.getID());
-            ForgePlayer owner = team.getOwner();
+            IForgePlayer owner = team.getOwner();
             page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
 
             List<String> members = new ArrayList<>();
 
-            for(ForgePlayer player : team.getMembers())
+            for(IForgePlayer player : team.getMembers())
             {
                 if(player != owner)
                 {

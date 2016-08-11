@@ -1,14 +1,6 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.IClickable;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryColor;
@@ -16,6 +8,15 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IClickable;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
+import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.LMColor;
@@ -108,7 +109,7 @@ public class GuiEditConfig extends GuiLM
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
         {
             if(mouseY >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
             {
@@ -282,7 +283,7 @@ public class GuiEditConfig extends GuiLM
         buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.button_accept.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 shouldClose = 1;
@@ -293,7 +294,7 @@ public class GuiEditConfig extends GuiLM
         buttonCancel = new ButtonLM(0, 2, 16, 16, GuiLang.button_cancel.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 shouldClose = 2;

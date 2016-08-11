@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;

@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButton;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -16,6 +16,8 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -44,14 +46,16 @@ public class FTBLibClientEventHandler
 
     private static class ButtonInvLM extends GuiButton
     {
-        public final ActionButton button;
+        public final SidebarButton button;
         public final String title;
 
-        public ButtonInvLM(int id, ResourceLocation bID, ActionButton b, int x, int y)
+        public ButtonInvLM(int id, ResourceLocation bID, SidebarButton b, int x, int y)
         {
             super(id, x, y, 16, 16, "");
             button = b;
-            title = b.getDisplayName(bID).getFormattedText();
+
+            ITextComponent c = b.getDisplayNameOverride();
+            title = ((c == null) ? new TextComponentTranslation("sidebar_button." + bID) : c).getFormattedText();
         }
 
         @Override
@@ -148,11 +152,12 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
+        /* FIXME
         if(ForgeWorldSP.inst != null)
         {
             ForgeWorldSP.inst.onClosed();
             ForgeWorldSP.inst = null;
-        }
+        }*/
     }
 
     @SubscribeEvent
@@ -216,13 +221,13 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
     {
-        if(ForgeWorldSP.inst != null && event.getGui() instanceof InventoryEffectRenderer)
+        if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<Map.Entry<ResourceLocation, ActionButton>> buttons = ActionButtonRegistry.getButtons(ForgeWorldSP.inst.clientPlayer, false);
+            List<Map.Entry<ResourceLocation, SidebarButton>> buttons = SidebarButtonRegistry.getButtons(false);
 
             if(!buttons.isEmpty())
             {
-                Collections.sort(buttons, ActionButtonRegistry.COMPARATOR);
+                Collections.sort(buttons, SidebarButtonRegistry.COMPARATOR);
 
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
@@ -230,7 +235,7 @@ public class FTBLibClientEventHandler
                 if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
                 {
                     int i = 0;
-                    for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
+                    for(Map.Entry<ResourceLocation, SidebarButton> entry : buttons)
                     {
                         int x = i % 4;
                         int y = i / 4;
@@ -269,7 +274,7 @@ public class FTBLibClientEventHandler
                     }
 
                     int i = 0;
-                    for(Map.Entry<ResourceLocation, ActionButton> entry : buttons)
+                    for(Map.Entry<ResourceLocation, SidebarButton> entry : buttons)
                     {
                         ButtonInvLM b;
 
@@ -300,8 +305,8 @@ public class FTBLibClientEventHandler
     {
         if(event.getButton() instanceof ButtonInvLM)
         {
-            ActionButton b = ((ButtonInvLM) event.getButton()).button;
-            b.onClicked(ForgeWorldSP.inst.clientPlayer);
+            SidebarButton b = ((ButtonInvLM) event.getButton()).button;
+            b.onClicked(MouseButton.LEFT); //TODO: Fix mouse button
         }
     }
 

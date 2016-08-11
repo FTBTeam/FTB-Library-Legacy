@@ -3,16 +3,15 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldSP;
-import com.feed_the_beast.ftbl.api.PackModes;
-import com.feed_the_beast.ftbl.api.events.ForgeWorldEvent;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.events.SyncDataEvent;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.api.notification.Notification;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
@@ -29,19 +28,18 @@ public class MessageReload extends MessageToClient<MessageReload>
     public int typeID;
     public boolean login;
     public NBTTagCompound syncData;
-    public NBTTagCompound worldData;
+    public NBTTagCompound sharedDataTag;
 
     public MessageReload()
     {
     }
 
-    public MessageReload(ReloadType t, ForgePlayerMP self, boolean l)
+    public MessageReload(ReloadType t, IForgePlayer self, boolean l)
     {
         typeID = t.ordinal();
         login = l;
-        worldData = new NBTTagCompound();
-        ForgeWorldMP.inst.writeDataToNet(worldData, self, l);
-        syncData = ForgeWorldEvent.Sync.generateData(self, login);
+        syncData = SyncDataEvent.generateData(self, login);
+        sharedDataTag = FTBLibAPI.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
     }
 
     public static void reloadClient(long ms, ReloadType type, boolean login)
@@ -51,16 +49,16 @@ public class MessageReload extends MessageToClient<MessageReload>
             ms = System.currentTimeMillis();
         }
 
-        PackModes.reload();
+        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
         EntityPlayer ep = FTBLibMod.proxy.getClientPlayer();
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent(ForgeWorldSP.inst, ep, type, login));
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, ep, type, login));
 
         if(!login)
         {
             FTBLibLang.reload_client.printChat(ep, (System.currentTimeMillis() - ms) + "ms");
         }
 
-        FTBLibMod.logger.info("Current Mode: " + ForgeWorldSP.inst.getMode());
+        FTBLibMod.logger.info("Current Mode: " + FTBLibAPI.INSTANCE.getSharedData(Side.CLIENT).getMode().getID());
     }
 
     @Override
@@ -74,8 +72,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         typeID = io.readUnsignedByte();
         login = io.readBoolean();
-        worldData = LMNetUtils.readTag(io);
         syncData = LMNetUtils.readTag(io);
+        sharedDataTag = LMNetUtils.readTag(io);
     }
 
     @Override
@@ -83,8 +81,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         io.writeByte(typeID);
         io.writeBoolean(login);
-        LMNetUtils.writeTag(io, worldData);
         LMNetUtils.writeTag(io, syncData);
+        LMNetUtils.writeTag(io, sharedDataTag);
     }
 
     @Override
@@ -92,11 +90,10 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void onMessage(MessageReload m, Minecraft mc)
     {
         long ms = System.currentTimeMillis();
+        FTBLibAPI.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
+        SyncDataEvent.readData(m.syncData, m.login);
 
         ReloadType type = ReloadType.values()[m.typeID];
-
-        ForgeWorldSP.inst.readDataFromNet(m.worldData, m.login);
-        ForgeWorldEvent.Sync.readData(m.syncData, m.login);
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 

@@ -55,6 +55,19 @@ dependencies {
     //compile "mcp.mobius.waila:Waila:1.7.0-B3_1.9.4"
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir 'src/main/api'
+            srcDir 'src/main/lib'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
 processResources
         {
             // this will ensure that this task is redone when the versions change.

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.client;
 
-import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
@@ -17,17 +17,12 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
@@ -63,17 +58,12 @@ public class FTBLibClient
 
     // - Registry - //
 
+    /*
     public static <T extends Entity> void addEntityRenderer(@Nonnull Class<T> c, @Nonnull IRenderFactory<? super T> r)
     {
         RenderingRegistry.registerEntityRenderingHandler(c, r);
     }
-
-    @Nonnull
-    public static KeyBinding addKeyBinding(@Nonnull KeyBinding k)
-    {
-        ClientRegistry.registerKeyBinding(k);
-        return k;
-    }
+    */
 
     // -- //
 

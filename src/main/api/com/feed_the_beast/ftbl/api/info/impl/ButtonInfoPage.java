@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.latmod.lib.TextureCoords;
@@ -42,7 +42,7 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+    public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
     {
         GuiLM.playClickSound();
         guiInfo.setSelectedPage(page);

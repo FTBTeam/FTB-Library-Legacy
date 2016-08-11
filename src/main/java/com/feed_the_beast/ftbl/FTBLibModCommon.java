@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
+import com.feed_the_beast.ftbl.api.gui.GuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

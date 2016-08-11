@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
-import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMNetUtils;
@@ -54,7 +54,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void onMessage(MessageEditConfigResponse m, EntityPlayerMP player)
     {
-        ConfigContainer cc = ConfigRegistry.tempServerConfig.get(player.getGameProfile().getId());
+        ConfigContainer cc = FTBLibAPI_Impl.INSTANCE.tempServerConfig.get(player.getGameProfile().getId());
 
         if(cc != null)
         {
@@ -64,7 +64,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
             }
 
             cc.saveConfig(player, m.extraNBT, m.groupData);
-            ConfigRegistry.tempServerConfig.remove(player.getGameProfile().getId());
+            FTBLibAPI_Impl.INSTANCE.tempServerConfig.remove(player.getGameProfile().getId());
         }
     }
 }

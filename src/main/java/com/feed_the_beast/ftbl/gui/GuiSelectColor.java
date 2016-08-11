@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.util.EnumDyeColorHelper;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.ObjectCallbackHandler;
@@ -106,7 +106,7 @@ public class GuiSelectColor extends GuiLM
         }
 
         @Override
-        public void mousePressed(GuiLM gui, MouseButton b)
+        public void mousePressed(GuiLM gui, IMouseButton b)
         {
             if(b.isLeft() && gui.isMouseOver(this))
             {
@@ -136,7 +136,7 @@ public class GuiSelectColor extends GuiLM
         colorInit = new ButtonLM(76, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 closeGui(false);
             }
@@ -152,7 +152,7 @@ public class GuiSelectColor extends GuiLM
         colorCurrent = new ButtonLM(109, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 closeGui(true);
             }

@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.MouseButton;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.IClientActionGui;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.PanelLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.SliderLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.WidgetLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
@@ -89,7 +89,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack = new ButtonLM(0, 0, 14, 11, selectedPage.getParent() == null ? GuiLang.button_close.translate() : GuiLang.button_back.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 setSelectedPage(selectedPage.getParent());
@@ -143,7 +143,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
-        buttonSpecial = selectedPage.getPage().createSpecialButton(this);
+        buttonSpecial = selectedPage.getPage().createSpecialButton(this, selectedPage);
     }
 
     public IGuiInfoPageTree getSelectedPage()

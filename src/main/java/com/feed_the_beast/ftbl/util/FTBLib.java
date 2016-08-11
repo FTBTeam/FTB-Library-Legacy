@@ -1,18 +1,9 @@
 package com.feed_the_beast.ftbl.util;
 
-import com.feed_the_beast.ftbl.FTBLibEventHandler;
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.PackModes;
-import com.feed_the_beast.ftbl.api.ServerTickCallback;
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
-import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
-import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.io.LMConnection;
 import com.latmod.lib.io.RequestMethod;
 import com.latmod.lib.util.LMUtils;
@@ -22,7 +13,6 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
@@ -40,7 +30,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -121,39 +110,6 @@ public class FTBLib
         else
         {
             FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + dev_logger.getClass().getName());
-        }
-    }
-
-    public static void reload(ICommandSender sender, ReloadType type, boolean login)
-    {
-        if(ForgeWorldMP.inst == null)
-        {
-            return;
-        }
-
-        long ms = System.currentTimeMillis();
-
-        if(type.reload(Side.SERVER))
-        {
-            ConfigRegistry.reload();
-            PackModes.reload();
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent(ForgeWorldMP.inst, sender, type, login));
-        }
-
-        if(!login)
-        {
-            if(hasOnlinePlayers())
-            {
-                for(EntityPlayerMP ep : getServer().getPlayerList().getPlayerList())
-                {
-                    new MessageReload(type, ForgeWorldMP.inst.getPlayer(ep), login).sendTo(ep);
-                }
-            }
-
-            if(type.reload(Side.SERVER))
-            {
-                FTBLibLang.reload_server.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
-            }
         }
     }
 
@@ -289,18 +245,6 @@ public class FTBLib
         }
 
         return runCommand(ics, sb.toString());
-    }
-
-    public static void addCallback(ServerTickCallback c)
-    {
-        if(c.maxTick == 0)
-        {
-            c.onCallback();
-        }
-        else
-        {
-            FTBLibEventHandler.pendingCallbacks.add(c);
-        }
     }
 
     public static boolean isOP(GameProfile p)

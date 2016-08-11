@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonSimpleLM;
-import com.feed_the_beast.ftbl.api.client.gui.widgets.TextBoxLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonSimpleLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
+import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.math.Converter;
 import net.minecraft.client.renderer.GlStateManager;
@@ -65,7 +66,7 @@ public class GuiSelectField extends GuiLM
         buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16, GuiLang.button_cancel.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 callback.onCallback(ID, def);
@@ -75,7 +76,7 @@ public class GuiSelectField extends GuiLM
         buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16, GuiLang.button_accept.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull MouseButton button)
+            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 if(textBox.isValid())

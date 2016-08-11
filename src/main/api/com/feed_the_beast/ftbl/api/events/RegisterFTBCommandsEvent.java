@@ -11,13 +11,18 @@ import javax.annotation.Nonnull;
  */
 public class RegisterFTBCommandsEvent extends Event
 {
-    public final boolean isDedi;
+    private final boolean isDedi;
     private CommandSubBase command;
 
     public RegisterFTBCommandsEvent(CommandSubBase c, boolean dedi)
     {
         command = c;
         isDedi = dedi;
+    }
+
+    public boolean isDedicatedServer()
+    {
+        return isDedi;
     }
 
     public void add(@Nonnull ICommand cmd)

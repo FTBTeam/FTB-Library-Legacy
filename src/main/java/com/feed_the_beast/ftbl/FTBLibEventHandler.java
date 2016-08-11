@@ -1,9 +1,12 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorld;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.ServerTickCallback;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeWorld;
+import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMNBTUtils;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +18,9 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +30,31 @@ public class FTBLibEventHandler implements ITickable
     public static final List<ServerTickCallback> callbacks = new ArrayList<>();
     public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
 
+    public static class ServerTickCallback
+    {
+        public final int maxTick;
+        public Runnable runnable;
+        private int ticks = 0;
+
+        public ServerTickCallback(int i, Runnable r)
+        {
+            maxTick = i;
+            runnable = r;
+        }
+
+        public boolean incAndCheck()
+        {
+            ticks++;
+            if(ticks >= maxTick)
+            {
+                runnable.run();
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     @SubscribeEvent
     public void onWorldSaved(WorldEvent.Save event)
     {
@@ -32,7 +62,9 @@ public class FTBLibEventHandler implements ITickable
         {
             try
             {
-                ForgeWorldMP.inst.save();
+                LMJsonUtils.toJson(new File(FTBLib.folderWorld, "world_data.json"), FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).getSerializableElement());
+                LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), FTBLibAPI.INSTANCE.getWorld().serializeNBT());
+                FTBLib.dev_logger.info("ForgeWorldMP Saved");
             }
             catch(Exception ex)
             {
@@ -45,46 +77,46 @@ public class FTBLibEventHandler implements ITickable
     @Optional.Method(modid = "forgeanalytics")
     public void onAnalytics(AnalyticsEvent event)
     {
-        ForgeWorld w = ForgeWorld.getFrom(event.side);
-
-        if(w != null)
-        {
-            ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", w.getMode().getID());
-        }
+        ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", FTBLibAPI.INSTANCE.getSharedData(event.side).getMode().getID());
     }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
     {
-        if(e.player instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
+        if(e.player instanceof EntityPlayerMP)
         {
-            EntityPlayerMP ep = (EntityPlayerMP) e.player;
+            ForgeWorld world = FTBLibAPI_Impl.INSTANCE.getWorld();
 
-            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
-
-            boolean firstLogin = p == null;
-
-            if(firstLogin)
+            if(world != null)
             {
-                p = new ForgePlayerMP(ep.getGameProfile());
-                ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
-            }
-            else if(!p.getProfile().getName().equals(ep.getName()))
-            {
-                p.setProfile(ep.getGameProfile());
-            }
+                EntityPlayerMP ep = (EntityPlayerMP) e.player;
 
-            p.setPlayer(ep);
-            p.onLoggedIn(firstLogin);
+                ForgePlayer p = world.getPlayer(ep);
+
+                boolean firstLogin = p == null;
+
+                if(firstLogin)
+                {
+                    p = new ForgePlayer(ep.getGameProfile());
+                    world.playerMap.put(p.getProfile().getId(), p);
+                }
+                else if(!p.getProfile().getName().equals(ep.getName()))
+                {
+                    p.setProfile(ep.getGameProfile());
+                }
+
+                p.setPlayer(ep);
+                p.onLoggedIn(firstLogin);
+            }
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
     {
-        if(e.player instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
+        if(e.player instanceof EntityPlayerMP && FTBLibAPI_Impl.INSTANCE.getWorld() != null)
         {
-            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(e.player);
+            ForgePlayer p = FTBLibAPI_Impl.INSTANCE.getWorld().getPlayer(e.player);
 
             if(p != null)
             {
@@ -96,9 +128,9 @@ public class FTBLibEventHandler implements ITickable
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent e)
     {
-        if(e.getEntity() instanceof EntityPlayerMP && ForgeWorldMP.inst != null)
+        if(e.getEntity() instanceof EntityPlayerMP && FTBLibAPI_Impl.INSTANCE.getWorld() != null)
         {
-            ForgeWorldMP.inst.getPlayer(e.getEntity()).onDeath();
+            FTBLibAPI_Impl.INSTANCE.getWorld().getPlayer(e.getEntity()).onDeath();
         }
     }
 

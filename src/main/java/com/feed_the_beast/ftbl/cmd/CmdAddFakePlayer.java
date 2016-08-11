@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeWorld;
 import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
@@ -48,13 +49,15 @@ public class CmdAddFakePlayer extends CommandLM
             throw FTBLibLang.raw.commandError("Invalid UUID!");
         }
 
-        if(ForgeWorldMP.inst.getPlayer(id) != null || ForgeWorldMP.inst.getPlayer(args[1]) != null)
+        ForgeWorld world = FTBLibAPI_Impl.INSTANCE.getWorld();
+
+        if(world.getPlayer(id) != null || world.getPlayer(args[1]) != null)
         {
             throw FTBLibLang.raw.commandError("Player already exists!");
         }
 
-        ForgePlayerMP p = new ForgePlayerMP(new GameProfile(id, args[1]));
-        ForgeWorldMP.inst.playerMap.put(p.getProfile().getId(), p);
+        ForgePlayer p = new ForgePlayer(new GameProfile(id, args[1]));
+        world.playerMap.put(p.getProfile().getId(), p);
 
         ics.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
     }

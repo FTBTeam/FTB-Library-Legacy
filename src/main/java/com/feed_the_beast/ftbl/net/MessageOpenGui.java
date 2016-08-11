@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
+import com.feed_the_beast.ftbl.api.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.latmod.lib.util.LMNetUtils;

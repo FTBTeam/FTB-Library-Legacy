@@ -21,7 +21,7 @@ import java.util.Map;
 
 public class CommandSubBase extends CommandLM implements ICustomCommandInfo
 {
-    public final Map<String, ICommand> subCommands;
+    private final Map<String, ICommand> subCommands;
 
     public CommandSubBase(String s)
     {

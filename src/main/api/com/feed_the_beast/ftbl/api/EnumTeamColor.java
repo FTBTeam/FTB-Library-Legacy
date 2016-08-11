@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
 
@@ -22,12 +21,10 @@ public enum EnumTeamColor implements IStringSerializable
     PURPLE("purple", TextFormatting.DARK_PURPLE, 0x7F00FF),
     GRAY("gray", TextFormatting.GRAY, 0xC0C0C0);
 
-    public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(false, EnumTeamColor.values());
-
-    public final String name;
-    public final TextFormatting textFormatting;
-    public final int color;
-    public final LangKey langKey;
+    private final String name;
+    private final TextFormatting textFormatting;
+    private final int color;
+    private final LangKey langKey;
 
     EnumTeamColor(String n, TextFormatting t, int c)
     {
@@ -37,10 +34,25 @@ public enum EnumTeamColor implements IStringSerializable
         langKey = new LangKey("ftbl.lang.team_color." + name);
     }
 
-    @Nonnull
     @Override
+    @Nonnull
     public String getName()
     {
         return name;
+    }
+
+    public TextFormatting getTextFormatting()
+    {
+        return textFormatting;
+    }
+
+    public int getColor()
+    {
+        return color;
+    }
+
+    public LangKey getLangKey()
+    {
+        return langKey;
     }
 }

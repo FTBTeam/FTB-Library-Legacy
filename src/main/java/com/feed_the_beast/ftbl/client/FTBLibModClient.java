@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.client.gui.GuiHandler;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
+import com.feed_the_beast.ftbl.api.gui.GuiHandler;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
 import com.feed_the_beast.ftbl.gui.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMColorUtils;
@@ -39,7 +39,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
-        ClientConfigRegistry.addGroup("sidebar_buttons", ActionButtonRegistry.configGroup);
+        ClientConfigRegistry.addGroup("sidebar_buttons", SidebarButtonRegistry.configGroup);
 
         FTBLibActions.init();
     }

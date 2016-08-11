@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.feed_the_beast.ftbl.api.client.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraftforge.fml.relauncher.Side;
@@ -25,11 +25,11 @@ public interface IGuiInfoPage extends IInfoPage
     IResourceProvider getResourceProvider();
 
     @SideOnly(Side.CLIENT)
-    void refreshGui(@Nonnull GuiInfo gui);
+    void refreshGui(GuiInfo gui);
 
     @SideOnly(Side.CLIENT)
-    ButtonLM createSpecialButton(@Nonnull GuiInfo gui);
+    ButtonLM createSpecialButton(GuiInfo gui, IGuiInfoPageTree page);
 
     @SideOnly(Side.CLIENT)
-    ButtonInfoPage createButton(@Nonnull GuiInfo guiInfo, @Nonnull IGuiInfoPageTree page);
+    ButtonInfoPage createButton(GuiInfo guiInfo, IGuiInfoPageTree page);
 }

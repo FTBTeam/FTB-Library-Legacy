@@ -1,14 +1,11 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.net.MessageUpdateTeam;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -50,11 +47,6 @@ public class CmdTeamConfig extends CmdEditConfigBase
         public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
         {
             group.loadFromGroup(json);
-
-            for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
-            {
-                new MessageUpdateTeam(ForgeWorldMP.inst.getPlayer(ep), team).sendTo(null);
-            }
         }
     }
 
@@ -73,16 +65,14 @@ public class CmdTeamConfig extends CmdEditConfigBase
     public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
+        ForgePlayer p = getForgePlayer(ep);
+        ForgeTeam team = p.getTeam();
 
-        if(!p.hasTeam())
+        if(team == null)
         {
             throw FTBLibLang.team_no_team.commandError();
         }
-
-        ForgeTeam team = p.getTeam();
-
-        if(!team.getStatus(p).isOwner())
+        else if(!team.getStatus(p).isOwner())
         {
             throw FTBLibLang.team_not_owner.commandError();
         }

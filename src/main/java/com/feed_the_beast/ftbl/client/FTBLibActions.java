@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.ForgePlayerSP;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.client.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.client.gui.GuiScreenRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.ActionButtonRegistry;
-import com.feed_the_beast.ftbl.api.client.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
+import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
 import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
@@ -29,17 +29,17 @@ public class FTBLibActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
         {
             @Override
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 new GuiInfo("friends_gui", new InfoFriendsGUI()).openGui();
             }
 
             @Override
             @Nullable
-            protected ITextComponent getDisplayNameOverride()
+            public ITextComponent getDisplayNameOverride()
             {
                 return new TextComponentString("FriendsGUI");
             }
@@ -60,72 +60,72 @@ public class FTBLibActions
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), new SidebarButton(990, GuiIcons.settings, null)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), new SidebarButton(990, GuiIcons.settings, null)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).openGui();
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), new SidebarButton(985, GuiIcons.settings_red, true)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), new SidebarButton(985, GuiIcons.settings_red, true)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 FTBLibClient.execClientCommand("/ftb my_settings", false);
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), new SidebarButton(200, GuiIcons.heart, true)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), new SidebarButton(200, GuiIcons.heart, true)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 FTBLibClient.execClientCommand("/ftb heal", false);
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), new SidebarButton(195, GuiIcons.toggle_gamemode, true)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), new SidebarButton(195, GuiIcons.toggle_gamemode, true)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
-                int i = player.getPlayer().capabilities.isCreativeMode ? 0 : 1;
+                int i = Minecraft.getMinecraft().thePlayer.capabilities.isCreativeMode ? 0 : 1;
                 FTBLibClient.execClientCommand("/gamemode " + i, false);
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), new SidebarButton(190, GuiIcons.toggle_rain, true)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), new SidebarButton(190, GuiIcons.toggle_rain, true)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 FTBLibClient.execClientCommand("/toggledownfall", false);
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), new SidebarButton(185, GuiIcons.toggle_day, true)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), new SidebarButton(185, GuiIcons.toggle_day, true)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 FTBLibClient.execClientCommand("/time set 6000", false);
             }
         });
 
-        ActionButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), new SidebarButton(180, GuiIcons.toggle_night, true)
+        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), new SidebarButton(180, GuiIcons.toggle_night, true)
         {
             @Override
             @SideOnly(Side.CLIENT)
-            public void onClicked(ForgePlayerSP player)
+            public void onClicked(IMouseButton button)
             {
                 FTBLibClient.execClientCommand("/time set 18000", false);
             }

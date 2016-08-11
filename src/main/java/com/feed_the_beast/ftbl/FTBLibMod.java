@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
-import com.feed_the_beast.ftbl.api.PackModes;
-import com.feed_the_beast.ftbl.api.config.ConfigRegistry;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -51,6 +50,8 @@ public class FTBLibMod
             logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
         }
 
+        FTBLibAPI.INSTANCE = FTBLibAPI_Impl.INSTANCE;
+
         FTBLib.init(e.getModConfigurationDirectory());
         FTBLibNetHandler.init();
         ODItems.preInit();
@@ -66,8 +67,8 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent e)
     {
-        PackModes.reload();
-        ConfigRegistry.reload();
+        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
+        FTBLibAPI_Impl.INSTANCE.reloadConfig();
         proxy.postInit();
     }
 
@@ -80,35 +81,23 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarted(FMLServerAboutToStartEvent e)
     {
-        ConfigRegistry.reload();
-        PackModes.reload();
+        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
+        FTBLibAPI_Impl.INSTANCE.reloadConfig();
         FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
-
-        ForgeWorldMP.inst = new ForgeWorldMP();
-
-        try
-        {
-            ForgeWorldMP.inst.load();
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
+        FTBLibAPI_Impl.INSTANCE.createAndLoadWorld();
         FTBLib.registerServerTickable(e.getServer(), FTBLibEventHandler.instance);
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent e)
     {
-        FTBLib.reload(FTBLib.getServer(), ReloadType.SERVER_ONLY, false);
+        FTBLibAPI.INSTANCE.reload(FTBLib.getServer(), ReloadType.SERVER_ONLY, false);
     }
 
     @Mod.EventHandler
     public void onServerShutDown(FMLServerStoppedEvent e)
     {
-        ForgeWorldMP.inst.onClosed();
-        ForgeWorldMP.inst = null;
+        FTBLibAPI_Impl.INSTANCE.closeWorld();
     }
 
     @NetworkCheckHandler

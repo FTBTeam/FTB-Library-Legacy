@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.api.security;
 
-import com.feed_the_beast.ftbl.api.ForgePlayer;
 import com.feed_the_beast.ftbl.api.LangKey;
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.config.EnumNameMap;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.TextureCoords;
 
 public enum EnumPrivacyLevel
@@ -48,27 +47,5 @@ public enum EnumPrivacyLevel
     public boolean isPublic()
     {
         return this == PUBLIC;
-    }
-
-    public boolean canInteract(ForgePlayer owner, ForgePlayer player)
-    {
-        if(this == EnumPrivacyLevel.PUBLIC || owner == null)
-        {
-            return true;
-        }
-        else if(player == null)
-        {
-            return false;
-        }
-        else if(owner.equalsPlayer(player))
-        {
-            return true;
-        }
-        else if(this == EnumPrivacyLevel.PRIVATE)
-        {
-            return false;
-        }
-
-        return this == EnumPrivacyLevel.TEAM && owner.hasTeam() && owner.getTeam().getStatus(player).isAlly();
     }
 }

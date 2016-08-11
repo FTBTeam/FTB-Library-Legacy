@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.ForgeTeam;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
 import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import net.minecraft.command.CommandException;
 
 /**
@@ -29,7 +29,7 @@ public class CmdTeam extends CommandSubBase
 
     public static ForgeTeam getTeam(String s) throws CommandException
     {
-        ForgeTeam team = ForgeWorldMP.inst.teams.get(s);
+        ForgeTeam team = FTBLibAPI_Impl.INSTANCE.getWorld().getTeam(s);
 
         if(team != null)
         {

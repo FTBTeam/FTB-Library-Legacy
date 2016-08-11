@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.client.gui.GuiIcons;
+import com.feed_the_beast.ftbl.api.LangKey;
+import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.TextureCoords;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum EnumRedstoneMode
 {
@@ -13,14 +11,15 @@ public enum EnumRedstoneMode
     ACTIVE_LOW("low");
 
     public static final EnumRedstoneMode[] VALUES = values();
+    public static final LangKey enumLangKey = new LangKey("ftbl.redstonemode");
 
     public final int ID;
-    public final String uname;
+    public final LangKey langKey;
 
     EnumRedstoneMode(String s)
     {
         ID = ordinal();
-        uname = s;
+        langKey = new LangKey("ftbl.redstonemode." + s);
     }
 
     public boolean cancel(boolean b)
@@ -35,17 +34,5 @@ public enum EnumRedstoneMode
     public TextureCoords getIcon()
     {
         return GuiIcons.redstone[ordinal()];
-    }
-
-    @SideOnly(Side.CLIENT)
-    public String getText()
-    {
-        return I18n.format("ftbl.redstonemode." + uname);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public String getTitle()
-    {
-        return I18n.format("ftbl.redstonemode");
     }
 }

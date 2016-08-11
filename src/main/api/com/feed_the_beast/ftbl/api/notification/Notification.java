@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.notification;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
-import com.feed_the_beast.ftbl.api.ForgeWorldMP;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -343,7 +343,7 @@ public final class Notification implements IJsonSerializable
         }
         else
         {
-            ForgePlayerMP p = ForgeWorldMP.inst.getPlayer(ep);
+            ForgePlayer p = FTBLibAPI_Impl.INSTANCE.getWorld().getPlayer(ep);
 
             if(p != null)
             {

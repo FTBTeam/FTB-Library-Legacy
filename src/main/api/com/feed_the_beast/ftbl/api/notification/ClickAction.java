@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.notification;
 
-import com.feed_the_beast.ftbl.api.MouseButton;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -105,7 +105,7 @@ public final class ClickAction implements IJsonSerializable
     }
 
     @SideOnly(Side.CLIENT)
-    public void onClicked(@Nonnull MouseButton button)
+    public void onClicked(@Nonnull IMouseButton button)
     {
         if(typeID != null)
         {

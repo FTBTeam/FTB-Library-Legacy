@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.ForgePlayerMP;
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -19,11 +18,11 @@ public class CmdMyServerSettings extends CmdEditConfigBase
 {
     public static class MyServerSettingsContainer extends ConfigContainer
     {
-        public final ForgePlayerMP player;
+        public final ForgePlayer player;
         public final ConfigGroup group;
 
         //new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings")
-        public MyServerSettingsContainer(ForgePlayerMP p)
+        public MyServerSettingsContainer(ForgePlayer p)
         {
             player = p;
             group = new ConfigGroup();
@@ -63,8 +62,6 @@ public class CmdMyServerSettings extends CmdEditConfigBase
     @Override
     public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayerMP p = ForgePlayerMP.get(ep);
-        return new MyServerSettingsContainer(p);
+        return new MyServerSettingsContainer(getForgePlayer(getCommandSenderAsPlayer(sender)));
     }
 }
