@@ -2,9 +2,9 @@ package com.latmod.lib;
 
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMUtils;
-import com.sun.istack.internal.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
