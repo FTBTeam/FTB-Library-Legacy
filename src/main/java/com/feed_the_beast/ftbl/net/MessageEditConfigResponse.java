@@ -27,7 +27,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("TX Response: " + groupData);
+            FTBLib.DEV_LOGGER.info("TX Response: " + groupData);
         }
     }
 
@@ -54,17 +54,17 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void onMessage(MessageEditConfigResponse m, EntityPlayerMP player)
     {
-        ConfigContainer cc = FTBLibAPI_Impl.INSTANCE.tempServerConfig.get(player.getGameProfile().getId());
+        ConfigContainer cc = FTBLibAPI_Impl.get().getRegistries().tempServerConfig.get(player.getGameProfile().getId());
 
         if(cc != null)
         {
             if(FTBLib.DEV_ENV)
             {
-                FTBLib.dev_logger.info("RX Response: " + m.groupData);
+                FTBLib.DEV_LOGGER.info("RX Response: " + m.groupData);
             }
 
             cc.saveConfig(player, m.extraNBT, m.groupData);
-            FTBLibAPI_Impl.INSTANCE.tempServerConfig.remove(player.getGameProfile().getId());
+            FTBLibAPI_Impl.get().getRegistries().tempServerConfig.remove(player.getGameProfile().getId());
         }
     }
 }

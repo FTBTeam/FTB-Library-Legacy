@@ -23,6 +23,21 @@ public class PackMode implements IPackMode
         return ID;
     }
 
+    public String toString()
+    {
+        return ID;
+    }
+
+    public int hashCode()
+    {
+        return ID.hashCode();
+    }
+
+    public boolean equals(Object o)
+    {
+        return o == this || (o != null && o.toString().equals(ID));
+    }
+
     @Override
     public File getFolder()
     {

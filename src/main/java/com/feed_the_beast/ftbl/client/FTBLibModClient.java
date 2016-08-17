@@ -3,9 +3,11 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.gui.GuiHandler;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
+import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
+import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.gui.InfoClientSettings;
+import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMUtils;
@@ -27,6 +29,7 @@ public class FTBLibModClient extends FTBLibModCommon
 {
     public static final ConfigEntryBool item_ore_names = new ConfigEntryBool(false);
     public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool(true);
+    public static final ConfigEntryEnum<EnumNotificationDisplay> notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
 
     @Override
     public void preInit()
@@ -39,7 +42,7 @@ public class FTBLibModClient extends FTBLibModCommon
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
-        ClientConfigRegistry.addGroup("sidebar_buttons", SidebarButtonRegistry.configGroup);
+        ClientConfigRegistry.addGroup("sidebar_buttons", FTBLibAPI_Impl.get().getRegistries().sidebarButtons().getSidebarButtonConfig());
 
         FTBLibActions.init();
     }
@@ -91,9 +94,9 @@ public class FTBLibModClient extends FTBLibModCommon
     }
 
     @Override
-    public void openClientGui(GuiHandler handler, EntityPlayer ep, int ID, NBTTagCompound data, int wid)
+    public void openClientGui(IGuiHandler handler, EntityPlayer ep, NBTTagCompound data, int wid)
     {
-        GuiScreen g = handler.getGui(ep, ID, data);
+        GuiScreen g = handler.getGui(ep, data);
 
         if(g != null)
         {

@@ -19,5 +19,5 @@ public interface IInfoTextLine extends IJsonSerializable
 
     @SideOnly(Side.CLIENT)
     @Nonnull
-    ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page);
+    ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page);
 }

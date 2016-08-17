@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
+import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import net.minecraft.client.Minecraft;
@@ -46,10 +46,10 @@ public class FTBLibClientEventHandler
 
     private static class ButtonInvLM extends GuiButton
     {
-        public final SidebarButton button;
+        public final ISidebarButton button;
         public final String title;
 
-        public ButtonInvLM(int id, ResourceLocation bID, SidebarButton b, int x, int y)
+        public ButtonInvLM(int id, ResourceLocation bID, ISidebarButton b, int x, int y)
         {
             super(id, x, y, 16, 16, "");
             button = b;
@@ -223,11 +223,11 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<Map.Entry<ResourceLocation, SidebarButton>> buttons = SidebarButtonRegistry.getButtons(false);
+            List<Map.Entry<ResourceLocation, ISidebarButton>> buttons = FTBLibAPI_Impl.get().getRegistries().sidebarButtons().getButtons(false);
 
             if(!buttons.isEmpty())
             {
-                Collections.sort(buttons, SidebarButtonRegistry.COMPARATOR);
+                Collections.sort(buttons, FTBLibRegistries.SidebarButtonRegistry.COMPARATOR);
 
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
@@ -235,7 +235,7 @@ public class FTBLibClientEventHandler
                 if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
                 {
                     int i = 0;
-                    for(Map.Entry<ResourceLocation, SidebarButton> entry : buttons)
+                    for(Map.Entry<ResourceLocation, ISidebarButton> entry : buttons)
                     {
                         int x = i % 4;
                         int y = i / 4;
@@ -274,7 +274,7 @@ public class FTBLibClientEventHandler
                     }
 
                     int i = 0;
-                    for(Map.Entry<ResourceLocation, SidebarButton> entry : buttons)
+                    for(Map.Entry<ResourceLocation, ISidebarButton> entry : buttons)
                     {
                         ButtonInvLM b;
 
@@ -305,7 +305,7 @@ public class FTBLibClientEventHandler
     {
         if(event.getButton() instanceof ButtonInvLM)
         {
-            SidebarButton b = ((ButtonInvLM) event.getButton()).button;
+            ISidebarButton b = ((ButtonInvLM) event.getButton()).button;
             b.onClicked(MouseButton.LEFT); //TODO: Fix mouse button
         }
     }

@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
-import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,13 +46,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
         {
             GuiLM.playClickSound();
-
-            if(gui.mouseX < getAX() + width - 32 && notification.notification.getClickAction() != null)
-            {
-                notification.notification.getClickAction().onClicked(button);
-            }
-
-            ClientNotifications.Perm.map.remove(widget.notification.ID);
+            ClientNotifications.Perm.map.remove(widget.notification.getID());
             gui.refreshWidgets();
         }
 
@@ -61,8 +55,8 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         {
             widget.width = width = ((GuiInfo) gui).panelText.width - 4;
 
-            double ay = getAY();
-            double ax = getAX();
+            int ay = getAY();
+            int ax = getAX();
 
             widget.render(gui.mc, ax, ay);
 
@@ -77,7 +71,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
                     GlStateManager.color(1F, 1F, 1F, 1F);
                 }
 
-                GuiLM.render(GuiIcons.close, ax + width - 32, ay + (height - 32D) / 2D, 32D, 32D);
+                GuiLM.render(GuiIcons.close, ax + width - 32, ay + (height - 32) / 2, 32, 32);
             }
         }
     }
@@ -92,7 +86,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoNotification(gui);
     }

@@ -11,6 +11,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public abstract class ButtonLM extends WidgetLM
 {
+    private String title;
+
     public ButtonLM(int x, int y, int w, int h)
     {
         super(x, y, w, h);
@@ -19,7 +21,18 @@ public abstract class ButtonLM extends WidgetLM
     public ButtonLM(int x, int y, int w, int h, String t)
     {
         this(x, y, w, h);
-        title = t;
+        setTitle(t);
+    }
+
+    @Override
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String s)
+    {
+        title = s;
     }
 
     @Override

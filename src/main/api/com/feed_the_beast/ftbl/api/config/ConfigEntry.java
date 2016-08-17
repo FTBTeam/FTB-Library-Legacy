@@ -15,11 +15,8 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-import java.util.function.IntSupplier;
 
-public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable, BooleanSupplier, IntSupplier, DoubleSupplier
+public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJsonSerializable
 {
     private byte flags;
     private String[] info;
@@ -78,19 +75,16 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
 
     public abstract String getAsString();
 
-    @Override
     public boolean getAsBoolean()
     {
         return false;
     }
 
-    @Override
     public int getAsInt()
     {
         return 0;
     }
 
-    @Override
     public double getAsDouble()
     {
         return 0D;

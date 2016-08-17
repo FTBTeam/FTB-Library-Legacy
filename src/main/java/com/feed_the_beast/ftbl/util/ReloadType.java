@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public enum ReloadType
 {
-    SYNC_ONLY,
+    LOGIN,
     SERVER_ONLY,
     CLIENT_ONLY,
     SERVER_AND_CLIENT,
@@ -22,7 +22,7 @@ public enum ReloadType
         }
         else
         {
-            return this == CLIENT_ONLY || this == SERVER_AND_CLIENT;
+            return this == LOGIN || this == CLIENT_ONLY || this == SERVER_AND_CLIENT;
         }
     }
 }

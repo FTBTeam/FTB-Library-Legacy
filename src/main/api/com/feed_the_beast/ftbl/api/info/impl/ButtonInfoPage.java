@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.latmod.lib.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,13 +20,13 @@ import java.util.List;
 public class ButtonInfoPage extends ButtonLM
 {
     public final GuiInfo guiInfo;
-    public final IGuiInfoPageTree page;
+    public final IGuiInfoPage page;
     public String hover;
     public TextureCoords icon;
     public boolean iconBlur = false;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, IGuiInfoPageTree p, TextureCoords t)
+    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, TextureCoords t)
     {
         super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
@@ -50,7 +50,7 @@ public class ButtonInfoPage extends ButtonLM
 
     public void updateTitle(@Nonnull GuiLM gui)
     {
-        ITextComponent titleC = InfoPageHelper.getTitleComponent(page.getPage(), page.getID());
+        ITextComponent titleC = page.getDisplayName().createCopy();
 
         if(guiInfo.getSelectedPage() == page)
         {
@@ -62,12 +62,12 @@ public class ButtonInfoPage extends ButtonLM
             titleC.getStyle().setUnderlined(true);
         }
 
-        title = titleC.getFormattedText();
+        setTitle(titleC.getFormattedText());
         hover = null;
 
-        if(guiInfo.font.getStringWidth(title) > width)
+        if(guiInfo.font.getStringWidth(getTitle()) > width)
         {
-            hover = InfoPageHelper.getTitleComponent(page.getPage(), page.getID()).getFormattedText();
+            hover = page.getDisplayName().getFormattedText();
         }
     }
 
@@ -83,7 +83,7 @@ public class ButtonInfoPage extends ButtonLM
     @Override
     public boolean shouldRender(@Nonnull GuiLM gui)
     {
-        return parentPanel.isInside(this);
+        return getParentWidget().isInside(this);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class ButtonInfoPage extends ButtonLM
             prevMouseOver = mouseOver;
         }
 
-        double ay = getAY();
-        double ax = getAX();
+        int ay = getAY();
+        int ax = getAX();
 
         if(icon != null)
         {
@@ -119,12 +119,12 @@ public class ButtonInfoPage extends ButtonLM
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             }
 
-            guiInfo.font.drawString(title, (int) ax + 19, (int) ay + 6, guiInfo.colorText);
+            guiInfo.font.drawString(getTitle(), ax + 19, ay + 6, guiInfo.colorText);
         }
         else
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            guiInfo.font.drawString(title, (int) ax + 1, (int) ay + 1, guiInfo.colorText);
+            guiInfo.font.drawString(getTitle(), ax + 1, ay + 1, guiInfo.colorText);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

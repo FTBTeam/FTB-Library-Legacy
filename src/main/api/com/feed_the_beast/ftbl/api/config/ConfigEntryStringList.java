@@ -7,12 +7,15 @@ import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMListUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigEntryStringList extends ConfigEntry
+public class ConfigEntryStringList extends ConfigEntry implements INBTSerializable<NBTTagList>
 {
     public final List<String> defValue;
     private List<String> value;
@@ -179,5 +182,31 @@ public class ConfigEntryStringList extends ConfigEntry
                 }
             }
         }
+    }
+
+    @Override
+    public NBTTagList serializeNBT()
+    {
+        NBTTagList list = new NBTTagList();
+
+        for(String s : getAsStringList())
+        {
+            list.appendTag(new NBTTagString(s));
+        }
+
+        return list;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagList nbt)
+    {
+        List<String> l = new ArrayList<>();
+
+        for(int i = 0; i < nbt.tagCount(); i++)
+        {
+            l.add(nbt.getStringTagAt(i));
+        }
+
+        set(l);
     }
 }

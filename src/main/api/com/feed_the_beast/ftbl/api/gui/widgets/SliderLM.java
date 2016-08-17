@@ -17,10 +17,6 @@ public class SliderLM extends WidgetLM
 {
     public final int sliderSize;
     public double value;
-    public int displayMin = 0;
-    public int displayMax = 0;
-    public boolean isVertical = false;
-    public double scrollStep = 0.1D;
     private boolean isGrabbed;
 
     public SliderLM(int x, int y, int w, int h, int ss)
@@ -29,15 +25,38 @@ public class SliderLM extends WidgetLM
         sliderSize = ss;
     }
 
-    public void update(GuiLM gui)
+    @Override
+    public void mousePressed(GuiLM gui, IMouseButton b)
+    {
+        if(b.isLeft() && gui.isMouseOver(this))
+        {
+            setGrabbed(true);
+        }
+    }
+
+    @Override
+    public void addMouseOverText(GuiLM gui, List<String> l)
+    {
+        double min = getDisplayMin();
+        double max = getDisplayMax();
+
+        if(min < max)
+        {
+            String s = "" + (int) MathHelperLM.map(value, 0D, 1D, min, max);
+            String t = getTitle();
+            l.add(t == null ? s : (t + ": " + s));
+        }
+    }
+
+    public void updateSlider(GuiLM gui)
     {
         double v0 = value;
 
-        if(isGrabbed)
+        if(isGrabbed())
         {
             if(Mouse.isButtonDown(0))
             {
-                if(isVertical)
+                if(getDirection().isVertical())
                 {
                     value = (gui.mouseY - (getAY() + (sliderSize / 2D))) / (double) (height - sliderSize);
                 }
@@ -48,14 +67,14 @@ public class SliderLM extends WidgetLM
             }
             else
             {
-                isGrabbed = false;
+                setGrabbed(false);
                 onReleased(gui);
             }
         }
 
         if(gui.dmouseWheel != 0 && canMouseScroll(gui))
         {
-            value += (gui.dmouseWheel < 0) ? scrollStep : -scrollStep;
+            value += (gui.dmouseWheel < 0) ? getScrollStep() : -getScrollStep();
         }
 
         value = MathHelperLM.clamp(value, 0D, 1D);
@@ -66,9 +85,14 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    public final boolean isGrabbed()
+    public boolean isGrabbed()
     {
         return isGrabbed;
+    }
+
+    public void setGrabbed(boolean b)
+    {
+        isGrabbed = b;
     }
 
     public void onMoved(GuiLM gui)
@@ -86,12 +110,12 @@ public class SliderLM extends WidgetLM
 
     public int getValueI()
     {
-        return (int) (value * ((isVertical ? height : width) - sliderSize));
+        return (int) (value * ((getDirection().isVertical() ? height : width) - sliderSize));
     }
 
     public void renderSlider(TextureCoords tc)
     {
-        if(isVertical)
+        if(getDirection().isVertical())
         {
             GuiLM.render(tc, getAX(), getAY() + getValueI(), width, sliderSize);
         }
@@ -101,27 +125,23 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    @Override
-    public void mousePressed(GuiLM gui, IMouseButton b)
+    public double getScrollStep()
     {
-        if(b.isLeft() && gui.isMouseOver(this))
-        {
-            isGrabbed = true;
-        }
+        return 0.1D;
     }
 
-    @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public EnumDirection getDirection()
     {
-        if(displayMin == 0 && displayMax == 0)
-        {
-            return;
-        }
-        String s = "" + (int) MathHelperLM.map(value, 0D, 1D, displayMin, displayMax);
-        if(title != null)
-        {
-            s = title + ": " + s;
-        }
-        l.add(s);
+        return EnumDirection.VERTICAL;
+    }
+
+    public double getDisplayMin()
+    {
+        return 0;
+    }
+
+    public double getDisplayMax()
+    {
+        return 0;
     }
 }

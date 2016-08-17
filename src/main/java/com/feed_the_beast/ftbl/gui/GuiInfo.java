@@ -7,16 +7,15 @@ import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
-import com.feed_the_beast.ftbl.api.info.impl.GuiInfoPageTree;
 import com.latmod.lib.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -49,20 +48,19 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     private static final TextureCoords TEX_BG_NP = TextureCoords.fromCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
     private static final TextureCoords TEX_BG_PP = TextureCoords.fromCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
 
-    public final IGuiInfoPageTree pageTree;
+    public final IGuiInfoPage pageTree;
     public final SliderLM sliderPages, sliderText;
     public final PanelLM panelPages, panelText;
     private final ButtonLM buttonBack, buttonSpecial;
     public int panelWidth;
     public int colorText, colorBackground;
     public boolean useUnicodeFont;
-    private IGuiInfoPageTree selectedPage;
+    private IGuiInfoPage selectedPage;
 
-    public GuiInfo(String id, IGuiInfoPage c)
+    public GuiInfo(IGuiInfoPage tree)
     {
         super(0, 0);
-        pageTree = new GuiInfoPageTree(id, null, c);
-        selectedPage = pageTree;
+        selectedPage = pageTree = tree;
 
         sliderPages = new SliderLM(0, 0, 12, 0, 18)
         {
@@ -71,9 +69,19 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 return mouseX < panelWidth;
             }
-        };
 
-        sliderPages.isVertical = true;
+            @Override
+            public EnumDirection getDirection()
+            {
+                return EnumDirection.VERTICAL;
+            }
+
+            @Override
+            public double getScrollStep()
+            {
+                return 20D / (double) panelPages.height;
+            }
+        };
 
         sliderText = new SliderLM(0, 0, 12, 0, 18)
         {
@@ -82,17 +90,33 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 return mouseX > panelWidth;
             }
+
+            @Override
+            public EnumDirection getDirection()
+            {
+                return EnumDirection.VERTICAL;
+            }
+
+            @Override
+            public double getScrollStep()
+            {
+                return 30D / (double) panelText.height;
+            }
         };
 
-        sliderText.isVertical = true;
-
-        buttonBack = new ButtonLM(0, 0, 14, 11, selectedPage.getParent() == null ? GuiLang.button_close.translate() : GuiLang.button_back.translate())
+        buttonBack = new ButtonLM(0, 0, 14, 11)
         {
             @Override
             public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
             {
                 GuiLM.playClickSound();
                 setSelectedPage(selectedPage.getParent());
+            }
+
+            @Override
+            public String getTitle()
+            {
+                return (selectedPage.getParent() == null) ? GuiLang.button_close.translate() : GuiLang.button_back.translate();
             }
         };
 
@@ -103,9 +127,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 height = 0;
 
-                for(IGuiInfoPageTree c : selectedPage.getPages())
+                for(IGuiInfoPage c : selectedPage.getPages())
                 {
-                    ButtonInfoPage b = c.getPage().createButton(GuiInfo.this, c);
+                    ButtonInfoPage b = c.createButton(GuiInfo.this);
 
                     if(b != null && b.height > 0)
                     {
@@ -131,7 +155,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 boolean uni = font.getUnicodeFlag();
                 font.setUnicodeFlag(useUnicodeFont);
 
-                for(IInfoTextLine line : selectedPage.getPage().getText())
+                for(IInfoTextLine line : selectedPage.getText())
                 {
                     WidgetLM w = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage);
                     add(w);
@@ -139,19 +163,18 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 }
 
                 font.setUnicodeFlag(uni);
-                sliderText.scrollStep = 30F / (float) height;
             }
         };
 
-        buttonSpecial = selectedPage.getPage().createSpecialButton(this, selectedPage);
+        buttonSpecial = selectedPage.createSpecialButton(this);
     }
 
-    public IGuiInfoPageTree getSelectedPage()
+    public IGuiInfoPage getSelectedPage()
     {
         return selectedPage;
     }
 
-    public void setSelectedPage(@Nullable IGuiInfoPageTree p)
+    public void setSelectedPage(@Nullable IGuiInfoPage p)
     {
         sliderText.value = 0F;
         panelText.posY = 10;
@@ -173,7 +196,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void addWidgets()
     {
-        selectedPage.getPage().refreshGui(this);
+        selectedPage.refreshGui(this);
 
         add(sliderPages);
         add(sliderText);
@@ -181,8 +204,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         add(panelPages);
         add(panelText);
         add(buttonSpecial);
-
-        buttonBack.title = (selectedPage.getParent() == null) ? GuiLang.button_close.translate() : GuiLang.button_back.translate();
     }
 
     @Override
@@ -215,7 +236,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        IInfoPageTheme theme = selectedPage.getPage().getTheme();
+        IInfoPageTheme theme = selectedPage.getTheme();
 
         colorText = 0xFF000000 | theme.getTextColor();
         colorBackground = 0xFF000000 | theme.getBackgroundColor();
@@ -236,7 +257,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void drawBackground()
     {
-        sliderPages.update(this);
+        sliderPages.updateSlider(this);
 
         if(sliderPages.value == 0F || panelPages.height - (height - 56F) <= 0F)
         {
@@ -248,7 +269,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             panelPages.posY = (int) (46F - (sliderPages.value * (panelPages.height - (height - 56F))));
         }
 
-        sliderText.update(this);
+        sliderText.updateSlider(this);
 
         if(sliderText.value == 0F || panelText.height - (height - 20F) <= 0F)
         {
@@ -301,7 +322,34 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             buttonSpecial.renderWidget(this);
         }
 
-        font.drawString(selectedPage.getFormattedTitle(), buttonBack.getAX() + buttonBack.width + 5, posY + 14, colorText);
+        int buttonBackAX = buttonBack.getAX();
+        String txt = selectedPage.getDisplayName().getFormattedText();
+        int txtsize = font.getStringWidth(txt);
+        int maxtxtsize = panelWidth - (buttonBackAX + buttonBack.width) + 4;
+
+        if(txtsize > maxtxtsize)
+        {
+            boolean mouseOver = isMouseOver(buttonBackAX + buttonBack.width + 5, posY + 13, maxtxtsize, 12);
+
+            if(mouseOver)
+            {
+                FTBLibClient.setGLColor(colorBackground, 255);
+                drawBlankRect(buttonBackAX + buttonBack.width + 2, posY + 12, txtsize + 6, 13);
+                GlStateManager.color(1F, 1F, 1F, 1F);
+                font.drawString(txt, buttonBackAX + buttonBack.width + 5, posY + 14, colorText);
+            }
+            else
+            {
+                GL11.glEnable(GL11.GL_SCISSOR_TEST);
+                scissor(buttonBackAX + buttonBack.width + 5, posY + 13, maxtxtsize, 12);
+                font.drawString(txt, buttonBackAX + buttonBack.width + 5, posY + 14, colorText);
+                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            }
+        }
+        else
+        {
+            font.drawString(txt, buttonBackAX + buttonBack.width + 5, posY + 14, colorText);
+        }
     }
 
     @Override
@@ -310,7 +358,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         return false;
     }
 
-    private void renderBorders(double px, double py, double w, double h)
+    private void renderBorders(int px, int py, int w, int h)
     {
         GlStateManager.color(1F, 1F, 1F, 1F);
         px += posX;
@@ -327,7 +375,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         render(TEX_BG_ML, px, py + 13, 13, h - 25);
     }
 
-    private void renderFilling(double px, double py, double w, double h)
+    private void renderFilling(int px, int py, int w, int h)
     {
         FTBLibClient.setGLColor(colorBackground, 255);
         drawBlankRect(posX + px + 4, posY + py + 4, w - 8, h - 8);

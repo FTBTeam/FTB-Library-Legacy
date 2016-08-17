@@ -62,7 +62,7 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         GlStateManager.enableTexture2D();
     }
 
-    public static void drawTexturedRect(double x, double y, double w, double h, double u0, double v0, double u1, double v1)
+    public static void drawTexturedRect(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
     {
         if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
         {
@@ -88,21 +88,21 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         }
     }
 
-    public static void drawPlayerHead(String username, double x, double y, double w, double h)
+    public static void drawPlayerHead(String username, int x, int y, int w, int h)
     {
         FTBLibClient.setTexture(FTBLibClient.getSkinTexture(username));
         drawTexturedRect(x, y, w, h, 0.125D, 0.125D, 0.25D, 0.25D);
         drawTexturedRect(x, y, w, h, 0.625D, 0.125D, 0.75D, 0.25D);
     }
 
-    public static void drawBlankRect(double x, double y, double w, double h)
+    public static void drawBlankRect(int x, int y, int w, int h)
     {
         GlStateManager.disableTexture2D();
         drawTexturedRect(x, y, w, h, 0D, 0D, 0D, 0D);
         GlStateManager.enableTexture2D();
     }
 
-    public static void render(TextureCoords tc, double x, double y, double w, double h)
+    public static void render(TextureCoords tc, int x, int y, int w, int h)
     {
         if(tc.isValid())
         {
@@ -258,7 +258,7 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
     @Override
     public boolean isInside(WidgetLM w)
     {
-        double a = w.getAY();
+        int a = w.getAY();
 
         if(a < -w.height || a > screen.getScaledHeight_double())
         {
@@ -286,11 +286,14 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         TEMP_TEXT_LIST.clear();
     }
 
+    public final boolean isMouseOver(int x, int y, int w, int h)
+    {
+        return mouseX >= x && mouseY >= y && mouseX < x + w && mouseY < y + h;
+    }
+
     public final boolean isMouseOver(WidgetLM w)
     {
-        double ax = w.getAX();
-        double ay = w.getAY();
-        return mouseX >= ax && mouseY >= ay && mouseX < ax + w.width && mouseY < ay + w.height;
+        return isMouseOver(w.getAX(), w.getAY(), w.width, w.height);
     }
 
     public GuiScreen getWrapper()
@@ -308,11 +311,11 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
     }
 
-    public final void scissor(double x, double y, double w, double h)
+    public final void scissor(int x, int y, int w, int h)
     {
         int scale = screen.getScaleFactor();
         int h1 = screen.getScaledHeight() * scale;
-        GL11.glScissor((int) (x * scale), h1 - (int) (y * scale + h * scale), (int) (w * scale), (int) (h * scale));
+        GL11.glScissor(x * scale, h1 - (y * scale + h * scale), w * scale, h * scale);
     }
 
     @Override

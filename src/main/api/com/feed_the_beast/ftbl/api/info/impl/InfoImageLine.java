@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -100,9 +99,9 @@ public class InfoImageLine extends InfoExtendedTextLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
-        return new ButtonInfoImage(gui, this, getDisplayImage(page.getPage()));
+        return new ButtonInfoImage(gui, this, getDisplayImage(page));
     }
 
     @Override

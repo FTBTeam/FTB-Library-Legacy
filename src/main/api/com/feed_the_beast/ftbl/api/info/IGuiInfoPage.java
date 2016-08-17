@@ -7,16 +7,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 08.08.2016.
  */
 public interface IGuiInfoPage extends IInfoPage
 {
-    @Nonnull
     @Override
-    Map<String, ? extends IGuiInfoPage> getPages();
+    @Nullable
+    IGuiInfoPage getParent();
+
+    @Override
+    @Nonnull
+    List<? extends IGuiInfoPage> getPages();
 
     @Nonnull
     IInfoPageTheme getTheme();
@@ -28,8 +33,8 @@ public interface IGuiInfoPage extends IInfoPage
     void refreshGui(GuiInfo gui);
 
     @SideOnly(Side.CLIENT)
-    ButtonLM createSpecialButton(GuiInfo gui, IGuiInfoPageTree page);
+    ButtonLM createSpecialButton(GuiInfo gui);
 
     @SideOnly(Side.CLIENT)
-    ButtonInfoPage createButton(GuiInfo guiInfo, IGuiInfoPageTree page);
+    ButtonInfoPage createButton(GuiInfo gui);
 }

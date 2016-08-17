@@ -2,69 +2,71 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibEventHandler;
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
-import com.feed_the_beast.ftbl.api.config.ConfigFile;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
+import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
+import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMNBTUtils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by LatvianModder on 11.08.2016.
  */
 public final class FTBLibAPI_Impl extends FTBLibAPI
 {
-    public static final FTBLibAPI_Impl INSTANCE = new FTBLibAPI_Impl();
-
+    private static FTBLibAPI_Impl INST;
     private static ForgeWorld world;
     private static PackModes packModes;
     private static SharedData sharedDataServer, sharedDataClient;
-    public final Map<UUID, ConfigContainer> tempServerConfig = new HashMap<>();
-    private final Map<String, ConfigFile> configMap = new HashMap<>();
-    private final ConfigGroup mainConfigGroup = new ConfigGroup();
+    private boolean hasServer = false;
 
-    public final ConfigContainer CONFIG_CONTAINER = new ConfigContainer()
+    public static FTBLibAPI_Impl get()
     {
-        @Override
-        public ConfigGroup createGroup()
+        if(INST == null)
         {
-            return mainConfigGroup;
+            INST = new FTBLibAPI_Impl();
         }
 
-        @Override
-        public ITextComponent getConfigTitle()
-        {
-            return new TextComponentString("Server Config"); //TODO: Lang
-        }
+        return INST;
+    }
 
-        @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
-        {
-            mainConfigGroup.loadFromGroup(json);
-            configMap.values().forEach(ConfigFile::save);
-            FTBLibAPI.INSTANCE.reload(sender, ReloadType.SERVER_ONLY, false);
-        }
-    };
+    public void setHasServer(boolean b)
+    {
+        hasServer = b;
+    }
+
+    @Override
+    public boolean hasServer()
+    {
+        return hasServer;
+    }
+
+    @Override
+    public FTBLibRegistries getRegistries()
+    {
+        return FTBLibRegistries.INSTANCE;
+    }
 
     @Override
     public PackModes getPackModes()
@@ -120,7 +122,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
-    public void reload(ICommandSender sender, ReloadType type, boolean login)
+    public void reload(ICommandSender sender, ReloadType type)
     {
         if(world == null)
         {
@@ -131,36 +133,51 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
         if(type.reload(Side.SERVER))
         {
-            reloadConfig();
+            FTBLibRegistries.INSTANCE.reloadConfig();
             reloadPackModes();
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type, login));
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type, false));
         }
 
-        if(!login)
-        {
-            if(FTBLib.hasOnlinePlayers())
-            {
-                for(EntityPlayerMP ep : FTBLib.getServer().getPlayerList().getPlayerList())
-                {
-                    new MessageReload(type, world.getPlayer(ep), login).sendTo(ep);
-                }
-            }
+        new MessageReload(type).sendTo(null);
 
-            if(type.reload(Side.SERVER))
-            {
-                FTBLibLang.reload_server.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
-            }
+        if(type.reload(Side.SERVER))
+        {
+            FTBLibLang.reload_server.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
         }
     }
 
     @Override
-    public void registerConfigFile(String id, ConfigFile file)
+    public void openGui(@Nonnull ResourceLocation guiID, @Nonnull EntityPlayer ep, @Nullable NBTTagCompound data)
     {
-        if(file != null)
+        IGuiHandler handler = FTBLibAPI.get().getRegistries().guis().get(guiID);
+
+        if(ep.worldObj.isRemote)
         {
-            configMap.put(id, file);
-            mainConfigGroup.add(id, file);
+            FTBLibMod.proxy.openClientGui(handler, ep, data, ep.openContainer.windowId);
         }
+        else
+        {
+            Container c = (handler != null) ? handler.getContainer(ep, data) : null;
+
+            EntityPlayerMP epM = (EntityPlayerMP) ep;
+            epM.getNextWindowId();
+            epM.closeContainer();
+
+            if(c != null)
+            {
+                epM.openContainer = c;
+            }
+
+            epM.openContainer.windowId = epM.currentWindowId;
+            epM.openContainer.addListener(epM);
+            new MessageOpenGui(guiID, data, epM.currentWindowId).sendTo(epM);
+        }
+    }
+
+    @Override
+    public void sendNotification(@Nullable EntityPlayerMP ep, @Nonnull INotification n)
+    {
+        new MessageNotifyPlayer(n).sendTo(ep);
     }
 
     // Other Methods //
@@ -170,31 +187,6 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
         File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "packmodes.json"));
         packModes = new PackModes(LMJsonUtils.fromJson(file));
         LMJsonUtils.toJson(file, packModes.toJsonObject());
-    }
-
-    public void reloadConfig()
-    {
-        configMap.values().forEach(ConfigFile::load);
-
-        FTBLib.dev_logger.info("Loading override configs");
-        JsonElement overridesE = LMJsonUtils.fromJson(new File(FTBLib.folderModpack, "overrides.json"));
-
-        if(overridesE.isJsonObject())
-        {
-            int result = mainConfigGroup.loadFromGroup(overridesE.getAsJsonObject());
-
-            if(result > 0)
-            {
-                FTBLib.dev_logger.info("Loaded " + result + " config overrides");
-
-                for(ConfigFile f : configMap.values())
-                {
-                    f.save();
-                }
-            }
-        }
-
-        configMap.values().forEach(ConfigFile::save);
     }
 
     public void createAndLoadWorld()
@@ -207,7 +199,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
             if(worldData.isJsonObject())
             {
-                sharedDataServer.fromJson(worldData.getAsJsonObject());
+                getSharedData(Side.SERVER).fromJson(worldData.getAsJsonObject());
             }
 
             world.playerMap.clear();

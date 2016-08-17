@@ -40,7 +40,7 @@ public class CmdPackMode extends CommandSubBase
         {
             if(args.length == 1)
             {
-                return getListOfStringsMatchingLastWord(args, FTBLibAPI.INSTANCE.getPackModes().getModes());
+                return getListOfStringsMatchingLastWord(args, FTBLibAPI.get().getPackModes().getModes());
             }
 
             return super.getTabCompletionOptions(server, sender, args, pos);
@@ -53,7 +53,7 @@ public class CmdPackMode extends CommandSubBase
 
             ITextComponent c;
 
-            int i = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).setMode(args[0]);
+            int i = FTBLibAPI_Impl.get().getSharedData(Side.SERVER).setMode(args[0]);
 
             if(i == 1)
             {
@@ -69,7 +69,7 @@ public class CmdPackMode extends CommandSubBase
             {
                 c = FTBLibLang.mode_loaded.textComponent(args[0]);
                 c.getStyle().setColor(TextFormatting.GREEN);
-                FTBLibAPI.INSTANCE.reload(ics, ReloadType.SERVER_AND_CLIENT, true);
+                FTBLibAPI.get().reload(ics, ReloadType.SERVER_AND_CLIENT);
             }
 
             ics.addChatMessage(c);
@@ -92,7 +92,7 @@ public class CmdPackMode extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.mode_current.textComponent(FTBLibAPI.INSTANCE.getSharedData(Side.SERVER).getMode().getID());
+            ITextComponent c = FTBLibLang.mode_current.textComponent(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID());
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
@@ -114,7 +114,7 @@ public class CmdPackMode extends CommandSubBase
         @Override
         public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(FTBLibAPI.INSTANCE.getPackModes().getModes()));
+            ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(FTBLibAPI.get().getPackModes().getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
@@ -124,7 +124,7 @@ public class CmdPackMode extends CommandSubBase
     {
         super("packmode");
         add(new CmdSet("set"));
-        add(new CmdGet("getMode"));
+        add(new CmdGet("get"));
         add(new CmdList("list"));
     }
 

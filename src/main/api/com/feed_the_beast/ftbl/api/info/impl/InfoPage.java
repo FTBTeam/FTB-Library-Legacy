@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.IResourceProvider;
@@ -12,6 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.latmod.lib.IIDObject;
 import com.latmod.lib.RemoveFilter;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMMapUtils;
@@ -32,9 +32,10 @@ import java.util.Map;
 
 public class InfoPage implements IGuiInfoPage // GuideFile
 {
-    private static final Comparator<Map.Entry<String, InfoPage>> COMPARATOR = (o1, o2) -> InfoPageHelper.getTitleComponent(o1.getValue(), o1.getKey()).getUnformattedText().compareToIgnoreCase(InfoPageHelper.getTitleComponent(o2.getValue(), o2.getKey()).getUnformattedText());
+    private static final Comparator<Map.Entry<String, InfoPage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
     private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().childPages.isEmpty() && InfoPageHelper.getUnformattedText(entry.getValue()).trim().isEmpty();
 
+    private final String ID;
     private final List<IInfoTextLine> text;
     private final LinkedHashMap<String, InfoPage> childPages;
     public InfoPage parent = null;
@@ -42,16 +43,41 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     public IResourceProvider resourceProvider;
     private ITextComponent title;
 
-    public InfoPage()
+    public InfoPage(String id)
     {
+        ID = id;
         text = new ArrayList<>();
         childPages = new LinkedHashMap<>();
+    }
+
+    public int hashCode()
+    {
+        return ID.hashCode();
+    }
+
+    public boolean equals(Object o)
+    {
+        return o == this || (o instanceof IIDObject && ((IIDObject) o).getID().equals(getID()));
     }
 
     public InfoPage setTitle(@Nullable ITextComponent c)
     {
         title = c;
         return this;
+    }
+
+    @Nonnull
+    @Override
+    public String getID()
+    {
+        return ID;
+    }
+
+    @Nullable
+    @Override
+    public IGuiInfoPage getParent()
+    {
+        return parent;
     }
 
     public InfoPage setParent(InfoPage c)
@@ -89,9 +115,9 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         }
     }
 
-    public void addSub(String id, InfoPage c)
+    public void addSub(InfoPage c)
     {
-        childPages.put(id, c);
+        childPages.put(c.getID(), c);
         c.setParent(this);
     }
 
@@ -100,9 +126,9 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         InfoPage c = childPages.get(id);
         if(c == null)
         {
-            c = new InfoPage();
+            c = new InfoPage(id);
             c.setParent(this);
-            childPages.put(id, c);
+            childPages.put(c.getID(), c);
         }
 
         return c;
@@ -141,15 +167,15 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
         for(Map.Entry<String, InfoPage> entry : c.childPages.entrySet())
         {
-            InfoPage p1 = new InfoPage();
+            InfoPage p1 = new InfoPage(entry.getKey());
             p1.copyFrom(entry.getValue());
-            addSub(entry.getKey(), p1);
+            addSub(p1);
         }
     }
 
     public InfoPage copy()
     {
-        InfoPage page = new InfoPage();
+        InfoPage page = new InfoPage(getID());
         page.fromJson(getSerializableElement());
         return page;
     }
@@ -235,10 +261,10 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
             for(Map.Entry<String, JsonElement> entry : o1.entrySet())
             {
-                InfoPage c = new InfoPage();
+                InfoPage c = new InfoPage(entry.getKey());
                 c.setParent(this);
                 c.fromJson(entry.getValue());
-                childPages.put(entry.getKey(), c);
+                childPages.put(c.getID(), c);
             }
         }
 
@@ -249,9 +275,9 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         }
     }
 
-    public MessageDisplayInfo displayGuide(EntityPlayerMP ep, String id)
+    public MessageDisplayInfo displayGuide(EntityPlayerMP ep)
     {
-        MessageDisplayInfo m = new MessageDisplayInfo(id, this);
+        MessageDisplayInfo m = new MessageDisplayInfo(this);
         if(ep != null && !(ep instanceof FakePlayer))
         {
             m.sendTo(ep);
@@ -275,9 +301,11 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     @Nonnull
     @Override
-    public final Map<String, ? extends IGuiInfoPage> getPages()
+    public final List<IGuiInfoPage> getPages()
     {
-        return childPages;
+        List<IGuiInfoPage> list = new ArrayList<>(childPages.size());
+        list.addAll(childPages.values());
+        return list;
     }
 
     @Nonnull
@@ -298,14 +326,14 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @SideOnly(Side.CLIENT)
-    public ButtonLM createSpecialButton(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonLM createSpecialButton(GuiInfo gui)
     {
         return null;
     }
 
     @SideOnly(Side.CLIENT)
-    public ButtonInfoPage createButton(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonInfoPage createButton(GuiInfo gui)
     {
-        return new ButtonInfoPage(gui, page, null);
+        return new ButtonInfoPage(gui, this, null);
     }
 }

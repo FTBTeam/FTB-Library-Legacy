@@ -1,8 +1,8 @@
-package com.feed_the_beast.ftbl.api.notification;
+package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,26 +22,28 @@ public class ClientNotifications
 
     public static class NotificationWidget
     {
-        public final Notification notification;
+        public final INotification notification;
         public final List<String> text;
         public final int height;
-        public double width;
+        public int width;
 
-        public NotificationWidget(Notification n)
+        public NotificationWidget(INotification n)
         {
             notification = n;
             text = new ArrayList<>();
             width = 0;
 
-            for(ITextComponent t : notification.text)
+            List<ITextComponent> list = notification.getText();
+
+            for(ITextComponent t : list)
             {
                 String s = t.getFormattedText();
                 text.add(s);
             }
 
-            if(notification.text.size() > 2)
+            if(list.size() > 2)
             {
-                height = 4 + notification.text.size() * 12;
+                height = 4 + list.size() * 12;
             }
             else
             {
@@ -49,7 +51,7 @@ public class ClientNotifications
             }
         }
 
-        public void render(Minecraft mc, double ax, double ay)
+        public void render(Minecraft mc, int ax, int ay)
         {
             GlStateManager.enableBlend();
 
@@ -58,14 +60,14 @@ public class ClientNotifications
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
-            if(notification.hasItem())
+            if(notification.getItem() != null)
             {
                 GuiLM.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
             }
 
             for(int i = 0; i < text.size(); i++)
             {
-                mc.fontRendererObj.drawString(text.get(i), (int) ax + (notification.hasItem() ? 30 : 10), (int) (ay + i * 11D + (height - text.size() * 10D) / 2D), 0xFFFFFFFF);
+                mc.fontRendererObj.drawString(text.get(i), ax + (notification.getItem() != null ? 30 : 10), (int) (ay + i * 11D + (height - text.size() * 10D) / 2D), 0xFFFFFFFF);
             }
         }
     }
@@ -77,7 +79,7 @@ public class ClientNotifications
         private long time;
         private NotificationWidget widget;
 
-        private Temp(Notification n)
+        private Temp(INotification n)
         {
             widget = new NotificationWidget(n);
             widget.width = 0;
@@ -102,7 +104,7 @@ public class ClientNotifications
 
                 widget.width += 20;
 
-                if(widget.notification.hasItem())
+                if(widget.notification.getItem() != null)
                 {
                     widget.width += 20;
                 }
@@ -135,7 +137,7 @@ public class ClientNotifications
                 GlStateManager.disableDepth();
                 GlStateManager.depthMask(false);
                 GlStateManager.disableLighting();
-                widget.render(mc, screen.getScaledWidth() - widget.width - 4, d1 * widget.height - widget.height);
+                widget.render(mc, screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
                 GlStateManager.depthMask(true);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 GlStateManager.enableLighting();
@@ -150,10 +152,10 @@ public class ClientNotifications
     {
         public static final LinkedHashMap<Integer, Perm> map = new LinkedHashMap<>();
 
-        public final Notification notification;
+        public final INotification notification;
         public final long timeAdded;
 
-        private Perm(Notification n)
+        private Perm(INotification n)
         {
             notification = n;
             timeAdded = System.currentTimeMillis();
@@ -163,14 +165,6 @@ public class ClientNotifications
         public int compareTo(@Nonnull Perm o)
         {
             return Long.compare(o.timeAdded, timeAdded);
-        }
-
-        public void onClicked(IMouseButton button)
-        {
-            if(notification.getClickAction() != null)
-            {
-                notification.getClickAction().onClicked(button);
-            }
         }
     }
 
@@ -191,27 +185,27 @@ public class ClientNotifications
         else if(!Temp.map.isEmpty())
         {
             current = Temp.map.values().iterator().next();
-            Temp.map.remove(current.widget.notification.ID);
+            Temp.map.remove(current.widget.notification.getID());
         }
     }
 
-    public static void add(Notification n)
+    public static void add(INotification n)
     {
         if(n != null)
         {
-            Temp.map.remove(n.ID);
-            Perm.map.remove(n.ID);
+            Temp.map.remove(n.getID());
+            Perm.map.remove(n.getID());
 
-            if(current != null && current.widget.notification.ID == n.ID)
+            if(current != null && current.widget.notification.getID() == n.getID())
             {
                 current = null;
             }
 
-            Temp.map.put(n.ID, new Temp(n));
+            Temp.map.put(n.getID(), new Temp(n));
 
             if(!n.isTemp())
             {
-                Perm.map.put(n.ID, new Perm(n));
+                Perm.map.put(n.getID(), new Perm(n));
             }
         }
     }

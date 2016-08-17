@@ -1,18 +1,17 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.GuiScreenRegistry;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButtonRegistry;
-import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.api_impl.SidebarButton;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
+import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.TextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -29,12 +28,12 @@ public class FTBLibActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
         {
             @Override
             public void onClicked(IMouseButton button)
             {
-                new GuiInfo("friends_gui", new InfoFriendsGUI()).openGui();
+                new GuiInfo(new InfoFriendsGUI()).openGui();
             }
 
             @Override
@@ -45,7 +44,7 @@ public class FTBLibActions
             }
 
             @Override
-            public void postRender(Minecraft mc, double ax, double ay)
+            public void postRender(Minecraft mc, int ax, int ay)
             {
                 if(!ClientNotifications.Perm.map.isEmpty())
                 {
@@ -55,12 +54,12 @@ public class FTBLibActions
                     GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
                     GuiLM.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
                     GlStateManager.color(1F, 1F, 1F, 1F);
-                    mc.fontRendererObj.drawString(n, (int) (ax + width - nw + 1), (int) (ay - 3), 0xFFFFFFFF);
+                    mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
                 }
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), new SidebarButton(990, GuiIcons.settings, null)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), new SidebarButton(990, GuiIcons.settings, null)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -70,7 +69,7 @@ public class FTBLibActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), new SidebarButton(985, GuiIcons.settings_red, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), new SidebarButton(985, GuiIcons.settings_red, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -80,7 +79,7 @@ public class FTBLibActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), new SidebarButton(200, GuiIcons.heart, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), new SidebarButton(200, GuiIcons.heart, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -90,7 +89,7 @@ public class FTBLibActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), new SidebarButton(195, GuiIcons.toggle_gamemode, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), new SidebarButton(195, GuiIcons.toggle_gamemode, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -101,7 +100,7 @@ public class FTBLibActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), new SidebarButton(190, GuiIcons.toggle_rain, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), new SidebarButton(190, GuiIcons.toggle_rain, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -111,7 +110,7 @@ public class FTBLibActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), new SidebarButton(185, GuiIcons.toggle_day, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), new SidebarButton(185, GuiIcons.toggle_day, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -121,7 +120,7 @@ public class FTBLibActions
             }
         });
 
-        SidebarButtonRegistry.add(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), new SidebarButton(180, GuiIcons.toggle_night, true)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), new SidebarButton(180, GuiIcons.toggle_night, EnumEnabled.ENABLED)
         {
             @Override
             @SideOnly(Side.CLIENT)
@@ -130,8 +129,5 @@ public class FTBLibActions
                 FTBLibClient.execClientCommand("/time set 18000", false);
             }
         });
-
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), () -> new GuiInfo("friends_gui", new InfoFriendsGUI()).getWrapper());
-        GuiScreenRegistry.register(new ResourceLocation(FTBLibFinals.MOD_ID, "client_config"), () -> new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).getWrapper());
     }
 }

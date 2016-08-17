@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
@@ -14,7 +13,6 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.net.MessageReload;
-import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.latmod.lib.util.LMStringUtils;
@@ -49,7 +47,6 @@ import java.util.UUID;
 public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
 {
     public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
-    public final ConfigEntryEnum<EnumNotificationDisplay> notifications;
     final CapabilityDispatcher capabilities;
     private String teamID;
     private GameProfile gameProfile;
@@ -60,7 +57,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     {
         setProfile(p);
         lastArmor = new HashMap<>();
-        notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
 
         AttachPlayerCapabilitiesEvent event = new AttachPlayerCapabilitiesEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
@@ -85,7 +81,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     @Nullable
     public final ForgeTeam getTeam()
     {
-        return teamID != null ? FTBLibAPI_Impl.INSTANCE.getWorld().getTeam(teamID) : null;
+        return teamID != null ? FTBLibAPI_Impl.get().getWorld().getTeam(teamID) : null;
     }
 
     @Override
@@ -244,7 +240,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     @Override
     public final ForgeWorld getWorld()
     {
-        return FTBLibAPI_Impl.INSTANCE.getWorld();
+        return FTBLibAPI_Impl.get().getWorld();
     }
 
     public boolean isFake()
@@ -381,7 +377,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         updateArmor();
         FTBLibStats.updateLastSeen(stats());
         EntityPlayerMP ep = getPlayer();
-        new MessageReload(ReloadType.CLIENT_ONLY, this, true).sendTo(ep);
+        new MessageReload(ReloadType.LOGIN).sendTo(ep);
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
     }
 
@@ -419,7 +415,5 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     public void getSettings(ConfigGroup group)
     {
         MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, group));
-
-        group.add("notifications", notifications);
     }
 }

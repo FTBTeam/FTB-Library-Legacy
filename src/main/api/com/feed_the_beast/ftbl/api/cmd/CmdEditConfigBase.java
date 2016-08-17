@@ -87,7 +87,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             ConfigContainer cc = getConfigContainer(sender);
-            FTBLibAPI_Impl.INSTANCE.tempServerConfig.put(ep.getGameProfile().getId(), cc);
+            FTBLibAPI_Impl.get().getRegistries().tempServerConfig.put(ep.getGameProfile().getId(), cc);
             new MessageEditConfig(null, cc).sendTo(ep);
             return;
         }

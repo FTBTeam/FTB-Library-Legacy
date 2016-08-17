@@ -21,19 +21,19 @@ public class GuiLoading extends GuiLM
         super(128, 128);
     }
 
-    public static void renderLoading(double x, double y, double w, double h)
+    public static void renderLoading(int x, int y, int w, int h)
     {
         FTBLibClient.setTexture(TEXTURE);
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + w / 2D, y + h / 2D, 0D);
         GlStateManager.pushMatrix();
         GlStateManager.rotate(((System.currentTimeMillis() % 7200L) * 0.3F) % 360F, 0F, 0F, 1F);
-        drawTexturedRect(-w / 2D, -h / 2D, w, h, 0D, 0D, 1D, 1D);
+        drawTexturedRect(-w / 2, -h / 2, w, h, 0D, 0D, 1D, 1D);
         GlStateManager.popMatrix();
         GlStateManager.pushMatrix();
         GlStateManager.rotate(-((System.currentTimeMillis() % 7200L) * 0.13F) % 360F, 0F, 0F, 1F);
         GlStateManager.scale(0.5D, 0.5D, 1D);
-        drawTexturedRect(-w / 2D, -h / 2D, w, h, 0D, 0D, 1D, 1D);
+        drawTexturedRect(-w / 2, -h / 2, w, h, 0D, 0D, 1D, 1D);
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
     }

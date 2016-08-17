@@ -12,14 +12,12 @@ public class ReloadEvent extends Event
     private final Side side;
     private final ICommandSender sender;
     private final ReloadType type;
-    private final boolean login;
 
-    public ReloadEvent(@Nonnull Side s, @Nonnull ICommandSender ics, @Nonnull ReloadType t, boolean b)
+    public ReloadEvent(@Nonnull Side s, @Nonnull ICommandSender ics, @Nonnull ReloadType t)
     {
         side = s;
         sender = ics;
         type = t;
-        login = b;
     }
 
     @Nonnull
@@ -42,6 +40,6 @@ public class ReloadEvent extends Event
 
     public boolean isAtLogin()
     {
-        return login;
+        return getReloadType() == ReloadType.LOGIN;
     }
 }

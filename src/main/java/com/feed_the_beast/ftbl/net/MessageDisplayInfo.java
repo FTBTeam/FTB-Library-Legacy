@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
@@ -20,9 +21,9 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     {
     }
 
-    public MessageDisplayInfo(String id, InfoPage page)
+    public MessageDisplayInfo(IInfoPage page)
     {
-        infoID = id;
+        infoID = page.getID();
         json = page.getSerializableElement();
     }
 
@@ -50,8 +51,8 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageDisplayInfo m, Minecraft mc)
     {
-        InfoPage page = new InfoPage();
+        InfoPage page = new InfoPage(m.infoID);
         page.fromJson(m.json);
-        new GuiInfo(m.infoID, page).openGui();
+        new GuiInfo(page).openGui();
     }
 }

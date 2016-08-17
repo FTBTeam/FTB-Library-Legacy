@@ -35,7 +35,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("TX Send: " + group);
+            FTBLib.DEV_LOGGER.info("TX Send: " + group);
         }
     }
 
@@ -70,7 +70,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         if(FTBLib.DEV_ENV)
         {
-            FTBLib.dev_logger.info("RX Send: " + m.group);
+            FTBLib.DEV_LOGGER.info("RX Send: " + m.group);
         }
 
         new GuiEditConfig(m.extraNBT, new ConfigContainer()

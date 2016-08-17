@@ -5,12 +5,14 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.io.ByteIOStream;
+import net.minecraft.nbt.NBTTagByte;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
-public class ConfigEntryBool extends ConfigEntry implements IClickable
+public class ConfigEntryBool extends ConfigEntry implements IClickable, INBTSerializable<NBTTagByte>
 {
     public boolean defValue;
     private boolean value;
@@ -121,5 +123,17 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable
     public List<String> getVariants()
     {
         return Arrays.asList("true", "false");
+    }
+
+    @Override
+    public NBTTagByte serializeNBT()
+    {
+        return new NBTTagByte(getAsBoolean() ? (byte) 1 : 0);
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagByte nbt)
+    {
+        set(nbt.getByte() != 0);
     }
 }

@@ -3,12 +3,12 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.api.notification.ClickActionTypeRegistry;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -50,7 +50,9 @@ public class FTBLibMod
             logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
         }
 
-        FTBLibAPI.INSTANCE = FTBLibAPI_Impl.INSTANCE;
+        FTBLibAPI.setAPI(FTBLibAPI_Impl.get());
+        FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(FTBLibFinals.MOD_ID, "guis"), FTBLibAPI.get().getRegistries().guis());
+        FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), FTBLibAPI.get().getRegistries().notifications());
 
         FTBLib.init(e.getModConfigurationDirectory());
         FTBLibNetHandler.init();
@@ -59,7 +61,7 @@ public class FTBLibMod
 
         MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
         FTBLibCapabilities.init();
-        ClickActionTypeRegistry.init();
+        FTBLibNotifications.init();
 
         proxy.preInit();
     }
@@ -67,8 +69,8 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent e)
     {
-        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
-        FTBLibAPI_Impl.INSTANCE.reloadConfig();
+        FTBLibAPI_Impl.get().reloadPackModes();
+        FTBLibAPI_Impl.get().getRegistries().reloadConfig();
         proxy.postInit();
     }
 
@@ -81,28 +83,33 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarted(FMLServerAboutToStartEvent e)
     {
-        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
-        FTBLibAPI_Impl.INSTANCE.reloadConfig();
+        FTBLibAPI_Impl.get().reloadPackModes();
+        FTBLibAPI_Impl.get().getRegistries().reloadConfig();
         FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
-        FTBLibAPI_Impl.INSTANCE.createAndLoadWorld();
+        FTBLibAPI_Impl.get().createAndLoadWorld();
         FTBLib.registerServerTickable(e.getServer(), FTBLibEventHandler.instance);
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent e)
     {
-        FTBLibAPI.INSTANCE.reload(FTBLib.getServer(), ReloadType.SERVER_ONLY, false);
+        FTBLibAPI.get().reload(FTBLib.getServer(), ReloadType.SERVER_ONLY);
     }
 
     @Mod.EventHandler
     public void onServerShutDown(FMLServerStoppedEvent e)
     {
-        FTBLibAPI_Impl.INSTANCE.closeWorld();
+        FTBLibAPI_Impl.get().closeWorld();
     }
 
     @NetworkCheckHandler
     public boolean checkNetwork(Map<String, String> m, Side side)
     {
+        if(side.isServer())
+        {
+            FTBLibAPI_Impl.get().setHasServer(m.containsKey(FTBLibFinals.MOD_ID));
+        }
+
         String s = m.get(FTBLibFinals.MOD_ID);
         return s == null || s.equals(FTBLibFinals.MOD_VERSION);
     }

@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IClickable;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
+import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
@@ -61,7 +62,7 @@ public class GuiEditConfig extends GuiLM
         @Override
         public boolean shouldRender(GuiLM gui)
         {
-            double ay = getAY();
+            int ay = getAY();
             return ay > -height && ay < screen.getScaledHeight();
         }
 
@@ -70,8 +71,8 @@ public class GuiEditConfig extends GuiLM
         {
             boolean mouseOver = mouseY >= 20 && gui.isMouseOver(this);
 
-            double ax = getAX();
-            double ay = getAY();
+            int ax = getAX();
+            int ay = getAY();
 
             if(mouseOver)
             {
@@ -309,10 +310,19 @@ public class GuiEditConfig extends GuiLM
             {
                 return true;
             }
-        };
 
-        scroll.isVertical = true;
-        scroll.displayMin = scroll.displayMax = 0;
+            @Override
+            public EnumDirection getDirection()
+            {
+                return EnumDirection.VERTICAL;
+            }
+
+            @Override
+            public double getScrollStep()
+            {
+                return 40D / (configPanel.height + 20D);
+            }
+        };
     }
 
     @Override
@@ -384,8 +394,7 @@ public class GuiEditConfig extends GuiLM
 
         if(configPanel.height + 20D > height)
         {
-            scroll.scrollStep = 40D / (configPanel.height + 20D);
-            scroll.update(this);
+            scroll.updateSlider(this);
             configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20D) + 20D);
         }
         else
@@ -406,9 +415,8 @@ public class GuiEditConfig extends GuiLM
 
         FTBLibClient.setGLColor(0x99333333);
         drawBlankRect(scroll.posX, scroll.posY, scroll.width, scroll.height);
-        double sy = scroll.posY + scroll.value * (scroll.height - scroll.sliderSize);
         FTBLibClient.setGLColor(0x99666666);
-        drawBlankRect(scroll.posX, sy, scroll.width, scroll.sliderSize);
+        drawBlankRect(scroll.posX, scroll.posY + (int) (scroll.value * (scroll.height - scroll.sliderSize)), scroll.width, scroll.sliderSize);
 
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
@@ -418,6 +426,7 @@ public class GuiEditConfig extends GuiLM
         buttonCancel.render(GuiIcons.cancel);
     }
 
+    @Override
     public String getTitle()
     {
         return title;

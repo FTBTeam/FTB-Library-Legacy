@@ -5,13 +5,15 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.io.ByteIOStream;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public final class ConfigEntryStringEnum extends ConfigEntry implements IClickable
+public final class ConfigEntryStringEnum extends ConfigEntry implements IClickable, INBTSerializable<NBTTagString>
 {
     private final List<String> array;
     private int index;
@@ -170,5 +172,17 @@ public final class ConfigEntryStringEnum extends ConfigEntry implements IClickab
         List<String> list = new ArrayList<>(array.size());
         list.addAll(array);
         return list;
+    }
+
+    @Override
+    public NBTTagString serializeNBT()
+    {
+        return new NBTTagString(getAsString());
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagString nbt)
+    {
+        set(nbt.getString());
     }
 }

@@ -1,14 +1,21 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
+import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.latmod.lib.util.LMUtils;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +25,14 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 {
-    public ClickAction clickAction;
+    public ClickEvent clickEvent;
     public List<String> hover;
 
     public ButtonInfoExtendedTextLine(GuiInfo g, @Nonnull InfoExtendedTextLine l)
     {
         super(g, l.getText() == null ? null : l.getText().getFormattedText());
 
-        clickAction = l.getClickAction();
+        clickEvent = l.getClickEvent();
 
         List<ITextComponent> h = l.getHover();
 
@@ -61,10 +68,77 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     @Override
     public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
     {
-        if(clickAction != null)
+        if(clickEvent != null)
         {
             GuiLM.playClickSound();
-            clickAction.onClicked(button);
+
+            switch(this.clickEvent.getAction())
+            {
+                case OPEN_URL:
+                {
+                    try
+                    {
+                        final URI uri = new URI(clickEvent.getValue());
+                        String s = uri.getScheme();
+
+                        if(s == null)
+                        {
+                            throw new URISyntaxException(clickEvent.getValue(), "Missing protocol");
+                        }
+                        if(!s.toLowerCase().contains("http") && !s.toLowerCase().contains("https"))
+                        {
+                            throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
+                        }
+                        if(gui.mc.gameSettings.chatLinksPrompt)
+                        {
+                            final GuiScreen currentScreen = gui.mc.currentScreen;
+
+                            gui.mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+                            {
+                                if(result)
+                                {
+                                    try
+                                    {
+                                        LMUtils.openURI(uri);
+                                    }
+                                    catch(Exception ex)
+                                    {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                                gui.mc.displayGuiScreen(currentScreen);
+                            }, clickEvent.getValue(), 0, false));
+                        }
+                        else
+                        {
+                            LMUtils.openURI(uri);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+                case OPEN_FILE:
+                {
+                    try
+                    {
+                        LMUtils.openURI((new File(clickEvent.getValue())).toURI());
+                    }
+                    catch(Exception ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                }
+                case SUGGEST_COMMAND:
+                {
+                    //FIXME
+                }
+                case RUN_COMMAND:
+                {
+                    FTBLibClient.execClientCommand(clickEvent.getValue(), true);
+                }
+            }
         }
     }
 

@@ -49,7 +49,7 @@ public class CmdAddFakePlayer extends CommandLM
             throw FTBLibLang.raw.commandError("Invalid UUID!");
         }
 
-        ForgeWorld world = FTBLibAPI_Impl.INSTANCE.getWorld();
+        ForgeWorld world = FTBLibAPI_Impl.get().getWorld();
 
         if(world.getPlayer(id) != null || world.getPlayer(args[1]) != null)
         {

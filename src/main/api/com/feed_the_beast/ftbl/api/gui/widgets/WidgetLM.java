@@ -14,8 +14,7 @@ import java.util.List;
 public class WidgetLM
 {
     public int posX, posY, width, height;
-    public PanelLM parentPanel = null;
-    public String title = null;
+    private WidgetLM parentWidget;
 
     public WidgetLM(int x, int y, int w, int h)
     {
@@ -23,6 +22,16 @@ public class WidgetLM
         posY = y;
         width = w;
         height = h;
+    }
+
+    public WidgetLM getParentWidget()
+    {
+        return parentWidget;
+    }
+
+    public void setParentWidget(WidgetLM p)
+    {
+        parentWidget = p;
     }
 
     public boolean isEnabled()
@@ -35,14 +44,30 @@ public class WidgetLM
         return gui.isInside(this);
     }
 
+    public boolean isInside(WidgetLM w)
+    {
+        double a0 = getAY();
+        double a1 = w.getAY();
+
+        if(a1 + w.height >= a0 || a1 <= a0 + height)
+        {
+            return true;
+        }
+
+        a0 = getAX();
+        a1 = w.getAX();
+
+        return (a1 + w.width < a0 && a1 > a0 + width);
+    }
+
     public int getAX()
     {
-        return (parentPanel == null) ? posX : (parentPanel.getAX() + posX);
+        return (parentWidget == null) ? posX : (parentWidget.getAX() + posX);
     }
 
     public int getAY()
     {
-        return (parentPanel == null) ? posY : (parentPanel.getAY() + posY);
+        return (parentWidget == null) ? posY : (parentWidget.getAY() + posY);
     }
 
     public final void render(TextureCoords icon)
@@ -61,13 +86,20 @@ public class WidgetLM
 
     public void addMouseOverText(GuiLM gui, List<String> l)
     {
-        if(title != null)
+        String t = getTitle();
+
+        if(t != null)
         {
-            l.add(title);
+            l.add(t);
         }
     }
 
     public void renderWidget(GuiLM gui)
     {
+    }
+
+    public String getTitle()
+    {
+        return null;
     }
 }

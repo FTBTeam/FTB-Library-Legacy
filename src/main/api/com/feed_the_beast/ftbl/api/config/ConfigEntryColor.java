@@ -4,10 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.io.ByteIOStream;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-public class ConfigEntryColor extends ConfigEntry
+public class ConfigEntryColor extends ConfigEntry implements INBTSerializable<NBTTagInt>
 {
     public final LMColor.RGB value;
     public final LMColor.RGB defValue;
@@ -94,5 +96,17 @@ public class ConfigEntryColor extends ConfigEntry
         {
             defValue.setRGBA(io.readInt());
         }
+    }
+
+    @Override
+    public NBTTagInt serializeNBT()
+    {
+        return new NBTTagInt(value.color());
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagInt nbt)
+    {
+        value.setRGBA(nbt.getInt());
     }
 }

@@ -37,7 +37,7 @@ public class CmdJoin extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibAPI_Impl.INSTANCE.getWorld().teams.keySet());
+            return getListOfStringsMatchingLastWord(args, FTBLibAPI_Impl.get().getWorld().teams.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);

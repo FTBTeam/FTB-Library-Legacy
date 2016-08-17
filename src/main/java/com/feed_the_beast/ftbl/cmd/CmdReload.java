@@ -19,6 +19,6 @@ public class CmdReload extends CommandLM
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
     {
-        FTBLibAPI.INSTANCE.reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT, false);
+        FTBLibAPI.get().reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT);
     }
 }

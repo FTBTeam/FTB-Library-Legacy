@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.guibuttons.SidebarButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
+import com.feed_the_beast.ftbl.api_impl.SidebarButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -31,8 +31,8 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
             super(g, null);
             height = 18;
             ITextComponent c = action.getDisplayNameOverride();
-            title = ((c == null) ? new TextComponentTranslation("sidebar_button." + actionID) : c).getFormattedText();
-            width = (action.icon == null ? 8 : 24) + g.font.getStringWidth(title);
+            setTitle(((c == null) ? new TextComponentTranslation("sidebar_button." + actionID) : c).getFormattedText());
+            width = (action.getIcon() == null ? 8 : 24) + g.font.getStringWidth(getTitle());
         }
 
         @Override
@@ -50,8 +50,8 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
         @Override
         public void renderWidget(@Nonnull GuiLM gui)
         {
-            double ay = getAY();
-            double ax = getAX();
+            int ay = getAY();
+            int ax = getAX();
 
             GlStateManager.enableBlend();
 
@@ -66,7 +66,7 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
             action.render(gui.mc, ax + 1, ay + 1);
             action.postRender(gui.mc, ax + 1, ay + 1);
 
-            gui.font.drawString(title, (int) ax + (action.icon == null ? 4 : 20), (int) ay + 5, ((GuiInfo) gui).colorText);
+            gui.font.drawString(getTitle(), ax + (action.getIcon() == null ? 4 : 20), ay + 5, ((GuiInfo) gui).colorText);
         }
     }
 
@@ -82,7 +82,7 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoPlayerAction(gui);
     }

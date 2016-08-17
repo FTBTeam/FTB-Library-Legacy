@@ -28,7 +28,7 @@ public abstract class PanelLM extends WidgetLM
     {
         if(w != null)
         {
-            w.parentPanel = this;
+            w.setParentWidget(this);
             widgets.add(w);
 
             if(w instanceof PanelLM)
@@ -58,11 +58,6 @@ public abstract class PanelLM extends WidgetLM
     @Override
     public void addMouseOverText(GuiLM gui, List<String> l)
     {
-        if(title != null)
-        {
-            l.add(title);
-        }
-
         for(WidgetLM w : widgets)
         {
             if(w.isEnabled() && gui.isMouseOver(w))
@@ -108,21 +103,5 @@ public abstract class PanelLM extends WidgetLM
                 widget.renderWidget(gui);
             }
         }
-    }
-
-    public boolean isInside(WidgetLM w)
-    {
-        double a0 = getAY();
-        double a1 = w.getAY();
-
-        if(a1 + w.height >= a0 || a1 <= a0 + height)
-        {
-            return true;
-        }
-
-        a0 = getAX();
-        a1 = w.getAX();
-
-        return (a1 + w.width < a0 && a1 > a0 + width);
     }
 }

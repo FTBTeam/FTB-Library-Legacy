@@ -45,7 +45,7 @@ public abstract class CommandLM extends CommandBase
 
     public static ForgePlayer getForgePlayer(Object o) throws CommandException
     {
-        ForgePlayer p = FTBLibAPI_Impl.INSTANCE.getWorld().getPlayer(o);
+        ForgePlayer p = FTBLibAPI_Impl.get().getWorld().getPlayer(o);
 
         if(p == null || p.isFake())
         {

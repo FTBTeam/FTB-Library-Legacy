@@ -41,10 +41,10 @@ public class CmdListTeams extends CommandLM
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        InfoPage page = new InfoPage().setTitle(new TextComponentString("Teams")); //TODO: Lang
+        InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.theme = InfoPageTheme.DARK_NON_UNICODE;
 
-        for(IForgeTeam team : FTBLibAPI.INSTANCE.getWorld().getTeams())
+        for(IForgeTeam team : FTBLibAPI.get().getWorld().getTeams())
         {
             InfoPage page1 = page.getSub(team.getID());
 
@@ -88,6 +88,6 @@ public class CmdListTeams extends CommandLM
             }
         }
 
-        page.displayGuide(ep, "teams");
+        page.displayGuide(ep);
     }
 }

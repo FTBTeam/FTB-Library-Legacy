@@ -6,10 +6,12 @@ import com.latmod.lib.annotations.INumberBoundsContainer;
 import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
+import net.minecraft.nbt.NBTTagDouble;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsContainer
+public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsContainer, INBTSerializable<NBTTagDouble>
 {
     public double defValue;
     private double value;
@@ -162,5 +164,17 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
             double max = io.readDouble();
             setBounds(min, max);
         }
+    }
+
+    @Override
+    public NBTTagDouble serializeNBT()
+    {
+        return new NBTTagDouble(getAsDouble());
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagDouble nbt)
+    {
+        set(nbt.getDouble());
     }
 }

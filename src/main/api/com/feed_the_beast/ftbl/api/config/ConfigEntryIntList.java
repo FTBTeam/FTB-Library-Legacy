@@ -7,12 +7,14 @@ import com.latmod.lib.io.ByteCount;
 import com.latmod.lib.io.ByteIOStream;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigEntryIntList extends ConfigEntry
+public class ConfigEntryIntList extends ConfigEntry implements INBTSerializable<NBTTagIntArray>
 {
     public final TIntList defValue;
     private TIntList value;
@@ -142,5 +144,17 @@ public class ConfigEntryIntList extends ConfigEntry
             defValue.clear();
             defValue.add(io.readIntArray(ByteCount.INT));
         }
+    }
+
+    @Override
+    public NBTTagIntArray serializeNBT()
+    {
+        return new NBTTagIntArray(getAsIntList().toArray());
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagIntArray nbt)
+    {
+        set(TIntArrayList.wrap(nbt.getIntArray()));
     }
 }

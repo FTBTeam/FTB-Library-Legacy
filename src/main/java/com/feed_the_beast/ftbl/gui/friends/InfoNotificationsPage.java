@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.latmod.lib.util.LMMapUtils;
 import net.minecraft.util.text.ITextComponent;
@@ -24,6 +23,7 @@ public class InfoNotificationsPage extends InfoPage
 {
     public InfoNotificationsPage()
     {
+        super("notifications");
         setTitle(new TextComponentTranslation("client_config.ftbl.notifications"));
     }
 
@@ -57,8 +57,8 @@ public class InfoNotificationsPage extends InfoPage
     }
 
     @Override
-    public ButtonInfoPage createButton(GuiInfo gui, IGuiInfoPageTree p)
+    public ButtonInfoPage createButton(GuiInfo gui)
     {
-        return new ButtonInfoPage(gui, p, GuiIcons.chat);
+        return new ButtonInfoPage(gui, this, GuiIcons.chat);
     }
 }

@@ -16,6 +16,6 @@ public class CmdEditConfig extends CmdEditConfigBase
     @Override
     public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
-        return FTBLibAPI_Impl.INSTANCE.CONFIG_CONTAINER;
+        return FTBLibAPI_Impl.get().getRegistries().CONFIG_CONTAINER;
     }
 }

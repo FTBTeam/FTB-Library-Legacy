@@ -10,6 +10,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class InfoFriendsGUIPage extends InfoPage
 {
+    public InfoFriendsGUIPage()
+    {
+        super("friends_gui_page");
+    }
     /*
     private class Button extends ButtonInfoPage
     {

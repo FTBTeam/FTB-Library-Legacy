@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
-import com.feed_the_beast.ftbl.api.notification.ClientNotifications;
+import com.feed_the_beast.ftbl.client.ClientNotifications;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,12 +15,13 @@ public class InfoFriendsGUI extends InfoPage
 {
     public InfoFriendsGUI()
     {
+        super("friends_gui");
         setTitle(new TextComponentString("FriendsGUI"));
         theme = InfoPageTheme.DARK_NON_UNICODE;
 
         if(!ClientNotifications.Perm.map.isEmpty())
         {
-            addSub("notifications", new InfoNotificationsPage());
+            addSub(new InfoNotificationsPage());
         }
         
         /*

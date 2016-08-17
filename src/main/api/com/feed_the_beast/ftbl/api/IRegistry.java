@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,9 +19,6 @@ public interface IRegistry<K, V>
 
     @Nonnull
     Set<K> getKeys();
-
-    @Nonnull
-    List<String> getKeyStringList();
 
     @Nonnull
     Collection<V> getValues();

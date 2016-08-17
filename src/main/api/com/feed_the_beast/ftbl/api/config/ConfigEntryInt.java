@@ -5,10 +5,12 @@ import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
 import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.math.MathHelperLM;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContainer
+public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContainer, INBTSerializable<NBTTagInt>
 {
     public int defValue;
     private int value;
@@ -165,5 +167,17 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
             double max = io.readDouble();
             setBounds(min, max);
         }
+    }
+
+    @Override
+    public NBTTagInt serializeNBT()
+    {
+        return new NBTTagInt(getAsInt());
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagInt nbt)
+    {
+        set(nbt.getInt());
     }
 }

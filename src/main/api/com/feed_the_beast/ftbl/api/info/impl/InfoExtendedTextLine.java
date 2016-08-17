@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.api.notification.ClickAction;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
@@ -27,7 +27,7 @@ import java.util.List;
 public class InfoExtendedTextLine implements IInfoTextLine
 {
     private ITextComponent text;
-    private ClickAction clickAction;
+    private ClickEvent clickEvent;
     private List<ITextComponent> hover;
 
     public InfoExtendedTextLine(ITextComponent cc)
@@ -36,12 +36,7 @@ public class InfoExtendedTextLine implements IInfoTextLine
 
         if(text != null)
         {
-            ClickEvent clickEvent = text.getStyle().getClickEvent();
-
-            if(clickEvent != null)
-            {
-                clickAction = ClickAction.from(clickEvent);
-            }
+            clickEvent = text.getStyle().getClickEvent();
 
             HoverEvent hoverEvent = text.getStyle().getHoverEvent();
             if(hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_TEXT)
@@ -67,7 +62,7 @@ public class InfoExtendedTextLine implements IInfoTextLine
     @Override
     @Nonnull
     @SideOnly(Side.CLIENT)
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoExtendedTextLine(gui, this);
     }
@@ -90,15 +85,9 @@ public class InfoExtendedTextLine implements IInfoTextLine
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public ClickAction getClickAction()
+    public ClickEvent getClickEvent()
     {
-        return clickAction;
-    }
-
-    public void setClickAction(ClickAction a)
-    {
-        clickAction = a;
+        return clickEvent;
     }
 
     @Override
@@ -108,14 +97,19 @@ public class InfoExtendedTextLine implements IInfoTextLine
 
         text = o.has("text") ? LMJsonUtils.deserializeTextComponent(o.get("text")) : null;
 
+        clickEvent = null;
         if(o.has("click"))
         {
-            clickAction = new ClickAction();
-            clickAction.fromJson(o.get("click"));
-        }
-        else
-        {
-            clickAction = null;
+            JsonObject o1 = o.get("click").getAsJsonObject();
+            JsonPrimitive j = o1.getAsJsonPrimitive("action");
+            ClickEvent.Action action = j == null ? null : ClickEvent.Action.getValueByCanonicalName(j.getAsString());
+            j = o1.getAsJsonPrimitive("value");
+            String s = j == null ? null : j.getAsString();
+
+            if(action != null && s != null)
+            {
+                clickEvent = new ClickEvent(action, s);
+            }
         }
 
         if(o.has("hover"))
@@ -157,9 +151,12 @@ public class InfoExtendedTextLine implements IInfoTextLine
             o.add("text", LMJsonUtils.serializeTextComponent(text));
         }
 
-        if(clickAction != null)
+        if(clickEvent != null)
         {
-            o.add("click", clickAction.getSerializableElement());
+            JsonObject o1 = new JsonObject();
+            o1.addProperty("action", clickEvent.getAction().getCanonicalName());
+            o1.addProperty("value", clickEvent.getValue());
+            o.add("click", o1);
         }
 
         if(hover != null && !hover.isEmpty())

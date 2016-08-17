@@ -3,10 +3,12 @@ package com.feed_the_beast.ftbl.api.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.io.ByteIOStream;
+import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-public class ConfigEntryString extends ConfigEntry
+public class ConfigEntryString extends ConfigEntry implements INBTSerializable<NBTTagString>
 {
     public String defValue;
     private String value;
@@ -107,5 +109,17 @@ public class ConfigEntryString extends ConfigEntry
         {
             defValue = io.readUTF();
         }
+    }
+
+    @Override
+    public NBTTagString serializeNBT()
+    {
+        return new NBTTagString(getAsString());
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagString nbt)
+    {
+        set(nbt.getString());
     }
 }

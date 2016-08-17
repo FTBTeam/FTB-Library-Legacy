@@ -6,9 +6,6 @@ import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.json.LMJsonUtils;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
@@ -20,18 +17,6 @@ import java.util.List;
  */
 public class InfoPageHelper
 {
-    public static ITextComponent getTitleComponent(IInfoPage page, String pageID)
-    {
-        ITextComponent c = page.getName();
-
-        if(c == null)
-        {
-            return new TextComponentString(pageID);
-        }
-
-        return c.createCopy();
-    }
-
     @Nonnull
     public static String getUnformattedText(@Nonnull IInfoPage page)
     {
@@ -97,14 +82,6 @@ public class InfoPageHelper
 
             l.fromJson(o);
             return l;
-        }
-    }
-
-    public static void loadText(IGuiInfoPage page, List<String> list) throws Exception
-    {
-        for(JsonElement e : LMJsonUtils.deserializeText(list))
-        {
-            page.getText().add(InfoPageHelper.createLine(page, e));
         }
     }
 }

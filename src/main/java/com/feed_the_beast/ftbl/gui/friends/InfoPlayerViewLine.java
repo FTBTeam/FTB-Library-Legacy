@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.gui.friends;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPageTree;
+import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
@@ -145,7 +145,7 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
 
     @Override
     @Nonnull
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPageTree page)
+    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoPlayerView(gui);
     }
