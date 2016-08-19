@@ -135,7 +135,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
         {
             FTBLibRegistries.INSTANCE.reloadConfig();
             reloadPackModes();
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type, false));
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
         }
 
         new MessageReload(type).sendTo(null);
