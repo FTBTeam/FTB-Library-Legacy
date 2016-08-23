@@ -28,7 +28,7 @@ public class FTBLibActions
     @SideOnly(Side.CLIENT)
     public static void init()
     {
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "friends_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/friendsbutton.png")), null)
+        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "teams_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -40,15 +40,15 @@ public class FTBLibActions
             @Nullable
             public ITextComponent getDisplayNameOverride()
             {
-                return new TextComponentString("FriendsGUI");
+                return new TextComponentString("TeamsGUI");
             }
 
             @Override
             public void postRender(Minecraft mc, int ax, int ay)
             {
-                if(!ClientNotifications.Perm.map.isEmpty())
+                if(!ClientNotifications.Perm.MAP.isEmpty())
                 {
-                    String n = String.valueOf(ClientNotifications.Perm.map.size());
+                    String n = String.valueOf(ClientNotifications.Perm.MAP.size());
                     int nw = mc.fontRendererObj.getStringWidth(n);
                     int width = 16;
                     GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibEventHandler;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -143,6 +144,11 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
         if(type.reload(Side.SERVER))
         {
             FTBLibLang.reload_server.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+        }
+
+        if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT && sender instanceof EntityPlayerMP)
+        {
+            sendNotification((EntityPlayerMP) sender, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
-import com.feed_the_beast.ftbl.api.LangKey;
+import com.latmod.lib.LangKey;
 
 public class GuiLang
 {

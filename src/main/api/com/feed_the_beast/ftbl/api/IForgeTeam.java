@@ -40,5 +40,5 @@ public interface IForgeTeam extends ICapabilitySerializable<NBTTagCompound>, IFl
 
     boolean isInvited(@Nullable IForgePlayer player);
 
-    boolean canInteract(IForgePlayer player, EnumTeamPrivacyLevel level);
+    boolean canInteract(@Nullable IForgePlayer player, EnumTeamPrivacyLevel level);
 }

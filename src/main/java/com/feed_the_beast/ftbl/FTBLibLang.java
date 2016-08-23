@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.LangKey;
+import com.latmod.lib.LangKey;
 
 /**
  * Created by LatvianModder on 13.04.2016.
@@ -14,9 +14,10 @@ public class FTBLibLang
     public static final LangKey mode_list = get("mode.list");
     public static final LangKey reload_server = get("reload_server");
     public static final LangKey reload_client = get("reload_client");
-    public static final LangKey reload_client_config = get("reload_client_config");
-    //@Deprecated
+    public static final LangKey reload_client_config_1 = get("reload_client_config_1");
+    public static final LangKey reload_client_config_2 = get("reload_client_config_2");
 
+    //@Deprecated
     public static final LangKey raw = get("raw");
     public static final LangKey missing_args = get("missing_args");
     public static final LangKey missing_args_num = get("missing_args_num");

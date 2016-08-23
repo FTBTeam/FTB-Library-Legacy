@@ -12,11 +12,13 @@ import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.EnumEnabled;
+import com.latmod.lib.ResourceLocationComparator;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,7 +51,7 @@ public class FTBLibRegistries implements IFTBLibRegistries
 
             if(i == 0)
             {
-                i = FTBLib.RESOURCE_LOCATION_COMPARATOR.compare(o1.getKey(), o2.getKey());
+                i = ResourceLocationComparator.INSTANCE.compare(o1.getKey(), o2.getKey());
             }
 
             return i;
@@ -116,8 +118,9 @@ public class FTBLibRegistries implements IFTBLibRegistries
     private final IRegistry<ResourceLocation, INBTSerializable<NBTTagCompound>> syncedData = new SimpleRegistry<>(false);
     private final SyncedRegistry<IGuiHandler> guis = new SyncedRegistry<>(true);
     private final SidebarButtonRegistry sidebarButtons = new SidebarButtonRegistry();
-    private final IntIDRegistry notifications = new IntIDRegistry();
     private final IRegistry<String, ConfigFile> config = new SimpleRegistry<>(false);
+    private final IntIDRegistry notifications = new IntIDRegistry();
+    private final IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers = new SimpleRegistry<>(true);
 
     public final ConfigContainer CONFIG_CONTAINER = new ConfigContainer()
     {
@@ -181,6 +184,12 @@ public class FTBLibRegistries implements IFTBLibRegistries
     public IIntIDRegistry notifications()
     {
         return notifications;
+    }
+
+    @Override
+    public IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers()
+    {
+        return recipeHandlers;
     }
 
     public void reloadConfig()

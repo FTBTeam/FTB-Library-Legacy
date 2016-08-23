@@ -20,6 +20,20 @@ public class SyncedRegistry<V> extends SimpleRegistry<ResourceLocation, V> imple
         intIDs = new IntIDRegistry();
     }
 
+    @Override
+    @Nonnull
+    public V register(@Nonnull ResourceLocation key, @Nonnull V v)
+    {
+        V v1 = super.register(key, v);
+
+        if(v1 == v)
+        {
+            getOrCreateIDFromKey(key);
+        }
+
+        return v1;
+    }
+
     @Nullable
     @Override
     public ResourceLocation getKeyFromID(int numID)

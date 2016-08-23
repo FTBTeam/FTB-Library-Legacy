@@ -32,10 +32,10 @@ public class InfoNotificationsPage extends InfoPage
     {
         ITextComponent title = new TextComponentTranslation("client_config.ftbl.notifications");
 
-        if(!ClientNotifications.Perm.map.isEmpty())
+        if(!ClientNotifications.Perm.MAP.isEmpty())
         {
             title.appendText(" [");
-            ITextComponent num = new TextComponentString(Integer.toString(ClientNotifications.Perm.map.size()));
+            ITextComponent num = new TextComponentString(Integer.toString(ClientNotifications.Perm.MAP.size()));
             num.getStyle().setColor(TextFormatting.RED);
             title.appendSibling(num);
             title.appendText("]");
@@ -45,11 +45,11 @@ public class InfoNotificationsPage extends InfoPage
 
         clear();
 
-        if(!ClientNotifications.Perm.map.isEmpty())
+        if(!ClientNotifications.Perm.MAP.isEmpty())
         {
-            LMMapUtils.sortMap(ClientNotifications.Perm.map, (o1, o2) -> Long.compare(o2.getValue().timeAdded, o1.getValue().timeAdded));
+            LMMapUtils.sortMap(ClientNotifications.Perm.MAP, (o1, o2) -> Long.compare(o2.getValue().timeAdded, o1.getValue().timeAdded));
 
-            for(ClientNotifications.Perm p : ClientNotifications.Perm.map.values())
+            for(ClientNotifications.Perm p : ClientNotifications.Perm.MAP.values())
             {
                 println(new InfoNotificationLine(p));
             }

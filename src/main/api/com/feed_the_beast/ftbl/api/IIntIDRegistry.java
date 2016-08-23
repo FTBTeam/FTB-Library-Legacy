@@ -4,7 +4,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -15,7 +14,7 @@ public interface IIntIDRegistry extends INBTSerializable<NBTTagCompound>
     @Nullable
     ResourceLocation getKeyFromID(int numID);
 
-    int getIDFromKey(@Nonnull ResourceLocation key);
+    int getIDFromKey(ResourceLocation key);
 
-    int getOrCreateIDFromKey(@Nonnull ResourceLocation key);
+    int getOrCreateIDFromKey(ResourceLocation key);
 }

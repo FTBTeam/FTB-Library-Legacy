@@ -97,15 +97,7 @@ public class LMNBTUtils
 
     public static boolean areTagsEqual(NBTTagCompound tag1, NBTTagCompound tag2)
     {
-        if(tag1 == null && tag2 == null)
-        {
-            return true;
-        }
-        if(tag1 != null && tag2 == null)
-        {
-            return false;
-        }
-        return !(tag1 == null && tag2 != null) && tag1.equals(tag2);
+        return tag1 == tag2 || (tag1 != null && tag2 != null && tag1.equals(tag2));
     }
 
     public static void toStringList(List<String> l, NBTTagList tag)
@@ -180,7 +172,7 @@ public class LMNBTUtils
         }
         else if(string)
         {
-            return tag.hasKey(key) ? LMUtils.fromString(tag.getString(key)) : null;
+            return tag.hasKey(key) ? LMStringUtils.fromString(tag.getString(key)) : null;
         }
         else
         {
@@ -198,7 +190,7 @@ public class LMNBTUtils
         }
         if(string)
         {
-            tag.setString(key, LMUtils.fromUUID(uuid));
+            tag.setString(key, LMStringUtils.fromUUID(uuid));
         }
         else
         {

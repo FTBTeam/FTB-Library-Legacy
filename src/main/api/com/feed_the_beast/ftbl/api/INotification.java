@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -14,9 +15,10 @@ public interface INotification
 
     List<ITextComponent> getText();
 
+    @Nullable
     ItemStack getItem();
 
-    boolean isTemp();
+    boolean isPermanent();
 
     int getTimer();
 

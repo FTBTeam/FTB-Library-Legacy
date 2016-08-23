@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.ISharedData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;
@@ -94,7 +94,7 @@ public class SharedData implements ISharedData, IJsonSerializable
     public void fromJson(@Nonnull JsonElement json)
     {
         JsonObject group = json.getAsJsonObject();
-        worldID = group.has("world_id") ? LMUtils.fromString(group.get("world_id").getAsString()) : null;
+        worldID = group.has("world_id") ? LMStringUtils.fromString(group.get("world_id").getAsString()) : null;
         currentMode = group.has("mode") ? FTBLibAPI.get().getPackModes().getMode(group.get("mode").getAsString()) : FTBLibAPI.get().getPackModes().getDefault();
     }
 
@@ -103,7 +103,7 @@ public class SharedData implements ISharedData, IJsonSerializable
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
-        o.add("world_id", new JsonPrimitive(LMUtils.fromUUID(getUUID())));
+        o.add("world_id", new JsonPrimitive(LMStringUtils.fromUUID(getUUID())));
         o.add("mode", new JsonPrimitive(getMode().getID()));
         return o;
     }

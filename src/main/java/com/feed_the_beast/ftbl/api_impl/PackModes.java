@@ -115,20 +115,20 @@ public final class PackModes implements IPackModes
     }
 
     @Override
-    public IPackMode getRawMode(String s)
+    public IPackMode getRawMode(String id)
     {
-        return (s == null || s.isEmpty()) ? null : modes.get(s);
+        return id.isEmpty() ? null : modes.get(id);
     }
 
     @Override
-    public IPackMode getMode(String s)
+    public IPackMode getMode(String id)
     {
-        if(s == null || s.isEmpty())
+        if(id.isEmpty())
         {
             return defaultMode;
         }
 
-        IPackMode m = modes.get(s);
+        IPackMode m = modes.get(id);
         return (m == null) ? defaultMode : m;
     }
 
@@ -139,8 +139,8 @@ public final class PackModes implements IPackModes
     }
 
     @Override
-    public JsonElement getCustomData(String s)
+    public JsonElement getCustomData(String id)
     {
-        return (s != null && !s.isEmpty() && customData.containsKey(s)) ? customData.get(s) : JsonNull.INSTANCE;
+        return (!id.isEmpty() && customData.containsKey(id)) ? customData.get(id) : JsonNull.INSTANCE;
     }
 }

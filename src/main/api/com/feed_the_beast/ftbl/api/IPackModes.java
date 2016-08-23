@@ -11,11 +11,11 @@ public interface IPackModes
 {
     Collection<IPackMode> getModes();
 
-    IPackMode getRawMode(String s);
+    IPackMode getRawMode(String id);
 
-    IPackMode getMode(String s);
+    IPackMode getMode(String id);
 
     IPackMode getDefault();
 
-    JsonElement getCustomData(String s);
+    JsonElement getCustomData(String id);
 }

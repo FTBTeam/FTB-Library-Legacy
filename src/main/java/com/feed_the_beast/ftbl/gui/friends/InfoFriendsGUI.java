@@ -19,7 +19,7 @@ public class InfoFriendsGUI extends InfoPage
         setTitle(new TextComponentString("FriendsGUI"));
         theme = InfoPageTheme.DARK_NON_UNICODE;
 
-        if(!ClientNotifications.Perm.map.isEmpty())
+        if(!ClientNotifications.Perm.MAP.isEmpty())
         {
             addSub(new InfoNotificationsPage());
         }

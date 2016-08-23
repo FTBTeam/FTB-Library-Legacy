@@ -92,8 +92,15 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageNotifyPlayer m, Minecraft mc)
     {
-        EnumNotificationDisplay e = FTBLibModClient.notifications.get();
+        EnumNotificationDisplay display = FTBLibModClient.notifications.get();
+
+        if(display == EnumNotificationDisplay.OFF)
+        {
+            return;
+        }
+
         Notification n = new Notification(m.ID);
+        n.setDefaults();
 
         if(m.data.hasKey("L"))
         {
@@ -120,7 +127,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
             n.setColor(m.data.getInteger("C"));
         }
 
-        if(e == EnumNotificationDisplay.SCREEN)
+        if(display == EnumNotificationDisplay.SCREEN)
         {
             ClientNotifications.add(n);
             return;
@@ -128,7 +135,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
         List<ITextComponent> list = n.getText();
 
-        if(e != EnumNotificationDisplay.OFF && !list.isEmpty())
+        if(!list.isEmpty())
         {
             if(list.size() > 1)
             {
@@ -137,7 +144,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
             GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
 
-            if(e == EnumNotificationDisplay.CHAT)
+            if(display == EnumNotificationDisplay.CHAT)
             {
                 chat.printChatMessageWithOptionalDeletion(list.get(0), 42059283 + n.getID());
             }

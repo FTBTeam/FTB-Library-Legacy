@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMNetUtils;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
@@ -99,7 +99,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
                                 {
                                     try
                                     {
-                                        LMUtils.openURI(uri);
+                                        LMNetUtils.openURI(uri);
                                     }
                                     catch(Exception ex)
                                     {
@@ -111,7 +111,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
                         }
                         else
                         {
-                            LMUtils.openURI(uri);
+                            LMNetUtils.openURI(uri);
                         }
                     }
                     catch(Exception ex)
@@ -123,7 +123,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
                 {
                     try
                     {
-                        LMUtils.openURI((new File(clickEvent.getValue())).toURI());
+                        LMNetUtils.openURI((new File(clickEvent.getValue())).toURI());
                     }
                     catch(Exception ex)
                     {

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.util.StatsLongValue;
+import com.latmod.lib.LangKey;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
 import net.minecraft.stats.StatList;

@@ -147,6 +147,7 @@ public class GuiSelectColor extends GuiLM
             }
         }
     }
+
     private final ObjectCallbackHandler callback;
     private final LMColor.HSB initCol;
     private final Object colorID;
@@ -208,7 +209,7 @@ public class GuiSelectColor extends GuiLM
             @Override
             public String getTitle()
             {
-                return EnumDyeColorHelper.get(EnumDyeColor.RED).langKey.translate();
+                return EnumDyeColorHelper.get(EnumDyeColor.RED).getLangKey().translate();
             }
         };
 
@@ -223,7 +224,7 @@ public class GuiSelectColor extends GuiLM
             @Override
             public String getTitle()
             {
-                return EnumDyeColorHelper.get(EnumDyeColor.GREEN).langKey.translate();
+                return EnumDyeColorHelper.get(EnumDyeColor.GREEN).getLangKey().translate();
             }
         };
 
@@ -238,7 +239,7 @@ public class GuiSelectColor extends GuiLM
             @Override
             public String getTitle()
             {
-                return EnumDyeColorHelper.get(EnumDyeColor.BLUE).langKey.translate();
+                return EnumDyeColorHelper.get(EnumDyeColor.BLUE).getLangKey().translate();
             }
         };
 

@@ -29,7 +29,7 @@ public final class Response
 
     public Response(@Nonnull InputStream is)
     {
-        this(RequestMethod.SIMPLE_GET, 0L, 200, is);
+        this(RequestMethod.GET, 0L, 200, is);
     }
 
     @Override

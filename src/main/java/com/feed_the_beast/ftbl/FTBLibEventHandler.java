@@ -105,8 +105,7 @@ public class FTBLibEventHandler implements ITickable
                     p.setProfile(ep.getGameProfile());
                 }
 
-                p.setPlayer(ep);
-                p.onLoggedIn(firstLogin);
+                p.onLoggedIn(ep, firstLogin);
             }
         }
     }

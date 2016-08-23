@@ -14,6 +14,6 @@ public enum URLResourceProvider implements IResourceProvider
     @Override
     public LMConnection getConnection(String s)
     {
-        return new LMConnection(RequestMethod.SIMPLE_GET, s);
+        return new LMConnection(RequestMethod.GET, s);
     }
 }

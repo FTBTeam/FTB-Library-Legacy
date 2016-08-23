@@ -36,8 +36,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
         info = new ArrayList<>();
         p.getInfo(owner, info);
 
-        p.updateArmor();
-        armor = p.lastArmor;
+        armor = p.getArmor();
     }
 
     @Override

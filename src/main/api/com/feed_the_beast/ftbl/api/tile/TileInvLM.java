@@ -36,12 +36,8 @@ public class TileInvLM extends TileLM
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
     {
-        if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-        {
-            return true;
-        }
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 
-        return super.hasCapability(capability, facing);
     }
 
     @Nonnull

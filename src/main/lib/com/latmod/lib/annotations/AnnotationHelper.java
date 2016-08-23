@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class AnnotationHelper
 {
-    private static final Map<Class<? extends Annotation>, Handler> map = new HashMap<>();
+    private static final Map<Class<? extends Annotation>, Handler> MAP = new HashMap<>();
 
     public interface Handler
     {
@@ -63,10 +63,10 @@ public class AnnotationHelper
 
     public static void register(@Nonnull Class<? extends Annotation> c, @Nonnull Handler h)
     {
-        map.put(c, h);
+        MAP.put(c, h);
     }
 
-    public static void inject(@Nonnull Field field, Object obj) throws Exception
+    public static void inject(@Nonnull Field field, Object obj)
     {
         if(obj instanceof IAnnotationContainer)
         {
@@ -74,7 +74,7 @@ public class AnnotationHelper
 
             for(Annotation a : field.getDeclaredAnnotations())
             {
-                Handler h = map.get(a.annotationType());
+                Handler h = MAP.get(a.annotationType());
                 if(h != null)
                 {
                     h.onAnnotationDeclared(a, container);

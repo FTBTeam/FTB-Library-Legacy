@@ -13,8 +13,7 @@ public final class ForgePlayerFake extends ForgePlayer
 {
     public ForgePlayerFake(FakePlayer p)
     {
-        super(p.getGameProfile());
-        setPlayer(p);
+        super(p);
     }
 
     @Override

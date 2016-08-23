@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IClickable;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.io.ByteIOStream;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -78,7 +79,7 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     @Override
     public ConfigEntry copy()
     {
-        ConfigEntryEnum<E> entry = new ConfigEntryEnum<E>(nameMap.getFromIndex(getIndex()), nameMap);
+        ConfigEntryEnum<E> entry = new ConfigEntryEnum<>(nameMap.getFromIndex(getIndex()), nameMap);
         entry.setIndex(getIndex());
         return entry;
     }

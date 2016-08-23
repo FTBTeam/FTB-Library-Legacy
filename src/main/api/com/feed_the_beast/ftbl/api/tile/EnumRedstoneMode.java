@@ -1,34 +1,49 @@
 package com.feed_the_beast.ftbl.api.tile;
 
-import com.feed_the_beast.ftbl.api.LangKey;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
+import com.latmod.lib.ILangKeyContainer;
+import com.latmod.lib.LangKey;
 import com.latmod.lib.TextureCoords;
+import net.minecraft.util.IStringSerializable;
 
-public enum EnumRedstoneMode
+import javax.annotation.Nonnull;
+import java.util.Locale;
+
+public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
 {
-    DISABLED("disabled"),
-    ACTIVE_HIGH("high"),
-    ACTIVE_LOW("low");
+    DISABLED,
+    ACTIVE_HIGH,
+    ACTIVE_LOW;
 
     public static final EnumRedstoneMode[] VALUES = values();
-    public static final LangKey enumLangKey = new LangKey("ftbl.redstonemode");
+    public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.redstonemode");
 
-    public final int ID;
-    public final LangKey langKey;
+    private final LangKey langKey;
+    private final String name;
 
-    EnumRedstoneMode(String s)
+    EnumRedstoneMode()
     {
-        ID = ordinal();
-        langKey = new LangKey("ftbl.redstonemode." + s);
+        name = name().toLowerCase(Locale.ENGLISH);
+        langKey = new LangKey("ftbl.redstonemode." + name);
+    }
+
+    @Override
+    @Nonnull
+    public LangKey getLangKey()
+    {
+        return langKey;
+    }
+
+    @Override
+    @Nonnull
+    public String getName()
+    {
+        return name;
     }
 
     public boolean cancel(boolean b)
     {
-        if(this == DISABLED)
-        {
-            return false;
-        }
-        return this == ACTIVE_HIGH && !b || this == ACTIVE_LOW && b;
+        return this != DISABLED && (this == ACTIVE_HIGH && !b || this == ACTIVE_LOW && b);
     }
 
     public TextureCoords getIcon()

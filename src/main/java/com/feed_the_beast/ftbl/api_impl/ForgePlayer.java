@@ -10,13 +10,12 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.api.item.LMInvUtils;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
+import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMStringUtils;
-import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -36,6 +35,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,21 +46,26 @@ import java.util.UUID;
  */
 public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
 {
-    public final Map<EntityEquipmentSlot, ItemStack> lastArmor;
     final CapabilityDispatcher capabilities;
     private String teamID;
     private GameProfile gameProfile;
     private StatisticsManagerServer statsManager;
     private EntityPlayerMP entityPlayer;
+    private NBTTagCompound playerNBT;
 
     public ForgePlayer(GameProfile p)
     {
         setProfile(p);
-        lastArmor = new HashMap<>();
 
         AttachPlayerCapabilitiesEvent event = new AttachPlayerCapabilitiesEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
+    }
+
+    ForgePlayer(EntityPlayerMP ep)
+    {
+        this(ep.getGameProfile());
+        entityPlayer = ep;
     }
 
     public final String getTeamID()
@@ -117,7 +122,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
 
     public final String getStringUUID()
     {
-        return LMUtils.fromUUID(gameProfile.getId());
+        return LMStringUtils.fromUUID(getProfile().getId());
     }
 
     @Override
@@ -165,29 +170,26 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return p == this || (p != null && gameProfile.getId().equals(p.getProfile().getId()));
     }
 
-    public boolean isMCPlayer()
+    public Map<EntityEquipmentSlot, ItemStack> getArmor()
     {
-        return false;
-    }
+        Map<EntityEquipmentSlot, ItemStack> map = new HashMap<>();
 
-    public void updateArmor()
-    {
         EntityPlayerMP ep = getPlayer();
 
         if(ep != null)
         {
-            lastArmor.clear();
-
             for(EntityEquipmentSlot e : EntityEquipmentSlot.values())
             {
                 ItemStack is = ep.getItemStackFromSlot(e);
 
                 if(is != null)
                 {
-                    lastArmor.put(e, is.copy());
+                    map.put(e, is.copy());
                 }
             }
         }
+
+        return map;
     }
 
     public boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level)
@@ -230,11 +232,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     public EntityPlayerMP getPlayer()
     {
         return entityPlayer;
-    }
-
-    public void setPlayer(EntityPlayerMP ep)
-    {
-        entityPlayer = ep;
     }
 
     @Override
@@ -324,22 +321,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         {
             capabilities.deserializeNBT(tag.getCompoundTag("Caps"));
         }
-
-        lastArmor.clear();
-
-        if(tag.hasKey("LastItems"))
-        {
-            ItemStack[] lastArmorItems = new ItemStack[EntityEquipmentSlot.values().length];
-            LMInvUtils.readItemsFromNBT(lastArmorItems, tag, "Armor");
-
-            for(int i = 0; i < lastArmorItems.length; i++)
-            {
-                if(lastArmorItems[i] != null)
-                {
-                    lastArmor.put(EntityEquipmentSlot.values()[i], lastArmorItems[i]);
-                }
-            }
-        }
     }
 
     @Override
@@ -357,43 +338,32 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
             tag.setTag("Caps", capabilities.serializeNBT());
         }
 
-        if(!lastArmor.isEmpty())
-        {
-            ItemStack[] lastArmorItems = new ItemStack[EntityEquipmentSlot.values().length];
-            for(Map.Entry<EntityEquipmentSlot, ItemStack> e : lastArmor.entrySet())
-            {
-                lastArmorItems[e.getKey().ordinal()] = e.getValue();
-            }
-
-            LMInvUtils.writeItemsToNBT(lastArmorItems, tag, "Armor");
-        }
-
         return tag;
     }
 
-    public void onLoggedIn(boolean firstLogin)
+    public void onLoggedIn(EntityPlayerMP ep, boolean firstLogin)
     {
+        entityPlayer = ep;
+        playerNBT = null;
         statsManager = null;
-        updateArmor();
         FTBLibStats.updateLastSeen(stats());
-        EntityPlayerMP ep = getPlayer();
-        new MessageReload(ReloadType.LOGIN).sendTo(ep);
+        new MessageReload(ReloadType.LOGIN).sendTo(entityPlayer);
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
     }
 
     public void onLoggedOut()
     {
-        statsManager = null;
         FTBLibStats.updateLastSeen(stats());
-        updateArmor();
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedOutEvent(this));
+        entityPlayer = null;
+        playerNBT = null;
+        statsManager = null;
     }
 
     public void onDeath()
     {
         if(isOnline())
         {
-            updateArmor();
             FTBLibStats.updateLastSeen(stats());
             MinecraftForge.EVENT_BUS.post(new ForgePlayerDeathEvent(this));
             statsManager = null;
@@ -415,5 +385,28 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     public void getSettings(ConfigGroup group)
     {
         MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, group));
+    }
+
+    @Nullable
+    public NBTTagCompound getPlayerNBT()
+    {
+        if(isOnline())
+        {
+            return null;
+        }
+
+        if(playerNBT == null)
+        {
+            try
+            {
+                playerNBT = LMNBTUtils.readTag(new File(FTBLib.folderWorld, "playerdata/" + getProfile().getId() + ".dat"));
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+
+        return playerNBT;
     }
 }

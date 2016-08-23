@@ -8,9 +8,9 @@ import com.latmod.lib.util.LMColorUtils;
  */
 public abstract class LMColor
 {
-    public static final LMColor WHITE = new ImmutableColor(0xFFFFFFFF);
-    public static final LMColor BLACK = new ImmutableColor(0xFF000000);
-    public static final LMColor TRANSPARENT = new ImmutableColor(0x00000000);
+    public static final ImmutableColor WHITE = new ImmutableColor(0xFFFFFFFF);
+    public static final ImmutableColor BLACK = new ImmutableColor(0xFF000000);
+    public static final ImmutableColor TRANSPARENT = new ImmutableColor(0x00000000);
 
     public static class RGB extends LMColor
     {

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMStringUtils;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -77,7 +78,7 @@ public class ItemStackSerializer
 
     public static String toString(ItemStack is)
     {
-        return (is == null) ? null : LMInvUtils.getRegName(is).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
+        return (is == null) ? null : Item.REGISTRY.getNameForObject(is.getItem()).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
     }
 
     public static JsonElement serialize(ItemStack is)

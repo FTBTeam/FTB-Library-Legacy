@@ -9,8 +9,9 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.gui.InfoClientSettings;
 import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.util.LMColorUtils;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
@@ -29,7 +30,7 @@ public class FTBLibModClient extends FTBLibModCommon
 {
     public static final ConfigEntryBool item_ore_names = new ConfigEntryBool(false);
     public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool(true);
-    public static final ConfigEntryEnum<EnumNotificationDisplay> notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, EnumNotificationDisplay.NAME_MAP);
+    public static final ConfigEntryEnum<EnumNotificationDisplay> notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, new EnumNameMap<>(false, EnumNotificationDisplay.values()));
 
     @Override
     public void preInit()
@@ -38,7 +39,7 @@ public class FTBLibModClient extends FTBLibModCommon
         MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.instance);
 
         //For Dev reasons, see DevConsole
-        FTBLib.userIsLatvianModder = Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
+        FTBLib.userIsLatvianModder = Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);

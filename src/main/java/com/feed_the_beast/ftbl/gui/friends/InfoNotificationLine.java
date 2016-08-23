@@ -46,7 +46,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
         {
             GuiLM.playClickSound();
-            ClientNotifications.Perm.map.remove(widget.notification.getID());
+            ClientNotifications.Perm.MAP.remove(widget.notification.getID());
             gui.refreshWidgets();
         }
 

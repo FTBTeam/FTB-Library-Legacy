@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api;
+package com.latmod.lib;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;

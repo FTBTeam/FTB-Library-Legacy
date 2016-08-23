@@ -2,9 +2,7 @@ package com.feed_the_beast.ftbl.api.item;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Collection;
@@ -84,16 +82,6 @@ public class ODItems
         OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_CHICKEN));
         OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_MUTTON));
         OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_RABBIT));
-    }
-
-    private static boolean addOreName(String item, int damage, String name)
-    {
-        Item i = LMInvUtils.getItemFromRegName(new ResourceLocation(item));
-        if(i != null)
-        {
-            OreDictionary.registerOre(name, new ItemStack(i, 1, damage));
-        }
-        return i != null;
     }
 
     public static Collection<String> getOreNames(ItemStack is)

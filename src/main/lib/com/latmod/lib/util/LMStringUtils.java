@@ -1,5 +1,6 @@
 package com.latmod.lib.util;
 
+import com.latmod.lib.IIDObject;
 import com.latmod.lib.math.MathHelperLM;
 
 import javax.annotation.Nonnull;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @ParametersAreNonnullByDefault
 public class LMStringUtils
@@ -25,10 +27,17 @@ public class LMStringUtils
     public static final String ALLOWED_TEXT_CHARS = " -_!@#$%^&*()+=\\/,.<>?\'\"[]{}|;:`~";
 
     public static final Comparator<Object> IGNORE_CASE_COMPARATOR = (o1, o2) -> String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
+    public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1).compareToIgnoreCase(getID(o2));
 
-    public static boolean isValid(String s)
+    @Nonnull
+    public static String getID(@Nullable Object o)
     {
-        return s != null && s.length() > 0;
+        if(o instanceof IIDObject)
+        {
+            return ((IIDObject) o).getID();
+        }
+
+        return String.valueOf(o);
     }
 
     @Nonnull
@@ -404,11 +413,6 @@ public class LMStringUtils
         return String.valueOf(c) + s.substring(1);
     }
 
-    public static boolean areStringsEqual(@Nullable String s0, @Nullable String s1)
-    {
-        return s0 == null && s1 == null || !(s0 == null || s1 == null) && s0.length() == s1.length() && (s0.isEmpty() && s1.isEmpty() || s0.equals(s1));
-    }
-
     @Nonnull
     public static String fillString(String s, char fill, int length)
     {
@@ -431,38 +435,6 @@ public class LMStringUtils
         return new String(c);
     }
 
-    public static boolean contains(String[] s, String s1)
-    {
-        if(s.length > 0)
-        {
-            for(String value : s)
-            {
-                if(value != null && value.equals(s1))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @Nonnull
-    public static String substring(String s, String pre, String post)
-    {
-        int preI = s.indexOf(pre);
-        int postI = s.lastIndexOf(post);
-        return s.substring(preI + 1, postI);
-    }
-
-    @Nonnull
-    public static String substring(String s, char pre, char post)
-    {
-        int preI = s.indexOf(pre);
-        int postI = s.lastIndexOf(post);
-        return s.substring(preI + 1, postI);
-    }
-
     @Nonnull
     public static String removeAllWhitespace(String s)
     {
@@ -476,35 +448,7 @@ public class LMStringUtils
     }
 
     @Nonnull
-    public static String formatInt(int i)
-    {
-        return formatInt(i, 1);
-    }
-
-    @Nonnull
-    public static String formatInt(int i, int z)
-    {
-        String s0 = Integer.toString(i);
-        if(z <= 0)
-        {
-            return s0;
-        }
-        z += 1;
-
-        StringBuilder sb = new StringBuilder();
-
-        int l = z - s0.length();
-        for(int j = 0; j < l; j++)
-        {
-            sb.append('0');
-        }
-
-        sb.append(i);
-        return sb.toString();
-    }
-
-    @Nonnull
-    public static String formatDouble(double d)
+    public static String formatDouble(double d) //TODO: Replace with number formatter
     {
         if(d == Double.POSITIVE_INFINITY)
         {
@@ -585,5 +529,64 @@ public class LMStringUtils
     public static String fromBytes(byte[] b)
     {
         return (b.length == 0) ? "" : new String(b, UTF_8);
+    }
+
+    public static String fromUUID(@Nullable UUID id)
+    {
+        if(id != null)
+        {
+            long msb = id.getMostSignificantBits();
+            long lsb = id.getLeastSignificantBits();
+            StringBuilder sb = new StringBuilder(32);
+            digitsUUID(sb, msb >> 32, 8);
+            digitsUUID(sb, msb >> 16, 4);
+            digitsUUID(sb, msb, 4);
+            digitsUUID(sb, lsb >> 48, 4);
+            digitsUUID(sb, lsb, 12);
+            return sb.toString();
+        }
+
+        return null;
+    }
+
+    private static void digitsUUID(StringBuilder sb, long val, int digits)
+    {
+        long hi = 1L << (digits * 4);
+        String s = Long.toHexString(hi | (val & (hi - 1)));
+        sb.append(s, 1, s.length());
+    }
+
+    public static UUID fromString(@Nullable String s)
+    {
+        if(s == null || !(s.length() == 32 || s.length() == 36))
+        {
+            return null;
+        }
+
+        try
+        {
+            if(s.indexOf('-') != -1)
+            {
+                return UUID.fromString(s);
+            }
+
+            int l = s.length();
+            StringBuilder sb = new StringBuilder(36);
+            for(int i = 0; i < l; i++)
+            {
+                sb.append(s.charAt(i));
+                if(i == 7 || i == 11 || i == 15 || i == 19)
+                {
+                    sb.append('-');
+                }
+            }
+
+            return UUID.fromString(sb.toString());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

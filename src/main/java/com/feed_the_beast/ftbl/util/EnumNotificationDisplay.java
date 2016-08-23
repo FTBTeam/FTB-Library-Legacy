@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.util;
 
-import com.feed_the_beast.ftbl.api.config.EnumNameMap;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public enum EnumNotificationDisplay
 {
     OFF,
     SCREEN,
     CHAT,
-    CHAT_ALL;
-
-    public static final EnumNameMap<EnumNotificationDisplay> NAME_MAP = new EnumNameMap<>(false, values());
+    CHAT_ALL
 }

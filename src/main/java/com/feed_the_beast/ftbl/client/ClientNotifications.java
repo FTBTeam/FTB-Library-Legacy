@@ -18,7 +18,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ClientNotifications
 {
-    private static Temp current = null;
+    private static Temp current;
 
     public static class NotificationWidget
     {
@@ -74,7 +74,7 @@ public class ClientNotifications
 
     public static class Temp
     {
-        public static final LinkedHashMap<Integer, Temp> map = new LinkedHashMap<>();
+        public static final LinkedHashMap<Integer, INotification> MAP = new LinkedHashMap<>();
 
         private long time;
         private NotificationWidget widget;
@@ -150,7 +150,7 @@ public class ClientNotifications
 
     public static class Perm implements Comparable<Perm>
     {
-        public static final LinkedHashMap<Integer, Perm> map = new LinkedHashMap<>();
+        public static final LinkedHashMap<Integer, Perm> MAP = new LinkedHashMap<>();
 
         public final INotification notification;
         public final long timeAdded;
@@ -170,7 +170,7 @@ public class ClientNotifications
 
     public static boolean shouldRenderTemp()
     {
-        return current != null || !Temp.map.isEmpty();
+        return current != null || !Temp.MAP.isEmpty();
     }
 
     public static void renderTemp(ScaledResolution screen)
@@ -182,38 +182,35 @@ public class ClientNotifications
                 current = null;
             }
         }
-        else if(!Temp.map.isEmpty())
+        else if(!Temp.MAP.isEmpty())
         {
-            current = Temp.map.values().iterator().next();
-            Temp.map.remove(current.widget.notification.getID());
+            current = new Temp(Temp.MAP.values().iterator().next());
+            Temp.MAP.remove(current.widget.notification.getID());
         }
     }
 
     public static void add(INotification n)
     {
-        if(n != null)
+        Perm.MAP.remove(n.getID());
+        Temp.MAP.remove(n.getID());
+
+        if(current != null && current.widget.notification.getID() == n.getID())
         {
-            Temp.map.remove(n.getID());
-            Perm.map.remove(n.getID());
+            current = null;
+        }
 
-            if(current != null && current.widget.notification.getID() == n.getID())
-            {
-                current = null;
-            }
+        Temp.MAP.put(n.getID(), n);
 
-            Temp.map.put(n.getID(), new Temp(n));
-
-            if(!n.isTemp())
-            {
-                Perm.map.put(n.getID(), new Perm(n));
-            }
+        if(n.isPermanent())
+        {
+            Perm.MAP.put(n.getID(), new Perm(n));
         }
     }
 
     public static void init()
     {
         current = null;
-        Perm.map.clear();
-        Temp.map.clear();
+        Perm.MAP.clear();
+        Temp.MAP.clear();
     }
 }

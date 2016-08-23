@@ -6,7 +6,7 @@ import com.latmod.lib.annotations.AnnotationHelper;
 import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.annotations.ID;
 import com.latmod.lib.io.ByteIOStream;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -312,12 +312,12 @@ public class ConfigGroup extends ConfigEntry
 
     public boolean hasKey(Object key)
     {
-        return entryMap.containsKey(LMUtils.getID(key));
+        return entryMap.containsKey(LMStringUtils.getID(key));
     }
 
     public ConfigEntry getEntry(Object key)
     {
-        return entryMap.get(LMUtils.getID(key));
+        return entryMap.get(LMStringUtils.getID(key));
     }
 
     public ConfigGroup getGroup(Object key)

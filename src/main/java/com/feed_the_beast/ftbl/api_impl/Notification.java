@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.INotification;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -9,7 +10,9 @@ import net.minecraft.util.text.TextFormatting;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Notification implements INotification
 {
@@ -28,7 +31,7 @@ public class Notification implements INotification
         return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959).setItem(new ItemStack(Blocks.BARRIER));
     }
 
-    private void setDefaults()
+    public void setDefaults()
     {
         if(text != null)
         {
@@ -38,6 +41,28 @@ public class Notification implements INotification
         timer = 3000;
         color = 0xA0A0A0;
         item = null;
+    }
+
+    public int hashCode()
+    {
+        return ID;
+    }
+
+    public boolean equals(Object o)
+    {
+        return o == this || (o != null && o.hashCode() == ID);
+    }
+
+    public String toString()
+    {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", getID());
+        map.put("timer", getTimer());
+        map.put("color", LMColorUtils.getHex(getColor()));
+        map.put("text", getText());
+        map.put("item", getItem());
+        map.put("perm", isPermanent());
+        return map.toString();
     }
 
     public Notification addText(ITextComponent t)
@@ -57,6 +82,7 @@ public class Notification implements INotification
         return ID;
     }
 
+    @Nonnull
     public List<ITextComponent> getText()
     {
         return text == null ? Collections.emptyList() : text;
@@ -74,9 +100,9 @@ public class Notification implements INotification
     }
 
     @Override
-    public boolean isTemp()
+    public boolean isPermanent()
     {
-        return true;
+        return false;
     }
 
     public int getTimer()

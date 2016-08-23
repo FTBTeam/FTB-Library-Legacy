@@ -3,7 +3,10 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.item.ODItems;
+import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
+import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -71,6 +74,14 @@ public class FTBLibMod
     {
         FTBLibAPI_Impl.get().reloadPackModes();
         FTBLibAPI_Impl.get().getRegistries().reloadConfig();
+
+        IRecipes recipes = new LMRecipes();
+
+        for(IRecipeHandler handler : FTBLibAPI_Impl.get().getRegistries().recipeHandlers().getValues())
+        {
+            handler.loadRecipes(recipes);
+        }
+
         proxy.postInit();
     }
 

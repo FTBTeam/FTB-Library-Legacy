@@ -1,7 +1,8 @@
-package com.feed_the_beast.ftbl.api.config;
+package com.latmod.lib;
 
 import net.minecraft.util.IStringSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +51,11 @@ public final class EnumNameMap<E extends Enum<E>>
         map = Collections.unmodifiableMap(map1);
     }
 
+    public static String createName(@Nonnull Enum<?> e)
+    {
+        return e.name().toLowerCase(Locale.ENGLISH);
+    }
+
     public static String getEnumName(Enum<?> e)
     {
         if(e == null)
@@ -62,7 +68,7 @@ public final class EnumNameMap<E extends Enum<E>>
         }
         else
         {
-            return e.name().toLowerCase(Locale.US);
+            return createName(e);
         }
     }
 

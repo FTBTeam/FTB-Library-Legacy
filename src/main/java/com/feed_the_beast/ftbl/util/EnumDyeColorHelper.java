@@ -1,48 +1,46 @@
 package com.feed_the_beast.ftbl.util;
 
-import com.feed_the_beast.ftbl.api.LangKey;
+import com.latmod.lib.ILangKeyContainer;
+import com.latmod.lib.LangKey;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 
-public class EnumDyeColorHelper // ItemDye
+import javax.annotation.Nonnull;
+import java.util.EnumMap;
+
+public class EnumDyeColorHelper implements ILangKeyContainer // ItemDye
 {
-    public static final EnumDyeColorHelper[] HELPERS = new EnumDyeColorHelper[EnumDyeColor.values().length];
+    public static final EnumMap<EnumDyeColor, EnumDyeColorHelper> HELPERS = new EnumMap<>(EnumDyeColor.class);
 
     static
     {
         for(EnumDyeColor c : EnumDyeColor.values())
         {
-            HELPERS[c.ordinal()] = new EnumDyeColorHelper(c);
+            HELPERS.put(c, new EnumDyeColorHelper(c));
         }
     }
 
-    public final EnumDyeColor dye;
-    public final LangKey langKey;
-    public final String dyeName;
-    public final String glassName;
-    public final String paneName;
+    private final EnumDyeColor dye;
+    private final LangKey langKey;
+    private final String oreName;
 
-    EnumDyeColorHelper(EnumDyeColor col)
+    private EnumDyeColorHelper(EnumDyeColor col)
     {
         dye = col;
         langKey = new LangKey("item.fireworksCharge." + col.getUnlocalizedName());
-
-        String s = LMStringUtils.firstUppercase(col.getName());
-        dyeName = "dye" + s;
-        glassName = "blockGlass" + s;
-        paneName = "paneGlass" + s;
+        oreName = LMStringUtils.firstUppercase(col.getName());
     }
 
     public static EnumDyeColorHelper get(EnumDyeColor dye)
     {
-        return HELPERS[dye.ordinal()];
+        return HELPERS.get(dye);
     }
 
     public ItemStack getDye(int s)
     {
-        return new ItemStack(Items.DYE, s, dye.ordinal());
+        return new ItemStack(Items.DYE, s, dye.getDyeDamage());
     }
 
     @Override
@@ -55,5 +53,37 @@ public class EnumDyeColorHelper // ItemDye
     public int hashCode()
     {
         return dye.ordinal();
+    }
+
+    public EnumDyeColor getDye()
+    {
+        return dye;
+    }
+
+    @Override
+    @Nonnull
+    public LangKey getLangKey()
+    {
+        return langKey;
+    }
+
+    public String getOreName()
+    {
+        return oreName;
+    }
+
+    public String getDyeName()
+    {
+        return "dye" + getOreName();
+    }
+
+    public String getGlassName()
+    {
+        return "blockGlass" + getOreName();
+    }
+
+    public String getPaneName()
+    {
+        return "paneGlass" + getOreName();
     }
 }

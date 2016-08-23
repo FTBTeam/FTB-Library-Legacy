@@ -1,6 +1,6 @@
 package com.latmod.lib;
 
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 
 import javax.annotation.Nonnull;
 
@@ -41,6 +41,6 @@ public class FinalIDObject implements IIDObject
     @Override
     public final boolean equals(Object o)
     {
-        return o != null && (o == this || o == ID || ID.equals(LMUtils.getID(o)));
+        return o != null && (o == this || o == ID || ID.equals(LMStringUtils.getID(o)));
     }
 }

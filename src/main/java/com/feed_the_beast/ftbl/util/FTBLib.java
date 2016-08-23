@@ -33,7 +33,6 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
@@ -45,18 +44,6 @@ public class FTBLib
     public static final Logger DEV_LOGGER = LogManager.getLogger("FTBLibDev");
     public static final String FORMATTING = "\u00a7";
     public static final Pattern TEXT_FORMATTING_PATTERN = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
-
-    public static final Comparator<ResourceLocation> RESOURCE_LOCATION_COMPARATOR = (o1, o2) ->
-    {
-        int i = o1.getResourceDomain().compareTo(o2.getResourceDomain());
-
-        if(i == 0)
-        {
-            i = o1.getResourcePath().compareToIgnoreCase(o2.getResourcePath());
-        }
-
-        return i;
-    };
 
     public static boolean userIsLatvianModder = false;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;

@@ -44,7 +44,8 @@ ftbl.lang.mode.list=Available modes: %s
 
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
 ftbl.lang.reload_client=FTBLib: Client reloaded in %s
-ftbl.lang.reload_client_config=Server Reloaded. You can
+ftbl.lang.reload_client_config_1=Server Reloaded. You can run
+ftbl.lang.reload_client_config_2=to reload client data
 
 ftbl.lang.raw=%s
 ftbl.lang.missing_args=Missing Arguments: %s!
@@ -59,6 +60,7 @@ ftbl.lang.commands=Commands
 ftbl.lang.my_permissions=My Permissions
 ftbl.lang.difficulty=Difficulty: %s
 
+# Teams
 ftbl.lang.team.config='%s' team config
 ftbl.lang.team.created=Team '%s' created
 ftbl.lang.team.deleted=Team '%s' deleted
@@ -76,6 +78,17 @@ ftbl.lang.team.error.not_member=%s is not a member of this Team!
 ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
 ftbl.lang.team.error.already_invited=%s already is invited!
 ftbl.lang.team.error.failed_to_join=Can't join this team!
+
+ftbl.lang.team_color.blue=Blue
+ftbl.lang.team_color.cyan=Cyan
+ftbl.lang.team_color.green=Green
+ftbl.lang.team_color.yellow=Yellow
+ftbl.lang.team_color.orange=Orange
+ftbl.lang.team_color.red=Red
+ftbl.lang.team_color.pink=Pink
+ftbl.lang.team_color.magenta=Magenta
+ftbl.lang.team_color.purple=Purple
+ftbl.lang.team_color.gray=Gray
 
 # Action Buttons
 sidebar_button.ftbl:settings=Client Settings
@@ -98,14 +111,14 @@ ftbl.privacy.team=Team
 # Redstone Mode
 ftbl.redstonemode=Redstone Mode
 ftbl.redstonemode.disabled=Disabled
-ftbl.redstonemode.high=Active High
-ftbl.redstonemode.low=Active Low
+ftbl.redstonemode.active_high=Active High
+ftbl.redstonemode.active_low=Active Low
 
 # Inventory Mode
 ftbl.invmode=Automation
 ftbl.invmode.enabled=Enabled
-ftbl.invmode.onlyin=Insert Only
-ftbl.invmode.onlyout=Extract Only
+ftbl.invmode.only_in=Insert Only
+ftbl.invmode.only_out=Extract Only
 ftbl.invmode.disabled=Disabled
 
 # Click Actions

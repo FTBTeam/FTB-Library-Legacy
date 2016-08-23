@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api.events.world.ForgeWorldClosedEvent;
 import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.world.ForgeWorldPostLoadedEvent;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -115,13 +115,14 @@ public class ForgeWorld implements IForgeWorld
                 }
             }
 
-            return getPlayer(LMUtils.fromString(s));
+            return getPlayer(LMStringUtils.fromString(s));
         }
 
         return null;
     }
 
     @Override
+    @Nullable
     public IForgePlayer getCurrentPlayer()
     {
         return currentPlayer;
@@ -134,6 +135,7 @@ public class ForgeWorld implements IForgeWorld
     }
 
     @Override
+    @Nullable
     public ForgeTeam getTeam(String id)
     {
         return teams.get(id);
@@ -181,7 +183,7 @@ public class ForgeWorld implements IForgeWorld
         for(int i = 0; i < list.tagCount(); i++)
         {
             NBTTagCompound tag = list.getCompoundTagAt(i);
-            UUID id = LMUtils.fromString(tag.getString("UUID"));
+            UUID id = LMStringUtils.fromString(tag.getString("UUID"));
 
             if(id != null)
             {
@@ -229,7 +231,7 @@ public class ForgeWorld implements IForgeWorld
             currentPlayer = p;
             tag2 = p.serializeNBT();
             tag2.setString("Name", p.getProfile().getName());
-            tag2.setString("UUID", LMUtils.fromUUID(p.getProfile().getId()));
+            tag2.setString("UUID", p.getStringUUID());
             tagPlayers.appendTag(tag2);
         }
 

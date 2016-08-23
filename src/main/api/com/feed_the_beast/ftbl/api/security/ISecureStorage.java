@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.security;
 
-import com.feed_the_beast.ftbl.api.config.EnumNameMap;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.EnumNameMap;
+import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
@@ -27,14 +27,14 @@ public enum ISecureStorage implements Capability.IStorage<ISecure>
 
         if(saveOwner && !saveLevel)
         {
-            return new NBTTagString(ownerID == null ? "" : LMUtils.fromUUID(ownerID));
+            return new NBTTagString(ownerID == null ? "" : LMStringUtils.fromUUID(ownerID));
         }
 
         NBTTagCompound tag = new NBTTagCompound();
 
         if(saveOwner && ownerID != null)
         {
-            tag.setString("Owner", LMUtils.fromUUID(ownerID));
+            tag.setString("Owner", LMStringUtils.fromUUID(ownerID));
         }
 
         if(saveLevel)
@@ -57,12 +57,12 @@ public enum ISecureStorage implements Capability.IStorage<ISecure>
 
         if(nbt instanceof NBTTagString)
         {
-            sm.setOwner(((instance.getFlags() & ISecure.SAVE_OWNER) != 0) ? LMUtils.fromString(((NBTTagString) nbt).getString()) : null);
+            sm.setOwner(((instance.getFlags() & ISecure.SAVE_OWNER) != 0) ? LMStringUtils.fromString(((NBTTagString) nbt).getString()) : null);
         }
         else
         {
             NBTTagCompound tag = (NBTTagCompound) nbt;
-            sm.setOwner(tag.hasKey("Owner") ? LMUtils.fromString(tag.getString("Owner")) : null);
+            sm.setOwner(tag.hasKey("Owner") ? LMStringUtils.fromString(tag.getString("Owner")) : null);
             sm.setPrivacyLevel((((instance.getFlags() & ISecure.SAVE_PRIVACY_LEVEL) != 0) && tag.hasKey("Level")) ? EnumPrivacyLevel.NAME_MAP.get(tag.getString("Level")) : EnumPrivacyLevel.PUBLIC);
         }
     }

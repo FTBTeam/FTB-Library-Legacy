@@ -2,14 +2,11 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.Notification;
-import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.latmod.lib.util.LMNetUtils;
@@ -18,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
@@ -119,15 +115,6 @@ public class MessageReload extends MessageToClient<MessageReload>
         if(type.reload(Side.CLIENT))
         {
             reloadClient(ms, type);
-        }
-        else if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT)
-        {
-            Notification n = new Notification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
-            n.addText(FTBLibLang.reload_client_config.textComponent());
-            n.addText(new TextComponentString("/ftb reload_client"));
-            n.setTimer(7000);
-            n.setColor(0xFF333333);
-            ClientNotifications.add(n);
         }
     }
 }

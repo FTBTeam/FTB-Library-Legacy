@@ -9,15 +9,15 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.config.EnumNameMap;
 import com.feed_the_beast.ftbl.api.events.team.AttachTeamCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
+import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.FinalIDObject;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.LMStringUtils;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -41,18 +41,18 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
 {
     public static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(false, EnumTeamColor.values());
 
-    private final IForgeWorld world;
+    private final ForgeWorld world;
     private final CapabilityDispatcher capabilities;
     private final ConfigEntryEnum<EnumTeamColor> color;
-    private IForgePlayer owner;
+    private ForgePlayer owner;
     private Collection<String> allies;
     private Collection<UUID> enemies;
     private String title;
     private String desc;
     private int flags;
-    private Collection<IForgePlayer> invited;
+    private Collection<ForgePlayer> invited;
 
-    public ForgeTeam(IForgeWorld w, String id)
+    public ForgeTeam(ForgeWorld w, String id)
     {
         super(id);
         world = w;
@@ -93,7 +93,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setString("Owner", LMUtils.fromUUID(owner.getProfile().getId()));
+        nbt.setString("Owner", owner.getStringUUID());
         nbt.setByte("Flags", (byte) flags);
         nbt.setString("Color", EnumNameMap.getEnumName(color.get()));
 
@@ -118,7 +118,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        owner = world.getPlayer(LMUtils.fromString(nbt.getString("Owner")));
+        owner = world.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
         flags = nbt.getByte("Flags");
         color.set(nbt.hasKey("Color") ? COLOR_NAME_MAP.get(nbt.getString("Color")) : EnumTeamColor.GRAY);
         title = nbt.hasKey("Title") ? nbt.getString("Title") : null;
@@ -318,7 +318,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         }
     }
 
-    public boolean inviteMember(@Nullable IForgePlayer player)
+    public boolean inviteMember(@Nullable ForgePlayer player)
     {
         if(!isInvited(player))
         {
