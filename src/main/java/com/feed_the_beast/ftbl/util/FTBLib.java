@@ -11,7 +11,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -25,16 +24,13 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -231,24 +227,5 @@ public class FTBLib
         }
 
         return null;
-    }
-
-    //
-    public static void registerServerTickable(MinecraftServer server, ITickable tickable)
-    {
-        try
-        {
-            Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
-            field.setAccessible(true);
-
-            @SuppressWarnings("unchecked")
-            List<ITickable> list = (List<ITickable>) field.get(server);
-
-            list.add(tickable);
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
     }
 }

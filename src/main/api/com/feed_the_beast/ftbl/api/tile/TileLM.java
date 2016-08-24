@@ -55,7 +55,6 @@ public class TileLM extends TileEntity
     {
         super.writeToNBT(tag);
         writeTileData(tag);
-        tag.setTag("Security", security.serializeNBT());
         return tag;
     }
 
@@ -63,7 +62,6 @@ public class TileLM extends TileEntity
     public final void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        security.deserializeNBT(tag.getTag("Security"));
         readTileData(tag);
     }
 
@@ -79,7 +77,6 @@ public class TileLM extends TileEntity
     public final NBTTagCompound getUpdateTag()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setTag("Security", security.serializeNBT());
         writeTileClientData(tag);
         return tag;
     }
@@ -87,29 +84,29 @@ public class TileLM extends TileEntity
     @Override
     public final void onDataPacket(NetworkManager m, SPacketUpdateTileEntity p)
     {
-        NBTTagCompound tag = p.getNbtCompound();
-        security.deserializeNBT(tag.getTag("Security"));
-        readTileClientData(tag);
+        readTileClientData(p.getNbtCompound());
         onUpdatePacket();
         FTBLibClient.onGuiClientAction();
     }
 
-    public void writeTileData(NBTTagCompound tag)
+    public void writeTileData(NBTTagCompound nbt)
     {
+        nbt.setTag("Security", security.serializeNBT());
     }
 
-    public void readTileData(NBTTagCompound tag)
+    public void readTileData(NBTTagCompound nbt)
     {
+        security.deserializeNBT(nbt.getTag("Security"));
     }
 
-    public void writeTileClientData(NBTTagCompound tag)
+    public void writeTileClientData(NBTTagCompound nbt)
     {
-        writeTileData(tag);
+        nbt.setTag("SCR", security.serializeNBT());
     }
 
-    public void readTileClientData(NBTTagCompound tag)
+    public void readTileClientData(NBTTagCompound nbt)
     {
-        readTileData(tag);
+        security.deserializeNBT(nbt.getTag("SCR"));
     }
 
     public EnumSync getSync()

@@ -11,6 +11,8 @@ import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -23,11 +25,14 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP)
@@ -62,7 +67,7 @@ public class FTBLibMod
         ODItems.preInit();
         FTBLibStats.init();
 
-        MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.instance);
+        MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
         FTBLibCapabilities.init();
         FTBLibNotifications.init();
 
@@ -98,7 +103,19 @@ public class FTBLibMod
         FTBLibAPI_Impl.get().getRegistries().reloadConfig();
         FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
         FTBLibAPI_Impl.get().createAndLoadWorld();
-        FTBLib.registerServerTickable(e.getServer(), FTBLibEventHandler.instance);
+
+        try
+        {
+            Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
+            field.setAccessible(true);
+            @SuppressWarnings("unchecked")
+            List<ITickable> list = (List<ITickable>) field.get(e.getServer());
+            list.add(FTBLibAPI_Impl.get().getRegistries());
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     @Mod.EventHandler

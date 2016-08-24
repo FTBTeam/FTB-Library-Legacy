@@ -19,7 +19,7 @@ public abstract class ItemLM extends Item
     }
 
     @SideOnly(Side.CLIENT)
-    public final void addDefaultModel()
+    public final void registerDefaultModel()
     {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));
     }

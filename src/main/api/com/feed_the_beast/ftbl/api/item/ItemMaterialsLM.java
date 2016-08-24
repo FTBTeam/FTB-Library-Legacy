@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
+public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
 {
     public enum Air implements IMaterial
     {
@@ -51,6 +51,7 @@ public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMater
     private final TIntObjectHashMap<IMaterial> materials;
     private final TIntObjectHashMap<String> unlocalizedNameMap;
     private IMaterial defValue;
+    private String folder = "";
 
     public ItemMaterialsLM()
     {
@@ -59,6 +60,11 @@ public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMater
         unlocalizedNameMap = new TIntObjectHashMap<>();
         setHasSubtypes(true);
         setMaxDamage(0);
+    }
+
+    public void setFolder(@Nonnull String s)
+    {
+        folder = s;
     }
 
     public void setDefaultMaterial(@Nonnull IMaterial m)
@@ -80,12 +86,17 @@ public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMater
     {
         try
         {
-            LMUtils.getObjects(IMaterial.class, c, null).forEach(this::add);
+            addAll(LMUtils.getObjects(IMaterial.class, c, null));
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
         }
+    }
+
+    public final void addAll(Iterable<IMaterial> c)
+    {
+        c.forEach(this::add);
     }
 
     @Override
@@ -104,12 +115,6 @@ public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMater
     }
 
     @Nonnull
-    public String getFolder()
-    {
-        return "";
-    }
-
-    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack is)
     {
@@ -123,8 +128,7 @@ public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMater
 
             if(m.isAdded())
             {
-                String f = getFolder();
-                s = getRegistryName().getResourceDomain() + ".item." + (f.isEmpty() ? m.getName() : (f + '.' + m.getName()));
+                s = getRegistryName().getResourceDomain() + ".item." + (folder.isEmpty() ? m.getName() : (folder + '.' + m.getName()));
             }
             else
             {
@@ -142,8 +146,7 @@ public abstract class ItemMaterialsLM extends Item implements IMetaLookup<IMater
     {
         for(IMaterial i : getValues())
         {
-            String s = getFolder();
-            ResourceLocation rl = new ResourceLocation(getRegistryName().getResourceDomain(), s.isEmpty() ? i.getName() : (s + '/' + i.getName()));
+            ResourceLocation rl = new ResourceLocation(getRegistryName().getResourceDomain(), folder.isEmpty() ? i.getName() : (folder + '/' + i.getName()));
             ModelLoader.setCustomModelResourceLocation(this, i.getMetadata(), new ModelResourceLocation(rl, "inventory"));
         }
     }

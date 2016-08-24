@@ -22,6 +22,7 @@ import com.latmod.lib.ResourceLocationComparator;
 import com.latmod.lib.json.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -30,6 +31,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 16.08.2016.
  */
-public class FTBLibRegistries implements IFTBLibRegistries
+public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 {
     static final FTBLibRegistries INSTANCE = new FTBLibRegistries();
 
@@ -121,6 +123,35 @@ public class FTBLibRegistries implements IFTBLibRegistries
     private final IRegistry<String, ConfigFile> config = new SimpleRegistry<>(false);
     private final IntIDRegistry notifications = new IntIDRegistry();
     private final IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers = new SimpleRegistry<>(true);
+    private final Collection<ITickable> tickables = new ArrayList<>();
+    //TODO: Make this Thread-safe
+    private final List<ServerTickCallback> callbacks = new ArrayList<>();
+    private final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
+
+    private class ServerTickCallback
+    {
+        private final int maxTick;
+        private Runnable runnable;
+        private int ticks = 0;
+
+        private ServerTickCallback(int i, Runnable r)
+        {
+            maxTick = i;
+            runnable = r;
+        }
+
+        private boolean incAndCheck()
+        {
+            ticks++;
+            if(ticks >= maxTick)
+            {
+                runnable.run();
+                return true;
+            }
+
+            return false;
+        }
+    }
 
     public final ConfigContainer CONFIG_CONTAINER = new ConfigContainer()
     {
@@ -190,6 +221,53 @@ public class FTBLibRegistries implements IFTBLibRegistries
     public IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers()
     {
         return recipeHandlers;
+    }
+
+    @Override
+    public Collection<ITickable> tickables()
+    {
+        return tickables;
+    }
+
+    void addServerCallback(int timer, Runnable runnable)
+    {
+        if(timer <= 0)
+        {
+            runnable.run();
+        }
+        else
+        {
+            pendingCallbacks.add(new ServerTickCallback(timer, runnable));
+        }
+    }
+
+    @Override
+    public void update()
+    {
+        if(!tickables.isEmpty())
+        {
+            for(ITickable t : tickables)
+            {
+                t.update();
+            }
+        }
+
+        if(!pendingCallbacks.isEmpty())
+        {
+            callbacks.addAll(pendingCallbacks);
+            pendingCallbacks.clear();
+        }
+
+        if(!callbacks.isEmpty())
+        {
+            for(int i = callbacks.size() - 1; i >= 0; i--)
+            {
+                if(callbacks.get(i).incAndCheck())
+                {
+                    callbacks.remove(i);
+                }
+            }
+        }
     }
 
     public void reloadConfig()

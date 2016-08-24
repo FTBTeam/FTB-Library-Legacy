@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibEventHandler;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
@@ -112,14 +111,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     @Override
     public void addServerCallback(int timer, Runnable runnable)
     {
-        if(timer <= 0)
-        {
-            runnable.run();
-        }
-        else
-        {
-            FTBLibEventHandler.pendingCallbacks.add(new FTBLibEventHandler.ServerTickCallback(timer, runnable));
-        }
+        getRegistries().addServerCallback(timer, runnable);
     }
 
     @Override

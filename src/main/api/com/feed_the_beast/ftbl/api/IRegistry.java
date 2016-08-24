@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -11,6 +12,7 @@ public interface IRegistry<K, V>
 {
     V register(K key, V v);
 
+    @Nullable
     V get(K key);
 
     Set<K> getKeys();

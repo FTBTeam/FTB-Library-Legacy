@@ -8,12 +8,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,6 +66,11 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
 
         @Nonnull
         Material getMaterial();
+
+        default boolean onActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side)
+        {
+            return false;
+        }
     }
 
     private BlockVariantLookup<T> metaLookup;
@@ -113,7 +123,6 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         return state.getValue(getMetaLookup().getProperty()).getTileEntityClass() != null;
     }
 
-    @Nonnull
     @Override
     public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
     {
@@ -173,9 +182,29 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
 
     @Override
     @Deprecated
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockState state, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side)
+    {
+        if(canRenderInLayer(state, BlockRenderLayer.TRANSLUCENT))
+        {
+            IBlockState otherState = blockAccess.getBlockState(pos.offset(side));
+            return state != otherState;
+        }
+
+        return super.shouldSideBeRendered(state, blockAccess, pos, side);
+    }
+
+    @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state)
     {
         return state.getValue(getMetaLookup().getProperty()).isOpaqueCube();
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    {
+        return state.getValue(getMetaLookup().getProperty()).onActivated(worldIn, pos, state, playerIn, hand, heldItem, side);
     }
 
     // Helpers //

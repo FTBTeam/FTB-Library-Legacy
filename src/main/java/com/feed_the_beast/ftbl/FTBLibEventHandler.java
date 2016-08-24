@@ -10,7 +10,6 @@ import com.latmod.lib.util.LMNBTUtils;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ITickable;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -21,40 +20,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
-public class FTBLibEventHandler implements ITickable
+public class FTBLibEventHandler
 {
-    public static final FTBLibEventHandler instance = new FTBLibEventHandler();
-    public static final List<ServerTickCallback> callbacks = new ArrayList<>();
-    public static final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
-
-    public static class ServerTickCallback
-    {
-        public final int maxTick;
-        public Runnable runnable;
-        private int ticks = 0;
-
-        public ServerTickCallback(int i, Runnable r)
-        {
-            maxTick = i;
-            runnable = r;
-        }
-
-        public boolean incAndCheck()
-        {
-            ticks++;
-            if(ticks >= maxTick)
-            {
-                runnable.run();
-                return true;
-            }
-
-            return false;
-        }
-    }
-
     @SubscribeEvent
     public void onWorldSaved(WorldEvent.Save event)
     {
@@ -130,27 +98,6 @@ public class FTBLibEventHandler implements ITickable
         if(e.getEntity() instanceof EntityPlayerMP && FTBLibAPI_Impl.get().getWorld() != null)
         {
             FTBLibAPI_Impl.get().getWorld().getPlayer(e.getEntity()).onDeath();
-        }
-    }
-
-    @Override
-    public void update()
-    {
-        if(!pendingCallbacks.isEmpty())
-        {
-            callbacks.addAll(pendingCallbacks);
-            pendingCallbacks.clear();
-        }
-
-        if(!callbacks.isEmpty())
-        {
-            for(int i = callbacks.size() - 1; i >= 0; i--)
-            {
-                if(callbacks.get(i).incAndCheck())
-                {
-                    callbacks.remove(i);
-                }
-            }
         }
     }
 
