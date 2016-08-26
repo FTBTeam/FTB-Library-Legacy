@@ -23,7 +23,7 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 
     public MessageDisplayInfo(IInfoPage page)
     {
-        infoID = page.getID();
+        infoID = page.getName();
         json = page.getSerializableElement();
     }
 

@@ -26,6 +26,7 @@ public class MaterialItem implements IMaterial
         item = i;
     }
 
+    @Override
     public int getMetadata()
     {
         return metadata;

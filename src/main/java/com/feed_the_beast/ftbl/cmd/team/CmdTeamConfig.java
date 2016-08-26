@@ -40,7 +40,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
         @Override
         public ITextComponent getConfigTitle()
         {
-            return FTBLibLang.team_config.textComponent(team.getID());
+            return FTBLibLang.team_config.textComponent(team.getName());
         }
 
         @Override

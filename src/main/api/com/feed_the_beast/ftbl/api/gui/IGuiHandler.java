@@ -16,9 +16,9 @@ import javax.annotation.Nullable;
 public interface IGuiHandler
 {
     @Nullable
-    Container getContainer(@Nonnull EntityPlayer ep, @Nullable NBTTagCompound data);
+    Container getContainer(@Nonnull EntityPlayer player, @Nullable NBTTagCompound data);
 
     @SideOnly(Side.CLIENT)
-    @Nullable
-    GuiScreen getGui(@Nonnull EntityPlayer ep, @Nullable NBTTagCompound data);
+    @Nonnull
+    GuiScreen getGui(@Nonnull EntityPlayer player, @Nullable NBTTagCompound data);
 }

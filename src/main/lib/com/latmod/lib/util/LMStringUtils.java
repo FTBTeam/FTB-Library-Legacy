@@ -1,7 +1,7 @@
 package com.latmod.lib.util;
 
-import com.latmod.lib.IIDObject;
 import com.latmod.lib.math.MathHelperLM;
+import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,9 +32,9 @@ public class LMStringUtils
     @Nonnull
     public static String getID(@Nullable Object o)
     {
-        if(o instanceof IIDObject)
+        if(o instanceof IStringSerializable)
         {
-            return ((IIDObject) o).getID();
+            return ((IStringSerializable) o).getName();
         }
 
         return String.valueOf(o);

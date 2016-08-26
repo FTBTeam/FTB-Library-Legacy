@@ -11,11 +11,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.latmod.lib.IIDObject;
 import com.latmod.lib.RemoveFilter;
 import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMMapUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
@@ -57,7 +57,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     public boolean equals(Object o)
     {
-        return o == this || (o instanceof IIDObject && ((IIDObject) o).getID().equals(getID()));
+        return o == this || (o instanceof IStringSerializable && ((IStringSerializable) o).getName().equals(getName()));
     }
 
     public InfoPage setTitle(@Nullable ITextComponent c)
@@ -68,7 +68,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     @Nonnull
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -117,7 +117,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     public void addSub(InfoPage c)
     {
-        childPages.put(c.getID(), c);
+        childPages.put(c.getName(), c);
         c.setParent(this);
     }
 
@@ -128,7 +128,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         {
             c = new InfoPage(id);
             c.setParent(this);
-            childPages.put(c.getID(), c);
+            childPages.put(c.getName(), c);
         }
 
         return c;
@@ -175,7 +175,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     public InfoPage copy()
     {
-        InfoPage page = new InfoPage(getID());
+        InfoPage page = new InfoPage(getName());
         page.fromJson(getSerializableElement());
         return page;
     }
@@ -196,9 +196,9 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     {
         JsonObject o = new JsonObject();
 
-        if(getName() != null)
+        if(getTitle() != null)
         {
-            o.add("N", LMJsonUtils.serializeTextComponent(getName()));
+            o.add("N", LMJsonUtils.serializeTextComponent(getTitle()));
         }
 
         if(!text.isEmpty())
@@ -264,7 +264,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
                 InfoPage c = new InfoPage(entry.getKey());
                 c.setParent(this);
                 c.fromJson(entry.getValue());
-                childPages.put(c.getID(), c);
+                childPages.put(c.getName(), c);
             }
         }
 
@@ -287,7 +287,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     @Nullable
     @Override
-    public ITextComponent getName()
+    public ITextComponent getTitle()
     {
         return title;
     }
@@ -308,29 +308,34 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         return list;
     }
 
+    @Override
     @Nonnull
     public final IInfoPageTheme getTheme()
     {
         return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : parent.getTheme()) : theme;
     }
 
+    @Override
     @Nonnull
     public final IResourceProvider getResourceProvider()
     {
         return (resourceProvider == null) ? ((parent == null) ? URLResourceProvider.INSTANCE : parent.getResourceProvider()) : resourceProvider;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public void refreshGui(@Nonnull GuiInfo gui)
     {
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public ButtonLM createSpecialButton(GuiInfo gui)
     {
         return null;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public ButtonInfoPage createButton(GuiInfo gui)
     {

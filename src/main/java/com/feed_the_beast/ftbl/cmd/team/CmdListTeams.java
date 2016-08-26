@@ -46,7 +46,7 @@ public class CmdListTeams extends CommandLM
 
         for(IForgeTeam team : FTBLibAPI.get().getWorld().getTeams())
         {
-            InfoPage page1 = page.getSub(team.getID());
+            InfoPage page1 = page.getSub(team.getName());
 
             ITextComponent title = new TextComponentString(team.getTitle());
             title.getStyle().setColor(team.getColor().getTextFormatting());
@@ -60,7 +60,7 @@ public class CmdListTeams extends CommandLM
                 page1.println(null);
             }
 
-            page1.println("ID: " + team.getID());
+            page1.println("ID: " + team.getName());
             IForgePlayer owner = team.getOwner();
             page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
 

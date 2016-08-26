@@ -68,6 +68,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         entityPlayer = ep;
     }
 
+    @Override
     public final String getTeamID()
     {
         return teamID;
@@ -80,9 +81,10 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
 
     public final boolean isMemberOf(ForgeTeam team)
     {
-        return teamID != null && team != null && team.getID().equals(teamID);
+        return teamID != null && team != null && team.getName().equals(teamID);
     }
 
+    @Override
     @Nullable
     public final ForgeTeam getTeam()
     {
@@ -101,6 +103,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return capabilities == null ? null : capabilities.getCapability(capability, facing);
     }
 
+    @Override
     @Nonnull
     public final GameProfile getProfile()
     {
@@ -165,6 +168,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return equalsPlayer(getWorld().getPlayer(o));
     }
 
+    @Override
     public boolean equalsPlayer(IForgePlayer p)
     {
         return p == this || (p != null && gameProfile.getId().equals(p.getProfile().getId()));
@@ -192,6 +196,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return map;
     }
 
+    @Override
     public boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level)
     {
         if(level == EnumPrivacyLevel.PUBLIC || owner == null)
@@ -240,6 +245,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return FTBLibAPI_Impl.get().getWorld();
     }
 
+    @Override
     public boolean isFake()
     {
         return getPlayer() instanceof FakePlayer;
@@ -248,7 +254,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     @Override
     public boolean isMemberOf(IForgeTeam team)
     {
-        return teamID != null && team != null && team.getID().equals(teamID);
+        return teamID != null && team != null && team.getName().equals(teamID);
     }
 
     @Override

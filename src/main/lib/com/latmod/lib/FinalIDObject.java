@@ -1,10 +1,11 @@
 package com.latmod.lib;
 
 import com.latmod.lib.util.LMStringUtils;
+import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nonnull;
 
-public class FinalIDObject implements IIDObject
+public class FinalIDObject implements IStringSerializable
 {
     private final String ID;
 
@@ -20,7 +21,7 @@ public class FinalIDObject implements IIDObject
 
     @Override
     @Nonnull
-    public final String getID()
+    public final String getName()
     {
         return ID;
     }

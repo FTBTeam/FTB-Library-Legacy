@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -71,6 +72,21 @@ public final class CubeRenderer
     public void setSizeWHD(double x, double y, double z, double w, double h, double d)
     {
         setSize(x, y, z, x + w, y + h, z + d);
+    }
+
+    public void offset(double x, double y, double z)
+    {
+        minX += x;
+        minY += y;
+        minZ += z;
+        maxX += x;
+        maxY += y;
+        maxZ += z;
+    }
+
+    public void offset(Vec3i pos)
+    {
+        offset(pos.getX(), pos.getY(), pos.getZ());
     }
 
     public void setUV(double u0, double v0, double u1, double v1)

@@ -82,12 +82,14 @@ public class Notification implements INotification
         return ID;
     }
 
+    @Override
     @Nonnull
     public List<ITextComponent> getText()
     {
         return text == null ? Collections.emptyList() : text;
     }
 
+    @Override
     public ItemStack getItem()
     {
         return item;
@@ -105,6 +107,7 @@ public class Notification implements INotification
         return false;
     }
 
+    @Override
     public int getTimer()
     {
         return timer;
@@ -116,6 +119,7 @@ public class Notification implements INotification
         return this;
     }
 
+    @Override
     public int getColor()
     {
         return color;

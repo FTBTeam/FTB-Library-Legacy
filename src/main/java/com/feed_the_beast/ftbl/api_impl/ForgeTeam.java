@@ -130,16 +130,19 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         }
     }
 
+    @Override
     public IForgeWorld getWorld()
     {
         return null;
     }
 
+    @Override
     public IForgePlayer getOwner()
     {
         return owner;
     }
 
+    @Override
     public String getTitle()
     {
         return (title == null) ? (owner.getProfile().getName() + "'s Team") : title;
@@ -150,6 +153,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         title = (s == null || s.isEmpty()) ? null : s;
     }
 
+    @Override
     @Nullable
     public String getDesc()
     {
@@ -161,6 +165,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         desc = (s == null || s.isEmpty()) ? null : s;
     }
 
+    @Override
     public EnumTeamColor getColor()
     {
         return color.get();
@@ -171,6 +176,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         color.set(col);
     }
 
+    @Override
     public EnumTeamStatus getStatus(@Nullable IForgePlayer player)
     {
         if(player == null)
@@ -195,7 +201,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
                 {
                     return EnumTeamStatus.MEMBER;
                 }
-                else if(allies != null && allies.contains(team.getID()) && team.isAllyTeam(getID()))
+                else if(allies != null && allies.contains(team.getName()) && team.isAllyTeam(getName()))
                 {
                     return EnumTeamStatus.ALLY;
                 }
@@ -238,6 +244,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return false;
     }
 
+    @Override
     public boolean isAllyTeam(String team)
     {
         return allies != null && allies.contains(team);
@@ -276,11 +283,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return false;
     }
 
+    @Override
     public boolean isEnemy(UUID player)
     {
         return enemies != null && enemies.contains(player);
     }
 
+    @Override
     public Collection<IForgePlayer> getMembers()
     {
         Collection<IForgePlayer> c = new HashSet<>();
@@ -300,7 +309,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     {
         if(!player.isMemberOf(this) && isInvited(player))
         {
-            player.setTeamID(getID());
+            player.setTeamID(getName());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
             invited.remove(player);
             return true;
@@ -334,6 +343,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return false;
     }
 
+    @Override
     public boolean isInvited(@Nullable IForgePlayer player)
     {
         return player != null && (((getFlags() & IForgeTeam.FREE_TO_JOIN) != 0) || invited != null && invited.contains(player) && player.getTeam() != null);
@@ -344,7 +354,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         if(owner == null)
         {
             owner = newOwner;
-            newOwner.setTeamID(getID());
+            newOwner.setTeamID(getName());
         }
         else
         {
@@ -358,6 +368,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         }
     }
 
+    @Override
     public boolean canInteract(IForgePlayer player, EnumTeamPrivacyLevel level)
     {
         switch(level)

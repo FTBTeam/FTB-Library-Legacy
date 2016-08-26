@@ -47,9 +47,9 @@ public class CmdRemAlly extends CommandLM
         checkArgs(args, 1, "<teamID>");
         ForgeTeam team1 = CmdTeam.getTeam(args[0]);
 
-        if(team.removeAllyTeam(team1.getID()))
+        if(team.removeAllyTeam(team1.getName()))
         {
-            FTBLib.printChat(ep, "Removed ally team: " + team1.getID());
+            FTBLib.printChat(ep, "Removed ally team: " + team1.getName());
         }
     }
 }

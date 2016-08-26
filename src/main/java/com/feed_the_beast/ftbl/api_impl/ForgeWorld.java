@@ -67,6 +67,7 @@ public class ForgeWorld implements IForgeWorld
         return playerMap.values();
     }
 
+    @Override
     public ForgePlayer getPlayer(Object o)
     {
         if(o == null)
@@ -205,7 +206,7 @@ public class ForgeWorld implements IForgeWorld
             ForgeTeam team = new ForgeTeam(this, tag2.getString("ID"));
             currentTeam = team;
             team.deserializeNBT(tag2);
-            teams.put(team.getID(), team);
+            teams.put(team.getName(), team);
         }
 
         currentTeam = null;
@@ -245,7 +246,7 @@ public class ForgeWorld implements IForgeWorld
         {
             currentTeam = team;
             tag2 = team.serializeNBT();
-            tag2.setString("ID", team.getID());
+            tag2.setString("ID", team.getName());
             teamsTag.appendTag(tag2);
         }
 

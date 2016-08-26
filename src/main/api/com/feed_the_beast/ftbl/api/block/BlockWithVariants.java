@@ -64,6 +64,11 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
             return getLayer() == BlockRenderLayer.SOLID;
         }
 
+        default boolean isFullCube()
+        {
+            return true;
+        }
+
         @Nonnull
         Material getMaterial();
 
@@ -199,6 +204,13 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
     public boolean isOpaqueCube(IBlockState state)
     {
         return state.getValue(getMetaLookup().getProperty()).isOpaqueCube();
+    }
+
+    @Override
+    @Deprecated
+    public boolean isFullCube(IBlockState state)
+    {
+        return state.getValue(getMetaLookup().getProperty()).isFullCube();
     }
 
     @Override

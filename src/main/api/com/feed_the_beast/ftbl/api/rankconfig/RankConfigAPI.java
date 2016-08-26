@@ -35,12 +35,12 @@ public class RankConfigAPI
 
     public static <E extends RankConfig> E register(@Nonnull E rankConfig)
     {
-        if(map.containsKey(rankConfig.getID()))
+        if(map.containsKey(rankConfig.getName()))
         {
-            throw new RuntimeException("Duplicate RankConfig ID found: " + rankConfig.getID());
+            throw new RuntimeException("Duplicate RankConfig ID found: " + rankConfig.getName());
         }
 
-        map.put(rankConfig.getID(), rankConfig);
+        map.put(rankConfig.getName(), rankConfig);
         return rankConfig;
     }
 

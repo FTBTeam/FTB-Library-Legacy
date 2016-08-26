@@ -78,11 +78,11 @@ public class CmdCreate extends CommandLM
 
         ForgeTeam team = new ForgeTeam(p.getWorld(), args[0]);
         team.changeOwner(p);
-        p.getWorld().teams.put(team.getID(), team);
+        p.getWorld().teams.put(team.getName(), team);
 
         MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
         MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
 
-        FTBLibLang.team_created.printChat(sender, team.getID());
+        FTBLibLang.team_created.printChat(sender, team.getName());
     }
 }

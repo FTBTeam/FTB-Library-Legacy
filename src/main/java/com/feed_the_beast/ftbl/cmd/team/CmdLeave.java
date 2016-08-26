@@ -44,7 +44,7 @@ public class CmdLeave extends CommandLM
         {
             MinecraftForge.EVENT_BUS.post(new ForgeTeamDeletedEvent(team));
             team.removePlayer(p);
-            p.getWorld().teams.remove(team.getID());
+            p.getWorld().teams.remove(team.getName());
 
             FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
             FTBLibLang.team_deleted.printChat(sender, team.getTitle());
