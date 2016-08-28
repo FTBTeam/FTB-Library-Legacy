@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IForgeWorld;
-import com.feed_the_beast.ftbl.api.events.world.AttachWorldCapabilitiesEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldClosedEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedBeforePlayersEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.world.ForgeWorldPostLoadedEvent;
+import com.feed_the_beast.ftbl.api.IUniverse;
+import com.feed_the_beast.ftbl.api.events.universe.AttachUniverseCapabilitiesEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public class ForgeWorld implements IForgeWorld
+public class Universe implements IUniverse
 {
     public final Map<UUID, ForgePlayer> playerMap;
     public final Map<String, ForgeTeam> teams;
@@ -38,15 +38,15 @@ public class ForgeWorld implements IForgeWorld
     private ForgePlayer currentPlayer;
     private ForgeTeam currentTeam;
 
-    ForgeWorld()
+    Universe()
     {
         playerMap = new HashMap<>();
         teams = new HashMap<>();
 
-        AttachWorldCapabilitiesEvent event = new AttachWorldCapabilitiesEvent(this);
+        AttachUniverseCapabilitiesEvent event = new AttachUniverseCapabilitiesEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
         capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldLoadedEvent(this));
+        MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ForgeWorld implements IForgeWorld
 
     public void onClosed()
     {
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldClosedEvent(this));
+        MinecraftForge.EVENT_BUS.post(new ForgeUniverseClosedEvent(this));
         playerMap.clear();
     }
 
@@ -177,7 +177,7 @@ public class ForgeWorld implements IForgeWorld
             capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
         }
 
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldLoadedBeforePlayersEvent(this));
+        MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
 
         NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
 
@@ -211,7 +211,7 @@ public class ForgeWorld implements IForgeWorld
 
         currentTeam = null;
 
-        MinecraftForge.EVENT_BUS.post(new ForgeWorldPostLoadedEvent(this));
+        MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
     }
 
     @Override

@@ -66,7 +66,7 @@ public class MessageReload extends MessageToClient<MessageReload>
             FTBLibLang.RELOAD_CLIENT.printChat(ep, (System.currentTimeMillis() - ms) + "ms");
         }
 
-        FTBLibMod.logger.info("Current Mode: " + FTBLibAPI.get().getSharedData(Side.CLIENT).getMode().getID());
+        FTBLibMod.logger.info("Current Mode: " + FTBLibAPI.get().getSharedData(Side.CLIENT).getPackMode().getID());
     }
 
     @Override

@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.api.security;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.ILangKeyContainer;
+import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.LangKey;
-import com.latmod.lib.TextureCoords;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
@@ -55,9 +55,17 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
         return langKey;
     }
 
-    public TextureCoords getIcon()
+    public ITextureCoords getIcon()
     {
-        return GuiIcons.SECURITY[ordinal()];
+        switch(this)
+        {
+            case PRIVATE:
+                return GuiIcons.SECURITY_PRIVATE;
+            case TEAM:
+                return GuiIcons.SECURITY_TEAM;
+            default:
+                return GuiIcons.SECURITY_PUBLIC;
+        }
     }
 
     public boolean isPublic()

@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.api.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
@@ -83,7 +83,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         if(args.length == 0 && sender instanceof EntityPlayerMP)
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            ConfigContainer cc = getConfigContainer(sender);
+            IConfigContainer cc = getConfigContainer(sender);
             FTBLibAPI_Impl.get().getRegistries().tempServerConfig.put(ep.getGameProfile().getId(), cc);
             new MessageEditConfig(null, cc).sendTo(ep);
             return;
@@ -91,7 +91,7 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         checkArgs(args, 1, "[ID] [value]");
 
-        ConfigContainer cc = getConfigContainer(sender);
+        IConfigContainer cc = getConfigContainer(sender);
         ConfigEntry entry = cc.createGroup().getEntryFromFullID(args[0]);
 
         if(entry == null)
@@ -123,5 +123,5 @@ public abstract class CmdEditConfigBase extends CommandLM
         sender.addChatMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
     }
 
-    public abstract ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;
+    public abstract IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;
 }

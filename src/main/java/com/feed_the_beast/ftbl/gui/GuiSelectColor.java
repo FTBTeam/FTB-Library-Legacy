@@ -40,12 +40,12 @@ public class GuiSelectColor extends GuiLM
     private static final int COL_TEX_W = 29;
     private static final int COL_TEX_H = 16;
 
-    private static final TextureCoords col_tex = TextureCoords.fromCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
-    private static final TextureCoords cursor_tex = TextureCoords.fromCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
+    private static final TextureCoords COL_TEX = TextureCoords.fromCoords(TEXTURE, 145, 10, COL_TEX_W, COL_TEX_H, 256, 256);
+    private static final TextureCoords CURSOR_TEX = TextureCoords.fromCoords(TEXTURE, 145, 36, 8, 8, 256, 256);
 
     private static final int SLIDER_W = 6, SLIDER_H = 10, SLIDER_BAR_W = 64;
-    private static final TextureCoords slider_tex = TextureCoords.fromCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
-    private static final TextureCoords slider_col_tex = TextureCoords.fromCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
+    private static final TextureCoords SLIDER_TEX = TextureCoords.fromCoords(TEXTURE, 145, 26, SLIDER_W, SLIDER_H, 256, 256);
+    private static final TextureCoords SLIDER_COL_TEX = TextureCoords.fromCoords(TEXTURE, 145, 0, SLIDER_BAR_W, SLIDER_H, 256, 256);
 
     private static class ColorSlider extends SliderLM
     {
@@ -132,7 +132,7 @@ public class GuiSelectColor extends GuiLM
             if(cursorPosX >= 0D && cursorPosY >= 0D)
             {
                 GlStateManager.color((float) (1F - sliderRed.getValue(gui)), (float) (1F - sliderGreen.getValue(gui)), (float) (1F - sliderBlue.getValue(gui)), 1F);
-                GuiLM.render(cursor_tex, ax + (int) (cursorPosX * width) - 2, ay + (int) (cursorPosY * height) - 2, 4, 4);
+                GuiLM.render(CURSOR_TEX, ax + (int) (cursorPosX * width) - 2, ay + (int) (cursorPosY * height) - 2, 4, 4);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
@@ -354,9 +354,9 @@ public class GuiSelectColor extends GuiLM
         GuiScreen.drawModalRectWithCustomSizedTexture(getAX(), getAY(), 0F, 0F, width, height, 256F, 256F);
 
         FTBLibClient.setGLColor(initCol.color(), 255);
-        colorInit.render(col_tex);
+        colorInit.render(COL_TEX);
         FTBLibClient.setGLColor(currentColor.color(), 255);
-        colorCurrent.render(col_tex);
+        colorCurrent.render(COL_TEX);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -396,13 +396,13 @@ public class GuiSelectColor extends GuiLM
 
         colorSelector.renderWidget(this);
 
-        sliderRed.renderSlider(slider_tex);
-        sliderGreen.renderSlider(slider_tex);
-        sliderBlue.renderSlider(slider_tex);
+        sliderRed.renderSlider(SLIDER_TEX);
+        sliderGreen.renderSlider(SLIDER_TEX);
+        sliderBlue.renderSlider(SLIDER_TEX);
 
-        sliderHue.renderSlider(slider_tex);
-        sliderSaturation.renderSlider(slider_tex);
-        sliderBrightness.renderSlider(slider_tex);
+        sliderHue.renderSlider(SLIDER_TEX);
+        sliderSaturation.renderSlider(SLIDER_TEX);
+        sliderBrightness.renderSlider(SLIDER_TEX);
     }
 
     private void renderSlider(WidgetLM widget, int colLeft, int colRight)
@@ -417,13 +417,13 @@ public class GuiSelectColor extends GuiLM
         int red = LMColorUtils.getRed(colLeft);
         int green = LMColorUtils.getGreen(colLeft);
         int blue = LMColorUtils.getBlue(colLeft);
-        buffer.pos(x, y, 0D).tex(slider_col_tex.minU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
-        buffer.pos(x, y + h, 0D).tex(slider_col_tex.minU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
+        buffer.pos(x, y, 0D).tex(SLIDER_COL_TEX.getMinU(), SLIDER_COL_TEX.getMinV()).color(red, green, blue, 255).endVertex();
+        buffer.pos(x, y + h, 0D).tex(SLIDER_COL_TEX.getMinU(), SLIDER_COL_TEX.getMaxV()).color(red, green, blue, 255).endVertex();
         red = LMColorUtils.getRed(colRight);
         green = LMColorUtils.getGreen(colRight);
         blue = LMColorUtils.getBlue(colRight);
-        buffer.pos(x + w, y + h, 0D).tex(slider_col_tex.maxU, slider_col_tex.maxV).color(red, green, blue, 255).endVertex();
-        buffer.pos(x + w, y, 0D).tex(slider_col_tex.maxU, slider_col_tex.minV).color(red, green, blue, 255).endVertex();
+        buffer.pos(x + w, y + h, 0D).tex(SLIDER_COL_TEX.getMaxU(), SLIDER_COL_TEX.getMaxV()).color(red, green, blue, 255).endVertex();
+        buffer.pos(x + w, y, 0D).tex(SLIDER_COL_TEX.getMaxU(), SLIDER_COL_TEX.getMinV()).color(red, green, blue, 255).endVertex();
         tessellator.draw();
     }
 

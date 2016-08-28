@@ -90,7 +90,7 @@ public class CmdPackMode extends CommandSubBase
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID());
+            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(FTBLibAPI.get().getSharedData(Side.SERVER).getPackMode().getID());
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }

@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.latmod.lib.TextureCoords;
+import com.latmod.lib.ITextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
@@ -22,10 +22,10 @@ public class ButtonInfoPage extends ButtonLM
     public final GuiInfo guiInfo;
     public final IGuiInfoPage page;
     public String hover;
-    public TextureCoords icon;
+    public ITextureCoords icon;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable TextureCoords t)
+    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable ITextureCoords t)
     {
         super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
@@ -101,7 +101,7 @@ public class ButtonInfoPage extends ButtonLM
         if(icon != null)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.setTexture(icon.texture);
+            FTBLibClient.setTexture(icon.getTexture());
 
             boolean iconBlur = isIconBlurry(gui);
 

@@ -35,7 +35,7 @@ import java.io.File;
 public final class FTBLibAPI_Impl extends FTBLibAPI
 {
     private static FTBLibAPI_Impl INST;
-    private static ForgeWorld world;
+    private static Universe universe;
     private static PackModes packModes;
     private static SharedData sharedDataServer, sharedDataClient;
     private boolean hasServer = false;
@@ -102,9 +102,9 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
-    public ForgeWorld getWorld()
+    public Universe getUniverse()
     {
-        return world;
+        return universe;
     }
 
     @Override
@@ -116,7 +116,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     @Override
     public void reload(ICommandSender sender, ReloadType type)
     {
-        if(world == null)
+        if(universe == null)
         {
             return;
         }
@@ -190,7 +190,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     {
         try
         {
-            world = new ForgeWorld();
+            universe = new Universe();
 
             JsonElement worldData = LMJsonUtils.fromJson(new File(FTBLib.folderWorld, "world_data.json"));
 
@@ -199,13 +199,13 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
                 getSharedData(Side.SERVER).fromJson(worldData.getAsJsonObject());
             }
 
-            world.playerMap.clear();
+            universe.playerMap.clear();
 
             NBTTagCompound nbt = LMNBTUtils.readTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"));
 
             if(nbt != null)
             {
-                world.deserializeNBT(nbt);
+                universe.deserializeNBT(nbt);
             }
         }
         catch(Exception ex)
@@ -216,7 +216,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
     public void closeWorld()
     {
-        world.onClosed();
-        world = null;
+        universe.onClosed();
+        universe = null;
     }
 }

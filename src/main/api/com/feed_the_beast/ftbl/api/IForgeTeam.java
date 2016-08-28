@@ -18,7 +18,7 @@ public interface IForgeTeam extends IStringSerializable, ICapabilitySerializable
     byte FREE_TO_JOIN = 1;
     byte HIDDEN = 2;
 
-    IForgeWorld getWorld();
+    IUniverse getUniverse();
 
     IForgePlayer getOwner();
 

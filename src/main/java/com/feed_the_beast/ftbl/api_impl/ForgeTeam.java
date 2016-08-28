@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IForgeWorld;
+import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
@@ -37,7 +37,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
 {
     public static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(false, EnumTeamColor.values());
 
-    private final ForgeWorld world;
+    private final Universe world;
     private final CapabilityDispatcher capabilities;
     private final ConfigEntryEnum<EnumTeamColor> color;
     private ForgePlayer owner;
@@ -48,7 +48,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     private int flags;
     private Collection<ForgePlayer> invited;
 
-    public ForgeTeam(ForgeWorld w, String id)
+    public ForgeTeam(Universe w, String id)
     {
         super(id);
         world = w;
@@ -127,7 +127,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
-    public IForgeWorld getWorld()
+    public IUniverse getUniverse()
     {
         return world;
     }

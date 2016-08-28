@@ -13,7 +13,7 @@ public interface ISharedData extends INBTSerializable<NBTTagCompound>
 {
     Side getSide();
 
-    IPackMode getMode();
+    IPackMode getPackMode();
 
-    UUID getUUID();
+    UUID getUniverseID();
 }

@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.ILangKeyContainer;
+import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.LangKey;
-import com.latmod.lib.TextureCoords;
 import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
@@ -43,8 +43,16 @@ public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
         return this != DISABLED && (this == ACTIVE_HIGH && !b || this == ACTIVE_LOW && b);
     }
 
-    public TextureCoords getIcon()
+    public ITextureCoords getIcon()
     {
-        return GuiIcons.REDSTONE[ordinal()];
+        switch(this)
+        {
+            case ACTIVE_HIGH:
+                return GuiIcons.RS_HIGH;
+            case ACTIVE_LOW:
+                return GuiIcons.RS_LOW;
+            default:
+                return GuiIcons.RS_NONE;
+        }
     }
 }

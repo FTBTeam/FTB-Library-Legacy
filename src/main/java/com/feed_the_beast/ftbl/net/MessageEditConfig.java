@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
@@ -27,7 +27,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
     }
 
-    public MessageEditConfig(NBTTagCompound nbt, ConfigContainer c)
+    public MessageEditConfig(NBTTagCompound nbt, IConfigContainer c)
     {
         group = c.createGroup();
         extraNBT = nbt;
@@ -73,7 +73,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             FTBLib.DEV_LOGGER.info("RX Send: " + m.group);
         }
 
-        new GuiEditConfig(m.extraNBT, new ConfigContainer()
+        new GuiEditConfig(m.extraNBT, new IConfigContainer()
         {
             @Override
             public ConfigGroup createGroup()

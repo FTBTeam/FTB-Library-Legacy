@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import net.minecraft.util.text.ITextComponent;
  */
 public class CmdTeamConfig extends CmdEditConfigBase
 {
-    public static class TeamConfigContainer extends ConfigContainer
+    public static class TeamConfigContainer implements IConfigContainer
     {
         public final ForgeTeam team;
         public final ConfigGroup group;
@@ -62,7 +62,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
     }
 
     @Override
-    public ConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+    public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         ForgePlayer p = getForgePlayer(ep);

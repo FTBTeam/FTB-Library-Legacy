@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryColor;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
@@ -227,7 +227,7 @@ public class GuiEditConfig extends GuiLM
         }
     }
 
-    private final ConfigContainer configContainer;
+    private final IConfigContainer configContainer;
     private final NBTTagCompound extraNBT;
     private final JsonObject modifiedConfig;
 
@@ -238,7 +238,7 @@ public class GuiEditConfig extends GuiLM
     private final SliderLM scroll;
     private int shouldClose = 0;
 
-    public GuiEditConfig(NBTTagCompound nbt, ConfigContainer cc)
+    public GuiEditConfig(NBTTagCompound nbt, IConfigContainer cc)
     {
         super(0, 0);
         configContainer = cc;

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
@@ -54,7 +54,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void onMessage(MessageEditConfigResponse m, EntityPlayerMP player)
     {
-        ConfigContainer cc = FTBLibAPI_Impl.get().getRegistries().tempServerConfig.get(player.getGameProfile().getId());
+        IConfigContainer cc = FTBLibAPI_Impl.get().getRegistries().tempServerConfig.get(player.getGameProfile().getId());
 
         if(cc != null)
         {

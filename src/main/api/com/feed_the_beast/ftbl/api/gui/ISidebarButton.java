@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.TextureCoords;
+import com.latmod.lib.ITextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,7 +17,7 @@ public interface ISidebarButton
 {
     int getPriority();
 
-    TextureCoords getIcon();
+    ITextureCoords getIcon();
 
     EnumEnabled getConfigDefault();
 

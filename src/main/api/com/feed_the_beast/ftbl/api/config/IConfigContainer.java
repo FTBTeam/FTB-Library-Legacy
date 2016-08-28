@@ -8,11 +8,11 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Created by LatvianModder on 07.06.2016.
  */
-public abstract class ConfigContainer
+public interface IConfigContainer
 {
-    public abstract ConfigGroup createGroup();
+    ConfigGroup createGroup();
 
-    public abstract ITextComponent getConfigTitle();
+    ITextComponent getConfigTitle();
 
-    public abstract void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json);
+    void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json);
 }

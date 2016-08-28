@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.ForgeWorld;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.latmod.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
@@ -47,7 +47,7 @@ public class CmdAddFakePlayer extends CommandLM
             throw FTBLibLang.RAW.commandError("Invalid UUID!");
         }
 
-        ForgeWorld world = FTBLibAPI_Impl.get().getWorld();
+        Universe world = FTBLibAPI_Impl.get().getUniverse();
 
         if(world.getPlayer(id) != null || world.getPlayer(args[1]) != null)
         {

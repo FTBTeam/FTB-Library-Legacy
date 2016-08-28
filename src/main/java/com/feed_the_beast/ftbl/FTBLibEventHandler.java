@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.ForgeWorld;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
@@ -31,7 +31,7 @@ public class FTBLibEventHandler
             try
             {
                 LMJsonUtils.toJson(new File(FTBLib.folderWorld, "world_data.json"), FTBLibAPI_Impl.get().getSharedData(Side.SERVER).getSerializableElement());
-                LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), FTBLibAPI.get().getWorld().serializeNBT());
+                LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), FTBLibAPI.get().getUniverse().serializeNBT());
                 //FTBLib.dev_logger.info("ForgeWorldMP Saved");
             }
             catch(Exception ex)
@@ -45,7 +45,7 @@ public class FTBLibEventHandler
     @Optional.Method(modid = "forgeanalytics")
     public void onAnalytics(AnalyticsEvent event)
     {
-        ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", FTBLibAPI.get().getSharedData(event.side).getMode().getID());
+        ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", FTBLibAPI.get().getSharedData(event.side).getPackMode().getID());
     }
 
     @SubscribeEvent
@@ -53,7 +53,7 @@ public class FTBLibEventHandler
     {
         if(e.player instanceof EntityPlayerMP)
         {
-            ForgeWorld world = FTBLibAPI_Impl.get().getWorld();
+            Universe world = FTBLibAPI_Impl.get().getUniverse();
 
             if(world != null)
             {
@@ -81,9 +81,9 @@ public class FTBLibEventHandler
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
     {
-        if(e.player instanceof EntityPlayerMP && FTBLibAPI_Impl.get().getWorld() != null)
+        if(e.player instanceof EntityPlayerMP && FTBLibAPI_Impl.get().getUniverse() != null)
         {
-            ForgePlayer p = FTBLibAPI_Impl.get().getWorld().getPlayer(e.player);
+            ForgePlayer p = FTBLibAPI_Impl.get().getUniverse().getPlayer(e.player);
 
             if(p != null)
             {
@@ -95,9 +95,9 @@ public class FTBLibEventHandler
     @SubscribeEvent
     public void onPlayerDeath(LivingDeathEvent e)
     {
-        if(e.getEntity() instanceof EntityPlayerMP && FTBLibAPI_Impl.get().getWorld() != null)
+        if(e.getEntity() instanceof EntityPlayerMP && FTBLibAPI_Impl.get().getUniverse() != null)
         {
-            FTBLibAPI_Impl.get().getWorld().getPlayer(e.getEntity()).onDeath();
+            FTBLibAPI_Impl.get().getUniverse().getPlayer(e.getEntity()).onDeath();
         }
     }
 

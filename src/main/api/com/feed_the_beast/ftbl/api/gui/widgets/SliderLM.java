@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.latmod.lib.TextureCoords;
+import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -122,7 +122,7 @@ public class SliderLM extends WidgetLM
         return (int) (value * ((getDirection().isVertical() ? height : width) - sliderSize));
     }
 
-    public void renderSlider(TextureCoords tc)
+    public void renderSlider(ITextureCoords tc)
     {
         if(getDirection().isVertical())
         {

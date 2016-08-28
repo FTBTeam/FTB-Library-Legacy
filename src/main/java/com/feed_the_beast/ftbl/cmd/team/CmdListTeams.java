@@ -43,7 +43,7 @@ public class CmdListTeams extends CommandLM
         InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.theme = InfoPageTheme.DARK_NON_UNICODE;
 
-        for(IForgeTeam team : FTBLibAPI.get().getWorld().getTeams())
+        for(IForgeTeam team : FTBLibAPI.get().getUniverse().getTeams())
         {
             InfoPage page1 = page.getSub(team.getName());
 

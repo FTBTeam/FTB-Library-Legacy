@@ -29,7 +29,7 @@ public class CmdTeam extends CommandSubBase
 
     public static ForgeTeam getTeam(String s) throws CommandException
     {
-        ForgeTeam team = FTBLibAPI_Impl.get().getWorld().getTeam(s);
+        ForgeTeam team = FTBLibAPI_Impl.get().getUniverse().getTeam(s);
 
         if(team != null)
         {

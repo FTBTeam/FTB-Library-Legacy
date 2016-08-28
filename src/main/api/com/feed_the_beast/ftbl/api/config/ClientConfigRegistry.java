@@ -17,7 +17,7 @@ public final class ClientConfigRegistry
     private static final ConfigFile FILE = new ConfigFile();
 
     //new ResourceLocation(FTBLibFinals.MOD_ID, "client_config")
-    public static final ConfigContainer CONTAINER = new ConfigContainer()
+    public static final IConfigContainer CONTAINER = new IConfigContainer()
     {
         @Override
         public ConfigGroup createGroup()

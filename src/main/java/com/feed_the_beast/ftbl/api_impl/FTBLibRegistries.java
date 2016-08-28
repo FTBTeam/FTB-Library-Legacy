@@ -5,11 +5,11 @@ import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.IIntIDRegistry;
 import com.feed_the_beast.ftbl.api.IRegistry;
 import com.feed_the_beast.ftbl.api.ISyncedRegistry;
-import com.feed_the_beast.ftbl.api.config.ConfigContainer;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
@@ -114,7 +114,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
     }
 
-    public final Map<UUID, ConfigContainer> tempServerConfig = new HashMap<>();
+    public final Map<UUID, IConfigContainer> tempServerConfig = new HashMap<>();
     private final IRegistry<ResourceLocation, INBTSerializable<NBTTagCompound>> syncedData = new SimpleRegistry<>(false);
     private final SyncedRegistry<IGuiHandler> guis = new SyncedRegistry<>(true);
     private final SidebarButtonRegistry sidebarButtons = new SidebarButtonRegistry();
@@ -151,7 +151,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
     }
 
-    public final ConfigContainer CONFIG_CONTAINER = new ConfigContainer()
+    public final IConfigContainer CONFIG_CONTAINER = new IConfigContainer()
     {
         @Override
         public ConfigGroup createGroup()

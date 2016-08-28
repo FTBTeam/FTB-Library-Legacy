@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.api.tile;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.ILangKeyContainer;
+import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.LangKey;
-import com.latmod.lib.TextureCoords;
 import net.minecraft.util.IStringSerializable;
 
 public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
@@ -38,9 +38,19 @@ public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
         return langKey;
     }
 
-    public TextureCoords getIcon()
+    public ITextureCoords getIcon()
     {
-        return GuiIcons.INV[ordinal()];
+        switch(this)
+        {
+            case ENABLED:
+                return GuiIcons.INV_IO;
+            case ONLY_IN:
+                return GuiIcons.INV_IN;
+            case ONLY_OUT:
+                return GuiIcons.INV_OUT;
+            default:
+                return GuiIcons.INV_NONE;
+        }
     }
 
     public boolean canInsertItem()

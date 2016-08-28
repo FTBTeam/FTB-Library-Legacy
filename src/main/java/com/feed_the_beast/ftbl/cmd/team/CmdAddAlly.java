@@ -44,7 +44,7 @@ public class CmdAddAlly extends CommandLM
 
         checkArgs(args, 1, "<teamID>");
 
-        if(p.getWorld().getTeam(args[0]) == null)
+        if(p.getUniverse().getTeam(args[0]) == null)
         {
             throw FTBLibLang.TEAM_NOT_FOUND.commandError();
         }

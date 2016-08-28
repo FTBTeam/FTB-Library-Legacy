@@ -16,7 +16,7 @@ public interface IForgePlayer extends ICapabilitySerializable<NBTTagCompound>
 {
     GameProfile getProfile();
 
-    IForgeWorld getWorld();
+    IUniverse getUniverse();
 
     @Nullable
     EntityPlayerMP getPlayer();

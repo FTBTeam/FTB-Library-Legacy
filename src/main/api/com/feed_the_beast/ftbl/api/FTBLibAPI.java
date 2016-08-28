@@ -35,7 +35,7 @@ public abstract class FTBLibAPI
 
     public abstract ISharedData getSharedData(Side side);
 
-    public abstract IForgeWorld getWorld();
+    public abstract IUniverse getUniverse();
 
     public abstract void addServerCallback(int timer, Runnable runnable);
 

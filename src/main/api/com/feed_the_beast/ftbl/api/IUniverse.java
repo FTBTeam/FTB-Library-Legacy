@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public interface IForgeWorld extends ICapabilitySerializable<NBTTagCompound>
+public interface IUniverse extends ICapabilitySerializable<NBTTagCompound>
 {
     Collection<? extends IForgePlayer> getPlayers();
 

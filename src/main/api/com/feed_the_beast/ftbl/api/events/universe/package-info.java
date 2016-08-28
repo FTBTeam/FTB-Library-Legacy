@@ -1,3 +1,3 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @mcp.MethodsReturnNonnullByDefault
-package com.feed_the_beast.ftbl.api.events.world;
+package com.feed_the_beast.ftbl.api.events.universe;

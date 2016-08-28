@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.TextureCoords;
+import com.latmod.lib.ITextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,10 +15,10 @@ import javax.annotation.Nullable;
 public abstract class SidebarButton implements ISidebarButton
 {
     private final int priority;
-    private final TextureCoords icon;
+    private final ITextureCoords icon;
     private final EnumEnabled configDefault;
 
-    public SidebarButton(int p, TextureCoords c, EnumEnabled b)
+    public SidebarButton(int p, ITextureCoords c, EnumEnabled b)
     {
         priority = p;
         icon = c;
@@ -32,7 +32,7 @@ public abstract class SidebarButton implements ISidebarButton
     }
 
     @Override
-    public TextureCoords getIcon()
+    public ITextureCoords getIcon()
     {
         return icon;
     }

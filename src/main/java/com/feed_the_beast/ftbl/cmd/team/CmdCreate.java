@@ -69,14 +69,14 @@ public class CmdCreate extends CommandLM
             throw FTBLibLang.RAW.commandError("ID can only contain lowercase a-z, _ and |!");
         }
 
-        if(p.getWorld().getTeam(args[0]) != null)
+        if(p.getUniverse().getTeam(args[0]) != null)
         {
             throw FTBLibLang.RAW.commandError("ID already registred!");
         }
 
-        ForgeTeam team = new ForgeTeam(p.getWorld(), args[0]);
+        ForgeTeam team = new ForgeTeam(p.getUniverse(), args[0]);
         team.changeOwner(p);
-        p.getWorld().teams.put(team.getName(), team);
+        p.getUniverse().teams.put(team.getName(), team);
 
         MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
         MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));

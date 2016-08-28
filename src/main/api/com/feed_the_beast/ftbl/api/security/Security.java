@@ -39,7 +39,7 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
             return ((IForgePlayer) o).getProfile().getId();
         }
 
-        return FTBLibAPI.get().getWorld().getPlayer(o).getProfile().getId();
+        return FTBLibAPI.get().getUniverse().getPlayer(o).getProfile().getId();
     }
 
     @Override

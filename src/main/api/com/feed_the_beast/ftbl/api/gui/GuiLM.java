@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.gui;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.widgets.PanelLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
-import com.latmod.lib.TextureCoords;
+import com.latmod.lib.ITextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -99,12 +99,12 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         GlStateManager.enableTexture2D();
     }
 
-    public static void render(TextureCoords tc, int x, int y, int w, int h)
+    public static void render(ITextureCoords tc, int x, int y, int w, int h)
     {
         if(tc.isValid())
         {
-            FTBLibClient.setTexture(tc.texture);
-            drawTexturedRect(x, y, w, h, tc.minU, tc.minV, tc.maxU, tc.maxV);
+            FTBLibClient.setTexture(tc.getTexture());
+            drawTexturedRect(x, y, w, h, tc.getMinU(), tc.getMinV(), tc.getMaxU(), tc.getMaxV());
         }
     }
 
