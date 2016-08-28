@@ -28,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -95,10 +96,7 @@ public class FTBLib
 
     public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)
     {
-        if(c != null && id != null)
-        {
-            GameRegistry.registerTileEntity(c, id.toString().replace(':', '.'));
-        }
+        GameRegistry.registerTileEntity(c, id.toString().replace(':', '.'));
     }
 
     public static ITextComponent getChatComponent(Object o)
@@ -109,7 +107,7 @@ public class FTBLib
     /**
      * Prints message to chat (doesn't translate it)
      */
-    public static void printChat(ICommandSender ep, Object o)
+    public static void printChat(@Nullable ICommandSender ep, Object o)
     {
         if(ep == null)
         {
@@ -125,6 +123,7 @@ public class FTBLib
         }
     }
 
+    @Nullable
     public static MinecraftServer getServer()
     {
         return FMLCommonHandler.instance().getMinecraftServerInstance();
@@ -143,28 +142,17 @@ public class FTBLib
 
     public static String removeFormatting(String s)
     {
-        if(s == null)
-        {
-            return null;
-        }
-        if(s.isEmpty())
-        {
-            return "";
-        }
-        return TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
+        return s.isEmpty() ? s : TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
     }
 
+    @Nullable
     public static WorldServer getServerWorld()
     {
         MinecraftServer ms = getServer();
-        if(ms == null || ms.worldServers.length < 1)
-        {
-            return null;
-        }
-        return ms.worldServers[0];
+        return (ms == null || ms.worldServers.length < 1) ? null : ms.worldServers[0];
     }
 
-    public static boolean isOP(GameProfile p)
+    public static boolean isOP(@Nullable GameProfile p)
     {
         return !isDedicatedServer() || (p != null && p.getId() != null && getServerWorld() != null && getServer().getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0);
     }
@@ -187,10 +175,11 @@ public class FTBLib
     //null - can't, TRUE - always spawns, FALSE - only spawns at night
     public static Boolean canMobSpawn(World world, BlockPos pos)
     {
-        if(world == null || pos == null || pos.getY() < 0 || pos.getY() >= 256)
+        if(pos.getY() < 0 || pos.getY() >= 256)
         {
             return null;
         }
+
         Chunk chunk = world.getChunkFromBlockCoords(pos);
 
         if(!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
@@ -213,11 +202,6 @@ public class FTBLib
 
     public static Entity getEntityByUUID(World worldObj, UUID uuid)
     {
-        if(worldObj == null || uuid == null)
-        {
-            return null;
-        }
-
         for(Entity e : worldObj.loadedEntityList)
         {
             if(e.getUniqueID().equals(uuid))

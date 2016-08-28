@@ -12,62 +12,67 @@ import java.util.List;
 
 public class ODItems
 {
-    public static final String WOOD = "logWood";
-    public static final String SAPLING = "treeSapling";
-    public static final String PLANKS = "plankWood";
-    public static final String STICK = "stickWood";
-    public static final String GLASS = "blockGlassColorless";
-    public static final String GLASS_ANY = "blockGlass";
-    public static final String GLASS_PANE = "paneGlassColorless";
-    public static final String GLASS_PANE_ANY = "paneGlass";
-    public static final String STONE = "stone";
-    public static final String COBBLE = "cobblestone";
-    public static final String SAND = "sand";
-    public static final String OBSIDIAN = "obsidian";
     public static final ItemStack WOOL = new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE);
     public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
-    public static final String CHEST = "chest";
-    public static final String CHEST_WOOD = "chestWood";
-    public static final String QUARTZ_BLOCK = "blockQuartz";
 
-    public static final String SLIMEBALL = "slimeball";
-    public static final String STRING = "string";
-    public static final String LEATHER = "leather";
-    public static final String GUNPOWDER = "gunpowder";
-    public static final String PAPER = "paper";
-    public static final String MEAT_RAW = "listAllmeatraw";
-    public static final String MEAT_COOKED = "listAllmeatcooked";
-    public static final String RUBBER = "itemRubber";
-    public static final String SILICON = "itemSilicon";
-    public static final String IRON_ROD = "rodIron";
+    //@formatter:off
+    public static final String
 
-    public static final String REDSTONE = "dustRedstone";
-    public static final String GLOWSTONE = "dustGlowstone";
-    public static final String QUARTZ = "gemQuartz";
-    public static final String LAPIS = "gemLapis";
-    public static final String ENDERPEARL = "enderpearl";
-    public static final String NETHERSTAR = "netherStar";
+    WOOD = "logWood",
+    SAPLING = "treeSapling",
+    PLANKS = "plankWood",
+    STICK = "stickWood",
+    GLASS = "blockGlassColorless",
+    GLASS_ANY = "blockGlass",
+    GLASS_PANE = "paneGlassColorless",
+    GLASS_PANE_ANY = "paneGlass",
+    STONE = "stone",
+    COBBLE = "cobblestone",
+    SAND = "sand",
+    OBSIDIAN = "obsidian",
+    CHEST = "chest",
+    CHEST_WOOD = "chestWood",
+    QUARTZ_BLOCK = "blockQuartz",
 
-    public static final String IRON = "ingotIron";
-    public static final String GOLD = "ingotGold";
-    public static final String DIAMOND = "gemDiamond";
-    public static final String EMERALD = "gemEmerald";
+    SLIMEBALL = "slimeball",
+    STRING = "string",
+    LEATHER = "leather",
+    GUNPOWDER = "gunpowder",
+    PAPER = "paper",
+    MEAT_RAW = "listAllmeatraw",
+    MEAT_COOKED = "listAllmeatcooked",
+    RUBBER = "itemRubber",
+    SILICON = "itemSilicon",
+    IRON_ROD = "rodIron",
 
-    public static final String TIN = "ingotTin";
-    public static final String COPPER = "ingotCopper";
-    public static final String LEAD = "ingotLead";
-    public static final String BRONZE = "ingotBronze";
-    public static final String SILVER = "ingotSilver";
+    REDSTONE = "dustRedstone",
+    GLOWSTONE = "dustGlowstone",
+    QUARTZ = "gemQuartz",
+    LAPIS = "gemLapis",
+    ENDERPEARL = "enderpearl",
+    NETHERSTAR = "netherStar",
 
-    public static final String RUBY = "gemRuby";
-    public static final String SAPPHIRE = "gemSapphire";
-    public static final String PERIDOT = "gemPeridot";
+    IRON = "ingotIron",
+    GOLD = "ingotGold",
+    DIAMOND = "gemDiamond",
+    EMERALD = "gemEmerald",
 
-    public static final String NUGGET_GOLD = "nuggetGold";
-    public static final String NUGGET_TIN = "nuggetTin";
-    public static final String NUGGET_COPPER = "nuggetCopper";
-    public static final String NUGGET_LEAD = "nuggetLead";
-    public static final String NUGGET_SILVER = "nuggetSilver";
+    TIN = "ingotTin",
+    COPPER = "ingotCopper",
+    LEAD = "ingotLead",
+    BRONZE = "ingotBronze",
+    SILVER = "ingotSilver",
+
+    RUBY = "gemRuby",
+    SAPPHIRE = "gemSapphire",
+    PERIDOT = "gemPeridot",
+
+    NUGGET_GOLD = "nuggetGold",
+    NUGGET_TIN = "nuggetTin",
+    NUGGET_COPPER = "nuggetCopper",
+    NUGGET_LEAD = "nuggetLead",
+    NUGGET_SILVER = "nuggetSilver";
+    //@formatter:on
 
     public static void preInit()
     {

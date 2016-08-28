@@ -8,12 +8,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileInvLM extends TileLM
 {
-    public ItemStackHandler itemHandler;
+    public final ItemStackHandler itemHandler;
 
     public TileInvLM(int size)
     {
@@ -34,15 +33,14 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing)
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
 
     }
 
-    @Nonnull
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing)
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
@@ -52,28 +50,28 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public void readTileData(@Nonnull NBTTagCompound nbt)
+    public void readTileData(NBTTagCompound nbt)
     {
         super.readTileData(nbt);
         itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
     }
 
     @Override
-    public void writeTileData(@Nonnull NBTTagCompound nbt)
+    public void writeTileData(NBTTagCompound nbt)
     {
         super.writeTileData(nbt);
         nbt.setTag("Items", itemHandler.serializeNBT());
     }
 
     @Override
-    public void readTileClientData(@Nonnull NBTTagCompound nbt)
+    public void readTileClientData(NBTTagCompound nbt)
     {
         super.readTileClientData(nbt);
         itemHandler.deserializeNBT(nbt.getCompoundTag("INV"));
     }
 
     @Override
-    public void writeTileClientData(@Nonnull NBTTagCompound nbt)
+    public void writeTileClientData(NBTTagCompound nbt)
     {
         super.writeTileClientData(nbt);
         nbt.setTag("INV", itemHandler.serializeNBT());

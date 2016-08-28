@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -20,13 +19,10 @@ public interface IGuiInfoPage extends IInfoPage
     IGuiInfoPage getParent();
 
     @Override
-    @Nonnull
     List<? extends IGuiInfoPage> getPages();
 
-    @Nonnull
     IInfoPageTheme getTheme();
 
-    @Nonnull
     IResourceProvider getResourceProvider();
 
     @SideOnly(Side.CLIENT)

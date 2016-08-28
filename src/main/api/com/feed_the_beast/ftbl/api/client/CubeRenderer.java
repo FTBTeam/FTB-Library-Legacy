@@ -16,10 +16,10 @@ public final class CubeRenderer
     private static final float[] normalsX = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
     private static final float[] normalsY = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
     private static final float[] normalsZ = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
-    public final boolean hasTexture, hasNormals;
+    private final boolean hasTexture, hasNormals;
     public final Color4F color;
     private final VertexFormat format;
-    public boolean beginAndEnd = true;
+    private boolean beginAndEnd = true;
     private Tessellator tessellator;
     private VertexBuffer buffer;
     private double minX, minY, minZ, maxX, maxY, maxZ;
@@ -47,11 +47,16 @@ public final class CubeRenderer
         }
     }
 
-    public CubeRenderer setTessellator(Tessellator t)
+    public CubeRenderer setTessellator(Tessellator t, VertexBuffer vb)
     {
         tessellator = t;
-        buffer = (t == null) ? null : tessellator.getBuffer();
+        buffer = vb;
         return this;
+    }
+
+    public CubeRenderer setTessellator(Tessellator t)
+    {
+        return setTessellator(t, t.getBuffer());
     }
 
     public void setSize(double x0, double y0, double z0, double x1, double y1, double z1)

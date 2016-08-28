@@ -9,8 +9,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 20.06.2016.
  */
@@ -28,7 +26,7 @@ public class CmdInvite extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         ForgePlayer p = getForgePlayer(ep);
@@ -36,11 +34,11 @@ public class CmdInvite extends CommandLM
 
         if(team == null)
         {
-            throw FTBLibLang.team_no_team.commandError();
+            throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
         else if(!team.getStatus(p).isOwner())
         {
-            throw FTBLibLang.team_not_owner.commandError();
+            throw FTBLibLang.TEAM_NOT_OWNER.commandError();
         }
 
         checkArgs(args, 1, "<player>");
@@ -49,16 +47,16 @@ public class CmdInvite extends CommandLM
 
         if(team.inviteMember(p1))
         {
-            FTBLibLang.team_invited.printChat(sender, p1.getProfile().getName(), team.getName());
+            FTBLibLang.TEAM_INVITED.printChat(sender, p1.getProfile().getName(), team.getName());
 
             if(p1.isOnline())
             {
-                FTBLibLang.team_invited_you.printChat(p1.getPlayer(), team.getName(), ep.getName());
+                FTBLibLang.TEAM_INVITED_YOU.printChat(p1.getPlayer(), team.getName(), ep.getName());
             }
         }
         else
         {
-            throw FTBLibLang.team_already_invited.commandError(p1.getProfile().getName());
+            throw FTBLibLang.TEAM_ALREADY_INVITED.commandError(p1.getProfile().getName());
         }
     }
 }

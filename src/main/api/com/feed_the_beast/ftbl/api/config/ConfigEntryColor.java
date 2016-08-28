@@ -7,8 +7,6 @@ import com.latmod.lib.io.ByteIOStream;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
-
 public class ConfigEntryColor extends ConfigEntry implements INBTSerializable<NBTTagInt>
 {
     public final LMColor.RGB value;
@@ -36,12 +34,11 @@ public class ConfigEntryColor extends ConfigEntry implements INBTSerializable<NB
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement o)
+    public void fromJson(JsonElement o)
     {
         value.setRGBA(o.getAsInt());
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

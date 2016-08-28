@@ -19,7 +19,6 @@
 
 package com.feed_the_beast.ftbl.api.permissions.context;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,20 +28,19 @@ public class Context implements IContext
     private Map<ContextKey<?>, Object> map;
 
     @Override
-    public <T> T get(@Nonnull ContextKey<T> key)
+    public <T> T get(ContextKey<T> key)
     {
         return map == null || map.isEmpty() ? null : (T) map.get(key);
     }
 
     @Override
-    public boolean has(@Nonnull ContextKey<?> key)
+    public boolean has(ContextKey<?> key)
     {
         return map != null && !map.isEmpty() && map.containsKey(key);
     }
 
-    @Nonnull
     @Override
-    public <T> Context set(@Nonnull ContextKey<T> key, @Nullable T obj)
+    public <T> Context set(ContextKey<T> key, @Nullable T obj)
     {
         if(map == null)
         {

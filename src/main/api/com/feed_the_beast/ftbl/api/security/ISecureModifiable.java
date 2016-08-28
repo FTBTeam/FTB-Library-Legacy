@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.security;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -11,5 +10,5 @@ public interface ISecureModifiable extends ISecure
 {
     void setOwner(@Nullable UUID id);
 
-    void setPrivacyLevel(@Nonnull EnumPrivacyLevel level);
+    void setPrivacyLevel(EnumPrivacyLevel level);
 }

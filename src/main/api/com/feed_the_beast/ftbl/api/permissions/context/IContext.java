@@ -19,7 +19,6 @@
 
 package com.feed_the_beast.ftbl.api.permissions.context;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface IContext
@@ -30,14 +29,14 @@ public interface IContext
      * @see ContextKey
      */
     @Nullable
-    <T> T get(@Nonnull ContextKey<T> key);
+    <T> T get(ContextKey<T> key);
 
     /**
      * @param key Context key
      * @return true if context contains this key
      * @see ContextKey
      */
-    boolean has(@Nonnull ContextKey<?> key);
+    boolean has(ContextKey<?> key);
 
     /**
      * Sets Context object
@@ -47,6 +46,5 @@ public interface IContext
      * @return itself, for easy context chaining
      * @see ContextKey
      */
-    @Nonnull
-    <T> IContext set(@Nonnull ContextKey<T> key, @Nullable T obj);
+    <T> IContext set(ContextKey<T> key, @Nullable T obj);
 }

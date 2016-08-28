@@ -9,7 +9,6 @@ import com.latmod.lib.io.ByteIOStream;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,12 +63,11 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement o)
+    public void fromJson(JsonElement o)
     {
         set(nameMap.get(o.getAsString()));
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -112,7 +110,7 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     }
 
     @Override
-    public void onClicked(@Nonnull IMouseButton button)
+    public void onClicked(IMouseButton button)
     {
         if(button.isLeft())
         {
@@ -131,12 +129,6 @@ public final class ConfigEntryEnum<E extends Enum<E>> extends ConfigEntry implem
     public String getAsString()
     {
         return EnumNameMap.getEnumName(get());
-    }
-
-    @Override
-    public boolean getAsBoolean()
-    {
-        return get() != null;
     }
 
     @Override

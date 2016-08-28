@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.latmod.lib.LMColor;
-import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TByteObjectMap;
 import gnu.trove.map.hash.TByteObjectHashMap;
+
+import java.util.Collections;
 
 /**
  * Created by LatvianModder on 30.03.2016.
@@ -58,13 +60,13 @@ public enum ConfigEntryType
             case DOUBLE:
                 return new ConfigEntryDouble(0D);
             case STRING:
-                return new ConfigEntryString(null);
+                return new ConfigEntryString("");
             case ENUM:
                 return new ConfigEntryStringEnum();
             case INT_ARRAY:
-                return new ConfigEntryIntList((TIntList) null);
+                return new ConfigEntryIntList(new TIntArrayList(0));
             case STRING_ARRAY:
-                return new ConfigEntryStringList(null);
+                return new ConfigEntryStringList(Collections.emptyList());
             case COLOR:
                 return new ConfigEntryColor(new LMColor.RGB());
             default:

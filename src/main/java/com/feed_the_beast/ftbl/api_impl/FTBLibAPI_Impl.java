@@ -14,8 +14,8 @@ import com.feed_the_beast.ftbl.util.FTBLib;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
 import com.latmod.lib.BroadcastSender;
-import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMFileUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
@@ -135,7 +134,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
         if(type.reload(Side.SERVER))
         {
-            FTBLibLang.reload_server.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+            FTBLibLang.RELOAD_SERVER.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
         }
 
         if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT && sender instanceof EntityPlayerMP)
@@ -145,7 +144,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
-    public void openGui(@Nonnull ResourceLocation guiID, @Nonnull EntityPlayer ep, @Nullable NBTTagCompound data)
+    public void openGui(ResourceLocation guiID, EntityPlayer ep, @Nullable NBTTagCompound data)
     {
         IGuiHandler handler = FTBLibAPI.get().getRegistries().guis().get(guiID);
 
@@ -173,7 +172,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
-    public void sendNotification(@Nullable EntityPlayerMP ep, @Nonnull INotification n)
+    public void sendNotification(@Nullable EntityPlayerMP ep, INotification n)
     {
         new MessageNotifyPlayer(n).sendTo(ep);
     }

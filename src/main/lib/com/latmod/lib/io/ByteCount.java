@@ -1,7 +1,5 @@
 package com.latmod.lib.io;
 
-import javax.annotation.Nonnull;
-
 public enum ByteCount
 {
     BYTE(1),
@@ -15,7 +13,7 @@ public enum ByteCount
         bytes = i;
     }
 
-    public void write(@Nonnull ByteIOStream io, int num)
+    public void write(ByteIOStream io, int num)
     {
         switch(this)
         {
@@ -30,7 +28,7 @@ public enum ByteCount
         }
     }
 
-    public int read(@Nonnull ByteIOStream io)
+    public int read(ByteIOStream io)
     {
         switch(this)
         {

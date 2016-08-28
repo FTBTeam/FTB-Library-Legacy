@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.util;
+package com.feed_the_beast.ftbl.client;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

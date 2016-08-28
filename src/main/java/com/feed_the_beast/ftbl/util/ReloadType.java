@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.util;
 
-
 import net.minecraftforge.fml.relauncher.Side;
 
 /**

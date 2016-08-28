@@ -4,12 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
 import com.latmod.lib.io.ByteIOStream;
-import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import javax.annotation.Nonnull;
 
 public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsContainer, INBTSerializable<NBTTagDouble>
 {
@@ -58,7 +56,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
 
     public void set(double v)
     {
-        value = MathHelperLM.clamp(v, getMin(), getMax());
+        value = MathHelper.clamp_double(v, getMin(), getMax());
     }
 
     public void add(double v)
@@ -67,12 +65,11 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
     }
 
     @Override
-    public final void fromJson(@Nonnull JsonElement o)
+    public final void fromJson(JsonElement o)
     {
         set(o.getAsDouble());
     }
 
-    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

@@ -2,7 +2,6 @@ package com.latmod.lib.io;
 
 import com.latmod.lib.util.LMStringUtils;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -169,7 +168,7 @@ public final class ByteIOStream implements DataInput, DataOutput
             }
 
             @Override
-            public void write(@Nonnull byte b[], int off, int len) throws IOException
+            public void write(byte b[], int off, int len) throws IOException
             {
                 ByteIOStream.this.write(b, off, len);
             }
@@ -189,7 +188,7 @@ public final class ByteIOStream implements DataInput, DataOutput
             }
 
             @Override
-            public int read(@Nonnull byte b[], int off, int len) throws IOException
+            public int read(byte b[], int off, int len) throws IOException
             {
                 ByteIOStream.this.readFully(b, off, len);
                 return len;
@@ -212,7 +211,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void readFully(@Nonnull byte[] b, int off, int len)
+    public void readFully(byte[] b, int off, int len)
     {
         if(len == 0)
         {
@@ -229,7 +228,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void readFully(@Nonnull byte[] b)
+    public void readFully(byte[] b)
     {
         readFully(b, 0, b.length);
     }
@@ -258,16 +257,11 @@ public final class ByteIOStream implements DataInput, DataOutput
         return (char) readUnsignedShort();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String readUTF()
     {
         int l = readUnsignedShort();
-        if(l == 65535)
-        {
-            return null;
-        }
-        else if(l == 0)
+        if(l == 0)
         {
             return "";
         }
@@ -430,7 +424,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void write(@Nonnull byte[] b, int off, int len)
+    public void write(byte[] b, int off, int len)
     {
         if(len == 0)
         {
@@ -442,7 +436,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void write(@Nonnull byte[] b)
+    public void write(byte[] b)
     {
         write(b, 0, b.length);
     }
@@ -471,7 +465,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void writeUTF(@Nonnull String s)
+    public void writeUTF(String s)
     {
         int sl = s.length();
         if(sl == 0)
@@ -540,7 +534,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void writeBytes(@Nonnull String s)
+    public void writeBytes(String s)
     {
         if(s.isEmpty())
         {
@@ -553,7 +547,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     }
 
     @Override
-    public void writeChars(@Nonnull String s)
+    public void writeChars(String s)
     {
         if(s.isEmpty())
         {

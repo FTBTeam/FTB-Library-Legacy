@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class ButtonInfoTextLine extends ButtonLM
 {
     public List<String> text;
 
-    public ButtonInfoTextLine(GuiInfo g, String txt)
+    public ButtonInfoTextLine(GuiInfo g, @Nullable String txt)
     {
         super(0, g.panelText.height, 0, 0);
 
@@ -48,17 +48,17 @@ public class ButtonInfoTextLine extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
     }
 
     @Override
-    public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+    public void onClicked(GuiLM gui, IMouseButton button)
     {
     }
 
     @Override
-    public void renderWidget(@Nonnull GuiLM gui)
+    public void renderWidget(GuiLM gui)
     {
         int ay = getAY();
         int ax = getAX();

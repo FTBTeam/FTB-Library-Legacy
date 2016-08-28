@@ -19,9 +19,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
-    public ConfigGroup group;
-    public NBTTagCompound extraNBT;
-    public ITextComponent title;
+    private ConfigGroup group;
+    private NBTTagCompound extraNBT;
+    private ITextComponent title;
 
     public MessageEditConfig()
     {

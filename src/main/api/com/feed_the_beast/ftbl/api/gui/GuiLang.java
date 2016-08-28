@@ -4,39 +4,43 @@ import com.latmod.lib.LangKey;
 
 public class GuiLang
 {
-    public static final LangKey button_done = new LangKey("gui.done");
-    public static final LangKey button_cancel = new LangKey("gui.cancel");
-    public static final LangKey button_back = new LangKey("gui.back");
-    public static final LangKey button_up = new LangKey("gui.up");
-    public static final LangKey button_down = new LangKey("gui.down");
-    public static final LangKey button_yes = new LangKey("gui.yes");
-    public static final LangKey button_no = new LangKey("gui.no");
-    public static final LangKey button_none = new LangKey("gui.none");
-    public static final LangKey button_all = new LangKey("gui.all");
-    public static final LangKey button_edit = new LangKey("selectServer.edit");
-    public static final LangKey button_options = new LangKey("options.title");
-    public static final LangKey button_prev_page = new LangKey("createWorld.customize.custom.prev");
-    public static final LangKey button_next_page = new LangKey("createWorld.customize.custom.next");
-    public static final LangKey button_defaults = new LangKey("createWorld.customize.custom.defaults");
-    public static final LangKey button_delete = new LangKey("selectServer.delete");
-    public static final LangKey button_refresh = new LangKey("selectServer.refresh");
+    //@formatter:off
+    public static final LangKey
 
-    public static final LangKey label_enabled = new LangKey("addServer.resourcePack.enabled");
-    public static final LangKey label_disabled = new LangKey("addServer.resourcePack.disabled");
-    public static final LangKey label_on = new LangKey("options.on");
-    public static final LangKey label_off = new LangKey("options.off");
+    BUTTON_DONE = new LangKey("gui.done"),
+    BUTTON_CANCEL = new LangKey("gui.cancel"),
+    BUTTON_BACK = new LangKey("gui.back"),
+    BUTTON_UP = new LangKey("gui.up"),
+    BUTTON_DOWN = new LangKey("gui.down"),
+    BUTTON_YES = new LangKey("gui.yes"),
+    BUTTON_NO = new LangKey("gui.no"),
+    BUTTON_NONE = new LangKey("gui.none"),
+    BUTTON_ALL = new LangKey("gui.all"),
+    BUTTON_EDIT = new LangKey("selectServer.edit"),
+    BUTTON_OPTIONS = new LangKey("options.title"),
+    BUTTON_PREV_PAGE = new LangKey("createWorld.customize.custom.prev"),
+    BUTTON_NEXT_PAGE = new LangKey("createWorld.customize.custom.next"),
+    BUTTON_DEFAULTS = new LangKey("createWorld.customize.custom.defaults"),
+    BUTTON_DELETE = new LangKey("selectServer.delete"),
+    BUTTON_REFRESH = new LangKey("selectServer.refresh"),
 
-    public static final LangKey button_accept = new LangKey("gui_lm.button.accept");
-    public static final LangKey button_add = new LangKey("gui_lm.button.add");
-    public static final LangKey button_close = new LangKey("gui_lm.button.close");
-    public static final LangKey button_save = new LangKey("gui_lm.button.save");
-    public static final LangKey button_info = new LangKey("gui_lm.button.info");
+    LABEL_ENABLED = new LangKey("addServer.resourcePack.enabled"),
+    LABEL_DISABLED = new LangKey("addServer.resourcePack.disabled"),
+    LABEL_ON = new LangKey("options.on"),
+    LABEL_OFF = new LangKey("options.off"),
 
-    public static final LangKey label_other = new LangKey("gui_lm.label.other");
-    public static final LangKey label_server_forced = new LangKey("gui_lm.label.server_forced");
-    public static final LangKey label_online = new LangKey("gui_lm.label.online");
-    public static final LangKey label_offline = new LangKey("gui_lm.label.offline");
-    public static final LangKey label_whitelist = new LangKey("gui_lm.label.whitelist");
-    public static final LangKey label_blacklist = new LangKey("gui_lm.label.blacklist");
-    public static final LangKey label_color = new LangKey("gui_lm.label.color");
+    BUTTON_ACCEPT = new LangKey("gui_lm.button.accept"),
+    BUTTON_ADD = new LangKey("gui_lm.button.add"),
+    BUTTON_CLOSE = new LangKey("gui_lm.button.close"),
+    BUTTON_SAVE = new LangKey("gui_lm.button.save"),
+    BUTTON_INFO = new LangKey("gui_lm.button.info"),
+
+    LABEL_OTHER = new LangKey("gui_lm.label.other"),
+    LABEL_SERVER_FORCED = new LangKey("gui_lm.label.server_forced"),
+    LABEL_ONLINE = new LangKey("gui_lm.label.online"),
+    LABEL_OFFLINE = new LangKey("gui_lm.label.offline"),
+    LABEL_WHITELIST = new LangKey("gui_lm.label.whitelist"),
+    LABEL_BLACKLIST = new LangKey("gui_lm.label.blacklist"),
+    LABEL_COLOR = new LangKey("gui_lm.label.color");
+    //@formatter:on
 }

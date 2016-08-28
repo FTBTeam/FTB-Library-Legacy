@@ -5,7 +5,6 @@ import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.util.math.MathHelper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -27,7 +26,7 @@ public final class RankConfigInt extends RankConfig
         setDefaultValue(op, new JsonPrimitive(value));
     }
 
-    public int get(@Nonnull GameProfile profile)
+    public int get(GameProfile profile)
     {
         return MathHelper.clamp_int(getJson(profile).getAsInt(), minVal, maxVal);
     }

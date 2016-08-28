@@ -12,8 +12,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 20.06.2016.
  */
@@ -54,26 +52,26 @@ public class CmdCreate extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         ForgePlayer p = getForgePlayer(ep);
 
         if(p.getTeam() != null)
         {
-            throw FTBLibLang.team_must_leave.commandError();
+            throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
         }
 
         checkArgs(args, 1, "<ID>");
 
         if(!isValidTeamID(args[0]))
         {
-            throw FTBLibLang.raw.commandError("ID can only contain lowercase a-z, _ and |!");
+            throw FTBLibLang.RAW.commandError("ID can only contain lowercase a-z, _ and |!");
         }
 
         if(p.getWorld().getTeam(args[0]) != null)
         {
-            throw FTBLibLang.raw.commandError("ID already registred!");
+            throw FTBLibLang.RAW.commandError("ID already registred!");
         }
 
         ForgeTeam team = new ForgeTeam(p.getWorld(), args[0]);
@@ -83,6 +81,6 @@ public class CmdCreate extends CommandLM
         MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
         MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
 
-        FTBLibLang.team_created.printChat(sender, team.getName());
+        FTBLibLang.TEAM_CREATED.printChat(sender, team.getName());
     }
 }

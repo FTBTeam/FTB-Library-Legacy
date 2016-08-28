@@ -12,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -25,9 +24,8 @@ public class CmdAddFakePlayer extends CommandLM
         super("add_fake_player");
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <player>";
     }
@@ -39,21 +37,21 @@ public class CmdAddFakePlayer extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 2, "<uuid> <name>");
 
         UUID id = LMStringUtils.fromString(args[0]);
         if(id == null)
         {
-            throw FTBLibLang.raw.commandError("Invalid UUID!");
+            throw FTBLibLang.RAW.commandError("Invalid UUID!");
         }
 
         ForgeWorld world = FTBLibAPI_Impl.get().getWorld();
 
         if(world.getPlayer(id) != null || world.getPlayer(args[1]) != null)
         {
-            throw FTBLibLang.raw.commandError("Player already exists!");
+            throw FTBLibLang.RAW.commandError("Player already exists!");
         }
 
         ForgePlayer p = new ForgePlayer(new GameProfile(id, args[1]));

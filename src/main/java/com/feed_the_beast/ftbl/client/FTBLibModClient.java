@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.gui.InfoClientSettings;
-import com.feed_the_beast.ftbl.util.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.util.LMColorUtils;
@@ -24,6 +23,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
@@ -55,6 +56,7 @@ public class FTBLibModClient extends FTBLibModCommon
     }
 
     @Override
+    @Nullable
     public EntityPlayer getClientPlayer()
     {
         return FMLClientHandler.instance().getClientPlayerEntity();

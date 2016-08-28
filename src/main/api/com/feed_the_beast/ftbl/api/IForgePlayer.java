@@ -18,12 +18,15 @@ public interface IForgePlayer extends ICapabilitySerializable<NBTTagCompound>
 
     IForgeWorld getWorld();
 
+    @Nullable
     EntityPlayerMP getPlayer();
 
     boolean equalsPlayer(@Nullable IForgePlayer player);
 
+    @Nullable
     String getTeamID();
 
+    @Nullable
     IForgeTeam getTeam();
 
     boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level);

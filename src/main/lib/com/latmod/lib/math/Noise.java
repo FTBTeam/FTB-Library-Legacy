@@ -1,5 +1,8 @@
 package com.latmod.lib.math;
 
+import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -14,17 +17,17 @@ public class Noise
 
     static
     {
-        double d = 0.5D * MathHelperLM.RAD;
+        float d = 0.5F * MathHelperLM.RAD_F;
         for(int i = 0; i < perlin_cosTable.length; i++)
         {
-            perlin_cosTable[i] = (float) MathHelperLM.cos(i * d);
+            perlin_cosTable[i] = MathHelper.cos(i * d);
         }
 
     }
 
     private final float perlin[] = new float[4096];
 
-    public Noise(Random r)
+    public Noise(@Nullable Random r)
     {
         if(r == null)
         {

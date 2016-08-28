@@ -14,8 +14,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
-    public String infoID;
-    public JsonElement json;
+    private String infoID;
+    private JsonElement json;
 
     public MessageDisplayInfo()
     {

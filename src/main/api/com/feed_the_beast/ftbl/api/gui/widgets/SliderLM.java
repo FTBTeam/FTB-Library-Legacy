@@ -4,19 +4,18 @@ import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.latmod.lib.TextureCoords;
 import com.latmod.lib.math.MathHelperLM;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class SliderLM extends WidgetLM
 {
     public final int sliderSize;
-    public double value;
+    private double value;
     private boolean isGrabbed;
 
     public SliderLM(int x, int y, int w, int h, int ss)
@@ -30,7 +29,7 @@ public class SliderLM extends WidgetLM
     {
         if(b.isLeft() && gui.isMouseOver(this))
         {
-            setGrabbed(true);
+            setGrabbed(gui, true);
         }
     }
 
@@ -43,54 +42,54 @@ public class SliderLM extends WidgetLM
         if(min < max)
         {
             String s = "" + (int) MathHelperLM.map(value, 0D, 1D, min, max);
-            String t = getTitle();
+            String t = getTitle(gui);
             l.add(t == null ? s : (t + ": " + s));
         }
     }
 
     public void updateSlider(GuiLM gui)
     {
-        double v0 = value;
+        double v = getValue(gui);
+        double v0 = v;
 
-        if(isGrabbed())
+        if(isGrabbed(gui))
         {
             if(Mouse.isButtonDown(0))
             {
                 if(getDirection().isVertical())
                 {
-                    value = (gui.mouseY - (getAY() + (sliderSize / 2D))) / (double) (height - sliderSize);
+                    v = (gui.mouseY - (getAY() + (sliderSize / 2D))) / (double) (height - sliderSize);
                 }
                 else
                 {
-                    value = (gui.mouseX - (getAX() + (sliderSize / 2D))) / (double) (width - sliderSize);
+                    v = (gui.mouseX - (getAX() + (sliderSize / 2D))) / (double) (width - sliderSize);
                 }
             }
             else
             {
-                setGrabbed(false);
-                onReleased(gui);
+                setGrabbed(gui, false);
             }
         }
 
         if(gui.dmouseWheel != 0 && canMouseScroll(gui))
         {
-            value += (gui.dmouseWheel < 0) ? getScrollStep() : -getScrollStep();
+            v += (gui.dmouseWheel < 0) ? getScrollStep() : -getScrollStep();
         }
 
-        value = MathHelperLM.clamp(value, 0D, 1D);
+        v = MathHelper.clamp_double(v, 0D, 1D);
 
-        if(v0 != value)
+        if(v0 != v)
         {
-            onMoved(gui);
+            setValue(gui, v);
         }
     }
 
-    public boolean isGrabbed()
+    public boolean isGrabbed(GuiLM gui)
     {
         return isGrabbed;
     }
 
-    public void setGrabbed(boolean b)
+    public void setGrabbed(GuiLM gui, boolean b)
     {
         isGrabbed = b;
     }
@@ -99,13 +98,23 @@ public class SliderLM extends WidgetLM
     {
     }
 
-    public void onReleased(GuiLM gui)
-    {
-    }
-
     public boolean canMouseScroll(GuiLM gui)
     {
         return gui.isMouseOver(this);
+    }
+
+    public void setValue(GuiLM gui, double v)
+    {
+        if(value != v)
+        {
+            value = v;
+            onMoved(gui);
+        }
+    }
+
+    public double getValue(GuiLM gui)
+    {
+        return value;
     }
 
     public int getValueI()

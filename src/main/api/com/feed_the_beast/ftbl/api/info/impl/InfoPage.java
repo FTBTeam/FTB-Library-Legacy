@@ -12,7 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.latmod.lib.RemoveFilter;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMMapUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IStringSerializable;
@@ -22,7 +22,6 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -66,7 +65,6 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         return this;
     }
 
-    @Nonnull
     @Override
     public String getName()
     {
@@ -190,7 +188,6 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         return parent.getParentTop();
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -230,7 +227,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement e)
+    public void fromJson(JsonElement e)
     {
         clear();
 
@@ -292,14 +289,12 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         return title;
     }
 
-    @Nonnull
     @Override
     public final List<IInfoTextLine> getText()
     {
         return text;
     }
 
-    @Nonnull
     @Override
     public final List<IGuiInfoPage> getPages()
     {
@@ -309,14 +304,12 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @Override
-    @Nonnull
     public final IInfoPageTheme getTheme()
     {
         return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : parent.getTheme()) : theme;
     }
 
     @Override
-    @Nonnull
     public final IResourceProvider getResourceProvider()
     {
         return (resourceProvider == null) ? ((parent == null) ? URLResourceProvider.INSTANCE : parent.getResourceProvider()) : resourceProvider;
@@ -324,7 +317,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void refreshGui(@Nonnull GuiInfo gui)
+    public void refreshGui(GuiInfo gui)
     {
     }
 

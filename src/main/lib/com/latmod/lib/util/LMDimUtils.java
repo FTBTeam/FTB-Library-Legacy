@@ -8,14 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class LMDimUtils
 {
@@ -39,7 +38,7 @@ public class LMDimUtils
         }
 
         @Override
-        public void placeInPortal(@Nonnull Entity entity, float f)
+        public void placeInPortal(Entity entity, float f)
         {
             entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
             entity.motionX = 0D;
@@ -56,21 +55,16 @@ public class LMDimUtils
 
     public static boolean teleportPlayer(Entity entity, EntityDimPos pos)
     {
-        return pos != null && teleportPlayer(entity, pos.pos, pos.dim);
+        return teleportPlayer(entity, pos.pos, pos.dim);
     }
 
     public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
     {
-        return pos != null && teleportPlayer(entity, pos.toVec(), pos.dim);
+        return teleportPlayer(entity, pos.toVec(), pos.dim);
     }
 
     public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
     {
-        if(entity == null || pos == null)
-        {
-            return false;
-        }
-
         entity.fallDistance = 0F;
         EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
 
@@ -131,6 +125,7 @@ public class LMDimUtils
         entity.fallDistance = 0;
         entity.rotationYaw = rotationYaw;
         entity.rotationPitch = rotationPitch;
+
         if(player != null)
         {
             player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
@@ -139,9 +134,11 @@ public class LMDimUtils
         {
             entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
         }
+
         return true;
     }
 
+    @Nullable
     public static World getWorld(int dim)
     {
         return DimensionManager.getWorld(dim);
@@ -165,28 +162,10 @@ public class LMDimUtils
         }
     }
 
+    @Nullable
     public static BlockDimPos getSpawnPoint(int dim)
     {
         World w = getWorld(dim);
-        if(w == null)
-        {
-            return null;
-        }
-        BlockPos c = w.getSpawnPoint();
-        if(c == null)
-        {
-            return null;
-        }
-        return new BlockDimPos(c, dim);
-    }
-
-    public static BlockDimPos getPlayerEntitySpawnPoint(EntityPlayerMP ep, int dim)
-    {
-        BlockPos c = ep.getBedLocation(dim);
-        if(c == null)
-        {
-            return getSpawnPoint(dim);
-        }
-        return new BlockDimPos(c, dim);
+        return (w == null) ? null : new BlockDimPos(w.getSpawnPoint(), dim);
     }
 }

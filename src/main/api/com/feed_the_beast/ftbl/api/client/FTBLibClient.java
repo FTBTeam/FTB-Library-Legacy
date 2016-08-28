@@ -28,7 +28,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ import java.util.Map;
 public class FTBLibClient
 {
     public static final Frustum frustum = new Frustum();
-    private static final Map<String, ResourceLocation> cachedSkins = new HashMap<>();
+    private static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
     /*
     private static final Vector4f OBJECTCOORDS = new Vector4f();
     private static final Vector4f TEMP_POINT = new Vector4f();
@@ -73,7 +72,7 @@ public class FTBLibClient
         return mc.thePlayer != null ? mc.theWorld.provider.getDimension() : 0;
     }
 
-    public static void spawnPart(@Nonnull Particle e)
+    public static void spawnPart(Particle e)
     {
         Minecraft.getMinecraft().effectRenderer.addEffect(e);
     }
@@ -100,7 +99,7 @@ public class FTBLibClient
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
     }
 
-    public static ThreadDownloadImageData getDownloadImage(@Nonnull ResourceLocation out, @Nonnull String url, @Nonnull ResourceLocation def, @Nullable IImageBuffer buffer)
+    public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
     {
         TextureManager t = Minecraft.getMinecraft().getTextureManager();
         ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);
@@ -127,8 +126,7 @@ public class FTBLibClient
         setGLColor(c, LMColorUtils.getAlpha(c));
     }
 
-    @Nonnull
-    public static ByteBuffer toByteBuffer(@Nonnull int pixels[], boolean alpha)
+    public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
     {
         ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
         byte alpha255 = (byte) 255;
@@ -145,7 +143,7 @@ public class FTBLibClient
         return bb;
     }
 
-    public static void execClientCommand(@Nonnull String s, boolean printChat)
+    public static void execClientCommand(String s, boolean printChat)
     {
         Minecraft mc = Minecraft.getMinecraft();
 
@@ -160,10 +158,9 @@ public class FTBLibClient
         }
     }
 
-    @Nonnull
-    public static ResourceLocation getSkinTexture(@Nonnull String username)
+    public static ResourceLocation getSkinTexture(String username)
     {
-        ResourceLocation r = cachedSkins.get(username);
+        ResourceLocation r = CACHED_SKINS.get(username);
 
         if(r == null)
         {
@@ -172,7 +169,7 @@ public class FTBLibClient
             try
             {
                 AbstractClientPlayer.getDownloadImageSkin(r, username);
-                cachedSkins.put(username, r);
+                CACHED_SKINS.put(username, r);
             }
             catch(Exception e)
             {
@@ -183,17 +180,17 @@ public class FTBLibClient
         return r;
     }
 
-    public static void setTexture(@Nonnull ResourceLocation tex)
+    public static void setTexture(ResourceLocation tex)
     {
         Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
     }
 
     public static void clearCachedData()
     {
-        cachedSkins.clear();
+        CACHED_SKINS.clear();
     }
 
-    public static void renderItem(@Nonnull World w, @Nonnull ItemStack is)
+    public static void renderItem(World w, ItemStack is)
     {
         if(entityItem == null)
         {
@@ -206,7 +203,7 @@ public class FTBLibClient
         Minecraft.getMinecraft().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
     }
 
-    public static void drawOutlinedBoundingBox(@Nonnull AxisAlignedBB bb)
+    public static void drawOutlinedBoundingBox(AxisAlignedBB bb)
     {
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();

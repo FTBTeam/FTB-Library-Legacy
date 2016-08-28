@@ -26,8 +26,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public final class ContextKey<T>
 {
     public static final ContextKey<World> WORLD = new ContextKey<World>("world");
@@ -38,7 +36,7 @@ public final class ContextKey<T>
 
     private final String key;
 
-    public ContextKey(@Nonnull String key)
+    public ContextKey(String key)
     {
         Preconditions.checkNotNull(key, "Context key can't be null!");
 

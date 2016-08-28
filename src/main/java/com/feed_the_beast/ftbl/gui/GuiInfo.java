@@ -23,12 +23,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
@@ -107,16 +104,16 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack = new ButtonLM(0, 0, 14, 11)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
                 setSelectedPage(selectedPage.getParent());
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
-                return (selectedPage.getParent() == null) ? GuiLang.button_close.translate() : GuiLang.button_back.translate();
+                return (selectedPage.getParent() == null) ? GuiLang.BUTTON_CLOSE.translate() : GuiLang.BUTTON_BACK.translate();
             }
         };
 
@@ -176,7 +173,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
     public void setSelectedPage(@Nullable IGuiInfoPage p)
     {
-        sliderText.value = 0F;
+        sliderText.setValue(this, 0D);
         panelText.posY = 10;
 
         if(selectedPage != p)
@@ -259,25 +256,25 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     {
         sliderPages.updateSlider(this);
 
-        if(sliderPages.value == 0F || panelPages.height - (height - 56F) <= 0F)
+        if(sliderPages.getValue(this) == 0D || panelPages.height - (height - 56F) <= 0F)
         {
             panelPages.posY = 46;
-            sliderPages.value = 0F;
+            sliderPages.setValue(this, 0D);
         }
         else
         {
-            panelPages.posY = (int) (46F - (sliderPages.value * (panelPages.height - (height - 56F))));
+            panelPages.posY = (int) (46F - (sliderPages.getValue(this) * (panelPages.height - (height - 56F))));
         }
 
         sliderText.updateSlider(this);
 
-        if(sliderText.value == 0F || panelText.height - (height - 20F) <= 0F)
+        if(sliderText.getValue(this) == 0D || panelText.height - (height - 20F) <= 0F)
         {
             setSelectedPage(selectedPage);
         }
         else
         {
-            panelText.posY = (int) (10F - (sliderText.value * (panelText.height - (height - 20F))));
+            panelText.posY = (int) (10F - (sliderText.getValue(this) * (panelText.height - (height - 20F))));
         }
 
         super.drawBackground();

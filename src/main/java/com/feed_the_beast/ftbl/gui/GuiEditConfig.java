@@ -23,8 +23,8 @@ import com.google.gson.JsonObject;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.io.Bits;
-import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMColorUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -33,8 +33,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class GuiEditConfig extends GuiLM
 {
     public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareTo(o2.getKey());
@@ -110,7 +107,7 @@ public class GuiEditConfig extends GuiLM
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+        public void onClicked(GuiLM gui, IMouseButton button)
         {
             if(mouseY >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
             {
@@ -281,10 +278,10 @@ public class GuiEditConfig extends GuiLM
             }
         };
 
-        buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.button_accept.translate())
+        buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
                 shouldClose = 1;
@@ -292,10 +289,10 @@ public class GuiEditConfig extends GuiLM
             }
         };
 
-        buttonCancel = new ButtonLM(0, 2, 16, 16, GuiLang.button_cancel.translate())
+        buttonCancel = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
                 shouldClose = 2;
@@ -306,7 +303,7 @@ public class GuiEditConfig extends GuiLM
         scroll = new SliderLM(-16, 20, 16, 0, 10)
         {
             @Override
-            public boolean canMouseScroll(@Nonnull GuiLM gui)
+            public boolean canMouseScroll(GuiLM gui)
             {
                 return true;
             }
@@ -334,7 +331,7 @@ public class GuiEditConfig extends GuiLM
         scroll.posX = width - 16;
         scroll.height = height - 20;
         configPanel.posY = 20;
-        scroll.value = 0F;
+        scroll.setValue(this, 0);
 
         for(ButtonConfigEntry b : configEntryButtons)
         {
@@ -395,11 +392,11 @@ public class GuiEditConfig extends GuiLM
         if(configPanel.height + 20D > height)
         {
             scroll.updateSlider(this);
-            configPanel.posY = (int) (scroll.value * (height - configPanel.height - 20D) + 20D);
+            configPanel.posY = (int) (scroll.getValue(this) * (height - configPanel.height - 20D) + 20D);
         }
         else
         {
-            scroll.value = 0F;
+            scroll.setValue(this, 0D);
             configPanel.posY = 20;
         }
 
@@ -416,18 +413,18 @@ public class GuiEditConfig extends GuiLM
         FTBLibClient.setGLColor(0x99333333);
         drawBlankRect(scroll.posX, scroll.posY, scroll.width, scroll.height);
         FTBLibClient.setGLColor(0x99666666);
-        drawBlankRect(scroll.posX, scroll.posY + (int) (scroll.value * (scroll.height - scroll.sliderSize)), scroll.width, scroll.sliderSize);
+        drawBlankRect(scroll.posX, scroll.posY + (int) (scroll.getValue(this) * (scroll.height - scroll.sliderSize)), scroll.width, scroll.sliderSize);
 
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        buttonAccept.render(GuiIcons.accept);
-        buttonCancel.render(GuiIcons.cancel);
+        buttonAccept.render(GuiIcons.ACCEPT);
+        buttonCancel.render(GuiIcons.CANCEL);
     }
 
     @Override
-    public String getTitle()
+    public String getTitle(GuiLM gui)
     {
         return title;
     }

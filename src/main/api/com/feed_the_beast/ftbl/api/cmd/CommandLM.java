@@ -11,7 +11,8 @@ import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class CommandLM extends CommandBase
@@ -20,7 +21,7 @@ public abstract class CommandLM extends CommandBase
 
     public CommandLM(String s)
     {
-        if(s == null || s.isEmpty() || s.indexOf(' ') != -1)
+        if(s.isEmpty() || s.indexOf(' ') != -1)
         {
             throw new NullPointerException("Command ID can't be null!");
         }
@@ -34,11 +35,11 @@ public abstract class CommandLM extends CommandBase
         {
             if(desc == null || desc.isEmpty())
             {
-                throw FTBLibLang.missing_args_num.commandError(Integer.toString(i - (args == null ? 0 : args.length)));
+                throw FTBLibLang.MISSING_ARGS_NUM.commandError(Integer.toString(i - (args == null ? 0 : args.length)));
             }
             else
             {
-                throw FTBLibLang.missing_args.commandError(desc);
+                throw FTBLibLang.MISSING_ARGS.commandError(desc);
             }
         }
     }
@@ -67,27 +68,24 @@ public abstract class CommandLM extends CommandBase
         return getRequiredPermissionLevel() == 0 || !FTBLib.isDedicatedServer() || super.checkPermission(server, ics);
     }
 
-    @Nonnull
     @Override
     public final String getCommandName()
     {
         return commandName;
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName;
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 0)
         {
-            return null;
+            return Collections.emptyList();
         }
         else if(isUsernameIndex(args, args.length - 1))
         {

@@ -5,10 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
@@ -25,58 +27,14 @@ public class MathHelperLM
     public static final double DEG = 180D / Math.PI;
     public static final double TWO_PI = Math.PI * 2D;
     public static final double HALF_PI = Math.PI / 2D;
+
     public static final float PI_F = (float) Math.PI;
+    public static final float RAD_F = (float) (Math.PI / 180D);
+    public static final float DEG_F = (float) (180D / Math.PI);
     public static final float TWO_PI_F = (float) TWO_PI;
     public static final float HALF_PI_F = (float) HALF_PI;
+
     public static final double SQRT_2 = Math.sqrt(2D);
-
-    public static final float RAD_F = (float) RAD;
-    public static final float DEG_F = (float) DEG;
-
-    private static final int SIN_TABLE_SIZE = 65536;
-    private static final int SIN_TABLE_SIZE_1 = SIN_TABLE_SIZE - 1;
-    private static final double[] SIN_TABLE = new double[SIN_TABLE_SIZE];
-    private static final double SIN_SCALE = SIN_TABLE_SIZE / TWO_PI;
-    private static final double COS_SHIFT = SIN_TABLE_SIZE / 4D;
-
-    static
-    {
-        double ds = TWO_PI / (double) SIN_TABLE_SIZE;
-        for(int i = 0; i < SIN_TABLE_SIZE; i++)
-        {
-            SIN_TABLE[i] = Math.sin(i * ds);
-        }
-    }
-
-    public static double sin(double d)
-    {
-        return SIN_TABLE[(int) (d * SIN_SCALE) & SIN_TABLE_SIZE_1];
-    }
-
-    public static double cos(double d)
-    {
-        return SIN_TABLE[(int) (d * SIN_SCALE + COS_SHIFT) & SIN_TABLE_SIZE_1];
-    }
-
-    public static double tan(double d)
-    {
-        return sin(d) / cos(d);
-    }
-
-    public static double sinFromDeg(double f)
-    {
-        return sin(f * RAD);
-    }
-
-    public static double cosFromDeg(double f)
-    {
-        return cos(f * RAD);
-    }
-
-    public static double tanFromDeg(double f)
-    {
-        return tan(f * RAD);
-    }
 
     public static double sqrt(double d)
     {
@@ -109,55 +67,9 @@ public class MathHelperLM
         return f * f;
     }
 
-    public static double power(double i, int n)
-    {
-        if(n == 2)
-        {
-            return i * i;
-        }
-        double i1 = 1D;
-        for(int j = 0; j < n; j++)
-        {
-            i1 *= i;
-        }
-        return i1;
-    }
-
-    public static int power(int i, int n)
-    {
-        if(n == 2)
-        {
-            return i * i;
-        }
-        int i1 = 1;
-        for(int j = 0; j < n; j++)
-        {
-            i1 *= i;
-        }
-        return i1;
-    }
-
-    public static long power(long i, int n)
-    {
-        if(n == 2)
-        {
-            return i * i;
-        }
-        long i1 = 1L;
-        for(int j = 0; j < n; j++)
-        {
-            i1 *= i;
-        }
-        return i1;
-    }
-
     public static double distSq(double x1, double y1, double z1, double x2, double y2, double z2)
     {
-        if(x1 == x2 && y1 == y2 && z1 == z2)
-        {
-            return 0D;
-        }
-        return (sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1));
+        return (x1 == x2 && y1 == y2 && z1 == z2) ? 0D : (sq(x2 - x1) + sq(y2 - y1) + sq(z2 - z1));
     }
 
     public static double dist(double x1, double y1, double z1, double x2, double y2, double z2)
@@ -179,25 +91,13 @@ public class MathHelperLM
         return sqrt(distSq(x1, y1, x2, y2));
     }
 
-    public static Vec3d getLook(double yaw, double pitch, double dist)
+    public static Vec3d getLook(float yaw, float pitch, float dist)
     {
-        double f = cos(pitch * RAD);
-        double x1 = cos(-yaw * RAD + HALF_PI);
-        double z1 = sin(-yaw * RAD + HALF_PI);
-        double y1 = sin(pitch * RAD);
+        float f = MathHelper.cos(pitch * RAD_F);
+        float x1 = MathHelper.cos(HALF_PI_F - yaw * RAD_F);
+        float z1 = MathHelper.sin(HALF_PI_F - yaw * RAD_F);
+        float y1 = MathHelper.sin(pitch * RAD_F);
         return new Vec3d(x1 * f * dist, y1 * dist, z1 * f * dist);
-    }
-
-    public static int floor(double d)
-    {
-        int i = (int) d;
-        return d < (double) i ? i - 1 : i;
-    }
-
-    public static int ceil(double d)
-    {
-        int i = (int) d;
-        return d > (double) i ? i + 1 : i;
     }
 
     public static int chunk(int i)
@@ -212,7 +112,7 @@ public class MathHelperLM
 
     public static int chunk(double d)
     {
-        return chunk(floor(d));
+        return chunk(MathHelper.floor_double(d));
     }
 
     public static int randomInt(Random r, int min, int max)
@@ -250,71 +150,14 @@ public class MathHelperLM
         return Math.round(d) == d;
     }
 
-    public static int lerpInt(int i1, int i2, double f)
+    public static int lerp_int(int i1, int i2, double f)
     {
         return i1 + (int) ((i2 - i1) * f);
     }
 
-    public static double lerp(double f1, double f2, double f)
+    public static double lerp_double(double f1, double f2, double f)
     {
         return f1 + (f2 - f1) * f;
-    }
-
-    public static double clamp(double n, double min, double max)
-    {
-        if(n < min)
-        {
-            return min;
-        }
-        if(n > max)
-        {
-            return max;
-        }
-        return n;
-    }
-
-    public static int clampInt(int n, int min, int max)
-    {
-        if(n < min)
-        {
-            return min;
-        }
-        if(n > max)
-        {
-            return max;
-        }
-        return n;
-    }
-
-    public static float clampFloat(float n, float min, float max)
-    {
-        if(n < min)
-        {
-            return min;
-        }
-        if(n > max)
-        {
-            return max;
-        }
-        return n;
-    }
-
-    public static double[] clamp(double[] d, double min, double max)
-    {
-        for(int i = 0; i < d.length; i++)
-        {
-            d[i] = clamp(d[i], min, max);
-        }
-        return d;
-    }
-
-    public static int[] clampInt(int[] i, int min, int max)
-    {
-        for(int j = 0; j < i.length; j++)
-        {
-            i[j] = clampInt(i[j], min, max);
-        }
-        return i;
     }
 
     public static String toSmallDouble(double d)
@@ -348,119 +191,86 @@ public class MathHelperLM
 
     public static int getRotations(double yaw, int max)
     {
-        return floor((yaw * max / 360D) + 0.5D) & (max - 1);
+        return MathHelper.floor_double((yaw * max / 360D) + 0.5D) & (max - 1);
     }
 
-    public static int getRotYaw(int rot)
+    public static int getRotYaw(EnumFacing facing)
     {
-        if(rot == 2)
+        switch(facing)
         {
-            return 180;
+            case NORTH:
+                return 180;
+            case SOUTH:
+                return 0;
+            case WEST:
+                return 90;
+            case EAST:
+                return -90;
+            default:
+                return 0;
         }
-        else if(rot == 3)
-        {
-            return 0;
-        }
-        else if(rot == 4)
-        {
-            return 90;
-        }
-        else if(rot == 5)
-        {
-            return -90;
-        }
-        return 0;
     }
 
-    public static int getRotPitch(int rot)
+    public static int getRotPitch(EnumFacing facing)
     {
-        if(rot == 0)
+        switch(facing)
         {
-            return 90;
+            case DOWN:
+                return 90;
+            case UP:
+                return -90;
+            default:
+                return 0;
         }
-        else if(rot == 1)
-        {
-            return -90;
-        }
-        return 0;
-    }
-
-    public static boolean inRange(double d, double min, double max)
-    {
-        return d >= min && d <= max;
-    }
-
-    public static int percent(double d, double max)
-    {
-        return (int) (d / max * 100D);
     }
 
     public static double wrap(double i, double n)
     {
         i = i % n;
-        if(i < 0D)
-        {
-            i += n;
-        }
-        return i;
+        return (i < 0D) ? i + n : i;
     }
 
     public static int wrap(int i, int n)
     {
         i = i % n;
-        if(i < 0)
-        {
-            i += n;
-        }
-        return i;
+        return (i < 0) ? i + n : i;
     }
-
-    public static boolean isPow2(int i)
-    {
-        return i != 0 && (i & i - 1) == 0;
-    }
-
-    // MathHelperMC
 
     public static Vec3d getEyePosition(EntityPlayer ep)
     {
-        double y = 0D;
-        if(!ep.worldObj.isRemote)
-        {
-            y = ep.getEyeHeight();
-        }
-        return new Vec3d(ep.posX, ep.posY + y, ep.posZ);
+        return new Vec3d(ep.posX, ep.worldObj.isRemote ? ep.posY : (ep.posY + ep.getEyeHeight()), ep.posZ);
     }
 
-    public static RayTraceResult rayTrace(EntityPlayer ep, double d)
+    @Nullable
+    public static RayTraceResult rayTrace(@Nullable EntityPlayer ep, double d)
     {
         if(ep == null)
         {
             return null;
         }
+
         Vec3d pos = getEyePosition(ep);
         Vec3d look = ep.getLookVec();
         Vec3d vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
         RayTraceResult mop = ep.worldObj.rayTraceBlocks(pos, vec, false, true, false);
+
         if(mop != null && mop.hitVec == null)
         {
             mop.hitVec = new Vec3d(0D, 0D, 0D);
         }
+
         return mop;
     }
 
-    public static RayTraceResult rayTrace(EntityPlayer ep)
+    @Nullable
+    public static RayTraceResult rayTrace(@Nullable EntityPlayer ep)
     {
         return rayTrace(ep, FTBLibMod.proxy.getReachDist(ep));
     }
 
+    @Nullable
     public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, AxisAlignedBB[] boxes)
     {
-        if(boxes == null || boxes.length <= 0)
-        {
-            return null;
-        }
-
         RayTraceResult current = null;
         double dist = Double.POSITIVE_INFINITY;
 
@@ -486,6 +296,7 @@ public class MathHelperLM
         return current;
     }
 
+    @Nullable
     public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, List<AxisAlignedBB> boxes)
     {
         AxisAlignedBB[] boxesa = new AxisAlignedBB[boxes.size()];
@@ -595,17 +406,17 @@ public class MathHelperLM
         }
     }
 
-    private static boolean isVecInsideYZBounds(Vec3d v, AxisAlignedBB aabb)
+    private static boolean isVecInsideYZBounds(@Nullable Vec3d v, AxisAlignedBB aabb)
     {
         return v != null && (v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ);
     }
 
-    private static boolean isVecInsideXZBounds(Vec3d v, AxisAlignedBB aabb)
+    private static boolean isVecInsideXZBounds(@Nullable Vec3d v, AxisAlignedBB aabb)
     {
         return v != null && (v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ);
     }
 
-    private static boolean isVecInsideXYBounds(Vec3d v, AxisAlignedBB aabb)
+    private static boolean isVecInsideXYBounds(@Nullable Vec3d v, AxisAlignedBB aabb)
     {
         return v != null && (v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY);
     }
@@ -615,23 +426,8 @@ public class MathHelperLM
         return new RayTraceResult(new Vec3d(pos.getX() + hitX, pos.getY() + hitY, pos.getZ() + hitZ), s, pos);
     }
 
-    public static AxisAlignedBB getBox(double cx, double y0, double cz, double w, double y1, double d)
-    {
-        return new AxisAlignedBB(cx - w / 2D, y0, cz - d / 2D, cx + w / 2D, y1, cz + d / 2D);
-    }
-
-    public static AxisAlignedBB centerBox(double x, double y, double z, double w, double h, double d)
-    {
-        return getBox(x, y - h / 2D, z, w, y + h / 2D, d);
-    }
-
     public static AxisAlignedBB rotateAABB(AxisAlignedBB bb, EnumFacing facing)
     {
-        if(bb == null)
-        {
-            return null;
-        }
-
         switch(facing)
         {
             case DOWN:

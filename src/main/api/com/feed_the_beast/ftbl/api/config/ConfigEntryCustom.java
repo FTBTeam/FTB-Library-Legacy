@@ -6,11 +6,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.latmod.lib.io.ByteIOStream;
-import com.latmod.lib.json.JsonElementIO;
+import com.latmod.lib.util.JsonElementIO;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +35,11 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement o)
+    public void fromJson(JsonElement o)
     {
         value = o == JsonNull.INSTANCE ? null : o;
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -48,6 +47,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
+    @Nullable
     public ConfigGroup getAsGroup()
     {
         JsonElement e = getSerializableElement();
@@ -61,6 +61,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
             group.fromJson(e);
             return group;
         }
+
         return null;
     }
 
@@ -126,7 +127,7 @@ public class ConfigEntryCustom extends ConfigEntry implements IClickable
     }
 
     @Override
-    public void onClicked(@Nonnull IMouseButton button)
+    public void onClicked(IMouseButton button)
     {
     }
 

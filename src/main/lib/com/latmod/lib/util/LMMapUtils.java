@@ -2,9 +2,7 @@ package com.latmod.lib.util;
 
 import com.latmod.lib.RemoveFilter;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,10 +14,8 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 06.01.2016.
  */
-@ParametersAreNonnullByDefault
 public class LMMapUtils
 {
-    @Nonnull
     public static String toString(Map<?, ?> map)
     {
         StringBuilder sb = new StringBuilder();
@@ -53,18 +49,6 @@ public class LMMapUtils
         return sb.toString();
     }
 
-    @Nonnull
-    public static Map<String, String> toStringMap(Map<?, ?> map)
-    {
-        Map<String, String> map1 = new HashMap<>();
-        for(Map.Entry<?, ?> e : map.entrySet())
-        {
-            map1.put(String.valueOf(e.getKey()), String.valueOf(e.getValue()));
-        }
-        return map1;
-    }
-
-    @Nonnull
     public static <K, V> Map<V, K> inverse(Map<K, V> map)
     {
         Map<V, K> map1 = new HashMap<>();
@@ -76,7 +60,6 @@ public class LMMapUtils
     }
 
     @SuppressWarnings("unchecked")
-    @Nonnull
     public static <K, V> List<Map.Entry<K, V>> sortedEntryList(Map<K, V> map, @Nullable Comparator<Map.Entry<K, V>> c)
     {
         List<Map.Entry<K, V>> list = new ArrayList<>();
@@ -91,7 +74,6 @@ public class LMMapUtils
         return list;
     }
 
-    @Nonnull
     public static <K, V> List<V> values(Map<K, V> map, Comparator<Map.Entry<K, V>> c)
     {
         List<V> list = new ArrayList<>();
@@ -102,7 +84,6 @@ public class LMMapUtils
         return list;
     }
 
-    @Nonnull
     public static <K, V> Comparator<Map.Entry<K, V>> byKeyNames(final boolean ignoreCase)
     {
         return (o1, o2) ->

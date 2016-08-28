@@ -13,8 +13,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 24.03.2016.
  */
@@ -28,7 +26,7 @@ public class InfoNotificationsPage extends InfoPage
     }
 
     @Override
-    public void refreshGui(@Nonnull GuiInfo gui)
+    public void refreshGui(GuiInfo gui)
     {
         ITextComponent title = new TextComponentTranslation("client_config.ftbl.notifications");
 
@@ -59,6 +57,6 @@ public class InfoNotificationsPage extends InfoPage
     @Override
     public ButtonInfoPage createButton(GuiInfo gui)
     {
-        return new ButtonInfoPage(gui, this, GuiIcons.chat);
+        return new ButtonInfoPage(gui, this, GuiIcons.CHAT);
     }
 }

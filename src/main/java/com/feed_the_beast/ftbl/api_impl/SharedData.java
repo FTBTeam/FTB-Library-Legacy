@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -91,7 +90,7 @@ public class SharedData implements ISharedData, IJsonSerializable
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement json)
+    public void fromJson(JsonElement json)
     {
         JsonObject group = json.getAsJsonObject();
         worldID = group.has("world_id") ? LMStringUtils.fromString(group.get("world_id").getAsString()) : null;
@@ -99,7 +98,6 @@ public class SharedData implements ISharedData, IJsonSerializable
     }
 
     @Override
-    @Nonnull
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();

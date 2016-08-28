@@ -6,12 +6,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public abstract class PanelLM extends WidgetLM
 {
     public final List<WidgetLM> widgets;

@@ -12,11 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
-
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class GuiSelectField extends GuiLM
 {
     public enum FieldType
@@ -63,20 +59,20 @@ public class GuiSelectField extends GuiLM
 
         int bsize = width / 2 - 4;
 
-        buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16, GuiLang.button_cancel.translate())
+        buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
                 callback.onCallback(ID, def);
             }
         };
 
-        buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16, GuiLang.button_accept.translate())
+        buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 GuiLM.playClickSound();
                 if(textBox.isValid())

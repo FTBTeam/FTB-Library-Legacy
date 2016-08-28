@@ -14,7 +14,7 @@ public interface IForgeWorld extends ICapabilitySerializable<NBTTagCompound>
     Collection<? extends IForgePlayer> getPlayers();
 
     @Nullable
-    IForgePlayer getPlayer(Object o);
+    IForgePlayer getPlayer(@Nullable Object o);
 
     @Nullable
     IForgePlayer getCurrentPlayer();

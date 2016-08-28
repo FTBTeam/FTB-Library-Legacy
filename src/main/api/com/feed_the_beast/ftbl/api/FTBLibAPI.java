@@ -8,7 +8,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -42,7 +41,7 @@ public abstract class FTBLibAPI
 
     public abstract void reload(ICommandSender sender, ReloadType type);
 
-    public abstract void openGui(@Nonnull ResourceLocation guiID, @Nonnull EntityPlayer ep, @Nullable NBTTagCompound data);
+    public abstract void openGui(ResourceLocation guiID, EntityPlayer ep, @Nullable NBTTagCompound data);
 
-    public abstract void sendNotification(@Nullable EntityPlayerMP ep, @Nonnull INotification n);
+    public abstract void sendNotification(@Nullable EntityPlayerMP ep, INotification n);
 }

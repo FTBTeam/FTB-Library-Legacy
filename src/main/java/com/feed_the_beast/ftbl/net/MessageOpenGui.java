@@ -15,9 +15,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
-    public int guiID;
-    public NBTTagCompound data;
-    public int windowID;
+    private int guiID;
+    private NBTTagCompound data;
+    private int windowID;
 
     public MessageOpenGui()
     {

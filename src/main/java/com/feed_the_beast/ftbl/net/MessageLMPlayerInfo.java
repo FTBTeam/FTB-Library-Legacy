@@ -21,9 +21,9 @@ import java.util.UUID;
 
 public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 {
-    public UUID playerID;
-    public List<ITextComponent> info;
-    public Map<EntityEquipmentSlot, ItemStack> armor;
+    private UUID playerID;
+    private List<ITextComponent> info;
+    private Map<EntityEquipmentSlot, ItemStack> armor;
 
     public MessageLMPlayerInfo()
     {

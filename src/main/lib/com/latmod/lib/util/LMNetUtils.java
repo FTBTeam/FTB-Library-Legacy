@@ -2,8 +2,6 @@ package com.latmod.lib.util;
 
 import com.google.gson.JsonElement;
 import com.latmod.lib.io.ByteIOStream;
-import com.latmod.lib.json.JsonElementIO;
-import com.latmod.lib.json.LMJsonUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;

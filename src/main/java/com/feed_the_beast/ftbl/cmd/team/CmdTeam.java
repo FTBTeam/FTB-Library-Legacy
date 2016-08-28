@@ -36,7 +36,7 @@ public class CmdTeam extends CommandSubBase
             return team;
         }
 
-        throw FTBLibLang.team_not_found.commandError();
+        throw FTBLibLang.TEAM_NOT_FOUND.commandError();
     }
 
     @Override

@@ -22,12 +22,10 @@ package com.feed_the_beast.ftbl.api.permissions;
 import com.feed_the_beast.ftbl.api.permissions.context.IContext;
 import com.mojang.authlib.GameProfile;
 
-import javax.annotation.Nonnull;
-
 public interface IPermissionHandler
 {
     /**
      * @see PermissionAPI#hasPermission(GameProfile, String, boolean, IContext)
      */
-    boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull IContext context);
+    boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, IContext context);
 }

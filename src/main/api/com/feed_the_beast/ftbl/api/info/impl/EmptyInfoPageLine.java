@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -20,12 +19,11 @@ public abstract class EmptyInfoPageLine implements IInfoTextLine
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement json)
+    public void fromJson(JsonElement json)
     {
     }
 
     @Override
-    @Nonnull
     public JsonElement getSerializableElement()
     {
         return JsonNull.INSTANCE;

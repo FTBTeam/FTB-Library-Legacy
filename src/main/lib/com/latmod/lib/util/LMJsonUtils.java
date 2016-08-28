@@ -1,4 +1,4 @@
-package com.latmod.lib.json;
+package com.latmod.lib.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,8 +10,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import com.latmod.lib.util.LMFileUtils;
-import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.util.EnumTypeAdapterFactory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -49,7 +47,7 @@ public class LMJsonUtils
         DESERIALIZATION_CONTEXT = new JsonDeserializationContext()
         {
             @Override
-            public <T> T deserialize(JsonElement json, Type typeOfT) throws JsonParseException
+            public <T> T deserialize(@Nonnull JsonElement json, @Nonnull Type typeOfT) throws JsonParseException
             {
                 return GSON.fromJson(json, typeOfT);
             }
@@ -64,7 +62,7 @@ public class LMJsonUtils
             }
 
             @Override
-            public JsonElement serialize(Object src, Type typeOfSrc)
+            public JsonElement serialize(@Nonnull Object src, @Nonnull Type typeOfSrc)
             {
                 return GSON.toJsonTree(src, typeOfSrc);
             }
@@ -73,13 +71,13 @@ public class LMJsonUtils
         PRETTY_SERIALIZATION_CONTEXT = new JsonSerializationContext()
         {
             @Override
-            public JsonElement serialize(Object src)
+            public JsonElement serialize(@Nonnull Object src)
             {
                 return GSON_PRETTY.toJsonTree(src);
             }
 
             @Override
-            public JsonElement serialize(Object src, Type typeOfSrc)
+            public JsonElement serialize(@Nonnull Object src, @Nonnull Type typeOfSrc)
             {
                 return GSON_PRETTY.toJsonTree(src, typeOfSrc);
             }
@@ -92,7 +90,6 @@ public class LMJsonUtils
         TEXT_COMPONENT_GSON = gb.create();
     }
 
-    @Nonnull
     public static String toJson(@Nonnull Gson gson, JsonElement e)
     {
         return gson.toJson(e == null ? JsonNull.INSTANCE : e);
@@ -114,7 +111,6 @@ public class LMJsonUtils
         return false;
     }
 
-    @Nonnull
     public static String toJson(JsonElement o)
     {
         return toJson(GSON, o);
@@ -125,19 +121,16 @@ public class LMJsonUtils
         return toJson(GSON_PRETTY, f, o);
     }
 
-    @Nonnull
     public static JsonElement fromJson(String json)
     {
         return (json == null || json.isEmpty()) ? JsonNull.INSTANCE : new JsonParser().parse(json);
     }
 
-    @Nonnull
     public static JsonElement fromJson(Reader json)
     {
         return (json == null) ? JsonNull.INSTANCE : new JsonParser().parse(json);
     }
 
-    @Nonnull
     public static JsonElement fromJson(File json)
     {
         try
@@ -146,6 +139,7 @@ public class LMJsonUtils
             {
                 return JsonNull.INSTANCE;
             }
+
             BufferedReader reader = new BufferedReader(new FileReader(json));
             JsonElement e = fromJson(reader);
             reader.close();
@@ -159,7 +153,6 @@ public class LMJsonUtils
 
     // -- //
 
-    @Nonnull
     public static JsonElement toIntArray(int... ai)
     {
         if(ai == null)
@@ -207,7 +200,6 @@ public class LMJsonUtils
         return new int[] {e.getAsInt()};
     }
 
-    @Nonnull
     public static JsonElement toNumberArray(Number[] ai)
     {
         if(ai == null)
@@ -255,7 +247,6 @@ public class LMJsonUtils
         return new Number[] {e.getAsNumber()};
     }
 
-    @Nonnull
     public static JsonElement toStringArray(String... ai)
     {
         if(ai == null)
@@ -297,7 +288,6 @@ public class LMJsonUtils
         return ai;
     }
 
-    @Nonnull
     public static List<JsonElement> deserializeText(List<String> text)
     {
         List<JsonElement> elements = new ArrayList<>();
@@ -360,6 +350,7 @@ public class LMJsonUtils
         return (c == null) ? JsonNull.INSTANCE : TEXT_COMPONENT_GSON.toJsonTree(c, ITextComponent.class);
     }
 
+    @Nullable
     public static ITextComponent deserializeTextComponent(JsonElement e)
     {
         return (e == null || e.isJsonNull()) ? null : TEXT_COMPONENT_GSON.fromJson(e, ITextComponent.class);

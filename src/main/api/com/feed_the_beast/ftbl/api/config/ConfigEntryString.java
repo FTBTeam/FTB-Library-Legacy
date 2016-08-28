@@ -6,8 +6,6 @@ import com.latmod.lib.io.ByteIOStream;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
-
 public class ConfigEntryString extends ConfigEntry implements INBTSerializable<NBTTagString>
 {
     public String defValue;
@@ -15,8 +13,7 @@ public class ConfigEntryString extends ConfigEntry implements INBTSerializable<N
 
     public ConfigEntryString(String def)
     {
-        set(def);
-        defValue = def == null ? "" : def;
+        defValue = value = def;
     }
 
     @Override
@@ -33,16 +30,15 @@ public class ConfigEntryString extends ConfigEntry implements INBTSerializable<N
 
     public void set(String v)
     {
-        value = v == null ? "" : v;
+        value = v;
     }
 
     @Override
-    public final void fromJson(@Nonnull JsonElement o)
+    public final void fromJson(JsonElement o)
     {
         set(o.getAsString());
     }
 
-    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

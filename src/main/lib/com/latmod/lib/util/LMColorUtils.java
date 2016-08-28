@@ -3,8 +3,8 @@ package com.latmod.lib.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.math.MathHelperLM;
+import net.minecraft.util.math.MathHelper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class LMColorUtils
@@ -33,7 +33,6 @@ public class LMColorUtils
         }
     }
 
-    @Nonnull
     public static JsonElement serialize(int col)
     {
         return new JsonPrimitive('#' + Integer.toHexString(col).toUpperCase());
@@ -111,13 +110,13 @@ public class LMColorUtils
 
     public static int addBrightness(int c, int b)
     {
-        int red = MathHelperLM.clampInt(getRed(c) + b, 0, 255);
-        int green = MathHelperLM.clampInt(getGreen(c) + b, 0, 255);
-        int blue = MathHelperLM.clampInt(getBlue(c) + b, 0, 255);
+        int red = MathHelper.clamp_int(getRed(c) + b, 0, 255);
+        int green = MathHelper.clamp_int(getGreen(c) + b, 0, 255);
+        int blue = MathHelper.clamp_int(getBlue(c) + b, 0, 255);
         return getRGBA(red, green, blue, getAlpha(c));
     }
 
-    public static void addHSB(@Nonnull int pixels[], float h, float s, float b)
+    public static void addHSB(int pixels[], float h, float s, float b)
     {
         if(pixels.length > 0)
         {
@@ -127,8 +126,8 @@ public class LMColorUtils
             {
                 java.awt.Color.RGBtoHSB(getRed(pixels[i]), getGreen(pixels[i]), getBlue(pixels[i]), hsb);
                 hsb[0] += h;
-                hsb[1] = MathHelperLM.clampFloat(hsb[1] + s, 0F, 1F);
-                hsb[2] = MathHelperLM.clampFloat(hsb[2] + b, 0F, 1F);
+                hsb[1] = MathHelper.clamp_float(hsb[1] + s, 0F, 1F);
+                hsb[2] = MathHelper.clamp_float(hsb[2] + b, 0F, 1F);
                 pixels[i] = getRGBA(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]), 255);
             }
         }
@@ -136,10 +135,10 @@ public class LMColorUtils
 
     public static int lerp(int col1, int col2, double m, int alpha)
     {
-        m = MathHelperLM.clamp(m, 0F, 1F);
-        int r = MathHelperLM.lerpInt(getRed(col1), getRed(col2), m);
-        int g = MathHelperLM.lerpInt(getGreen(col1), getGreen(col2), m);
-        int b = MathHelperLM.lerpInt(getBlue(col1), getBlue(col2), m);
+        m = MathHelper.clamp_double(m, 0D, 1D);
+        int r = MathHelperLM.lerp_int(getRed(col1), getRed(col2), m);
+        int g = MathHelperLM.lerp_int(getGreen(col1), getGreen(col2), m);
+        int b = MathHelperLM.lerp_int(getBlue(col1), getBlue(col2), m);
         return getRGBA(r, g, b, alpha);
     }
 
@@ -150,9 +149,9 @@ public class LMColorUtils
 
     public static int multiply(int col1, int col2, int a)
     {
-        float r = MathHelperLM.clampFloat(getRedF(col1) * getRedF(col2), 0F, 1F);
-        float g = MathHelperLM.clampFloat(getGreenF(col1) * getGreenF(col2), 0F, 1F);
-        float b = MathHelperLM.clampFloat(getBlueF(col1) * getBlueF(col2), 0F, 1F);
+        float r = MathHelper.clamp_float(getRedF(col1) * getRedF(col2), 0F, 1F);
+        float g = MathHelper.clamp_float(getGreenF(col1) * getGreenF(col2), 0F, 1F);
+        float b = MathHelper.clamp_float(getBlueF(col1) * getBlueF(col2), 0F, 1F);
         return getRGBA((int) (r * 255F), (int) (g * 255F), (int) (b * 255F), a);
     }
 }

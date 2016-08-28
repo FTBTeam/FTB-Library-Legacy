@@ -8,8 +8,6 @@ import com.google.gson.JsonPrimitive;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 07.05.2016.
  */
@@ -55,7 +53,7 @@ public final class InfoPageTheme implements IInfoPageTheme
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement json)
+    public void fromJson(JsonElement json)
     {
         JsonArray a = json.getAsJsonArray();
         backgroundColor = a.get(0).getAsInt();
@@ -63,7 +61,6 @@ public final class InfoPageTheme implements IInfoPageTheme
         useUnicodeFont = (a.size() >= 3) ? a.get(2).getAsBoolean() : null;
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

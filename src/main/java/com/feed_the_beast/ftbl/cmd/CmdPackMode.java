@@ -15,7 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CmdPackMode extends CommandSubBase
@@ -27,16 +27,14 @@ public class CmdPackMode extends CommandSubBase
             super(s);
         }
 
-        @Nonnull
         @Override
-        public String getCommandUsage(@Nonnull ICommandSender ics)
+        public String getCommandUsage(ICommandSender ics)
         {
             return '/' + commandName + " <modeID>";
         }
 
-        @Nonnull
         @Override
-        public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+        public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
         {
             if(args.length == 1)
             {
@@ -47,7 +45,7 @@ public class CmdPackMode extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<modeID>");
 
@@ -57,17 +55,17 @@ public class CmdPackMode extends CommandSubBase
 
             if(i == 1)
             {
-                c = FTBLibLang.mode_not_found.textComponent();
+                c = FTBLibLang.MODE_NOT_FOUND.textComponent();
                 c.getStyle().setColor(TextFormatting.RED);
             }
             else if(i == 2)
             {
-                c = FTBLibLang.mode_already_set.textComponent();
+                c = FTBLibLang.MODE_ALREADY_SET.textComponent();
                 c.getStyle().setColor(TextFormatting.RED);
             }
             else
             {
-                c = FTBLibLang.mode_loaded.textComponent(args[0]);
+                c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
                 c.getStyle().setColor(TextFormatting.GREEN);
                 FTBLibAPI.get().reload(ics, ReloadType.SERVER_AND_CLIENT);
             }
@@ -90,9 +88,9 @@ public class CmdPackMode extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.mode_current.textComponent(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID());
+            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(FTBLibAPI.get().getSharedData(Side.SERVER).getMode().getID());
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
@@ -112,9 +110,9 @@ public class CmdPackMode extends CommandSubBase
         }
 
         @Override
-        public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.mode_list.textComponent(LMStringUtils.strip(FTBLibAPI.get().getPackModes().getModes()));
+            ITextComponent c = FTBLibLang.MODE_LIST.textComponent(LMStringUtils.strip(FTBLibAPI.get().getPackModes().getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }

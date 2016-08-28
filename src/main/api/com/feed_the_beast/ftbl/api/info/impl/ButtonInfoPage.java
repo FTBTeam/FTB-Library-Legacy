@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -23,10 +23,9 @@ public class ButtonInfoPage extends ButtonLM
     public final IGuiInfoPage page;
     public String hover;
     public TextureCoords icon;
-    public boolean iconBlur = false;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, TextureCoords t)
+    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable TextureCoords t)
     {
         super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
@@ -35,20 +34,19 @@ public class ButtonInfoPage extends ButtonLM
         updateTitle(g);
     }
 
-    public ButtonInfoPage setIconBlur()
+    public boolean isIconBlurry(GuiLM gui)
     {
-        iconBlur = true;
-        return this;
+        return false;
     }
 
     @Override
-    public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+    public void onClicked(GuiLM gui, IMouseButton button)
     {
         GuiLM.playClickSound();
         guiInfo.setSelectedPage(page);
     }
 
-    public void updateTitle(@Nonnull GuiLM gui)
+    public void updateTitle(GuiLM gui)
     {
         ITextComponent titleC = page.getDisplayName().createCopy();
 
@@ -65,14 +63,14 @@ public class ButtonInfoPage extends ButtonLM
         setTitle(titleC.getFormattedText());
         hover = null;
 
-        if(guiInfo.font.getStringWidth(getTitle()) > width)
+        if(guiInfo.font.getStringWidth(getTitle(gui)) > width)
         {
             hover = page.getDisplayName().getFormattedText();
         }
     }
 
     @Override
-    public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
         if(hover != null)
         {
@@ -81,13 +79,13 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public boolean shouldRender(@Nonnull GuiLM gui)
+    public boolean shouldRender(GuiLM gui)
     {
         return getParentWidget().isInside(this);
     }
 
     @Override
-    public void renderWidget(@Nonnull GuiLM gui)
+    public void renderWidget(GuiLM gui)
     {
         boolean mouseOver = gui.isMouseOver(this);
 
@@ -105,6 +103,8 @@ public class ButtonInfoPage extends ButtonLM
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.setTexture(icon.texture);
 
+            boolean iconBlur = isIconBlurry(gui);
+
             if(iconBlur)
             {
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
@@ -119,12 +119,12 @@ public class ButtonInfoPage extends ButtonLM
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             }
 
-            guiInfo.font.drawString(getTitle(), ax + 19, ay + 6, guiInfo.colorText);
+            guiInfo.font.drawString(getTitle(gui), ax + 19, ay + 6, guiInfo.colorText);
         }
         else
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            guiInfo.font.drawString(getTitle(), ax + 1, ay + 1, guiInfo.colorText);
+            guiInfo.font.drawString(getTitle(gui), ax + 1, ay + 1, guiInfo.colorText);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

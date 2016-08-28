@@ -1,8 +1,6 @@
 package com.latmod.lib.util;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,7 +15,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-@ParametersAreNonnullByDefault
 public class LMFileUtils
 {
     public static final File latmodHomeFolder = getFolder();
@@ -39,7 +36,6 @@ public class LMFileUtils
         return new File(System.getProperty("user.home"), "/LatMod/");
     }
 
-    @Nonnull
     public static File newFile(File f)
     {
         if(f.exists())
@@ -79,13 +75,11 @@ public class LMFileUtils
         fw.close();
     }
 
-    @Nonnull
     public static List<String> load(File f) throws Exception
     {
         return LMStringUtils.readStringList(new FileInputStream(f));
     }
 
-    @Nonnull
     public static String loadAsText(File f) throws Exception
     {
         return LMStringUtils.readString(new FileInputStream(f));
@@ -108,7 +102,6 @@ public class LMFileUtils
         }
     }
 
-    @Nonnull
     public static List<File> listAll(File f)
     {
         List<File> l = new ArrayList<>();
@@ -162,7 +155,6 @@ public class LMFileUtils
         return 0L;
     }
 
-    @Nonnull
     public static String getSizeS(double b)
     {
         if(b >= GB_D)
@@ -187,7 +179,6 @@ public class LMFileUtils
         return b + "B";
     }
 
-    @Nonnull
     public static String getSizeS(File f)
     {
         return getSizeS(getSize(f));
@@ -223,19 +214,23 @@ public class LMFileUtils
         {
             return false;
         }
-        if(f.isFile())
+        else if(f.isFile())
         {
             return f.delete();
         }
+
         String[] files = f.list();
-        for(String file : files)
+        if(files != null)
         {
-            delete(new File(f, file));
+            for(String file : files)
+            {
+                delete(new File(f, file));
+            }
         }
+
         return f.delete();
     }
 
-    @Nonnull
     public static File getSourceDirectory(Class<?> c)
     {
         return new File(c.getProtectionDomain().getCodeSource().getLocation().getFile());

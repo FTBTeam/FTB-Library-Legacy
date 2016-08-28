@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -31,9 +31,8 @@ public class CmdJoin extends CommandLM
         return 0;
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -44,14 +43,14 @@ public class CmdJoin extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         ForgePlayer p = getForgePlayer(ep);
 
         if(p.getTeam() != null)
         {
-            throw FTBLibLang.team_must_leave.commandError();
+            throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
         }
 
         checkArgs(args, 1, "<ID>");
@@ -64,13 +63,13 @@ public class CmdJoin extends CommandLM
             {
                 if(p1.isOnline())
                 {
-                    FTBLibLang.team_member_joined.printChat(p1.getPlayer(), p.getProfile().getName());
+                    FTBLibLang.TEAM_MEMBER_JOINED.printChat(p1.getPlayer(), p.getProfile().getName());
                 }
             }
         }
         else
         {
-            throw FTBLibLang.team_not_member.commandError(p.getProfile().getName());
+            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getProfile().getName());
         }
     }
 }

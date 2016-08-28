@@ -1,6 +1,5 @@
 package com.latmod.lib.annotations;
 
-import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ public class AnnotationHelper
 
     public interface Handler
     {
-        boolean onAnnotationDeclared(@Nonnull Annotation a, @Nonnull IAnnotationContainer container);
+        boolean onAnnotationDeclared(Annotation a, IAnnotationContainer container);
     }
 
     static
@@ -61,12 +60,12 @@ public class AnnotationHelper
         });
     }
 
-    public static void register(@Nonnull Class<? extends Annotation> c, @Nonnull Handler h)
+    public static void register(Class<? extends Annotation> c, Handler h)
     {
         MAP.put(c, h);
     }
 
-    public static void inject(@Nonnull Field field, Object obj)
+    public static void inject(Field field, Object obj)
     {
         if(obj instanceof IAnnotationContainer)
         {

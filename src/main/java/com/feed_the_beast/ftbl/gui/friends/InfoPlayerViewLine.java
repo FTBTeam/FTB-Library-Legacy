@@ -20,8 +20,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 23.03.2016.
  */
@@ -48,7 +46,6 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
                 return false;
             }
 
-            @Nonnull
             @Override
             public BlockPos getPosition()
             {
@@ -56,7 +53,7 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
             }
 
             @Override
-            public boolean isInvisibleToPlayer(@Nonnull EntityPlayer ep)
+            public boolean isInvisibleToPlayer(EntityPlayer ep)
             {
                 return true;
             }
@@ -77,7 +74,7 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void renderWidget(@Nonnull GuiLM gui)
+        public void renderWidget(GuiLM gui)
         {
             double ay = getAY();
             //double ax = getAX();
@@ -137,14 +134,13 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
         }
 
         @Override
-        public boolean shouldRender(@Nonnull GuiLM gui)
+        public boolean shouldRender(GuiLM gui)
         {
             return true;
         }
     }
 
     @Override
-    @Nonnull
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoPlayerView(gui);

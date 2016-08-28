@@ -12,7 +12,6 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,7 +27,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     public ClickEvent clickEvent;
     public List<String> hover;
 
-    public ButtonInfoExtendedTextLine(GuiInfo g, @Nonnull InfoExtendedTextLine l)
+    public ButtonInfoExtendedTextLine(GuiInfo g, InfoExtendedTextLine l)
     {
         super(g, l.getText() == null ? null : l.getText().getFormattedText());
 
@@ -57,7 +56,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
         if(hover != null)
         {
@@ -66,7 +65,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+    public void onClicked(GuiLM gui, IMouseButton button)
     {
         if(clickEvent != null)
         {
@@ -143,7 +142,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void renderWidget(@Nonnull GuiLM gui)
+    public void renderWidget(GuiLM gui)
     {
         int ay = getAY();
         int ax = getAX();

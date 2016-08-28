@@ -3,6 +3,7 @@ package com.latmod.lib.math;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public final class EntityDimPos
@@ -21,13 +22,11 @@ public final class EntityDimPos
         this(e.getPositionVector(), e.dimension);
     }
 
-    @Override
     public int hashCode()
     {
         return LMUtils.hashCode(pos, dim);
     }
 
-    @Override
     public String toString()
     {
         return "[" + dim + '@' + pos.xCoord + ',' + pos.yCoord + ',' + pos.zCoord + ']';
@@ -43,7 +42,6 @@ public final class EntityDimPos
         return (p == this) || (p != null && pos.xCoord == p.pos.xCoord && pos.yCoord == p.pos.yCoord && pos.zCoord == p.pos.zCoord && dim == p.dim);
     }
 
-    @Override
     public boolean equals(Object o)
     {
         if(o == null)
@@ -68,7 +66,7 @@ public final class EntityDimPos
 
     public BlockPos toBlockPos()
     {
-        return new BlockPos(MathHelperLM.floor(pos.xCoord), MathHelperLM.floor(pos.yCoord), MathHelperLM.floor(pos.zCoord));
+        return new BlockPos(MathHelper.floor_double(pos.xCoord), MathHelper.floor_double(pos.yCoord), MathHelper.floor_double(pos.zCoord));
     }
 
     public BlockDimPos toBlockDimPos()

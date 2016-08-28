@@ -2,9 +2,7 @@ package com.latmod.lib.util;
 
 import com.latmod.lib.RemoveFilter;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,16 +12,11 @@ import java.util.List;
 /**
  * Created by LatvianModder on 06.01.2016.
  */
-@ParametersAreNonnullByDefault
 public class LMListUtils
 {
     public static String toString(Collection<?> c)
     {
         String[] s = toStringArray(c);
-        if(s == null)
-        {
-            return null;
-        }
         if(s.length == 0)
         {
             return "[ ]";
@@ -48,7 +41,6 @@ public class LMListUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String[] toStringArray(Collection<?> c)
     {
         String[] s = new String[c.size()];
@@ -64,7 +56,6 @@ public class LMListUtils
         return s;
     }
 
-    @Nonnull
     public static List<String> toStringList(Collection<?> c)
     {
         List<String> list = new ArrayList<>(c.size());
@@ -79,7 +70,6 @@ public class LMListUtils
         return list;
     }
 
-    @Nonnull
     public static int[] toHashCodeArray(Collection<?> c)
     {
         if(c.isEmpty())
@@ -124,7 +114,6 @@ public class LMListUtils
         }
     }
 
-    @Nonnull
     public static <E> List<E> sortToNew(Collection<E> c, Comparator<? super E> comparator)
     {
         if(c.isEmpty())
@@ -154,7 +143,6 @@ public class LMListUtils
         return false;
     }
 
-    @Nonnull
     public static <E> List<E> clone(Collection<E> c)
     {
         if(c.isEmpty())
@@ -180,7 +168,6 @@ public class LMListUtils
         return false;
     }
 
-    @Nonnull
     public static <E> List<E> flip(List<E> list)
     {
         if(list.isEmpty())

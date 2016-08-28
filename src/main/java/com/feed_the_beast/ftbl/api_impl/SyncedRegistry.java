@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.ISyncedRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -21,8 +20,7 @@ public class SyncedRegistry<V> extends SimpleRegistry<ResourceLocation, V> imple
     }
 
     @Override
-    @Nonnull
-    public V register(@Nonnull ResourceLocation key, @Nonnull V v)
+    public V register(ResourceLocation key, V v)
     {
         V v1 = super.register(key, v);
 
@@ -42,13 +40,13 @@ public class SyncedRegistry<V> extends SimpleRegistry<ResourceLocation, V> imple
     }
 
     @Override
-    public int getIDFromKey(@Nonnull ResourceLocation key)
+    public int getIDFromKey(ResourceLocation key)
     {
         return intIDs.getIDFromKey(key);
     }
 
     @Override
-    public int getOrCreateIDFromKey(@Nonnull ResourceLocation key)
+    public int getOrCreateIDFromKey(ResourceLocation key)
     {
         return intIDs.getOrCreateIDFromKey(key);
     }

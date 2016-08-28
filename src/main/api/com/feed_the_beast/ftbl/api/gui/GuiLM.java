@@ -25,8 +25,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,6 @@ import java.util.List;
  * Created by LatvianModder on 09.06.2016.
  */
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public abstract class GuiLM extends PanelLM implements IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
@@ -142,28 +139,6 @@ public abstract class GuiLM extends PanelLM implements IClientActionGui
         itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
         GlStateManager.popMatrix();
         itemRender.zLevel = 0F;
-    }
-
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public static <E extends GuiLM> E getWrappedGui(@Nullable GuiScreen gui, @Nullable Class<E> c)
-    {
-        if(gui == null)
-        {
-            gui = Minecraft.getMinecraft().currentScreen;
-        }
-
-        if(gui instanceof IGuiWrapper)
-        {
-            GuiLM g = ((IGuiWrapper) gui).getWrappedGui();
-
-            if(g != null && (c == null || c.isAssignableFrom(g.getClass())))
-            {
-                return (E) g;
-            }
-        }
-
-        return null;
     }
 
     public final void initGui()

@@ -12,20 +12,16 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import javax.annotation.Nonnull;
-
 public enum BroadcastSender implements ICommandSender
 {
     INSTANCE;
 
-    @Nonnull
     @Override
     public String getName()
     {
         return "[Server]";
     }
 
-    @Nonnull
     @Override
     public ITextComponent getDisplayName()
     {
@@ -33,32 +29,29 @@ public enum BroadcastSender implements ICommandSender
     }
 
     @Override
-    public void addChatMessage(@Nonnull ITextComponent component)
+    public void addChatMessage(ITextComponent component)
     {
         FTBLib.getServer().getPlayerList().sendChatMsgImpl(component, true);
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(int permLevel, @Nonnull String commandName)
+    public boolean canCommandSenderUseCommand(int permLevel, String commandName)
     {
         return true;
     }
 
-    @Nonnull
     @Override
     public BlockPos getPosition()
     {
         return ((WorldServer) FTBLib.getServer().getEntityWorld()).getSpawnCoordinate();
     }
 
-    @Nonnull
     @Override
     public Vec3d getPositionVector()
     {
         return new Vec3d(getPosition());
     }
 
-    @Nonnull
     @Override
     public World getEntityWorld()
     {
@@ -78,7 +71,7 @@ public enum BroadcastSender implements ICommandSender
     }
 
     @Override
-    public void setCommandStat(@Nonnull CommandResultStats.Type type, int amount)
+    public void setCommandStat(CommandResultStats.Type type, int amount)
     {
     }
 

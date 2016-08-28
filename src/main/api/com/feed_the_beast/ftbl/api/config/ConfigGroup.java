@@ -8,7 +8,7 @@ import com.latmod.lib.annotations.ID;
 import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMStringUtils;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +51,7 @@ public class ConfigGroup extends ConfigEntry
         return ConfigEntryType.GROUP;
     }
 
+    @Nullable
     public ConfigEntry getEntryFromFullID(String id)
     {
         int idx = id.indexOf('.');
@@ -70,6 +71,7 @@ public class ConfigGroup extends ConfigEntry
         return null;
     }
 
+    @Nullable
     public ConfigFile asConfigFile()
     {
         return null;
@@ -85,15 +87,11 @@ public class ConfigGroup extends ConfigEntry
             }
         }
 
-        if(e != null)
-        {
-            entryMap.put(s, e);
-        }
-
+        entryMap.put(s, e);
         return this;
     }
 
-    public ConfigGroup addAll(Class<?> c, Object parent)
+    public ConfigGroup addAll(Class<?> c, @Nullable Object parent)
     {
         try
         {
@@ -145,7 +143,7 @@ public class ConfigGroup extends ConfigEntry
     }
 
     @Override
-    public final void fromJson(@Nonnull JsonElement o0)
+    public final void fromJson(JsonElement o0)
     {
         entryMap.clear();
 
@@ -167,7 +165,6 @@ public class ConfigGroup extends ConfigEntry
         }
     }
 
-    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {
@@ -252,7 +249,7 @@ public class ConfigGroup extends ConfigEntry
         }
     }
 
-    private Map<String, JsonElement> getFullMapFromObject(Map<String, JsonElement> map, JsonObject obj, String parent)
+    private Map<String, JsonElement> getFullMapFromObject(Map<String, JsonElement> map, JsonObject obj, @Nullable String parent)
     {
         for(Map.Entry<String, JsonElement> entry : obj.entrySet())
         {
@@ -275,28 +272,25 @@ public class ConfigGroup extends ConfigEntry
     {
         int result = 0;
 
-        if(json != null)
+        Map<String, JsonElement> map1 = getFullMapFromObject(new HashMap<>(), json, null);
+
+        if(!map1.isEmpty())
         {
-            Map<String, JsonElement> map1 = getFullMapFromObject(new HashMap<>(), json, null);
-
-            if(!map1.isEmpty())
+            for(Map.Entry<String, JsonElement> entry : map1.entrySet())
             {
-                for(Map.Entry<String, JsonElement> entry : map1.entrySet())
-                {
-                    ConfigEntry e0 = getEntryFromFullID(entry.getKey());
+                ConfigEntry e0 = getEntryFromFullID(entry.getKey());
 
-                    if(e0 != null)
+                if(e0 != null)
+                {
+                    try
                     {
-                        try
-                        {
-                            e0.fromJson(entry.getValue());
-                            result++;
-                        }
-                        catch(Exception ex)
-                        {
-                            System.err.println(ex);
-                            System.err.println("Can't set value " + entry.getValue().getAsString() + " for '" + entry.getKey() + "' (type:" + e0.getConfigType() + ")");
-                        }
+                        e0.fromJson(entry.getValue());
+                        result++;
+                    }
+                    catch(Exception ex)
+                    {
+                        System.err.println(ex);
+                        System.err.println("Can't set value " + entry.getValue().getAsString() + " for '" + entry.getKey() + "' (type:" + e0.getConfigType() + ")");
                     }
                 }
             }
@@ -315,11 +309,13 @@ public class ConfigGroup extends ConfigEntry
         return entryMap.containsKey(LMStringUtils.getID(key));
     }
 
+    @Nullable
     public ConfigEntry getEntry(Object key)
     {
         return entryMap.get(LMStringUtils.getID(key));
     }
 
+    @Nullable
     public ConfigGroup getGroup(Object key)
     {
         ConfigEntry e = getEntry(key);
@@ -351,7 +347,7 @@ public class ConfigGroup extends ConfigEntry
         return getFullEntryMap0(new HashMap<>(), null);
     }
 
-    private Map<String, ConfigEntry> getFullEntryMap0(Map<String, ConfigEntry> map, String prevID)
+    private Map<String, ConfigEntry> getFullEntryMap0(Map<String, ConfigEntry> map, @Nullable String prevID)
     {
         for(Map.Entry<String, ConfigEntry> e : entryMap.entrySet())
         {

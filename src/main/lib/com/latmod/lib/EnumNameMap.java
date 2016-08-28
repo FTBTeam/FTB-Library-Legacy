@@ -2,7 +2,7 @@ package com.latmod.lib;
 
 import net.minecraft.util.IStringSerializable;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public final class EnumNameMap<E extends Enum<E>>
 {
-    private static String NULL_VALUE = "-";
+    public static final String NULL_VALUE = "-";
     public final int size;
     private final Map<String, E> map;
     private final List<E> values;
@@ -51,7 +51,7 @@ public final class EnumNameMap<E extends Enum<E>>
         map = Collections.unmodifiableMap(map1);
     }
 
-    public static String createName(@Nonnull Enum<?> e)
+    public static String createName(Enum<?> e)
     {
         return e.name().toLowerCase(Locale.ENGLISH);
     }
@@ -84,12 +84,13 @@ public final class EnumNameMap<E extends Enum<E>>
         }
     }
 
+    @Nullable
     public E getFromIndex(int index)
     {
         return values.get(index);
     }
 
-    public int getIndex(Object e)
+    public int getIndex(@Nullable Object e)
     {
         return values.indexOf(e);
     }

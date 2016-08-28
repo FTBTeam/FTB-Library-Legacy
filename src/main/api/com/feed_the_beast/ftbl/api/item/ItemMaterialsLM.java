@@ -13,7 +13,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,17 +61,17 @@ public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
         setMaxDamage(0);
     }
 
-    public void setFolder(@Nonnull String s)
+    public void setFolder(String s)
     {
         folder = s;
     }
 
-    public void setDefaultMaterial(@Nonnull IMaterial m)
+    public void setDefaultMaterial(IMaterial m)
     {
         defValue = m;
     }
 
-    public void add(@Nonnull IMaterial m)
+    public void add(IMaterial m)
     {
         if(m.isAdded())
         {
@@ -100,21 +99,18 @@ public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
     }
 
     @Override
-    @Nonnull
     public Collection<IMaterial> getValues()
     {
         return materials.valueCollection();
     }
 
     @Override
-    @Nonnull
     public IMaterial get(int metadata)
     {
         IMaterial m = materials.get(metadata);
         return (m == null) ? defValue : m;
     }
 
-    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack is)
     {
@@ -153,7 +149,7 @@ public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubItems(@Nonnull Item item, CreativeTabs c, List<ItemStack> l)
+    public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
     {
         for(IMaterial m : getValues())
         {

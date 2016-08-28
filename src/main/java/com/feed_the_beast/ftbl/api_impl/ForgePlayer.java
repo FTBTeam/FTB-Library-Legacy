@@ -33,7 +33,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.util.FakePlayer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.HashMap;
@@ -69,17 +68,18 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
+    @Nullable
     public final String getTeamID()
     {
         return teamID;
     }
 
-    public final void setTeamID(String id)
+    public final void setTeamID(@Nullable String id)
     {
         teamID = (id == null || id.isEmpty()) ? null : id;
     }
 
-    public final boolean isMemberOf(ForgeTeam team)
+    public final boolean isMemberOf(@Nullable ForgeTeam team)
     {
         return teamID != null && team != null && team.getName().equals(teamID);
     }
@@ -104,7 +104,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    @Nonnull
     public final GameProfile getProfile()
     {
         if(gameProfile == null)
@@ -117,10 +116,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
 
     public final void setProfile(GameProfile p)
     {
-        if(p != null)
-        {
-            gameProfile = new GameProfile(p.getId(), p.getName());
-        }
+        gameProfile = new GameProfile(p.getId(), p.getName());
     }
 
     public final String getStringUUID()
@@ -129,7 +125,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    public final int compareTo(@Nonnull ForgePlayer o)
+    public final int compareTo(ForgePlayer o)
     {
         return getProfile().getName().compareToIgnoreCase(o.getProfile().getName());
     }
@@ -169,7 +165,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    public boolean equalsPlayer(IForgePlayer p)
+    public boolean equalsPlayer(@Nullable IForgePlayer p)
     {
         return p == this || (p != null && gameProfile.getId().equals(p.getProfile().getId()));
     }
@@ -234,6 +230,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
+    @Nullable
     public EntityPlayerMP getPlayer()
     {
         return entityPlayer;
@@ -252,7 +249,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    public boolean isMemberOf(IForgeTeam team)
+    public boolean isMemberOf(@Nullable IForgeTeam team)
     {
         return teamID != null && team != null && team.getName().equals(teamID);
     }
@@ -310,8 +307,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
 
         if(stats.readStat(StatList.PLAY_ONE_MINUTE) > 0L)
         {
-            ITextComponent c = StatList.PLAY_ONE_MINUTE.getStatName();
-            c.getStyle().setColor(null);
+            ITextComponent c = new TextComponentTranslation(StatList.PLAY_ONE_MINUTE.statId);
             info.add(c.appendSibling(new TextComponentString(": " + LMStringUtils.getTimeString(stats.readStat(StatList.PLAY_ONE_MINUTE) * 50L))));
         }
 
@@ -334,9 +330,9 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     {
         NBTTagCompound tag = new NBTTagCompound();
 
-        if(getTeam() != null)
+        if(teamID != null && !teamID.isEmpty())
         {
-            tag.setString("TeamID", getTeamID());
+            tag.setString("TeamID", teamID);
         }
 
         if(capabilities != null)
@@ -377,7 +373,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    @Nonnull
     public StatisticsManagerServer stats()
     {
         if(statsManager == null)

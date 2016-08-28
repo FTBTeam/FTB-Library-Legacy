@@ -7,46 +7,50 @@ import com.latmod.lib.LangKey;
  */
 public class FTBLibLang
 {
-    public static final LangKey mode_loaded = get("mode.loaded");
-    public static final LangKey mode_not_found = get("mode.not_found");
-    public static final LangKey mode_already_set = get("mode.already_set");
-    public static final LangKey mode_current = get("mode.current");
-    public static final LangKey mode_list = get("mode.list");
-    public static final LangKey reload_server = get("reload_server");
-    public static final LangKey reload_client = get("reload_client");
-    public static final LangKey reload_client_config_1 = get("reload_client_config_1");
-    public static final LangKey reload_client_config_2 = get("reload_client_config_2");
+    //@formatter:off
+    public static final LangKey
+
+    MODE_LOADED = get("mode.loaded"),
+    MODE_NOT_FOUND = get("mode.not_found"),
+    MODE_ALREADY_SET = get("mode.already_set"),
+    MODE_CURRENT = get("mode.current"),
+    MODE_LIST = get("mode.list"),
+    RELOAD_SERVER = get("reload_server"),
+    RELOAD_CLIENT = get("reload_client"),
+    RELOAD_CLIENT_CONFIG_1 = get("reload_client_config_1"),
+    RELOAD_CLIENT_CONFIG_2 = get("reload_client_config_2"),
 
     //@Deprecated
-    public static final LangKey raw = get("raw");
-    public static final LangKey missing_args = get("missing_args");
-    public static final LangKey missing_args_num = get("missing_args_num");
-    public static final LangKey feature_disabled = get("feature_disabled");
-    public static final LangKey invalid_subcmd = get("invalid_subcmd");
-    public static final LangKey client_config = new LangKey("client_config");
-    public static final LangKey owner = get("owner");
-    public static final LangKey delete_item = get("delete_item");
-    public static final LangKey server_forced = get("server_forced");
-    public static final LangKey commands = get("commands");
-    public static final LangKey my_permissions = get("my_permissions");
-    public static final LangKey difficulty = get("difficulty");
+    RAW = get("raw"),
+    MISSING_ARGS = get("missing_args"),
+    MISSING_ARGS_NUM = get("missing_args_num"),
+    FEATURE_DISABLED = get("feature_disabled"),
+    INVALID_SUBCMD = get("invalid_subcmd"),
+    CLIENT_CONFIG = new LangKey("client_config"),
+    OWNER = get("owner"),
+    DELETE_ITEM = get("delete_item"),
+    SERVER_FORCED = get("server_forced"),
+    COMMANDS = get("commands"),
+    MY_PERMISSIONS = get("my_permissions"),
+    DIFFICULTY = get("difficulty"),
 
-    public static final LangKey team_config = get("team.config");
-    public static final LangKey team_created = get("team.created");
-    public static final LangKey team_deleted = get("team.deleted");
-    public static final LangKey team_member_left = get("team.member_left");
-    public static final LangKey team_member_joined = get("team.member_joined");
-    public static final LangKey team_transfered_ownership = get("team.transfered_ownership");
-    public static final LangKey team_invited = get("team.invited");
-    public static final LangKey team_invited_you = get("team.invited_you");
-    public static final LangKey team_not_found = get("team.error.not_found");
-    public static final LangKey team_no_team = get("team.error.no_team");
-    public static final LangKey team_must_leave = get("team.error.must_leave");
-    public static final LangKey team_not_owner = get("team.error.not_owner");
-    public static final LangKey team_not_member = get("team.error.not_member");
-    public static final LangKey team_must_transfer_ownership = get("team.error.must_transfer_ownership");
-    public static final LangKey team_already_invited = get("team.error.already_invited");
-    public static final LangKey team_failed_to_join = get("team.error.failed_to_join");
+    TEAM_CONFIG = get("team.config"),
+    TEAM_CREATED = get("team.created"),
+    TEAM_DELETED = get("team.deleted"),
+    TEAM_MEMBER_LEFT = get("team.member_left"),
+    TEAM_MEMBER_JOINED = get("team.member_joined"),
+    TEAM_TRANSFERED_OWNERSHIP = get("team.transfered_ownership"),
+    TEAM_INVITED = get("team.invited"),
+    TEAM_INVITED_YOU = get("team.invited_you"),
+    TEAM_NOT_FOUND = get("team.error.not_found"),
+    TEAM_NO_TEAM = get("team.error.no_team"),
+    TEAM_MUST_LEAVE = get("team.error.must_leave"),
+    TEAM_NOT_OWNER = get("team.error.not_owner"),
+    TEAM_NOT_MEMBER = get("team.error.not_member"),
+    TEAM_MUST_TRANSFER_OWNERSHIP = get("team.error.must_transfer_ownership"),
+    TEAM_ALREADY_INVITED = get("team.error.already_invited"),
+    TEAM_FAILED_TO_JOIN = get("team.error.failed_to_join");
+    //@formatter:on
 
     public static LangKey get(String s)
     {

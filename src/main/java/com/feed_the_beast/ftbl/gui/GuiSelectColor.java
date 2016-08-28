@@ -22,17 +22,16 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nullable;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class GuiSelectColor extends GuiLM
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector.png");
@@ -117,12 +116,12 @@ public class GuiSelectColor extends GuiLM
                     s = 1D;
                 }
 
-                cursorPosX = MathHelperLM.clamp(cursorPosX, 0D, 1D);
-                cursorPosY = MathHelperLM.clamp(cursorPosY, 0D, 1D);
+                cursorPosX = MathHelper.clamp_double(cursorPosX, 0D, 1D);
+                cursorPosY = MathHelper.clamp_double(cursorPosY, 0D, 1D);
 
                 double h = Math.atan2(cursorPosY - 0.5D, cursorPosX - 0.5D) / MathHelperLM.TWO_PI;
 
-                setColor(new LMColor.HSB((float) h, (float) s, (float) sliderBrightness.value));
+                setColor(new LMColor.HSB((float) h, (float) s, (float) sliderBrightness.getValue(gui)));
             }
 
             GlStateManager.enableBlend();
@@ -132,7 +131,7 @@ public class GuiSelectColor extends GuiLM
 
             if(cursorPosX >= 0D && cursorPosY >= 0D)
             {
-                GlStateManager.color((float) (1F - sliderRed.value), (float) (1F - sliderGreen.value), (float) (1F - sliderBlue.value), 1F);
+                GlStateManager.color((float) (1F - sliderRed.getValue(gui)), (float) (1F - sliderGreen.getValue(gui)), (float) (1F - sliderBlue.getValue(gui)), 1F);
                 GuiLM.render(cursor_tex, ax + (int) (cursorPosX * width) - 2, ay + (int) (cursorPosY * height) - 2, 4, 4);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
@@ -157,7 +156,7 @@ public class GuiSelectColor extends GuiLM
     private final ColorSlider sliderHue, sliderSaturation, sliderBrightness;
     private final ColorSelector colorSelector;
 
-    private GuiSelectColor(ObjectCallbackHandler cb, LMColor col, Object id)
+    private GuiSelectColor(ObjectCallbackHandler cb, LMColor col, @Nullable Object id)
     {
         super(143, 93);
         callback = cb;
@@ -169,7 +168,7 @@ public class GuiSelectColor extends GuiLM
         colorInit = new ButtonLM(76, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 closeGui(false);
             }
@@ -177,7 +176,7 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void addMouseOverText(GuiLM gui, List<String> s)
             {
-                s.add(GuiLang.button_cancel.translate());
+                s.add(GuiLang.BUTTON_CANCEL.translate());
                 s.add(initCol.toString());
             }
         };
@@ -185,7 +184,7 @@ public class GuiSelectColor extends GuiLM
         colorCurrent = new ButtonLM(109, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+            public void onClicked(GuiLM gui, IMouseButton button)
             {
                 closeGui(true);
             }
@@ -193,7 +192,7 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void addMouseOverText(GuiLM gui, List<String> s)
             {
-                s.add(GuiLang.button_accept.translate());
+                s.add(GuiLang.BUTTON_ACCEPT.translate());
                 s.add(currentColor.toString());
             }
         };
@@ -203,11 +202,11 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.RGB((int) (value * 255F), currentColor.green(), currentColor.blue()));
+                setColor(new LMColor.RGB((int) (getValue(gui) * 255D), currentColor.green(), currentColor.blue()));
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
                 return EnumDyeColorHelper.get(EnumDyeColor.RED).getLangKey().translate();
             }
@@ -218,11 +217,11 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.RGB(currentColor.red(), (int) (value * 255F), currentColor.blue()));
+                setColor(new LMColor.RGB(currentColor.red(), (int) (getValue(gui) * 255D), currentColor.blue()));
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
                 return EnumDyeColorHelper.get(EnumDyeColor.GREEN).getLangKey().translate();
             }
@@ -233,11 +232,11 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.RGB(currentColor.red(), currentColor.green(), (int) (value * 255F)));
+                setColor(new LMColor.RGB(currentColor.red(), currentColor.green(), (int) (getValue(gui) * 255D)));
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
                 return EnumDyeColorHelper.get(EnumDyeColor.BLUE).getLangKey().translate();
             }
@@ -248,11 +247,11 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.HSB((float) value, currentColor.saturation(), currentColor.brightness()));
+                setColor(new LMColor.HSB((float) getValue(gui), currentColor.saturation(), currentColor.brightness()));
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
                 return "Hue"; //TODO: Lang
             }
@@ -263,11 +262,11 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.HSB(currentColor.hue(), (float) value, currentColor.brightness()));
+                setColor(new LMColor.HSB(currentColor.hue(), (float) getValue(gui), currentColor.brightness()));
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
                 return "Saturation"; //TODO: Lang
             }
@@ -278,11 +277,11 @@ public class GuiSelectColor extends GuiLM
             @Override
             public void onMoved(GuiLM gui)
             {
-                setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), (float) value));
+                setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), (float) getValue(gui)));
             }
 
             @Override
-            public String getTitle()
+            public String getTitle(GuiLM gui)
             {
                 return "Brightness"; //TODO: Lang
             }
@@ -293,7 +292,7 @@ public class GuiSelectColor extends GuiLM
         setColor(initCol);
     }
 
-    public static void display(Object id, LMColor col, ObjectCallbackHandler cb)
+    public static void display(@Nullable Object id, LMColor col, ObjectCallbackHandler cb)
     {
         new GuiSelectColor(cb, col, id).openGui();
     }
@@ -323,16 +322,16 @@ public class GuiSelectColor extends GuiLM
         }
         currentColor.set(col);
 
-        sliderRed.value = currentColor.red() / 255F;
-        sliderGreen.value = currentColor.green() / 255F;
-        sliderBlue.value = currentColor.blue() / 255F;
+        sliderRed.setValue(this, currentColor.red() / 255D);
+        sliderGreen.setValue(this, currentColor.green() / 255D);
+        sliderBlue.setValue(this, currentColor.blue() / 255D);
 
-        sliderHue.value = currentColor.hue();
-        sliderSaturation.value = currentColor.saturation();
-        sliderBrightness.value = currentColor.brightness();
+        sliderHue.setValue(this, currentColor.hue());
+        sliderSaturation.setValue(this, currentColor.saturation());
+        sliderBrightness.setValue(this, currentColor.brightness());
 
-        colorSelector.cursorPosX = (Math.cos(sliderHue.value * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.value + 0.5D;
-        colorSelector.cursorPosY = (Math.sin(sliderHue.value * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.value + 0.5D;
+        colorSelector.cursorPosX = (Math.cos(sliderHue.getValue(this) * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.getValue(this) + 0.5D;
+        colorSelector.cursorPosY = (Math.sin(sliderHue.getValue(this) * MathHelperLM.TWO_PI) * 0.5D) * sliderSaturation.getValue(this) + 0.5D;
     }
 
     @Override

@@ -68,7 +68,7 @@ public class ForgeWorld implements IForgeWorld
     }
 
     @Override
-    public ForgePlayer getPlayer(Object o)
+    public ForgePlayer getPlayer(@Nullable Object o)
     {
         if(o == null)
         {

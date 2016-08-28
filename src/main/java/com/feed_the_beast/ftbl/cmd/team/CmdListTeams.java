@@ -15,7 +15,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +36,7 @@ public class CmdListTeams extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
@@ -62,7 +61,7 @@ public class CmdListTeams extends CommandLM
 
             page1.println("ID: " + team.getName());
             IForgePlayer owner = team.getOwner();
-            page1.println(FTBLibLang.owner.textComponent(owner.getProfile().getName()));
+            page1.println(FTBLibLang.OWNER.textComponent(owner.getProfile().getName()));
 
             List<String> members = new ArrayList<>();
 

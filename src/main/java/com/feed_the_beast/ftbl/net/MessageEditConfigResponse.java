@@ -13,8 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
 {
-    public JsonObject groupData;
-    public NBTTagCompound extraNBT;
+    private JsonObject groupData;
+    private NBTTagCompound extraNBT;
 
     public MessageEditConfigResponse()
     {

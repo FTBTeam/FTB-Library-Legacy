@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -16,9 +15,9 @@ import javax.annotation.Nullable;
 public interface IGuiHandler
 {
     @Nullable
-    Container getContainer(@Nonnull EntityPlayer player, @Nullable NBTTagCompound data);
+    Container getContainer(EntityPlayer player, @Nullable NBTTagCompound data);
 
     @SideOnly(Side.CLIENT)
-    @Nonnull
-    GuiScreen getGui(@Nonnull EntityPlayer player, @Nullable NBTTagCompound data);
+    @Nullable
+    GuiScreen getGui(EntityPlayer player, @Nullable NBTTagCompound data);
 }

@@ -25,7 +25,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class BlockLM extends Block implements IBlockWithItem
@@ -44,7 +43,6 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         return new ItemBlockLM(this);
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public EnumBlockRenderType getRenderType(IBlockState state)
@@ -52,7 +50,6 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         return EnumBlockRenderType.MODEL;
     }
 
-    @Nonnull
     @Override
     public String getUnlocalizedName()
     {
@@ -73,33 +70,33 @@ public abstract class BlockLM extends Block implements IBlockWithItem
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(@Nonnull Item item, CreativeTabs c, List<ItemStack> l)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
-        l.add(new ItemStack(item, 1, 0));
+        list.add(new ItemStack(itemIn, 1, 0));
     }
 
     @Override
-    public void onBlockPlacedBy(World w, BlockPos pos, IBlockState state, EntityLivingBase el, ItemStack is)
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
-        super.onBlockPlacedBy(w, pos, state, el, is);
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 
-        if(hasTileEntity(state) && el instanceof EntityPlayer)
+        if(hasTileEntity(state) && placer instanceof EntityPlayer)
         {
-            TileEntity te = w.getTileEntity(pos);
+            TileEntity te = worldIn.getTileEntity(pos);
 
             if(te instanceof TileLM)
             {
-                ((TileLM) te).onPlacedBy(el, is, state);
+                ((TileLM) te).onPlacedBy(placer, stack, state);
             }
         }
     }
 
     @Override
-    public float getExplosionResistance(World w, BlockPos pos, @Nonnull Entity e, Explosion ex)
+    public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
     {
-        if(hasTileEntity(w.getBlockState(pos)))
+        if(hasTileEntity(world.getBlockState(pos)))
         {
-            TileEntity te = w.getTileEntity(pos);
+            TileEntity te = world.getTileEntity(pos);
 
             if(te instanceof TileLM && ((TileLM) te).isExplosionResistant())
             {
@@ -107,20 +104,20 @@ public abstract class BlockLM extends Block implements IBlockWithItem
             }
         }
 
-        return super.getExplosionResistance(w, pos, e, ex);
+        return super.getExplosionResistance(world, pos, exploder, explosion);
     }
 
     @Override
     @Deprecated
-    public boolean eventReceived(IBlockState state, World w, BlockPos pos, int eventID, int param)
+    public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)
     {
         if(hasTileEntity(state))
         {
-            TileEntity te = w.getTileEntity(pos);
+            TileEntity te = worldIn.getTileEntity(pos);
 
             if(te != null)
             {
-                return te.receiveClientEvent(eventID, param);
+                return te.receiveClientEvent(id, param);
             }
         }
 
@@ -128,11 +125,11 @@ public abstract class BlockLM extends Block implements IBlockWithItem
     }
 
     @Override
-    public void onNeighborChange(IBlockAccess w, BlockPos pos, BlockPos neighbor)
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
     {
-        if(hasTileEntity(w.getBlockState(pos)))
+        if(hasTileEntity(world.getBlockState(pos)))
         {
-            TileEntity te = w.getTileEntity(pos);
+            TileEntity te = world.getTileEntity(pos);
 
             if(te instanceof TileLM)
             {
@@ -141,7 +138,6 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         }
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
@@ -149,7 +145,6 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         return FULL_BLOCK_AABB;
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
@@ -157,7 +152,6 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         return getStateFromMeta(meta);
     }
 
-    @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()

@@ -8,14 +8,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +29,7 @@ public class InfoExtendedTextLine implements IInfoTextLine
     private ClickEvent clickEvent;
     private List<ITextComponent> hover;
 
-    public InfoExtendedTextLine(ITextComponent cc)
+    public InfoExtendedTextLine(@Nullable ITextComponent cc)
     {
         text = cc;
 
@@ -60,19 +59,19 @@ public class InfoExtendedTextLine implements IInfoTextLine
     }
 
     @Override
-    @Nonnull
     @SideOnly(Side.CLIENT)
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoExtendedTextLine(gui, this);
     }
 
+    @Nullable
     public List<ITextComponent> getHover()
     {
         return hover;
     }
 
-    public void setHover(List<ITextComponent> h)
+    public void setHover(@Nullable List<ITextComponent> h)
     {
         if(h == null || h.isEmpty())
         {
@@ -91,7 +90,7 @@ public class InfoExtendedTextLine implements IInfoTextLine
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement e)
+    public void fromJson(JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
 
@@ -141,7 +140,6 @@ public class InfoExtendedTextLine implements IInfoTextLine
         }
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

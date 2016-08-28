@@ -8,12 +8,9 @@ import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 /**
  * Created by LatvianModder on 04.07.2016.
  */
-@ParametersAreNonnullByDefault
 public class FTBLibStats
 {
     public static final StatBase LAST_SEEN = (new StatBasic("ftbl.stat.last_seen", new TextComponentTranslation("ftbl.stat.last_seen")));

@@ -11,8 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 20.06.2016.
  */
@@ -30,7 +28,7 @@ public class CmdLeave extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         ForgePlayer p = getForgePlayer(ep);
@@ -38,7 +36,7 @@ public class CmdLeave extends CommandLM
 
         if(team == null)
         {
-            throw FTBLibLang.team_no_team.commandError();
+            throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
         else if(team.getMembers().size() == 1)
         {
@@ -46,18 +44,18 @@ public class CmdLeave extends CommandLM
             team.removePlayer(p);
             p.getWorld().teams.remove(team.getName());
 
-            FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
-            FTBLibLang.team_deleted.printChat(sender, team.getTitle());
+            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getProfile().getName());
+            FTBLibLang.TEAM_DELETED.printChat(sender, team.getTitle());
         }
         else
         {
             if(team.getStatus(p).isOwner())
             {
-                throw FTBLibLang.team_must_transfer_ownership.commandError();
+                throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
             }
 
             team.removePlayer(p);
-            FTBLibLang.team_member_left.printChat(sender, p.getProfile().getName());
+            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getProfile().getName());
         }
     }
 }

@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -25,7 +24,7 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
         flags = f;
     }
 
-    public static UUID getUUID(@Nonnull Object o)
+    public static UUID getUUID(Object o)
     {
         if(o instanceof UUID)
         {
@@ -67,7 +66,6 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
         return getOwner() != null;
     }
 
-    @Nonnull
     @Override
     public EnumPrivacyLevel getPrivacyLevel()
     {
@@ -75,7 +73,7 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
     }
 
     @Override
-    public void setPrivacyLevel(@Nonnull EnumPrivacyLevel l)
+    public void setPrivacyLevel(EnumPrivacyLevel l)
     {
         level = l;
     }

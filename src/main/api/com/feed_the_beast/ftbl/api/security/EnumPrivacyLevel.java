@@ -7,8 +7,6 @@ import com.latmod.lib.LangKey;
 import com.latmod.lib.TextureCoords;
 import net.minecraft.util.IStringSerializable;
 
-import javax.annotation.Nonnull;
-
 public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
 {
     PUBLIC,
@@ -46,14 +44,12 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
     }
 
     @Override
-    @Nonnull
     public String getName()
     {
         return name;
     }
 
     @Override
-    @Nonnull
     public LangKey getLangKey()
     {
         return langKey;
@@ -61,7 +57,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
 
     public TextureCoords getIcon()
     {
-        return GuiIcons.security[ordinal()];
+        return GuiIcons.SECURITY[ordinal()];
     }
 
     public boolean isPublic()

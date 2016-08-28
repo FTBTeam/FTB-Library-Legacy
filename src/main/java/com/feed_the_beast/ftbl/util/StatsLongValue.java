@@ -4,8 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 04.07.2016.
  */
@@ -29,12 +27,11 @@ public class StatsLongValue implements IJsonSerializable
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement json)
+    public void fromJson(JsonElement json)
     {
         set(json.getAsLong());
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

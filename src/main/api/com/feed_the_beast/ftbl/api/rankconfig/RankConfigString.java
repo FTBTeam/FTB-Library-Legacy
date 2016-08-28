@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -17,12 +16,12 @@ public final class RankConfigString extends RankConfig
         super(id, new JsonPrimitive(player), new JsonPrimitive(op));
     }
 
-    public void setDefaultValue(boolean op, @Nonnull String value)
+    public void setDefaultValue(boolean op, String value)
     {
         setDefaultValue(op, new JsonPrimitive(value));
     }
 
-    public String get(@Nonnull GameProfile profile)
+    public String get(GameProfile profile)
     {
         return getJson(profile).getAsString();
     }

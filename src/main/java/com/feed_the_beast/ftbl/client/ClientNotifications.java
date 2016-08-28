@@ -10,7 +10,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -162,7 +161,7 @@ public class ClientNotifications
         }
 
         @Override
-        public int compareTo(@Nonnull Perm o)
+        public int compareTo(Perm o)
         {
             return Long.compare(o.timeAdded, timeAdded);
         }

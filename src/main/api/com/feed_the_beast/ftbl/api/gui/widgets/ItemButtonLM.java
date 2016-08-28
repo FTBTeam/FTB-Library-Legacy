@@ -5,7 +5,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
@@ -25,7 +24,7 @@ public abstract class ItemButtonLM extends ButtonLM
     }
 
     @Override
-    public void renderWidget(@Nonnull GuiLM gui)
+    public void renderWidget(GuiLM gui)
     {
         if(item != null)
         {

@@ -6,8 +6,6 @@ import com.google.gson.JsonElement;
 import com.latmod.lib.FinalIDObject;
 import com.mojang.authlib.GameProfile;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 13.02.2016.
  */
@@ -16,14 +14,14 @@ public class RankConfig extends FinalIDObject
     private JsonElement defaultPlayerValue;
     private JsonElement defaultOPValue;
 
-    public RankConfig(String id, @Nonnull JsonElement player, @Nonnull JsonElement op)
+    public RankConfig(String id, JsonElement player, JsonElement op)
     {
         super(id);
         setDefaultValue(false, player);
         setDefaultValue(true, op);
     }
 
-    public final void setDefaultValue(boolean op, @Nonnull JsonElement value)
+    public final void setDefaultValue(boolean op, JsonElement value)
     {
         if(op)
         {
@@ -40,7 +38,7 @@ public class RankConfig extends FinalIDObject
         return op ? defaultOPValue : defaultPlayerValue;
     }
 
-    public JsonElement getJson(@Nonnull GameProfile profile)
+    public JsonElement getJson(GameProfile profile)
     {
         if(RankConfigAPI.rankConfigHandler != null)
         {

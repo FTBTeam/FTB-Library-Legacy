@@ -34,13 +34,11 @@ public final class BlockDimPos
         return new int[] {posX, posY, posZ, dim};
     }
 
-    @Override
     public String toString()
     {
         return "[" + dim + '@' + posX + ',' + posY + ',' + posZ + ']';
     }
 
-    @Override
     public boolean equals(Object o)
     {
         if(o == null)
@@ -59,7 +57,6 @@ public final class BlockDimPos
         return false;
     }
 
-    @Override
     public int hashCode()
     {
         return 31 * (31 * (31 * posX + posY) + posZ) + dim;

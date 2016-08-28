@@ -1,10 +1,9 @@
 package com.latmod.lib.io;
 
 import com.google.gson.JsonElement;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMStringUtils;
 
-import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -14,12 +13,12 @@ import java.util.List;
 
 public final class Response
 {
-    public final RequestMethod method;
-    public final long millis;
-    public final int code;
-    public final InputStream stream;
+    private RequestMethod method;
+    private long millis;
+    private int code;
+    private InputStream stream;
 
-    public Response(@Nonnull RequestMethod m, long ms, int c, @Nonnull InputStream is)
+    public Response(RequestMethod m, long ms, int c, InputStream is)
     {
         method = m;
         millis = ms;
@@ -27,38 +26,53 @@ public final class Response
         stream = is;
     }
 
-    public Response(@Nonnull InputStream is)
+    public Response(InputStream is)
     {
         this(RequestMethod.GET, 0L, 200, is);
     }
 
-    @Override
-    public String toString()
+    public RequestMethod getMethod()
     {
-        return method + "-" + Integer.toString(code);
+        return method;
     }
 
-    @Nonnull
+    public long getMillis()
+    {
+        return millis;
+    }
+
+    public int getResponseCode()
+    {
+        return code;
+    }
+
+    public InputStream getStream()
+    {
+        return stream;
+    }
+
     public String asString() throws Exception
     {
-        return LMStringUtils.readString(stream);
+        return LMStringUtils.readString(getStream());
     }
 
-    @Nonnull
     public List<String> asStringList() throws Exception
     {
-        return LMStringUtils.readStringList(stream);
+        return LMStringUtils.readStringList(getStream());
     }
 
-    @Nonnull
     public JsonElement asJson() throws Exception
     {
-        return LMJsonUtils.fromJson(new BufferedReader(new InputStreamReader(stream)));
+        return LMJsonUtils.fromJson(new BufferedReader(new InputStreamReader(getStream())));
     }
 
-    @Nonnull
     public BufferedImage asImage() throws Exception
     {
-        return ImageIO.read(stream);
+        return ImageIO.read(getStream());
+    }
+
+    public String toString()
+    {
+        return getMethod() + "-" + Integer.toString(getResponseCode());
     }
 }

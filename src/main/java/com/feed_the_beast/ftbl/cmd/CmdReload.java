@@ -7,8 +7,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
-import javax.annotation.Nonnull;
-
 public class CmdReload extends CommandLM
 {
     public CmdReload()
@@ -17,7 +15,7 @@ public class CmdReload extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         FTBLibAPI.get().reload(ics, ReloadType.SERVER_ONLY_NOTIFY_CLIENT);
     }

@@ -5,10 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public abstract class ButtonLM extends WidgetLM
 {
     private String title;
@@ -25,7 +22,7 @@ public abstract class ButtonLM extends WidgetLM
     }
 
     @Override
-    public String getTitle()
+    public String getTitle(GuiLM gui)
     {
         return title;
     }

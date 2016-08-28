@@ -2,8 +2,6 @@ package com.latmod.lib.math;
 
 import net.minecraft.util.math.ChunkPos;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 14.03.2016.
  */
@@ -18,7 +16,6 @@ public final class ChunkDimPos
         dim = d;
     }
 
-    @Override
     public boolean equals(Object o)
     {
         if(o == null)
@@ -41,14 +38,11 @@ public final class ChunkDimPos
         return p == this || (p != null && p.dim == dim && p.posX == posX && p.posZ == posZ);
     }
 
-    @Nonnull
-    @Override
     public String toString()
     {
         return "[" + dim + '@' + posX + ',' + posZ + ']';
     }
 
-    @Override
     public int hashCode()
     {
         return 31 * (31 * posX + posZ) + dim;

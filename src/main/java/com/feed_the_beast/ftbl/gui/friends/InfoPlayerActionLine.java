@@ -15,7 +15,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -32,23 +31,23 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
             height = 18;
             ITextComponent c = action.getDisplayNameOverride();
             setTitle(((c == null) ? new TextComponentTranslation("sidebar_button." + actionID) : c).getFormattedText());
-            width = (action.getIcon() == null ? 8 : 24) + g.font.getStringWidth(getTitle());
+            width = (action.getIcon() == null ? 8 : 24) + g.font.getStringWidth(getTitle(g));
         }
 
         @Override
-        public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
+        public void addMouseOverText(GuiLM gui, List<String> l)
         {
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+        public void onClicked(GuiLM gui, IMouseButton button)
         {
             GuiLM.playClickSound();
             action.onClicked(button);
         }
 
         @Override
-        public void renderWidget(@Nonnull GuiLM gui)
+        public void renderWidget(GuiLM gui)
         {
             int ay = getAY();
             int ax = getAX();
@@ -66,7 +65,7 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
             action.render(gui.mc, ax + 1, ay + 1);
             action.postRender(gui.mc, ax + 1, ay + 1);
 
-            gui.font.drawString(getTitle(), ax + (action.getIcon() == null ? 4 : 20), ay + 5, ((GuiInfo) gui).colorText);
+            gui.font.drawString(getTitle(gui), ax + (action.getIcon() == null ? 4 : 20), ay + 5, ((GuiInfo) gui).colorText);
         }
     }
 
@@ -80,7 +79,6 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
     }
 
     @Override
-    @Nonnull
     @SideOnly(Side.CLIENT)
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {

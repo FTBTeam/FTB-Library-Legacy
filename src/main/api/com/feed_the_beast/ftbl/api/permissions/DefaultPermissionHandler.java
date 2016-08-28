@@ -24,8 +24,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import javax.annotation.Nonnull;
-
 /**
  * Default implementation of PermissionAPI.
  * Returns returns true if it is a singleplayer world or the player is an OP
@@ -37,7 +35,7 @@ public enum DefaultPermissionHandler implements IPermissionHandler
     INSTANCE;
 
     @Override
-    public boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull IContext context)
+    public boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, IContext context)
     {
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         return defaultForPlayer || server == null || !server.isDedicatedServer() || server.getPlayerList().getOppedPlayers().getPermissionLevel(profile) > 0;

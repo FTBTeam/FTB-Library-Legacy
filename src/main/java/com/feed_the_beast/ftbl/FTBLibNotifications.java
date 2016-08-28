@@ -17,9 +17,9 @@ public class FTBLibNotifications
     }
 
     public static final INotification RELOAD_CLIENT_CONFIG = new Notification(register("reload_client_config"))
-            .addText(FTBLibLang.reload_client_config_1.textComponent())
+            .addText(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent())
             .addText(new TextComponentString("/ftb reload_client"))
-            .addText(FTBLibLang.reload_client_config_2.textComponent())
+            .addText(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent())
             .setTimer(7000)
             .setColor(0xFF333333);
 

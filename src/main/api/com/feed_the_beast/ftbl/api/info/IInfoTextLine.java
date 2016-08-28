@@ -6,7 +6,6 @@ import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -18,6 +17,5 @@ public interface IInfoTextLine extends IJsonSerializable
     String getUnformattedText();
 
     @SideOnly(Side.CLIENT)
-    @Nonnull
     ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page);
 }

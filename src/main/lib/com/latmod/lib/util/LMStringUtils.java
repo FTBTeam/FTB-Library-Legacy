@@ -3,9 +3,7 @@ package com.latmod.lib.util;
 import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.util.IStringSerializable;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +15,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-@ParametersAreNonnullByDefault
 public class LMStringUtils
 {
     public static final int DAY24 = 24 * 60 * 60;
@@ -29,7 +26,6 @@ public class LMStringUtils
     public static final Comparator<Object> IGNORE_CASE_COMPARATOR = (o1, o2) -> String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
     public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1).compareToIgnoreCase(getID(o2));
 
-    @Nonnull
     public static String getID(@Nullable Object o)
     {
         if(o instanceof IStringSerializable)
@@ -40,7 +36,6 @@ public class LMStringUtils
         return String.valueOf(o);
     }
 
-    @Nonnull
     public static String[] shiftArray(@Nullable String[] s)
     {
         if(s == null || s.length == 0)
@@ -53,14 +48,8 @@ public class LMStringUtils
         return s1;
     }
 
-    @Nullable
-    public static String readString(@Nullable InputStream is) throws Exception
+    public static String readString(InputStream is) throws Exception
     {
-        if(is == null || is.available() <= 0)
-        {
-            return null;
-        }
-
         final char[] buffer = new char[0x10000];
         final StringBuilder out = new StringBuilder();
         try(Reader in = new InputStreamReader(is, UTF_8))
@@ -80,7 +69,6 @@ public class LMStringUtils
         return out.toString();
     }
 
-    @Nonnull
     public static List<String> readStringList(InputStream is) throws Exception
     {
         List<String> l = new ArrayList<>();
@@ -94,7 +82,6 @@ public class LMStringUtils
         return l;
     }
 
-    @Nonnull
     public static List<String> toStringList(String s, String regex)
     {
         List<String> al = new ArrayList<>();
@@ -109,7 +96,6 @@ public class LMStringUtils
         return al;
     }
 
-    @Nonnull
     public static String fromStringList(List<String> l)
     {
         StringBuilder sb = new StringBuilder();
@@ -151,7 +137,6 @@ public class LMStringUtils
         }
     }
 
-    @Nonnull
     public static String replace(String s, char c, char with)
     {
         if(s.isEmpty())
@@ -169,7 +154,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static <E> String[] toStrings(E[] o)
     {
         String[] s = new String[o.length];
@@ -181,7 +165,6 @@ public class LMStringUtils
         return s;
     }
 
-    @Nonnull
     public static String strip(String... o)
     {
         if(o.length == 0)
@@ -203,7 +186,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String strip(Collection<?> c)
     {
         if(c.isEmpty())
@@ -228,7 +210,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String stripD(double... o)
     {
         if(o.length == 0)
@@ -250,7 +231,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String stripDI(double... o)
     {
         if(o.length == 0)
@@ -272,7 +252,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String stripI(int... o)
     {
         if(o.length == 0)
@@ -294,7 +273,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String stripB(boolean... o)
     {
         if(o.length == 0)
@@ -316,7 +294,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String stripB(byte... o)
     {
         if(o.length == 0)
@@ -338,7 +315,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String unsplit(String[] s, String s1)
     {
         StringBuilder sb = new StringBuilder();
@@ -357,7 +333,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String unsplit(Object[] o, String s1)
     {
         if(o.length == 1)
@@ -398,7 +373,6 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static String firstUppercase(String s)
     {
         if(s.length() == 0)
@@ -413,7 +387,6 @@ public class LMStringUtils
         return String.valueOf(c) + s.substring(1);
     }
 
-    @Nonnull
     public static String fillString(String s, char fill, int length)
     {
         int sl = s.length();
@@ -435,19 +408,16 @@ public class LMStringUtils
         return new String(c);
     }
 
-    @Nonnull
     public static String removeAllWhitespace(String s)
     {
         return s.isEmpty() ? s : s.replaceAll("\\s+", "");
     }
 
-    @Nonnull
     public static String trimAllWhitespace(String s)
     {
         return s.isEmpty() ? s : s.replace("^\\s*(.*?)\\s*$", "$1");
     }
 
-    @Nonnull
     public static String formatDouble(double d) //TODO: Replace with number formatter
     {
         if(d == Double.POSITIVE_INFINITY)
@@ -472,13 +442,11 @@ public class LMStringUtils
         return s;
     }
 
-    @Nonnull
     public static String getTimeString(long millis)
     {
         return getTimeString(millis, true);
     }
 
-    @Nonnull
     public static String getTimeString(long millis, boolean days)
     {
         long secs = millis / 1000L;
@@ -519,13 +487,11 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    @Nonnull
     public static byte[] toBytes(String s)
     {
         return s.isEmpty() ? new byte[0] : s.getBytes(UTF_8);
     }
 
-    @Nonnull
     public static String fromBytes(byte[] b)
     {
         return (b.length == 0) ? "" : new String(b, UTF_8);
@@ -546,7 +512,7 @@ public class LMStringUtils
             return sb.toString();
         }
 
-        return null;
+        return "";
     }
 
     private static void digitsUUID(StringBuilder sb, long val, int digits)
@@ -556,6 +522,7 @@ public class LMStringUtils
         sb.append(s, 1, s.length());
     }
 
+    @Nullable
     public static UUID fromString(@Nullable String s)
     {
         if(s == null || !(s.length() == 32 || s.length() == 36))

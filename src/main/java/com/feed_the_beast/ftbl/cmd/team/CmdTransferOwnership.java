@@ -9,8 +9,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
-import javax.annotation.Nonnull;
-
 /**
  * Created by LatvianModder on 20.06.2016.
  */
@@ -28,7 +26,7 @@ public class CmdTransferOwnership extends CommandLM
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
         ForgePlayer p = getForgePlayer(ep);
@@ -36,11 +34,11 @@ public class CmdTransferOwnership extends CommandLM
 
         if(team == null)
         {
-            throw FTBLibLang.team_no_team.commandError();
+            throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
         else if(!team.getStatus(p).isOwner())
         {
-            throw FTBLibLang.team_not_owner.commandError();
+            throw FTBLibLang.TEAM_NOT_OWNER.commandError();
         }
 
         checkArgs(args, 1, "<player>");
@@ -49,10 +47,10 @@ public class CmdTransferOwnership extends CommandLM
 
         if(!p1.getTeamID().equals(p.getTeamID()))
         {
-            throw FTBLibLang.team_not_member.commandError(p1.getProfile().getName());
+            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getProfile().getName());
         }
 
         team.changeOwner(p1);
-        FTBLibLang.team_transfered_ownership.printChat(sender, p1.getProfile().getName());
+        FTBLibLang.TEAM_TRANSFERED_OWNERSHIP.printChat(sender, p1.getProfile().getName());
     }
 }

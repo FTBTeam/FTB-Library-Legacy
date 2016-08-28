@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -34,16 +33,16 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
+        public void addMouseOverText(GuiLM gui, List<String> l)
         {
             if(gui.mouseX >= getAX() + width - 32)
             {
-                l.add(GuiLang.button_close.translate());
+                l.add(GuiLang.BUTTON_CLOSE.translate());
             }
         }
 
         @Override
-        public void onClicked(@Nonnull GuiLM gui, @Nonnull IMouseButton button)
+        public void onClicked(GuiLM gui, IMouseButton button)
         {
             GuiLM.playClickSound();
             ClientNotifications.Perm.MAP.remove(widget.notification.getID());
@@ -51,7 +50,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void renderWidget(@Nonnull GuiLM gui)
+        public void renderWidget(GuiLM gui)
         {
             widget.width = width = ((GuiInfo) gui).panelText.width - 4;
 
@@ -71,7 +70,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
                     GlStateManager.color(1F, 1F, 1F, 1F);
                 }
 
-                GuiLM.render(GuiIcons.close, ax + width - 32, ay + (height - 32) / 2, 32, 32);
+                GuiLM.render(GuiIcons.CLOSE, ax + width - 32, ay + (height - 32) / 2, 32, 32);
             }
         }
     }
@@ -84,7 +83,6 @@ public class InfoNotificationLine extends EmptyInfoPageLine
     }
 
     @Override
-    @Nonnull
     @SideOnly(Side.CLIENT)
     public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPage page)
     {

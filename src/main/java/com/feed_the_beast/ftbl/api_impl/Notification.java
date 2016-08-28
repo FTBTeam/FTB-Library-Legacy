@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class Notification implements INotification
         ID = id;
     }
 
-    public static Notification error(int id, @Nonnull ITextComponent title)
+    public static Notification error(int id, ITextComponent title)
     {
         title.getStyle().setColor(TextFormatting.WHITE);
         return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959).setItem(new ItemStack(Blocks.BARRIER));
@@ -83,7 +82,6 @@ public class Notification implements INotification
     }
 
     @Override
-    @Nonnull
     public List<ITextComponent> getText()
     {
         return text == null ? Collections.emptyList() : text;

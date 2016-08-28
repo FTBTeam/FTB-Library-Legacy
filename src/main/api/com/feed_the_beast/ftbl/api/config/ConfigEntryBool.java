@@ -8,7 +8,6 @@ import com.latmod.lib.io.ByteIOStream;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,12 +40,11 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable, INBTSeri
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement o)
+    public void fromJson(JsonElement o)
     {
         set(o.getAsBoolean());
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {
@@ -54,7 +52,7 @@ public class ConfigEntryBool extends ConfigEntry implements IClickable, INBTSeri
     }
 
     @Override
-    public void onClicked(@Nonnull IMouseButton button)
+    public void onClicked(IMouseButton button)
     {
         set(!getAsBoolean());
     }

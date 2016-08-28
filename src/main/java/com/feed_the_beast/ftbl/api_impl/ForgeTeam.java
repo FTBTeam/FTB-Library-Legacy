@@ -18,7 +18,6 @@ import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.FinalIDObject;
 import com.latmod.lib.util.LMStringUtils;
-import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,7 +26,6 @@ import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.UUID;
@@ -35,8 +33,6 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 26.05.2016.
  */
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapabilitySerializable<NBTTagCompound>
 {
     public static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(false, EnumTeamColor.values());
@@ -133,7 +129,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     @Override
     public IForgeWorld getWorld()
     {
-        return null;
+        return world;
     }
 
     @Override

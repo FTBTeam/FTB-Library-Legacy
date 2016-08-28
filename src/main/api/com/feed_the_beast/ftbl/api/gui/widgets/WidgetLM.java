@@ -6,11 +6,10 @@ import com.latmod.lib.TextureCoords;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.Nullable;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class WidgetLM
 {
     public int posX, posY, width, height;
@@ -86,7 +85,7 @@ public class WidgetLM
 
     public void addMouseOverText(GuiLM gui, List<String> l)
     {
-        String t = getTitle();
+        String t = getTitle(gui);
 
         if(t != null)
         {
@@ -98,7 +97,8 @@ public class WidgetLM
     {
     }
 
-    public String getTitle()
+    @Nullable
+    public String getTitle(GuiLM gui)
     {
         return null;
     }

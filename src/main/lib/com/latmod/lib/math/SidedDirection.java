@@ -14,6 +14,26 @@ public enum SidedDirection
     public static final SidedDirection[] VALUES = values();
     public final EnumFacing[] directions;
 
+    private static final SidedDirection[] CACHED_SIDES = new SidedDirection[36];
+
+    static
+    {
+        for(EnumFacing side : EnumFacing.VALUES)
+        {
+            for(EnumFacing rot : EnumFacing.VALUES)
+            {
+                for(SidedDirection d : VALUES)
+                {
+                    if(d.directions[rot.ordinal()] == side)
+                    {
+                        CACHED_SIDES[side.ordinal() + rot.ordinal() * 6] = d;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     // Static //
 
     SidedDirection(EnumFacing a, EnumFacing b, EnumFacing c, EnumFacing d, EnumFacing e, EnumFacing f)
@@ -23,18 +43,7 @@ public enum SidedDirection
 
     public static SidedDirection getSide(EnumFacing side, EnumFacing rot)
     {
-        if(side == null || rot == null)
-        {
-            return null;
-        }
-        for(SidedDirection d : VALUES)
-        {
-            if(d.directions[rot.ordinal()] == side)
-            {
-                return d;
-            }
-        }
-        return null;
+        return CACHED_SIDES[side.ordinal() + rot.ordinal() * 6];
     }
 
     public static SidedDirection get(EnumFacing side, EnumFacing rot3D, EnumFacing rot2D)
@@ -43,12 +52,11 @@ public enum SidedDirection
         {
             return FRONT;
         }
-        if(side == rot3D.getOpposite())
+        else if(side == rot3D.getOpposite())
         {
             return BACK;
         }
-
-        if(rot3D == EnumFacing.DOWN)
+        else if(rot3D == EnumFacing.DOWN)
         {
             if(side != EnumFacing.DOWN && side != EnumFacing.UP)
             {

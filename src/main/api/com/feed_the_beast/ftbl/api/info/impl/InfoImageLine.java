@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 
 /**
@@ -32,6 +32,7 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @SideOnly(Side.CLIENT)
+    @Nullable
     public InfoImage getImage(IGuiInfoPage page)
     {
         if(texture == InfoImage.NULL)
@@ -61,7 +62,7 @@ public class InfoImageLine extends InfoExtendedTextLine
         return texture;
     }
 
-    public InfoImageLine setImage(String img)
+    public InfoImageLine setImage(@Nullable String img)
     {
         String imageURL0 = imageURL == null ? null : (imageURL + "");
         imageURL = img;
@@ -75,6 +76,7 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @SideOnly(Side.CLIENT)
+    @Nullable
     public InfoImage getDisplayImage(IGuiInfoPage page)
     {
         InfoImage img = getImage(page);
@@ -97,7 +99,6 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @Override
-    @Nonnull
     @SideOnly(Side.CLIENT)
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
@@ -105,7 +106,7 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement e)
+    public void fromJson(JsonElement e)
     {
         super.fromJson(e);
 
@@ -133,7 +134,6 @@ public class InfoImageLine extends InfoExtendedTextLine
         }
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

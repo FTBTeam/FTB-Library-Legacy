@@ -18,18 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
-@ParametersAreNonnullByDefault
 public class TileLM extends TileEntity
 {
     public final Security security = createSecurity();
     private boolean isDirty = true;
     private IBlockState currentState;
 
-    public static TileEntity getTileEntityFromNBT(@Nonnull IBlockAccess world, @Nullable NBTTagCompound data)
+    public static TileEntity getTileEntityFromNBT(IBlockAccess world, @Nullable NBTTagCompound data)
     {
         if(data != null)
         {
@@ -49,7 +46,6 @@ public class TileLM extends TileEntity
         return new Security(ISecure.SAVE_OWNER);
     }
 
-    @Nonnull
     @Override
     public final NBTTagCompound writeToNBT(NBTTagCompound tag)
     {
@@ -72,7 +68,6 @@ public class TileLM extends TileEntity
         return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
     }
 
-    @Nonnull
     @Override
     public final NBTTagCompound getUpdateTag()
     {
@@ -186,7 +181,7 @@ public class TileLM extends TileEntity
         return currentState;
     }
 
-    public void onPlacedBy(@Nonnull EntityLivingBase el, @Nonnull ItemStack is, @Nonnull IBlockState state)
+    public void onPlacedBy(EntityLivingBase el, ItemStack is, IBlockState state)
     {
         security.setOwner(el.getUniqueID());
         markDirty();

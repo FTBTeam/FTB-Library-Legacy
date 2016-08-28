@@ -13,7 +13,7 @@ public class LMConnection
 
     public LMConnection(RequestMethod t, String s)
     {
-        type = (t == null) ? RequestMethod.GET : t;
+        type = t;
         url = s;
     }
 

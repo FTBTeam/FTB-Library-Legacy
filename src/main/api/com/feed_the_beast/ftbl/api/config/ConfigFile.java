@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.google.gson.JsonElement;
-import com.latmod.lib.json.LMJsonUtils;
 import com.latmod.lib.util.LMFileUtils;
+import com.latmod.lib.util.LMJsonUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 public class ConfigFile extends ConfigGroup
@@ -20,6 +21,7 @@ public class ConfigFile extends ConfigGroup
         return this;
     }
 
+    @Nullable
     public File getFile()
     {
         return file;
@@ -32,7 +34,7 @@ public class ConfigFile extends ConfigGroup
 
     public void load()
     {
-        JsonElement e = LMJsonUtils.fromJson(file);
+        JsonElement e = LMJsonUtils.fromJson(getFile());
 
         if(e.isJsonObject())
         {
@@ -42,9 +44,11 @@ public class ConfigFile extends ConfigGroup
 
     public void save()
     {
-        if(file != null)
+        File f = getFile();
+
+        if(f != null)
         {
-            LMJsonUtils.toJson(file, getSerializableElement());
+            LMJsonUtils.toJson(f, getSerializableElement());
         }
     }
 

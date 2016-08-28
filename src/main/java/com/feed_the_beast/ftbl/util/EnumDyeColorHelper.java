@@ -7,7 +7,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
 public class EnumDyeColorHelper implements ILangKeyContainer // ItemDye
@@ -61,7 +60,6 @@ public class EnumDyeColorHelper implements ILangKeyContainer // ItemDye
     }
 
     @Override
-    @Nonnull
     public LangKey getLangKey()
     {
         return langKey;

@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -19,19 +18,17 @@ public class InfoGuiLineEvent extends Event
     private final JsonObject json;
     private IInfoTextLine line;
 
-    public InfoGuiLineEvent(@Nonnull IGuiInfoPage p, @Nonnull JsonObject o)
+    public InfoGuiLineEvent(IGuiInfoPage p, JsonObject o)
     {
         page = p;
         json = o;
     }
 
-    @Nonnull
     public IGuiInfoPage getPage()
     {
         return page;
     }
 
-    @Nonnull
     public JsonObject getJson()
     {
         return json;
@@ -43,7 +40,7 @@ public class InfoGuiLineEvent extends Event
         return line;
     }
 
-    public void setLine(@Nonnull IInfoTextLine l)
+    public void setLine(IInfoTextLine l)
     {
         line = l;
     }

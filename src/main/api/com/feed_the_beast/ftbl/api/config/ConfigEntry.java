@@ -5,14 +5,14 @@ import com.latmod.lib.annotations.IFlagContainer;
 import com.latmod.lib.annotations.IInfoContainer;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.io.ByteIOStream;
-import com.latmod.lib.json.JsonElementIO;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.JsonElementIO;
+import com.latmod.lib.util.LMJsonUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,9 +29,8 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     public abstract ConfigEntryType getConfigType();
 
     @Override
-    public abstract void fromJson(@Nonnull JsonElement o);
+    public abstract void fromJson(JsonElement o);
 
-    @Nonnull
     @Override
     public abstract JsonElement getSerializableElement();
 
@@ -40,16 +39,19 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         return 0x999999;
     }
 
+    @Nullable
     public String getDefValueString()
     {
         return null;
     }
 
+    @Nullable
     public String getMinValueString()
     {
         return null;
     }
 
+    @Nullable
     public String getMaxValueString()
     {
         return null;
@@ -100,6 +102,7 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         return Collections.singletonList(getAsString());
     }
 
+    @Nullable
     public ConfigGroup getAsGroup()
     {
         return null;
@@ -120,13 +123,13 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
     @Override
     public final String[] getInfo()
     {
-        return info;
+        return info == null ? IInfoContainer.NO_INFO : info;
     }
 
     @Override
     public final void setInfo(String[] s)
     {
-        info = (s != null && s.length > 0) ? s : null;
+        info = s;
     }
 
     public void writeData(ByteIOStream io, boolean extended)
@@ -189,6 +192,7 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         }
     }
 
+    @Nullable
     public List<String> getVariants()
     {
         return null;

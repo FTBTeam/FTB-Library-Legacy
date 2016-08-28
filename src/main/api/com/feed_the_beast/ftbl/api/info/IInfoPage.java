@@ -5,7 +5,6 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -20,20 +19,16 @@ public interface IInfoPage extends IStringSerializable, IJsonSerializable
     @Nullable
     ITextComponent getTitle();
 
-    @Nonnull
     List<IInfoTextLine> getText();
 
-    @Nonnull
     List<? extends IInfoPage> getPages();
 
-    @Nonnull
     default String getFullID()
     {
         IInfoPage parent = getParent();
         return (parent == null) ? getName() : (parent.getFullID() + '.' + getName());
     }
 
-    @Nonnull
     default ITextComponent getDisplayName()
     {
         ITextComponent t = getTitle();

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IRegistry;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,8 +23,7 @@ public class SimpleRegistry<K, V> implements IRegistry<K, V>
     }
 
     @Override
-    @Nonnull
-    public V register(@Nonnull K key, @Nonnull V v)
+    public V register(K key, V v)
     {
         if(allowOverrides || !map.containsKey(key))
         {
@@ -38,27 +36,24 @@ public class SimpleRegistry<K, V> implements IRegistry<K, V>
 
     @Override
     @Nullable
-    public V get(@Nonnull K key)
+    public V get(K key)
     {
         return map.get(key);
     }
 
     @Override
-    @Nonnull
     public Set<K> getKeys()
     {
         return map.keySet();
     }
 
     @Override
-    @Nonnull
     public Collection<V> getValues()
     {
         return map.values();
     }
 
     @Override
-    @Nonnull
     public Set<Map.Entry<K, V>> getEntrySet()
     {
         return map.entrySet();

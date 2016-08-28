@@ -25,13 +25,11 @@ import com.mojang.authlib.GameProfile;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 
-import javax.annotation.Nonnull;
-
 public class PermissionAPI
 {
     private static IPermissionHandler permissionHandler = DefaultPermissionHandler.INSTANCE;
 
-    public static void setPermissionHandler(@Nonnull IPermissionHandler handler)
+    public static void setPermissionHandler(IPermissionHandler handler)
     {
         Preconditions.checkNotNull(handler, "IPermissionHandler can't be null!");
         FMLLog.log(Level.WARN, "Replacing " + permissionHandler.getClass().getName() + " with " + handler.getClass().getName());
@@ -46,7 +44,7 @@ public class PermissionAPI
      * @return true, if player has permission, false if he does not.
      * @see DefaultPermissionHandler
      */
-    public static boolean hasPermission(@Nonnull GameProfile profile, @Nonnull String permission, boolean defaultForPlayer, @Nonnull IContext context)
+    public static boolean hasPermission(GameProfile profile, String permission, boolean defaultForPlayer, IContext context)
     {
         Preconditions.checkNotNull(profile, "GameProfile can't be null!");
         Preconditions.checkNotNull(permission, "Permission node can't be null!");

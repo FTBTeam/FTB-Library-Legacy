@@ -6,7 +6,6 @@ import com.latmod.lib.LangKey;
 import com.latmod.lib.TextureCoords;
 import net.minecraft.util.IStringSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.Locale;
 
 public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
@@ -28,14 +27,12 @@ public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
     }
 
     @Override
-    @Nonnull
     public LangKey getLangKey()
     {
         return langKey;
     }
 
     @Override
-    @Nonnull
     public String getName()
     {
         return name;
@@ -48,6 +45,6 @@ public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
 
     public TextureCoords getIcon()
     {
-        return GuiIcons.redstone[ordinal()];
+        return GuiIcons.REDSTONE[ordinal()];
     }
 }

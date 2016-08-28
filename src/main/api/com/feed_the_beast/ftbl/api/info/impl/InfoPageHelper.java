@@ -8,7 +8,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -17,8 +16,7 @@ import java.util.List;
  */
 public class InfoPageHelper
 {
-    @Nonnull
-    public static String getUnformattedText(@Nonnull IInfoPage page)
+    public static String getUnformattedText(IInfoPage page)
     {
         List<IInfoTextLine> text = page.getText();
 
@@ -52,7 +50,7 @@ public class InfoPageHelper
     }
 
     @Nullable
-    public static IInfoTextLine createLine(IGuiInfoPage page, JsonElement e)
+    public static IInfoTextLine createLine(IGuiInfoPage page, @Nullable JsonElement e)
     {
         if(e == null || e.isJsonNull())
         {

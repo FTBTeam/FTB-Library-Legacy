@@ -40,7 +40,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
         @Override
         public ITextComponent getConfigTitle()
         {
-            return FTBLibLang.team_config.textComponent(team.getName());
+            return FTBLibLang.TEAM_CONFIG.textComponent(team.getName());
         }
 
         @Override
@@ -70,11 +70,11 @@ public class CmdTeamConfig extends CmdEditConfigBase
 
         if(team == null)
         {
-            throw FTBLibLang.team_no_team.commandError();
+            throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
         else if(!team.getStatus(p).isOwner())
         {
-            throw FTBLibLang.team_not_owner.commandError();
+            throw FTBLibLang.TEAM_NOT_OWNER.commandError();
         }
 
         return new TeamConfigContainer(team);

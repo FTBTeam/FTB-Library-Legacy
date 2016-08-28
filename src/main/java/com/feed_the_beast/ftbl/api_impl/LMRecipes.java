@@ -11,9 +11,11 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
+import javax.annotation.Nullable;
+
 public class LMRecipes implements IRecipes
 {
-    public static Object getFrom(Object o)
+    public static Object getFrom(@Nullable Object o)
     {
         if(o == null)
         {

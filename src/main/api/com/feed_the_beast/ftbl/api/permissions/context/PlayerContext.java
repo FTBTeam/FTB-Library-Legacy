@@ -22,21 +22,20 @@ package com.feed_the_beast.ftbl.api.permissions.context;
 import com.google.common.base.Preconditions;
 import net.minecraft.entity.player.EntityPlayer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PlayerContext extends Context
 {
     private final EntityPlayer player;
 
-    public PlayerContext(@Nonnull EntityPlayer ep)
+    public PlayerContext(EntityPlayer ep)
     {
         player = Preconditions.checkNotNull(ep, "Player can't be null in PlayerContext!");
         Preconditions.checkNotNull(ep.worldObj, "Player's world can't be null in PlayerContext!");
     }
 
     @Override
-    public <T> T get(@Nonnull ContextKey<T> key)
+    public <T> T get(ContextKey<T> key)
     {
         if(key.equals(ContextKey.PLAYER))
         {
@@ -51,14 +50,13 @@ public class PlayerContext extends Context
     }
 
     @Override
-    public boolean has(@Nonnull ContextKey<?> key)
+    public boolean has(ContextKey<?> key)
     {
         return key.equals(ContextKey.PLAYER) || key.equals(ContextKey.WORLD) || super.has(key);
     }
 
-    @Nonnull
     @Override
-    public <T> Context set(@Nonnull ContextKey<T> key, @Nullable T obj)
+    public <T> Context set(ContextKey<T> key, @Nullable T obj)
     {
         return (key.equals(ContextKey.PLAYER) || key.equals(ContextKey.WORLD)) ? this : super.set(key, obj);
     }

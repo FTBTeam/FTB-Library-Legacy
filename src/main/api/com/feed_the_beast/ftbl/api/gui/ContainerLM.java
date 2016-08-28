@@ -6,7 +6,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class ContainerLM extends Container
@@ -72,7 +71,7 @@ public abstract class ContainerLM extends Container
 
     public void addPlayerSlots(int posX, int posY, boolean ignoreCurrent)
     {
-        if(player != null && player.inventory != null)
+        if(player.inventory != null)
         {
             for(int y = 0; y < 3; y++)
             {
@@ -106,7 +105,7 @@ public abstract class ContainerLM extends Container
     }
 
     @Override
-    public boolean canInteractWith(@Nonnull EntityPlayer ep)
+    public boolean canInteractWith(EntityPlayer ep)
     {
         return true;
     }

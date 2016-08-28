@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,10 +19,10 @@ public class RankConfigAPI
 
     public interface Handler
     {
-        JsonElement getRankConfig(@Nonnull GameProfile profile, @Nonnull RankConfig config);
+        JsonElement getRankConfig(GameProfile profile, RankConfig config);
     }
 
-    public static void setHandler(@Nonnull Handler handler)
+    public static void setHandler(Handler handler)
     {
         if(rankConfigHandler != null)
         {
@@ -33,7 +32,7 @@ public class RankConfigAPI
         rankConfigHandler = handler;
     }
 
-    public static <E extends RankConfig> E register(@Nonnull E rankConfig)
+    public static <E extends RankConfig> E register(E rankConfig)
     {
         if(map.containsKey(rankConfig.getName()))
         {

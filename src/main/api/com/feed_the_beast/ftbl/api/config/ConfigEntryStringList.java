@@ -11,8 +11,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ConfigEntryStringList extends ConfigEntry implements INBTSerializable<NBTTagList>
@@ -25,7 +25,7 @@ public class ConfigEntryStringList extends ConfigEntry implements INBTSerializab
         value = new ArrayList<>();
         defValue = new ArrayList<>();
 
-        if(def != null && !def.isEmpty())
+        if(!def.isEmpty())
         {
             defValue.addAll(def);
             value.addAll(def);
@@ -48,14 +48,14 @@ public class ConfigEntryStringList extends ConfigEntry implements INBTSerializab
     {
         value.clear();
 
-        if(o != null && !o.isEmpty())
+        if(!o.isEmpty())
         {
             value.addAll(o);
         }
     }
 
     @Override
-    public final void fromJson(@Nonnull JsonElement o)
+    public final void fromJson(JsonElement o)
     {
         JsonArray a = o.getAsJsonArray();
         value.clear();
@@ -66,7 +66,6 @@ public class ConfigEntryStringList extends ConfigEntry implements INBTSerializab
         set(LMListUtils.clone(value));
     }
 
-    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {
@@ -155,7 +154,7 @@ public class ConfigEntryStringList extends ConfigEntry implements INBTSerializab
 
         if(s == 0)
         {
-            set(null);
+            set(Collections.emptyList());
         }
         else
         {

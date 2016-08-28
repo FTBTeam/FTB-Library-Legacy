@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,16 +34,14 @@ public class CommandSubBase extends CommandLM implements ICustomCommandInfo
         subCommands.put(c.getCommandName(), c);
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " [subcommand]";
     }
 
-    @Nonnull
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 1)
         {
@@ -87,11 +85,11 @@ public class CommandSubBase extends CommandLM implements ICustomCommandInfo
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         if(args.length < 1)
         {
-            throw FTBLibLang.raw.commandError(LMStringUtils.strip(subCommands.keySet()));
+            throw FTBLibLang.RAW.commandError(LMStringUtils.strip(subCommands.keySet()));
         }
         else
         {
@@ -99,7 +97,7 @@ public class CommandSubBase extends CommandLM implements ICustomCommandInfo
 
             if(cmd == null)
             {
-                throw FTBLibLang.invalid_subcmd.commandError(args[0]);
+                throw FTBLibLang.INVALID_SUBCMD.commandError(args[0]);
             }
             else if(!cmd.checkPermission(server, ics))
             {

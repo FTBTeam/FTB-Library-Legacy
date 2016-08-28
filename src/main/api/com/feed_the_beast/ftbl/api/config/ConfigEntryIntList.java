@@ -10,7 +10,6 @@ import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class ConfigEntryIntList extends ConfigEntry implements INBTSerializable<
 
     public ConfigEntryIntList(TIntList def)
     {
-        defValue = def == null ? new TIntArrayList() : def;
+        defValue = def;
         value = new TIntArrayList();
         value.addAll(defValue);
     }
@@ -54,7 +53,7 @@ public class ConfigEntryIntList extends ConfigEntry implements INBTSerializable<
     }
 
     @Override
-    public void fromJson(@Nonnull JsonElement o)
+    public void fromJson(JsonElement o)
     {
         JsonArray a = o.getAsJsonArray();
         TIntList l = new TIntArrayList(a.size());
@@ -66,7 +65,6 @@ public class ConfigEntryIntList extends ConfigEntry implements INBTSerializable<
         set(l);
     }
 
-    @Nonnull
     @Override
     public JsonElement getSerializableElement()
     {

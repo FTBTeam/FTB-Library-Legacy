@@ -8,7 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 04.03.2016.
@@ -18,7 +18,7 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
 {
     public InfoImage texture;
 
-    public ButtonInfoImage(GuiInfo g, @Nonnull InfoImageLine l, InfoImage img)
+    public ButtonInfoImage(GuiInfo g, InfoImageLine l, @Nullable InfoImage img)
     {
         super(g, l);
 
@@ -40,7 +40,7 @@ public class ButtonInfoImage extends ButtonInfoExtendedTextLine
     }
 
     @Override
-    public void renderWidget(@Nonnull GuiLM gui)
+    public void renderWidget(GuiLM gui)
     {
         if(texture != null)
         {

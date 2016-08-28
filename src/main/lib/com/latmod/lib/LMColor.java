@@ -1,7 +1,7 @@
 package com.latmod.lib;
 
-import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMColorUtils;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by LatvianModder on 08.01.2016.
@@ -199,8 +199,8 @@ public abstract class LMColor
         public void setHSB(float h, float s, float b)
         {
             hsb[0] = h % 1F;
-            hsb[1] = MathHelperLM.clampFloat(s, 0F, 1F);
-            hsb[2] = MathHelperLM.clampFloat(b, 0F, 1F);
+            hsb[1] = MathHelper.clamp_float(s, 0F, 1F);
+            hsb[2] = MathHelper.clamp_float(b, 0F, 1F);
             color = 0xFF000000 | java.awt.Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
         }
 

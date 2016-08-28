@@ -229,16 +229,4 @@ public class Converter
             return false;
         }
     }
-
-    public static int toInt(String text, int def)
-    {
-        try
-        {
-            return Integer.parseInt(text);
-        }
-        catch(Exception e)
-        {
-            return def;
-        }
-    }
 }

@@ -4,11 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.annotations.INumberBoundsContainer;
 import com.latmod.lib.io.ByteIOStream;
-import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.INBTSerializable;
-
-import javax.annotation.Nonnull;
 
 public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContainer, INBTSerializable<NBTTagInt>
 {
@@ -55,7 +53,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 
     public void set(int v)
     {
-        value = MathHelperLM.clampInt(v, (int) getMin(), (int) getMax());
+        value = MathHelper.clamp_int(v, (int) getMin(), (int) getMax());
     }
 
     public void add(int i)
@@ -64,12 +62,11 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
     }
 
     @Override
-    public final void fromJson(@Nonnull JsonElement o)
+    public final void fromJson(JsonElement o)
     {
         set(o.isJsonNull() ? defValue : o.getAsInt());
     }
 
-    @Nonnull
     @Override
     public final JsonElement getSerializableElement()
     {

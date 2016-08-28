@@ -19,7 +19,6 @@
 
 package com.feed_the_beast.ftbl.api.permissions.context;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public enum EmptyContext implements IContext
@@ -27,20 +26,19 @@ public enum EmptyContext implements IContext
     INSTANCE;
 
     @Override
-    public <T> T get(@Nonnull ContextKey<T> key)
+    public <T> T get(ContextKey<T> key)
     {
         return null;
     }
 
     @Override
-    public boolean has(@Nonnull ContextKey<?> key)
+    public boolean has(ContextKey<?> key)
     {
         return false;
     }
 
-    @Nonnull
     @Override
-    public <T> IContext set(@Nonnull ContextKey<T> key, @Nullable T obj)
+    public <T> IContext set(ContextKey<T> key, @Nullable T obj)
     {
         return this;
     }

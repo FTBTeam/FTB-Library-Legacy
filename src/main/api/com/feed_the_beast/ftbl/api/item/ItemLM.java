@@ -7,11 +7,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-
 public abstract class ItemLM extends Item
 {
-    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack stack)
     {

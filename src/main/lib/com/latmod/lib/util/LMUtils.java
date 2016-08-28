@@ -1,8 +1,6 @@
 package com.latmod.lib.util;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -13,13 +11,11 @@ import java.util.List;
 /**
  * Made by LatvianModder
  */
-@ParametersAreNonnullByDefault
 public class LMUtils
 {
     public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
     @SuppressWarnings("all")
-    @Nonnull
     public static <E> E newObject(Class<?> c, Object... o) throws Exception
     {
         if(o != null && o.length > 0)
@@ -83,7 +79,6 @@ public class LMUtils
         return h;
     }
 
-    @Nonnull
     public static <E> List<E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj) throws IllegalAccessException
     {
         List<E> l = new ArrayList<>();

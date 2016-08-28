@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,13 +26,13 @@ public class IntIDRegistry implements INBTSerializable<NBTTagCompound>, IIntIDRe
     }
 
     @Override
-    public int getIDFromKey(@Nonnull ResourceLocation key)
+    public int getIDFromKey(ResourceLocation key)
     {
         return IDToRL.containsValue(key) ? RLToID.get(key) : 0;
     }
 
     @Override
-    public int getOrCreateIDFromKey(@Nonnull ResourceLocation key)
+    public int getOrCreateIDFromKey(ResourceLocation key)
     {
         if(IDToRL.containsValue(key))
         {

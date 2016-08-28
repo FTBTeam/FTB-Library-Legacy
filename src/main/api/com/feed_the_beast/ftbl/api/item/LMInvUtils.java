@@ -157,7 +157,7 @@ public class LMInvUtils
 
     public static boolean isWrench(@Nullable ItemStack is)
     {
-        return is != null && is.getItem().getHarvestLevel(is, Tool.Type.WRENCH) >= Tool.Level.BASIC;
+        return is != null && is.getItem().getHarvestLevel(is, ToolType.WRENCH.getName()) >= ToolLevel.BASIC.ordinal();
     }
 
     public static void removeDisplayName(ItemStack is)

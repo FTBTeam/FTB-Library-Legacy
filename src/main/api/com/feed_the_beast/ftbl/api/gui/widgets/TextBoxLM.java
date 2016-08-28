@@ -10,13 +10,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @SideOnly(Side.CLIENT)
-@ParametersAreNonnullByDefault
 public class TextBoxLM extends WidgetLM
 {
-    public boolean isSelected = false;
+    private boolean isSelected = false;
     public int charLimit = -1;
     public double textRenderX = 4, textRenderY = 4;
     public int textColor = 0xFFFFFFFF;
@@ -38,7 +36,7 @@ public class TextBoxLM extends WidgetLM
 
         if(gui.isMouseOver(this))
         {
-            isSelected = true;
+            setSelected(gui, true);
             Keyboard.enableRepeatEvents(true);
 
             if(b.isRight() && getText().length() > 0)
@@ -50,8 +48,18 @@ public class TextBoxLM extends WidgetLM
         else
         {
             Keyboard.enableRepeatEvents(false);
-            isSelected = false;
+            setSelected(gui, false);
         }
+    }
+
+    public boolean isSelected(GuiLM gui)
+    {
+        return isSelected;
+    }
+
+    public void setSelected(GuiLM gui, boolean v)
+    {
+        isSelected = v;
     }
 
     @Override
@@ -62,7 +70,7 @@ public class TextBoxLM extends WidgetLM
             return false;
         }
 
-        if(isSelected)
+        if(isSelected(gui))
         {
             if(key == Keyboard.KEY_BACK)
             {
@@ -82,14 +90,14 @@ public class TextBoxLM extends WidgetLM
             }
             else if(key == Keyboard.KEY_ESCAPE)
             {
-                isSelected = false;
+                setSelected(gui, false);
             }
             else if(key == Keyboard.KEY_TAB)
             {
                 if(isValid())
                 {
                     onTabPressed(gui);
-                    isSelected = false;
+                    setSelected(gui, false);
                 }
             }
             else if(key == Keyboard.KEY_RETURN)
@@ -97,7 +105,7 @@ public class TextBoxLM extends WidgetLM
                 if(isValid())
                 {
                     onEnterPressed(gui);
-                    isSelected = false;
+                    setSelected(gui, false);
                 }
             }
             else
@@ -150,7 +158,7 @@ public class TextBoxLM extends WidgetLM
 
         String ns = s;
 
-        if(isSelected && Minecraft.getSystemTime() % 1000L > 500L)
+        if(isSelected(gui) && Minecraft.getSystemTime() % 1000L > 500L)
         {
             ns += '_';
         }

@@ -6,6 +6,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class FTBLibModCommon // FTBLibModClient
 {
     public void preInit()
@@ -16,6 +18,7 @@ public class FTBLibModCommon // FTBLibModClient
     {
     }
 
+    @Nullable
     public EntityPlayer getClientPlayer()
     {
         return null;

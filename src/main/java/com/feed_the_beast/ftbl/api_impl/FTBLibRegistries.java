@@ -19,7 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.ResourceLocationComparator;
-import com.latmod.lib.json.LMJsonUtils;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -28,7 +28,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -71,8 +70,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
 
         @Override
-        @Nonnull
-        public ISidebarButton register(@Nonnull ResourceLocation key, @Nonnull ISidebarButton a)
+        public ISidebarButton register(ResourceLocation key, ISidebarButton a)
         {
             a = super.register(key, a);
 

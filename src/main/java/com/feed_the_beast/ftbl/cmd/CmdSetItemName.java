@@ -8,8 +8,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nonnull;
-
 public class CmdSetItemName extends CommandLM
 {
     public CmdSetItemName()
@@ -23,15 +21,14 @@ public class CmdSetItemName extends CommandLM
         return 0;
     }
 
-    @Nonnull
     @Override
-    public String getCommandUsage(@Nonnull ICommandSender ics)
+    public String getCommandUsage(ICommandSender ics)
     {
         return '/' + commandName + " <name...>";
     }
 
     @Override
-    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender ics, @Nonnull String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<player>");
         EntityPlayerMP ep = getCommandSenderAsPlayer(ics);

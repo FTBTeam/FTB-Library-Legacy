@@ -6,34 +6,44 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public abstract class ButtonSimpleLM extends ButtonLM
 {
-    public int colorText = 0xFFFFFFFF;
-    public int colorButton = 0xFF888888;
-    public int colorButtonOver = 0xFF999999;
-
     public ButtonSimpleLM(int x, int y, int w, int h, String t)
     {
         super(x, y, w, h, t);
     }
 
     @Override
-    public void addMouseOverText(@Nonnull GuiLM gui, @Nonnull List<String> l)
+    public void addMouseOverText(GuiLM gui, List<String> l)
     {
     }
 
+    public int getTextColor(GuiLM gui)
+    {
+        return 0xFFFFFFFF;
+    }
+
+    public int getButtonColor(GuiLM gui, boolean over)
+    {
+        return over ? 0xFF999999 : 0xFF888888;
+    }
+
     @Override
-    public void renderWidget(@Nonnull GuiLM gui)
+    public void renderWidget(GuiLM gui)
     {
         int ax = getAX();
         int ay = getAY();
-        FTBLibClient.setGLColor(gui.isMouseOver(this) ? colorButtonOver : colorButton);
+        FTBLibClient.setGLColor(getButtonColor(gui, gui.isMouseOver(this)));
         GuiLM.drawBlankRect(ax, ay, width, height);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        gui.font.drawStringWithShadow(getTitle(), ax + (width - gui.font.getStringWidth(getTitle())) / 2, ay + (height - gui.font.FONT_HEIGHT) / 2, colorText);
+        String title = getTitle(gui);
+
+        if(title != null)
+        {
+            gui.font.drawStringWithShadow(title, ax + (width - gui.font.getStringWidth(title)) / 2, ay + (height - gui.font.FONT_HEIGHT) / 2, getTextColor(gui));
+        }
     }
 }

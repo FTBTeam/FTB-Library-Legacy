@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 
 public final class TextureCoords
 {
-    public static final TextureCoords NULL_TEXTURE = new TextureCoords(null, 0D, 0D, 1D, 1D);
+    public static final TextureCoords NULL_TEXTURE = new TextureCoords(new ResourceLocation("textures/misc/unknown_pack.png"), 0D, 0D, 1D, 1D);
 
     public final ResourceLocation texture;
     public final double minU, minV, maxU, maxV;

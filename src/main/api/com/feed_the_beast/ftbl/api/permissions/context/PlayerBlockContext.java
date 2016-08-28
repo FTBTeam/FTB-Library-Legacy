@@ -24,14 +24,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PlayerBlockContext extends PlayerContext
 {
     private final BlockPos blockPos;
 
-    public PlayerBlockContext(@Nonnull EntityPlayer ep, @Nonnull BlockPos pos)
+    public PlayerBlockContext(EntityPlayer ep, BlockPos pos)
     {
         super(ep);
         Preconditions.checkNotNull(pos, "BlockPos can't be null in PlayerBlockContext!");
@@ -39,7 +38,7 @@ public class PlayerBlockContext extends PlayerContext
     }
 
     @Override
-    public <T> T get(@Nonnull ContextKey<T> key)
+    public <T> T get(ContextKey<T> key)
     {
         if(key.equals(ContextKey.BLOCK))
         {
@@ -55,14 +54,13 @@ public class PlayerBlockContext extends PlayerContext
     }
 
     @Override
-    public boolean has(@Nonnull ContextKey<?> key)
+    public boolean has(ContextKey<?> key)
     {
         return key.equals(ContextKey.BLOCK) || super.has(key);
     }
 
-    @Nonnull
     @Override
-    public <T> Context set(@Nonnull ContextKey<T> key, @Nullable T obj)
+    public <T> Context set(ContextKey<T> key, @Nullable T obj)
     {
         return key.equals(ContextKey.BLOCK) ? this : super.set(key, obj);
     }

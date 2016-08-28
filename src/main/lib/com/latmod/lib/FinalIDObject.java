@@ -3,13 +3,11 @@ package com.latmod.lib;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.util.IStringSerializable;
 
-import javax.annotation.Nonnull;
-
 public class FinalIDObject implements IStringSerializable
 {
     private final String ID;
 
-    public FinalIDObject(@Nonnull String id)
+    public FinalIDObject(String id)
     {
         if(id.isEmpty())
         {
@@ -20,14 +18,12 @@ public class FinalIDObject implements IStringSerializable
     }
 
     @Override
-    @Nonnull
     public final String getName()
     {
         return ID;
     }
 
     @Override
-    @Nonnull
     public String toString()
     {
         return ID;
