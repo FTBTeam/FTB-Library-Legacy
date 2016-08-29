@@ -70,21 +70,6 @@ public class LMListUtils
         return list;
     }
 
-    public static int[] toHashCodeArray(Collection<?> c)
-    {
-        if(c.isEmpty())
-        {
-            return new int[0];
-        }
-        int[] s = new int[c.size()];
-        int i = -1;
-        for(Object o : c)
-        {
-            s[++i] = LMUtils.hashCodeOf(o);
-        }
-        return s;
-    }
-
     public static void removeNullValues(List<?> list)
     {
         for(int i = list.size() - 1; i >= 0; i--)

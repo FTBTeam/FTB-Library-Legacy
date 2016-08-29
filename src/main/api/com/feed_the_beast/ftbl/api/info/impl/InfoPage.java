@@ -84,7 +84,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         return this;
     }
 
-    public void println(Object o)
+    public void println(@Nullable Object o)
     {
         if(o == null)
         {

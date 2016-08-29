@@ -1,12 +1,10 @@
 package com.latmod.lib;
 
-import com.latmod.lib.util.LMUtils;
+import com.google.common.base.Objects;
 import net.minecraft.util.ResourceLocation;
 
 public final class TextureCoords implements ITextureCoords
 {
-    public static final TextureCoords NULL_TEXTURE = new TextureCoords(new ResourceLocation("textures/misc/unknown_pack.png"), 0D, 0D, 1D, 1D);
-
     public static TextureCoords fromUV(ResourceLocation res, double u0, double v0, double u1, double v1)
     {
         return new TextureCoords(res, u0, v0, u1, v1);
@@ -67,7 +65,7 @@ public final class TextureCoords implements ITextureCoords
     @Override
     public int hashCode()
     {
-        return LMUtils.hashCode(texture, minU, minV, maxU, maxV);
+        return Objects.hashCode(texture, minU, minV, maxU, maxV);
     }
 
     @Override
@@ -79,7 +77,7 @@ public final class TextureCoords implements ITextureCoords
     @Override
     public boolean isValid()
     {
-        return texture != null && this != NULL_TEXTURE && (maxU - minU) > 0D && (maxV - minV) > 0D;
+        return texture != null && (maxU - minU) > 0D && (maxV - minV) > 0D;
     }
 
     public TextureCoords copy()

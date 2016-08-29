@@ -15,6 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiLoading extends GuiLM
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/loading.png");
+    private boolean startedLoading = false;
+    private boolean isLoading = true;
 
     public GuiLoading()
     {
@@ -46,6 +48,38 @@ public class GuiLoading extends GuiLM
     @Override
     public void drawBackground()
     {
-        renderLoading(getAX(), getAY(), width, height);
+        if(!startedLoading)
+        {
+            startLoading();
+            startedLoading = true;
+        }
+
+        if(isLoading())
+        {
+            renderLoading(getAX(), getAY(), width, height);
+        }
+        else
+        {
+            closeGui();
+            finishLoading();
+        }
+    }
+
+    public void setFinished()
+    {
+        isLoading = false;
+    }
+
+    public void startLoading()
+    {
+    }
+
+    public boolean isLoading()
+    {
+        return isLoading;
+    }
+
+    public void finishLoading()
+    {
     }
 }

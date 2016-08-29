@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.client;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.latmod.lib.util.LMColorUtils;
-import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,6 +13,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @SideOnly(Side.CLIENT)
 public class FTBLibClient
@@ -46,10 +47,9 @@ public class FTBLibClient
     private static final Matrix4f MATRIX_OUT = new Matrix4f();
     */
     public static boolean isFirstPerson;
-    public static int currentDim;
+    public static int currentDim, playerPosHash;
     public static double playerX, playerY, playerZ;
     public static double renderX, renderY, renderZ;
-    public static long playerPosHash;
     private static float lastBrightnessX, lastBrightnessY;
     private static EntityItem entityItem;
     //private static IntBuffer VIEWPORT;
@@ -99,10 +99,10 @@ public class FTBLibClient
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
     }
 
-    public static ThreadDownloadImageData getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
+    public static ITextureObject getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
     {
         TextureManager t = Minecraft.getMinecraft().getTextureManager();
-        ThreadDownloadImageData img = (ThreadDownloadImageData) t.getTexture(out);
+        ITextureObject img = t.getTexture(out);
 
         if(img == null)
         {
@@ -249,7 +249,7 @@ public class FTBLibClient
         renderX = TileEntityRendererDispatcher.staticPlayerX;
         renderY = TileEntityRendererDispatcher.staticPlayerY;
         renderZ = TileEntityRendererDispatcher.staticPlayerZ;
-        playerPosHash = Math.abs(LMUtils.longHashCode(currentDim, playerX, playerY, playerZ) + 1);
+        playerPosHash = Objects.hash(currentDim, playerX, playerY, playerZ);
         frustum.setPosition(playerX, playerY, playerZ);
 
         /*

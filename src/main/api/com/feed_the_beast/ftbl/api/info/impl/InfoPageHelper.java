@@ -69,7 +69,7 @@ public class InfoPageHelper
 
             if(o.has("image"))
             {
-                l = new InfoImageLine(null);
+                l = new InfoImageLine();
             }
             else
             {

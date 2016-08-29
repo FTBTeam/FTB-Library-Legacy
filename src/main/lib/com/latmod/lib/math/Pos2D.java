@@ -1,7 +1,7 @@
 package com.latmod.lib.math;
 
 import com.latmod.lib.util.LMStringUtils;
-import com.latmod.lib.util.LMUtils;
+import net.minecraft.util.math.MathHelper;
 
 public class Pos2D
 {
@@ -24,12 +24,12 @@ public class Pos2D
 
     public Pos2I toPos2I()
     {
-        return new Pos2I((int) x, (int) y);
+        return new Pos2I(MathHelper.floor_double(x), MathHelper.floor_double(y));
     }
 
     public int hashCode()
     {
-        return LMUtils.hashCode(x, y);
+        return Double.hashCode(x) * 31 + Double.hashCode(y);
     }
 
     public boolean equalsPos(Pos2D o)

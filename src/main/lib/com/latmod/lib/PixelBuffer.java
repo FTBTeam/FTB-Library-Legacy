@@ -1,16 +1,15 @@
 package com.latmod.lib;
 
 import com.latmod.lib.util.LMColorUtils;
-import com.latmod.lib.util.LMUtils;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
-public class PixelBuffer
+public class PixelBuffer implements IPixelBuffer
 {
-    public final int width, height;
-    public final int[] pixels;
+    private final int width, height;
+    private final int[] pixels;
 
     public PixelBuffer(int w, int h)
     {
@@ -25,24 +24,46 @@ public class PixelBuffer
         img.getRGB(0, 0, width, height, pixels, 0, width);
     }
 
-    public void setPixels(int[] rgbArray)
+    @Override
+    public int getWidth()
     {
-        if(rgbArray.length == pixels.length)
+        return width;
+    }
+
+    @Override
+    public int getHeight()
+    {
+        return height;
+    }
+
+    @Override
+    public int[] getPixels()
+    {
+        return pixels;
+    }
+
+    @Override
+    public void setPixels(int[] p)
+    {
+        if(p.length == pixels.length)
         {
-            System.arraycopy(rgbArray, 0, pixels, 0, pixels.length);
+            System.arraycopy(p, 0, pixels, 0, pixels.length);
         }
     }
 
+    @Override
     public void setRGB(int x, int y, int col)
     {
         pixels[x + y * width] = col;
     }
 
+    @Override
     public int getRGB(int x, int y)
     {
         return pixels[x + y * width];
     }
 
+    @Override
     public void setRGB(int startX, int startY, int w, int h, int[] rgbArray)
     {
         int off = -1;
@@ -55,28 +76,35 @@ public class PixelBuffer
         }
     }
 
-    public void setRGB(int startX, int startY, PixelBuffer buffer)
+    @Override
+    public void setRGB(int startX, int startY, IPixelBuffer buffer)
     {
-        setRGB(startX, startY, buffer.width, buffer.height, buffer.pixels);
+        setRGB(startX, startY, buffer.getWidth(), buffer.getHeight(), buffer.getPixels());
     }
 
-    public int[] getRGB(int startX, int startY, int w, int h, @Nullable int[] rgbArray)
+    @Override
+    public int[] getRGB(int startX, int startY, int w, int h, @Nullable int[] p)
     {
-        if(rgbArray == null || rgbArray.length != w * h)
+        if(p == null || p.length != w * h)
         {
-            rgbArray = new int[w * h];
+            p = new int[w * h];
         }
+
         int off = -1;
-        for(int y = startY; y < startY + h; y++)
+        w += startX;
+        h += startY;
+        for(int y = startY; y < h; y++)
         {
-            for(int x = startX; x < startX + w; x++)
+            for(int x = startX; x < w; x++)
             {
-                rgbArray[++off] = getRGB(x, y);
+                p[++off] = getRGB(x, y);
             }
         }
-        return rgbArray;
+
+        return p;
     }
 
+    @Override
     public BufferedImage toImage(int type)
     {
         BufferedImage image = new BufferedImage(width, height, type);
@@ -100,7 +128,6 @@ public class PixelBuffer
         }
     }
 
-    @Override
     public boolean equals(Object o)
     {
         if(o == null)
@@ -111,7 +138,7 @@ public class PixelBuffer
         {
             return true;
         }
-        if(o instanceof PixelBuffer)
+        else if(o instanceof PixelBuffer)
         {
             PixelBuffer b = (PixelBuffer) o;
             if(width == b.width && height == b.height)
@@ -123,16 +150,16 @@ public class PixelBuffer
                         return false;
                     }
                 }
+
                 return true;
             }
         }
         return false;
     }
 
-    @Override
     public int hashCode()
     {
-        return LMUtils.hashCode(width, height, pixels);
+        return Arrays.hashCode(getPixels());
     }
 
     public PixelBuffer copy()
@@ -142,7 +169,8 @@ public class PixelBuffer
         return b;
     }
 
-    public PixelBuffer getSubimage(int x, int y, int w, int h)
+    @Override
+    public IPixelBuffer getSubimage(int x, int y, int w, int h)
     {
         PixelBuffer b = new PixelBuffer(w, h);
         getRGB(x, y, w, h, b.pixels);

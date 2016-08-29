@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by LatvianModder on 29.08.2016.
  */
-public interface ITextureCoords
+public interface ITextureCoords extends ITextureCoordsProvider
 {
     ResourceLocation getTexture();
 
@@ -18,4 +18,10 @@ public interface ITextureCoords
     double getMaxV();
 
     boolean isValid();
+
+    @Override
+    default ITextureCoords getTextureCoords()
+    {
+        return this;
+    }
 }

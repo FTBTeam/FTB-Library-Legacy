@@ -1,10 +1,11 @@
 package com.latmod.lib.math;
 
-import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.Arrays;
 
 public final class EntityDimPos
 {
@@ -24,7 +25,7 @@ public final class EntityDimPos
 
     public int hashCode()
     {
-        return LMUtils.hashCode(pos, dim);
+        return Arrays.hashCode(new double[] {pos.xCoord, pos.yCoord, pos.zCoord, dim});
     }
 
     public String toString()
