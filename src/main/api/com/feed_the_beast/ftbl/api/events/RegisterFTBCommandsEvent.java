@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.events;
 
-import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
+import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -10,9 +10,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class RegisterFTBCommandsEvent extends Event
 {
     private final boolean isDedi;
-    private CommandSubBase command;
+    private CommandTreeBase command;
 
-    public RegisterFTBCommandsEvent(CommandSubBase c, boolean dedi)
+    public RegisterFTBCommandsEvent(CommandTreeBase c, boolean dedi)
     {
         command = c;
         isDedi = dedi;

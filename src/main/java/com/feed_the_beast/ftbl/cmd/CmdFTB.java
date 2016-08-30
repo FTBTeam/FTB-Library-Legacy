@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
+import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.cmd.team.CmdTeam;
 import com.feed_the_beast.ftbl.util.FTBLib;
@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 /**
  * Created by LatvianModder on 08.06.2016.
  */
-public class CmdFTB extends CommandSubBase
+public class CmdFTB extends CommandTreeBase
 {
     public CmdFTB(boolean dedi)
     {

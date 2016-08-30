@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
-import com.feed_the_beast.ftbl.api.cmd.CommandSubBase;
+import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.util.ReloadType;
 import com.latmod.lib.util.LMStringUtils;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CmdPackMode extends CommandSubBase
+public class CmdPackMode extends CommandTreeBase
 {
     public static class CmdSet extends CommandLM
     {
