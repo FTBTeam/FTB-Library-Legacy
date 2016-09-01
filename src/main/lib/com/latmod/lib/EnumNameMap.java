@@ -56,7 +56,7 @@ public final class EnumNameMap<E extends Enum<E>>
         return e.name().toLowerCase(Locale.ENGLISH);
     }
 
-    public static String getEnumName(Enum<?> e)
+    public static String getEnumName(@Nullable Enum<?> e)
     {
         if(e == null)
         {
@@ -72,7 +72,8 @@ public final class EnumNameMap<E extends Enum<E>>
         }
     }
 
-    public E get(String s)
+    @Nullable
+    public E get(@Nullable String s)
     {
         if(s == null || s.isEmpty() || s.charAt(0) == '-')
         {

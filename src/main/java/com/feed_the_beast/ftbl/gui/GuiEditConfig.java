@@ -78,7 +78,7 @@ public class GuiEditConfig extends GuiLM
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            font.drawString(title, (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
+            font.drawString(getTitle(gui), (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
 
             String s = entry.getAsString();
 

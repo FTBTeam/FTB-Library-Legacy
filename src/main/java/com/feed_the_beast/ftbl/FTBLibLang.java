@@ -22,6 +22,7 @@ public class FTBLibLang
 
     //@Deprecated
     RAW = get("raw"),
+    COMMAND_PERMISSION = new LangKey("commands.generic.permission"),
     MISSING_ARGS = get("missing_args"),
     MISSING_ARGS_NUM = get("missing_args_num"),
     FEATURE_DISABLED = get("feature_disabled"),

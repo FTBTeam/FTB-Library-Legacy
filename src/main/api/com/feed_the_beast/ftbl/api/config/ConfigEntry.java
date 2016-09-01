@@ -57,12 +57,13 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         return null;
     }
 
+    @Nullable
     public ITextComponent getDisplayName()
     {
         return displayName;
     }
 
-    public void setDisplayName(ITextComponent c)
+    public void setDisplayName(@Nullable ITextComponent c)
     {
         displayName = c;
     }
@@ -138,13 +139,14 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
         {
             io.writeByte(getFlags());
             int extraFlags = 0;
-            Bits.setFlag(extraFlags, 1, displayName != null);
+            ITextComponent dn = getDisplayName();
+            Bits.setFlag(extraFlags, 1, dn != null);
             Bits.setFlag(extraFlags, 2, info != null && info.length > 0);
             io.writeByte(extraFlags);
 
-            if(displayName != null)
+            if(dn != null)
             {
-                JsonElementIO.write(io, LMJsonUtils.serializeTextComponent(displayName));
+                JsonElementIO.write(io, LMJsonUtils.serializeTextComponent(dn));
             }
 
             if(info != null && info.length > 0)
@@ -168,11 +170,11 @@ public abstract class ConfigEntry implements IInfoContainer, IFlagContainer, IJs
 
             if(Bits.getFlag(extraFlags, 1))
             {
-                displayName = LMJsonUtils.deserializeTextComponent(JsonElementIO.read(io));
+                setDisplayName(LMJsonUtils.deserializeTextComponent(JsonElementIO.read(io)));
             }
             else
             {
-                displayName = null;
+                setDisplayName(null);
             }
 
             if(Bits.getFlag(extraFlags, 2))

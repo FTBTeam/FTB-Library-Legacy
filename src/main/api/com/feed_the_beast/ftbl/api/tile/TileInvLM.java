@@ -50,13 +50,6 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public void readTileData(NBTTagCompound nbt)
-    {
-        super.readTileData(nbt);
-        itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
-    }
-
-    @Override
     public void writeTileData(NBTTagCompound nbt)
     {
         super.writeTileData(nbt);
@@ -64,10 +57,10 @@ public class TileInvLM extends TileLM
     }
 
     @Override
-    public void readTileClientData(NBTTagCompound nbt)
+    public void readTileData(NBTTagCompound nbt)
     {
-        super.readTileClientData(nbt);
-        itemHandler.deserializeNBT(nbt.getCompoundTag("INV"));
+        super.readTileData(nbt);
+        itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
     }
 
     @Override
@@ -75,6 +68,13 @@ public class TileInvLM extends TileLM
     {
         super.writeTileClientData(nbt);
         nbt.setTag("INV", itemHandler.serializeNBT());
+    }
+
+    @Override
+    public void readTileClientData(NBTTagCompound nbt)
+    {
+        super.readTileClientData(nbt);
+        itemHandler.deserializeNBT(nbt.getCompoundTag("INV"));
     }
 
     public void dropItems()

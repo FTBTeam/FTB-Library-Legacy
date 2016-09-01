@@ -1,8 +1,10 @@
 package com.latmod.lib.math;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,6 +22,7 @@ public class BlockStateSerializer extends DefaultStateMapper
 
     public ModelResourceLocation get(IBlockState state)
     {
-        return getModelResourceLocation(state);
+        ResourceLocation id = Block.REGISTRY.getNameForObject(state.getBlock());
+        return new ModelResourceLocation(new ResourceLocation(id.getResourceDomain(), "blocks/" + id.getResourcePath()), getPropertyString(state.getProperties()));
     }
 }

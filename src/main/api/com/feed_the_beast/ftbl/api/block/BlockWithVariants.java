@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.api.block;
 
 import com.feed_the_beast.ftbl.api.item.IMaterial;
 import com.feed_the_beast.ftbl.util.FTBLib;
-import com.latmod.lib.math.BlockStateSerializer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -239,7 +239,8 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
 
         for(T e : getMetaLookup())
         {
-            ModelLoader.setCustomModelResourceLocation(item, e.getMetadata(), BlockStateSerializer.INSTANCE.get(getDefaultState().withProperty(getMetaLookup().getProperty(), e)));
+            ResourceLocation id = new ResourceLocation(getRegistryName().getResourceDomain(), "blocks/" + e.getName());
+            ModelLoader.setCustomModelResourceLocation(item, e.getMetadata(), new ModelResourceLocation(id, "inventory"));
         }
     }
 }

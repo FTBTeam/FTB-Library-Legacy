@@ -130,19 +130,16 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return getProfile().getName().compareToIgnoreCase(o.getProfile().getName());
     }
 
-    @Override
     public final String toString()
     {
         return gameProfile.getName();
     }
 
-    @Override
     public final int hashCode()
     {
         return gameProfile.getId().hashCode();
     }
 
-    @Override
     public boolean equals(Object o)
     {
         if(o == null)

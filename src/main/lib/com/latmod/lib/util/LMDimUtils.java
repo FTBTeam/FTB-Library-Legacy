@@ -138,12 +138,6 @@ public class LMDimUtils
         return true;
     }
 
-    @Nullable
-    public static World getWorld(int dim)
-    {
-        return DimensionManager.getWorld(dim);
-    }
-
     public static double getMovementFactor(int dim)
     {
         switch(dim)
@@ -156,7 +150,7 @@ public class LMDimUtils
                 return 1D;
             default:
             {
-                World w = getWorld(dim);
+                WorldServer w = DimensionManager.getWorld(dim);
                 return (w == null) ? 1D : w.provider.getMovementFactor();
             }
         }
@@ -165,7 +159,7 @@ public class LMDimUtils
     @Nullable
     public static BlockDimPos getSpawnPoint(int dim)
     {
-        World w = getWorld(dim);
+        WorldServer w = DimensionManager.getWorld(dim);
         return (w == null) ? null : new BlockDimPos(w.getSpawnPoint(), dim);
     }
 }

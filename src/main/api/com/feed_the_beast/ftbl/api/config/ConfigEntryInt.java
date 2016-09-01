@@ -16,8 +16,7 @@ public class ConfigEntryInt extends ConfigEntry implements INumberBoundsContaine
 
     public ConfigEntryInt(int def)
     {
-        defValue = def;
-        set(def);
+        defValue = value = def;
     }
 
     @Override

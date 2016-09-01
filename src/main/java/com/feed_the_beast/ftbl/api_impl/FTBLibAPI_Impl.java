@@ -102,6 +102,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
+    @Nullable
     public Universe getUniverse()
     {
         return universe;

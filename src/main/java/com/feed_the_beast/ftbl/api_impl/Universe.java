@@ -172,11 +172,6 @@ public class Universe implements IUniverse
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        if(capabilities != null)
-        {
-            capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
-        }
-
         MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
 
         NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
@@ -212,6 +207,11 @@ public class Universe implements IUniverse
         currentTeam = null;
 
         MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
+
+        if(capabilities != null)
+        {
+            capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
+        }
     }
 
     @Override
@@ -219,11 +219,6 @@ public class Universe implements IUniverse
     {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound tag2;
-
-        if(capabilities != null)
-        {
-            tag.setTag("ForgeCaps", capabilities.serializeNBT());
-        }
 
         NBTTagList tagPlayers = new NBTTagList();
 
@@ -253,6 +248,11 @@ public class Universe implements IUniverse
         currentTeam = null;
 
         tag.setTag("Teams", teamsTag);
+
+        if(capabilities != null)
+        {
+            tag.setTag("ForgeCaps", capabilities.serializeNBT());
+        }
 
         return tag;
     }

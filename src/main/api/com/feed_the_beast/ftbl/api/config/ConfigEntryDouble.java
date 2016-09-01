@@ -20,7 +20,7 @@ public class ConfigEntryDouble extends ConfigEntry implements INumberBoundsConta
         defValue = d;
         minValue = Double.NEGATIVE_INFINITY;
         maxValue = Double.POSITIVE_INFINITY;
-        set(d);
+        value = MathHelper.clamp_double(d, minValue, maxValue);
     }
 
     @Override

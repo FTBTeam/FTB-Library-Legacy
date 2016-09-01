@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 
 public class LMRecipes implements IRecipes
 {
+    @Nullable
     public static Object getFrom(@Nullable Object o)
     {
         if(o == null)
@@ -27,10 +28,10 @@ public class LMRecipes implements IRecipes
         }
         else if(o instanceof EnumDyeColor)
         {
-            return EnumDyeColorHelper.get((EnumDyeColor) o).getOreName();
+            return EnumDyeColorHelper.get((EnumDyeColor) o).getDyeName();
         }
 
-        return null;
+        return o;
     }
 
     public static ItemStack size(ItemStack is, int s)
@@ -44,11 +45,7 @@ public class LMRecipes implements IRecipes
     {
         for(int i = 0; i < in.length; i++)
         {
-            Object o = getFrom(in[i]);
-            if(o != null)
-            {
-                in[i] = o;
-            }
+            in[i] = getFrom(in[i]);
         }
 
         return in;

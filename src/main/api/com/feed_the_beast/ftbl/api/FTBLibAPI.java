@@ -35,6 +35,7 @@ public abstract class FTBLibAPI
 
     public abstract ISharedData getSharedData(Side side);
 
+    @Nullable
     public abstract IUniverse getUniverse();
 
     public abstract void addServerCallback(int timer, Runnable runnable);
