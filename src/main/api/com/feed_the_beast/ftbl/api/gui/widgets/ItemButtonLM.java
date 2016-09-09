@@ -1,16 +1,15 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-@SideOnly(Side.CLIENT)
 public abstract class ItemButtonLM extends ButtonLM
 {
-    public ItemStack item;
+    private ItemStack item;
 
     public ItemButtonLM(int x, int y, int w, int h, @Nullable ItemStack is)
     {
@@ -23,12 +22,20 @@ public abstract class ItemButtonLM extends ButtonLM
         item = is;
     }
 
-    @Override
-    public void renderWidget(GuiLM gui)
+    @Nullable
+    public ItemStack getItem()
     {
-        if(item != null)
+        return item;
+    }
+
+    @Override
+    public void renderWidget(IGui gui)
+    {
+        ItemStack stack = getItem();
+
+        if(stack != null)
         {
-            GuiLM.renderGuiItem(gui.mc.getRenderItem(), item, getAX(), getAY());
+            GuiHelper.renderGuiItem(Minecraft.getMinecraft().getRenderItem(), stack, getAX(), getAY());
         }
     }
 }

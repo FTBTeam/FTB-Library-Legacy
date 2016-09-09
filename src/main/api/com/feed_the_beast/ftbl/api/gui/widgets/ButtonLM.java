@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+import javax.annotation.Nullable;
+
 public abstract class ButtonLM extends WidgetLM
 {
     private String title;
@@ -22,18 +21,18 @@ public abstract class ButtonLM extends WidgetLM
     }
 
     @Override
-    public String getTitle(GuiLM gui)
+    public String getTitle(IGui gui)
     {
         return title;
     }
 
-    public void setTitle(String s)
+    public void setTitle(@Nullable String s)
     {
         title = s;
     }
 
     @Override
-    public void mousePressed(GuiLM gui, IMouseButton button)
+    public void mousePressed(IGui gui, IMouseButton button)
     {
         if(gui.isMouseOver(this))
         {
@@ -41,5 +40,5 @@ public abstract class ButtonLM extends WidgetLM
         }
     }
 
-    public abstract void onClicked(GuiLM gui, IMouseButton button);
+    public abstract void onClicked(IGui gui, IMouseButton button);
 }

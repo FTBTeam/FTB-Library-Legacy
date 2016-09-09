@@ -1,13 +1,10 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 24.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class InfoFriendsGUIPage extends InfoPage
 {
     public InfoFriendsGUIPage()

@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbl.api.net;
 
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 14.05.2016.
@@ -21,25 +22,24 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
     }
 
     @Override
-    public final IMessage onMessage(E m, MessageContext ctx)
+    @Nullable
+    public final IMessage onMessage(final E m, MessageContext ctx)
     {
-        Minecraft mc = Minecraft.getMinecraft();
-        mc.addScheduledTask(() -> onMessage(m, mc));
+        Minecraft.getMinecraft().addScheduledTask(() -> onMessage(m));
 
         if(MessageLM.LOG_NET)
         {
-            FTBLib.DEV_LOGGER.info("RX MessageLM: " + getClass().getName());
+            LMUtils.DEV_LOGGER.info("RX MessageLM: " + getClass().getName());
         }
 
         return null;
     }
 
-    @SideOnly(Side.CLIENT)
-    public void onMessage(E m, Minecraft mc)
+    public void onMessage(E m)
     {
     }
 
-    public final void sendTo(EntityPlayerMP player)
+    public final void sendTo(@Nullable EntityPlayerMP player)
     {
         if(player != null)
         {

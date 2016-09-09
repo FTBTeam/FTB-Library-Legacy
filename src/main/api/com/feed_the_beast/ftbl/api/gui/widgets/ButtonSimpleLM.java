@@ -1,14 +1,12 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
 public abstract class ButtonSimpleLM extends ButtonLM
 {
     public ButtonSimpleLM(int x, int y, int w, int h, String t)
@@ -17,33 +15,33 @@ public abstract class ButtonSimpleLM extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> l)
     {
     }
 
-    public int getTextColor(GuiLM gui)
+    public int getTextColor(IGui gui)
     {
         return 0xFFFFFFFF;
     }
 
-    public int getButtonColor(GuiLM gui, boolean over)
+    public int getButtonColor(IGui gui, boolean over)
     {
         return over ? 0xFF999999 : 0xFF888888;
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(IGui gui)
     {
         int ax = getAX();
         int ay = getAY();
         FTBLibClient.setGLColor(getButtonColor(gui, gui.isMouseOver(this)));
-        GuiLM.drawBlankRect(ax, ay, width, height);
+        GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
         GlStateManager.color(1F, 1F, 1F, 1F);
         String title = getTitle(gui);
 
         if(title != null)
         {
-            gui.font.drawStringWithShadow(title, ax + (width - gui.font.getStringWidth(title)) / 2, ay + (height - gui.font.FONT_HEIGHT) / 2, getTextColor(gui));
+            gui.getFont().drawStringWithShadow(title, ax + (getWidth() - gui.getFont().getStringWidth(title)) / 2, ay + (getHeight() - gui.getFont().FONT_HEIGHT) / 2, getTextColor(gui));
         }
     }
 }

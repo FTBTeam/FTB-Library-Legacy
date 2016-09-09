@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -54,6 +54,6 @@ public class CmdAddAlly extends CommandLM
             //TODO: Lang
         }
 
-        FTBLib.printChat(ep, "Added ally team: " + args[0]);
+        LMServerUtils.printChat(ep, "Added ally team: " + args[0]);
     }
 }

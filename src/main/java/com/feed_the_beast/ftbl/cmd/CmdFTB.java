@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.cmd.team.CmdTeam;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -25,7 +25,7 @@ public class CmdFTB extends CommandTreeBase
         add(new CmdHeal());
         add(new CmdEditConfig());
 
-        if(FTBLib.DEV_ENV)
+        if(LMUtils.DEV_ENV)
         {
             add(new CmdAddFakePlayer());
         }

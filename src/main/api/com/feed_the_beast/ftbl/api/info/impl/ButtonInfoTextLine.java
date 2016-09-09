@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -13,52 +11,51 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class ButtonInfoTextLine extends ButtonLM
 {
     public List<String> text;
 
     public ButtonInfoTextLine(GuiInfo g, @Nullable String txt)
     {
-        super(0, g.panelText.height, 0, 0);
+        super(0, g.panelText.getHeight(), 0, 0);
 
         if(txt != null && !txt.isEmpty())
         {
-            text = g.font.listFormattedStringToWidth(txt, g.panelText.width);
+            text = g.getFont().listFormattedStringToWidth(txt, g.panelText.getWidth());
         }
 
         if(text != null)
         {
             if(text.size() > 1)
             {
-                width = g.panelText.width;
+                setWidth(g.panelText.getWidth());
             }
             else
             {
-                width = g.font.getStringWidth(text.get(0));
+                setWidth(g.getFont().getStringWidth(text.get(0)));
             }
 
-            height = 10 * text.size();
+            setHeight(10 * text.size());
         }
         else
         {
-            width = 0;
-            height = 11;
+            setWidth(0);
+            setHeight(11);
         }
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> l)
     {
     }
 
     @Override
-    public void onClicked(GuiLM gui, IMouseButton button)
+    public void onClicked(IGui gui, IMouseButton button)
     {
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(IGui gui)
     {
         int ay = getAY();
         int ax = getAX();
@@ -67,7 +64,7 @@ public class ButtonInfoTextLine extends ButtonLM
         {
             for(int i = 0; i < text.size(); i++)
             {
-                gui.font.drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
+                gui.getFont().drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
             }
         }
     }

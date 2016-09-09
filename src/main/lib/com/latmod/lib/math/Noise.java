@@ -11,16 +11,16 @@ import java.util.Random;
  */
 public class Noise
 {
-    private static final float perlin_cosTable[] = new float[720];
-    private static final int perlin_TWOPI = 720;
-    private static final int perlin_PI = perlin_TWOPI >> 1;
+    private static final float PERLIN_COS_TABLE[] = new float[720];
+    private static final int PERLIN_TWOPI = 720;
+    private static final int PERLIN_PI = PERLIN_TWOPI >> 1;
 
     static
     {
         float d = 0.5F * MathHelperLM.RAD_F;
-        for(int i = 0; i < perlin_cosTable.length; i++)
+        for(int i = 0; i < PERLIN_COS_TABLE.length; i++)
         {
-            perlin_cosTable[i] = MathHelper.cos(i * d);
+            PERLIN_COS_TABLE[i] = MathHelper.cos(i * d);
         }
 
     }
@@ -46,7 +46,7 @@ public class Noise
 
     private float noise_fsc(double f)
     {
-        return 0.5F * (1F - perlin_cosTable[((int) (f * perlin_PI) % perlin_TWOPI)]);
+        return 0.5F * (1F - PERLIN_COS_TABLE[((int) (f * PERLIN_PI) % PERLIN_TWOPI)]);
     }
 
     public float get(float x, float y, float z)

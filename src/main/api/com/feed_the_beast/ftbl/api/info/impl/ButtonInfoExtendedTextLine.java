@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.latmod.lib.util.LMNetUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.net.URI;
@@ -21,7 +21,6 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 {
     public ClickEvent clickEvent;
@@ -56,7 +55,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> l)
     {
         if(hover != null)
         {
@@ -65,11 +64,11 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void onClicked(GuiLM gui, IMouseButton button)
+    public void onClicked(IGui gui, IMouseButton button)
     {
         if(clickEvent != null)
         {
-            GuiLM.playClickSound();
+            GuiHelper.playClickSound();
 
             switch(this.clickEvent.getAction())
             {
@@ -88,11 +87,14 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
                         {
                             throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
                         }
-                        if(gui.mc.gameSettings.chatLinksPrompt)
-                        {
-                            final GuiScreen currentScreen = gui.mc.currentScreen;
 
-                            gui.mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+                        Minecraft mc = Minecraft.getMinecraft();
+
+                        if(mc.gameSettings.chatLinksPrompt)
+                        {
+                            final GuiScreen currentScreen = mc.currentScreen;
+
+                            mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
                             {
                                 if(result)
                                 {
@@ -105,7 +107,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
                                         ex.printStackTrace();
                                     }
                                 }
-                                gui.mc.displayGuiScreen(currentScreen);
+                                mc.displayGuiScreen(currentScreen);
                             }, clickEvent.getValue(), 0, false));
                         }
                         else
@@ -142,7 +144,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(IGui gui)
     {
         int ay = getAY();
         int ax = getAX();
@@ -151,7 +153,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
         {
             for(int i = 0; i < text.size(); i++)
             {
-                gui.font.drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
+                gui.getFont().drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
             }
         }
     }

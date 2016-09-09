@@ -6,8 +6,6 @@ import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 08.08.2016.
@@ -28,7 +26,6 @@ public class InfoTextLineString implements IInfoTextLine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoTextLine(gui, text);

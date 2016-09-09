@@ -10,16 +10,16 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.ResourceLocationComparator;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -28,6 +28,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -173,7 +174,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
+        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
             createGroup().loadFromGroup(json);
             config.getValues().forEach(ConfigFile::save);
@@ -272,8 +273,8 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
     {
         config.getValues().forEach(ConfigFile::load);
 
-        FTBLib.DEV_LOGGER.info("Loading override configs");
-        JsonElement overridesE = LMJsonUtils.fromJson(new File(FTBLib.folderModpack, "overrides.json"));
+        LMUtils.DEV_LOGGER.info("Loading override configs");
+        JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
 
         if(overridesE.isJsonObject())
         {
@@ -281,7 +282,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 
             if(result > 0)
             {
-                FTBLib.DEV_LOGGER.info("Loaded " + result + " config overrides");
+                LMUtils.DEV_LOGGER.info("Loaded " + result + " config overrides");
 
                 for(ConfigFile f : config.getValues())
                 {

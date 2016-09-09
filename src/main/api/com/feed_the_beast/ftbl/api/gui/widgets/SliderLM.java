@@ -1,17 +1,15 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
 public class SliderLM extends WidgetLM
 {
     public final int sliderSize;
@@ -25,7 +23,7 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(GuiLM gui, IMouseButton b)
+    public void mousePressed(IGui gui, IMouseButton b)
     {
         if(b.isLeft() && gui.isMouseOver(this))
         {
@@ -34,7 +32,7 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> l)
     {
         double min = getDisplayMin();
         double max = getDisplayMax();
@@ -47,7 +45,7 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    public void updateSlider(GuiLM gui)
+    public void updateSlider(IGui gui)
     {
         double v = getValue(gui);
         double v0 = v;
@@ -58,11 +56,11 @@ public class SliderLM extends WidgetLM
             {
                 if(getDirection().isVertical())
                 {
-                    v = (gui.mouseY - (getAY() + (sliderSize / 2D))) / (double) (height - sliderSize);
+                    v = (gui.getMouseY() - (getAY() + (sliderSize / 2D))) / (double) (getHeight() - sliderSize);
                 }
                 else
                 {
-                    v = (gui.mouseX - (getAX() + (sliderSize / 2D))) / (double) (width - sliderSize);
+                    v = (gui.getMouseX() - (getAX() + (sliderSize / 2D))) / (double) (getWidth() - sliderSize);
                 }
             }
             else
@@ -71,9 +69,9 @@ public class SliderLM extends WidgetLM
             }
         }
 
-        if(gui.dmouseWheel != 0 && canMouseScroll(gui))
+        if(gui.getMouseWheel() != 0 && canMouseScroll(gui))
         {
-            v += (gui.dmouseWheel < 0) ? getScrollStep() : -getScrollStep();
+            v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
         }
 
         v = MathHelper.clamp_double(v, 0D, 1D);
@@ -84,26 +82,26 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    public boolean isGrabbed(GuiLM gui)
+    public boolean isGrabbed(IGui gui)
     {
         return isGrabbed;
     }
 
-    public void setGrabbed(GuiLM gui, boolean b)
+    public void setGrabbed(IGui gui, boolean b)
     {
         isGrabbed = b;
     }
 
-    public void onMoved(GuiLM gui)
+    public void onMoved(IGui gui)
     {
     }
 
-    public boolean canMouseScroll(GuiLM gui)
+    public boolean canMouseScroll(IGui gui)
     {
         return gui.isMouseOver(this);
     }
 
-    public void setValue(GuiLM gui, double v)
+    public void setValue(IGui gui, double v)
     {
         if(value != v)
         {
@@ -112,25 +110,25 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    public double getValue(GuiLM gui)
+    public double getValue(IGui gui)
     {
         return value;
     }
 
     public int getValueI()
     {
-        return (int) (value * ((getDirection().isVertical() ? height : width) - sliderSize));
+        return (int) (value * ((getDirection().isVertical() ? getHeight() : getWidth()) - sliderSize));
     }
 
     public void renderSlider(ITextureCoords tc)
     {
         if(getDirection().isVertical())
         {
-            GuiLM.render(tc, getAX(), getAY() + getValueI(), width, sliderSize);
+            GuiHelper.render(tc, getAX(), getAY() + getValueI(), getWidth(), sliderSize);
         }
         else
         {
-            GuiLM.render(tc, getAX() + getValueI(), getAY(), sliderSize, height);
+            GuiHelper.render(tc, getAX() + getValueI(), getAY(), sliderSize, getHeight());
         }
     }
 

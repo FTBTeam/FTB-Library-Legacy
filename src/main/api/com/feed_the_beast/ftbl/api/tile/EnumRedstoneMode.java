@@ -12,9 +12,11 @@ public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
 {
     DISABLED,
     ACTIVE_HIGH,
-    ACTIVE_LOW;
+    ACTIVE_LOW,
+    PULSE;
 
-    public static final EnumRedstoneMode[] VALUES = values();
+    public static final EnumRedstoneMode[] VALUES = {DISABLED, ACTIVE_HIGH, ACTIVE_LOW};
+    public static final EnumRedstoneMode[] VALUES_WITH_PULSE = {DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE};
     public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.redstonemode");
 
     private final LangKey langKey;
@@ -51,6 +53,8 @@ public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
                 return GuiIcons.RS_HIGH;
             case ACTIVE_LOW:
                 return GuiIcons.RS_LOW;
+            case PULSE:
+                return GuiIcons.RS_PULSE;
             default:
                 return GuiIcons.RS_NONE;
         }

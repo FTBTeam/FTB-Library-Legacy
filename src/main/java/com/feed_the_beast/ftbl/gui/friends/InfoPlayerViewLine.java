@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
@@ -16,14 +16,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class InfoPlayerViewLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerView extends ButtonInfoTextLine
@@ -70,13 +67,13 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
         public ButtonInfoPlayerView(GuiInfo g)
         {
             super(g, null);
-            height = 1;
+            setHeight(1);
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
-            double ay = getAY();
+            int ay = getAY();
             //double ax = getAX();
 
             if(player == null)
@@ -116,25 +113,25 @@ public class InfoPlayerViewLine extends EmptyInfoPageLine
 
             GlStateManager.pushMatrix();
 
-            double pheight = 120D;
-            double pwidth = pheight / 1.625D;
+            int pheight = 120;
+            int pwidth = (int) (pheight / 1.625D);
 
-            double playerX = gui.width - pwidth / 2 - 30;
-            double playerY = ay + pheight + 10;
+            int playerX = gui.getWidth() - pwidth / 2 - 30;
+            int playerY = ay + pheight + 10;
 
             pheight = pheight / 2;
-            pwidth = pheight / 1.625D;
+            pwidth = (int) (pheight / 1.625D);
 
             FTBLibClient.setTexture(player.getLocationSkin());
             GlStateManager.translate(0F, 0F, 100F);
             GlStateManager.color(1F, 1F, 1F, 1F);
-            GuiInventory.drawEntityOnScreen((int) playerX, (int) playerY, (int) pheight, (float) playerX - gui.mouseX, (float) (playerY - (pheight + pwidth) - gui.mouseY), player);
+            GuiInventory.drawEntityOnScreen(playerX, playerY, pheight, playerX - gui.getMouseX(), playerY - (pheight + pwidth) - gui.getMouseY(), player);
             GlStateManager.color(1F, 1F, 1F, 1F);
             GlStateManager.popMatrix();
         }
 
         @Override
-        public boolean shouldRender(GuiLM gui)
+        public boolean shouldRender(IGui gui)
         {
             return true;
         }

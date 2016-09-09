@@ -13,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 20.06.2016.
  */
@@ -44,7 +46,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
+        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
             group.loadFromGroup(json);
         }

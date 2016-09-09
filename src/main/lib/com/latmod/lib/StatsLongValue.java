@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.util;
+package com.latmod.lib;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;

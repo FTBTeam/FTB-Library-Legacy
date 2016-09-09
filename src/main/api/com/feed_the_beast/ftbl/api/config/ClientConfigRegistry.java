@@ -1,17 +1,15 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonObject;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
-@SideOnly(Side.CLIENT)
 public final class ClientConfigRegistry
 {
     private static final ConfigFile FILE = new ConfigFile();
@@ -32,7 +30,7 @@ public final class ClientConfigRegistry
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
+        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
             FILE.loadFromGroup(json);
             ClientConfigRegistry.saveConfig();
@@ -43,7 +41,7 @@ public final class ClientConfigRegistry
     {
         if(FILE.getFile() == null)
         {
-            FILE.setFile(new File(FTBLib.folderLocal, "client/config.json"));
+            FILE.setFile(new File(LMUtils.folderLocal, "client/config.json"));
             FILE.load();
         }
 

@@ -1,14 +1,10 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.ITextureCoords;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -18,7 +14,7 @@ public abstract class SidebarButton implements ISidebarButton
     private final ITextureCoords icon;
     private final EnumEnabled configDefault;
 
-    public SidebarButton(int p, ITextureCoords c, EnumEnabled b)
+    public SidebarButton(int p, ITextureCoords c, @Nullable EnumEnabled b)
     {
         priority = p;
         icon = c;
@@ -38,6 +34,7 @@ public abstract class SidebarButton implements ISidebarButton
     }
 
     @Override
+    @Nullable
     public EnumEnabled getConfigDefault()
     {
         return configDefault;
@@ -51,22 +48,13 @@ public abstract class SidebarButton implements ISidebarButton
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public boolean isVisibleFor(IForgePlayer player)
+    public void render(int ax, int ay)
     {
-        return true;
+        GuiHelper.render(icon, ax, ay, 16, 16);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void render(Minecraft mc, int ax, int ay)
-    {
-        GuiLM.render(icon, ax, ay, 16, 16);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void postRender(Minecraft mc, int ax, int ay)
+    public void postRender(int ax, int ay)
     {
     }
 

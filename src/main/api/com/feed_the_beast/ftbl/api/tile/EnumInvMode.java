@@ -9,10 +9,10 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
 {
-    ENABLED,
-    ONLY_IN,
-    ONLY_OUT,
-    DISABLED;
+    IO,
+    IN,
+    OUT,
+    NONE;
 
     public static final EnumInvMode[] VALUES = values();
     public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.invmode");
@@ -42,24 +42,24 @@ public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
     {
         switch(this)
         {
-            case ENABLED:
+            case IO:
                 return GuiIcons.INV_IO;
-            case ONLY_IN:
+            case IN:
                 return GuiIcons.INV_IN;
-            case ONLY_OUT:
+            case OUT:
                 return GuiIcons.INV_OUT;
             default:
                 return GuiIcons.INV_NONE;
         }
     }
 
-    public boolean canInsertItem()
+    public boolean canInsert()
     {
-        return this == ENABLED || this == ONLY_IN;
+        return this == IO || this == IN;
     }
 
-    public boolean canExtractItem()
+    public boolean canExtract()
     {
-        return this == ENABLED || this == ONLY_OUT;
+        return this == IO || this == OUT;
     }
 }

@@ -1,26 +1,44 @@
 package com.latmod.lib.util;
 
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.latmod.lib.math.BlockDimPos;
 import com.latmod.lib.math.EntityDimPos;
+import com.mojang.authlib.GameProfile;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.UUID;
 
-public class LMDimUtils
+/**
+ * Created by LatvianModder on 08.09.2016.
+ */
+public class LMServerUtils
 {
     private static class TeleporterBlank extends Teleporter
     {
-        public TeleporterBlank(WorldServer w)
+        private TeleporterBlank(WorldServer w)
         {
             super(w);
         }
@@ -86,7 +104,7 @@ public class LMDimUtils
         int from = entity.dimension;
         float rotationYaw = entity.rotationYaw;
         float rotationPitch = entity.rotationPitch;
-        MinecraftServer server = FTBLib.getServer();
+        MinecraftServer server = LMServerUtils.getServer();
         WorldServer fromDim = server.worldServerForDimension(from);
         WorldServer toDim = server.worldServerForDimension(dim);
 
@@ -161,5 +179,106 @@ public class LMDimUtils
     {
         WorldServer w = DimensionManager.getWorld(dim);
         return (w == null) ? null : new BlockDimPos(w.getSpawnPoint(), dim);
+    }
+
+    public static ITextComponent getChatComponent(Object o)
+    {
+        return (o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString(String.valueOf(o));
+    }
+
+    /**
+     * Prints message to chat (doesn't translate it)
+     */
+    public static void printChat(@Nullable ICommandSender ep, Object o)
+    {
+        if(ep == null)
+        {
+            ep = FTBLibMod.proxy.getClientPlayer();
+        }
+        if(ep != null)
+        {
+            ep.addChatMessage(getChatComponent(o));
+        }
+        else
+        {
+            FTBLibMod.logger.info(o);
+        }
+    }
+
+    public static MinecraftServer getServer()
+    {
+        return FMLCommonHandler.instance().getMinecraftServerInstance();
+    }
+
+    public static boolean hasOnlinePlayers()
+    {
+        return !getServer().getPlayerList().getPlayerList().isEmpty();
+    }
+
+    public static WorldServer getServerWorld()
+    {
+        return getServer().worldServers[0];
+    }
+
+    public static boolean isOP(@Nullable GameProfile p)
+    {
+        MinecraftServer ms = getServer();
+        return !ms.isDedicatedServer() || (p != null && p.getId() != null && ms.getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0);
+    }
+
+    public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
+    {
+        Collection<ICommand> commands = new HashSet<>();
+
+        for(ICommand c : server.getCommandManager().getCommands().values())
+        {
+            if(c.checkPermission(server, sender))
+            {
+                commands.add(c);
+            }
+        }
+
+        return commands;
+    }
+
+    //null - can't, TRUE - always spawns, FALSE - only spawns at night
+    public static Boolean canMobSpawn(World world, BlockPos pos)
+    {
+        if(pos.getY() < 0 || pos.getY() >= 256)
+        {
+            return null;
+        }
+
+        Chunk chunk = world.getChunkFromBlockCoords(pos);
+
+        if(!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
+        {
+            return null;
+        }
+
+        AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
+        if(!world.checkNoEntityCollision(aabb) || world.containsAnyLiquid(aabb))
+        {
+            return null;
+        }
+
+        if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8)
+        {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    public static Entity getEntityByUUID(World worldObj, UUID uuid)
+    {
+        for(Entity e : worldObj.loadedEntityList)
+        {
+            if(e.getUniqueID().equals(uuid))
+            {
+                return e;
+            }
+        }
+
+        return null;
     }
 }

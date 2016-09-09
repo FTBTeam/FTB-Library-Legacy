@@ -21,6 +21,11 @@ public class PixelBuffer implements IPixelBuffer
     public PixelBuffer(BufferedImage img)
     {
         this(img.getWidth(), img.getHeight());
+        loadFrom(img);
+    }
+
+    public void loadFrom(BufferedImage img)
+    {
         img.getRGB(0, 0, width, height, pixels, 0, width);
     }
 

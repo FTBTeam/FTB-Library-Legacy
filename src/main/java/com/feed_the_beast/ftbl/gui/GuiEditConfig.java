@@ -8,10 +8,12 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
 import com.feed_the_beast.ftbl.api.gui.IClickable;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
@@ -29,17 +31,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-@SideOnly(Side.CLIENT)
 public class GuiEditConfig extends GuiLM
 {
     public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareTo(o2.getKey());
@@ -57,16 +57,16 @@ public class GuiEditConfig extends GuiLM
         }
 
         @Override
-        public boolean shouldRender(GuiLM gui)
+        public boolean shouldRender(IGui gui)
         {
             int ay = getAY();
-            return ay > -height && ay < screen.getScaledHeight();
+            return ay > -getHeight() && ay < gui.getScreenHeight();
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
-            boolean mouseOver = mouseY >= 20 && gui.isMouseOver(this);
+            boolean mouseOver = getMouseX() >= 20 && gui.isMouseOver(this);
 
             int ax = getAX();
             int ay = getAY();
@@ -74,19 +74,19 @@ public class GuiEditConfig extends GuiLM
             if(mouseOver)
             {
                 GlStateManager.color(1F, 1F, 1F, 0.13F);
-                drawBlankRect(ax, ay, width, height);
+                GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            font.drawString(getTitle(gui), (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
+            getFont().drawString(getTitle(gui), (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
 
             String s = entry.getAsString();
 
-            int slen = font.getStringWidth(s);
+            int slen = getFont().getStringWidth(s);
 
             if(slen > 150)
             {
-                s = font.trimStringToWidth(s, 150) + "...";
+                s = getFont().trimStringToWidth(s, 150) + "...";
                 slen = 152;
             }
 
@@ -96,22 +96,22 @@ public class GuiEditConfig extends GuiLM
                 textCol = LMColorUtils.addBrightness(textCol, 60);
             }
 
-            if(mouseOver && mouseX > ax + width - slen - 9)
+            if(mouseOver && getMouseX() > ax + getWidth() - slen - 9)
             {
                 GlStateManager.color(1F, 1F, 1F, 0.13F);
-                drawBlankRect(ax + width - slen - 8, ay, slen + 8, height);
+                GuiHelper.drawBlankRect(ax + getWidth() - slen - 8, ay, slen + 8, getHeight());
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            font.drawString(s, screen.getScaledWidth() - (slen + 20), (int) (ay + 4D), textCol);
+            getFont().drawString(s, getScreenWidth() - (slen + 20), (int) (ay + 4D), textCol);
         }
 
         @Override
-        public void onClicked(GuiLM gui, IMouseButton button)
+        public void onClicked(IGui gui, IMouseButton button)
         {
-            if(mouseY >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
+            if(getMouseY() >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
 
                 ConfigEntryType type = entry.getConfigType();
 
@@ -187,24 +187,24 @@ public class GuiEditConfig extends GuiLM
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(IGui gui, List<String> l)
         {
-            if(mouseY > 18)
+            if(getMouseY() > 18)
             {
-                if(mouseX < getAX() + font.getStringWidth(title) + 10)
+                if(getMouseX() < getAX() + getFont().getStringWidth(title) + 10)
                 {
                     String[] info = entry.getInfo();
 
-                    if(info != null && info.length > 0)
+                    if(info.length > 0)
                     {
                         for(String s : info)
                         {
-                            l.addAll(font.listFormattedStringToWidth(s, 230));
+                            l.addAll(getFont().listFormattedStringToWidth(s, 230));
                         }
                     }
                 }
 
-                if(entry.getAsGroup() == null && mouseX > screen.getScaledWidth() - (Math.min(150, font.getStringWidth(entry.getAsString())) + 25))
+                if(entry.getAsGroup() == null && getMouseX() > getScreenWidth() - (Math.min(150, getFont().getStringWidth(entry.getAsString())) + 25))
                 {
                     String def = entry.getDefValueString();
                     String min = entry.getMinValueString();
@@ -238,7 +238,7 @@ public class GuiEditConfig extends GuiLM
     private final SliderLM scroll;
     private int shouldClose = 0;
 
-    public GuiEditConfig(NBTTagCompound nbt, IConfigContainer cc)
+    public GuiEditConfig(@Nullable NBTTagCompound nbt, IConfigContainer cc)
     {
         super(0, 0);
         configContainer = cc;
@@ -268,12 +268,12 @@ public class GuiEditConfig extends GuiLM
             @Override
             public void addWidgets()
             {
-                height = 0;
+                setHeight(0);
                 for(ButtonConfigEntry b : configEntryButtons)
                 {
-                    b.posY = height;
+                    b.posY = getHeight();
                     add(b);
-                    height += b.height;
+                    setHeight(getHeight() + b.getHeight());
                 }
             }
         };
@@ -281,9 +281,9 @@ public class GuiEditConfig extends GuiLM
         buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 shouldClose = 1;
                 closeGui();
             }
@@ -292,9 +292,9 @@ public class GuiEditConfig extends GuiLM
         buttonCancel = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 shouldClose = 2;
                 closeGui();
             }
@@ -303,7 +303,7 @@ public class GuiEditConfig extends GuiLM
         scroll = new SliderLM(-16, 20, 16, 0, 10)
         {
             @Override
-            public boolean canMouseScroll(GuiLM gui)
+            public boolean canMouseScroll(IGui gui)
             {
                 return true;
             }
@@ -317,33 +317,38 @@ public class GuiEditConfig extends GuiLM
             @Override
             public double getScrollStep()
             {
-                return 40D / (configPanel.height + 20D);
+                return 40D / (configPanel.getHeight() + 20D);
             }
         };
     }
 
     @Override
+    public boolean isFullscreen()
+    {
+        return true;
+    }
+
+    @Override
     public void onInit()
     {
-        setFullscreen();
-        buttonAccept.posX = width - 18;
-        buttonCancel.posX = width - 38;
-        scroll.posX = width - 16;
-        scroll.height = height - 20;
+        buttonAccept.posX = getWidth() - 18;
+        buttonCancel.posX = getWidth() - 38;
+        scroll.posX = getWidth() - 16;
+        scroll.setHeight(getHeight() - 20);
         configPanel.posY = 20;
         scroll.setValue(this, 0);
 
         for(ButtonConfigEntry b : configEntryButtons)
         {
-            b.width = width - 16;
+            b.setWidth(getWidth() - 16);
         }
     }
 
     @Override
     public void addWidgets()
     {
-        configPanel.height = 20;
-        configPanel.width = width;
+        configPanel.setHeight(20);
+        configPanel.setWidth(getWidth());
         configPanel.posX = 0;
         configPanel.posY = 20;
 
@@ -389,10 +394,10 @@ public class GuiEditConfig extends GuiLM
         GlStateManager.enableBlend();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        if(configPanel.height + 20D > height)
+        if(configPanel.getHeight() + 20D > getHeight())
         {
             scroll.updateSlider(this);
-            configPanel.posY = (int) (scroll.getValue(this) * (height - configPanel.height - 20D) + 20D);
+            configPanel.posY = (int) (scroll.getValue(this) * (getHeight() - configPanel.getHeight() - 20D) + 20D);
         }
         else
         {
@@ -401,19 +406,19 @@ public class GuiEditConfig extends GuiLM
         }
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        scissor(0, 20, width, height - 20);
+        scissor(0, 20, getWidth(), getHeight() - 20);
         configPanel.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         FTBLibClient.setGLColor(0x99333333);
-        drawBlankRect(0, 0, width, 20);
+        GuiHelper.drawBlankRect(0, 0, getWidth(), 20);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        font.drawString(title, 6, 6, 0xFFFFFFFF);
+        getFont().drawString(title, 6, 6, 0xFFFFFFFF);
 
         FTBLibClient.setGLColor(0x99333333);
-        drawBlankRect(scroll.posX, scroll.posY, scroll.width, scroll.height);
+        GuiHelper.drawBlankRect(scroll.posX, scroll.posY, scroll.getWidth(), scroll.getHeight());
         FTBLibClient.setGLColor(0x99666666);
-        drawBlankRect(scroll.posX, scroll.posY + (int) (scroll.getValue(this) * (scroll.height - scroll.sliderSize)), scroll.width, scroll.sliderSize);
+        GuiHelper.drawBlankRect(scroll.posX, scroll.posY + (int) (scroll.getValue(this) * (scroll.getHeight() - scroll.sliderSize)), scroll.getWidth(), scroll.sliderSize);
 
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
@@ -424,7 +429,7 @@ public class GuiEditConfig extends GuiLM
     }
 
     @Override
-    public String getTitle(GuiLM gui)
+    public String getTitle(IGui gui)
     {
         return title;
     }

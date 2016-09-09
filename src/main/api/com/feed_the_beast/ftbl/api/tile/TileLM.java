@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.security.Security;
 import com.latmod.lib.math.BlockDimPos;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -145,22 +144,13 @@ public class TileLM extends TileEntity
 
     public void sendDirtyUpdate()
     {
-        if(worldObj != null)
+        updateContainingBlockInfo();
+        super.markDirty();
+
+        if(worldObj != null && getSync().sync())
         {
-            updateContainingBlockInfo();
-
-            if(getSync().sync())
-            {
-                IBlockState state = getBlockState();
-                worldObj.notifyBlockUpdate(pos, state, state, 3);
-            }
-
-            worldObj.markChunkDirty(pos, this);
-
-            if(getBlockType() != Blocks.AIR)
-            {
-                worldObj.updateComparatorOutputLevel(pos, getBlockType());
-            }
+            IBlockState state = getBlockState();
+            worldObj.notifyBlockUpdate(pos, state, state, 3);
         }
     }
 

@@ -1,24 +1,22 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.ReloadType;
 import com.google.gson.JsonElement;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -145,31 +143,28 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
-    public void openGui(ResourceLocation guiID, EntityPlayer ep, @Nullable NBTTagCompound data)
+    public void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data)
     {
         IGuiHandler handler = FTBLibAPI.get().getRegistries().guis().get(guiID);
 
-        if(ep.worldObj.isRemote)
+        if(handler == null)
         {
-            FTBLibMod.proxy.openClientGui(handler, ep, data, ep.openContainer.windowId);
+            return;
         }
-        else
+
+        Container c = handler.getContainer(ep, data);
+
+        ep.getNextWindowId();
+        ep.closeContainer();
+
+        if(c != null)
         {
-            Container c = (handler != null) ? handler.getContainer(ep, data) : null;
-
-            EntityPlayerMP epM = (EntityPlayerMP) ep;
-            epM.getNextWindowId();
-            epM.closeContainer();
-
-            if(c != null)
-            {
-                epM.openContainer = c;
-            }
-
-            epM.openContainer.windowId = epM.currentWindowId;
-            epM.openContainer.addListener(epM);
-            new MessageOpenGui(guiID, data, epM.currentWindowId).sendTo(epM);
+            ep.openContainer = c;
         }
+
+        ep.openContainer.windowId = ep.currentWindowId;
+        ep.openContainer.addListener(ep);
+        new MessageOpenGui(guiID, data, ep.currentWindowId).sendTo(ep);
     }
 
     @Override
@@ -182,7 +177,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
     public void reloadPackModes()
     {
-        File file = LMFileUtils.newFile(new File(FTBLib.folderModpack, "packmodes.json"));
+        File file = LMFileUtils.newFile(new File(LMUtils.folderModpack, "packmodes.json"));
         packModes = new PackModes(LMJsonUtils.fromJson(file));
         LMJsonUtils.toJson(file, packModes.toJsonObject());
     }
@@ -193,7 +188,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
         {
             universe = new Universe();
 
-            JsonElement worldData = LMJsonUtils.fromJson(new File(FTBLib.folderWorld, "world_data.json"));
+            JsonElement worldData = LMJsonUtils.fromJson(new File(LMUtils.folderWorld, "world_data.json"));
 
             if(worldData.isJsonObject())
             {
@@ -202,7 +197,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
             universe.playerMap.clear();
 
-            NBTTagCompound nbt = LMNBTUtils.readTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"));
+            NBTTagCompound nbt = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"));
 
             if(nbt != null)
             {

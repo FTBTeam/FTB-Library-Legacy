@@ -1,11 +1,9 @@
-package com.feed_the_beast.ftbl.util;
+package com.latmod.lib;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,6 @@ public class CreativeTabLM extends CreativeTabs
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public ItemStack getIconItemStack()
     {
         if(!iconItems.isEmpty())
@@ -53,21 +50,18 @@ public class CreativeTabLM extends CreativeTabs
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public Item getTabIconItem()
     {
         return getIconItemStack().getItem();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public int getIconItemDamage()
     {
         return getIconItemStack().getItemDamage();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void displayAllRelevantItems(List<ItemStack> list)
     {
         for(Item item : Item.REGISTRY)

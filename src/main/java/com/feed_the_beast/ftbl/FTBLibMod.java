@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
+import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api.recipes.IRecipes;
@@ -9,8 +10,8 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.ReloadType;
+import com.latmod.lib.util.LMServerUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
@@ -47,9 +48,9 @@ public class FTBLibMod
     public static FTBLibModCommon proxy;
 
     @Mod.EventHandler
-    public void onPreInit(FMLPreInitializationEvent e)
+    public void onPreInit(FMLPreInitializationEvent event)
     {
-        if(FTBLib.DEV_ENV)
+        if(LMUtils.DEV_ENV)
         {
             logger.info("Loading FTBLib, DevEnv");
         }
@@ -62,7 +63,7 @@ public class FTBLibMod
         FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(FTBLibFinals.MOD_ID, "guis"), FTBLibAPI.get().getRegistries().guis());
         FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), FTBLibAPI.get().getRegistries().notifications());
 
-        FTBLib.init(e.getModConfigurationDirectory());
+        LMUtils.init(event.getModConfigurationDirectory());
         FTBLibNetHandler.init();
         ODItems.preInit();
         FTBLibStats.init();
@@ -75,7 +76,7 @@ public class FTBLibMod
     }
 
     @Mod.EventHandler
-    public void onPostInit(FMLPostInitializationEvent e)
+    public void onPostInit(FMLPostInitializationEvent event)
     {
         FTBLibAPI_Impl.get().reloadPackModes();
         FTBLibAPI_Impl.get().getRegistries().reloadConfig();
@@ -91,17 +92,17 @@ public class FTBLibMod
     }
 
     @Mod.EventHandler
-    public void onServerStarting(FMLServerStartingEvent e)
+    public void onServerStarting(FMLServerStartingEvent event)
     {
-        e.registerServerCommand(new CmdFTB(e.getServer().isDedicatedServer()));
+        event.registerServerCommand(new CmdFTB(event.getServer().isDedicatedServer()));
     }
 
     @Mod.EventHandler
-    public void onServerStarted(FMLServerAboutToStartEvent e)
+    public void onServerStarted(FMLServerAboutToStartEvent event)
     {
         FTBLibAPI_Impl.get().reloadPackModes();
         FTBLibAPI_Impl.get().getRegistries().reloadConfig();
-        FTBLib.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), e.getServer().getFolderName());
+        LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         FTBLibAPI_Impl.get().createAndLoadWorld();
 
         try
@@ -109,7 +110,7 @@ public class FTBLibMod
             Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
             field.setAccessible(true);
             @SuppressWarnings("unchecked")
-            List<ITickable> list = (List<ITickable>) field.get(e.getServer());
+            List<ITickable> list = (List<ITickable>) field.get(event.getServer());
             list.add(FTBLibAPI_Impl.get().getRegistries());
         }
         catch(Exception ex)
@@ -119,13 +120,13 @@ public class FTBLibMod
     }
 
     @Mod.EventHandler
-    public void onServerStarted(FMLServerStartedEvent e)
+    public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibAPI.get().reload(FTBLib.getServer(), ReloadType.SERVER_ONLY);
+        FTBLibAPI.get().reload(LMServerUtils.getServer(), ReloadType.SERVER_ONLY);
     }
 
     @Mod.EventHandler
-    public void onServerShutDown(FMLServerStoppedEvent e)
+    public void onServerShutDown(FMLServerStoppedEvent event)
     {
         FTBLibAPI_Impl.get().closeWorld();
     }

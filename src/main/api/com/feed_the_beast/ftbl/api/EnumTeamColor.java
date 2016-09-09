@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.util.EnumDyeColorHelper;
+import com.latmod.lib.EnumDyeColorHelper;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.ILangKeyContainer;
 import com.latmod.lib.LangKey;

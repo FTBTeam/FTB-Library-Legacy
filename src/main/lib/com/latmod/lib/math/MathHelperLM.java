@@ -29,8 +29,8 @@ public class MathHelperLM
     public static final double HALF_PI = Math.PI / 2D;
 
     public static final float PI_F = (float) Math.PI;
-    public static final float RAD_F = (float) (Math.PI / 180D);
-    public static final float DEG_F = (float) (180D / Math.PI);
+    public static final float RAD_F = (float) RAD;
+    public static final float DEG_F = (float) DEG;
     public static final float TWO_PI_F = (float) TWO_PI;
     public static final float HALF_PI_F = (float) HALF_PI;
 
@@ -113,36 +113,6 @@ public class MathHelperLM
     public static int chunk(double d)
     {
         return chunk(MathHelper.floor_double(d));
-    }
-
-    public static int randomInt(Random r, int min, int max)
-    {
-        if(min == max)
-        {
-            return min;
-        }
-        if(min > max)
-        {
-            int min0 = min;
-            min = max;
-            max = min0;
-        }
-        return min + r.nextInt(max - min + 1);
-    }
-
-    public static double randomDouble(Random r, double min, double max)
-    {
-        if(min == max)
-        {
-            return min;
-        }
-        if(min > max)
-        {
-            double min0 = min;
-            min = max;
-            max = min0;
-        }
-        return min + r.nextDouble() * (max - min);
     }
 
     public static boolean isRound(double d)

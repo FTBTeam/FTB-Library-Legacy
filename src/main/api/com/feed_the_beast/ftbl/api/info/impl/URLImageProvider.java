@@ -5,8 +5,6 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.latmod.lib.InvalidTextureCoords;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 29.08.2016.
@@ -22,7 +20,6 @@ public class URLImageProvider implements IImageProvider
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public ResourceLocation getImage()
     {
         if(texture == null)

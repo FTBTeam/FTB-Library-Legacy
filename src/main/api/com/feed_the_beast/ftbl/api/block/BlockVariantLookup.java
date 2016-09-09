@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.block;
 
 import com.feed_the_beast.ftbl.api.item.IMaterial;
-import com.feed_the_beast.ftbl.util.IMetaLookup;
+import com.feed_the_beast.ftbl.api.item.IMetaLookup;
 import gnu.trove.map.hash.TByteObjectHashMap;
 import net.minecraft.block.properties.PropertyEnum;
 

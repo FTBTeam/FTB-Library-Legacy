@@ -5,8 +5,6 @@ import com.feed_the_beast.ftbl.gui.InfoClientSettings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 07.05.2016.
@@ -32,21 +30,18 @@ public final class InfoPageTheme implements IInfoPageTheme
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public int getBackgroundColor()
     {
         return backgroundColor;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public int getTextColor()
     {
         return textColor;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public boolean getUseUnicodeFont()
     {
         return useUnicodeFont == null ? InfoClientSettings.unicode.getAsBoolean() : useUnicodeFont;

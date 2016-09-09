@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.util.ReloadType;
+import com.feed_the_beast.ftbl.api.events.ReloadType;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -42,7 +41,7 @@ public abstract class FTBLibAPI
 
     public abstract void reload(ICommandSender sender, ReloadType type);
 
-    public abstract void openGui(ResourceLocation guiID, EntityPlayer ep, @Nullable NBTTagCompound data);
+    public abstract void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data);
 
     public abstract void sendNotification(@Nullable EntityPlayerMP ep, INotification n);
 }

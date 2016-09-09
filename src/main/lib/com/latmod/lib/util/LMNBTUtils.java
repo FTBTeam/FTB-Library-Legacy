@@ -2,20 +2,14 @@ package com.latmod.lib.util;
 
 import com.latmod.lib.io.ByteIOStream;
 import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
 import java.io.File;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class LMNBTUtils
@@ -29,61 +23,25 @@ public class LMNBTUtils
         return LMListUtils.toStringArray(tag.getKeySet());
     }
 
-    public static Map<String, NBTBase> toMap(NBTTagCompound tag)
-    {
-        if(tag == null)
-        {
-            return null;
-        }
-        HashMap<String, NBTBase> map = new HashMap<>();
-        if(tag.hasNoTags())
-        {
-            return map;
-        }
-
-        for(String s : tag.getKeySet())
-        {
-            map.put(s, tag.getTag(s));
-        }
-
-        return map;
-    }
-
-    public static Set<Map.Entry<String, NBTBase>> entrySet(NBTTagCompound tag)
-    {
-        Set<Map.Entry<String, NBTBase>> l = new HashSet<>();
-        if(tag == null || tag.hasNoTags())
-        {
-            return l;
-        }
-
-        for(String s : tag.getKeySet())
-        {
-            l.add(new AbstractMap.SimpleEntry<>(s, tag.getTag(s)));
-        }
-
-        return l;
-    }
-
-    public static Exception writeTag(File f, NBTTagCompound tag)
+    public static void writeTag(File f, NBTTagCompound tag)
     {
         try
         {
             CompressedStreamTools.write(tag, LMFileUtils.newFile(f));
         }
-        catch(Exception e)
+        catch(Exception ex)
         {
-            return e;
+            ex.printStackTrace();
         }
-        return null;
     }
 
     public static NBTTagCompound readTag(File f)
     {
-        if(f == null || !f.exists())
+        if(!f.exists())
         {
             return null;
         }
+
         try
         {
             return CompressedStreamTools.read(f);

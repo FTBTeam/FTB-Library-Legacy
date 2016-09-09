@@ -1,7 +1,5 @@
-package com.feed_the_beast.ftbl.util;
+package com.latmod.lib;
 
-import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.LangKey;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;

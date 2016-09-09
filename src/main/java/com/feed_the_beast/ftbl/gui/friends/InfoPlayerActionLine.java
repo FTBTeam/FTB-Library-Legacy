@@ -1,12 +1,13 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
-import com.feed_the_beast.ftbl.api_impl.SidebarButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +21,6 @@ import java.util.List;
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class InfoPlayerActionLine extends EmptyInfoPageLine
 {
     public class ButtonInfoPlayerAction extends ButtonInfoTextLine
@@ -28,26 +28,26 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
         public ButtonInfoPlayerAction(GuiInfo g)
         {
             super(g, null);
-            height = 18;
+            setHeight(18);
             ITextComponent c = action.getDisplayNameOverride();
             setTitle(((c == null) ? new TextComponentTranslation("sidebar_button." + actionID) : c).getFormattedText());
-            width = (action.getIcon() == null ? 8 : 24) + g.font.getStringWidth(getTitle(g));
+            setWidth((action.getIcon() == null ? 8 : 24) + g.getFont().getStringWidth(getTitle(g)));
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(IGui gui, List<String> l)
         {
         }
 
         @Override
-        public void onClicked(GuiLM gui, IMouseButton button)
+        public void onClicked(IGui gui, IMouseButton button)
         {
-            GuiLM.playClickSound();
+            GuiHelper.playClickSound();
             action.onClicked(button);
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
             int ay = getAY();
             int ax = getAX();
@@ -57,22 +57,22 @@ public class InfoPlayerActionLine extends EmptyInfoPageLine
             if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
-                GuiLM.drawBlankRect(ax, ay, width, height);
+                GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
-            action.render(gui.mc, ax + 1, ay + 1);
-            action.postRender(gui.mc, ax + 1, ay + 1);
+            action.render(ax + 1, ay + 1);
+            action.postRender(ax + 1, ay + 1);
 
-            gui.font.drawString(getTitle(gui), ax + (action.getIcon() == null ? 4 : 20), ay + 5, ((GuiInfo) gui).colorText);
+            gui.getFont().drawString(getTitle(gui), ax + (action.getIcon() == null ? 4 : 20), ay + 5, ((GuiInfo) gui).colorText);
         }
     }
 
     public final ResourceLocation actionID;
-    public final SidebarButton action;
+    public final ISidebarButton action;
 
-    public InfoPlayerActionLine(ResourceLocation id, SidebarButton a)
+    public InfoPlayerActionLine(ResourceLocation id, ISidebarButton a)
     {
         actionID = id;
         action = a;

@@ -2,19 +2,15 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
 public class ClientNotifications
 {
     private static Temp current;
@@ -22,27 +18,26 @@ public class ClientNotifications
     public static class NotificationWidget
     {
         public final INotification notification;
-        public final List<String> text;
+        public final String[] text;
         public final int height;
         public int width;
 
         public NotificationWidget(INotification n)
         {
             notification = n;
-            text = new ArrayList<>();
             width = 0;
 
             List<ITextComponent> list = notification.getText();
+            text = new String[list.size()];
 
-            for(ITextComponent t : list)
+            for(int i = 0; i < text.length; i++)
             {
-                String s = t.getFormattedText();
-                text.add(s);
+                text[i] = list.get(i).getFormattedText();
             }
 
-            if(list.size() > 2)
+            if(text.length > 2)
             {
-                height = 4 + list.size() * 12;
+                height = 4 + text.length * 12;
             }
             else
             {
@@ -55,18 +50,18 @@ public class ClientNotifications
             GlStateManager.enableBlend();
 
             FTBLibClient.setGLColor(notification.getColor(), 255);
-            GuiLM.drawBlankRect(ax, ay, width, height);
+            GuiHelper.drawBlankRect(ax, ay, width, height);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
             if(notification.getItem() != null)
             {
-                GuiLM.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
+                GuiHelper.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
             }
 
-            for(int i = 0; i < text.size(); i++)
+            for(int i = 0; i < text.length; i++)
             {
-                mc.fontRendererObj.drawString(text.get(i), ax + (notification.getItem() != null ? 30 : 10), (int) (ay + i * 11D + (height - text.size() * 10D) / 2D), 0xFFFFFFFF);
+                mc.fontRendererObj.drawString(text[i], ax + (notification.getItem() != null ? 30 : 10), (int) (ay + i * 11D + (height - text.length * 10D) / 2D), 0xFFFFFFFF);
             }
         }
     }

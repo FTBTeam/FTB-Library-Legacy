@@ -4,29 +4,24 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
-import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.gui.InfoClientSettings;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleRedstone;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-@SideOnly(Side.CLIENT)
 public class FTBLibModClient extends FTBLibModCommon
 {
     public static final ConfigEntryBool item_ore_names = new ConfigEntryBool(false);
@@ -40,13 +35,18 @@ public class FTBLibModClient extends FTBLibModCommon
         MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.instance);
 
         //For Dev reasons, see DevConsole
-        FTBLib.userIsLatvianModder = Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f"));
+        if(Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
+        {
+            LMUtils.userIsLatvianModder = true;
+        }
 
         ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
         ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
         ClientConfigRegistry.addGroup("sidebar_buttons", FTBLibAPI_Impl.get().getRegistries().sidebarButtons().getSidebarButtonConfig());
 
         FTBLibActions.init();
+
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new FTBLibColors());
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FTBLibModClient extends FTBLibModCommon
     }
 
     @Override
-    public double getReachDist(EntityPlayer ep)
+    public double getReachDist(@Nullable EntityPlayer ep)
     {
         if(ep == null)
         {
@@ -94,18 +94,5 @@ public class FTBLibModClient extends FTBLibModCommon
         fx.setRBGColorF(red, green, blue);
         fx.setAlphaF(alpha);
         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-    }
-
-    @Override
-    public void openClientGui(IGuiHandler handler, EntityPlayer ep, NBTTagCompound data, int wid)
-    {
-        GuiScreen g = handler.getGui(ep, data);
-
-        if(g != null)
-        {
-            Minecraft mc = Minecraft.getMinecraft();
-            mc.displayGuiScreen(g);
-            mc.thePlayer.openContainer.windowId = wid;
-        }
     }
 }

@@ -4,12 +4,14 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMNetUtils;
+import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+
+import javax.annotation.Nullable;
 
 public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
 {
@@ -20,14 +22,14 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     {
     }
 
-    public MessageEditConfigResponse(NBTTagCompound nbt, JsonObject json)
+    public MessageEditConfigResponse(@Nullable NBTTagCompound nbt, JsonObject json)
     {
         groupData = json;
         extraNBT = nbt;
 
-        if(FTBLib.DEV_ENV)
+        if(LMUtils.DEV_ENV)
         {
-            FTBLib.DEV_LOGGER.info("TX Response: " + groupData);
+            LMUtils.DEV_LOGGER.info("TX Response: " + groupData);
         }
     }
 
@@ -58,9 +60,9 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 
         if(cc != null)
         {
-            if(FTBLib.DEV_ENV)
+            if(LMUtils.DEV_ENV)
             {
-                FTBLib.DEV_LOGGER.info("RX Response: " + m.groupData);
+                LMUtils.DEV_LOGGER.info("RX Response: " + m.groupData);
             }
 
             cc.saveConfig(player, m.extraNBT, m.groupData);

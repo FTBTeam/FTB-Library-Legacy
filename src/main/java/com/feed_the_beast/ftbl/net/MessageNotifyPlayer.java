@@ -18,8 +18,6 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -89,8 +87,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(MessageNotifyPlayer m, Minecraft mc)
+    public void onMessage(MessageNotifyPlayer m)
     {
         EnumNotificationDisplay display = FTBLibModClient.notifications.get();
 

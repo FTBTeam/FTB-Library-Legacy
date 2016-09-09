@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api.block;
 
-import com.feed_the_beast.ftbl.api.item.IMaterial;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -24,60 +23,14 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Created by LatvianModder on 09.08.2016.
  */
-public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IBlockVariant> extends BlockLM
+public abstract class BlockWithVariants<T extends Enum<T> & IBlockVariant> extends BlockLM
 {
-    public interface IBlockVariant extends IMaterial
-    {
-        @Nullable
-        default Class<? extends TileEntity> getTileEntityClass()
-        {
-            return null;
-        }
-
-        @Nullable
-        default TileEntity createTileEntity(World world)
-        {
-            return null;
-        }
-
-        @Nonnull
-        default BlockRenderLayer getLayer()
-        {
-            return BlockRenderLayer.SOLID;
-        }
-
-        @Nonnull
-        default MapColor getMapColor()
-        {
-            return MapColor.STONE;
-        }
-
-        default boolean isOpaqueCube()
-        {
-            return getLayer() == BlockRenderLayer.SOLID;
-        }
-
-        default boolean isFullCube()
-        {
-            return true;
-        }
-
-        @Nonnull
-        Material getMaterial();
-
-        default boolean onActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side)
-        {
-            return false;
-        }
-    }
-
     private BlockVariantLookup<T> metaLookup;
 
     public BlockWithVariants(Material m, CreativeTabs tab)
@@ -86,10 +39,8 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         setCreativeTab(tab);
     }
 
-    @Nonnull
     public abstract BlockVariantLookup<T> createMetaLookup();
 
-    @Nonnull
     public BlockVariantLookup<T> getMetaLookup()
     {
         if(metaLookup == null)
@@ -114,7 +65,6 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         };
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public Material getMaterial(IBlockState state)
@@ -129,14 +79,14 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
     }
 
     @Override
-    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
+    public TileEntity createTileEntity(World world, IBlockState state)
     {
         return state.getValue(getMetaLookup().getProperty()).createTileEntity(world);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list)
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
     {
         for(T e : getMetaLookup().getValues())
         {
@@ -150,7 +100,6 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         return state.getValue(getMetaLookup().getProperty()).getMetadata();
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public IBlockState getStateFromMeta(int meta)
@@ -158,7 +107,6 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         return getDefaultState().withProperty(getMetaLookup().getProperty(), getMetaLookup().get(meta));
     }
 
-    @Nonnull
     @Override
     @Deprecated
     public MapColor getMapColor(IBlockState state)
@@ -172,7 +120,6 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         return state.getValue(getMetaLookup().getProperty()).getMetadata();
     }
 
-    @Nonnull
     @Override
     protected BlockStateContainer createBlockState()
     {
@@ -180,7 +127,7 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
     }
 
     @Override
-    public boolean canRenderInLayer(IBlockState state, @Nonnull BlockRenderLayer layer)
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer)
     {
         return layer == state.getValue(getMetaLookup().getProperty()).getLayer();
     }
@@ -188,7 +135,7 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
     @Override
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState state, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRendered(IBlockState state, IBlockAccess blockAccess, BlockPos pos, EnumFacing side)
     {
         if(canRenderInLayer(state, BlockRenderLayer.TRANSLUCENT))
         {
@@ -227,7 +174,7 @@ public abstract class BlockWithVariants<T extends Enum<T> & BlockWithVariants.IB
         {
             if(e.getTileEntityClass() != null)
             {
-                FTBLib.addTile(e.getTileEntityClass(), new ResourceLocation(getRegistryName().getResourceDomain(), e.getName()));
+                LMUtils.addTile(e.getTileEntityClass(), new ResourceLocation(getRegistryName().getResourceDomain(), e.getName()));
             }
         }
     }

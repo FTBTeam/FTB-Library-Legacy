@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.gui;
 
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
@@ -9,10 +11,9 @@ import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.math.Converter;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+import javax.annotation.Nullable;
+
 public class GuiSelectField extends GuiLM
 {
     public enum FieldType
@@ -49,7 +50,7 @@ public class GuiSelectField extends GuiLM
     public final ButtonSimpleLM buttonCancel, buttonAccept;
     public final TextBoxLM textBox;
 
-    public GuiSelectField(Object id, FieldType typ, String d, ObjectCallbackHandler c)
+    public GuiSelectField(@Nullable Object id, FieldType typ, String d, ObjectCallbackHandler c)
     {
         super(100, 40);
         ID = id;
@@ -57,24 +58,24 @@ public class GuiSelectField extends GuiLM
         def = d;
         callback = c;
 
-        int bsize = width / 2 - 4;
+        int bsize = getWidth() / 2 - 4;
 
-        buttonCancel = new ButtonSimpleLM(2, height - 18, bsize, 16, GuiLang.BUTTON_CANCEL.translate())
+        buttonCancel = new ButtonSimpleLM(2, getHeight() - 18, bsize, 16, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 callback.onCallback(ID, def);
             }
         };
 
-        buttonAccept = new ButtonSimpleLM(width - bsize - 2, height - 18, bsize, 16, GuiLang.BUTTON_ACCEPT.translate())
+        buttonAccept = new ButtonSimpleLM(getWidth() - bsize - 2, getHeight() - 18, bsize, 16, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
-                GuiLM.playClickSound();
+                GuiHelper.playClickSound();
                 if(textBox.isValid())
                 {
                     switch(type)
@@ -93,7 +94,7 @@ public class GuiSelectField extends GuiLM
             }
         };
 
-        textBox = new TextBoxLM(2, 2, width - 4, 18)
+        textBox = new TextBoxLM(2, 2, getWidth() - 4, 18)
         {
             @Override
             public boolean isValid()
@@ -102,7 +103,7 @@ public class GuiSelectField extends GuiLM
             }
 
             @Override
-            public void onEnterPressed(GuiLM gui)
+            public void onEnterPressed(IGui gui)
             {
                 buttonAccept.onClicked(GuiSelectField.this, MouseButton.LEFT);
             }
@@ -114,7 +115,7 @@ public class GuiSelectField extends GuiLM
         textBox.textColor = 0xFFEEEEEE;
     }
 
-    public static void display(Object id, FieldType type, Object d, ObjectCallbackHandler c)
+    public static void display(@Nullable Object id, FieldType type, Object d, ObjectCallbackHandler c)
     {
         new GuiSelectField(id, type, String.valueOf(d), c).openGui();
     }
@@ -141,21 +142,22 @@ public class GuiSelectField extends GuiLM
     @Override
     public void drawBackground()
     {
-        int size = 8 + font.getStringWidth(textBox.getText());
-        if(size > width)
+        int size = 8 + getFont().getStringWidth(textBox.getText());
+        if(size > getWidth())
         {
-            width = size;
+            setWidth(size);
             int bsize = size / 2 - 4;
-            buttonAccept.width = buttonCancel.width = bsize;
-            buttonAccept.posX = width - bsize - 2;
-            textBox.width = width - 4;
+            buttonAccept.setWidth(bsize);
+            buttonCancel.setWidth(bsize);
+            buttonAccept.posX = getWidth() - bsize - 2;
+            textBox.setWidth(getWidth() - 4);
             initGui();
         }
 
         GlStateManager.color(0.4F, 0.4F, 0.4F, 0.66F);
-        drawBlankRect(posX, posY, width, height);
+        GuiHelper.drawBlankRect(posX, posY, getWidth(), getHeight());
         GlStateManager.color(0.2F, 0.2F, 0.2F, 1F);
-        drawBlankRect(textBox.getAX(), textBox.getAY(), textBox.width, textBox.height);
+        GuiHelper.drawBlankRect(textBox.getAX(), textBox.getAY(), textBox.getWidth(), textBox.getHeight());
         GlStateManager.color(1F, 1F, 1F, 1F);
         buttonAccept.renderWidget(this);
         buttonCancel.renderWidget(this);

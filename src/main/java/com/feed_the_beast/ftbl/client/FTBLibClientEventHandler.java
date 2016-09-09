@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -28,8 +28,6 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -38,7 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@SideOnly(Side.CLIENT)
 public class FTBLibClientEventHandler
 {
     public static final FTBLibClientEventHandler instance = new FTBLibClientEventHandler();
@@ -88,19 +85,19 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.render(mc, b.xPosition, b.yPosition);
+                b.button.render(b.xPosition, b.yPosition);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
                     GlStateManager.color(1F, 1F, 1F, 0.3F);
-                    GuiLM.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height);
+                    GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height);
                     GlStateManager.color(1F, 1F, 1F, 1F);
                 }
             }
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.postRender(mc, b.xPosition, b.yPosition);
+                b.button.postRender(b.xPosition, b.yPosition);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
@@ -130,7 +127,7 @@ public class FTBLibClientEventHandler
                     GlStateManager.enableBlend();
                     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
-                    GuiLM.drawBlankRect(-3, -2, tw + 6, 12);
+                    GuiHelper.drawBlankRect(-3, -2, tw + 6, 12);
                     GlStateManager.color(1F, 1F, 1F, 1F);
                     mc.fontRendererObj.drawString(b.title, 0, 0, 0xFFFFFFFF);
                     GlStateManager.popMatrix();
@@ -183,7 +180,7 @@ public class FTBLibClientEventHandler
     {
         if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
         {
-            if(FTBLib.DEV_ENV)
+            if(LMUtils.DEV_ENV)
             {
                 event.getLeft().add("[MC " + TextFormatting.GOLD + Loader.MC_VERSION + TextFormatting.WHITE + " DevEnv]");
             }

@@ -1,6 +1,4 @@
-package com.feed_the_beast.ftbl.util;
-
-import com.feed_the_beast.ftbl.api.item.IMaterial;
+package com.feed_the_beast.ftbl.api.item;
 
 import java.util.Collection;
 

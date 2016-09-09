@@ -5,13 +5,10 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,8 +89,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(MessageLMPlayerInfo m, Minecraft mc)
+    public void onMessage(MessageLMPlayerInfo m)
     {
         //TODO: Open FriendsGUI
         /*

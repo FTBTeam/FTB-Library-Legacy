@@ -2,8 +2,6 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -11,7 +9,6 @@ import java.io.IOException;
 /**
  * Created by LatvianModder on 09.06.2016.
  */
-@SideOnly(Side.CLIENT)
 public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionGui
 {
     private GuiLM wrappedGui;

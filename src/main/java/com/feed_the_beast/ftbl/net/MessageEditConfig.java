@@ -5,17 +5,16 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonObject;
 import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMNetUtils;
+import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
@@ -33,9 +32,9 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         extraNBT = nbt;
         title = c.getConfigTitle();
 
-        if(FTBLib.DEV_ENV)
+        if(LMUtils.DEV_ENV)
         {
-            FTBLib.DEV_LOGGER.info("TX Send: " + group);
+            LMUtils.DEV_LOGGER.info("TX Send: " + group);
         }
     }
 
@@ -65,12 +64,11 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(final MessageEditConfig m, Minecraft mc)
+    public void onMessage(final MessageEditConfig m)
     {
-        if(FTBLib.DEV_ENV)
+        if(LMUtils.DEV_ENV)
         {
-            FTBLib.DEV_LOGGER.info("RX Send: " + m.group);
+            LMUtils.DEV_LOGGER.info("RX Send: " + m.group);
         }
 
         new GuiEditConfig(m.extraNBT, new IConfigContainer()
@@ -88,7 +86,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
             }
 
             @Override
-            public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
+            public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
             {
                 new MessageEditConfigResponse(nbt, json).sendToServer();
             }

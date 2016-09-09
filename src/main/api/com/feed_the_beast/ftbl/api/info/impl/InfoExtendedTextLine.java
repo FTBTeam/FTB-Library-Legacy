@@ -12,8 +12,6 @@ import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -59,7 +57,6 @@ public class InfoExtendedTextLine implements IInfoTextLine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoExtendedTextLine(gui, this);

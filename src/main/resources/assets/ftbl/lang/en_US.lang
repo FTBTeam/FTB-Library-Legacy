@@ -113,13 +113,14 @@ ftbl.redstonemode=Redstone Mode
 ftbl.redstonemode.disabled=Disabled
 ftbl.redstonemode.active_high=Active High
 ftbl.redstonemode.active_low=Active Low
+ftbl.redstonemode.pulse=Pulse
 
 # Inventory Mode
-ftbl.invmode=Automation
-ftbl.invmode.enabled=Enabled
-ftbl.invmode.only_in=Insert Only
-ftbl.invmode.only_out=Extract Only
-ftbl.invmode.disabled=Disabled
+ftbl.invmode=Inventory Mode
+ftbl.invmode.io=IO
+ftbl.invmode.in=Insert Only
+ftbl.invmode.out=Extract Only
+ftbl.invmode.none=Disabled
 
 # Click Actions
 click_action.cmd=Command
@@ -127,7 +128,3 @@ click_action.show_cmd=Show Command
 click_action.url=Open URL
 click_action.file=Open File
 click_action.gui=Open Gui
-
-# Paint
-ftbl.paint.texture_set=Paint texture set to %s
-ftbl.paint.texture_cleared=Paint texture cleared

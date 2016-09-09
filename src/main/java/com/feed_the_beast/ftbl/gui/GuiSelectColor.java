@@ -2,14 +2,17 @@ package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.EnumDirection;
 import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.WidgetLM;
-import com.feed_the_beast.ftbl.util.EnumDyeColorHelper;
+import com.latmod.lib.EnumDyeColorHelper;
 import com.latmod.lib.LMColor;
 import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.TextureCoords;
@@ -23,15 +26,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
 public class GuiSelectColor extends GuiLM
 {
     private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/colselector.png");
@@ -92,7 +92,7 @@ public class GuiSelectColor extends GuiLM
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -104,8 +104,8 @@ public class GuiSelectColor extends GuiLM
 
             if(grabbed)
             {
-                cursorPosX = (mouseX - ax) / width;
-                cursorPosY = (mouseY - ay) / height;
+                cursorPosX = (getMouseX() - ax) / getWidth();
+                cursorPosY = (getMouseY() - ay) / getHeight();
 
                 double s = MathHelperLM.dist(cursorPosX, cursorPosY, 0D, 0.5D, 0.5D, 0D) * 2D;
 
@@ -127,18 +127,18 @@ public class GuiSelectColor extends GuiLM
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 1F);
             FTBLibClient.setTexture(TEXTURE_WHEEL);
-            drawTexturedRect(ax, ay, width, height, 0D, 0D, 1D, 1D);
+            GuiHelper.drawTexturedRect(ax, ay, getWidth(), getHeight(), 0D, 0D, 1D, 1D);
 
             if(cursorPosX >= 0D && cursorPosY >= 0D)
             {
                 GlStateManager.color((float) (1F - sliderRed.getValue(gui)), (float) (1F - sliderGreen.getValue(gui)), (float) (1F - sliderBlue.getValue(gui)), 1F);
-                GuiLM.render(CURSOR_TEX, ax + (int) (cursorPosX * width) - 2, ay + (int) (cursorPosY * height) - 2, 4, 4);
+                GuiHelper.render(CURSOR_TEX, ax + (int) (cursorPosX * getWidth()) - 2, ay + (int) (cursorPosY * getHeight()) - 2, 4, 4);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
 
         @Override
-        public void mousePressed(GuiLM gui, IMouseButton b)
+        public void mousePressed(IGui gui, IMouseButton b)
         {
             if(b.isLeft() && gui.isMouseOver(this))
             {
@@ -168,13 +168,13 @@ public class GuiSelectColor extends GuiLM
         colorInit = new ButtonLM(76, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
                 closeGui(false);
             }
 
             @Override
-            public void addMouseOverText(GuiLM gui, List<String> s)
+            public void addMouseOverText(IGui gui, List<String> s)
             {
                 s.add(GuiLang.BUTTON_CANCEL.translate());
                 s.add(initCol.toString());
@@ -184,13 +184,13 @@ public class GuiSelectColor extends GuiLM
         colorCurrent = new ButtonLM(109, 71, COL_TEX_W, COL_TEX_H)
         {
             @Override
-            public void onClicked(GuiLM gui, IMouseButton button)
+            public void onClicked(IGui gui, IMouseButton button)
             {
                 closeGui(true);
             }
 
             @Override
-            public void addMouseOverText(GuiLM gui, List<String> s)
+            public void addMouseOverText(IGui gui, List<String> s)
             {
                 s.add(GuiLang.BUTTON_ACCEPT.translate());
                 s.add(currentColor.toString());
@@ -200,13 +200,13 @@ public class GuiSelectColor extends GuiLM
         sliderRed = new ColorSlider(6, 6)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
                 setColor(new LMColor.RGB((int) (getValue(gui) * 255D), currentColor.green(), currentColor.blue()));
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return EnumDyeColorHelper.get(EnumDyeColor.RED).getLangKey().translate();
             }
@@ -215,13 +215,13 @@ public class GuiSelectColor extends GuiLM
         sliderGreen = new ColorSlider(6, 19)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
                 setColor(new LMColor.RGB(currentColor.red(), (int) (getValue(gui) * 255D), currentColor.blue()));
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return EnumDyeColorHelper.get(EnumDyeColor.GREEN).getLangKey().translate();
             }
@@ -230,13 +230,13 @@ public class GuiSelectColor extends GuiLM
         sliderBlue = new ColorSlider(6, 32)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
                 setColor(new LMColor.RGB(currentColor.red(), currentColor.green(), (int) (getValue(gui) * 255D)));
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return EnumDyeColorHelper.get(EnumDyeColor.BLUE).getLangKey().translate();
             }
@@ -245,13 +245,13 @@ public class GuiSelectColor extends GuiLM
         sliderHue = new ColorSlider(6, 51)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
                 setColor(new LMColor.HSB((float) getValue(gui), currentColor.saturation(), currentColor.brightness()));
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return "Hue"; //TODO: Lang
             }
@@ -260,13 +260,13 @@ public class GuiSelectColor extends GuiLM
         sliderSaturation = new ColorSlider(6, 64)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
                 setColor(new LMColor.HSB(currentColor.hue(), (float) getValue(gui), currentColor.brightness()));
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return "Saturation"; //TODO: Lang
             }
@@ -275,13 +275,13 @@ public class GuiSelectColor extends GuiLM
         sliderBrightness = new ColorSlider(6, 77)
         {
             @Override
-            public void onMoved(GuiLM gui)
+            public void onMoved(IGui gui)
             {
                 setColor(new LMColor.HSB(currentColor.hue(), currentColor.saturation(), (float) getValue(gui)));
             }
 
             @Override
-            public String getTitle(GuiLM gui)
+            public String getTitle(IGui gui)
             {
                 return "Brightness"; //TODO: Lang
             }
@@ -351,7 +351,7 @@ public class GuiSelectColor extends GuiLM
         sliderBrightness.updateSlider(this);
 
         FTBLibClient.setTexture(TEXTURE);
-        GuiScreen.drawModalRectWithCustomSizedTexture(getAX(), getAY(), 0F, 0F, width, height, 256F, 256F);
+        GuiScreen.drawModalRectWithCustomSizedTexture(getAX(), getAY(), 0F, 0F, getWidth(), getHeight(), 256F, 256F);
 
         FTBLibClient.setGLColor(initCol.color(), 255);
         colorInit.render(COL_TEX);
@@ -405,12 +405,12 @@ public class GuiSelectColor extends GuiLM
         sliderBrightness.renderSlider(SLIDER_TEX);
     }
 
-    private void renderSlider(WidgetLM widget, int colLeft, int colRight)
+    private void renderSlider(IWidget widget, int colLeft, int colRight)
     {
-        double x = widget.getAX();
-        double y = widget.getAY();
-        double w = widget.width;
-        double h = widget.height;
+        int x = widget.getAX();
+        int y = widget.getAY();
+        int w = widget.getWidth();
+        int h = widget.getHeight();
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
@@ -429,7 +429,7 @@ public class GuiSelectColor extends GuiLM
 
     private void closeGui(boolean set)
     {
-        GuiLM.playClickSound();
+        GuiHelper.playClickSound();
         callback.onCallback(colorID, set ? currentColor : initCol);
     }
 }

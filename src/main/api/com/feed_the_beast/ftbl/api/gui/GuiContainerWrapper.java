@@ -4,8 +4,6 @@ import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -13,7 +11,6 @@ import java.io.IOException;
 /**
  * Created by LatvianModder on 09.06.2016.
  */
-@SideOnly(Side.CLIENT)
 public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IClientActionGui
 {
     private GuiLM wrappedGui;
@@ -31,8 +28,8 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
         wrappedGui.initGui();
         guiLeft = wrappedGui.getAX();
         guiTop = wrappedGui.getAY();
-        xSize = wrappedGui.width;
-        ySize = wrappedGui.height;
+        xSize = wrappedGui.getWidth();
+        ySize = wrappedGui.getHeight();
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.api.net;
 
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 14.05.2016.
@@ -18,14 +20,15 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
     }
 
     @Override
-    public final IMessage onMessage(E m, MessageContext ctx)
+    @Nullable
+    public final IMessage onMessage(final E m, MessageContext ctx)
     {
-        EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
+        final EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
         ep.mcServer.addScheduledTask(() -> onMessage(m, ep));
 
         if(MessageLM.LOG_NET)
         {
-            FTBLib.DEV_LOGGER.info("TX MessageLM: " + getClass().getName());
+            LMUtils.DEV_LOGGER.info("TX MessageLM: " + getClass().getName());
         }
 
         return null;

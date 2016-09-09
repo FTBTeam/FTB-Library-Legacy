@@ -1,5 +1,7 @@
-package com.feed_the_beast.ftbl.api.item;
+package com.latmod.lib.util;
 
+import com.feed_the_beast.ftbl.api.item.ToolLevel;
+import com.feed_the_beast.ftbl.api.item.ToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;

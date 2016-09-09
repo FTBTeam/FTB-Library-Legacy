@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.item;
 
-import com.feed_the_beast.ftbl.util.IMetaLookup;
 import com.latmod.lib.util.LMUtils;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -10,8 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 import java.util.List;
@@ -137,7 +134,6 @@ public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
         return s;
     }
 
-    @SideOnly(Side.CLIENT)
     public void loadModels()
     {
         for(IMaterial i : getValues())
@@ -148,7 +144,6 @@ public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs c, List<ItemStack> l)
     {
         for(IMaterial m : getValues())

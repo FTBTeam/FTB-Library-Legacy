@@ -7,6 +7,8 @@ import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.LangKey;
 import net.minecraft.util.IStringSerializable;
 
+import javax.annotation.Nullable;
+
 public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
 {
     PUBLIC,
@@ -26,7 +28,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
         langKey = new LangKey("ftbl.privacy." + name);
     }
 
-    public static EnumPrivacyLevel get(String s)
+    public static EnumPrivacyLevel get(@Nullable String s)
     {
         if(s == null || s.isEmpty())
         {

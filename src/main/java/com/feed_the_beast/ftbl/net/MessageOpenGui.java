@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
@@ -8,10 +7,13 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
@@ -23,7 +25,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     {
     }
 
-    public MessageOpenGui(ResourceLocation key, NBTTagCompound tag, int wid)
+    public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
     {
         guiID = FTBLibAPI.get().getRegistries().guis().getIDFromKey(key);
         data = tag;
@@ -54,7 +56,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onMessage(MessageOpenGui m, Minecraft mc)
+    public void onMessage(MessageOpenGui m)
     {
         ResourceLocation key = FTBLibAPI.get().getRegistries().guis().getKeyFromID(m.guiID);
 
@@ -64,7 +66,14 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
             if(handler != null)
             {
-                FTBLibMod.proxy.openClientGui(handler, mc.thePlayer, m.data, m.windowID);
+                Minecraft mc = Minecraft.getMinecraft();
+                GuiScreen g = handler.getGui(mc.thePlayer, m.data);
+
+                if(g != null)
+                {
+                    mc.displayGuiScreen(g);
+                    mc.thePlayer.openContainer.windowId = m.windowID;
+                }
             }
         }
     }

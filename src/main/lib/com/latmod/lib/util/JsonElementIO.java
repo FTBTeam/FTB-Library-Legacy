@@ -16,19 +16,31 @@ import java.util.Set;
  */
 public class JsonElementIO
 {
-    public static EnumJsonID getID(@Nullable JsonElement e)
+    public static final byte NULL = 0;
+    public static final byte ARRAY = 1;
+    public static final byte OBJECT = 2;
+    public static final byte STRING = 3;
+    public static final byte BOOL = 4;
+    public static final byte BYTE = 5;
+    public static final byte SHORT = 6;
+    public static final byte INT = 7;
+    public static final byte LONG = 8;
+    public static final byte FLOAT = 9;
+    public static final byte DOUBLE = 10;
+
+    public static byte getID(@Nullable JsonElement e)
     {
         if(e == null || e.isJsonNull())
         {
-            return EnumJsonID.NULL;
+            return NULL;
         }
         else if(e.isJsonArray())
         {
-            return EnumJsonID.ARRAY;
+            return ARRAY;
         }
         else if(e.isJsonObject())
         {
-            return EnumJsonID.OBJECT;
+            return OBJECT;
         }
         else
         {
@@ -36,43 +48,43 @@ public class JsonElementIO
 
             if(p.isString())
             {
-                return EnumJsonID.STRING;
+                return STRING;
             }
             else if(p.isBoolean())
             {
-                return EnumJsonID.BOOL;
+                return BOOL;
             }
             else
             {
-                Number n = p.getAsNumber();
+                Class<? extends Number> n = p.getAsNumber().getClass();
 
-                if(n instanceof Integer)
+                if(n == Integer.class)
                 {
-                    return EnumJsonID.INT;
+                    return INT;
                 }
-                else if(n instanceof Byte)
+                else if(n == Byte.class)
                 {
-                    return EnumJsonID.BYTE;
+                    return BYTE;
                 }
-                else if(n instanceof Short)
+                else if(n == Short.class)
                 {
-                    return EnumJsonID.SHORT;
+                    return SHORT;
                 }
-                else if(n instanceof Long)
+                else if(n == Long.class)
                 {
-                    return EnumJsonID.LONG;
+                    return LONG;
                 }
-                else if(n instanceof Float)
+                else if(n == Float.class)
                 {
-                    return EnumJsonID.FLOAT;
+                    return FLOAT;
                 }
-                else if(n instanceof Double)
+                else if(n == Double.class)
                 {
-                    return EnumJsonID.DOUBLE;
+                    return DOUBLE;
                 }
                 else
                 {
-                    return EnumJsonID.NULL;
+                    return NULL;
                 }
             }
         }
@@ -80,7 +92,7 @@ public class JsonElementIO
 
     public static JsonElement read(ByteIOStream io)
     {
-        switch(EnumJsonID.values()[io.readByte()])
+        switch(io.readByte())
         {
             case NULL:
                 return JsonNull.INSTANCE;
@@ -138,11 +150,11 @@ public class JsonElementIO
     {
         if(e == null || e.isJsonNull())
         {
-            io.writeByte(EnumJsonID.NULL.ordinal());
+            io.writeByte(NULL);
         }
         else if(e.isJsonArray())
         {
-            io.writeByte(EnumJsonID.ARRAY.ordinal());
+            io.writeByte(ARRAY);
 
             JsonArray a = e.getAsJsonArray();
             int s = a.size();
@@ -155,7 +167,7 @@ public class JsonElementIO
         }
         else if(e.isJsonObject())
         {
-            io.writeByte(EnumJsonID.OBJECT.ordinal());
+            io.writeByte(OBJECT);
 
             Set<Map.Entry<String, JsonElement>> set = e.getAsJsonObject().entrySet();
             io.writeInt(set.size());
@@ -172,51 +184,51 @@ public class JsonElementIO
 
             if(p.isString())
             {
-                io.writeByte(EnumJsonID.STRING.ordinal());
+                io.writeByte(STRING);
                 io.writeUTF(p.getAsString());
             }
             else if(p.isBoolean())
             {
-                io.writeByte(EnumJsonID.BOOL.ordinal());
+                io.writeByte(BOOL);
                 io.writeBoolean(p.getAsBoolean());
             }
             else
             {
-                Number n = p.getAsNumber();
+                Class<? extends Number> n = p.getAsNumber().getClass();
 
-                if(n instanceof Integer)
+                if(n == Integer.class)
                 {
-                    io.writeByte(EnumJsonID.INT.ordinal());
-                    io.writeInt(n.intValue());
+                    io.writeByte(INT);
+                    io.writeInt(p.getAsInt());
                 }
-                else if(n instanceof Byte)
+                else if(n == Byte.class)
                 {
-                    io.writeByte(EnumJsonID.BYTE.ordinal());
-                    io.writeByte(n.byteValue());
+                    io.writeByte(BYTE);
+                    io.writeByte(p.getAsByte());
                 }
-                else if(n instanceof Short)
+                else if(n == Short.class)
                 {
-                    io.writeByte(EnumJsonID.SHORT.ordinal());
-                    io.writeShort(n.shortValue());
+                    io.writeByte(SHORT);
+                    io.writeShort(p.getAsShort());
                 }
-                else if(n instanceof Long)
+                else if(n == Long.class)
                 {
-                    io.writeByte(EnumJsonID.LONG.ordinal());
-                    io.writeLong(n.longValue());
+                    io.writeByte(LONG);
+                    io.writeLong(p.getAsLong());
                 }
-                else if(n instanceof Float)
+                else if(n == Float.class)
                 {
-                    io.writeByte(EnumJsonID.FLOAT.ordinal());
-                    io.writeFloat(n.floatValue());
+                    io.writeByte(FLOAT);
+                    io.writeFloat(p.getAsFloat());
                 }
-                else if(n instanceof Double)
+                else if(n == Double.class)
                 {
-                    io.writeByte(EnumJsonID.DOUBLE.ordinal());
-                    io.writeDouble(n.doubleValue());
+                    io.writeByte(DOUBLE);
+                    io.writeDouble(p.getAsDouble());
                 }
                 else
                 {
-                    io.writeByte(EnumJsonID.NULL.ordinal());
+                    io.writeByte(NULL);
                 }
             }
         }

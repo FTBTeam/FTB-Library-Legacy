@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.util;
+package com.latmod.lib;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;

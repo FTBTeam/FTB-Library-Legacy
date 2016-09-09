@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.google.gson.JsonElement;
 import com.latmod.lib.FinalIDObject;
+import com.latmod.lib.util.LMServerUtils;
 import com.mojang.authlib.GameProfile;
 
 /**
@@ -45,7 +45,7 @@ public class RankConfig extends FinalIDObject
             return RankConfigAPI.rankConfigHandler.getRankConfig(profile, this);
         }
 
-        return getDefaultValue(FTBLib.isOP(profile));
+        return getDefaultValue(LMServerUtils.isOP(profile));
     }
 
     public ConfigEntryType getType()

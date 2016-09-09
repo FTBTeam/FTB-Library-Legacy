@@ -5,6 +5,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 07.06.2016.
  */
@@ -14,5 +16,5 @@ public interface IConfigContainer
 
     ITextComponent getConfigTitle();
 
-    void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json);
+    void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json);
 }

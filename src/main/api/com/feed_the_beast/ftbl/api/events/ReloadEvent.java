@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.events;
 
-import com.feed_the_beast.ftbl.util.ReloadType;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;

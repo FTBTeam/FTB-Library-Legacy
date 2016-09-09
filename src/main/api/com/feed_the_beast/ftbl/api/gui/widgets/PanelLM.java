@@ -1,18 +1,16 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import com.feed_the_beast.ftbl.api.gui.IPanel;
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public abstract class PanelLM extends WidgetLM
+public abstract class PanelLM extends WidgetLM implements IPanel
 {
-    public final List<WidgetLM> widgets;
+    public final List<IWidget> widgets;
 
     public PanelLM(int x, int y, int w, int h)
     {
@@ -22,31 +20,19 @@ public abstract class PanelLM extends WidgetLM
 
     public abstract void addWidgets();
 
-    public void add(@Nullable WidgetLM w)
+    @Override
+    public void add(IWidget w)
     {
-        if(w != null)
-        {
-            w.setParentWidget(this);
-            widgets.add(w);
+        w.setParentPanel(this);
+        widgets.add(w);
 
-            if(w instanceof PanelLM)
-            {
-                ((PanelLM) w).refreshWidgets();
-            }
+        if(w instanceof IPanel)
+        {
+            ((IPanel) w).refreshWidgets();
         }
     }
 
-    public void addAll(@Nullable Iterable<? extends WidgetLM> l)
-    {
-        if(l != null)
-        {
-            for(WidgetLM w : l)
-            {
-                add(w);
-            }
-        }
-    }
-
+    @Override
     public void refreshWidgets()
     {
         widgets.clear();
@@ -54,9 +40,9 @@ public abstract class PanelLM extends WidgetLM
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> l)
     {
-        for(WidgetLM w : widgets)
+        for(IWidget w : widgets)
         {
             if(w.isEnabled() && gui.isMouseOver(w))
             {
@@ -66,9 +52,9 @@ public abstract class PanelLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(GuiLM gui, IMouseButton b)
+    public void mousePressed(IGui gui, IMouseButton b)
     {
-        for(WidgetLM w : widgets)
+        for(IWidget w : widgets)
         {
             if(w.isEnabled())
             {
@@ -78,9 +64,9 @@ public abstract class PanelLM extends WidgetLM
     }
 
     @Override
-    public boolean keyPressed(GuiLM gui, int key, char keyChar)
+    public boolean keyPressed(IGui gui, int key, char keyChar)
     {
-        for(WidgetLM w : widgets)
+        for(IWidget w : widgets)
         {
             if(w.isEnabled() && w.keyPressed(gui, key, keyChar))
             {
@@ -92,9 +78,9 @@ public abstract class PanelLM extends WidgetLM
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(IGui gui)
     {
-        for(WidgetLM widget : widgets)
+        for(IWidget widget : widgets)
         {
             if(widget.shouldRender(gui))
             {

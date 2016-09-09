@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
@@ -27,26 +28,26 @@ public class ButtonInfoPage extends ButtonLM
 
     public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable ITextureCoordsProvider t)
     {
-        super(0, g.panelPages.height, g.panelWidth - 36, t == null ? 13 : 18);
+        super(0, g.panelPages.getHeight(), g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
         page = p;
         icon = t;
         updateTitle(g);
     }
 
-    public boolean isIconBlurry(GuiLM gui)
+    public boolean isIconBlurry(IGui gui)
     {
         return false;
     }
 
     @Override
-    public void onClicked(GuiLM gui, IMouseButton button)
+    public void onClicked(IGui gui, IMouseButton button)
     {
-        GuiLM.playClickSound();
+        GuiHelper.playClickSound();
         guiInfo.setSelectedPage(page);
     }
 
-    public void updateTitle(GuiLM gui)
+    public void updateTitle(IGui gui)
     {
         ITextComponent titleC = page.getDisplayName().createCopy();
 
@@ -63,14 +64,14 @@ public class ButtonInfoPage extends ButtonLM
         setTitle(titleC.getFormattedText());
         hover = null;
 
-        if(guiInfo.font.getStringWidth(getTitle(gui)) > width)
+        if(guiInfo.getFont().getStringWidth(getTitle(gui)) > getWidth())
         {
             hover = page.getDisplayName().getFormattedText();
         }
     }
 
     @Override
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> l)
     {
         if(hover != null)
         {
@@ -79,13 +80,13 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public boolean shouldRender(GuiLM gui)
+    public boolean shouldRender(IGui gui)
     {
-        return getParentWidget().isInside(this);
+        return getParentPanel().isInside(this);
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(IGui gui)
     {
         boolean mouseOver = gui.isMouseOver(this);
 
@@ -111,7 +112,7 @@ public class ButtonInfoPage extends ButtonLM
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
             }
 
-            GuiLM.render(icon.getTextureCoords(), ax + 1, ay + 1, 16, 16);
+            GuiHelper.render(icon.getTextureCoords(), ax + 1, ay + 1, 16, 16);
 
             if(iconBlur)
             {
@@ -119,12 +120,12 @@ public class ButtonInfoPage extends ButtonLM
                 GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
             }
 
-            guiInfo.font.drawString(getTitle(gui), ax + 19, ay + 6, guiInfo.colorText);
+            guiInfo.getFont().drawString(getTitle(gui), ax + 19, ay + 6, guiInfo.colorText);
         }
         else
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            guiInfo.font.drawString(getTitle(gui), ax + 1, ay + 1, guiInfo.colorText);
+            guiInfo.getFont().drawString(getTitle(gui), ax + 1, ay + 1, guiInfo.colorText);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

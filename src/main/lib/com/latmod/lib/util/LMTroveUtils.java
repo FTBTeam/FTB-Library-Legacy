@@ -1,6 +1,5 @@
 package com.latmod.lib.util;
 
-import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -20,9 +19,9 @@ public class LMTroveUtils
         }
     }
 
-    public static TIntList toIntList(TIntIntMap map)
+    public static TIntArrayList toIntList(TIntIntMap map)
     {
-        TIntList list = new TIntArrayList();
+        TIntArrayList list = new TIntArrayList();
 
         map.forEachEntry((key, value) ->
         {
@@ -34,9 +33,9 @@ public class LMTroveUtils
         return list;
     }
 
-    public static TIntIntMap fromArray(@Nullable int[] a)
+    public static TIntIntHashMap fromArray(@Nullable int[] a)
     {
-        TIntIntMap map = new TIntIntHashMap();
+        TIntIntHashMap map = new TIntIntHashMap();
 
         if(a == null || a.length == 0)
         {

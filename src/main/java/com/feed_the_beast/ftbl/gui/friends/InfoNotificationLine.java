@@ -1,14 +1,16 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.impl.EmptyInfoPageLine;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,7 +20,6 @@ import java.util.List;
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class InfoNotificationLine extends EmptyInfoPageLine
 {
     public class ButtonInfoNotification extends ButtonInfoTextLine
@@ -29,48 +30,49 @@ public class InfoNotificationLine extends EmptyInfoPageLine
         {
             super(g, null);
             widget = new ClientNotifications.NotificationWidget(notification.notification);
-            height = widget.height;
+            setHeight(widget.height);
         }
 
         @Override
-        public void addMouseOverText(GuiLM gui, List<String> l)
+        public void addMouseOverText(IGui gui, List<String> l)
         {
-            if(gui.mouseX >= getAX() + width - 32)
+            if(gui.getMouseX() >= getAX() + getWidth() - 32)
             {
                 l.add(GuiLang.BUTTON_CLOSE.translate());
             }
         }
 
         @Override
-        public void onClicked(GuiLM gui, IMouseButton button)
+        public void onClicked(IGui gui, IMouseButton button)
         {
-            GuiLM.playClickSound();
+            GuiHelper.playClickSound();
             ClientNotifications.Perm.MAP.remove(widget.notification.getID());
             gui.refreshWidgets();
         }
 
         @Override
-        public void renderWidget(GuiLM gui)
+        public void renderWidget(IGui gui)
         {
-            widget.width = width = ((GuiInfo) gui).panelText.width - 4;
+            setWidth(((GuiInfo) gui).panelText.getWidth() - 4);
+            widget.width = getWidth();
 
             int ay = getAY();
             int ax = getAX();
 
-            widget.render(gui.mc, ax, ay);
+            widget.render(Minecraft.getMinecraft(), ax, ay);
 
             if(gui.isMouseOver(this))
             {
                 GlStateManager.color(1F, 1F, 1F, 0.2F);
-                GuiLM.drawBlankRect(ax, ay, width, height);
+                GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
 
-                if(gui.mouseX >= ax + width - 32)
+                if(gui.getMouseX() >= ax + getWidth() - 32)
                 {
-                    GuiLM.drawBlankRect(ax + width - 32, ay, 32, height);
+                    GuiHelper.drawBlankRect(ax + getWidth() - 32, ay, 32, getHeight());
                     GlStateManager.color(1F, 1F, 1F, 1F);
                 }
 
-                GuiLM.render(GuiIcons.CLOSE, ax + width - 32, ay + (height - 32) / 2, 32, 32);
+                GuiHelper.render(GuiIcons.CLOSE, ax + getWidth() - 32, ay + (getHeight() - 32) / 2, 32, 32);
             }
         }
     }

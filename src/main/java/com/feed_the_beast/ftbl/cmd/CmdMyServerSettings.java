@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 29.05.2016.
  */
@@ -42,7 +44,7 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         }
 
         @Override
-        public void saveConfig(ICommandSender sender, NBTTagCompound nbt, JsonObject json)
+        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
             group.loadFromGroup(json);
         }

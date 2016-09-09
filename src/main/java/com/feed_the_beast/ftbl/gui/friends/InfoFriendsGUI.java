@@ -4,13 +4,10 @@ import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class InfoFriendsGUI extends InfoPage
 {
     public InfoFriendsGUI()

@@ -16,7 +16,6 @@ import net.minecraft.util.text.Style;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNullableByDefault;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -28,7 +27,6 @@ import java.util.List;
 /**
  * Type for Lists: new TypeToken<List<E>>() {}.getType()
  */
-@ParametersAreNullableByDefault
 public class LMJsonUtils
 {
     public static final JsonDeserializationContext DESERIALIZATION_CONTEXT;

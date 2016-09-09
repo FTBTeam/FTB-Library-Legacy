@@ -1,19 +1,19 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IPanel;
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.latmod.lib.ITextureCoords;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-@SideOnly(Side.CLIENT)
-public class WidgetLM
+public class WidgetLM implements IWidget
 {
-    public int posX, posY, width, height;
-    private WidgetLM parentWidget;
+    public int posX, posY;
+    private int width, height;
+    private IPanel parentPanel;
 
     public WidgetLM(int x, int y, int w, int h)
     {
@@ -23,67 +23,60 @@ public class WidgetLM
         height = h;
     }
 
-    public WidgetLM getParentWidget()
+    @Override
+    public final int getX()
     {
-        return parentWidget;
+        return posX;
     }
 
-    public void setParentWidget(WidgetLM p)
+    @Override
+    public final int getY()
     {
-        parentWidget = p;
+        return posY;
     }
 
-    public boolean isEnabled()
+    @Override
+    public int getWidth()
     {
-        return true;
+        return width;
     }
 
-    public boolean shouldRender(GuiLM gui)
+    public void setWidth(int w)
     {
-        return gui.isInside(this);
+        width = w;
     }
 
-    public boolean isInside(WidgetLM w)
+    @Override
+    public int getHeight()
     {
-        double a0 = getAY();
-        double a1 = w.getAY();
-
-        if(a1 + w.height >= a0 || a1 <= a0 + height)
-        {
-            return true;
-        }
-
-        a0 = getAX();
-        a1 = w.getAX();
-
-        return (a1 + w.width < a0 && a1 > a0 + width);
+        return height;
     }
 
-    public int getAX()
+    public void setHeight(int h)
     {
-        return (parentWidget == null) ? posX : (parentWidget.getAX() + posX);
+        height = h;
     }
 
-    public int getAY()
+    @Override
+    @Nullable
+    public IPanel getParentPanel()
     {
-        return (parentWidget == null) ? posY : (parentWidget.getAY() + posY);
+        return parentPanel;
+    }
+
+    @Override
+    public void setParentPanel(@Nullable IPanel p)
+    {
+        parentPanel = p;
     }
 
     public final void render(ITextureCoords icon)
     {
-        GuiLM.render(icon, getAX(), getAY(), width, height);
+        GuiHelper.render(icon, getAX(), getAY(), getWidth(), getHeight());
     }
 
-    public void mousePressed(GuiLM gui, IMouseButton button)
-    {
-    }
-
-    public boolean keyPressed(GuiLM gui, int key, char keyChar)
-    {
-        return false;
-    }
-
-    public void addMouseOverText(GuiLM gui, List<String> l)
+    @Override
+    public void addMouseOverText(IGui gui, List<String> l)
     {
         String t = getTitle(gui);
 
@@ -93,12 +86,8 @@ public class WidgetLM
         }
     }
 
-    public void renderWidget(GuiLM gui)
-    {
-    }
-
     @Nullable
-    public String getTitle(GuiLM gui)
+    public String getTitle(IGui gui)
     {
         return null;
     }

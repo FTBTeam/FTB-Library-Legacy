@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -24,7 +22,7 @@ public class FTBLibModCommon // FTBLibModClient
         return null;
     }
 
-    public double getReachDist(EntityPlayer ep)
+    public double getReachDist(@Nullable EntityPlayer ep)
     {
         if(ep instanceof EntityPlayerMP)
         {
@@ -35,10 +33,6 @@ public class FTBLibModCommon // FTBLibModClient
     }
 
     public void spawnDust(World worldObj, double x, double y, double z, int i)
-    {
-    }
-
-    public void openClientGui(IGuiHandler handler, EntityPlayer ep, NBTTagCompound data, int wid)
     {
     }
 }

@@ -4,9 +4,9 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.Universe;
-import com.feed_the_beast.ftbl.util.FTBLib;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
+import com.latmod.lib.util.LMUtils;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,8 +30,8 @@ public class FTBLibEventHandler
         {
             try
             {
-                LMJsonUtils.toJson(new File(FTBLib.folderWorld, "world_data.json"), FTBLibAPI_Impl.get().getSharedData(Side.SERVER).getSerializableElement());
-                LMNBTUtils.writeTag(new File(FTBLib.folderWorld, "data/FTBLib.dat"), FTBLibAPI.get().getUniverse().serializeNBT());
+                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), FTBLibAPI_Impl.get().getSharedData(Side.SERVER).getSerializableElement());
+                LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), FTBLibAPI.get().getUniverse().serializeNBT());
                 //FTBLib.dev_logger.info("ForgeWorldMP Saved");
             }
             catch(Exception ex)

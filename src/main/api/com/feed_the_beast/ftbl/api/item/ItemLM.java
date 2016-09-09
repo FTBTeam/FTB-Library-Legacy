@@ -4,8 +4,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ItemLM extends Item
 {
@@ -15,7 +13,6 @@ public abstract class ItemLM extends Item
         return getRegistryName().getResourceDomain() + ".item." + getRegistryName().getResourcePath();
     }
 
-    @SideOnly(Side.CLIENT)
     public final void registerDefaultModel()
     {
         ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(getRegistryName(), "inventory"));

@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
-import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.api.info.IResourceProvider;
+import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.google.gson.JsonArray;
@@ -19,8 +18,6 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -39,7 +36,6 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     private final LinkedHashMap<String, InfoPage> childPages;
     public InfoPage parent = null;
     public IInfoPageTheme theme;
-    public IResourceProvider resourceProvider;
     private ITextComponent title;
 
     public InfoPage(String id)
@@ -310,26 +306,17 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @Override
-    public final IResourceProvider getResourceProvider()
-    {
-        return (resourceProvider == null) ? ((parent == null) ? URLResourceProvider.INSTANCE : parent.getResourceProvider()) : resourceProvider;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
     public void refreshGui(GuiInfo gui)
     {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public ButtonLM createSpecialButton(GuiInfo gui)
+    public ISpecialInfoButton createSpecialButton(GuiInfo gui)
     {
         return null;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public ButtonInfoPage createButton(GuiInfo gui)
     {
         return new ButtonInfoPage(gui, this, null);

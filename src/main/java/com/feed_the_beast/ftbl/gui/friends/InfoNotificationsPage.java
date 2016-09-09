@@ -10,13 +10,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 24.03.2016.
  */
-@SideOnly(Side.CLIENT)
 public class InfoNotificationsPage extends InfoPage
 {
     public InfoNotificationsPage()

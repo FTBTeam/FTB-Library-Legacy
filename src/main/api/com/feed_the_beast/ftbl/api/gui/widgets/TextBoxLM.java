@@ -1,17 +1,14 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.gui.GuiLM;
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
 
-@SideOnly(Side.CLIENT)
 public class TextBoxLM extends WidgetLM
 {
     private boolean isSelected = false;
@@ -27,7 +24,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(GuiLM gui, IMouseButton b)
+    public void mousePressed(IGui gui, IMouseButton b)
     {
         if(charLimit == 0)
         {
@@ -52,18 +49,18 @@ public class TextBoxLM extends WidgetLM
         }
     }
 
-    public boolean isSelected(GuiLM gui)
+    public boolean isSelected(IGui gui)
     {
         return isSelected;
     }
 
-    public void setSelected(GuiLM gui, boolean v)
+    public void setSelected(IGui gui, boolean v)
     {
         isSelected = v;
     }
 
     @Override
-    public boolean keyPressed(GuiLM gui, int key, char keyChar)
+    public boolean keyPressed(IGui gui, int key, char keyChar)
     {
         if(charLimit == 0)
         {
@@ -124,15 +121,15 @@ public class TextBoxLM extends WidgetLM
         return false;
     }
 
-    public void onTextChanged(GuiLM gui)
+    public void onTextChanged(IGui gui)
     {
     }
 
-    public void onTabPressed(GuiLM gui)
+    public void onTabPressed(IGui gui)
     {
     }
 
-    public void onEnterPressed(GuiLM gui)
+    public void onEnterPressed(IGui gui)
     {
     }
 
@@ -152,7 +149,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public void renderWidget(GuiLM gui)
+    public void renderWidget(IGui gui)
     {
         String s = getText();
 
@@ -173,11 +170,11 @@ public class TextBoxLM extends WidgetLM
 
             if(textRenderX == -1)
             {
-                gui.font.drawString(ns, (int) (getAX() + textRenderX - (gui.font.getStringWidth(s) / 2D) + width / 2D), (int) (getAY() + textRenderY), col);
+                gui.getFont().drawString(ns, (int) (getAX() + textRenderX - (gui.getFont().getStringWidth(s) / 2D) + getWidth() / 2D), (int) (getAY() + textRenderY), col);
             }
             else
             {
-                gui.font.drawString(ns, (int) (getAX() + textRenderX), (int) (getAY() + textRenderY), col);
+                gui.getFont().drawString(ns, (int) (getAX() + textRenderX), (int) (getAY() + textRenderY), col);
             }
         }
     }

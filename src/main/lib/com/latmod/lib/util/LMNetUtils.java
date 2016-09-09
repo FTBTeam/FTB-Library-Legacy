@@ -129,11 +129,12 @@ public class LMNetUtils
         return new ResourceLocation(d, p);
     }
 
-    public static void writeTag(ByteBuf io, NBTTagCompound tag)
+    public static void writeTag(ByteBuf io, @Nullable NBTTagCompound tag)
     {
         ByteBufUtils.writeTag(io, tag);
     }
 
+    @Nullable
     public static NBTTagCompound readTag(ByteBuf io)
     {
         return ByteBufUtils.readTag(io);

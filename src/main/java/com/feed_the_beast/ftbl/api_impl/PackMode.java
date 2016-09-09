@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IPackMode;
-import com.feed_the_beast.ftbl.util.FTBLib;
+import com.latmod.lib.util.LMUtils;
 
 import java.io.File;
 
@@ -41,7 +41,7 @@ public class PackMode implements IPackMode
     @Override
     public File getFolder()
     {
-        File f = new File(FTBLib.folderModpack, getID());
+        File f = new File(LMUtils.folderModpack, getID());
         if(!f.exists())
         {
             f.mkdirs();

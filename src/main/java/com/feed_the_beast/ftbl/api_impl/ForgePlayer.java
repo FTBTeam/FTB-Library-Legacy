@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
@@ -12,10 +13,10 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.net.MessageReload;
-import com.feed_the_beast.ftbl.util.FTBLib;
-import com.feed_the_beast.ftbl.util.ReloadType;
 import com.latmod.lib.util.LMNBTUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -254,7 +255,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     @Override
     public boolean isOP()
     {
-        return FTBLib.isOP(getProfile());
+        return LMServerUtils.isOP(getProfile());
     }
 
     public void getInfo(IForgePlayer owner, List<ITextComponent> info)
@@ -374,7 +375,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     {
         if(statsManager == null)
         {
-            statsManager = FTBLib.getServer().getPlayerList().getPlayerStatsFile(entityPlayer == null ? new FakePlayer(FTBLib.getServerWorld(), getProfile()) : entityPlayer);
+            statsManager = LMServerUtils.getServer().getPlayerList().getPlayerStatsFile(entityPlayer == null ? new FakePlayer(LMServerUtils.getServerWorld(), getProfile()) : entityPlayer);
         }
 
         return statsManager;
@@ -397,7 +398,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         {
             try
             {
-                playerNBT = LMNBTUtils.readTag(new File(FTBLib.folderWorld, "playerdata/" + getProfile().getId() + ".dat"));
+                playerNBT = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "playerdata/" + getProfile().getId() + ".dat"));
             }
             catch(Exception ex)
             {

@@ -7,8 +7,6 @@ import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -69,7 +67,6 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoImage(gui, this, imageProvider, imageWidth, imageHeight, imageScale);

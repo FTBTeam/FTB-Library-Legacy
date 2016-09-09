@@ -8,9 +8,6 @@ import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.google.gson.JsonElement;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
@@ -48,8 +45,7 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(MessageDisplayInfo m, Minecraft mc)
+    public void onMessage(MessageDisplayInfo m)
     {
         InfoPage page = new InfoPage(m.infoID);
         page.fromJson(m.json);
