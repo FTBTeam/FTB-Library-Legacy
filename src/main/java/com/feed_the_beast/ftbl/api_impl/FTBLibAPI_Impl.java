@@ -117,7 +117,12 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     {
         if(universe == null)
         {
-            return;
+            throw new NullPointerException("Can't reload yet!");
+        }
+
+        if(type == ReloadType.LOGIN)
+        {
+            throw new IllegalArgumentException("ReloadType can't be LOGIN!");
         }
 
         long ms = System.currentTimeMillis();

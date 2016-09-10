@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.IIntIDRegistry;
 import com.feed_the_beast.ftbl.api.IRegistry;
+import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.ISyncedRegistry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
@@ -26,7 +27,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -116,7 +116,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
     }
 
     public final Map<UUID, IConfigContainer> tempServerConfig = new HashMap<>();
-    private final IRegistry<ResourceLocation, INBTSerializable<NBTTagCompound>> syncedData = new SimpleRegistry<>(false);
+    private final IRegistry<ResourceLocation, ISyncData> syncedData = new SimpleRegistry<>(false);
     private final SyncedRegistry<IGuiHandler> guis = new SyncedRegistry<>(true);
     private final SidebarButtonRegistry sidebarButtons = new SidebarButtonRegistry();
     private final IRegistry<String, ConfigFile> config = new SimpleRegistry<>(false);
@@ -187,7 +187,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
     }
 
     @Override
-    public IRegistry<ResourceLocation, INBTSerializable<NBTTagCompound>> syncedData()
+    public IRegistry<ResourceLocation, ISyncData> syncedData()
     {
         return syncedData;
     }

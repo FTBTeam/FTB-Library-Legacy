@@ -4,10 +4,8 @@ import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Collection;
 
@@ -16,7 +14,7 @@ import java.util.Collection;
  */
 public interface IFTBLibRegistries
 {
-    IRegistry<ResourceLocation, INBTSerializable<NBTTagCompound>> syncedData();
+    IRegistry<ResourceLocation, ISyncData> syncedData();
 
     ISyncedRegistry<IGuiHandler> guis();
 

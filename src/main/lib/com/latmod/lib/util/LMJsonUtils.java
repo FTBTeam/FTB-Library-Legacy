@@ -10,12 +10,12 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
-import net.minecraft.util.EnumTypeAdapterFactory;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * Type for Lists: new TypeToken<List<E>>() {}.getType()
  */
+@ParametersAreNullableByDefault
 public class LMJsonUtils
 {
     public static final JsonDeserializationContext DESERIALIZATION_CONTEXT;
@@ -81,11 +82,14 @@ public class LMJsonUtils
             }
         };
 
-        gb = new GsonBuilder();
-        gb.registerTypeHierarchyAdapter(ITextComponent.class, new ITextComponent.Serializer());
-        gb.registerTypeHierarchyAdapter(Style.class, new Style.Serializer());
-        gb.registerTypeAdapterFactory(new EnumTypeAdapterFactory());
-        TEXT_COMPONENT_GSON = gb.create();
+        try
+        {
+            TEXT_COMPONENT_GSON = (Gson) ReflectionHelper.findField(ITextComponent.Serializer.class, "field_150700_a", "GSON").get(null);
+        }
+        catch(Exception ex)
+        {
+            throw new NullPointerException("Failed to read ITextComponent.Serializer.GSON!");
+        }
     }
 
     public static String toJson(@Nonnull Gson gson, JsonElement e)

@@ -3,6 +3,8 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
@@ -12,10 +14,10 @@ import com.latmod.lib.util.LMNetUtils;
 import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Map;
@@ -33,18 +35,23 @@ public class MessageReload extends MessageToClient<MessageReload>
     public MessageReload(ReloadType t)
     {
         typeID = t.ordinal();
+        sharedDataTag = FTBLibAPI.get().getSharedData(Side.SERVER).serializeNBT();
+    }
+
+    public MessageReload(EntityPlayerMP player, IForgePlayer forgePlayer)
+    {
+        this(ReloadType.LOGIN);
+
         syncData = new NBTTagCompound();
 
-        for(Map.Entry<ResourceLocation, INBTSerializable<NBTTagCompound>> entry : FTBLibAPI.get().getRegistries().syncedData().getEntrySet())
+        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibAPI.get().getRegistries().syncedData().getEntrySet())
         {
-            syncData.setTag(entry.getKey().toString(), entry.getValue().serializeNBT());
+            syncData.setTag(entry.getKey().toString(), entry.getValue().writeSyncData(player, forgePlayer));
         }
-
-        sharedDataTag = FTBLibAPI.get().getSharedData(Side.SERVER).serializeNBT();
 
         if(LMUtils.DEV_ENV)
         {
-            LMUtils.DEV_LOGGER.info("Sending sync data: " + syncData);
+            LMUtils.DEV_LOGGER.info("Sending sync data to " + player.getDisplayNameString() + ": " + syncData);
         }
     }
 
@@ -76,19 +83,21 @@ public class MessageReload extends MessageToClient<MessageReload>
         long ms = System.currentTimeMillis();
         Minecraft mc = Minecraft.getMinecraft();
 
+        ReloadType type = ReloadType.values()[m.typeID];
         FTBLibAPI.get().getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
 
-        for(String s : m.syncData.getKeySet())
+        if(type == ReloadType.LOGIN)
         {
-            INBTSerializable<NBTTagCompound> nbt = FTBLibAPI.get().getRegistries().syncedData().get(new ResourceLocation(s));
-
-            if(nbt != null)
+            for(String s : m.syncData.getKeySet())
             {
-                nbt.deserializeNBT(m.syncData.getCompoundTag(s));
+                ISyncData nbt = FTBLibAPI.get().getRegistries().syncedData().get(new ResourceLocation(s));
+
+                if(nbt != null)
+                {
+                    nbt.readSyncData(m.syncData.getCompoundTag(s));
+                }
             }
         }
-
-        ReloadType type = ReloadType.values()[m.typeID];
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 

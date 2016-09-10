@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
-import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
@@ -347,7 +346,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         playerNBT = null;
         statsManager = null;
         FTBLibStats.updateLastSeen(stats());
-        new MessageReload(ReloadType.LOGIN).sendTo(entityPlayer);
+        new MessageReload(ep, this).sendTo(entityPlayer);
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
     }
 

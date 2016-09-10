@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IIntIDRegistry;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -13,7 +15,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 17.08.2016.
  */
-public class IntIDRegistry implements INBTSerializable<NBTTagCompound>, IIntIDRegistry
+public class IntIDRegistry implements IIntIDRegistry, INBTSerializable<NBTTagCompound>
 {
     private final TIntObjectHashMap<ResourceLocation> IDToRL = new TIntObjectHashMap<>();
     private final Map<ResourceLocation, Integer> RLToID = new HashMap<>();
@@ -84,5 +86,17 @@ public class IntIDRegistry implements INBTSerializable<NBTTagCompound>, IIntIDRe
             IDToRL.put(id, key);
             RLToID.put(key, id);
         }
+    }
+
+    @Override
+    public NBTTagCompound writeSyncData(EntityPlayerMP player, IForgePlayer forgePlayer)
+    {
+        return serializeNBT();
+    }
+
+    @Override
+    public void readSyncData(NBTTagCompound nbt)
+    {
+        deserializeNBT(nbt);
     }
 }
