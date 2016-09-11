@@ -53,7 +53,7 @@ public class FTBLibLang
     TEAM_FAILED_TO_JOIN = get("team.error.failed_to_join");
     //@formatter:on
 
-    public static LangKey get(String s)
+    private static LangKey get(String s)
     {
         return new LangKey("ftbl.lang." + s);
     }

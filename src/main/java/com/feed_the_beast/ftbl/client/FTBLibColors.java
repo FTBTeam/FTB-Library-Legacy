@@ -14,7 +14,7 @@ import java.util.Arrays;
  */
 public class FTBLibColors implements IResourceManagerReloadListener
 {
-    private static final ResourceLocation COLORS_PNG = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/colors_128.png");
+    public static final ResourceLocation COLORS_PNG = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/colors_128.png");
     public static final int WIDTH = 16;
     public static final int HEIGHT = 8;
     private static final int[] COLORS = new int[WIDTH * HEIGHT];

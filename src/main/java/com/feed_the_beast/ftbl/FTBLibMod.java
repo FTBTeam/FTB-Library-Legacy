@@ -14,7 +14,6 @@ import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -36,7 +35,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = FTBLibFinals.MOD_DEP)
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
 public class FTBLibMod
 {
     public static final Logger logger = LogManager.getLogger("FTBLib");
@@ -60,8 +59,6 @@ public class FTBLibMod
         }
 
         FTBLibAPI.setAPI(FTBLibAPI_Impl.get());
-        FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(FTBLibFinals.MOD_ID, "guis"), FTBLibAPI.get().getRegistries().guis());
-        FTBLibAPI.get().getRegistries().syncedData().register(new ResourceLocation(FTBLibFinals.MOD_ID, "notifications"), FTBLibAPI.get().getRegistries().notifications());
 
         LMUtils.init(event.getModConfigurationDirectory());
         FTBLibNetHandler.init();

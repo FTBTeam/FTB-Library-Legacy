@@ -12,10 +12,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR})
 public @interface Flags
 {
-    /**
-     * Will be synced with client
-     */
-    int SYNC = 1;
+    //UNUSED = 1
     /**
      * Will be hidden from config gui
      */

@@ -1,14 +1,12 @@
 package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.ITextureCoordsProvider;
 import com.latmod.lib.LangKey;
-import net.minecraft.util.IStringSerializable;
 
 import java.util.Locale;
 
-public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
+public enum EnumRedstoneMode implements IRedstoneMode
 {
     DISABLED,
     ACTIVE_HIGH,
@@ -40,12 +38,24 @@ public enum EnumRedstoneMode implements IStringSerializable, ILangKeyContainer
         return name;
     }
 
-    public boolean cancel(boolean b)
+    @Override
+    public boolean isActive(boolean rsHigh)
     {
-        return this != DISABLED && (this == ACTIVE_HIGH && !b || this == ACTIVE_LOW && b);
+        switch(this)
+        {
+            case DISABLED:
+                return false;
+            case ACTIVE_HIGH:
+                return rsHigh;
+            case ACTIVE_LOW:
+                return !rsHigh;
+            default:
+                return false;
+        }
     }
 
-    public ITextureCoords getIcon()
+    @Override
+    public ITextureCoordsProvider getIcon()
     {
         switch(this)
         {

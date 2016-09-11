@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.IIntIDRegistry;
@@ -11,6 +12,11 @@ import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
 import com.feed_the_beast.ftbl.api.config.ConfigFile;
 import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
+import com.feed_the_beast.ftbl.api.config.properties.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.properties.PropertyDouble;
+import com.feed_the_beast.ftbl.api.config.properties.PropertyInt;
+import com.feed_the_beast.ftbl.api.config.properties.PropertyString;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
@@ -123,6 +129,7 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
     private final IntIDRegistry notifications = new IntIDRegistry();
     private final IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers = new SimpleRegistry<>(true);
     private final Collection<ITickable> tickables = new ArrayList<>();
+    private final SyncedRegistry<IConfigValueProvider> configValues = new SyncedRegistry<>(false);
     //TODO: Make this Thread-safe
     private final List<ServerTickCallback> callbacks = new ArrayList<>();
     private final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
@@ -184,6 +191,19 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 
     private FTBLibRegistries()
     {
+        registerSync("guis", guis);
+        registerSync("notifications", notifications);
+        registerSync("config", configValues);
+
+        configValues.register(PropertyBool.Provider.ID, PropertyBool.Provider.INSTANCE);
+        configValues.register(PropertyString.Provider.ID, PropertyString.Provider.INSTANCE);
+        configValues.register(PropertyInt.Provider.ID, PropertyInt.Provider.INSTANCE);
+        configValues.register(PropertyDouble.Provider.ID, PropertyDouble.Provider.INSTANCE);
+    }
+
+    private void registerSync(String id, ISyncData data)
+    {
+        syncedData.register(new ResourceLocation(FTBLibFinals.MOD_ID, id), data);
     }
 
     @Override
@@ -226,6 +246,12 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
     public Collection<ITickable> tickables()
     {
         return tickables;
+    }
+
+    @Override
+    public ISyncedRegistry<IConfigValueProvider> configValues()
+    {
+        return configValues;
     }
 
     void addServerCallback(int timer, Runnable runnable)

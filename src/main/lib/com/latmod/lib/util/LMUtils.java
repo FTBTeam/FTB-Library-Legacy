@@ -31,7 +31,7 @@ public class LMUtils
 
     public static boolean userIsLatvianModder = false;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
-    
+
     public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
     public static void init(File configFolder)

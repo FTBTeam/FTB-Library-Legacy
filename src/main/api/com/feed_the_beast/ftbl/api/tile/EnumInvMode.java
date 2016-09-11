@@ -2,12 +2,10 @@ package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.EnumNameMap;
-import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.ITextureCoordsProvider;
 import com.latmod.lib.LangKey;
-import net.minecraft.util.IStringSerializable;
 
-public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
+public enum EnumInvMode implements IInvMode
 {
     IO,
     IN,
@@ -38,7 +36,8 @@ public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
         return langKey;
     }
 
-    public ITextureCoords getIcon()
+    @Override
+    public ITextureCoordsProvider getIcon()
     {
         switch(this)
         {
@@ -53,11 +52,13 @@ public enum EnumInvMode implements IStringSerializable, ILangKeyContainer
         }
     }
 
+    @Override
     public boolean canInsert()
     {
         return this == IO || this == IN;
     }
 
+    @Override
     public boolean canExtract()
     {
         return this == IO || this == OUT;
