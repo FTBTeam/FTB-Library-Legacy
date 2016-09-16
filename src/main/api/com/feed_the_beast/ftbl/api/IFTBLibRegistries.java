@@ -1,13 +1,16 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.api.config.ConfigFile;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
+import com.feed_the_beast.ftbl.api.config.IConfigFile;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
@@ -21,7 +24,9 @@ public interface IFTBLibRegistries
 
     IRegistry<ResourceLocation, ISidebarButton> sidebarButtons();
 
-    IRegistry<String, ConfigFile> configFiles();
+    void registerConfigFile(String id, IConfigFile file, @Nonnull ITextComponent displayName);
+
+    Collection<IConfigFile> getRegistredConfigFiles();
 
     IIntIDRegistry notifications();
 
@@ -29,5 +34,7 @@ public interface IFTBLibRegistries
 
     Collection<ITickable> tickables();
 
-    ISyncedRegistry<IConfigValueProvider> configValues();
+    ISyncedRegistry<IConfigValue> configValues();
+
+    IConfigTree clientConfig();
 }

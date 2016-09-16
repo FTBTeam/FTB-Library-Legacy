@@ -1,0 +1,30 @@
+package com.feed_the_beast.ftbl.api.permissions.context;
+
+import com.google.common.base.Preconditions;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+
+public class WorldContext extends Context
+{
+    private final World world;
+
+    public WorldContext(World w)
+    {
+        world = Preconditions.checkNotNull(w, "World can't be null in WorldContext!");
+    }
+
+    @Override
+    public World getWorld()
+    {
+        return world;
+    }
+
+    @Override
+    @Nullable
+    public EntityPlayer getPlayer()
+    {
+        return null;
+    }
+}

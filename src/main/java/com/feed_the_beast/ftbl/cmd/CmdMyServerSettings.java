@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.impl.ConfigTree;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
@@ -21,20 +22,20 @@ public class CmdMyServerSettings extends CmdEditConfigBase
     public static class MyServerSettingsContainer implements IConfigContainer
     {
         public final ForgePlayer player;
-        public final ConfigGroup group;
+        public final IConfigTree tree;
 
         //new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings")
         public MyServerSettingsContainer(ForgePlayer p)
         {
             player = p;
-            group = new ConfigGroup();
-            p.getSettings(group);
+            tree = new ConfigTree();
+            p.getSettings(tree);
         }
 
         @Override
-        public ConfigGroup createGroup()
+        public IConfigTree createGroup()
         {
-            return group;
+            return tree;
         }
 
         @Override
@@ -46,7 +47,7 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         @Override
         public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
-            group.loadFromGroup(json);
+            tree.fromJson(json);
         }
     }
 

@@ -1,65 +1,48 @@
-/*
- * Minecraft Forge
- * Copyright (c) 2016.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation version 2.1
- * of the License.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
-
 package com.feed_the_beast.ftbl.api.permissions.context;
 
 import com.google.common.base.Preconditions;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
 
 public final class ContextKey<T>
 {
-    public static final ContextKey<World> WORLD = new ContextKey<World>("world");
-    public static final ContextKey<EntityPlayer> PLAYER = new ContextKey<EntityPlayer>("player");
-    public static final ContextKey<BlockPos> BLOCK = new ContextKey<BlockPos>("block");
-    public static final ContextKey<ChunkPos> CHUNK = new ContextKey<ChunkPos>("chunk");
-    public static final ContextKey<Entity> ENTITY = new ContextKey<Entity>("entity");
+    private final String ID;
+    private final Class<T> typeClass;
 
-    private final String key;
-
-    public ContextKey(String key)
+    public static <E> ContextKey<E> create(String id, Class<E> c)
     {
-        Preconditions.checkNotNull(key, "Context key can't be null!");
+        Preconditions.checkNotNull(id, "ContextKey's ID can't be null!");
+        Preconditions.checkNotNull(c, "ContextKey's Type can't be null!");
 
-        if(key.isEmpty())
+        if(id.isEmpty())
         {
-            throw new IllegalArgumentException("Context key can't be empty!");
+            throw new IllegalArgumentException("ContextKey's ID can't be blank!");
         }
 
-        this.key = key;
+        return new ContextKey<E>(id, c);
     }
 
-    public int hashCode()
+    private ContextKey(String id, Class<T> c)
     {
-        return key.hashCode();
+        ID = id;
+        typeClass = c;
     }
 
     public String toString()
     {
-        return key;
+        return ID;
+    }
+
+    public int hashCode()
+    {
+        return ID.hashCode();
     }
 
     public boolean equals(Object o)
     {
-        return o == this || (o != null && o.toString().equals(key));
+        return o == this || (o != null && o.toString().equals(ID));
+    }
+
+    public Class<T> getTypeClass()
+    {
+        return typeClass;
     }
 }

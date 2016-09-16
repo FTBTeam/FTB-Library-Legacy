@@ -25,6 +25,7 @@ import java.util.Map;
 public class MessageReload extends MessageToClient<MessageReload>
 {
     private int typeID;
+    private NBTTagCompound configIDs;
     private NBTTagCompound syncData;
     private NBTTagCompound sharedDataTag;
 
@@ -41,6 +42,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     public MessageReload(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
         this(ReloadType.LOGIN);
+
+        configIDs = FTBLibAPI.get().getRegistries().configValues().writeSyncData(player, forgePlayer);
 
         syncData = new NBTTagCompound();
 
@@ -65,6 +68,12 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void toBytes(ByteBuf io)
     {
         io.writeByte(typeID);
+
+        if(typeID == ReloadType.LOGIN.ordinal())
+        {
+            LMNetUtils.writeTag(io, configIDs);
+        }
+
         LMNetUtils.writeTag(io, syncData);
         LMNetUtils.writeTag(io, sharedDataTag);
     }
@@ -73,6 +82,12 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void fromBytes(ByteBuf io)
     {
         typeID = io.readUnsignedByte();
+
+        if(typeID == ReloadType.LOGIN.ordinal())
+        {
+            configIDs = LMNetUtils.readTag(io);
+        }
+
         syncData = LMNetUtils.readTag(io);
         sharedDataTag = LMNetUtils.readTag(io);
     }
@@ -84,6 +99,12 @@ public class MessageReload extends MessageToClient<MessageReload>
         Minecraft mc = Minecraft.getMinecraft();
 
         ReloadType type = ReloadType.values()[m.typeID];
+
+        if(type == ReloadType.LOGIN)
+        {
+            FTBLibAPI.get().getRegistries().configValues().readSyncData(m.configIDs);
+        }
+
         FTBLibAPI.get().getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
 
         if(type == ReloadType.LOGIN)

@@ -248,10 +248,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void onInit()
     {
-        posX = InfoClientSettings.border_width.getAsInt();
-        posY = InfoClientSettings.border_height.getAsInt();
-        int width = getScreenWidth() - InfoClientSettings.border_width.getAsInt() * 2;
-        int height = getScreenHeight() - InfoClientSettings.border_height.getAsInt() * 2;
+        posX = InfoClientSettings.BORDER_WIDTH.getInt();
+        posY = InfoClientSettings.BORDER_HEIGHT.getInt();
+        int width = getScreenWidth() - posX * 2;
+        int height = getScreenHeight() - posY * 2;
         setWidth(width);
         setHeight(height);
 

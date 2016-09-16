@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.impl.ConfigTree;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
@@ -15,10 +16,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
-    private ConfigGroup group;
+    private IConfigTree group;
     private NBTTagCompound extraNBT;
     private ITextComponent title;
 
@@ -49,8 +51,16 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         extraNBT = LMNetUtils.readTag(io);
         title = LMNetUtils.readTextComponent(io);
-        group = new ConfigGroup();
-        group.readData(LMNetUtils.readCompressedByteIOStream(io), true);
+        group = new ConfigTree();
+
+        try
+        {
+            group.readData(LMNetUtils.readCompressedByteIOStream(io), true);
+        }
+        catch(IOException ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -59,7 +69,16 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         LMNetUtils.writeTag(io, extraNBT);
         LMNetUtils.writeTextComponent(io, title);
         ByteIOStream stream = new ByteIOStream();
-        group.writeData(stream, true);
+
+        try
+        {
+            group.writeData(stream, true);
+        }
+        catch(IOException ex)
+        {
+            ex.printStackTrace();
+        }
+
         LMNetUtils.writeCompressedByteIOStream(io, stream);
     }
 
@@ -74,7 +93,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         new GuiEditConfig(m.extraNBT, new IConfigContainer()
         {
             @Override
-            public ConfigGroup createGroup()
+            public IConfigTree createGroup()
             {
                 return m.group;
             }

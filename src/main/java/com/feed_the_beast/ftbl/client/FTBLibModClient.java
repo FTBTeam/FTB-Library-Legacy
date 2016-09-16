@@ -1,12 +1,9 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.gui.InfoClientSettings;
-import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
@@ -24,10 +21,6 @@ import javax.annotation.Nullable;
 
 public class FTBLibModClient extends FTBLibModCommon
 {
-    public static final ConfigEntryBool item_ore_names = new ConfigEntryBool(false);
-    public static final ConfigEntryBool action_buttons_on_top = new ConfigEntryBool(true);
-    public static final ConfigEntryEnum<EnumNotificationDisplay> notifications = new ConfigEntryEnum<>(EnumNotificationDisplay.SCREEN, new EnumNameMap<>(false, EnumNotificationDisplay.values()));
-
     @Override
     public void preInit()
     {
@@ -40,10 +33,8 @@ public class FTBLibModClient extends FTBLibModCommon
             LMUtils.userIsLatvianModder = true;
         }
 
-        ClientConfigRegistry.addGroup("ftbl", FTBLibModClient.class);
-        ClientConfigRegistry.addGroup("ftbl_info", InfoClientSettings.class);
-        ClientConfigRegistry.addGroup("sidebar_buttons", FTBLibAPI_Impl.get().getRegistries().sidebarButtons().getSidebarButtonConfig());
-
+        FTBLibAPI.get().getRegistries().clientConfig().addAll("ftbl", FTBLibClientConfig.class, null);
+        FTBLibAPI.get().getRegistries().clientConfig().addAll("ftbl.info", InfoClientSettings.class, null);
         FTBLibActions.init();
 
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new FTBLibColors());
@@ -52,7 +43,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void postInit()
     {
-        ClientConfigRegistry.saveConfig();
+        FTBLibAPI_Impl.get().getRegistries().saveClientConfig();
     }
 
     @Override

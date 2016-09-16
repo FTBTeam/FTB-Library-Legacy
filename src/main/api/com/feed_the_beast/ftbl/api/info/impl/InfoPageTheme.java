@@ -44,7 +44,7 @@ public final class InfoPageTheme implements IInfoPageTheme
     @Override
     public boolean getUseUnicodeFont()
     {
-        return useUnicodeFont == null ? InfoClientSettings.unicode.getAsBoolean() : useUnicodeFont;
+        return useUnicodeFont == null ? InfoClientSettings.UNICODE.getBoolean() : useUnicodeFont;
     }
 
     @Override

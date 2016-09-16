@@ -1,0 +1,130 @@
+# GuiLM
+## Buttons
+gui_lm.button.accept=Pieņemt
+gui_lm.button.add=Pievienot
+gui_lm.button.close=Aizvērt
+gui_lm.button.save=Saglabāt
+gui_lm.button.info=Informācija
+
+## Labels
+gui_lm.label.other=Cits
+gui_lm.label.server_forced=Servera Uzspiests: %s
+gui_lm.label.online=Online
+gui_lm.label.offline=Offline
+gui_lm.label.whitelist=Whitelist
+gui_lm.label.blacklist=Blacklist
+gui_lm.label.color=Krāsa
+
+## Stats
+ftbl.stat.time_played=Laiks Nospēlēts
+ftbl.stat.last_seen=Pēdējo Reizi Manīts
+ftbl.stat.first_joined=Pirmo Reizi Pievienojies
+
+## Sides
+facing.down=Apakša
+facing.up=Augša
+facing.north=Ziemeļi
+facing.south=Dienvidi
+facing.west=Rietumi
+facing.east=Austrumi
+
+ftbl.dside.bottom=Apakša
+ftbl.dside.top=Augša
+ftbl.dside.back=Aizmugure
+ftbl.dside.front=Priekša
+ftbl.dside.left=Kreisā Puse
+ftbl.dside.right=Labā Puse
+
+# FTBLib Lang
+ftbl.lang.mode.loaded=Režīms uzstādīts uz '%s'!
+ftbl.lang.mode.not_found=Režīms neeksistē!
+ftbl.lang.mode.already_set=Režīms jau uzstādīts!
+ftbl.lang.mode.current=Pašreizējais režīms: %s
+ftbl.lang.mode.list=Pieejamie režīmi: %s
+
+ftbl.lang.reload_server=FTBLib: Serveris pārlādēts %s
+ftbl.lang.reload_client=FTBLib: Klients pārlādēts in %s
+ftbl.lang.reload_client_config_1=Serveris pārlādēts. Tu vari palais
+ftbl.lang.reload_client_config_2=lai pārlādētu klienta datus
+
+ftbl.lang.raw=%s
+ftbl.lang.missing_args=Pietrūkst Argumentu: %s!
+ftbl.lang.missing_args_num=Pietrūkst Argumentu: vēl %s!
+ftbl.lang.feature_disabled=Šī lieta ir atslēgta!
+ftbl.lang.invalid_subcmd=Nezināma apakškomanda: '%s'!
+
+ftbl.lang.owner=Īpašnieks: %s
+ftbl.lang.delete_item=Vai vēlies izdzēst '%s'?
+ftbl.lang.server_forced=Serveris pārraksta uz '%s'
+ftbl.lang.commands=Komandas
+ftbl.lang.my_permissions=Manas Atkļaujas
+ftbl.lang.difficulty=Grūtība: %s
+
+# Teams
+ftbl.lang.team.config='%s' team config
+ftbl.lang.team.created=Team '%s' created
+ftbl.lang.team.deleted=Team '%s' deleted
+ftbl.lang.team.member_left=%s left your team!
+ftbl.lang.team.member_joined=%s joined your team!
+ftbl.lang.team.transfered_ownership=New owner now is %s
+ftbl.lang.team.invited=Invited %s to '%s'
+ftbl.lang.team.invited_you=You have been invited to '%s' by %s
+ftbl.lang.team.cancel_invite=Cancel invite
+ftbl.lang.team.error.not_found=Team '%s' not found!
+ftbl.lang.team.error.no_team=You must be in a Team to do that!
+ftbl.lang.team.error.must_leave=You must leave your Team to do that!
+ftbl.lang.team.error.not_owner=You are not the owner of this Team!
+ftbl.lang.team.error.not_member=%s is not a member of this Team!
+ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
+ftbl.lang.team.error.already_invited=%s already is invited!
+ftbl.lang.team.error.failed_to_join=Can't join this team!
+
+ftbl.lang.team_color.blue=Blue
+ftbl.lang.team_color.cyan=Cyan
+ftbl.lang.team_color.green=Green
+ftbl.lang.team_color.yellow=Yellow
+ftbl.lang.team_color.orange=Orange
+ftbl.lang.team_color.red=Red
+ftbl.lang.team_color.pink=Pink
+ftbl.lang.team_color.magenta=Magenta
+ftbl.lang.team_color.purple=Purple
+ftbl.lang.team_color.gray=Gray
+
+# Action Buttons
+sidebar_button.ftbl:settings=Client Settings
+sidebar_button.ftbl:my_server_settings=My Server Settings
+sidebar_button.ftbl:notifications=Notifications
+sidebar_button.ftbl:toggle_gamemode=Toggle Gamemode
+sidebar_button.ftbl:toggle_rain=Toggle Rain
+sidebar_button.ftbl:set_day=Set time to Day
+sidebar_button.ftbl:set_night=Set time to Night
+sidebar_button.ftbl:heal=Heal
+player_action.ftbl:team_invite=Invate To My Team
+player_action.ftbl:team_deny_invite=Deny Invite
+
+# Privacy Level
+ftbl.privacy=Privacy
+ftbl.privacy.public=Public
+ftbl.privacy.private=Private
+ftbl.privacy.team=Team
+
+# Redstone Mode
+ftbl.redstonemode=Redstone Mode
+ftbl.redstonemode.disabled=Disabled
+ftbl.redstonemode.active_high=Active High
+ftbl.redstonemode.active_low=Active Low
+ftbl.redstonemode.pulse=Pulse
+
+# Inventory Mode
+ftbl.invmode=Inventory Mode
+ftbl.invmode.io=IO
+ftbl.invmode.in=Insert Only
+ftbl.invmode.out=Extract Only
+ftbl.invmode.none=Disabled
+
+# Click Actions
+click_action.cmd=Command
+click_action.show_cmd=Show Command
+click_action.url=Open URL
+click_action.file=Open File
+click_action.gui=Open Gui

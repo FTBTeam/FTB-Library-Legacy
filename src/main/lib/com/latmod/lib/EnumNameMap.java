@@ -21,7 +21,7 @@ public final class EnumNameMap<E extends Enum<E>>
     private final Map<String, E> map;
     private final List<E> values;
 
-    public EnumNameMap(boolean addNull, E[] v)
+    public EnumNameMap(E[] v, boolean addNull)
     {
         List<E> list = new ArrayList<>();
 

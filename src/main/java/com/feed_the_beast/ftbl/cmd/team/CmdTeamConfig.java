@@ -2,8 +2,9 @@ package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.impl.ConfigTree;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.google.gson.JsonObject;
@@ -23,20 +24,20 @@ public class CmdTeamConfig extends CmdEditConfigBase
     public static class TeamConfigContainer implements IConfigContainer
     {
         public final ForgeTeam team;
-        public final ConfigGroup group;
+        public final IConfigTree tree;
 
         //new ResourceLocation(FTBLibFinals.MOD_ID, "team_config")
         public TeamConfigContainer(ForgeTeam t)
         {
             team = t;
-            group = new ConfigGroup();
-            team.getSettings(group);
+            tree = new ConfigTree();
+            team.getSettings(tree);
         }
 
         @Override
-        public ConfigGroup createGroup()
+        public IConfigTree createGroup()
         {
-            return group;
+            return tree;
         }
 
         @Override
@@ -48,7 +49,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
         @Override
         public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
-            group.loadFromGroup(json);
+            tree.fromJson(json);
         }
     }
 

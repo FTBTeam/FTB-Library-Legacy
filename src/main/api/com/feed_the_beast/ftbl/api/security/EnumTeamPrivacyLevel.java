@@ -11,5 +11,6 @@ public enum EnumTeamPrivacyLevel
     ALLIES,
     MEMBERS;
 
-    public static final EnumNameMap<EnumTeamPrivacyLevel> NAME_MAP = new EnumNameMap<>(false, EnumTeamPrivacyLevel.values());
+    public static final EnumTeamPrivacyLevel[] VALUES = values();
+    public static final EnumNameMap<EnumTeamPrivacyLevel> NAME_MAP = new EnumNameMap<>(VALUES, false);
 }

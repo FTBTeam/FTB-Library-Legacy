@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
@@ -380,9 +380,9 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return statsManager;
     }
 
-    public void getSettings(ConfigGroup group)
+    public void getSettings(IConfigTree tree)
     {
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, group));
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, tree));
     }
 
     @Nullable

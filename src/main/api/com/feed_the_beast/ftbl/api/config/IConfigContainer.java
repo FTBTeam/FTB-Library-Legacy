@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  */
 public interface IConfigContainer
 {
-    ConfigGroup createGroup();
+    IConfigTree createGroup();
 
     ITextComponent getConfigTitle();
 

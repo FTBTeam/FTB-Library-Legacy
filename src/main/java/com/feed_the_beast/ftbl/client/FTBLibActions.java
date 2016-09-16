@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.config.ClientConfigRegistry;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SidebarButton;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
@@ -62,7 +62,7 @@ public class FTBLibActions
             @Override
             public void onClicked(IMouseButton button)
             {
-                new GuiEditConfig(null, ClientConfigRegistry.CONTAINER).openGui();
+                new GuiEditConfig(null, FTBLibAPI_Impl.get().getRegistries().CLIENT_CONFIG_CONTAINER).openGui();
             }
         });
 

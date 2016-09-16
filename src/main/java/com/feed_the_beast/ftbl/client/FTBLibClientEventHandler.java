@@ -107,7 +107,7 @@ public class FTBLibClientEventHandler
 
                     int tw = mc.fontRendererObj.getStringWidth(b.title);
 
-                    if(!FTBLibModClient.action_buttons_on_top.getAsBoolean())
+                    if(!FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                     {
                         mx1 -= tw + 8;
                         my1 += 4;
@@ -159,7 +159,7 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event)
     {
-        if(FTBLibModClient.item_ore_names.getAsBoolean())
+        if(FTBLibClientConfig.ITEM_ORE_NAMES.getBoolean())
         {
             Collection<String> ores = ODItems.getOreNames(event.getItemStack());
 
@@ -228,7 +228,7 @@ public class FTBLibClientEventHandler
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
 
-                if(FTBLibModClient.action_buttons_on_top.getAsBoolean())
+                if(FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                 {
                     int i = 0;
                     for(Map.Entry<ResourceLocation, ISidebarButton> entry : buttons)

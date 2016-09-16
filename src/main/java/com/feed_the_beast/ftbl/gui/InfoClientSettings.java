@@ -1,22 +1,19 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyInt;
 import com.latmod.lib.annotations.Flags;
-import com.latmod.lib.annotations.NumberBounds;
 
 /**
  * Created by LatvianModder on 22.03.2016.
  */
 public class InfoClientSettings
 {
-    public static final ConfigEntryBool unicode = new ConfigEntryBool(true);
+    public static final PropertyBool UNICODE = new PropertyBool(true);
 
     @Flags(Flags.USE_SLIDER)
-    @NumberBounds(min = 0, max = 200)
-    public static final ConfigEntryInt border_width = new ConfigEntryInt(15);
+    public static final PropertyInt BORDER_WIDTH = new PropertyInt(15).setMin(0).setMax(200);
 
     @Flags(Flags.USE_SLIDER)
-    @NumberBounds(min = 0, max = 50)
-    public static final ConfigEntryInt border_height = new ConfigEntryInt(15);
+    public static final PropertyInt BORDER_HEIGHT = new PropertyInt(15).setMin(0).setMax(200);
 }

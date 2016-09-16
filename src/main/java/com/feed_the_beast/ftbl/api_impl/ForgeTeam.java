@@ -5,10 +5,12 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryEnum;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.SimpleConfigKey;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyEnum;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyEnumAbstract;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyString;
 import com.feed_the_beast.ftbl.api.events.team.AttachTeamCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
@@ -35,11 +37,11 @@ import java.util.UUID;
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapabilitySerializable<NBTTagCompound>
 {
-    public static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(false, EnumTeamColor.values());
+    public static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
 
     private final Universe world;
     private final CapabilityDispatcher capabilities;
-    private final ConfigEntryEnum<EnumTeamColor> color;
+    private final PropertyEnumAbstract<EnumTeamColor> color;
     private ForgePlayer owner;
     private Collection<String> allies;
     private Collection<UUID> enemies;
@@ -53,7 +55,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         super(id);
         world = w;
 
-        color = new ConfigEntryEnum<>(EnumTeamColor.BLUE, COLOR_NAME_MAP);
+        color = new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE);
 
         AttachTeamCapabilitiesEvent event = new AttachTeamCapabilitiesEvent(this);
         MinecraftForge.EVENT_BUS.post(event);
@@ -91,7 +93,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
 
         nbt.setString("Owner", owner.getStringUUID());
         nbt.setByte("Flags", (byte) flags);
-        nbt.setString("Color", EnumNameMap.getEnumName(color.get()));
+        nbt.setString("Color", color.getString());
 
         if(title != null)
         {
@@ -164,7 +166,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     @Override
     public EnumTeamColor getColor()
     {
-        return color.get();
+        return (EnumTeamColor) color.getValue();
     }
 
     public void setColor(EnumTeamColor col)
@@ -380,13 +382,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         }
     }
 
-    public void getSettings(ConfigGroup group)
+    public void getSettings(IConfigTree tree)
     {
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, group));
+        MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, tree));
 
-        group.add("color", color);
+        tree.add(new SimpleConfigKey("color"), color);
 
-        group.add("title", new ConfigEntryString(title == null ? "" : title)
+        tree.add(new SimpleConfigKey("title"), new PropertyString(title == null ? "" : title)
         {
             @Override
             public void set(String v)
@@ -395,13 +397,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             }
 
             @Override
-            public String getAsString()
+            public String getString()
             {
                 return title == null ? "" : title;
             }
         });
 
-        group.add("desc", new ConfigEntryString(desc == null ? "" : desc)
+        tree.add(new SimpleConfigKey("desc"), new PropertyString(desc == null ? "" : desc)
         {
             @Override
             public void set(String v)
@@ -410,13 +412,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             }
 
             @Override
-            public String getAsString()
+            public String getString()
             {
                 return desc == null ? "" : desc;
             }
         });
 
-        group.add("free_to_join", new ConfigEntryBool(false)
+        tree.add(new SimpleConfigKey("free_to_join"), new PropertyBool(false)
         {
             @Override
             public void set(boolean v)
@@ -425,13 +427,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             }
 
             @Override
-            public boolean getAsBoolean()
+            public boolean getBoolean()
             {
                 return getFlag(IForgeTeam.FREE_TO_JOIN);
             }
         });
 
-        group.add("is_hidden", new ConfigEntryBool(false)
+        tree.add(new SimpleConfigKey("is_hidden"), new PropertyBool(false)
         {
             @Override
             public void set(boolean v)
@@ -440,7 +442,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             }
 
             @Override
-            public boolean getAsBoolean()
+            public boolean getBoolean()
             {
                 return getFlag(IForgeTeam.HIDDEN);
             }

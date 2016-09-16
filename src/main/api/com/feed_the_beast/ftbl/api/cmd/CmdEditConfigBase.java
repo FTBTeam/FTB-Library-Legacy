@@ -2,9 +2,12 @@ package com.feed_the_beast.ftbl.api.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.config.ConfigEntry;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.SimpleConfigKey;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,18 +46,18 @@ public abstract class CmdEditConfigBase extends CommandLM
     {
         try
         {
-            Map<String, ConfigEntry> map = getConfigContainer(sender).createGroup().getFullEntryMap();
+            Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).createGroup().getTree();
 
             if(args.length == 1)
             {
-                List<String> keys = new ArrayList<>();
+                List<IConfigKey> keys = new ArrayList<>();
                 keys.addAll(map.keySet());
                 Collections.sort(keys, null);
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)
             {
-                ConfigEntry entry = map.get(args[0]);
+                IConfigValue entry = map.get(new SimpleConfigKey(args[0]));
 
                 if(entry != null)
                 {
@@ -84,7 +87,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             IConfigContainer cc = getConfigContainer(sender);
-            FTBLibAPI_Impl.get().getRegistries().tempServerConfig.put(ep.getGameProfile().getId(), cc);
+            FTBLibRegistries.TEMP_SERVER_CONFIG.put(ep.getGameProfile().getId(), cc);
             new MessageEditConfig(null, cc).sendTo(ep);
             return;
         }
@@ -92,12 +95,15 @@ public abstract class CmdEditConfigBase extends CommandLM
         checkArgs(args, 1, "[ID] [value]");
 
         IConfigContainer cc = getConfigContainer(sender);
-        ConfigEntry entry = cc.createGroup().getEntryFromFullID(args[0]);
+        IConfigKey key = new SimpleConfigKey(args[0]);
+        IConfigTree tree = cc.createGroup();
 
-        if(entry == null)
+        if(!tree.has(key))
         {
             throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //TODO: Lang
         }
+
+        IConfigValue entry = tree.get(key);
 
         if(args.length >= 2)
         {

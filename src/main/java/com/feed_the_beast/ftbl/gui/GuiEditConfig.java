@@ -1,18 +1,15 @@
 package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.config.ConfigEntry;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryColor;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryDouble;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryInt;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryString;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.GuiLang;
-import com.feed_the_beast.ftbl.api.gui.IClickable;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
@@ -22,11 +19,9 @@ import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.LMColor;
 import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMColorUtils;
-import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -40,20 +35,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class GuiEditConfig extends GuiLM
+public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 {
-    public static final Comparator<Map.Entry<String, ConfigEntry>> COMPARATOR = (o1, o2) -> o1.getKey().compareTo(o2.getKey());
+    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) -> o1.getKey().getDisplayName().getUnformattedText().compareTo(o2.getKey().getDisplayName().getUnformattedText());
 
     public class ButtonConfigEntry extends ButtonLM
     {
-        public final String ID;
-        public final ConfigEntry entry;
+        public final IConfigKey key;
+        public final IConfigValue value;
 
-        public ButtonConfigEntry(String id, ConfigEntry e)
+        public ButtonConfigEntry(IConfigKey id, IConfigValue e)
         {
-            super(0, 0, 0, 16, e.getDisplayName() == null ? id : e.getDisplayName().getFormattedText());
-            ID = id;
-            entry = e;
+            super(0, 0, 0, 16, id.getDisplayName().getFormattedText());
+            key = id;
+            value = e;
         }
 
         @Override
@@ -80,7 +75,7 @@ public class GuiEditConfig extends GuiLM
 
             getFont().drawString(getTitle(gui), (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
 
-            String s = entry.getAsString();
+            String s = value.getString();
 
             int slen = getFont().getStringWidth(s);
 
@@ -90,7 +85,7 @@ public class GuiEditConfig extends GuiLM
                 slen = 152;
             }
 
-            int textCol = 0xFF000000 | entry.getColor();
+            int textCol = 0xFF000000 | value.getColor();
             if(mouseOver)
             {
                 textCol = LMColorUtils.addBrightness(textCol, 60);
@@ -109,80 +104,10 @@ public class GuiEditConfig extends GuiLM
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
-            if(getMouseY() >= 20 && !Bits.getFlag(entry.getFlags(), Flags.CANT_EDIT))
+            if(getMouseY() >= 20 && !Bits.getFlag(key.getFlags(), Flags.CANT_EDIT))
             {
                 GuiHelper.playClickSound();
-
-                ConfigEntryType type = entry.getConfigType();
-
-                if(entry instanceof IClickable)
-                {
-                    ((IClickable) entry).onClicked(button);
-                    GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
-                }
-                else
-                {
-                    switch(type)
-                    {
-                        case COLOR:
-                        {
-                            GuiSelectColor.display(null, ((ConfigEntryColor) entry).value, (id, val) ->
-                            {
-                                ((ConfigEntryColor) entry).value.set((LMColor) val);
-                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
-                                GuiEditConfig.this.openGui();
-                            });
-
-                            break;
-                        }
-                        case INT:
-                        {
-                            GuiSelectField.display(null, GuiSelectField.FieldType.INTEGER, entry.getAsInt(), (id, val) ->
-                            {
-                                ((ConfigEntryInt) entry).set((Integer) val);
-                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
-                                GuiEditConfig.this.openGui();
-                            });
-
-                            break;
-                        }
-                        case DOUBLE:
-                        {
-                            GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, entry.getAsDouble(), (id, val) ->
-                            {
-                                ((ConfigEntryDouble) entry).set((Double) val);
-                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
-                                GuiEditConfig.this.openGui();
-                            });
-
-                            break;
-                        }
-                        case STRING:
-                        {
-                            GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getAsString(), (id, val) ->
-                            {
-                                ((ConfigEntryString) entry).set(val.toString());
-                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
-                                GuiEditConfig.this.openGui();
-                            });
-
-                            break;
-                        }
-                        case CUSTOM:
-                        case INT_ARRAY:
-                        case STRING_ARRAY:
-                        {
-                            GuiSelectField.display(null, GuiSelectField.FieldType.STRING, entry.getSerializableElement().toString(), (id, val) ->
-                            {
-                                entry.fromJson(LMJsonUtils.fromJson(val.toString()));
-                                GuiEditConfig.this.onChanged(ID, entry.getSerializableElement());
-                                GuiEditConfig.this.openGui();
-                            });
-
-                            break;
-                        }
-                    }
-                }
+                value.onClicked(GuiEditConfig.this, key, button);
             }
         }
 
@@ -193,31 +118,24 @@ public class GuiEditConfig extends GuiLM
             {
                 if(getMouseX() < getAX() + getFont().getStringWidth(title) + 10)
                 {
-                    String[] info = entry.getInfo();
-
-                    if(info.length > 0)
+                    for(String s : key.getInfo())
                     {
-                        for(String s : info)
-                        {
-                            l.addAll(getFont().listFormattedStringToWidth(s, 230));
-                        }
+                        l.addAll(getFont().listFormattedStringToWidth(s, 230));
                     }
                 }
 
-                if(entry.getAsGroup() == null && getMouseX() > getScreenWidth() - (Math.min(150, getFont().getStringWidth(entry.getAsString())) + 25))
+                if(!(value instanceof IConfigTree) && getMouseX() > getScreenWidth() - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
                 {
-                    String def = entry.getDefValueString();
-                    String min = entry.getMinValueString();
-                    String max = entry.getMaxValueString();
+                    String min = value.getMinValueString();
+                    String max = value.getMaxValueString();
 
-                    if(def != null)
-                    {
-                        l.add(TextFormatting.AQUA + "Def: " + def);
-                    }
+                    l.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
+
                     if(min != null)
                     {
                         l.add(TextFormatting.AQUA + "Min: " + min);
                     }
+
                     if(max != null)
                     {
                         l.add(TextFormatting.AQUA + "Max: " + max);
@@ -251,13 +169,13 @@ public class GuiEditConfig extends GuiLM
 
         configEntryButtons = new ArrayList<>();
 
-        List<Map.Entry<String, ConfigEntry>> list = new ArrayList<>();
-        list.addAll(configContainer.createGroup().getFullEntryMap().entrySet());
+        List<Map.Entry<IConfigKey, IConfigValue>> list = new ArrayList<>();
+        list.addAll(configContainer.createGroup().getTree().entrySet());
         Collections.sort(list, COMPARATOR);
 
-        for(Map.Entry<String, ConfigEntry> entry : list)
+        for(Map.Entry<IConfigKey, IConfigValue> entry : list)
         {
-            if(!Bits.getFlag(entry.getValue().getFlags(), Flags.HIDDEN))
+            if(!Bits.getFlag(entry.getKey().getFlags(), Flags.HIDDEN))
             {
                 configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue().copy()));
             }
@@ -377,9 +295,10 @@ public class GuiEditConfig extends GuiLM
         return false;
     }
 
-    private void onChanged(String id, JsonElement val)
+    @Override
+    public void onChanged(IConfigKey key, JsonElement val)
     {
-        modifiedConfig.add(id, val);
+        modifiedConfig.add(key.getName(), val);
     }
 
     @Override

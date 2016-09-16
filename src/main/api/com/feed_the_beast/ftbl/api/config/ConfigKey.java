@@ -2,16 +2,14 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.latmod.lib.annotations.IInfoContainer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class ConfigKey implements IConfigKey
+public class ConfigKey extends SimpleConfigKey
 {
-    private final String ID;
     private final IConfigValue defValue;
     private ITextComponent displayName;
     private byte flags;
@@ -19,15 +17,9 @@ public class ConfigKey implements IConfigKey
 
     public ConfigKey(String id, IConfigValue def, @Nullable ITextComponent dn)
     {
-        ID = id;
+        super(id);
         defValue = def;
         displayName = dn;
-    }
-
-    @Override
-    public String getName()
-    {
-        return ID;
     }
 
     @Override
@@ -37,9 +29,9 @@ public class ConfigKey implements IConfigKey
     }
 
     @Override
-    public ITextComponent getDisplayName()
+    public ITextComponent getRawDisplayName()
     {
-        return displayName == null ? new TextComponentString(getName()) : displayName;
+        return displayName;
     }
 
     public void setDisplayName(@Nullable ITextComponent c)
@@ -59,6 +51,12 @@ public class ConfigKey implements IConfigKey
         flags = (byte) f;
     }
 
+    public ConfigKey addFlag(int f)
+    {
+        setFlags(getFlags() | f);
+        return this;
+    }
+
     @Override
     public final String[] getInfo()
     {
@@ -71,18 +69,9 @@ public class ConfigKey implements IConfigKey
         info = s;
     }
 
-    public int hashCode()
+    public ConfigKey setKeyInfo(String... s)
     {
-        return ID.hashCode();
-    }
-
-    public String toString()
-    {
-        return ID;
-    }
-
-    public boolean equals(Object o)
-    {
-        return o == this || (o != null && o.toString().equals(ID));
+        setInfo(s);
+        return this;
     }
 }

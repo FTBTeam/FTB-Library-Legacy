@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.google.gson.JsonElement;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.entity.player.EntityPlayer;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,60 +14,45 @@ import java.util.Map;
  */
 public class RankConfigAPI
 {
-    private static final Map<String, RankConfig> map = new HashMap<>();
-    static Handler rankConfigHandler;
+    private static final Map<String, IRankConfig> REGISTRY = new HashMap<>();
+    private static final Map<String, IRankConfig> REGISTRY_PUBLIC = Collections.unmodifiableMap(REGISTRY);
+    private static IRankConfigHandler rankConfigHandler = DefaultRankConfigHandler.INSTANCE;
 
-    public interface Handler
+    public static void setHandler(IRankConfigHandler handler)
     {
-        JsonElement getRankConfig(GameProfile profile, RankConfig config);
-    }
-
-    public static void setHandler(Handler handler)
-    {
-        if(rankConfigHandler != null)
-        {
-            FTBLibMod.logger.warn("Replacing " + rankConfigHandler.getClass().getName() + " with " + handler.getClass().getName());
-        }
-
+        FTBLibMod.logger.warn("Replacing " + rankConfigHandler.getClass().getName() + " with " + handler.getClass().getName());
         rankConfigHandler = handler;
     }
 
-    public static <E extends RankConfig> E register(E rankConfig)
+    public static IRankConfigHandler getHandler()
     {
-        if(map.containsKey(rankConfig.getName()))
-        {
-            throw new RuntimeException("Duplicate RankConfig ID found: " + rankConfig.getName());
-        }
-
-        map.put(rankConfig.getName(), rankConfig);
-        return rankConfig;
+        return rankConfigHandler;
     }
 
-    public static void registerAll(Class<?> c)
+    public static IRankConfig register(String id, IConfigValue defPlayer, IConfigValue defOP, String... description)
     {
-        try
+        if(REGISTRY.containsKey(id))
         {
-            for(Field f : c.getDeclaredFields())
-            {
-                if(RankConfig.class.isAssignableFrom(f.getType()))
-                {
-                    register((RankConfig) f.get(null));
-                }
-            }
+            throw new RuntimeException("Duplicate RankConfig ID found: " + id);
         }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
+
+        IRankConfig c = new RankConfig(id, defPlayer, defOP, description.length == 0 ? null : description);
+        REGISTRY.put(c.getName(), c);
+        return c;
     }
 
-    public static Collection<RankConfig> getRankConfigValues()
+    public static IConfigValue getRankConfig(GameProfile profile, IRankConfig id)
     {
-        return map.values();
+        return rankConfigHandler.getRankConfig(profile, id);
     }
 
-    public static RankConfig getRankConfig(String s)
+    public static IConfigValue getRankConfig(EntityPlayer player, IRankConfig id)
     {
-        return map.get(s);
+        return getRankConfig(player.getGameProfile(), id);
+    }
+
+    public static Map<String, IRankConfig> getRegistredRankConfigs()
+    {
+        return REGISTRY_PUBLIC;
     }
 }

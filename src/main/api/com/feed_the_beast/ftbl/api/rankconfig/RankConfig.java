@@ -1,55 +1,43 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
-import com.feed_the_beast.ftbl.api.config.ConfigEntryType;
-import com.google.gson.JsonElement;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.latmod.lib.FinalIDObject;
-import com.latmod.lib.util.LMServerUtils;
-import com.mojang.authlib.GameProfile;
+import com.latmod.lib.annotations.IInfoContainer;
+
+import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 13.02.2016.
+ * Created by LatvianModder on 15.09.2016.
  */
-public class RankConfig extends FinalIDObject
+class RankConfig extends FinalIDObject implements IRankConfig
 {
-    private JsonElement defaultPlayerValue;
-    private JsonElement defaultOPValue;
+    private final IConfigValue defaultValue, defaultOPValue;
+    private final String[] desc;
 
-    public RankConfig(String id, JsonElement player, JsonElement op)
+    RankConfig(String s, IConfigValue def, IConfigValue defOP, @Nullable String[] d)
     {
-        super(id);
-        setDefaultValue(false, player);
-        setDefaultValue(true, op);
+        super(s);
+        defaultValue = def;
+        defaultOPValue = def.copy(); // To ensure that defOP gets all def properties
+        defaultOPValue.deserializeNBT(defOP.serializeNBT());
+        desc = d;
     }
 
-    public final void setDefaultValue(boolean op, JsonElement value)
+    @Override
+    public IConfigValue getDefaultValue()
     {
-        if(op)
-        {
-            defaultOPValue = value;
-        }
-        else
-        {
-            defaultPlayerValue = value;
-        }
+        return defaultValue;
     }
 
-    public final JsonElement getDefaultValue(boolean op)
+    @Override
+    public IConfigValue getDefaultOPValue()
     {
-        return op ? defaultOPValue : defaultPlayerValue;
+        return defaultOPValue;
     }
 
-    public JsonElement getJson(GameProfile profile)
+    @Override
+    public String[] getDescription()
     {
-        if(RankConfigAPI.rankConfigHandler != null)
-        {
-            return RankConfigAPI.rankConfigHandler.getRankConfig(profile, this);
-        }
-
-        return getDefaultValue(LMServerUtils.isOP(profile));
-    }
-
-    public ConfigEntryType getType()
-    {
-        return ConfigEntryType.CUSTOM;
+        return desc == null ? IInfoContainer.NO_INFO : desc;
     }
 }

@@ -223,7 +223,7 @@ public class LMServerUtils
     public static boolean isOP(@Nullable GameProfile p)
     {
         MinecraftServer ms = getServer();
-        return !ms.isDedicatedServer() || (p != null && p.getId() != null && ms.getPlayerList().getOppedPlayers().getPermissionLevel(p) > 0);
+        return ms != null && p != null && ms.getPlayerList().canSendCommands(p);
     }
 
     public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)

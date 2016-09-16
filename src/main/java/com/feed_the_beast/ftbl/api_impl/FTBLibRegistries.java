@@ -7,16 +7,23 @@ import com.feed_the_beast.ftbl.api.IIntIDRegistry;
 import com.feed_the_beast.ftbl.api.IRegistry;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.ISyncedRegistry;
-import com.feed_the_beast.ftbl.api.config.ConfigEntry;
-import com.feed_the_beast.ftbl.api.config.ConfigEntryBool;
-import com.feed_the_beast.ftbl.api.config.ConfigFile;
-import com.feed_the_beast.ftbl.api.config.ConfigGroup;
+import com.feed_the_beast.ftbl.api.config.ConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
-import com.feed_the_beast.ftbl.api.config.properties.PropertyBool;
-import com.feed_the_beast.ftbl.api.config.properties.PropertyDouble;
-import com.feed_the_beast.ftbl.api.config.properties.PropertyInt;
-import com.feed_the_beast.ftbl.api.config.properties.PropertyString;
+import com.feed_the_beast.ftbl.api.config.IConfigFile;
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.SimpleConfigKey;
+import com.feed_the_beast.ftbl.api.config.impl.ConfigFile;
+import com.feed_the_beast.ftbl.api.config.impl.ConfigTree;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyBool;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyDouble;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyEnumAbstract;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyInt;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyNull;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyString;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyStringEnum;
+import com.feed_the_beast.ftbl.api.config.impl.PropertyStringList;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
@@ -34,10 +41,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -64,16 +73,10 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 
             return i;
         };
-        private ConfigGroup sidebarButtonConfig = new ConfigGroup();
 
         private SidebarButtonRegistry()
         {
             super(true);
-        }
-
-        public ConfigGroup getSidebarButtonConfig()
-        {
-            return sidebarButtonConfig;
         }
 
         @Override
@@ -83,9 +86,8 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 
             if(a.getConfigDefault() != null)
             {
-                ConfigEntryBool entry = new ConfigEntryBool(a.getConfigDefault() == EnumEnabled.ENABLED);
                 //entry.setDisplayName(a.displayName);
-                sidebarButtonConfig.entryMap.put(key.toString(), entry);
+                FTBLibAPI.get().getRegistries().clientConfig().add(new ConfigKey(key.toString(), new PropertyBool(a.getConfigDefault() == EnumEnabled.ENABLED), null));
             }
 
             return a;
@@ -93,8 +95,8 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 
         public boolean enabled(ResourceLocation id)
         {
-            ConfigEntry entry = sidebarButtonConfig.entryMap.get(id.toString());
-            return (entry == null) || entry.getAsBoolean();
+            IConfigKey key = new SimpleConfigKey(id.toString());
+            return !FTBLibAPI.get().getRegistries().clientConfig().has(key) || FTBLibAPI.get().getRegistries().clientConfig().get(key).getBoolean();
         }
 
         public List<Map.Entry<ResourceLocation, ISidebarButton>> getButtons(boolean ignoreConfig)
@@ -121,18 +123,22 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
     }
 
-    public final Map<UUID, IConfigContainer> tempServerConfig = new HashMap<>();
-    private final IRegistry<ResourceLocation, ISyncData> syncedData = new SimpleRegistry<>(false);
-    private final SyncedRegistry<IGuiHandler> guis = new SyncedRegistry<>(true);
-    private final SidebarButtonRegistry sidebarButtons = new SidebarButtonRegistry();
-    private final IRegistry<String, ConfigFile> config = new SimpleRegistry<>(false);
-    private final IntIDRegistry notifications = new IntIDRegistry();
-    private final IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers = new SimpleRegistry<>(true);
-    private final Collection<ITickable> tickables = new ArrayList<>();
-    private final SyncedRegistry<IConfigValueProvider> configValues = new SyncedRegistry<>(false);
+    public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
+    private static final IRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
+    private static final SyncedRegistry<IGuiHandler> GUIS = new SyncedRegistry<>(true);
+    private static final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
+    private static final IConfigTree CONFIG = new ConfigTree();
+    private static final Collection<IConfigFile> CONFIG_FILES = new ArrayList<>();
+    private static final IntIDRegistry NOTIFICATIONS = new IntIDRegistry();
+    private static final IRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
+    private static final Collection<ITickable> TICKABLES = new ArrayList<>();
+    private static final SyncedRegistry<IConfigValue> CONFIG_VALUES = new SyncedRegistry<>(false);
+    private static final IConfigTree CLIENT_CONFIG = new ConfigTree();
+
     //TODO: Make this Thread-safe
-    private final List<ServerTickCallback> callbacks = new ArrayList<>();
-    private final List<ServerTickCallback> pendingCallbacks = new ArrayList<>();
+    private static final List<ServerTickCallback> CALLBACKS = new ArrayList<>();
+    private static final List<ServerTickCallback> PENDING_CALLBACKS = new ArrayList<>();
+    private static final ConfigFile CLIENT_CONFIG_FILE = new ConfigFile();
 
     private class ServerTickCallback
     {
@@ -162,16 +168,9 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
     public final IConfigContainer CONFIG_CONTAINER = new IConfigContainer()
     {
         @Override
-        public ConfigGroup createGroup()
+        public IConfigTree createGroup()
         {
-            ConfigGroup group = new ConfigGroup();
-
-            for(Map.Entry<String, ConfigFile> c : config.getEntrySet())
-            {
-                group.add(c.getKey(), c.getValue());
-            }
-
-            return group;
+            return CONFIG;
         }
 
         @Override
@@ -183,75 +182,118 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         @Override
         public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
-            createGroup().loadFromGroup(json);
-            config.getValues().forEach(ConfigFile::save);
+            CONFIG.fromJson(json);
+            CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).save());
             FTBLibAPI.get().reload(sender, ReloadType.SERVER_ONLY);
         }
     };
 
+    //new ResourceLocation(FTBLibFinals.MOD_ID, "client_config")
+    public final IConfigContainer CLIENT_CONFIG_CONTAINER = new IConfigContainer()
+    {
+        @Override
+        public IConfigTree createGroup()
+        {
+            return CLIENT_CONFIG_FILE;
+        }
+
+        @Override
+        public ITextComponent getConfigTitle()
+        {
+            return new TextComponentString("client_settings"); //TODO: Lang
+        }
+
+        @Override
+        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+        {
+            CLIENT_CONFIG_FILE.fromJson(json);
+            saveClientConfig();
+        }
+    };
+
+    public void saveClientConfig()
+    {
+        if(CLIENT_CONFIG_FILE.getFile() == null)
+        {
+            CLIENT_CONFIG_FILE.setFile(new File(LMUtils.folderLocal, "client/config.json"));
+            CLIENT_CONFIG_FILE.load();
+        }
+
+        CLIENT_CONFIG_FILE.save();
+    }
+
     private FTBLibRegistries()
     {
-        registerSync("guis", guis);
-        registerSync("notifications", notifications);
-        registerSync("config", configValues);
+        registerSync("guis", GUIS);
+        registerSync("notifications", NOTIFICATIONS);
 
-        configValues.register(PropertyBool.Provider.ID, PropertyBool.Provider.INSTANCE);
-        configValues.register(PropertyString.Provider.ID, PropertyString.Provider.INSTANCE);
-        configValues.register(PropertyInt.Provider.ID, PropertyInt.Provider.INSTANCE);
-        configValues.register(PropertyDouble.Provider.ID, PropertyDouble.Provider.INSTANCE);
+        CONFIG_VALUES.register(PropertyNull.ID, PropertyNull.INSTANCE);
+        CONFIG_VALUES.register(ConfigTree.ID, new ConfigTree());
+        CONFIG_VALUES.register(PropertyBool.ID, new PropertyBool(false));
+        CONFIG_VALUES.register(PropertyString.ID, new PropertyString(""));
+        CONFIG_VALUES.register(PropertyInt.ID, new PropertyInt(0));
+        CONFIG_VALUES.register(PropertyDouble.ID, new PropertyDouble(0D));
+        CONFIG_VALUES.register(PropertyStringList.ID, new PropertyStringList(Collections.emptyList()));
+        CONFIG_VALUES.register(PropertyEnumAbstract.ID, new PropertyStringEnum(Collections.emptyList(), ""));
     }
 
     private void registerSync(String id, ISyncData data)
     {
-        syncedData.register(new ResourceLocation(FTBLibFinals.MOD_ID, id), data);
+        SYNCED_DATA.register(new ResourceLocation(FTBLibFinals.MOD_ID, id), data);
     }
 
     @Override
     public IRegistry<ResourceLocation, ISyncData> syncedData()
     {
-        return syncedData;
+        return SYNCED_DATA;
     }
 
     @Override
     public ISyncedRegistry<IGuiHandler> guis()
     {
-        return guis;
+        return GUIS;
     }
 
     @Override
     public SidebarButtonRegistry sidebarButtons()
     {
-        return sidebarButtons;
+        return SIDEBAR_BUTTONS;
     }
 
     @Override
-    public IRegistry<String, ConfigFile> configFiles()
+    public void registerConfigFile(String id, IConfigFile file, @Nonnull ITextComponent displayName)
     {
-        return config;
+
+    }
+
+    @Override
+    public Collection<IConfigFile> getRegistredConfigFiles()
+    {
+        return CONFIG_FILES;
     }
 
     @Override
     public IIntIDRegistry notifications()
     {
-        return notifications;
+        return NOTIFICATIONS;
     }
 
     @Override
     public IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers()
     {
-        return recipeHandlers;
+        return RECIPE_HANDLERS;
     }
 
     @Override
     public Collection<ITickable> tickables()
     {
-        return tickables;
+        return TICKABLES;
     }
 
     @Override
-    public ISyncedRegistry<IConfigValueProvider> configValues()
+    public ISyncedRegistry<IConfigValue> configValues()
     {
-        return configValues;
+        return CONFIG_VALUES;
     }
 
     void addServerCallback(int timer, Runnable runnable)
@@ -262,34 +304,37 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
         else
         {
-            pendingCallbacks.add(new ServerTickCallback(timer, runnable));
+            PENDING_CALLBACKS.add(new ServerTickCallback(timer, runnable));
         }
+    }
+
+    @Override
+    public IConfigTree clientConfig()
+    {
+        return CLIENT_CONFIG;
     }
 
     @Override
     public void update()
     {
-        if(!tickables.isEmpty())
+        if(!TICKABLES.isEmpty())
         {
-            for(ITickable t : tickables)
-            {
-                t.update();
-            }
+            TICKABLES.forEach(ITickable::update);
         }
 
-        if(!pendingCallbacks.isEmpty())
+        if(!PENDING_CALLBACKS.isEmpty())
         {
-            callbacks.addAll(pendingCallbacks);
-            pendingCallbacks.clear();
+            CALLBACKS.addAll(PENDING_CALLBACKS);
+            PENDING_CALLBACKS.clear();
         }
 
-        if(!callbacks.isEmpty())
+        if(!CALLBACKS.isEmpty())
         {
-            for(int i = callbacks.size() - 1; i >= 0; i--)
+            for(int i = CALLBACKS.size() - 1; i >= 0; i--)
             {
-                if(callbacks.get(i).incAndCheck())
+                if(CALLBACKS.get(i).incAndCheck())
                 {
-                    callbacks.remove(i);
+                    CALLBACKS.remove(i);
                 }
             }
         }
@@ -297,26 +342,16 @@ public class FTBLibRegistries implements IFTBLibRegistries, ITickable
 
     public void reloadConfig()
     {
-        config.getValues().forEach(ConfigFile::load);
+        CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).load());
 
         LMUtils.DEV_LOGGER.info("Loading override configs");
         JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
 
         if(overridesE.isJsonObject())
         {
-            int result = CONFIG_CONTAINER.createGroup().loadFromGroup(overridesE.getAsJsonObject());
-
-            if(result > 0)
-            {
-                LMUtils.DEV_LOGGER.info("Loaded " + result + " config overrides");
-
-                for(ConfigFile f : config.getValues())
-                {
-                    f.save();
-                }
-            }
+            CONFIG_CONTAINER.createGroup().fromJson(overridesE.getAsJsonObject());
         }
 
-        config.getValues().forEach(ConfigFile::save);
+        CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).save());
     }
 }

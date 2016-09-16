@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.Notification;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
-import com.feed_the_beast.ftbl.client.FTBLibModClient;
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -89,7 +89,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     @Override
     public void onMessage(MessageNotifyPlayer m)
     {
-        EnumNotificationDisplay display = FTBLibModClient.notifications.get();
+        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.get();
 
         if(display == EnumNotificationDisplay.OFF)
         {
