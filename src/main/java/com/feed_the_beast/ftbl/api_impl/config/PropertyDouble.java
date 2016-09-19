@@ -1,8 +1,9 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiSelectField;
@@ -12,7 +13,6 @@ import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -24,7 +24,10 @@ import java.io.IOException;
  */
 public class PropertyDouble extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "double");
+    public static final String ID = "double";
+
+    @ConfigValueProvider(ID)
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyDouble(0D);
 
     private double value;
     private double min = Double.MIN_VALUE;
@@ -43,7 +46,7 @@ public class PropertyDouble extends PropertyBase
     }
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }

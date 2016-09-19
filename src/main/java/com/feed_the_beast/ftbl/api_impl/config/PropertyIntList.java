@@ -1,14 +1,14 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonElement;
 import com.latmod.lib.util.LMJsonUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagIntArray;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -22,7 +22,10 @@ import java.util.List;
  */
 public class PropertyIntList extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "string_list");
+    public static final String ID = "int_list";
+
+    @ConfigValueProvider(ID)
+    public static final IConfigValueProvider PROVIDER = PropertyIntList::new;
 
     private TIntList value;
 
@@ -37,7 +40,7 @@ public class PropertyIntList extends PropertyBase
     }
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }

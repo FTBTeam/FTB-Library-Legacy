@@ -1,11 +1,9 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -17,10 +15,10 @@ import java.io.IOException;
  */
 public abstract class PropertyCustom extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "custom");
+    public static final String ID = "custom";
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }

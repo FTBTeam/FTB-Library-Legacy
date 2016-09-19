@@ -12,5 +12,5 @@ public interface IRankConfig extends IStringSerializable
 
     IConfigValue getDefaultOPValue();
 
-    String[] getDescription();
+    String getDescription();
 }

@@ -1,13 +1,11 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.EnumNameMap;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -19,10 +17,10 @@ import java.io.IOException;
  */
 public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "enum");
+    public static final String ID = "enum";
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }

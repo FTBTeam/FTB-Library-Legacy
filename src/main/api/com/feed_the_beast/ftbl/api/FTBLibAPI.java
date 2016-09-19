@@ -28,6 +28,8 @@ public abstract class FTBLibAPI
 
     public abstract boolean hasServer();
 
+    public abstract IConfigManager configManager();
+
     public abstract IFTBLibRegistries getRegistries();
 
     public abstract IPackModes getPackModes();

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISyncedRegistry;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -12,18 +11,18 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 16.08.2016.
  */
-public class SyncedRegistry<V> extends SimpleRegistry<ResourceLocation, V> implements ISyncedRegistry<V>, INBTSerializable<NBTTagCompound>
+public class SyncedRegistry<K, V> extends SimpleRegistry<K, V> implements ISyncedRegistry<K, V>, INBTSerializable<NBTTagCompound>
 {
-    private final IntIDRegistry intIDs;
+    private final AbstractIntIDRegistry<K> intIDs;
 
-    public SyncedRegistry(boolean overrides)
+    public SyncedRegistry(AbstractIntIDRegistry<K> r, boolean overrides)
     {
         super(overrides);
-        intIDs = new IntIDRegistry();
+        intIDs = r;
     }
 
     @Override
-    public V register(ResourceLocation key, V v)
+    public V register(K key, V v)
     {
         V v1 = super.register(key, v);
 
@@ -37,19 +36,19 @@ public class SyncedRegistry<V> extends SimpleRegistry<ResourceLocation, V> imple
 
     @Nullable
     @Override
-    public ResourceLocation getKeyFromID(int numID)
+    public K getKeyFromID(int numID)
     {
         return intIDs.getKeyFromID(numID);
     }
 
     @Override
-    public int getIDFromKey(ResourceLocation key)
+    public int getIDFromKey(K key)
     {
         return intIDs.getIDFromKey(key);
     }
 
     @Override
-    public int getOrCreateIDFromKey(ResourceLocation key)
+    public int getOrCreateIDFromKey(K key)
     {
         return intIDs.getOrCreateIDFromKey(key);
     }

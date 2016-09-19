@@ -3,10 +3,13 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IConfigManager;
+import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
@@ -60,7 +63,13 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     }
 
     @Override
-    public FTBLibRegistries getRegistries()
+    public IConfigManager configManager()
+    {
+        return ConfigManager.INSTANCE;
+    }
+
+    @Override
+    public IFTBLibRegistries getRegistries()
     {
         return FTBLibRegistries.INSTANCE;
     }
@@ -109,7 +118,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     @Override
     public void addServerCallback(int timer, Runnable runnable)
     {
-        getRegistries().addServerCallback(timer, runnable);
+        FTBLibRegistries.INSTANCE.addServerCallback(timer, runnable);
     }
 
     @Override
@@ -129,7 +138,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
 
         if(type.reload(Side.SERVER))
         {
-            FTBLibRegistries.INSTANCE.reloadConfig();
+            ConfigManager.INSTANCE.reloadConfig();
             reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
         }

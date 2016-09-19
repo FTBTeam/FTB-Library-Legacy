@@ -2,9 +2,6 @@ package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.latmod.lib.FinalIDObject;
-import com.latmod.lib.annotations.IInfoContainer;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 15.09.2016.
@@ -12,9 +9,9 @@ import javax.annotation.Nullable;
 class RankConfig extends FinalIDObject implements IRankConfig
 {
     private final IConfigValue defaultValue, defaultOPValue;
-    private final String[] desc;
+    private final String desc;
 
-    RankConfig(String s, IConfigValue def, IConfigValue defOP, @Nullable String[] d)
+    RankConfig(String s, IConfigValue def, IConfigValue defOP, String d)
     {
         super(s);
         defaultValue = def;
@@ -36,8 +33,8 @@ class RankConfig extends FinalIDObject implements IRankConfig
     }
 
     @Override
-    public String[] getDescription()
+    public String getDescription()
     {
-        return desc == null ? IInfoContainer.NO_INFO : desc;
+        return desc;
     }
 }

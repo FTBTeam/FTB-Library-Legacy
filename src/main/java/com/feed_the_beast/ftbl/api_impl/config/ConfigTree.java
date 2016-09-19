@@ -1,15 +1,14 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.config.ConfigKey;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -23,7 +22,13 @@ import java.util.Map;
  */
 public class ConfigTree extends PropertyBase implements IConfigTree
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "tree");
+    public static final String ID = "tree";
+
+    @ConfigValueProvider(ID)
+    public static final IConfigValueProvider PROVIDER = ConfigTree::new;
+
+    private static final int HAS_DISPLAY_NAME = 1;
+    private static final int HAS_INFO = 2;
 
     private final Map<IConfigKey, IConfigValue> tree = new HashMap<>();
 
@@ -34,7 +39,7 @@ public class ConfigTree extends PropertyBase implements IConfigTree
     }
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }
@@ -49,11 +54,13 @@ public class ConfigTree extends PropertyBase implements IConfigTree
     @Override
     public void writeData(DataOutput data, boolean extended) throws IOException
     {
+        //FIXME
     }
 
     @Override
     public void readData(DataInput data, boolean extended) throws IOException
     {
+        //FIXME
     }
 
     @Override
@@ -105,7 +112,7 @@ public class ConfigTree extends PropertyBase implements IConfigTree
 
         for(Map.Entry<String, JsonElement> entry : o.entrySet())
         {
-            get(new ConfigKey(entry.getKey(), PropertyNull.INSTANCE, null)).fromJson(entry.getValue());
+            get(new SimpleConfigKey(entry.getKey())).fromJson(entry.getValue());
         }
     }
 

@@ -1,45 +1,50 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiSelectField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.EnumNameMap;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyString extends PropertyBase
+public class PropertyStringEnum extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "string");
+    @ConfigValueProvider(PropertyEnumAbstract.ID)
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringEnum(Collections.emptyList(), "");
 
+    private List<String> keys;
     private String value;
 
-    public PropertyString(String v)
+    public PropertyStringEnum(List<String> k, String v)
     {
+        keys = k;
         value = v;
     }
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
-        return ID;
+        return PropertyEnumAbstract.ID;
     }
 
     @Nullable
     @Override
-    public Object getValue()
+    public String getValue()
     {
         return getString();
     }
@@ -52,13 +57,35 @@ public class PropertyString extends PropertyBase
     @Override
     public void writeData(DataOutput data, boolean extended) throws IOException
     {
-        data.writeUTF(getString());
+        if(extended)
+        {
+            data.writeShort(keys.size());
+
+            for(String s : keys)
+            {
+                data.writeUTF(s);
+            }
+        }
+
+        data.writeShort(getInt());
     }
 
     @Override
     public void readData(DataInput data, boolean extended) throws IOException
     {
-        set(data.readUTF());
+        if(extended)
+        {
+            keys.clear();
+
+            int s = data.readShort() & 0xFFFF;
+
+            for(int i = 0; i < s; i++)
+            {
+                keys.add(data.readUTF());
+            }
+        }
+
+        value = keys.get(data.readShort() & 0xFFFF);
     }
 
     @Override
@@ -70,36 +97,30 @@ public class PropertyString extends PropertyBase
     @Override
     public boolean getBoolean()
     {
-        return getString().equals("true");
+        return !value.equals(EnumNameMap.NULL_VALUE);
     }
 
     @Override
     public int getInt()
     {
-        return Integer.parseInt(getString());
+        return keys.indexOf(value);
     }
 
     @Override
     public IConfigValue copy()
     {
-        return new PropertyString(getString());
+        return new PropertyStringEnum(keys, getString());
     }
 
     @Override
     public int getColor()
     {
-        return 0xFFAA49;
+        return 0x0094FF;
     }
 
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectField.display(null, GuiSelectField.FieldType.STRING, getString(), (id, val) ->
-        {
-            set(val.toString());
-            gui.onChanged(key, getSerializableElement());
-            gui.openGui();
-        });
     }
 
     @Override

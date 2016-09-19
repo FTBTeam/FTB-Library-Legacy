@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.latmod.lib.io.IExtendedIOObject;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.IJsonSerializable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -15,7 +14,7 @@ import java.util.List;
  */
 public interface IConfigValue extends IExtendedIOObject, INBTSerializable<NBTBase>, IJsonSerializable
 {
-    ResourceLocation getID();
+    String getID();
 
     @Nullable
     Object getValue();

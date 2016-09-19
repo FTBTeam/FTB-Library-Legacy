@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.security;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.FTBLibCaps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -81,13 +81,13 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
     @Override
     public NBTBase serializeNBT()
     {
-        return ISecureStorage.INSTANCE.writeNBT(FTBLibCapabilities.SECURE, this, null);
+        return ISecureStorage.INSTANCE.writeNBT(FTBLibCaps.SECURE, this, null);
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        ISecureStorage.INSTANCE.readNBT(FTBLibCapabilities.SECURE, this, null, nbt);
+        ISecureStorage.INSTANCE.readNBT(FTBLibCaps.SECURE, this, null, nbt);
     }
 
     public boolean isOwner(@Nullable Object o)

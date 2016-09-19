@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import net.minecraft.nbt.NBTBase;
 
-import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -33,11 +32,6 @@ public enum EmptyConfigTree implements IConfigTree
     }
 
     @Override
-    public void add(IConfigKey key)
-    {
-    }
-
-    @Override
     public boolean has(IConfigKey key)
     {
         return false;
@@ -58,11 +52,6 @@ public enum EmptyConfigTree implements IConfigTree
     public boolean isEmpty()
     {
         return true;
-    }
-
-    @Override
-    public void addAll(String id, Class<?> clazz, @Nullable Object obj)
-    {
     }
 
     @Override

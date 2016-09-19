@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info.impl;
 
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
-import com.feed_the_beast.ftbl.gui.InfoClientSettings;
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -44,7 +44,7 @@ public final class InfoPageTheme implements IInfoPageTheme
     @Override
     public boolean getUseUnicodeFont()
     {
-        return useUnicodeFont == null ? InfoClientSettings.UNICODE.getBoolean() : useUnicodeFont;
+        return useUnicodeFont == null ? FTBLibClientConfig.INFO_UNICODE.getBoolean() : useUnicodeFont;
     }
 
     @Override

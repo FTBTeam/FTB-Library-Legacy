@@ -29,14 +29,14 @@ public class RankConfigAPI
         return rankConfigHandler;
     }
 
-    public static IRankConfig register(String id, IConfigValue defPlayer, IConfigValue defOP, String... description)
+    public static IRankConfig register(String id, IConfigValue defPlayer, IConfigValue defOP, String description)
     {
         if(REGISTRY.containsKey(id))
         {
             throw new RuntimeException("Duplicate RankConfig ID found: " + id);
         }
 
-        IRankConfig c = new RankConfig(id, defPlayer, defOP, description.length == 0 ? null : description);
+        IRankConfig c = new RankConfig(id, defPlayer, defOP, description);
         REGISTRY.put(c.getName(), c);
         return c;
     }

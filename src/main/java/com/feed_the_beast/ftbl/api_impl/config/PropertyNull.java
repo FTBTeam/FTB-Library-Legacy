@@ -1,14 +1,14 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -23,10 +23,13 @@ public enum PropertyNull implements IConfigValue
 {
     INSTANCE;
 
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "null");
+    public static final String ID = "null";
+
+    @ConfigValueProvider(ID)
+    public static final IConfigValueProvider PROVIDER = () -> INSTANCE;
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }

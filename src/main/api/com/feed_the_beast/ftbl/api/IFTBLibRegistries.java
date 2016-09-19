@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
@@ -20,21 +18,15 @@ public interface IFTBLibRegistries
 {
     IRegistry<ResourceLocation, ISyncData> syncedData();
 
-    ISyncedRegistry<IGuiHandler> guis();
+    ISyncedRegistry<ResourceLocation, IGuiHandler> guis();
 
     IRegistry<ResourceLocation, ISidebarButton> sidebarButtons();
 
     void registerConfigFile(String id, IConfigFile file, @Nonnull ITextComponent displayName);
 
-    Collection<IConfigFile> getRegistredConfigFiles();
-
-    IIntIDRegistry notifications();
+    IIntIDRegistry<ResourceLocation> notifications();
 
     IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers();
 
     Collection<ITickable> tickables();
-
-    ISyncedRegistry<IConfigValue> configValues();
-
-    IConfigTree clientConfig();
 }

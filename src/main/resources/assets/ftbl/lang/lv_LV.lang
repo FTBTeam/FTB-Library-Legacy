@@ -61,70 +61,70 @@ ftbl.lang.my_permissions=Manas Atkļaujas
 ftbl.lang.difficulty=Grūtība: %s
 
 # Teams
-ftbl.lang.team.config='%s' team config
-ftbl.lang.team.created=Team '%s' created
-ftbl.lang.team.deleted=Team '%s' deleted
-ftbl.lang.team.member_left=%s left your team!
-ftbl.lang.team.member_joined=%s joined your team!
-ftbl.lang.team.transfered_ownership=New owner now is %s
-ftbl.lang.team.invited=Invited %s to '%s'
-ftbl.lang.team.invited_you=You have been invited to '%s' by %s
-ftbl.lang.team.cancel_invite=Cancel invite
-ftbl.lang.team.error.not_found=Team '%s' not found!
-ftbl.lang.team.error.no_team=You must be in a Team to do that!
-ftbl.lang.team.error.must_leave=You must leave your Team to do that!
-ftbl.lang.team.error.not_owner=You are not the owner of this Team!
-ftbl.lang.team.error.not_member=%s is not a member of this Team!
-ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
-ftbl.lang.team.error.already_invited=%s already is invited!
-ftbl.lang.team.error.failed_to_join=Can't join this team!
+ftbl.lang.team.config='%s' komandas uzstādījumi
+ftbl.lang.team.created=Komanda '%s' izveidota
+ftbl.lang.team.deleted=Komanda '%s' izdzēsta
+ftbl.lang.team.member_left=%s pameta tavu komandu!
+ftbl.lang.team.member_joined=%s pievienojās tavai komandai!
+ftbl.lang.team.transfered_ownership=Jaunais īpašnieks tagad ir %s
+ftbl.lang.team.invited=%s ielūgts uz '%s'
+ftbl.lang.team.invited_you=Tevi ielūdza uz komandu '%s' %s
+ftbl.lang.team.cancel_invite=Atcelt ielūgumu
+ftbl.lang.team.error.not_found=Komanda '%s' nav atrasta!
+ftbl.lang.team.error.no_team=Tev jābūt Komandā lai to darītu!
+ftbl.lang.team.error.must_leave=Tev jāpamet sava komanda lai to darītu!
+ftbl.lang.team.error.not_owner=Tu neesi šīs komandas īpašnieks!
+ftbl.lang.team.error.not_member=%s nav šīs komandas biedrs!
+ftbl.lang.team.error.must_transfer_ownership=Tev jāatdod īpašnieka tiesības!
+ftbl.lang.team.error.already_invited=%s jau ir ielūgts!
+ftbl.lang.team.error.failed_to_join=Nevar pievienoties šai komandai!
 
-ftbl.lang.team_color.blue=Blue
-ftbl.lang.team_color.cyan=Cyan
-ftbl.lang.team_color.green=Green
-ftbl.lang.team_color.yellow=Yellow
-ftbl.lang.team_color.orange=Orange
-ftbl.lang.team_color.red=Red
-ftbl.lang.team_color.pink=Pink
-ftbl.lang.team_color.magenta=Magenta
-ftbl.lang.team_color.purple=Purple
-ftbl.lang.team_color.gray=Gray
+ftbl.lang.team_color.blue=Zils
+ftbl.lang.team_color.cyan=Ciānzils
+ftbl.lang.team_color.green=Zaļš
+ftbl.lang.team_color.yellow=Dzeltens
+ftbl.lang.team_color.orange=Oranžs
+ftbl.lang.team_color.red=Sarkans
+ftbl.lang.team_color.pink=Rozā
+ftbl.lang.team_color.magenta=Fuksīns
+ftbl.lang.team_color.purple=Violēts
+ftbl.lang.team_color.gray=Pelēks
 
 # Action Buttons
-sidebar_button.ftbl:settings=Client Settings
-sidebar_button.ftbl:my_server_settings=My Server Settings
-sidebar_button.ftbl:notifications=Notifications
-sidebar_button.ftbl:toggle_gamemode=Toggle Gamemode
-sidebar_button.ftbl:toggle_rain=Toggle Rain
-sidebar_button.ftbl:set_day=Set time to Day
-sidebar_button.ftbl:set_night=Set time to Night
-sidebar_button.ftbl:heal=Heal
-player_action.ftbl:team_invite=Invate To My Team
-player_action.ftbl:team_deny_invite=Deny Invite
+sidebar_button.ftbl:settings=Klienta Uzstādījumi
+sidebar_button.ftbl:my_server_settings=Mani Servera Uzstādījumi
+sidebar_button.ftbl:notifications=Paziņojumi
+sidebar_button.ftbl:toggle_gamemode=Mainīt Spēles Režīmu
+sidebar_button.ftbl:toggle_rain=Pārslēgt Lietu
+sidebar_button.ftbl:set_day=Uzstādīt Dienu
+sidebar_button.ftbl:set_night=Uzstādīt Nakti
+sidebar_button.ftbl:heal=Sadziedēt
+player_action.ftbl:team_invite=Ielūgt Manā Komandā
+player_action.ftbl:team_deny_invite=Noraidīt Ielūgmu
 
 # Privacy Level
-ftbl.privacy=Privacy
-ftbl.privacy.public=Public
-ftbl.privacy.private=Private
-ftbl.privacy.team=Team
+ftbl.privacy=Privātums
+ftbl.privacy.public=Publisks
+ftbl.privacy.private=Privāts
+ftbl.privacy.team=Komandai
 
 # Redstone Mode
-ftbl.redstonemode=Redstone Mode
-ftbl.redstonemode.disabled=Disabled
-ftbl.redstonemode.active_high=Active High
-ftbl.redstonemode.active_low=Active Low
-ftbl.redstonemode.pulse=Pulse
+ftbl.redstonemode=Sarkanakmens Režīms
+ftbl.redstonemode.disabled=Atslēgts
+ftbl.redstonemode.active_high=Aktīvs Ieslēgts
+ftbl.redstonemode.active_low=Aktīvs Izslēgts
+ftbl.redstonemode.pulse=Pulss
 
 # Inventory Mode
-ftbl.invmode=Inventory Mode
+ftbl.invmode=Inventāra Režīms
 ftbl.invmode.io=IO
-ftbl.invmode.in=Insert Only
-ftbl.invmode.out=Extract Only
-ftbl.invmode.none=Disabled
+ftbl.invmode.in=Tikai Ielikt
+ftbl.invmode.out=Tikai Izņemt
+ftbl.invmode.none=Atslēgts
 
 # Click Actions
-click_action.cmd=Command
-click_action.show_cmd=Show Command
-click_action.url=Open URL
-click_action.file=Open File
-click_action.gui=Open Gui
+click_action.cmd=Komanda
+click_action.show_cmd=Parādīt Komandu
+click_action.url=Atvērt URL
+click_action.file=Atvērt Failu
+click_action.gui=Atvērt GUI

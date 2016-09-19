@@ -20,6 +20,7 @@ import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.latmod.lib.TextureCoords;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -248,8 +249,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void onInit()
     {
-        posX = InfoClientSettings.BORDER_WIDTH.getInt();
-        posY = InfoClientSettings.BORDER_HEIGHT.getInt();
+        posX = FTBLibClientConfig.INFO_BORDER_WIDTH.getInt();
+        posY = FTBLibClientConfig.INFO_BORDER_HEIGHT.getInt();
         int width = getScreenWidth() - posX * 2;
         int height = getScreenHeight() - posY * 2;
         setWidth(width);

@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbl.api.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.SimpleConfigKey;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.config.SimpleConfigKey;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -87,7 +87,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         {
             EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
             IConfigContainer cc = getConfigContainer(sender);
-            FTBLibRegistries.TEMP_SERVER_CONFIG.put(ep.getGameProfile().getId(), cc);
+            FTBLibAPI.get().configManager().getTempConfig().put(ep.getGameProfile().getId(), cc);
             new MessageEditConfig(null, cc).sendTo(ep);
             return;
         }

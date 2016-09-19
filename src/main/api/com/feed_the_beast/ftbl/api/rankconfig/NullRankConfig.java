@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.impl.PropertyNull;
-import com.latmod.lib.annotations.IInfoContainer;
+import com.feed_the_beast.ftbl.api_impl.config.PropertyNull;
 
 /**
  * Created by LatvianModder on 15.09.2016.
@@ -24,9 +23,9 @@ public enum NullRankConfig implements IRankConfig
     }
 
     @Override
-    public String[] getDescription()
+    public String getDescription()
     {
-        return IInfoContainer.NO_INFO;
+        return "";
     }
 
     @Override

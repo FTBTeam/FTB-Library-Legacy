@@ -1,14 +1,14 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.ResourceLocation;
 import scala.actors.threadpool.*;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,10 @@ import java.util.List;
  */
 public class PropertyStringList extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "string_list");
+    public static final String ID = "string_list";
+
+    @ConfigValueProvider(ID)
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(Collections.emptyList());
 
     private List<String> value;
 
@@ -39,7 +42,7 @@ public class PropertyStringList extends PropertyBase
     }
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }

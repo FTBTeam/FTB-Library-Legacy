@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.gui.InfoClientSettings;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
@@ -33,8 +31,6 @@ public class FTBLibModClient extends FTBLibModCommon
             LMUtils.userIsLatvianModder = true;
         }
 
-        FTBLibAPI.get().getRegistries().clientConfig().addAll("ftbl", FTBLibClientConfig.class, null);
-        FTBLibAPI.get().getRegistries().clientConfig().addAll("ftbl.info", InfoClientSettings.class, null);
         FTBLibActions.init();
 
         ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new FTBLibColors());
@@ -43,7 +39,7 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void postInit()
     {
-        FTBLibAPI_Impl.get().getRegistries().saveClientConfig();
+        ConfigManager.INSTANCE.saveClientConfig();
     }
 
     @Override

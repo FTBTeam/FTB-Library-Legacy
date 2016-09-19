@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.impl.ConfigTree;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigTree;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.google.gson.JsonObject;
 import com.latmod.lib.io.ByteIOStream;

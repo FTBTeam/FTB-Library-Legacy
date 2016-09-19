@@ -43,7 +43,7 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         this(ReloadType.LOGIN);
 
-        configIDs = FTBLibAPI.get().getRegistries().configValues().writeSyncData(player, forgePlayer);
+        configIDs = FTBLibAPI.get().configManager().configValues().writeSyncData(player, forgePlayer);
 
         syncData = new NBTTagCompound();
 
@@ -102,7 +102,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         if(type == ReloadType.LOGIN)
         {
-            FTBLibAPI.get().getRegistries().configValues().readSyncData(m.configIDs);
+            FTBLibAPI.get().configManager().configValues().readSyncData(m.configIDs);
         }
 
         FTBLibAPI.get().getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);

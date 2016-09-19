@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.item.ODItems;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.latmod.lib.util.LMUtils;
@@ -219,7 +218,7 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<Map.Entry<ResourceLocation, ISidebarButton>> buttons = FTBLibAPI_Impl.get().getRegistries().sidebarButtons().getButtons(false);
+            List<Map.Entry<ResourceLocation, ISidebarButton>> buttons = FTBLibRegistries.INSTANCE.sidebarButtons().getButtons(false);
 
             if(!buttons.isEmpty())
             {

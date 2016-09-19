@@ -1,39 +1,43 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiSelectColor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyColor extends PropertyBase
+public class PropertyBool extends PropertyBase
 {
-    public static final ResourceLocation ID = new ResourceLocation(FTBLibFinals.MOD_ID, "color");
+    public static final String ID = "bool";
 
-    private byte value;
+    @ConfigValueProvider(ID)
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyBool(false);
 
-    public PropertyColor(byte v)
+    private boolean value;
+
+    public PropertyBool(boolean v)
     {
         value = v;
     }
 
     @Override
-    public ResourceLocation getID()
+    public String getID()
     {
         return ID;
     }
@@ -42,93 +46,95 @@ public class PropertyColor extends PropertyBase
     @Override
     public Object getValue()
     {
-        return getColorID();
+        return getBoolean();
     }
 
-    public void set(byte v)
+    public void set(boolean v)
     {
         value = v;
-    }
-
-    public byte getColorID()
-    {
-        return value;
     }
 
     @Override
     public void writeData(DataOutput data, boolean extended) throws IOException
     {
-        data.writeByte(getColorID());
+        data.writeBoolean(getBoolean());
     }
 
     @Override
     public void readData(DataInput data, boolean extended) throws IOException
     {
-        set(data.readByte());
+        set(data.readBoolean());
     }
 
     @Override
     public String getString()
     {
-        return Integer.toString(getColorID());
+        return value ? "true" : "false";
     }
 
     @Override
     public boolean getBoolean()
     {
-        return getColorID() != 0;
+        return value;
     }
 
     @Override
     public int getInt()
     {
-        return getColorID();
+        return getBoolean() ? 1 : 0;
     }
 
     @Override
     public IConfigValue copy()
     {
-        return new PropertyColor(getColorID());
+        return new PropertyBool(getBoolean());
+    }
+
+    @Override
+    public boolean equalsValue(IConfigValue value)
+    {
+        return getBoolean() == value.getBoolean();
     }
 
     @Override
     public int getColor()
     {
-        return 0xAA5AE8;
+        return getBoolean() ? 0x33AA33 : 0xD52834;
+    }
+
+    @Override
+    public List<String> getVariants()
+    {
+        return Arrays.asList("true", "false");
     }
 
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        new GuiSelectColor(null, getColorID(), (id, val) ->
-        {
-            set((Byte) val);
-            gui.onChanged(key, getSerializableElement());
-            gui.openGui();
-        }).openGui();
+        set(!getBoolean());
     }
 
     @Override
     public NBTBase serializeNBT()
     {
-        return new NBTTagByte(getColorID());
+        return new NBTTagByte(getBoolean() ? (byte) 1 : 0);
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        set(((NBTPrimitive) nbt).getByte());
+        set(((NBTPrimitive) nbt).getByte() != 0);
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        set(json.getAsByte());
+        set(json.getAsBoolean());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        return new JsonPrimitive(getColorID());
+        return new JsonPrimitive(getBoolean());
     }
 }

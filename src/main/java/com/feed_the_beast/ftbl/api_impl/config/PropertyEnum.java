@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.config.impl;
+package com.feed_the_beast.ftbl.api_impl.config;
 
 import com.latmod.lib.EnumNameMap;
 

@@ -19,7 +19,6 @@ import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.annotations.Flags;
 import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -37,7 +36,7 @@ import java.util.Map;
 
 public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 {
-    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) -> o1.getKey().getDisplayName().getUnformattedText().compareTo(o2.getKey().getDisplayName().getUnformattedText());
+    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) -> o1.getKey().getDisplayName().getFormattedText().compareTo(o2.getKey().getDisplayName().getFormattedText());
 
     public class ButtonConfigEntry extends ButtonLM
     {
@@ -104,7 +103,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
-            if(getMouseY() >= 20 && !Bits.getFlag(key.getFlags(), Flags.CANT_EDIT))
+            if(getMouseY() >= 20 && !Bits.getFlag(key.getFlags(), IConfigKey.CANT_EDIT))
             {
                 GuiHelper.playClickSound();
                 value.onClicked(GuiEditConfig.this, key, button);
@@ -118,9 +117,11 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             {
                 if(getMouseX() < getAX() + getFont().getStringWidth(title) + 10)
                 {
-                    for(String s : key.getInfo())
+                    String info = key.getInfo();
+
+                    if(!info.isEmpty())
                     {
-                        l.addAll(getFont().listFormattedStringToWidth(s, 230));
+                        l.addAll(getFont().listFormattedStringToWidth(info, 230));
                     }
                 }
 
@@ -175,7 +176,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
         for(Map.Entry<IConfigKey, IConfigValue> entry : list)
         {
-            if(!Bits.getFlag(entry.getKey().getFlags(), Flags.HIDDEN))
+            if(!Bits.getFlag(entry.getKey().getFlags(), IConfigKey.HIDDEN))
             {
                 configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue().copy()));
             }

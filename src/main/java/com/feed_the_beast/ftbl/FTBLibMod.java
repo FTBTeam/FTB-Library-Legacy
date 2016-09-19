@@ -1,19 +1,19 @@
 package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.FTBLibCapabilities;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.FTBLibCaps;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMUtils;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ITickable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -25,14 +25,11 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
@@ -59,15 +56,15 @@ public class FTBLibMod
         }
 
         FTBLibAPI.setAPI(FTBLibAPI_Impl.get());
-
         LMUtils.init(event.getModConfigurationDirectory());
         FTBLibNetHandler.init();
         ODItems.preInit();
         FTBLibStats.init();
-
         MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
-        FTBLibCapabilities.init();
+        FTBLibCaps.init();
         FTBLibNotifications.init();
+
+        ConfigManager.INSTANCE.init(event.getAsmData());
 
         proxy.preInit();
     }
@@ -76,7 +73,7 @@ public class FTBLibMod
     public void onPostInit(FMLPostInitializationEvent event)
     {
         FTBLibAPI_Impl.get().reloadPackModes();
-        FTBLibAPI_Impl.get().getRegistries().reloadConfig();
+        ConfigManager.INSTANCE.reloadConfig();
 
         IRecipes recipes = new LMRecipes();
 
@@ -98,22 +95,10 @@ public class FTBLibMod
     public void onServerStarted(FMLServerAboutToStartEvent event)
     {
         FTBLibAPI_Impl.get().reloadPackModes();
-        FTBLibAPI_Impl.get().getRegistries().reloadConfig();
+        ConfigManager.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         FTBLibAPI_Impl.get().createAndLoadWorld();
-
-        try
-        {
-            Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
-            field.setAccessible(true);
-            @SuppressWarnings("unchecked")
-            List<ITickable> list = (List<ITickable>) field.get(event.getServer());
-            list.add(FTBLibAPI_Impl.get().getRegistries());
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        LMServerUtils.addTickable(event.getServer(), FTBLibRegistries.INSTANCE);
     }
 
     @Mod.EventHandler
