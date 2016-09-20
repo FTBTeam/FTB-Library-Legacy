@@ -88,7 +88,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     @Nullable
     public final ForgeTeam getTeam()
     {
-        return teamID != null ? FTBLibAPI_Impl.get().getUniverse().getTeam(teamID) : null;
+        return teamID != null ? FTBLibAPI_Impl.INSTANCE.getUniverse().getTeam(teamID) : null;
     }
 
     @Override
@@ -236,7 +236,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     @Override
     public final Universe getUniverse()
     {
-        return FTBLibAPI_Impl.get().getUniverse();
+        return FTBLibAPI_Impl.INSTANCE.getUniverse();
     }
 
     @Override

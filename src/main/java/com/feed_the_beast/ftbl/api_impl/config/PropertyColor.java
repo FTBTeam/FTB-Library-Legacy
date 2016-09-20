@@ -103,9 +103,9 @@ public class PropertyColor extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        new GuiSelectColor(null, getColorID(), (id, val) ->
+        new GuiSelectColor(null, (id, val) ->
         {
-            set((Byte) val);
+            set((byte) val.hashCode());
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         }).openGui();

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.SidebarButton;
 import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
@@ -25,7 +25,7 @@ public class FTBLibActions
 {
     public static void init()
     {
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "teams_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "teams_gui"), new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -57,7 +57,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), new SidebarButton(990, GuiIcons.SETTINGS, null)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), new SidebarButton(990, GuiIcons.SETTINGS, null)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -66,7 +66,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), new SidebarButton(985, GuiIcons.SETTINGS_RED, EnumEnabled.ENABLED)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), new SidebarButton(985, GuiIcons.SETTINGS_RED, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -75,7 +75,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), new SidebarButton(200, GuiIcons.HEART, EnumEnabled.ENABLED)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "heal"), new SidebarButton(200, GuiIcons.HEART, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -84,7 +84,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), new SidebarButton(195, GuiIcons.TOGGLE_GAMEMODE, EnumEnabled.ENABLED)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_gamemode"), new SidebarButton(195, GuiIcons.TOGGLE_GAMEMODE, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -94,7 +94,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), new SidebarButton(190, GuiIcons.TOGGLE_RAIN, EnumEnabled.ENABLED)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "toggle_rain"), new SidebarButton(190, GuiIcons.TOGGLE_RAIN, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -103,7 +103,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), new SidebarButton(185, GuiIcons.TOGGLE_DAY, EnumEnabled.ENABLED)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "set_day"), new SidebarButton(185, GuiIcons.TOGGLE_DAY, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)
@@ -112,7 +112,7 @@ public class FTBLibActions
             }
         });
 
-        FTBLibAPI.get().getRegistries().sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), new SidebarButton(180, GuiIcons.TOGGLE_NIGHT, EnumEnabled.ENABLED)
+        FTBLibRegistries.INSTANCE.sidebarButtons().register(new ResourceLocation(FTBLibFinals.MOD_ID, "set_night"), new SidebarButton(180, GuiIcons.TOGGLE_NIGHT, EnumEnabled.ENABLED)
         {
             @Override
             public void onClicked(IMouseButton button)

@@ -8,7 +8,6 @@ import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleRedstone;
-import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -32,8 +31,6 @@ public class FTBLibModClient extends FTBLibModCommon
         }
 
         FTBLibActions.init();
-
-        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new FTBLibColors());
     }
 
     @Override

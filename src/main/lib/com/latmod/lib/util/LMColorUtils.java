@@ -3,19 +3,25 @@ package com.latmod.lib.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.math.MathHelperLM;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.EnumMap;
 
 public class LMColorUtils
 {
     public static final int[] CHAT_FORMATTING_COLORS = new int[16];
+    private static final int[] ID_COLORS = new int[256];
+
     private static EnumMap<EnumDyeColor, TextFormatting> dyeToTextFormattingMap;
     private static EnumMap<TextFormatting, Character> textFormattingToCharMap;
     private static EnumMap<EnumDyeColor, Integer> dyeTextFormattingColorsLight, dyeTextFormattingColorsDark;
@@ -30,6 +36,45 @@ public class LMColorUtils
             int b = (i & 1) * 170 + j;
             CHAT_FORMATTING_COLORS[i] = getRGBA((i == 6) ? r + 85 : r, g, b, 255);
         }
+
+        for(int y = 0; y < 16; y++)
+        {
+            for(int x = 0; x < 16; x++)
+            {
+                if(x == 0)
+                {
+                    if(y > 0)
+                    {
+                        float ry = y == 1 ? 0F : (y == 15) ? 1F : ((y - 1F) / 15F);
+                        ID_COLORS[y * 16] = 0xFF000000 | getRGBAF(ry, ry, ry, 1F);
+                    }
+                }
+                else
+                {
+                    float h = (x - 1F) / 15F;
+                    float b = 1F;
+                    float s = 1F;
+
+                    if(y < 8)
+                    {
+                        b = 0.2F + (y / 8F) * 0.8F;
+                    }
+                    else if(y > 8)
+                    {
+                        s = 1F - (0.2F + ((y - 8) / 9F) * 0.8F);
+                    }
+
+                    ID_COLORS[x + y * 16] = 0xFF000000 | Color.HSBtoRGB(h, s, b);
+                }
+            }
+        }
+
+        ID_COLORS[0] = 0;
+    }
+
+    public static int getColorFromID(byte col)
+    {
+        return ID_COLORS[col & 0xFF];
     }
 
     public static JsonElement serialize(int col)
@@ -105,6 +150,33 @@ public class LMColorUtils
     public static int getRGBA(int c, int a)
     {
         return getRGBA(getRed(c), getGreen(c), getBlue(c), a);
+    }
+
+    public static void setGLColor(int c, int a)
+    {
+        GlStateManager.color(getRedF(c), getGreenF(c), getBlueF(c), a / 255F);
+    }
+
+    public static void setGLColor(int c)
+    {
+        GlStateManager.color(getRedF(c), getGreenF(c), getBlueF(c), 1F);
+    }
+
+    public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
+    {
+        ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
+        byte alpha255 = (byte) 255;
+
+        for(int p : pixels)
+        {
+            bb.put((byte) getRed(p));
+            bb.put((byte) getGreen(p));
+            bb.put((byte) getBlue(p));
+            bb.put(alpha ? (byte) getAlpha(p) : alpha255);
+        }
+
+        bb.flip();
+        return bb;
     }
 
     public static int addBrightness(int c, int b)

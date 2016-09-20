@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbl.api.client;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
-import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -23,18 +21,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class FTBLibClient
 {
-    public static final Frustum frustum = new Frustum();
+    public static final Frustum FRUSTUM = new Frustum();
     private static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
     /*
     private static final Vector4f OBJECTCOORDS = new Vector4f();
@@ -108,36 +104,6 @@ public class FTBLibClient
         }
 
         return img;
-    }
-
-    public static void setGLColor(int c, int a)
-    {
-        int r = LMColorUtils.getRed(c);
-        int g = LMColorUtils.getGreen(c);
-        int b = LMColorUtils.getBlue(c);
-        GlStateManager.color(r / 255F, g / 255F, b / 255F, a / 255F);
-    }
-
-    public static void setGLColor(int c)
-    {
-        setGLColor(c, LMColorUtils.getAlpha(c));
-    }
-
-    public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)
-    {
-        ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
-        byte alpha255 = (byte) 255;
-
-        for(int p : pixels)
-        {
-            bb.put((byte) LMColorUtils.getRed(p));
-            bb.put((byte) LMColorUtils.getGreen(p));
-            bb.put((byte) LMColorUtils.getBlue(p));
-            bb.put(alpha ? (byte) LMColorUtils.getAlpha(p) : alpha255);
-        }
-
-        bb.flip();
-        return bb;
     }
 
     public static void execClientCommand(String s, boolean printChat)
@@ -247,7 +213,7 @@ public class FTBLibClient
         renderY = TileEntityRendererDispatcher.staticPlayerY;
         renderZ = TileEntityRendererDispatcher.staticPlayerZ;
         playerPosHash = Objects.hash(currentDim, playerX, playerY, playerZ);
-        frustum.setPosition(playerX, playerY, playerZ);
+        FRUSTUM.setPosition(playerX, playerY, playerZ);
 
         /*
         VIEWPORT = null;

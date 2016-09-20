@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.IIntIDRegistry;
 import com.feed_the_beast.ftbl.api.IRegistry;
@@ -13,6 +12,7 @@ import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api_impl.config.ConfigKey;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
 import com.feed_the_beast.ftbl.api_impl.config.SimpleConfigKey;
 import com.latmod.lib.EnumEnabled;
@@ -63,7 +63,7 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
             {
                 //entry.setDisplayName(a.displayName);
                 PropertyBool configValue = new PropertyBool(a.getConfigDefault() == EnumEnabled.ENABLED);
-                FTBLibAPI.get().configManager().clientConfig().add(new ConfigKey(key.toString(), configValue), configValue.copy());
+                ConfigManager.INSTANCE.clientConfig().add(new ConfigKey(key.toString(), configValue), configValue.copy());
             }
 
             return a;
@@ -72,7 +72,7 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
         public boolean enabled(ResourceLocation id)
         {
             IConfigKey key = new SimpleConfigKey(id.toString());
-            return !FTBLibAPI.get().configManager().clientConfig().has(key) || FTBLibAPI.get().configManager().clientConfig().get(key).getBoolean();
+            return !ConfigManager.INSTANCE.clientConfig().has(key) || ConfigManager.INSTANCE.clientConfig().get(key).getBoolean();
         }
 
         public List<Map.Entry<ResourceLocation, ISidebarButton>> getButtons(boolean ignoreConfig)

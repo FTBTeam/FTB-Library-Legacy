@@ -5,10 +5,13 @@ import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.feed_the_beast.ftbl.client.FTBLibColors;
 import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -17,19 +20,21 @@ import java.util.List;
 public class GuiSelectColor extends GuiLM
 {
     private final ObjectCallbackHandler callback;
-    private final byte initCol;
     private final Object colorID;
     private final List<ButtonColor> colorButtons;
+    private ButtonColor noColorButton;
 
     private class ButtonColor extends ButtonLM
     {
         private final byte colID;
+        private final int col;
 
         private ButtonColor(int x, int y, byte cid)
         {
             super(x, y, 16, 16);
             colID = cid;
-            setTitle(LMColorUtils.getHex(FTBLibColors.get(colID)));
+            col = LMColorUtils.getColorFromID(colID);
+            setTitle((colID & 0xFF) + ": " + (colID == 0 ? "-" : LMColorUtils.getHex(col)));
         }
 
         @Override
@@ -40,20 +45,25 @@ public class GuiSelectColor extends GuiLM
         }
     }
 
-    public GuiSelectColor(@Nullable Object id, byte cid, ObjectCallbackHandler cb)
+    public GuiSelectColor(@Nullable Object id, ObjectCallbackHandler cb)
     {
-        super(143, 93);
+        super(256, 256);
         callback = cb;
-        initCol = cid;
         colorID = id;
 
         colorButtons = new ArrayList<>();
 
-        for(int y = 0; y < FTBLibColors.HEIGHT; y++)
+        for(int y = 0; y < 16; y++)
         {
-            for(int x = 0; x < FTBLibColors.WIDTH; x++)
+            for(int x = 0; x < 16; x++)
             {
-                colorButtons.add(new ButtonColor(x * 16, y * 16, (byte) (x + y * FTBLibColors.WIDTH)));
+                ButtonColor b = new ButtonColor(x * 16, y * 16, (byte) (x + (16 - y - 1) * 16));
+                colorButtons.add(b);
+
+                if(b.colID == 0)
+                {
+                    noColorButton = b;
+                }
             }
         }
     }
@@ -62,6 +72,72 @@ public class GuiSelectColor extends GuiLM
     public void addWidgets()
     {
         addAll(colorButtons);
+    }
+
+    @Override
+    public void renderWidgets()
+    {
+        GlStateManager.disableTexture2D();
+        GlStateManager.color(1F, 1F, 1F, 1F);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+
+        int ax = getAX();
+        int ay = getAY();
+        int w = getWidth();
+        int h = getHeight();
+
+        int r = 26;
+        int g = 26;
+        int b = 26;
+        int a = 90;
+
+        buffer.pos(ax, ay + h, 0D).color(r, g, b, a).endVertex();
+        buffer.pos(ax + w, ay + h, 0D).color(r, g, b, a).endVertex();
+        buffer.pos(ax + w, ay, 0D).color(r, g, b, a).endVertex();
+        buffer.pos(ax, ay, 0D).color(r, g, b, a).endVertex();
+
+        a = 255;
+
+        for(ButtonColor button : colorButtons)
+        {
+            ax = button.getAX() + 1;
+            ay = button.getAY() + 1;
+            w = button.getWidth() - 2;
+            h = button.getHeight() - 2;
+
+            r = LMColorUtils.getRed(button.col);
+            g = LMColorUtils.getGreen(button.col);
+            b = LMColorUtils.getBlue(button.col);
+
+            buffer.pos(ax, ay + h, 0D).color(r, g, b, a).endVertex();
+            buffer.pos(ax + w, ay + h, 0D).color(r, g, b, a).endVertex();
+            buffer.pos(ax + w, ay, 0D).color(r, g, b, a).endVertex();
+            buffer.pos(ax, ay, 0D).color(r, g, b, a).endVertex();
+        }
+
+        tessellator.draw();
+
+        ax = noColorButton.getAX() + 1;
+        ay = noColorButton.getAY() + 1;
+        w = noColorButton.getWidth() - 2;
+        h = noColorButton.getHeight() - 2;
+
+        r = 255;
+        g = 30;
+        b = 30;
+        a = 240;
+
+        buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(ax, ay, 0D).color(r, g, b, a).endVertex();
+        buffer.pos(ax + w, ay + h, 0D).color(r, g, b, a).endVertex();
+        buffer.pos(ax + w, ay, 0D).color(r, g, b, a).endVertex();
+        buffer.pos(ax, ay + h, 0D).color(r, g, b, a).endVertex();
+        tessellator.draw();
+
+        GlStateManager.enableTexture2D();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.gui;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
@@ -330,14 +329,14 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         configPanel.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        FTBLibClient.setGLColor(0x99333333);
+        LMColorUtils.setGLColor(0x99333333);
         GuiHelper.drawBlankRect(0, 0, getWidth(), 20);
         GlStateManager.color(1F, 1F, 1F, 1F);
         getFont().drawString(title, 6, 6, 0xFFFFFFFF);
 
-        FTBLibClient.setGLColor(0x99333333);
+        LMColorUtils.setGLColor(0x99333333);
         GuiHelper.drawBlankRect(scroll.posX, scroll.posY, scroll.getWidth(), scroll.getHeight());
-        FTBLibClient.setGLColor(0x99666666);
+        LMColorUtils.setGLColor(0x99666666);
         GuiHelper.drawBlankRect(scroll.posX, scroll.posY + (int) (scroll.getValue(this) * (scroll.getHeight() - scroll.sliderSize)), scroll.getWidth(), scroll.sliderSize);
 
         GlStateManager.disableLighting();

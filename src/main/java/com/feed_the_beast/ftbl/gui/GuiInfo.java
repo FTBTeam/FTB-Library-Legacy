@@ -22,6 +22,7 @@ import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.latmod.lib.TextureCoords;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -356,7 +357,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         sliderPages.renderSlider(TEX_SLIDER);
         sliderText.renderSlider(TEX_SLIDER);
-        FTBLibClient.setGLColor(colorText, 255);
+        LMColorUtils.setGLColor(colorText, 255);
         buttonBack.render((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
@@ -373,7 +374,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
             if(mouseOver)
             {
-                FTBLibClient.setGLColor(colorBackground, 255);
+                LMColorUtils.setGLColor(colorBackground, 255);
                 GuiHelper.drawBlankRect(buttonBackAX + buttonBack.getWidth() + 2, posY + 12, txtsize + 6, 13);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
@@ -417,7 +418,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
     private void renderFilling(int px, int py, int w, int h)
     {
-        FTBLibClient.setGLColor(colorBackground, 255);
+        LMColorUtils.setGLColor(colorBackground, 255);
         GuiHelper.drawBlankRect(posX + px + 4, posY + py + 4, w - 8, h - 8);
     }
 

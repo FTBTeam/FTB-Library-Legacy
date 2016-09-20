@@ -12,38 +12,26 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public abstract class FTBLibAPI
+public interface FTBLibAPI
 {
-    private static FTBLibAPI API;
+    boolean hasServer();
 
-    public static void setAPI(FTBLibAPI api)
-    {
-        API = api;
-    }
+    IConfigManager configManager();
 
-    public static FTBLibAPI get()
-    {
-        return API;
-    }
+    IFTBLibRegistries getRegistries();
 
-    public abstract boolean hasServer();
+    IPackModes getPackModes();
 
-    public abstract IConfigManager configManager();
-
-    public abstract IFTBLibRegistries getRegistries();
-
-    public abstract IPackModes getPackModes();
-
-    public abstract ISharedData getSharedData(Side side);
+    ISharedData getSharedData(Side side);
 
     @Nullable
-    public abstract IUniverse getUniverse();
+    IUniverse getUniverse();
 
-    public abstract void addServerCallback(int timer, Runnable runnable);
+    void addServerCallback(int timer, Runnable runnable);
 
-    public abstract void reload(ICommandSender sender, ReloadType type);
+    void reload(ICommandSender sender, ReloadType type);
 
-    public abstract void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data);
+    void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data);
 
-    public abstract void sendNotification(@Nullable EntityPlayerMP ep, INotification n);
+    void sendNotification(@Nullable EntityPlayerMP ep, INotification n);
 }

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl.config;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IConfigManager;
 import com.feed_the_beast.ftbl.api.IRegistry;
 import com.feed_the_beast.ftbl.api.ISyncedRegistry;
@@ -15,6 +14,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SimpleRegistry;
 import com.feed_the_beast.ftbl.api_impl.StringIntIDRegistry;
 import com.feed_the_beast.ftbl.api_impl.SyncedRegistry;
@@ -243,7 +243,7 @@ public enum ConfigManager implements IConfigManager
         {
             CONFIG.fromJson(json);
             CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).save());
-            FTBLibAPI.get().reload(sender, ReloadType.SERVER_ONLY);
+            FTBLibAPI_Impl.INSTANCE.reload(sender, ReloadType.SERVER_ONLY);
         }
     };
 

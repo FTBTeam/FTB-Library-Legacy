@@ -3,7 +3,9 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.FTBLibAddon;
 import com.feed_the_beast.ftbl.api.IConfigManager;
+import com.feed_the_beast.ftbl.api.IFTBLibAddon;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -25,6 +27,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
@@ -33,22 +36,30 @@ import java.io.File;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public final class FTBLibAPI_Impl extends FTBLibAPI
+public enum FTBLibAPI_Impl implements FTBLibAPI
 {
-    private static FTBLibAPI_Impl INST;
+    INSTANCE;
+
     private static Universe universe;
     private static PackModes packModes;
     private static SharedData sharedDataServer, sharedDataClient;
     private boolean hasServer = false;
 
-    public static FTBLibAPI_Impl get()
+    public void init(ASMDataTable table)
     {
-        if(INST == null)
+        for(ASMDataTable.ASMData data : table.getAll(FTBLibAddon.class.getName()))
         {
-            INST = new FTBLibAPI_Impl();
+            try
+            {
+                Class<?> clazz = Class.forName(data.getClassName());
+                Class<? extends IFTBLibAddon> clazzAddon = clazz.asSubclass(IFTBLibAddon.class);
+                clazzAddon.newInstance().onFTBLibLoaded(this);
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
-
-        return INST;
     }
 
     public void setHasServer(boolean b)
@@ -159,7 +170,7 @@ public final class FTBLibAPI_Impl extends FTBLibAPI
     @Override
     public void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data)
     {
-        IGuiHandler handler = FTBLibAPI.get().getRegistries().guis().get(guiID);
+        IGuiHandler handler = getRegistries().guis().get(guiID);
 
         if(handler == null)
         {

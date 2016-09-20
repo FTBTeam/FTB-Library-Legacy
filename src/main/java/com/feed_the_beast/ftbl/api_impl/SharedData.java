@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
 import com.google.gson.JsonElement;
@@ -38,7 +37,7 @@ public class SharedData implements ISharedData, IJsonSerializable
     {
         if(currentMode == null)
         {
-            currentMode = side.isClient() ? new PackMode("default") : FTBLibAPI.get().getPackModes().getDefault();
+            currentMode = side.isClient() ? new PackMode("default") : FTBLibAPI_Impl.INSTANCE.getPackModes().getDefault();
         }
 
         return currentMode;
@@ -74,7 +73,7 @@ public class SharedData implements ISharedData, IJsonSerializable
 
     public final int setMode(String mode)
     {
-        IPackMode m = FTBLibAPI.get().getPackModes().getRawMode(mode);
+        IPackMode m = FTBLibAPI_Impl.INSTANCE.getPackModes().getRawMode(mode);
 
         if(m == null)
         {
@@ -94,7 +93,7 @@ public class SharedData implements ISharedData, IJsonSerializable
     {
         JsonObject group = json.getAsJsonObject();
         universeID = group.has("world_id") ? LMStringUtils.fromString(group.get("world_id").getAsString()) : null;
-        currentMode = group.has("mode") ? FTBLibAPI.get().getPackModes().getMode(group.get("mode").getAsString()) : FTBLibAPI.get().getPackModes().getDefault();
+        currentMode = group.has("mode") ? FTBLibAPI_Impl.INSTANCE.getPackModes().getMode(group.get("mode").getAsString()) : FTBLibAPI_Impl.INSTANCE.getPackModes().getDefault();
     }
 
     @Override

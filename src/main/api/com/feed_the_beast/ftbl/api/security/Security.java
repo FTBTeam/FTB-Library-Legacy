@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.security;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibCaps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
@@ -39,7 +39,7 @@ public class Security implements ISecureModifiable, INBTSerializable<NBTBase>
             return ((IForgePlayer) o).getProfile().getId();
         }
 
-        return FTBLibAPI.get().getUniverse().getPlayer(o).getProfile().getId();
+        return FTBLibAPI_Impl.INSTANCE.getUniverse().getPlayer(o).getProfile().getId();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.gui.widgets;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public abstract class ButtonSimpleLM extends ButtonLM
     {
         int ax = getAX();
         int ay = getAY();
-        FTBLibClient.setGLColor(getButtonColor(gui, gui.isMouseOver(this)));
+        LMColorUtils.setGLColor(getButtonColor(gui, gui.isMouseOver(this)));
         GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
         GlStateManager.color(1F, 1F, 1F, 1F);
         String title = getTitle(gui);

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -10,6 +9,8 @@ import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.latmod.lib.util.LMNetUtils;
 import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
@@ -36,18 +37,18 @@ public class MessageReload extends MessageToClient<MessageReload>
     public MessageReload(ReloadType t)
     {
         typeID = t.ordinal();
-        sharedDataTag = FTBLibAPI.get().getSharedData(Side.SERVER).serializeNBT();
+        sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
     }
 
     public MessageReload(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
         this(ReloadType.LOGIN);
 
-        configIDs = FTBLibAPI.get().configManager().configValues().writeSyncData(player, forgePlayer);
+        configIDs = ConfigManager.INSTANCE.configValues().writeSyncData(player, forgePlayer);
 
         syncData = new NBTTagCompound();
 
-        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibAPI.get().getRegistries().syncedData().getEntrySet())
+        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.syncedData().getEntrySet())
         {
             syncData.setTag(entry.getKey().toString(), entry.getValue().writeSyncData(player, forgePlayer));
         }
@@ -102,16 +103,16 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         if(type == ReloadType.LOGIN)
         {
-            FTBLibAPI.get().configManager().configValues().readSyncData(m.configIDs);
+            ConfigManager.INSTANCE.configValues().readSyncData(m.configIDs);
         }
 
-        FTBLibAPI.get().getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
+        FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
 
         if(type == ReloadType.LOGIN)
         {
             for(String s : m.syncData.getKeySet())
             {
-                ISyncData nbt = FTBLibAPI.get().getRegistries().syncedData().get(new ResourceLocation(s));
+                ISyncData nbt = FTBLibRegistries.INSTANCE.syncedData().get(new ResourceLocation(s));
 
                 if(nbt != null)
                 {
@@ -124,7 +125,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         if(type.reload(Side.CLIENT))
         {
-            FTBLibAPI_Impl.get().reloadPackModes();
+            FTBLibAPI_Impl.INSTANCE.reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, mc.thePlayer, type));
 
             if(type != ReloadType.LOGIN)
@@ -132,7 +133,7 @@ public class MessageReload extends MessageToClient<MessageReload>
                 FTBLibLang.RELOAD_CLIENT.printChat(mc.thePlayer, (System.currentTimeMillis() - ms) + "ms");
             }
 
-            FTBLibMod.logger.info("Current Mode: " + FTBLibAPI.get().getSharedData(Side.CLIENT).getPackMode().getID());
+            FTBLibMod.logger.info("Current Mode: " + FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).getPackMode().getID());
         }
     }
 }

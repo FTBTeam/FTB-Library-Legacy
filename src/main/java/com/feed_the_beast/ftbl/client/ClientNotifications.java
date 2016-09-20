@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
+import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -49,7 +49,7 @@ public class ClientNotifications
         {
             GlStateManager.enableBlend();
 
-            FTBLibClient.setGLColor(notification.getColor(), 255);
+            LMColorUtils.setGLColor(notification.getColor(), 255);
             GuiHelper.drawBlankRect(ax, ay, width, height);
 
             GlStateManager.color(1F, 1F, 1F, 1F);

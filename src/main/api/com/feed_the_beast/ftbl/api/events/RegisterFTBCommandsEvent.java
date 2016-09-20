@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.events;
 
-import com.feed_the_beast.ftbl.api.cmd.CommandTreeBase;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.server.command.CommandTreeBase;
 
 /**
  * Created by LatvianModder on 28.05.2016.
@@ -25,6 +25,6 @@ public class RegisterFTBCommandsEvent extends Event
 
     public void add(ICommand cmd)
     {
-        command.add(cmd);
+        command.addSubcommand(cmd);
     }
 }

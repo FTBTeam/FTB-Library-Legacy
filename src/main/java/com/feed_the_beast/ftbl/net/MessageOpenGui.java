@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -27,7 +27,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
     {
-        guiID = FTBLibAPI.get().getRegistries().guis().getIDFromKey(key);
+        guiID = FTBLibRegistries.INSTANCE.guis().getIDFromKey(key);
         data = tag;
         windowID = wid;
     }
@@ -58,11 +58,11 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m)
     {
-        ResourceLocation key = FTBLibAPI.get().getRegistries().guis().getKeyFromID(m.guiID);
+        ResourceLocation key = FTBLibRegistries.INSTANCE.guis().getKeyFromID(m.guiID);
 
         if(key != null)
         {
-            IGuiHandler handler = FTBLibAPI.get().getRegistries().guis().get(key);
+            IGuiHandler handler = FTBLibRegistries.INSTANCE.guis().get(key);
 
             if(handler != null)
             {

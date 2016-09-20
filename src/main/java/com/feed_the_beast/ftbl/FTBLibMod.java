@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
@@ -55,7 +54,8 @@ public class FTBLibMod
             logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
         }
 
-        FTBLibAPI.setAPI(FTBLibAPI_Impl.get());
+        FTBLibAPI_Impl.INSTANCE.init(event.getAsmData());
+
         LMUtils.init(event.getModConfigurationDirectory());
         FTBLibNetHandler.init();
         ODItems.preInit();
@@ -72,12 +72,12 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
-        FTBLibAPI_Impl.get().reloadPackModes();
+        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
         ConfigManager.INSTANCE.reloadConfig();
 
         IRecipes recipes = new LMRecipes();
 
-        for(IRecipeHandler handler : FTBLibAPI_Impl.get().getRegistries().recipeHandlers().getValues())
+        for(IRecipeHandler handler : FTBLibRegistries.INSTANCE.recipeHandlers().getValues())
         {
             handler.loadRecipes(recipes);
         }
@@ -94,23 +94,23 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarted(FMLServerAboutToStartEvent event)
     {
-        FTBLibAPI_Impl.get().reloadPackModes();
+        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
         ConfigManager.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
-        FTBLibAPI_Impl.get().createAndLoadWorld();
+        FTBLibAPI_Impl.INSTANCE.createAndLoadWorld();
         LMServerUtils.addTickable(event.getServer(), FTBLibRegistries.INSTANCE);
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibAPI.get().reload(LMServerUtils.getServer(), ReloadType.SERVER_ONLY);
+        FTBLibAPI_Impl.INSTANCE.reload(LMServerUtils.getServer(), ReloadType.SERVER_ONLY);
     }
 
     @Mod.EventHandler
     public void onServerShutDown(FMLServerStoppedEvent event)
     {
-        FTBLibAPI_Impl.get().closeWorld();
+        FTBLibAPI_Impl.INSTANCE.closeWorld();
     }
 
     @NetworkCheckHandler
@@ -118,7 +118,7 @@ public class FTBLibMod
     {
         if(side.isServer())
         {
-            FTBLibAPI_Impl.get().setHasServer(m.containsKey(FTBLibFinals.MOD_ID));
+            FTBLibAPI_Impl.INSTANCE.setHasServer(m.containsKey(FTBLibFinals.MOD_ID));
         }
 
         String s = m.get(FTBLibFinals.MOD_ID);

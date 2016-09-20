@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.Notification;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -32,7 +32,7 @@ public class CmdNotify extends CommandLM
             for(Map.Entry<String, JsonElement> entry : o.entrySet())
             {
                 ResourceLocation key = new ResourceLocation(entry.getKey());
-                int id = FTBLibAPI.get().getRegistries().notifications().getOrCreateIDFromKey(key);
+                int id = FTBLibAPI_Impl.INSTANCE.getRegistries().notifications().getOrCreateIDFromKey(key);
                 Notification n = new Notification(id);
 
                 if(entry.getValue().isJsonObject())
@@ -95,6 +95,6 @@ public class CmdNotify extends CommandLM
             throw new IllegalArgumentException("Notification '" + args[1] + "' not found!");
         }
 
-        FTBLibAPI.get().sendNotification(player, n);
+        FTBLibAPI_Impl.INSTANCE.sendNotification(player, n);
     }
 }

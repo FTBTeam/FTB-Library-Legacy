@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
 import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -43,7 +43,7 @@ public class CmdListTeams extends CommandLM
         InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.theme = InfoPageTheme.DARK_NON_UNICODE;
 
-        for(IForgeTeam team : FTBLibAPI.get().getUniverse().getTeams())
+        for(IForgeTeam team : FTBLibAPI_Impl.INSTANCE.getUniverse().getTeams())
         {
             InfoPage page1 = page.getSub(team.getName());
 
