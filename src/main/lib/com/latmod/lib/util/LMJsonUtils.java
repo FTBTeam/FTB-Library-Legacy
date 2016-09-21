@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -22,7 +23,9 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Type for Lists: new TypeToken<List<E>>() {}.getType()
@@ -356,5 +359,72 @@ public class LMJsonUtils
     public static ITextComponent deserializeTextComponent(JsonElement e)
     {
         return (e == null || e.isJsonNull()) ? null : TEXT_COMPONENT_GSON.fromJson(e, ITextComponent.class);
+    }
+
+    @Nonnull
+    public static JsonObject fromJsonTree(@Nonnull JsonObject o)
+    {
+        JsonObject map = new JsonObject();
+        fromJsonTree0(map, null, o);
+        return map;
+    }
+
+    private static void fromJsonTree0(@Nonnull JsonObject map, String id0, @Nonnull JsonObject o)
+    {
+        for(Map.Entry<String, JsonElement> entry : o.entrySet())
+        {
+            if(entry.getValue() instanceof JsonObject)
+            {
+                fromJsonTree0(map, (id0 == null) ? entry.getKey() : (id0 + '.' + entry.getKey()), entry.getValue().getAsJsonObject());
+            }
+            else
+            {
+                map.add((id0 == null) ? entry.getKey() : (id0 + '.' + entry.getKey()), entry.getValue());
+            }
+        }
+    }
+
+    @Nonnull
+    public static JsonObject toJsonTree(@Nonnull Collection<Map.Entry<String, JsonElement>> tree)
+    {
+        JsonObject o1 = new JsonObject();
+        tree.forEach(entry -> findGroup(o1, entry.getKey()).add(lastKeyPart(entry.getKey()), entry.getValue()));
+        return o1;
+    }
+
+    @Nonnull
+    private static String lastKeyPart(String s)
+    {
+        int idx = s.lastIndexOf('.');
+
+        if(idx != -1)
+        {
+            return s.substring(idx + 1);
+        }
+
+        return s;
+    }
+
+    @Nonnull
+    private static JsonObject findGroup(@Nonnull JsonObject parent, @Nonnull String s)
+    {
+        int idx = s.indexOf('.');
+
+        if(idx != -1)
+        {
+            String s0 = s.substring(0, idx);
+
+            JsonElement o = parent.get(s0);
+
+            if(o == null)
+            {
+                o = new JsonObject();
+                parent.add(s0, o);
+            }
+
+            return findGroup(o.getAsJsonObject(), s.substring(idx + 1, s.length() - 1));
+        }
+
+        return parent;
     }
 }

@@ -7,6 +7,8 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.latmod.lib.util.JsonElementIO;
+import com.latmod.lib.util.LMJsonUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -54,13 +56,13 @@ public class ConfigTree extends PropertyBase implements IConfigTree
     @Override
     public void writeData(DataOutput data, boolean extended) throws IOException
     {
-        //FIXME
+        JsonElementIO.write(data, getSerializableElement());
     }
 
     @Override
     public void readData(DataInput data, boolean extended) throws IOException
     {
-        //FIXME
+        fromJson(JsonElementIO.read(data));
     }
 
     @Override
@@ -126,7 +128,7 @@ public class ConfigTree extends PropertyBase implements IConfigTree
             o.add(entry.getKey().getName(), entry.getValue().getSerializableElement());
         }
 
-        return o;
+        return LMJsonUtils.fromJsonTree(o);
     }
 
     @Override

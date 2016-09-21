@@ -140,18 +140,14 @@ public class LMNetUtils
         return ByteBufUtils.readTag(io);
     }
 
-    //TODO: Improve me
     public static void writeJsonElement(ByteBuf io, JsonElement e)
     {
-        ByteIOStream stream = new ByteIOStream();
-        JsonElementIO.write(stream, e);
-        writeCompressedByteIOStream(io, stream);
+        JsonElementIO.write(io, e);
     }
 
-    //TODO: Improve me
     public static JsonElement readJsonElement(ByteBuf io)
     {
-        return JsonElementIO.read(readCompressedByteIOStream(io));
+        return JsonElementIO.read(io);
     }
 
     public static void writeCompressedByteIOStream(ByteBuf io, ByteIOStream stream)

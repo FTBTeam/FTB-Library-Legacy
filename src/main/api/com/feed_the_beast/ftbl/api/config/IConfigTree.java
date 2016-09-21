@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api_impl.config.PropertyNull;
+import com.google.common.base.Preconditions;
 import com.latmod.lib.io.IExtendedIOObject;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.IJsonSerializable;
@@ -17,6 +18,7 @@ public interface IConfigTree extends IExtendedIOObject, IJsonSerializable, INBTS
 
     default void add(IConfigKey key, IConfigValue value)
     {
+        Preconditions.checkArgument(!(value instanceof IConfigTree), "Can't add IConfigTree in IConfigTree!");
         getTree().put(key, value);
     }
 
