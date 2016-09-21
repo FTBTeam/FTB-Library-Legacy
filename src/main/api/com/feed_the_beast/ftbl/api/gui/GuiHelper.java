@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
@@ -53,7 +54,7 @@ public class GuiHelper
         {
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
-            buffer.begin(7, DefaultVertexFormats.POSITION);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
             buffer.pos(x, y + h, 0D).endVertex();
             buffer.pos(x + w, y + h, 0D).endVertex();
             buffer.pos(x + w, y, 0D).endVertex();
@@ -64,7 +65,7 @@ public class GuiHelper
         {
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
-            buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             buffer.pos(x, y + h, 0D).tex(u0, v1).endVertex();
             buffer.pos(x + w, y + h, 0D).tex(u1, v1).endVertex();
             buffer.pos(x + w, y, 0D).tex(u1, v0).endVertex();

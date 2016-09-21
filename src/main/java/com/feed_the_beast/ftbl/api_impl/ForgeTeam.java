@@ -19,6 +19,7 @@ import com.feed_the_beast.ftbl.api_impl.config.PropertyString;
 import com.feed_the_beast.ftbl.api_impl.config.SimpleConfigKey;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.FinalIDObject;
+import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -47,8 +48,8 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     private Collection<UUID> enemies;
     private String title;
     private String desc;
-    private int flags;
-    private Collection<ForgePlayer> invited;
+    private byte flags;
+    private Collection<IForgePlayer> invited;
 
     public ForgeTeam(Universe w, String id)
     {
@@ -75,15 +76,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
-    public int getFlags()
+    public boolean getFlag(byte flag)
     {
-        return flags;
+        return (flags & flag) != 0;
     }
 
-    @Override
-    public void setFlags(int f)
+    public void setFlag(byte flag, boolean v)
     {
-        flags = f;
+        flags = (byte) Bits.setFlag(flags, flag, v);
     }
 
     @Override
@@ -92,7 +92,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         NBTTagCompound nbt = new NBTTagCompound();
 
         nbt.setString("Owner", owner.getStringUUID());
-        nbt.setByte("Flags", (byte) flags);
+        nbt.setByte("Flags", flags);
         nbt.setString("Color", color.getString());
 
         if(title != null)
@@ -344,7 +344,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     @Override
     public boolean isInvited(@Nullable IForgePlayer player)
     {
-        return player != null && (((getFlags() & IForgeTeam.FREE_TO_JOIN) != 0) || invited != null && invited.contains(player) && player.getTeam() != null);
+        return player != null && (getFlag(IForgeTeam.FREE_TO_JOIN) || invited != null && invited.contains(player) && player.getTeam() != null);
     }
 
     public void changeOwner(ForgePlayer newOwner)

@@ -51,13 +51,12 @@ public final class ConfigKey extends SimpleConfigKey
     }
 
     @Override
-    public final int getFlags()
+    public byte getFlags()
     {
         return flags;
     }
 
-    @Override
-    public final void setFlags(int f)
+    public void setFlags(int f)
     {
         flags = (byte) f;
     }
@@ -69,13 +68,12 @@ public final class ConfigKey extends SimpleConfigKey
     }
 
     @Override
-    public final String getInfo()
+    public String getInfo()
     {
         return info;
     }
 
-    @Override
-    public final void setInfo(String s)
+    public void setInfo(String s)
     {
         info = s;
     }

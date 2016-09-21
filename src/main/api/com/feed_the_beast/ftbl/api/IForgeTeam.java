@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
-import com.latmod.lib.annotations.IFlagContainer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -13,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public interface IForgeTeam extends IStringSerializable, ICapabilitySerializable<NBTTagCompound>, IFlagContainer
+public interface IForgeTeam extends IStringSerializable, ICapabilitySerializable<NBTTagCompound>
 {
     byte FREE_TO_JOIN = 1;
     byte HIDDEN = 2;
@@ -26,6 +25,8 @@ public interface IForgeTeam extends IStringSerializable, ICapabilitySerializable
 
     @Nullable
     String getDesc();
+
+    boolean getFlag(byte flag);
 
     EnumTeamColor getColor();
 

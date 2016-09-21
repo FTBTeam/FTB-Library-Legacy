@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import com.latmod.lib.annotations.IFlagContainer;
-import com.latmod.lib.annotations.IInfoContainer;
 import com.latmod.lib.io.Bits;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
@@ -13,32 +11,34 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 11.09.2016.
  */
-public interface IConfigKey extends IStringSerializable, IInfoContainer, IFlagContainer
+public interface IConfigKey extends IStringSerializable
 {
     /**
      * Will be excluded from writing / reading from files
      */
-    int EXCLUDED = 1;
+    byte EXCLUDED = 1;
 
     /**
      * Will be hidden from config gui
      */
-    int HIDDEN = 2;
+    byte HIDDEN = 2;
 
     /**
      * Will be visible in config gui, but uneditable
      */
-    int CANT_EDIT = 4;
+    byte CANT_EDIT = 4;
 
     /**
      * Use scroll bar on numbers whenever that is available
      */
-    int USE_SCROLL_BAR = 8;
+    byte USE_SCROLL_BAR = 8;
 
     /**
      * Use display name as I18n key
      */
-    int TRANSLATE_DISPLAY_NAME = 16;
+    byte TRANSLATE_DISPLAY_NAME = 16;
+
+    byte getFlags();
 
     IConfigValue getDefValue();
 
@@ -62,4 +62,6 @@ public interface IConfigKey extends IStringSerializable, IInfoContainer, IFlagCo
 
         return new TextComponentString(getName());
     }
+
+    String getInfo();
 }
