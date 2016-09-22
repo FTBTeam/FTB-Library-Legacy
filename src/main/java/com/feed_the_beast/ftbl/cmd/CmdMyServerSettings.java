@@ -4,8 +4,8 @@ import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigTree;
 import com.google.gson.JsonObject;
+import com.latmod.lib.config.ConfigTree;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,13 +33,13 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         }
 
         @Override
-        public IConfigTree createGroup()
+        public IConfigTree getTree()
         {
             return tree;
         }
 
         @Override
-        public ITextComponent getConfigTitle() //TODO: Lang
+        public ITextComponent getTitle() //TODO: Lang
         {
             return new TextComponentString("My Server Settings");
         }

@@ -12,9 +12,9 @@ import javax.annotation.Nullable;
  */
 public interface IConfigContainer
 {
-    IConfigTree createGroup();
+    IConfigTree getTree();
 
-    ITextComponent getConfigTitle();
+    ITextComponent getTitle();
 
     void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json);
 }

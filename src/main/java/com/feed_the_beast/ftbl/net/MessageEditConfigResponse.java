@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToServer;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
+import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMNetUtils;
 import com.latmod.lib.util.LMUtils;

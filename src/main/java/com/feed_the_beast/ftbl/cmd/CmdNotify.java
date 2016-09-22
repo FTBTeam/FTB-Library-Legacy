@@ -32,7 +32,7 @@ public class CmdNotify extends CommandLM
             for(Map.Entry<String, JsonElement> entry : o.entrySet())
             {
                 ResourceLocation key = new ResourceLocation(entry.getKey());
-                int id = FTBLibAPI_Impl.INSTANCE.getRegistries().notifications().getOrCreateIDFromKey(key);
+                int id = FTBLibAPI_Impl.INSTANCE.getRegistries().notifications().generateID(key);
                 Notification n = new Notification(id);
 
                 if(entry.getValue().isJsonObject())

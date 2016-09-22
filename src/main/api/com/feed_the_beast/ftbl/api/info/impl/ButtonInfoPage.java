@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.latmod.lib.ITextureCoordsProvider;
+import com.latmod.lib.client.ITextureCoordsProvider;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;

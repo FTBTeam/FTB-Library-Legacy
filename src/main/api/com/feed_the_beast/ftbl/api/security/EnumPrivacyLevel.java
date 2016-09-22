@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.api.security;
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
 import com.latmod.lib.EnumNameMap;
 import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.ITextureCoords;
 import com.latmod.lib.LangKey;
+import com.latmod.lib.client.ITextureCoords;
 import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nullable;

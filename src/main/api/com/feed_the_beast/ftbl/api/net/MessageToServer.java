@@ -21,7 +21,7 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
 
     @Override
     @Nullable
-    public final IMessage onMessage(final E m, MessageContext ctx)
+    public IMessage onMessage(final E m, MessageContext ctx)
     {
         final EntityPlayerMP ep = ctx.getServerHandler().playerEntity;
         ep.mcServer.addScheduledTask(() -> onMessage(m, ep));

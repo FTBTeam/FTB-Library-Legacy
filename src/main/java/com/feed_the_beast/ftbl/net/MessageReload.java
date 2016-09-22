@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
@@ -10,53 +9,32 @@ import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.latmod.lib.util.LMNetUtils;
-import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MessageReload extends MessageToClient<MessageReload>
 {
     private int typeID;
-    private NBTTagCompound configIDs;
-    private NBTTagCompound syncData;
-    private NBTTagCompound sharedDataTag;
+    private NBTTagCompound sharedData;
+    private Map<String, NBTTagCompound> syncData;
 
     public MessageReload()
     {
     }
 
-    public MessageReload(ReloadType t)
+    public MessageReload(ReloadType t, NBTTagCompound shared, Map<String, NBTTagCompound> sync)
     {
         typeID = t.ordinal();
-        sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
-    }
-
-    public MessageReload(EntityPlayerMP player, IForgePlayer forgePlayer)
-    {
-        this(ReloadType.LOGIN);
-
-        configIDs = ConfigManager.INSTANCE.configValues().writeSyncData(player, forgePlayer);
-
-        syncData = new NBTTagCompound();
-
-        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.syncedData().getEntrySet())
-        {
-            syncData.setTag(entry.getKey().toString(), entry.getValue().writeSyncData(player, forgePlayer));
-        }
-
-        if(LMUtils.DEV_ENV)
-        {
-            LMUtils.DEV_LOGGER.info("Sending sync data to " + player.getDisplayNameString() + ": " + syncData);
-        }
+        sharedData = shared;
+        syncData = sync;
     }
 
     @Override
@@ -69,28 +47,33 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void toBytes(ByteBuf io)
     {
         io.writeByte(typeID);
+        LMNetUtils.writeTag(io, sharedData);
 
-        if(typeID == ReloadType.LOGIN.ordinal())
+        io.writeShort(syncData.size());
+
+        syncData.forEach((key, value) ->
         {
-            LMNetUtils.writeTag(io, configIDs);
-        }
-
-        LMNetUtils.writeTag(io, syncData);
-        LMNetUtils.writeTag(io, sharedDataTag);
+            LMNetUtils.writeString(io, key);
+            LMNetUtils.writeTag(io, value);
+        });
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
         typeID = io.readUnsignedByte();
+        sharedData = LMNetUtils.readTag(io);
 
-        if(typeID == ReloadType.LOGIN.ordinal())
+        int s = io.readUnsignedShort();
+
+        syncData = new HashMap<>(s);
+
+        while(--s >= 0)
         {
-            configIDs = LMNetUtils.readTag(io);
+            String key = LMNetUtils.readString(io);
+            NBTTagCompound value = LMNetUtils.readTag(io);
+            syncData.put(key, value);
         }
-
-        syncData = LMNetUtils.readTag(io);
-        sharedDataTag = LMNetUtils.readTag(io);
     }
 
     @Override
@@ -101,25 +84,17 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         ReloadType type = ReloadType.values()[m.typeID];
 
-        if(type == ReloadType.LOGIN)
-        {
-            ConfigManager.INSTANCE.configValues().readSyncData(m.configIDs);
-        }
+        FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedData);
 
-        FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
-
-        if(type == ReloadType.LOGIN)
+        m.syncData.forEach((key, value) ->
         {
-            for(String s : m.syncData.getKeySet())
+            ISyncData nbt = FTBLibRegistries.INSTANCE.syncedData().get(new ResourceLocation(key));
+
+            if(nbt != null)
             {
-                ISyncData nbt = FTBLibRegistries.INSTANCE.syncedData().get(new ResourceLocation(s));
-
-                if(nbt != null)
-                {
-                    nbt.readSyncData(m.syncData.getCompoundTag(s));
-                }
+                nbt.readSyncData(value);
             }
-        }
+        });
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.tile;
 
 import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.ITextureCoordsProvider;
+import com.latmod.lib.client.ITextureCoordsProvider;
 import net.minecraft.util.IStringSerializable;
 
 /**

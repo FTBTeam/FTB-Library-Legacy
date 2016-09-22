@@ -8,10 +8,10 @@ import com.feed_the_beast.ftbl.api.IConfigManager;
 import com.feed_the_beast.ftbl.api.IFTBLibAddon;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
@@ -20,6 +20,7 @@ import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
+import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,6 +33,8 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 11.08.2016.
@@ -154,7 +157,22 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
         }
 
-        new MessageReload(type).sendTo(null);
+        if(LMServerUtils.hasOnlinePlayers())
+        {
+            NBTTagCompound sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
+
+            for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayerList())
+            {
+                Map<String, NBTTagCompound> syncData = new HashMap<>();
+
+                for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.syncedData().getEntrySet())
+                {
+                    syncData.put(entry.getKey().toString(), entry.getValue().writeSyncData(ep, FTBLibAPI_Impl.INSTANCE.getUniverse().getPlayer(ep)));
+                }
+
+                new MessageReload(type, sharedDataTag, syncData).sendTo(ep);
+            }
+        }
 
         if(type.reload(Side.SERVER))
         {

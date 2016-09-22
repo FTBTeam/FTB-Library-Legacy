@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.latmod.lib.EnumEnabled;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.client.ITextureCoords;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;

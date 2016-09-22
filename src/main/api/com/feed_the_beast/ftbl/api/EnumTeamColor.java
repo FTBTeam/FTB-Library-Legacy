@@ -24,6 +24,8 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
     PURPLE(EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0x7F00FF),
     GRAY(EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
 
+    public static final EnumTeamColor[] VALUES = values();
+
     private final String name;
     private final EnumDyeColor dyeColor;
     private final TextFormatting textFormatting;

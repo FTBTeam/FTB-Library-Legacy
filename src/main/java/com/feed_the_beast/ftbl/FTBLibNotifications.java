@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.NotificationVariant;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.Notification;
 import net.minecraft.util.ResourceLocation;
@@ -11,12 +12,13 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class FTBLibNotifications
 {
-    private static int register(String s)
+    private static Notification create(String s)
     {
-        return FTBLibAPI_Impl.INSTANCE.getRegistries().notifications().getOrCreateIDFromKey(new ResourceLocation(FTBLibFinals.MOD_ID, s));
+        return new Notification(new ResourceLocation(FTBLibFinals.MOD_ID, s));
     }
 
-    public static final INotification RELOAD_CLIENT_CONFIG = new Notification(register("reload_client_config"))
+    @NotificationVariant
+    public static final INotification RELOAD_CLIENT_CONFIG = create("reload_client_config")
             .addText(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent())
             .addText(new TextComponentString("/ftb reload_client"))
             .addText(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent())
@@ -25,5 +27,6 @@ public class FTBLibNotifications
 
     public static void init()
     {
+        FTBLibAPI_Impl.INSTANCE.getRegistries().notifications().register(RELOAD_CLIENT_CONFIG.getID(), RELOAD_CLIENT_CONFIG);
     }
 }

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.info.impl;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.client.ITextureCoords;
 
 /**
  * Created by LatvianModder on 02.09.2016.

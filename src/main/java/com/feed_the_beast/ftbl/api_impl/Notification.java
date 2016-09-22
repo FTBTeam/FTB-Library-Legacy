@@ -1,30 +1,29 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Notification implements INotification
 {
-    private int ID, timer, color;
+    private ResourceLocation ID;
+    private int timer, color;
     private List<ITextComponent> text;
     private ItemStack item;
 
-    public Notification(int id)
+    public Notification(ResourceLocation id)
     {
         ID = id;
     }
 
-    public static Notification error(int id, ITextComponent title)
+    public static Notification error(ResourceLocation id, ITextComponent title)
     {
         title.getStyle().setColor(TextFormatting.WHITE);
         return new Notification(id).addText(title).setTimer(3000).setColor(0xFF5959).setItem(new ItemStack(Blocks.BARRIER));
@@ -44,24 +43,17 @@ public class Notification implements INotification
 
     public int hashCode()
     {
-        return ID;
+        return ID.hashCode();
     }
 
     public boolean equals(Object o)
     {
-        return o == this || (o != null && o.hashCode() == ID);
+        return o == this || (o instanceof INotification && ((INotification) o).getID().equals(getID()));
     }
 
     public String toString()
     {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", getID());
-        map.put("timer", getTimer());
-        map.put("color", LMColorUtils.getHex(getColor()));
-        map.put("text", getText());
-        map.put("item", getItem());
-        map.put("perm", isPermanent());
-        return map.toString();
+        return getID().toString();
     }
 
     public Notification addText(ITextComponent t)
@@ -76,7 +68,7 @@ public class Notification implements INotification
     }
 
     @Override
-    public int getID()
+    public ResourceLocation getID()
     {
         return ID;
     }

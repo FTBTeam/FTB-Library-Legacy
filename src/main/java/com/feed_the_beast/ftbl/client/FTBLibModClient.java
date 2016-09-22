@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
+import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.latmod.lib.util.LMColorUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;

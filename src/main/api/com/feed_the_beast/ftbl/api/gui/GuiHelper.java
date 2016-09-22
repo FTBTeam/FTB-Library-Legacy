@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.client.ITextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;

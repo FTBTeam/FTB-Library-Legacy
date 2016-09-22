@@ -27,7 +27,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
     {
-        guiID = FTBLibRegistries.INSTANCE.guis().getIDFromKey(key);
+        guiID = FTBLibRegistries.INSTANCE.guis().getIntIDs().getIDFromKey(key);
         data = tag;
         windowID = wid;
     }
@@ -58,7 +58,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m)
     {
-        ResourceLocation key = FTBLibRegistries.INSTANCE.guis().getKeyFromID(m.guiID);
+        ResourceLocation key = FTBLibRegistries.INSTANCE.guis().getIntIDs().getKeyFromID(m.guiID);
 
         if(key != null)
         {

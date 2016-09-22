@@ -4,9 +4,9 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigTree;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.google.gson.JsonObject;
+import com.latmod.lib.config.ConfigTree;
 import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMNetUtils;
 import com.latmod.lib.util.LMUtils;
@@ -28,11 +28,11 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
     }
 
-    public MessageEditConfig(NBTTagCompound nbt, IConfigContainer c)
+    public MessageEditConfig(@Nullable NBTTagCompound nbt, IConfigContainer c)
     {
-        group = c.createGroup();
+        group = c.getTree();
         extraNBT = nbt;
-        title = c.getConfigTitle();
+        title = c.getTitle();
 
         if(LMUtils.DEV_ENV)
         {
@@ -93,13 +93,13 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         new GuiEditConfig(m.extraNBT, new IConfigContainer()
         {
             @Override
-            public IConfigTree createGroup()
+            public IConfigTree getTree()
             {
                 return m.group;
             }
 
             @Override
-            public ITextComponent getConfigTitle()
+            public ITextComponent getTitle()
             {
                 return m.title;
             }

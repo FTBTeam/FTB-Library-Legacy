@@ -6,11 +6,11 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
-import com.feed_the_beast.ftbl.api_impl.config.SimpleConfigKey;
+import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.latmod.lib.config.SimpleConfigKey;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
@@ -46,7 +46,7 @@ public abstract class CmdEditConfigBase extends CommandLM
     {
         try
         {
-            Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).createGroup().getTree();
+            Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).getTree().getTree();
 
             if(args.length == 1)
             {
@@ -96,7 +96,7 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         IConfigContainer cc = getConfigContainer(sender);
         IConfigKey key = new SimpleConfigKey(args[0]);
-        IConfigTree tree = cc.createGroup();
+        IConfigTree tree = cc.getTree();
 
         if(!tree.has(key))
         {

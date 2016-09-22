@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
-import com.feed_the_beast.ftbl.net.MessageReload;
+import com.feed_the_beast.ftbl.net.MessageLogin;
 import com.latmod.lib.util.LMNBTUtils;
 import com.latmod.lib.util.LMServerUtils;
 import com.latmod.lib.util.LMStringUtils;
@@ -346,7 +346,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         playerNBT = null;
         statsManager = null;
         FTBLibStats.updateLastSeen(stats());
-        new MessageReload(ep, this).sendTo(entityPlayer);
+        new MessageLogin(ep, this).sendTo(entityPlayer);
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
     }
 

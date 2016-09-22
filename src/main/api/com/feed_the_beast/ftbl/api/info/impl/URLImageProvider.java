@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.info.impl;
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
-import com.latmod.lib.InvalidTextureCoords;
+import com.latmod.lib.client.InvalidTextureCoords;
 import net.minecraft.util.ResourceLocation;
 
 /**

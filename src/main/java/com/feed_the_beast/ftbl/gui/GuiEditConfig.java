@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.gui;
 
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
@@ -18,7 +17,6 @@ import com.feed_the_beast.ftbl.api.gui.widgets.SliderLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.io.Bits;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,12 +39,14 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
     {
         public final IConfigKey key;
         public final IConfigValue value;
+        public String keyText;
 
         public ButtonConfigEntry(IConfigKey id, IConfigValue e)
         {
-            super(0, 0, 0, 16, id.getDisplayName().getFormattedText());
+            super(0, 0, 0, 16);
             key = id;
             value = e;
+            keyText = id.getDisplayName().getFormattedText();
         }
 
         @Override
@@ -71,7 +71,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            getFont().drawString(getTitle(gui), (int) (ax + 4D), (int) (ay + 4D), mouseOver ? 0xFFFFFFFF : 0xFF999999);
+            getFont().drawString(keyText, ax + 4, ay + 4, mouseOver ? 0xFFFFFFFF : 0xFF999999);
 
             String s = value.getString();
 
@@ -96,13 +96,13 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            getFont().drawString(s, getScreenWidth() - (slen + 20), (int) (ay + 4D), textCol);
+            getFont().drawString(s, getScreenWidth() - (slen + 20), ay + 4, textCol);
         }
 
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
-            if(getMouseY() >= 20 && !Bits.getFlag(key.getFlags(), IConfigKey.CANT_EDIT))
+            if(getMouseY() >= 20 && !key.getFlag(IConfigKey.CANT_EDIT))
             {
                 GuiHelper.playClickSound();
                 value.onClicked(GuiEditConfig.this, key, button);
@@ -124,7 +124,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
                     }
                 }
 
-                if(!(value instanceof IConfigTree) && getMouseX() > getScreenWidth() - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
+                if(getMouseX() > getScreenWidth() - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
                 {
                     String min = value.getMinValueString();
                     String max = value.getMaxValueString();
@@ -161,7 +161,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         super(0, 0);
         configContainer = cc;
 
-        ITextComponent title0 = configContainer.getConfigTitle().createCopy();
+        ITextComponent title0 = configContainer.getTitle().createCopy();
         title0.getStyle().setBold(true);
         title = title0.getFormattedText() + TextFormatting.DARK_GRAY + " [WIP GUI]";
         extraNBT = nbt;
@@ -170,12 +170,12 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         configEntryButtons = new ArrayList<>();
 
         List<Map.Entry<IConfigKey, IConfigValue>> list = new ArrayList<>();
-        list.addAll(configContainer.createGroup().getTree().entrySet());
+        list.addAll(configContainer.getTree().getTree().entrySet());
         Collections.sort(list, COMPARATOR);
 
         for(Map.Entry<IConfigKey, IConfigValue> entry : list)
         {
-            if(!Bits.getFlag(entry.getKey().getFlags(), IConfigKey.HIDDEN))
+            if(!entry.getKey().getFlag(IConfigKey.HIDDEN))
             {
                 configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue().copy()));
             }

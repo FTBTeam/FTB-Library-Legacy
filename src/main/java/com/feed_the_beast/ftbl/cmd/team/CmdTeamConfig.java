@@ -6,8 +6,8 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigTree;
 import com.google.gson.JsonObject;
+import com.latmod.lib.config.ConfigTree;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -35,13 +35,13 @@ public class CmdTeamConfig extends CmdEditConfigBase
         }
 
         @Override
-        public IConfigTree createGroup()
+        public IConfigTree getTree()
         {
             return tree;
         }
 
         @Override
-        public ITextComponent getConfigTitle()
+        public ITextComponent getTitle()
         {
             return FTBLibLang.TEAM_CONFIG.textComponent(team.getName());
         }

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.tile;
 
 import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.latmod.lib.ITextureCoordsProvider;
 import com.latmod.lib.LangKey;
+import com.latmod.lib.client.ITextureCoordsProvider;
 
 import java.util.Locale;
 

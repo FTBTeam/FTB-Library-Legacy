@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api.gui.widgets;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.client.ITextureCoords;
 import com.latmod.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;

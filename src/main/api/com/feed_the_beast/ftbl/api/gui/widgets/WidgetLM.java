@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.client.ITextureCoords;
 
 import javax.annotation.Nullable;
 import java.util.List;

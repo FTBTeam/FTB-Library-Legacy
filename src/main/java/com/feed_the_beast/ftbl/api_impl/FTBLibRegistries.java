@@ -2,26 +2,23 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
-import com.feed_the_beast.ftbl.api.IIntIDRegistry;
-import com.feed_the_beast.ftbl.api.IRegistry;
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.ISyncedRegistry;
-import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigKey;
-import com.feed_the_beast.ftbl.api_impl.config.ConfigManager;
-import com.feed_the_beast.ftbl.api_impl.config.PropertyBool;
-import com.feed_the_beast.ftbl.api_impl.config.SimpleConfigKey;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.ResourceLocationComparator;
+import com.latmod.lib.config.ConfigKey;
+import com.latmod.lib.config.PropertyBool;
+import com.latmod.lib.config.SimpleConfigKey;
+import com.latmod.lib.reg.ResourceLocationIntIDRegistry;
+import com.latmod.lib.reg.SimpleRegistry;
+import com.latmod.lib.reg.SyncedRegistry;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -99,11 +96,11 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
     }
 
-    private final IRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
+    private final SimpleRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
     private final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIntIDRegistry(), true);
     private final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
-    private final IIntIDRegistry<ResourceLocation> NOTIFICATIONS = new ResourceLocationIntIDRegistry();
-    private final IRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
+    private final SyncedRegistry<ResourceLocation, INotification> NOTIFICATIONS = new SyncedRegistry<>(new ResourceLocationIntIDRegistry(), true);
+    private final SimpleRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
     private final Collection<ITickable> TICKABLES = new ArrayList<>();
 
     //TODO: Make this Thread-safe
@@ -135,25 +132,19 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
         }
     }
 
-    FTBLibRegistries()
-    {
-        registerSync("guis", GUIS);
-        registerSync("notifications", NOTIFICATIONS);
-    }
-
     private void registerSync(String id, ISyncData data)
     {
         SYNCED_DATA.register(new ResourceLocation(FTBLibFinals.MOD_ID, id), data);
     }
 
     @Override
-    public IRegistry<ResourceLocation, ISyncData> syncedData()
+    public SimpleRegistry<ResourceLocation, ISyncData> syncedData()
     {
         return SYNCED_DATA;
     }
 
     @Override
-    public ISyncedRegistry<ResourceLocation, IGuiHandler> guis()
+    public SyncedRegistry<ResourceLocation, IGuiHandler> guis()
     {
         return GUIS;
     }
@@ -165,19 +156,7 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
     }
 
     @Override
-    public void registerConfigFile(String id, IConfigFile file, @Nonnull ITextComponent displayName)
-    {
-
-    }
-
-    @Override
-    public IIntIDRegistry<ResourceLocation> notifications()
-    {
-        return NOTIFICATIONS;
-    }
-
-    @Override
-    public IRegistry<ResourceLocation, IRecipeHandler> recipeHandlers()
+    public SimpleRegistry<ResourceLocation, IRecipeHandler> recipeHandlers()
     {
         return RECIPE_HANDLERS;
     }

@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.latmod.lib.EnumNameMap;
-import com.latmod.lib.ITextureCoords;
+import com.latmod.lib.client.ITextureCoords;
 import net.minecraft.util.ResourceLocation;
 
 public enum GuiIcons implements ITextureCoords
