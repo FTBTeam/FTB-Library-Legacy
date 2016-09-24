@@ -7,13 +7,11 @@ import com.google.gson.JsonElement;
 import com.latmod.lib.util.LMJsonUtils;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagIntArray;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,38 +58,6 @@ public class PropertyIntList extends PropertyBase
     public TIntList getIntList()
     {
         return value;
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        TIntList list = getIntList();
-
-        data.writeShort(list.size());
-
-        if(!list.isEmpty())
-        {
-            data.writeShort(list.size());
-
-            for(int i = 0; i < list.size(); i++)
-            {
-                data.writeInt(list.get(i));
-            }
-        }
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        int s = data.readShort() & 0xFFFF;
-        value.clear();
-
-        for(int i = 0; i < s; i++)
-        {
-            value.add(data.readInt());
-        }
-
-        set(value);
     }
 
     @Override
@@ -155,5 +121,37 @@ public class PropertyIntList extends PropertyBase
     public JsonElement getSerializableElement()
     {
         return LMJsonUtils.toIntArray(getIntList().toArray());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        TIntList list = getIntList();
+
+        data.writeShort(list.size());
+
+        if(!list.isEmpty())
+        {
+            data.writeShort(list.size());
+
+            for(int i = 0; i < list.size(); i++)
+            {
+                data.writeInt(list.get(i));
+            }
+        }
+    }
+
+    @Override
+    public void readData(ByteBuf data, boolean extended)
+    {
+        int s = data.readShort() & 0xFFFF;
+        value.clear();
+
+        for(int i = 0; i < s; i++)
+        {
+            value.add(data.readInt());
+        }
+
+        set(value);
     }
 }

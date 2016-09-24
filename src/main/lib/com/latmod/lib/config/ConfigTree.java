@@ -8,12 +8,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.util.JsonElementIO;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMNetUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,20 @@ public class ConfigTree implements IConfigTree
     }
 
     @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
+    public IConfigTree copy()
+    {
+        ConfigTree t = new ConfigTree();
+
+        getTree().forEach((key, value) ->
+        {
+            t.add(key, value.copy());
+        });
+
+        return t;
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
     {
         if(!extended)
         {
@@ -54,10 +66,10 @@ public class ConfigTree implements IConfigTree
             IConfigKey key = entry.getKey();
             IConfigValue value = key.getDefValue();
 
-            data.writeUTF(key.getName());
+            LMNetUtils.writeString(data, key.getName());
             data.writeByte(key.getFlags());
 
-            data.writeShort(ConfigManager.INSTANCE.configValues().getIntIDs().getIDFromKey(value.getID()));
+            data.writeShort(ConfigManager.INSTANCE.configValues().getIDs().getIDFromKey(value.getID()));
             value.writeData(data, true);
 
             byte extraFlags = 0;
@@ -80,23 +92,23 @@ public class ConfigTree implements IConfigTree
 
             if(!rawDN.isEmpty())
             {
-                data.writeUTF(rawDN);
+                LMNetUtils.writeString(data, rawDN);
             }
 
             if(info.isEmpty())
             {
-                data.writeUTF(info);
+                LMNetUtils.writeString(data, info);
             }
 
             value = entry.getValue();
 
-            data.writeShort(ConfigManager.INSTANCE.configValues().getIntIDs().getIDFromKey(value.getID()));
+            data.writeShort(ConfigManager.INSTANCE.configValues().getIDs().getIDFromKey(value.getID()));
             value.writeData(data, true);
         }
     }
 
     @Override
-    public void readData(DataInput data, boolean extended) throws IOException
+    public void readData(ByteBuf data, boolean extended)
     {
         if(!extended)
         {
@@ -112,10 +124,10 @@ public class ConfigTree implements IConfigTree
 
         while(--s >= 0)
         {
-            String id = data.readUTF();
+            String id = LMNetUtils.readString(data);
             byte flags = data.readByte();
 
-            IConfigValue value = ConfigManager.INSTANCE.configValues().getFromIntID(data.readUnsignedShort()).createConfigValue();
+            IConfigValue value = ConfigManager.INSTANCE.configValues().getFromIntID(data.readShort()).createConfigValue();
             value.readData(data, true);
 
             ConfigKey key = new ConfigKey(id, value);
@@ -125,15 +137,15 @@ public class ConfigTree implements IConfigTree
 
             if((extraFlags & HAS_DISPLAY_NAME) != 0)
             {
-                key.setDisplayName(data.readUTF());
+                key.setDisplayName(LMNetUtils.readString(data));
             }
 
             if((extraFlags & HAS_INFO) != 0)
             {
-                key.setInfo(data.readUTF());
+                key.setInfo(LMNetUtils.readString(data));
             }
 
-            value = ConfigManager.INSTANCE.configValues().getFromIntID(data.readUnsignedShort()).createConfigValue();
+            value = ConfigManager.INSTANCE.configValues().getFromIntID(data.readShort()).createConfigValue();
             value.readData(data, true);
             map.put(key, value);
         }

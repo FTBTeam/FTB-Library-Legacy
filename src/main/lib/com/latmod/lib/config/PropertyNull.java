@@ -8,12 +8,10 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -39,16 +37,6 @@ public enum PropertyNull implements IConfigValue
     public Object getValue()
     {
         return null;
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
     }
 
     @Override
@@ -84,7 +72,7 @@ public enum PropertyNull implements IConfigValue
     @Override
     public int getColor()
     {
-        return 0;
+        return 0x333333;
     }
 
     @Override
@@ -120,6 +108,17 @@ public enum PropertyNull implements IConfigValue
     }
 
     @Override
+    public NBTBase serializeNBT()
+    {
+        return null;
+    }
+
+    @Override
+    public void deserializeNBT(NBTBase nbt)
+    {
+    }
+
+    @Override
     public void fromJson(JsonElement json)
     {
     }
@@ -131,13 +130,12 @@ public enum PropertyNull implements IConfigValue
     }
 
     @Override
-    public NBTBase serializeNBT()
+    public void writeData(ByteBuf data, boolean extended)
     {
-        return null;
     }
 
     @Override
-    public void deserializeNBT(NBTBase nbt)
+    public void readData(ByteBuf data, boolean extended)
     {
     }
 }

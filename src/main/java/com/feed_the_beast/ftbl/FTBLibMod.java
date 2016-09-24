@@ -62,10 +62,6 @@ public class FTBLibMod
         FTBLibStats.init();
         MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
         FTBLibCaps.init();
-        FTBLibNotifications.init();
-
-        ConfigManager.INSTANCE.init(event.getAsmData());
-
         proxy.preInit();
     }
 

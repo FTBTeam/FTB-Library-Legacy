@@ -6,17 +6,15 @@ import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.util.LMNetUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import scala.actors.threadpool.*;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +25,7 @@ public class PropertyStringList extends PropertyBase
     public static final String ID = "string_list";
 
     @ConfigValueProvider(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(Collections.emptyList());
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(new ArrayList<>());
 
     private List<String> value;
 
@@ -65,42 +63,33 @@ public class PropertyStringList extends PropertyBase
     }
 
     @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
+    public void writeData(ByteBuf data, boolean extended)
     {
         List<String> list = getStringList();
-
         data.writeShort(list.size());
-
-        if(!list.isEmpty())
-        {
-            data.writeShort(list.size());
-
-            for(String s : list)
-            {
-                data.writeUTF(s);
-            }
-        }
+        list.forEach(s -> LMNetUtils.writeString(data, s));
     }
 
     @Override
-    public void readData(DataInput data, boolean extended) throws IOException
+    public void readData(ByteBuf data, boolean extended)
     {
-        int s = data.readShort() & 0xFFFF;
+        int s = data.readUnsignedShort();
 
         if(s <= 0)
         {
-            set(Collections.emptyList());
+            value.clear();
+            set(value);
         }
         else
         {
-            List<String> list = new ArrayList<>(s);
+            value.clear();
 
-            for(int i = 0; i < s; i++)
+            while(--s >= 0)
             {
-                list.add(data.readUTF());
+                value.add(LMNetUtils.readString(data));
             }
 
-            set(list);
+            set(value);
         }
     }
 
@@ -135,76 +124,47 @@ public class PropertyStringList extends PropertyBase
     }
 
     @Override
-    public List<String> getVariants()
-    {
-        List<String> list0 = getStringList();
-        List<String> list = new ArrayList<>(list0.size());
-        list.addAll(list0);
-        return list;
-    }
-
-    @Override
     public NBTBase serializeNBT()
     {
         NBTTagList tagList = new NBTTagList();
-
-        for(String s : getStringList())
-        {
-            tagList.appendTag(new NBTTagString(s));
-        }
-
+        getStringList().forEach(s -> tagList.appendTag(new NBTTagString(s)));
         return tagList;
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
+        value.clear();
         NBTTagList tagList = (NBTTagList) nbt;
-
         int s = tagList.tagCount();
 
-        if(s <= 0)
+        for(int i = 0; i < s; i++)
         {
-            set(Collections.emptyList());
+            value.add(tagList.getStringTagAt(i));
         }
-        else
-        {
-            List<String> list = new ArrayList<>(s);
 
-            for(int i = 0; i < s; i++)
-            {
-                list.add(tagList.getStringTagAt(i));
-            }
-
-            set(list);
-        }
+        set(value);
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
+        value.clear();
         JsonArray a = json.getAsJsonArray();
 
-        if(a.size() == 0)
+        if(a.size() > 0)
         {
-            set(Collections.emptyList());
+            a.forEach(e -> value.add(e.getAsString()));
         }
-        else
-        {
-            List<String> list = new ArrayList<>(a.size());
 
-            for(JsonElement e : a)
-            {
-                list.add(e.getAsString());
-            }
-
-            set(list);
-        }
+        set(value);
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        return new JsonPrimitive(getString());
+        JsonArray a = new JsonArray();
+        getStringList().forEach(s -> a.add(new JsonPrimitive(s)));
+        return a;
     }
 }

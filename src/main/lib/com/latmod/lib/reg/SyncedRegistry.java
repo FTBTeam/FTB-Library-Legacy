@@ -7,23 +7,23 @@ import javax.annotation.Nullable;
  */
 public class SyncedRegistry<K, V> extends SimpleRegistry<K, V>
 {
-    private final IntIDRegistry<K> intIDs;
+    private final IDRegistry<K> IDs;
 
-    public SyncedRegistry(IntIDRegistry<K> r, boolean overrides)
+    public SyncedRegistry(IDRegistry<K> r, boolean overrides)
     {
         super(overrides);
-        intIDs = r;
+        IDs = r;
     }
 
-    public IntIDRegistry<K> getIntIDs()
+    public IDRegistry<K> getIDs()
     {
-        return intIDs;
+        return IDs;
     }
 
     @Nullable
-    public V getFromIntID(int numID)
+    public V getFromIntID(short numID)
     {
-        K key = getIntIDs().getKeyFromID(numID);
+        K key = getIDs().getKeyFromID(numID);
         return key == null ? null : get(key);
     }
 }

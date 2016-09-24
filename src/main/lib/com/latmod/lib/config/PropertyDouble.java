@@ -10,14 +10,12 @@ import com.feed_the_beast.ftbl.gui.GuiSelectField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMStringUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagDouble;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -30,8 +28,8 @@ public class PropertyDouble extends PropertyBase
     public static final IConfigValueProvider PROVIDER = () -> new PropertyDouble(0D);
 
     private double value;
-    private double min = Double.MIN_VALUE;
-    private double max = Double.MAX_VALUE;
+    private double min = Double.NEGATIVE_INFINITY;
+    private double max = Double.POSITIVE_INFINITY;
 
     public PropertyDouble(double v)
     {
@@ -49,6 +47,17 @@ public class PropertyDouble extends PropertyBase
     public String getID()
     {
         return ID;
+    }
+
+    @Override
+    public double getDouble()
+    {
+        return value;
+    }
+
+    public void setDouble(double v)
+    {
+        value = v;
     }
 
     @Nullable
@@ -70,12 +79,6 @@ public class PropertyDouble extends PropertyBase
         return this;
     }
 
-    @Override
-    public double getDouble()
-    {
-        return value;
-    }
-
     public double getMin()
     {
         return min;
@@ -84,35 +87,6 @@ public class PropertyDouble extends PropertyBase
     public double getMax()
     {
         return max;
-    }
-
-    public void set(double v)
-    {
-        value = v;
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        data.writeDouble(getDouble());
-
-        if(extended)
-        {
-            data.writeDouble(getMin());
-            data.writeDouble(getMax());
-        }
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        set(data.readDouble());
-
-        if(extended)
-        {
-            setMin(data.readDouble());
-            setMax(data.readDouble());
-        }
     }
 
     @Override
@@ -184,7 +158,7 @@ public class PropertyDouble extends PropertyBase
     {
         GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, getDouble(), (id, val) ->
         {
-            set((Double) val);
+            setDouble((Double) val);
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         });
@@ -199,18 +173,42 @@ public class PropertyDouble extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        set(((NBTPrimitive) nbt).getDouble());
+        setDouble(((NBTPrimitive) nbt).getDouble());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        set(json.getAsDouble());
+        setDouble(json.getAsDouble());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getDouble());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        data.writeDouble(getDouble());
+
+        if(extended)
+        {
+            data.writeDouble(getMin());
+            data.writeDouble(getMax());
+        }
+    }
+
+    @Override
+    public void readData(ByteBuf data, boolean extended)
+    {
+        setDouble(data.readDouble());
+
+        if(extended)
+        {
+            setMin(data.readDouble());
+            setMax(data.readDouble());
+        }
     }
 }

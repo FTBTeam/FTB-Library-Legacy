@@ -18,7 +18,7 @@ import com.latmod.lib.config.ConfigFile;
 import com.latmod.lib.config.ConfigKey;
 import com.latmod.lib.config.ConfigTree;
 import com.latmod.lib.reg.SimpleRegistry;
-import com.latmod.lib.reg.StringIntIDRegistry;
+import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMUtils;
@@ -30,7 +30,6 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,7 +45,7 @@ public enum ConfigManager implements IConfigManager
 {
     INSTANCE;
 
-    private final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIntIDRegistry(), false);
+    private final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIDRegistry(), false);
     private final SimpleRegistry<String, IConfigFileProvider> FILE_PROVIDERS = new SimpleRegistry<>(false);
     private final IConfigTree CLIENT_CONFIG = new ConfigTree();
     private final ConfigFile CLIENT_CONFIG_FILE = new ConfigFile();
@@ -86,140 +85,104 @@ public enum ConfigManager implements IConfigManager
 
     public void init(ASMDataTable table)
     {
-        for(ASMDataTable.ASMData data : table.getAll(ConfigValueProvider.class.getName()))
+        LMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, ConfigValueProvider.class, (obj, data) ->
         {
-            try
+            String s = (String) data.getAnnotationInfo().get("value");
+
+            if(s != null && !s.isEmpty())
             {
-                Class<?> clazz = Class.forName(data.getClassName());
-                String s = (String) data.getAnnotationInfo().get("value");
+                CONFIG_VALUES.register(s.toLowerCase(Locale.ENGLISH), obj);
+            }
 
-                if(s != null && !s.isEmpty())
+            return null;
+        });
+
+        LMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, ConfigFileProvider.class, (obj, data) ->
+        {
+            String s = (String) data.getAnnotationInfo().get("value");
+
+            if(s != null && !s.isEmpty())
+            {
+                FILE_PROVIDERS.register(s.toLowerCase(Locale.ENGLISH), obj);
+            }
+
+            return null;
+        });
+
+        LMUtils.findAnnotatedObjects(table, IConfigValue.class, ConfigValue.class, (obj, data) ->
+        {
+            String id = (String) data.getAnnotationInfo().get("id");
+            String file = (String) data.getAnnotationInfo().get("file");
+
+            if(id != null && file != null && !id.isEmpty() && !file.isEmpty())
+            {
+                boolean client = data.getAnnotationInfo().containsKey("client") && (boolean) data.getAnnotationInfo().get("client");
+                String displayName = data.getAnnotationInfo().containsKey("displayName") ? (String) data.getAnnotationInfo().get("displayName") : null;
+
+                byte flags = 0;
+
+                if(data.getAnnotationInfo().containsKey("isExcluded") && (boolean) data.getAnnotationInfo().get("isExcluded"))
                 {
-                    Field field = clazz.getDeclaredField(data.getObjectName());
+                    flags |= IConfigKey.EXCLUDED;
+                }
 
-                    if(field != null && IConfigValueProvider.class.isAssignableFrom(field.getType()))
+                if(data.getAnnotationInfo().containsKey("isHidden") && (boolean) data.getAnnotationInfo().get("isHidden"))
+                {
+                    flags |= IConfigKey.HIDDEN;
+                }
+
+                if(data.getAnnotationInfo().containsKey("canEdit") && !(boolean) data.getAnnotationInfo().get("canEdit"))
+                {
+                    flags |= IConfigKey.CANT_EDIT;
+                }
+
+                if(data.getAnnotationInfo().containsKey("useScrollBar") && (boolean) data.getAnnotationInfo().get("useScrollBar"))
+                {
+                    flags |= IConfigKey.USE_SCROLL_BAR;
+                }
+
+                if(data.getAnnotationInfo().containsKey("translateDisplayName") && (boolean) data.getAnnotationInfo().get("translateDisplayName"))
+                {
+                    flags |= IConfigKey.TRANSLATE_DISPLAY_NAME;
+                }
+
+                ConfigKey key = new ConfigKey(file + "." + id, obj.copy(), displayName, false);
+                key.setFlags(flags);
+
+                Object infoObj = data.getAnnotationInfo().get("info");
+
+                if(infoObj instanceof String)
+                {
+                    if(infoObj.toString().isEmpty())
                     {
-                        IConfigValueProvider provider = (IConfigValueProvider) field.get(null);
-                        CONFIG_VALUES.register(s.toLowerCase(Locale.ENGLISH), provider);
+                        key.setInfo(infoObj.toString());
                     }
                 }
+                else if(infoObj instanceof List<?>)
+                {
+                    if(((List<?>) infoObj).size() == 1)
+                    {
+                        key.setInfo(((List<?>) infoObj).get(0).toString());
+                    }
+                }
+
+                if(client)
+                {
+                    CLIENT_CONFIG.add(key, obj);
+                }
+                else
+                {
+                    CONFIG.add(key, obj);
+                }
             }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
+
+            return null;
+        });
+
+        CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getKeys());
 
         LMUtils.DEV_LOGGER.info("Found IConfigValueProviders [" + CONFIG_VALUES.size() + "]: " + CONFIG_VALUES.getKeys());
-
-        for(ASMDataTable.ASMData data : table.getAll(ConfigFileProvider.class.getName()))
-        {
-            try
-            {
-                Class<?> clazz = Class.forName(data.getClassName());
-                String s = (String) data.getAnnotationInfo().get("value");
-
-                if(s != null && !s.isEmpty())
-                {
-                    Field field = clazz.getDeclaredField(data.getObjectName());
-
-                    if(field != null && IConfigFileProvider.class.isAssignableFrom(field.getType()))
-                    {
-                        IConfigFileProvider provider = (IConfigFileProvider) field.get(null);
-                        FILE_PROVIDERS.register(s.toLowerCase(Locale.ENGLISH), provider);
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-
         LMUtils.DEV_LOGGER.info("Found IConfigFileProviders [" + FILE_PROVIDERS.size() + "]: " + FILE_PROVIDERS.getKeys());
-
-        for(ASMDataTable.ASMData data : table.getAll(ConfigValue.class.getName()))
-        {
-            try
-            {
-                Class<?> clazz = Class.forName(data.getClassName());
-                String id = (String) data.getAnnotationInfo().get("id");
-                String file = (String) data.getAnnotationInfo().get("file");
-
-                if(id != null && file != null && !id.isEmpty() && !file.isEmpty())
-                {
-                    Field field = clazz.getDeclaredField(data.getObjectName());
-
-                    if(field != null && IConfigValue.class.isAssignableFrom(field.getType()))
-                    {
-                        IConfigValue value = (IConfigValue) field.get(null);
-                        boolean client = data.getAnnotationInfo().containsKey("client") && (boolean) data.getAnnotationInfo().get("client");
-                        String displayName = data.getAnnotationInfo().containsKey("displayName") ? (String) data.getAnnotationInfo().get("displayName") : null;
-
-                        byte flags = 0;
-
-                        if(data.getAnnotationInfo().containsKey("isExcluded") && (boolean) data.getAnnotationInfo().get("isExcluded"))
-                        {
-                            flags |= IConfigKey.EXCLUDED;
-                        }
-
-                        if(data.getAnnotationInfo().containsKey("isHidden") && (boolean) data.getAnnotationInfo().get("isHidden"))
-                        {
-                            flags |= IConfigKey.HIDDEN;
-                        }
-
-                        if(data.getAnnotationInfo().containsKey("canEdit") && !(boolean) data.getAnnotationInfo().get("canEdit"))
-                        {
-                            flags |= IConfigKey.CANT_EDIT;
-                        }
-
-                        if(data.getAnnotationInfo().containsKey("useScrollBar") && (boolean) data.getAnnotationInfo().get("useScrollBar"))
-                        {
-                            flags |= IConfigKey.USE_SCROLL_BAR;
-                        }
-
-                        if(data.getAnnotationInfo().containsKey("translateDisplayName") && (boolean) data.getAnnotationInfo().get("translateDisplayName"))
-                        {
-                            flags |= IConfigKey.TRANSLATE_DISPLAY_NAME;
-                        }
-
-                        ConfigKey key = new ConfigKey(file + "." + id, value.copy(), displayName, false);
-                        key.setFlags(flags);
-
-                        Object infoObj = data.getAnnotationInfo().get("info");
-
-                        if(infoObj instanceof String)
-                        {
-                            if(infoObj.toString().isEmpty())
-                            {
-                                key.setInfo(infoObj.toString());
-                            }
-                        }
-                        else if(infoObj instanceof List<?>)
-                        {
-                            if(((List<?>) infoObj).size() == 1)
-                            {
-                                key.setInfo(((List<?>) infoObj).get(0).toString());
-                            }
-                        }
-
-                        if(client)
-                        {
-                            CLIENT_CONFIG.add(key, value);
-                        }
-                        else
-                        {
-                            CONFIG.add(key, value);
-                        }
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-
         LMUtils.DEV_LOGGER.info("Found ClientConfig IConfigValues [" + CLIENT_CONFIG.getTree().size() + "]: " + CLIENT_CONFIG.getTree().keySet());
         LMUtils.DEV_LOGGER.info("Found CommonConfig IConfigValues [" + CONFIG.getTree().size() + "]: " + CONFIG.getTree().keySet());
     }

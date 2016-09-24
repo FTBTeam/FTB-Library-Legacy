@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationVariant;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.Notification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -12,21 +11,16 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class FTBLibNotifications
 {
-    private static Notification create(String s)
+    private static Notification create(String s, int v)
     {
-        return new Notification(new ResourceLocation(FTBLibFinals.MOD_ID, s));
+        return new Notification(new ResourceLocation(FTBLibFinals.MOD_ID, s), (byte) v);
     }
 
     @NotificationVariant
-    public static final INotification RELOAD_CLIENT_CONFIG = create("reload_client_config")
+    public static final INotification RELOAD_CLIENT_CONFIG = create("reload_client_config", 0)
             .addText(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent())
             .addText(new TextComponentString("/ftb reload_client"))
             .addText(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent())
             .setTimer(7000)
-            .setColor(0xFF333333);
-
-    public static void init()
-    {
-        FTBLibAPI_Impl.INSTANCE.getRegistries().notifications().register(RELOAD_CLIENT_CONFIG.getID(), RELOAD_CLIENT_CONFIG);
-    }
+            /*.setColor(0xFF333333)*/;
 }

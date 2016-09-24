@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 
 public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
-    private int guiID;
+    private short guiID;
     private NBTTagCompound data;
     private int windowID;
 
@@ -27,7 +27,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
     {
-        guiID = FTBLibRegistries.INSTANCE.guis().getIntIDs().getIDFromKey(key);
+        guiID = FTBLibRegistries.INSTANCE.guis().getIDs().getIDFromKey(key);
         data = tag;
         windowID = wid;
     }
@@ -41,7 +41,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        guiID = io.readInt();
+        guiID = io.readShort();
         data = LMNetUtils.readTag(io);
         windowID = io.readUnsignedByte();
     }
@@ -49,7 +49,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeInt(guiID);
+        io.writeShort(guiID);
         LMNetUtils.writeTag(io, data);
         io.writeByte(windowID);
     }
@@ -58,7 +58,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m)
     {
-        ResourceLocation key = FTBLibRegistries.INSTANCE.guis().getIntIDs().getKeyFromID(m.guiID);
+        ResourceLocation key = FTBLibRegistries.INSTANCE.guis().getIDs().getKeyFromID(m.guiID);
 
         if(key != null)
         {

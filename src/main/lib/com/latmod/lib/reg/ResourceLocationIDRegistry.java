@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by LatvianModder on 17.09.2016.
  */
-public class ResourceLocationIntIDRegistry extends IntIDRegistry<ResourceLocation>
+public class ResourceLocationIDRegistry extends IDRegistry<ResourceLocation>
 {
     @Override
     public String createStringFromKey(ResourceLocation rl)

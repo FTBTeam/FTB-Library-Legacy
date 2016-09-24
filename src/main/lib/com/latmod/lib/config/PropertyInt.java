@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiSelectField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
@@ -18,9 +19,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -93,54 +91,6 @@ public class PropertyInt extends PropertyBase
     public void set(int v)
     {
         value = MathHelper.clamp_int(v, getMin(), getMax());
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        data.writeByte(NBT_ID);
-
-        switch(NBT_ID)
-        {
-            case Constants.NBT.TAG_BYTE:
-                data.writeByte(getInt());
-                return;
-            case Constants.NBT.TAG_SHORT:
-                data.writeShort(getInt());
-                return;
-            default:
-                data.writeInt(getInt());
-        }
-
-        if(extended)
-        {
-            data.writeInt(getMin());
-            data.writeInt(getMax());
-        }
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        NBT_ID = data.readByte();
-
-        switch(NBT_ID)
-        {
-            case Constants.NBT.TAG_BYTE:
-                set(data.readByte());
-                return;
-            case Constants.NBT.TAG_SHORT:
-                set(data.readShort());
-                return;
-            default:
-                set(data.readInt());
-        }
-
-        if(extended)
-        {
-            setMin(data.readInt());
-            setMax(data.readInt());
-        }
     }
 
     @Override
@@ -248,5 +198,52 @@ public class PropertyInt extends PropertyBase
     public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getInt());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        data.writeByte(NBT_ID);
+
+        switch(NBT_ID)
+        {
+            case Constants.NBT.TAG_BYTE:
+                data.writeByte(getInt());
+                return;
+            case Constants.NBT.TAG_SHORT:
+                data.writeShort(getInt());
+                return;
+            default:
+                data.writeInt(getInt());
+        }
+
+        if(extended)
+        {
+            data.writeInt(getMin());
+            data.writeInt(getMax());
+        }
+    }
+
+    public void readData(ByteBuf data, boolean extended)
+    {
+        NBT_ID = data.readByte();
+
+        switch(NBT_ID)
+        {
+            case Constants.NBT.TAG_BYTE:
+                set(data.readByte());
+                return;
+            case Constants.NBT.TAG_SHORT:
+                set(data.readShort());
+                return;
+            default:
+                set(data.readInt());
+        }
+
+        if(extended)
+        {
+            setMin(data.readInt());
+            setMax(data.readInt());
+        }
     }
 }

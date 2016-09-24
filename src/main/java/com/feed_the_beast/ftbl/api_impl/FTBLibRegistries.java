@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
+import com.feed_the_beast.ftbl.api.NotificationVariant;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
@@ -13,11 +14,15 @@ import com.latmod.lib.ResourceLocationComparator;
 import com.latmod.lib.config.ConfigKey;
 import com.latmod.lib.config.PropertyBool;
 import com.latmod.lib.config.SimpleConfigKey;
-import com.latmod.lib.reg.ResourceLocationIntIDRegistry;
+import com.latmod.lib.reg.ResourceLocationIDRegistry;
 import com.latmod.lib.reg.SimpleRegistry;
+import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
+import com.latmod.lib.util.LMUtils;
+import gnu.trove.map.hash.TShortObjectHashMap;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +36,17 @@ import java.util.Map;
 public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
 {
     INSTANCE;
+
+    public void init(ASMDataTable table)
+    {
+        LMUtils.findAnnotatedObjects(table, INotification.class, NotificationVariant.class, (obj, data) ->
+        {
+            NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj);
+            return null;
+        });
+
+        NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getKeys());
+    }
 
     public static class SidebarButtonRegistry extends SimpleRegistry<ResourceLocation, ISidebarButton>
     {
@@ -97,9 +113,10 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
     }
 
     private final SimpleRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
-    private final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIntIDRegistry(), true);
+    private final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIDRegistry(), true);
     private final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
-    private final SyncedRegistry<ResourceLocation, INotification> NOTIFICATIONS = new SyncedRegistry<>(new ResourceLocationIntIDRegistry(), true);
+    public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
+    public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     private final SimpleRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
     private final Collection<ITickable> TICKABLES = new ArrayList<>();
 

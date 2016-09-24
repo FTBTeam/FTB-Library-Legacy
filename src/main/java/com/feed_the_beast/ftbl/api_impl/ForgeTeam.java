@@ -391,7 +391,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         tree.add(new SimpleConfigKey("title"), new PropertyString(title == null ? "" : title)
         {
             @Override
-            public void set(String v)
+            public void setString(String v)
             {
                 setTitle(v.trim());
             }
@@ -406,7 +406,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         tree.add(new SimpleConfigKey("desc"), new PropertyString(desc == null ? "" : desc)
         {
             @Override
-            public void set(String v)
+            public void setString(String v)
             {
                 setDesc(v.trim());
             }
@@ -421,7 +421,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         tree.add(new SimpleConfigKey("free_to_join"), new PropertyBool(false)
         {
             @Override
-            public void set(boolean v)
+            public void setBoolean(boolean v)
             {
                 setFlag(IForgeTeam.FREE_TO_JOIN, v);
             }
@@ -436,7 +436,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         tree.add(new SimpleConfigKey("is_hidden"), new PropertyBool(false)
         {
             @Override
-            public void set(boolean v)
+            public void setBoolean(boolean v)
             {
                 setFlag(IForgeTeam.HIDDEN, v);
             }

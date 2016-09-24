@@ -9,14 +9,12 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiSelectColor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -41,33 +39,21 @@ public class PropertyColor extends PropertyBase
         return ID;
     }
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getColorID();
-    }
-
-    public void set(byte v)
-    {
-        value = v;
-    }
-
     public byte getColorID()
     {
         return value;
     }
 
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
+    public void setColorID(byte v)
     {
-        data.writeByte(getColorID());
+        value = v;
     }
 
+    @Nullable
     @Override
-    public void readData(DataInput data, boolean extended) throws IOException
+    public Object getValue()
     {
-        set(data.readByte());
+        return getColorID();
     }
 
     @Override
@@ -105,7 +91,7 @@ public class PropertyColor extends PropertyBase
     {
         new GuiSelectColor(null, (id, val) ->
         {
-            set((byte) val.hashCode());
+            setColorID((byte) val.hashCode());
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         }).openGui();
@@ -120,18 +106,30 @@ public class PropertyColor extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        set(((NBTPrimitive) nbt).getByte());
+        setColorID(((NBTPrimitive) nbt).getByte());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        set(json.getAsByte());
+        setColorID(json.getAsByte());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getColorID());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        data.writeByte(getColorID());
+    }
+
+    @Override
+    public void readData(ByteBuf data, boolean extended)
+    {
+        setColorID(data.readByte());
     }
 }

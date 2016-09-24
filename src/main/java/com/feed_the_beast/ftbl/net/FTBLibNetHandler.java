@@ -15,5 +15,6 @@ public class FTBLibNetHandler
         NET.register(5, new MessageNotifyPlayer());
         NET.register(6, new MessageDisplayInfo());
         NET.register(7, new MessageLogin());
+        NET.register(8, new MessageNotifyPlayerCustom());
     }
 }

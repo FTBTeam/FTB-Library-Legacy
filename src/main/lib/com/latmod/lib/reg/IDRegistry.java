@@ -1,7 +1,6 @@
 package com.latmod.lib.reg;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -11,18 +10,18 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 17.08.2016.
  */
-public abstract class IntIDRegistry<K>
+public abstract class IDRegistry<K>
 {
-    private final TIntObjectMap<K> IDToKey = new TIntObjectHashMap<>();
-    private final Map<K, Integer> KeyToID = new HashMap<>();
+    private final TShortObjectHashMap<K> IDToKey = new TShortObjectHashMap<>();
+    private final Map<K, Short> KeyToID = new HashMap<>();
 
     @Nullable
-    public K getKeyFromID(int numID)
+    public K getKeyFromID(short numID)
     {
         return IDToKey.get(numID);
     }
 
-    public int getIDFromKey(K key)
+    public short getIDFromKey(K key)
     {
         return IDToKey.containsValue(key) ? KeyToID.get(key) : 0;
     }
@@ -34,20 +33,20 @@ public abstract class IntIDRegistry<K>
 
         keys.forEach(key ->
         {
-            int i = IDToKey.size() + 1;
+            short i = (short) (IDToKey.size() + 1);
             KeyToID.put(key, i);
             IDToKey.put(i, key);
         });
     }
 
-    public int generateID(K key)
+    public short generateID(K key)
     {
         if(IDToKey.containsValue(key))
         {
             return KeyToID.get(key);
         }
 
-        int i = IDToKey.size() + 1;
+        short i = (short) (IDToKey.size() + 1);
         KeyToID.put(key, i);
         IDToKey.put(i, key);
         return i;
@@ -57,9 +56,9 @@ public abstract class IntIDRegistry<K>
 
     public abstract K createKeyFromString(String s);
 
-    public TIntObjectMap<String> serialize()
+    public TShortObjectHashMap<String> serialize()
     {
-        TIntObjectHashMap<String> map = new TIntObjectHashMap<>();
+        TShortObjectHashMap<String> map = new TShortObjectHashMap<>();
 
         KeyToID.forEach((key, value) ->
         {
@@ -69,7 +68,7 @@ public abstract class IntIDRegistry<K>
         return map;
     }
 
-    public void deserialize(TIntObjectMap<String> map)
+    public void deserialize(TShortObjectHashMap<String> map)
     {
         map.forEachEntry((key, value) ->
         {

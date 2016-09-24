@@ -8,14 +8,12 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,6 +40,17 @@ public class PropertyBool extends PropertyBase
         return ID;
     }
 
+    @Override
+    public boolean getBoolean()
+    {
+        return value;
+    }
+
+    public void setBoolean(boolean v)
+    {
+        value = v;
+    }
+
     @Nullable
     @Override
     public Object getValue()
@@ -49,33 +58,10 @@ public class PropertyBool extends PropertyBase
         return getBoolean();
     }
 
-    public void set(boolean v)
-    {
-        value = v;
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        data.writeBoolean(getBoolean());
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        set(data.readBoolean());
-    }
-
     @Override
     public String getString()
     {
         return value ? "true" : "false";
-    }
-
-    @Override
-    public boolean getBoolean()
-    {
-        return value;
     }
 
     @Override
@@ -111,7 +97,7 @@ public class PropertyBool extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        set(!getBoolean());
+        setBoolean(!getBoolean());
     }
 
     @Override
@@ -123,18 +109,30 @@ public class PropertyBool extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        set(((NBTPrimitive) nbt).getByte() != 0);
+        setBoolean(((NBTPrimitive) nbt).getByte() != 0);
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        set(json.getAsBoolean());
+        setBoolean(json.getAsBoolean());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getBoolean());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        data.writeBoolean(getBoolean());
+    }
+
+    @Override
+    public void readData(ByteBuf data, boolean extended)
+    {
+        setBoolean(data.readBoolean());
     }
 }

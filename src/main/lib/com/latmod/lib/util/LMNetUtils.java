@@ -3,6 +3,7 @@ package com.latmod.lib.util;
 import com.google.gson.JsonElement;
 import com.latmod.lib.io.ByteIOStream;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -174,5 +175,15 @@ public class LMNetUtils
     public static ITextComponent readTextComponent(ByteBuf io)
     {
         return LMJsonUtils.deserializeTextComponent(readJsonElement(io));
+    }
+
+    public static void writeItemStack(ByteBuf io, ItemStack is)
+    {
+        ByteBufUtils.writeItemStack(io, is);
+    }
+
+    public static ItemStack readItemStack(ByteBuf io)
+    {
+        return ByteBufUtils.readItemStack(io);
     }
 }

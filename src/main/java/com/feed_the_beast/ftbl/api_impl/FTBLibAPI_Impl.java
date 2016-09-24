@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
+import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
@@ -50,19 +51,9 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
 
     public void init(ASMDataTable table)
     {
-        for(ASMDataTable.ASMData data : table.getAll(FTBLibAddon.class.getName()))
-        {
-            try
-            {
-                Class<?> clazz = Class.forName(data.getClassName());
-                Class<? extends IFTBLibAddon> clazzAddon = clazz.asSubclass(IFTBLibAddon.class);
-                clazzAddon.newInstance().onFTBLibLoaded(this);
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
+        LMUtils.findAnnotatedClasses(table, IFTBLibAddon.class, FTBLibAddon.class, (inst, data) -> inst.onFTBLibLoaded(this));
+        ConfigManager.INSTANCE.init(table);
+        FTBLibRegistries.INSTANCE.init(table);
     }
 
     public void setHasServer(boolean b)
@@ -213,7 +204,16 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void sendNotification(@Nullable EntityPlayerMP ep, INotification n)
     {
-        new MessageNotifyPlayer(n).sendTo(ep);
+        short id = FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().getIDFromKey(n.getID() + "@" + n.getVariant());
+
+        if(id != 0)
+        {
+            new MessageNotifyPlayer(id).sendTo(ep);
+        }
+        else
+        {
+            new MessageNotifyPlayerCustom(n).sendTo(ep);
+        }
     }
 
     // Other Methods //

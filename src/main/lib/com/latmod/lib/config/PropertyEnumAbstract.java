@@ -1,16 +1,16 @@
 package com.latmod.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.EnumNameMap;
+import com.latmod.lib.util.LMNetUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 
 /**
  * Created by LatvianModder on 12.09.2016.
@@ -36,33 +36,6 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     public Object getValue()
     {
         return get();
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        if(extended)
-        {
-            data.writeShort(getNameMap().size);
-
-            for(String s : getNameMap().getKeys())
-            {
-                data.writeUTF(s);
-            }
-        }
-
-        data.writeShort(getNameMap().getIndex(getValue()));
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        if(extended)
-        {
-            throw new IOException("Reading extended PropertyEnum data is not supported!");
-        }
-
-        set(getNameMap().getFromIndex(data.readShort() & 0xFFFF));
     }
 
     @Override
@@ -97,6 +70,18 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     }
 
     @Override
+    public NBTBase serializeNBT()
+    {
+        return new NBTTagString(getString());
+    }
+
+    @Override
+    public void deserializeNBT(NBTBase nbt)
+    {
+        set(getNameMap().get(((NBTTagString) nbt).getString()));
+    }
+
+    @Override
     public void fromJson(JsonElement json)
     {
         set(getNameMap().get(json.getAsString()));
@@ -109,14 +94,21 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     }
 
     @Override
-    public NBTBase serializeNBT()
+    public void writeData(ByteBuf data, boolean extended)
     {
-        return new NBTTagString(getString());
+        if(extended)
+        {
+            data.writeShort(getNameMap().size);
+            getNameMap().getKeys().forEach(s -> LMNetUtils.writeString(data, s));
+        }
+
+        data.writeShort(getNameMap().getIndex(getValue()));
     }
 
     @Override
-    public void deserializeNBT(NBTBase nbt)
+    public void readData(ByteBuf data, boolean extended)
     {
-        set(getNameMap().get(((NBTTagString) nbt).getString()));
+        Preconditions.checkState(!extended, "Reading extended PropertyEnum data is not supported!");
+        set(getNameMap().getFromIndex(data.readShort() & 0xFFFF));
     }
 }

@@ -9,13 +9,12 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiSelectField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.util.LMNetUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -40,34 +39,22 @@ public class PropertyString extends PropertyBase
         return ID;
     }
 
+    @Override
+    public String getString()
+    {
+        return value;
+    }
+
+    public void setString(String v)
+    {
+        value = v;
+    }
+
     @Nullable
     @Override
     public Object getValue()
     {
         return getString();
-    }
-
-    public void set(String v)
-    {
-        value = v;
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        data.writeUTF(getString());
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        set(data.readUTF());
-    }
-
-    @Override
-    public String getString()
-    {
-        return value;
     }
 
     @Override
@@ -99,7 +86,7 @@ public class PropertyString extends PropertyBase
     {
         GuiSelectField.display(null, GuiSelectField.FieldType.STRING, getString(), (id, val) ->
         {
-            set(val.toString());
+            setString(val.toString());
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         });
@@ -114,18 +101,30 @@ public class PropertyString extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        set(((NBTTagString) nbt).getString());
+        setString(((NBTTagString) nbt).getString());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        set(json.getAsString());
+        setString(json.getAsString());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getString());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        LMNetUtils.writeString(data, getString());
+    }
+
+    @Override
+    public void readData(ByteBuf data, boolean extended)
+    {
+        setString(LMNetUtils.readString(data));
     }
 }

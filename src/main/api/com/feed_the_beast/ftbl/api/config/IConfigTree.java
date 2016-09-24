@@ -40,4 +40,6 @@ public interface IConfigTree extends IExtendedIOObject, IJsonSerializable, INBTS
     {
         return getTree().isEmpty();
     }
+
+    IConfigTree copy();
 }

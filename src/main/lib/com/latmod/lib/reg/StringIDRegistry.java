@@ -3,7 +3,7 @@ package com.latmod.lib.reg;
 /**
  * Created by LatvianModder on 17.09.2016.
  */
-public class StringIntIDRegistry extends IntIDRegistry<String>
+public class StringIDRegistry extends IDRegistry<String>
 {
     @Override
     public String createStringFromKey(String s)

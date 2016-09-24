@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -14,9 +15,6 @@ import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 
 /**
  * Created by LatvianModder on 30.08.2016.
@@ -28,27 +26,27 @@ public class PropertyBlockState extends PropertyBase
     @ConfigValueProvider(ID)
     public static final IConfigValueProvider PROVIDER = () -> new PropertyBlockState(Blocks.AIR.getDefaultState());
 
-    private IBlockState blockState;
+    private IBlockState value;
 
     public PropertyBlockState(IBlockState state)
     {
-        blockState = state;
-    }
-
-    public IBlockState getBlockState()
-    {
-        return blockState;
-    }
-
-    public void setBlockState(IBlockState state)
-    {
-        blockState = state;
+        value = state;
     }
 
     @Override
     public String getID()
     {
         return ID;
+    }
+
+    public IBlockState getBlockState()
+    {
+        return value;
+    }
+
+    public void setBlockState(IBlockState state)
+    {
+        value = state;
     }
 
     @Nullable
@@ -83,25 +81,6 @@ public class PropertyBlockState extends PropertyBase
     }
 
     @Override
-    public void fromJson(JsonElement o)
-    {
-        blockState = Blocks.AIR.getDefaultState();
-
-        if(o.isJsonPrimitive())
-        {
-            blockState = Block.REGISTRY.getObject(new ResourceLocation(o.getAsString())).getDefaultState();
-        }
-
-        setBlockState(blockState);
-    }
-
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
-    }
-
-    @Override
     public NBTBase serializeNBT()
     {
         return new NBTTagShort((short) getInt());
@@ -114,13 +93,32 @@ public class PropertyBlockState extends PropertyBase
     }
 
     @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
+    public void fromJson(JsonElement o)
+    {
+        value = Blocks.AIR.getDefaultState();
+
+        if(o.isJsonPrimitive())
+        {
+            value = Block.REGISTRY.getObject(new ResourceLocation(o.getAsString())).getDefaultState();
+        }
+
+        setBlockState(value);
+    }
+
+    @Override
+    public JsonElement getSerializableElement()
+    {
+        return new JsonPrimitive(Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
     {
         data.writeShort(getInt());
     }
 
     @Override
-    public void readData(DataInput data, boolean extended) throws IOException
+    public void readData(ByteBuf data, boolean extended)
     {
         setBlockState(Block.getStateById(data.readUnsignedShort()));
     }

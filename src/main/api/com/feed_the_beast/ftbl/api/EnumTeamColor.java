@@ -29,14 +29,14 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
     private final String name;
     private final EnumDyeColor dyeColor;
     private final TextFormatting textFormatting;
-    private final int color;
+    private final byte colorID;
 
     EnumTeamColor(EnumDyeColor d, TextFormatting t, int c)
     {
         name = EnumNameMap.createName(this);
         dyeColor = d;
         textFormatting = t;
-        color = c;
+        colorID = (byte) c;
     }
 
     @Override
@@ -50,9 +50,9 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
         return textFormatting;
     }
 
-    public int getColor()
+    public byte getColorID()
     {
-        return color;
+        return colorID;
     }
 
     public EnumDyeColor getDyeColor()

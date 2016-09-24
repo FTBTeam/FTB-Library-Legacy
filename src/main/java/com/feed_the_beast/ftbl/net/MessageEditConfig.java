@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.google.gson.JsonObject;
 import com.latmod.lib.config.ConfigTree;
-import com.latmod.lib.io.ByteIOStream;
 import com.latmod.lib.util.LMNetUtils;
 import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
@@ -16,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
@@ -30,7 +28,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 
     public MessageEditConfig(@Nullable NBTTagCompound nbt, IConfigContainer c)
     {
-        group = c.getTree();
+        group = c.getTree().copy();
         extraNBT = nbt;
         title = c.getTitle();
 
@@ -52,15 +50,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         extraNBT = LMNetUtils.readTag(io);
         title = LMNetUtils.readTextComponent(io);
         group = new ConfigTree();
-
-        try
-        {
-            group.readData(LMNetUtils.readCompressedByteIOStream(io), true);
-        }
-        catch(IOException ex)
-        {
-            ex.printStackTrace();
-        }
+        group.readData(io, true);
     }
 
     @Override
@@ -68,18 +58,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         LMNetUtils.writeTag(io, extraNBT);
         LMNetUtils.writeTextComponent(io, title);
-        ByteIOStream stream = new ByteIOStream();
-
-        try
-        {
-            group.writeData(stream, true);
-        }
-        catch(IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        LMNetUtils.writeCompressedByteIOStream(io, stream);
+        group.writeData(io, true);
     }
 
     @Override

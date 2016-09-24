@@ -9,13 +9,12 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.EnumNameMap;
+import com.latmod.lib.util.LMNetUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
-import java.io.DataInput;
-import java.io.DataOutput;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,48 +43,14 @@ public class PropertyStringEnum extends PropertyBase
 
     @Nullable
     @Override
-    public String getValue()
+    public Object getValue()
     {
         return getString();
     }
 
-    public void set(String v)
+    public void setString(String v)
     {
         value = v;
-    }
-
-    @Override
-    public void writeData(DataOutput data, boolean extended) throws IOException
-    {
-        if(extended)
-        {
-            data.writeShort(keys.size());
-
-            for(String s : keys)
-            {
-                data.writeUTF(s);
-            }
-        }
-
-        data.writeShort(getInt());
-    }
-
-    @Override
-    public void readData(DataInput data, boolean extended) throws IOException
-    {
-        if(extended)
-        {
-            keys.clear();
-
-            int s = data.readShort() & 0xFFFF;
-
-            for(int i = 0; i < s; i++)
-            {
-                keys.add(data.readUTF());
-            }
-        }
-
-        value = keys.get(data.readShort() & 0xFFFF);
     }
 
     @Override
@@ -132,18 +97,47 @@ public class PropertyStringEnum extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        set(((NBTTagString) nbt).getString());
+        setString(((NBTTagString) nbt).getString());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        set(json.getAsString());
+        setString(json.getAsString());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
         return new JsonPrimitive(getString());
+    }
+
+    @Override
+    public void writeData(ByteBuf data, boolean extended)
+    {
+        if(extended)
+        {
+            data.writeShort(keys.size());
+            keys.forEach(s -> LMNetUtils.writeString(data, s));
+        }
+
+        data.writeShort(getInt());
+    }
+
+    @Override
+    public void readData(ByteBuf data, boolean extended)
+    {
+        if(extended)
+        {
+            keys.clear();
+            int s = data.readUnsignedShort();
+
+            while(--s >= 0)
+            {
+                keys.add(LMNetUtils.readString(data));
+            }
+        }
+
+        setString(keys.get(data.readShort() & 0xFFFF));
     }
 }

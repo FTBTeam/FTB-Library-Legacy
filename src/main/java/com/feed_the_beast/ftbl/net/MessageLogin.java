@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
@@ -10,9 +11,9 @@ import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.Notification;
 import com.latmod.lib.util.LMNetUtils;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.map.hash.TShortObjectHashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,9 +27,9 @@ import java.util.Map;
 
 public class MessageLogin extends MessageToClient<MessageLogin>
 {
-    private TIntObjectMap<String> configIDs;
-    private TIntObjectMap<String> guiIDs;
-    private TIntObjectMap<String> notificationIDs;
+    private TShortObjectHashMap<String> configIDs;
+    private TShortObjectHashMap<String> guiIDs;
+    private TShortObjectHashMap<INotification> notificationIDs;
     private NBTTagCompound sharedDataTag;
     private Map<String, NBTTagCompound> syncData;
 
@@ -38,9 +39,9 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
-        configIDs = ConfigManager.INSTANCE.configValues().getIntIDs().serialize();
-        guiIDs = FTBLibRegistries.INSTANCE.guis().getIntIDs().serialize();
-        notificationIDs = FTBLibRegistries.INSTANCE.notifications().serialize();
+        configIDs = ConfigManager.INSTANCE.configValues().getIDs().serialize();
+        guiIDs = FTBLibRegistries.INSTANCE.guis().getIDs().serialize();
+        notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
         sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
         syncData = new HashMap<>();
 
@@ -56,24 +57,37 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         return FTBLibNetHandler.NET;
     }
 
-    private static void writeMap(ByteBuf io, TIntObjectMap<String> map)
+    @Override
+    public void toBytes(ByteBuf io)
     {
-        io.writeShort(map.size());
+        io.writeShort(configIDs.size());
 
-        map.forEachEntry((key, value) ->
+        configIDs.forEachEntry((key, value) ->
         {
             io.writeShort(key);
             LMNetUtils.writeString(io, value);
             return true;
         });
-    }
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        writeMap(io, configIDs);
-        writeMap(io, guiIDs);
-        writeMap(io, notificationIDs);
+        io.writeShort(guiIDs.size());
+
+        guiIDs.forEachEntry((key, value) ->
+        {
+            io.writeShort(key);
+            LMNetUtils.writeString(io, value);
+            return true;
+        });
+
+        io.writeShort(notificationIDs.size());
+
+        notificationIDs.forEachEntry((key, value) ->
+        {
+            io.writeShort(key);
+            Notification.write(io, value);
+            return true;
+        });
+
+
         LMNetUtils.writeTag(io, sharedDataTag);
 
         io.writeShort(syncData.size());
@@ -85,31 +99,45 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         });
     }
 
-    private static TIntObjectMap<String> readMap(ByteBuf io)
-    {
-        int s = io.readUnsignedShort();
-
-        TIntObjectMap<String> map = new TIntObjectHashMap<>(s);
-
-        while(--s >= 0)
-        {
-            int key = io.readUnsignedShort();
-            String value = LMNetUtils.readString(io);
-            map.put(key, value);
-        }
-
-        return map;
-    }
-
     @Override
     public void fromBytes(ByteBuf io)
     {
-        configIDs = readMap(io);
-        guiIDs = readMap(io);
-        notificationIDs = readMap(io);
+        int s = io.readUnsignedShort();
+
+        configIDs = new TShortObjectHashMap<>(s);
+
+        while(--s >= 0)
+        {
+            short key = io.readShort();
+            String value = LMNetUtils.readString(io);
+            configIDs.put(key, value);
+        }
+
+        s = io.readUnsignedShort();
+
+        guiIDs = new TShortObjectHashMap<>(s);
+
+        while(--s >= 0)
+        {
+            short key = io.readShort();
+            String value = LMNetUtils.readString(io);
+            guiIDs.put(key, value);
+        }
+
+        notificationIDs = new TShortObjectHashMap<>();
+
+        s = io.readUnsignedShort();
+
+        while(--s >= 0)
+        {
+            short id = io.readShort();
+            INotification n = Notification.read(io);
+            notificationIDs.put(id, n);
+        }
+
         sharedDataTag = LMNetUtils.readTag(io);
 
-        int s = io.readUnsignedShort();
+        s = io.readUnsignedShort();
 
         syncData = new HashMap<>(s);
 
@@ -124,9 +152,10 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void onMessage(MessageLogin m)
     {
-        ConfigManager.INSTANCE.configValues().getIntIDs().deserialize(m.configIDs);
-        FTBLibRegistries.INSTANCE.guis().getIntIDs().deserialize(m.guiIDs);
-        FTBLibRegistries.INSTANCE.notifications().deserialize(m.notificationIDs);
+        ConfigManager.INSTANCE.configValues().getIDs().deserialize(m.configIDs);
+        FTBLibRegistries.INSTANCE.guis().getIDs().deserialize(m.guiIDs);
+        FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
+        FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);
         FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
 
         m.syncData.forEach((key, value) ->

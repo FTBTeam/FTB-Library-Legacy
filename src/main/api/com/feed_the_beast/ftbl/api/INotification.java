@@ -14,6 +14,8 @@ public interface INotification
 {
     ResourceLocation getID();
 
+    byte getVariant();
+
     List<ITextComponent> getText();
 
     @Nullable
@@ -21,7 +23,7 @@ public interface INotification
 
     boolean isPermanent();
 
-    int getTimer();
+    short getTimer();
 
-    int getColor();
+    byte getColorID();
 }

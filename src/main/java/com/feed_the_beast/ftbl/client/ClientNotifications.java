@@ -6,6 +6,7 @@ import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.LinkedHashMap;
@@ -49,7 +50,7 @@ public class ClientNotifications
         {
             GlStateManager.enableBlend();
 
-            LMColorUtils.setGLColor(notification.getColor(), 255);
+            LMColorUtils.setGLColor(LMColorUtils.getColorFromID(notification.getColorID()), 255);
             GuiHelper.drawBlankRect(ax, ay, width, height);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -66,9 +67,9 @@ public class ClientNotifications
         }
     }
 
-    public static class Temp
+    private static class Temp
     {
-        public static final LinkedHashMap<Integer, INotification> MAP = new LinkedHashMap<>();
+        private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
 
         private long time;
         private NotificationWidget widget;
@@ -107,7 +108,7 @@ public class ClientNotifications
             if(time > 0L)
             {
                 int timeExisted = (int) (System.currentTimeMillis() - time);
-                int timer = widget.notification.getTimer();
+                int timer = widget.notification.getTimer() & 0xFFFF;
 
                 if(timeExisted > timer)
                 {
@@ -144,7 +145,7 @@ public class ClientNotifications
 
     public static class Perm implements Comparable<Perm>
     {
-        public static final LinkedHashMap<Integer, Perm> MAP = new LinkedHashMap<>();
+        public static final LinkedHashMap<ResourceLocation, Perm> MAP = new LinkedHashMap<>();
 
         public final INotification notification;
         public final long timeAdded;
@@ -162,12 +163,12 @@ public class ClientNotifications
         }
     }
 
-    public static boolean shouldRenderTemp()
+    static boolean shouldRenderTemp()
     {
         return current != null || !Temp.MAP.isEmpty();
     }
 
-    public static void renderTemp(ScaledResolution screen)
+    static void renderTemp(ScaledResolution screen)
     {
         if(current != null)
         {
@@ -188,7 +189,7 @@ public class ClientNotifications
         Perm.MAP.remove(n.getID());
         Temp.MAP.remove(n.getID());
 
-        if(current != null && current.widget.notification.getID() == n.getID())
+        if(current != null && current.widget.notification.getID().equals(n.getID()))
         {
             current = null;
         }
