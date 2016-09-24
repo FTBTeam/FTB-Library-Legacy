@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
@@ -27,7 +28,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
     {
-        guiID = FTBLibRegistries.INSTANCE.guis().getIDs().getIDFromKey(key);
+        guiID = FTBLibRegistries.INSTANCE.GUIS.getIDs().getIDFromKey(key);
         data = tag;
         windowID = wid;
     }
@@ -58,16 +59,27 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m)
     {
-        ResourceLocation key = FTBLibRegistries.INSTANCE.guis().getIDs().getKeyFromID(m.guiID);
+        ResourceLocation key = FTBLibRegistries.INSTANCE.GUIS.getIDs().getKeyFromID(m.guiID);
 
         if(key != null)
         {
-            IGuiHandler handler = FTBLibRegistries.INSTANCE.guis().get(key);
+            IGuiHandler handler = FTBLibRegistries.INSTANCE.GUIS.get(key);
 
             if(handler != null)
             {
                 Minecraft mc = Minecraft.getMinecraft();
-                GuiScreen g = handler.getGui(mc.thePlayer, m.data);
+                Object go = handler.getGui(mc.thePlayer, m.data);
+
+                GuiScreen g;
+
+                if(go instanceof IGui)
+                {
+                    g = ((IGui) go).getWrapper();
+                }
+                else
+                {
+                    g = (GuiScreen) go;
+                }
 
                 if(g != null)
                 {

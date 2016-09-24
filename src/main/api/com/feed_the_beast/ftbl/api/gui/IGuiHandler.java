@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.api.gui;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -12,9 +12,11 @@ import javax.annotation.Nullable;
  */
 public interface IGuiHandler
 {
+    ResourceLocation getID();
+
     @Nullable
     Container getContainer(EntityPlayer player, @Nullable NBTTagCompound data);
 
     @Nullable
-    GuiScreen getGui(EntityPlayer player, @Nullable NBTTagCompound data);
+    Object getGui(EntityPlayer player, @Nullable NBTTagCompound data);
 }

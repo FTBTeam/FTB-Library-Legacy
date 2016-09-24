@@ -13,16 +13,16 @@ import net.minecraft.util.text.TextFormatting;
  */
 public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
 {
-    BLUE(EnumDyeColor.BLUE, TextFormatting.BLUE, 0x007FFF),
-    CYAN(EnumDyeColor.CYAN, TextFormatting.AQUA, 0x00F2D1),
-    GREEN(EnumDyeColor.GREEN, TextFormatting.GREEN, 0x3FD300),
-    YELLOW(EnumDyeColor.YELLOW, TextFormatting.YELLOW, 0xFFD800),
-    ORANGE(EnumDyeColor.ORANGE, TextFormatting.GOLD, 0xFF7F00),
-    RED(EnumDyeColor.RED, TextFormatting.RED, 0xFF5E5E),
-    PINK(EnumDyeColor.PINK, TextFormatting.LIGHT_PURPLE, 0xFF7CBD),
-    MAGENTA(EnumDyeColor.MAGENTA, TextFormatting.LIGHT_PURPLE, 0xFF00FF),
-    PURPLE(EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0x7F00FF),
-    GRAY(EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
+    BLUE(EnumDyeColor.BLUE, TextFormatting.BLUE, 138),
+    CYAN(EnumDyeColor.CYAN, TextFormatting.AQUA, 136),
+    GREEN(EnumDyeColor.GREEN, TextFormatting.GREEN, 118),
+    YELLOW(EnumDyeColor.YELLOW, TextFormatting.YELLOW, 131),
+    ORANGE(EnumDyeColor.ORANGE, TextFormatting.GOLD, 130),
+    RED(EnumDyeColor.RED, TextFormatting.RED, 129),
+    PINK(EnumDyeColor.PINK, TextFormatting.LIGHT_PURPLE, 190),
+    MAGENTA(EnumDyeColor.MAGENTA, TextFormatting.LIGHT_PURPLE, 143),
+    PURPLE(EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 141),
+    GRAY(EnumDyeColor.GRAY, TextFormatting.GRAY, 160);
 
     public static final EnumTeamColor[] VALUES = values();
 

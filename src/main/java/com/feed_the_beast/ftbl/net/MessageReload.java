@@ -88,7 +88,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         m.syncData.forEach((key, value) ->
         {
-            ISyncData nbt = FTBLibRegistries.INSTANCE.syncedData().get(new ResourceLocation(key));
+            ISyncData nbt = FTBLibRegistries.INSTANCE.SYNCED_DATA.get(new ResourceLocation(key));
 
             if(nbt != null)
             {

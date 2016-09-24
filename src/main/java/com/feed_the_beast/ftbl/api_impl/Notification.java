@@ -39,7 +39,7 @@ public class Notification implements INotification
         t.getStyle().setColor(TextFormatting.WHITE);
         addText(t);
         timer = 3000;
-        color = 65;
+        color = 97;
         item = new ItemStack(Blocks.BARRIER);
         return this;
     }

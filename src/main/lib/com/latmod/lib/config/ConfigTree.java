@@ -69,7 +69,7 @@ public class ConfigTree implements IConfigTree
             LMNetUtils.writeString(data, key.getName());
             data.writeByte(key.getFlags());
 
-            data.writeShort(ConfigManager.INSTANCE.configValues().getIDs().getIDFromKey(value.getID()));
+            data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
             value.writeData(data, true);
 
             byte extraFlags = 0;
@@ -102,7 +102,7 @@ public class ConfigTree implements IConfigTree
 
             value = entry.getValue();
 
-            data.writeShort(ConfigManager.INSTANCE.configValues().getIDs().getIDFromKey(value.getID()));
+            data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
             value.writeData(data, true);
         }
     }
@@ -127,7 +127,7 @@ public class ConfigTree implements IConfigTree
             String id = LMNetUtils.readString(data);
             byte flags = data.readByte();
 
-            IConfigValue value = ConfigManager.INSTANCE.configValues().getFromIntID(data.readShort()).createConfigValue();
+            IConfigValue value = ConfigManager.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
             value.readData(data, true);
 
             ConfigKey key = new ConfigKey(id, value);
@@ -145,7 +145,7 @@ public class ConfigTree implements IConfigTree
                 key.setInfo(LMNetUtils.readString(data));
             }
 
-            value = ConfigManager.INSTANCE.configValues().getFromIntID(data.readShort()).createConfigValue();
+            value = ConfigManager.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
             value.readData(data, true);
             map.put(key, value);
         }

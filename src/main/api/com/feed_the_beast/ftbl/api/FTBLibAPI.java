@@ -4,10 +4,12 @@ import com.feed_the_beast.ftbl.api.events.ReloadType;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * Created by LatvianModder on 11.08.2016.
@@ -18,7 +20,7 @@ public interface FTBLibAPI
 
     IConfigManager configManager();
 
-    IFTBLibRegistries getRegistries();
+    Collection<ITickable> ticking();
 
     IPackModes getPackModes();
 

@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by LatvianModder on 20.09.2016.
+ * Created by LatvianModder on 24.09.2016.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface FTBLibAddon
+public @interface SyncData
 {
 }

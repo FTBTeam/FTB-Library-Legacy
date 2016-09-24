@@ -1,14 +1,16 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.NotificationVariant;
+import com.feed_the_beast.ftbl.api.SyncData;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.api.gui.SidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
+import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.ResourceLocationComparator;
 import com.latmod.lib.config.ConfigKey;
@@ -20,12 +22,10 @@ import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
 import com.latmod.lib.util.LMUtils;
 import gnu.trove.map.hash.TShortObjectHashMap;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +33,16 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 16.08.2016.
  */
-public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
+public enum FTBLibRegistries
 {
     INSTANCE;
+
+    public final SimpleRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
+    public final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIDRegistry(), true);
+    public final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
+    public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
+    public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
+    public final SimpleRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
 
     public void init(ASMDataTable table)
     {
@@ -46,6 +53,32 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
         });
 
         NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getKeys());
+
+        LMUtils.findAnnotatedObjects(table, IGuiHandler.class, GuiHandler.class, (obj, data) ->
+        {
+            GUIS.register(obj.getID(), obj);
+            return null;
+        });
+
+        GUIS.getIDs().generateIDs(GUIS.getKeys());
+
+        LMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, data) ->
+        {
+            SYNCED_DATA.register(obj.getID(), obj);
+            return null;
+        });
+
+        LMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, data) ->
+        {
+            SIDEBAR_BUTTONS.register(obj.getID(), obj);
+            return null;
+        });
+
+        LMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, data) ->
+        {
+            RECIPE_HANDLERS.register(obj.getID(), obj);
+            return null;
+        });
     }
 
     public static class SidebarButtonRegistry extends SimpleRegistry<ResourceLocation, ISidebarButton>
@@ -109,116 +142,6 @@ public enum FTBLibRegistries implements IFTBLibRegistries, ITickable
             }
 
             return l;
-        }
-    }
-
-    private final SimpleRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
-    private final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIDRegistry(), true);
-    private final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
-    public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
-    public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
-    private final SimpleRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
-    private final Collection<ITickable> TICKABLES = new ArrayList<>();
-
-    //TODO: Make this Thread-safe
-    private final List<ServerTickCallback> CALLBACKS = new ArrayList<>();
-    private final List<ServerTickCallback> PENDING_CALLBACKS = new ArrayList<>();
-
-    private static class ServerTickCallback
-    {
-        private final int maxTick;
-        private Runnable runnable;
-        private int ticks = 0;
-
-        private ServerTickCallback(int i, Runnable r)
-        {
-            maxTick = i;
-            runnable = r;
-        }
-
-        private boolean incAndCheck()
-        {
-            ticks++;
-            if(ticks >= maxTick)
-            {
-                runnable.run();
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    private void registerSync(String id, ISyncData data)
-    {
-        SYNCED_DATA.register(new ResourceLocation(FTBLibFinals.MOD_ID, id), data);
-    }
-
-    @Override
-    public SimpleRegistry<ResourceLocation, ISyncData> syncedData()
-    {
-        return SYNCED_DATA;
-    }
-
-    @Override
-    public SyncedRegistry<ResourceLocation, IGuiHandler> guis()
-    {
-        return GUIS;
-    }
-
-    @Override
-    public SidebarButtonRegistry sidebarButtons()
-    {
-        return SIDEBAR_BUTTONS;
-    }
-
-    @Override
-    public SimpleRegistry<ResourceLocation, IRecipeHandler> recipeHandlers()
-    {
-        return RECIPE_HANDLERS;
-    }
-
-    @Override
-    public Collection<ITickable> tickables()
-    {
-        return TICKABLES;
-    }
-
-    void addServerCallback(int timer, Runnable runnable)
-    {
-        if(timer <= 0)
-        {
-            runnable.run();
-        }
-        else
-        {
-            PENDING_CALLBACKS.add(new ServerTickCallback(timer, runnable));
-        }
-    }
-
-    @Override
-    public void update()
-    {
-        if(!TICKABLES.isEmpty())
-        {
-            TICKABLES.forEach(ITickable::update);
-        }
-
-        if(!PENDING_CALLBACKS.isEmpty())
-        {
-            CALLBACKS.addAll(PENDING_CALLBACKS);
-            PENDING_CALLBACKS.clear();
-        }
-
-        if(!CALLBACKS.isEmpty())
-        {
-            for(int i = CALLBACKS.size() - 1; i >= 0; i--)
-            {
-                if(CALLBACKS.get(i).incAndCheck())
-                {
-                    CALLBACKS.remove(i);
-                }
-            }
         }
     }
 }

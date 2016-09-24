@@ -39,13 +39,13 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
-        configIDs = ConfigManager.INSTANCE.configValues().getIDs().serialize();
-        guiIDs = FTBLibRegistries.INSTANCE.guis().getIDs().serialize();
+        configIDs = ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().serialize();
+        guiIDs = FTBLibRegistries.INSTANCE.GUIS.getIDs().serialize();
         notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
         sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
         syncData = new HashMap<>();
 
-        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.syncedData().getEntrySet())
+        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.SYNCED_DATA.getEntrySet())
         {
             syncData.put(entry.getKey().toString(), entry.getValue().writeSyncData(player, forgePlayer));
         }
@@ -152,15 +152,15 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void onMessage(MessageLogin m)
     {
-        ConfigManager.INSTANCE.configValues().getIDs().deserialize(m.configIDs);
-        FTBLibRegistries.INSTANCE.guis().getIDs().deserialize(m.guiIDs);
+        ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
+        FTBLibRegistries.INSTANCE.GUIS.getIDs().deserialize(m.guiIDs);
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);
         FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
 
         m.syncData.forEach((key, value) ->
         {
-            ISyncData nbt = FTBLibRegistries.INSTANCE.syncedData().get(new ResourceLocation(key));
+            ISyncData nbt = FTBLibRegistries.INSTANCE.SYNCED_DATA.get(new ResourceLocation(key));
 
             if(nbt != null)
             {

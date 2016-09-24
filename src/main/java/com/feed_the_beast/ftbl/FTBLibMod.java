@@ -73,7 +73,7 @@ public class FTBLibMod
 
         IRecipes recipes = new LMRecipes();
 
-        for(IRecipeHandler handler : FTBLibRegistries.INSTANCE.recipeHandlers().getValues())
+        for(IRecipeHandler handler : FTBLibRegistries.INSTANCE.RECIPE_HANDLERS.getValues())
         {
             handler.loadRecipes(recipes);
         }
@@ -94,7 +94,7 @@ public class FTBLibMod
         ConfigManager.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         FTBLibAPI_Impl.INSTANCE.createAndLoadWorld();
-        LMServerUtils.addTickable(event.getServer(), FTBLibRegistries.INSTANCE);
+        LMServerUtils.addTickable(event.getServer(), FTBLibAPI_Impl.INSTANCE);
     }
 
     @Mod.EventHandler

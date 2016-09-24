@@ -4,21 +4,30 @@ import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.client.ITextureCoords;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 
-public abstract class SidebarButton implements ISidebarButton
+public abstract class SidebarButtonInst implements ISidebarButton
 {
+    private final ResourceLocation ID;
     private final int priority;
     private final ITextureCoords icon;
     private final EnumEnabled configDefault;
 
-    public SidebarButton(int p, ITextureCoords c, @Nullable EnumEnabled b)
+    public SidebarButtonInst(ResourceLocation id, int p, ITextureCoords c, @Nullable EnumEnabled b)
     {
+        ID = id;
         priority = p;
         icon = c;
         configDefault = b;
+    }
+
+    @Override
+    public ResourceLocation getID()
+    {
+        return ID;
     }
 
     @Override

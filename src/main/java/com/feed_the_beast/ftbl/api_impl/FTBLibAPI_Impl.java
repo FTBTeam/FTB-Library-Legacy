@@ -5,8 +5,6 @@ import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibAddon;
 import com.feed_the_beast.ftbl.api.IConfigManager;
-import com.feed_the_beast.ftbl.api.IFTBLibAddon;
-import com.feed_the_beast.ftbl.api.IFTBLibRegistries;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -27,6 +25,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -34,15 +33,43 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public enum FTBLibAPI_Impl implements FTBLibAPI
+public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
 {
     INSTANCE;
+
+    private static class ServerTickCallback
+    {
+        private final int maxTick;
+        private Runnable runnable;
+        private int ticks = 0;
+
+        private ServerTickCallback(int i, Runnable r)
+        {
+            maxTick = i;
+            runnable = r;
+        }
+
+        private boolean incAndCheck()
+        {
+            ticks++;
+            if(ticks >= maxTick)
+            {
+                runnable.run();
+                return true;
+            }
+
+            return false;
+        }
+    }
 
     private static Universe universe;
     private static PackModes packModes;
@@ -51,7 +78,7 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
 
     public void init(ASMDataTable table)
     {
-        LMUtils.findAnnotatedClasses(table, IFTBLibAddon.class, FTBLibAddon.class, (inst, data) -> inst.onFTBLibLoaded(this));
+        LMUtils.findAnnotatedObjects(table, FTBLibAPI.class, FTBLibAddon.class, (inst, data) -> this);
         ConfigManager.INSTANCE.init(table);
         FTBLibRegistries.INSTANCE.init(table);
     }
@@ -74,9 +101,9 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public IFTBLibRegistries getRegistries()
+    public Collection<ITickable> ticking()
     {
-        return FTBLibRegistries.INSTANCE;
+        return TICKABLES;
     }
 
     @Override
@@ -123,7 +150,45 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void addServerCallback(int timer, Runnable runnable)
     {
-        FTBLibRegistries.INSTANCE.addServerCallback(timer, runnable);
+        if(timer <= 0)
+        {
+            runnable.run();
+        }
+        else
+        {
+            PENDING_CALLBACKS.add(new ServerTickCallback(timer, runnable));
+        }
+    }
+
+    //TODO: Make this Thread-safe
+    private final List<ServerTickCallback> CALLBACKS = new ArrayList<>();
+    private final List<ServerTickCallback> PENDING_CALLBACKS = new ArrayList<>();
+    public final Collection<ITickable> TICKABLES = new ArrayList<>();
+
+    @Override
+    public void update()
+    {
+        if(!TICKABLES.isEmpty())
+        {
+            TICKABLES.forEach(ITickable::update);
+        }
+
+        if(!PENDING_CALLBACKS.isEmpty())
+        {
+            CALLBACKS.addAll(PENDING_CALLBACKS);
+            PENDING_CALLBACKS.clear();
+        }
+
+        if(!CALLBACKS.isEmpty())
+        {
+            for(int i = CALLBACKS.size() - 1; i >= 0; i--)
+            {
+                if(CALLBACKS.get(i).incAndCheck())
+                {
+                    CALLBACKS.remove(i);
+                }
+            }
+        }
     }
 
     @Override
@@ -156,7 +221,7 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
             {
                 Map<String, NBTTagCompound> syncData = new HashMap<>();
 
-                for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.syncedData().getEntrySet())
+                for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.SYNCED_DATA.getEntrySet())
                 {
                     syncData.put(entry.getKey().toString(), entry.getValue().writeSyncData(ep, FTBLibAPI_Impl.INSTANCE.getUniverse().getPlayer(ep)));
                 }
@@ -179,7 +244,7 @@ public enum FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data)
     {
-        IGuiHandler handler = getRegistries().guis().get(guiID);
+        IGuiHandler handler = FTBLibRegistries.INSTANCE.GUIS.get(guiID);
 
         if(handler == null)
         {

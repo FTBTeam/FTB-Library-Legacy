@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.client.ITextureCoords;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -11,6 +12,8 @@ import javax.annotation.Nullable;
  */
 public interface ISidebarButton
 {
+    ResourceLocation getID();
+
     int getPriority();
 
     @Nullable

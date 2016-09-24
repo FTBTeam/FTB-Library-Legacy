@@ -218,7 +218,7 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<Map.Entry<ResourceLocation, ISidebarButton>> buttons = FTBLibRegistries.INSTANCE.sidebarButtons().getButtons(false);
+            List<Map.Entry<ResourceLocation, ISidebarButton>> buttons = FTBLibRegistries.INSTANCE.SIDEBAR_BUTTONS.getButtons(false);
 
             if(!buttons.isEmpty())
             {

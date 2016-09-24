@@ -29,8 +29,6 @@ public class FTBLibModClient extends FTBLibModCommon
         {
             LMUtils.userIsLatvianModder = true;
         }
-
-        FTBLibActions.init();
     }
 
     @Override

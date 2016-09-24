@@ -45,19 +45,13 @@ public enum ConfigManager implements IConfigManager
 {
     INSTANCE;
 
-    private final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIDRegistry(), false);
+    public final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIDRegistry(), false);
     private final SimpleRegistry<String, IConfigFileProvider> FILE_PROVIDERS = new SimpleRegistry<>(false);
     private final IConfigTree CLIENT_CONFIG = new ConfigTree();
     private final ConfigFile CLIENT_CONFIG_FILE = new ConfigFile();
     private final IConfigTree CONFIG = new ConfigTree();
     private final Collection<IConfigFile> CONFIG_FILES = new ArrayList<>();
     private final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
-
-    @Override
-    public SyncedRegistry<String, IConfigValueProvider> configValues()
-    {
-        return CONFIG_VALUES;
-    }
 
     @Override
     public SimpleRegistry<String, IConfigFileProvider> fileProviders()

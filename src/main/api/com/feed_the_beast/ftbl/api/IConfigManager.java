@@ -4,9 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.latmod.lib.reg.SimpleRegistry;
-import com.latmod.lib.reg.SyncedRegistry;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,8 +15,6 @@ import java.util.UUID;
  */
 public interface IConfigManager
 {
-    SyncedRegistry<String, IConfigValueProvider> configValues();
-
     SimpleRegistry<String, IConfigFileProvider> fileProviders();
 
     IConfigTree clientConfig();
