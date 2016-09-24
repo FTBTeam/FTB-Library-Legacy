@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiSelectField;
+import com.feed_the_beast.ftbl.gui.GuiDoubleField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMStringUtils;
@@ -156,9 +156,9 @@ public class PropertyDouble extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectField.display(null, GuiSelectField.FieldType.DOUBLE, getDouble(), (id, val) ->
+        GuiDoubleField.display(null, getDouble(), (id, val) ->
         {
-            setDouble((Double) val);
+            setDouble(val);
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         });

@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiSelectField;
+import com.feed_the_beast.ftbl.gui.GuiIntField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -160,9 +160,9 @@ public class PropertyInt extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectField.display(null, GuiSelectField.FieldType.INTEGER, getInt(), (id, val) ->
+        GuiIntField.display(null, getInt(), (id, val) ->
         {
-            set(val.hashCode());
+            set(val);
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         });
@@ -224,6 +224,7 @@ public class PropertyInt extends PropertyBase
         }
     }
 
+    @Override
     public void readData(ByteBuf data, boolean extended)
     {
         NBT_ID = data.readByte();

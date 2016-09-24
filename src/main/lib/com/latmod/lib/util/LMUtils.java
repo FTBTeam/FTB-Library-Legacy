@@ -70,7 +70,7 @@ public class LMUtils
         }
     }
 
-    public static <K extends IForgeRegistryEntry<?>> K register(ResourceLocation id, K object)
+    public static <K extends IForgeRegistryEntry<?>> void register(ResourceLocation id, K object)
     {
         object.setRegistryName(id);
         GameRegistry.register(object);
@@ -81,8 +81,6 @@ public class LMUtils
             ib.setRegistryName(id);
             GameRegistry.register(ib);
         }
-
-        return object;
     }
 
     public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)

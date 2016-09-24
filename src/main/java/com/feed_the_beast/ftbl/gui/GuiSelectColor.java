@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.gui.GuiLM;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonLM;
-import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -19,10 +18,10 @@ import java.util.List;
 
 public class GuiSelectColor extends GuiLM
 {
-    private final ObjectCallbackHandler callback;
-    private final Object colorID;
-    private final List<ButtonColor> colorButtons;
-    private ButtonColor noColorButton;
+    public interface Callback
+    {
+        void onCallback(@Nullable Object id, byte value);
+    }
 
     private class ButtonColor extends ButtonLM
     {
@@ -41,15 +40,27 @@ public class GuiSelectColor extends GuiLM
         public void onClicked(IGui gui, IMouseButton button)
         {
             GuiHelper.playClickSound();
-            callback.onCallback(colorID, colID);
+            callback.onCallback(ID, colID);
         }
     }
 
-    public GuiSelectColor(@Nullable Object id, ObjectCallbackHandler cb)
+    private final Object ID;
+    private final byte initCol;
+    private final Callback callback;
+    private final List<ButtonColor> colorButtons;
+    private ButtonColor noColorButton;
+
+    public static void display(@Nullable Object id, byte col, Callback c)
+    {
+        new GuiSelectColor(id, col, c).openGui();
+    }
+
+    private GuiSelectColor(@Nullable Object id, byte col, Callback c)
     {
         super(256, 256);
-        callback = cb;
-        colorID = id;
+        ID = id;
+        initCol = col;
+        callback = c;
 
         colorButtons = new ArrayList<>();
 
@@ -103,10 +114,25 @@ public class GuiSelectColor extends GuiLM
 
         for(ButtonColor button : colorButtons)
         {
-            ax = button.getAX() + 1;
-            ay = button.getAY() + 1;
-            w = button.getWidth() - 2;
-            h = button.getHeight() - 2;
+            ax = button.getAX() - 1;
+            ay = button.getAY() - 1;
+            w = button.getWidth() + 2;
+            h = button.getHeight() + 2;
+
+            if(initCol == button.colID)
+            {
+                r = g = b = 180 + (int) (Math.sin(System.currentTimeMillis() * 0.003D) * 60D);
+
+                buffer.pos(ax, ay + h, 0D).color(r, g, b, a).endVertex();
+                buffer.pos(ax + w, ay + h, 0D).color(r, g, b, a).endVertex();
+                buffer.pos(ax + w, ay, 0D).color(r, g, b, a).endVertex();
+                buffer.pos(ax, ay, 0D).color(r, g, b, a).endVertex();
+            }
+
+            ax += 2;
+            ay += 2;
+            w -= 4;
+            h -= 4;
 
             r = LMColorUtils.getRed(button.col);
             g = LMColorUtils.getGreen(button.col);

@@ -8,54 +8,32 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
 import com.feed_the_beast.ftbl.api_impl.MouseButton;
-import com.latmod.lib.ObjectCallbackHandler;
 import com.latmod.lib.math.Converter;
 import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;
 
-public class GuiSelectField extends GuiLM
+public class GuiDoubleField extends GuiLM
 {
-    public enum FieldType
+    public interface Callback
     {
-        STRING,
-        INTEGER,
-        DOUBLE;
-
-        public boolean isValid(String s)
-        {
-            switch(this)
-            {
-                case INTEGER:
-                {
-                    return Converter.canParseInt(s);
-                }
-                case DOUBLE:
-                {
-                    return Converter.canParseDouble(s);
-                }
-                default:
-                {
-                    return true;
-                }
-            }
-        }
+        void onCallback(@Nullable Object id, double value);
     }
 
     public final Object ID;
-    public final FieldType type;
-    public final String def;
-    public final ObjectCallbackHandler callback;
-
+    public final Callback callback;
     public final ButtonSimpleLM buttonCancel, buttonAccept;
     public final TextBoxLM textBox;
 
-    public GuiSelectField(@Nullable Object id, FieldType typ, String d, ObjectCallbackHandler c)
+    public static void display(@Nullable Object id, double def, Callback c)
+    {
+        new GuiDoubleField(id, def, c).openGui();
+    }
+
+    private GuiDoubleField(@Nullable Object id, double def, Callback c)
     {
         super(100, 40);
         ID = id;
-        type = typ;
-        def = d;
         callback = c;
 
         int bsize = getWidth() / 2 - 4;
@@ -66,7 +44,6 @@ public class GuiSelectField extends GuiLM
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
-                callback.onCallback(ID, def);
             }
         };
 
@@ -76,20 +53,10 @@ public class GuiSelectField extends GuiLM
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
+
                 if(textBox.isValid())
                 {
-                    switch(type)
-                    {
-                        case STRING:
-                            callback.onCallback(ID, textBox.getText());
-                            break;
-                        case INTEGER:
-                            callback.onCallback(ID, Integer.parseInt(textBox.getText()));
-                            break;
-                        case DOUBLE:
-                            callback.onCallback(ID, Double.parseDouble(textBox.getText()));
-                            break;
-                    }
+                    callback.onCallback(ID, Double.parseDouble(textBox.getText()));
                 }
             }
         };
@@ -99,31 +66,20 @@ public class GuiSelectField extends GuiLM
             @Override
             public boolean isValid()
             {
-                return type.isValid(getText());
+                return Converter.canParseDouble(getText());
             }
 
             @Override
             public void onEnterPressed(IGui gui)
             {
-                buttonAccept.onClicked(GuiSelectField.this, MouseButton.LEFT);
+                buttonAccept.onClicked(GuiDoubleField.this, MouseButton.LEFT);
             }
         };
 
-        textBox.setText(def);
+        textBox.setText(Double.toString(def));
         textBox.textRenderX = -1;
         textBox.textRenderY = 6;
         textBox.textColor = 0xFFEEEEEE;
-    }
-
-    public static void display(@Nullable Object id, FieldType type, Object d, ObjectCallbackHandler c)
-    {
-        new GuiSelectField(id, type, String.valueOf(d), c).openGui();
-    }
-
-    public GuiSelectField setCharLimit(int i)
-    {
-        textBox.charLimit = i;
-        return this;
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiSelectColor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.latmod.lib.util.LMColorUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
@@ -59,7 +60,7 @@ public class PropertyColor extends PropertyBase
     @Override
     public String getString()
     {
-        return Integer.toString(getColorID());
+        return "#" + Integer.toString(getColorID() & 0xFF);
     }
 
     @Override
@@ -83,18 +84,18 @@ public class PropertyColor extends PropertyBase
     @Override
     public int getColor()
     {
-        return 0xAA5AE8;
+        return LMColorUtils.getColorFromID(getColorID());
     }
 
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        new GuiSelectColor(null, (id, val) ->
+        GuiSelectColor.display(null, getColorID(), (id, value) ->
         {
-            setColorID((byte) val.hashCode());
+            setColorID(value);
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
-        }).openGui();
+        });
     }
 
     @Override

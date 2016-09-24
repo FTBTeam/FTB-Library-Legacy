@@ -4,8 +4,9 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiSelectField;
+import com.feed_the_beast.ftbl.gui.GuiTextField;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMUtils;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -52,10 +53,18 @@ public abstract class PropertyBase implements IConfigValue
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectField.display(null, GuiSelectField.FieldType.STRING, getSerializableElement().toString(), (id, val) ->
+        GuiTextField.display(null, getSerializableElement().toString(), (id, val) ->
         {
-            fromJson(LMJsonUtils.fromJson(val.toString()));
-            gui.onChanged(key, getSerializableElement());
+            try
+            {
+                fromJson(LMJsonUtils.fromJson(val));
+                gui.onChanged(key, getSerializableElement());
+            }
+            catch(Exception ex)
+            {
+                LMUtils.DEV_LOGGER.info("Failed to parse Json: " + val);
+            }
+
             gui.openGui();
         });
     }

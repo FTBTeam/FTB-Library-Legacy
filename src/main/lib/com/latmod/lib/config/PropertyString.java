@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiSelectField;
+import com.feed_the_beast.ftbl.gui.GuiTextField;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.util.LMNetUtils;
@@ -84,9 +84,9 @@ public class PropertyString extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectField.display(null, GuiSelectField.FieldType.STRING, getString(), (id, val) ->
+        GuiTextField.display(null, getString(), (id, val) ->
         {
-            setString(val.toString());
+            setString(val);
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         });
