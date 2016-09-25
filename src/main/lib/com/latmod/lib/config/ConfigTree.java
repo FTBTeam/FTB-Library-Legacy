@@ -21,8 +21,6 @@ import java.util.Map;
  */
 public class ConfigTree implements IConfigTree
 {
-    public static final String ID = "tree";
-
     private static final int HAS_DISPLAY_NAME = 1;
     private static final int HAS_INFO = 2;
 
@@ -61,16 +59,14 @@ public class ConfigTree implements IConfigTree
 
         data.writeShort(map.size());
 
-        for(Map.Entry<IConfigKey, IConfigValue> entry : map.entrySet())
+        map.forEach((key, value) ->
         {
-            IConfigKey key = entry.getKey();
-            IConfigValue value = key.getDefValue();
-
             LMNetUtils.writeString(data, key.getName());
             data.writeByte(key.getFlags());
 
-            data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
-            value.writeData(data, true);
+            IConfigValue defValue = key.getDefValue();
+            data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(defValue.getID()));
+            defValue.writeData(data, true);
 
             byte extraFlags = 0;
 
@@ -100,11 +96,9 @@ public class ConfigTree implements IConfigTree
                 LMNetUtils.writeString(data, info);
             }
 
-            value = entry.getValue();
-
             data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
             value.writeData(data, true);
-        }
+        });
     }
 
     @Override
@@ -154,24 +148,14 @@ public class ConfigTree implements IConfigTree
     @Override
     public void fromJson(JsonElement json)
     {
-        JsonObject o = json.getAsJsonObject();
-
-        for(Map.Entry<String, JsonElement> entry : o.entrySet())
-        {
-            get(new SimpleConfigKey(entry.getKey())).fromJson(entry.getValue());
-        }
+        json.getAsJsonObject().entrySet().forEach(entry -> get(new SimpleConfigKey(entry.getKey())).fromJson(entry.getValue()));
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
-
-        for(Map.Entry<IConfigKey, IConfigValue> entry : getTree().entrySet())
-        {
-            o.add(entry.getKey().getName(), entry.getValue().getSerializableElement());
-        }
-
+        getTree().forEach((key, value) -> o.add(key.getName(), value.getSerializableElement()));
         return LMJsonUtils.fromJsonTree(o);
     }
 
@@ -179,18 +163,7 @@ public class ConfigTree implements IConfigTree
     public NBTBase serializeNBT()
     {
         NBTTagCompound nbt = new NBTTagCompound();
-
-        if(!isEmpty())
-        {
-            for(Map.Entry<IConfigKey, IConfigValue> entry : getTree().entrySet())
-            {
-                if(entry.getValue() != null)
-                {
-                    nbt.setTag(entry.getKey().getName(), entry.getValue().serializeNBT());
-                }
-            }
-        }
-
+        getTree().forEach((key, value) -> nbt.setTag(key.getName(), value.serializeNBT()));
         return nbt;
     }
 

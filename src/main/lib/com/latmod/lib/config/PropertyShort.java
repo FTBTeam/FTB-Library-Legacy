@@ -143,7 +143,7 @@ public class PropertyShort extends PropertyBase
     @Nullable
     public String getMaxValueString()
     {
-        short m = getMin();
+        short m = getMax();
 
         if(m != Short.MAX_VALUE)
         {

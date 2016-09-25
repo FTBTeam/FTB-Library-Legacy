@@ -143,7 +143,7 @@ public class PropertyByte extends PropertyBase
     @Nullable
     public String getMaxValueString()
     {
-        byte m = getMin();
+        byte m = getMax();
 
         if(m != Byte.MAX_VALUE)
         {

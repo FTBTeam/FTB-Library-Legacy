@@ -137,7 +137,7 @@ public class PropertyInt extends PropertyBase
     @Nullable
     public String getMaxValueString()
     {
-        int m = getMin();
+        int m = getMax();
 
         if(m != Integer.MAX_VALUE)
         {
