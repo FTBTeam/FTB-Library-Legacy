@@ -33,7 +33,7 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         }
 
         @Override
-        public IConfigTree getTree()
+        public IConfigTree getConfigTree()
         {
             return tree;
         }

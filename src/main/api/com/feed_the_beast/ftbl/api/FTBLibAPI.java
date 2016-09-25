@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,8 +19,6 @@ public interface FTBLibAPI
 {
     boolean hasServer();
 
-    IConfigManager configManager();
-
     Collection<ITickable> ticking();
 
     IPackModes getPackModes();
@@ -36,4 +35,6 @@ public interface FTBLibAPI
     void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data);
 
     void sendNotification(@Nullable EntityPlayerMP ep, INotification n);
+
+    void editServerConfig(EntityPlayerMP ep, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 }

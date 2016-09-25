@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
+import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.google.gson.JsonObject;
 import com.latmod.lib.config.ConfigTree;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
@@ -26,15 +28,16 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
     }
 
-    public MessageEditConfig(@Nullable NBTTagCompound nbt, IConfigContainer c)
+    public MessageEditConfig(UUID id, @Nullable NBTTagCompound nbt, IConfigContainer c)
     {
-        group = c.getTree().copy();
+        ConfigManager.INSTANCE.TEMP_SERVER_CONFIG.put(id, c);
+        group = c.getConfigTree().copy();
         extraNBT = nbt;
         title = c.getTitle();
 
         if(LMUtils.DEV_ENV)
         {
-            LMUtils.DEV_LOGGER.info("TX Send: " + group);
+            LMUtils.DEV_LOGGER.info("TX Send: " + group.getTree());
         }
     }
 
@@ -66,13 +69,13 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         if(LMUtils.DEV_ENV)
         {
-            LMUtils.DEV_LOGGER.info("RX Send: " + m.group);
+            LMUtils.DEV_LOGGER.info("RX Send: " + m.group.getTree());
         }
 
         new GuiEditConfig(m.extraNBT, new IConfigContainer()
         {
             @Override
-            public IConfigTree getTree()
+            public IConfigTree getConfigTree()
             {
                 return m.group;
             }

@@ -56,7 +56,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void onMessage(MessageEditConfigResponse m, EntityPlayerMP player)
     {
-        IConfigContainer cc = ConfigManager.INSTANCE.getTempConfig().get(player.getGameProfile().getId());
+        IConfigContainer cc = ConfigManager.INSTANCE.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
 
         if(cc != null)
         {
@@ -66,7 +66,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
             }
 
             cc.saveConfig(player, m.extraNBT, m.groupData);
-            ConfigManager.INSTANCE.getTempConfig().remove(player.getGameProfile().getId());
+            ConfigManager.INSTANCE.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
         }
     }
 }

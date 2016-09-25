@@ -170,7 +170,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         configEntryButtons = new ArrayList<>();
 
         List<Map.Entry<IConfigKey, IConfigValue>> list = new ArrayList<>();
-        list.addAll(configContainer.getTree().getTree().entrySet());
+        list.addAll(configContainer.getConfigTree().getTree().entrySet());
         Collections.sort(list, COMPARATOR);
 
         for(Map.Entry<IConfigKey, IConfigValue> entry : list)

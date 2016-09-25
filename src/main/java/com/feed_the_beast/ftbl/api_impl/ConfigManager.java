@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.api.IConfigManager;
 import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
@@ -11,13 +10,11 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
-import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.config.ConfigFile;
 import com.latmod.lib.config.ConfigKey;
 import com.latmod.lib.config.ConfigTree;
-import com.latmod.lib.reg.SimpleRegistry;
 import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
 import com.latmod.lib.util.LMJsonUtils;
@@ -30,8 +27,6 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -41,41 +36,15 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 17.09.2016.
  */
-public enum ConfigManager implements IConfigManager
+public enum ConfigManager
 {
     INSTANCE;
 
     public final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIDRegistry(), false);
-    private final SimpleRegistry<String, IConfigFileProvider> FILE_PROVIDERS = new SimpleRegistry<>(false);
-    private final IConfigTree CLIENT_CONFIG = new ConfigTree();
-    private final ConfigFile CLIENT_CONFIG_FILE = new ConfigFile();
-    private final IConfigTree CONFIG = new ConfigTree();
-    private final Collection<IConfigFile> CONFIG_FILES = new ArrayList<>();
-    private final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
-
-    @Override
-    public SimpleRegistry<String, IConfigFileProvider> fileProviders()
-    {
-        return FILE_PROVIDERS;
-    }
-
-    @Override
-    public IConfigTree clientConfig()
-    {
-        return CLIENT_CONFIG;
-    }
-
-    @Override
-    public Collection<IConfigFile> registredFiles()
-    {
-        return CONFIG_FILES;
-    }
-
-    @Override
-    public Map<UUID, IConfigContainer> getTempConfig()
-    {
-        return TEMP_SERVER_CONFIG;
-    }
+    public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
+    public final IConfigTree CLIENT_CONFIG = new ConfigTree();
+    public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
+    public IConfigFile CLIENT_CONFIG_FILE;
 
     public void init(ASMDataTable table)
     {
@@ -95,13 +64,21 @@ public enum ConfigManager implements IConfigManager
         {
             String s = (String) data.getAnnotationInfo().get("value");
 
-            if(s != null && !s.isEmpty())
+            if(s != null && !s.isEmpty() && s.charAt(0) != '-')
             {
-                FILE_PROVIDERS.register(s.toLowerCase(Locale.ENGLISH), obj);
+                s = s.toLowerCase(Locale.ENGLISH);
+                ITextComponent n = new TextComponentString(s);
+                ConfigFile configFile = new ConfigFile(n, obj);
+                CONFIG_FILES.put(s, configFile);
             }
 
             return null;
         });
+
+        CLIENT_CONFIG_FILE = new ConfigFile(new TextComponentString("Client Config"), () -> new File(LMUtils.folderLocal, "client/config.json")); //TODO: Lang
+        CONFIG_FILES.put("client_config", CLIENT_CONFIG_FILE);
+
+        int[] configValuesCount = {0};
 
         LMUtils.findAnnotatedObjects(table, IConfigValue.class, ConfigValue.class, (obj, data) ->
         {
@@ -140,7 +117,7 @@ public enum ConfigManager implements IConfigManager
                     flags |= IConfigKey.TRANSLATE_DISPLAY_NAME;
                 }
 
-                ConfigKey key = new ConfigKey(file + "." + id, obj.copy(), displayName, false);
+                ConfigKey key = new ConfigKey(client ? (file + "." + id) : id, obj.copy(), displayName, false);
                 key.setFlags(flags);
 
                 Object infoObj = data.getAnnotationInfo().get("info");
@@ -166,7 +143,16 @@ public enum ConfigManager implements IConfigManager
                 }
                 else
                 {
-                    CONFIG.add(key, obj);
+                    IConfigFile configFile = CONFIG_FILES.get(file);
+
+                    if(configFile == null)
+                    {
+                        configFile = new ConfigFile(new TextComponentString(file), () -> new File(LMUtils.folderConfig, file + ".json"));
+                        CONFIG_FILES.put(file, configFile);
+                    }
+
+                    configFile.add(key, obj);
+                    configValuesCount[0]++;
                 }
             }
 
@@ -175,40 +161,17 @@ public enum ConfigManager implements IConfigManager
 
         CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getKeys());
 
-        LMUtils.DEV_LOGGER.info("Found IConfigValueProviders [" + CONFIG_VALUES.size() + "]: " + CONFIG_VALUES.getKeys());
-        LMUtils.DEV_LOGGER.info("Found IConfigFileProviders [" + FILE_PROVIDERS.size() + "]: " + FILE_PROVIDERS.getKeys());
-        LMUtils.DEV_LOGGER.info("Found ClientConfig IConfigValues [" + CLIENT_CONFIG.getTree().size() + "]: " + CLIENT_CONFIG.getTree().keySet());
-        LMUtils.DEV_LOGGER.info("Found CommonConfig IConfigValues [" + CONFIG.getTree().size() + "]: " + CONFIG.getTree().keySet());
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.getKeys());
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
+        LMUtils.DEV_LOGGER.info("Found " + CLIENT_CONFIG.getTree().size() + " ClientConfig IConfigValues: " + CLIENT_CONFIG.getTree().keySet());
+        LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " CommonConfig IConfigValues");
     }
-
-    public final IConfigContainer CONFIG_CONTAINER = new IConfigContainer()
-    {
-        @Override
-        public IConfigTree getTree()
-        {
-            return CONFIG;
-        }
-
-        @Override
-        public ITextComponent getTitle()
-        {
-            return new TextComponentString("Server Config"); //TODO: Lang
-        }
-
-        @Override
-        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-        {
-            CONFIG.fromJson(json);
-            CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).save());
-            FTBLibAPI_Impl.INSTANCE.reload(sender, ReloadType.SERVER_ONLY);
-        }
-    };
 
     //new ResourceLocation(FTBLibFinals.MOD_ID, "client_config")
     public final IConfigContainer CLIENT_CONFIG_CONTAINER = new IConfigContainer()
     {
         @Override
-        public IConfigTree getTree()
+        public IConfigTree getConfigTree()
         {
             return CLIENT_CONFIG_FILE;
         }
@@ -223,33 +186,35 @@ public enum ConfigManager implements IConfigManager
         public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
             CLIENT_CONFIG_FILE.fromJson(json);
-            saveClientConfig();
+
         }
     };
 
-    public void saveClientConfig()
+    public void loadAllFiles()
     {
-        if(CLIENT_CONFIG_FILE.getFile() == null)
-        {
-            CLIENT_CONFIG_FILE.setFile(new File(LMUtils.folderLocal, "client/config.json"));
-            CLIENT_CONFIG_FILE.load();
-        }
+        CONFIG_FILES.values().forEach(IConfigFile::load);
+    }
 
-        CLIENT_CONFIG_FILE.save();
+    public void saveAllFiles()
+    {
+        CONFIG_FILES.values().forEach(IConfigFile::save);
     }
 
     public void reloadConfig()
     {
-        CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).load());
+        loadAllFiles();
 
         LMUtils.DEV_LOGGER.info("Loading override configs");
         JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
 
         if(overridesE.isJsonObject())
         {
-            CONFIG_CONTAINER.getTree().fromJson(overridesE.getAsJsonObject());
+            overridesE.getAsJsonObject().entrySet().forEach(entry ->
+            {
+                //FIXME: Config overrides
+            });
         }
 
-        CONFIG.getTree().values().stream().filter(value -> value instanceof IConfigFile).forEach(value -> ((IConfigFile) value).save());
+        saveAllFiles();
     }
 }

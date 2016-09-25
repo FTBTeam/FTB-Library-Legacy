@@ -6,8 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api_impl.ConfigManager;
-import com.feed_the_beast.ftbl.net.MessageEditConfig;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.latmod.lib.config.SimpleConfigKey;
@@ -46,7 +45,7 @@ public abstract class CmdEditConfigBase extends CommandLM
     {
         try
         {
-            Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).getTree().getTree();
+            Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).getConfigTree().getTree();
 
             if(args.length == 1)
             {
@@ -85,10 +84,7 @@ public abstract class CmdEditConfigBase extends CommandLM
     {
         if(args.length == 0 && sender instanceof EntityPlayerMP)
         {
-            EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-            IConfigContainer cc = getConfigContainer(sender);
-            ConfigManager.INSTANCE.getTempConfig().put(ep.getGameProfile().getId(), cc);
-            new MessageEditConfig(null, cc).sendTo(ep);
+            FTBLibAPI_Impl.INSTANCE.editServerConfig(getCommandSenderAsPlayer(sender), null, getConfigContainer(sender));
             return;
         }
 
@@ -96,7 +92,7 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         IConfigContainer cc = getConfigContainer(sender);
         IConfigKey key = new SimpleConfigKey(args[0]);
-        IConfigTree tree = cc.getTree();
+        IConfigTree tree = cc.getConfigTree();
 
         if(!tree.has(key))
         {

@@ -1,8 +1,14 @@
 package com.latmod.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
+import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMJsonUtils;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -12,19 +18,25 @@ import java.io.File;
  */
 public class ConfigFile extends ConfigTree implements IConfigFile
 {
+    private final ITextComponent displayName;
+    private final IConfigFileProvider fileProvider;
     private File file;
 
-    @Nullable
-    @Override
-    public File getFile()
+    public ConfigFile(ITextComponent n, IConfigFileProvider p)
     {
-        return file;
+        displayName = n;
+        fileProvider = p;
     }
 
     @Override
-    public void setFile(File f)
+    public File getFile()
     {
-        file = f;
+        if(file == null)
+        {
+            file = fileProvider.getFile();
+        }
+
+        return file;
     }
 
     @Override
@@ -41,11 +53,25 @@ public class ConfigFile extends ConfigTree implements IConfigFile
     @Override
     public void save()
     {
-        File f = getFile();
+        LMJsonUtils.toJson(getFile(), getSerializableElement());
+    }
 
-        if(f != null)
-        {
-            LMJsonUtils.toJson(f, getSerializableElement());
-        }
+    @Override
+    public ITextComponent getTitle()
+    {
+        return displayName;
+    }
+
+    @Override
+    public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+    {
+        fromJson(json);
+        save();
+    }
+
+    @Override
+    public IConfigTree getConfigTree()
+    {
+        return this;
     }
 }

@@ -76,7 +76,7 @@ public class GuiIntField extends GuiLM
             }
         };
 
-        textBox.setText(Double.toString(def));
+        textBox.setText(Integer.toString(def));
         textBox.textRenderX = -1;
         textBox.textRenderY = 6;
         textBox.textColor = 0xFFEEEEEE;

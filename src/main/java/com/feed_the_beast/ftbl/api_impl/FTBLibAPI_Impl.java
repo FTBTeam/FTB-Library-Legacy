@@ -4,12 +4,13 @@ import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibAddon;
-import com.feed_the_beast.ftbl.api.IConfigManager;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
+import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
@@ -92,12 +93,6 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     public boolean hasServer()
     {
         return hasServer;
-    }
-
-    @Override
-    public IConfigManager configManager()
-    {
-        return ConfigManager.INSTANCE;
     }
 
     @Override
@@ -279,6 +274,12 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
         {
             new MessageNotifyPlayerCustom(n).sendTo(ep);
         }
+    }
+
+    @Override
+    public void editServerConfig(EntityPlayerMP ep, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
+    {
+        new MessageEditConfig(ep.getGameProfile().getId(), nbt, configContainer).sendTo(ep);
     }
 
     // Other Methods //

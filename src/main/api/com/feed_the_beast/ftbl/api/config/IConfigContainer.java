@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
  */
 public interface IConfigContainer
 {
-    IConfigTree getTree();
+    IConfigTree getConfigTree();
 
     ITextComponent getTitle();
 

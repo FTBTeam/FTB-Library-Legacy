@@ -109,7 +109,7 @@ public enum FTBLibRegistries
             {
                 //entry.setDisplayName(a.displayName);
                 PropertyBool configValue = new PropertyBool(a.getConfigDefault() == EnumEnabled.ENABLED);
-                ConfigManager.INSTANCE.clientConfig().add(new ConfigKey(key.toString(), configValue), configValue.copy());
+                ConfigManager.INSTANCE.CLIENT_CONFIG.add(new ConfigKey(key.toString(), configValue), configValue.copy());
             }
 
             return a;
@@ -118,7 +118,7 @@ public enum FTBLibRegistries
         public boolean enabled(ResourceLocation id)
         {
             IConfigKey key = new SimpleConfigKey(id.toString());
-            return !ConfigManager.INSTANCE.clientConfig().has(key) || ConfigManager.INSTANCE.clientConfig().get(key).getBoolean();
+            return !ConfigManager.INSTANCE.CLIENT_CONFIG.has(key) || ConfigManager.INSTANCE.CLIENT_CONFIG.get(key).getBoolean();
         }
 
         public List<Map.Entry<ResourceLocation, ISidebarButton>> getButtons(boolean ignoreConfig)
