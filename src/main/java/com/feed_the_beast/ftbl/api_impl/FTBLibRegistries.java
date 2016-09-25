@@ -42,7 +42,7 @@ public enum FTBLibRegistries
     public final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
     public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
-    public final SimpleRegistry<ResourceLocation, IRecipeHandler> RECIPE_HANDLERS = new SimpleRegistry<>(true);
+    public final List<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
 
     public void init(ASMDataTable table)
     {
@@ -76,7 +76,7 @@ public enum FTBLibRegistries
 
         LMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, data) ->
         {
-            RECIPE_HANDLERS.register(obj.getID(), obj);
+            RECIPE_HANDLERS.add(obj);
             return null;
         });
     }
