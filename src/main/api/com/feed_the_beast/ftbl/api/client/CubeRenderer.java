@@ -14,7 +14,7 @@ public final class CubeRenderer
     private static final float[] normalsY = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
     private static final float[] normalsZ = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
     private final boolean hasTexture, hasNormals;
-    public final Color4F color;
+    public final Color4I color;
     private final VertexFormat format;
     private boolean beginAndEnd = true;
     private Tessellator tessellator;
@@ -27,7 +27,7 @@ public final class CubeRenderer
         hasTexture = tex;
         hasNormals = norm;
 
-        color = new Color4F();
+        color = new Color4I();
         format = new VertexFormat();
         format.addElement(DefaultVertexFormats.POSITION_3F);
         format.addElement(DefaultVertexFormats.COLOR_4UB);

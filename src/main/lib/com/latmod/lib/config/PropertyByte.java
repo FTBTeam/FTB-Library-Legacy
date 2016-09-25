@@ -12,35 +12,34 @@ import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.NBTTagByte;
 
 import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyInt extends PropertyBase
+public class PropertyByte extends PropertyBase
 {
-    public static final String ID = "int";
+    public static final String ID = "byte";
 
     @ConfigValueProvider(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyInt(0);
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyByte((byte) 0);
 
-    private int value;
-    private int minValue = Integer.MIN_VALUE;
-    private int maxValue = Integer.MAX_VALUE;
+    private byte value;
+    private byte minValue = Byte.MIN_VALUE;
+    private byte maxValue = Byte.MAX_VALUE;
 
-    public PropertyInt(int v)
+    public PropertyByte(int v)
     {
-        value = v;
+        value = (byte) v;
     }
 
-    public PropertyInt(int v, int min, int max)
+    public PropertyByte(int v, int min, int max)
     {
         this(v);
-        minValue = min;
-        maxValue = max;
+        minValue = (byte) min;
+        maxValue = (byte) max;
     }
 
     @Override
@@ -49,68 +48,75 @@ public class PropertyInt extends PropertyBase
         return ID;
     }
 
+    public byte getByte()
+    {
+        return value;
+    }
+
+    public void setByte(byte v)
+    {
+        byte min = getMin();
+        byte max = getMax();
+        value = v < min ? min : (v > max ? max : v);
+    }
+
     @Nullable
     @Override
     public Object getValue()
     {
-        return getInt();
+        return getByte();
     }
 
-    public PropertyInt setMin(int v)
+    public PropertyByte setMin(byte v)
     {
         minValue = v;
         return this;
     }
 
-    public PropertyInt setMax(int v)
+    public PropertyByte setMax(byte v)
     {
         maxValue = v;
         return this;
     }
 
-    public int getMin()
+    public byte getMin()
     {
         return minValue;
     }
 
-    public int getMax()
+    public byte getMax()
     {
         return maxValue;
-    }
-
-    public void setInt(int v)
-    {
-        value = MathHelper.clamp_int(v, getMin(), getMax());
     }
 
     @Override
     public String getString()
     {
-        return Integer.toString(getInt());
+        return Short.toString(getByte());
     }
 
     @Override
     public boolean getBoolean()
     {
-        return getInt() != 0;
+        return getByte() != 0;
     }
 
     @Override
     public int getInt()
     {
-        return value;
+        return getByte();
     }
 
     @Override
     public IConfigValue copy()
     {
-        return new PropertyInt(getInt(), getMin(), getMax());
+        return new PropertyByte(getByte(), getMin(), getMax());
     }
 
     @Override
     public boolean equalsValue(IConfigValue value)
     {
-        return getInt() == value.getInt();
+        return getByte() == value.getInt();
     }
 
     @Override
@@ -123,11 +129,11 @@ public class PropertyInt extends PropertyBase
     @Nullable
     public String getMinValueString()
     {
-        int m = getMin();
+        byte m = getMin();
 
-        if(m != Integer.MIN_VALUE)
+        if(m != Byte.MIN_VALUE)
         {
-            return Integer.toString(m);
+            return Byte.toString(m);
         }
 
         return null;
@@ -137,11 +143,11 @@ public class PropertyInt extends PropertyBase
     @Nullable
     public String getMaxValueString()
     {
-        int m = getMin();
+        byte m = getMin();
 
-        if(m != Integer.MAX_VALUE)
+        if(m != Byte.MAX_VALUE)
         {
-            return Integer.toString(m);
+            return Byte.toString(m);
         }
 
         return null;
@@ -150,9 +156,9 @@ public class PropertyInt extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiIntField.display(null, getInt(), (id, val) ->
+        GuiIntField.display(null, getByte(), (id, val) ->
         {
-            setInt(val);
+            setByte((byte) val);
             gui.onChanged(key, getSerializableElement());
             gui.openGui();
         });
@@ -161,48 +167,48 @@ public class PropertyInt extends PropertyBase
     @Override
     public NBTBase serializeNBT()
     {
-        return new NBTTagInt(getInt());
+        return new NBTTagByte(getByte());
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        setInt(((NBTPrimitive) nbt).getInt());
+        setByte(((NBTPrimitive) nbt).getByte());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        setInt(json.getAsInt());
+        setByte(json.getAsByte());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        return new JsonPrimitive(getInt());
+        return new JsonPrimitive(getByte());
     }
 
     @Override
     public void writeData(ByteBuf data, boolean extended)
     {
-        data.writeInt(getInt());
+        data.writeByte(getByte());
 
         if(extended)
         {
-            data.writeInt(getMin());
-            data.writeInt(getMax());
+            data.writeByte(getMin());
+            data.writeByte(getMax());
         }
     }
 
     @Override
     public void readData(ByteBuf data, boolean extended)
     {
-        setInt(data.readInt());
+        setByte(data.readByte());
 
         if(extended)
         {
-            setMin(data.readInt());
-            setMax(data.readInt());
+            setMin(data.readByte());
+            setMax(data.readByte());
         }
     }
 }
