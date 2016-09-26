@@ -98,6 +98,7 @@ public class PropertyBool extends PropertyBase
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
         setBoolean(!getBoolean());
+        gui.onChanged(key, getSerializableElement());
     }
 
     @Override

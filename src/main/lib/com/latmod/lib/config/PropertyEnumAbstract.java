@@ -1,10 +1,14 @@
 package com.latmod.lib.config;
 
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.EnumNameMap;
+import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
@@ -110,5 +114,12 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     {
         Preconditions.checkState(!extended, "Reading extended PropertyEnum data is not supported!");
         set(getNameMap().getFromIndex(data.readShort() & 0xFFFF));
+    }
+
+    @Override
+    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+    {
+        set(getNameMap().getFromIndex(MathHelperLM.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().size)));
+        gui.onChanged(key, getSerializableElement());
     }
 }

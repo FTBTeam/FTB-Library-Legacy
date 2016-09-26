@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.latmod.lib.EnumNameMap;
+import com.latmod.lib.math.MathHelperLM;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
@@ -86,6 +87,8 @@ public class PropertyStringEnum extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
+        setString(keys.get(MathHelperLM.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
+        gui.onChanged(key, getSerializableElement());
     }
 
     @Override
