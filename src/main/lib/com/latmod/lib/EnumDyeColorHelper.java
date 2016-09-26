@@ -27,7 +27,7 @@ public class EnumDyeColorHelper implements ILangKeyContainer // ItemDye
     {
         dye = col;
         langKey = new LangKey("item.fireworksCharge." + col.getUnlocalizedName());
-        oreName = LMStringUtils.firstUppercase(col.getName());
+        oreName = LMStringUtils.firstUppercase(col.getUnlocalizedName());
     }
 
     public static EnumDyeColorHelper get(EnumDyeColor dye)
