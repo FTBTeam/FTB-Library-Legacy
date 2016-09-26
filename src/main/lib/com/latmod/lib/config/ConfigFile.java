@@ -65,7 +65,6 @@ public class ConfigFile extends ConfigTree implements IConfigFile
     @Override
     public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
     {
-        System.out.println("Loading file from: " + json);
         fromJson(json);
         save();
     }
@@ -73,7 +72,6 @@ public class ConfigFile extends ConfigTree implements IConfigFile
     @Override
     public IConfigTree getConfigTree()
     {
-        System.out.println("Sending file: " + getSerializableElement());
         return this;
     }
 }

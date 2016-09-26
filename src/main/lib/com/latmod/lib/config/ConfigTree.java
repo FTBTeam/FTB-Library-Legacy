@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.latmod.lib.util.JsonElementIO;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
@@ -48,16 +47,19 @@ public class ConfigTree implements IConfigTree
     @Override
     public void writeData(ByteBuf data, boolean extended)
     {
+        Map<IConfigKey, IConfigValue> map = getTree();
+        data.writeShort(map.size());
+
         if(!extended)
         {
-            //FIXME
-            JsonElementIO.write(data, getSerializableElement());
+            map.forEach((key, value) ->
+            {
+                LMNetUtils.writeString(data, key.getName());
+                value.writeData(data, false);
+            });
+
             return;
         }
-
-        Map<IConfigKey, IConfigValue> map = getTree();
-
-        data.writeShort(map.size());
 
         map.forEach((key, value) ->
         {
@@ -79,7 +81,7 @@ public class ConfigTree implements IConfigTree
 
             String info = key.getInfo();
 
-            if(info.isEmpty())
+            if(!info.isEmpty())
             {
                 extraFlags |= HAS_INFO;
             }
@@ -91,7 +93,7 @@ public class ConfigTree implements IConfigTree
                 LMNetUtils.writeString(data, rawDN);
             }
 
-            if(info.isEmpty())
+            if(!info.isEmpty())
             {
                 LMNetUtils.writeString(data, info);
             }
@@ -104,17 +106,21 @@ public class ConfigTree implements IConfigTree
     @Override
     public void readData(ByteBuf data, boolean extended)
     {
+        Map<IConfigKey, IConfigValue> map = getTree();
+        int s = data.readUnsignedShort();
+
         if(!extended)
         {
-            //FIXME
-            fromJson(JsonElementIO.read(data));
+            while(--s >= 0)
+            {
+                String id = LMNetUtils.readString(data);
+                map.get(new SimpleConfigKey(id)).readData(data, false);
+            }
+
             return;
         }
 
-        Map<IConfigKey, IConfigValue> map = getTree();
         map.clear();
-
-        int s = data.readUnsignedShort();
 
         while(--s >= 0)
         {

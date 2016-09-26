@@ -18,6 +18,7 @@ import com.latmod.lib.config.ConfigTree;
 import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
 import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
@@ -120,21 +121,9 @@ public enum ConfigManager
                 ConfigKey key = new ConfigKey(client ? (file + "." + id) : id, obj.copy(), displayName, false);
                 key.setFlags(flags);
 
-                Object infoObj = data.getAnnotationInfo().get("info");
-
-                if(infoObj instanceof String)
+                if(data.getAnnotationInfo().containsKey("info"))
                 {
-                    if(infoObj.toString().isEmpty())
-                    {
-                        key.setInfo(infoObj.toString());
-                    }
-                }
-                else if(infoObj instanceof List<?>)
-                {
-                    if(((List<?>) infoObj).size() == 1)
-                    {
-                        key.setInfo(((List<?>) infoObj).get(0).toString());
-                    }
+                    key.setInfo(LMStringUtils.unsplit(((List<String>) data.getAnnotationInfo().get("info")).toArray(new String[0]), "\n"));
                 }
 
                 if(client)
@@ -163,8 +152,7 @@ public enum ConfigManager
 
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.getKeys());
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
-        LMUtils.DEV_LOGGER.info("Found " + CLIENT_CONFIG.getTree().size() + " ClientConfig IConfigValues: " + CLIENT_CONFIG.getTree().keySet());
-        LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " CommonConfig IConfigValues");
+        LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
     }
 
     //new ResourceLocation(FTBLibFinals.MOD_ID, "client_config")
@@ -211,7 +199,10 @@ public enum ConfigManager
         {
             overridesE.getAsJsonObject().entrySet().forEach(entry ->
             {
-                //FIXME: Config overrides
+                if(entry.getValue().isJsonObject() && CONFIG_FILES.containsKey(entry.getKey()))
+                {
+                    CONFIG_FILES.get(entry.getKey()).fromJson(entry.getValue());
+                }
             });
         }
 

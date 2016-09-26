@@ -40,6 +40,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         public final IConfigKey key;
         public final IConfigValue value;
         public String keyText;
+        public List<String> info;
 
         public ButtonConfigEntry(IConfigKey id, IConfigValue e)
         {
@@ -47,6 +48,11 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             key = id;
             value = e;
             keyText = id.getDisplayName().getFormattedText();
+
+            if(!id.getInfo().isEmpty())
+            {
+                info = getFont().listFormattedStringToWidth(id.getInfo(), 230);
+            }
         }
 
         @Override
@@ -59,7 +65,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         @Override
         public void renderWidget(IGui gui)
         {
-            boolean mouseOver = getMouseX() >= 20 && gui.isMouseOver(this);
+            boolean mouseOver = getMouseY() >= 20 && gui.isMouseOver(this);
 
             int ax = getAX();
             int ay = getAY();
@@ -114,13 +120,11 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         {
             if(getMouseY() > 18)
             {
-                if(getMouseX() < getAX() + getFont().getStringWidth(title) + 10)
+                if(getMouseX() < getAX() + getFont().getStringWidth(keyText) + 10)
                 {
-                    String info = key.getInfo();
-
-                    if(!info.isEmpty())
+                    if(info != null)
                     {
-                        l.addAll(getFont().listFormattedStringToWidth(info, 230));
+                        l.addAll(info);
                     }
                 }
 

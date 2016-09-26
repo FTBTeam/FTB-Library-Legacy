@@ -30,5 +30,5 @@ public @interface ConfigValue
 
     boolean translateDisplayName() default false;
 
-    String info() default "";
+    String[] info() default { };
 }
