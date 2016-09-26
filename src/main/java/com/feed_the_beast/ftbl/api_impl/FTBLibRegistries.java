@@ -52,7 +52,6 @@ public enum FTBLibRegistries
         ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.register(obj.getID(), obj));
         ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
 
-        NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getKeys());
         GUIS.getIDs().generateIDs(GUIS.getKeys());
     }
 

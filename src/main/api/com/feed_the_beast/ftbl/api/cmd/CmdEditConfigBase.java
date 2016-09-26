@@ -51,7 +51,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             {
                 List<IConfigKey> keys = new ArrayList<>();
                 keys.addAll(map.keySet());
-                Collections.sort(keys, null);
+                Collections.sort(keys, (o1, o2) -> o1.getName().compareTo(o2.getName()));
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)

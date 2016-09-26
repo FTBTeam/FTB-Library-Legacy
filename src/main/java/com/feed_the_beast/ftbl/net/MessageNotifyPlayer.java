@@ -43,7 +43,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeInt(ID);
+        io.writeShort(ID);
     }
 
     @Override

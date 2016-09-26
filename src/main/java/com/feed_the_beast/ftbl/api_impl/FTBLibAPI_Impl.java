@@ -320,6 +320,10 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
         {
             ex.printStackTrace();
         }
+
+        FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().generateIDs(FTBLibRegistries.INSTANCE.NOTIFICATIONS.getKeys());
+        FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
+        FTBLibRegistries.INSTANCE.NOTIFICATIONS.getEntrySet().forEach(entry -> FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.put(FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().getIDFromKey(entry.getKey()), entry.getValue()));
     }
 
     public void closeWorld()
