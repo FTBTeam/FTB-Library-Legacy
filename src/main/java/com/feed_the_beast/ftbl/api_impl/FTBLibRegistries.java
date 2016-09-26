@@ -20,7 +20,7 @@ import com.latmod.lib.reg.ResourceLocationIDRegistry;
 import com.latmod.lib.reg.SimpleRegistry;
 import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
-import com.latmod.lib.util.LMUtils;
+import com.latmod.lib.util.ASMUtils;
 import gnu.trove.map.hash.TShortObjectHashMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -46,39 +46,14 @@ public enum FTBLibRegistries
 
     public void init(ASMDataTable table)
     {
-        LMUtils.findAnnotatedObjects(table, INotification.class, NotificationVariant.class, (obj, data) ->
-        {
-            NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj);
-            return null;
-        });
+        ASMUtils.findAnnotatedObjects(table, INotification.class, NotificationVariant.class, (obj, field, data) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
+        ASMUtils.findAnnotatedObjects(table, IGuiHandler.class, GuiHandler.class, (obj, field, data) -> GUIS.register(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, field, data) -> SYNCED_DATA.register(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.register(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
 
         NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getKeys());
-
-        LMUtils.findAnnotatedObjects(table, IGuiHandler.class, GuiHandler.class, (obj, data) ->
-        {
-            GUIS.register(obj.getID(), obj);
-            return null;
-        });
-
         GUIS.getIDs().generateIDs(GUIS.getKeys());
-
-        LMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, data) ->
-        {
-            SYNCED_DATA.register(obj.getID(), obj);
-            return null;
-        });
-
-        LMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, data) ->
-        {
-            SIDEBAR_BUTTONS.register(obj.getID(), obj);
-            return null;
-        });
-
-        LMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, data) ->
-        {
-            RECIPE_HANDLERS.add(obj);
-            return null;
-        });
     }
 
     public static class SidebarButtonRegistry extends SimpleRegistry<ResourceLocation, ISidebarButton>

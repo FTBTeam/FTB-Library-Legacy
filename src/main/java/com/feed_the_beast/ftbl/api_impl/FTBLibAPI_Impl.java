@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.gson.JsonElement;
 import com.latmod.lib.BroadcastSender;
+import com.latmod.lib.util.ASMUtils;
 import com.latmod.lib.util.LMFileUtils;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNBTUtils;
@@ -79,7 +80,9 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
 
     public void init(ASMDataTable table)
     {
-        LMUtils.findAnnotatedObjects(table, FTBLibAPI.class, FTBLibAddon.class, (inst, data) -> this);
+        ASMUtils.findAnnotatedObjects(table, FTBLibAPI.class, FTBLibAddon.class, (obj, field, data) -> field.set(null, INSTANCE));
+        ASMUtils.findAnnotatedMethods(table, FTBLibAddon.class, (method, params, data) -> method.invoke(null));
+
         ConfigManager.INSTANCE.init(table);
         FTBLibRegistries.INSTANCE.init(table);
     }

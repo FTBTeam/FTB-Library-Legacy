@@ -17,6 +17,7 @@ import com.latmod.lib.config.ConfigKey;
 import com.latmod.lib.config.ConfigTree;
 import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
+import com.latmod.lib.util.ASMUtils;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMStringUtils;
 import com.latmod.lib.util.LMUtils;
@@ -49,31 +50,27 @@ public enum ConfigManager
 
     public void init(ASMDataTable table)
     {
-        LMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, ConfigValueProvider.class, (obj, data) ->
+        ASMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, ConfigValueProvider.class, (obj, field, info) ->
         {
-            String s = (String) data.getAnnotationInfo().get("value");
+            String s = info.getString("value", "");
 
-            if(s != null && !s.isEmpty())
+            if(!s.isEmpty())
             {
                 CONFIG_VALUES.register(s.toLowerCase(Locale.ENGLISH), obj);
             }
-
-            return null;
         });
 
-        LMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, ConfigFileProvider.class, (obj, data) ->
+        ASMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, ConfigFileProvider.class, (obj, field, info) ->
         {
-            String s = (String) data.getAnnotationInfo().get("value");
+            String s = info.getString("value", "");
 
-            if(s != null && !s.isEmpty() && s.charAt(0) != '-')
+            if(!s.isEmpty() && s.charAt(0) != '-')
             {
                 s = s.toLowerCase(Locale.ENGLISH);
                 ITextComponent n = new TextComponentString(s);
                 ConfigFile configFile = new ConfigFile(n, obj);
                 CONFIG_FILES.put(s, configFile);
             }
-
-            return null;
         });
 
         CLIENT_CONFIG_FILE = new ConfigFile(new TextComponentString("Client Config"), () -> new File(LMUtils.folderLocal, "client/config.json")); //TODO: Lang
@@ -81,39 +78,39 @@ public enum ConfigManager
 
         int[] configValuesCount = {0};
 
-        LMUtils.findAnnotatedObjects(table, IConfigValue.class, ConfigValue.class, (obj, data) ->
+        ASMUtils.findAnnotatedObjects(table, IConfigValue.class, ConfigValue.class, (obj, field, info) ->
         {
-            String id = (String) data.getAnnotationInfo().get("id");
-            String file = (String) data.getAnnotationInfo().get("file");
+            String id = info.getString("id", "");
+            String file = info.getString("file", "");
 
-            if(id != null && file != null && !id.isEmpty() && !file.isEmpty())
+            if(!id.isEmpty() && !file.isEmpty())
             {
-                boolean client = data.getAnnotationInfo().containsKey("client") && (boolean) data.getAnnotationInfo().get("client");
-                String displayName = data.getAnnotationInfo().containsKey("displayName") ? (String) data.getAnnotationInfo().get("displayName") : null;
+                boolean client = info.getBoolean("client", false);
+                String displayName = info.getString("displayName", "");
 
                 byte flags = 0;
 
-                if(data.getAnnotationInfo().containsKey("isExcluded") && (boolean) data.getAnnotationInfo().get("isExcluded"))
+                if(info.getBoolean("isExcluded", false))
                 {
                     flags |= IConfigKey.EXCLUDED;
                 }
 
-                if(data.getAnnotationInfo().containsKey("isHidden") && (boolean) data.getAnnotationInfo().get("isHidden"))
+                if(info.getBoolean("isHidden", false))
                 {
                     flags |= IConfigKey.HIDDEN;
                 }
 
-                if(data.getAnnotationInfo().containsKey("canEdit") && !(boolean) data.getAnnotationInfo().get("canEdit"))
+                if(!info.getBoolean("canEdit", true))
                 {
                     flags |= IConfigKey.CANT_EDIT;
                 }
 
-                if(data.getAnnotationInfo().containsKey("useScrollBar") && (boolean) data.getAnnotationInfo().get("useScrollBar"))
+                if(info.getBoolean("useScrollBar", false))
                 {
                     flags |= IConfigKey.USE_SCROLL_BAR;
                 }
 
-                if(data.getAnnotationInfo().containsKey("translateDisplayName") && (boolean) data.getAnnotationInfo().get("translateDisplayName"))
+                if(info.getBoolean("translateDisplayName", false))
                 {
                     flags |= IConfigKey.TRANSLATE_DISPLAY_NAME;
                 }
@@ -121,9 +118,11 @@ public enum ConfigManager
                 ConfigKey key = new ConfigKey(client ? (file + "." + id) : id, obj.copy(), displayName, false);
                 key.setFlags(flags);
 
-                if(data.getAnnotationInfo().containsKey("info"))
+                List<String> keyInfo = info.getStringList("info");
+
+                if(!keyInfo.isEmpty())
                 {
-                    key.setInfo(LMStringUtils.unsplit(((List<String>) data.getAnnotationInfo().get("info")).toArray(new String[0]), "\n"));
+                    key.setInfo(LMStringUtils.unsplit(keyInfo.toArray(new String[keyInfo.size()]), "\n"));
                 }
 
                 if(client)
@@ -144,8 +143,6 @@ public enum ConfigManager
                     configValuesCount[0]++;
                 }
             }
-
-            return null;
         });
 
         CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getKeys());

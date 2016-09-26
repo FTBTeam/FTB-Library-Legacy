@@ -6,7 +6,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
@@ -18,8 +17,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 /**
@@ -109,45 +106,5 @@ public class LMUtils
     public static String removeFormatting(String s)
     {
         return s.isEmpty() ? s : TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
-    }
-
-    public static <T> void findAnnotatedObjects(ASMDataTable table, Class<T> objClass, Class<?> annotationClass, BiFunction<T, ASMDataTable.ASMData, T> consumer)
-    {
-        for(ASMDataTable.ASMData data : table.getAll(annotationClass.getName()))
-        {
-            try
-            {
-                Field field = Class.forName(data.getClassName()).getDeclaredField(data.getObjectName());
-
-                if(field != null && objClass.isAssignableFrom(field.getType()))
-                {
-                    T t = consumer.apply((T) field.get(null), data);
-
-                    if(t != null)
-                    {
-                        field.set(null, t);
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    public static <T> void findAnnotatedClasses(ASMDataTable table, Class<T> interfaceClass, Class<?> annotationClass, BiConsumer<T, ASMDataTable.ASMData> consumer)
-    {
-        for(ASMDataTable.ASMData data : table.getAll(annotationClass.getName()))
-        {
-            try
-            {
-                consumer.accept(Class.forName(data.getClassName()).asSubclass(interfaceClass).newInstance(), data);
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
     }
 }

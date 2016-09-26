@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Created by LatvianModder on 20.09.2016.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 public @interface FTBLibAddon
 {
 }
