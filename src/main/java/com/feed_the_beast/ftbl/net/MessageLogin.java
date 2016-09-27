@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import gnu.trove.map.hash.TShortObjectHashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,7 @@ import java.util.Map;
 
 public class MessageLogin extends MessageToClient<MessageLogin>
 {
+    private boolean isOP;
     private TShortObjectHashMap<String> configIDs;
     private TShortObjectHashMap<String> guiIDs;
     private TShortObjectHashMap<INotification> notificationIDs;
@@ -37,6 +39,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
+        isOP = LMServerUtils.isOP(player.getGameProfile());
         configIDs = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().serialize();
         guiIDs = FTBLibRegistries.INSTANCE.GUIS.getIDs().serialize();
         notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
@@ -58,6 +61,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void toBytes(ByteBuf io)
     {
+        io.writeBoolean(isOP);
         io.writeShort(configIDs.size());
 
         configIDs.forEachEntry((key, value) ->
@@ -100,6 +104,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void fromBytes(ByteBuf io)
     {
+        isOP = io.readBoolean();
         int s = io.readUnsignedShort();
 
         configIDs = new TShortObjectHashMap<>(s);
@@ -150,6 +155,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void onMessage(MessageLogin m)
     {
+        FTBLibAPI_Impl.INSTANCE.setHasServer(true);
+        FTBLibAPI_Impl.INSTANCE.setIsClientPlayerOP(m.isOP);
         FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
         FTBLibRegistries.INSTANCE.GUIS.getIDs().deserialize(m.guiIDs);
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();

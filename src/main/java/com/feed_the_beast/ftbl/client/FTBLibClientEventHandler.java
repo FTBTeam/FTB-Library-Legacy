@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -135,23 +136,19 @@ public class FTBLibClientEventHandler
         }
     }
 
-    /*
     @SubscribeEvent
-    public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent e)
+    public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
     {
+        FTBLibAPI_Impl.INSTANCE.setHasServer(false);
+        FTBLibAPI_Impl.INSTANCE.setIsClientPlayerOP(false);
     }
-    */
 
+    /* TODO: Close world / destroy cached data
     @SubscribeEvent
     public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
-        /* FIXME
-        if(ForgeWorldSP.inst != null)
-        {
-            ForgeWorldSP.inst.onClosed();
-            ForgeWorldSP.inst = null;
-        }*/
     }
+    */
 
     @SubscribeEvent
     public void onTooltip(ItemTooltipEvent event)
@@ -318,7 +315,7 @@ public class FTBLibClientEventHandler
     }
 
     @SubscribeEvent
-    public void renderWorld(RenderWorldLastEvent e)
+    public void renderWorld(RenderWorldLastEvent event)
     {
         FTBLibClient.updateRenderInfo();
     }

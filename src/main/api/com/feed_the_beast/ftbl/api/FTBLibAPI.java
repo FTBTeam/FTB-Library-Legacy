@@ -18,6 +18,8 @@ import java.util.Collection;
 public interface FTBLibAPI
 {
     boolean hasServer();
+    
+    boolean isClientPlayerOP();
 
     Collection<ITickable> ticking();
 

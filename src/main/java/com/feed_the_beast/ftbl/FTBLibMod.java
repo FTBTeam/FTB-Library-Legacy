@@ -105,11 +105,6 @@ public class FTBLibMod
     @NetworkCheckHandler
     public boolean checkNetwork(Map<String, String> m, Side side)
     {
-        if(side.isServer())
-        {
-            FTBLibAPI_Impl.INSTANCE.setHasServer(m.containsKey(FTBLibFinals.MOD_ID));
-        }
-
         String s = m.get(FTBLibFinals.MOD_ID);
         return s == null || s.equals(FTBLibFinals.MOD_VERSION);
     }

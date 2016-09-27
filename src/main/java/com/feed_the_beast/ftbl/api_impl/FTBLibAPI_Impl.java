@@ -77,7 +77,7 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     private static Universe universe;
     private static PackModes packModes;
     private static SharedData sharedDataServer, sharedDataClient;
-    private boolean hasServer = false;
+    private boolean hasServer = false, isClientPlayerOP = false;
 
     public void init(ASMDataTable table)
     {
@@ -96,6 +96,17 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     public boolean hasServer()
     {
         return hasServer;
+    }
+
+    public void setIsClientPlayerOP(boolean b)
+    {
+        isClientPlayerOP = b;
+    }
+
+    @Override
+    public boolean isClientPlayerOP()
+    {
+        return isClientPlayerOP;
     }
 
     @Override
