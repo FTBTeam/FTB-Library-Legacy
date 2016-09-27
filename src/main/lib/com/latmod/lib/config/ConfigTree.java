@@ -5,14 +5,16 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -154,15 +156,15 @@ public class ConfigTree implements IConfigTree
     @Override
     public void fromJson(JsonElement json)
     {
-        json.getAsJsonObject().entrySet().forEach(entry -> get(new SimpleConfigKey(entry.getKey())).fromJson(entry.getValue()));
+        LMJsonUtils.fromJsonTree(json.getAsJsonObject()).entrySet().forEach(entry -> get(new SimpleConfigKey(entry.getKey())).fromJson(entry.getValue()));
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        JsonObject o = new JsonObject();
-        getTree().forEach((key, value) -> o.add(key.getName(), value.getSerializableElement()));
-        return LMJsonUtils.fromJsonTree(o);
+        List<Map.Entry<String, JsonElement>> list = new ArrayList<>();
+        getTree().forEach((key, value) -> list.add(new AbstractMap.SimpleEntry<>(key.getName(), value.getSerializableElement())));
+        return LMJsonUtils.toJsonTree(list);
     }
 
     @Override
