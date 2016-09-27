@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.latmod.lib.io.LMConnection;
+import com.feed_the_beast.ftbl.lib.io.LMConnection;
 
 /**
  * Created by LatvianModder on 09.05.2016.

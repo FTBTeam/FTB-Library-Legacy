@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.google.gson.JsonObject;
-import com.latmod.lib.config.ConfigTree;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;

@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.latmod.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;

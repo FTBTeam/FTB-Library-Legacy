@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
-import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.latmod.lib.MouseButton;
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.item.ODItems;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
-import com.feed_the_beast.ftbl.api.net.MessageToServer;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.MessageToServer;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
-import com.latmod.lib.util.LMNetUtils;
-import com.latmod.lib.util.LMUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;

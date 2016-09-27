@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.latmod.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
 
 /**
  * Created by LatvianModder on 15.09.2016.

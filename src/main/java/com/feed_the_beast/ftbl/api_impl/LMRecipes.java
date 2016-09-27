@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.item.IMaterial;
 import com.feed_the_beast.ftbl.api.recipes.IRecipes;
-import com.latmod.lib.EnumDyeColorHelper;
+import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
