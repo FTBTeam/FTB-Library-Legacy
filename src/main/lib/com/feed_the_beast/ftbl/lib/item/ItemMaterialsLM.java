@@ -1,6 +1,8 @@
-package com.feed_the_beast.ftbl.api.item;
+package com.feed_the_beast.ftbl.lib.item;
 
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.api.item.IMaterial;
+import com.feed_the_beast.ftbl.api.item.IMetaLookup;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
