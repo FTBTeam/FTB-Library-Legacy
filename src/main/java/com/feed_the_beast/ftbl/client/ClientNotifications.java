@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.gui.GuiHelper;
-import com.latmod.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -189,10 +189,12 @@ public class ClientNotifications
         Perm.MAP.remove(n.getID());
         Temp.MAP.remove(n.getID());
 
+        /*
         if(current != null && current.widget.notification.getID().equals(n.getID()))
         {
             current = null;
         }
+        */
 
         Temp.MAP.put(n.getID(), n);
 

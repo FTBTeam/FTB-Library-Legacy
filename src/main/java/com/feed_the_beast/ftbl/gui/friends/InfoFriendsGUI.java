@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
-import com.feed_the_beast.ftbl.api.info.impl.InfoPage;
-import com.feed_the_beast.ftbl.api.info.impl.InfoPageTheme;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
 import net.minecraft.util.text.TextComponentString;
 
 /**

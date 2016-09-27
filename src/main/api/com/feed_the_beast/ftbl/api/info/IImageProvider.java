@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.latmod.lib.client.ITextureCoords;
-import com.latmod.lib.client.ITextureCoordsProvider;
-import com.latmod.lib.client.WrappedTextureCoords;
+import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
+import com.feed_the_beast.ftbl.lib.client.ITextureCoordsProvider;
+import com.feed_the_beast.ftbl.lib.client.WrappedTextureCoords;
 import net.minecraft.util.ResourceLocation;
 
 /**

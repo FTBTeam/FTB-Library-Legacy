@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationVariant;
-import com.latmod.lib.Notification;
+import com.feed_the_beast.ftbl.lib.Notification;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 

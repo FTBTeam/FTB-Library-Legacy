@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
+import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
 

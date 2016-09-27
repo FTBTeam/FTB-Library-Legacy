@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.client;
 
-import com.latmod.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 
 /**
  * Created by LatvianModder on 20.06.2016.

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.latmod.lib.client.ITextureCoords;
+import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 

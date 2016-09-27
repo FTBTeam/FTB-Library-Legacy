@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.feed_the_beast.ftbl.api.info.impl.ButtonInfoPage;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 
 import javax.annotation.Nullable;
 import java.util.List;

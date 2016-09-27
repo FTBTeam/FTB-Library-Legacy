@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.cmd.team.CmdTeam;
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;

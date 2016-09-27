@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
-import com.latmod.lib.EnumNameMap;
-import com.latmod.lib.config.PropertyBool;
-import com.latmod.lib.config.PropertyEnum;
-import com.latmod.lib.config.PropertyInt;
+import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
+import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 
 /**
  * Created by LatvianModder on 13.09.2016.

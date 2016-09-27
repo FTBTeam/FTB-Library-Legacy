@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api.cmd.CommandLM;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.latmod.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -120,7 +120,7 @@ public class CmdPackMode extends CommandTreeBase
     public CmdPackMode()
     {
         addSubcommand(new CmdSet("set"));
-        addSubcommand(new CmdGet("get"));
+        addSubcommand(new CmdGet("getPrivacyLevel"));
         addSubcommand(new CmdList("list"));
     }
 

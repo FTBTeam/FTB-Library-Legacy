@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
-import com.feed_the_beast.ftbl.api.net.MessageToClient;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.latmod.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.MessageToClient;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;

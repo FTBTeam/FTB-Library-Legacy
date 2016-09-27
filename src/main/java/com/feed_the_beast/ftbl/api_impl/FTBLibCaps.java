@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.security.ISecure;
 import com.feed_the_beast.ftbl.api.security.ISecureStorage;
-import com.feed_the_beast.ftbl.api.security.Security;
+import com.feed_the_beast.ftbl.lib.Security;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;

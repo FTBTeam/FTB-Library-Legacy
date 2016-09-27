@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IPackMode;
-import com.latmod.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 
 import java.io.File;
 

@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbl.api.security;
 
-import com.feed_the_beast.ftbl.api.gui.GuiIcons;
-import com.latmod.lib.EnumNameMap;
-import com.latmod.lib.ILangKeyContainer;
-import com.latmod.lib.LangKey;
-import com.latmod.lib.client.ITextureCoords;
+import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
+import com.feed_the_beast.ftbl.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.IStringSerializable;
-
-import javax.annotation.Nullable;
 
 public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
 {
@@ -26,23 +24,6 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
     {
         name = EnumNameMap.createName(this);
         langKey = new LangKey("ftbl.privacy." + name);
-    }
-
-    public static EnumPrivacyLevel get(@Nullable String s)
-    {
-        if(s == null || s.isEmpty())
-        {
-            return PUBLIC;
-        }
-        else if(s.equalsIgnoreCase("team"))
-        {
-            return TEAM;
-        }
-        else if(s.equalsIgnoreCase("private"))
-        {
-            return PRIVATE;
-        }
-        return PUBLIC;
     }
 
     @Override

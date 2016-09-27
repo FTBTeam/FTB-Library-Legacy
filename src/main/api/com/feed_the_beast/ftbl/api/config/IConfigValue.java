@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.latmod.lib.io.IExtendedIOObject;
+import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.common.util.INBTSerializable;

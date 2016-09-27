@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.security;
 
-import com.latmod.lib.EnumNameMap;
-import com.latmod.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;

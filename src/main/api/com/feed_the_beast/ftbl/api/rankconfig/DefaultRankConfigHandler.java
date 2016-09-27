@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.latmod.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.mojang.authlib.GameProfile;
 
 /**
