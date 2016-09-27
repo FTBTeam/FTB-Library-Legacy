@@ -3,7 +3,7 @@ package com.latmod.lib.config;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api_impl.ConfigManager;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.google.gson.JsonElement;
 import com.latmod.lib.util.LMJsonUtils;
 import com.latmod.lib.util.LMNetUtils;
@@ -69,7 +69,7 @@ public class ConfigTree implements IConfigTree
             data.writeByte(key.getFlags());
 
             IConfigValue defValue = key.getDefValue();
-            data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(defValue.getID()));
+            data.writeShort(FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(defValue.getID()));
             defValue.writeData(data, true);
 
             byte extraFlags = 0;
@@ -100,7 +100,7 @@ public class ConfigTree implements IConfigTree
                 LMNetUtils.writeString(data, info);
             }
 
-            data.writeShort(ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
+            data.writeShort(FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
             value.writeData(data, true);
         });
     }
@@ -129,7 +129,7 @@ public class ConfigTree implements IConfigTree
             String id = LMNetUtils.readString(data);
             byte flags = data.readByte();
 
-            IConfigValue value = ConfigManager.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
+            IConfigValue value = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
             value.readData(data, true);
 
             ConfigKey key = new ConfigKey(id, value);
@@ -147,7 +147,7 @@ public class ConfigTree implements IConfigTree
                 key.setInfo(LMNetUtils.readString(data));
             }
 
-            value = ConfigManager.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
+            value = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
             value.readData(data, true);
             map.put(key, value);
         }

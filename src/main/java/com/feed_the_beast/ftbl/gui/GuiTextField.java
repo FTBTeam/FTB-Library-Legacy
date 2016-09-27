@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.widgets.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.api.gui.widgets.TextBoxLM;
-import com.feed_the_beast.ftbl.api_impl.MouseButton;
+import com.latmod.lib.MouseButton;
 import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;

@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api.recipes.IRecipes;
-import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibCaps;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
@@ -68,7 +67,7 @@ public class FTBLibMod
     public void onPostInit(FMLPostInitializationEvent event)
     {
         FTBLibAPI_Impl.INSTANCE.reloadPackModes();
-        ConfigManager.INSTANCE.reloadConfig();
+        FTBLibRegistries.INSTANCE.reloadConfig();
 
         IRecipes recipes = new LMRecipes();
         FTBLibRegistries.INSTANCE.RECIPE_HANDLERS.forEach(h -> h.loadRecipes(recipes));
@@ -85,7 +84,7 @@ public class FTBLibMod
     public void onServerStarted(FMLServerAboutToStartEvent event)
     {
         FTBLibAPI_Impl.INSTANCE.reloadPackModes();
-        ConfigManager.INSTANCE.reloadConfig();
+        FTBLibRegistries.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         FTBLibAPI_Impl.INSTANCE.createAndLoadWorld();
         LMServerUtils.addTickable(event.getServer(), FTBLibAPI_Impl.INSTANCE);

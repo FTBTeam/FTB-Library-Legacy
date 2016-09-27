@@ -91,16 +91,9 @@ ftbl.lang.team_color.purple=紫色
 ftbl.lang.team_color.gray=灰色
 
 # Action Buttons
-sidebar_button.ftbl:settings=客户端设定
-sidebar_button.ftbl:my_server_settings=服务端设定
-sidebar_button.ftbl:notifications=通知
-sidebar_button.ftbl:toggle_gamemode=切换游戏模式
-sidebar_button.ftbl:toggle_rain=切换天气
-sidebar_button.ftbl:set_day=设置为白天
-sidebar_button.ftbl:set_night=设置为黑夜
-sidebar_button.ftbl:heal=治疗
-player_action.ftbl:team_invite=邀请到我的组
-player_action.ftbl:team_deny_invite=拒绝邀请
+sidebar_button.ftbl.settings=客户端设定
+sidebar_button.ftbl.my_server_settings=服务端设定
+sidebar_button.ftbl.notifications=通知
 
 # Privacy Level
 ftbl.privacy=隐私

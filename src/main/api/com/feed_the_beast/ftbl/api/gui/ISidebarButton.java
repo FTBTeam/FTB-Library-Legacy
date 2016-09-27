@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
-import com.latmod.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.latmod.lib.client.ITextureCoords;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -14,22 +14,38 @@ public interface ISidebarButton
 {
     ResourceLocation getID();
 
-    int getPriority();
+    default int getPriority()
+    {
+        return 0;
+    }
 
     @Nullable
     ITextureCoords getIcon();
 
     @Nullable
-    EnumEnabled getConfigDefault();
+    IConfigValue getConfig();
 
     void onClicked(IMouseButton button);
 
     @Nullable
-    ITextComponent getDisplayNameOverride();
+    default ITextComponent getDisplayNameOverride()
+    {
+        return null;
+    }
 
     void render(int ax, int ay);
 
-    void postRender(int ax, int ay);
+    default void postRender(int ax, int ay)
+    {
+    }
 
-    boolean isVisible();
+    default boolean isVisible()
+    {
+        return true;
+    }
+
+    default String getPath()
+    {
+        return "sidebar_button." + getID().getResourceDomain() + '.' + getID().getResourcePath();
+    }
 }

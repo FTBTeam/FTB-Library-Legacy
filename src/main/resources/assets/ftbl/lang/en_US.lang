@@ -91,16 +91,9 @@ ftbl.lang.team_color.purple=Purple
 ftbl.lang.team_color.gray=Gray
 
 # Action Buttons
-sidebar_button.ftbl:settings=Client Settings
-sidebar_button.ftbl:my_server_settings=My Server Settings
-sidebar_button.ftbl:notifications=Notifications
-sidebar_button.ftbl:toggle_gamemode=Toggle Gamemode
-sidebar_button.ftbl:toggle_rain=Toggle Rain
-sidebar_button.ftbl:set_day=Set time to Day
-sidebar_button.ftbl:set_night=Set time to Night
-sidebar_button.ftbl:heal=Heal
-player_action.ftbl:team_invite=Invate To My Team
-player_action.ftbl:team_deny_invite=Deny Invite
+sidebar_button.ftbl.settings=Client Settings
+sidebar_button.ftbl.my_server_settings=My Server Settings
+sidebar_button.ftbl.notifications=Notifications
 
 # Privacy Level
 ftbl.privacy=Privacy

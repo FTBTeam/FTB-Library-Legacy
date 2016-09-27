@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api_impl;
+package com.latmod.lib;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 

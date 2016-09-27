@@ -91,16 +91,9 @@ ftbl.lang.team_color.purple=Violēts
 ftbl.lang.team_color.gray=Pelēks
 
 # Action Buttons
-sidebar_button.ftbl:settings=Klienta Uzstādījumi
-sidebar_button.ftbl:my_server_settings=Mani Servera Uzstādījumi
-sidebar_button.ftbl:notifications=Paziņojumi
-sidebar_button.ftbl:toggle_gamemode=Mainīt Spēles Režīmu
-sidebar_button.ftbl:toggle_rain=Pārslēgt Lietu
-sidebar_button.ftbl:set_day=Uzstādīt Dienu
-sidebar_button.ftbl:set_night=Uzstādīt Nakti
-sidebar_button.ftbl:heal=Sadziedēt
-player_action.ftbl:team_invite=Ielūgt Manā Komandā
-player_action.ftbl:team_deny_invite=Noraidīt Ielūgmu
+sidebar_button.ftbl.settings=Klienta Uzstādījumi
+sidebar_button.ftbl.my_server_settings=Mani Servera Uzstādījumi
+sidebar_button.ftbl.notifications=Paziņojumi
 
 # Privacy Level
 ftbl.privacy=Privātums

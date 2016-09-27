@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.item.ODItems;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.MouseButton;
+import com.latmod.lib.MouseButton;
 import com.latmod.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -14,7 +14,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -33,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class FTBLibClientEventHandler
 {
@@ -44,13 +42,13 @@ public class FTBLibClientEventHandler
         public final ISidebarButton button;
         public final String title;
 
-        public ButtonInvLM(int id, ResourceLocation bID, ISidebarButton b, int x, int y)
+        public ButtonInvLM(int id, ISidebarButton b, int x, int y)
         {
             super(id, x, y, 16, 16, "");
             button = b;
 
             ITextComponent c = b.getDisplayNameOverride();
-            title = ((c == null) ? new TextComponentTranslation("sidebar_button." + bID) : c).getFormattedText();
+            title = ((c == null) ? new TextComponentTranslation(b.getPath()) : c).getFormattedText();
         }
 
         @Override
@@ -218,11 +216,11 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<Map.Entry<ResourceLocation, ISidebarButton>> buttons = FTBLibRegistries.INSTANCE.SIDEBAR_BUTTONS.getButtons(false);
+            List<ISidebarButton> buttons = FTBLibRegistries.INSTANCE.getSidebarButtons(false);
 
             if(!buttons.isEmpty())
             {
-                Collections.sort(buttons, FTBLibRegistries.SidebarButtonRegistry.COMPARATOR);
+                Collections.sort(buttons, FTBLibRegistries.SIDEBAR_BUTTON_COMPARATOR);
 
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
@@ -230,11 +228,11 @@ public class FTBLibClientEventHandler
                 if(FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                 {
                     int i = 0;
-                    for(Map.Entry<ResourceLocation, ISidebarButton> entry : buttons)
+                    for(ISidebarButton button : buttons)
                     {
                         int x = i % 4;
                         int y = i / 4;
-                        ButtonInvLM b = new ButtonInvLM(495830 + i, entry.getKey(), entry.getValue(), 4 + x * 18, 4 + y * 18);
+                        ButtonInvLM b = new ButtonInvLM(495830 + i, button, 4 + x * 18, 4 + y * 18);
                         event.getButtonList().add(b);
                         renderer.buttons.add(b);
                         i++;
@@ -269,7 +267,7 @@ public class FTBLibClientEventHandler
                     }
 
                     int i = 0;
-                    for(Map.Entry<ResourceLocation, ISidebarButton> entry : buttons)
+                    for(ISidebarButton button : buttons)
                     {
                         ButtonInvLM b;
 
@@ -277,13 +275,13 @@ public class FTBLibClientEventHandler
                         {
                             int x = i % 8;
                             int y = i / 8;
-                            b = new ButtonInvLM(495830 + i, entry.getKey(), entry.getValue(), guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
+                            b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
                         }
                         else
                         {
                             int x = i / 8;
                             int y = i % 8;
-                            b = new ButtonInvLM(495830 + i, entry.getKey(), entry.getValue(), guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
+                            b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
                         }
 
                         event.getButtonList().add(b);

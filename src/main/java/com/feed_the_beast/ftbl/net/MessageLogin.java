@@ -8,10 +8,8 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.api_impl.ConfigManager;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.Notification;
 import com.latmod.lib.util.LMNetUtils;
 import gnu.trove.map.hash.TShortObjectHashMap;
 import io.netty.buffer.ByteBuf;
@@ -39,15 +37,15 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
-        configIDs = ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().serialize();
+        configIDs = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().serialize();
         guiIDs = FTBLibRegistries.INSTANCE.GUIS.getIDs().serialize();
         notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
         sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
         syncData = new HashMap<>();
 
-        for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.SYNCED_DATA.getEntrySet())
+        for(ISyncData data : FTBLibRegistries.INSTANCE.SYNCED_DATA.values())
         {
-            syncData.put(entry.getKey().toString(), entry.getValue().writeSyncData(player, forgePlayer));
+            syncData.put(data.getID().toString(), data.writeSyncData(player, forgePlayer));
         }
     }
 
@@ -83,7 +81,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         notificationIDs.forEachEntry((key, value) ->
         {
             io.writeShort(key);
-            Notification.write(io, value);
+            MessageNotifyPlayer.write(io, value);
             return true;
         });
 
@@ -131,7 +129,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         while(--s >= 0)
         {
             short id = io.readShort();
-            INotification n = Notification.read(io);
+            INotification n = MessageNotifyPlayer.read(io);
             notificationIDs.put(id, n);
         }
 
@@ -152,7 +150,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void onMessage(MessageLogin m)
     {
-        ConfigManager.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
+        FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
         FTBLibRegistries.INSTANCE.GUIS.getIDs().deserialize(m.guiIDs);
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);

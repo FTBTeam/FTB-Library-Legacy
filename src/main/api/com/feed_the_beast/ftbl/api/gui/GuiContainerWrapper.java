@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
-import com.feed_the_beast.ftbl.api_impl.MouseButton;
+import com.latmod.lib.MouseButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;

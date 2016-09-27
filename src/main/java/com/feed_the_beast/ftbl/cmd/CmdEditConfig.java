@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api_impl.ConfigManager;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -28,9 +28,9 @@ public class CmdEditConfig extends CommandTreeBase
 
     public CmdEditConfig()
     {
-        ConfigManager.INSTANCE.CONFIG_FILES.forEach((key, value) ->
+        FTBLibRegistries.INSTANCE.CONFIG_FILES.forEach((key, value) ->
         {
-            if(value != ConfigManager.INSTANCE.CLIENT_CONFIG_FILE)
+            if(value != FTBLibRegistries.INSTANCE.CLIENT_CONFIG)
             {
                 addSubcommand(new CmdEditConfigFile(key, value));
             }

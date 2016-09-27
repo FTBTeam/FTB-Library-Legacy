@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.api_impl.ConfigManager;
+import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.google.gson.JsonObject;
 import com.latmod.lib.config.ConfigTree;
@@ -30,7 +30,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 
     public MessageEditConfig(UUID id, @Nullable NBTTagCompound nbt, IConfigContainer c)
     {
-        ConfigManager.INSTANCE.TEMP_SERVER_CONFIG.put(id, c);
+        FTBLibRegistries.INSTANCE.TEMP_SERVER_CONFIG.put(id, c);
         group = c.getConfigTree().copy();
         extraNBT = nbt;
         title = c.getTitle();

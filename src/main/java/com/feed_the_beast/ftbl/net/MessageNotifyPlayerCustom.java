@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.api.net.MessageToClient;
-import com.feed_the_beast.ftbl.api_impl.Notification;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import io.netty.buffer.ByteBuf;
@@ -18,7 +17,7 @@ public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlay
 
     public MessageNotifyPlayerCustom(INotification n)
     {
-        notification = Notification.copy(n);
+        notification = MessageNotifyPlayer.copy(n);
     }
 
     @Override
@@ -30,13 +29,13 @@ public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlay
     @Override
     public void fromBytes(ByteBuf io)
     {
-        notification = Notification.read(io);
+        notification = MessageNotifyPlayer.read(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        Notification.write(io, notification);
+        MessageNotifyPlayer.write(io, notification);
     }
 
     @Override

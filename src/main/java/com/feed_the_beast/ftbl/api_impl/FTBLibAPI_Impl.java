@@ -15,6 +15,7 @@ import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.latmod.lib.BroadcastSender;
 import com.latmod.lib.util.ASMUtils;
@@ -83,7 +84,6 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
         ASMUtils.findAnnotatedObjects(table, FTBLibAPI.class, FTBLibAddon.class, (obj, field, data) -> field.set(null, INSTANCE));
         ASMUtils.findAnnotatedMethods(table, FTBLibAddon.class, (method, params, data) -> method.invoke(null));
 
-        ConfigManager.INSTANCE.init(table);
         FTBLibRegistries.INSTANCE.init(table);
     }
 
@@ -192,21 +192,14 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     @Override
     public void reload(ICommandSender sender, ReloadType type)
     {
-        if(universe == null)
-        {
-            throw new NullPointerException("Can't reload yet!");
-        }
-
-        if(type == ReloadType.LOGIN)
-        {
-            throw new IllegalArgumentException("ReloadType can't be LOGIN!");
-        }
+        Preconditions.checkNotNull(universe, "Can't reload yet!");
+        Preconditions.checkArgument(type != ReloadType.LOGIN, "ReloadType can't be LOGIN!");
 
         long ms = System.currentTimeMillis();
 
         if(type.reload(Side.SERVER))
         {
-            ConfigManager.INSTANCE.reloadConfig();
+            FTBLibRegistries.INSTANCE.reloadConfig();
             reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
         }
@@ -219,9 +212,9 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
             {
                 Map<String, NBTTagCompound> syncData = new HashMap<>();
 
-                for(Map.Entry<ResourceLocation, ISyncData> entry : FTBLibRegistries.INSTANCE.SYNCED_DATA.getEntrySet())
+                for(ISyncData data : FTBLibRegistries.INSTANCE.SYNCED_DATA.values())
                 {
-                    syncData.put(entry.getKey().toString(), entry.getValue().writeSyncData(ep, FTBLibAPI_Impl.INSTANCE.getUniverse().getPlayer(ep)));
+                    syncData.put(data.getID().toString(), data.writeSyncData(ep, FTBLibAPI_Impl.INSTANCE.getUniverse().getPlayer(ep)));
                 }
 
                 new MessageReload(type, sharedDataTag, syncData).sendTo(ep);
@@ -321,9 +314,7 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
             ex.printStackTrace();
         }
 
-        FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().generateIDs(FTBLibRegistries.INSTANCE.NOTIFICATIONS.getKeys());
-        FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
-        FTBLibRegistries.INSTANCE.NOTIFICATIONS.getEntrySet().forEach(entry -> FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.put(FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().getIDFromKey(entry.getKey()), entry.getValue()));
+        FTBLibRegistries.INSTANCE.worldLoaded();
     }
 
     public void closeWorld()

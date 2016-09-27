@@ -4,31 +4,53 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.NotificationVariant;
 import com.feed_the_beast.ftbl.api.SyncData;
+import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
+import com.feed_the_beast.ftbl.api.config.ConfigValue;
+import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigFile;
+import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
+import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.SidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
-import com.latmod.lib.EnumEnabled;
+import com.feed_the_beast.ftbl.client.FTBLibActions;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.latmod.lib.ResourceLocationComparator;
+import com.latmod.lib.config.ConfigFile;
 import com.latmod.lib.config.ConfigKey;
-import com.latmod.lib.config.PropertyBool;
-import com.latmod.lib.config.SimpleConfigKey;
 import com.latmod.lib.reg.ResourceLocationIDRegistry;
-import com.latmod.lib.reg.SimpleRegistry;
 import com.latmod.lib.reg.StringIDRegistry;
 import com.latmod.lib.reg.SyncedRegistry;
 import com.latmod.lib.util.ASMUtils;
+import com.latmod.lib.util.LMJsonUtils;
+import com.latmod.lib.util.LMStringUtils;
+import com.latmod.lib.util.LMUtils;
 import gnu.trove.map.hash.TShortObjectHashMap;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
+import javax.annotation.Nullable;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 16.08.2016.
@@ -37,85 +59,231 @@ public enum FTBLibRegistries
 {
     INSTANCE;
 
-    public final SimpleRegistry<ResourceLocation, ISyncData> SYNCED_DATA = new SimpleRegistry<>(false);
+    public static final Comparator<ISidebarButton> SIDEBAR_BUTTON_COMPARATOR = (o1, o2) ->
+    {
+        int i = Integer.compare(o2.getPriority(), o1.getPriority());
+
+        if(i == 0)
+        {
+            i = ResourceLocationComparator.INSTANCE.compare(o1.getID(), o2.getID());
+        }
+
+        return i;
+    };
+
+    public final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIDRegistry(), false);
+    public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
+    public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
+    public IConfigFile CLIENT_CONFIG;
+    public final Map<ResourceLocation, ISyncData> SYNCED_DATA = new HashMap<>();
     public final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIDRegistry(), true);
-    public final SidebarButtonRegistry SIDEBAR_BUTTONS = new SidebarButtonRegistry();
+    public final Map<ResourceLocation, ISidebarButton> SIDEBAR_BUTTONS = new HashMap<>();
     public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     public final List<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
 
     public void init(ASMDataTable table)
     {
+        ASMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, ConfigValueProvider.class, (obj, field, info) ->
+        {
+            String s = info.getString("value", "");
+
+            if(!s.isEmpty())
+            {
+                CONFIG_VALUES.register(s.toLowerCase(Locale.ENGLISH), obj);
+            }
+        });
+
+        ASMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, ConfigFileProvider.class, (obj, field, info) ->
+        {
+            String s = info.getString("value", "");
+
+            if(!s.isEmpty() && s.charAt(0) != '-')
+            {
+                s = s.toLowerCase(Locale.ENGLISH);
+                ITextComponent n = new TextComponentString(s);
+                ConfigFile configFile = new ConfigFile(n, obj);
+                CONFIG_FILES.put(s, configFile);
+            }
+        });
+
+        CLIENT_CONFIG = new ConfigFile(new TextComponentTranslation("Client Config"), () -> new File(LMUtils.folderLocal, "client/config.json")); //TODO: Lang
+        CONFIG_FILES.put("client_config", CLIENT_CONFIG);
+
+        int[] configValuesCount = {0};
+
+        ASMUtils.findAnnotatedObjects(table, IConfigValue.class, ConfigValue.class, (obj, field, info) ->
+        {
+            String id = info.getString("id", "");
+            String file = info.getString("file", "");
+
+            if(!id.isEmpty() && !file.isEmpty())
+            {
+                boolean client = info.getBoolean("client", false);
+                String displayName = info.getString("displayName", "");
+
+                byte flags = 0;
+
+                if(info.getBoolean("isExcluded", false))
+                {
+                    flags |= IConfigKey.EXCLUDED;
+                }
+
+                if(info.getBoolean("isHidden", false))
+                {
+                    flags |= IConfigKey.HIDDEN;
+                }
+
+                if(!info.getBoolean("canEdit", true))
+                {
+                    flags |= IConfigKey.CANT_EDIT;
+                }
+
+                if(info.getBoolean("useScrollBar", false))
+                {
+                    flags |= IConfigKey.USE_SCROLL_BAR;
+                }
+
+                if(info.getBoolean("translateDisplayName", false))
+                {
+                    flags |= IConfigKey.TRANSLATE_DISPLAY_NAME;
+                }
+
+                ConfigKey key = new ConfigKey(client ? (file + "." + id) : id, obj.copy(), displayName, false);
+                key.setFlags(flags);
+
+                List<String> keyInfo = info.getStringList("info");
+
+                if(!keyInfo.isEmpty())
+                {
+                    key.setInfo(LMStringUtils.unsplit(keyInfo.toArray(new String[keyInfo.size()]), "\n"));
+                }
+
+                if(client)
+                {
+                    CLIENT_CONFIG.add(key, obj);
+                }
+                else
+                {
+                    IConfigFile configFile = CONFIG_FILES.get(file);
+
+                    if(configFile == null)
+                    {
+                        configFile = new ConfigFile(new TextComponentString(file), () -> new File(LMUtils.folderConfig, file + ".json"));
+                        CONFIG_FILES.put(file, configFile);
+                    }
+
+                    configFile.add(key, obj);
+                    configValuesCount[0]++;
+                }
+            }
+        });
+
+        CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getKeys());
+
         ASMUtils.findAnnotatedObjects(table, INotification.class, NotificationVariant.class, (obj, field, data) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
         ASMUtils.findAnnotatedObjects(table, IGuiHandler.class, GuiHandler.class, (obj, field, data) -> GUIS.register(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, field, data) -> SYNCED_DATA.register(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.register(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, field, data) -> SYNCED_DATA.put(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
         ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
 
         GUIS.getIDs().generateIDs(GUIS.getKeys());
+
+        for(ISidebarButton button : SIDEBAR_BUTTONS.values())
+        {
+            IConfigValue value = button.getConfig();
+
+            if(value != null)
+            {
+                CLIENT_CONFIG.add(new ConfigKey(button.getPath(), value.copy()), value);
+            }
+        }
+
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.getKeys());
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
+        LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
     }
 
-    public static class SidebarButtonRegistry extends SimpleRegistry<ResourceLocation, ISidebarButton>
+    public final IConfigContainer CLIENT_CONFIG_CONTAINER = new IConfigContainer()
     {
-        public static final Comparator<Map.Entry<ResourceLocation, ISidebarButton>> COMPARATOR = (o1, o2) ->
+        private final ITextComponent TITLE = new TextComponentTranslation(FTBLibActions.SETTINGS.getPath());
+
+        @Override
+        public IConfigTree getConfigTree()
         {
-            int i = Integer.compare(o2.getValue().getPriority(), o1.getValue().getPriority());
-
-            if(i == 0)
-            {
-                i = ResourceLocationComparator.INSTANCE.compare(o1.getKey(), o2.getKey());
-            }
-
-            return i;
-        };
-
-        private SidebarButtonRegistry()
-        {
-            super(true);
+            return CLIENT_CONFIG;
         }
 
         @Override
-        public ISidebarButton register(ResourceLocation key, ISidebarButton a)
+        public ITextComponent getTitle()
         {
-            a = super.register(key, a);
-
-            if(a.getConfigDefault() != null)
-            {
-                //entry.setDisplayName(a.displayName);
-                PropertyBool configValue = new PropertyBool(a.getConfigDefault() == EnumEnabled.ENABLED);
-                ConfigManager.INSTANCE.CLIENT_CONFIG.add(new ConfigKey(key.toString(), configValue), configValue.copy());
-            }
-
-            return a;
+            return TITLE;
         }
 
-        public boolean enabled(ResourceLocation id)
+        @Override
+        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
         {
-            IConfigKey key = new SimpleConfigKey(id.toString());
-            return !ConfigManager.INSTANCE.CLIENT_CONFIG.has(key) || ConfigManager.INSTANCE.CLIENT_CONFIG.get(key).getBoolean();
+            CLIENT_CONFIG.fromJson(json);
+            CLIENT_CONFIG.save();
         }
+    };
 
-        public List<Map.Entry<ResourceLocation, ISidebarButton>> getButtons(boolean ignoreConfig)
+    public void loadAllFiles()
+    {
+        CONFIG_FILES.values().forEach(IConfigFile::load);
+    }
+
+    public void saveAllFiles()
+    {
+        CONFIG_FILES.values().forEach(IConfigFile::save);
+    }
+
+    public void reloadConfig()
+    {
+        loadAllFiles();
+        JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
+
+        if(overridesE.isJsonObject())
         {
-            List<Map.Entry<ResourceLocation, ISidebarButton>> l = new ArrayList<>();
-
-            for(Map.Entry<ResourceLocation, ISidebarButton> entry : getEntrySet())
+            overridesE.getAsJsonObject().entrySet().forEach(entry ->
             {
-                if(entry.getValue().isVisible())
+                if(entry.getValue().isJsonObject())
                 {
-                    if(!ignoreConfig && entry.getValue().getConfigDefault() != null)
-                    {
-                        if(!enabled(entry.getKey()))
-                        {
-                            continue;
-                        }
-                    }
+                    IConfigFile file = CONFIG_FILES.get(entry.getKey());
 
-                    l.add(entry);
+                    if(file != null && file != CLIENT_CONFIG)
+                    {
+                        file.fromJson(entry.getValue());
+                    }
+                }
+            });
+        }
+
+        saveAllFiles();
+    }
+
+    public List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)
+    {
+        List<ISidebarButton> l = new ArrayList<>();
+
+        SIDEBAR_BUTTONS.forEach((key, value) ->
+        {
+            if(value.isVisible())
+            {
+                if(ignoreConfig || value.getConfig() == null || value.getConfig().getBoolean())
+                {
+                    l.add(value);
                 }
             }
+        });
 
-            return l;
-        }
+        return l;
+    }
+
+    public void worldLoaded()
+    {
+        NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getKeys());
+        CACHED_NOTIFICATIONS.clear();
+        NOTIFICATIONS.getEntrySet().forEach(entry -> CACHED_NOTIFICATIONS.put(NOTIFICATIONS.getIDs().getIDFromKey(entry.getKey()), entry.getValue()));
     }
 }

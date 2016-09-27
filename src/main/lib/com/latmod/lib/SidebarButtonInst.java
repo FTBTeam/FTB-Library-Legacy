@@ -1,11 +1,10 @@
-package com.feed_the_beast.ftbl.api_impl;
+package com.latmod.lib;
 
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.GuiHelper;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.latmod.lib.EnumEnabled;
 import com.latmod.lib.client.ITextureCoords;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 
@@ -14,14 +13,16 @@ public abstract class SidebarButtonInst implements ISidebarButton
     private final ResourceLocation ID;
     private final int priority;
     private final ITextureCoords icon;
-    private final EnumEnabled configDefault;
+    private final IConfigValue config;
+    private final String path;
 
-    public SidebarButtonInst(ResourceLocation id, int p, ITextureCoords c, @Nullable EnumEnabled b)
+    public SidebarButtonInst(ResourceLocation id, int p, ITextureCoords c, @Nullable IConfigValue b)
     {
         ID = id;
         priority = p;
         icon = c;
-        configDefault = b;
+        config = b;
+        path = "sidebar_button." + getID().getResourceDomain() + '.' + getID().getResourcePath();
     }
 
     @Override
@@ -44,16 +45,9 @@ public abstract class SidebarButtonInst implements ISidebarButton
 
     @Override
     @Nullable
-    public EnumEnabled getConfigDefault()
+    public IConfigValue getConfig()
     {
-        return configDefault;
-    }
-
-    @Override
-    @Nullable
-    public ITextComponent getDisplayNameOverride()
-    {
-        return null;
+        return config;
     }
 
     @Override
@@ -63,13 +57,8 @@ public abstract class SidebarButtonInst implements ISidebarButton
     }
 
     @Override
-    public void postRender(int ax, int ay)
+    public String getPath()
     {
-    }
-
-    @Override
-    public boolean isVisible()
-    {
-        return true;
+        return path;
     }
 }
