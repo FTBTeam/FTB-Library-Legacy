@@ -29,31 +29,30 @@ public class ConfigFile extends ConfigTree implements IConfigFile
     }
 
     @Override
-    public File getFile()
-    {
-        if(file == null)
-        {
-            file = fileProvider.getFile();
-        }
-
-        return file;
-    }
-
-    @Override
     public void load()
     {
-        JsonElement e = LMJsonUtils.fromJson(getFile());
+        File f = fileProvider.getFile();
 
-        if(e.isJsonObject())
+        if(f != null)
         {
-            fromJson(e.getAsJsonObject());
+            JsonElement e = LMJsonUtils.fromJson(f);
+
+            if(e.isJsonObject())
+            {
+                fromJson(e.getAsJsonObject());
+            }
         }
     }
 
     @Override
     public void save()
     {
-        LMJsonUtils.toJson(getFile(), getSerializableElement());
+        File f = fileProvider.getFile();
+
+        if(f != null)
+        {
+            LMJsonUtils.toJson(f, getSerializableElement());
+        }
     }
 
     @Override

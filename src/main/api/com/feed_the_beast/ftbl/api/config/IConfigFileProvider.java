@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -7,5 +8,6 @@ import java.io.File;
  */
 public interface IConfigFileProvider
 {
+    @Nullable
     File getFile();
 }

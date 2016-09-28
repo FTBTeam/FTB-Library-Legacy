@@ -113,7 +113,7 @@ public enum FTBLibRegistries
             }
         });
 
-        CLIENT_CONFIG = new ConfigFile(new TextComponentTranslation("Client Config"), () -> new File(LMUtils.folderLocal, "client_config.json")); //TODO: Lang
+        CLIENT_CONFIG = new ConfigFile(new TextComponentTranslation("sidebar_button.ftbl.settings"), () -> new File(LMUtils.folderLocal, "client_config.json"));
         CONFIG_FILES.put("client_config", CLIENT_CONFIG);
 
         int[] configValuesCount = {0};
