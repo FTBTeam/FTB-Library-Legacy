@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.NotificationVariant;
+import com.feed_the_beast.ftbl.api.OptionalServerModID;
 import com.feed_the_beast.ftbl.api.SyncData;
 import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
@@ -21,6 +22,7 @@ import com.feed_the_beast.ftbl.api.gui.SidebarButton;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
+import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.ResourceLocationComparator;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
@@ -45,8 +47,10 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -80,7 +84,9 @@ public enum FTBLibRegistries
     public final Map<ResourceLocation, ISidebarButton> SIDEBAR_BUTTONS = new HashMap<>();
     public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
-    public final List<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
+    public final Collection<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
+    public final Collection<String> OPTIONAL_SERVER_MODS = new HashSet<>();
+    public final Collection<String> OPTIONAL_SERVER_MODS_CLIENT = new HashSet<>();
 
     public void init(ASMDataTable table)
     {
@@ -107,7 +113,7 @@ public enum FTBLibRegistries
             }
         });
 
-        CLIENT_CONFIG = new ConfigFile(new TextComponentTranslation("Client Config"), () -> new File(LMUtils.folderLocal, "client/config.json")); //TODO: Lang
+        CLIENT_CONFIG = new ConfigFile(new TextComponentTranslation("Client Config"), () -> new File(LMUtils.folderLocal, "client_config.json")); //TODO: Lang
         CONFIG_FILES.put("client_config", CLIENT_CONFIG);
 
         int[] configValuesCount = {0};
@@ -169,7 +175,7 @@ public enum FTBLibRegistries
 
                     if(configFile == null)
                     {
-                        configFile = new ConfigFile(new TextComponentString(file), () -> new File(LMUtils.folderConfig, file + ".json"));
+                        configFile = new ConfigFile(new TextComponentString(file), () -> null);
                         CONFIG_FILES.put(file, configFile);
                     }
 
@@ -179,15 +185,16 @@ public enum FTBLibRegistries
             }
         });
 
-        CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getKeys());
+        CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getMap().keySet());
 
         ASMUtils.findAnnotatedObjects(table, INotification.class, NotificationVariant.class, (obj, field, data) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
         ASMUtils.findAnnotatedObjects(table, IGuiHandler.class, GuiHandler.class, (obj, field, data) -> GUIS.register(obj.getID(), obj));
         ASMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, field, data) -> SYNCED_DATA.put(obj.getID(), obj));
         ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
         ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
+        ASMUtils.findAnnotatedObjects(table, String.class, OptionalServerModID.class, (obj, field, data) -> OPTIONAL_SERVER_MODS.add(obj));
 
-        GUIS.getIDs().generateIDs(GUIS.getKeys());
+        GUIS.getIDs().generateIDs(GUIS.getMap().keySet());
 
         for(ISidebarButton button : SIDEBAR_BUTTONS.values())
         {
@@ -199,7 +206,7 @@ public enum FTBLibRegistries
             }
         }
 
-        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.getKeys());
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.getMap().size() + " IConfigValueProviders: " + CONFIG_VALUES.getMap().keySet());
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
     }
@@ -282,8 +289,8 @@ public enum FTBLibRegistries
 
     public void worldLoaded()
     {
-        NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getKeys());
+        NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getMap().keySet());
         CACHED_NOTIFICATIONS.clear();
-        NOTIFICATIONS.getEntrySet().forEach(entry -> CACHED_NOTIFICATIONS.put(NOTIFICATIONS.getIDs().getIDFromKey(entry.getKey()), entry.getValue()));
+        NOTIFICATIONS.getMap().forEach((key, value) -> CACHED_NOTIFICATIONS.put(NOTIFICATIONS.getIDs().getIDFromKey(key), Notification.copy(value)));
     }
 }

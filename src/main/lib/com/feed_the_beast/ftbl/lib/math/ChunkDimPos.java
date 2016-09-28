@@ -35,7 +35,7 @@ public final class ChunkDimPos
 
     public boolean equalsChunkDimPos(ChunkDimPos p)
     {
-        return p == this || (p != null && p.dim == dim && p.posX == posX && p.posZ == posZ);
+        return p == this || (p.dim == dim && p.posX == posX && p.posZ == posZ);
     }
 
     public String toString()

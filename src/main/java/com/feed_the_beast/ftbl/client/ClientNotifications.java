@@ -189,12 +189,10 @@ public class ClientNotifications
         Perm.MAP.remove(n.getID());
         Temp.MAP.remove(n.getID());
 
-        /*
         if(current != null && current.widget.notification.getID().equals(n.getID()))
         {
             current = null;
         }
-        */
 
         Temp.MAP.put(n.getID(), n);
 

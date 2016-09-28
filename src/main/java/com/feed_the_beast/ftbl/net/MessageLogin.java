@@ -21,7 +21,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class MessageLogin extends MessageToClient<MessageLogin>
@@ -32,6 +34,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     private TShortObjectHashMap<INotification> notificationIDs;
     private NBTTagCompound sharedDataTag;
     private Map<String, NBTTagCompound> syncData;
+    private Collection<String> optionalServerMods;
 
     public MessageLogin()
     {
@@ -50,6 +53,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         {
             syncData.put(data.getID().toString(), data.writeSyncData(player, forgePlayer));
         }
+
+        optionalServerMods = FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS;
     }
 
     @Override
@@ -61,7 +66,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeBoolean(isOP);
+        io.writeByte((isOP ? 1 : 0) | (optionalServerMods.isEmpty() ? 0 : 2));
         io.writeShort(configIDs.size());
 
         configIDs.forEachEntry((key, value) ->
@@ -99,12 +104,23 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             LMNetUtils.writeString(io, key);
             LMNetUtils.writeTag(io, value);
         });
+
+        if(!optionalServerMods.isEmpty())
+        {
+            io.writeShort(optionalServerMods.size());
+
+            for(String s : optionalServerMods)
+            {
+                LMNetUtils.writeString(io, s);
+            }
+        }
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
-        isOP = io.readBoolean();
+        byte flags = io.readByte();
+        isOP = (flags & 1) != 0;
         int s = io.readUnsignedShort();
 
         configIDs = new TShortObjectHashMap<>(s);
@@ -150,6 +166,17 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             NBTTagCompound value = LMNetUtils.readTag(io);
             syncData.put(key, value);
         }
+
+        if((flags & 2) != 0)
+        {
+            s = io.readUnsignedShort();
+            optionalServerMods = new HashSet<>(s);
+
+            while(--s >= 0)
+            {
+                optionalServerMods.add(LMNetUtils.readString(io));
+            }
+        }
     }
 
     @Override
@@ -158,6 +185,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         FTBLibAPI_Impl.INSTANCE.setHasServer(true);
         FTBLibAPI_Impl.INSTANCE.setIsClientPlayerOP(m.isOP);
         FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
+        FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.clear();
+        FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.addAll(m.optionalServerMods);
         FTBLibRegistries.INSTANCE.GUIS.getIDs().deserialize(m.guiIDs);
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);

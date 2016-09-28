@@ -1,16 +1,21 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
 import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Optional;
@@ -19,6 +24,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
+import java.util.Locale;
 
 public class FTBLibEventHandler
 {
@@ -52,20 +58,20 @@ public class FTBLibEventHandler
     {
         if(e.player instanceof EntityPlayerMP)
         {
-            Universe world = FTBLibAPI_Impl.INSTANCE.getUniverse();
+            Universe universe = FTBLibAPI_Impl.INSTANCE.getUniverse();
 
-            if(world != null)
+            if(universe != null)
             {
                 EntityPlayerMP ep = (EntityPlayerMP) e.player;
 
-                ForgePlayer p = world.getPlayer(ep);
+                ForgePlayer p = universe.getPlayer(ep);
 
                 boolean firstLogin = p == null;
 
                 if(firstLogin)
                 {
                     p = new ForgePlayer(ep.getGameProfile());
-                    world.playerMap.put(p.getProfile().getId(), p);
+                    universe.playerMap.put(p.getProfile().getId(), p);
                 }
                 else if(!p.getProfile().getName().equals(ep.getName()))
                 {
@@ -73,6 +79,25 @@ public class FTBLibEventHandler
                 }
 
                 p.onLoggedIn(ep, firstLogin);
+
+                if(firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
+                {
+                    String id = p.getProfile().getName().toLowerCase(Locale.ENGLISH);
+
+                    if(universe.getTeam(id) != null)
+                    {
+                        id = LMStringUtils.fromUUID(p.getProfile().getId());
+                    }
+
+                    if(universe.getTeam(id) == null)
+                    {
+                        ForgeTeam team = new ForgeTeam(universe, id);
+                        team.changeOwner(p);
+                        p.getUniverse().teams.put(team.getName(), team);
+                        MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
+                        MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
+                    }
+                }
             }
         }
     }

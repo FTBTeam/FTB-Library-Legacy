@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Notification implements INotification
@@ -24,6 +24,7 @@ public class Notification implements INotification
     {
         ID = id;
         variant = v;
+        text = new ArrayList<>();
     }
 
     public Notification setError(ITextComponent title)
@@ -39,11 +40,7 @@ public class Notification implements INotification
 
     public void setDefaults()
     {
-        if(text != null)
-        {
-            text.clear();
-        }
-
+        text.clear();
         timer = 3000;
         color = 0;
         item = null;
@@ -61,16 +58,11 @@ public class Notification implements INotification
 
     public String toString()
     {
-        return getID().toString();
+        return getID() + "@" + variant + ", text:" + getText() + ", col:" + getColorID() + ", timer:" + getTimer() + ", item:" + getItem();
     }
 
     public Notification addText(ITextComponent t)
     {
-        if(text == null)
-        {
-            text = new ArrayList<>();
-        }
-
         text.add(t);
         return this;
     }
@@ -90,7 +82,7 @@ public class Notification implements INotification
     @Override
     public List<ITextComponent> getText()
     {
-        return text == null ? Collections.emptyList() : text;
+        return text;
     }
 
     @Override
@@ -99,7 +91,7 @@ public class Notification implements INotification
         return item;
     }
 
-    public Notification setItem(ItemStack is)
+    public Notification setItem(@Nullable ItemStack is)
     {
         item = is;
         return this;
@@ -138,5 +130,16 @@ public class Notification implements INotification
     {
         color = c;
         return this;
+    }
+
+    public static Notification copy(INotification n)
+    {
+        Notification n1 = new Notification(n.getID(), n.getVariant());
+        n1.getText().addAll(n.getText());
+        n1.setColorID(n.getColorID());
+        n1.setTimer(n.getTimer());
+        n1.setItem(n.getItem());
+        n1.setPermanent(n.isPermanent());
+        return n1;
     }
 }

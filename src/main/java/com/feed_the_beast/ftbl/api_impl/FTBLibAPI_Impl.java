@@ -93,9 +93,9 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     }
 
     @Override
-    public boolean hasServer()
+    public boolean hasServer(@Nullable String id)
     {
-        return hasServer;
+        return (id == null || id.isEmpty()) ? hasServer : FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.contains(id);
     }
 
     public void setIsClientPlayerOP(boolean b)

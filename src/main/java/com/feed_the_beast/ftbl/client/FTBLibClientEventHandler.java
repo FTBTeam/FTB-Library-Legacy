@@ -141,6 +141,7 @@ public class FTBLibClientEventHandler
     {
         FTBLibAPI_Impl.INSTANCE.setHasServer(false);
         FTBLibAPI_Impl.INSTANCE.setIsClientPlayerOP(false);
+        FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.clear();
     }
 
     /* TODO: Close world / destroy cached data

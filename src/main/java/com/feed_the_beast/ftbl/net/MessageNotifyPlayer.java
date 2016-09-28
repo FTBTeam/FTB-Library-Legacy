@@ -108,12 +108,6 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
         }
     }
 
-    static Notification copy(INotification n)
-    {
-        Notification n1 = new Notification(n.getID(), n.getVariant());
-        return n1;
-    }
-
     static void write(ByteBuf io, INotification n)
     {
         LMNetUtils.writeResourceLocation(io, n.getID());

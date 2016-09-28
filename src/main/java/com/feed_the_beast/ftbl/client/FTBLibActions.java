@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.SidebarButton;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
@@ -55,6 +56,12 @@ public class FTBLibActions
                 mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
             }
         }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibAPI_Impl.INSTANCE.hasServer(null);
+        }
     };
 
     @SidebarButton
@@ -74,6 +81,12 @@ public class FTBLibActions
         public void onClicked(IMouseButton button)
         {
             FTBLibClient.execClientCommand("/ftb my_settings", false);
+        }
+
+        @Override
+        public boolean isVisible()
+        {
+            return FTBLibAPI_Impl.INSTANCE.hasServer(null);
         }
     };
 }
