@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiIntField;
+import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -156,7 +156,7 @@ public class PropertyByte extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiIntField.display(null, getByte(), (id, val) ->
+        GuiSelectors.INSTANCE.selectInt(null, getByte(), (id, val) ->
         {
             setByte((byte) val);
             gui.onChanged(key, getSerializableElement());

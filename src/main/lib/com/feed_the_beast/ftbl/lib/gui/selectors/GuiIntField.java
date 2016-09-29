@@ -1,6 +1,7 @@
-package com.feed_the_beast.ftbl.gui;
+package com.feed_the_beast.ftbl.lib.gui.selectors;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonSimpleLM;
@@ -13,24 +14,14 @@ import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;
 
-public class GuiDoubleField extends GuiLM
+public class GuiIntField extends GuiLM
 {
-    public interface Callback
-    {
-        void onCallback(@Nullable Object id, double value);
-    }
+    private final Object ID;
+    private final IGuiSelectors.IntCallback callback;
+    private final ButtonSimpleLM buttonCancel, buttonAccept;
+    private final TextBoxLM textBox;
 
-    public final Object ID;
-    public final Callback callback;
-    public final ButtonSimpleLM buttonCancel, buttonAccept;
-    public final TextBoxLM textBox;
-
-    public static void display(@Nullable Object id, double def, Callback c)
-    {
-        new GuiDoubleField(id, def, c).openGui();
-    }
-
-    private GuiDoubleField(@Nullable Object id, double def, Callback c)
+    GuiIntField(@Nullable Object id, int def, IGuiSelectors.IntCallback c)
     {
         super(100, 40);
         ID = id;
@@ -56,7 +47,7 @@ public class GuiDoubleField extends GuiLM
 
                 if(textBox.isValid())
                 {
-                    callback.onCallback(ID, Double.parseDouble(textBox.getText()));
+                    callback.onIntCallback(ID, Integer.parseInt(textBox.getText()));
                 }
             }
         };
@@ -66,17 +57,17 @@ public class GuiDoubleField extends GuiLM
             @Override
             public boolean isValid()
             {
-                return Converter.canParseDouble(getText());
+                return Converter.canParseInt(getText());
             }
 
             @Override
             public void onEnterPressed(IGui gui)
             {
-                buttonAccept.onClicked(GuiDoubleField.this, MouseButton.LEFT);
+                buttonAccept.onClicked(GuiIntField.this, MouseButton.LEFT);
             }
         };
 
-        textBox.setText(Double.toString(def));
+        textBox.setText(Integer.toString(def));
         textBox.textRenderX = -1;
         textBox.textRenderY = 6;
         textBox.textColor = 0xFFEEEEEE;

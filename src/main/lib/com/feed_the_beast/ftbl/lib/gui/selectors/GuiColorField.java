@@ -1,6 +1,7 @@
-package com.feed_the_beast.ftbl.gui;
+package com.feed_the_beast.ftbl.lib.gui.selectors;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -16,13 +17,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSelectColor extends GuiLM
+public class GuiColorField extends GuiLM
 {
-    public interface Callback
-    {
-        void onCallback(@Nullable Object id, byte value);
-    }
-
     private class ButtonColor extends ButtonLM
     {
         private final byte colID;
@@ -40,26 +36,21 @@ public class GuiSelectColor extends GuiLM
         public void onClicked(IGui gui, IMouseButton button)
         {
             GuiHelper.playClickSound();
-            callback.onCallback(ID, colID);
+            callback.onColorCallback(ID, colID);
         }
     }
 
     private final Object ID;
     private final byte initCol;
-    private final Callback callback;
+    private final IGuiSelectors.ColorCallback callback;
     private final List<ButtonColor> colorButtons;
     private ButtonColor noColorButton;
 
-    public static void display(@Nullable Object id, byte col, Callback c)
-    {
-        new GuiSelectColor(id, col, c).openGui();
-    }
-
-    private GuiSelectColor(@Nullable Object id, byte col, Callback c)
+    GuiColorField(@Nullable Object id, byte def, IGuiSelectors.ColorCallback c)
     {
         super(256, 256);
         ID = id;
-        initCol = col;
+        initCol = def;
         callback = c;
 
         colorButtons = new ArrayList<>();

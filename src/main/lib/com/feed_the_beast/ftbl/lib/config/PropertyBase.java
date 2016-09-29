@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiTextField;
+import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 
@@ -53,7 +53,7 @@ public abstract class PropertyBase implements IConfigValue
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiTextField.display(null, getSerializableElement().toString(), (id, val) ->
+        GuiSelectors.INSTANCE.selectString(null, getSerializableElement().toString(), (id, val) ->
         {
             try
             {

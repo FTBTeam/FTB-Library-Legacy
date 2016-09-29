@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.gui.GuiIntField;
+import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -156,7 +156,7 @@ public class PropertyShort extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiIntField.display(null, getShort(), (id, val) ->
+        GuiSelectors.INSTANCE.selectInt(null, getShort(), (id, val) ->
         {
             setShort((short) val);
             gui.onChanged(key, getSerializableElement());
