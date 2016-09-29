@@ -1,40 +1,25 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 
 /**
  * Created by LatvianModder on 15.09.2016.
  */
-class RankConfig extends FinalIDObject implements IRankConfig
+class RankConfig extends ConfigKey implements IRankConfig
 {
-    private final IConfigValue defaultValue, defaultOPValue;
-    private final String desc;
+    private final IConfigValue defaultOPValue;
 
-    RankConfig(String s, IConfigValue def, IConfigValue defOP, String d)
+    RankConfig(String s, IConfigValue def, IConfigValue defOP)
     {
-        super(s);
-        defaultValue = def;
-        defaultOPValue = def.copy(); // To ensure that defOP gets all def properties
+        super(s, def);
+        defaultOPValue = def.copy();
         defaultOPValue.deserializeNBT(defOP.serializeNBT());
-        desc = d;
     }
 
     @Override
-    public IConfigValue getDefaultValue()
-    {
-        return defaultValue;
-    }
-
-    @Override
-    public IConfigValue getDefaultOPValue()
+    public IConfigValue getDefOPValue()
     {
         return defaultOPValue;
-    }
-
-    @Override
-    public String getDescription()
-    {
-        return desc;
     }
 }

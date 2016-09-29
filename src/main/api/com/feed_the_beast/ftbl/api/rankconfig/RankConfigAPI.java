@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api.rankconfig;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -31,12 +32,10 @@ public class RankConfigAPI
 
     public static IRankConfig register(String id, IConfigValue defPlayer, IConfigValue defOP, String description)
     {
-        if(REGISTRY.containsKey(id))
-        {
-            throw new RuntimeException("Duplicate RankConfig ID found: " + id);
-        }
+        Preconditions.checkArgument(!REGISTRY.containsKey(id), "Duplicate RankConfig ID found: " + id);
 
-        IRankConfig c = new RankConfig(id, defPlayer, defOP, description);
+        RankConfig c = new RankConfig(id, defPlayer, defOP);
+        c.setInfo(description);
         REGISTRY.put(c.getName(), c);
         return c;
     }

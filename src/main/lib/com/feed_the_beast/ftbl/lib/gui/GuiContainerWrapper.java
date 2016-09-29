@@ -48,6 +48,13 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
     }
 
     @Override
+    protected void mouseReleased(int mx, int my, int state)
+    {
+        wrappedGui.mouseReleased(wrappedGui);
+        super.mouseReleased(mx, my, state);
+    }
+
+    @Override
     protected void keyTyped(char keyChar, int key) throws IOException
     {
         if(wrappedGui.keyPressed(wrappedGui, key, keyChar))

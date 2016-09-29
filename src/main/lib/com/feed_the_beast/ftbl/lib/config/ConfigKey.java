@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public final class ConfigKey extends SimpleConfigKey
+public class ConfigKey extends SimpleConfigKey
 {
     private final IConfigValue defValue;
     private String displayName;

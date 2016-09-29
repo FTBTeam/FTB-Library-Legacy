@@ -61,6 +61,10 @@ public interface IWidget
     {
     }
 
+    default void mouseReleased(IGui gui)
+    {
+    }
+
     default boolean keyPressed(IGui gui, int key, char keyChar)
     {
         return false;

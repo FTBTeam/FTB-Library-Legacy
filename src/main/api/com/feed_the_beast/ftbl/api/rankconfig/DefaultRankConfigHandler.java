@@ -14,6 +14,6 @@ public enum DefaultRankConfigHandler implements IRankConfigHandler
     @Override
     public IConfigValue getRankConfig(GameProfile profile, IRankConfig id)
     {
-        return LMServerUtils.isOP(profile) ? id.getDefaultOPValue() : id.getDefaultValue();
+        return LMServerUtils.isOP(profile) ? id.getDefOPValue() : id.getDefValue();
     }
 }

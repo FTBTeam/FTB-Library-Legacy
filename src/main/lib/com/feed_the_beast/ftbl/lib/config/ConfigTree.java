@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,17 @@ public class ConfigTree implements IConfigTree
     private static final int HAS_DISPLAY_NAME = 1;
     private static final int HAS_INFO = 2;
 
-    private final Map<IConfigKey, IConfigValue> tree = new HashMap<>();
+    private final Map<IConfigKey, IConfigValue> tree;
+
+    public ConfigTree(boolean linked)
+    {
+        tree = linked ? new LinkedHashMap<>() : new HashMap<>();
+    }
+
+    public ConfigTree()
+    {
+        this(false);
+    }
 
     @Override
     public Map<IConfigKey, IConfigValue> getTree()

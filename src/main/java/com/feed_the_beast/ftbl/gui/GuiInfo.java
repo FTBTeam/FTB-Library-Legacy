@@ -186,7 +186,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void addWidgets()
             {
-                for(IWidget w : panelPages.widgets)
+                for(IWidget w : panelPages.getWidgets())
                 {
                     ((ButtonInfoPage) w).updateTitle(GuiInfo.this);
                 }
