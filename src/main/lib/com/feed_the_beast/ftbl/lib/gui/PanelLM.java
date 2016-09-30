@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 
@@ -30,5 +31,17 @@ public abstract class PanelLM extends WidgetLM implements IPanel
     {
         getWidgets().clear();
         addWidgets();
+    }
+
+    @Override
+    public void addMouseOverText(IGui gui, List<String> l)
+    {
+        for(IWidget w : getWidgets())
+        {
+            if(w.isEnabled() && gui.isMouseOver(w))
+            {
+                w.addMouseOverText(gui, l);
+            }
+        }
     }
 }

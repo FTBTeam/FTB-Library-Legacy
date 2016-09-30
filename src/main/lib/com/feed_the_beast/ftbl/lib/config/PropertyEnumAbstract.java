@@ -15,6 +15,8 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 12.09.2016.
@@ -71,6 +73,13 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     public int getColor()
     {
         return 0x0094FF;
+    }
+
+    @Override
+    @Nullable
+    public List<String> getVariants()
+    {
+        return new ArrayList<>(getNameMap().getKeys());
     }
 
     @Override

@@ -12,8 +12,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagIntArray;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by LatvianModder on 15.09.2016.
@@ -88,15 +86,6 @@ public class PropertyIntList extends PropertyBase
     public int getColor()
     {
         return 0xFFAA49;
-    }
-
-    @Override
-    public List<String> getVariants()
-    {
-        TIntList list0 = getIntList();
-        List<String> list = new ArrayList<>(list0.size());
-        list0.forEach(i -> list.add(Integer.toString(i)));
-        return list;
     }
 
     @Override

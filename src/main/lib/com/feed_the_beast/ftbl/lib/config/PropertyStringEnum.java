@@ -85,6 +85,13 @@ public class PropertyStringEnum extends PropertyBase
     }
 
     @Override
+    @Nullable
+    public List<String> getVariants()
+    {
+        return Collections.unmodifiableList(keys);
+    }
+
+    @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
         setString(keys.get(MathHelperLM.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
