@@ -16,6 +16,11 @@ public final class ChunkDimPos
         dim = d;
     }
 
+    public ChunkDimPos(ChunkPos pos, int d)
+    {
+        this(pos.chunkXPos, pos.chunkZPos, d);
+    }
+
     public boolean equals(Object o)
     {
         if(o == null)
