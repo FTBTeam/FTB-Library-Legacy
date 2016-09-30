@@ -14,7 +14,7 @@ import java.io.File;
 public class FTBLibConfig
 {
     @ConfigFileProvider(FTBLibFinals.MOD_ID)
-    public static final IConfigFileProvider FILE = () -> new File(LMUtils.folderLocal, "client_config.json");
+    public static final IConfigFileProvider FILE = () -> new File(LMUtils.folderLocal, "ftbl.json");
 
     @ConfigValue(id = "teams.autocreate_on_login", file = FTBLibFinals.MOD_ID)
     public static final PropertyBool AUTOCREATE_TEAMS = new PropertyBool(true);
