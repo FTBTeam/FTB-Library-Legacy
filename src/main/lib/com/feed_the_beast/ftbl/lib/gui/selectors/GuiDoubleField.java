@@ -1,113 +1,35 @@
 package com.feed_the_beast.ftbl.lib.gui.selectors;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.gui.ButtonSimpleLM;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
 import com.feed_the_beast.ftbl.lib.math.Converter;
-import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;
 
-public class GuiDoubleField extends GuiLM
+public class GuiDoubleField extends GuiAbstractField<Double>
 {
-    private final Object ID;
     private final IGuiSelectors.DoubleCallback callback;
-    private final ButtonSimpleLM buttonCancel, buttonAccept;
-    private final TextBoxLM textBox;
 
-    GuiDoubleField(@Nullable Object id, double def, IGuiSelectors.DoubleCallback c)
+    GuiDoubleField(@Nullable Object id, Double def, IGuiSelectors.DoubleCallback c)
     {
-        super(100, 40);
-        ID = id;
+        super(id, def);
         callback = c;
-
-        int bsize = getWidth() / 2 - 4;
-
-        buttonCancel = new ButtonSimpleLM(2, getHeight() - 18, bsize, 16, GuiLang.BUTTON_CANCEL.translate())
-        {
-            @Override
-            public void onClicked(IGui gui, IMouseButton button)
-            {
-                GuiHelper.playClickSound();
-            }
-        };
-
-        buttonAccept = new ButtonSimpleLM(getWidth() - bsize - 2, getHeight() - 18, bsize, 16, GuiLang.BUTTON_ACCEPT.translate())
-        {
-            @Override
-            public void onClicked(IGui gui, IMouseButton button)
-            {
-                GuiHelper.playClickSound();
-
-                if(textBox.isValid())
-                {
-                    callback.onDoubleCallback(ID, Double.parseDouble(textBox.getText()));
-                }
-            }
-        };
-
-        textBox = new TextBoxLM(2, 2, getWidth() - 4, 18)
-        {
-            @Override
-            public boolean isValid()
-            {
-                return Converter.canParseDouble(getText());
-            }
-
-            @Override
-            public void onEnterPressed(IGui gui)
-            {
-                buttonAccept.onClicked(GuiDoubleField.this, MouseButton.LEFT);
-            }
-        };
-
-        textBox.setText(Double.toString(def));
-        textBox.textRenderX = -1;
-        textBox.textRenderY = 6;
-        textBox.textColor = 0xFFEEEEEE;
     }
 
     @Override
-    public void addWidgets()
+    protected boolean isValid(String val)
     {
-        add(buttonCancel);
-        add(buttonAccept);
-        add(textBox);
+        return Converter.canParseInt(val);
     }
 
     @Override
-    public void renderWidgets()
+    protected void onCancelled(Double def)
     {
+        callback.onDoubleCallback(ID, def);
     }
 
     @Override
-    public void drawBackground()
+    protected void onCallback(String val)
     {
-        int size = 8 + getFont().getStringWidth(textBox.getText());
-        if(size > getWidth())
-        {
-            setWidth(size);
-            int bsize = size / 2 - 4;
-            buttonAccept.setWidth(bsize);
-            buttonCancel.setWidth(bsize);
-            buttonAccept.posX = getWidth() - bsize - 2;
-            textBox.setWidth(getWidth() - 4);
-            initGui();
-        }
-
-        GlStateManager.color(0.4F, 0.4F, 0.4F, 0.66F);
-        GuiHelper.drawBlankRect(posX, posY, getWidth(), getHeight());
-        GlStateManager.color(0.2F, 0.2F, 0.2F, 1F);
-        GuiHelper.drawBlankRect(textBox.getAX(), textBox.getAY(), textBox.getWidth(), textBox.getHeight());
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        buttonAccept.renderWidget(this);
-        buttonCancel.renderWidget(this);
-        textBox.renderWidget(this);
+        callback.onDoubleCallback(ID, Double.parseDouble(val));
     }
 }

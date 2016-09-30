@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
 public class PropertyStringEnum extends PropertyBase
 {
     @ConfigValueProvider(PropertyEnumAbstract.ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringEnum(Collections.emptyList(), "");
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringEnum(new ArrayList<>(), "");
 
     private List<String> keys;
     private String value;
@@ -75,7 +76,7 @@ public class PropertyStringEnum extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyStringEnum(keys, getString());
+        return new PropertyStringEnum(new ArrayList<>(keys), getString());
     }
 
     @Override
@@ -128,7 +129,11 @@ public class PropertyStringEnum extends PropertyBase
         if(extended)
         {
             data.writeShort(keys.size());
-            keys.forEach(s -> LMNetUtils.writeString(data, s));
+
+            for(String s : keys)
+            {
+                LMNetUtils.writeString(data, s);
+            }
         }
 
         data.writeShort(getInt());
@@ -148,6 +153,6 @@ public class PropertyStringEnum extends PropertyBase
             }
         }
 
-        setString(keys.get(data.readShort() & 0xFFFF));
+        setString(keys.get(data.readUnsignedShort()));
     }
 }

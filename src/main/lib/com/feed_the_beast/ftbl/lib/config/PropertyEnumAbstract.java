@@ -112,7 +112,11 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
         if(extended)
         {
             data.writeShort(getNameMap().size);
-            getNameMap().getKeys().forEach(s -> LMNetUtils.writeString(data, s));
+
+            for(String s : getNameMap().getKeys())
+            {
+                LMNetUtils.writeString(data, s);
+            }
         }
 
         data.writeShort(getNameMap().getIndex(getValue()));
@@ -122,7 +126,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     public void readData(ByteBuf data, boolean extended)
     {
         Preconditions.checkState(!extended, "Reading extended PropertyEnum data is not supported!");
-        set(getNameMap().getFromIndex(data.readShort() & 0xFFFF));
+        set(getNameMap().getFromIndex(data.readUnsignedShort()));
     }
 
     @Override

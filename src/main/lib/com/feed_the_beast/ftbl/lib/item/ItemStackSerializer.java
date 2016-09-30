@@ -11,6 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
+
 public class ItemStackSerializer
 {
     private static String getParseRegex(String s)
@@ -35,11 +37,6 @@ public class ItemStackSerializer
 
     public static ItemStack parseItem(String s)
     {
-        if(s == null)
-        {
-            return null;
-        }
-
         s = s.trim();
         if(s.isEmpty())
         {
@@ -54,7 +51,7 @@ public class ItemStackSerializer
         }
 
         String itemID = s1[0];
-        int dmg = 0;
+        int meta = 0;
         int size = 1;
         String nbt = null;
 
@@ -65,7 +62,7 @@ public class ItemStackSerializer
 
         if(s1.length > 2)
         {
-            dmg = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : Integer.parseInt(s1[2]);
+            meta = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : Integer.parseInt(s1[2]);
         }
 
         if(s1.length > 3)
@@ -73,22 +70,24 @@ public class ItemStackSerializer
             nbt = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
         }
 
-        return GameRegistry.makeItemStack(itemID, size, dmg, nbt);
+        return GameRegistry.makeItemStack(itemID, meta, size, nbt);
     }
 
-    public static String toString(ItemStack is)
+    @Nullable
+    public static String toString(@Nullable ItemStack is)
     {
-        return (is == null) ? null : Item.REGISTRY.getNameForObject(is.getItem()).toString() + is + ' ' + is.stackSize + ' ' + is.getItemDamage();
+        return (is == null) ? null : Item.REGISTRY.getNameForObject(is.getItem()) + " " + is.stackSize + ' ' + is.getItemDamage();
     }
 
-    public static JsonElement serialize(ItemStack is)
+    public static JsonElement serialize(@Nullable ItemStack is)
     {
         return (is == null) ? JsonNull.INSTANCE : new JsonPrimitive(toString(is));
     }
 
+    @Nullable
     public static ItemStack deserialize(JsonElement e)
     {
-        if(e == null || e.isJsonNull())
+        if(e.isJsonNull())
         {
             return null;
         }

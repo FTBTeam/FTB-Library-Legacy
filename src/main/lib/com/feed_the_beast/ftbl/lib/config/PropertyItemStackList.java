@@ -59,7 +59,14 @@ public class PropertyItemStackList extends PropertyBase
     @Override
     public String getString()
     {
-        return getItems().toString();
+        List<String> l = new ArrayList<>(getItems().size());
+
+        for(ItemStack is : getItems())
+        {
+            l.add(is.stackSize + "x " + is.getDisplayName());
+        }
+
+        return l.toString();
     }
 
     @Override
