@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbl.api.info;
 
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 08.08.2016.
@@ -12,11 +13,15 @@ import java.util.List;
 public interface IGuiInfoPage extends IInfoPage
 {
     @Override
-    @Nullable
-    IGuiInfoPage getParent();
+    IGuiInfoPage setTitle(@Nullable ITextComponent title);
 
     @Override
-    List<? extends IGuiInfoPage> getPages();
+    Map<String, IGuiInfoPage> getPages();
+
+    void addSub(IGuiInfoPage c);
+
+    @Override
+    IGuiInfoPage getSub(String id);
 
     IInfoPageTheme getTheme();
 
@@ -25,5 +30,7 @@ public interface IGuiInfoPage extends IInfoPage
     @Nullable
     ISpecialInfoButton createSpecialButton(GuiInfo gui);
 
-    ButtonInfoPage createButton(GuiInfo gui);
+    IWidget createButton(GuiInfo gui);
+
+    void setTheme(@Nullable IInfoPageTheme theme);
 }

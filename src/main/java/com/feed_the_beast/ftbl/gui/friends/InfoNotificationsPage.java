@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.gui.friends;
 
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -52,7 +53,7 @@ public class InfoNotificationsPage extends InfoPage
     }
 
     @Override
-    public ButtonInfoPage createButton(GuiInfo gui)
+    public IWidget createButton(GuiInfo gui)
     {
         return new ButtonInfoPage(gui, this, GuiIcons.CHAT);
     }

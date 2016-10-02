@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
@@ -19,7 +20,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.SliderLM;
-import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
@@ -151,7 +151,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
-                setSelectedPage(selectedPage.getParent());
+                IInfoPage parent = selectedPage.getParent();
+
+                if(parent == null || parent instanceof IGuiInfoPage)
+                {
+                    setSelectedPage((IGuiInfoPage) parent);
+                }
             }
 
             @Override
@@ -168,9 +173,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 setHeight(0);
 
-                for(IGuiInfoPage c : selectedPage.getPages())
+                for(IGuiInfoPage c : selectedPage.getPages().values())
                 {
-                    ButtonInfoPage b = c.createButton(GuiInfo.this);
+                    IWidget b = c.createButton(GuiInfo.this);
 
                     if(b.getHeight() > 0)
                     {
@@ -178,6 +183,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                         setHeight(getHeight() + b.getHeight());
                     }
                 }
+
+                buttonSpecial.updateButton(GuiInfo.this);
             }
         };
 
@@ -188,7 +195,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 for(IWidget w : panelPages.getWidgets())
                 {
-                    ((ButtonInfoPage) w).updateTitle(GuiInfo.this);
+                    if(w instanceof ButtonInfoPage)
+                    {
+                        ((ButtonInfoPage) w).updateTitle(GuiInfo.this);
+                    }
                 }
 
                 setHeight(0);
@@ -198,7 +208,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    WidgetLM w = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage);
+                    IWidget w = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage);
                     add(w);
                     setHeight(getHeight() + w.getHeight());
                 }
@@ -232,6 +242,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 refreshWidgets();
             }
         }
+
+        buttonSpecial.updateButton(GuiInfo.this);
     }
 
     @Override

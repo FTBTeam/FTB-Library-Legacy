@@ -1,21 +1,24 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.events.InfoGuiLineEvent;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 08.08.2016.
  */
 public class InfoPageHelper
 {
+    public static final Map<String, IInfoTextLineProvider> INFO_TEXT_LINE_PROVIDERS = new HashMap<>();
+
     public static String getUnformattedText(IInfoPage page)
     {
         List<IInfoTextLine> text = page.getText();
@@ -65,21 +68,25 @@ public class InfoPageHelper
         {
             JsonObject o = e.getAsJsonObject();
 
-            IInfoTextLine l;
+            IInfoTextLine line = null;
 
-            if(o.has("image"))
+            if(o.has("id"))
             {
-                l = new InfoImageLine();
-            }
-            else
-            {
-                InfoGuiLineEvent event = new InfoGuiLineEvent(page, o);
-                MinecraftForge.EVENT_BUS.post(event);
-                l = (event.getLine() == null) ? new InfoExtendedTextLine(null) : event.getLine();
+                IInfoTextLineProvider provider = INFO_TEXT_LINE_PROVIDERS.get(o.get("id").getAsString());
+
+                if(provider != null)
+                {
+                    line = provider.create(page, o);
+                }
             }
 
-            l.fromJson(o);
-            return l;
+            if(line == null)
+            {
+                line = new InfoExtendedTextLine(null);
+            }
+
+            line.fromJson(o);
+            return line;
         }
     }
 }

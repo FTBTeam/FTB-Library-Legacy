@@ -1,28 +1,39 @@
 package com.feed_the_beast.ftbl.lib.info;
 
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
+import com.feed_the_beast.ftbl.api.info.InfoTextLineProvider;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.event.ClickEvent;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-public class InfoImageLine extends InfoExtendedTextLine
+public class InfoImageLine extends EmptyInfoPageLine
 {
-    public String imageURL;
-    private IImageProvider imageProvider;
-    private int imageWidth, imageHeight;
-    private double imageScale;
+    @InfoTextLineProvider("image")
+    public static final IInfoTextLineProvider PROVIDER = (page, json) -> new InfoImageLine();
+
+    private String imageURL;
+    IImageProvider imageProvider;
+    int imageWidth, imageHeight;
+    double imageScale = 1D;
+    ClickEvent clickEvent;
+    List<String> hover;
 
     public InfoImageLine()
     {
-        super(null);
     }
 
     public InfoImageLine(IImageProvider img, int w, int h)
@@ -33,27 +44,7 @@ public class InfoImageLine extends InfoExtendedTextLine
         imageHeight = h;
     }
 
-    public IImageProvider getImageProvider()
-    {
-        return imageProvider;
-    }
-
-    public int getImageWidth()
-    {
-        return imageWidth;
-    }
-
-    public int getImageHeight()
-    {
-        return imageHeight;
-    }
-
-    public double getImageScale()
-    {
-        return imageScale;
-    }
-
-    public InfoImageLine setImage(@Nullable IImageProvider img)
+    public InfoImageLine setImage(IImageProvider img)
     {
         imageProvider = img;
         return this;
@@ -67,37 +58,44 @@ public class InfoImageLine extends InfoExtendedTextLine
     }
 
     @Override
-    public ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page)
+    public IWidget createWidget(GuiInfo gui, IGuiInfoPage page)
     {
-        return new ButtonInfoImage(gui, this, imageProvider, imageWidth, imageHeight, imageScale);
+        return new ButtonInfoImage(gui, this);
     }
 
     @Override
     public void fromJson(JsonElement e)
     {
-        super.fromJson(e);
-
-        imageWidth = imageHeight = 0;
-        imageScale = 0D;
+        imageWidth = imageHeight = 64;
+        imageScale = 1D;
+        hover = null;
 
         JsonObject o = e.getAsJsonObject();
+        boolean loadFromURL = o.has("image_url") && o.get("image_url").getAsBoolean();
+        setImage(o.has("image") ? (loadFromURL ? new URLImageProvider(o.get("image").getAsString()) : new WrappedImageProvider(new ResourceLocation(o.get("image").getAsString()))) : EmptyImageProvider.INSTANCE);
 
-        setImage(o.has("image") ? new URLImageProvider(o.get("image").getAsString()) : EmptyImageProvider.INSTANCE);
+        if(o.has("width"))
+        {
+            imageWidth = o.get("width").getAsInt();
+        }
+
+        if(o.has("height"))
+        {
+            imageHeight = o.get("height").getAsInt();
+        }
 
         if(o.has("scale"))
         {
             imageScale = o.get("scale").getAsDouble();
         }
-        else
-        {
-            if(o.has("width"))
-            {
-                imageWidth = o.get("width").getAsInt();
-            }
 
-            if(o.has("height"))
+        if(o.has("hover"))
+        {
+            hover = new ArrayList<>();
+
+            for(JsonElement e1 : o.get("hover").getAsJsonArray())
             {
-                imageHeight = o.get("height").getAsInt();
+                hover.add(LMJsonUtils.deserializeTextComponent(e1).getFormattedText());
             }
         }
     }
@@ -105,12 +103,26 @@ public class InfoImageLine extends InfoExtendedTextLine
     @Override
     public JsonElement getSerializableElement()
     {
-        JsonObject o = (JsonObject) super.getSerializableElement();
+        JsonObject o = new JsonObject();
 
         if(imageURL != null && !imageURL.isEmpty())
         {
             o.add("image", new JsonPrimitive(imageURL));
         }
+
+        if(hover != null)
+        {
+            JsonArray a = new JsonArray();
+
+            for(String s : hover)
+            {
+                a.add(new JsonPrimitive(s));
+            }
+
+            o.add("hover", a);
+        }
+
+        //FIXME: width, height, scale
 
         return o;
     }

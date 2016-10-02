@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 08.08.2016.
@@ -16,12 +17,20 @@ public interface IInfoPage extends IStringSerializable, IJsonSerializable
     @Nullable
     IInfoPage getParent();
 
+    void setParent(@Nullable IInfoPage parent);
+
     @Nullable
     ITextComponent getTitle();
 
+    IInfoPage setTitle(@Nullable ITextComponent title);
+
     List<IInfoTextLine> getText();
 
-    List<? extends IInfoPage> getPages();
+    void println(@Nullable Object o);
+
+    Map<String, ? extends IInfoPage> getPages();
+
+    IInfoPage getSub(String id);
 
     default String getFullID()
     {
@@ -34,4 +43,12 @@ public interface IInfoPage extends IStringSerializable, IJsonSerializable
         ITextComponent t = getTitle();
         return (t == null) ? new TextComponentString(getName()) : t;
     }
+
+    void clear();
+
+    void cleanup();
+
+    void sortAll();
+
+    IInfoPage copy();
 }

@@ -9,13 +9,12 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,34 +22,22 @@ import java.util.List;
  */
 public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
 {
-    public ClickEvent clickEvent;
-    public List<String> hover;
+    private ClickEvent clickEvent;
+    private String hover;
 
     public ButtonInfoExtendedTextLine(GuiInfo g, InfoExtendedTextLine l)
     {
-        super(g, l.getText() == null ? null : l.getText().getFormattedText());
+        super(g, l.text == null ? null : l.text.getFormattedText());
 
-        clickEvent = l.getClickEvent();
-
-        List<ITextComponent> h = l.getHover();
-
-        if(h != null)
+        if(l.text != null)
         {
-            hover = new ArrayList<>();
+            clickEvent = l.text.getStyle().getClickEvent();
 
-            for(ITextComponent c1 : h)
+            HoverEvent hoverEvent = l.text.getStyle().getHoverEvent();
+            if(hoverEvent != null && hoverEvent.getAction() == HoverEvent.Action.SHOW_TEXT)
             {
-                hover.add(c1.getFormattedText());
+                hover = hoverEvent.getValue().getFormattedText();
             }
-
-            if(hover.isEmpty())
-            {
-                hover = null;
-            }
-        }
-        else
-        {
-            hover = null;
         }
     }
 
@@ -59,7 +46,7 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
     {
         if(hover != null)
         {
-            l.addAll(hover);
+            l.add(hover);
         }
     }
 
@@ -69,76 +56,80 @@ public class ButtonInfoExtendedTextLine extends ButtonInfoTextLine
         if(clickEvent != null)
         {
             GuiHelper.playClickSound();
+            onClickEvent(clickEvent);
+        }
+    }
 
-            switch(this.clickEvent.getAction())
+    public static void onClickEvent(ClickEvent clickEvent)
+    {
+        switch(clickEvent.getAction())
+        {
+            case OPEN_URL:
             {
-                case OPEN_URL:
+                try
                 {
-                    try
+                    final URI uri = new URI(clickEvent.getValue());
+                    String s = uri.getScheme();
+
+                    if(s == null)
                     {
-                        final URI uri = new URI(clickEvent.getValue());
-                        String s = uri.getScheme();
+                        throw new URISyntaxException(clickEvent.getValue(), "Missing protocol");
+                    }
+                    if(!s.toLowerCase().contains("http") && !s.toLowerCase().contains("https"))
+                    {
+                        throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
+                    }
 
-                        if(s == null)
+                    Minecraft mc = Minecraft.getMinecraft();
+
+                    if(mc.gameSettings.chatLinksPrompt)
+                    {
+                        final GuiScreen currentScreen = mc.currentScreen;
+
+                        mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
                         {
-                            throw new URISyntaxException(clickEvent.getValue(), "Missing protocol");
-                        }
-                        if(!s.toLowerCase().contains("http") && !s.toLowerCase().contains("https"))
-                        {
-                            throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
-                        }
-
-                        Minecraft mc = Minecraft.getMinecraft();
-
-                        if(mc.gameSettings.chatLinksPrompt)
-                        {
-                            final GuiScreen currentScreen = mc.currentScreen;
-
-                            mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+                            if(result)
                             {
-                                if(result)
+                                try
                                 {
-                                    try
-                                    {
-                                        LMNetUtils.openURI(uri);
-                                    }
-                                    catch(Exception ex)
-                                    {
-                                        ex.printStackTrace();
-                                    }
+                                    LMNetUtils.openURI(uri);
                                 }
-                                mc.displayGuiScreen(currentScreen);
-                            }, clickEvent.getValue(), 0, false));
-                        }
-                        else
-                        {
-                            LMNetUtils.openURI(uri);
-                        }
+                                catch(Exception ex)
+                                {
+                                    ex.printStackTrace();
+                                }
+                            }
+                            mc.displayGuiScreen(currentScreen);
+                        }, clickEvent.getValue(), 0, false));
                     }
-                    catch(Exception ex)
+                    else
                     {
-                        ex.printStackTrace();
+                        LMNetUtils.openURI(uri);
                     }
                 }
-                case OPEN_FILE:
+                catch(Exception ex)
                 {
-                    try
-                    {
-                        LMNetUtils.openURI((new File(clickEvent.getValue())).toURI());
-                    }
-                    catch(Exception ex)
-                    {
-                        ex.printStackTrace();
-                    }
+                    ex.printStackTrace();
                 }
-                case SUGGEST_COMMAND:
+            }
+            case OPEN_FILE:
+            {
+                try
                 {
-                    //FIXME
+                    LMNetUtils.openURI((new File(clickEvent.getValue())).toURI());
                 }
-                case RUN_COMMAND:
+                catch(Exception ex)
                 {
-                    FTBLibClient.execClientCommand(clickEvent.getValue(), true);
+                    ex.printStackTrace();
                 }
+            }
+            case SUGGEST_COMMAND:
+            {
+                //FIXME
+            }
+            case RUN_COMMAND:
+            {
+                FTBLibClient.execClientCommand(clickEvent.getValue(), true);
             }
         }
     }

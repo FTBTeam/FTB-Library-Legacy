@@ -2,55 +2,74 @@ package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.info.IImageProvider;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.GlStateManager;
 
-import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-public class ButtonInfoImage extends ButtonInfoExtendedTextLine
+//FIXME: Image sizes
+class ButtonInfoImage extends ButtonLM
 {
-    public IImageProvider imageProvider;
+    private final InfoImageLine line;
 
-    public ButtonInfoImage(GuiInfo g, InfoImageLine l, @Nullable IImageProvider img, int imgW, int imgH, double imgS)
+    ButtonInfoImage(GuiInfo g, InfoImageLine l)
     {
-        super(g, l);
+        super(0, 0, 0, 0);
+        line = l;
 
-        if(img == null)
+        if(l.imageProvider == null)
         {
             setWidth(64);
             setHeight(64);
-            imageProvider = EmptyImageProvider.INSTANCE;
         }
         else
         {
-            imageProvider = img;
-
             //double w = (displayW > 0D) ? displayW : (displayS == 0D ? imageProvider.getWidth() : (displayS > 0D ? imageProvider.getWidth() * displayS : (imageProvider.getWidth() / -displayS)));
             //double h = (displayH > 0D) ? displayH : (displayS == 0D ? imageProvider.getHeight() : (displayS > 0D ? imageProvider.getHeight() * displayS : (imageProvider.getHeight() / -displayS)));
 
-            int w = Math.min(g.panelText.getWidth(), imgW);
-            double h = imgH * (w / (double) imgW);
+            double w = Math.min(g.panelText.getWidth(), l.imageWidth * l.imageScale);
+            double h = l.imageHeight * (w / (l.imageWidth * l.imageScale));
 
             //imageProvider = new ScaledImageProvider(img, w, (int) h);
 
-            setWidth(imgW);
-            setHeight(imgH + 1);
+            setWidth((int) w);
+            setHeight((int) h + 1);
         }
     }
 
     @Override
     public void renderWidget(IGui gui)
     {
-        if(imageProvider != null)
+        if(line.imageProvider != EmptyImageProvider.INSTANCE)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.setTexture(imageProvider.getImage());
+            FTBLibClient.setTexture(line.imageProvider.getImage());
             GuiHelper.drawTexturedRect(getAX(), getAY(), getWidth(), getHeight(), 0D, 0D, 1D, 1D);
+        }
+    }
+
+    @Override
+    public void addMouseOverText(IGui gui, List<String> l)
+    {
+        if(line.hover != null)
+        {
+            l.addAll(line.hover);
+        }
+    }
+
+    @Override
+    public void onClicked(IGui gui, IMouseButton button)
+    {
+        if(line.clickEvent != null)
+        {
+            GuiHelper.playClickSound();
+            ButtonInfoExtendedTextLine.onClickEvent(line.clickEvent);
         }
     }
 }

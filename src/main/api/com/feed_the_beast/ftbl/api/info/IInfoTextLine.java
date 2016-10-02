@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import net.minecraft.util.IJsonSerializable;
 
 import javax.annotation.Nullable;
@@ -14,5 +14,5 @@ public interface IInfoTextLine extends IJsonSerializable
     @Nullable
     String getUnformattedText();
 
-    ButtonLM createWidget(GuiInfo gui, IGuiInfoPage page);
+    IWidget createWidget(GuiInfo gui, IGuiInfoPage page);
 }

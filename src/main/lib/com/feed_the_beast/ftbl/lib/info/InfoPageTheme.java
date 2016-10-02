@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by LatvianModder on 07.05.2016.
  */
@@ -22,7 +24,7 @@ public final class InfoPageTheme implements IInfoPageTheme
     {
     }
 
-    public InfoPageTheme(int bgColor, int txtColor, Boolean unicode)
+    public InfoPageTheme(int bgColor, int txtColor, @Nullable Boolean unicode)
     {
         backgroundColor = 0xFF000000 | bgColor;
         textColor = 0xFF000000 | txtColor;

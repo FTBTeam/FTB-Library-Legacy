@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.gui.friends;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
@@ -86,7 +87,7 @@ public class InfoNotificationLine extends EmptyInfoPageLine
 
     @Override
     @SideOnly(Side.CLIENT)
-    public ButtonInfoTextLine createWidget(GuiInfo gui, IGuiInfoPage page)
+    public IWidget createWidget(GuiInfo gui, IGuiInfoPage page)
     {
         return new ButtonInfoNotification(gui);
     }

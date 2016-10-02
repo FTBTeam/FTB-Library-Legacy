@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.cmd.team.CmdTeam;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
 
@@ -42,6 +43,12 @@ public class CmdFTB extends CommandTreeBase
     public int getRequiredPermissionLevel()
     {
         return 0;
+    }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+    {
+        return true;
     }
 
     @Override

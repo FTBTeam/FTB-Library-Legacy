@@ -19,6 +19,8 @@ import com.feed_the_beast.ftbl.api.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.gui.SidebarButton;
+import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
+import com.feed_the_beast.ftbl.api.info.InfoTextLineProvider;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
@@ -26,6 +28,7 @@ import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.ResourceLocationComparator;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
 import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.reg.SyncedRegistry;
@@ -193,6 +196,16 @@ public enum FTBLibRegistries
         ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
         ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
         ASMUtils.findAnnotatedObjects(table, String.class, OptionalServerModID.class, (obj, field, data) -> OPTIONAL_SERVER_MODS.add(obj));
+
+        ASMUtils.findAnnotatedObjects(table, IInfoTextLineProvider.class, InfoTextLineProvider.class, (obj, field, info) ->
+        {
+            String s = info.getString("value", "");
+
+            if(!s.isEmpty())
+            {
+                InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(s.toLowerCase(Locale.ENGLISH), obj);
+            }
+        });
 
         GUIS.getIDs().generateIDs(GUIS.getMap().keySet());
 

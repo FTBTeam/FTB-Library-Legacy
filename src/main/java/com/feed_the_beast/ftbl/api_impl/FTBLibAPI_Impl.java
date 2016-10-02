@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
+import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.util.ASMUtils;
@@ -19,6 +20,7 @@ import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
@@ -246,7 +248,7 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     }
 
     @Override
-    public void openGui(ResourceLocation guiID, EntityPlayerMP ep, @Nullable NBTTagCompound data)
+    public void openGui(ResourceLocation guiID, EntityPlayerMP player, @Nullable NBTTagCompound data)
     {
         IGuiHandler handler = FTBLibRegistries.INSTANCE.GUIS.get(guiID);
 
@@ -255,46 +257,52 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
             return;
         }
 
-        Container c = handler.getContainer(ep, data);
+        Container c = handler.getContainer(player, data);
 
-        ep.getNextWindowId();
-        ep.closeContainer();
+        player.getNextWindowId();
+        player.closeContainer();
 
         if(c != null)
         {
-            ep.openContainer = c;
+            player.openContainer = c;
         }
 
-        ep.openContainer.windowId = ep.currentWindowId;
-        ep.openContainer.addListener(ep);
-        new MessageOpenGui(guiID, data, ep.currentWindowId).sendTo(ep);
+        player.openContainer.windowId = player.currentWindowId;
+        player.openContainer.addListener(player);
+        new MessageOpenGui(guiID, data, player.currentWindowId).sendTo(player);
     }
 
     @Override
-    public void sendNotification(@Nullable EntityPlayerMP ep, INotification n)
+    public void sendNotification(@Nullable EntityPlayerMP player, INotification n)
     {
         short id = FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().getIDFromKey(n.getID() + "@" + n.getVariant());
 
         if(id != 0)
         {
-            new MessageNotifyPlayer(id).sendTo(ep);
+            new MessageNotifyPlayer(id).sendTo(player);
         }
         else
         {
-            new MessageNotifyPlayerCustom(n).sendTo(ep);
+            new MessageNotifyPlayerCustom(n).sendTo(player);
         }
     }
 
     @Override
-    public void editServerConfig(EntityPlayerMP ep, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
+    public void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
     {
-        new MessageEditConfig(ep.getGameProfile().getId(), nbt, configContainer).sendTo(ep);
+        new MessageEditConfig(player.getGameProfile().getId(), nbt, configContainer).sendTo(player);
     }
 
     @Override
     public IGuiSelectors selectors()
     {
         return GuiSelectors.INSTANCE;
+    }
+
+    @Override
+    public void displayInfoGui(EntityPlayerMP player, IInfoPage page)
+    {
+        new MessageDisplayInfo(page).sendTo(player);
     }
 
     // Other Methods //
