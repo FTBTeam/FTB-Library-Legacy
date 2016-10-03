@@ -21,6 +21,14 @@ public interface IWidget
 
     int getHeight();
 
+    void setX(int v);
+
+    void setY(int v);
+
+    void setWidth(int v);
+
+    void setHeight(int v);
+
     default int getAX()
     {
         return (getParentPanel() == null) ? getX() : (getParentPanel().getAX() + getX());

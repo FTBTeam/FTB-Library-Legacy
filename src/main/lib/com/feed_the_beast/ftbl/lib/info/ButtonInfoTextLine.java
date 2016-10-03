@@ -17,7 +17,7 @@ public class ButtonInfoTextLine extends ButtonLM
 
     public ButtonInfoTextLine(GuiInfo g, @Nullable String txt)
     {
-        super(0, g.panelText.getHeight(), 0, 0);
+        super(0, 0, 0, 0);
 
         if(txt != null && !txt.isEmpty())
         {

@@ -180,6 +180,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                     if(b.getHeight() > 0)
                     {
                         add(b);
+                        b.setY(getHeight());
                         setHeight(getHeight() + b.getHeight());
                     }
                 }
@@ -210,6 +211,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 {
                     IWidget w = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage);
                     add(w);
+                    w.setY(getHeight());
                     setHeight(getHeight() + w.getHeight());
                 }
 

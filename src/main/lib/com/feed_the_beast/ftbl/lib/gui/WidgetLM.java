@@ -40,20 +40,34 @@ public class WidgetLM implements IWidget
         return width;
     }
 
-    public void setWidth(int w)
-    {
-        width = w;
-    }
-
     @Override
     public int getHeight()
     {
         return height;
     }
 
-    public void setHeight(int h)
+    @Override
+    public final void setX(int v)
     {
-        height = h;
+        posX = v;
+    }
+
+    @Override
+    public final void setY(int v)
+    {
+        posY = v;
+    }
+
+    @Override
+    public void setWidth(int v)
+    {
+        width = v;
+    }
+
+    @Override
+    public void setHeight(int v)
+    {
+        height = v;
     }
 
     @Override

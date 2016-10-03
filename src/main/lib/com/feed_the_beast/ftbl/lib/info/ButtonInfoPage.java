@@ -28,7 +28,7 @@ public class ButtonInfoPage extends ButtonLM
 
     public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable ITextureCoordsProvider t)
     {
-        super(0, g.panelPages.getHeight(), g.panelWidth - 36, t == null ? 13 : 18);
+        super(0, 0, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
         page = p;
         icon = t;
