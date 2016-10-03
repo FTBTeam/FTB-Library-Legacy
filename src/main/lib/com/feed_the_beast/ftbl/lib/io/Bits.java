@@ -20,6 +20,11 @@ public class Bits
         return (flags & flag) != 0;
     }
 
+    public static boolean getFlag(byte flags, byte flag)
+    {
+        return (flags & flag) != 0;
+    }
+
     public static int setFlag(int flags, int flag, boolean v)
     {
         if(v)
@@ -29,6 +34,18 @@ public class Bits
         else
         {
             return flags & ~flag;
+        }
+    }
+
+    public static byte setFlag(byte flags, byte flag, boolean v)
+    {
+        if(v)
+        {
+            return (byte) (flags | flag);
+        }
+        else
+        {
+            return (byte) (flags & ~flag);
         }
     }
 
