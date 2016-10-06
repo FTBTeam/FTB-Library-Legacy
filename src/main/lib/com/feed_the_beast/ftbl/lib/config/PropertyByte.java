@@ -156,7 +156,7 @@ public class PropertyByte extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectInt(null, getByte(), (id, val) ->
+        GuiSelectors.selectInt(null, getByte(), (id, val) ->
         {
             setByte((byte) val);
             gui.onChanged(key, getSerializableElement());

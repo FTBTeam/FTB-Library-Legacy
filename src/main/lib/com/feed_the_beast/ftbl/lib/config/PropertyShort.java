@@ -156,7 +156,7 @@ public class PropertyShort extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectInt(null, getShort(), (id, val) ->
+        GuiSelectors.selectInt(null, getShort(), (id, val) ->
         {
             setShort((short) val);
             gui.onChanged(key, getSerializableElement());

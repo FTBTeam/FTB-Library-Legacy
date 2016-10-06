@@ -53,7 +53,7 @@ public abstract class PropertyBase implements IConfigValue
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectString(null, getSerializableElement().toString(), (id, val) ->
+        GuiSelectors.selectString(null, getSerializableElement().toString(), (id, val) ->
         {
             try
             {

@@ -15,6 +15,8 @@ import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,13 +27,13 @@ public class PropertyTextComponentList extends PropertyBase
     public static final String ID = "text_component_list";
 
     @ConfigValueProvider(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyTextComponentList(new ArrayList<>());
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyTextComponentList(Collections.emptyList());
 
     private List<ITextComponent> value;
 
-    public PropertyTextComponentList(List<ITextComponent> l)
+    public PropertyTextComponentList(Collection<ITextComponent> l)
     {
-        value = l;
+        value = new ArrayList<>(l);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class PropertyTextComponentList extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyTextComponentList(new ArrayList<>(getText()));
+        return new PropertyTextComponentList(getText());
     }
 
     @Override

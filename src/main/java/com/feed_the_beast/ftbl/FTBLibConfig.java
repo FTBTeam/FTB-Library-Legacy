@@ -18,4 +18,7 @@ public class FTBLibConfig
 
     @ConfigValue(id = "teams.autocreate_on_login", file = FTBLibFinals.MOD_ID)
     public static final PropertyBool AUTOCREATE_TEAMS = new PropertyBool(true);
+
+    @ConfigValue(id = "command.use_ftb_prefix", file = FTBLibFinals.MOD_ID)
+    public static final PropertyBool USE_FTB_COMMAND_PREFIX = new PropertyBool(true);
 }

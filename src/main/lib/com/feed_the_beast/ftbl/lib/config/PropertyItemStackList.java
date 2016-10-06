@@ -8,12 +8,15 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,13 +27,13 @@ public class PropertyItemStackList extends PropertyBase
     public static final String ID = "item_stack_list";
 
     @ConfigValueProvider(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyItemStackList(new ArrayList<>());
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyItemStackList(Collections.emptyList());
 
     private List<ItemStack> value;
 
-    public PropertyItemStackList(List<ItemStack> l)
+    public PropertyItemStackList(Collection<ItemStack> l)
     {
-        value = l;
+        value = new ArrayList<>(l);
     }
 
     @Override
@@ -42,6 +45,44 @@ public class PropertyItemStackList extends PropertyBase
     public List<ItemStack> getItems()
     {
         return value;
+    }
+
+    /**
+     * @param sizeMode 0 - ignore stack size, 1 - itemStack size must be equal, 2 - itemStack size must be equal or larger
+     * @return stack that is equal to itemStack. null if none match
+     */
+    @Nullable
+    public ItemStack containsItem(ItemStack itemStack, int sizeMode)
+    {
+        Item item0 = itemStack.getItem();
+        int meta = itemStack.getMetadata();
+        int stackSize = itemStack.stackSize;
+
+        for(ItemStack is : getItems())
+        {
+            if(is.getItem() == item0 && is.getMetadata() == meta)
+            {
+                switch(sizeMode)
+                {
+                    case 1:
+                        if(is.stackSize == stackSize)
+                        {
+                            return is;
+                        }
+                        break;
+                    case 2:
+                        if(is.stackSize <= stackSize)
+                        {
+                            return is;
+                        }
+                        break;
+                    default:
+                        return is;
+                }
+            }
+        }
+
+        return null;
     }
 
     public void setItems(List<ItemStack> list)
@@ -84,7 +125,7 @@ public class PropertyItemStackList extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyItemStackList(new ArrayList<>(getItems()));
+        return new PropertyItemStackList(getItems());
     }
 
     @Override

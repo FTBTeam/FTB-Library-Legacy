@@ -84,7 +84,7 @@ public class PropertyString extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectString(null, getString(), (id, val) ->
+        GuiSelectors.selectString(null, getString(), (id, val) ->
         {
             setString(val);
             gui.onChanged(key, getSerializableElement());

@@ -156,7 +156,7 @@ public class PropertyDouble extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectDouble(null, getDouble(), (id, val) ->
+        GuiSelectors.selectDouble(null, getDouble(), (id, val) ->
         {
             setDouble(val);
             gui.onChanged(key, getSerializableElement());

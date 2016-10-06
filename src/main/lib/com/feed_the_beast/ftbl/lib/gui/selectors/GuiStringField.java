@@ -1,14 +1,12 @@
 package com.feed_the_beast.ftbl.lib.gui.selectors;
 
-import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
-
 import javax.annotation.Nullable;
 
 public class GuiStringField extends GuiAbstractField<String>
 {
-    private final IGuiSelectors.StringCallback callback;
+    private final GuiSelectors.StringCallback callback;
 
-    GuiStringField(@Nullable Object id, String def, IGuiSelectors.StringCallback c)
+    GuiStringField(@Nullable Object id, String def, GuiSelectors.StringCallback c)
     {
         super(id, def);
         callback = c;

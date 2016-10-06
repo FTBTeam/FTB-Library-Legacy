@@ -150,7 +150,7 @@ public class PropertyInt extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectInt(null, getInt(), (id, val) ->
+        GuiSelectors.selectInt(null, getInt(), (id, val) ->
         {
             setInt(val);
             gui.onChanged(key, getSerializableElement());

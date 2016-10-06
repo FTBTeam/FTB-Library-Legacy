@@ -1,36 +1,48 @@
 package com.feed_the_beast.ftbl.lib.gui.selectors;
 
-import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
-
 import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 29.09.2016.
  */
-public enum GuiSelectors implements IGuiSelectors
+public class GuiSelectors
 {
-    INSTANCE;
+    public interface StringCallback
+    {
+        void onStringCallback(@Nullable Object id, String value);
+    }
 
-    @Override
-    public void selectString(@Nullable Object ID, String def, StringCallback callback)
+    public static void selectString(@Nullable Object ID, String def, StringCallback callback)
     {
         new GuiStringField(ID, def, callback).openGui();
     }
 
-    @Override
-    public void selectInt(@Nullable Object ID, int def, IntCallback callback)
+    public interface IntCallback
+    {
+        void onIntCallback(@Nullable Object id, int value);
+    }
+
+    public static void selectInt(@Nullable Object ID, int def, IntCallback callback)
     {
         new GuiIntField(ID, def, callback).openGui();
     }
 
-    @Override
-    public void selectDouble(@Nullable Object ID, double def, DoubleCallback callback)
+    public interface DoubleCallback
+    {
+        void onDoubleCallback(@Nullable Object id, double value);
+    }
+
+    public static void selectDouble(@Nullable Object ID, double def, DoubleCallback callback)
     {
         new GuiDoubleField(ID, def, callback).openGui();
     }
 
-    @Override
-    public void selectColor(@Nullable Object ID, byte def, ColorCallback callback)
+    public interface ColorCallback
+    {
+        void onColorCallback(@Nullable Object id, byte value);
+    }
+
+    public static void selectColor(@Nullable Object ID, byte def, ColorCallback callback)
     {
         new GuiColorField(ID, def, callback).openGui();
     }

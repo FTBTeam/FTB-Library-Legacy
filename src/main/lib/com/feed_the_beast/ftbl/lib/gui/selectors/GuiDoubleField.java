@@ -1,15 +1,14 @@
 package com.feed_the_beast.ftbl.lib.gui.selectors;
 
-import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
 import com.feed_the_beast.ftbl.lib.math.Converter;
 
 import javax.annotation.Nullable;
 
 public class GuiDoubleField extends GuiAbstractField<Double>
 {
-    private final IGuiSelectors.DoubleCallback callback;
+    private final GuiSelectors.DoubleCallback callback;
 
-    GuiDoubleField(@Nullable Object id, Double def, IGuiSelectors.DoubleCallback c)
+    GuiDoubleField(@Nullable Object id, Double def, GuiSelectors.DoubleCallback c)
     {
         super(id, def);
         callback = c;

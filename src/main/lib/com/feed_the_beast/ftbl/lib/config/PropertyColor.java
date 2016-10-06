@@ -90,7 +90,7 @@ public class PropertyColor extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.INSTANCE.selectColor(null, getColorID(), (id, value) ->
+        GuiSelectors.selectColor(null, getColorID(), (id, value) ->
         {
             setColorID(value);
             gui.onChanged(key, getSerializableElement());

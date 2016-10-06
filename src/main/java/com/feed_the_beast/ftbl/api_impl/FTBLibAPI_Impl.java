@@ -10,10 +10,8 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
-import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.util.ASMUtils;
 import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
@@ -291,12 +289,6 @@ public enum FTBLibAPI_Impl implements FTBLibAPI, ITickable
     public void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
     {
         new MessageEditConfig(player.getGameProfile().getId(), nbt, configContainer).sendTo(player);
-    }
-
-    @Override
-    public IGuiSelectors selectors()
-    {
-        return GuiSelectors.INSTANCE;
     }
 
     @Override

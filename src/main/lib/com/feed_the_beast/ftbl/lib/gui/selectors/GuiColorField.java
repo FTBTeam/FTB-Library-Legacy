@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui.selectors;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IGuiSelectors;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -42,11 +41,11 @@ public class GuiColorField extends GuiLM
 
     private final Object ID;
     private final byte initCol;
-    private final IGuiSelectors.ColorCallback callback;
+    private final GuiSelectors.ColorCallback callback;
     private final List<ButtonColor> colorButtons;
     private ButtonColor noColorButton;
 
-    GuiColorField(@Nullable Object id, byte def, IGuiSelectors.ColorCallback c)
+    GuiColorField(@Nullable Object id, byte def, GuiSelectors.ColorCallback c)
     {
         super(256, 256);
         ID = id;
