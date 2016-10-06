@@ -1,16 +1,14 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
+import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoordsProvider;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,21 +21,16 @@ public class ButtonInfoPage extends ButtonLM
     public final GuiInfo guiInfo;
     public final IGuiInfoPage page;
     public String hover;
-    public ITextureCoordsProvider icon;
+    public IPageIconRenderer iconRenderer;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable ITextureCoordsProvider t)
+    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable IPageIconRenderer t)
     {
         super(0, 0, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
         page = p;
-        icon = t;
+        iconRenderer = t;
         updateTitle(g);
-    }
-
-    public boolean isIconBlurry(IGui gui)
-    {
-        return false;
     }
 
     @Override
@@ -99,27 +92,10 @@ public class ButtonInfoPage extends ButtonLM
         int ay = getAY();
         int ax = getAX();
 
-        if(icon != null)
+        if(iconRenderer != null)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.setTexture(icon.getTextureCoords().getTexture());
-
-            boolean iconBlur = isIconBlurry(gui);
-
-            if(iconBlur)
-            {
-                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-            }
-
-            GuiHelper.render(icon.getTextureCoords(), ax + 1, ay + 1, 16, 16);
-
-            if(iconBlur)
-            {
-                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-                GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-            }
-
+            iconRenderer.renderIcon(gui, this, ax + 1, ay + 1);
             guiInfo.getFont().drawString(getTitle(gui), ax + 19, ay + 6, guiInfo.colorText);
         }
         else

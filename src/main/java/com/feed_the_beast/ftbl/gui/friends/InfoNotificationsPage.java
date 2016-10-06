@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.gui.GuiInfo;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.info.TexturePageIconRenderer;
 import com.feed_the_beast.ftbl.lib.util.LMMapUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -55,6 +56,6 @@ public class InfoNotificationsPage extends InfoPage
     @Override
     public IWidget createButton(GuiInfo gui)
     {
-        return new ButtonInfoPage(gui, this, GuiIcons.CHAT);
+        return new ButtonInfoPage(gui, this, new TexturePageIconRenderer(GuiIcons.CHAT));
     }
 }
