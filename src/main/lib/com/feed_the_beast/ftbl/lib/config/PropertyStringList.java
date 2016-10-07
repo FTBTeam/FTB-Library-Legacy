@@ -11,10 +11,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import scala.actors.threadpool.*;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,13 +27,13 @@ public class PropertyStringList extends PropertyBase
     public static final String ID = "string_list";
 
     @ConfigValueProvider(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(new ArrayList<>());
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(Collections.emptyList());
 
     private List<String> value;
 
-    public PropertyStringList(List<String> v)
+    public PropertyStringList(Collection<String> v)
     {
-        value = v;
+        value = new ArrayList<>(v);
     }
 
     public PropertyStringList(String... s)
@@ -114,7 +116,7 @@ public class PropertyStringList extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyStringList(new ArrayList<>(getStringList()));
+        return new PropertyStringList(getStringList());
     }
 
     @Override
