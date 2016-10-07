@@ -65,8 +65,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     @Override
     public IConfigValue copy()
     {
-        //Good idea?
-        return new PropertyEnum<E>(getNameMap(), (E) getValue());
+        return new PropertyEnum<>(getNameMap(), getNameMap().getFromIndex(getInt()));
     }
 
     @Override

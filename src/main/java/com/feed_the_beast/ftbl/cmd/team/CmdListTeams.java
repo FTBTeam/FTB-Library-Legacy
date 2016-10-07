@@ -25,9 +25,10 @@ import java.util.List;
  */
 public class CmdListTeams extends CommandLM
 {
-    public CmdListTeams()
+    @Override
+    public String getCommandName()
     {
-        super("list");
+        return "list";
     }
 
     @Override
@@ -52,7 +53,7 @@ public class CmdListTeams extends CommandLM
             title.getStyle().setColor(team.getColor().getTextFormatting());
             page1.setTitle(title);
 
-            if(team.getDesc() != null)
+            if(!team.getDesc().isEmpty())
             {
                 ITextComponent desc = new TextComponentString(team.getDesc());
                 desc.getStyle().setItalic(true);

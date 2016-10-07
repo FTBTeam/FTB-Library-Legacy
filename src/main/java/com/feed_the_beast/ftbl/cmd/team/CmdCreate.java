@@ -17,9 +17,10 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class CmdCreate extends CommandLM
 {
-    public CmdCreate()
+    @Override
+    public String getCommandName()
     {
-        super("create");
+        return "create";
     }
 
     private static boolean isValidTeamID(String s)
@@ -74,7 +75,7 @@ public class CmdCreate extends CommandLM
             throw FTBLibLang.RAW.commandError("ID already registred!");
         }
 
-        ForgeTeam team = new ForgeTeam(p.getUniverse(), args[0]);
+        ForgeTeam team = new ForgeTeam(args[0]);
         team.changeOwner(p);
         p.getUniverse().teams.put(team.getName(), team);
 

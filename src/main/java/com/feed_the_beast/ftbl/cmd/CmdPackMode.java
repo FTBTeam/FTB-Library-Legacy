@@ -21,15 +21,16 @@ public class CmdPackMode extends CommandTreeBase
 {
     public static class CmdSet extends CommandLM
     {
-        public CmdSet(String s)
+        @Override
+        public String getCommandName()
         {
-            super(s);
+            return "set";
         }
 
         @Override
         public String getCommandUsage(ICommandSender ics)
         {
-            return '/' + commandName + " <modeID>";
+            return '/' + getCommandName() + " <modeID>";
         }
 
         @Override
@@ -75,9 +76,10 @@ public class CmdPackMode extends CommandTreeBase
 
     public static class CmdGet extends CommandLM
     {
-        public CmdGet(String s)
+        @Override
+        public String getCommandName()
         {
-            super(s);
+            return "get";
         }
 
         @Override
@@ -97,9 +99,10 @@ public class CmdPackMode extends CommandTreeBase
 
     public static class CmdList extends CommandLM
     {
-        public CmdList(String s)
+        @Override
+        public String getCommandName()
         {
-            super(s);
+            return "list";
         }
 
         @Override
@@ -119,9 +122,9 @@ public class CmdPackMode extends CommandTreeBase
 
     public CmdPackMode()
     {
-        addSubcommand(new CmdSet("set"));
-        addSubcommand(new CmdGet("getPrivacyLevel"));
-        addSubcommand(new CmdList("list"));
+        addSubcommand(new CmdSet());
+        addSubcommand(new CmdGet());
+        addSubcommand(new CmdList());
     }
 
     @Override

@@ -51,9 +51,10 @@ public class CmdMyServerSettings extends CmdEditConfigBase
         }
     }
 
-    public CmdMyServerSettings()
+    @Override
+    public String getCommandName()
     {
-        super("my_settings");
+        return "my_settings";
     }
 
     @Override

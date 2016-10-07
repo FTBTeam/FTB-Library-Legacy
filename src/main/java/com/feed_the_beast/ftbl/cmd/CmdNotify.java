@@ -15,15 +15,16 @@ import java.util.List;
 
 public class CmdNotify extends CommandLM
 {
-    public CmdNotify()
+    @Override
+    public String getCommandName()
     {
-        super("notify");
+        return "notify";
     }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return "/" + commandName + " <player> <id>";
+        return "/" + getCommandName() + " <player> <id>";
     }
 
     @Override

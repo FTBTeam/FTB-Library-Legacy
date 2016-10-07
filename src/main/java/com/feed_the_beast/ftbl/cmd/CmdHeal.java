@@ -8,9 +8,10 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdHeal extends CommandLM
 {
-    public CmdHeal()
+    @Override
+    public String getCommandName()
     {
-        super("heal");
+        return "heal";
     }
 
     @Override

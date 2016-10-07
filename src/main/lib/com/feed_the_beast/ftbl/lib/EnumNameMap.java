@@ -5,7 +5,7 @@ import net.minecraft.util.IStringSerializable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,7 +41,7 @@ public final class EnumNameMap<E extends Enum<E>>
         values = Collections.unmodifiableList(list);
         size = values.size();
 
-        Map<String, E> map1 = new HashMap<>(size);
+        Map<String, E> map1 = new LinkedHashMap<>(size);
 
         for(E e : values)
         {

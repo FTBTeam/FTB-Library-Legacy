@@ -11,12 +11,19 @@ public class CmdEditConfig extends CommandTreeBase
 {
     public static class CmdEditConfigFile extends CmdEditConfigBase
     {
+        private String commandName;
         private IConfigContainer configContainer;
 
         public CmdEditConfigFile(String id, IConfigContainer c)
         {
-            super(id);
+            commandName = id;
             configContainer = c;
+        }
+
+        @Override
+        public String getCommandName()
+        {
+            return commandName;
         }
 
         @Override

@@ -16,18 +16,6 @@ import java.util.List;
 
 public abstract class CommandLM extends CommandBase
 {
-    public final String commandName;
-
-    public CommandLM(String s)
-    {
-        if(s.isEmpty() || s.indexOf(' ') != -1)
-        {
-            throw new NullPointerException("Command ID can't be null!");
-        }
-
-        commandName = s;
-    }
-
     public static void checkArgs(String[] args, int i, String desc) throws CommandException
     {
         if(args == null || args.length < i)
@@ -68,15 +56,9 @@ public abstract class CommandLM extends CommandBase
     }
 
     @Override
-    public final String getCommandName()
-    {
-        return commandName;
-    }
-
-    @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName;
+        return '/' + getCommandName();
     }
 
     @Override

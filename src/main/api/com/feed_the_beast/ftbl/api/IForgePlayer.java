@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,6 +29,12 @@ public interface IForgePlayer extends ICapabilitySerializable<NBTTagCompound>
 
     @Nullable
     IForgeTeam getTeam();
+
+    default boolean isMemberOf(@Nullable ForgeTeam team)
+    {
+        String teamID = getTeamID();
+        return teamID != null && team != null && team.getName().equals(teamID);
+    }
 
     boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level);
 

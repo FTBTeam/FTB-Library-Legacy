@@ -10,9 +10,10 @@ import net.minecraft.util.text.TextComponentString;
 
 public class CmdSetItemName extends CommandLM
 {
-    public CmdSetItemName()
+    @Override
+    public String getCommandName()
     {
-        super("set_item_name");
+        return "set_item_name";
     }
 
     @Override
@@ -24,7 +25,7 @@ public class CmdSetItemName extends CommandLM
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " <name...>";
+        return '/' + getCommandName() + " <name...>";
     }
 
     @Override

@@ -19,15 +19,16 @@ import java.util.UUID;
  */
 public class CmdAddFakePlayer extends CommandLM
 {
-    public CmdAddFakePlayer()
+    @Override
+    public String getCommandName()
     {
-        super("add_fake_player");
+        return "add_fake_player";
     }
 
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return '/' + commandName + " <player>";
+        return '/' + getCommandName() + " <player>";
     }
 
     @Override

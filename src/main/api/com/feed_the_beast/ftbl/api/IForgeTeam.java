@@ -23,7 +23,6 @@ public interface IForgeTeam extends IStringSerializable, ICapabilitySerializable
 
     String getTitle();
 
-    @Nullable
     String getDesc();
 
     boolean getFlag(byte flag);

@@ -14,15 +14,22 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdTransferOwnership extends CommandLM
 {
-    public CmdTransferOwnership()
+    @Override
+    public String getCommandName()
     {
-        super("transfer_ownership");
+        return "transfer_ownership";
     }
 
     @Override
     public int getRequiredPermissionLevel()
     {
         return 0;
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int i)
+    {
+        return i == 0;
     }
 
     @Override

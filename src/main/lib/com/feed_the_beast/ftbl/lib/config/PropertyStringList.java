@@ -11,13 +11,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -29,7 +28,7 @@ public class PropertyStringList extends PropertyBase
     @ConfigValueProvider(ID)
     public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(Collections.emptyList());
 
-    private List<String> value;
+    private Collection<String> value;
 
     public PropertyStringList(Collection<String> v)
     {
@@ -54,12 +53,12 @@ public class PropertyStringList extends PropertyBase
         return getStringList();
     }
 
-    public void set(List<String> v)
+    public void setStringList(Collection<String> v)
     {
         value = v;
     }
 
-    public List<String> getStringList()
+    public Collection<String> getStringList()
     {
         return value;
     }
@@ -67,7 +66,7 @@ public class PropertyStringList extends PropertyBase
     @Override
     public void writeData(ByteBuf data, boolean extended)
     {
-        List<String> list = getStringList();
+        Collection<String> list = getStringList();
         data.writeShort(list.size());
         list.forEach(s -> LMNetUtils.writeString(data, s));
     }
@@ -80,7 +79,7 @@ public class PropertyStringList extends PropertyBase
         if(s <= 0)
         {
             value.clear();
-            set(value);
+            setStringList(value);
         }
         else
         {
@@ -91,7 +90,7 @@ public class PropertyStringList extends PropertyBase
                 value.add(LMNetUtils.readString(data));
             }
 
-            set(value);
+            setStringList(value);
         }
     }
 
@@ -145,7 +144,7 @@ public class PropertyStringList extends PropertyBase
             value.add(tagList.getStringTagAt(i));
         }
 
-        set(value);
+        setStringList(value);
     }
 
     @Override
@@ -159,7 +158,7 @@ public class PropertyStringList extends PropertyBase
             a.forEach(e -> value.add(e.getAsString()));
         }
 
-        set(value);
+        setStringList(value);
     }
 
     @Override

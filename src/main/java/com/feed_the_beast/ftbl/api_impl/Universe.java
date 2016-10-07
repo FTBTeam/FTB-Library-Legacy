@@ -198,7 +198,7 @@ public class Universe implements IUniverse
         for(int i = 0; i < teamsTag.tagCount(); i++)
         {
             NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-            ForgeTeam team = new ForgeTeam(this, tag2.getString("ID"));
+            ForgeTeam team = new ForgeTeam(tag2.getString("ID"));
             currentTeam = team;
             team.deserializeNBT(tag2);
             teams.put(team.getName(), team);
@@ -227,7 +227,7 @@ public class Universe implements IUniverse
             currentPlayer = p;
             tag2 = p.serializeNBT();
             tag2.setString("Name", p.getProfile().getName());
-            tag2.setString("UUID", p.getStringUUID());
+            tag2.setString("UUID", LMStringUtils.fromUUID(p.getProfile().getId()));
             tagPlayers.appendTag(tag2);
         }
 

@@ -20,9 +20,10 @@ import java.util.List;
  */
 public class CmdJoin extends CommandLM
 {
-    public CmdJoin()
+    @Override
+    public String getCommandName()
     {
-        super("join");
+        return "join";
     }
 
     @Override

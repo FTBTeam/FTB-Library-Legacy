@@ -9,9 +9,10 @@ import net.minecraft.server.MinecraftServer;
 
 public class CmdReloadClient extends CommandLM
 {
-    public CmdReloadClient()
+    @Override
+    public String getCommandName()
     {
-        super("reload_client");
+        return "reload_client";
     }
 
     @Override

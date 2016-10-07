@@ -26,6 +26,16 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
 
     public static final EnumTeamColor[] VALUES = values();
 
+    public static EnumTeamColor getFromIndex(int i)
+    {
+        if(i < 0 || i >= VALUES.length)
+        {
+            return BLUE;
+        }
+
+        return VALUES[i];
+    }
+
     private final String name;
     private final EnumDyeColor dyeColor;
     private final TextFormatting textFormatting;

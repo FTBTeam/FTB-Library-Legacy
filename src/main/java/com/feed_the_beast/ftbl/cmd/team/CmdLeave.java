@@ -16,9 +16,10 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class CmdLeave extends CommandLM
 {
-    public CmdLeave()
+    @Override
+    public String getCommandName()
     {
-        super("leave");
+        return "leave";
     }
 
     @Override

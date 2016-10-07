@@ -53,9 +53,10 @@ public class CmdTeamConfig extends CmdEditConfigBase
         }
     }
 
-    public CmdTeamConfig()
+    @Override
+    public String getCommandName()
     {
-        super("config");
+        return "config";
     }
 
     @Override

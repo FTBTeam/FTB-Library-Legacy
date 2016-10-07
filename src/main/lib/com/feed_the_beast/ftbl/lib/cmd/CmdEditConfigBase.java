@@ -29,15 +29,10 @@ import java.util.Map;
  */
 public abstract class CmdEditConfigBase extends CommandLM
 {
-    public CmdEditConfigBase(String s)
-    {
-        super(s);
-    }
-
     @Override
     public String getCommandUsage(ICommandSender ics)
     {
-        return "/" + commandName + " [ID] [value]";
+        return "/" + getCommandName() + " [ID] [value]";
     }
 
     @Override

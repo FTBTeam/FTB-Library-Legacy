@@ -79,11 +79,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         teamID = (id == null || id.isEmpty()) ? null : id;
     }
 
-    public final boolean isMemberOf(@Nullable ForgeTeam team)
-    {
-        return teamID != null && team != null && team.getName().equals(teamID);
-    }
-
     @Override
     @Nullable
     public final ForgeTeam getTeam()
@@ -117,11 +112,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     public final void setProfile(GameProfile p)
     {
         gameProfile = new GameProfile(p.getId(), p.getName());
-    }
-
-    public final String getStringUUID()
-    {
-        return LMStringUtils.fromUUID(getProfile().getId());
     }
 
     @Override
@@ -268,7 +258,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
             c.getStyle().setColor(team.getColor().getTextFormatting()).setUnderlined(true);
             info.add(c);
 
-            if(team.getDesc() != null)
+            if(!team.getDesc().isEmpty())
             {
                 c = new TextComponentString(team.getDesc());
                 c.getStyle().setColor(TextFormatting.GRAY).setItalic(true);

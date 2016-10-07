@@ -91,7 +91,7 @@ public class FTBLibEventHandler
 
                     if(universe.getTeam(id) == null)
                     {
-                        ForgeTeam team = new ForgeTeam(universe, id);
+                        ForgeTeam team = new ForgeTeam(id);
                         team.changeOwner(p);
                         p.getUniverse().teams.put(team.getName(), team);
                         MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));

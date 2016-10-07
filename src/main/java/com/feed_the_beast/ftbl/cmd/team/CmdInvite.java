@@ -14,15 +14,22 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdInvite extends CommandLM
 {
-    public CmdInvite()
+    @Override
+    public String getCommandName()
     {
-        super("invite");
+        return "invite";
     }
 
     @Override
     public int getRequiredPermissionLevel()
     {
         return 0;
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int i)
+    {
+        return i == 0;
     }
 
     @Override
