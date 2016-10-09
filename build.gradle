@@ -13,6 +13,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven'
 
 version = "1.10.2-" + version_mod
 group = "com.feed_the_beast.ftblib"
@@ -24,7 +25,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.10.2-12.18.1.2092"
+    version = "1.10.2-12.18.2.2098"
     runDir = "run"
     mappings = "snapshot_20160518"
     replace "@VERSION@", version_mod
