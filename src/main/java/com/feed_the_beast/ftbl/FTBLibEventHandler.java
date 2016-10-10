@@ -9,15 +9,12 @@ import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.tamashenning.forgeanalytics.client.ForgeAnalyticsConstants;
-import com.tamashenning.forgeanalytics.events.AnalyticsEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -45,12 +42,14 @@ public class FTBLibEventHandler
         }
     }
 
+    /* FIXME: Reimplement me
     @SubscribeEvent
     @Optional.Method(modid = "forgeanalytics")
     public void onAnalytics(AnalyticsEvent event)
     {
         ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", FTBLibIntegrationInternal.API.getSharedData(event.side).getPackMode().getID());
     }
+    */
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)

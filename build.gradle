@@ -32,21 +32,12 @@ minecraft {
     replaceIn "FTBLibFinals.java"
 }
 
-/*
 repositories {
-    maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
-    maven { // the repo from which to get NEI and stuff 
-        name 'CB Repo'
-        url "http://chickenbones.net/maven/"
-    }
+    maven { url 'https://jitpack.io' }
 }
-*/
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.github.LatvianModder:PermissionAPI:1.0.0'
 }
 
 sourceSets {
