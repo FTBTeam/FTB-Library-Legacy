@@ -1,33 +1,21 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
-import com.feed_the_beast.ftbl.api.security.ISecure;
-import com.feed_the_beast.ftbl.lib.Security;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 
 public class TileLM extends TileEntity
 {
-    public final Security security = createSecurity();
     private boolean isDirty = true;
     private IBlockState currentState;
-
-    protected Security createSecurity()
-    {
-        return new Security(ISecure.SAVE_OWNER);
-    }
 
     @Override
     public final NBTTagCompound writeToNBT(NBTTagCompound tag)
@@ -74,22 +62,18 @@ public class TileLM extends TileEntity
 
     public void writeTileData(NBTTagCompound nbt)
     {
-        nbt.setTag("Security", security.serializeNBT());
     }
 
     public void readTileData(NBTTagCompound nbt)
     {
-        security.deserializeNBT(nbt.getTag("Security"));
     }
 
     public void writeTileClientData(NBTTagCompound nbt)
     {
-        nbt.setTag("SCR", security.serializeNBT());
     }
 
     public void readTileClientData(NBTTagCompound nbt)
     {
-        security.deserializeNBT(nbt.getTag("SCR"));
     }
 
     protected boolean rerenderBlock()
@@ -137,14 +121,14 @@ public class TileLM extends TileEntity
         }
     }
 
-    public void sendDirtyUpdate()
+    protected void sendDirtyUpdate()
     {
         if(worldObj != null && !worldObj.isRemote)
         {
             updateContainingBlockInfo();
             worldObj.markChunkDirty(getPos(), this);
 
-            if(getBlockType() != Blocks.AIR)
+            if(updateComparator() && getBlockType() != Blocks.AIR)
             {
                 worldObj.updateComparatorOutputLevel(getPos(), getBlockType());
             }
@@ -168,34 +152,14 @@ public class TileLM extends TileEntity
         return currentState;
     }
 
-    public void onPlacedBy(EntityLivingBase el, ItemStack is, IBlockState state)
+    public final boolean isServerSide()
     {
-        security.setOwner(el.getUniqueID());
-        markDirty();
-    }
-
-    public boolean isExplosionResistant()
-    {
-        return !security.getPrivacyLevel().isPublic();
-    }
-
-    public final Side getSide()
-    {
-        return (worldObj != null && !worldObj.isRemote) ? Side.SERVER : Side.CLIENT;
+        return worldObj != null && !worldObj.isRemote;
     }
 
     public void notifyNeighbors()
     {
         worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
-    }
-
-    public void onNeighborBlockChange(BlockPos pos)
-    {
-        if(worldObj != null)
-        {
-            //redstonePowered = worldObj.isBlockPowered(getPos());
-            updateContainingBlockInfo();
-        }
     }
 
     public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)

@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.FTBLibCaps;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
@@ -60,7 +59,6 @@ public class FTBLibMod
         ODItems.preInit();
         FTBLibStats.init();
         MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
-        FTBLibCaps.init();
         proxy.preInit();
     }
 

@@ -2,14 +2,11 @@ package com.feed_the_beast.ftbl.lib.block;
 
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
 import com.feed_the_beast.ftbl.lib.math.BlockStateSerializer;
-import com.feed_the_beast.ftbl.lib.tile.TileLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -19,7 +16,6 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -77,38 +73,6 @@ public abstract class BlockLM extends Block implements IBlockWithItem
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-
-        if(hasTileEntity(state) && placer instanceof EntityPlayer)
-        {
-            TileEntity te = worldIn.getTileEntity(pos);
-
-            if(te instanceof TileLM)
-            {
-                ((TileLM) te).onPlacedBy(placer, stack, state);
-            }
-        }
-    }
-
-    @Override
-    public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
-    {
-        if(hasTileEntity(world.getBlockState(pos)))
-        {
-            TileEntity te = world.getTileEntity(pos);
-
-            if(te instanceof TileLM && ((TileLM) te).isExplosionResistant())
-            {
-                return Float.MAX_VALUE;
-            }
-        }
-
-        return super.getExplosionResistance(world, pos, exploder, explosion);
-    }
-
-    @Override
     @Deprecated
     public boolean eventReceived(IBlockState state, World worldIn, BlockPos pos, int id, int param)
     {
@@ -132,9 +96,9 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         {
             TileEntity te = world.getTileEntity(pos);
 
-            if(te instanceof TileLM)
+            if(te != null)
             {
-                ((TileLM) te).onNeighborBlockChange(neighbor);
+                te.updateContainingBlockInfo();
             }
         }
     }

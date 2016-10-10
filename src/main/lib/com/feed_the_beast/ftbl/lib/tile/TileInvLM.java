@@ -33,6 +33,12 @@ public class TileInvLM extends TileLM
     }
 
     @Override
+    protected boolean updateComparator()
+    {
+        return true;
+    }
+
+    @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
@@ -67,19 +73,19 @@ public class TileInvLM extends TileLM
     public void writeTileClientData(NBTTagCompound nbt)
     {
         super.writeTileClientData(nbt);
-        nbt.setTag("INV", itemHandler.serializeNBT());
+        nbt.setTag("Items", itemHandler.serializeNBT());
     }
 
     @Override
     public void readTileClientData(NBTTagCompound nbt)
     {
         super.readTileClientData(nbt);
-        itemHandler.deserializeNBT(nbt.getCompoundTag("INV"));
+        itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
     }
 
     public void dropItems()
     {
-        if(getSide().isServer() && itemHandler != null && itemHandler.getSlots() > 0)
+        if(isServerSide() && itemHandler != null && itemHandler.getSlots() > 0)
         {
             for(int i = 0; i < itemHandler.getSlots(); i++)
             {
