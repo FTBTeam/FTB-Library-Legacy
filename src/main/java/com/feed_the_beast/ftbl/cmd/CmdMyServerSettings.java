@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.google.gson.JsonObject;
@@ -19,15 +20,12 @@ import javax.annotation.Nullable;
  */
 public class CmdMyServerSettings extends CmdEditConfigBase
 {
-    public static class MyServerSettingsContainer implements IConfigContainer
+    private static class MyServerSettingsContainer implements IConfigContainer
     {
-        public final ForgePlayer player;
         public final IConfigTree tree;
 
-        //new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings")
-        public MyServerSettingsContainer(ForgePlayer p)
+        private MyServerSettingsContainer(IForgePlayer p)
         {
-            player = p;
             tree = new ConfigTree();
             p.getSettings(tree);
         }
@@ -66,6 +64,6 @@ public class CmdMyServerSettings extends CmdEditConfigBase
     @Override
     public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
-        return new MyServerSettingsContainer(getForgePlayer(getCommandSenderAsPlayer(sender)));
+        return new MyServerSettingsContainer(FTBLibIntegrationInternal.API.getForgePlayer(getCommandSenderAsPlayer(sender)));
     }
 }

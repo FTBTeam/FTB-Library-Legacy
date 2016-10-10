@@ -3,20 +3,18 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.events.universe.AttachUniverseCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
+import com.feed_the_beast.ftbl.lib.INBTData;
+import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 
@@ -32,33 +30,25 @@ import java.util.UUID;
  */
 public class Universe implements IUniverse
 {
-    public final Map<UUID, ForgePlayer> playerMap;
-    public final Map<String, ForgeTeam> teams;
-    final CapabilityDispatcher capabilities;
+    public static Universe INSTANCE = null;
+
+    public final Map<UUID, ForgePlayer> playerMap = new HashMap<>();
+    public final Map<String, ForgeTeam> teams = new HashMap<>();
+    private NBTDataStorage dataStorage;
     private ForgePlayer currentPlayer;
     private ForgeTeam currentTeam;
 
-    Universe()
+    void init()
     {
-        playerMap = new HashMap<>();
-        teams = new HashMap<>();
-
-        AttachUniverseCapabilitiesEvent event = new AttachUniverseCapabilitiesEvent(this);
-        MinecraftForge.EVENT_BUS.post(event);
-        capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
+        dataStorage = FTBLibRegistries.INSTANCE.createUniverseDataStorage(this);
         MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    @Nullable
+    public INBTData getData(String id)
     {
-        return capabilities != null && capabilities.hasCapability(capability, facing);
-    }
-
-    @Override
-    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return capabilities == null ? null : capabilities.getCapability(capability, facing);
+        return dataStorage.get(id);
     }
 
     @Override
@@ -208,9 +198,9 @@ public class Universe implements IUniverse
 
         MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
 
-        if(capabilities != null)
+        if(dataStorage != null)
         {
-            capabilities.deserializeNBT(nbt.getCompoundTag("ForgeCaps"));
+            dataStorage.deserializeNBT(nbt.hasKey("ForgeCaps") ? nbt.getCompoundTag("ForgeCaps") : nbt.getCompoundTag("Data"));
         }
     }
 
@@ -249,9 +239,9 @@ public class Universe implements IUniverse
 
         tag.setTag("Teams", teamsTag);
 
-        if(capabilities != null)
+        if(dataStorage != null)
         {
-            tag.setTag("ForgeCaps", capabilities.serializeNBT());
+            tag.setTag("Data", dataStorage.serializeNBT());
         }
 
         return tag;

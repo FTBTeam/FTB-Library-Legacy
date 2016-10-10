@@ -5,6 +5,8 @@ import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
+import com.feed_the_beast.ftbl.api_impl.TickHandler;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -52,7 +54,7 @@ public class FTBLibMod
             logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
         }
 
-        FTBLibAPI_Impl.INSTANCE.init(event.getAsmData());
+        FTBLibAPI_Impl.init(event.getAsmData());
 
         LMUtils.init(event.getModConfigurationDirectory());
         FTBLibNetHandler.init();
@@ -65,7 +67,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
-        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
+        FTBLibAPI_Impl.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
 
         IRecipes recipes = new LMRecipes();
@@ -76,6 +78,8 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
+        TickHandler.INSTANCE = new TickHandler();
+
         CmdFTB cmd = new CmdFTB(event.getServer().isDedicatedServer());
 
         if(FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean())
@@ -94,23 +98,24 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarted(FMLServerAboutToStartEvent event)
     {
-        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
+        FTBLibAPI_Impl.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
-        FTBLibAPI_Impl.INSTANCE.createAndLoadWorld();
-        LMServerUtils.addTickable(event.getServer(), FTBLibAPI_Impl.INSTANCE);
+        FTBLibAPI_Impl.createAndLoadWorld();
+        LMServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibAPI_Impl.INSTANCE.reload(LMServerUtils.getServer(), ReloadType.SERVER_ONLY);
+        FTBLibIntegrationInternal.API.reload(LMServerUtils.getServer(), ReloadType.SERVER_ONLY);
     }
 
     @Mod.EventHandler
     public void onServerShutDown(FMLServerStoppedEvent event)
     {
-        FTBLibAPI_Impl.INSTANCE.closeWorld();
+        Universe.INSTANCE.onClosed();
+        Universe.INSTANCE = null;
     }
 
     @NetworkCheckHandler

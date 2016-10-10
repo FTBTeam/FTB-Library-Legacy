@@ -1,12 +1,9 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -29,18 +26,6 @@ public abstract class CommandLM extends CommandBase
                 throw FTBLibLang.MISSING_ARGS.commandError(desc);
             }
         }
-    }
-
-    public static ForgePlayer getForgePlayer(Object o) throws CommandException
-    {
-        ForgePlayer p = FTBLibAPI_Impl.INSTANCE.getUniverse().getPlayer(o);
-
-        if(p == null || p.isFake())
-        {
-            throw new PlayerNotFoundException();
-        }
-
-        return p;
     }
 
     @Override

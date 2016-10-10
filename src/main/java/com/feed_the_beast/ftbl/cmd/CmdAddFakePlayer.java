@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
@@ -48,15 +47,13 @@ public class CmdAddFakePlayer extends CommandLM
             throw FTBLibLang.RAW.commandError("Invalid UUID!");
         }
 
-        Universe world = FTBLibAPI_Impl.INSTANCE.getUniverse();
-
-        if(world.getPlayer(id) != null || world.getPlayer(args[1]) != null)
+        if(Universe.INSTANCE.getPlayer(id) != null || Universe.INSTANCE.getPlayer(args[1]) != null)
         {
             throw FTBLibLang.RAW.commandError("Player already exists!");
         }
 
         ForgePlayer p = new ForgePlayer(new GameProfile(id, args[1]));
-        world.playerMap.put(p.getProfile().getId(), p);
+        Universe.INSTANCE.playerMap.put(p.getProfile().getId(), p);
 
         ics.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
     }

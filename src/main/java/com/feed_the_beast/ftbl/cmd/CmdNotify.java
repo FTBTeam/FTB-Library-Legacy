@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import net.minecraft.command.CommandException;
@@ -63,7 +63,7 @@ public class CmdNotify extends CommandLM
                 throw new IllegalArgumentException("Notification '" + args[1] + "' not found!");
             }
 
-            FTBLibAPI_Impl.INSTANCE.sendNotification(player, n);
+            FTBLibIntegrationInternal.API.sendNotification(player, n);
         }
     }
 }

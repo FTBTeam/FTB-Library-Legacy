@@ -1,9 +1,5 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -31,18 +27,6 @@ public class CmdTeam extends CommandTreeBase
     public String getCommandName()
     {
         return "team";
-    }
-
-    public static ForgeTeam getTeam(String s) throws CommandException
-    {
-        ForgeTeam team = FTBLibAPI_Impl.INSTANCE.getUniverse().getTeam(s);
-
-        if(team != null)
-        {
-            return team;
-        }
-
-        throw FTBLibLang.TEAM_NOT_FOUND.commandError();
     }
 
     @Override

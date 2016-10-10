@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -56,7 +58,7 @@ public class CmdCreate extends CommandLM
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayer p = getForgePlayer(ep);
+        IForgePlayer p = FTBLibIntegrationInternal.API.getForgePlayer(ep);
 
         if(p.getTeam() != null)
         {
@@ -70,14 +72,14 @@ public class CmdCreate extends CommandLM
             throw FTBLibLang.RAW.commandError("ID can only contain lowercase a-z, _ and |!");
         }
 
-        if(p.getUniverse().getTeam(args[0]) != null)
+        if(Universe.INSTANCE.getTeam(args[0]) != null)
         {
             throw FTBLibLang.RAW.commandError("ID already registred!");
         }
 
         ForgeTeam team = new ForgeTeam(args[0]);
         team.changeOwner(p);
-        p.getUniverse().teams.put(team.getName(), team);
+        Universe.INSTANCE.teams.put(team.getName(), team);
 
         MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
         MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));

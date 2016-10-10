@@ -4,13 +4,13 @@ import com.feed_the_beast.ftbl.FTBLibStats;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.events.player.AttachPlayerCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.INBTData;
+import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -23,14 +23,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityDispatcher;
 import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
@@ -43,10 +40,10 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 09.02.2016.
  */
-public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
+public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {
-    final CapabilityDispatcher capabilities;
-    private String teamID;
+    private final NBTDataStorage dataStorage;
+    private String teamID = "";
     private GameProfile gameProfile;
     private StatisticsManagerServer statsManager;
     private EntityPlayerMP entityPlayer;
@@ -55,10 +52,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     public ForgePlayer(GameProfile p)
     {
         setProfile(p);
-
-        AttachPlayerCapabilitiesEvent event = new AttachPlayerCapabilitiesEvent(this);
-        MinecraftForge.EVENT_BUS.post(event);
-        capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
+        dataStorage = FTBLibRegistries.INSTANCE.createPlayerDataStorage(this);
     }
 
     ForgePlayer(EntityPlayerMP ep)
@@ -68,34 +62,22 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    @Nullable
     public final String getTeamID()
     {
         return teamID;
     }
 
-    public final void setTeamID(@Nullable String id)
+    @Override
+    public final void setTeamID(String id)
     {
-        teamID = (id == null || id.isEmpty()) ? null : id;
+        teamID = id;
     }
 
     @Override
     @Nullable
     public final ForgeTeam getTeam()
     {
-        return teamID != null ? FTBLibAPI_Impl.INSTANCE.getUniverse().getTeam(teamID) : null;
-    }
-
-    @Override
-    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        return capabilities != null && capabilities.hasCapability(capability, facing);
-    }
-
-    @Override
-    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return capabilities == null ? null : capabilities.getCapability(capability, facing);
+        return teamID.isEmpty() ? null : Universe.INSTANCE.getTeam(teamID);
     }
 
     @Override
@@ -112,6 +94,12 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     public final void setProfile(GameProfile p)
     {
         gameProfile = new GameProfile(p.getId(), p.getName());
+    }
+
+    @Override
+    public INBTData getData(String id)
+    {
+        return dataStorage.get(id);
     }
 
     @Override
@@ -148,7 +136,7 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         {
             return equalsPlayer((IForgePlayer) o);
         }
-        return equalsPlayer(getUniverse().getPlayer(o));
+        return equalsPlayer(Universe.INSTANCE.getPlayer(o));
     }
 
     @Override
@@ -180,37 +168,6 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    public boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level)
-    {
-        if(level == EnumPrivacyLevel.PUBLIC || owner == null)
-        {
-            return true;
-        }
-        else if(owner.equalsPlayer(this))
-        {
-            return true;
-        }
-        else if(level == EnumPrivacyLevel.PRIVATE)
-        {
-            return false;
-        }
-        else if(level == EnumPrivacyLevel.TEAM)
-        {
-            IForgeTeam team = owner.getTeam();
-
-            if(team != null)
-            {
-                if(team.getStatus(this).isAlly())
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean isOnline()
     {
         return getPlayer() != null;
@@ -224,21 +181,9 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    public final Universe getUniverse()
-    {
-        return FTBLibAPI_Impl.INSTANCE.getUniverse();
-    }
-
-    @Override
     public boolean isFake()
     {
         return getPlayer() instanceof FakePlayer;
-    }
-
-    @Override
-    public boolean isMemberOf(@Nullable IForgeTeam team)
-    {
-        return teamID != null && team != null && team.getName().equals(teamID);
     }
 
     @Override
@@ -302,13 +247,13 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag)
+    public void deserializeNBT(NBTTagCompound nbt)
     {
-        setTeamID(tag.getString("TeamID"));
+        setTeamID(nbt.getString("TeamID"));
 
-        if(capabilities != null)
+        if(dataStorage != null)
         {
-            capabilities.deserializeNBT(tag.getCompoundTag("Caps"));
+            dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
         }
     }
 
@@ -322,9 +267,9 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
             tag.setString("TeamID", teamID);
         }
 
-        if(capabilities != null)
+        if(dataStorage != null)
         {
-            tag.setTag("Caps", capabilities.serializeNBT());
+            tag.setTag("Data", dataStorage.serializeNBT());
         }
 
         return tag;
@@ -370,17 +315,18 @@ public class ForgePlayer implements Comparable<ForgePlayer>, IForgePlayer
         return statsManager;
     }
 
+    @Override
     public void getSettings(IConfigTree tree)
     {
         MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, tree));
     }
 
-    @Nullable
+    @Override
     public NBTTagCompound getPlayerNBT()
     {
         if(isOnline())
         {
-            return null;
+            return getPlayer().serializeNBT();
         }
 
         if(playerNBT == null)

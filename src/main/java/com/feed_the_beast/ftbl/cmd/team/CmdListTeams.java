@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
@@ -45,7 +47,7 @@ public class CmdListTeams extends CommandLM
         IGuiInfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.setTheme(InfoPageTheme.DARK_NON_UNICODE);
 
-        for(IForgeTeam team : FTBLibAPI_Impl.INSTANCE.getUniverse().getTeams())
+        for(IForgeTeam team : Universe.INSTANCE.getTeams())
         {
             IGuiInfoPage page1 = page.getSub(team.getName());
 
@@ -67,7 +69,7 @@ public class CmdListTeams extends CommandLM
 
             List<String> members = new ArrayList<>();
 
-            for(IForgePlayer player : team.getMembers())
+            for(IForgePlayer player : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
             {
                 if(player != owner)
                 {
@@ -89,6 +91,6 @@ public class CmdListTeams extends CommandLM
             }
         }
 
-        FTBLibAPI_Impl.INSTANCE.displayInfoGui(ep, page);
+        FTBLibIntegrationInternal.API.displayInfoGui(ep, page);
     }
 }

@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +39,7 @@ public class CmdJoin extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibAPI_Impl.INSTANCE.getUniverse().teams.keySet());
+            return getListOfStringsMatchingLastWord(args, Universe.INSTANCE.teams.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -47,7 +49,7 @@ public class CmdJoin extends CommandLM
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayer p = getForgePlayer(ep);
+        IForgePlayer p = FTBLibIntegrationInternal.API.getForgePlayer(ep);
 
         if(p.getTeam() != null)
         {
@@ -56,11 +58,11 @@ public class CmdJoin extends CommandLM
 
         checkArgs(args, 1, "<ID>");
 
-        ForgeTeam team = CmdTeam.getTeam(args[0]);
+        IForgeTeam team = FTBLibIntegrationInternal.API.getTeam(args[0]);
 
         if(team.addPlayer(p))
         {
-            for(IForgePlayer p1 : team.getMembers())
+            for(IForgePlayer p1 : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
             {
                 if(p1.isOnline())
                 {

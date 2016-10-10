@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.NotificationVariant;
+import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.OptionalServerModID;
-import com.feed_the_beast.ftbl.api.SyncData;
-import com.feed_the_beast.ftbl.api.config.ConfigFileProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
-import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
@@ -15,15 +15,12 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
-import com.feed_the_beast.ftbl.api.gui.GuiHandler;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api.gui.SidebarButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
-import com.feed_the_beast.ftbl.api.info.InfoTextLineProvider;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
-import com.feed_the_beast.ftbl.api.recipes.RecipeHandler;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
+import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.ResourceLocationComparator;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
@@ -93,7 +90,7 @@ public enum FTBLibRegistries
 
     public void init(ASMDataTable table)
     {
-        ASMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, ConfigValueProvider.class, (obj, field, info) ->
+        ASMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, RegistryObject.class, (obj, field, info) ->
         {
             String s = info.getString("value", "");
 
@@ -103,7 +100,7 @@ public enum FTBLibRegistries
             }
         });
 
-        ASMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, ConfigFileProvider.class, (obj, field, info) ->
+        ASMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, RegistryObject.class, (obj, field, info) ->
         {
             String s = info.getString("value", "");
 
@@ -190,14 +187,14 @@ public enum FTBLibRegistries
 
         CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getMap().keySet());
 
-        ASMUtils.findAnnotatedObjects(table, INotification.class, NotificationVariant.class, (obj, field, data) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
-        ASMUtils.findAnnotatedObjects(table, IGuiHandler.class, GuiHandler.class, (obj, field, data) -> GUIS.register(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, ISyncData.class, SyncData.class, (obj, field, data) -> SYNCED_DATA.put(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, SidebarButton.class, (obj, field, data) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RecipeHandler.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
+        ASMUtils.findAnnotatedObjects(table, INotification.class, RegistryObject.class, (obj, field, data) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
+        ASMUtils.findAnnotatedObjects(table, IGuiHandler.class, RegistryObject.class, (obj, field, data) -> GUIS.register(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, ISyncData.class, RegistryObject.class, (obj, field, data) -> SYNCED_DATA.put(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, RegistryObject.class, (obj, field, data) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
+        ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RegistryObject.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
         ASMUtils.findAnnotatedObjects(table, String.class, OptionalServerModID.class, (obj, field, data) -> OPTIONAL_SERVER_MODS.add(obj));
 
-        ASMUtils.findAnnotatedObjects(table, IInfoTextLineProvider.class, InfoTextLineProvider.class, (obj, field, info) ->
+        ASMUtils.findAnnotatedObjects(table, IInfoTextLineProvider.class, RegistryObject.class, (obj, field, info) ->
         {
             String s = info.getString("value", "");
 
@@ -305,5 +302,23 @@ public enum FTBLibRegistries
         NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getMap().keySet());
         CACHED_NOTIFICATIONS.clear();
         NOTIFICATIONS.getMap().forEach((key, value) -> CACHED_NOTIFICATIONS.put(NOTIFICATIONS.getIDs().getIDFromKey(key), Notification.copy(value)));
+    }
+
+    @Nullable
+    public NBTDataStorage createUniverseDataStorage(IUniverse universe)
+    {
+        return null;
+    }
+
+    @Nullable
+    public NBTDataStorage createPlayerDataStorage(IForgePlayer player)
+    {
+        return null;
+    }
+
+    @Nullable
+    public NBTDataStorage createTeamDataStorage(IForgeTeam team)
+    {
+        return null;
     }
 }

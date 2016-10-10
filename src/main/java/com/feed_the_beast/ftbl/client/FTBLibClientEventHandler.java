@@ -139,8 +139,9 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
     {
-        FTBLibAPI_Impl.INSTANCE.setHasServer(false);
-        FTBLibAPI_Impl.INSTANCE.setIsClientPlayerOP(false);
+        FTBLibAPI_Impl.hasServer = false;
+        FTBLibAPI_Impl.isClientPlayerOP = false;
+        FTBLibAPI_Impl.useFTBPrefix = false;
         FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.clear();
     }
 

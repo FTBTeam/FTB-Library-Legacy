@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibConfig;
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.INotification;
@@ -8,6 +10,7 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -28,7 +31,11 @@ import java.util.Map;
 
 public class MessageLogin extends MessageToClient<MessageLogin>
 {
-    private boolean isOP;
+    private static final byte IS_OP = 1;
+    private static final byte OPTIONAL_SERVER_MODS = 2;
+    private static final byte USE_FTB_PREFIX = 4;
+
+    private byte flags;
     private TShortObjectHashMap<String> configIDs;
     private TShortObjectHashMap<String> guiIDs;
     private TShortObjectHashMap<INotification> notificationIDs;
@@ -42,11 +49,13 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
-        isOP = LMServerUtils.isOP(player.getGameProfile());
+        flags = 0;
+        flags = Bits.setFlag(flags, IS_OP, LMServerUtils.isOP(player.getGameProfile()));
+        flags = Bits.setFlag(flags, USE_FTB_PREFIX, FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean());
         configIDs = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().serialize();
         guiIDs = FTBLibRegistries.INSTANCE.GUIS.getIDs().serialize();
         notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
-        sharedDataTag = FTBLibAPI_Impl.INSTANCE.getSharedData(Side.SERVER).serializeNBT();
+        sharedDataTag = FTBLibIntegrationInternal.API.getSharedData(Side.SERVER).serializeNBT();
         syncData = new HashMap<>();
 
         for(ISyncData data : FTBLibRegistries.INSTANCE.SYNCED_DATA.values())
@@ -55,6 +64,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         }
 
         optionalServerMods = FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS;
+        flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
     }
 
     @Override
@@ -66,7 +76,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeByte((isOP ? 1 : 0) | (optionalServerMods.isEmpty() ? 0 : 2));
+        io.writeByte(flags);
         io.writeShort(configIDs.size());
 
         configIDs.forEachEntry((key, value) ->
@@ -119,8 +129,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        byte flags = io.readByte();
-        isOP = (flags & 1) != 0;
+        flags = io.readByte();
         int s = io.readUnsignedShort();
 
         configIDs = new TShortObjectHashMap<>(s);
@@ -167,7 +176,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             syncData.put(key, value);
         }
 
-        if((flags & 2) != 0)
+        if(Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
         {
             s = io.readUnsignedShort();
             optionalServerMods = new HashSet<>(s);
@@ -182,15 +191,16 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void onMessage(MessageLogin m)
     {
-        FTBLibAPI_Impl.INSTANCE.setHasServer(true);
-        FTBLibAPI_Impl.INSTANCE.setIsClientPlayerOP(m.isOP);
+        FTBLibAPI_Impl.hasServer = true;
+        FTBLibAPI_Impl.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
+        FTBLibAPI_Impl.useFTBPrefix = Bits.getFlag(m.flags, USE_FTB_PREFIX);
         FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
         FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.clear();
         FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.addAll(m.optionalServerMods);
         FTBLibRegistries.INSTANCE.GUIS.getIDs().deserialize(m.guiIDs);
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);
-        FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
+        FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).deserializeNBT(m.sharedDataTag);
 
         m.syncData.forEach((key, value) ->
         {
@@ -204,8 +214,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 
-        FTBLibAPI_Impl.INSTANCE.reloadPackModes();
+        FTBLibAPI_Impl.reloadPackModes();
         MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, Minecraft.getMinecraft().thePlayer, ReloadType.LOGIN));
-        FTBLibMod.logger.info("Current Mode: " + FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).getPackMode().getID());
+        FTBLibMod.logger.info("Current Mode: " + FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).getPackMode().getID());
     }
 }

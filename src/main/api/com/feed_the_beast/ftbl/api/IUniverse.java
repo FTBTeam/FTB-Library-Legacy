@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.lib.INBTData;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -9,8 +10,11 @@ import java.util.Collection;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public interface IUniverse extends ICapabilitySerializable<NBTTagCompound>
+public interface IUniverse extends INBTSerializable<NBTTagCompound>
 {
+    @Nullable
+    INBTData getData(String id);
+
     Collection<? extends IForgePlayer> getPlayers();
 
     @Nullable

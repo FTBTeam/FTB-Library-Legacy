@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.ISyncData;
@@ -84,7 +85,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         ReloadType type = ReloadType.values()[m.typeID];
 
-        FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).deserializeNBT(m.sharedData);
+        FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).deserializeNBT(m.sharedData);
 
         m.syncData.forEach((key, value) ->
         {
@@ -100,7 +101,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         if(type.reload(Side.CLIENT))
         {
-            FTBLibAPI_Impl.INSTANCE.reloadPackModes();
+            FTBLibAPI_Impl.reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, mc.thePlayer, type));
 
             if(type != ReloadType.LOGIN)
@@ -108,7 +109,7 @@ public class MessageReload extends MessageToClient<MessageReload>
                 FTBLibLang.RELOAD_CLIENT.printChat(mc.thePlayer, (System.currentTimeMillis() - ms) + "ms");
             }
 
-            FTBLibMod.logger.info("Current Mode: " + FTBLibAPI_Impl.INSTANCE.getSharedData(Side.CLIENT).getPackMode().getID());
+            FTBLibMod.logger.info("Current Mode: " + FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).getPackMode().getID());
         }
     }
 }

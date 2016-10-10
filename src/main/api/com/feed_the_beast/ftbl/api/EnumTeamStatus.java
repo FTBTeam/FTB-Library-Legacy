@@ -52,24 +52,4 @@ public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
     {
         return langKey;
     }
-
-    public boolean isEnemy()
-    {
-        return status < 0;
-    }
-
-    public boolean isAlly()
-    {
-        return status > 0;
-    }
-
-    public boolean isMember()
-    {
-        return status >= MEMBER.status;
-    }
-
-    public boolean isOwner()
-    {
-        return this == OWNER;
-    }
 }

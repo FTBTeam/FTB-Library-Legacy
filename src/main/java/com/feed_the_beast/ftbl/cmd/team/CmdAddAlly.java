@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
@@ -37,7 +39,7 @@ public class CmdAddAlly extends CommandLM
     {
         if(args.length == 1)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibAPI_Impl.INSTANCE.getUniverse().teams.keySet());
+            return getListOfStringsMatchingLastWord(args, Universe.INSTANCE.teams.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -47,21 +49,21 @@ public class CmdAddAlly extends CommandLM
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayer p = getForgePlayer(ep);
-        ForgeTeam team = p.getTeam();
+        IForgePlayer p = FTBLibIntegrationInternal.API.getForgePlayer(ep);
+        IForgeTeam team = p.getTeam();
 
         if(team == null)
         {
             throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
-        else if(!team.getStatus(p).isOwner())
+        else if(!team.hasStatus(p, EnumTeamStatus.OWNER))
         {
             throw FTBLibLang.TEAM_NOT_OWNER.commandError();
         }
 
         checkArgs(args, 1, "<teamID>");
 
-        if(p.getUniverse().getTeam(args[0]) == null)
+        if(Universe.INSTANCE.getTeam(args[0]) == null)
         {
             throw FTBLibLang.TEAM_NOT_FOUND.commandError();
         }

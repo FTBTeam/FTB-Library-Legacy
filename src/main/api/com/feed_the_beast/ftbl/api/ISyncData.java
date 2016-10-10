@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by LatvianModder on 10.09.2016.
  */
-public interface ISyncData
+public interface ISyncData extends IRegistryObject
 {
     ResourceLocation getID();
 

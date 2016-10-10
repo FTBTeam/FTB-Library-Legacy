@@ -8,6 +8,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -115,6 +116,7 @@ public final class PackModes implements IPackModes
     }
 
     @Override
+    @Nullable
     public IPackMode getRawMode(String id)
     {
         return id.isEmpty() ? null : modes.get(id);

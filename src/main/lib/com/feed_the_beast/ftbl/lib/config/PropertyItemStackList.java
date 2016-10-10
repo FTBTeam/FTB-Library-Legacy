@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
@@ -26,7 +26,7 @@ public class PropertyItemStackList extends PropertyBase
 {
     public static final String ID = "item_stack_list";
 
-    @ConfigValueProvider(ID)
+    @RegistryObject(ID)
     public static final IConfigValueProvider PROVIDER = () -> new PropertyItemStackList(Collections.emptyList());
 
     private List<ItemStack> value;

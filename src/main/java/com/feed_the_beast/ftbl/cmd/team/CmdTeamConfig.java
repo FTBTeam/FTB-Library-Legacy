@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.google.gson.JsonObject;
@@ -21,17 +23,16 @@ import javax.annotation.Nullable;
  */
 public class CmdTeamConfig extends CmdEditConfigBase
 {
-    public static class TeamConfigContainer implements IConfigContainer
+    private static class TeamConfigContainer implements IConfigContainer
     {
-        public final ForgeTeam team;
-        public final IConfigTree tree;
+        private final ITextComponent title;
+        private final IConfigTree tree;
 
-        //new ResourceLocation(FTBLibFinals.MOD_ID, "team_config")
-        public TeamConfigContainer(ForgeTeam t)
+        private TeamConfigContainer(IForgeTeam t)
         {
-            team = t;
+            title = FTBLibLang.TEAM_CONFIG.textComponent(t.getName());
             tree = new ConfigTree();
-            team.getSettings(tree);
+            t.getSettings(tree);
         }
 
         @Override
@@ -43,7 +44,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
         @Override
         public ITextComponent getTitle()
         {
-            return FTBLibLang.TEAM_CONFIG.textComponent(team.getName());
+            return title;
         }
 
         @Override
@@ -69,14 +70,14 @@ public class CmdTeamConfig extends CmdEditConfigBase
     public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        ForgePlayer p = getForgePlayer(ep);
-        ForgeTeam team = p.getTeam();
+        IForgePlayer p = FTBLibIntegrationInternal.API.getForgePlayer(ep);
+        IForgeTeam team = p.getTeam();
 
         if(team == null)
         {
             throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
-        else if(!team.getStatus(p).isOwner())
+        else if(!team.hasStatus(p, EnumTeamStatus.OWNER))
         {
             throw FTBLibLang.TEAM_NOT_OWNER.commandError();
         }

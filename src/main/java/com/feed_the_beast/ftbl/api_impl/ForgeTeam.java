@@ -4,17 +4,16 @@ import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.events.team.AttachTeamCapabilitiesEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
-import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.INBTData;
+import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
@@ -26,11 +25,7 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityDispatcher;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -42,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 26.05.2016.
  */
-public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapabilitySerializable<NBTTagCompound>
+public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
     private static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
     private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE));
@@ -52,7 +47,10 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     private static final IConfigKey KEY_IS_HIDDEN = new ConfigKey("team.is_hidden", new PropertyBool(false));
     private static final IConfigKey KEY_ALLIES = new ConfigKey("team.allies", new PropertyStringList(Collections.emptyList()));
 
-    private final CapabilityDispatcher capabilities;
+    private static final byte FLAG_FREE_TO_JOIN = 1;
+    private static final byte FLAG_HIDDEN = 2;
+
+    private final NBTDataStorage dataStorage;
     private final PropertyEnumAbstract<EnumTeamColor> color;
     private IForgePlayer owner;
     private Collection<String> allies;
@@ -71,32 +69,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         desc = "";
         flags = 0;
 
-        AttachTeamCapabilitiesEvent event = new AttachTeamCapabilitiesEvent(this);
-        MinecraftForge.EVENT_BUS.post(event);
-        capabilities = !event.getCapabilities().isEmpty() ? new CapabilityDispatcher(event.getCapabilities(), null) : null;
+        dataStorage = FTBLibRegistries.INSTANCE.createTeamDataStorage(this);
     }
 
     @Override
-    public final boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    @Nullable
+    public INBTData getData(String id)
     {
-        return capabilities != null && capabilities.hasCapability(capability, facing);
-    }
-
-    @Override
-    public final <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        return capabilities == null ? null : capabilities.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean getFlag(byte flag)
-    {
-        return Bits.getFlag(flags, flag);
-    }
-
-    public void setFlag(byte flag, boolean v)
-    {
-        flags = Bits.setFlag(flags, flag, v);
+        return dataStorage.get(id);
     }
 
     @Override
@@ -150,9 +130,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             nbt.setTag("Invited", list);
         }
 
-        if(capabilities != null)
+        if(dataStorage != null)
         {
-            nbt.setTag("Caps", capabilities.serializeNBT());
+            nbt.setTag("Data", dataStorage.serializeNBT());
         }
 
         return nbt;
@@ -161,7 +141,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        owner = getUniverse().getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
+        owner = Universe.INSTANCE.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
         flags = nbt.getByte("Flags");
         color.set(COLOR_NAME_MAP.get(nbt.getString("Color")));
         title = nbt.getString("Title");
@@ -232,16 +212,10 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             invited.clear();
         }
 
-        if(capabilities != null)
+        if(dataStorage != null)
         {
-            capabilities.deserializeNBT(nbt.getCompoundTag("Caps"));
+            dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
         }
-    }
-
-    @Override
-    public IUniverse getUniverse()
-    {
-        return FTBLibAPI_Impl.INSTANCE.getUniverse();
     }
 
     @Override
@@ -263,6 +237,28 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
+    public boolean isFreeToJoin()
+    {
+        return (flags & FLAG_FREE_TO_JOIN) != 0;
+    }
+
+    @Override
+    public boolean isHidden()
+    {
+        return (flags & FLAG_HIDDEN) != 0;
+    }
+
+    private void setFreeToJoin(boolean v)
+    {
+        flags = Bits.setFlag(flags, FLAG_FREE_TO_JOIN, v);
+    }
+
+    private void setHidden(boolean v)
+    {
+        flags = Bits.setFlag(flags, FLAG_HIDDEN, v);
+    }
+
+    @Override
     public EnumTeamColor getColor()
     {
         return (EnumTeamColor) color.getValue();
@@ -274,40 +270,26 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
-    public EnumTeamStatus getStatus(@Nullable IForgePlayer player)
+    public boolean hasStatus(IForgePlayer player, EnumTeamStatus status)
     {
-        if(player == null)
-        {
-            return EnumTeamStatus.NONE;
-        }
-        else if(owner.equalsPlayer(player))
-        {
-            return EnumTeamStatus.OWNER;
-        }
-        else if(enemies != null && enemies.contains(player.getProfile().getId()))
-        {
-            return EnumTeamStatus.ENEMY;
-        }
-        else
-        {
-            IForgeTeam team = player.getTeam();
+        IForgeTeam team = player.getTeam();
 
-            if(team != null)
-            {
-                if(team.equals(this))
-                {
-                    return EnumTeamStatus.MEMBER;
-                }
-                else if(allies != null && allies.contains(team.getName()) && team.isAllyTeam(getName()))
-                {
-                    return EnumTeamStatus.ALLY;
-                }
-            }
+        switch(status)
+        {
+            case ENEMY:
+                return enemies != null && enemies.contains(player.getProfile().getId());
+            case OWNER:
+                return owner.equalsPlayer(player);
+            case MEMBER:
+                return team != null && team.equals(this);
+            case ALLY:
+                return team != null && allies != null && allies.contains(team.getName()) && team.isAllyTeam(getName());
+            default:
+                return false;
         }
-
-        return EnumTeamStatus.NONE;
     }
 
+    @Override
     public boolean addAllyTeam(String team)
     {
         if(!isAllyTeam(team))
@@ -324,6 +306,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return false;
     }
 
+    @Override
     public boolean removeAllyTeam(String team)
     {
         if(isAllyTeam(team))
@@ -347,27 +330,27 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return allies != null && allies.contains(team);
     }
 
-    public boolean addEnemy(UUID player)
+    public boolean addEnemy(IForgePlayer player)
     {
-        if(!isEnemy(player))
+        if(!hasStatus(player, EnumTeamStatus.ENEMY))
         {
             if(enemies == null)
             {
                 enemies = new HashSet<>();
             }
 
-            enemies.add(player);
+            enemies.add(player.getProfile().getId());
             return true;
         }
 
         return false;
     }
 
-    public boolean removeEnemy(UUID player)
+    public boolean removeEnemy(IForgePlayer player)
     {
-        if(isEnemy(player))
+        if(hasStatus(player, EnumTeamStatus.ENEMY))
         {
-            enemies.remove(player);
+            enemies.remove(player.getProfile().getId());
 
             if(enemies.isEmpty())
             {
@@ -381,19 +364,11 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
-    public boolean isEnemy(UUID player)
+    public Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status)
     {
-        return enemies != null && enemies.contains(player);
-    }
-
-    @Override
-    public Collection<IForgePlayer> getMembers()
-    {
-        Collection<IForgePlayer> c = new HashSet<>();
-
-        for(IForgePlayer p : getUniverse().getPlayers())
+        for(IForgePlayer p : Universe.INSTANCE.getPlayers())
         {
-            if(p.isMemberOf(this))
+            if(hasStatus(p, status))
             {
                 c.add(p);
             }
@@ -402,9 +377,10 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return c;
     }
 
-    public boolean addPlayer(ForgePlayer player)
+    @Override
+    public boolean addPlayer(IForgePlayer player)
     {
-        if(!player.isMemberOf(this) && isInvited(player))
+        if(!hasStatus(player, EnumTeamStatus.MEMBER) && isInvited(player))
         {
             player.setTeamID(getName());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
@@ -415,16 +391,18 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         return false;
     }
 
-    public void removePlayer(ForgePlayer player)
+    @Override
+    public void removePlayer(IForgePlayer player)
     {
-        if(player.isMemberOf(this))
+        if(hasStatus(player, EnumTeamStatus.MEMBER))
         {
-            player.setTeamID(null);
+            player.setTeamID("");
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerLeftEvent(this, player));
         }
     }
 
-    public boolean inviteMember(ForgePlayer player)
+    @Override
+    public boolean inviteMember(IForgePlayer player)
     {
         if(!isInvited(player))
         {
@@ -441,12 +419,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
-    public boolean isInvited(@Nullable IForgePlayer player)
+    public boolean isInvited(IForgePlayer player)
     {
-        return player != null && (getFlag(IForgeTeam.FREE_TO_JOIN) || invited != null && invited.contains(player.getProfile().getId()) && player.getTeam() != null);
+        return isFreeToJoin() || (invited != null && invited.contains(player.getProfile().getId()));
     }
 
-    public void changeOwner(ForgePlayer newOwner)
+    @Override
+    public void changeOwner(IForgePlayer newOwner)
     {
         if(owner == null)
         {
@@ -457,7 +436,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
         {
             IForgePlayer oldOwner = owner;
 
-            if(!oldOwner.equalsPlayer(newOwner) && newOwner.isMemberOf(this))
+            if(!oldOwner.equalsPlayer(newOwner) && hasStatus(newOwner, EnumTeamStatus.MEMBER))
             {
                 owner = newOwner;
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamOwnerChangedEvent(this, oldOwner, newOwner));
@@ -466,21 +445,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
     }
 
     @Override
-    public boolean canInteract(IForgePlayer player, EnumTeamPrivacyLevel level)
-    {
-        switch(level)
-        {
-            case EVERYONE:
-                return true;
-            case MEMBERS:
-                return getStatus(player).isMember();
-            case ALLIES:
-                return getStatus(player).isAlly();
-            default:
-                return false;
-        }
-    }
-
     public void getSettings(IConfigTree tree)
     {
         MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, tree));
@@ -517,33 +481,33 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam, ICapab
             }
         });
 
-        tree.add(KEY_FREE_TO_JOIN, new PropertyBool(getFlag(IForgeTeam.FREE_TO_JOIN))
+        tree.add(KEY_FREE_TO_JOIN, new PropertyBool(isFreeToJoin())
         {
             @Override
             public void setBoolean(boolean v)
             {
-                setFlag(IForgeTeam.FREE_TO_JOIN, v);
+                setFreeToJoin(v);
             }
 
             @Override
             public boolean getBoolean()
             {
-                return getFlag(IForgeTeam.FREE_TO_JOIN);
+                return isFreeToJoin();
             }
         });
 
-        tree.add(KEY_IS_HIDDEN, new PropertyBool(getFlag(IForgeTeam.HIDDEN))
+        tree.add(KEY_IS_HIDDEN, new PropertyBool(isHidden())
         {
             @Override
             public void setBoolean(boolean v)
             {
-                setFlag(IForgeTeam.HIDDEN, v);
+                setHidden(v);
             }
 
             @Override
             public boolean getBoolean()
             {
-                return getFlag(IForgeTeam.HIDDEN);
+                return isHidden();
             }
         });
 

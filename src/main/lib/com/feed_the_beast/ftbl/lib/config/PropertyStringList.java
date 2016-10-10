@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -25,7 +25,7 @@ public class PropertyStringList extends PropertyBase
 {
     public static final String ID = "string_list";
 
-    @ConfigValueProvider(ID)
+    @RegistryObject(ID)
     public static final IConfigValueProvider PROVIDER = () -> new PropertyStringList(Collections.emptyList());
 
     private Collection<String> value;

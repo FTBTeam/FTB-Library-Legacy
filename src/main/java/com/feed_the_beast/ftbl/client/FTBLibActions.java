@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibFinals;
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api.gui.SidebarButton;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.gui.GuiInfo;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 public class FTBLibActions
 {
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton TEAMS_GUI = new SidebarButtonInst(new ResourceLocation(FTBLibFinals.MOD_ID, "teams_gui"), 995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
     {
         @Override
@@ -60,11 +60,11 @@ public class FTBLibActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibAPI_Impl.INSTANCE.hasServer(null);
+            return FTBLibIntegrationInternal.API.hasServer(null);
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton SETTINGS = new SidebarButtonInst(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), 990, GuiIcons.SETTINGS, null)
     {
         @Override
@@ -74,7 +74,7 @@ public class FTBLibActions
         }
     };
 
-    @SidebarButton
+    @RegistryObject
     public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButtonInst(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.SETTINGS_RED, new PropertyBool(true))
     {
         @Override
@@ -86,7 +86,7 @@ public class FTBLibActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibAPI_Impl.INSTANCE.hasServer(null);
+            return FTBLibIntegrationInternal.API.hasServer(null);
         }
     };
 }

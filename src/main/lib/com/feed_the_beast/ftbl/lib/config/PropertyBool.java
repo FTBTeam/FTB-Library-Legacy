@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
@@ -24,7 +24,7 @@ public class PropertyBool extends PropertyBase
 {
     public static final String ID = "bool";
 
-    @ConfigValueProvider(ID)
+    @RegistryObject(ID)
     public static final IConfigValueProvider PROVIDER = () -> new PropertyBool(false);
 
     private boolean value;

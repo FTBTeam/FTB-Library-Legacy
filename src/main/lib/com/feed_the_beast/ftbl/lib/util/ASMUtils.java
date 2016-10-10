@@ -82,6 +82,7 @@ public class ASMUtils
                     continue;
                 }
 
+                field.setAccessible(true);
                 callback.onCallback((T) field.get(null), field, new AnnotationInfo(data.getAnnotationInfo()));
             }
             catch(Exception ex)
@@ -131,6 +132,7 @@ public class ASMUtils
 
                     if(method != null)
                     {
+                        method.setAccessible(true);
                         callback.onCallback(method, method.getParameterTypes(), new AnnotationInfo(data.getAnnotationInfo()));
                     }
                 }

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.api;
 
 import com.google.gson.JsonElement;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -11,6 +12,7 @@ public interface IPackModes
 {
     Collection<IPackMode> getModes();
 
+    @Nullable
     IPackMode getRawMode(String id);
 
     IPackMode getMode(String id);
