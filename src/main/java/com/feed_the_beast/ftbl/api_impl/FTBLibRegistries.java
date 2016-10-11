@@ -15,6 +15,9 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
+import com.feed_the_beast.ftbl.api.events.player.IPlayerDataProvider;
+import com.feed_the_beast.ftbl.api.events.team.ITeamDataProvider;
+import com.feed_the_beast.ftbl.api.events.universe.IUniverseDataProvider;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
@@ -87,6 +90,9 @@ public enum FTBLibRegistries
     public final Collection<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
     public final Collection<String> OPTIONAL_SERVER_MODS = new HashSet<>();
     public final Collection<String> OPTIONAL_SERVER_MODS_CLIENT = new HashSet<>();
+    private final Collection<IUniverseDataProvider> DATA_PROVIDER_UNIVERSE = new ArrayList<>();
+    private final Collection<IPlayerDataProvider> DATA_PROVIDER_PLAYER = new ArrayList<>();
+    private final Collection<ITeamDataProvider> DATA_PROVIDER_TEAM = new ArrayList<>();
 
     public void init(ASMDataTable table)
     {
@@ -204,6 +210,10 @@ public enum FTBLibRegistries
             }
         });
 
+        ASMUtils.findAnnotatedObjects(table, IUniverseDataProvider.class, RegistryObject.class, (obj, field, data) -> DATA_PROVIDER_UNIVERSE.add(obj));
+        ASMUtils.findAnnotatedObjects(table, IPlayerDataProvider.class, RegistryObject.class, (obj, field, data) -> DATA_PROVIDER_PLAYER.add(obj));
+        ASMUtils.findAnnotatedObjects(table, ITeamDataProvider.class, RegistryObject.class, (obj, field, data) -> DATA_PROVIDER_TEAM.add(obj));
+
         GUIS.getIDs().generateIDs(GUIS.getMap().keySet());
 
         for(ISidebarButton button : SIDEBAR_BUTTONS.values())
@@ -307,18 +317,60 @@ public enum FTBLibRegistries
     @Nullable
     public NBTDataStorage createUniverseDataStorage(IUniverse universe)
     {
-        return null;
+        NBTDataStorage storage = new NBTDataStorage();
+
+        for(IUniverseDataProvider provider : DATA_PROVIDER_UNIVERSE)
+        {
+            try
+            {
+                storage.add(provider.getUniverseData(universe));
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+
+        return storage.isEmpty() ? null : storage;
     }
 
     @Nullable
     public NBTDataStorage createPlayerDataStorage(IForgePlayer player)
     {
-        return null;
+        NBTDataStorage storage = new NBTDataStorage();
+
+        for(IPlayerDataProvider provider : DATA_PROVIDER_PLAYER)
+        {
+            try
+            {
+                storage.add(provider.getPlayerData(player));
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+
+        return storage.isEmpty() ? null : storage;
     }
 
     @Nullable
     public NBTDataStorage createTeamDataStorage(IForgeTeam team)
     {
-        return null;
+        NBTDataStorage storage = new NBTDataStorage();
+
+        for(ITeamDataProvider provider : DATA_PROVIDER_TEAM)
+        {
+            try
+            {
+                storage.add(provider.getTeamData(team));
+            }
+            catch(Exception ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+
+        return storage.isEmpty() ? null : storage;
     }
 }

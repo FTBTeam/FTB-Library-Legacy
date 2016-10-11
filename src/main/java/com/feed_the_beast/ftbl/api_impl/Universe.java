@@ -48,7 +48,7 @@ public class Universe implements IUniverse
     @Nullable
     public INBTData getData(String id)
     {
-        return dataStorage.get(id);
+        return dataStorage == null ? null : dataStorage.get(id);
     }
 
     @Override

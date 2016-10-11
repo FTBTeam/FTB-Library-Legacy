@@ -78,8 +78,6 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarting(FMLServerStartingEvent event)
     {
-        TickHandler.INSTANCE = new TickHandler();
-
         CmdFTB cmd = new CmdFTB(event.getServer().isDedicatedServer());
 
         if(FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean())
@@ -96,8 +94,10 @@ public class FTBLibMod
     }
 
     @Mod.EventHandler
-    public void onServerStarted(FMLServerAboutToStartEvent event)
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event)
     {
+        TickHandler.INSTANCE = new TickHandler();
+
         FTBLibAPI_Impl.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());

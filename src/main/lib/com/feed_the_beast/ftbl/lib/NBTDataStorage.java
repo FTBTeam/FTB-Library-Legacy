@@ -28,6 +28,11 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
         return map.get(id);
     }
 
+    public boolean isEmpty()
+    {
+        return map.isEmpty();
+    }
+
     @Override
     public NBTTagCompound serializeNBT()
     {

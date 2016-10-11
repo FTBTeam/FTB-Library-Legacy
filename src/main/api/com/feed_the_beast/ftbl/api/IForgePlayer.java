@@ -21,6 +21,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
     @Nullable
     EntityPlayerMP getPlayer();
 
+    @Nullable
     INBTData getData(String id);
 
     boolean equalsPlayer(@Nullable IForgePlayer player);

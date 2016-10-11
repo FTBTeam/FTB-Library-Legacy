@@ -97,9 +97,10 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     }
 
     @Override
+    @Nullable
     public INBTData getData(String id)
     {
-        return dataStorage.get(id);
+        return dataStorage == null ? null : dataStorage.get(id);
     }
 
     @Override
