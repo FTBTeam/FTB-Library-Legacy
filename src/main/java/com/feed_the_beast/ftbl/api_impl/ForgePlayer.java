@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -98,7 +99,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
     @Override
     @Nullable
-    public INBTData getData(String id)
+    public INBTData getData(ResourceLocation id)
     {
         return dataStorage == null ? null : dataStorage.get(id);
     }

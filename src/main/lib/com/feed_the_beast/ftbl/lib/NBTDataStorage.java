@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 {
-    private final Map<String, INBTData> map;
+    private final Map<ResourceLocation, INBTData> map;
 
     public NBTDataStorage()
     {
@@ -20,10 +21,10 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 
     public void add(INBTData data)
     {
-        map.put(data.getName(), data);
+        map.put(data.getID(), data);
     }
 
-    public INBTData get(String id)
+    public INBTData get(ResourceLocation id)
     {
         return map.get(id);
     }
@@ -36,27 +37,28 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
     @Override
     public NBTTagCompound serializeNBT()
     {
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound nbt = new NBTTagCompound();
 
         for(INBTData data : map.values())
         {
-            tag.setTag(data.getName(), data.serializeNBT());
+            NBTTagCompound nbt1 = new NBTTagCompound();
+            data.writeData(nbt1);
+
+            if(!nbt1.hasNoTags())
+            {
+                nbt.setTag(data.getID().toString(), nbt1);
+            }
         }
 
-        return tag;
+        return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        for(String s : nbt.getKeySet())
+        for(INBTData data : map.values())
         {
-            INBTData data = map.get(s);
-
-            if(data != null)
-            {
-                data.deserializeNBT(nbt.getCompoundTag(s));
-            }
+            data.readData(nbt.getCompoundTag(data.getID().toString()));
         }
     }
 }

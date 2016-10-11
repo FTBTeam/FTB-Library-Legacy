@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.INBTData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -16,7 +17,7 @@ import java.util.Collection;
 public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
 {
     @Nullable
-    INBTData getData(String id);
+    INBTData getData(ResourceLocation id);
 
     IForgePlayer getOwner();
 

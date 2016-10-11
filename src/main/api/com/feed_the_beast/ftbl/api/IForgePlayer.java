@@ -7,6 +7,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -22,7 +23,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
     EntityPlayerMP getPlayer();
 
     @Nullable
-    INBTData getData(String id);
+    INBTData getData(ResourceLocation id);
 
     boolean equalsPlayer(@Nullable IForgePlayer player);
 

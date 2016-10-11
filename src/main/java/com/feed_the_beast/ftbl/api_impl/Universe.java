@@ -14,6 +14,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
@@ -46,7 +47,7 @@ public class Universe implements IUniverse
 
     @Override
     @Nullable
-    public INBTData getData(String id)
+    public INBTData getData(ResourceLocation id)
     {
         return dataStorage == null ? null : dataStorage.get(id);
     }

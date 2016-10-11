@@ -25,6 +25,7 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 
@@ -74,7 +75,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
     @Override
     @Nullable
-    public INBTData getData(String id)
+    public INBTData getData(ResourceLocation id)
     {
         return dataStorage == null ? null : dataStorage.get(id);
     }
