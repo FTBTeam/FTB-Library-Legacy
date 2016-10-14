@@ -45,6 +45,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {
     private final NBTDataStorage dataStorage;
     private String teamID = "";
+    private byte flags = 0;
     private GameProfile gameProfile;
     private StatisticsManagerServer statsManager;
     private EntityPlayerMP entityPlayer;
@@ -251,6 +252,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
+        flags = nbt.getByte("Flags");
         setTeamID(nbt.getString("TeamID"));
 
         if(dataStorage != null)
@@ -262,19 +264,24 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public NBTTagCompound serializeNBT()
     {
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound nbt = new NBTTagCompound();
+
+        if(flags != 0)
+        {
+            nbt.setByte("Flags", flags);
+        }
 
         if(teamID != null && !teamID.isEmpty())
         {
-            tag.setString("TeamID", teamID);
+            nbt.setString("TeamID", teamID);
         }
 
         if(dataStorage != null)
         {
-            tag.setTag("Data", dataStorage.serializeNBT());
+            nbt.setTag("Data", dataStorage.serializeNBT());
         }
 
-        return tag;
+        return nbt;
     }
 
     public void onLoggedIn(EntityPlayerMP ep, boolean firstLogin)
@@ -344,5 +351,17 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         }
 
         return playerNBT;
+    }
+
+    @Override
+    public byte getFlags()
+    {
+        return flags;
+    }
+
+    @Override
+    public void setFlags(byte f)
+    {
+        flags = f;
     }
 }
