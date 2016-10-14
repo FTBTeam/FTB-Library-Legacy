@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.OptionalServerModID;
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
@@ -23,6 +22,7 @@ import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
 import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
+import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.ResourceLocationComparator;
@@ -32,7 +32,6 @@ import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
 import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.reg.SyncedRegistry;
-import com.feed_the_beast.ftbl.lib.util.ASMUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -45,7 +44,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -94,28 +92,18 @@ public enum FTBLibRegistries
     private final Collection<IPlayerDataProvider> DATA_PROVIDER_PLAYER = new ArrayList<>();
     private final Collection<ITeamDataProvider> DATA_PROVIDER_TEAM = new ArrayList<>();
 
-    public void init(ASMDataTable table)
+    public void init(AsmData asmData)
     {
-        ASMUtils.findAnnotatedObjects(table, IConfigValueProvider.class, RegistryObject.class, (obj, field, info) ->
+        asmData.findRegistryObjects(IConfigValueProvider.class, true, (obj, field, id) -> CONFIG_VALUES.register(id.toLowerCase(Locale.ENGLISH), obj));
+
+        asmData.findRegistryObjects(IConfigFileProvider.class, true, (obj, field, id) ->
         {
-            String s = info.getString("value", "");
-
-            if(!s.isEmpty())
+            if(id.charAt(0) != '-')
             {
-                CONFIG_VALUES.register(s.toLowerCase(Locale.ENGLISH), obj);
-            }
-        });
-
-        ASMUtils.findAnnotatedObjects(table, IConfigFileProvider.class, RegistryObject.class, (obj, field, info) ->
-        {
-            String s = info.getString("value", "");
-
-            if(!s.isEmpty() && s.charAt(0) != '-')
-            {
-                s = s.toLowerCase(Locale.ENGLISH);
-                ITextComponent n = new TextComponentString(s);
+                id = id.toLowerCase(Locale.ENGLISH);
+                ITextComponent n = new TextComponentString(id);
                 ConfigFile configFile = new ConfigFile(n, obj);
-                CONFIG_FILES.put(s, configFile);
+                CONFIG_FILES.put(id, configFile);
             }
         });
 
@@ -124,7 +112,7 @@ public enum FTBLibRegistries
 
         int[] configValuesCount = {0};
 
-        ASMUtils.findAnnotatedObjects(table, IConfigValue.class, ConfigValue.class, (obj, field, info) ->
+        asmData.findAnnotatedObjects(IConfigValue.class, ConfigValue.class, (obj, field, info) ->
         {
             String id = info.getString("id", "");
             String file = info.getString("file", "");
@@ -193,26 +181,16 @@ public enum FTBLibRegistries
 
         CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getMap().keySet());
 
-        ASMUtils.findAnnotatedObjects(table, INotification.class, RegistryObject.class, (obj, field, data) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
-        ASMUtils.findAnnotatedObjects(table, IGuiHandler.class, RegistryObject.class, (obj, field, data) -> GUIS.register(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, ISyncData.class, RegistryObject.class, (obj, field, data) -> SYNCED_DATA.put(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, ISidebarButton.class, RegistryObject.class, (obj, field, data) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
-        ASMUtils.findAnnotatedObjects(table, IRecipeHandler.class, RegistryObject.class, (obj, field, data) -> RECIPE_HANDLERS.add(obj));
-        ASMUtils.findAnnotatedObjects(table, String.class, OptionalServerModID.class, (obj, field, data) -> OPTIONAL_SERVER_MODS.add(obj));
-
-        ASMUtils.findAnnotatedObjects(table, IInfoTextLineProvider.class, RegistryObject.class, (obj, field, info) ->
-        {
-            String s = info.getString("value", "");
-
-            if(!s.isEmpty())
-            {
-                InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(s.toLowerCase(Locale.ENGLISH), obj);
-            }
-        });
-
-        ASMUtils.findAnnotatedObjects(table, IUniverseDataProvider.class, RegistryObject.class, (obj, field, data) -> DATA_PROVIDER_UNIVERSE.add(obj));
-        ASMUtils.findAnnotatedObjects(table, IPlayerDataProvider.class, RegistryObject.class, (obj, field, data) -> DATA_PROVIDER_PLAYER.add(obj));
-        ASMUtils.findAnnotatedObjects(table, ITeamDataProvider.class, RegistryObject.class, (obj, field, data) -> DATA_PROVIDER_TEAM.add(obj));
+        asmData.findAnnotatedObjects(String.class, OptionalServerModID.class, (obj, field, info) -> OPTIONAL_SERVER_MODS.add(obj));
+        asmData.findRegistryObjects(INotification.class, false, (obj, field, id) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
+        asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.register(obj.getID(), obj));
+        asmData.findRegistryObjects(ISyncData.class, false, (obj, field, id) -> SYNCED_DATA.put(obj.getID(), obj));
+        asmData.findRegistryObjects(ISidebarButton.class, false, (obj, field, id) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
+        asmData.findRegistryObjects(IRecipeHandler.class, false, (obj, field, id) -> RECIPE_HANDLERS.add(obj));
+        asmData.findRegistryObjects(IInfoTextLineProvider.class, true, (obj, field, id) -> InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(Locale.ENGLISH), obj));
+        asmData.findRegistryObjects(IUniverseDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_UNIVERSE.add(obj));
+        asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));
+        asmData.findRegistryObjects(ITeamDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_TEAM.add(obj));
 
         GUIS.getIDs().generateIDs(GUIS.getMap().keySet());
 

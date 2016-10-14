@@ -13,8 +13,8 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
+import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.util.ASMUtils;
 import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
@@ -49,17 +49,17 @@ import java.util.Map;
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {
+    private AsmData asmData;
     private static PackModes packModes;
     private static SharedData sharedDataServer, sharedDataClient;
     public static boolean hasServer, isClientPlayerOP, useFTBPrefix;
 
-    public static void init(ASMDataTable table)
+    public void init(ASMDataTable table)
     {
-        FTBLibAPI api = new FTBLibAPI_Impl();
-        ASMUtils.findAnnotatedObjects(table, FTBLibAPI.class, FTBLibAddon.class, (obj, field, data) -> field.set(null, api));
-        ASMUtils.findAnnotatedMethods(table, FTBLibAddon.class, (method, params, data) -> method.invoke(null));
-
-        FTBLibRegistries.INSTANCE.init(table);
+        asmData = new AsmData(table);
+        asmData.findAnnotatedObjects(FTBLibAPI.class, FTBLibAddon.class, (obj, field, data) -> field.set(null, this));
+        asmData.findAnnotatedMethods(FTBLibAddon.class, (method, params, data) -> method.invoke(null));
+        FTBLibRegistries.INSTANCE.init(asmData);
     }
 
     @Override

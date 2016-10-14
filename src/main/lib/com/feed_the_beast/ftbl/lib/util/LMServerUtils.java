@@ -201,7 +201,7 @@ public class LMServerUtils
     {
         if(ep == null)
         {
-            ep = FTBLibMod.proxy.getClientPlayer();
+            ep = FTBLibMod.PROXY.getClientPlayer();
         }
         if(ep != null)
         {
@@ -209,7 +209,7 @@ public class LMServerUtils
         }
         else
         {
-            FTBLibMod.logger.info(o);
+            FTBLibMod.LOGGER.info(o);
         }
     }
 

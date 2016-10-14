@@ -235,7 +235,7 @@ public class MathHelperLM
     @Nullable
     public static RayTraceResult rayTrace(@Nullable EntityPlayer ep)
     {
-        return rayTrace(ep, FTBLibMod.proxy.getReachDist(ep));
+        return rayTrace(ep, FTBLibMod.PROXY.getReachDist(ep));
     }
 
     @Nullable

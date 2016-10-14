@@ -100,7 +100,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         {
             String json = LMStringUtils.unsplitSpaceUntilEnd(1, args);
 
-            FTBLibMod.logger.info("Setting " + args[0] + " to " + json); //TODO: Lang
+            FTBLibMod.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
 
             try
             {

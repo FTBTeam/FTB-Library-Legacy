@@ -63,7 +63,7 @@ public class LMUtils
         }
         else
         {
-            FTBLibMod.logger.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + DEV_LOGGER.getClass().getName());
+            FTBLibMod.LOGGER.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + DEV_LOGGER.getClass().getName());
         }
     }
 

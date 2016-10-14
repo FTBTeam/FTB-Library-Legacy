@@ -216,6 +216,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
         FTBLibAPI_Impl.reloadPackModes();
         MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, Minecraft.getMinecraft().thePlayer, ReloadType.LOGIN));
-        FTBLibMod.logger.info("Current Mode: " + FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).getPackMode().getID());
+        FTBLibMod.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).getPackMode().getID());
     }
 }

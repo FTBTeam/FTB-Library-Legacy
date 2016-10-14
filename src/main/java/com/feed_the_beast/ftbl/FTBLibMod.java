@@ -23,45 +23,41 @@ import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import net.minecraftforge.fml.common.network.NetworkCheckHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.Map;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.MOD_VERSION, dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
+@Mod(
+        modid = FTBLibFinals.MOD_ID,
+        name = FTBLibFinals.MOD_ID,
+        version = "0.0.0",
+        useMetadata = true,
+        acceptableRemoteVersions = "*",
+        dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits"
+)
 public class FTBLibMod
 {
-    public static final Logger logger = LogManager.getLogger("FTBLib");
+    public static final Logger LOGGER = LogManager.getLogger("FTBLib");
 
     @Mod.Instance(FTBLibFinals.MOD_ID)
-    public static FTBLibMod inst;
+    public static FTBLibMod INST;
 
     @SidedProxy(serverSide = "com.feed_the_beast.ftbl.FTBLibModCommon", clientSide = "com.feed_the_beast.ftbl.client.FTBLibModClient")
-    public static FTBLibModCommon proxy;
+    public static FTBLibModCommon PROXY;
 
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event)
     {
-        if(LMUtils.DEV_ENV)
-        {
-            logger.info("Loading FTBLib, DevEnv");
-        }
-        else
-        {
-            logger.info("Loading FTBLib, v" + FTBLibFinals.MOD_VERSION);
-        }
-
-        FTBLibAPI_Impl.init(event.getAsmData());
+        LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
+        new FTBLibAPI_Impl().init(event.getAsmData());
 
         LMUtils.init(event.getModConfigurationDirectory());
         FTBLibNetHandler.init();
         ODItems.preInit();
         FTBLibStats.init();
         MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
-        proxy.preInit();
+        PROXY.preInit();
     }
 
     @Mod.EventHandler
@@ -72,7 +68,7 @@ public class FTBLibMod
 
         IRecipes recipes = new LMRecipes();
         FTBLibRegistries.INSTANCE.RECIPE_HANDLERS.forEach(h -> h.loadRecipes(recipes));
-        proxy.postInit();
+        PROXY.postInit();
     }
 
     @Mod.EventHandler
@@ -116,12 +112,5 @@ public class FTBLibMod
     {
         Universe.INSTANCE.onClosed();
         Universe.INSTANCE = null;
-    }
-
-    @NetworkCheckHandler
-    public boolean checkNetwork(Map<String, String> m, Side side)
-    {
-        String s = m.get(FTBLibFinals.MOD_ID);
-        return s == null || s.equals(FTBLibFinals.MOD_VERSION);
     }
 }

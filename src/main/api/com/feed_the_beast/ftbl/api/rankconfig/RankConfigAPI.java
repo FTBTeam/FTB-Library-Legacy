@@ -21,7 +21,7 @@ public class RankConfigAPI
 
     public static void setHandler(IRankConfigHandler handler)
     {
-        FTBLibMod.logger.warn("Replacing " + rankConfigHandler.getClass().getName() + " with " + handler.getClass().getName());
+        FTBLibMod.LOGGER.warn("Replacing " + rankConfigHandler.getClass().getName() + " with " + handler.getClass().getName());
         rankConfigHandler = handler;
     }
 
