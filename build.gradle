@@ -14,7 +14,6 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 version = "1.10.2-" + version_mod
@@ -30,8 +29,10 @@ minecraft {
     version = "1.10.2-12.18.2.2099"
     runDir = "run"
     mappings = "snapshot_20160518"
-    replace "@VERSION@", version_mod
-    replaceIn "FTBLibFinals.java"
+}
+
+shadowJar {
+    classifier = ''
 }
 
 repositories {
@@ -70,9 +71,8 @@ processResources {
     }
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
+artifacts {
+    shadowJar;
 }
 
-build.dependsOn deobfJar
+build.dependsOn(shadowJar);
