@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -21,15 +20,13 @@ import java.util.Collection;
  */
 public interface FTBLibAPI
 {
-    boolean hasServer(@Nullable String id);
-
-    boolean isClientPlayerOP();
-
     Collection<ITickable> ticking();
 
     IPackModes getPackModes();
 
-    ISharedData getSharedData(Side side);
+    ISharedData getServerData();
+
+    ISharedData getClientData();
 
     @Nullable
     IUniverse getUniverse();

@@ -6,8 +6,8 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -85,7 +85,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         ReloadType type = ReloadType.values()[m.typeID];
 
-        FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).deserializeNBT(m.sharedData);
+        FTBLibIntegrationInternal.API.getClientData().deserializeNBT(m.sharedData);
 
         m.syncData.forEach((key, value) ->
         {
@@ -101,7 +101,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         if(type.reload(Side.CLIENT))
         {
-            FTBLibAPI_Impl.reloadPackModes();
+            PackModes.reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, mc.thePlayer, type));
 
             if(type != ReloadType.LOGIN)
@@ -109,7 +109,7 @@ public class MessageReload extends MessageToClient<MessageReload>
                 FTBLibLang.RELOAD_CLIENT.printChat(mc.thePlayer, (System.currentTimeMillis() - ms) + "ms");
             }
 
-            FTBLibMod.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getSharedData(Side.CLIENT).getPackMode().getID());
+            FTBLibMod.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
         }
     }
 }

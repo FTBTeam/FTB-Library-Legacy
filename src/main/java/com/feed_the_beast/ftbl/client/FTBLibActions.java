@@ -8,18 +8,18 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.gui.GuiEditConfig;
-import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.gui.friends.InfoFriendsGUI;
+import com.feed_the_beast.ftbl.gui.GuiLoading;
+import com.feed_the_beast.ftbl.gui.friends.InfoTeamsGUI;
 import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.net.MessageTeamsGuiRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 
@@ -31,14 +31,15 @@ public class FTBLibActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            new GuiInfo(new InfoFriendsGUI()).openGui();
+            new GuiLoading().openGui();
+            new MessageTeamsGuiRequest().sendToServer();
         }
 
         @Override
         @Nullable
         public ITextComponent getDisplayNameOverride()
         {
-            return new TextComponentString("TeamsGUI");
+            return InfoTeamsGUI.TITLE;
         }
 
         @Override
@@ -60,7 +61,7 @@ public class FTBLibActions
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegrationInternal.API.hasServer(null);
+            return FTBLibIntegrationInternal.API.getClientData().hasOptionalServerMod(null);
         }
     };
 
@@ -80,13 +81,13 @@ public class FTBLibActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/ftb my_settings", false);
+            FTBLibClient.execClientCommand(FTBLibIntegrationInternal.API.getClientData().useFTBPrefix() ? "/ftb my_settings" : "/my_settings", false);
         }
 
         @Override
         public boolean isVisible()
         {
-            return FTBLibIntegrationInternal.API.hasServer(null);
+            return FTBLibIntegrationInternal.API.getClientData().hasOptionalServerMod(null);
         }
     };
 }

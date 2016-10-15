@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
+import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.TickHandler;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
@@ -28,14 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-@Mod(
-        modid = FTBLibFinals.MOD_ID,
-        name = FTBLibFinals.MOD_ID,
-        version = "0.0.0",
-        useMetadata = true,
-        acceptableRemoteVersions = "*",
-        dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits"
-)
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
 public class FTBLibMod
 {
     public static final Logger LOGGER = LogManager.getLogger("FTBLib");
@@ -63,7 +57,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
-        FTBLibAPI_Impl.reloadPackModes();
+        PackModes.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
 
         IRecipes recipes = new LMRecipes();
@@ -94,7 +88,7 @@ public class FTBLibMod
     {
         TickHandler.INSTANCE = new TickHandler();
 
-        FTBLibAPI_Impl.reloadPackModes();
+        PackModes.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         FTBLibAPI_Impl.createAndLoadWorld();

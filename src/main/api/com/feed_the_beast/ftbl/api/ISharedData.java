@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -18,5 +20,9 @@ public interface ISharedData extends INBTSerializable<NBTTagCompound>, IJsonSeri
 
     UUID getUniverseID();
 
-    int setMode(String mode);
+    boolean hasOptionalServerMod(@Nullable String id);
+
+    boolean isOP(@Nullable GameProfile profile);
+
+    boolean useFTBPrefix();
 }

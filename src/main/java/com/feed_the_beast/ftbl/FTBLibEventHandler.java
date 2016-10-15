@@ -17,7 +17,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.Locale;
@@ -31,7 +30,7 @@ public class FTBLibEventHandler
         {
             try
             {
-                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), FTBLibIntegrationInternal.API.getSharedData(Side.SERVER).getSerializableElement());
+                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), FTBLibIntegrationInternal.API.getServerData().getSerializableElement());
                 LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), Universe.INSTANCE.serializeNBT());
                 //FTBLib.dev_logger.info("ForgeWorldMP Saved");
             }
@@ -117,7 +116,12 @@ public class FTBLibEventHandler
     {
         if(e.getEntity() instanceof EntityPlayerMP && Universe.INSTANCE != null)
         {
-            Universe.INSTANCE.getPlayer(e.getEntity()).onDeath();
+            ForgePlayer p = Universe.INSTANCE.getPlayer(e.getEntity());
+
+            if(p != null)
+            {
+                p.onDeath();
+            }
         }
     }
 

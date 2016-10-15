@@ -1,4 +1,4 @@
-def version_mod = "3.1.0"
+def version_mod = "3.1.1"
 
 buildscript {
     repositories {
@@ -10,10 +10,12 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 version = "1.10.2-" + version_mod
 group = "com.feed_the_beast.ftblib"
@@ -37,7 +39,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.LatvianModder:PermissionAPI:1.0.0'
+    deobfCompile 'com.github.LatvianModder:PermissionAPI:1.0.0'
+    shadow 'com.github.LatvianModder:PermissionAPI:1.0.0'
 }
 
 sourceSets {

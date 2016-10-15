@@ -60,7 +60,9 @@ public class FTBLibModClient extends FTBLibModCommon
     @Override
     public void spawnDust(World w, double x, double y, double z, int col)
     {
-        ParticleRedstone fx = new ParticleRedstone(w, x, y, z, 0F, 0F, 0F) { };
+        ParticleRedstone fx = new ParticleRedstone(w, x, y, z, 0F, 0F, 0F)
+        {
+        };
 
         float alpha = LMColorUtils.getAlpha(col) / 255F;
         float red = LMColorUtils.getRed(col) / 255F;

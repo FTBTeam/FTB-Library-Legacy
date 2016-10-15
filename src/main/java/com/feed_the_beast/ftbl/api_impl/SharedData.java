@@ -1,16 +1,22 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -18,19 +24,43 @@ import java.util.UUID;
  */
 public class SharedData implements ISharedData, IJsonSerializable
 {
+    public static final SharedData SERVER = new SharedData(Side.SERVER);
+    public static final SharedData CLIENT = new SharedData(Side.CLIENT);
+
+    public static boolean hasServer, isClientPlayerOP, useFTBPrefix;
+    public static GameProfile clientGameProfile;
+
     private final Side side;
     private IPackMode currentMode;
     private UUID universeID;
+    private final Collection<String> optionalServerMods;
 
-    public SharedData(Side s)
+    private SharedData(Side s)
     {
         side = s;
+        currentMode = null;
+        universeID = null;
+        optionalServerMods = new HashSet<>();
     }
 
     @Override
     public Side getSide()
     {
         return side;
+    }
+
+    public void reset()
+    {
+        currentMode = null;
+        universeID = null;
+        optionalServerMods.clear();
+
+        if(side == Side.CLIENT)
+        {
+            hasServer = false;
+            isClientPlayerOP = false;
+            useFTBPrefix = false;
+        }
     }
 
     @Override
@@ -72,8 +102,7 @@ public class SharedData implements ISharedData, IJsonSerializable
         universeID = new UUID(nbt.getLong("ID_M"), nbt.getLong("ID_L"));
     }
 
-    @Override
-    public final int setMode(String mode)
+    public int setMode(String mode)
     {
         IPackMode m = FTBLibIntegrationInternal.API.getPackModes().getRawMode(mode);
 
@@ -88,6 +117,34 @@ public class SharedData implements ISharedData, IJsonSerializable
 
         currentMode = m;
         return 0;
+    }
+
+    public Collection<String> getOptionalServerMods()
+    {
+        return optionalServerMods;
+    }
+
+    @Override
+    public boolean hasOptionalServerMod(@Nullable String id)
+    {
+        return (id == null || id.isEmpty()) ? hasServer : optionalServerMods.contains(id);
+    }
+
+    @Override
+    public boolean isOP(@Nullable GameProfile profile)
+    {
+        if(side == Side.SERVER)
+        {
+            return profile != null && LMServerUtils.isOP(profile);
+        }
+
+        return isClientPlayerOP && (profile == null || profile == clientGameProfile || (clientGameProfile != null && profile.equals(clientGameProfile)));
+    }
+
+    @Override
+    public boolean useFTBPrefix()
+    {
+        return side == Side.CLIENT ? useFTBPrefix : FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean();
     }
 
     @Override

@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 {
     byte FLAG_HIDE_TEAM_NOTIFICATION = 1;
-    
+
     GameProfile getProfile();
 
     @Nullable

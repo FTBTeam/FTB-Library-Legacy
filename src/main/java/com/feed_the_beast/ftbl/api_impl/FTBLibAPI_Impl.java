@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibAddon;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.ISharedData;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
@@ -15,7 +16,6 @@ import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -49,29 +49,12 @@ import java.util.Map;
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {
-    private AsmData asmData;
-    private static PackModes packModes;
-    private static SharedData sharedDataServer, sharedDataClient;
-    public static boolean hasServer, isClientPlayerOP, useFTBPrefix;
-
     public void init(ASMDataTable table)
     {
-        asmData = new AsmData(table);
+        AsmData asmData = new AsmData(table);
         asmData.findAnnotatedObjects(FTBLibAPI.class, FTBLibAddon.class, (obj, field, data) -> field.set(null, this));
         asmData.findAnnotatedMethods(FTBLibAddon.class, (method, params, data) -> method.invoke(null));
         FTBLibRegistries.INSTANCE.init(asmData);
-    }
-
-    @Override
-    public boolean hasServer(@Nullable String id)
-    {
-        return (id == null || id.isEmpty()) ? hasServer : FTBLibRegistries.INSTANCE.OPTIONAL_SERVER_MODS_CLIENT.contains(id);
-    }
-
-    @Override
-    public boolean isClientPlayerOP()
-    {
-        return isClientPlayerOP;
     }
 
     @Override
@@ -83,35 +66,24 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public PackModes getPackModes()
     {
-        if(packModes == null)
+        if(PackModes.INSTANCE == null)
         {
-            reloadPackModes();
+            PackModes.reloadPackModes();
         }
 
-        return packModes;
+        return PackModes.INSTANCE;
     }
 
     @Override
-    public SharedData getSharedData(Side side)
+    public ISharedData getServerData()
     {
-        if(side.isServer())
-        {
-            if(sharedDataServer == null)
-            {
-                sharedDataServer = new SharedData(Side.SERVER);
-            }
+        return SharedData.SERVER;
+    }
 
-            return sharedDataServer;
-        }
-        else
-        {
-            if(sharedDataClient == null)
-            {
-                sharedDataClient = new SharedData(Side.CLIENT);
-            }
-
-            return sharedDataClient;
-        }
+    @Override
+    public ISharedData getClientData()
+    {
+        return SharedData.CLIENT;
     }
 
     @Override
@@ -138,13 +110,13 @@ public class FTBLibAPI_Impl implements FTBLibAPI
         if(type.reload(Side.SERVER))
         {
             FTBLibRegistries.INSTANCE.reloadConfig();
-            reloadPackModes();
+            PackModes.reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
         }
 
         if(LMServerUtils.hasOnlinePlayers())
         {
-            NBTTagCompound sharedDataTag = getSharedData(Side.SERVER).serializeNBT();
+            NBTTagCompound sharedDataTag = getServerData().serializeNBT();
 
             for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayerList())
             {
@@ -224,13 +196,6 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
     // Other Methods //
 
-    public static void reloadPackModes()
-    {
-        File file = LMFileUtils.newFile(new File(LMUtils.folderModpack, "packmodes.json"));
-        packModes = new PackModes(LMJsonUtils.fromJson(file));
-        LMJsonUtils.toJson(file, packModes.toJsonObject());
-    }
-
     public static void createAndLoadWorld()
     {
         try
@@ -242,7 +207,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
             if(worldData.isJsonObject())
             {
-                FTBLibIntegrationInternal.API.getSharedData(Side.SERVER).fromJson(worldData.getAsJsonObject());
+                FTBLibIntegrationInternal.API.getServerData().fromJson(worldData.getAsJsonObject());
             }
 
             Universe.INSTANCE.playerMap.clear();

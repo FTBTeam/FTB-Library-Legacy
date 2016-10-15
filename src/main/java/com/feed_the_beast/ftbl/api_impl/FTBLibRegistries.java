@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -86,8 +85,6 @@ public enum FTBLibRegistries
     public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     public final Collection<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
-    public final Collection<String> OPTIONAL_SERVER_MODS = new HashSet<>();
-    public final Collection<String> OPTIONAL_SERVER_MODS_CLIENT = new HashSet<>();
     private final Collection<IUniverseDataProvider> DATA_PROVIDER_UNIVERSE = new ArrayList<>();
     private final Collection<IPlayerDataProvider> DATA_PROVIDER_PLAYER = new ArrayList<>();
     private final Collection<ITeamDataProvider> DATA_PROVIDER_TEAM = new ArrayList<>();
@@ -181,7 +178,7 @@ public enum FTBLibRegistries
 
         CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getMap().keySet());
 
-        asmData.findAnnotatedObjects(String.class, OptionalServerModID.class, (obj, field, info) -> OPTIONAL_SERVER_MODS.add(obj));
+        asmData.findAnnotatedObjects(String.class, OptionalServerModID.class, (obj, field, info) -> SharedData.SERVER.getOptionalServerMods().add(obj));
         asmData.findRegistryObjects(INotification.class, false, (obj, field, id) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
         asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.register(obj.getID(), obj));
         asmData.findRegistryObjects(ISyncData.class, false, (obj, field, id) -> SYNCED_DATA.put(obj.getID(), obj));

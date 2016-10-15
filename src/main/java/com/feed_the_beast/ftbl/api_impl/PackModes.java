@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.IPackModes;
+import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -9,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +20,15 @@ import java.util.Map;
 
 public final class PackModes implements IPackModes
 {
+    public static PackModes INSTANCE;
+
+    public static void reloadPackModes()
+    {
+        File file = LMFileUtils.newFile(new File(LMUtils.folderModpack, "packmodes.json"));
+        INSTANCE = new PackModes(LMJsonUtils.fromJson(file));
+        LMJsonUtils.toJson(file, INSTANCE.toJsonObject());
+    }
+
     private final Map<String, IPackMode> modes;
     private final IPackMode defaultMode;
     private final Map<String, JsonElement> customData;

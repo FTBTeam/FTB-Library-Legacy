@@ -3,17 +3,20 @@ package com.feed_the_beast.ftbl.gui.friends;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-public class InfoFriendsGUI extends InfoPage
+public class InfoTeamsGUI extends InfoPage
 {
-    public InfoFriendsGUI()
+    public static final ITextComponent TITLE = new TextComponentString("TeamsGUI");
+
+    public InfoTeamsGUI()
     {
-        super("friends_gui");
-        setTitle(new TextComponentString("FriendsGUI"));
+        super("teams_gui");
+        setTitle(TITLE);
         theme = InfoPageTheme.DARK_NON_UNICODE;
 
         if(!ClientNotifications.Perm.MAP.isEmpty())

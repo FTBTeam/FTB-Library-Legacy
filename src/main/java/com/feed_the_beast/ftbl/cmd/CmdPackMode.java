@@ -3,6 +3,8 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
+import com.feed_the_beast.ftbl.api_impl.PackModes;
+import com.feed_the_beast.ftbl.api_impl.SharedData;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
@@ -11,7 +13,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nullable;
@@ -38,7 +39,7 @@ public class CmdPackMode extends CommandTreeBase
         {
             if(args.length == 1)
             {
-                return getListOfStringsMatchingLastWord(args, FTBLibIntegrationInternal.API.getPackModes().getModes());
+                return getListOfStringsMatchingLastWord(args, PackModes.INSTANCE.getModes());
             }
 
             return super.getTabCompletionOptions(server, sender, args, pos);
@@ -51,7 +52,7 @@ public class CmdPackMode extends CommandTreeBase
 
             ITextComponent c;
 
-            int i = FTBLibIntegrationInternal.API.getSharedData(Side.SERVER).setMode(args[0]);
+            int i = SharedData.SERVER.setMode(args[0]);
 
             if(i == 1)
             {
@@ -91,7 +92,7 @@ public class CmdPackMode extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(FTBLibIntegrationInternal.API.getSharedData(Side.SERVER).getPackMode().getID());
+            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedData.SERVER.getPackMode().getID());
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
@@ -114,7 +115,7 @@ public class CmdPackMode extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.MODE_LIST.textComponent(LMStringUtils.strip(FTBLibIntegrationInternal.API.getPackModes().getModes()));
+            ITextComponent c = FTBLibLang.MODE_LIST.textComponent(LMStringUtils.strip(PackModes.INSTANCE.getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }
