@@ -14,7 +14,6 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.github.johnrengelman.shadow'
 
 version = "1.10.2-" + version_mod
 group = "com.feed_the_beast.ftblib"
@@ -25,14 +24,15 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
 minecraft {
     version = "1.10.2-12.18.2.2099"
     runDir = "run"
     mappings = "snapshot_20160518"
-}
-
-shadowJar {
-    classifier = ''
 }
 
 repositories {
@@ -40,8 +40,7 @@ repositories {
 }
 
 dependencies {
-    deobfCompile 'com.github.LatvianModder:PermissionAPI:1.0.0'
-    shadow 'com.github.LatvianModder:PermissionAPI:1.0.0'
+    shade 'com.github.LatvianModder:PermissionAPI:1.0.0'
 }
 
 sourceSets {
@@ -53,6 +52,14 @@ sourceSets {
         }
         resources {
             srcDir 'src/main/resources'
+        }
+    }
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)) {
+            exclude 'META-INF', 'META-INF/**'
         }
     }
 }
@@ -70,9 +77,3 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-artifacts {
-    shadowJar;
-}
-
-build.dependsOn(shadowJar);
