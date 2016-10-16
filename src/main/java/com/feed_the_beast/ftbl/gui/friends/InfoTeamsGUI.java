@@ -23,6 +23,8 @@ public class InfoTeamsGUI extends InfoPage
         {
             addSub(new InfoNotificationsPage());
         }
+
+        println("Not yet implemented!");
         
         /*
 

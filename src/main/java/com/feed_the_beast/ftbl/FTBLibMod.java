@@ -45,8 +45,8 @@ public class FTBLibMod
     {
         LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
         new FTBLibAPI_Impl().init(event.getAsmData());
-
         LMUtils.init(event.getModConfigurationDirectory());
+        PackModes.INSTANCE.load();
         FTBLibNetHandler.init();
         ODItems.preInit();
         FTBLibStats.init();
@@ -57,7 +57,6 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
-        PackModes.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
 
         IRecipes recipes = new LMRecipes();
@@ -87,11 +86,11 @@ public class FTBLibMod
     public void onServerAboutToStart(FMLServerAboutToStartEvent event)
     {
         TickHandler.INSTANCE = new TickHandler();
-
-        PackModes.reloadPackModes();
         FTBLibRegistries.INSTANCE.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
-        FTBLibAPI_Impl.createAndLoadWorld();
+        Universe.INSTANCE = new Universe();
+        Universe.INSTANCE.init();
+        FTBLibRegistries.INSTANCE.worldLoaded();
         LMServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
     }
 

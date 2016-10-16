@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.SharedData;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
@@ -215,7 +214,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 
-        PackModes.reloadPackModes();
         MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, Minecraft.getMinecraft().thePlayer, ReloadType.LOGIN));
         FTBLibMod.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
     }

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
+import com.feed_the_beast.ftbl.api_impl.SharedData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
@@ -15,11 +16,14 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class FTBLibEventHandler
 {
@@ -41,14 +45,14 @@ public class FTBLibEventHandler
         }
     }
 
-    /* FIXME: Reimplement me
     @SubscribeEvent
-    @Optional.Method(modid = "forgeanalytics")
-    public void onAnalytics(AnalyticsEvent event)
+    @Optional.Method(modid = "mercurius")
+    public void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
     {
-        ForgeAnalyticsConstants.CustomProperties.put("FTB_PackMode", FTBLibIntegrationInternal.API.getSharedData(event.side).getPackMode().getID());
+        Map<String, Object> map = new HashMap<>();
+        map.put("FTB_PackMode", SharedData.SERVER.getPackMode().getID());
+        event.addEventData(FTBLibFinals.MOD_ID, map);
     }
-    */
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)

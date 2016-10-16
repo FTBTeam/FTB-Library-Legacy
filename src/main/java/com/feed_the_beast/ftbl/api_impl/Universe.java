@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -9,7 +10,11 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +25,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -39,10 +45,33 @@ public class Universe implements IUniverse
     private ForgePlayer currentPlayer;
     private ForgeTeam currentTeam;
 
-    void init()
+    public void init()
     {
         dataStorage = FTBLibRegistries.INSTANCE.createUniverseDataStorage(this);
         MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
+
+        try
+        {
+            JsonElement worldData = LMJsonUtils.fromJson(new File(LMUtils.folderWorld, "world_data.json"));
+
+            if(worldData.isJsonObject())
+            {
+                FTBLibIntegrationInternal.API.getServerData().fromJson(worldData.getAsJsonObject());
+            }
+
+            playerMap.clear();
+
+            NBTTagCompound nbt = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"));
+
+            if(nbt != null)
+            {
+                deserializeNBT(nbt);
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibAddon;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.IPackModes;
 import com.feed_the_beast.ftbl.api.ISharedData;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -16,10 +16,7 @@ import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
@@ -27,7 +24,6 @@ import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -39,7 +35,6 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
-import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,13 +59,8 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public PackModes getPackModes()
+    public IPackModes getPackModes()
     {
-        if(PackModes.INSTANCE == null)
-        {
-            PackModes.reloadPackModes();
-        }
-
         return PackModes.INSTANCE;
     }
 
@@ -110,7 +100,6 @@ public class FTBLibAPI_Impl implements FTBLibAPI
         if(type.reload(Side.SERVER))
         {
             FTBLibRegistries.INSTANCE.reloadConfig();
-            PackModes.reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
         }
 
@@ -192,38 +181,5 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     public void displayInfoGui(EntityPlayerMP player, IInfoPage page)
     {
         new MessageDisplayInfo(page).sendTo(player);
-    }
-
-    // Other Methods //
-
-    public static void createAndLoadWorld()
-    {
-        try
-        {
-            Universe.INSTANCE = new Universe();
-            Universe.INSTANCE.init();
-
-            JsonElement worldData = LMJsonUtils.fromJson(new File(LMUtils.folderWorld, "world_data.json"));
-
-            if(worldData.isJsonObject())
-            {
-                FTBLibIntegrationInternal.API.getServerData().fromJson(worldData.getAsJsonObject());
-            }
-
-            Universe.INSTANCE.playerMap.clear();
-
-            NBTTagCompound nbt = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"));
-
-            if(nbt != null)
-            {
-                Universe.INSTANCE.deserializeNBT(nbt);
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
-        FTBLibRegistries.INSTANCE.worldLoaded();
     }
 }

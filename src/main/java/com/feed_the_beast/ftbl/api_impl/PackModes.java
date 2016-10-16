@@ -18,23 +18,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class PackModes implements IPackModes
+public enum PackModes implements IPackModes
 {
-    public static PackModes INSTANCE;
+    INSTANCE;
 
-    public static void reloadPackModes()
+    private Map<String, IPackMode> modes;
+    private IPackMode defaultMode;
+    private Map<String, JsonElement> customData;
+
+    public void load()
     {
         File file = LMFileUtils.newFile(new File(LMUtils.folderModpack, "packmodes.json"));
-        INSTANCE = new PackModes(LMJsonUtils.fromJson(file));
-        LMJsonUtils.toJson(file, INSTANCE.toJsonObject());
-    }
+        JsonElement el = LMJsonUtils.fromJson(file);
 
-    private final Map<String, IPackMode> modes;
-    private final IPackMode defaultMode;
-    private final Map<String, JsonElement> customData;
-
-    public PackModes(JsonElement el)
-    {
         JsonObject o = isValid(el) ? el.getAsJsonObject() : createDefault();
 
         Map<String, IPackMode> modes0 = new HashMap<>();
@@ -69,27 +65,28 @@ public final class PackModes implements IPackModes
         }
 
         customData = Collections.unmodifiableMap(customData0);
+        LMJsonUtils.toJson(file, INSTANCE.toJsonObject());
     }
 
-    private static JsonObject createDefault()
+    private boolean isValid(JsonElement e)
+    {
+        if(!e.isJsonObject())
+        {
+            return false;
+        }
+
+        JsonObject o = e.getAsJsonObject();
+        return o.has("modes") && o.has("default");
+    }
+
+    private JsonObject createDefault()
     {
         JsonObject o = new JsonObject();
         JsonArray a = new JsonArray();
         a.add(new JsonPrimitive("default"));
         o.add("modes", a);
         o.add("default", new JsonPrimitive("default"));
-        o.add("common", new JsonPrimitive("common"));
         return o;
-    }
-
-    private static boolean isValid(JsonElement e)
-    {
-        if(e == null || !e.isJsonObject())
-        {
-            return false;
-        }
-        JsonObject o = e.getAsJsonObject();
-        return !(o == null || o.entrySet().isEmpty()) && o.has("modes") && o.has("default") && o.has("common");
     }
 
     public JsonObject toJsonObject()
@@ -156,6 +153,7 @@ public final class PackModes implements IPackModes
     @Override
     public JsonElement getCustomData(String id)
     {
-        return (!id.isEmpty() && customData.containsKey(id)) ? customData.get(id) : JsonNull.INSTANCE;
+        JsonElement e = customData.get(id);
+        return e == null ? JsonNull.INSTANCE : e;
     }
 }

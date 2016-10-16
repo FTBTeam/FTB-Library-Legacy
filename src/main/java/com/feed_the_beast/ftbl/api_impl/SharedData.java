@@ -33,7 +33,7 @@ public class SharedData implements ISharedData, IJsonSerializable
     private final Side side;
     private IPackMode currentMode;
     private UUID universeID;
-    private final Collection<String> optionalServerMods;
+    public final Collection<String> optionalServerMods;
 
     private SharedData(Side s)
     {

@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -101,7 +100,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         if(type.reload(Side.CLIENT))
         {
-            PackModes.reloadPackModes();
             MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, mc.thePlayer, type));
 
             if(type != ReloadType.LOGIN)
