@@ -10,9 +10,9 @@ public class ForgeTeamPlayerLeftEvent extends ForgeTeamEvent
 {
     private final IForgePlayer player;
 
-    public ForgeTeamPlayerLeftEvent(IForgeTeam t, IForgePlayer p)
+    public ForgeTeamPlayerLeftEvent(IForgeTeam team, IForgePlayer p)
     {
-        super(t);
+        super(team);
         player = p;
     }
 

@@ -4,6 +4,8 @@ import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
+import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
+import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;
@@ -34,6 +36,9 @@ public class SharedData implements ISharedData, IJsonSerializable
     private IPackMode currentMode;
     private UUID universeID;
     public final Collection<String> optionalServerMods;
+    private final StringIDRegistry configIDs;
+    public final ResourceLocationIDRegistry guiIDs;
+    public final StringIDRegistry notificationIDs;
 
     private SharedData(Side s)
     {
@@ -41,6 +46,9 @@ public class SharedData implements ISharedData, IJsonSerializable
         currentMode = null;
         universeID = null;
         optionalServerMods = new HashSet<>();
+        configIDs = new StringIDRegistry();
+        guiIDs = new ResourceLocationIDRegistry();
+        notificationIDs = new StringIDRegistry();
     }
 
     @Override
@@ -119,11 +127,6 @@ public class SharedData implements ISharedData, IJsonSerializable
         return 0;
     }
 
-    public Collection<String> getOptionalServerMods()
-    {
-        return optionalServerMods;
-    }
-
     @Override
     public boolean hasOptionalServerMod(@Nullable String id)
     {
@@ -145,6 +148,12 @@ public class SharedData implements ISharedData, IJsonSerializable
     public boolean useFTBPrefix()
     {
         return side == Side.CLIENT ? useFTBPrefix : FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean();
+    }
+
+    @Override
+    public StringIDRegistry getConfigIDs()
+    {
+        return configIDs;
     }
 
     @Override

@@ -135,14 +135,14 @@ public class PropertyTextComponentList extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeShort(value.size());
         getText().forEach(c -> LMNetUtils.writeTextComponent(data, c));
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         int s = data.readUnsignedShort();
         value.clear();

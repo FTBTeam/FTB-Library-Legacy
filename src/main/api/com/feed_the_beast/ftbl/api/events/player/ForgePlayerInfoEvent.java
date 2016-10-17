@@ -13,9 +13,9 @@ public class ForgePlayerInfoEvent extends ForgePlayerEvent
     private final List<ITextComponent> list;
     private final long currentTime;
 
-    public ForgePlayerInfoEvent(IForgePlayer p, List<ITextComponent> l, long t)
+    public ForgePlayerInfoEvent(IForgePlayer player, List<ITextComponent> l, long t)
     {
-        super(p);
+        super(player);
         list = l;
         currentTime = t;
     }

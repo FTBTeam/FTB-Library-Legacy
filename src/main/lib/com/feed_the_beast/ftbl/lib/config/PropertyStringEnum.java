@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,14 +27,14 @@ import java.util.List;
 public class PropertyStringEnum extends PropertyBase
 {
     @RegistryObject(PropertyEnumAbstract.ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringEnum(new ArrayList<>(), "");
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringEnum(Collections.emptyList(), "");
 
     private List<String> keys;
     private String value;
 
-    public PropertyStringEnum(List<String> k, String v)
+    public PropertyStringEnum(Collection<String> k, String v)
     {
-        keys = k;
+        keys = new ArrayList<>(k);
         value = v;
     }
 
@@ -76,7 +77,7 @@ public class PropertyStringEnum extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyStringEnum(new ArrayList<>(keys), getString());
+        return new PropertyStringEnum(keys, getString());
     }
 
     @Override
@@ -124,33 +125,27 @@ public class PropertyStringEnum extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
-        if(extended)
-        {
-            data.writeShort(keys.size());
+        data.writeShort(keys.size());
 
-            for(String s : keys)
-            {
-                LMNetUtils.writeString(data, s);
-            }
+        for(String s : keys)
+        {
+            LMNetUtils.writeString(data, s);
         }
 
         data.writeShort(getInt());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
-        if(extended)
-        {
-            keys.clear();
-            int s = data.readUnsignedShort();
+        keys.clear();
+        int s = data.readUnsignedShort();
 
-            while(--s >= 0)
-            {
-                keys.add(LMNetUtils.readString(data));
-            }
+        while(--s >= 0)
+        {
+            keys.add(LMNetUtils.readString(data));
         }
 
         setString(keys.get(data.readUnsignedShort()));

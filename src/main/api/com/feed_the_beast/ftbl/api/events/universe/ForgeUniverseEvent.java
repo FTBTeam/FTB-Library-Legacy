@@ -8,15 +8,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public abstract class ForgeUniverseEvent extends Event
 {
-    private final IUniverse world;
+    private final IUniverse universe;
 
-    public ForgeUniverseEvent(IUniverse w)
+    public ForgeUniverseEvent(IUniverse u)
     {
-        world = w;
+        universe = u;
     }
 
-    public IUniverse getWorld()
+    public IUniverse getUniverse()
     {
-        return world;
+        return universe;
     }
 }

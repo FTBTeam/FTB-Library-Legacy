@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.SharedData;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -28,7 +29,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
     {
-        guiID = FTBLibRegistries.INSTANCE.GUIS.getIDs().getIDFromKey(key);
+        guiID = SharedData.SERVER.guiIDs.getIDFromKey(key);
         data = tag;
         windowID = wid;
     }
@@ -59,7 +60,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m)
     {
-        ResourceLocation key = FTBLibRegistries.INSTANCE.GUIS.getIDs().getKeyFromID(m.guiID);
+        ResourceLocation key = SharedData.CLIENT.guiIDs.getKeyFromID(m.guiID);
 
         if(key != null)
         {

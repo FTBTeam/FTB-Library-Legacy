@@ -16,6 +16,8 @@ import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,13 +28,13 @@ public class PropertyEntityClassList extends PropertyBase
     public static final String ID = "entity_class_list";
 
     @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyEntityClassList(new ArrayList<>());
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyEntityClassList(Collections.emptyList());
 
     private List<Class<?>> list;
 
-    public PropertyEntityClassList(List<Class<?>> c)
+    public PropertyEntityClassList(Collection<Class<?>> c)
     {
-        list = c;
+        list = new ArrayList<>(c);
     }
 
     @Override
@@ -97,7 +99,7 @@ public class PropertyEntityClassList extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyEntityClassList(new ArrayList<>(getEntityList()));
+        return new PropertyEntityClassList(getEntityList());
     }
 
     @Override
@@ -175,7 +177,7 @@ public class PropertyEntityClassList extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         list = getEntityList();
         data.writeShort(list.size());
@@ -183,7 +185,7 @@ public class PropertyEntityClassList extends PropertyBase
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         list.clear();
 

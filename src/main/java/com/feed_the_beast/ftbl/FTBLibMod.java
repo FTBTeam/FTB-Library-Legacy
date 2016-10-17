@@ -24,16 +24,12 @@ import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
 public class FTBLibMod
 {
-    public static final Logger LOGGER = LogManager.getLogger("FTBLib");
-
     @Mod.Instance(FTBLibFinals.MOD_ID)
     public static FTBLibMod INST;
 
@@ -43,7 +39,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event)
     {
-        LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
+        FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
         new FTBLibAPI_Impl().init(event.getAsmData());
         LMUtils.init(event.getModConfigurationDirectory());
         PackModes.INSTANCE.load();

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
@@ -100,7 +100,7 @@ public abstract class CmdEditConfigBase extends CommandLM
         {
             String json = LMStringUtils.unsplitSpaceUntilEnd(1, args);
 
-            FTBLibMod.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
+            FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
 
             try
             {

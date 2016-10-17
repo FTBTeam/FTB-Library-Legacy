@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
  */
 public class ForgePlayerDeathEvent extends ForgePlayerEvent
 {
-    public ForgePlayerDeathEvent(IForgePlayer p)
+    public ForgePlayerDeathEvent(IForgePlayer player)
     {
-        super(p);
+        super(player);
     }
 }

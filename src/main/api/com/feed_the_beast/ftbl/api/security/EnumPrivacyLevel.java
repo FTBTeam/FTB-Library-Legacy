@@ -14,7 +14,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
     TEAM;
 
     public static final EnumPrivacyLevel[] VALUES = values();
-    public static final LangKey enumLangKey = new LangKey("ftbl.privacy");
+    public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.privacy");
     public static final EnumNameMap<EnumPrivacyLevel> NAME_MAP = new EnumNameMap<>(EnumPrivacyLevel.VALUES, false);
 
     private final String name;

@@ -113,7 +113,7 @@ public class PropertyIntList extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         TIntList list = getIntList();
 
@@ -131,7 +131,7 @@ public class PropertyIntList extends PropertyBase
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         int s = data.readShort() & 0xFFFF;
         value.clear();

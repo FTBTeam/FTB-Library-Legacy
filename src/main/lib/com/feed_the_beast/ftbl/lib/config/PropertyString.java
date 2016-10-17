@@ -117,13 +117,13 @@ public class PropertyString extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         LMNetUtils.writeString(data, getString());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setString(LMNetUtils.readString(data));
     }

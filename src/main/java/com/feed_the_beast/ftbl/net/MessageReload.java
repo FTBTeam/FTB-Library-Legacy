@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
@@ -107,7 +107,7 @@ public class MessageReload extends MessageToClient<MessageReload>
                 FTBLibLang.RELOAD_CLIENT.printChat(mc.thePlayer, (System.currentTimeMillis() - ms) + "ms");
             }
 
-            FTBLibMod.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
+            FTBLibFinals.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
         }
     }
 }

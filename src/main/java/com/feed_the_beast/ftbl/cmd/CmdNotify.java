@@ -32,7 +32,7 @@ public class CmdNotify extends CommandLM
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibRegistries.INSTANCE.NOTIFICATIONS.getMap().keySet());
+            return getListOfStringsMatchingLastWord(args, FTBLibRegistries.INSTANCE.NOTIFICATIONS.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);

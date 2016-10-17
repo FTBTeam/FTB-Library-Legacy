@@ -20,17 +20,17 @@ import java.util.Set;
  */
 public class JsonElementIO
 {
-    public static final byte NULL = 0;
-    public static final byte ARRAY = 1;
-    public static final byte OBJECT = 2;
-    public static final byte STRING = 3;
-    public static final byte BOOL = 4;
-    public static final byte BYTE = 5;
-    public static final byte SHORT = 6;
-    public static final byte INT = 7;
-    public static final byte LONG = 8;
-    public static final byte FLOAT = 9;
-    public static final byte DOUBLE = 10;
+    private static final byte NULL = 0;
+    private static final byte ARRAY = 1;
+    private static final byte OBJECT = 2;
+    private static final byte STRING = 3;
+    private static final byte BOOL = 4;
+    private static final byte BYTE = 5;
+    private static final byte SHORT = 6;
+    private static final byte INT = 7;
+    private static final byte LONG = 8;
+    private static final byte FLOAT = 9;
+    private static final byte DOUBLE = 10;
 
     public static byte getID(@Nullable JsonElement e)
     {

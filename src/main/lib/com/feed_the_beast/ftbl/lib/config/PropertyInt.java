@@ -183,26 +183,18 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeInt(getInt());
-
-        if(extended)
-        {
-            data.writeInt(getMin());
-            data.writeInt(getMax());
-        }
+        data.writeInt(getMin());
+        data.writeInt(getMax());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setInt(data.readInt());
-
-        if(extended)
-        {
-            setMin(data.readInt());
-            setMax(data.readInt());
-        }
+        setMin(data.readInt());
+        setMax(data.readInt());
     }
 }

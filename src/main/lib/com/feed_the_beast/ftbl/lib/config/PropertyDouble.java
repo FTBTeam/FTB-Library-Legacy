@@ -189,26 +189,18 @@ public class PropertyDouble extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeDouble(getDouble());
-
-        if(extended)
-        {
-            data.writeDouble(getMin());
-            data.writeDouble(getMax());
-        }
+        data.writeDouble(getMin());
+        data.writeDouble(getMax());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setDouble(data.readDouble());
-
-        if(extended)
-        {
-            setMin(data.readDouble());
-            setMax(data.readDouble());
-        }
+        setMin(data.readDouble());
+        setMax(data.readDouble());
     }
 }

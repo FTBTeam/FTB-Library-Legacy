@@ -5,10 +5,8 @@ import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.PlayerControllerMP;
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -40,21 +38,6 @@ public class FTBLibModClient extends FTBLibModCommon
     public EntityPlayer getClientPlayer()
     {
         return FMLClientHandler.instance().getClientPlayerEntity();
-    }
-
-    @Override
-    public double getReachDist(@Nullable EntityPlayer ep)
-    {
-        if(ep == null)
-        {
-            return 0D;
-        }
-        else if(ep instanceof EntityPlayerMP)
-        {
-            return super.getReachDist(ep);
-        }
-        PlayerControllerMP c = Minecraft.getMinecraft().playerController;
-        return (c == null) ? 0D : c.getBlockReachDistance();
     }
 
     @Override

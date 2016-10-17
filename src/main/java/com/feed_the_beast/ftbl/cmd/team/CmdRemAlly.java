@@ -7,12 +7,12 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -66,7 +66,7 @@ public class CmdRemAlly extends CommandLM
 
         if(team.removeAllyTeam(team1.getName()))
         {
-            LMServerUtils.printChat(ep, "Removed ally team: " + team1.getName());
+            ep.addChatMessage(new TextComponentString("Removed ally team: " + team1.getName()));
         }
     }
 }

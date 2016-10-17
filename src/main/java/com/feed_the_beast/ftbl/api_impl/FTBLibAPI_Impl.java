@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.api.ISharedData;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
@@ -74,6 +75,12 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     public ISharedData getClientData()
     {
         return SharedData.CLIENT;
+    }
+
+    @Override
+    public Map<String, IConfigValueProvider> getConfigValueProviders()
+    {
+        return FTBLibRegistries.INSTANCE.CONFIG_VALUES;
     }
 
     @Override
@@ -159,7 +166,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void sendNotification(@Nullable EntityPlayerMP player, INotification n)
     {
-        short id = FTBLibRegistries.INSTANCE.NOTIFICATIONS.getIDs().getIDFromKey(n.getID() + "@" + n.getVariant());
+        short id = SharedData.SERVER.notificationIDs.getIDFromKey(n.getID() + "@" + n.getVariant());
 
         if(id != 0)
         {

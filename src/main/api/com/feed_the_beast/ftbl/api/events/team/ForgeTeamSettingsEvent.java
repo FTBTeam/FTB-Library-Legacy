@@ -10,10 +10,10 @@ public class ForgeTeamSettingsEvent extends ForgeTeamEvent
 {
     private final IConfigTree settings;
 
-    public ForgeTeamSettingsEvent(IForgeTeam p, IConfigTree g)
+    public ForgeTeamSettingsEvent(IForgeTeam team, IConfigTree tree)
     {
-        super(p);
-        settings = g;
+        super(team);
+        settings = tree;
     }
 
     public IConfigTree getSettings()

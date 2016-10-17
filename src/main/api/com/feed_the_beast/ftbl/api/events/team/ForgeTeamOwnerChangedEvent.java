@@ -11,9 +11,9 @@ public class ForgeTeamOwnerChangedEvent extends ForgeTeamEvent
     private final IForgePlayer oldOwner;
     private final IForgePlayer newOwner;
 
-    public ForgeTeamOwnerChangedEvent(IForgeTeam t, IForgePlayer o0, IForgePlayer o1)
+    public ForgeTeamOwnerChangedEvent(IForgeTeam team, IForgePlayer o0, IForgePlayer o1)
     {
-        super(t);
+        super(team);
         oldOwner = o0;
         newOwner = o1;
     }

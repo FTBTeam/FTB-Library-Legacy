@@ -9,9 +9,9 @@ public class ForgePlayerLoggedInEvent extends ForgePlayerEvent
 {
     private final boolean first;
 
-    public ForgePlayerLoggedInEvent(IForgePlayer p, boolean f)
+    public ForgePlayerLoggedInEvent(IForgePlayer player, boolean f)
     {
-        super(p);
+        super(player);
         first = f;
     }
 

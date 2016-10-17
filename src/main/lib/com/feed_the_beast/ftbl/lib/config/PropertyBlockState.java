@@ -112,13 +112,13 @@ public class PropertyBlockState extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeShort(getInt());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setBlockState(Block.getStateById(data.readUnsignedShort()));
     }

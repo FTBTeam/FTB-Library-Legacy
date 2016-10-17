@@ -64,7 +64,7 @@ public class PropertyStringList extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         Collection<String> list = getStringList();
         data.writeShort(list.size());
@@ -72,7 +72,7 @@ public class PropertyStringList extends PropertyBase
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         int s = data.readUnsignedShort();
 

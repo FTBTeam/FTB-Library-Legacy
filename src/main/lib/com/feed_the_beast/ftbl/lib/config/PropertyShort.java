@@ -189,26 +189,18 @@ public class PropertyShort extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeShort(getShort());
-
-        if(extended)
-        {
-            data.writeShort(getMin());
-            data.writeShort(getMax());
-        }
+        data.writeShort(getMin());
+        data.writeShort(getMax());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setShort(data.readShort());
-
-        if(extended)
-        {
-            setMin(data.readShort());
-            setMax(data.readShort());
-        }
+        setMin(data.readShort());
+        setMax(data.readShort());
     }
 }

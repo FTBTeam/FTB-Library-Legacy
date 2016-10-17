@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
@@ -25,4 +26,6 @@ public interface ISharedData extends INBTSerializable<NBTTagCompound>, IJsonSeri
     boolean isOP(@Nullable GameProfile profile);
 
     boolean useFTBPrefix();
+
+    StringIDRegistry getConfigIDs();
 }

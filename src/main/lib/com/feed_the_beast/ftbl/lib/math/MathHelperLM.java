@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.math;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -212,30 +212,27 @@ public class MathHelperLM
     }
 
     @Nullable
-    public static RayTraceResult rayTrace(@Nullable EntityPlayer ep, double d)
+    public static RayTraceResult rayTrace(EntityPlayer playerIn, boolean useLiquids, double dist)
     {
-        if(ep == null)
-        {
-            return null;
-        }
-
-        Vec3d pos = getEyePosition(ep);
-        Vec3d look = ep.getLookVec();
-        Vec3d vec = pos.addVector(look.xCoord * d, look.yCoord * d, look.zCoord * d);
-        RayTraceResult mop = ep.worldObj.rayTraceBlocks(pos, vec, false, true, false);
-
-        if(mop != null && mop.hitVec == null)
-        {
-            mop.hitVec = new Vec3d(0D, 0D, 0D);
-        }
-
-        return mop;
+        Vec3d vec3d = new Vec3d(playerIn.posX, playerIn.posY + playerIn.getEyeHeight(), playerIn.posZ);
+        float f2 = MathHelper.cos(-playerIn.rotationYaw * RAD_F - PI_F);
+        float f3 = MathHelper.sin(-playerIn.rotationYaw * RAD_F - PI_F);
+        float f4 = -MathHelper.cos(-playerIn.rotationPitch * RAD_F);
+        Vec3d vec3d1 = vec3d.addVector(f3 * f4 * dist, MathHelper.sin(-playerIn.rotationPitch * RAD_F) * dist, f2 * f4 * dist);
+        return playerIn.worldObj.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
     }
 
     @Nullable
-    public static RayTraceResult rayTrace(@Nullable EntityPlayer ep)
+    public static RayTraceResult rayTrace(EntityPlayer playerIn, boolean useLiquids)
     {
-        return rayTrace(ep, FTBLibMod.PROXY.getReachDist(ep));
+        double dist = 5D;
+
+        if(playerIn instanceof EntityPlayerMP)
+        {
+            dist = ((EntityPlayerMP) playerIn).interactionManager.getBlockReachDistance();
+        }
+
+        return rayTrace(playerIn, useLiquids, dist);
     }
 
     @Nullable

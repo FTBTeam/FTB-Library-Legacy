@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.api.IUniverse;
  */
 public class ForgeUniversePostLoadedEvent extends ForgeUniverseEvent
 {
-    public ForgeUniversePostLoadedEvent(IUniverse w)
+    public ForgeUniversePostLoadedEvent(IUniverse universe)
     {
-        super(w);
+        super(universe);
     }
 }

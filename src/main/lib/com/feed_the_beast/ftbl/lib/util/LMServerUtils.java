@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
@@ -192,25 +191,6 @@ public class LMServerUtils
     public static ITextComponent getChatComponent(Object o)
     {
         return (o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString(String.valueOf(o));
-    }
-
-    /**
-     * Prints message to chat (doesn't translate it)
-     */
-    public static void printChat(@Nullable ICommandSender ep, Object o)
-    {
-        if(ep == null)
-        {
-            ep = FTBLibMod.PROXY.getClientPlayer();
-        }
-        if(ep != null)
-        {
-            ep.addChatMessage(getChatComponent(o));
-        }
-        else
-        {
-            FTBLibMod.LOGGER.info(o);
-        }
     }
 
     public static MinecraftServer getServer()

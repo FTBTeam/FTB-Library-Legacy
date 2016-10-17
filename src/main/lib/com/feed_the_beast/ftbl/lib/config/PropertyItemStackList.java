@@ -180,7 +180,7 @@ public class PropertyItemStackList extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         value = getItems();
         data.writeShort(value.size());
@@ -188,7 +188,7 @@ public class PropertyItemStackList extends PropertyBase
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         value.clear();
         int s = data.readUnsignedShort();

@@ -17,8 +17,6 @@ import java.util.List;
 
 public class LMFileUtils
 {
-    public static final File LATMOD_HOME_FOLDER = new File(System.getProperty("user.home"), "/LatMod/");
-
     public static final int KB = 1024;
     public static final int MB = KB * 1024;
     public static final int GB = MB * 1024;

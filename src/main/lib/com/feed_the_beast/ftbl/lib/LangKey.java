@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Created by LatvianModder on 17.04.2016.
  */
-public final class LangKey
+public final class LangKey implements ILangKeyContainer
 {
     private final String key;
 
@@ -39,5 +39,11 @@ public final class LangKey
     public CommandException commandError(Object... o)
     {
         return new CommandException(key, o);
+    }
+
+    @Override
+    public LangKey getLangKey()
+    {
+        return this;
     }
 }

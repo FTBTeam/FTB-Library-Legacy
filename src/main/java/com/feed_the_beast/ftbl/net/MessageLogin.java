@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibConfig;
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
@@ -51,8 +51,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         flags = 0;
         flags = Bits.setFlag(flags, IS_OP, SharedData.SERVER.isOP(player.getGameProfile()));
         flags = Bits.setFlag(flags, USE_FTB_PREFIX, FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean());
-        configIDs = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().serialize();
-        guiIDs = FTBLibRegistries.INSTANCE.GUIS.getIDs().serialize();
+        configIDs = SharedData.SERVER.getConfigIDs().serialize();
+        guiIDs = SharedData.SERVER.guiIDs.serialize();
         notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
         sharedDataTag = SharedData.SERVER.serializeNBT();
         syncData = new HashMap<>();
@@ -62,7 +62,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             syncData.put(data.getID().toString(), data.writeSyncData(player, forgePlayer));
         }
 
-        optionalServerMods = SharedData.SERVER.getOptionalServerMods();
+        optionalServerMods = SharedData.SERVER.optionalServerMods;
         flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
     }
 
@@ -195,9 +195,9 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         SharedData.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
         SharedData.useFTBPrefix = Bits.getFlag(m.flags, USE_FTB_PREFIX);
         SharedData.clientGameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
-        FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().deserialize(m.configIDs);
-        SharedData.CLIENT.getOptionalServerMods().addAll(m.optionalServerMods);
-        FTBLibRegistries.INSTANCE.GUIS.getIDs().deserialize(m.guiIDs);
+        SharedData.CLIENT.getConfigIDs().deserialize(m.configIDs);
+        SharedData.CLIENT.optionalServerMods.addAll(m.optionalServerMods);
+        SharedData.CLIENT.guiIDs.deserialize(m.guiIDs);
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
         FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);
         FTBLibIntegrationInternal.API.getClientData().deserializeNBT(m.sharedDataTag);
@@ -215,6 +215,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 
         MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, Minecraft.getMinecraft().thePlayer, ReloadType.LOGIN));
-        FTBLibMod.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
+        FTBLibFinals.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
     }
 }

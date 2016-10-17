@@ -29,9 +29,6 @@ import com.feed_the_beast.ftbl.lib.ResourceLocationComparator;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
-import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
-import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
-import com.feed_the_beast.ftbl.lib.reg.SyncedRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -75,14 +72,14 @@ public enum FTBLibRegistries
         return i;
     };
 
-    public final SyncedRegistry<String, IConfigValueProvider> CONFIG_VALUES = new SyncedRegistry<>(new StringIDRegistry(), false);
+    public final Map<String, IConfigValueProvider> CONFIG_VALUES = new HashMap<>();
     public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
     public IConfigFile CLIENT_CONFIG;
     public final Map<ResourceLocation, ISyncData> SYNCED_DATA = new HashMap<>();
-    public final SyncedRegistry<ResourceLocation, IGuiHandler> GUIS = new SyncedRegistry<>(new ResourceLocationIDRegistry(), true);
+    public final Map<ResourceLocation, IGuiHandler> GUIS = new HashMap<>();
     public final Map<ResourceLocation, ISidebarButton> SIDEBAR_BUTTONS = new HashMap<>();
-    public final SyncedRegistry<String, INotification> NOTIFICATIONS = new SyncedRegistry<>(new StringIDRegistry(), true);
+    public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     public final Collection<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
     private final Collection<IUniverseDataProvider> DATA_PROVIDER_UNIVERSE = new ArrayList<>();
@@ -91,7 +88,7 @@ public enum FTBLibRegistries
 
     public void init(AsmData asmData)
     {
-        asmData.findRegistryObjects(IConfigValueProvider.class, true, (obj, field, id) -> CONFIG_VALUES.register(id.toLowerCase(Locale.ENGLISH), obj));
+        asmData.findRegistryObjects(IConfigValueProvider.class, true, (obj, field, id) -> CONFIG_VALUES.put(id.toLowerCase(Locale.ENGLISH), obj));
 
         asmData.findRegistryObjects(IConfigFileProvider.class, true, (obj, field, id) ->
         {
@@ -146,7 +143,7 @@ public enum FTBLibRegistries
                     flags |= IConfigKey.TRANSLATE_DISPLAY_NAME;
                 }
 
-                ConfigKey key = new ConfigKey(client ? (file + "." + id) : id, obj.copy(), displayName, false);
+                ConfigKey key = new ConfigKey(client ? (file + '.' + id) : id, obj.copy(), displayName, false);
                 key.setFlags(flags);
 
                 List<String> keyInfo = info.getStringList("info");
@@ -176,11 +173,11 @@ public enum FTBLibRegistries
             }
         });
 
-        CONFIG_VALUES.getIDs().generateIDs(CONFIG_VALUES.getMap().keySet());
+        SharedData.SERVER.getConfigIDs().generateIDs(CONFIG_VALUES.keySet());
 
-        asmData.findAnnotatedObjects(String.class, OptionalServerModID.class, (obj, field, info) -> SharedData.SERVER.getOptionalServerMods().add(obj));
-        asmData.findRegistryObjects(INotification.class, false, (obj, field, id) -> NOTIFICATIONS.register(obj.getID() + "@" + obj.getVariant(), obj));
-        asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.register(obj.getID(), obj));
+        asmData.findAnnotatedObjects(String.class, OptionalServerModID.class, (obj, field, info) -> SharedData.SERVER.optionalServerMods.add(obj));
+        asmData.findRegistryObjects(INotification.class, false, (obj, field, id) -> NOTIFICATIONS.put(obj.getID() + "@" + obj.getVariant(), obj));
+        asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.put(obj.getID(), obj));
         asmData.findRegistryObjects(ISyncData.class, false, (obj, field, id) -> SYNCED_DATA.put(obj.getID(), obj));
         asmData.findRegistryObjects(ISidebarButton.class, false, (obj, field, id) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
         asmData.findRegistryObjects(IRecipeHandler.class, false, (obj, field, id) -> RECIPE_HANDLERS.add(obj));
@@ -189,7 +186,7 @@ public enum FTBLibRegistries
         asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));
         asmData.findRegistryObjects(ITeamDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_TEAM.add(obj));
 
-        GUIS.getIDs().generateIDs(GUIS.getMap().keySet());
+        SharedData.SERVER.guiIDs.generateIDs(GUIS.keySet());
 
         for(ISidebarButton button : SIDEBAR_BUTTONS.values())
         {
@@ -201,7 +198,7 @@ public enum FTBLibRegistries
             }
         }
 
-        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.getMap().size() + " IConfigValueProviders: " + CONFIG_VALUES.getMap().keySet());
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
     }
@@ -284,9 +281,9 @@ public enum FTBLibRegistries
 
     public void worldLoaded()
     {
-        NOTIFICATIONS.getIDs().generateIDs(NOTIFICATIONS.getMap().keySet());
+        SharedData.SERVER.notificationIDs.generateIDs(NOTIFICATIONS.keySet());
         CACHED_NOTIFICATIONS.clear();
-        NOTIFICATIONS.getMap().forEach((key, value) -> CACHED_NOTIFICATIONS.put(NOTIFICATIONS.getIDs().getIDFromKey(key), Notification.copy(value)));
+        NOTIFICATIONS.forEach((key, value) -> CACHED_NOTIFICATIONS.put(SharedData.SERVER.notificationIDs.getIDFromKey(key), Notification.copy(value)));
     }
 
     @Nullable

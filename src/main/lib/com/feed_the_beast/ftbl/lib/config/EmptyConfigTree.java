@@ -20,12 +20,12 @@ public enum EmptyConfigTree implements IConfigTree
     INSTANCE;
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
     }
 

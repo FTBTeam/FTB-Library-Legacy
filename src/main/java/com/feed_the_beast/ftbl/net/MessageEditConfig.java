@@ -53,7 +53,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         extraNBT = LMNetUtils.readTag(io);
         title = LMNetUtils.readTextComponent(io);
         group = new ConfigTree();
-        group.readData(io, true);
+        group.readFromServer(io);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         LMNetUtils.writeTag(io, extraNBT);
         LMNetUtils.writeTextComponent(io, title);
-        group.writeData(io, true);
+        group.writeToServer(io);
     }
 
     @Override

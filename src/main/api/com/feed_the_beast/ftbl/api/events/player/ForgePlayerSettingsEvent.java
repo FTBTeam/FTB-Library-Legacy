@@ -10,10 +10,10 @@ public class ForgePlayerSettingsEvent extends ForgePlayerEvent
 {
     private final IConfigTree settings;
 
-    public ForgePlayerSettingsEvent(IForgePlayer p, IConfigTree g)
+    public ForgePlayerSettingsEvent(IForgePlayer player, IConfigTree tree)
     {
-        super(p);
-        settings = g;
+        super(player);
+        settings = tree;
     }
 
     public IConfigTree getSettings()

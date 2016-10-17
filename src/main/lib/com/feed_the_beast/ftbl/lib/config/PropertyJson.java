@@ -54,13 +54,13 @@ public class PropertyJson extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         LMNetUtils.writeJsonElement(data, getJsonElement());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setJsonElement(LMNetUtils.readJsonElement(data));
     }

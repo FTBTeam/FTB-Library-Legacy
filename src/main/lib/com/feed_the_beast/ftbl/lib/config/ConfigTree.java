@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
@@ -58,21 +58,10 @@ public class ConfigTree implements IConfigTree
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         Map<IConfigKey, IConfigValue> map = getTree();
         data.writeShort(map.size());
-
-        if(!extended)
-        {
-            map.forEach((key, value) ->
-            {
-                LMNetUtils.writeString(data, key.getName());
-                value.writeData(data, false);
-            });
-
-            return;
-        }
 
         map.forEach((key, value) ->
         {
@@ -80,8 +69,8 @@ public class ConfigTree implements IConfigTree
             data.writeByte(key.getFlags());
 
             IConfigValue defValue = key.getDefValue();
-            data.writeShort(FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(defValue.getID()));
-            defValue.writeData(data, true);
+            data.writeShort(FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getIDFromKey(defValue.getID()));
+            defValue.writeToServer(data);
 
             byte extraFlags = 0;
 
@@ -111,28 +100,16 @@ public class ConfigTree implements IConfigTree
                 LMNetUtils.writeString(data, info);
             }
 
-            data.writeShort(FTBLibRegistries.INSTANCE.CONFIG_VALUES.getIDs().getIDFromKey(value.getID()));
-            value.writeData(data, true);
+            data.writeShort(FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getIDFromKey(value.getID()));
+            value.writeToServer(data);
         });
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         Map<IConfigKey, IConfigValue> map = getTree();
         int s = data.readUnsignedShort();
-
-        if(!extended)
-        {
-            while(--s >= 0)
-            {
-                String id = LMNetUtils.readString(data);
-                map.get(new SimpleConfigKey(id)).readData(data, false);
-            }
-
-            return;
-        }
-
         map.clear();
 
         while(--s >= 0)
@@ -140,8 +117,9 @@ public class ConfigTree implements IConfigTree
             String id = LMNetUtils.readString(data);
             byte flags = data.readByte();
 
-            IConfigValue value = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
-            value.readData(data, true);
+            String sid = FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getKeyFromID(data.readShort());
+            IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueProviders().get(sid).createConfigValue();
+            value.readFromServer(data);
 
             ConfigKey key = new ConfigKey(id, value);
             key.setFlags(flags);
@@ -158,8 +136,9 @@ public class ConfigTree implements IConfigTree
                 key.setInfo(LMNetUtils.readString(data));
             }
 
-            value = FTBLibRegistries.INSTANCE.CONFIG_VALUES.getFromIntID(data.readShort()).createConfigValue();
-            value.readData(data, true);
+            sid = FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getKeyFromID(data.readShort());
+            value = FTBLibIntegrationInternal.API.getConfigValueProviders().get(sid).createConfigValue();
+            value.readFromServer(data);
             map.put(key, value);
         }
     }

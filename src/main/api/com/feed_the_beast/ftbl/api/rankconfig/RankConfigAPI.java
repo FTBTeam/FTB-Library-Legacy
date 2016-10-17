@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.api.rankconfig;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
@@ -21,7 +21,7 @@ public class RankConfigAPI
 
     public static void setHandler(IRankConfigHandler handler)
     {
-        FTBLibMod.LOGGER.warn("Replacing " + rankConfigHandler.getClass().getName() + " with " + handler.getClass().getName());
+        FTBLibFinals.LOGGER.warn("Replacing " + rankConfigHandler.getClass().getName() + " with " + handler.getClass().getName());
         rankConfigHandler = handler;
     }
 

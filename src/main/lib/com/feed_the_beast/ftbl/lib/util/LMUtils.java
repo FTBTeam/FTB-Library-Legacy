@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
@@ -63,7 +63,7 @@ public class LMUtils
         }
         else
         {
-            FTBLibMod.LOGGER.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + DEV_LOGGER.getClass().getName());
+            FTBLibFinals.LOGGER.info("DevLogger isn't org.apache.logging.log4j.core.Logger! It's " + DEV_LOGGER.getClass().getName());
         }
     }
 

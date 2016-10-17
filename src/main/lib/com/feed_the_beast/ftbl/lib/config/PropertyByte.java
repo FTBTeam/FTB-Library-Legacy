@@ -189,26 +189,18 @@ public class PropertyByte extends PropertyBase
     }
 
     @Override
-    public void writeData(ByteBuf data, boolean extended)
+    public void writeToServer(ByteBuf data)
     {
         data.writeByte(getByte());
-
-        if(extended)
-        {
-            data.writeByte(getMin());
-            data.writeByte(getMax());
-        }
+        data.writeByte(getMin());
+        data.writeByte(getMax());
     }
 
     @Override
-    public void readData(ByteBuf data, boolean extended)
+    public void readFromServer(ByteBuf data)
     {
         setByte(data.readByte());
-
-        if(extended)
-        {
-            setMin(data.readByte());
-            setMax(data.readByte());
-        }
+        setMin(data.readByte());
+        setMax(data.readByte());
     }
 }
