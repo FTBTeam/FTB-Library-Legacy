@@ -41,7 +41,7 @@ repositories {
 
 dependencies {
     shade 'com.github.LatvianModder:PermissionAPI:1.0.0'
-    compile 'com.github.MinecraftForge:Mercurius:1.0.1'
+    compile 'com.github.MinecraftForge:Mercurius:release-1.0.1'
 }
 
 sourceSets {
