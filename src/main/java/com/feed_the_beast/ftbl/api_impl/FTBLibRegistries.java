@@ -20,7 +20,6 @@ import com.feed_the_beast.ftbl.api.events.universe.IUniverseDataProvider;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
-import com.feed_the_beast.ftbl.api.recipes.IRecipeHandler;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
 import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
@@ -81,7 +80,6 @@ public enum FTBLibRegistries
     public final Map<ResourceLocation, ISidebarButton> SIDEBAR_BUTTONS = new HashMap<>();
     public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
-    public final Collection<IRecipeHandler> RECIPE_HANDLERS = new ArrayList<>();
     private final Collection<IUniverseDataProvider> DATA_PROVIDER_UNIVERSE = new ArrayList<>();
     private final Collection<IPlayerDataProvider> DATA_PROVIDER_PLAYER = new ArrayList<>();
     private final Collection<ITeamDataProvider> DATA_PROVIDER_TEAM = new ArrayList<>();
@@ -180,7 +178,6 @@ public enum FTBLibRegistries
         asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.put(obj.getID(), obj));
         asmData.findRegistryObjects(ISyncData.class, false, (obj, field, id) -> SYNCED_DATA.put(obj.getID(), obj));
         asmData.findRegistryObjects(ISidebarButton.class, false, (obj, field, id) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
-        asmData.findRegistryObjects(IRecipeHandler.class, false, (obj, field, id) -> RECIPE_HANDLERS.add(obj));
         asmData.findRegistryObjects(IInfoTextLineProvider.class, true, (obj, field, id) -> InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(Locale.ENGLISH), obj));
         asmData.findRegistryObjects(IUniverseDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_UNIVERSE.add(obj));
         asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));

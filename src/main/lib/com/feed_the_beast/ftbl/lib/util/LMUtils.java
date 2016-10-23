@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
@@ -78,11 +77,6 @@ public class LMUtils
             ib.setRegistryName(id);
             GameRegistry.register(ib);
         }
-    }
-
-    public static void addTile(Class<? extends TileEntity> c, ResourceLocation id)
-    {
-        GameRegistry.registerTileEntity(c, id.toString().replace(':', '.'));
     }
 
     public static <E> List<E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj) throws IllegalAccessException

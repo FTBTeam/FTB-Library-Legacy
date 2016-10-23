@@ -112,8 +112,6 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
         if(LMServerUtils.hasOnlinePlayers())
         {
-            NBTTagCompound sharedDataTag = getServerData().serializeNBT();
-
             for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayerList())
             {
                 Map<String, NBTTagCompound> syncData = new HashMap<>();
@@ -123,7 +121,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
                     syncData.put(data.getID().toString(), data.writeSyncData(ep, Universe.INSTANCE.getPlayer(ep)));
                 }
 
-                new MessageReload(type, sharedDataTag, syncData).sendTo(ep);
+                new MessageReload(type, syncData).sendTo(ep);
             }
         }
 

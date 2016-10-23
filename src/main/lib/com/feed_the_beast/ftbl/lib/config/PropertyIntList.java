@@ -21,18 +21,19 @@ public class PropertyIntList extends PropertyBase
     public static final String ID = "int_list";
 
     @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = PropertyIntList::new;
+    public static final IConfigValueProvider PROVIDER = () -> new PropertyIntList(new TIntArrayList(0));
 
     private TIntList value;
 
     public PropertyIntList(TIntList v)
     {
-        value = v;
+        value = new TIntArrayList(v);
     }
 
     public PropertyIntList(int... ai)
     {
-        this(TIntArrayList.wrap(ai));
+        value = new TIntArrayList(ai.length);
+        value.addAll(ai);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class PropertyIntList extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyIntList(new TIntArrayList(getIntList()));
+        return new PropertyIntList(getIntList());
     }
 
     @Override
@@ -133,7 +134,7 @@ public class PropertyIntList extends PropertyBase
     @Override
     public void readFromServer(ByteBuf data)
     {
-        int s = data.readShort() & 0xFFFF;
+        int s = data.readUnsignedShort();
         value.clear();
 
         for(int i = 0; i < s; i++)

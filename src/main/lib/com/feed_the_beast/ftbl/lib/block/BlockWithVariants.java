@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.block;
 
 import com.feed_the_beast.ftbl.api.block.IBlockVariant;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
@@ -21,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -175,7 +175,7 @@ public abstract class BlockWithVariants<T extends Enum<T> & IBlockVariant> exten
         {
             if(e.getTileEntityClass() != null)
             {
-                LMUtils.addTile(e.getTileEntityClass(), new ResourceLocation(getRegistryName().getResourceDomain(), e.getName()));
+                GameRegistry.registerTileEntity(e.getTileEntityClass(), getRegistryName().getResourceDomain() + '.' + e.getName());
             }
         }
     }

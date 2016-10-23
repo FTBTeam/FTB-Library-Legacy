@@ -2,9 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IJsonSerializable;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
@@ -13,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public interface ISharedData extends INBTSerializable<NBTTagCompound>, IJsonSerializable
+public interface ISharedData
 {
     Side getSide();
 

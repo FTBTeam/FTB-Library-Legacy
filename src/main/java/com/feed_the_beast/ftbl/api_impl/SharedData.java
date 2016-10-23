@@ -12,7 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -33,8 +32,8 @@ public class SharedData implements ISharedData, IJsonSerializable
     public static GameProfile clientGameProfile;
 
     private final Side side;
-    private IPackMode currentMode;
-    private UUID universeID;
+    public IPackMode currentMode;
+    public UUID universeID;
     public final Collection<String> optionalServerMods;
     private final StringIDRegistry configIDs;
     public final ResourceLocationIDRegistry guiIDs;
@@ -91,23 +90,6 @@ public class SharedData implements ISharedData, IJsonSerializable
         }
 
         return universeID;
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("M", getPackMode().getID());
-        nbt.setLong("ID_M", getUniverseID().getMostSignificantBits());
-        nbt.setLong("ID_L", getUniverseID().getLeastSignificantBits());
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
-        currentMode = new PackMode(nbt.getString("M"));
-        universeID = new UUID(nbt.getLong("ID_M"), nbt.getLong("ID_L"));
     }
 
     public int setMode(String mode)

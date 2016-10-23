@@ -78,4 +78,9 @@ public abstract class IDRegistry<K>
             return true;
         });
     }
+
+    public String toString()
+    {
+        return IDToKey.toString();
+    }
 }

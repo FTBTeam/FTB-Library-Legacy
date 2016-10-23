@@ -7,6 +7,8 @@ import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.PackMode;
+import com.feed_the_beast.ftbl.api_impl.SharedData;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -19,22 +21,25 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class MessageReload extends MessageToClient<MessageReload>
 {
     private int typeID;
-    private NBTTagCompound sharedData;
     private Map<String, NBTTagCompound> syncData;
+    private String currentMode;
+    private UUID universeID;
 
     public MessageReload()
     {
     }
 
-    public MessageReload(ReloadType t, NBTTagCompound shared, Map<String, NBTTagCompound> sync)
+    public MessageReload(ReloadType t, Map<String, NBTTagCompound> sync)
     {
         typeID = t.ordinal();
-        sharedData = shared;
         syncData = sync;
+        currentMode = SharedData.SERVER.getPackMode().getID();
+        universeID = SharedData.SERVER.getUniverseID();
     }
 
     @Override
@@ -47,7 +52,6 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void toBytes(ByteBuf io)
     {
         io.writeByte(typeID);
-        LMNetUtils.writeTag(io, sharedData);
 
         io.writeShort(syncData.size());
 
@@ -56,13 +60,15 @@ public class MessageReload extends MessageToClient<MessageReload>
             LMNetUtils.writeString(io, key);
             LMNetUtils.writeTag(io, value);
         });
+
+        LMNetUtils.writeString(io, currentMode);
+        LMNetUtils.writeUUID(io, universeID);
     }
 
     @Override
     public void fromBytes(ByteBuf io)
     {
         typeID = io.readUnsignedByte();
-        sharedData = LMNetUtils.readTag(io);
 
         int s = io.readUnsignedShort();
 
@@ -74,6 +80,9 @@ public class MessageReload extends MessageToClient<MessageReload>
             NBTTagCompound value = LMNetUtils.readTag(io);
             syncData.put(key, value);
         }
+
+        currentMode = LMNetUtils.readString(io);
+        universeID = LMNetUtils.readUUID(io);
     }
 
     @Override
@@ -84,7 +93,8 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         ReloadType type = ReloadType.values()[m.typeID];
 
-        FTBLibIntegrationInternal.API.getClientData().deserializeNBT(m.sharedData);
+        SharedData.CLIENT.universeID = m.universeID;
+        SharedData.CLIENT.currentMode = new PackMode(m.currentMode);
 
         m.syncData.forEach((key, value) ->
         {

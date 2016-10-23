@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.events.RegisterRecipesEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
-import com.feed_the_beast.ftbl.api.recipes.IRecipes;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
@@ -54,9 +54,7 @@ public class FTBLibMod
     public void onPostInit(FMLPostInitializationEvent event)
     {
         FTBLibRegistries.INSTANCE.reloadConfig();
-
-        IRecipes recipes = new LMRecipes();
-        FTBLibRegistries.INSTANCE.RECIPE_HANDLERS.forEach(h -> h.loadRecipes(recipes));
+        MinecraftForge.EVENT_BUS.post(new RegisterRecipesEvent(new LMRecipes()));
         PROXY.postInit();
     }
 

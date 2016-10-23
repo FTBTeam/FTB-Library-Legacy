@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -56,7 +55,7 @@ public class Universe implements IUniverse
 
             if(worldData.isJsonObject())
             {
-                FTBLibIntegrationInternal.API.getServerData().fromJson(worldData.getAsJsonObject());
+                SharedData.SERVER.fromJson(worldData.getAsJsonObject());
             }
 
             playerMap.clear();

@@ -99,6 +99,8 @@ public class ConfigTree implements IConfigTree
             {
                 LMNetUtils.writeString(data, info);
             }
+            
+            System.out.println(key + " -> " + value.getID());
 
             data.writeShort(FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getIDFromKey(value.getID()));
             value.writeToServer(data);
@@ -137,7 +139,14 @@ public class ConfigTree implements IConfigTree
             }
 
             sid = FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getKeyFromID(data.readShort());
-            value = FTBLibIntegrationInternal.API.getConfigValueProviders().get(sid).createConfigValue();
+
+            System.out.println(key + " -> " + sid);
+            
+            value = FTBLibIntegrationInternal
+                    .API
+                    .getConfigValueProviders()
+                    .get(sid)
+                    .createConfigValue();
             value.readFromServer(data);
             map.put(key, value);
         }

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.recipes;
+package com.feed_the_beast.ftbl.api;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;

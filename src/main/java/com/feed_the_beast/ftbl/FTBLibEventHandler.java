@@ -34,7 +34,7 @@ public class FTBLibEventHandler
         {
             try
             {
-                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), FTBLibIntegrationInternal.API.getServerData().getSerializableElement());
+                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedData.SERVER.getSerializableElement());
                 LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), Universe.INSTANCE.serializeNBT());
                 //FTBLib.dev_logger.info("ForgeWorldMP Saved");
             }
