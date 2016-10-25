@@ -1,27 +1,24 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.api_impl.FTBLibClientRegistries;
+import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRedstone;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
-
-import javax.annotation.Nullable;
 
 public class FTBLibModClient extends FTBLibModCommon
 {
     @Override
     public void preInit()
     {
-        //JsonHelper.initClient();
-        MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.instance);
+        MinecraftForge.EVENT_BUS.register(new FTBLibClientEventHandler());
 
-        //For Dev reasons, see DevConsole
+        //For Dev reasons
         if(Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
         {
             LMUtils.userIsLatvianModder = true;
@@ -34,10 +31,9 @@ public class FTBLibModClient extends FTBLibModCommon
     }
 
     @Override
-    @Nullable
-    public EntityPlayer getClientPlayer()
+    public void loadRegistries(AsmData asmData)
     {
-        return FMLClientHandler.instance().getClientPlayerEntity();
+        FTBLibClientRegistries.INSTANCE.init(asmData);
     }
 
     @Override

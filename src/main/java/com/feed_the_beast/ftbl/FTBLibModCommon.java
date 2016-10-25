@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl;
 
-import net.minecraft.entity.player.EntityPlayer;
+import com.feed_the_beast.ftbl.lib.AsmData;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class FTBLibModCommon // FTBLibModClient
 {
@@ -15,10 +13,8 @@ public class FTBLibModCommon // FTBLibModClient
     {
     }
 
-    @Nullable
-    public EntityPlayer getClientPlayer()
+    public void loadRegistries(AsmData asmData)
     {
-        return null;
     }
 
     public void spawnDust(World worldObj, double x, double y, double z, int i)

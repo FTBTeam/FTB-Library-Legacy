@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.FTBLibClientRegistries;
 import com.feed_the_beast.ftbl.api_impl.SharedData;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -36,8 +36,6 @@ import java.util.List;
 
 public class FTBLibClientEventHandler
 {
-    public static final FTBLibClientEventHandler instance = new FTBLibClientEventHandler();
-
     private static class ButtonInvLM extends GuiButton
     {
         public final ISidebarButton button;
@@ -212,11 +210,11 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<ISidebarButton> buttons = FTBLibRegistries.INSTANCE.getSidebarButtons(false);
+            List<ISidebarButton> buttons = FTBLibClientRegistries.INSTANCE.getSidebarButtons(false);
 
             if(!buttons.isEmpty())
             {
-                Collections.sort(buttons, FTBLibRegistries.SIDEBAR_BUTTON_COMPARATOR);
+                Collections.sort(buttons, FTBLibClientRegistries.SIDEBAR_BUTTON_COMPARATOR);
 
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);

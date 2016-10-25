@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
@@ -18,13 +19,11 @@ import com.feed_the_beast.ftbl.api.events.player.IPlayerDataProvider;
 import com.feed_the_beast.ftbl.api.events.team.ITeamDataProvider;
 import com.feed_the_beast.ftbl.api.events.universe.IUniverseDataProvider;
 import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
-import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
 import com.feed_the_beast.ftbl.client.FTBLibActions;
 import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.Notification;
-import com.feed_the_beast.ftbl.lib.ResourceLocationComparator;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
@@ -45,7 +44,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -59,25 +57,12 @@ public enum FTBLibRegistries
 {
     INSTANCE;
 
-    public static final Comparator<ISidebarButton> SIDEBAR_BUTTON_COMPARATOR = (o1, o2) ->
-    {
-        int i = Integer.compare(o2.getPriority(), o1.getPriority());
-
-        if(i == 0)
-        {
-            i = ResourceLocationComparator.INSTANCE.compare(o1.getID(), o2.getID());
-        }
-
-        return i;
-    };
-
     public final Map<String, IConfigValueProvider> CONFIG_VALUES = new HashMap<>();
     public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
-    public IConfigFile CLIENT_CONFIG;
     public final Map<ResourceLocation, ISyncData> SYNCED_DATA = new HashMap<>();
     public final Map<ResourceLocation, IGuiHandler> GUIS = new HashMap<>();
-    public final Map<ResourceLocation, ISidebarButton> SIDEBAR_BUTTONS = new HashMap<>();
+    public IConfigFile CLIENT_CONFIG;
     public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     private final Collection<IUniverseDataProvider> DATA_PROVIDER_UNIVERSE = new ArrayList<>();
@@ -177,7 +162,6 @@ public enum FTBLibRegistries
         asmData.findRegistryObjects(INotification.class, false, (obj, field, id) -> NOTIFICATIONS.put(obj.getID() + "@" + obj.getVariant(), obj));
         asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.put(obj.getID(), obj));
         asmData.findRegistryObjects(ISyncData.class, false, (obj, field, id) -> SYNCED_DATA.put(obj.getID(), obj));
-        asmData.findRegistryObjects(ISidebarButton.class, false, (obj, field, id) -> SIDEBAR_BUTTONS.put(obj.getID(), obj));
         asmData.findRegistryObjects(IInfoTextLineProvider.class, true, (obj, field, id) -> InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(Locale.ENGLISH), obj));
         asmData.findRegistryObjects(IUniverseDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_UNIVERSE.add(obj));
         asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));
@@ -185,19 +169,11 @@ public enum FTBLibRegistries
 
         SharedData.SERVER.guiIDs.generateIDs(GUIS.keySet());
 
-        for(ISidebarButton button : SIDEBAR_BUTTONS.values())
-        {
-            IConfigValue value = button.getConfig();
-
-            if(value != null)
-            {
-                CLIENT_CONFIG.add(new ConfigKey(button.getPath(), value.copy()), value);
-            }
-        }
-
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
+
+        FTBLibMod.PROXY.loadRegistries(asmData);
     }
 
     public final IConfigContainer CLIENT_CONFIG_CONTAINER = new IConfigContainer()
@@ -256,24 +232,6 @@ public enum FTBLibRegistries
         }
 
         saveAllFiles();
-    }
-
-    public List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)
-    {
-        List<ISidebarButton> l = new ArrayList<>();
-
-        SIDEBAR_BUTTONS.forEach((key, value) ->
-        {
-            if(value.isVisible())
-            {
-                if(ignoreConfig || value.getConfig() == null || value.getConfig().getBoolean())
-                {
-                    l.add(value);
-                }
-            }
-        });
-
-        return l;
     }
 
     public void worldLoaded()
