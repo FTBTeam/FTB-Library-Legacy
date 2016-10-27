@@ -282,9 +282,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             case OWNER:
                 return owner.equalsPlayer(player);
             case MEMBER:
-                return team != null && team.equals(this);
+                return owner.equalsPlayer(player) || (team != null && team.equals(this));
             case ALLY:
-                return team != null && allies != null && allies.contains(team.getName()) && team.isAllyTeam(getName());
+                return owner.equalsPlayer(player) || (team != null && (team.equals(this) || (allies != null && allies.contains(team.getName()) && team.isAllyTeam(getName()))));
             default:
                 return false;
         }
