@@ -262,7 +262,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public EnumTeamColor getColor()
     {
-        return (EnumTeamColor) color.getValue();
+        return color.get();
     }
 
     public void setColor(EnumTeamColor col)
