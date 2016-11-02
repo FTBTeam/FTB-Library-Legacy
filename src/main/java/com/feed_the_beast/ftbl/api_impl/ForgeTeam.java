@@ -19,7 +19,6 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.config.PropertyStringList;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +30,6 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -46,7 +44,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""));
     private static final IConfigKey KEY_FREE_TO_JOIN = new ConfigKey("team.free_to_join", new PropertyBool(false));
     private static final IConfigKey KEY_IS_HIDDEN = new ConfigKey("team.is_hidden", new PropertyBool(false));
-    private static final IConfigKey KEY_ALLIES = new ConfigKey("team.allies", new PropertyStringList(Collections.emptyList()));
 
     private static final byte FLAG_FREE_TO_JOIN = 1;
     private static final byte FLAG_HIDDEN = 2;
@@ -497,6 +494,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             }
         });
 
+        /*
         tree.add(KEY_IS_HIDDEN, new PropertyBool(isHidden())
         {
             @Override
@@ -511,20 +509,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 return isHidden();
             }
         });
-
-        tree.add(KEY_ALLIES, new PropertyStringList(allies)
-        {
-            @Override
-            public void setStringList(Collection<String> v)
-            {
-                allies = v;
-            }
-
-            @Override
-            public Collection<String> getStringList()
-            {
-                return allies;
-            }
-        });
+        */
     }
 }
