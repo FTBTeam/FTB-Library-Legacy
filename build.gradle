@@ -36,12 +36,19 @@ minecraft {
 }
 
 repositories {
-    maven { url "https://jitpack.io" }
+    ivy {
+        name "LatMod"
+        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+    }
+    ivy {
+        name "Mercurius"
+        artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]"
+    }
 }
 
 dependencies {
-    shade 'com.github.LatvianModder:PermissionAPI:1.0.0'
-    compile 'com.github.MinecraftForge:Mercurius:release-1.0.1'
+    shade 'LatMod:PermissionAPI:1.0.0'
+    compile 'Mercurius:Mercurius:1.10.2-1.0.1'
 }
 
 sourceSets {
@@ -78,3 +85,10 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+build.dependsOn deobfJar
