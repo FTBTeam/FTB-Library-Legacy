@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
@@ -99,8 +100,11 @@ public class ConfigTree implements IConfigTree
             {
                 LMNetUtils.writeString(data, info);
             }
-            
-            System.out.println(key + " -> " + value.getID());
+
+            if(LMUtils.DEV_ENV)
+            {
+                LMUtils.DEV_LOGGER.info(key + " -> " + value.getID());
+            }
 
             data.writeShort(FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getIDFromKey(value.getID()));
             value.writeToServer(data);
@@ -140,8 +144,11 @@ public class ConfigTree implements IConfigTree
 
             sid = FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getKeyFromID(data.readShort());
 
-            System.out.println(key + " -> " + sid);
-            
+            if(LMUtils.DEV_ENV)
+            {
+                LMUtils.DEV_LOGGER.info(key + " -> " + sid);
+            }
+
             value = FTBLibIntegrationInternal
                     .API
                     .getConfigValueProviders()

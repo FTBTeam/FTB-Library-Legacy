@@ -64,7 +64,11 @@ public enum FTBLibRegistries
     public final Map<ResourceLocation, IGuiHandler> GUIS = new HashMap<>();
     public IConfigFile CLIENT_CONFIG;
     public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
+
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
+    public final TShortObjectHashMap<String> CACHED_CONFIG_IDS = new TShortObjectHashMap<>();
+    public final TShortObjectHashMap<String> CACHED_GUI_IDS = new TShortObjectHashMap<>();
+
     private final Collection<IUniverseDataProvider> DATA_PROVIDER_UNIVERSE = new ArrayList<>();
     private final Collection<IPlayerDataProvider> DATA_PROVIDER_PLAYER = new ArrayList<>();
     private final Collection<ITeamDataProvider> DATA_PROVIDER_TEAM = new ArrayList<>();
@@ -156,8 +160,6 @@ public enum FTBLibRegistries
             }
         });
 
-        SharedData.SERVER.getConfigIDs().generateIDs(CONFIG_VALUES.keySet());
-
         asmData.findAnnotatedObjects(String.class, OptionalServerModID.class, (obj, field, info) -> SharedData.SERVER.optionalServerMods.add(obj));
         asmData.findRegistryObjects(INotification.class, false, (obj, field, id) -> NOTIFICATIONS.put(obj.getID() + "@" + obj.getVariant(), obj));
         asmData.findRegistryObjects(IGuiHandler.class, false, (obj, field, id) -> GUIS.put(obj.getID(), obj));
@@ -167,13 +169,11 @@ public enum FTBLibRegistries
         asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));
         asmData.findRegistryObjects(ITeamDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_TEAM.add(obj));
 
-        SharedData.SERVER.guiIDs.generateIDs(GUIS.keySet());
+        FTBLibMod.PROXY.loadRegistries(asmData);
 
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
         LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
-
-        FTBLibMod.PROXY.loadRegistries(asmData);
     }
 
     public final IConfigContainer CLIENT_CONFIG_CONTAINER = new IConfigContainer()
@@ -239,6 +239,12 @@ public enum FTBLibRegistries
         SharedData.SERVER.notificationIDs.generateIDs(NOTIFICATIONS.keySet());
         CACHED_NOTIFICATIONS.clear();
         NOTIFICATIONS.forEach((key, value) -> CACHED_NOTIFICATIONS.put(SharedData.SERVER.notificationIDs.getIDFromKey(key), Notification.copy(value)));
+
+        SharedData.SERVER.getConfigIDs().generateIDs(CONFIG_VALUES.keySet());
+        SharedData.SERVER.getConfigIDs().serialize(CACHED_CONFIG_IDS);
+
+        SharedData.SERVER.guiIDs.generateIDs(GUIS.keySet());
+        SharedData.SERVER.guiIDs.serialize(CACHED_GUI_IDS);
     }
 
     @Nullable

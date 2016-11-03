@@ -55,8 +55,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         flags = Bits.setFlag(flags, USE_FTB_PREFIX, FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean());
         currentMode = SharedData.SERVER.getPackMode().getID();
         universeID = SharedData.SERVER.getUniverseID();
-        configIDs = SharedData.SERVER.getConfigIDs().serialize();
-        guiIDs = SharedData.SERVER.guiIDs.serialize();
+        configIDs = FTBLibRegistries.INSTANCE.CACHED_CONFIG_IDS;
+        guiIDs = FTBLibRegistries.INSTANCE.CACHED_GUI_IDS;
         notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
         syncData = new HashMap<>();
 

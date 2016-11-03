@@ -56,16 +56,9 @@ public abstract class IDRegistry<K>
 
     public abstract K createKeyFromString(String s);
 
-    public TShortObjectHashMap<String> serialize()
+    public void serialize(TShortObjectHashMap<String> map)
     {
-        TShortObjectHashMap<String> map = new TShortObjectHashMap<>();
-
-        KeyToID.forEach((key, value) ->
-        {
-            map.put(value, createStringFromKey(key));
-        });
-
-        return map;
+        KeyToID.forEach((key, value) -> map.put(value, createStringFromKey(key)));
     }
 
     public void deserialize(TShortObjectHashMap<String> map)
