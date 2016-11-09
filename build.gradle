@@ -10,7 +10,6 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -24,22 +23,13 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-configurations {
-    shade
-    compile.extendsFrom shade
-}
-
 minecraft {
-    version = "1.10.2-12.18.2.2099"
+    version = "1.10.2-12.18.2.2123"
     runDir = "run"
     mappings = "snapshot_20160518"
 }
 
 repositories {
-    ivy {
-        name "LatMod"
-        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
-    }
     ivy {
         name "Mercurius"
         artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]"
@@ -47,7 +37,6 @@ repositories {
 }
 
 dependencies {
-    shade 'LatMod:PermissionAPI:1.0.0'
     compile 'Mercurius:Mercurius:1.10.2-1.0.1'
 }
 
@@ -60,14 +49,6 @@ sourceSets {
         }
         resources {
             srcDir 'src/main/resources'
-        }
-    }
-}
-
-jar {
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
         }
     }
 }
