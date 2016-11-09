@@ -94,6 +94,12 @@ public class AsmData
                     continue;
                 }
 
+                if(data.getObjectName().contains("ISound") || data.getClassName().contains("ISound"))
+                {
+                    LMUtils.DEV_LOGGER.info("ERROR! invalid ASM entry found! :: " + data.getClassName() + "#" + data.getObjectName());
+                    continue;
+                }
+
                 if(DUMP_INFO)
                 {
                     LMUtils.DEV_LOGGER.info("-  " + data.getClassName() + "#" + data.getObjectName() + " with info " + data.getAnnotationInfo());

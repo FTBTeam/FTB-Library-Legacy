@@ -120,11 +120,12 @@ public class FTBLibEventHandler
     {
         if(e.getEntity() instanceof EntityPlayerMP && Universe.INSTANCE != null)
         {
-            ForgePlayer p = Universe.INSTANCE.getPlayer(e.getEntity());
+            EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
+            ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
 
             if(p != null)
             {
-                p.onDeath();
+                p.onDeath(ep, e.getSource());
             }
         }
     }

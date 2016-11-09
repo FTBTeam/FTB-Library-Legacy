@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.stats.StatisticsManagerServer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -303,12 +304,14 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         statsManager = null;
     }
 
-    public void onDeath()
+    public void onDeath(EntityPlayerMP ep, DamageSource ds)
     {
+        entityPlayer = ep;
+
         if(isOnline())
         {
             FTBLibStats.updateLastSeen(stats());
-            MinecraftForge.EVENT_BUS.post(new ForgePlayerDeathEvent(this));
+            MinecraftForge.EVENT_BUS.post(new ForgePlayerDeathEvent(this, ds));
             statsManager = null;
         }
     }
