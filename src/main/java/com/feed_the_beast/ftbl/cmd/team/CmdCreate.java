@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -58,7 +57,7 @@ public class CmdCreate extends CommandLM
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = FTBLibIntegrationInternal.API.getForgePlayer(ep);
+        IForgePlayer p = getForgePlayer(ep);
 
         if(p.getTeam() != null)
         {

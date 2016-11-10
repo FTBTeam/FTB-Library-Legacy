@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;

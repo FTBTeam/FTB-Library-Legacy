@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibConfig;
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
 import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.gui;
+package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
@@ -7,14 +7,6 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
-import com.feed_the_beast.ftbl.lib.gui.SliderLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

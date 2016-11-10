@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.OptionalServerModID;
+import com.feed_the_beast.ftbl.api.TeamPlayerPermission;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
@@ -45,6 +46,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,13 +59,14 @@ public enum FTBLibRegistries
 {
     INSTANCE;
 
-    public final Map<String, IConfigValueProvider> CONFIG_VALUES = new HashMap<>();
+    public final Map<String, IConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
     public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
     public final Map<ResourceLocation, ISyncData> SYNCED_DATA = new HashMap<>();
     public final Map<ResourceLocation, IGuiHandler> GUIS = new HashMap<>();
     public IConfigFile CLIENT_CONFIG;
     public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
+    public final Collection<ResourceLocation> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
 
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     public final TShortObjectHashMap<String> CACHED_CONFIG_IDS = new TShortObjectHashMap<>();
@@ -75,7 +78,7 @@ public enum FTBLibRegistries
 
     public void init(AsmData asmData)
     {
-        asmData.findRegistryObjects(IConfigValueProvider.class, true, (obj, field, id) -> CONFIG_VALUES.put(id.toLowerCase(Locale.ENGLISH), obj));
+        asmData.findRegistryObjects(IConfigValueProvider.class, true, (obj, field, id) -> CONFIG_VALUE_PROVIDERS.put(id.toLowerCase(Locale.ENGLISH), obj));
 
         asmData.findRegistryObjects(IConfigFileProvider.class, true, (obj, field, id) ->
         {
@@ -168,12 +171,11 @@ public enum FTBLibRegistries
         asmData.findRegistryObjects(IUniverseDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_UNIVERSE.add(obj));
         asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));
         asmData.findRegistryObjects(ITeamDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_TEAM.add(obj));
+        asmData.findAnnotatedObjects(ResourceLocation.class, TeamPlayerPermission.class, (obj, field, info) -> TEAM_PLAYER_PERMISSIONS.add(obj));
 
         FTBLibMod.PROXY.loadRegistries(asmData);
 
-        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUES.size() + " IConfigValueProviders: " + CONFIG_VALUES.keySet());
-        LMUtils.DEV_LOGGER.info("Found " + CONFIG_FILES.size() + " IConfigFiles: " + CONFIG_FILES.keySet());
-        LMUtils.DEV_LOGGER.info("Found " + configValuesCount[0] + " IConfigValues, " + CLIENT_CONFIG.getTree().size() + " Client IConfigValues");
+        LMUtils.DEV_LOGGER.info("Found " + CONFIG_VALUE_PROVIDERS.size() + " IConfigValueProviders: " + CONFIG_VALUE_PROVIDERS.keySet());
     }
 
     public final IConfigContainer CLIENT_CONFIG_CONTAINER = new IConfigContainer()
@@ -240,7 +242,7 @@ public enum FTBLibRegistries
         CACHED_NOTIFICATIONS.clear();
         NOTIFICATIONS.forEach((key, value) -> CACHED_NOTIFICATIONS.put(SharedData.SERVER.notificationIDs.getIDFromKey(key), Notification.copy(value)));
 
-        SharedData.SERVER.getConfigIDs().generateIDs(CONFIG_VALUES.keySet());
+        SharedData.SERVER.getConfigIDs().generateIDs(CONFIG_VALUE_PROVIDERS.keySet());
         SharedData.SERVER.getConfigIDs().serialize(CACHED_CONFIG_IDS);
 
         SharedData.SERVER.guiIDs.generateIDs(GUIS.keySet());

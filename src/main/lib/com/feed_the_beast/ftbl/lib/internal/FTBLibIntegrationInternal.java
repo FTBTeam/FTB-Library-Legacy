@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl;
+package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibAddon;

@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
-import com.feed_the_beast.ftbl.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.util.text.ITextComponent;

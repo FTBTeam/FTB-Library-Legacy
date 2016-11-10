@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
@@ -64,6 +63,6 @@ public class CmdMyServerSettings extends CmdEditConfigBase
     @Override
     public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
     {
-        return new MyServerSettingsContainer(FTBLibIntegrationInternal.API.getForgePlayer(getCommandSenderAsPlayer(sender)));
+        return new MyServerSettingsContainer(getForgePlayer(getCommandSenderAsPlayer(sender)));
     }
 }

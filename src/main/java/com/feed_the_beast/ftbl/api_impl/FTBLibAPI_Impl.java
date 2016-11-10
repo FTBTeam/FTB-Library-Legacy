@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
-import com.feed_the_beast.ftbl.FTBLibNotifications;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibAddon;
 import com.feed_the_beast.ftbl.api.INotification;
@@ -17,6 +15,8 @@ import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.lib.AsmData;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
@@ -80,7 +80,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public Map<String, IConfigValueProvider> getConfigValueProviders()
     {
-        return FTBLibRegistries.INSTANCE.CONFIG_VALUES;
+        return FTBLibRegistries.INSTANCE.CONFIG_VALUE_PROVIDERS;
     }
 
     @Override

@@ -15,12 +15,12 @@ import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import gnu.trove.TShortCollection;
+import gnu.trove.set.hash.TShortHashSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -30,7 +30,9 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -39,29 +41,23 @@ import java.util.UUID;
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
     private static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
-    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE));
-    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""));
-    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""));
-    private static final IConfigKey KEY_FREE_TO_JOIN = new ConfigKey("team.free_to_join", new PropertyBool(false));
-    private static final IConfigKey KEY_IS_HIDDEN = new ConfigKey("team.is_hidden", new PropertyBool(false));
-
-    private static final byte FLAG_FREE_TO_JOIN = 1;
-    private static final byte FLAG_HIDDEN = 2;
+    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE), "ftbteam.config.display.color", true);
+    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""), "ftbteam.config.display.title", true);
+    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""), "ftbteam.config.display.desc", true);
 
     private final NBTDataStorage dataStorage;
-    private final PropertyEnumAbstract<EnumTeamColor> color;
+    private EnumTeamColor color;
     private IForgePlayer owner;
     private Collection<String> allies;
-    private Collection<UUID> enemies;
     private String title;
     private String desc;
     private byte flags;
-    private Collection<UUID> invited;
+    private Map<UUID, TShortCollection> playerPermissions;
 
     public ForgeTeam(String id)
     {
         super(id);
-        color = new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE);
+        color = EnumTeamColor.BLUE;
 
         title = "";
         desc = "";
@@ -83,7 +79,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("Owner", LMStringUtils.fromUUID(owner.getProfile().getId()));
         nbt.setByte("Flags", flags);
-        nbt.setString("Color", color.getString());
+        nbt.setString("Color", EnumNameMap.getEnumName(color));
 
         if(!title.isEmpty())
         {
@@ -106,26 +102,27 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             nbt.setTag("Allies", list);
         }
 
-        if(enemies != null && !enemies.isEmpty())
+        if(playerPermissions != null && !playerPermissions.isEmpty())
         {
-            NBTTagList list = new NBTTagList();
-            for(UUID id : enemies)
+            NBTTagCompound nbt1 = new NBTTagCompound();
+
+            for(Map.Entry<UUID, TShortCollection> entry : playerPermissions.entrySet())
             {
-                list.appendTag(new NBTTagString(LMStringUtils.fromUUID(id)));
+                if(!entry.getValue().isEmpty())
+                {
+                    short[] as = entry.getValue().toArray();
+                    int[] ai = new int[as.length];
+
+                    for(int i = 0; i < as.length; i++)
+                    {
+                        ai[i] = as[i];
+                    }
+
+                    nbt1.setIntArray(LMStringUtils.fromUUID(entry.getKey()), ai);
+                }
             }
 
-            nbt.setTag("Enemies", list);
-        }
-
-        if(invited != null && !invited.isEmpty())
-        {
-            NBTTagList list = new NBTTagList();
-            for(UUID id : invited)
-            {
-                list.appendTag(new NBTTagString(LMStringUtils.fromUUID(id)));
-            }
-
-            nbt.setTag("Invited", list);
+            nbt.setTag("Perms", nbt1);
         }
 
         if(dataStorage != null)
@@ -141,9 +138,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         owner = Universe.INSTANCE.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
         flags = nbt.getByte("Flags");
-        color.set(COLOR_NAME_MAP.get(nbt.getString("Color")));
+        color = COLOR_NAME_MAP.get(nbt.getString("Color"));
         title = nbt.getString("Title");
         desc = nbt.getString("Desc");
+
+        if(allies != null)
+        {
+            allies.clear();
+        }
 
         if(nbt.hasKey("Allies"))
         {
@@ -159,41 +161,42 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 allies.add(list.getStringTagAt(i));
             }
         }
-        else if(allies != null)
+
+        if(playerPermissions != null)
         {
-            allies.clear();
+            playerPermissions.clear();
         }
 
-        if(nbt.hasKey("Enemies"))
+        if(nbt.hasKey("Perms"))
         {
-            if(enemies == null)
+            if(playerPermissions == null)
             {
-                enemies = new HashSet<>();
+                playerPermissions = new HashMap<>();
             }
 
-            NBTTagList list = nbt.getTagList("Enemies", Constants.NBT.TAG_STRING);
+            NBTTagCompound nbt1 = nbt.getCompoundTag("Perms");
 
-            for(int i = 0; i < list.tagCount(); i++)
+            for(String s : nbt1.getKeySet())
             {
-                UUID id = LMStringUtils.fromString(list.getStringTagAt(i));
+                UUID id = LMStringUtils.fromString(s);
+
                 if(id != null)
                 {
-                    enemies.add(id);
+                    int[] ai = nbt1.getIntArray(s);
+                    TShortHashSet set = new TShortHashSet(ai.length);
+
+                    for(int i : ai)
+                    {
+                        set.add((short) i);
+                    }
+
+                    playerPermissions.put(id, set);
                 }
             }
-        }
-        else if(enemies != null)
-        {
-            enemies.clear();
         }
 
         if(nbt.hasKey("Invited"))
         {
-            if(invited == null)
-            {
-                invited = new HashSet<>();
-            }
-
             NBTTagList list = nbt.getTagList("Invited", Constants.NBT.TAG_STRING);
 
             for(int i = 0; i < list.tagCount(); i++)
@@ -201,13 +204,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 UUID id = LMStringUtils.fromString(list.getStringTagAt(i));
                 if(id != null)
                 {
-                    invited.add(id);
+                    setHasPermission(id, FTBLibTeamPermissions.CAN_JOIN, true);
                 }
             }
-        }
-        else if(invited != null)
-        {
-            invited.clear();
         }
 
         if(dataStorage != null)
@@ -235,36 +234,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     }
 
     @Override
-    public boolean isFreeToJoin()
-    {
-        return (flags & FLAG_FREE_TO_JOIN) != 0;
-    }
-
-    @Override
-    public boolean isHidden()
-    {
-        return (flags & FLAG_HIDDEN) != 0;
-    }
-
-    private void setFreeToJoin(boolean v)
-    {
-        flags = Bits.setFlag(flags, FLAG_FREE_TO_JOIN, v);
-    }
-
-    private void setHidden(boolean v)
-    {
-        flags = Bits.setFlag(flags, FLAG_HIDDEN, v);
-    }
-
-    @Override
     public EnumTeamColor getColor()
     {
-        return color.get();
+        return color;
     }
 
     public void setColor(EnumTeamColor col)
     {
-        color.set(col);
+        color = col;
     }
 
     @Override
@@ -275,7 +252,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         switch(status)
         {
             case ENEMY:
-                return enemies != null && enemies.contains(player.getProfile().getId());
+                return hasPermission(player.getProfile().getId(), FTBLibTeamPermissions.IS_ENEMY);
             case OWNER:
                 return owner.equalsPlayer(player);
             case MEMBER:
@@ -328,39 +305,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         return allies != null && allies.contains(team);
     }
 
-    public boolean addEnemy(IForgePlayer player)
-    {
-        if(!hasStatus(player, EnumTeamStatus.ENEMY))
-        {
-            if(enemies == null)
-            {
-                enemies = new HashSet<>();
-            }
-
-            enemies.add(player.getProfile().getId());
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean removeEnemy(IForgePlayer player)
-    {
-        if(hasStatus(player, EnumTeamStatus.ENEMY))
-        {
-            enemies.remove(player.getProfile().getId());
-
-            if(enemies.isEmpty())
-            {
-                enemies = null;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
     @Override
     public Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status)
     {
@@ -378,11 +322,11 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public boolean addPlayer(IForgePlayer player)
     {
-        if(!hasStatus(player, EnumTeamStatus.MEMBER) && isInvited(player))
+        if(!hasStatus(player, EnumTeamStatus.MEMBER) && hasPermission(player.getProfile().getId(), FTBLibTeamPermissions.CAN_JOIN))
         {
             player.setTeamID(getName());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
-            invited.remove(player.getProfile().getId());
+            setHasPermission(player.getProfile().getId(), FTBLibTeamPermissions.CAN_JOIN, false);
             return true;
         }
 
@@ -397,29 +341,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             player.setTeamID("");
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerLeftEvent(this, player));
         }
-    }
-
-    @Override
-    public boolean inviteMember(IForgePlayer player)
-    {
-        if(!isInvited(player))
-        {
-            if(invited == null)
-            {
-                invited = new HashSet<>();
-            }
-
-            invited.add(player.getProfile().getId());
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean isInvited(IForgePlayer player)
-    {
-        return isFreeToJoin() || (invited != null && invited.contains(player.getProfile().getId()));
     }
 
     @Override
@@ -447,7 +368,20 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, tree));
 
-        tree.add(KEY_COLOR, color);
+        tree.add(KEY_COLOR, new PropertyEnum<EnumTeamColor>(COLOR_NAME_MAP, EnumTeamColor.BLUE)
+        {
+            @Override
+            public EnumTeamColor get()
+            {
+                return color;
+            }
+
+            @Override
+            public void set(@Nullable EnumTeamColor e)
+            {
+                color = e == null ? EnumTeamColor.BLUE : e;
+            }
+        });
 
         tree.add(KEY_TITLE, new PropertyString(title)
         {
@@ -478,37 +412,53 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 return desc;
             }
         });
+    }
 
-        tree.add(KEY_FREE_TO_JOIN, new PropertyBool(isFreeToJoin())
+    @Override
+    public boolean hasPermission(UUID playerID, ResourceLocation permission)
+    {
+        return playerID.equals(owner.getProfile().getId());
+
+    }
+
+    @Override
+    public boolean setHasPermission(UUID playerID, ResourceLocation permission, boolean val)
+    {
+        if(val)
         {
-            @Override
-            public void setBoolean(boolean v)
+            if(playerPermissions == null)
             {
-                setFreeToJoin(v);
+                playerPermissions = new HashMap<>();
             }
 
-            @Override
-            public boolean getBoolean()
-            {
-                return isFreeToJoin();
-            }
-        });
+            TShortCollection permissions = playerPermissions.get(playerID);
 
-        /*
-        tree.add(KEY_IS_HIDDEN, new PropertyBool(isHidden())
+            if(permissions == null)
+            {
+                permissions = new TShortHashSet();
+                playerPermissions.put(playerID, permissions);
+            }
+
+            short id = Universe.INSTANCE.teamPlayerPermisssionIDs.generateID(permission);
+            return id != 0 && permissions.add(id);
+        }
+        else if(playerPermissions != null)
         {
-            @Override
-            public void setBoolean(boolean v)
+            short id = Universe.INSTANCE.teamPlayerPermisssionIDs.getIDFromKey(permission);
+
+            if(id != 0)
             {
-                setHidden(v);
+                return false;
             }
 
-            @Override
-            public boolean getBoolean()
+            TShortCollection permissions = playerPermissions.get(playerID);
+
+            if(permissions != null)
             {
-                return isHidden();
+                return permissions.remove(id);
             }
-        });
-        */
+        }
+
+        return false;
     }
 }

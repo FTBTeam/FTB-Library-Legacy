@@ -1,9 +1,13 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -65,5 +69,31 @@ public abstract class CommandLM extends CommandBase
     public boolean isUsernameIndex(String[] args, int i)
     {
         return false;
+    }
+
+    // Static //
+
+    public static IForgePlayer getForgePlayer(Object o) throws CommandException
+    {
+        IForgePlayer p = FTBLibIntegrationInternal.API.getUniverse().getPlayer(o);
+
+        if(p == null || p.isFake())
+        {
+            throw new PlayerNotFoundException();
+        }
+
+        return p;
+    }
+
+    public static IForgeTeam getTeam(String s) throws CommandException
+    {
+        IForgeTeam team = FTBLibIntegrationInternal.API.getUniverse().getTeam(s);
+
+        if(team != null)
+        {
+            return team;
+        }
+
+        throw FTBLibLang.TEAM_NOT_FOUND.commandError();
     }
 }

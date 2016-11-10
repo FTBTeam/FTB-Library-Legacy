@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 11.08.2016.
@@ -25,10 +26,6 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     String getDesc();
 
-    boolean isFreeToJoin();
-
-    boolean isHidden();
-
     EnumTeamColor getColor();
 
     boolean hasStatus(IForgePlayer player, EnumTeamStatus status);
@@ -36,8 +33,6 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
     boolean isAllyTeam(String team);
 
     Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
-
-    boolean isInvited(IForgePlayer player);
 
     default boolean canInteract(IForgePlayer player, EnumTeamPrivacyLevel level)
     {
@@ -60,11 +55,13 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     void changeOwner(IForgePlayer o);
 
-    boolean inviteMember(IForgePlayer p1);
-
     boolean addAllyTeam(String arg);
 
     boolean removeAllyTeam(String name);
 
     void getSettings(IConfigTree tree);
+
+    boolean hasPermission(UUID playerID, ResourceLocation permission);
+
+    boolean setHasPermission(UUID playerID, ResourceLocation permission, boolean val);
 }

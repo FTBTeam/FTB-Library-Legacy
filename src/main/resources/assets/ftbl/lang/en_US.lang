@@ -58,6 +58,7 @@ ftbl.lang.delete_item=Do you want to delete '%s'?
 ftbl.lang.server_forced=Server overrides to '%s'
 ftbl.lang.commands=Commands
 ftbl.lang.my_permissions=My Permissions
+ftbl.lang.all_permissions=All Permissions
 ftbl.lang.difficulty=Difficulty: %s
 
 # Teams
@@ -121,3 +122,6 @@ click_action.show_cmd=Show Command
 click_action.url=Open URL
 click_action.file=Open File
 click_action.gui=Open Gui
+
+# Guide
+ftbl.guide=FTBLib

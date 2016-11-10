@@ -66,17 +66,20 @@ public class InfoPageHelper
         }
         else
         {
-            JsonObject o = e.getAsJsonObject();
-
             IInfoTextLine line = null;
 
-            if(o.has("id"))
+            if(e.isJsonObject())
             {
-                IInfoTextLineProvider provider = INFO_TEXT_LINE_PROVIDERS.get(o.get("id").getAsString());
+                JsonObject o = e.getAsJsonObject();
 
-                if(provider != null)
+                if(o.has("id"))
                 {
-                    line = provider.create(page, o);
+                    IInfoTextLineProvider provider = INFO_TEXT_LINE_PROVIDERS.get(o.get("id").getAsString());
+
+                    if(provider != null)
+                    {
+                        line = provider.create(page, o);
+                    }
                 }
             }
 
@@ -85,7 +88,7 @@ public class InfoPageHelper
                 line = new InfoExtendedTextLine(null);
             }
 
-            line.fromJson(o);
+            line.fromJson(e);
             return line;
         }
     }

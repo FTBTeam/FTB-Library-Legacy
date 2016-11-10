@@ -94,9 +94,9 @@ public class AsmData
                     continue;
                 }
 
-                if(data.getObjectName().contains("ISound") || data.getClassName().contains("ISound"))
+                if(data.getClassName().startsWith("net.minecraft.client") || data.getObjectName().startsWith("net.minecraft.client"))
                 {
-                    LMUtils.DEV_LOGGER.info("ERROR! invalid ASM entry found! :: " + data.getClassName() + "#" + data.getObjectName());
+                    LMUtils.DEV_LOGGER.error("ERROR! invalid ASM entry found! :: " + data.getClassName() + "#" + data.getObjectName());
                     continue;
                 }
 

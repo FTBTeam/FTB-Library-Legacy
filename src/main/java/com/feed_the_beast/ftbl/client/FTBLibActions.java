@@ -1,32 +1,32 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
-import com.feed_the_beast.ftbl.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.gui.GuiEditConfig;
-import com.feed_the_beast.ftbl.gui.GuiLoading;
-import com.feed_the_beast.ftbl.gui.friends.InfoTeamsGUI;
 import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.gui.GuiLoading;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.net.MessageTeamsGuiRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 
 public class FTBLibActions
 {
     @RegistryObject
-    public static final ISidebarButton TEAMS_GUI = new SidebarButtonInst(new ResourceLocation(FTBLibFinals.MOD_ID, "teams_gui"), 995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
+    public static final ISidebarButton TEAMS_GUI = new SidebarButtonInst(FTBLibFinals.get("teams_gui"), 995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -39,7 +39,7 @@ public class FTBLibActions
         @Nullable
         public ITextComponent getDisplayNameOverride()
         {
-            return InfoTeamsGUI.TITLE;
+            return new TextComponentString("TeamsGUI");
         }
 
         @Override
@@ -66,7 +66,7 @@ public class FTBLibActions
     };
 
     @RegistryObject
-    public static final ISidebarButton SETTINGS = new SidebarButtonInst(new ResourceLocation(FTBLibFinals.MOD_ID, "settings"), 990, GuiIcons.SETTINGS, null)
+    public static final ISidebarButton SETTINGS = new SidebarButtonInst(FTBLibFinals.get("settings"), 990, GuiIcons.SETTINGS, null)
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -76,7 +76,7 @@ public class FTBLibActions
     };
 
     @RegistryObject
-    public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButtonInst(new ResourceLocation(FTBLibFinals.MOD_ID, "my_server_settings"), 985, GuiIcons.SETTINGS_RED, new PropertyBool(true))
+    public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButtonInst(FTBLibFinals.get("my_server_settings"), 985, GuiIcons.SETTINGS_RED, new PropertyBool(true))
     {
         @Override
         public void onClicked(IMouseButton button)

@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.gui.GuiInfo;
-import com.feed_the_beast.ftbl.gui.friends.InfoTeamsGUI;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
@@ -36,6 +34,6 @@ public class MessageTeamsGuiResponse extends MessageToClient<MessageTeamsGuiResp
     @Override
     public void onMessage(MessageTeamsGuiResponse m)
     {
-        new GuiInfo(new InfoTeamsGUI()).openGui();
+        //new GuiInfo(new InfoTeamsGUI()).openGui();
     }
 }

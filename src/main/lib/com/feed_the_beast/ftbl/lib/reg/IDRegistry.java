@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.lib.reg;
 
 import gnu.trove.map.hash.TShortObjectHashMap;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -10,7 +12,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 17.08.2016.
  */
-public abstract class IDRegistry<K>
+public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 {
     private final TShortObjectHashMap<K> IDToKey = new TShortObjectHashMap<>();
     private final Map<K, Short> KeyToID = new HashMap<>();
@@ -41,14 +43,15 @@ public abstract class IDRegistry<K>
 
     public short generateID(K key)
     {
-        if(IDToKey.containsValue(key))
+        short i = getIDFromKey(key);
+
+        if(i == 0)
         {
-            return KeyToID.get(key);
+            i = (short) (IDToKey.size() + 1);
+            KeyToID.put(key, i);
+            IDToKey.put(i, key);
         }
 
-        short i = (short) (IDToKey.size() + 1);
-        KeyToID.put(key, i);
-        IDToKey.put(i, key);
         return i;
     }
 
@@ -75,5 +78,28 @@ public abstract class IDRegistry<K>
     public String toString()
     {
         return IDToKey.toString();
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT()
+    {
+        NBTTagCompound nbt = new NBTTagCompound();
+        KeyToID.forEach((key, value) -> nbt.setShort(createStringFromKey(key), value));
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt)
+    {
+        IDToKey.clear();
+        KeyToID.clear();
+
+        for(String key : nbt.getKeySet())
+        {
+            short val = nbt.getShort(key);
+            K key1 = createKeyFromString(key);
+            IDToKey.put(val, key1);
+            KeyToID.put(key1, val);
+        }
     }
 }

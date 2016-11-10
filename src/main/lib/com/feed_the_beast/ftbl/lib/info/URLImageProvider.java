@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.feed_the_beast.ftbl.lib.client.InvalidTextureCoords;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -24,7 +24,7 @@ public class URLImageProvider implements IImageProvider
     {
         if(texture == null)
         {
-            texture = new ResourceLocation(FTBLibFinals.MOD_ID, "url_images/" + URL.replace(':', '|'));
+            texture = FTBLibFinals.get("url_images/" + URL.replace(':', '|'));
             FTBLibClient.getDownloadImage(texture, URL, InvalidTextureCoords.INSTANCE.getTexture(), null);
         }
 

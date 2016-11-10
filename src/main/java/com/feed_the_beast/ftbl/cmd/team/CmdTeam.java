@@ -21,6 +21,7 @@ public class CmdTeam extends CommandTreeBase
         addSubcommand(new CmdJoin());
         addSubcommand(new CmdAddAlly());
         addSubcommand(new CmdRemAlly());
+        addSubcommand(new CmdSetPermission());
     }
 
     @Override

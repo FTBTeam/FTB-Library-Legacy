@@ -1,6 +1,5 @@
-package com.feed_the_beast.ftbl.gui;
+package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGui;
@@ -11,17 +10,10 @@ import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
-import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
-import com.feed_the_beast.ftbl.lib.gui.SliderLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoTextLine;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +23,7 @@ import javax.annotation.Nullable;
 
 public class GuiInfo extends GuiLM implements IClientActionGui
 {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/info.png");
+    private static final ResourceLocation TEXTURE = FTBLibFinals.get("textures/gui/info.png");
 
     private static final TextureCoords TEX_SLIDER = TextureCoords.fromCoords(TEXTURE, 0, 30, 12, 18, 64, 64);
     private static final TextureCoords TEX_BACK = TextureCoords.fromCoords(TEXTURE, 13, 30, 14, 11, 64, 64);
@@ -264,8 +256,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void onInit()
     {
-        posX = FTBLibClientConfig.INFO_BORDER_WIDTH.getInt();
-        posY = FTBLibClientConfig.INFO_BORDER_HEIGHT.getInt();
+        posX = GuiInfoConfig.INFO_BORDER_WIDTH.getInt();
+        posY = GuiInfoConfig.INFO_BORDER_HEIGHT.getInt();
         int width = getScreenWidth() - posX * 2;
         int height = getScreenHeight() - posY * 2;
         setWidth(width);

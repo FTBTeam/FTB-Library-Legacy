@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl;
+package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.lib.LangKey;
 
@@ -32,6 +32,7 @@ public class FTBLibLang
     SERVER_FORCED = get("server_forced"),
     COMMANDS = get("commands"),
     MY_PERMISSIONS = get("my_permissions"),
+    ALL_PERMISSIONS = get("all_permissions"),
     DIFFICULTY = get("difficulty"),
 
     TEAM_CONFIG = get("team.config"),

@@ -1,13 +1,10 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.FTBLibLang;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.ReloadType;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -46,28 +43,4 @@ public interface FTBLibAPI
     void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 
     void displayInfoGui(EntityPlayerMP player, IInfoPage page);
-
-    default IForgePlayer getForgePlayer(Object o) throws CommandException
-    {
-        IForgePlayer p = getUniverse().getPlayer(o);
-
-        if(p == null || p.isFake())
-        {
-            throw new PlayerNotFoundException();
-        }
-
-        return p;
-    }
-
-    default IForgeTeam getTeam(String s) throws CommandException
-    {
-        IForgeTeam team = getUniverse().getTeam(s);
-
-        if(team != null)
-        {
-            return team;
-        }
-
-        throw FTBLibLang.TEAM_NOT_FOUND.commandError();
-    }
 }

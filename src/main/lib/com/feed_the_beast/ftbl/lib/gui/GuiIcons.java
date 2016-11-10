@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.util.ResourceLocation;
 
 public enum GuiIcons implements ITextureCoords
@@ -83,7 +83,7 @@ public enum GuiIcons implements ITextureCoords
 
     GuiIcons()
     {
-        texture = new ResourceLocation(FTBLibFinals.MOD_ID, "textures/icons/" + EnumNameMap.createName(this) + ".png");
+        texture = FTBLibFinals.get("textures/icons/" + EnumNameMap.createName(this) + ".png");
     }
 
     @Override

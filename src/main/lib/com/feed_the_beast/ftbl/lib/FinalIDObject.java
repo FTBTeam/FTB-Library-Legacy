@@ -38,6 +38,6 @@ public class FinalIDObject implements IStringSerializable
     @Override
     public final boolean equals(Object o)
     {
-        return o != null && (o == this || o == ID || ID.equals(LMStringUtils.getID(o)));
+        return o == this || o == ID || (o != null && ID.equals(LMStringUtils.getID(o)));
     }
 }

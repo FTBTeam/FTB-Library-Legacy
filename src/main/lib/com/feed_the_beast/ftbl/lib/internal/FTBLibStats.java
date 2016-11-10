@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl;
+package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.StatsLongValue;

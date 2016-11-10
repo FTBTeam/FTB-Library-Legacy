@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -41,8 +42,7 @@ public class Universe implements IUniverse
     public final Map<UUID, ForgePlayer> playerMap = new HashMap<>();
     public final Map<String, ForgeTeam> teams = new HashMap<>();
     private NBTDataStorage dataStorage;
-    private ForgePlayer currentPlayer;
-    private ForgeTeam currentTeam;
+    public final ResourceLocationIDRegistry teamPlayerPermisssionIDs = new ResourceLocationIDRegistry();
 
     public void init()
     {
@@ -142,13 +142,6 @@ public class Universe implements IUniverse
     }
 
     @Override
-    @Nullable
-    public IForgePlayer getCurrentPlayer()
-    {
-        return currentPlayer;
-    }
-
-    @Override
     public Collection<? extends IForgeTeam> getTeams()
     {
         return teams.values();
@@ -159,12 +152,6 @@ public class Universe implements IUniverse
     public ForgeTeam getTeam(String id)
     {
         return teams.get(id);
-    }
-
-    @Override
-    public IForgeTeam getCurrentTeam()
-    {
-        return currentTeam;
     }
 
     public void onClosed()
@@ -203,13 +190,12 @@ public class Universe implements IUniverse
             if(id != null)
             {
                 ForgePlayer p = new ForgePlayer(new GameProfile(id, tag.getString("Name")));
-                currentPlayer = p;
                 p.deserializeNBT(tag);
                 playerMap.put(id, p);
             }
         }
 
-        currentPlayer = null;
+        teamPlayerPermisssionIDs.deserializeNBT(nbt.getCompoundTag("TeamPlayerPermissionIDs"));
 
         teams.clear();
         NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
@@ -218,12 +204,9 @@ public class Universe implements IUniverse
         {
             NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
             ForgeTeam team = new ForgeTeam(tag2.getString("ID"));
-            currentTeam = team;
             team.deserializeNBT(tag2);
             teams.put(team.getName(), team);
         }
-
-        currentTeam = null;
 
         MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
 
@@ -236,43 +219,38 @@ public class Universe implements IUniverse
     @Override
     public NBTTagCompound serializeNBT()
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        NBTTagCompound tag2;
+        NBTTagCompound nbt = new NBTTagCompound();
+        NBTTagCompound nbt1;
 
         NBTTagList tagPlayers = new NBTTagList();
 
         for(ForgePlayer p : playerMap.values())
         {
-            currentPlayer = p;
-            tag2 = p.serializeNBT();
-            tag2.setString("Name", p.getProfile().getName());
-            tag2.setString("UUID", LMStringUtils.fromUUID(p.getProfile().getId()));
-            tagPlayers.appendTag(tag2);
+            nbt1 = p.serializeNBT();
+            nbt1.setString("Name", p.getProfile().getName());
+            nbt1.setString("UUID", LMStringUtils.fromUUID(p.getProfile().getId()));
+            tagPlayers.appendTag(nbt1);
         }
 
-        currentPlayer = null;
-
-        tag.setTag("Players", tagPlayers);
+        nbt.setTag("Players", tagPlayers);
 
         NBTTagList teamsTag = new NBTTagList();
 
         for(ForgeTeam team : teams.values())
         {
-            currentTeam = team;
-            tag2 = team.serializeNBT();
-            tag2.setString("ID", team.getName());
-            teamsTag.appendTag(tag2);
+            nbt1 = team.serializeNBT();
+            nbt1.setString("ID", team.getName());
+            teamsTag.appendTag(nbt1);
         }
 
-        currentTeam = null;
-
-        tag.setTag("Teams", teamsTag);
+        nbt.setTag("Teams", teamsTag);
+        nbt.setTag("TeamPlayerPermissionIDs", teamPlayerPermisssionIDs.serializeNBT());
 
         if(dataStorage != null)
         {
-            tag.setTag("Data", dataStorage.serializeNBT());
+            nbt.setTag("Data", dataStorage.serializeNBT());
         }
 
-        return tag;
+        return nbt;
     }
 }

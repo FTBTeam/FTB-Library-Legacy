@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.ConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 
 import java.io.File;
