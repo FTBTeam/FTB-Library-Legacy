@@ -61,7 +61,7 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     void getSettings(IConfigTree tree);
 
-    boolean hasPermission(UUID playerID, ResourceLocation permission);
+    boolean hasPermission(UUID playerID, String permission);
 
-    boolean setHasPermission(UUID playerID, ResourceLocation permission, boolean val);
+    boolean setHasPermission(UUID playerID, String permission, boolean val);
 }

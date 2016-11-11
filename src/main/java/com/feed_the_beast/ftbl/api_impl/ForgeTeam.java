@@ -415,14 +415,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     }
 
     @Override
-    public boolean hasPermission(UUID playerID, ResourceLocation permission)
+    public boolean hasPermission(UUID playerID, String permission)
     {
         return playerID.equals(owner.getProfile().getId());
 
     }
 
     @Override
-    public boolean setHasPermission(UUID playerID, ResourceLocation permission, boolean val)
+    public boolean setHasPermission(UUID playerID, String permission, boolean val)
     {
         if(val)
         {

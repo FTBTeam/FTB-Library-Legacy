@@ -66,7 +66,7 @@ public enum FTBLibRegistries
     public final Map<ResourceLocation, IGuiHandler> GUIS = new HashMap<>();
     public IConfigFile CLIENT_CONFIG;
     public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
-    public final Collection<ResourceLocation> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
+    public final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
 
     public final TShortObjectHashMap<INotification> CACHED_NOTIFICATIONS = new TShortObjectHashMap<>();
     public final TShortObjectHashMap<String> CACHED_CONFIG_IDS = new TShortObjectHashMap<>();
@@ -171,7 +171,7 @@ public enum FTBLibRegistries
         asmData.findRegistryObjects(IUniverseDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_UNIVERSE.add(obj));
         asmData.findRegistryObjects(IPlayerDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_PLAYER.add(obj));
         asmData.findRegistryObjects(ITeamDataProvider.class, false, (obj, field, info) -> DATA_PROVIDER_TEAM.add(obj));
-        asmData.findAnnotatedObjects(ResourceLocation.class, TeamPlayerPermission.class, (obj, field, info) -> TEAM_PLAYER_PERMISSIONS.add(obj));
+        asmData.findAnnotatedObjects(String.class, TeamPlayerPermission.class, (obj, field, info) -> TEAM_PLAYER_PERMISSIONS.add(obj));
 
         FTBLibMod.PROXY.loadRegistries(asmData);
 

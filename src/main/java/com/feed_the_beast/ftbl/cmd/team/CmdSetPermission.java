@@ -10,7 +10,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
@@ -78,6 +77,6 @@ public class CmdSetPermission extends CommandLM
             throw FTBLibLang.RAW.commandError("Can't set owner's permissions!"); //TODO: Lang
         }
 
-        team.setHasPermission(p1.getProfile().getId(), new ResourceLocation(args[1]), parseBoolean(args[2]));
+        team.setHasPermission(p1.getProfile().getId(), args[1], parseBoolean(args[2]));
     }
 }

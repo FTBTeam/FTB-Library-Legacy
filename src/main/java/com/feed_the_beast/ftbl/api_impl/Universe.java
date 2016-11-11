@@ -9,7 +9,7 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.reg.ResourceLocationIDRegistry;
+import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -42,7 +42,7 @@ public class Universe implements IUniverse
     public final Map<UUID, ForgePlayer> playerMap = new HashMap<>();
     public final Map<String, ForgeTeam> teams = new HashMap<>();
     private NBTDataStorage dataStorage;
-    public final ResourceLocationIDRegistry teamPlayerPermisssionIDs = new ResourceLocationIDRegistry();
+    public final StringIDRegistry teamPlayerPermisssionIDs = new StringIDRegistry();
 
     public void init()
     {

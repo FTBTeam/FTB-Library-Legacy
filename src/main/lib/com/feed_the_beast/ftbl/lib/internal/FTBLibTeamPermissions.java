@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.api.TeamPlayerPermission;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by LatvianModder on 10.11.2016.
@@ -9,20 +8,20 @@ import net.minecraft.util.ResourceLocation;
 public class FTBLibTeamPermissions
 {
     @TeamPlayerPermission
-    public static final ResourceLocation CAN_JOIN = FTBLibFinals.get("can_join");
+    public static final String CAN_JOIN = "can_join";
 
     @TeamPlayerPermission
-    public static final ResourceLocation IS_ENEMY = FTBLibFinals.get("enemy");
+    public static final String IS_ENEMY = "enemy";
 
     @TeamPlayerPermission
-    public static final ResourceLocation EDIT_SETTINGS = FTBLibFinals.get("edit_settings");
+    public static final String EDIT_SETTINGS = "edit_settings";
 
     @TeamPlayerPermission
-    public static final ResourceLocation EDIT_PERMISSIONS = FTBLibFinals.get("edit_permissions");
+    public static final String EDIT_PERMISSIONS = "edit_permissions";
 
     @TeamPlayerPermission
-    public static final ResourceLocation MANAGE_MEMBERS = FTBLibFinals.get("manage_members");
+    public static final String MANAGE_MEMBERS = "manage_members";
 
     @TeamPlayerPermission
-    public static final ResourceLocation MANAGE_ALLIES = FTBLibFinals.get("manage_allies");
+    public static final String MANAGE_ALLIES = "manage_allies";
 }
