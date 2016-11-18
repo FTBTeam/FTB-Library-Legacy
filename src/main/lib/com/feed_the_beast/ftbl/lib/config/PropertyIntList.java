@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonElement;
 import gnu.trove.list.TIntList;
@@ -20,10 +18,12 @@ public class PropertyIntList extends PropertyBase
 {
     public static final String ID = "int_list";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyIntList(new TIntArrayList(0));
-
     private TIntList value;
+
+    public PropertyIntList()
+    {
+        this(new TIntArrayList(0));
+    }
 
     public PropertyIntList(TIntList v)
     {
@@ -114,7 +114,7 @@ public class PropertyIntList extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         TIntList list = getIntList();
 
@@ -132,7 +132,7 @@ public class PropertyIntList extends PropertyBase
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         int s = data.readUnsignedShort();
         value.clear();

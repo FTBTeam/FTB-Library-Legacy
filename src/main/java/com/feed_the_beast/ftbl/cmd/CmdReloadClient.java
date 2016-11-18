@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.events.ReloadType;
+import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import net.minecraft.command.CommandException;
@@ -24,6 +24,6 @@ public class CmdReloadClient extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        FTBLibIntegrationInternal.API.reload(sender, ReloadType.CLIENT_ONLY);
+        FTBLibIntegrationInternal.API.reload(sender, EnumReloadType.CLIENT_ONLY);
     }
 }

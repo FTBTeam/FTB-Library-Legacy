@@ -1,20 +1,24 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.FTBLibAddon;
+import com.feed_the_beast.ftbl.api.FTBLibPlugin;
+import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackModes;
-import com.feed_the_beast.ftbl.api.ISharedData;
-import com.feed_the_beast.ftbl.api.ISyncData;
+import com.feed_the_beast.ftbl.api.ISharedClientData;
+import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadType;
-import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
+import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api.info.IInfoPage;
-import com.feed_the_beast.ftbl.lib.AsmData;
+import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -31,26 +35,34 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by LatvianModder on 11.08.2016.
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {
+    private Collection<IFTBLibPlugin> plugins;
+
     public void init(ASMDataTable table)
     {
-        AsmData asmData = new AsmData(table);
-        asmData.findAnnotatedObjects(FTBLibAPI.class, FTBLibAddon.class, (obj, field, data) -> field.set(null, this));
-        asmData.findAnnotatedMethods(FTBLibAddon.class, (method, params, data) -> method.invoke(null));
-        FTBLibRegistries.INSTANCE.init(asmData);
+        plugins = AsmHelper.findPlugins(table, IFTBLibPlugin.class, FTBLibPlugin.class);
+
+        for(IFTBLibPlugin p : plugins)
+        {
+            p.init(this);
+        }
+    }
+
+    @Override
+    public Collection<IFTBLibPlugin> getAllPlugins()
+    {
+        return plugins;
     }
 
     @Override
@@ -66,21 +78,15 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public ISharedData getServerData()
+    public ISharedServerData getServerData()
     {
-        return SharedData.SERVER;
+        return SharedServerData.INSTANCE;
     }
 
     @Override
-    public ISharedData getClientData()
+    public ISharedClientData getClientData()
     {
-        return SharedData.CLIENT;
-    }
-
-    @Override
-    public Map<String, IConfigValueProvider> getConfigValueProviders()
-    {
-        return FTBLibRegistries.INSTANCE.CONFIG_VALUE_PROVIDERS;
+        return SharedClientData.INSTANCE;
     }
 
     @Override
@@ -97,30 +103,30 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void reload(ICommandSender sender, ReloadType type)
+    public void reload(ICommandSender sender, EnumReloadType type)
     {
         Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
-        Preconditions.checkArgument(type != ReloadType.LOGIN, "ReloadType can't be LOGIN!");
+        Preconditions.checkArgument(type != EnumReloadType.LOGIN, "ReloadType can't be LOGIN!");
 
         long ms = System.currentTimeMillis();
 
         if(type.reload(Side.SERVER))
         {
-            FTBLibRegistries.INSTANCE.reloadConfig();
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.SERVER, sender, type));
+            FTBLibMod.PROXY.reloadConfig();
+
+            for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+            {
+                plugin.onReload(Side.SERVER, sender, type);
+            }
         }
 
         if(LMServerUtils.hasOnlinePlayers())
         {
             for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayerList())
             {
-                Map<String, NBTTagCompound> syncData = new HashMap<>();
-
-                for(ISyncData data : FTBLibRegistries.INSTANCE.SYNCED_DATA.values())
-                {
-                    syncData.put(data.getID().toString(), data.writeSyncData(ep, Universe.INSTANCE.getPlayer(ep)));
-                }
-
+                NBTTagCompound syncData = new NBTTagCompound();
+                IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
+                FTBLibMod.PROXY.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
                 new MessageReload(type, syncData).sendTo(ep);
             }
         }
@@ -130,23 +136,23 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             FTBLibLang.RELOAD_SERVER.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
         }
 
-        if(type == ReloadType.SERVER_ONLY_NOTIFY_CLIENT && sender instanceof EntityPlayerMP)
+        if(type == EnumReloadType.SERVER_ONLY_NOTIFY_CLIENT && sender instanceof EntityPlayerMP)
         {
             sendNotification((EntityPlayerMP) sender, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         }
     }
 
     @Override
-    public void openGui(ResourceLocation guiID, EntityPlayerMP player, @Nullable NBTTagCompound data)
+    public void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
     {
-        IGuiHandler handler = FTBLibRegistries.INSTANCE.GUIS.get(guiID);
+        IContainerProvider containerProvider = FTBLibMod.PROXY.GUI_CONTAINER_PROVIDERS.get(guiID);
 
-        if(handler == null)
+        if(containerProvider == null)
         {
             return;
         }
 
-        Container c = handler.getContainer(player, data);
+        Container c = containerProvider.getContainer(player, pos, data);
 
         player.getNextWindowId();
         player.closeContainer();
@@ -158,13 +164,13 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
         player.openContainer.windowId = player.currentWindowId;
         player.openContainer.addListener(player);
-        new MessageOpenGui(guiID, data, player.currentWindowId).sendTo(player);
+        new MessageOpenGui(guiID, pos, data, player.currentWindowId).sendTo(player);
     }
 
     @Override
     public void sendNotification(@Nullable EntityPlayerMP player, INotification n)
     {
-        short id = SharedData.SERVER.notificationIDs.getIDFromKey(n.getID() + "@" + n.getVariant());
+        short id = SharedServerData.INSTANCE.notificationIDs.getIDFromKey(n.getID() + "@" + n.getVariant());
 
         if(id != 0)
         {
@@ -186,5 +192,13 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     public void displayInfoGui(EntityPlayerMP player, IInfoPage page)
     {
         new MessageDisplayInfo(page).sendTo(player);
+    }
+
+    @Override
+    public IConfigValue getConfigValueFromID(String id)
+    {
+        IConfigValueProvider provider = FTBLibMod.PROXY.CONFIG_VALUE_PROVIDERS.get(id);
+        Preconditions.checkNotNull(provider, "Unknown Config ID: " + id);
+        return provider.createConfigValue();
     }
 }

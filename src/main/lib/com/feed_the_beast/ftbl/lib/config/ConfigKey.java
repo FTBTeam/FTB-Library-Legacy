@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 
@@ -10,25 +11,20 @@ import javax.annotation.Nullable;
 public class ConfigKey extends SimpleConfigKey
 {
     private final IConfigValue defValue;
-    private String displayName;
+    private ITextComponent displayName;
     private byte flags;
-    private String info;
+    private String info = "";
 
-    public ConfigKey(String id, IConfigValue def, @Nullable String dn, boolean translate)
+    public ConfigKey(String id, IConfigValue def, @Nullable ITextComponent dn)
     {
         super(id);
         defValue = def;
         displayName = dn;
-
-        if(translate)
-        {
-            flags |= TRANSLATE_DISPLAY_NAME;
-        }
     }
 
     public ConfigKey(String id, IConfigValue def)
     {
-        this(id, def, null, false);
+        this(id, def, null);
     }
 
     @Override
@@ -38,12 +34,13 @@ public class ConfigKey extends SimpleConfigKey
     }
 
     @Override
-    public String getRawDisplayName()
+    @Nullable
+    public ITextComponent getRawDisplayName()
     {
-        return displayName == null ? "" : displayName;
+        return displayName;
     }
 
-    public void setDisplayName(@Nullable String c)
+    public void setDisplayName(@Nullable ITextComponent c)
     {
         displayName = c;
     }
@@ -54,12 +51,13 @@ public class ConfigKey extends SimpleConfigKey
         return flags;
     }
 
-    public void setFlags(byte f)
+    public ConfigKey setFlags(byte f)
     {
         flags = f;
+        return this;
     }
 
-    public ConfigKey addFlag(int f)
+    public ConfigKey addFlag(byte f)
     {
         flags |= f;
         return this;
@@ -68,17 +66,11 @@ public class ConfigKey extends SimpleConfigKey
     @Override
     public String getInfo()
     {
-        return info == null ? "" : info;
+        return info;
     }
 
-    public void setInfo(String s)
+    public void setInfo(CharSequence... s)
     {
-        info = s;
-    }
-
-    public ConfigKey setKeyInfo(String s)
-    {
-        setInfo(s);
-        return this;
+        info = String.join("\n", s);
     }
 }

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.events.ReloadType;
+import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api_impl.PackModes;
-import com.feed_the_beast.ftbl.api_impl.SharedData;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -52,7 +52,7 @@ public class CmdPackMode extends CommandTreeBase
 
             ITextComponent c;
 
-            int i = SharedData.SERVER.setMode(args[0]);
+            int i = SharedServerData.INSTANCE.setMode(args[0]);
 
             if(i == 1)
             {
@@ -68,7 +68,7 @@ public class CmdPackMode extends CommandTreeBase
             {
                 c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
                 c.getStyle().setColor(TextFormatting.GREEN);
-                FTBLibIntegrationInternal.API.reload(ics, ReloadType.SERVER_AND_CLIENT);
+                FTBLibIntegrationInternal.API.reload(ics, EnumReloadType.SERVER_AND_CLIENT);
             }
 
             ics.addChatMessage(c);
@@ -92,7 +92,7 @@ public class CmdPackMode extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedData.SERVER.getPackMode().getID());
+            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedServerData.INSTANCE.getPackMode().getID());
             c.getStyle().setColor(TextFormatting.AQUA);
             ics.addChatMessage(c);
         }

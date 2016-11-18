@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.api.gui;
 
-import com.feed_the_beast.ftbl.api.IRegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -11,10 +9,8 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 16.08.2016.
  */
-public interface ISidebarButton extends IRegistryObject
+public interface ISidebarButton
 {
-    ResourceLocation getID();
-
     default int getPriority()
     {
         return 0;
@@ -45,8 +41,7 @@ public interface ISidebarButton extends IRegistryObject
         return true;
     }
 
-    default String getPath()
-    {
-        return "sidebar_button." + getID().getResourceDomain() + '.' + getID().getResourcePath();
-    }
+    void setPath(String path);
+
+    String getPath();
 }

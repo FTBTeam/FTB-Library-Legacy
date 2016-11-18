@@ -79,6 +79,9 @@ ftbl.lang.team.error.not_member=%s is not a member of this Team!
 ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
 ftbl.lang.team.error.already_invited=%s already is invited!
 ftbl.lang.team.error.failed_to_join=Can't join this team!
+ftbl.lang.team.permission.set=Permission '%s' for %s set to %b
+ftbl.lang.team.permission.already_set=Permission '%s' for %s already is set to %b!
+ftbl.lang.team.permission.owner=Can't change owner's permissions!
 
 ftbl.lang.team_color.blue=Blue
 ftbl.lang.team_color.cyan=Cyan

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.gui.GuiEditConfig;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -30,7 +30,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 
     public MessageEditConfig(UUID id, @Nullable NBTTagCompound nbt, IConfigContainer c)
     {
-        FTBLibRegistries.INSTANCE.TEMP_SERVER_CONFIG.put(id, c);
+        FTBLibMod.PROXY.TEMP_SERVER_CONFIG.put(id, c);
         group = c.getConfigTree().copy();
         extraNBT = nbt;
         title = c.getTitle();
@@ -53,7 +53,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
         extraNBT = LMNetUtils.readTag(io);
         title = LMNetUtils.readTextComponent(io);
         group = new ConfigTree();
-        group.readFromServer(io);
+        group.readData(io);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         LMNetUtils.writeTag(io, extraNBT);
         LMNetUtils.writeTextComponent(io, title);
-        group.writeToServer(io);
+        group.writeData(io);
     }
 
     @Override

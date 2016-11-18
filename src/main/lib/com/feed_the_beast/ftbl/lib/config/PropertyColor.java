@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -24,10 +22,11 @@ public class PropertyColor extends PropertyBase
 {
     public static final String ID = "color";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyColor((byte) 0);
-
     private byte value;
+
+    public PropertyColor()
+    {
+    }
 
     public PropertyColor(byte v)
     {
@@ -90,10 +89,14 @@ public class PropertyColor extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.selectColor(null, getColorID(), (id, value) ->
+        GuiSelectors.selectJson(this, (val, set) ->
         {
-            setColorID(value);
-            gui.onChanged(key, getSerializableElement());
+            if(set)
+            {
+                setColorID((byte) val.getInt());
+                gui.onChanged(key, getSerializableElement());
+            }
+
             gui.openGui();
         });
     }
@@ -123,13 +126,13 @@ public class PropertyColor extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeByte(getColorID());
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         setColorID(data.readByte());
     }

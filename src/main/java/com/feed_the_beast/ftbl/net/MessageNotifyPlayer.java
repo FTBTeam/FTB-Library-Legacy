@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
@@ -58,14 +58,14 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     @Override
     public void onMessage(MessageNotifyPlayer m)
     {
-        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.get();
+        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
 
         if(display == EnumNotificationDisplay.OFF)
         {
             return;
         }
 
-        INotification n = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.get(m.ID);
+        INotification n = SharedServerData.INSTANCE.cachedNotifications.get(m.ID);
 
         if(n != null)
         {

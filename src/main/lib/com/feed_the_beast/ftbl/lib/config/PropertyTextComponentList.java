@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonArray;
@@ -26,10 +24,12 @@ public class PropertyTextComponentList extends PropertyBase
 {
     public static final String ID = "text_component_list";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyTextComponentList(Collections.emptyList());
-
     private List<ITextComponent> value;
+
+    public PropertyTextComponentList()
+    {
+        this(Collections.emptyList());
+    }
 
     public PropertyTextComponentList(Collection<ITextComponent> l)
     {
@@ -135,14 +135,14 @@ public class PropertyTextComponentList extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeShort(value.size());
         getText().forEach(c -> LMNetUtils.writeTextComponent(data, c));
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         int s = data.readUnsignedShort();
         value.clear();

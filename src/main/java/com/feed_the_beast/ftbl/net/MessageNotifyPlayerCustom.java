@@ -42,7 +42,7 @@ public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlay
     @Override
     public void onMessage(MessageNotifyPlayerCustom m)
     {
-        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.get();
+        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
 
         if(display != EnumNotificationDisplay.OFF)
         {

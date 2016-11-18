@@ -1,32 +1,32 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibConfig;
+import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.api.EnumReloadType;
+import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadType;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.PackMode;
-import com.feed_the_beast.ftbl.api_impl.SharedData;
+import com.feed_the_beast.ftbl.api_impl.SharedClientData;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import gnu.trove.map.hash.TShortObjectHashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
 
 public class MessageLogin extends MessageToClient<MessageLogin>
@@ -38,10 +38,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     private byte flags;
     private String currentMode;
     private UUID universeID;
-    private TShortObjectHashMap<String> configIDs;
-    private TShortObjectHashMap<String> guiIDs;
     private TShortObjectHashMap<INotification> notificationIDs;
-    private Map<String, NBTTagCompound> syncData;
+    private NBTTagCompound syncData;
     private Collection<String> optionalServerMods;
 
     public MessageLogin()
@@ -51,21 +49,14 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
         flags = 0;
-        flags = Bits.setFlag(flags, IS_OP, SharedData.SERVER.isOP(player.getGameProfile()));
+        flags = Bits.setFlag(flags, IS_OP, LMServerUtils.isOP(player.getGameProfile()));
         flags = Bits.setFlag(flags, USE_FTB_PREFIX, FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean());
-        currentMode = SharedData.SERVER.getPackMode().getID();
-        universeID = SharedData.SERVER.getUniverseID();
-        configIDs = FTBLibRegistries.INSTANCE.CACHED_CONFIG_IDS;
-        guiIDs = FTBLibRegistries.INSTANCE.CACHED_GUI_IDS;
-        notificationIDs = FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS;
-        syncData = new HashMap<>();
-
-        for(ISyncData data : FTBLibRegistries.INSTANCE.SYNCED_DATA.values())
-        {
-            syncData.put(data.getID().toString(), data.writeSyncData(player, forgePlayer));
-        }
-
-        optionalServerMods = SharedData.SERVER.optionalServerMods;
+        currentMode = SharedServerData.INSTANCE.getPackMode().getID();
+        universeID = SharedServerData.INSTANCE.getUniverseID();
+        notificationIDs = SharedServerData.INSTANCE.cachedNotifications;
+        syncData = new NBTTagCompound();
+        FTBLibMod.PROXY.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
+        optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
         flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
     }
 
@@ -82,24 +73,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         LMNetUtils.writeString(io, currentMode);
         LMNetUtils.writeUUID(io, universeID);
 
-        io.writeShort(configIDs.size());
-
-        configIDs.forEachEntry((key, value) ->
-        {
-            io.writeShort(key);
-            LMNetUtils.writeString(io, value);
-            return true;
-        });
-
-        io.writeShort(guiIDs.size());
-
-        guiIDs.forEachEntry((key, value) ->
-        {
-            io.writeShort(key);
-            LMNetUtils.writeString(io, value);
-            return true;
-        });
-
         io.writeShort(notificationIDs.size());
 
         notificationIDs.forEachEntry((key, value) ->
@@ -109,13 +82,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             return true;
         });
 
-        io.writeShort(syncData.size());
-
-        syncData.forEach((key, value) ->
-        {
-            LMNetUtils.writeString(io, key);
-            LMNetUtils.writeTag(io, value);
-        });
+        LMNetUtils.writeTag(io, syncData);
 
         if(!optionalServerMods.isEmpty())
         {
@@ -136,26 +103,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         universeID = LMNetUtils.readUUID(io);
 
         int s = io.readUnsignedShort();
-        configIDs = new TShortObjectHashMap<>(s);
-
-        while(--s >= 0)
-        {
-            short key = io.readShort();
-            String value = LMNetUtils.readString(io);
-            configIDs.put(key, value);
-        }
-
-        s = io.readUnsignedShort();
-        guiIDs = new TShortObjectHashMap<>(s);
-
-        while(--s >= 0)
-        {
-            short key = io.readShort();
-            String value = LMNetUtils.readString(io);
-            guiIDs.put(key, value);
-        }
-
-        s = io.readUnsignedShort();
         notificationIDs = new TShortObjectHashMap<>(s);
 
         while(--s >= 0)
@@ -165,15 +112,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             notificationIDs.put(id, n);
         }
 
-        s = io.readUnsignedShort();
-        syncData = new HashMap<>(s);
-
-        while(--s >= 0)
-        {
-            String key = LMNetUtils.readString(io);
-            NBTTagCompound value = LMNetUtils.readTag(io);
-            syncData.put(key, value);
-        }
+        syncData = LMNetUtils.readTag(io);
 
         if(Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
         {
@@ -190,32 +129,39 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     @Override
     public void onMessage(MessageLogin m)
     {
-        SharedData.CLIENT.reset();
-        SharedData.hasServer = true;
-        SharedData.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
-        SharedData.useFTBPrefix = Bits.getFlag(m.flags, USE_FTB_PREFIX);
-        SharedData.clientGameProfile = Minecraft.getMinecraft().thePlayer.getGameProfile();
-        SharedData.CLIENT.universeID = m.universeID;
-        SharedData.CLIENT.currentMode = new PackMode(m.currentMode);
-        SharedData.CLIENT.getConfigIDs().deserialize(m.configIDs);
-        SharedData.CLIENT.optionalServerMods.addAll(m.optionalServerMods);
-        SharedData.CLIENT.guiIDs.deserialize(m.guiIDs);
-        FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.clear();
-        FTBLibRegistries.INSTANCE.CACHED_NOTIFICATIONS.putAll(m.notificationIDs);
+        SharedClientData.INSTANCE.reset();
+        SharedClientData.INSTANCE.hasServer = true;
+        SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
+        SharedClientData.INSTANCE.useFTBPrefix = Bits.getFlag(m.flags, USE_FTB_PREFIX);
+        SharedClientData.INSTANCE.universeID = m.universeID;
+        SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
-        m.syncData.forEach((key, value) ->
+        if(m.optionalServerMods != null && !m.optionalServerMods.isEmpty())
         {
-            ISyncData nbt = FTBLibRegistries.INSTANCE.SYNCED_DATA.get(new ResourceLocation(key));
+            SharedClientData.INSTANCE.optionalServerMods.addAll(m.optionalServerMods);
+        }
+
+        SharedClientData.INSTANCE.cachedNotifications.putAll(m.notificationIDs);
+
+        for(String key : m.syncData.getKeySet())
+        {
+            ISyncData nbt = FTBLibMod.PROXY.SYNCED_DATA.get(key);
 
             if(nbt != null)
             {
-                nbt.readSyncData(value);
+                nbt.readSyncData(m.syncData.getCompoundTag(key));
             }
-        });
+        }
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, Minecraft.getMinecraft().thePlayer, ReloadType.LOGIN));
+        ICommandSender sender = Minecraft.getMinecraft().thePlayer;
+
+        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+        {
+            plugin.onReload(Side.CLIENT, sender, EnumReloadType.LOGIN);
+        }
+
         FTBLibFinals.LOGGER.info("Current Mode: " + m.currentMode);
     }
 }

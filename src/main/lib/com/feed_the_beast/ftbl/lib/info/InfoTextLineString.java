@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
-import com.feed_the_beast.ftbl.lib.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
@@ -14,9 +12,6 @@ import com.google.gson.JsonPrimitive;
  */
 public class InfoTextLineString implements IInfoTextLine
 {
-    @RegistryObject("text")
-    public static final IInfoTextLineProvider PROVIDER = (page, json) -> new InfoTextLineString("");
-
     private String text;
 
     public InfoTextLineString(String s)

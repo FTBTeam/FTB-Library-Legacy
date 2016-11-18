@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -23,10 +21,12 @@ public class PropertyString extends PropertyBase
 {
     public static final String ID = "string";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyString("");
-
     private String value;
+
+    public PropertyString()
+    {
+        this("");
+    }
 
     public PropertyString(String v)
     {
@@ -84,10 +84,14 @@ public class PropertyString extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.selectString(null, getString(), (id, val) ->
+        GuiSelectors.selectJson(this, (val, set) ->
         {
-            setString(val);
-            gui.onChanged(key, getSerializableElement());
+            if(set)
+            {
+                setString(val.getString());
+                gui.onChanged(key, getSerializableElement());
+            }
+
             gui.openGui();
         });
     }
@@ -117,13 +121,13 @@ public class PropertyString extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         LMNetUtils.writeString(data, getString());
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         setString(LMNetUtils.readString(data));
     }

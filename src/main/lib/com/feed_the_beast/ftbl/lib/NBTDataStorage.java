@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -12,19 +13,19 @@ import java.util.Map;
  */
 public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 {
-    private final Map<ResourceLocation, INBTData> map;
+    private final Map<ResourceLocation, INBTSerializable<?>> map;
 
     public NBTDataStorage()
     {
         map = new HashMap<>();
     }
 
-    public void add(INBTData data)
+    public void add(ResourceLocation id, INBTSerializable<?> data)
     {
-        map.put(data.getID(), data);
+        map.put(id, data);
     }
 
-    public INBTData get(ResourceLocation id)
+    public INBTSerializable<?> get(ResourceLocation id)
     {
         return map.get(id);
     }
@@ -39,16 +40,15 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        for(INBTData data : map.values())
+        map.forEach((key, value) ->
         {
-            NBTTagCompound nbt1 = new NBTTagCompound();
-            data.writeData(nbt1);
+            NBTBase nbt1 = value.serializeNBT();
 
-            if(!nbt1.hasNoTags())
+            if(nbt1 != null && !nbt1.hasNoTags())
             {
-                nbt.setTag(data.getID().toString(), nbt1);
+                nbt.setTag(key.toString(), nbt1);
             }
-        }
+        });
 
         return nbt;
     }
@@ -56,9 +56,11 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        for(INBTData data : map.values())
-        {
-            data.readData(nbt.getCompoundTag(data.getID().toString()));
-        }
+        map.forEach((key, value) -> value.deserializeNBT(convert(nbt.getTag(key.toString()))));
+    }
+
+    private static <E extends NBTBase> E convert(NBTBase base)
+    {
+        return (E) base;
     }
 }

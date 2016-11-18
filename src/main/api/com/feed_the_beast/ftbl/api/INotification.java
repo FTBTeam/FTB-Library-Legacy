@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 17.08.2016.
  */
-public interface INotification extends IRegistryObject
+public interface INotification
 {
     ResourceLocation getID();
 

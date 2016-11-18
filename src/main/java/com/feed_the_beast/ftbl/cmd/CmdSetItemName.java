@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,7 +35,7 @@ public class CmdSetItemName extends CommandLM
 
         if(ep.inventory.getCurrentItem() != null)
         {
-            ep.inventory.getCurrentItem().setStackDisplayName(LMStringUtils.unsplit(args, " "));
+            ep.inventory.getCurrentItem().setStackDisplayName(String.join("", args));
             ep.openContainer.detectAndSendChanges();
             ics.addChatMessage(new TextComponentString("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
         }

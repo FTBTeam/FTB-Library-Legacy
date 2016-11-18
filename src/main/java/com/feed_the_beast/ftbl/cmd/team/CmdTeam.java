@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.command.CommandTreeBase;
@@ -19,9 +20,9 @@ public class CmdTeam extends CommandTreeBase
         addSubcommand(new CmdKick());
         addSubcommand(new CmdInvite());
         addSubcommand(new CmdJoin());
-        addSubcommand(new CmdAddAlly());
-        addSubcommand(new CmdRemAlly());
         addSubcommand(new CmdSetPermission());
+        addSubcommand(new CmdSpecialPerm("allies", FTBLibTeamPermissions.IS_ALLY, FTBLibTeamPermissions.MANAGE_ALLIES));
+        addSubcommand(new CmdSpecialPerm("enemies", FTBLibTeamPermissions.IS_ENEMY, FTBLibTeamPermissions.MANAGE_ENEMIES));
     }
 
     @Override

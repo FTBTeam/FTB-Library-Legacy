@@ -12,9 +12,11 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -62,22 +64,55 @@ public class LMUtils
         }
     }
 
-    public static <E> List<E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj) throws IllegalAccessException
+    public static <E> Map<String, E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj, boolean immutable)
     {
-        List<E> l = new ArrayList<>();
+        Map<String, E> map = new HashMap<>();
 
         for(Field f : fields.getDeclaredFields())
         {
             f.setAccessible(true);
-            Object o = f.get(obj);
 
-            if(type == null || type.isAssignableFrom(o.getClass()))
+            if(type == null || type.isAssignableFrom(f.getType()))
             {
-                l.add((E) o);
+                try
+                {
+                    map.put(f.getName(), (E) f.get(obj));
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
             }
         }
 
-        return l;
+        return immutable ? Collections.unmodifiableMap(map) : map;
+    }
+
+    public static <E extends IForgeRegistryEntry<E>> Map<String, E> findAndRegister(Class<E> type, String modID, Class<?> fields, @Nullable Object obj)
+    {
+        Map<String, E> map = new HashMap<>();
+
+        for(Field f : fields.getDeclaredFields())
+        {
+            f.setAccessible(true);
+
+            if(type.isAssignableFrom(f.getType()))
+            {
+                try
+                {
+                    E o = (E) f.get(obj);
+                    o.setRegistryName(new ResourceLocation(modID, f.getName().toLowerCase(Locale.ENGLISH)));
+                    GameRegistry.register(o);
+                    map.put(f.getName().toLowerCase(Locale.ENGLISH), o);
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        return Collections.unmodifiableMap(map);
     }
 
     public static String removeFormatting(String s)

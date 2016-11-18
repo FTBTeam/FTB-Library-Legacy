@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
@@ -26,11 +24,13 @@ import java.util.List;
  */
 public class PropertyStringEnum extends PropertyBase
 {
-    @RegistryObject(PropertyEnumAbstract.ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyStringEnum(Collections.emptyList(), "");
-
     private List<String> keys;
     private String value;
+
+    public PropertyStringEnum()
+    {
+        this(Collections.emptyList(), "");
+    }
 
     public PropertyStringEnum(Collection<String> k, String v)
     {
@@ -125,7 +125,7 @@ public class PropertyStringEnum extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeShort(keys.size());
 
@@ -138,7 +138,7 @@ public class PropertyStringEnum extends PropertyBase
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         keys.clear();
         int s = data.readUnsignedShort();

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
-import com.feed_the_beast.ftbl.lib.gui.GuiInfoConfig;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -46,7 +46,7 @@ public final class InfoPageTheme implements IInfoPageTheme
     @Override
     public boolean getUseUnicodeFont()
     {
-        return useUnicodeFont == null ? GuiInfoConfig.INFO_UNICODE.getBoolean() : useUnicodeFont;
+        return useUnicodeFont == null ? GuiConfigs.UNICODE.getBoolean() : useUnicodeFont;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -36,6 +37,13 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     public abstract E get();
 
     public abstract void set(@Nullable E e);
+
+    public E getNonnull()
+    {
+        E e = get();
+        Preconditions.checkNotNull(e);
+        return e;
+    }
 
     @Override
     public Object getValue()
@@ -105,7 +113,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeShort(getNameMap().size);
 
@@ -118,7 +126,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         throw new IllegalStateException("Can't read Abstract Enum Property!");
     }

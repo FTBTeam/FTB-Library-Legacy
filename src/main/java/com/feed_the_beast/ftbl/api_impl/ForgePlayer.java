@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
@@ -8,7 +9,6 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
@@ -31,6 +31,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -55,12 +56,13 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     public ForgePlayer(GameProfile p)
     {
         setProfile(p);
-        dataStorage = FTBLibRegistries.INSTANCE.createPlayerDataStorage(this);
+        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibMod.PROXY.DATA_PROVIDER_PLAYER);
     }
 
     ForgePlayer(EntityPlayerMP ep)
     {
-        this(ep.getGameProfile());
+        setProfile(ep.getGameProfile());
+        dataStorage = null;
         entityPlayer = ep;
     }
 
@@ -101,7 +103,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
     @Override
     @Nullable
-    public INBTData getData(ResourceLocation id)
+    public INBTSerializable<?> getData(ResourceLocation id)
     {
         return dataStorage == null ? null : dataStorage.get(id);
     }

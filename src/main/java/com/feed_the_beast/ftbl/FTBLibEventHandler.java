@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
-import com.feed_the_beast.ftbl.api_impl.SharedData;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
@@ -35,7 +35,7 @@ public class FTBLibEventHandler
         {
             try
             {
-                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedData.SERVER.getSerializableElement());
+                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
                 LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), Universe.INSTANCE.serializeNBT());
                 //FTBLib.dev_logger.info("ForgeWorldMP Saved");
             }
@@ -51,7 +51,7 @@ public class FTBLibEventHandler
     public void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
     {
         Map<String, Object> map = new HashMap<>();
-        map.put("FTB_PackMode", SharedData.SERVER.getPackMode().getID());
+        map.put("FTB_PackMode", SharedServerData.INSTANCE.getPackMode().getID());
         event.addEventData(FTBLibFinals.MOD_ID, map);
     }
 

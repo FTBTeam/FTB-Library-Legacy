@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbl.api.config;
 
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 11.09.2016.
  */
-public interface IConfigKey extends IStringSerializable
+public interface IConfigKey
 {
     /**
      * Will be excluded from writing / reading from files
@@ -30,10 +30,7 @@ public interface IConfigKey extends IStringSerializable
      */
     byte USE_SCROLL_BAR = 8;
 
-    /**
-     * Use display name as I18n key
-     */
-    byte TRANSLATE_DISPLAY_NAME = 16;
+    String getID();
 
     byte getFlags();
 
@@ -44,24 +41,13 @@ public interface IConfigKey extends IStringSerializable
 
     IConfigValue getDefValue();
 
-    String getRawDisplayName();
+    @Nullable
+    ITextComponent getRawDisplayName();
 
     default ITextComponent getDisplayName()
     {
-        String s = getRawDisplayName();
-
-        if(!s.isEmpty())
-        {
-            if(getFlag(TRANSLATE_DISPLAY_NAME))
-            {
-                //TODO: Replace with client side I18n
-                return new TextComponentTranslation(s);
-            }
-
-            return new TextComponentString(s);
-        }
-
-        return new TextComponentString(getName());
+        ITextComponent t = getRawDisplayName();
+        return t == null ? new TextComponentString("config." + getID() + ".name") : t;
     }
 
     String getInfo();

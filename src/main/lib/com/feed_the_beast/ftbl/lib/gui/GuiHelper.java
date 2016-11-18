@@ -12,42 +12,15 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 04.09.2016.
  */
 public class GuiHelper
 {
-    @Nullable
-    public static TileEntity getTile(EntityPlayer player, @Nullable NBTTagCompound data)
-    {
-        return data == null ? null : player.worldObj.getTileEntity(new BlockPos(data.getInteger("X"), data.getInteger("Y"), data.getInteger("Z")));
-    }
-
-    public static NBTTagCompound getPosData(BlockPos pos)
-    {
-        NBTTagCompound data = new NBTTagCompound();
-        data.setInteger("X", pos.getX());
-        data.setInteger("Y", pos.getY());
-        data.setInteger("Z", pos.getZ());
-        return data;
-    }
-
-    @Nullable
-    public static NBTTagCompound getPosData(@Nullable TileEntity tile)
-    {
-        return (tile == null) ? null : getPosData(tile.getPos());
-    }
-
     public static void drawTexturedRect(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
     {
         if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)

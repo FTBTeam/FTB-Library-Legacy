@@ -2,8 +2,7 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api_impl.FTBLibClientRegistries;
-import com.feed_the_beast.ftbl.api_impl.SharedData;
+import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
@@ -31,113 +30,14 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class FTBLibClientEventHandler
 {
-    private static class ButtonInvLM extends GuiButton
-    {
-        public final ISidebarButton button;
-        public final String title;
-
-        public ButtonInvLM(int id, ISidebarButton b, int x, int y)
-        {
-            super(id, x, y, 16, 16, "");
-            button = b;
-
-            ITextComponent c = b.getDisplayNameOverride();
-            title = ((c == null) ? new TextComponentTranslation(b.getPath()) : c).getFormattedText();
-        }
-
-        @Override
-        public void drawButton(Minecraft mc, int mx, int my)
-        {
-        }
-    }
-
-    private static class ButtonInvLMRenderer extends GuiButton
-    {
-        public final List<ButtonInvLM> buttons;
-
-        public ButtonInvLMRenderer(int id, GuiScreen g)
-        {
-            super(id, -1000, -1000, 0, 0, "");
-            buttons = new ArrayList<>();
-        }
-
-        @Override
-        public void drawButton(Minecraft mc, int mx, int my)
-        {
-            //if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
-            //	return;
-
-            zLevel = 0F;
-
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-            GlStateManager.color(1F, 1F, 1F, 1F);
-
-            for(ButtonInvLM b : buttons)
-            {
-                b.button.render(b.xPosition, b.yPosition);
-
-                if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
-                {
-                    GlStateManager.color(1F, 1F, 1F, 0.3F);
-                    GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
-                }
-            }
-
-            for(ButtonInvLM b : buttons)
-            {
-                b.button.postRender(b.xPosition, b.yPosition);
-
-                if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
-                {
-                    GlStateManager.pushMatrix();
-                    double mx1 = mx - 4D;
-                    double my1 = my - 12D;
-
-                    int tw = mc.fontRendererObj.getStringWidth(b.title);
-
-                    if(!FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
-                    {
-                        mx1 -= tw + 8;
-                        my1 += 4;
-                    }
-
-                    if(mx1 < 4D)
-                    {
-                        mx1 = 4D;
-                    }
-                    if(my1 < 4D)
-                    {
-                        my1 = 4D;
-                    }
-
-                    GlStateManager.translate(mx1, my1, zLevel);
-
-                    GlStateManager.enableBlend();
-                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                    GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
-                    GuiHelper.drawBlankRect(-3, -2, tw + 6, 12);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
-                    mc.fontRendererObj.drawString(b.title, 0, 0, 0xFFFFFFFF);
-                    GlStateManager.popMatrix();
-                }
-            }
-
-            GlStateManager.color(1F, 1F, 1F, 1F);
-        }
-    }
-
     @SubscribeEvent
     public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
     {
-        SharedData.CLIENT.reset();
+        SharedClientData.INSTANCE.reset();
     }
 
     /* TODO: Close world / destroy cached data
@@ -210,12 +110,10 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<ISidebarButton> buttons = FTBLibClientRegistries.INSTANCE.getSidebarButtons(false);
+            List<ISidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
 
             if(!buttons.isEmpty())
             {
-                Collections.sort(buttons, FTBLibClientRegistries.SIDEBAR_BUTTON_COMPARATOR);
-
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
 
@@ -315,5 +213,103 @@ public class FTBLibClientEventHandler
     public void renderWorld(RenderWorldLastEvent event)
     {
         FTBLibClient.updateRenderInfo();
+    }
+
+    private static class ButtonInvLM extends GuiButton
+    {
+        public final ISidebarButton button;
+        public final String title;
+
+        public ButtonInvLM(int id, ISidebarButton b, int x, int y)
+        {
+            super(id, x, y, 16, 16, "");
+            button = b;
+
+            ITextComponent c = b.getDisplayNameOverride();
+            title = ((c == null) ? new TextComponentTranslation(b.getPath()) : c).getFormattedText();
+        }
+
+        @Override
+        public void drawButton(Minecraft mc, int mx, int my)
+        {
+        }
+    }
+
+    private static class ButtonInvLMRenderer extends GuiButton
+    {
+        public final List<ButtonInvLM> buttons;
+
+        public ButtonInvLMRenderer(int id, GuiScreen g)
+        {
+            super(id, -1000, -1000, 0, 0, "");
+            buttons = new ArrayList<>();
+        }
+
+        @Override
+        public void drawButton(Minecraft mc, int mx, int my)
+        {
+            //if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
+            //	return;
+
+            zLevel = 0F;
+
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+            GlStateManager.color(1F, 1F, 1F, 1F);
+
+            for(ButtonInvLM b : buttons)
+            {
+                b.button.render(b.xPosition, b.yPosition);
+
+                if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
+                {
+                    GlStateManager.color(1F, 1F, 1F, 0.3F);
+                    GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height);
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                }
+            }
+
+            for(ButtonInvLM b : buttons)
+            {
+                b.button.postRender(b.xPosition, b.yPosition);
+
+                if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
+                {
+                    GlStateManager.pushMatrix();
+                    double mx1 = mx - 4D;
+                    double my1 = my - 12D;
+
+                    int tw = mc.fontRendererObj.getStringWidth(b.title);
+
+                    if(!FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+                    {
+                        mx1 -= tw + 8;
+                        my1 += 4;
+                    }
+
+                    if(mx1 < 4D)
+                    {
+                        mx1 = 4D;
+                    }
+                    if(my1 < 4D)
+                    {
+                        my1 = 4D;
+                    }
+
+                    GlStateManager.translate(mx1, my1, zLevel);
+
+                    GlStateManager.enableBlend();
+                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                    GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
+                    GuiHelper.drawBlankRect(-3, -2, tw + 6, 12);
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                    mc.fontRendererObj.drawString(b.title, 0, 0, 0xFFFFFFFF);
+                    GlStateManager.popMatrix();
+                }
+            }
+
+            GlStateManager.color(1F, 1F, 1F, 1F);
+        }
     }
 }

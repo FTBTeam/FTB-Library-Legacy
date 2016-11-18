@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.events.RegisterRecipesEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadType;
+import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.api_impl.PackModes;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.TickHandler;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
@@ -56,8 +54,6 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
-        FTBLibRegistries.INSTANCE.reloadConfig();
-        MinecraftForge.EVENT_BUS.post(new RegisterRecipesEvent(new LMRecipes()));
         PROXY.postInit();
     }
 
@@ -82,19 +78,20 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent event)
     {
+        SharedServerData.INSTANCE.reset();
         TickHandler.INSTANCE = new TickHandler();
-        FTBLibRegistries.INSTANCE.reloadConfig();
+        PROXY.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         Universe.INSTANCE = new Universe();
         Universe.INSTANCE.init();
-        FTBLibRegistries.INSTANCE.worldLoaded();
+        PROXY.worldLoaded();
         LMServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibIntegrationInternal.API.reload(LMServerUtils.getServer(), ReloadType.SERVER_ONLY);
+        FTBLibIntegrationInternal.API.reload(LMServerUtils.getServer(), EnumReloadType.SERVER_ONLY);
     }
 
     @Mod.EventHandler

@@ -46,7 +46,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             {
                 List<IConfigKey> keys = new ArrayList<>();
                 keys.addAll(map.keySet());
-                Collections.sort(keys, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+                Collections.sort(keys, (o1, o2) -> o1.getID().compareTo(o2.getID()));
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)
@@ -98,7 +98,7 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         if(args.length >= 2)
         {
-            String json = LMStringUtils.unsplitSpaceUntilEnd(1, args);
+            String json = LMStringUtils.joinSpaceUntilEnd(1, args);
 
             FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
 

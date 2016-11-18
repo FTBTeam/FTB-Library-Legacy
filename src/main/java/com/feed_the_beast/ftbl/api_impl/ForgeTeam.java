@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
@@ -12,7 +13,6 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
@@ -23,15 +23,15 @@ import gnu.trove.TShortCollection;
 import gnu.trove.set.hash.TShortHashSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,14 +41,13 @@ import java.util.UUID;
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
     private static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
-    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE), "ftbteam.config.display.color", true);
-    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""), "ftbteam.config.display.title", true);
-    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""), "ftbteam.config.display.desc", true);
+    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE), new TextComponentTranslation("ftbteam.config.display.color"));
+    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.title"));
+    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.desc"));
 
     private final NBTDataStorage dataStorage;
     private EnumTeamColor color;
     private IForgePlayer owner;
-    private Collection<String> allies;
     private String title;
     private String desc;
     private byte flags;
@@ -63,12 +62,12 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         desc = "";
         flags = 0;
 
-        dataStorage = FTBLibRegistries.INSTANCE.createTeamDataStorage(this);
+        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibMod.PROXY.DATA_PROVIDER_TEAM);
     }
 
     @Override
     @Nullable
-    public INBTData getData(ResourceLocation id)
+    public INBTSerializable<?> getData(ResourceLocation id)
     {
         return dataStorage == null ? null : dataStorage.get(id);
     }
@@ -89,17 +88,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         if(!desc.isEmpty())
         {
             nbt.setString("Desc", desc);
-        }
-
-        if(allies != null && !allies.isEmpty())
-        {
-            NBTTagList list = new NBTTagList();
-            for(String s : allies)
-            {
-                list.appendTag(new NBTTagString(s));
-            }
-
-            nbt.setTag("Allies", list);
         }
 
         if(playerPermissions != null && !playerPermissions.isEmpty())
@@ -141,26 +129,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         color = COLOR_NAME_MAP.get(nbt.getString("Color"));
         title = nbt.getString("Title");
         desc = nbt.getString("Desc");
-
-        if(allies != null)
-        {
-            allies.clear();
-        }
-
-        if(nbt.hasKey("Allies"))
-        {
-            if(allies == null)
-            {
-                allies = new HashSet<>();
-            }
-
-            NBTTagList list = nbt.getTagList("Allies", Constants.NBT.TAG_STRING);
-
-            for(int i = 0; i < list.tagCount(); i++)
-            {
-                allies.add(list.getStringTagAt(i));
-            }
-        }
 
         if(playerPermissions != null)
         {
@@ -258,51 +226,10 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             case MEMBER:
                 return owner.equalsPlayer(player) || (team != null && team.equals(this));
             case ALLY:
-                return owner.equalsPlayer(player) || (team != null && (team.equals(this) || (allies != null && allies.contains(team.getName()) && team.isAllyTeam(getName()))));
+                return owner.equalsPlayer(player) || (team != null && (team.equals(this) || hasPermission(player.getProfile().getId(), FTBLibTeamPermissions.IS_ALLY)));
             default:
                 return false;
         }
-    }
-
-    @Override
-    public boolean addAllyTeam(String team)
-    {
-        if(!isAllyTeam(team))
-        {
-            if(allies == null)
-            {
-                allies = new HashSet<>();
-            }
-
-            allies.add(team);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean removeAllyTeam(String team)
-    {
-        if(isAllyTeam(team))
-        {
-            allies.remove(team);
-
-            if(allies.isEmpty())
-            {
-                allies = null;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean isAllyTeam(String team)
-    {
-        return allies != null && allies.contains(team);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.api.asm;
 
+import net.minecraftforge.fml.common.discovery.ModCandidate;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -8,6 +10,8 @@ import java.util.List;
  */
 public interface IAnnotationInfo
 {
+    ModCandidate getModCandidate();
+
     Object getObject(String id, Object def);
 
     default String getString(String id, String def)

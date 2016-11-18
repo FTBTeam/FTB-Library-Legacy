@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -22,11 +20,14 @@ import javax.annotation.Nullable;
 public class PropertyBlockState extends PropertyBase
 {
     public static final String ID = "blockstate";
-
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyBlockState(Blocks.AIR.getDefaultState());
+    public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
 
     private IBlockState value;
+
+    public PropertyBlockState()
+    {
+        this(AIR_STATE);
+    }
 
     public PropertyBlockState(IBlockState state)
     {
@@ -112,13 +113,13 @@ public class PropertyBlockState extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeShort(getInt());
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         setBlockState(Block.getStateById(data.readUnsignedShort()));
     }

@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
@@ -22,9 +20,6 @@ public enum PropertyNull implements IConfigValue
     INSTANCE;
 
     public static final String ID = "null";
-
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> INSTANCE;
 
     @Override
     public String getID()
@@ -130,12 +125,12 @@ public enum PropertyNull implements IConfigValue
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
     }
 }

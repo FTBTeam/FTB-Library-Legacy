@@ -6,11 +6,11 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class ConfigTree implements IConfigTree
     }
 
     @Override
-    public Map<IConfigKey, IConfigValue> getTree()
+    public final Map<IConfigKey, IConfigValue> getTree()
     {
         return tree;
     }
@@ -49,35 +49,29 @@ public class ConfigTree implements IConfigTree
     public IConfigTree copy()
     {
         ConfigTree t = new ConfigTree();
-
-        getTree().forEach((key, value) ->
-        {
-            t.add(key, value.copy());
-        });
-
+        getTree().forEach((key, value) -> t.add(key, value.copy()));
         return t;
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
-        Map<IConfigKey, IConfigValue> map = getTree();
-        data.writeShort(map.size());
+        data.writeShort(tree.size());
 
-        map.forEach((key, value) ->
+        tree.forEach((key, value) ->
         {
-            LMNetUtils.writeString(data, key.getName());
+            LMNetUtils.writeString(data, key.getID());
             data.writeByte(key.getFlags());
 
             IConfigValue defValue = key.getDefValue();
-            data.writeShort(FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getIDFromKey(defValue.getID()));
-            defValue.writeToServer(data);
+            LMNetUtils.writeString(data, defValue.getID());
+            defValue.writeData(data);
 
             byte extraFlags = 0;
 
-            String rawDN = key.getRawDisplayName();
+            ITextComponent rawDN = key.getRawDisplayName();
 
-            if(!rawDN.isEmpty())
+            if(rawDN != null)
             {
                 extraFlags |= HAS_DISPLAY_NAME;
             }
@@ -91,9 +85,9 @@ public class ConfigTree implements IConfigTree
 
             data.writeByte(extraFlags);
 
-            if(!rawDN.isEmpty())
+            if(rawDN != null)
             {
-                LMNetUtils.writeString(data, rawDN);
+                LMNetUtils.writeTextComponent(data, rawDN);
             }
 
             if(!info.isEmpty())
@@ -101,31 +95,24 @@ public class ConfigTree implements IConfigTree
                 LMNetUtils.writeString(data, info);
             }
 
-            if(LMUtils.DEV_ENV)
-            {
-                LMUtils.DEV_LOGGER.info(key + " -> " + value.getID());
-            }
-
-            data.writeShort(FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getIDFromKey(value.getID()));
-            value.writeToServer(data);
+            LMNetUtils.writeString(data, value.getID());
+            value.writeData(data);
         });
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
-        Map<IConfigKey, IConfigValue> map = getTree();
         int s = data.readUnsignedShort();
-        map.clear();
+        tree.clear();
 
         while(--s >= 0)
         {
             String id = LMNetUtils.readString(data);
             byte flags = data.readByte();
 
-            String sid = FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getKeyFromID(data.readShort());
-            IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueProviders().get(sid).createConfigValue();
-            value.readFromServer(data);
+            IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(LMNetUtils.readString(data));
+            value.readData(data);
 
             ConfigKey key = new ConfigKey(id, value);
             key.setFlags(flags);
@@ -134,7 +121,7 @@ public class ConfigTree implements IConfigTree
 
             if((extraFlags & HAS_DISPLAY_NAME) != 0)
             {
-                key.setDisplayName(LMNetUtils.readString(data));
+                key.setDisplayName(LMNetUtils.readTextComponent(data));
             }
 
             if((extraFlags & HAS_INFO) != 0)
@@ -142,20 +129,9 @@ public class ConfigTree implements IConfigTree
                 key.setInfo(LMNetUtils.readString(data));
             }
 
-            sid = FTBLibIntegrationInternal.API.getClientData().getConfigIDs().getKeyFromID(data.readShort());
-
-            if(LMUtils.DEV_ENV)
-            {
-                LMUtils.DEV_LOGGER.info(key + " -> " + sid);
-            }
-
-            value = FTBLibIntegrationInternal
-                    .API
-                    .getConfigValueProviders()
-                    .get(sid)
-                    .createConfigValue();
-            value.readFromServer(data);
-            map.put(key, value);
+            value = FTBLibIntegrationInternal.API.getConfigValueFromID(LMNetUtils.readString(data));
+            value.readData(data);
+            tree.put(key, value);
         }
     }
 
@@ -169,7 +145,7 @@ public class ConfigTree implements IConfigTree
     public JsonElement getSerializableElement()
     {
         List<Map.Entry<String, JsonElement>> list = new ArrayList<>();
-        getTree().forEach((key, value) -> list.add(new AbstractMap.SimpleEntry<>(key.getName(), value.getSerializableElement())));
+        tree.forEach((key, value) -> list.add(new AbstractMap.SimpleEntry<>(key.getID(), value.getSerializableElement())));
         return LMJsonUtils.toJsonTree(list);
     }
 
@@ -177,7 +153,7 @@ public class ConfigTree implements IConfigTree
     public NBTBase serializeNBT()
     {
         NBTTagCompound nbt = new NBTTagCompound();
-        getTree().forEach((key, value) -> nbt.setTag(key.getName(), value.serializeNBT()));
+        tree.forEach((key, value) -> nbt.setTag(key.getID(), value.serializeNBT()));
         return nbt;
     }
 
@@ -185,14 +161,14 @@ public class ConfigTree implements IConfigTree
     public void deserializeNBT(NBTBase nbt)
     {
         NBTTagCompound configTag = (NBTTagCompound) nbt;
-        for(Map.Entry<IConfigKey, IConfigValue> entry : getTree().entrySet())
+        tree.forEach((key, value) ->
         {
-            NBTBase base = configTag.getTag(entry.getKey().getName());
+            NBTBase base = configTag.getTag(key.getID());
 
             if(base != null)
             {
-                entry.getValue().deserializeNBT(base);
+                value.deserializeNBT(base);
             }
-        }
+        });
     }
 }

@@ -5,7 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -28,39 +28,36 @@ public class LMFileUtils
     public static final Comparator<File> FILE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
     public static final Comparator<File> DEEP_FILE_COMPARATOR = (o1, o2) -> o1.getAbsolutePath().compareToIgnoreCase(o2.getAbsolutePath());
 
-    public static File newFile(File f)
+    public static File newFile(File file)
     {
-        if(f.exists())
+        if(!file.exists())
         {
-            return f;
-        }
-
-        try
-        {
-            File pf = f.getParentFile();
-            if(!pf.exists())
+            try
             {
-                pf.mkdirs();
+                File parent = file.getParentFile();
+                if(!parent.exists())
+                {
+                    parent.mkdirs();
+                }
+                file.createNewFile();
             }
-            f.createNewFile();
-            return f;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
-        return f;
+        return file;
     }
 
     public static void save(File f, List<String> al) throws Exception
     {
-        save(f, LMStringUtils.fromStringList(al));
+        save(f, String.join("\n", al));
     }
 
     public static void save(File f, String s) throws Exception
     {
-        FileWriter fw = new FileWriter(newFile(f));
+        OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(f)), LMStringUtils.UTF_8);
         BufferedWriter br = new BufferedWriter(fw);
         br.write(s);
         br.close();
@@ -81,8 +78,7 @@ public class LMFileUtils
     {
         try
         {
-            URL website = new URL(url);
-            ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+            ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
             FileOutputStream fos = new FileOutputStream(out);
             fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             fos.close();

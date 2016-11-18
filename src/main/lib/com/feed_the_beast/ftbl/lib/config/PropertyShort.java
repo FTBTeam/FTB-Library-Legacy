@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.math.Converter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -23,12 +22,13 @@ public class PropertyShort extends PropertyBase
 {
     public static final String ID = "short";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyShort((short) 0);
-
     private short value;
     private short minValue = Short.MIN_VALUE;
     private short maxValue = Short.MAX_VALUE;
+
+    public PropertyShort()
+    {
+    }
 
     public PropertyShort(int v)
     {
@@ -156,12 +156,22 @@ public class PropertyShort extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.selectInt(null, getShort(), (id, val) ->
+        GuiSelectors.selectJson(this, (val, set) ->
         {
-            setShort((short) val);
-            gui.onChanged(key, getSerializableElement());
+            if(set)
+            {
+                setShort((short) val.getInt());
+                gui.onChanged(key, getSerializableElement());
+            }
+
             gui.openGui();
         });
+    }
+
+    @Override
+    public boolean canParse(String text)
+    {
+        return Converter.canParseInt(text);
     }
 
     @Override
@@ -189,7 +199,7 @@ public class PropertyShort extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeShort(getShort());
         data.writeShort(getMin());
@@ -197,7 +207,7 @@ public class PropertyShort extends PropertyBase
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         setShort(data.readShort());
         setMin(data.readShort());

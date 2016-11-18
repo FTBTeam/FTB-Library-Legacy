@@ -36,7 +36,7 @@ public class RankConfigAPI
 
         RankConfig c = new RankConfig(id, defPlayer, defOP);
         c.setInfo(description);
-        REGISTRY.put(c.getName(), c);
+        REGISTRY.put(c.getID(), c);
         return c;
     }
 

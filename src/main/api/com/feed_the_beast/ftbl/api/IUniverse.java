@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.lib.INBTData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -14,7 +13,7 @@ import java.util.Collection;
 public interface IUniverse extends INBTSerializable<NBTTagCompound>
 {
     @Nullable
-    INBTData getData(ResourceLocation id);
+    INBTSerializable<?> getData(ResourceLocation id);
 
     Collection<? extends IForgePlayer> getPlayers();
 

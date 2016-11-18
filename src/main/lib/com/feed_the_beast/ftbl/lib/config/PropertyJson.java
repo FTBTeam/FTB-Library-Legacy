@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
@@ -20,10 +18,12 @@ public class PropertyJson extends PropertyBase
 {
     public static final String ID = "json";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyJson(new JsonObject());
-
     private JsonElement value;
+
+    public PropertyJson()
+    {
+        this(new JsonObject());
+    }
 
     public PropertyJson(JsonElement v)
     {
@@ -54,13 +54,13 @@ public class PropertyJson extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         LMNetUtils.writeJsonElement(data, getJsonElement());
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         setJsonElement(LMNetUtils.readJsonElement(data));
     }

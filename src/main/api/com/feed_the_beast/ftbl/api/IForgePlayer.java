@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.security.EnumPrivacyLevel;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,7 +24,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
     EntityPlayerMP getPlayer();
 
     @Nullable
-    INBTData getData(ResourceLocation id);
+    INBTSerializable<?> getData(ResourceLocation id);
 
     boolean equalsPlayer(@Nullable IForgePlayer player);
 

@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.api.EnumReloadType;
+import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadType;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.api_impl.PackMode;
-import com.feed_the_beast.ftbl.api_impl.SharedData;
+import com.feed_the_beast.ftbl.api_impl.SharedClientData;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -15,18 +16,14 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class MessageReload extends MessageToClient<MessageReload>
 {
     private int typeID;
-    private Map<String, NBTTagCompound> syncData;
+    private NBTTagCompound syncData;
     private String currentMode;
     private UUID universeID;
 
@@ -34,12 +31,12 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
     }
 
-    public MessageReload(ReloadType t, Map<String, NBTTagCompound> sync)
+    public MessageReload(EnumReloadType t, NBTTagCompound sync)
     {
         typeID = t.ordinal();
         syncData = sync;
-        currentMode = SharedData.SERVER.getPackMode().getID();
-        universeID = SharedData.SERVER.getUniverseID();
+        currentMode = SharedServerData.INSTANCE.getPackMode().getID();
+        universeID = SharedServerData.INSTANCE.getUniverseID();
     }
 
     @Override
@@ -52,15 +49,7 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void toBytes(ByteBuf io)
     {
         io.writeByte(typeID);
-
-        io.writeShort(syncData.size());
-
-        syncData.forEach((key, value) ->
-        {
-            LMNetUtils.writeString(io, key);
-            LMNetUtils.writeTag(io, value);
-        });
-
+        LMNetUtils.writeTag(io, syncData);
         LMNetUtils.writeString(io, currentMode);
         LMNetUtils.writeUUID(io, universeID);
     }
@@ -69,18 +58,7 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void fromBytes(ByteBuf io)
     {
         typeID = io.readUnsignedByte();
-
-        int s = io.readUnsignedShort();
-
-        syncData = new HashMap<>(s);
-
-        while(--s >= 0)
-        {
-            String key = LMNetUtils.readString(io);
-            NBTTagCompound value = LMNetUtils.readTag(io);
-            syncData.put(key, value);
-        }
-
+        syncData = LMNetUtils.readTag(io);
         currentMode = LMNetUtils.readString(io);
         universeID = LMNetUtils.readUUID(io);
     }
@@ -91,28 +69,31 @@ public class MessageReload extends MessageToClient<MessageReload>
         long ms = System.currentTimeMillis();
         Minecraft mc = Minecraft.getMinecraft();
 
-        ReloadType type = ReloadType.values()[m.typeID];
+        EnumReloadType type = EnumReloadType.values()[m.typeID];
 
-        SharedData.CLIENT.universeID = m.universeID;
-        SharedData.CLIENT.currentMode = new PackMode(m.currentMode);
+        SharedClientData.INSTANCE.universeID = m.universeID;
+        SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
-        m.syncData.forEach((key, value) ->
+        for(String key : m.syncData.getKeySet())
         {
-            ISyncData nbt = FTBLibRegistries.INSTANCE.SYNCED_DATA.get(new ResourceLocation(key));
+            ISyncData nbt = FTBLibMod.PROXY.SYNCED_DATA.get(key);
 
             if(nbt != null)
             {
-                nbt.readSyncData(value);
+                nbt.readSyncData(m.syncData.getCompoundTag(key));
             }
-        });
+        }
 
         //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
 
         if(type.reload(Side.CLIENT))
         {
-            MinecraftForge.EVENT_BUS.post(new ReloadEvent(Side.CLIENT, mc.thePlayer, type));
+            for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+            {
+                plugin.onReload(Side.CLIENT, mc.thePlayer, type);
+            }
 
-            if(type != ReloadType.LOGIN)
+            if(type != EnumReloadType.LOGIN)
             {
                 FTBLibLang.RELOAD_CLIENT.printChat(mc.thePlayer, (System.currentTimeMillis() - ms) + "ms");
             }

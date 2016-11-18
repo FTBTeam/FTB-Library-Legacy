@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by LatvianModder on 11.09.2016.
@@ -25,22 +26,45 @@ public interface IConfigValue extends IExtendedIOObject, INBTSerializable<NBTBas
 
     int getInt();
 
-    double getDouble();
+    default double getDouble()
+    {
+        return getInt();
+    }
 
     IConfigValue copy();
 
-    boolean equalsValue(IConfigValue value);
+    default boolean equalsValue(IConfigValue value)
+    {
+        return Objects.equals(getValue(), value.getValue());
+    }
 
-    int getColor();
+    default int getColor()
+    {
+        return 0x999999;
+    }
 
     @Nullable
-    String getMinValueString();
+    default String getMinValueString()
+    {
+        return null;
+    }
 
     @Nullable
-    String getMaxValueString();
+    default String getMaxValueString()
+    {
+        return null;
+    }
 
     @Nullable
-    List<String> getVariants();
+    default List<String> getVariants()
+    {
+        return null;
+    }
 
     void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button);
+
+    default boolean canParse(String text)
+    {
+        return true;
+    }
 }

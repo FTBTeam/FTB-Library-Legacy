@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
@@ -43,11 +43,11 @@ public class CmdSetPermission extends CommandLM
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibRegistries.INSTANCE.TEAM_PLAYER_PERMISSIONS);
+            return getListOfStringsMatchingLastWord(args, FTBLibMod.PROXY.VISIBLE_TEAM_PLAYER_PERMISSIONS);
         }
         else if(args.length == 3)
         {
-            return getListOfStringsMatchingLastWord(args, "false", "true");
+            return getListOfStringsMatchingLastWord(args, "true", "false");
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -71,12 +71,20 @@ public class CmdSetPermission extends CommandLM
 
         checkArgs(args, 3, "<player> <id> <true|false>");
         IForgePlayer p1 = getForgePlayer(args[0]);
+        boolean val = parseBoolean(args[2]);
 
         if(p1.equals(team.getOwner()))
         {
-            throw FTBLibLang.RAW.commandError("Can't set owner's permissions!"); //TODO: Lang
+            throw FTBLibLang.TEAM_PERMISSION_OWNER.commandError();
         }
 
-        team.setHasPermission(p1.getProfile().getId(), args[1], parseBoolean(args[2]));
+        if(team.setHasPermission(p1.getProfile().getId(), args[1], val))
+        {
+            FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, args[1], args[0], val);
+        }
+        else
+        {
+            FTBLibLang.TEAM_PERMISSION_ALREADY_SET.printChat(sender, args[1], args[0], val);
+        }
     }
 }

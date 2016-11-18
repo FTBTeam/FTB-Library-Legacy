@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.cmd.team.CmdTeam;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.server.command.CommandTreeBase;
 
 /**
@@ -30,7 +30,10 @@ public class CmdFTB extends CommandTreeBase
             addSubcommand(new CmdAddFakePlayer());
         }
 
-        MinecraftForge.EVENT_BUS.post(new RegisterFTBCommandsEvent(this, dedi));
+        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+        {
+            plugin.registerFTBCommands(this, dedi);
+        }
     }
 
     @Override

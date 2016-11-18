@@ -1,17 +1,16 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.lib.SidebarButtonInst;
+import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.gui.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLoading;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.net.MessageTeamsGuiRequest;
@@ -25,8 +24,7 @@ import javax.annotation.Nullable;
 
 public class FTBLibActions
 {
-    @RegistryObject
-    public static final ISidebarButton TEAMS_GUI = new SidebarButtonInst(FTBLibFinals.get("teams_gui"), 995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
+    public static final ISidebarButton TEAMS_GUI = new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -65,18 +63,16 @@ public class FTBLibActions
         }
     };
 
-    @RegistryObject
-    public static final ISidebarButton SETTINGS = new SidebarButtonInst(FTBLibFinals.get("settings"), 990, GuiIcons.SETTINGS, null)
+    public static final ISidebarButton SETTINGS = new SidebarButton(990, GuiIcons.SETTINGS, null)
     {
         @Override
         public void onClicked(IMouseButton button)
         {
-            new GuiEditConfig(null, FTBLibRegistries.INSTANCE.CLIENT_CONFIG_CONTAINER).openGui();
+            new GuiEditConfig(null, FTBLibMod.PROXY.getClientConfig()).openGui();
         }
     };
 
-    @RegistryObject
-    public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButtonInst(FTBLibFinals.get("my_server_settings"), 985, GuiIcons.SETTINGS_RED, new PropertyBool(true))
+    public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButton(985, GuiIcons.SETTINGS_RED, new PropertyBool(true))
     {
         @Override
         public void onClicked(IMouseButton button)

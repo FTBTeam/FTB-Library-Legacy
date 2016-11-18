@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.info;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.lib.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;

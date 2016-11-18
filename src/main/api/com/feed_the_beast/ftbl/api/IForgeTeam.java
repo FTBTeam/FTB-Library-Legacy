@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +17,7 @@ import java.util.UUID;
 public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
 {
     @Nullable
-    INBTData getData(ResourceLocation id);
+    INBTSerializable<?> getData(ResourceLocation id);
 
     IForgePlayer getOwner();
 
@@ -29,8 +28,6 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
     EnumTeamColor getColor();
 
     boolean hasStatus(IForgePlayer player, EnumTeamStatus status);
-
-    boolean isAllyTeam(String team);
 
     Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
 
@@ -54,10 +51,6 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
     void removePlayer(IForgePlayer p);
 
     void changeOwner(IForgePlayer o);
-
-    boolean addAllyTeam(String arg);
-
-    boolean removeAllyTeam(String name);
 
     void getSettings(IConfigTree tree);
 

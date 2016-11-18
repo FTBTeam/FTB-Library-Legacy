@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.Locale;
 
@@ -12,18 +12,18 @@ import java.util.Locale;
  */
 public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
 {
-    ENEMY(-1, EnumDyeColor.RED),
-    NONE(0, EnumDyeColor.WHITE),
-    ALLY(1, EnumDyeColor.LIGHT_BLUE),
-    MEMBER(2, EnumDyeColor.LIME),
-    OWNER(3, EnumDyeColor.ORANGE);
+    ENEMY(-1, TextFormatting.RED),
+    NONE(0, TextFormatting.WHITE),
+    ALLY(1, TextFormatting.BLUE),
+    MEMBER(2, TextFormatting.GREEN),
+    OWNER(3, TextFormatting.GOLD);
 
     private final String name;
     private final int status;
-    private final EnumDyeColor color;
+    private final TextFormatting color;
     private final LangKey langKey;
 
-    EnumTeamStatus(int s, EnumDyeColor c)
+    EnumTeamStatus(int s, TextFormatting c)
     {
         name = name().toLowerCase(Locale.ENGLISH);
         status = s;
@@ -42,7 +42,7 @@ public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
         return status;
     }
 
-    public EnumDyeColor getColor()
+    public TextFormatting getColor()
     {
         return color;
     }

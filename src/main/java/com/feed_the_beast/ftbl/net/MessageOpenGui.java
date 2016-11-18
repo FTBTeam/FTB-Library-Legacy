@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IGuiHandler;
-import com.feed_the_beast.ftbl.api_impl.FTBLibRegistries;
-import com.feed_the_beast.ftbl.api_impl.SharedData;
+import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
+import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -12,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,7 +18,8 @@ import javax.annotation.Nullable;
 
 public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
-    private short guiID;
+    private ResourceLocation guiID;
+    private BlockPos pos;
     private NBTTagCompound data;
     private int windowID;
 
@@ -27,9 +27,10 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     {
     }
 
-    public MessageOpenGui(ResourceLocation key, @Nullable NBTTagCompound tag, int wid)
+    public MessageOpenGui(ResourceLocation key, BlockPos p, @Nullable NBTTagCompound tag, int wid)
     {
-        guiID = SharedData.SERVER.guiIDs.getIDFromKey(key);
+        guiID = key;
+        pos = p;
         data = tag;
         windowID = wid;
     }
@@ -43,7 +44,8 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        guiID = io.readShort();
+        guiID = LMNetUtils.readResourceLocation(io);
+        pos = LMNetUtils.readPos(io);
         data = LMNetUtils.readTag(io);
         windowID = io.readUnsignedByte();
     }
@@ -51,7 +53,8 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeShort(guiID);
+        LMNetUtils.writeResourceLocation(io, guiID);
+        LMNetUtils.writePos(io, pos);
         LMNetUtils.writeTag(io, data);
         io.writeByte(windowID);
     }
@@ -60,33 +63,17 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @SideOnly(Side.CLIENT)
     public void onMessage(MessageOpenGui m)
     {
-        ResourceLocation key = SharedData.CLIENT.guiIDs.getKeyFromID(m.guiID);
+        IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiID);
 
-        if(key != null)
+        if(guiProvider != null)
         {
-            IGuiHandler handler = FTBLibRegistries.INSTANCE.GUIS.get(key);
+            Minecraft mc = Minecraft.getMinecraft();
+            GuiScreen g = guiProvider.getGui(mc.thePlayer, m.pos, m.data);
 
-            if(handler != null)
+            if(g != null)
             {
-                Minecraft mc = Minecraft.getMinecraft();
-                Object go = handler.getGui(mc.thePlayer, m.data);
-
-                GuiScreen g;
-
-                if(go instanceof IGui)
-                {
-                    g = ((IGui) go).getWrapper();
-                }
-                else
-                {
-                    g = (GuiScreen) go;
-                }
-
-                if(g != null)
-                {
-                    mc.displayGuiScreen(g);
-                    mc.thePlayer.openContainer.windowId = m.windowID;
-                }
+                mc.displayGuiScreen(g);
+                mc.thePlayer.openContainer.windowId = m.windowID;
             }
         }
     }

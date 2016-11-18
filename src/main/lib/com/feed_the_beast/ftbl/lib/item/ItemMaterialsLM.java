@@ -84,7 +84,7 @@ public class ItemMaterialsLM extends Item implements IMetaLookup<IMaterial>
     {
         try
         {
-            addAll(LMUtils.getObjects(IMaterial.class, c, null));
+            addAll(LMUtils.getObjects(IMaterial.class, c, null, false).values());
         }
         catch(Exception ex)
         {

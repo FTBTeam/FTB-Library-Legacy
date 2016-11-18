@@ -19,7 +19,8 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNullableByDefault;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class LMJsonUtils
     public static final Gson GSON;
     public static final Gson GSON_PRETTY;
     public static final Gson TEXT_COMPONENT_GSON;
+    public static final JsonParser PARSER;
 
     static
     {
@@ -93,6 +95,8 @@ public class LMJsonUtils
         {
             throw new NullPointerException("Failed to read ITextComponent.Serializer.GSON!");
         }
+
+        PARSER = new JsonParser();
     }
 
     public static String toJson(@Nonnull Gson gson, JsonElement e)
@@ -104,8 +108,7 @@ public class LMJsonUtils
     {
         try
         {
-            String s = toJson(gson, o);
-            LMFileUtils.save(f, s);
+            LMFileUtils.save(f, toJson(gson, o));
             return true;
         }
         catch(Exception e)
@@ -128,12 +131,12 @@ public class LMJsonUtils
 
     public static JsonElement fromJson(String json)
     {
-        return (json == null || json.isEmpty()) ? JsonNull.INSTANCE : new JsonParser().parse(json);
+        return (json == null || json.isEmpty()) ? JsonNull.INSTANCE : PARSER.parse(json);
     }
 
     public static JsonElement fromJson(Reader json)
     {
-        return (json == null) ? JsonNull.INSTANCE : new JsonParser().parse(json);
+        return (json == null) ? JsonNull.INSTANCE : PARSER.parse(json);
     }
 
     public static JsonElement fromJson(File json)
@@ -145,9 +148,11 @@ public class LMJsonUtils
                 return JsonNull.INSTANCE;
             }
 
-            BufferedReader reader = new BufferedReader(new FileReader(json));
+            FileInputStream fis = new FileInputStream(json);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, LMStringUtils.UTF_8));
             JsonElement e = fromJson(reader);
             reader.close();
+            fis.close();
             return e;
         }
         catch(Exception ex)

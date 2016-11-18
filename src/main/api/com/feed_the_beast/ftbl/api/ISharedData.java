@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
-import com.mojang.authlib.GameProfile;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
@@ -20,9 +18,5 @@ public interface ISharedData
 
     boolean hasOptionalServerMod(@Nullable String id);
 
-    boolean isOP(@Nullable GameProfile profile);
-
     boolean useFTBPrefix();
-
-    StringIDRegistry getConfigIDs();
 }

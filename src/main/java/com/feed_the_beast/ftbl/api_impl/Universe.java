@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -7,7 +8,6 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlayersEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
-import com.feed_the_beast.ftbl.lib.INBTData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -46,7 +47,7 @@ public class Universe implements IUniverse
 
     public void init()
     {
-        dataStorage = FTBLibRegistries.INSTANCE.createUniverseDataStorage(this);
+        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibMod.PROXY.DATA_PROVIDER_UNIVERSE);
         MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
 
         try
@@ -55,7 +56,7 @@ public class Universe implements IUniverse
 
             if(worldData.isJsonObject())
             {
-                SharedData.SERVER.fromJson(worldData.getAsJsonObject());
+                SharedServerData.INSTANCE.fromJson(worldData.getAsJsonObject());
             }
 
             playerMap.clear();
@@ -75,7 +76,7 @@ public class Universe implements IUniverse
 
     @Override
     @Nullable
-    public INBTData getData(ResourceLocation id)
+    public INBTSerializable<?> getData(ResourceLocation id)
     {
         return dataStorage == null ? null : dataStorage.get(id);
     }

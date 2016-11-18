@@ -67,7 +67,7 @@ public class ItemStackSerializer
 
         if(s1.length > 3)
         {
-            nbt = LMStringUtils.unsplitSpaceUntilEnd(3, s1);
+            nbt = LMStringUtils.joinSpaceUntilEnd(3, s1);
         }
 
         return GameRegistry.makeItemStack(itemID, meta, size, nbt);

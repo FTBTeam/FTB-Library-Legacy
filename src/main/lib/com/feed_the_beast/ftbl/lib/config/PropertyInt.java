@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.RegistryObject;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.selectors.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.math.Converter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -24,12 +23,13 @@ public class PropertyInt extends PropertyBase
 {
     public static final String ID = "int";
 
-    @RegistryObject(ID)
-    public static final IConfigValueProvider PROVIDER = () -> new PropertyInt(0);
-
     private int value;
     private int minValue = Integer.MIN_VALUE;
     private int maxValue = Integer.MAX_VALUE;
+
+    public PropertyInt()
+    {
+    }
 
     public PropertyInt(int v)
     {
@@ -150,12 +150,22 @@ public class PropertyInt extends PropertyBase
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.selectInt(null, getInt(), (id, val) ->
+        GuiSelectors.selectJson(this, (val, set) ->
         {
-            setInt(val);
-            gui.onChanged(key, getSerializableElement());
+            if(set)
+            {
+                setInt(val.getInt());
+                gui.onChanged(key, getSerializableElement());
+            }
+
             gui.openGui();
         });
+    }
+
+    @Override
+    public boolean canParse(String text)
+    {
+        return Converter.canParseInt(text);
     }
 
     @Override
@@ -183,7 +193,7 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    public void writeToServer(ByteBuf data)
+    public void writeData(ByteBuf data)
     {
         data.writeInt(getInt());
         data.writeInt(getMin());
@@ -191,7 +201,7 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    public void readFromServer(ByteBuf data)
+    public void readData(ByteBuf data)
     {
         setInt(data.readInt());
         setMin(data.readInt());

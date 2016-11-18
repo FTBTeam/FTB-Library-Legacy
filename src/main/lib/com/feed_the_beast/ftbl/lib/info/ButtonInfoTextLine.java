@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.info;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
-import com.feed_the_beast.ftbl.lib.gui.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 
 import javax.annotation.Nullable;
 import java.util.List;

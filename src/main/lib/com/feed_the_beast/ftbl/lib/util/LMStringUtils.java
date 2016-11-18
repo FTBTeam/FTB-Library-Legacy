@@ -96,20 +96,6 @@ public class LMStringUtils
         return al;
     }
 
-    public static String fromStringList(List<String> l)
-    {
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < l.size(); i++)
-        {
-            sb.append(l.get(i));
-            if(i != l.size() - 1)
-            {
-                sb.append('\n');
-            }
-        }
-        return sb.toString();
-    }
-
     public static boolean isASCIIChar(char c)
     {
         return c > 0 && c < 256;
@@ -315,44 +301,8 @@ public class LMStringUtils
         return sb.toString();
     }
 
-    public static String unsplit(String[] s, String s1)
-    {
-        StringBuilder sb = new StringBuilder();
-        if(s.length == 1)
-        {
-            return String.valueOf(s[0]);
-        }
-        for(int i = 0; i < s.length; i++)
-        {
-            sb.append(s[i]);
-            if(i != s.length - 1)
-            {
-                sb.append(s1);
-            }
-        }
-        return sb.toString();
-    }
-
-    public static String unsplit(Object[] o, String s1)
-    {
-        if(o.length == 1)
-        {
-            return String.valueOf(o[0]);
-        }
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < o.length; i++)
-        {
-            sb.append(o[i]);
-            if(i != o.length - 1)
-            {
-                sb.append(s1);
-            }
-        }
-        return sb.toString();
-    }
-
     @Nullable
-    public static String unsplitSpaceUntilEnd(int startIndex, String[] o)
+    public static String joinSpaceUntilEnd(int startIndex, CharSequence[] o)
     {
         if(startIndex < 0 || o.length <= startIndex)
         {
@@ -387,7 +337,7 @@ public class LMStringUtils
         return String.valueOf(c) + s.substring(1);
     }
 
-    public static String fillString(String s, char fill, int length)
+    public static String fillString(CharSequence s, char fill, int length)
     {
         int sl = s.length();
 
