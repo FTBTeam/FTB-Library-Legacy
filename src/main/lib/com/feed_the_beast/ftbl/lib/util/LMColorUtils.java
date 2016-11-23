@@ -8,23 +8,17 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
-import java.util.EnumMap;
 
 public class LMColorUtils
 {
-    public static final int[] CHAT_FORMATTING_COLORS = new int[16];
+    private static final int[] CHAT_FORMATTING_COLORS = new int[16];
     private static final int[] ID_COLORS = new int[256];
-
-    private static EnumMap<EnumDyeColor, TextFormatting> dyeToTextFormattingMap;
-    private static EnumMap<TextFormatting, Character> textFormattingToCharMap;
-    private static EnumMap<EnumDyeColor, Integer> dyeTextFormattingColorsLight, dyeTextFormattingColorsDark;
+    private static final int[] DYE_TEXT_FORMATTING_COLORS = new int[32];
 
     static
     {
@@ -70,11 +64,23 @@ public class LMColorUtils
         }
 
         ID_COLORS[0] = 0;
+
+        for(EnumDyeColor color : EnumDyeColor.values())
+        {
+            char c = getTextFormattingChar(getFromDyeColor(color));
+            DYE_TEXT_FORMATTING_COLORS[color.getMetadata()] = GuiUtils.getColorCode(c, true);
+            DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = GuiUtils.getColorCode(c, false);
+        }
     }
 
     public static int getColorFromID(byte col)
     {
         return ID_COLORS[col & 0xFF];
+    }
+
+    public static int getChatFormattingColor(int id)
+    {
+        return CHAT_FORMATTING_COLORS[id & 0xF];
     }
 
     public static JsonElement serialize(int col)
@@ -94,7 +100,7 @@ public class LMColorUtils
 
     public static int getRGBA(int r, int g, int b, int a)
     {
-        return ((a & 255) << 24) | ((r & 255) << 16) | ((g & 255) << 8) | ((b & 255));
+        return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 255));
     }
 
     public static int getRGBAF(float r, float g, float b, float a)
@@ -228,81 +234,16 @@ public class LMColorUtils
 
     public static TextFormatting getFromDyeColor(EnumDyeColor color)
     {
-        if(dyeToTextFormattingMap == null)
-        {
-            dyeToTextFormattingMap = new EnumMap<>(EnumDyeColor.class);
-
-            for(EnumDyeColor col : EnumDyeColor.values())
-            {
-                try
-                {
-                    Field field = ReflectionHelper.findField(EnumDyeColor.class, "chatColor", "field_176793_x");
-                    field.setAccessible(true);
-                    dyeToTextFormattingMap.put(col, (TextFormatting) field.get(col));
-                }
-                catch(Exception ex)
-                {
-                    ex.printStackTrace();
-                }
-            }
-        }
-
-        return dyeToTextFormattingMap.get(color);
+        return color.chatColor;
     }
 
     public static char getTextFormattingChar(TextFormatting formatting)
     {
-        if(textFormattingToCharMap == null)
-        {
-            textFormattingToCharMap = new EnumMap<>(TextFormatting.class);
-
-            for(TextFormatting f : TextFormatting.values())
-            {
-                try
-                {
-                    Field field = ReflectionHelper.findField(TextFormatting.class, "formattingCode", "field_96329_z");
-                    field.setAccessible(true);
-                    textFormattingToCharMap.put(f, (Character) field.get(f));
-                }
-                catch(Exception ex)
-                {
-                    ex.printStackTrace();
-                }
-            }
-        }
-
-        return textFormattingToCharMap.get(formatting);
+        return formatting.formattingCode;
     }
 
     public static int getDyeColor(EnumDyeColor color, boolean isLighter)
     {
-        if(isLighter)
-        {
-            if(dyeTextFormattingColorsLight == null)
-            {
-                dyeTextFormattingColorsLight = new EnumMap<>(EnumDyeColor.class);
-
-                for(EnumDyeColor col : EnumDyeColor.values())
-                {
-                    dyeTextFormattingColorsLight.put(col, GuiUtils.getColorCode(getTextFormattingChar(getFromDyeColor(color)), true));
-                }
-            }
-
-            return dyeTextFormattingColorsLight.get(color);
-        }
-        else
-        {
-            if(dyeTextFormattingColorsDark == null)
-            {
-                dyeTextFormattingColorsDark = new EnumMap<>(EnumDyeColor.class);
-
-                for(EnumDyeColor col : EnumDyeColor.values())
-                {
-                    dyeTextFormattingColorsDark.put(col, GuiUtils.getColorCode(getTextFormattingChar(getFromDyeColor(color)), false));
-                }
-            }
-
-            return dyeTextFormattingColorsDark.get(color);
-        }
+        return DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + (isLighter ? 0 : 16)];
     }
 }

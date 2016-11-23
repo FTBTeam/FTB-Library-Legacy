@@ -5,8 +5,10 @@ import com.feed_the_beast.ftbl.lib.item.ToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -23,6 +25,84 @@ public class LMInvUtils
 {
     public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
     private static Method baublesMethod = null;
+
+    public static void addPlayerSlots(Container container, EntityPlayer player, int posX, int posY, boolean ignoreCurrent)
+    {
+        if(player.inventory == null)
+        {
+            return;
+        }
+
+        for(int y = 0; y < 3; y++)
+        {
+            for(int x = 0; x < 9; x++)
+            {
+                container.addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
+            }
+        }
+
+        int i = ignoreCurrent ? player.inventory.currentItem : -1;
+
+        for(int x = 0; x < 9; x++)
+        {
+            if(x != i)
+            {
+                container.addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
+            }
+            else
+            {
+                container.addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58)
+                {
+                    @Override
+                    public boolean canTakeStack(EntityPlayer ep)
+                    {
+                        return false;
+                    }
+                });
+            }
+        }
+    }
+
+    @Nullable
+    public static ItemStack transferStackInSlot(Container container, int index, int nonPlayerSlots)
+    {
+        if(nonPlayerSlots <= 0)
+        {
+            return null;
+        }
+
+        ItemStack is = null;
+        Slot slot = container.inventorySlots.get(index);
+
+        if(slot != null && slot.getHasStack())
+        {
+            ItemStack is1 = slot.getStack();
+            is = is1.copy();
+
+            if(index < nonPlayerSlots)
+            {
+                if(!container.mergeItemStack(is1, nonPlayerSlots, container.inventorySlots.size(), true))
+                {
+                    return null;
+                }
+            }
+            else if(!container.mergeItemStack(is1, 0, nonPlayerSlots, false))
+            {
+                return null;
+            }
+
+            if(is1.stackSize == 0)
+            {
+                slot.putStack(null);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
+        }
+
+        return is;
+    }
 
     public static ItemStack singleCopy(@Nullable ItemStack is)
     {

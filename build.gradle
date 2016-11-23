@@ -33,6 +33,10 @@ minecraft {
 
 repositories {
     ivy {
+        name "LatMod"
+        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+    }
+    ivy {
         name "Mercurius"
         artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]"
     }
@@ -40,6 +44,7 @@ repositories {
 
 dependencies {
     compile 'Mercurius:Mercurius:1.10.2-1.0.1'
+    compile 'LatMod:iChunUtil:1.10.2-6.0.0:api'
 }
 
 sourceSets {
@@ -79,9 +84,18 @@ processResources {
     }
 }
 
+jar {
+    manifest {
+        attributes 'FMLAT': 'ftbl_at.cfg'
+    }
+}
+
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
+    manifest {
+        attributes 'FMLAT': 'ftbl_at.cfg'
+    }
 }
 
 build.dependsOn deobfJar

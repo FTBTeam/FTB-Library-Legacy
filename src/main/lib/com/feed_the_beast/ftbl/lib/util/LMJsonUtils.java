@@ -13,7 +13,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +36,6 @@ public class LMJsonUtils
     public static final JsonSerializationContext SERIALIZATION_CONTEXT, PRETTY_SERIALIZATION_CONTEXT;
     public static final Gson GSON;
     public static final Gson GSON_PRETTY;
-    public static final Gson TEXT_COMPONENT_GSON;
     public static final JsonParser PARSER;
 
     static
@@ -85,15 +83,6 @@ public class LMJsonUtils
                 return GSON_PRETTY.toJsonTree(src, typeOfSrc);
             }
         };
-
-        try
-        {
-            TEXT_COMPONENT_GSON = (Gson) ReflectionHelper.findField(ITextComponent.Serializer.class, "field_150700_a", "GSON").get(null);
-        }
-        catch(Exception ex)
-        {
-            throw new NullPointerException("Failed to read ITextComponent.Serializer.GSON!");
-        }
 
         PARSER = new JsonParser();
     }
@@ -216,13 +205,13 @@ public class LMJsonUtils
             return new JsonPrimitive(((TextComponentString) c).getText());
         }
 
-        return (c == null) ? JsonNull.INSTANCE : TEXT_COMPONENT_GSON.toJsonTree(c, ITextComponent.class);
+        return (c == null) ? JsonNull.INSTANCE : ITextComponent.Serializer.GSON.toJsonTree(c, ITextComponent.class);
     }
 
     @Nullable
     public static ITextComponent deserializeTextComponent(JsonElement e)
     {
-        return (e == null || e.isJsonNull()) ? null : TEXT_COMPONENT_GSON.fromJson(e, ITextComponent.class);
+        return (e == null || e.isJsonNull()) ? null : ITextComponent.Serializer.GSON.fromJson(e, ITextComponent.class);
     }
 
     public static JsonObject fromJsonTree(@Nonnull JsonObject o)

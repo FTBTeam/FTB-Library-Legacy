@@ -27,13 +27,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -271,17 +268,6 @@ public class LMServerUtils
 
     public static void addTickable(MinecraftServer server, ITickable tickable)
     {
-        try
-        {
-            Field field = ReflectionHelper.findField(MinecraftServer.class, "tickables", "field_71322_p");
-            field.setAccessible(true);
-            @SuppressWarnings("unchecked")
-            List<ITickable> list = (List<ITickable>) field.get(server);
-            list.add(tickable);
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        server.tickables.add(tickable);
     }
 }
