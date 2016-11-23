@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
@@ -44,12 +43,6 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
     public boolean hasOptionalServerMod(@Nullable String id)
     {
         return id == null || optionalServerMods.contains(id);
-    }
-
-    @Override
-    public boolean useFTBPrefix()
-    {
-        return FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean();
     }
 
     @Override

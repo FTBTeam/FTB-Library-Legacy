@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 
@@ -47,7 +47,7 @@ public interface IConfigKey
     default ITextComponent getDisplayName()
     {
         ITextComponent t = getRawDisplayName();
-        return t == null ? new TextComponentString("config." + getID() + ".name") : t;
+        return t == null ? new TextComponentTranslation("config." + getID() + ".name") : t;
     }
 
     String getInfo();

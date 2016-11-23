@@ -8,5 +8,5 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 public class FTBLibConfig
 {
     public static final PropertyBool AUTOCREATE_TEAMS = new PropertyBool(true);
-    public static final PropertyBool USE_FTB_COMMAND_PREFIX = new PropertyBool(true);
+    public static final PropertyBool MIRROR_FTB_COMMANDS = new PropertyBool(true);
 }

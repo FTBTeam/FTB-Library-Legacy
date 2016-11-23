@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.api.asm.IAnnotationInfo;
-import com.feed_the_beast.ftbl.api.asm.IObjectCallback;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ModCandidate;

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.NotificationID;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -13,17 +13,16 @@ import java.util.List;
 
 public class Notification implements INotification
 {
-    private ResourceLocation ID;
-    private byte variant, color;
+    private NotificationID ID;
+    private byte color;
     private short timer;
     private boolean isPermanent;
     private List<ITextComponent> text;
     private ItemStack item;
 
-    public Notification(ResourceLocation id, byte v)
+    public Notification(NotificationID id)
     {
         ID = id;
-        variant = v;
         text = new ArrayList<>();
     }
 
@@ -58,7 +57,7 @@ public class Notification implements INotification
 
     public String toString()
     {
-        return getID() + "@" + variant + ", text:" + getText() + ", col:" + getColorID() + ", timer:" + getTimer() + ", item:" + getItem();
+        return getID() + ", text:" + getText() + ", col:" + getColorID() + ", timer:" + getTimer() + ", item:" + getItem();
     }
 
     public Notification addText(ITextComponent t)
@@ -68,15 +67,9 @@ public class Notification implements INotification
     }
 
     @Override
-    public ResourceLocation getID()
+    public NotificationID getID()
     {
         return ID;
-    }
-
-    @Override
-    public byte getVariant()
-    {
-        return variant;
     }
 
     @Override
@@ -134,7 +127,7 @@ public class Notification implements INotification
 
     public static Notification copy(INotification n)
     {
-        Notification n1 = new Notification(n.getID(), n.getVariant());
+        Notification n1 = new Notification(n.getID());
         n1.getText().addAll(n.getText());
         n1.setColorID(n.getColorID());
         n1.setTimer(n.getTimer());

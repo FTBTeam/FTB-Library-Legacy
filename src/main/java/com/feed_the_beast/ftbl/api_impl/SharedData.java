@@ -3,12 +3,13 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
+import com.feed_the_beast.ftbl.api.NotificationID;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
-import gnu.trove.map.hash.TShortObjectHashMap;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -19,8 +20,7 @@ public abstract class SharedData implements ISharedData
     public IPackMode currentMode;
     public UUID universeID;
     public final Collection<String> optionalServerMods = new HashSet<>();
-    public final StringIDRegistry notificationIDs = new StringIDRegistry();
-    public final TShortObjectHashMap<INotification> cachedNotifications = new TShortObjectHashMap<>();
+    public final Map<NotificationID, INotification> notifications = new HashMap<>();
 
     SharedData()
     {
@@ -30,7 +30,6 @@ public abstract class SharedData implements ISharedData
     {
         currentMode = null;
         universeID = null;
-        cachedNotifications.clear();
     }
 
     @Override

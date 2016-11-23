@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -49,7 +49,7 @@ public class GuiHelper
 
     public static void drawPlayerHead(String username, int x, int y, int w, int h)
     {
-        FTBLibClient.setTexture(FTBLibClient.getSkinTexture(username));
+        Minecraft.getMinecraft().getTextureManager().bindTexture(FTBLibClient.getSkinTexture(username));
         drawTexturedRect(x, y, w, h, 0.125D, 0.125D, 0.25D, 0.25D);
         drawTexturedRect(x, y, w, h, 0.625D, 0.125D, 0.75D, 0.25D);
     }
@@ -65,7 +65,7 @@ public class GuiHelper
     {
         if(tc.isValid())
         {
-            FTBLibClient.setTexture(tc.getTexture());
+            Minecraft.getMinecraft().getTextureManager().bindTexture(tc.getTexture());
             drawTexturedRect(x, y, w, h, tc.getMinU(), tc.getMinV(), tc.getMaxU(), tc.getMaxV());
         }
     }

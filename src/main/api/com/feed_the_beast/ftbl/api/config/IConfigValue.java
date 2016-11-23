@@ -31,6 +31,11 @@ public interface IConfigValue extends IExtendedIOObject, INBTSerializable<NBTBas
         return getInt();
     }
 
+    default boolean containsInt(int val)
+    {
+        return getInt() == val;
+    }
+
     IConfigValue copy();
 
     default boolean equalsValue(IConfigValue value)

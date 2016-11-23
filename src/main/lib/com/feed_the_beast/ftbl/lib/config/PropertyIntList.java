@@ -32,8 +32,7 @@ public class PropertyIntList extends PropertyBase
 
     public PropertyIntList(int... ai)
     {
-        value = new TIntArrayList(ai.length);
-        value.addAll(ai);
+        value = new TIntArrayList(ai);
     }
 
     @Override
@@ -75,6 +74,12 @@ public class PropertyIntList extends PropertyBase
     public int getInt()
     {
         return getIntList().size();
+    }
+
+    @Override
+    public boolean containsInt(int val)
+    {
+        return getIntList().contains(val);
     }
 
     @Override
@@ -122,8 +127,6 @@ public class PropertyIntList extends PropertyBase
 
         if(!list.isEmpty())
         {
-            data.writeShort(list.size());
-
             for(int i = 0; i < list.size(); i++)
             {
                 data.writeInt(list.get(i));
@@ -137,7 +140,7 @@ public class PropertyIntList extends PropertyBase
         int s = data.readUnsignedShort();
         value.clear();
 
-        for(int i = 0; i < s; i++)
+        while(--s >= 0)
         {
             value.add(data.readInt());
         }

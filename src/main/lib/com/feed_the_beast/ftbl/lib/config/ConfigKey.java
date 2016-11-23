@@ -69,8 +69,8 @@ public class ConfigKey extends SimpleConfigKey
         return info;
     }
 
-    public void setInfo(CharSequence... s)
+    public void setInfo(String... s)
     {
-        info = String.join("\n", s);
+        info = s.length == 0 ? "" : (s.length == 1 ? s[0] : String.join("\n", s));
     }
 }

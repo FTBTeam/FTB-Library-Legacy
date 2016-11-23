@@ -11,7 +11,7 @@ public class SharedClientData extends SharedData implements ISharedClientData
 {
     public static final SharedClientData INSTANCE = new SharedClientData();
 
-    public boolean hasServer, useFTBPrefix, isClientPlayerOP;
+    public boolean hasServer, isClientPlayerOP;
 
     private SharedClientData()
     {
@@ -22,8 +22,8 @@ public class SharedClientData extends SharedData implements ISharedClientData
     {
         super.reset();
         optionalServerMods.clear();
+        notifications.clear();
         hasServer = false;
-        useFTBPrefix = false;
         isClientPlayerOP = false;
     }
 
@@ -31,12 +31,6 @@ public class SharedClientData extends SharedData implements ISharedClientData
     public boolean hasOptionalServerMod(@Nullable String id)
     {
         return (id == null || id.isEmpty()) ? hasServer : optionalServerMods.contains(id);
-    }
-
-    @Override
-    public boolean useFTBPrefix()
-    {
-        return useFTBPrefix;
     }
 
     @Override

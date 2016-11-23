@@ -17,6 +17,4 @@ public interface ISharedData
     UUID getUniverseID();
 
     boolean hasOptionalServerMod(@Nullable String id);
-
-    boolean useFTBPrefix();
 }

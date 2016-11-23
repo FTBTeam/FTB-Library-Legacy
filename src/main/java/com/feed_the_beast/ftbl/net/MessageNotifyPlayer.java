@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api_impl.SharedServerData;
+import com.feed_the_beast.ftbl.api.NotificationID;
+import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
@@ -26,13 +27,13 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     private static final byte FLAG_HAS_ITEM = 2;
     private static final byte FLAG_IS_PERMANENT = 4;
 
-    private short ID;
+    private NotificationID ID;
 
     public MessageNotifyPlayer()
     {
     }
 
-    public MessageNotifyPlayer(short id)
+    public MessageNotifyPlayer(NotificationID id)
     {
         ID = id;
     }
@@ -46,13 +47,13 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        ID = io.readShort();
+        ID = readID(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        io.writeShort(ID);
+        writeID(io, ID);
     }
 
     @Override
@@ -65,15 +66,15 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
             return;
         }
 
-        INotification n = SharedServerData.INSTANCE.cachedNotifications.get(m.ID);
+        INotification n = SharedClientData.INSTANCE.notifications.get(m.ID);
 
         if(n != null)
         {
-            displayNotification(display, n, m.ID);
+            displayNotification(display, n);
         }
     }
 
-    static void displayNotification(EnumNotificationDisplay display, INotification n, short id)
+    static void displayNotification(EnumNotificationDisplay display, INotification n)
     {
         if(display == EnumNotificationDisplay.SCREEN)
         {
@@ -83,35 +84,43 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
         List<ITextComponent> list = n.getText();
 
-        if(!list.isEmpty())
+        if(list.isEmpty())
         {
-            if(list.size() > 1)
-            {
-                list.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, list.get(1)));
-            }
-
-            GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
-
-            if(display == EnumNotificationDisplay.CHAT)
-            {
-                if(id == 0)
-                {
-                    id = (short) (n.getID().hashCode() % 32000);
-                }
-
-                chat.printChatMessageWithOptionalDeletion(list.get(0), 42059283 + id);
-            }
-            else
-            {
-                chat.printChatMessage(list.get(0));
-            }
+            return;
         }
+
+        if(list.size() > 1)
+        {
+            list.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, list.get(1)));
+        }
+
+        GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
+
+        if(display == EnumNotificationDisplay.CHAT)
+        {
+            chat.printChatMessageWithOptionalDeletion(list.get(0), n.getID().getChatMessageID());
+        }
+        else
+        {
+            chat.printChatMessage(list.get(0));
+        }
+    }
+
+    private static void writeID(ByteBuf io, NotificationID id)
+    {
+        LMNetUtils.writeResourceLocation(io, id.getID());
+        io.writeByte(id.getVariant());
+    }
+
+    private static NotificationID readID(ByteBuf io)
+    {
+        ResourceLocation id = LMNetUtils.readResourceLocation(io);
+        return new NotificationID(id, io.readByte());
     }
 
     static void write(ByteBuf io, INotification n)
     {
-        LMNetUtils.writeResourceLocation(io, n.getID());
-        io.writeByte(n.getVariant());
+        writeID(io, n.getID());
         io.writeByte(n.getColorID());
         io.writeShort(n.getTimer());
         byte flags = 0;
@@ -153,9 +162,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
     static Notification read(ByteBuf io)
     {
-        ResourceLocation id = LMNetUtils.readResourceLocation(io);
-        byte v = io.readByte();
-        Notification n = new Notification(id, v);
+        Notification n = new Notification(readID(io));
         n.setColorID(io.readByte());
         n.setTimer(io.readShort());
         byte flags = io.readByte();

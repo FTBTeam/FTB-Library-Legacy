@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.InvalidTextureCoords;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.util.ResourceLocation;

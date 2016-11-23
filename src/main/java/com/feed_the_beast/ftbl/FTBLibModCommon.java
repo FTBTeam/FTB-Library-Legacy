@@ -19,7 +19,6 @@ import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.PropertyBlockState;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
@@ -68,7 +67,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
     public final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
-    public final Map<String, INotification> NOTIFICATIONS = new HashMap<>();
     public final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public final Collection<String> VISIBLE_TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
@@ -82,7 +80,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbl.json"));
 
         addConfig(FTBLibFinals.MOD_ID, "teams.autocreate_on_login", FTBLibConfig.AUTOCREATE_TEAMS);
-        addConfig(FTBLibFinals.MOD_ID, "teams.use_ftb_prefix", FTBLibConfig.USE_FTB_COMMAND_PREFIX);
+        addConfig(FTBLibFinals.MOD_ID, "teams.mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
 
         addConfigValueProvider(PropertyNull.ID, () -> PropertyNull.INSTANCE);
         addConfigValueProvider(PropertyBool.ID, PropertyBool::new);
@@ -180,7 +178,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     @Override
     public void addNotification(INotification notification)
     {
-        NOTIFICATIONS.put(notification.getID() + "@" + notification.getVariant(), notification);
+        SharedServerData.INSTANCE.notifications.put(notification.getID(), notification);
     }
 
     @Override
@@ -266,9 +264,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 
     public void worldLoaded()
     {
-        SharedServerData.INSTANCE.notificationIDs.generateIDs(NOTIFICATIONS.keySet());
-        SharedServerData.INSTANCE.cachedNotifications.clear();
-        NOTIFICATIONS.forEach((key, value) -> SharedServerData.INSTANCE.cachedNotifications.put(SharedServerData.INSTANCE.notificationIDs.getIDFromKey(key), Notification.copy(value)));
+        //Cache data here if any
     }
 
     @Nullable

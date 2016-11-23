@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nonnull;
@@ -23,9 +24,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -210,153 +209,13 @@ public class LMJsonUtils
         return new int[] {e.getAsInt()};
     }
 
-    public static JsonElement toNumberArray(Number[] ai)
-    {
-        if(ai == null)
-        {
-            return JsonNull.INSTANCE;
-        }
-
-        JsonArray a = new JsonArray();
-        if(ai.length == 0)
-        {
-            return a;
-        }
-
-        for(Number anAi : ai)
-        {
-            a.add(new JsonPrimitive(anAi));
-        }
-
-        return a;
-    }
-
-    @Nullable
-    public static Number[] fromNumberArray(JsonElement e)
-    {
-        if(e == null || e.isJsonNull())
-        {
-            return null;
-        }
-
-        if(e.isJsonArray())
-        {
-            JsonArray a = e.getAsJsonArray();
-            Number[] ai = new Number[a.size()];
-            if(ai.length == 0)
-            {
-                return ai;
-            }
-            for(int i = 0; i < ai.length; i++)
-            {
-                ai[i] = a.get(i).getAsNumber();
-            }
-            return ai;
-        }
-
-        return new Number[] {e.getAsNumber()};
-    }
-
-    public static JsonElement toStringArray(String... ai)
-    {
-        if(ai == null)
-        {
-            return JsonNull.INSTANCE;
-        }
-
-        JsonArray a = new JsonArray();
-        if(ai.length == 0)
-        {
-            return a;
-        }
-
-        for(String anAi : ai)
-        {
-            a.add(new JsonPrimitive(anAi));
-        }
-
-        return a;
-    }
-
-    @Nullable
-    public static String[] fromStringArray(JsonElement e)
-    {
-        if(e == null || e.isJsonNull() || !e.isJsonArray())
-        {
-            return null;
-        }
-        JsonArray a = e.getAsJsonArray();
-        String[] ai = new String[a.size()];
-        if(ai.length == 0)
-        {
-            return ai;
-        }
-        for(int i = 0; i < ai.length; i++)
-        {
-            ai[i] = a.get(i).getAsString();
-        }
-        return ai;
-    }
-
-    public static List<JsonElement> deserializeText(List<String> text)
-    {
-        List<JsonElement> elements = new ArrayList<>();
-
-        if(text == null || text.isEmpty())
-        {
-            return elements;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        int inc = 0;
-
-        for(String s : text)
-        {
-            s = LMStringUtils.trimAllWhitespace(s);
-
-            System.out.println(s);
-
-            if(s.isEmpty())
-            {
-                elements.add(JsonNull.INSTANCE);
-            }
-            else
-            {
-                if(inc > 0 || s.startsWith("{"))
-                {
-                    for(int i = 0; i < s.length(); i++)
-                    {
-                        char c = s.charAt(i);
-                        if(c == '{')
-                        {
-                            inc++;
-                        }
-                        else if(c == '}')
-                        {
-                            inc--;
-                        }
-                        sb.append(c);
-
-                        if(inc == 0)
-                        {
-                            System.out.println(":: " + sb);
-                            elements.add(fromJson(sb.toString()));
-                            sb.setLength(0);
-                        }
-                    }
-                }
-                else
-                {
-                    elements.add(new JsonPrimitive(s));
-                }
-            }
-        }
-
-        return elements;
-    }
-
     public static JsonElement serializeTextComponent(ITextComponent c)
     {
+        if(c instanceof TextComponentString && c.getStyle().isEmpty())
+        {
+            return new JsonPrimitive(((TextComponentString) c).getText());
+        }
+
         return (c == null) ? JsonNull.INSTANCE : TEXT_COMPONENT_GSON.toJsonTree(c, ITextComponent.class);
     }
 
@@ -366,7 +225,6 @@ public class LMJsonUtils
         return (e == null || e.isJsonNull()) ? null : TEXT_COMPONENT_GSON.fromJson(e, ITextComponent.class);
     }
 
-    @Nonnull
     public static JsonObject fromJsonTree(@Nonnull JsonObject o)
     {
         JsonObject map = new JsonObject();
@@ -389,7 +247,6 @@ public class LMJsonUtils
         }
     }
 
-    @Nonnull
     public static JsonObject toJsonTree(@Nonnull Collection<Map.Entry<String, JsonElement>> tree)
     {
         JsonObject o1 = new JsonObject();
@@ -397,7 +254,6 @@ public class LMJsonUtils
         return o1;
     }
 
-    @Nonnull
     private static String lastKeyPart(String s)
     {
         int idx = s.lastIndexOf('.');
@@ -410,7 +266,6 @@ public class LMJsonUtils
         return s;
     }
 
-    @Nonnull
     private static JsonObject findGroup(@Nonnull JsonObject parent, @Nonnull String s)
     {
         int idx = s.indexOf('.');

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -77,7 +77,7 @@ public class FTBLibActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand(FTBLibIntegrationInternal.API.getClientData().useFTBPrefix() ? "/ftb my_settings" : "/my_settings", false);
+            FTBLibClient.execClientCommand("/ftb my_settings", false);
         }
 
         @Override

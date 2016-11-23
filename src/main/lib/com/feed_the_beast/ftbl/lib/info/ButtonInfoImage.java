@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
@@ -49,7 +49,7 @@ class ButtonInfoImage extends ButtonLM
         if(line.imageProvider != EmptyImageProvider.INSTANCE)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            FTBLibClient.setTexture(line.imageProvider.getImage());
+            Minecraft.getMinecraft().getTextureManager().bindTexture(line.imageProvider.getImage());
             GuiHelper.drawTexturedRect(getAX(), getAY(), getWidth(), getHeight(), 0D, 0D, 1D, 1D);
         }
     }

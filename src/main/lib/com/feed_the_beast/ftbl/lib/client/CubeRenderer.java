@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.client;
+package com.feed_the_beast.ftbl.lib.client;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;

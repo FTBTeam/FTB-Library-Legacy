@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.client.ITextureCoordsProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
@@ -29,7 +29,7 @@ public class TexturePageIconRenderer implements IPageIconRenderer
     @Override
     public void renderIcon(IGui gui, IWidget widget, int x, int y)
     {
-        FTBLibClient.setTexture(icon.getTextureCoords().getTexture());
+        Minecraft.getMinecraft().getTextureManager().bindTexture(icon.getTextureCoords().getTexture());
 
         boolean iconBlur = isIconBlurry(gui, widget);
 

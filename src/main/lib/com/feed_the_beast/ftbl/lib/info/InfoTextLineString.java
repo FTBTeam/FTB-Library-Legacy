@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.google.gson.JsonElement;
@@ -26,7 +25,7 @@ public class InfoTextLineString implements IInfoTextLine
     }
 
     @Override
-    public IWidget createWidget(GuiInfo gui, IGuiInfoPage page)
+    public IWidget createWidget(GuiInfo gui, InfoPage page)
     {
         return new ButtonInfoTextLine(gui, text);
     }

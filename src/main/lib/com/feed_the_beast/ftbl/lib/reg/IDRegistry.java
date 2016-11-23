@@ -17,6 +17,15 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
     private final TShortObjectHashMap<K> IDToKey = new TShortObjectHashMap<>();
     private final Map<K, Short> KeyToID = new HashMap<>();
 
+    public void clear()
+    {
+        if(!IDToKey.isEmpty())
+        {
+            IDToKey.clear();
+            KeyToID.clear();
+        }
+    }
+
     @Nullable
     public K getKeyFromID(short numID)
     {
@@ -30,8 +39,7 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 
     public void generateIDs(Collection<K> keys)
     {
-        IDToKey.clear();
-        KeyToID.clear();
+        clear();
 
         keys.forEach(key ->
         {
@@ -91,8 +99,7 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        IDToKey.clear();
-        KeyToID.clear();
+        clear();
 
         for(String key : nbt.getKeySet())
         {

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import net.minecraft.command.CommandException;
@@ -32,7 +32,7 @@ public class CmdNotify extends CommandLM
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibMod.PROXY.NOTIFICATIONS.keySet());
+            return getListOfStringsMatchingLastWord(args, SharedServerData.INSTANCE.notifications.keySet());
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
@@ -56,7 +56,7 @@ public class CmdNotify extends CommandLM
         }
         else
         {
-            INotification n = FTBLibMod.PROXY.NOTIFICATIONS.get(args[1]);
+            INotification n = SharedServerData.INSTANCE.notifications.get(args[1]);
 
             if(n == null)
             {

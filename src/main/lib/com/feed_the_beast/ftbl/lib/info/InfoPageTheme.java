@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,10 +10,10 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 07.05.2016.
  */
-public final class InfoPageTheme implements IInfoPageTheme
+public final class InfoPageTheme
 {
-    public static final IInfoPageTheme DEFAULT = new InfoPageTheme(0xFFF7F4DA, 0xFF7B6534, null);
-    public static final IInfoPageTheme DARK_NON_UNICODE = new InfoPageTheme(0xFF1E1E1E, 0xFFC8C8C8, false);
+    public static final InfoPageTheme DEFAULT = new InfoPageTheme(0xFFF7F4DA, 0xFF7B6534, null);
+    public static final InfoPageTheme DARK_NON_UNICODE = new InfoPageTheme(0xFF1E1E1E, 0xFFC8C8C8, false);
 
     private int backgroundColor;
     private int textColor;
@@ -31,25 +30,21 @@ public final class InfoPageTheme implements IInfoPageTheme
         useUnicodeFont = unicode;
     }
 
-    @Override
     public int getBackgroundColor()
     {
         return backgroundColor;
     }
 
-    @Override
     public int getTextColor()
     {
         return textColor;
     }
 
-    @Override
     public boolean getUseUnicodeFont()
     {
         return useUnicodeFont == null ? GuiConfigs.UNICODE.getBoolean() : useUnicodeFont;
     }
 
-    @Override
     public void fromJson(JsonElement json)
     {
         JsonArray a = json.getAsJsonArray();
@@ -58,7 +53,6 @@ public final class InfoPageTheme implements IInfoPageTheme
         useUnicodeFont = (a.size() >= 3) ? a.get(2).getAsBoolean() : null;
     }
 
-    @Override
     public JsonElement getSerializableElement()
     {
         JsonArray a = new JsonArray();

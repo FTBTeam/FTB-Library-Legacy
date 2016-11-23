@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.client;
+package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import net.minecraft.client.Minecraft;
@@ -31,7 +31,7 @@ import java.util.Objects;
 public class FTBLibClient
 {
     public static final Frustum FRUSTUM = new Frustum();
-    private static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
+    public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
     /*
     private static final Vector4f OBJECTCOORDS = new Vector4f();
     private static final Vector4f TEMP_POINT = new Vector4f();
@@ -141,16 +141,6 @@ public class FTBLibClient
         }
 
         return r;
-    }
-
-    public static void setTexture(ResourceLocation tex)
-    {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
-    }
-
-    public static void clearCachedData()
-    {
-        CACHED_SKINS.clear();
     }
 
     public static void renderItem(World w, ItemStack is)

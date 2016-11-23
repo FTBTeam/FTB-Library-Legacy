@@ -1,9 +1,6 @@
 package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api.info.IInfoPage;
-import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.RemoveFilter;
@@ -14,6 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -25,16 +23,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InfoPage implements IGuiInfoPage // GuideFile
+public class InfoPage implements IJsonSerializable, IStringSerializable // GuideFile
 {
-    private static final Comparator<Map.Entry<String, IGuiInfoPage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
-    private static final RemoveFilter<Map.Entry<String, IGuiInfoPage>> CLEANUP_FILTER = entry -> entry.getValue().getPages().isEmpty() && InfoPageHelper.getUnformattedText(entry.getValue()).trim().isEmpty();
+    private static final Comparator<Map.Entry<String, InfoPage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
+    private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().getPages().isEmpty() && InfoPageHelper.getUnformattedText(entry.getValue()).trim().isEmpty();
 
     private final String ID;
     private final List<IInfoTextLine> text;
-    private final LinkedHashMap<String, IGuiInfoPage> childPages;
-    public IInfoPage parent = null;
-    public IInfoPageTheme theme;
+    private final LinkedHashMap<String, InfoPage> childPages;
+    public InfoPage parent = null;
+    public InfoPageTheme theme;
     private ITextComponent title;
 
     public InfoPage(String id)
@@ -61,19 +59,28 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @Nullable
-    @Override
-    public IInfoPage getParent()
+    public InfoPage getParent()
     {
         return parent;
     }
 
-    @Override
-    public void setParent(@Nullable IInfoPage c)
+    public String getFullID()
+    {
+        InfoPage parent = getParent();
+        return (parent == null) ? getName() : (parent.getFullID() + '.' + getName());
+    }
+
+    public ITextComponent getDisplayName()
+    {
+        ITextComponent t = getTitle();
+        return (t == null) ? new TextComponentString(getName()) : t;
+    }
+
+    public void setParent(@Nullable InfoPage c)
     {
         parent = c;
     }
 
-    @Override
     public void println(@Nullable Object o)
     {
         if(o == null)
@@ -103,17 +110,15 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         }
     }
 
-    @Override
-    public void addSub(IGuiInfoPage c)
+    public void addSub(InfoPage c)
     {
         getPages().put(c.getName(), c);
         c.setParent(this);
     }
 
-    @Override
-    public IGuiInfoPage getSub(String id)
+    public InfoPage getSub(String id)
     {
-        IGuiInfoPage c = getPages().get(id);
+        InfoPage c = getPages().get(id);
         if(c == null)
         {
             c = new InfoPage(id);
@@ -124,7 +129,6 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         return c;
     }
 
-    @Override
     public void clear()
     {
         setTitle(null);
@@ -133,25 +137,19 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         theme = null;
     }
 
-    @Override
     public void cleanup()
     {
-        childPages.values().forEach(IGuiInfoPage::cleanup);
+        childPages.values().forEach(InfoPage::cleanup);
         LMMapUtils.removeAll(getPages(), CLEANUP_FILTER);
     }
 
-    @Override
     public void sortAll()
     {
         LMMapUtils.sortMap(getPages(), COMPARATOR);
-
-        for(IGuiInfoPage c : getPages().values())
-        {
-            c.sortAll();
-        }
+        getPages().values().forEach(InfoPage::sortAll);
     }
 
-    public void copyFrom(IGuiInfoPage c)
+    public void copyFrom(InfoPage c)
     {
         for(IInfoTextLine l : c.getText())
         {
@@ -166,8 +164,7 @@ public class InfoPage implements IGuiInfoPage // GuideFile
         });
     }
 
-    @Override
-    public IGuiInfoPage copy()
+    public InfoPage copy()
     {
         InfoPage page = new InfoPage(getName());
         page.fromJson(getSerializableElement());
@@ -256,55 +253,46 @@ public class InfoPage implements IGuiInfoPage // GuideFile
     }
 
     @Nullable
-    @Override
     public ITextComponent getTitle()
     {
         return title;
     }
 
-    @Override
-    public IGuiInfoPage setTitle(@Nullable ITextComponent t)
+    public InfoPage setTitle(@Nullable ITextComponent t)
     {
         title = t;
         return this;
     }
 
-    @Override
     public List<IInfoTextLine> getText()
     {
         return text;
     }
 
-    @Override
-    public LinkedHashMap<String, IGuiInfoPage> getPages()
+    public LinkedHashMap<String, InfoPage> getPages()
     {
         return childPages;
     }
 
-    @Override
-    public IInfoPageTheme getTheme()
+    public InfoPageTheme getTheme()
     {
-        return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : (parent instanceof IGuiInfoPage ? ((IGuiInfoPage) parent).getTheme() : InfoPageTheme.DEFAULT)) : theme;
+        return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : parent.getTheme()) : theme;
     }
 
-    @Override
-    public void setTheme(@Nullable IInfoPageTheme t)
+    public void setTheme(@Nullable InfoPageTheme t)
     {
         theme = t;
     }
 
-    @Override
     public void refreshGui(GuiInfo gui)
     {
     }
 
-    @Override
     public ISpecialInfoButton createSpecialButton(GuiInfo gui)
     {
         return null;
     }
 
-    @Override
     public IWidget createButton(GuiInfo gui)
     {
         return new ButtonInfoPage(gui, this, null);

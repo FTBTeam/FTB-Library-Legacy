@@ -46,7 +46,7 @@ public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlay
 
         if(display != EnumNotificationDisplay.OFF)
         {
-            MessageNotifyPlayer.displayNotification(display, m.notification, (short) 0);
+            MessageNotifyPlayer.displayNotification(display, m.notification);
         }
     }
 }

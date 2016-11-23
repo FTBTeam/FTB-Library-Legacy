@@ -180,25 +180,26 @@ public class ClientNotifications
         else if(!Temp.MAP.isEmpty())
         {
             current = new Temp(Temp.MAP.values().iterator().next());
-            Temp.MAP.remove(current.widget.notification.getID());
+            Temp.MAP.remove(current.widget.notification.getID().getID());
         }
     }
 
     public static void add(INotification n)
     {
-        Perm.MAP.remove(n.getID());
-        Temp.MAP.remove(n.getID());
+        ResourceLocation id = n.getID().getID();
+        Perm.MAP.remove(id);
+        Temp.MAP.remove(id);
 
         if(current != null && current.widget.notification.getID().equals(n.getID()))
         {
             current = null;
         }
 
-        Temp.MAP.put(n.getID(), n);
+        Temp.MAP.put(id, n);
 
         if(n.isPermanent())
         {
-            Perm.MAP.put(n.getID(), new Perm(n));
+            Perm.MAP.put(id, new Perm(n));
         }
     }
 

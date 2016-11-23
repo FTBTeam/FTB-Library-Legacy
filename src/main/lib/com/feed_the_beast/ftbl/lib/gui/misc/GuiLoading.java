@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,7 +23,7 @@ public class GuiLoading extends GuiLM
 
     public static void renderLoading(int x, int y, int w, int h)
     {
-        FTBLibClient.setTexture(TEXTURE);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + w / 2D, y + h / 2D, 0D);
         GlStateManager.pushMatrix();

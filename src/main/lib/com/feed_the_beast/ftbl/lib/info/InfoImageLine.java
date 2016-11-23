@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
@@ -53,7 +52,7 @@ public class InfoImageLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(GuiInfo gui, IGuiInfoPage page)
+    public IWidget createWidget(GuiInfo gui, InfoPage page)
     {
         return new ButtonInfoImage(gui, this);
     }

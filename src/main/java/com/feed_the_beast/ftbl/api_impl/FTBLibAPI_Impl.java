@@ -15,9 +15,9 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
-import com.feed_the_beast.ftbl.api.info.IInfoPage;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
@@ -170,11 +170,9 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void sendNotification(@Nullable EntityPlayerMP player, INotification n)
     {
-        short id = SharedServerData.INSTANCE.notificationIDs.getIDFromKey(n.getID() + "@" + n.getVariant());
-
-        if(id != 0)
+        if(SharedServerData.INSTANCE.notifications.containsKey(n.getID()))
         {
-            new MessageNotifyPlayer(id).sendTo(player);
+            new MessageNotifyPlayer(n.getID()).sendTo(player);
         }
         else
         {
@@ -189,7 +187,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void displayInfoGui(EntityPlayerMP player, IInfoPage page)
+    public void displayInfoGui(EntityPlayerMP player, InfoPage page)
     {
         new MessageDisplayInfo(page).sendTo(player);
     }

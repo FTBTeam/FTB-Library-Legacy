@@ -1,13 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.client.FTBLibClient;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
-import com.feed_the_beast.ftbl.api.info.IInfoPage;
-import com.feed_the_beast.ftbl.api.info.IInfoPageTheme;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
@@ -20,6 +16,8 @@ import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.SliderLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoTextLine;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -87,7 +85,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         }
     }
 
-    public final IGuiInfoPage pageTree;
+    public final InfoPage pageTree;
     public final SliderLM sliderPages, sliderText;
     public final PanelLM panelPages, panelText;
     private final ButtonLM buttonBack;
@@ -95,9 +93,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     public int panelWidth;
     public int colorText, colorBackground;
     public boolean useUnicodeFont;
-    private IGuiInfoPage selectedPage;
+    private InfoPage selectedPage;
 
-    public GuiInfo(IGuiInfoPage tree)
+    public GuiInfo(InfoPage tree)
     {
         super(0, 0);
         selectedPage = pageTree = tree;
@@ -150,12 +148,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
-                IInfoPage parent = selectedPage.getParent();
-
-                if(parent == null || parent instanceof IGuiInfoPage)
-                {
-                    setSelectedPage((IGuiInfoPage) parent);
-                }
+                setSelectedPage(selectedPage.getParent());
             }
 
             @Override
@@ -172,7 +165,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 setHeight(0);
 
-                for(IGuiInfoPage c : selectedPage.getPages().values())
+                for(InfoPage c : selectedPage.getPages().values())
                 {
                     IWidget b = c.createButton(GuiInfo.this);
 
@@ -221,12 +214,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonSpecial = new ButtonSpecial();
     }
 
-    public IGuiInfoPage getSelectedPage()
+    public InfoPage getSelectedPage()
     {
         return selectedPage;
     }
 
-    public void setSelectedPage(@Nullable IGuiInfoPage p)
+    public void setSelectedPage(@Nullable InfoPage p)
     {
         sliderText.setValue(this, 0D);
         panelText.posY = 10;
@@ -293,7 +286,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        IInfoPageTheme theme = selectedPage.getTheme();
+        InfoPageTheme theme = selectedPage.getTheme();
 
         colorText = 0xFF000000 | theme.getTextColor();
         colorBackground = 0xFF000000 | theme.getBackgroundColor();
@@ -339,10 +332,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         super.drawBackground();
 
-        FTBLibClient.setTexture(TEXTURE);
-
+        mc.getTextureManager().bindTexture(TEXTURE);
         GlStateManager.color(1F, 1F, 1F, 1F);
-
         renderFilling(panelWidth, 0, width - panelWidth, height);
         renderFilling(0, 36, panelWidth, height - 36);
 

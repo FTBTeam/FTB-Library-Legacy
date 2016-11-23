@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
-import net.minecraft.command.ICommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -61,17 +60,11 @@ public class FTBLibMod
     public void onServerStarting(FMLServerStartingEvent event)
     {
         CmdFTB cmd = new CmdFTB(event.getServer().isDedicatedServer());
+        event.registerServerCommand(cmd);
 
-        if(FTBLibConfig.USE_FTB_COMMAND_PREFIX.getBoolean())
+        if(FTBLibConfig.MIRROR_FTB_COMMANDS.getBoolean())
         {
-            event.registerServerCommand(cmd);
-        }
-        else
-        {
-            for(ICommand cmd1 : cmd.getSubCommands())
-            {
-                event.registerServerCommand(cmd1);
-            }
+            cmd.getSubCommands().forEach(event::registerServerCommand);
         }
     }
 

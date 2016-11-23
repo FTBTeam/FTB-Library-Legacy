@@ -30,10 +30,9 @@ public class RankConfigAPI
         return rankConfigHandler;
     }
 
-    public static IRankConfig register(String id, IConfigValue defPlayer, IConfigValue defOP, String description)
+    public static IRankConfig register(String id, IConfigValue defPlayer, IConfigValue defOP, String... description)
     {
         Preconditions.checkArgument(!REGISTRY.containsKey(id), "Duplicate RankConfig ID found: " + id);
-
         RankConfig c = new RankConfig(id, defPlayer, defOP);
         c.setInfo(description);
         REGISTRY.put(c.getID(), c);

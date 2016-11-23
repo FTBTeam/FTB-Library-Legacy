@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.info;
 
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.google.gson.JsonObject;
 
 /**
@@ -7,5 +8,5 @@ import com.google.gson.JsonObject;
  */
 public interface IInfoTextLineProvider
 {
-    IInfoTextLine create(IGuiInfoPage page, JsonObject json);
+    IInfoTextLine create(InfoPage page, JsonObject json);
 }

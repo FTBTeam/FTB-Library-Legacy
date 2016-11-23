@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
@@ -44,12 +43,12 @@ public class CmdListTeams extends CommandLM
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
-        IGuiInfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
+        InfoPage page = new InfoPage("teams").setTitle(new TextComponentString("Teams")); //TODO: Lang
         page.setTheme(InfoPageTheme.DARK_NON_UNICODE);
 
         for(IForgeTeam team : Universe.INSTANCE.getTeams())
         {
-            IGuiInfoPage page1 = page.getSub(team.getName());
+            InfoPage page1 = page.getSub(team.getName());
 
             ITextComponent title = new TextComponentString(team.getTitle());
             title.getStyle().setColor(team.getColor().getTextFormatting());

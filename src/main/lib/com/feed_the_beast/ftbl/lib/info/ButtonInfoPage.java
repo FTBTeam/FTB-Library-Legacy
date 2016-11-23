@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.info.IGuiInfoPage;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -19,12 +18,12 @@ import java.util.List;
 public class ButtonInfoPage extends ButtonLM
 {
     public final GuiInfo guiInfo;
-    public final IGuiInfoPage page;
+    public final InfoPage page;
     public String hover;
     public IPageIconRenderer iconRenderer;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, IGuiInfoPage p, @Nullable IPageIconRenderer t)
+    public ButtonInfoPage(GuiInfo g, InfoPage p, @Nullable IPageIconRenderer t)
     {
         super(0, 0, g.panelWidth - 36, t == null ? 13 : 18);
         guiInfo = g;
