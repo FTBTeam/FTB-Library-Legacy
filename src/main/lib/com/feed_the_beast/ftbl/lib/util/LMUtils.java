@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -118,5 +119,18 @@ public class LMUtils
     public static String removeFormatting(String s)
     {
         return s.isEmpty() ? s : TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
+    }
+
+    @Nullable
+    public static URL get(String url)
+    {
+        try
+        {
+            return new URL(url);
+        }
+        catch(Exception ex)
+        {
+            return null;
+        }
     }
 }
