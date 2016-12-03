@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.FTBLibPlugin;
@@ -8,6 +9,7 @@ import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackModes;
+import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -41,6 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 11.08.2016.
@@ -126,7 +129,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             {
                 NBTTagCompound syncData = new NBTTagCompound();
                 IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
-                FTBLibMod.PROXY.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
+                FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
                 new MessageReload(type, syncData).sendTo(ep);
             }
         }
@@ -145,7 +148,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
     {
-        IContainerProvider containerProvider = FTBLibMod.PROXY.GUI_CONTAINER_PROVIDERS.get(guiID);
+        IContainerProvider containerProvider = FTBLibModCommon.GUI_CONTAINER_PROVIDERS.get(guiID);
 
         if(containerProvider == null)
         {
@@ -195,8 +198,14 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public IConfigValue getConfigValueFromID(String id)
     {
-        IConfigValueProvider provider = FTBLibMod.PROXY.CONFIG_VALUE_PROVIDERS.get(id);
+        IConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
         Preconditions.checkNotNull(provider, "Unknown Config ID: " + id);
         return provider.createConfigValue();
+    }
+
+    @Override
+    public Map<String, IRankConfig> getRankConfigRegistry()
+    {
+        return FTBLibModCommon.RANK_CONFIGS_MIRROR;
     }
 }

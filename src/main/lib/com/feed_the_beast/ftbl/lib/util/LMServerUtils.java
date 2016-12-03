@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -269,5 +271,10 @@ public class LMServerUtils
     public static void addTickable(MinecraftServer server, ITickable tickable)
     {
         server.tickables.add(tickable);
+    }
+
+    public static Set<ICommand> getCommandSet(CommandHandler handler)
+    {
+        return handler.commandSet;
     }
 }

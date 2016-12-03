@@ -72,4 +72,9 @@ public interface IConfigValue extends IExtendedIOObject, INBTSerializable<NBTBas
     {
         return true;
     }
+
+    default boolean isNull()
+    {
+        return false;
+    }
 }

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
@@ -20,6 +21,7 @@ import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
+import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.PropertyBlockState;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyByte;
@@ -47,6 +49,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
@@ -55,6 +58,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -63,16 +67,37 @@ import java.util.UUID;
 
 public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 {
-    public final Map<String, IConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
-    public final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
-    public final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
-    public final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
-    public final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
-    public final Collection<String> VISIBLE_TEAM_PLAYER_PERMISSIONS = new HashSet<>();
-    public final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
-    public final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
-    public final Map<ResourceLocation, IDataProvider<IForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
-    public final Map<ResourceLocation, IDataProvider<IForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
+    public static final Map<String, IConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
+    public static final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
+    public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
+    public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
+    public static final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
+    public static final Collection<String> VISIBLE_TEAM_PLAYER_PERMISSIONS = new HashSet<>();
+    public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
+    public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
+    public static final Map<ResourceLocation, IDataProvider<IForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
+    public static final Map<ResourceLocation, IDataProvider<IForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
+    private static final Map<String, IRankConfig> RANK_CONFIGS = new HashMap<>();
+    public static final Map<String, IRankConfig> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
+
+    private static class RankConfig extends ConfigKey implements IRankConfig
+    {
+        private final IConfigValue defaultOPValue;
+
+        private RankConfig(String s, IConfigValue def, IConfigValue defOP, String... info)
+        {
+            super(s, def);
+            defaultOPValue = def.copy();
+            defaultOPValue.deserializeNBT(defOP.serializeNBT());
+            setInfo(info);
+        }
+
+        @Override
+        public IConfigValue getDefOPValue()
+        {
+            return defaultOPValue;
+        }
+    }
 
     public void preInit()
     {
@@ -226,6 +251,15 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public void addTeamDataProvider(ResourceLocation id, IDataProvider<IForgeTeam> provider)
     {
         DATA_PROVIDER_TEAM.put(id, provider);
+    }
+
+    @Override
+    public void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP, String... description)
+    {
+        Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
+        RankConfig c = new RankConfig(id, defPlayer, defOP);
+        c.setInfo(description);
+        RANK_CONFIGS.put(c.getID(), c);
     }
 
     public void loadAllFiles()

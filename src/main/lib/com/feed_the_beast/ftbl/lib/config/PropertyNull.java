@@ -133,4 +133,10 @@ public enum PropertyNull implements IConfigValue
     public void readData(ByteBuf data)
     {
     }
+
+    @Override
+    public boolean isNull()
+    {
+        return true;
+    }
 }

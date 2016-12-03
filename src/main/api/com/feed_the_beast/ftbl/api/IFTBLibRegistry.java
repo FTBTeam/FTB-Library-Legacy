@@ -50,4 +50,6 @@ public interface IFTBLibRegistry
     void addPlayerDataProvider(ResourceLocation id, IDataProvider<IForgePlayer> provider);
 
     void addTeamDataProvider(ResourceLocation id, IDataProvider<IForgeTeam> provider);
+
+    void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP, String... description);
 }

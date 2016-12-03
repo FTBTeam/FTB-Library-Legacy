@@ -46,7 +46,9 @@ public class FTBLibMod
         FTBLibNetHandler.init();
         ODItems.preInit();
         FTBLibStats.init();
+
         MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
+
         PROXY.preInit();
     }
 

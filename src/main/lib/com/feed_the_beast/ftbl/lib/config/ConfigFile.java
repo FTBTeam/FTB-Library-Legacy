@@ -33,7 +33,7 @@ public class ConfigFile extends ConfigTree implements IConfigFile
 
             if(e.isJsonObject())
             {
-                fromJson(e.getAsJsonObject());
+                fromJson(LMJsonUtils.fromJsonTree(e.getAsJsonObject()));
             }
         }
     }
@@ -45,7 +45,7 @@ public class ConfigFile extends ConfigTree implements IConfigFile
 
         if(f != null)
         {
-            LMJsonUtils.toJson(f, getSerializableElement());
+            LMJsonUtils.toJson(f, LMJsonUtils.toJsonTree(getSerializableElement().getAsJsonObject().entrySet()));
         }
     }
 

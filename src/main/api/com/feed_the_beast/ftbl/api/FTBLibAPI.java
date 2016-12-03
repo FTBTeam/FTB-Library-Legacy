@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 11.08.2016.
@@ -44,4 +45,6 @@ public interface FTBLibAPI
     void displayInfoGui(EntityPlayerMP player, InfoPage page);
 
     IConfigValue getConfigValueFromID(String id);
+
+    Map<String, IRankConfig> getRankConfigRegistry();
 }

@@ -1,10 +1,10 @@
-package com.feed_the_beast.ftbl.api.rankconfig;
+package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 
 /**
- * Created by LatvianModder on 15.09.2016.
+ * Created by LatvianModder on 02.12.2016.
  */
 public interface IRankConfig extends IConfigKey
 {
