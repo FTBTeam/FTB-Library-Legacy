@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
@@ -55,7 +55,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         universeID = SharedServerData.INSTANCE.getUniverseID();
         notifications = SharedServerData.INSTANCE.notifications;
         syncData = new NBTTagCompound();
-        FTBLibMod.PROXY.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
+        FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
         optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
         flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
     }
@@ -137,7 +137,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
         for(String key : m.syncData.getKeySet())
         {
-            ISyncData nbt = FTBLibMod.PROXY.SYNCED_DATA.get(key);
+            ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
 
             if(nbt != null)
             {

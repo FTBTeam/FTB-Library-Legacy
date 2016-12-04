@@ -20,7 +20,6 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 
     GameProfile getProfile();
 
-    @Nullable
     EntityPlayerMP getPlayer();
 
     @Nullable

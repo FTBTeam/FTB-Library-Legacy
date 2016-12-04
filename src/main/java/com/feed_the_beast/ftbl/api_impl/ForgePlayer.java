@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
@@ -16,6 +17,7 @@ import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.net.MessageLogin;
+import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -56,7 +58,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     public ForgePlayer(GameProfile p)
     {
         setProfile(p);
-        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibMod.PROXY.DATA_PROVIDER_PLAYER);
+        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
     }
 
     ForgePlayer(EntityPlayerMP ep)
@@ -176,13 +178,13 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public boolean isOnline()
     {
-        return getPlayer() != null;
+        return entityPlayer != null;
     }
 
     @Override
-    @Nullable
     public EntityPlayerMP getPlayer()
     {
+        Preconditions.checkNotNull(entityPlayer, "EntityPlayer can't be null!");
         return entityPlayer;
     }
 

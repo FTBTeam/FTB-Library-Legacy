@@ -71,7 +71,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public static final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
     public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
-    public static final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
+    private static final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public static final Collection<String> VISIBLE_TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
     public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -47,7 +48,7 @@ public class Universe implements IUniverse
 
     public void init()
     {
-        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibMod.PROXY.DATA_PROVIDER_UNIVERSE);
+        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_UNIVERSE);
         MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
 
         try

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
@@ -62,7 +63,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         desc = "";
         flags = 0;
 
-        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibMod.PROXY.DATA_PROVIDER_TEAM);
+        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
     }
 
     @Override

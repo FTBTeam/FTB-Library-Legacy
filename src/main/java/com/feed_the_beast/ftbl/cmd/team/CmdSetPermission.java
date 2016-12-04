@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
@@ -43,7 +43,7 @@ public class CmdSetPermission extends CommandLM
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibMod.PROXY.VISIBLE_TEAM_PLAYER_PERMISSIONS);
+            return getListOfStringsMatchingLastWord(args, FTBLibModCommon.VISIBLE_TEAM_PLAYER_PERMISSIONS);
         }
         else if(args.length == 3)
         {

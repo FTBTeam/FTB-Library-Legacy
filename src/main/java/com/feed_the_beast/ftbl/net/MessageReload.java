@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.ISyncData;
@@ -76,7 +76,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
         for(String key : m.syncData.getKeySet())
         {
-            ISyncData nbt = FTBLibMod.PROXY.SYNCED_DATA.get(key);
+            ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
 
             if(nbt != null)
             {

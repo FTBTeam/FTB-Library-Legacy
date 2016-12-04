@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
 import net.minecraft.command.CommandException;
@@ -35,7 +36,7 @@ public class CmdEditConfig extends CommandTreeBase
 
     public CmdEditConfig()
     {
-        FTBLibMod.PROXY.CONFIG_FILES.forEach((key, value) ->
+        FTBLibModCommon.CONFIG_FILES.forEach((key, value) ->
         {
             if(value != FTBLibMod.PROXY.getClientConfig())
             {
