@@ -345,7 +345,12 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public boolean hasPermission(UUID playerID, String permission)
     {
-        return playerID.equals(owner.getProfile().getId());
+        if (playerID.equals(owner.getProfile().getId()))
+            return true;
+        if (playerPermissions == null)
+            return false;
+        TShortCollection perms = playerPermissions.get(playerID);
+        return perms != null && perms.contains(Universe.INSTANCE.teamPlayerPermisssionIDs.generateID(permission));
 
     }
 
