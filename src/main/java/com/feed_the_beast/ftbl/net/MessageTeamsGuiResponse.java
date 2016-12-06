@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class MessageTeamsGuiResponse extends MessageToClient<MessageTeamsGuiResponse>
@@ -34,6 +35,7 @@ public class MessageTeamsGuiResponse extends MessageToClient<MessageTeamsGuiResp
     @Override
     public void onMessage(MessageTeamsGuiResponse m)
     {
+        Minecraft.getMinecraft().displayGuiScreen(null);
         //new GuiInfo(new InfoTeamsGUI()).openGui();
     }
 }

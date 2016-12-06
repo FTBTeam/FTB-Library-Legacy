@@ -13,7 +13,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.net.MessageTeamsGuiRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -30,7 +29,7 @@ public class FTBLibActions
         public void onClicked(IMouseButton button)
         {
             new GuiLoading().openGui();
-            new MessageTeamsGuiRequest().sendToServer();
+            FTBLibClient.execClientCommand("/ftb team gui", false);
         }
 
         @Override
@@ -77,6 +76,7 @@ public class FTBLibActions
         @Override
         public void onClicked(IMouseButton button)
         {
+            new GuiLoading().openGui();
             FTBLibClient.execClientCommand("/ftb my_settings", false);
         }
 

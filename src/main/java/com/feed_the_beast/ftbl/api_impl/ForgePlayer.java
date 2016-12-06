@@ -257,7 +257,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        flags = nbt.getByte("Flags");
+        setFlags(nbt.getByte("Flags"));
         setTeamID(nbt.getString("TeamID"));
 
         if(dataStorage != null)

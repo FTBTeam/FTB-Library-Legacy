@@ -49,11 +49,9 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             value = e;
             keyText = id.getDisplayName().getUnformattedText();
 
-            System.out.println(keyText);
-
             if(keyText.startsWith("config.") && keyText.endsWith(".name"))
             {
-                //keyText = id.getID();
+                keyText = id.getID();
             }
 
             if(!id.getInfo().isEmpty())

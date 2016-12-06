@@ -44,7 +44,6 @@ repositories {
 
 dependencies {
     compile 'Mercurius:Mercurius:1.10.2-1.0.1'
-    compile 'LatMod:iChunUtil:1.10.2-6.0.0:api'
 }
 
 sourceSets {
