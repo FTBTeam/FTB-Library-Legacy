@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -31,18 +30,20 @@ public class FTBLibEventHandler
     @SubscribeEvent
     public void onWorldSaved(WorldEvent.Save event)
     {
-        if(event.getWorld().provider.getDimensionType() == DimensionType.OVERWORLD && event.getWorld() instanceof WorldServer)
+        if(event.getWorld().provider.getDimension() != 0 || !(event.getWorld() instanceof WorldServer))
         {
-            try
-            {
-                LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
-                LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), Universe.INSTANCE.serializeNBT());
-                //FTBLib.dev_logger.info("ForgeWorldMP Saved");
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
+            return;
+        }
+
+        try
+        {
+            LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
+            LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), Universe.INSTANCE.serializeNBT());
+            //FTBLib.dev_logger.info("ForgeWorldMP Saved");
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 
