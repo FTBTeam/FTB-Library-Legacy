@@ -28,8 +28,9 @@ public class FTBLibActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            new GuiLoading().openGui();
-            FTBLibClient.execClientCommand("/ftb team gui", false);
+            Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString("TeamsGUI is not implemented yet!"));
+            //new GuiLoading().openGui();
+            //FTBLibClient.execClientCommand("/ftb team gui", false);
         }
 
         @Override
