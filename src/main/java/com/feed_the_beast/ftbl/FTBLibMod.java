@@ -27,7 +27,8 @@ import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
 import java.io.File;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = "after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*",
+        dependencies = "required-after:Forge@[12.18.2.2121,);after:Baubles;after:JEI;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
 public class FTBLibMod
 {
     @Mod.Instance(FTBLibFinals.MOD_ID)

@@ -11,6 +11,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
+import java.util.ArrayList;
+
 /**
  * Created by LatvianModder on 20.06.2016.
  */
@@ -61,8 +63,15 @@ public class CmdKick extends CommandLM
 
         if(!p1.equalsPlayer(p))
         {
-            team.removePlayer(p);
-            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getProfile().getName());
+            team.removePlayer(p1);
+
+            for(IForgePlayer m : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
+            {
+                if(m.isOnline())
+                {
+                    FTBLibLang.TEAM_MEMBER_LEFT.printChat(m.getPlayer(), p.getProfile().getName());
+                }
+            }
         }
         else
         {
