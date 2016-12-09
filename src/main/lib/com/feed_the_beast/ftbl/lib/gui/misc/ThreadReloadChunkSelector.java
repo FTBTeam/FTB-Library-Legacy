@@ -8,11 +8,15 @@ import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -21,14 +25,41 @@ import java.util.Map;
 
 public class ThreadReloadChunkSelector extends Thread
 {
-    public static ByteBuffer pixelBuffer = null;
-    public static final PixelBuffer PIXELS = new PixelBuffer(GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16);
+    private static ByteBuffer pixelBuffer = null;
+    private static final PixelBuffer PIXELS = new PixelBuffer(GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16);
     private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
     private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
     public final World worldObj;
-    public final int startX, startZ;
-    public boolean cancelled = false;
+    private final int startX, startZ;
+    private boolean cancelled = false;
     private static ThreadReloadChunkSelector instance;
+    private static int textureID = -1;
+
+    public static int getTextureID()
+    {
+        if(textureID == -1)
+        {
+            textureID = TextureUtil.glGenTextures();
+        }
+
+        return textureID;
+    }
+
+    public static void updateTexture()
+    {
+        if(pixelBuffer != null)
+        {
+            //boolean hasBlur = false;
+            //int filter = hasBlur ? GL11.GL_LINEAR : GL11.GL_NEAREST;
+            GlStateManager.bindTexture(getTextureID());
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+            GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
+            pixelBuffer = null;
+        }
+    }
 
     public static void reloadArea(World w, int sx, int sz)
     {
@@ -39,6 +70,7 @@ public class ThreadReloadChunkSelector extends Thread
         }
 
         instance = new ThreadReloadChunkSelector(w, sx, sz);
+        instance.cancelled = false;
         instance.start();
     }
 
@@ -232,5 +264,6 @@ public class ThreadReloadChunkSelector extends Thread
         }
 
         pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+        instance = null;
     }
 }
