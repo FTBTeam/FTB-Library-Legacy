@@ -117,7 +117,7 @@ public class FTBLibClientEventHandler
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
                 event.getButtonList().add(renderer);
 
-                if(FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean() && !Loader.isModLoaded("nei"))
+                if(!LMUtils.isNEILoaded && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                 {
                     int i = 0;
                     for(ISidebarButton button : buttons)
@@ -282,7 +282,7 @@ public class FTBLibClientEventHandler
 
                     int tw = mc.fontRendererObj.getStringWidth(b.title);
 
-                    if(!FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean() || Loader.isModLoaded("nei"))
+                    if(LMUtils.isNEILoaded || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                     {
                         mx1 -= tw + 8;
                         my1 += 4;

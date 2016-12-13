@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +31,7 @@ public class LMUtils
     public static final String FORMATTING = "\u00a7";
     public static final Pattern TEXT_FORMATTING_PATTERN = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 
-    public static boolean userIsLatvianModder = false;
+    public static boolean userIsLatvianModder = false, isNEILoaded = false;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
 
     public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
@@ -50,6 +51,8 @@ public class LMUtils
         {
             folderLocal.mkdirs();
         }
+
+        isNEILoaded = Loader.isModLoaded("NotEnoughItems") || Loader.isModLoaded("nei") || Loader.isModLoaded("notenoughitems");
     }
 
     public static <K extends IForgeRegistryEntry<?>> void register(ResourceLocation id, K object)
