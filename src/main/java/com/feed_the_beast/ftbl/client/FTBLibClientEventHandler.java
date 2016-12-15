@@ -16,12 +16,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -69,6 +67,7 @@ public class FTBLibClientEventHandler
     @SubscribeEvent
     public void onDrawDebugText(RenderGameOverlayEvent.Text event)
     {
+        /*
         if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
         {
             if(LMUtils.DEV_ENV)
@@ -77,7 +76,6 @@ public class FTBLibClientEventHandler
             }
         }
 
-        /*
         Minecraft mc = FTBLibClient.mc();
         ScaledResolution scaledResolution = new ScaledResolution(mc);
         double width2 = scaledResolution.getScaledWidth_double();
