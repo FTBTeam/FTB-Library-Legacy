@@ -60,6 +60,12 @@ public class CmdSpecialPerm extends CommandTreeBase
         }
 
         @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
+        }
+
+        @Override
         public boolean isUsernameIndex(String[] args, int i)
         {
             return i == 0;
@@ -105,6 +111,12 @@ public class CmdSpecialPerm extends CommandTreeBase
         public String getCommandName()
         {
             return "remove";
+        }
+
+        @Override
+        public int getRequiredPermissionLevel()
+        {
+            return 0;
         }
 
         @Override
