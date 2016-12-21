@@ -19,11 +19,11 @@ public abstract class CommandLM extends CommandBase
 {
     public static void checkArgs(String[] args, int i, String desc) throws CommandException
     {
-        if(args == null || args.length < i)
+        if(args.length < i)
         {
-            if(desc == null || desc.isEmpty())
+            if(desc.isEmpty())
             {
-                throw FTBLibLang.MISSING_ARGS_NUM.commandError(Integer.toString(i - (args == null ? 0 : args.length)));
+                throw FTBLibLang.MISSING_ARGS_NUM.commandError(Integer.toString(i - args.length));
             }
             else
             {
@@ -41,7 +41,7 @@ public abstract class CommandLM extends CommandBase
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender ics)
     {
-        return getRequiredPermissionLevel() == 0 || !server.isDedicatedServer() || super.checkPermission(server, ics);
+        return getRequiredPermissionLevel() == 0 || super.checkPermission(server, ics);
     }
 
     @Override

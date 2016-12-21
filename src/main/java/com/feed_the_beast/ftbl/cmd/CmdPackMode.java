@@ -141,6 +141,12 @@ public class CmdPackMode extends CommandTreeBase
     }
 
     @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender ics)
+    {
+        return true;
+    }
+
+    @Override
     public String getCommandUsage(ICommandSender sender)
     {
         return "command.ftb.packmode.usage";
