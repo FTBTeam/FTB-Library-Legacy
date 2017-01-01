@@ -191,7 +191,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public boolean isFake()
     {
-        return getPlayer() instanceof FakePlayer;
+        return entityPlayer instanceof FakePlayer;
     }
 
     @Override
