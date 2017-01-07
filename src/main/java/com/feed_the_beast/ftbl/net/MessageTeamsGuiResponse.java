@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageTeamsGuiResponse extends MessageToClient<MessageTeamsGuiResponse>
 {
@@ -12,7 +12,7 @@ public class MessageTeamsGuiResponse extends MessageToClient<MessageTeamsGuiResp
     {
     }
 
-    MessageTeamsGuiResponse(EntityPlayerMP player)
+    MessageTeamsGuiResponse(EntityPlayer player)
     {
     }
 
@@ -33,7 +33,7 @@ public class MessageTeamsGuiResponse extends MessageToClient<MessageTeamsGuiResp
     }
 
     @Override
-    public void onMessage(MessageTeamsGuiResponse m)
+    public void onMessage(MessageTeamsGuiResponse m, EntityPlayer player)
     {
         Minecraft.getMinecraft().displayGuiScreen(null);
         //new GuiInfo(new InfoTeamsGUI()).openGui();

@@ -11,6 +11,7 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -171,6 +172,11 @@ public class LMInvUtils
     public static void dropItem(World w, double x, double y, double z, ItemStack item, int delay)
     {
         dropItem(w, x, y, z, w.rand.nextGaussian() * 0.07F, w.rand.nextFloat() * 0.05F, w.rand.nextGaussian() * 0.07F, item, delay);
+    }
+
+    public static void dropItem(World w, BlockPos pos, ItemStack item, int delay)
+    {
+        dropItem(w, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, item, delay);
     }
 
     public static void dropItem(Entity e, ItemStack item)

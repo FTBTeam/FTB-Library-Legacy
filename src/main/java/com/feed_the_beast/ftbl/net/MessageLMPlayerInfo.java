@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -89,7 +90,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
     }
 
     @Override
-    public void onMessage(MessageLMPlayerInfo m)
+    public void onMessage(MessageLMPlayerInfo m, EntityPlayer player)
     {
         //TODO: Open FriendsGUI
         /*

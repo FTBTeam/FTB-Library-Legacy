@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlayerCustom>
 {
@@ -40,7 +41,7 @@ public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlay
     }
 
     @Override
-    public void onMessage(MessageNotifyPlayerCustom m)
+    public void onMessage(MessageNotifyPlayerCustom m, EntityPlayer player)
     {
         EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
 

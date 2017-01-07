@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
@@ -44,7 +45,7 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     }
 
     @Override
-    public void onMessage(MessageDisplayInfo m)
+    public void onMessage(MessageDisplayInfo m, EntityPlayer player)
     {
         InfoPage page = new InfoPage(m.infoID);
         page.fromJson(m.json);

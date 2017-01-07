@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -57,7 +58,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     }
 
     @Override
-    public void onMessage(MessageNotifyPlayer m)
+    public void onMessage(MessageNotifyPlayer m, EntityPlayer player)
     {
         EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
 

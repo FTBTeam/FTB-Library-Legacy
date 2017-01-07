@@ -19,8 +19,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -120,7 +119,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     }
 
     @Override
-    public void onMessage(MessageLogin m)
+    public void onMessage(MessageLogin m, EntityPlayer player)
     {
         SharedClientData.INSTANCE.reset();
         SharedClientData.INSTANCE.hasServer = true;
@@ -147,11 +146,9 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
         FTBLibClient.CACHED_SKINS.clear();
 
-        ICommandSender sender = Minecraft.getMinecraft().thePlayer;
-
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
-            plugin.onReload(Side.CLIENT, sender, EnumReloadType.LOGIN);
+            plugin.onReload(Side.CLIENT, player, EnumReloadType.LOGIN);
         }
 
         FTBLibFinals.LOGGER.info("Current Mode: " + m.currentMode);

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -38,11 +39,11 @@ public interface FTBLibAPI
 
     void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
-    void sendNotification(@Nullable EntityPlayerMP player, INotification n);
+    void sendNotification(@Nullable EntityPlayer player, INotification n);
 
     void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 
-    void displayInfoGui(EntityPlayerMP player, InfoPage page);
+    void displayInfoGui(EntityPlayer player, InfoPage page);
 
     IConfigValue getConfigValueFromID(String id);
 

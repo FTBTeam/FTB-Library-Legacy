@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -61,19 +62,18 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void onMessage(MessageOpenGui m)
+    public void onMessage(MessageOpenGui m, EntityPlayer player)
     {
         IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiID);
 
         if(guiProvider != null)
         {
-            Minecraft mc = Minecraft.getMinecraft();
-            GuiScreen g = guiProvider.getGui(mc.thePlayer, m.pos, m.data);
+            GuiScreen g = guiProvider.getGui(player, m.pos, m.data);
 
             if(g != null)
             {
-                mc.displayGuiScreen(g);
-                mc.thePlayer.openContainer.windowId = m.windowID;
+                Minecraft.getMinecraft().displayGuiScreen(g);
+                player.openContainer.windowId = m.windowID;
             }
         }
     }

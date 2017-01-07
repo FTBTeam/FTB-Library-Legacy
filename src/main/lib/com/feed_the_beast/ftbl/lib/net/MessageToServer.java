@@ -34,10 +34,6 @@ public abstract class MessageToServer<E extends MessageToServer<E>> extends Mess
         return null;
     }
 
-    public void onMessage(E m, EntityPlayerMP player)
-    {
-    }
-
     public final void sendToServer()
     {
         getWrapper().sendToServer(this);

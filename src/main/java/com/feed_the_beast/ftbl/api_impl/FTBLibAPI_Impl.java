@@ -32,6 +32,7 @@ import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.common.base.Preconditions;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -171,9 +172,13 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void sendNotification(@Nullable EntityPlayerMP player, INotification n)
+    public void sendNotification(@Nullable EntityPlayer player, INotification n)
     {
-        if(SharedServerData.INSTANCE.notifications.containsKey(n.getID()))
+        if(player != null && player.worldObj.isRemote)
+        {
+            //TODO: Send notification on client side
+        }
+        else if(SharedServerData.INSTANCE.notifications.containsKey(n.getID()))
         {
             new MessageNotifyPlayer(n.getID()).sendTo(player);
         }
@@ -190,9 +195,16 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void displayInfoGui(EntityPlayerMP player, InfoPage page)
+    public void displayInfoGui(EntityPlayer player, InfoPage page)
     {
-        new MessageDisplayInfo(page).sendTo(player);
+        if(player.worldObj.isRemote)
+        {
+            //TODO: Open gui on client side
+        }
+        else
+        {
+            new MessageDisplayInfo(page).sendTo(player);
+        }
     }
 
     @Override

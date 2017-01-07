@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.net;
 import io.netty.channel.ChannelFutureListener;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
-import net.minecraft.world.DimensionType;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -78,10 +77,10 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
         serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
 
-    public void sendToDimension(IMessage message, DimensionType dimensionId)
+    public void sendToDimension(IMessage message, int dimensionId)
     {
         serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
-        serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId.ordinal());
+        serverChannels.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimensionId);
         serverChannels.writeAndFlush(message).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
     }
 

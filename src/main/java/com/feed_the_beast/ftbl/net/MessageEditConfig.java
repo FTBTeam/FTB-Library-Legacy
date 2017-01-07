@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 
@@ -65,7 +66,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     }
 
     @Override
-    public void onMessage(final MessageEditConfig m)
+    public void onMessage(final MessageEditConfig m, EntityPlayer player)
     {
         if(LMUtils.DEV_ENV)
         {

@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;
@@ -54,7 +54,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     }
 
     @Override
-    public void onMessage(MessageEditConfigResponse m, EntityPlayerMP player)
+    public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
     {
         IConfigContainer cc = FTBLibModCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
 

@@ -14,7 +14,7 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -64,10 +64,9 @@ public class MessageReload extends MessageToClient<MessageReload>
     }
 
     @Override
-    public void onMessage(MessageReload m)
+    public void onMessage(MessageReload m, EntityPlayer player)
     {
         long ms = System.currentTimeMillis();
-        Minecraft mc = Minecraft.getMinecraft();
 
         EnumReloadType type = EnumReloadType.values()[m.typeID];
 
@@ -90,12 +89,12 @@ public class MessageReload extends MessageToClient<MessageReload>
         {
             for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
             {
-                plugin.onReload(Side.CLIENT, mc.thePlayer, type);
+                plugin.onReload(Side.CLIENT, player, type);
             }
 
             if(type != EnumReloadType.LOGIN)
             {
-                FTBLibLang.RELOAD_CLIENT.printChat(mc.thePlayer, (System.currentTimeMillis() - ms) + "ms");
+                FTBLibLang.RELOAD_CLIENT.printChat(player, (System.currentTimeMillis() - ms) + "ms");
             }
 
             FTBLibFinals.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
