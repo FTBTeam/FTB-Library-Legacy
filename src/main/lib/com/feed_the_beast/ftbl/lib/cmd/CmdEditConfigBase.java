@@ -98,13 +98,18 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         if(args.length >= 2)
         {
-            String json = LMStringUtils.joinSpaceUntilEnd(1, args);
-
+            String json = String.valueOf(LMStringUtils.joinSpaceUntilEnd(1, args));
             FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
 
             try
             {
+                if(json.indexOf(' ') != -1 && !((json.startsWith("\"") && json.endsWith("\"")) || (json.startsWith("{") && json.endsWith("}")) || (json.startsWith("[") && json.endsWith("]"))))
+                {
+                    json = "\"" + json + "\"";
+                }
+
                 JsonElement value = LMJsonUtils.fromJson(json);
+
                 sender.addChatMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
                 JsonObject json1 = new JsonObject();
                 json1.add(args[0], value);
