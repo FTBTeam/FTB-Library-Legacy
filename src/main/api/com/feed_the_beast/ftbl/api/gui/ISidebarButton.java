@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -17,7 +16,7 @@ public interface ISidebarButton
     }
 
     @Nullable
-    ITextureCoords getIcon();
+    IImageProvider getIcon();
 
     @Nullable
     IConfigValue getConfig();

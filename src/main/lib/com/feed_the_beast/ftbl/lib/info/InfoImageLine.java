@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.lib.info;
 
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.api.info.IImageProvider;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonArray;
@@ -19,68 +20,49 @@ import java.util.List;
  */
 public class InfoImageLine extends EmptyInfoPageLine
 {
-    private String imageURL;
-    IImageProvider imageProvider;
-    int imageWidth, imageHeight;
-    double imageScale = 1D;
-    ClickEvent clickEvent;
-    List<String> hover;
-
-    public InfoImageLine()
-    {
-    }
-
-    public InfoImageLine(IImageProvider img, int w, int h)
-    {
-        this();
-        imageProvider = img;
-        imageWidth = w;
-        imageHeight = h;
-    }
-
-    public InfoImageLine setImage(IImageProvider img)
-    {
-        imageProvider = img;
-        return this;
-    }
-
-    public InfoImageLine setDisplaySize(int w, int h)
-    {
-        imageWidth = w;
-        imageHeight = h;
-        return this;
-    }
+    public IImageProvider imageProvider = ImageProvider.NULL;
+    public int imageWidth, imageHeight;
+    public double imageScale = 1D;
+    public ClickEvent clickEvent;
+    public List<String> hover;
 
     @Override
     public IWidget createWidget(GuiInfo gui, InfoPage page)
     {
-        return new ButtonInfoImage(gui, this);
+        return new ButtonInfoImage(this);
     }
 
     @Override
     public void fromJson(JsonElement e)
     {
-        imageWidth = imageHeight = 64;
+        imageProvider = ImageProvider.NULL;
+        imageWidth = imageHeight = 0;
         imageScale = 1D;
         hover = null;
 
         JsonObject o = e.getAsJsonObject();
-        boolean loadFromURL = o.has("image_url") && o.get("image_url").getAsBoolean();
-        setImage(o.has("image") ? (loadFromURL ? new URLImageProvider(o.get("image").getAsString()) : new WrappedImageProvider(new ResourceLocation(o.get("image").getAsString()))) : EmptyImageProvider.INSTANCE);
 
-        if(o.has("width"))
+        if(!o.has("image"))
         {
-            imageWidth = o.get("width").getAsInt();
+            return;
         }
 
-        if(o.has("height"))
-        {
-            imageHeight = o.get("height").getAsInt();
-        }
+        imageProvider = new ImageProvider(new ResourceLocation(o.get("image").getAsString()));
 
         if(o.has("scale"))
         {
             imageScale = o.get("scale").getAsDouble();
+        }
+        else
+        {
+            if(o.has("width"))
+            {
+                imageWidth = o.get("width").getAsInt();
+            }
+            if(o.has("height"))
+            {
+                imageHeight = o.get("height").getAsInt();
+            }
         }
 
         if(o.has("hover"))
@@ -99,9 +81,21 @@ public class InfoImageLine extends EmptyInfoPageLine
     {
         JsonObject o = new JsonObject();
 
-        if(imageURL != null && !imageURL.isEmpty())
+        if(!imageProvider.isValid())
         {
-            o.add("image", new JsonPrimitive(imageURL));
+            return o;
+        }
+
+        o.add("image", new JsonPrimitive(imageProvider.getImage().toString()));
+
+        if(imageScale != 1D)
+        {
+            o.add("scale", new JsonPrimitive(imageScale));
+        }
+        else if(imageWidth != 0 || imageHeight != 0)
+        {
+            o.add("width", new JsonPrimitive(imageWidth));
+            o.add("height", new JsonPrimitive(imageHeight));
         }
 
         if(hover != null)
@@ -115,8 +109,6 @@ public class InfoImageLine extends EmptyInfoPageLine
 
             o.add("hover", a);
         }
-
-        //FIXME: width, height, scale
 
         return o;
     }

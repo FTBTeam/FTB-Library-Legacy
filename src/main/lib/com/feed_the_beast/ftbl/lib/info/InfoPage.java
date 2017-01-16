@@ -293,7 +293,7 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
         return null;
     }
 
-    public IWidget createButton(GuiInfo gui)
+    public IWidget createWidget(GuiInfo gui)
     {
         return new ButtonInfoPage(gui, this, null);
     }

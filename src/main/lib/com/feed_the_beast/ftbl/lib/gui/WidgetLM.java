@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -83,7 +83,7 @@ public class WidgetLM implements IWidget
         parentPanel = p;
     }
 
-    public final void render(ITextureCoords icon)
+    public final void render(IImageProvider icon)
     {
         GuiHelper.render(icon, getAX(), getAY(), getWidth(), getHeight());
     }

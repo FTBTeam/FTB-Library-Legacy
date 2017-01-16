@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.tile.IInvMode;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoordsProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 
 public enum EnumInvMode implements IInvMode
@@ -38,7 +38,7 @@ public enum EnumInvMode implements IInvMode
     }
 
     @Override
-    public ITextureCoordsProvider getIcon()
+    public IImageProvider getIcon()
     {
         switch(this)
         {

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.tile.IRedstoneMode;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoordsProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 
 import java.util.Locale;
@@ -56,7 +56,7 @@ public enum EnumRedstoneMode implements IRedstoneMode
     }
 
     @Override
-    public ITextureCoordsProvider getIcon()
+    public IImageProvider getIcon()
     {
         switch(this)
         {

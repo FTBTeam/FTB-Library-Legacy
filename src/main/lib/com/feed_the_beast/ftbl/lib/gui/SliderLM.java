@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
@@ -119,15 +119,15 @@ public class SliderLM extends WidgetLM
         return (int) (value * ((getDirection().isVertical() ? getHeight() : getWidth()) - sliderSize));
     }
 
-    public void renderSlider(ITextureCoords tc)
+    public void renderSlider(IImageProvider img)
     {
         if(getDirection().isVertical())
         {
-            GuiHelper.render(tc, getAX(), getAY() + getValueI(), getWidth(), sliderSize);
+            GuiHelper.render(img, getAX(), getAY() + getValueI(), getWidth(), sliderSize);
         }
         else
         {
-            GuiHelper.render(tc, getAX() + getValueI(), getAY(), sliderSize, getHeight());
+            GuiHelper.render(img, getAX() + getValueI(), getAY(), sliderSize, getHeight());
         }
     }
 

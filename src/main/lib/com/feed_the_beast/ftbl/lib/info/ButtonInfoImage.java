@@ -5,53 +5,49 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-//FIXME: Image sizes
 class ButtonInfoImage extends ButtonLM
 {
     private final InfoImageLine line;
 
-    ButtonInfoImage(GuiInfo g, InfoImageLine l)
+    ButtonInfoImage(InfoImageLine l)
     {
         super(0, 0, 0, 0);
         line = l;
-
-        if(l.imageProvider == null)
-        {
-            setWidth(64);
-            setHeight(64);
-        }
-        else
-        {
-            //double w = (displayW > 0D) ? displayW : (displayS == 0D ? imageProvider.getWidth() : (displayS > 0D ? imageProvider.getWidth() * displayS : (imageProvider.getWidth() / -displayS)));
-            //double h = (displayH > 0D) ? displayH : (displayS == 0D ? imageProvider.getHeight() : (displayS > 0D ? imageProvider.getHeight() * displayS : (imageProvider.getHeight() / -displayS)));
-
-            double w = Math.min(g.panelText.getWidth(), l.imageWidth * l.imageScale);
-            double h = l.imageHeight * (w / (l.imageWidth * l.imageScale));
-
-            //imageProvider = new ScaledImageProvider(img, w, (int) h);
-
-            setWidth((int) w);
-            setHeight((int) h + 1);
-        }
+        setWidth(line.imageWidth);
+        setHeight(line.imageHeight);
     }
 
     @Override
     public void renderWidget(IGui gui)
     {
-        if(line.imageProvider != EmptyImageProvider.INSTANCE)
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        line.imageProvider.bindTexture();
+
+        int width = getWidth();
+        int height = getHeight();
+
+        if(width == 0 || height == 0)
         {
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(line.imageProvider.getImage());
-            GuiHelper.drawTexturedRect(getAX(), getAY(), getWidth(), getHeight(), 0D, 0D, 1D, 1D);
+            width = line.imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : line.imageWidth;
+            height = line.imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : line.imageHeight;
+
+            double w = Math.min(((GuiInfo) gui).panelText.getWidth(), width * line.imageScale);
+            double h = height * (w / (width * line.imageScale)) + 1D;
+
+            setWidth(width = (int) w);
+            setHeight(height = (int) h);
+            ((GuiInfo) gui).updateTextPanelPositions();
         }
+
+        GuiHelper.render(line.imageProvider, getAX(), getAY(), width, height);
     }
 
     @Override

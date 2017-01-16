@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -90,6 +92,21 @@ public class FTBLibClient
     public static void popMaxBrightness()
     {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+    }
+
+    public static ITextureObject bindTexture(ResourceLocation texture)
+    {
+        TextureManager t = Minecraft.getMinecraft().getTextureManager();
+
+        ITextureObject textureObject = t.getTexture(texture);
+        if(textureObject == null)
+        {
+            textureObject = new SimpleTexture(texture);
+            t.loadTexture(texture, textureObject);
+        }
+
+        GlStateManager.bindTexture(textureObject.getGlTextureId());
+        return textureObject;
     }
 
     public static ITextureObject getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)

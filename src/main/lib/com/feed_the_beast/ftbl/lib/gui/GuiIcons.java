@@ -1,11 +1,15 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum GuiIcons implements ITextureCoords
+public enum GuiIcons implements IImageProvider
 {
     UP,
     DOWN,
@@ -77,9 +81,9 @@ public enum GuiIcons implements ITextureCoords
     TOGGLE_DAY,
     TOGGLE_NIGHT;
 
-    public static final ITextureCoords[] VALUES = values();
+    public static final GuiIcons[] VALUES = values();
 
-    private ResourceLocation texture;
+    private final ResourceLocation texture;
 
     GuiIcons()
     {
@@ -87,38 +91,21 @@ public enum GuiIcons implements ITextureCoords
     }
 
     @Override
-    public ResourceLocation getTexture()
+    public boolean isValid()
+    {
+        return true;
+    }
+
+    @Override
+    public ResourceLocation getImage()
     {
         return texture;
     }
 
     @Override
-    public double getMinU()
+    @SideOnly(Side.CLIENT)
+    public ITextureObject bindTexture()
     {
-        return 0D;
-    }
-
-    @Override
-    public double getMinV()
-    {
-        return 0D;
-    }
-
-    @Override
-    public double getMaxU()
-    {
-        return 1D;
-    }
-
-    @Override
-    public double getMaxV()
-    {
-        return 1D;
-    }
-
-    @Override
-    public boolean isValid()
-    {
-        return true;
+        return FTBLibClient.bindTexture(texture);
     }
 }

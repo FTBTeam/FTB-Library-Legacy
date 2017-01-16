@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.client.TextureCoords;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 public class FTBLibActions
 {
-    public static final ISidebarButton TEAMS_GUI = new SidebarButton(995, TextureCoords.fromUV(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
+    public static final ISidebarButton TEAMS_GUI = new SidebarButton(995, new ImageProvider(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
     {
         @Override
         public void onClicked(IMouseButton button)

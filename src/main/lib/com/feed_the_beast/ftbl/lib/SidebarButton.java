@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 
 import javax.annotation.Nullable;
@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 public abstract class SidebarButton implements ISidebarButton
 {
     private final int priority;
-    private final ITextureCoords icon;
+    private final IImageProvider icon;
     private final IConfigValue config;
     private String path = "";
 
-    public SidebarButton(int p, ITextureCoords c, @Nullable IConfigValue b)
+    public SidebarButton(int p, IImageProvider c, @Nullable IConfigValue b)
     {
         priority = p;
         icon = c;
@@ -28,7 +28,7 @@ public abstract class SidebarButton implements ISidebarButton
     }
 
     @Override
-    public ITextureCoords getIcon()
+    public IImageProvider getIcon()
     {
         return icon;
     }

@@ -167,7 +167,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(InfoPage c : selectedPage.getPages().values())
                 {
-                    IWidget b = c.createButton(GuiInfo.this);
+                    IWidget b = c.createWidget(GuiInfo.this);
 
                     if(b.getHeight() > 0)
                     {
@@ -194,24 +194,31 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                     }
                 }
 
-                setHeight(0);
-
                 boolean uni = getFont().getUnicodeFlag();
                 getFont().setUnicodeFlag(useUnicodeFont);
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    IWidget w = line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage);
-                    add(w);
-                    w.setY(getHeight());
-                    setHeight(getHeight() + w.getHeight());
+                    add(line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage));
                 }
 
+                updateTextPanelPositions();
                 getFont().setUnicodeFlag(uni);
             }
         };
 
         buttonSpecial = new ButtonSpecial();
+    }
+
+    public void updateTextPanelPositions()
+    {
+        panelText.setHeight(0);
+
+        for(IWidget w : panelText.getWidgets())
+        {
+            w.setY(panelText.getHeight());
+            panelText.setHeight(panelText.getHeight() + w.getHeight());
+        }
     }
 
     public InfoPage getSelectedPage()
@@ -272,7 +279,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         panelText.posX = panelWidth + 10;
         panelText.posY = 10;
-        panelText.setWidth(width - panelWidth - 20 - sliderText.getWidth());
+        panelText.setWidth(width - panelWidth - 23 - sliderText.getWidth());
         panelText.setHeight(height - 20);
 
         sliderPages.posX = panelWidth - sliderPages.getWidth() - 10;

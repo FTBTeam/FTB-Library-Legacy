@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 
 /**
@@ -11,9 +11,9 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 public abstract class SpecialInfoButton implements ISpecialInfoButton
 {
     private String title;
-    private ITextureCoords icon;
+    private IImageProvider icon;
 
-    public SpecialInfoButton(String s, ITextureCoords icn)
+    public SpecialInfoButton(String s, IImageProvider icn)
     {
         title = s;
         icon = icn;

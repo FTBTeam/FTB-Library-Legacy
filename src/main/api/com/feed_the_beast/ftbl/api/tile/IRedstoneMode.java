@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.tile;
 
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoordsProvider;
 import net.minecraft.util.IStringSerializable;
 
 /**
@@ -9,7 +9,7 @@ import net.minecraft.util.IStringSerializable;
  */
 public interface IRedstoneMode extends IStringSerializable, ILangKeyContainer
 {
-    ITextureCoordsProvider getIcon();
+    IImageProvider getIcon();
 
     boolean isActive(boolean rsHigh);
 }

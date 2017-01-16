@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.client.ITextureCoords;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -61,12 +61,12 @@ public class GuiHelper
         GlStateManager.enableTexture2D();
     }
 
-    public static void render(ITextureCoords tc, int x, int y, int w, int h)
+    public static void render(IImageProvider img, int x, int y, int w, int h)
     {
-        if(tc.isValid())
+        if(img.isValid())
         {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(tc.getTexture());
-            drawTexturedRect(x, y, w, h, tc.getMinU(), tc.getMinV(), tc.getMaxU(), tc.getMaxV());
+            img.bindTexture();
+            drawTexturedRect(x, y, w, h, img.getMinU(), img.getMinV(), img.getMaxU(), img.getMaxV());
         }
     }
 
