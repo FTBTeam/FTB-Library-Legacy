@@ -19,12 +19,7 @@ public abstract class EmptyInfoPageLine implements IInfoTextLine
     }
 
     @Override
-    public void fromJson(JsonElement json)
-    {
-    }
-
-    @Override
-    public JsonElement getSerializableElement()
+    public JsonElement getJson()
     {
         return JsonNull.INSTANCE;
     }

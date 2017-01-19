@@ -92,4 +92,8 @@ public interface IPanel extends IWidget
             }
         }
     }
+
+    default void updateWidgetPositions()
+    {
+    }
 }

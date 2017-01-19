@@ -153,7 +153,7 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
     {
         for(IInfoTextLine l : c.getText())
         {
-            getText().add(l == null ? null : InfoPageHelper.createLine(this, l.getSerializableElement()));
+            getText().add(l == null ? null : l.copy(this));
         }
 
         getPages().forEach((key, value) ->
@@ -186,7 +186,7 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
             JsonArray a = new JsonArray();
             for(IInfoTextLine c : text)
             {
-                a.add(c == null ? JsonNull.INSTANCE : c.getSerializableElement());
+                a.add(c == null ? JsonNull.INSTANCE : c.getJson());
             }
             o.add("T", a);
         }
@@ -228,7 +228,12 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
             JsonArray a = o.get("T").getAsJsonArray();
             for(int i = 0; i < a.size(); i++)
             {
-                getText().add(InfoPageHelper.createLine(this, a.get(i)));
+                IInfoTextLine line = InfoPageHelper.createLine(this, a.get(i));
+
+                if(line != null)
+                {
+                    getText().add(line);
+                }
             }
         }
 

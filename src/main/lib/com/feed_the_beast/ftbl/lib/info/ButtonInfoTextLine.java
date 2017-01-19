@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 
@@ -15,24 +16,24 @@ public class ButtonInfoTextLine extends ButtonLM
 {
     public List<String> text;
 
-    public ButtonInfoTextLine(GuiInfo g, @Nullable String txt)
+    public ButtonInfoTextLine(IGui gui, IPanel parent, @Nullable String txt)
     {
         super(0, 0, 0, 0);
 
         if(txt != null && !txt.isEmpty())
         {
-            text = g.getFont().listFormattedStringToWidth(txt, g.panelText.getWidth());
+            text = gui.getFont().listFormattedStringToWidth(txt, parent.getWidth());
         }
 
         if(text != null)
         {
             if(text.size() > 1)
             {
-                setWidth(g.panelText.getWidth());
+                setWidth(parent.getWidth());
             }
             else
             {
-                setWidth(g.getFont().getStringWidth(text.get(0)));
+                setWidth(gui.getFont().getStringWidth(text.get(0)));
             }
 
             setHeight(10 * text.size());

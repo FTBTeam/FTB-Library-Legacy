@@ -114,20 +114,20 @@ public class SliderLM extends WidgetLM
         return value;
     }
 
-    public int getValueI()
+    public int getValueI(IGui gui)
     {
-        return (int) (value * ((getDirection().isVertical() ? getHeight() : getWidth()) - sliderSize));
+        return (int) (getValue(gui) * ((getDirection().isVertical() ? getHeight() : getWidth()) - sliderSize));
     }
 
-    public void renderSlider(IImageProvider img)
+    public void renderSlider(IGui gui, IImageProvider img)
     {
         if(getDirection().isVertical())
         {
-            GuiHelper.render(img, getAX(), getAY() + getValueI(), getWidth(), sliderSize);
+            GuiHelper.render(img, getAX(), getAY() + getValueI(gui), getWidth(), sliderSize);
         }
         else
         {
-            GuiHelper.render(img, getAX() + getValueI(), getAY(), sliderSize, getHeight());
+            GuiHelper.render(img, getAX() + getValueI(gui), getAY(), sliderSize, getHeight());
         }
     }
 

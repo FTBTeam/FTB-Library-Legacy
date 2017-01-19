@@ -40,7 +40,9 @@ import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyStringList;
 import com.feed_the_beast.ftbl.lib.config.PropertyTextComponentList;
 import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
+import com.feed_the_beast.ftbl.lib.info.InfoHrLine;
 import com.feed_the_beast.ftbl.lib.info.InfoImageLine;
+import com.feed_the_beast.ftbl.lib.info.InfoListLine;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.InfoTextLineString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -126,9 +128,11 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 
         addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
 
-        addInfoTextLine("image", (page, json) -> new InfoImageLine());
-        addInfoTextLine("text_component", (page, json) -> new InfoExtendedTextLine(null));
-        addInfoTextLine("text", (page, json) -> new InfoTextLineString(""));
+        addInfoTextLine("image", (page, json) -> new InfoImageLine(json));
+        addInfoTextLine("text_component", (page, json) -> new InfoExtendedTextLine(json));
+        addInfoTextLine("text", (page, json) -> new InfoTextLineString(json));
+        addInfoTextLine("list", InfoListLine::new);
+        addInfoTextLine("hr", (page, json) -> new InfoHrLine(json));
 
         addTeamPlayerPermission(FTBLibTeamPermissions.CAN_JOIN, true);
         addTeamPlayerPermission(FTBLibTeamPermissions.IS_ALLY, true);

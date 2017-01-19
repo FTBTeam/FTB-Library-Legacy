@@ -199,26 +199,31 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new ButtonInfoTextLine(GuiInfo.this, null) : line.createWidget(GuiInfo.this, selectedPage));
+                    add(line == null ? new ButtonInfoTextLine(GuiInfo.this, panelText, null) : line.createWidget(GuiInfo.this, panelText));
                 }
 
-                updateTextPanelPositions();
+                updateWidgetPositions();
                 getFont().setUnicodeFlag(uni);
+            }
+
+            @Override
+            public void updateWidgetPositions()
+            {
+                double oldHeight = getHeight();
+                double scroll = oldHeight * sliderText.getValue(GuiInfo.this);
+                setHeight(0);
+
+                for(IWidget w : getWidgets())
+                {
+                    w.setY(getHeight());
+                    setHeight(getHeight() + w.getHeight());
+                }
+
+                sliderText.setValue(GuiInfo.this, scroll <= 0D ? 0D : scroll / getHeight());
             }
         };
 
         buttonSpecial = new ButtonSpecial();
-    }
-
-    public void updateTextPanelPositions()
-    {
-        panelText.setHeight(0);
-
-        for(IWidget w : panelText.getWidgets())
-        {
-            w.setY(panelText.getHeight());
-            panelText.setHeight(panelText.getHeight() + w.getHeight());
-        }
     }
 
     public InfoPage getSelectedPage()
@@ -366,8 +371,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         renderFilling(0, 0, panelWidth, 36);
         renderBorders(0, 0, panelWidth, 36);
 
-        sliderPages.renderSlider(TEX_SLIDER);
-        sliderText.renderSlider(TEX_SLIDER);
+        sliderPages.renderSlider(this, TEX_SLIDER);
+        sliderText.renderSlider(this, TEX_SLIDER);
         LMColorUtils.setGLColor(colorText, 255);
         buttonBack.render((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK);
 
