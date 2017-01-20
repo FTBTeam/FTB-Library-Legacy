@@ -16,6 +16,7 @@ import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
@@ -79,7 +80,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("Owner", LMStringUtils.fromUUID(owner.getProfile().getId()));
         nbt.setByte("Flags", flags);
-        nbt.setString("Color", EnumNameMap.getEnumName(color));
+        nbt.setString("Color", EnumNameMap.getName(color));
 
         if(!title.isEmpty())
         {
@@ -292,8 +293,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     }
 
     @Override
-    public void getSettings(IConfigTree tree)
+    public IConfigTree getSettings()
     {
+        IConfigTree tree = new ConfigTree();
         MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, tree));
 
         tree.add(KEY_COLOR, new PropertyEnum<EnumTeamColor>(COLOR_NAME_MAP, EnumTeamColor.BLUE)
@@ -340,6 +342,8 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 return desc;
             }
         });
+
+        return tree;
     }
 
     @Override

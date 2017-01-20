@@ -9,9 +9,9 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
 {
-    PUBLIC,
-    PRIVATE,
-    TEAM;
+    PUBLIC("public"),
+    PRIVATE("private"),
+    TEAM("team");
 
     public static final EnumPrivacyLevel[] VALUES = values();
     public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.privacy");
@@ -20,9 +20,9 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
     private final String name;
     private final LangKey langKey;
 
-    EnumPrivacyLevel()
+    EnumPrivacyLevel(String n)
     {
-        name = EnumNameMap.createName(this);
+        name = n;
         langKey = new LangKey("ftbl.privacy." + name);
     }
 

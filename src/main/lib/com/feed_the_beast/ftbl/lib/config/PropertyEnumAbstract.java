@@ -54,7 +54,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     @Override
     public String getString()
     {
-        return EnumNameMap.getEnumName((E) getValue());
+        return EnumNameMap.getName(getValue());
     }
 
     @Override

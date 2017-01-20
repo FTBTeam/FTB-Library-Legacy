@@ -12,7 +12,9 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class LMStringUtils
@@ -25,6 +27,8 @@ public class LMStringUtils
 
     public static final Comparator<Object> IGNORE_CASE_COMPARATOR = (o1, o2) -> String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
     public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1).compareToIgnoreCase(getID(o2));
+
+    public static final Map<String, String> TEMP_MAP = new HashMap<>();
 
     public static String getID(@Nullable Object o)
     {
@@ -505,5 +509,25 @@ public class LMStringUtils
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Map<String, String> parse(Map<String, String> map, String s)
+    {
+        if(map == TEMP_MAP)
+        {
+            map.clear();
+        }
+
+        for(String entry : s.split(","))
+        {
+            String[] val = entry.split("=");
+
+            for(String key : val[0].split("&"))
+            {
+                map.put(key, val[1]);
+            }
+        }
+
+        return map;
     }
 }

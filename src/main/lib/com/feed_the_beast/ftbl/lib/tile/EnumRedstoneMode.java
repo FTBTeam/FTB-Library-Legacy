@@ -5,14 +5,12 @@ import com.feed_the_beast.ftbl.api.tile.IRedstoneMode;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 
-import java.util.Locale;
-
 public enum EnumRedstoneMode implements IRedstoneMode
 {
-    DISABLED,
-    ACTIVE_HIGH,
-    ACTIVE_LOW,
-    PULSE;
+    DISABLED("disabled"),
+    ACTIVE_HIGH("active_high"),
+    ACTIVE_LOW("active_low"),
+    PULSE("pulse");
 
     public static final EnumRedstoneMode[] VALUES = {DISABLED, ACTIVE_HIGH, ACTIVE_LOW};
     public static final EnumRedstoneMode[] VALUES_WITH_PULSE = {DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE};
@@ -21,9 +19,9 @@ public enum EnumRedstoneMode implements IRedstoneMode
     private final LangKey langKey;
     private final String name;
 
-    EnumRedstoneMode()
+    EnumRedstoneMode(String n)
     {
-        name = name().toLowerCase(Locale.ENGLISH);
+        name = n;
         langKey = new LangKey("ftbl.redstonemode." + name);
     }
 

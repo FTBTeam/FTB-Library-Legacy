@@ -63,7 +63,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -172,7 +171,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     {
         if(id.charAt(0) != '-')
         {
-            id = id.toLowerCase(Locale.ENGLISH);
+            id = id.toLowerCase();
             ConfigFile configFile = new ConfigFile(new TextComponentString(id), provider);
             CONFIG_FILES.put(id, configFile);
         }
@@ -181,7 +180,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     @Override
     public void addConfigValueProvider(String id, IConfigValueProvider provider)
     {
-        CONFIG_VALUE_PROVIDERS.put(id.toLowerCase(Locale.ENGLISH), provider);
+        CONFIG_VALUE_PROVIDERS.put(id.toLowerCase(), provider);
     }
 
     @Override
@@ -219,7 +218,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     @Override
     public void addInfoTextLine(String id, IInfoTextLineProvider provider)
     {
-        InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(Locale.ENGLISH), provider);
+        InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(), provider);
     }
 
     @Override

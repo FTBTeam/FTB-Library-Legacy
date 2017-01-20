@@ -7,8 +7,6 @@ import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.Locale;
-
 /**
  * Created by LatvianModder on 15.11.2016.
  */
@@ -18,7 +16,7 @@ public interface IFTBLibClientRegistry
 
     default ConfigKey addClientConfig(String mod, String id, IConfigValue value, byte... flags)
     {
-        ConfigKey key = new ConfigKey(mod.toLowerCase(Locale.ENGLISH) + '.' + id, value.copy());
+        ConfigKey key = new ConfigKey(mod.toLowerCase() + '.' + id, value.copy());
 
         for(byte b : flags)
         {

@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -332,9 +333,11 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     }
 
     @Override
-    public void getSettings(IConfigTree tree)
+    public IConfigTree getSettings()
     {
+        IConfigTree tree = new ConfigTree();
         MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, tree));
+        return tree;
     }
 
     @Override

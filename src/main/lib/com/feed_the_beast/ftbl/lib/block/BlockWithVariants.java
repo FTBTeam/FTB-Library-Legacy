@@ -34,9 +34,11 @@ public abstract class BlockWithVariants<T extends Enum<T> & IBlockVariant> exten
 {
     private BlockVariantLookup<T> metaLookup;
 
-    public BlockWithVariants(Material m, CreativeTabs tab)
+    public BlockWithVariants(String id, Material m, CreativeTabs tab)
     {
         super(m);
+        setRegistryName(id);
+        setUnlocalizedName(id.replace(':', '.'));
         setCreativeTab(tab);
     }
 

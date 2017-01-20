@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 
 import java.io.File;
+import java.util.Locale;
 
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*",
         dependencies = "required-after:Forge@[12.18.2.2121,);after:Baubles;after:JEI;after:nei;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
@@ -40,6 +41,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPreInit(FMLPreInitializationEvent event)
     {
+        Locale.setDefault(Locale.US);
         FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
         new FTBLibAPI_Impl().init(event.getAsmData());
         LMUtils.init(event.getModConfigurationDirectory());

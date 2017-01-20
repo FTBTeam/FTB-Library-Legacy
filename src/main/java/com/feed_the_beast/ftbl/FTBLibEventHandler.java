@@ -22,7 +22,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class FTBLibEventHandler
@@ -83,7 +82,7 @@ public class FTBLibEventHandler
 
                 if(firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
                 {
-                    String id = p.getProfile().getName().toLowerCase(Locale.ENGLISH);
+                    String id = p.getProfile().getName().toLowerCase();
 
                     if(Universe.INSTANCE.getTeam(id) != null)
                     {

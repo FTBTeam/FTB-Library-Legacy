@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +18,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -55,15 +55,14 @@ public class LMUtils
         isNEILoaded = Loader.isModLoaded("NotEnoughItems") || Loader.isModLoaded("nei") || Loader.isModLoaded("notenoughitems");
     }
 
-    public static <K extends IForgeRegistryEntry<?>> void register(ResourceLocation id, K object)
+    public static <K extends IForgeRegistryEntry<?>> void register(K object)
     {
-        object.setRegistryName(id);
         GameRegistry.register(object);
 
         if(object instanceof IBlockWithItem)
         {
             ItemBlock ib = ((IBlockWithItem) object).createItemBlock();
-            ib.setRegistryName(id);
+            ib.setRegistryName(object.getRegistryName());
             GameRegistry.register(ib);
         }
     }
@@ -105,9 +104,9 @@ public class LMUtils
                 try
                 {
                     E o = (E) f.get(obj);
-                    o.setRegistryName(new ResourceLocation(modID, f.getName().toLowerCase(Locale.ENGLISH)));
+                    o.setRegistryName(new ResourceLocation(modID, f.getName().toLowerCase()));
                     GameRegistry.register(o);
-                    map.put(f.getName().toLowerCase(Locale.ENGLISH), o);
+                    map.put(f.getName().toLowerCase(), o);
                 }
                 catch(Exception ex)
                 {
@@ -135,5 +134,11 @@ public class LMUtils
         {
             return null;
         }
+    }
+
+    public static String getName(IBlockState state)
+    {
+        ResourceLocation id = state.getBlock().getRegistryName();
+        return id.getResourceDomain() + '_' + id.getResourcePath().replace('.', '_') + '_' + state.getBlock().getMetaFromState(state);
     }
 }

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.item;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 
 /**
@@ -8,16 +7,16 @@ import net.minecraft.util.IStringSerializable;
  */
 public enum ToolType implements IStringSerializable
 {
-    PICK,
-    SHOVEL,
-    AXE,
-    WRENCH;
+    PICK("pick"),
+    SHOVEL("shovel"),
+    AXE("axe"),
+    WRENCH("wrench");
 
     private String name;
 
-    ToolType()
+    ToolType(String n)
     {
-        name = EnumNameMap.createName(this);
+        name = n;
     }
 
     @Override

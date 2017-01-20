@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,30 +44,25 @@ public final class EnumNameMap<E extends Enum<E>>
 
         for(E e : values)
         {
-            map1.put(getEnumName(e), e);
+            map1.put(getName(e), e);
         }
 
         map = Collections.unmodifiableMap(map1);
     }
 
-    public static String createName(Enum<?> e)
+    public static String getName(@Nullable Object o)
     {
-        return e.name().toLowerCase(Locale.ENGLISH);
-    }
-
-    public static String getEnumName(@Nullable Enum<?> e)
-    {
-        if(e == null)
+        if(o == null)
         {
             return NULL_VALUE;
         }
-        else if(e instanceof IStringSerializable)
+        else if(o instanceof IStringSerializable)
         {
-            return ((IStringSerializable) e).getName();
+            return ((IStringSerializable) o).getName();
         }
         else
         {
-            return createName(e);
+            return ((o instanceof Enum<?>) ? ((Enum<?>) o).name() : o.toString()).toLowerCase();
         }
     }
 

@@ -3,15 +3,15 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -21,6 +21,16 @@ import java.util.UUID;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
+    private static NBTTagCompound RX_NBT;
+    private static final IConfigTree RX_CONFIG_TREE = new ConfigTree()
+    {
+        @Override
+        public void fromJson(JsonElement json)
+        {
+            new MessageEditConfigResponse(RX_NBT, json.getAsJsonObject()).sendToServer();
+        }
+    };
+
     private IConfigTree group;
     private NBTTagCompound extraNBT;
     private ITextComponent title;
@@ -51,10 +61,9 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void fromBytes(ByteBuf io)
     {
-        extraNBT = LMNetUtils.readTag(io);
+        RX_NBT = LMNetUtils.readTag(io);
         title = LMNetUtils.readTextComponent(io);
-        group = new ConfigTree();
-        group.readData(io);
+        RX_CONFIG_TREE.readData(io);
     }
 
     @Override
@@ -70,28 +79,9 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     {
         if(LMUtils.DEV_ENV)
         {
-            LMUtils.DEV_LOGGER.info("RX Send: " + m.group.getTree());
+            LMUtils.DEV_LOGGER.info("RX Send: " + RX_CONFIG_TREE.getTree());
         }
 
-        new GuiEditConfig(m.extraNBT, new IConfigContainer()
-        {
-            @Override
-            public IConfigTree getConfigTree()
-            {
-                return m.group;
-            }
-
-            @Override
-            public ITextComponent getTitle()
-            {
-                return m.title;
-            }
-
-            @Override
-            public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-            {
-                new MessageEditConfigResponse(nbt, json).sendToServer();
-            }
-        }).openGui();
+        new GuiEditConfig(RX_NBT, new BasicConfigContainer(m.title, RX_CONFIG_TREE)).openGui();
     }
 }

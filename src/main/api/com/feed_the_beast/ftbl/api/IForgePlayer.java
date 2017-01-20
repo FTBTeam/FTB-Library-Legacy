@@ -72,7 +72,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 
     StatisticsManagerServer stats();
 
-    void getSettings(IConfigTree tree);
+    IConfigTree getSettings();
 
     NBTTagCompound getPlayerNBT();
 

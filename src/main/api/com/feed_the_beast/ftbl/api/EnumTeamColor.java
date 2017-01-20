@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.item.EnumDyeColor;
@@ -13,16 +12,16 @@ import net.minecraft.util.text.TextFormatting;
  */
 public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
 {
-    BLUE(EnumDyeColor.BLUE, TextFormatting.BLUE, 138),
-    CYAN(EnumDyeColor.CYAN, TextFormatting.AQUA, 136),
-    GREEN(EnumDyeColor.GREEN, TextFormatting.GREEN, 118),
-    YELLOW(EnumDyeColor.YELLOW, TextFormatting.YELLOW, 131),
-    ORANGE(EnumDyeColor.ORANGE, TextFormatting.GOLD, 130),
-    RED(EnumDyeColor.RED, TextFormatting.RED, 129),
-    PINK(EnumDyeColor.PINK, TextFormatting.LIGHT_PURPLE, 190),
-    MAGENTA(EnumDyeColor.MAGENTA, TextFormatting.LIGHT_PURPLE, 143),
-    PURPLE(EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 141),
-    GRAY(EnumDyeColor.GRAY, TextFormatting.GRAY, 160);
+    BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 138),
+    CYAN("cyan", EnumDyeColor.CYAN, TextFormatting.AQUA, 136),
+    GREEN("green", EnumDyeColor.GREEN, TextFormatting.GREEN, 118),
+    YELLOW("yellow", EnumDyeColor.YELLOW, TextFormatting.YELLOW, 131),
+    ORANGE("orange", EnumDyeColor.ORANGE, TextFormatting.GOLD, 130),
+    RED("red", EnumDyeColor.RED, TextFormatting.RED, 129),
+    PINK("pink", EnumDyeColor.PINK, TextFormatting.LIGHT_PURPLE, 190),
+    MAGENTA("magenta", EnumDyeColor.MAGENTA, TextFormatting.LIGHT_PURPLE, 143),
+    PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 141),
+    GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 160);
 
     public static final EnumTeamColor[] VALUES = values();
 
@@ -41,9 +40,9 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
     private final TextFormatting textFormatting;
     private final byte colorID;
 
-    EnumTeamColor(EnumDyeColor d, TextFormatting t, int c)
+    EnumTeamColor(String n, EnumDyeColor d, TextFormatting t, int c)
     {
-        name = EnumNameMap.createName(this);
+        name = n;
         dyeColor = d;
         textFormatting = t;
         colorID = (byte) c;

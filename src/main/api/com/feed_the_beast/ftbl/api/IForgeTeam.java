@@ -52,7 +52,7 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     void changeOwner(IForgePlayer o);
 
-    void getSettings(IConfigTree tree);
+    IConfigTree getSettings();
 
     boolean hasPermission(UUID playerID, String permission);
 
