@@ -34,7 +34,7 @@ public class PropertyBool extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }

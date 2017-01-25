@@ -224,7 +224,7 @@ public class FTBLibClientEventHandler
             button = b;
 
             ITextComponent c = b.getDisplayNameOverride();
-            title = ((c == null) ? new TextComponentTranslation(b.getPath()) : c).getFormattedText();
+            title = ((c == null) ? new TextComponentTranslation("sidebar_button." + b.getName()) : c).getFormattedText();
         }
 
         @Override

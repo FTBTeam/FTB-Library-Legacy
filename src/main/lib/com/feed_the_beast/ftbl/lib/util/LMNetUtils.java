@@ -1,10 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.io.ByteIOStream;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -107,38 +104,17 @@ public class LMNetUtils
         return new UUID(msb, lsb);
     }
 
-    public static void writeString(ByteBuf io, String s)
-    {
-        ByteBufUtils.writeUTF8String(io, s);
-    }
-
-    public static String readString(ByteBuf io)
-    {
-        return ByteBufUtils.readUTF8String(io);
-    }
-
     public static void writeResourceLocation(ByteBuf io, ResourceLocation r)
     {
-        writeString(io, r.getResourceDomain());
-        writeString(io, r.getResourcePath());
+        ByteBufUtils.writeUTF8String(io, r.getResourceDomain());
+        ByteBufUtils.writeUTF8String(io, r.getResourcePath());
     }
 
     public static ResourceLocation readResourceLocation(ByteBuf io)
     {
-        String d = readString(io);
-        String p = readString(io);
+        String d = ByteBufUtils.readUTF8String(io);
+        String p = ByteBufUtils.readUTF8String(io);
         return new ResourceLocation(d, p);
-    }
-
-    public static void writeTag(ByteBuf io, @Nullable NBTTagCompound tag)
-    {
-        ByteBufUtils.writeTag(io, tag);
-    }
-
-    @Nullable
-    public static NBTTagCompound readTag(ByteBuf io)
-    {
-        return ByteBufUtils.readTag(io);
     }
 
     public static void writeJsonElement(ByteBuf io, JsonElement e)
@@ -151,22 +127,6 @@ public class LMNetUtils
         return JsonElementIO.read(io);
     }
 
-    public static void writeCompressedByteIOStream(ByteBuf io, ByteIOStream stream)
-    {
-        byte[] b = stream.toCompressedByteArray();
-        io.writeInt(b.length);
-        io.writeBytes(b, 0, b.length);
-    }
-
-    public static ByteIOStream readCompressedByteIOStream(ByteBuf io)
-    {
-        byte[] b = new byte[io.readInt()];
-        io.readBytes(b, 0, b.length);
-        ByteIOStream stream = new ByteIOStream();
-        stream.setCompressedData(b);
-        return stream;
-    }
-
     public static void writeTextComponent(ByteBuf io, ITextComponent t)
     {
         writeJsonElement(io, LMJsonUtils.serializeTextComponent(t));
@@ -175,15 +135,5 @@ public class LMNetUtils
     public static ITextComponent readTextComponent(ByteBuf io)
     {
         return LMJsonUtils.deserializeTextComponent(readJsonElement(io));
-    }
-
-    public static void writeItemStack(ByteBuf io, ItemStack is)
-    {
-        ByteBufUtils.writeItemStack(io, is);
-    }
-
-    public static ItemStack readItemStack(ByteBuf io)
-    {
-        return ByteBufUtils.readItemStack(io);
     }
 }

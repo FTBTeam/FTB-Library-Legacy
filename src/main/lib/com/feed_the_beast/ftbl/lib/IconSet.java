@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.lib.model;
+package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.util.EnumFacing;

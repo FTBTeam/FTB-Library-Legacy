@@ -26,7 +26,6 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ import java.util.Map;
 public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientRegistry
 {
     private IConfigFile clientConfig;
-    private static final Map<ResourceLocation, ISidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
+    private static final Map<String, ISidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
     private static final List<ISidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
     private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 
@@ -43,7 +42,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     {
         super.preInit();
 
-        clientConfig = new ConfigFile(new TextComponentTranslation(FTBLibActions.SETTINGS.getPath()), () -> new File(LMUtils.folderLocal, "client_config.json"));
+        clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button." + FTBLibActions.SETTINGS.getName()), () -> new File(LMUtils.folderLocal, "client_config.json"));
 
         addClientConfig(FTBLibFinals.MOD_ID, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
         addClientConfig(FTBLibFinals.MOD_ID, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
@@ -54,9 +53,9 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_height", GuiConfigs.BORDER_HEIGHT, IConfigKey.USE_SCROLL_BAR);
         addClientConfig(FTBLibFinals.MOD_ID, "gui.enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
 
-        addSidebarButton(FTBLibFinals.get("teams_gui"), FTBLibActions.TEAMS_GUI);
-        addSidebarButton(FTBLibFinals.get("settings"), FTBLibActions.SETTINGS);
-        addSidebarButton(FTBLibFinals.get("my_server_settings"), FTBLibActions.MY_SERVER_SETTINGS);
+        addSidebarButton(FTBLibActions.TEAMS_GUI);
+        addSidebarButton(FTBLibActions.SETTINGS);
+        addSidebarButton(FTBLibActions.MY_SERVER_SETTINGS);
 
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
@@ -65,32 +64,108 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
         SIDEBAR_BUTTON_MAP.forEach((key, button) ->
         {
-            if(button.getPath().isEmpty())
-            {
-                button.setPath("sidebar_button." + key.getResourceDomain() + '.' + key.getResourcePath());
-            }
-
             IConfigValue value = button.getConfig();
 
             if(value != null)
             {
-                clientConfig.add(new ConfigKey(button.getPath(), value.copy()), value);
+                clientConfig.add(new ConfigKey("sidebar_button." + button.getName(), value.copy()), value);
             }
 
             SIDEBAR_BUTTONS.add(button);
         });
 
-        Collections.sort(SIDEBAR_BUTTONS, (o1, o2) ->
+        /*
         {
-            int i = Integer.compare(o2.getPriority(), o1.getPriority());
+            HashMap<String, ModContainer> nameLookup = Maps.newHashMap();
+            ModContainer beforeAll = new DummyModContainer("BeforeAll");
+            ModContainer afterAll = new DummyModContainer("AfterAll");
+            ModContainer before = new DummyModContainer("Before");
+            ModContainer after = new DummyModContainer("After");
 
-            if(i == 0)
+            TopologicalSort.DirectedGraph<ModContainer> modGraph = new TopologicalSort.DirectedGraph<>();
+            modGraph.addNode(beforeAll);
+            modGraph.addNode(before);
+            modGraph.addNode(afterAll);
+            modGraph.addNode(after);
+            modGraph.addEdge(before, after);
+            modGraph.addEdge(beforeAll, before);
+            modGraph.addEdge(after, afterAll);
+
+            for(ModContainer mod : nameLookup.values())
             {
-                i = o1.getPath().compareToIgnoreCase(o2.getPath());
+                modGraph.addNode(mod);
             }
 
-            return i;
-        });
+            for(ModContainer mod : nameLookup.values())
+            {
+                if(mod.isImmutable())
+                {
+                    modGraph.addEdge(beforeAll, mod);
+                    modGraph.addEdge(mod, before);
+                    continue;
+                }
+                boolean preDepAdded = false;
+                boolean postDepAdded = false;
+
+                for(ArtifactVersion dep : mod.getDependencies())
+                {
+                    preDepAdded = true;
+
+                    String modid = dep.getLabel();
+                    if(modid.equals("*"))
+                    {
+                        modGraph.addEdge(mod, afterAll);
+                        modGraph.addEdge(after, mod);
+                        postDepAdded = true;
+                    }
+                    else
+                    {
+                        modGraph.addEdge(before, mod);
+                        if(nameLookup.containsKey(modid) || Loader.isModLoaded(modid))
+                        {
+                            modGraph.addEdge(nameLookup.get(modid), mod);
+                        }
+                    }
+                }
+
+                for(ArtifactVersion dep : mod.getDependants())
+                {
+                    postDepAdded = true;
+
+                    String modid = dep.getLabel();
+                    if(modid.equals("*"))
+                    {
+                        modGraph.addEdge(beforeAll, mod);
+                        modGraph.addEdge(mod, before);
+                        preDepAdded = true;
+                    }
+                    else
+                    {
+                        modGraph.addEdge(mod, after);
+                        if(Loader.isModLoaded(modid))
+                        {
+                            modGraph.addEdge(mod, nameLookup.get(modid));
+                        }
+                    }
+                }
+
+                if(!preDepAdded)
+                {
+                    modGraph.addEdge(before, mod);
+                }
+
+                if(!postDepAdded)
+                {
+                    modGraph.addEdge(mod, after);
+                }
+            }
+
+            List<ModContainer> sortedList = TopologicalSort.topologicalSort(modGraph);
+            sortedList.removeAll(Arrays.asList(new ModContainer[] {beforeAll, before, after, afterAll}));
+        }
+
+        FTBLibFinals.LOGGER.info("Sorted to " + SIDEBAR_BUTTONS);
+        */
 
         MinecraftForge.EVENT_BUS.register(new FTBLibClientEventHandler());
 
@@ -149,9 +224,9 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
-    public void addSidebarButton(ResourceLocation id, ISidebarButton button)
+    public void addSidebarButton(ISidebarButton button)
     {
-        SIDEBAR_BUTTON_MAP.put(id, button);
+        SIDEBAR_BUTTON_MAP.put(button.getName(), button);
     }
 
     @Override

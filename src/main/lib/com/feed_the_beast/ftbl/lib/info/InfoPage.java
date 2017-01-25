@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.RemoveFilter;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
@@ -34,6 +35,7 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
     public InfoPage parent = null;
     public InfoPageTheme theme;
     private ITextComponent title;
+    private IPageIconRenderer pageIcon;
 
     public InfoPage(String id)
     {
@@ -293,13 +295,20 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
     {
     }
 
+    @Nullable
     public ISpecialInfoButton createSpecialButton(GuiInfo gui)
     {
         return null;
     }
 
+    public InfoPage setIcon(IPageIconRenderer icon)
+    {
+        pageIcon = icon;
+        return this;
+    }
+
     public IWidget createWidget(GuiInfo gui)
     {
-        return new ButtonInfoPage(gui, this, null);
+        return new ButtonInfoPage(gui, this, pageIcon);
     }
 }

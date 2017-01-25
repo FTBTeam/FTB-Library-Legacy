@@ -1,20 +1,17 @@
 package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 16.08.2016.
  */
-public interface ISidebarButton
+public interface ISidebarButton extends IStringSerializable
 {
-    default int getPriority()
-    {
-        return 0;
-    }
-
     @Nullable
     IImageProvider getIcon();
 
@@ -40,7 +37,7 @@ public interface ISidebarButton
         return true;
     }
 
-    void setPath(String path);
+    List<String> requiredBefore();
 
-    String getPath();
+    List<String> requiredAfter();
 }

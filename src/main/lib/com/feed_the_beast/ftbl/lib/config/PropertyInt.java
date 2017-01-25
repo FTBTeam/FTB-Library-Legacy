@@ -44,7 +44,7 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }

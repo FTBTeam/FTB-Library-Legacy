@@ -51,7 +51,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
             if(keyText.startsWith("config.") && keyText.endsWith(".name"))
             {
-                keyText = id.getID();
+                keyText = id.getName();
             }
 
             if(!id.getInfo().isEmpty())
@@ -307,7 +307,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
     @Override
     public void onChanged(IConfigKey key, JsonElement val)
     {
-        modifiedConfig.add(key.getID(), val);
+        modifiedConfig.add(key.getName(), val);
     }
 
     @Override

@@ -107,6 +107,7 @@ public class InfoImageLine extends EmptyInfoPageLine
     public JsonElement getJson()
     {
         JsonObject o = new JsonObject();
+        o.add("id", new JsonPrimitive("img"));
 
         if(!imageProvider.isValid())
         {

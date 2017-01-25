@@ -36,7 +36,7 @@ public class PropertyIntList extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }

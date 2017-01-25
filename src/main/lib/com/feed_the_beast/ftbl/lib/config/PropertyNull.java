@@ -22,7 +22,7 @@ public enum PropertyNull implements IConfigValue
     public static final String ID = "null";
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
@@ -10,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class PropertyItemStackList extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -184,7 +184,7 @@ public class PropertyItemStackList extends PropertyBase
     {
         value = getItems();
         data.writeShort(value.size());
-        value.forEach(is -> LMNetUtils.writeItemStack(data, is));
+        value.forEach(is -> ByteBufUtils.writeItemStack(data, is));
     }
 
     @Override
@@ -195,7 +195,7 @@ public class PropertyItemStackList extends PropertyBase
 
         while(--s >= 0)
         {
-            value.add(LMNetUtils.readItemStack(data));
+            value.add(ByteBufUtils.readItemStack(data));
         }
 
         setItems(value);

@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
 {
@@ -33,14 +34,14 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        infoID = LMNetUtils.readString(io);
+        infoID = ByteBufUtils.readUTF8String(io);
         json = LMNetUtils.readJsonElement(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writeString(io, infoID);
+        ByteBufUtils.writeUTF8String(io, infoID);
         LMNetUtils.writeJsonElement(io, json);
     }
 

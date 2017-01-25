@@ -5,12 +5,13 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 
@@ -34,7 +35,7 @@ public class PropertyString extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -88,7 +89,7 @@ public class PropertyString extends PropertyBase
         {
             if(set)
             {
-                setString(val.getString());
+                setString(LMJsonUtils.fixJsonString(val.getString()));
                 gui.onChanged(key, getSerializableElement());
             }
 
@@ -123,12 +124,12 @@ public class PropertyString extends PropertyBase
     @Override
     public void writeData(ByteBuf data)
     {
-        LMNetUtils.writeString(data, getString());
+        ByteBufUtils.writeUTF8String(data, getString());
     }
 
     @Override
     public void readData(ByteBuf data)
     {
-        setString(LMNetUtils.readString(data));
+        setString(ByteBufUtils.readUTF8String(data));
     }
 }

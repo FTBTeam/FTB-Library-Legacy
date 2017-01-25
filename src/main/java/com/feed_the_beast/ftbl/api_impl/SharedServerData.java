@@ -58,7 +58,7 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
     {
         JsonObject o = new JsonObject();
         o.add("world_id", new JsonPrimitive(LMStringUtils.fromUUID(getUniverseID())));
-        o.add("mode", new JsonPrimitive(getPackMode().getID()));
+        o.add("mode", new JsonPrimitive(getPackMode().getName()));
         return o;
     }
 }

@@ -45,6 +45,7 @@ import com.feed_the_beast.ftbl.lib.info.InfoImageLine;
 import com.feed_the_beast.ftbl.lib.info.InfoListLine;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.InfoTextLineString;
+import com.feed_the_beast.ftbl.lib.info.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
@@ -127,11 +128,13 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 
         addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
 
+        addInfoTextLine("img", (page, json) -> new InfoImageLine(json));
         addInfoTextLine("image", (page, json) -> new InfoImageLine(json));
         addInfoTextLine("text_component", (page, json) -> new InfoExtendedTextLine(json));
         addInfoTextLine("text", (page, json) -> new InfoTextLineString(json));
         addInfoTextLine("list", InfoListLine::new);
         addInfoTextLine("hr", (page, json) -> new InfoHrLine(json));
+        addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
 
         addTeamPlayerPermission(FTBLibTeamPermissions.CAN_JOIN, true);
         addTeamPlayerPermission(FTBLibTeamPermissions.IS_ALLY, true);
@@ -262,7 +265,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
         RankConfig c = new RankConfig(id, defPlayer, defOP);
         c.setInfo(description);
-        RANK_CONFIGS.put(c.getID(), c);
+        RANK_CONFIGS.put(c.getName(), c);
     }
 
     public void loadAllFiles()

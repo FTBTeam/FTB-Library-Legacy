@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 
@@ -43,14 +44,14 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     public void fromBytes(ByteBuf io)
     {
         groupData = LMNetUtils.readJsonElement(io).getAsJsonObject();
-        extraNBT = LMNetUtils.readTag(io);
+        extraNBT = ByteBufUtils.readTag(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
         LMNetUtils.writeJsonElement(io, groupData);
-        LMNetUtils.writeTag(io, extraNBT);
+        ByteBufUtils.writeTag(io, extraNBT);
     }
 
     @Override

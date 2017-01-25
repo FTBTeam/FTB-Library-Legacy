@@ -276,4 +276,15 @@ public class LMJsonUtils
 
         return parent;
     }
+
+    @Nonnull
+    public static String fixJsonString(@Nonnull String json)
+    {
+        if(json.indexOf(' ') != -1 && !((json.startsWith("\"") && json.endsWith("\"")) || (json.startsWith("{") && json.endsWith("}")) || (json.startsWith("[") && json.endsWith("]"))))
+        {
+            json = "\"" + json + "\"";
+        }
+
+        return json;
+    }
 }

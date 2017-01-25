@@ -29,5 +29,5 @@ public interface IFTBLibClientRegistry
 
     void addGui(ResourceLocation id, IGuiProvider provider);
 
-    void addSidebarButton(ResourceLocation id, ISidebarButton provider);
+    void addSidebarButton(ISidebarButton provider);
 }

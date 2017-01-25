@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -11,6 +10,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class PropertyEntityClassList extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -181,7 +181,7 @@ public class PropertyEntityClassList extends PropertyBase
     {
         list = getEntityList();
         data.writeShort(list.size());
-        list.forEach(c -> LMNetUtils.writeString(data, EntityList.CLASS_TO_NAME.get(c)));
+        list.forEach(c -> ByteBufUtils.writeUTF8String(data, EntityList.CLASS_TO_NAME.get(c)));
     }
 
     @Override
@@ -193,7 +193,7 @@ public class PropertyEntityClassList extends PropertyBase
 
         while(--s >= 0)
         {
-            Class<?> c = EntityList.NAME_TO_CLASS.get(LMNetUtils.readString(data));
+            Class<?> c = EntityList.NAME_TO_CLASS.get(ByteBufUtils.readUTF8String(data));
 
             if(c != null && Entity.class.isAssignableFrom(c))
             {

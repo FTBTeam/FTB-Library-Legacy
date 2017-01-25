@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -29,6 +30,11 @@ public interface FTBLibAPI
     ISharedServerData getServerData();
 
     ISharedClientData getClientData();
+
+    default ISharedData getSidedData(Side side)
+    {
+        return side.isServer() ? getServerData() : getClientData();
+    }
 
     @Nullable
     IUniverse getUniverse();

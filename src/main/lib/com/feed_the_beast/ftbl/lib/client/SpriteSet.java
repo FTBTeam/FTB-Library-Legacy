@@ -1,5 +1,6 @@
-package com.feed_the_beast.ftbl.lib.model;
+package com.feed_the_beast.ftbl.lib.client;
 
+import com.feed_the_beast.ftbl.lib.IconSet;
 import com.google.common.base.Function;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;

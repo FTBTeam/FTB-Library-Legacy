@@ -4,27 +4,54 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public abstract class SidebarButton implements ISidebarButton
+public abstract class SidebarButton extends FinalIDObject implements ISidebarButton
 {
-    private final int priority;
     private final IImageProvider icon;
     private final IConfigValue config;
-    private String path = "";
+    private List<String> requiredBefore, requiredAfter;
 
-    public SidebarButton(int p, IImageProvider c, @Nullable IConfigValue b)
+    public SidebarButton(ResourceLocation id, IImageProvider c, @Nullable IConfigValue b, String dependencies)
     {
-        priority = p;
+        super(id.toString().toLowerCase().replace(':', '.'));
         icon = c;
         config = b;
-    }
 
-    @Override
-    public int getPriority()
-    {
-        return priority;
+        if(!dependencies.isEmpty())
+        {
+            for(String s : dependencies.split(";"))
+            {
+                int index = s.indexOf(':');
+
+                if(index != -1)
+                {
+                    switch(s.substring(0, index))
+                    {
+                        case "before":
+                            if(requiredBefore == null)
+                            {
+                                requiredBefore = new ArrayList<>();
+                            }
+                            requiredBefore.add(s.substring(index + 1, s.length()));
+                            break;
+
+                        case "after":
+                            if(requiredAfter == null)
+                            {
+                                requiredAfter = new ArrayList<>();
+                            }
+                            requiredAfter.add(s.substring(index + 1, s.length()));
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -47,14 +74,14 @@ public abstract class SidebarButton implements ISidebarButton
     }
 
     @Override
-    public void setPath(String p)
+    public List<String> requiredBefore()
     {
-        path = p;
+        return requiredBefore == null ? Collections.emptyList() : requiredBefore;
     }
 
     @Override
-    public String getPath()
+    public List<String> requiredAfter()
     {
-        return path;
+        return requiredAfter == null ? Collections.emptyList() : requiredAfter;
     }
 }

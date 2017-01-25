@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.item.ToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -26,6 +27,13 @@ public class LMInvUtils
 {
     public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
     private static Method baublesMethod = null;
+
+    public static final ItemStack ERROR_ITEM = new ItemStack(Blocks.BARRIER);
+
+    static
+    {
+        ERROR_ITEM.setStackDisplayName("Error!");
+    }
 
     public static void addPlayerSlots(Container container, EntityPlayer player, int posX, int posY, boolean ignoreCurrent)
     {

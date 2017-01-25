@@ -22,6 +22,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Collection;
@@ -50,7 +51,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     {
         flags = 0;
         flags = Bits.setFlag(flags, IS_OP, LMServerUtils.isOP(player.getGameProfile()));
-        currentMode = SharedServerData.INSTANCE.getPackMode().getID();
+        currentMode = SharedServerData.INSTANCE.getPackMode().getName();
         universeID = SharedServerData.INSTANCE.getUniverseID();
         notifications = SharedServerData.INSTANCE.notifications;
         syncData = new NBTTagCompound();
@@ -69,13 +70,13 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     public void toBytes(ByteBuf io)
     {
         io.writeByte(flags);
-        LMNetUtils.writeString(io, currentMode);
+        ByteBufUtils.writeUTF8String(io, currentMode);
         LMNetUtils.writeUUID(io, universeID);
 
         io.writeShort(notifications.size());
         notifications.forEach((key, value) -> MessageNotifyPlayer.write(io, value));
 
-        LMNetUtils.writeTag(io, syncData);
+        ByteBufUtils.writeTag(io, syncData);
 
         if(!optionalServerMods.isEmpty())
         {
@@ -83,7 +84,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
             for(String s : optionalServerMods)
             {
-                LMNetUtils.writeString(io, s);
+                ByteBufUtils.writeUTF8String(io, s);
             }
         }
     }
@@ -92,7 +93,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     public void fromBytes(ByteBuf io)
     {
         flags = io.readByte();
-        currentMode = LMNetUtils.readString(io);
+        currentMode = ByteBufUtils.readUTF8String(io);
         universeID = LMNetUtils.readUUID(io);
 
         int s = io.readUnsignedShort();
@@ -104,7 +105,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
             notifications.put(n.getID(), n);
         }
 
-        syncData = LMNetUtils.readTag(io);
+        syncData = ByteBufUtils.readTag(io);
 
         if(Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
         {
@@ -113,7 +114,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
             while(--s >= 0)
             {
-                optionalServerMods.add(LMNetUtils.readString(io));
+                optionalServerMods.add(ByteBufUtils.readUTF8String(io));
             }
         }
     }

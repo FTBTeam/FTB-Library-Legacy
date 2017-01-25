@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -8,7 +9,7 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 11.09.2016.
  */
-public interface IConfigKey
+public interface IConfigKey extends IStringSerializable
 {
     /**
      * Will be excluded from writing / reading from files
@@ -30,8 +31,6 @@ public interface IConfigKey
      */
     byte USE_SCROLL_BAR = 8;
 
-    String getID();
-
     byte getFlags();
 
     default boolean getFlag(byte flag)
@@ -47,7 +46,7 @@ public interface IConfigKey
     default ITextComponent getDisplayName()
     {
         ITextComponent t = getRawDisplayName();
-        return t == null ? new TextComponentTranslation("config." + getID() + ".name") : t;
+        return t == null ? new TextComponentTranslation("config." + getName() + ".name") : t;
     }
 
     String getInfo();

@@ -6,13 +6,13 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     public static final String ID = "enum";
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -119,7 +119,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
 
         for(String s : getNameMap().getKeys())
         {
-            LMNetUtils.writeString(data, s);
+            ByteBufUtils.writeUTF8String(data, s);
         }
 
         data.writeShort(getNameMap().getIndex(getValue()));

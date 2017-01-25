@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -9,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class PropertyStringList extends PropertyBase
     }
 
     @Override
-    public String getID()
+    public String getName()
     {
         return ID;
     }
@@ -68,7 +68,11 @@ public class PropertyStringList extends PropertyBase
     {
         Collection<String> list = getStringList();
         data.writeShort(list.size());
-        list.forEach(s -> LMNetUtils.writeString(data, s));
+
+        for(String s : list)
+        {
+            ByteBufUtils.writeUTF8String(data, s);
+        }
     }
 
     @Override
@@ -87,7 +91,7 @@ public class PropertyStringList extends PropertyBase
 
             while(--s >= 0)
             {
-                value.add(LMNetUtils.readString(data));
+                value.add(ByteBufUtils.readUTF8String(data));
             }
 
             setStringList(value);

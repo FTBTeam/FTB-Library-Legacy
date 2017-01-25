@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.lib.model;
+package com.feed_the_beast.ftbl.lib.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;

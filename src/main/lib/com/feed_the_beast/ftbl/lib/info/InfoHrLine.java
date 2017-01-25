@@ -49,6 +49,7 @@ public class InfoHrLine extends EmptyInfoPageLine
     public JsonElement getJson()
     {
         JsonObject o = new JsonObject();
+        o.add("id", new JsonPrimitive("hr"));
         o.add("height", new JsonPrimitive(height));
         o.add("color", LMColorUtils.serialize(color));
         return o;

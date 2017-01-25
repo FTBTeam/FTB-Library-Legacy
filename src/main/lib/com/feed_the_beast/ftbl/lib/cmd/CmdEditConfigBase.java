@@ -46,7 +46,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             {
                 List<IConfigKey> keys = new ArrayList<>();
                 keys.addAll(map.keySet());
-                Collections.sort(keys, (o1, o2) -> o1.getID().compareTo(o2.getID()));
+                Collections.sort(keys, (o1, o2) -> o1.getName().compareTo(o2.getName()));
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)
@@ -103,13 +103,7 @@ public abstract class CmdEditConfigBase extends CommandLM
 
             try
             {
-                if(json.indexOf(' ') != -1 && !((json.startsWith("\"") && json.endsWith("\"")) || (json.startsWith("{") && json.endsWith("}")) || (json.startsWith("[") && json.endsWith("]"))))
-                {
-                    json = "\"" + json + "\"";
-                }
-
-                JsonElement value = LMJsonUtils.fromJson(json);
-
+                JsonElement value = LMJsonUtils.fromJson(LMJsonUtils.fixJsonString(json));
                 sender.addChatMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
                 JsonObject json1 = new JsonObject();
                 json1.add(args[0], value);

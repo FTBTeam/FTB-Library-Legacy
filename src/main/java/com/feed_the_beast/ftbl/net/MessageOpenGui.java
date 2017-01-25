@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -47,7 +48,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     {
         guiID = LMNetUtils.readResourceLocation(io);
         pos = LMNetUtils.readPos(io);
-        data = LMNetUtils.readTag(io);
+        data = ByteBufUtils.readTag(io);
         windowID = io.readUnsignedByte();
     }
 
@@ -56,7 +57,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     {
         LMNetUtils.writeResourceLocation(io, guiID);
         LMNetUtils.writePos(io, pos);
-        LMNetUtils.writeTag(io, data);
+        ByteBufUtils.writeTag(io, data);
         io.writeByte(windowID);
     }
 

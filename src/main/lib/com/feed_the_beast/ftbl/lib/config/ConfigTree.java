@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -57,11 +58,11 @@ public class ConfigTree implements IConfigTree
 
         tree.forEach((key, value) ->
         {
-            LMNetUtils.writeString(data, key.getID());
+            ByteBufUtils.writeUTF8String(data, key.getName());
             data.writeByte(key.getFlags());
 
             IConfigValue defValue = key.getDefValue();
-            LMNetUtils.writeString(data, defValue.getID());
+            ByteBufUtils.writeUTF8String(data, defValue.getName());
             defValue.writeData(data);
 
             byte extraFlags = 0;
@@ -89,10 +90,10 @@ public class ConfigTree implements IConfigTree
 
             if(!info.isEmpty())
             {
-                LMNetUtils.writeString(data, info);
+                ByteBufUtils.writeUTF8String(data, info);
             }
 
-            LMNetUtils.writeString(data, value.getID());
+            ByteBufUtils.writeUTF8String(data, value.getName());
             value.writeData(data);
         });
     }
@@ -105,10 +106,10 @@ public class ConfigTree implements IConfigTree
 
         while(--s >= 0)
         {
-            String id = LMNetUtils.readString(data);
+            String id = ByteBufUtils.readUTF8String(data);
             byte flags = data.readByte();
 
-            IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(LMNetUtils.readString(data));
+            IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
             value.readData(data);
 
             ConfigKey key = new ConfigKey(id, value);
@@ -123,10 +124,10 @@ public class ConfigTree implements IConfigTree
 
             if((extraFlags & HAS_INFO) != 0)
             {
-                key.setInfo(LMNetUtils.readString(data));
+                key.setInfo(ByteBufUtils.readUTF8String(data));
             }
 
-            value = FTBLibIntegrationInternal.API.getConfigValueFromID(LMNetUtils.readString(data));
+            value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
             value.readData(data);
             tree.put(key, value);
         }
@@ -140,7 +141,7 @@ public class ConfigTree implements IConfigTree
         {
             if(!key.getFlag(IConfigKey.EXCLUDED))
             {
-                JsonElement e = o.get(key.getID());
+                JsonElement e = o.get(key.getName());
 
                 if(e != null)
                 {
@@ -158,7 +159,7 @@ public class ConfigTree implements IConfigTree
         {
             if(!key.getFlag(IConfigKey.EXCLUDED))
             {
-                o.add(key.getID(), value.getSerializableElement());
+                o.add(key.getName(), value.getSerializableElement());
             }
         });
 
@@ -169,7 +170,7 @@ public class ConfigTree implements IConfigTree
     public NBTBase serializeNBT()
     {
         NBTTagCompound nbt = new NBTTagCompound();
-        tree.forEach((key, value) -> nbt.setTag(key.getID(), value.serializeNBT()));
+        tree.forEach((key, value) -> nbt.setTag(key.getName(), value.serializeNBT()));
         return nbt;
     }
 
@@ -179,7 +180,7 @@ public class ConfigTree implements IConfigTree
         NBTTagCompound configTag = (NBTTagCompound) nbt;
         tree.forEach((key, value) ->
         {
-            NBTBase base = configTag.getTag(key.getID());
+            NBTBase base = configTag.getTag(key.getName());
 
             if(base != null)
             {

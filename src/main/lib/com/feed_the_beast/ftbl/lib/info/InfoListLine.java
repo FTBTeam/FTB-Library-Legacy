@@ -24,11 +24,29 @@ public class InfoListLine extends EmptyInfoPageLine
     public InfoListLine(InfoPage p, JsonElement json)
     {
         textLines = new ArrayList<>();
-        JsonObject o = json.getAsJsonObject();
 
-        if(o.has("list"))
+        if(json.isJsonObject())
         {
-            for(JsonElement element : o.get("list").getAsJsonArray())
+            JsonObject o = json.getAsJsonObject();
+
+            if(o.has("list"))
+            {
+                for(JsonElement element : o.get("list").getAsJsonArray())
+                {
+                    IInfoTextLine line = InfoPageHelper.createLine(p, element);
+
+                    if(line != null)
+                    {
+                        textLines.add(line);
+                    }
+                }
+            }
+
+            ordered = o.has("ordered") && o.get("ordered").getAsBoolean();
+        }
+        else
+        {
+            for(JsonElement element : json.getAsJsonArray())
             {
                 IInfoTextLine line = InfoPageHelper.createLine(p, element);
 
@@ -37,9 +55,9 @@ public class InfoListLine extends EmptyInfoPageLine
                     textLines.add(line);
                 }
             }
-        }
 
-        ordered = o.has("ordered") && o.get("ordered").getAsBoolean();
+            ordered = false;
+        }
     }
 
     public InfoListLine(List<IInfoTextLine> l, boolean o)

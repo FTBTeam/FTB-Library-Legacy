@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 public class FTBLibActions
 {
-    public static final ISidebarButton TEAMS_GUI = new SidebarButton(995, new ImageProvider(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null)
+    public static final ISidebarButton TEAMS_GUI = new SidebarButton(FTBLibFinals.get("teams_gui"), new ImageProvider(new ResourceLocation(FTBLibFinals.MOD_ID, "textures/gui/teams.png")), null, "before:*")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -63,7 +63,7 @@ public class FTBLibActions
         }
     };
 
-    public static final ISidebarButton SETTINGS = new SidebarButton(990, GuiIcons.SETTINGS, null)
+    public static final ISidebarButton SETTINGS = new SidebarButton(FTBLibFinals.get("settings"), GuiIcons.SETTINGS, null, "after:ftbl.teams_gui")
     {
         @Override
         public void onClicked(IMouseButton button)
@@ -72,7 +72,7 @@ public class FTBLibActions
         }
     };
 
-    public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButton(985, GuiIcons.SETTINGS_RED, new PropertyBool(true))
+    public static final ISidebarButton MY_SERVER_SETTINGS = new SidebarButton(FTBLibFinals.get("my_server_settings"), GuiIcons.SETTINGS_RED, new PropertyBool(true), "after:ftbl.settings")
     {
         @Override
         public void onClicked(IMouseButton button)

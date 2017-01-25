@@ -15,6 +15,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void fromBytes(ByteBuf io)
     {
-        RX_NBT = LMNetUtils.readTag(io);
+        RX_NBT = ByteBufUtils.readTag(io);
         title = LMNetUtils.readTextComponent(io);
         RX_CONFIG_TREE.readData(io);
     }
@@ -69,7 +70,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writeTag(io, extraNBT);
+        ByteBufUtils.writeTag(io, extraNBT);
         LMNetUtils.writeTextComponent(io, title);
         group.writeData(io);
     }

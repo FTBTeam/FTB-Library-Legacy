@@ -16,6 +16,7 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class MessageReload extends MessageToClient<MessageReload>
     {
         typeID = t.ordinal();
         syncData = sync;
-        currentMode = SharedServerData.INSTANCE.getPackMode().getID();
+        currentMode = SharedServerData.INSTANCE.getPackMode().getName();
         universeID = SharedServerData.INSTANCE.getUniverseID();
     }
 
@@ -49,8 +50,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void toBytes(ByteBuf io)
     {
         io.writeByte(typeID);
-        LMNetUtils.writeTag(io, syncData);
-        LMNetUtils.writeString(io, currentMode);
+        ByteBufUtils.writeTag(io, syncData);
+        ByteBufUtils.writeUTF8String(io, currentMode);
         LMNetUtils.writeUUID(io, universeID);
     }
 
@@ -58,8 +59,8 @@ public class MessageReload extends MessageToClient<MessageReload>
     public void fromBytes(ByteBuf io)
     {
         typeID = io.readUnsignedByte();
-        syncData = LMNetUtils.readTag(io);
-        currentMode = LMNetUtils.readString(io);
+        syncData = ByteBufUtils.readTag(io);
+        currentMode = ByteBufUtils.readUTF8String(io);
         universeID = LMNetUtils.readUUID(io);
     }
 
@@ -97,7 +98,7 @@ public class MessageReload extends MessageToClient<MessageReload>
                 FTBLibLang.RELOAD_CLIENT.printChat(player, (System.currentTimeMillis() - ms) + "ms");
             }
 
-            FTBLibFinals.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getID());
+            FTBLibFinals.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getName());
         }
     }
 }

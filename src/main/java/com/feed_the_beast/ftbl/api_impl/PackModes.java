@@ -40,7 +40,7 @@ public enum PackModes implements IPackModes
         for(int i = 0; i < a.size(); i++)
         {
             IPackMode m = new PackMode(a.get(i).getAsString());
-            modes0.put(m.getID(), m);
+            modes0.put(m.getName(), m);
         }
 
         defaultMode = modes0.get(o.get("default").getAsString());
@@ -97,12 +97,12 @@ public enum PackModes implements IPackModes
 
         for(IPackMode m : modes.values())
         {
-            a.add(new JsonPrimitive(m.getID()));
+            a.add(new JsonPrimitive(m.getName()));
         }
 
         o.add("modes", a);
 
-        o.add("default", new JsonPrimitive(defaultMode.getID()));
+        o.add("default", new JsonPrimitive(defaultMode.getName()));
 
         if(!customData.isEmpty())
         {
