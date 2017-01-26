@@ -245,11 +245,19 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             else
             {
                 selectedPage = p;
-                refreshWidgets();
+
+                if(p.getPages().isEmpty())
+                {
+                    panelText.refreshWidgets();
+                }
+                else
+                {
+                    refreshWidgets();
+                }
             }
         }
 
-        buttonSpecial.updateButton(GuiInfo.this);
+        buttonSpecial.updateButton(this);
     }
 
     @Override
