@@ -25,7 +25,7 @@ public class ButtonInfoTextLine extends ButtonLM
             text = gui.getFont().listFormattedStringToWidth(txt, parent.getWidth());
         }
 
-        if(text != null)
+        if(text != null && !text.isEmpty())
         {
             if(text.size() > 1)
             {
@@ -58,15 +58,17 @@ public class ButtonInfoTextLine extends ButtonLM
     @Override
     public void renderWidget(IGui gui)
     {
+        if(text == null || text.isEmpty())
+        {
+            return;
+        }
+
         int ay = getAY();
         int ax = getAX();
 
-        if(text != null)
+        for(int i = 0; i < text.size(); i++)
         {
-            for(int i = 0; i < text.size(); i++)
-            {
-                gui.getFont().drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
-            }
+            gui.getFont().drawString(text.get(i), ax, ay + i * 10 + 1, ((GuiInfo) gui).colorText);
         }
     }
 }

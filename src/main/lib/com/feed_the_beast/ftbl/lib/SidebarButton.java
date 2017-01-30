@@ -2,20 +2,22 @@ package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class SidebarButton extends FinalIDObject implements ISidebarButton
 {
     private final IImageProvider icon;
     private final IConfigValue config;
-    private List<String> requiredBefore, requiredAfter;
+    private Map<String, Boolean> deps;
 
     public SidebarButton(ResourceLocation id, IImageProvider c, @Nullable IConfigValue b, String dependencies)
     {
@@ -25,6 +27,8 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
 
         if(!dependencies.isEmpty())
         {
+            deps = new HashMap<>();
+
             for(String s : dependencies.split(";"))
             {
                 int index = s.indexOf(':');
@@ -34,23 +38,19 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
                     switch(s.substring(0, index))
                     {
                         case "before":
-                            if(requiredBefore == null)
-                            {
-                                requiredBefore = new ArrayList<>();
-                            }
-                            requiredBefore.add(s.substring(index + 1, s.length()));
+                            deps.put(s.substring(index + 1, s.length()), true);
                             break;
-
                         case "after":
-                            if(requiredAfter == null)
-                            {
-                                requiredAfter = new ArrayList<>();
-                            }
-                            requiredAfter.add(s.substring(index + 1, s.length()));
+                            deps.put(s.substring(index + 1, s.length()), false);
                             break;
                     }
                 }
             }
+        }
+
+        if(deps == null || deps.isEmpty())
+        {
+            deps = Collections.emptyMap();
         }
     }
 
@@ -74,14 +74,21 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
     }
 
     @Override
-    public List<String> requiredBefore()
+    public Map<String, Boolean> getDependencies()
     {
-        return requiredBefore == null ? Collections.emptyList() : requiredBefore;
+        return deps;
     }
 
-    @Override
-    public List<String> requiredAfter()
+    public static class Dummy extends SidebarButton
     {
-        return requiredAfter == null ? Collections.emptyList() : requiredAfter;
+        public Dummy(ResourceLocation id)
+        {
+            super(id, ImageProvider.NULL, null, "");
+        }
+
+        @Override
+        public void onClicked(IMouseButton button)
+        {
+        }
     }
 }

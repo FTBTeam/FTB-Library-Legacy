@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
@@ -22,10 +23,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.toposort.TopologicalSort;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +38,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     private IConfigFile clientConfig;
     private static final Map<String, ISidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
     private static final List<ISidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
+    private static final ISidebarButton DBUTTON_BEFORE_ALL = new SidebarButton.Dummy(new ResourceLocation("before_all"));
+    private static final ISidebarButton DBUTTON_AFTER_ALL = new SidebarButton.Dummy(new ResourceLocation("after_all"));
+    private static final ISidebarButton DBUTTON_BEFORE = new SidebarButton.Dummy(new ResourceLocation("before"));
+    private static final ISidebarButton DBUTTON_AFTER = new SidebarButton.Dummy(new ResourceLocation("after"));
     private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 
     @Override
@@ -70,102 +77,86 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
             {
                 clientConfig.add(new ConfigKey("sidebar_button." + button.getName(), value.copy()), value);
             }
-
-            SIDEBAR_BUTTONS.add(button);
         });
 
-        /*
+        TopologicalSort.DirectedGraph<ISidebarButton> sidebarButtonGraph = new TopologicalSort.DirectedGraph<>();
+        sidebarButtonGraph.addNode(DBUTTON_BEFORE_ALL);
+        sidebarButtonGraph.addNode(DBUTTON_BEFORE);
+        sidebarButtonGraph.addNode(DBUTTON_AFTER_ALL);
+        sidebarButtonGraph.addNode(DBUTTON_AFTER);
+        sidebarButtonGraph.addEdge(DBUTTON_BEFORE, DBUTTON_AFTER);
+        sidebarButtonGraph.addEdge(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE);
+        sidebarButtonGraph.addEdge(DBUTTON_AFTER, DBUTTON_AFTER_ALL);
+
+        SIDEBAR_BUTTON_MAP.values().forEach(sidebarButtonGraph::addNode);
+
+        for(ISidebarButton button : SIDEBAR_BUTTON_MAP.values())
         {
-            HashMap<String, ModContainer> nameLookup = Maps.newHashMap();
-            ModContainer beforeAll = new DummyModContainer("BeforeAll");
-            ModContainer afterAll = new DummyModContainer("AfterAll");
-            ModContainer before = new DummyModContainer("Before");
-            ModContainer after = new DummyModContainer("After");
+            boolean preDepAdded = false;
+            boolean postDepAdded = false;
 
-            TopologicalSort.DirectedGraph<ModContainer> modGraph = new TopologicalSort.DirectedGraph<>();
-            modGraph.addNode(beforeAll);
-            modGraph.addNode(before);
-            modGraph.addNode(afterAll);
-            modGraph.addNode(after);
-            modGraph.addEdge(before, after);
-            modGraph.addEdge(beforeAll, before);
-            modGraph.addEdge(after, afterAll);
-
-            for(ModContainer mod : nameLookup.values())
+            for(Map.Entry<String, Boolean> entry : button.getDependencies().entrySet())
             {
-                modGraph.addNode(mod);
-            }
-
-            for(ModContainer mod : nameLookup.values())
-            {
-                if(mod.isImmutable())
+                if(entry.getValue())
                 {
-                    modGraph.addEdge(beforeAll, mod);
-                    modGraph.addEdge(mod, before);
-                    continue;
-                }
-                boolean preDepAdded = false;
-                boolean postDepAdded = false;
+                    for(String id : button.getDependencies().keySet())
+                    {
+                        postDepAdded = true;
 
-                for(ArtifactVersion dep : mod.getDependencies())
+                        if(id.equals("*"))
+                        {
+                            sidebarButtonGraph.addEdge(DBUTTON_BEFORE_ALL, button);
+                            sidebarButtonGraph.addEdge(button, DBUTTON_BEFORE);
+                            preDepAdded = true;
+                        }
+                        else
+                        {
+                            sidebarButtonGraph.addEdge(button, DBUTTON_AFTER);
+                            if(SIDEBAR_BUTTON_MAP.containsKey(id))
+                            {
+                                sidebarButtonGraph.addEdge(button, SIDEBAR_BUTTON_MAP.get(id));
+                            }
+                        }
+                    }
+                }
+                else
                 {
                     preDepAdded = true;
+                    String id = entry.getKey();
 
-                    String modid = dep.getLabel();
-                    if(modid.equals("*"))
+                    if(id.equals("*"))
                     {
-                        modGraph.addEdge(mod, afterAll);
-                        modGraph.addEdge(after, mod);
+                        sidebarButtonGraph.addEdge(button, DBUTTON_AFTER_ALL);
+                        sidebarButtonGraph.addEdge(DBUTTON_AFTER, button);
                         postDepAdded = true;
                     }
                     else
                     {
-                        modGraph.addEdge(before, mod);
-                        if(nameLookup.containsKey(modid) || Loader.isModLoaded(modid))
+                        sidebarButtonGraph.addEdge(DBUTTON_BEFORE, button);
+                        if(SIDEBAR_BUTTON_MAP.containsKey(id))
                         {
-                            modGraph.addEdge(nameLookup.get(modid), mod);
+                            sidebarButtonGraph.addEdge(SIDEBAR_BUTTON_MAP.get(id), button);
                         }
                     }
-                }
-
-                for(ArtifactVersion dep : mod.getDependants())
-                {
-                    postDepAdded = true;
-
-                    String modid = dep.getLabel();
-                    if(modid.equals("*"))
-                    {
-                        modGraph.addEdge(beforeAll, mod);
-                        modGraph.addEdge(mod, before);
-                        preDepAdded = true;
-                    }
-                    else
-                    {
-                        modGraph.addEdge(mod, after);
-                        if(Loader.isModLoaded(modid))
-                        {
-                            modGraph.addEdge(mod, nameLookup.get(modid));
-                        }
-                    }
-                }
-
-                if(!preDepAdded)
-                {
-                    modGraph.addEdge(before, mod);
-                }
-
-                if(!postDepAdded)
-                {
-                    modGraph.addEdge(mod, after);
                 }
             }
 
-            List<ModContainer> sortedList = TopologicalSort.topologicalSort(modGraph);
-            sortedList.removeAll(Arrays.asList(new ModContainer[] {beforeAll, before, after, afterAll}));
+            if(!preDepAdded)
+            {
+                sidebarButtonGraph.addEdge(DBUTTON_BEFORE, button);
+            }
+
+            if(!postDepAdded)
+            {
+                sidebarButtonGraph.addEdge(button, DBUTTON_AFTER);
+            }
         }
 
-        FTBLibFinals.LOGGER.info("Sorted to " + SIDEBAR_BUTTONS);
-        */
+        List<ISidebarButton> sortedSidebarButtonList = TopologicalSort.topologicalSort(sidebarButtonGraph);
+        sortedSidebarButtonList.removeAll(Arrays.asList(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE, DBUTTON_AFTER, DBUTTON_AFTER_ALL));
+        SIDEBAR_BUTTONS.clear();
+        SIDEBAR_BUTTONS.addAll(sortedSidebarButtonList);
+        FTBLibFinals.LOGGER.info("Sorted sidebar buttons to " + SIDEBAR_BUTTONS);
 
         MinecraftForge.EVENT_BUS.register(new FTBLibClientEventHandler());
 

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -44,12 +45,17 @@ public class ItemListButtonLM extends ButtonLM
 
     public ItemStack getStack(int index)
     {
+        if(list.isEmpty())
+        {
+            return LMInvUtils.ERROR_ITEM;
+        }
+
         if(index == -1)
         {
             return list.get((int) ((System.currentTimeMillis() / 1000L) % list.size()));
         }
 
-        return list.get(index);
+        return list.get(MathHelperLM.wrap(index, list.size()));
     }
 
     @Override
@@ -91,15 +97,34 @@ public class ItemListButtonLM extends ButtonLM
     @Override
     public void addMouseOverText(IGui gui, List<String> l)
     {
-        if(cols == 0)
+        ItemStack stack;
+
+        if(cols > 0)
         {
-            l.add(getStack(-1).getDisplayName());
+            int mx = gui.getMouseX() - getAX() - 2;
+            int my = gui.getMouseY() - getAY() - 2;
+
+            if(mx < 0 || my < 0 || mx >= getWidth() - 4 || my >= getHeight() - 4)
+            {
+                return;
+            }
+
+            int index = ((mx / 16) % cols + (my / 16) * cols);
+
+            if(index < 0 || index >= list.size())
+            {
+                return;
+            }
+
+            stack = getStack(index);
         }
         else
         {
-            //int x = gui.getMouseX() - 2;
-            //int y = gui.getMouseY() - 2;
+            stack = getStack(-1);
         }
+
+        l.add(stack.getDisplayName());
+        stack.getItem().addInformation(stack, Minecraft.getMinecraft().thePlayer, l, false);
     }
 
     @Override

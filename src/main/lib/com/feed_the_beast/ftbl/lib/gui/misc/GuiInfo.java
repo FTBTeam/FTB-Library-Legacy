@@ -361,7 +361,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         getFont().setUnicodeFlag(useUnicodeFont);
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        scissor(panelText.getAX(), posY + 4, panelText.getWidth(), height - 8);
+        scissor(panelText.getAX() - 4, posY + 6, panelText.getWidth() + 4, height - 10);
         panelText.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 

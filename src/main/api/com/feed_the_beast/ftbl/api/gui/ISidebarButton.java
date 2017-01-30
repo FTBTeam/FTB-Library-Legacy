@@ -5,7 +5,7 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 16.08.2016.
@@ -37,7 +37,5 @@ public interface ISidebarButton extends IStringSerializable
         return true;
     }
 
-    List<String> requiredBefore();
-
-    List<String> requiredAfter();
+    Map<String, Boolean> getDependencies();
 }
