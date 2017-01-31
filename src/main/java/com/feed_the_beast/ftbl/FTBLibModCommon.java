@@ -50,6 +50,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
+import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.common.base.Preconditions;
@@ -330,5 +331,9 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public IConfigFile getClientConfig()
     {
         return null;
+    }
+
+    public <T extends MessageLM<T>> void handleClientMessage(MessageLM<T> message)
+    {
     }
 }

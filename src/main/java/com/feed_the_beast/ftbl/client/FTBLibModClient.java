@@ -15,6 +15,7 @@ import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -224,6 +225,12 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     public IConfigFile getClientConfig()
     {
         return clientConfig;
+    }
+
+    @Override
+    public <T extends MessageLM<T>> void handleClientMessage(MessageLM<T> message)
+    {
+        Minecraft.getMinecraft().addScheduledTask(() -> message.onMessage((T) message, Minecraft.getMinecraft().thePlayer));
     }
 
     public static List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)

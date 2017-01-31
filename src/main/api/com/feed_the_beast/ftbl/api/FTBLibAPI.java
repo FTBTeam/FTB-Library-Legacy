@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
@@ -54,4 +56,6 @@ public interface FTBLibAPI
     IConfigValue getConfigValueFromID(String id);
 
     Map<String, IRankConfig> getRankConfigRegistry();
+
+    <T extends MessageLM<T>> void handleMessage(MessageLM<T> message, MessageContext context, Side side);
 }

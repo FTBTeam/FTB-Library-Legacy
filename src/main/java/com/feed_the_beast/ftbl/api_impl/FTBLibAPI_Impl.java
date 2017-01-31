@@ -23,7 +23,9 @@ import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
+import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
@@ -40,6 +42,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
@@ -51,6 +54,7 @@ import java.util.Map;
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {
+    private static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
     private Collection<IFTBLibPlugin> plugins;
 
     public void init(ASMDataTable table)
@@ -219,5 +223,29 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     public Map<String, IRankConfig> getRankConfigRegistry()
     {
         return FTBLibModCommon.RANK_CONFIGS_MIRROR;
+    }
+
+    @Override
+    public <T extends MessageLM<T>> void handleMessage(MessageLM<T> message, MessageContext context, Side side)
+    {
+        if(side.isServer())
+        {
+            final EntityPlayerMP ep = context.getServerHandler().playerEntity;
+            ep.mcServer.addScheduledTask(() -> message.onMessage((T) message, ep));
+
+            if(LOG_NET)
+            {
+                LMUtils.DEV_LOGGER.info("TX MessageLM: " + message.getClass().getName());
+            }
+        }
+        else
+        {
+            FTBLibMod.PROXY.handleClientMessage(message);
+
+            if(LOG_NET)
+            {
+                LMUtils.DEV_LOGGER.info("RX MessageLM: " + message.getClass().getName());
+            }
+        }
     }
 }

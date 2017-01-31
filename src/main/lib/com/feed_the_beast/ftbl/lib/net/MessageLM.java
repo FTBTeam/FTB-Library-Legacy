@@ -7,8 +7,6 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMessageHandler<E, IMessage>
 {
-    static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
-
     MessageLM()
     {
     }

@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.net;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import net.minecraft.client.Minecraft;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
@@ -27,13 +26,7 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
     @Nullable
     public final IMessage onMessage(final E m, MessageContext ctx)
     {
-        Minecraft.getMinecraft().addScheduledTask(() -> onMessage(m, Minecraft.getMinecraft().thePlayer));
-
-        if(LOG_NET)
-        {
-            LMUtils.DEV_LOGGER.info("RX MessageLM: " + getClass().getName());
-        }
-
+        FTBLibIntegrationInternal.API.handleMessage(m, ctx, Side.CLIENT);
         return null;
     }
 
