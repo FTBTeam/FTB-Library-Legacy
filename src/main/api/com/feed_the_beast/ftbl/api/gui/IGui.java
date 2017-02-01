@@ -5,6 +5,8 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -12,10 +14,12 @@ import org.lwjgl.opengl.GL11;
  */
 public interface IGui extends IPanel
 {
+    @SideOnly(Side.CLIENT)
     GuiScreen getWrapper();
 
     void openGui();
 
+    @SideOnly(Side.CLIENT)
     FontRenderer getFont();
 
     int getScreenWidth();

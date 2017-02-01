@@ -1,12 +1,9 @@
 package com.feed_the_beast.ftbl.lib.net;
 
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
@@ -20,14 +17,6 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
     final Side getReceivingSide()
     {
         return Side.CLIENT;
-    }
-
-    @Override
-    @Nullable
-    public final IMessage onMessage(final E m, MessageContext ctx)
-    {
-        FTBLibIntegrationInternal.API.handleMessage(m, ctx, Side.CLIENT);
-        return null;
     }
 
     public final void sendTo(@Nullable EntityPlayer player)

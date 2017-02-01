@@ -57,5 +57,5 @@ public interface FTBLibAPI
 
     Map<String, IRankConfig> getRankConfigRegistry();
 
-    <T extends MessageLM<T>> void handleMessage(MessageLM<T> message, MessageContext context, Side side);
+    void handleMessage(MessageLM<?> message, MessageContext context, Side side);
 }

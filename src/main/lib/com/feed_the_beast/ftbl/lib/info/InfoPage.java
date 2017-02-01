@@ -1,19 +1,18 @@
 package com.feed_the_beast.ftbl.lib.info;
 
+import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.RemoveFilter;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMMapUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import net.minecraft.util.IJsonSerializable;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -24,12 +23,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InfoPage implements IJsonSerializable, IStringSerializable // GuideFile
+public class InfoPage extends FinalIDObject
 {
     private static final Comparator<Map.Entry<String, InfoPage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
-    private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().getPages().isEmpty() && InfoPageHelper.getUnformattedText(entry.getValue()).trim().isEmpty();
+    private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().childPages.isEmpty() && InfoPageHelper.getUnformattedText(entry.getValue()).trim().isEmpty();
 
-    private final String ID;
     private final List<IInfoTextLine> text;
     private final LinkedHashMap<String, InfoPage> childPages;
     public InfoPage parent = null;
@@ -39,25 +37,57 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
 
     public InfoPage(String id)
     {
-        ID = id;
+        super(id);
         text = new ArrayList<>();
-        childPages = new LinkedHashMap<>();
+        childPages = new LinkedHashMap<>(0);
     }
 
-    public int hashCode()
+    public InfoPage(String id, @Nullable InfoPage p, JsonElement json)
     {
-        return ID.hashCode();
-    }
+        this(id);
+        setParent(p);
 
-    public boolean equals(Object o)
-    {
-        return o == this || (o instanceof IStringSerializable && ((IStringSerializable) o).getName().equals(getName()));
-    }
+        if(!json.isJsonObject())
+        {
+            return;
+        }
 
-    @Override
-    public String getName()
-    {
-        return ID;
+        JsonObject o = json.getAsJsonObject();
+
+        if(o.has("N"))
+        {
+            setTitle(LMJsonUtils.deserializeTextComponent(o.get("N")));
+        }
+
+        if(o.has("C"))
+        {
+            theme = new InfoPageTheme();
+            theme.fromJson(o.get("C"));
+        }
+
+        if(o.has("T"))
+        {
+            JsonArray a = o.get("T").getAsJsonArray();
+            for(int i = 0; i < a.size(); i++)
+            {
+                IInfoTextLine line = InfoPageHelper.createLine(this, a.get(i));
+
+                if(line != null)
+                {
+                    text.add(line);
+                }
+            }
+        }
+
+        if(o.has("S"))
+        {
+            JsonObject o1 = o.get("S").getAsJsonObject();
+
+            for(Map.Entry<String, JsonElement> entry : o1.entrySet())
+            {
+                childPages.put(entry.getKey(), new InfoPage(entry.getKey(), this, entry.getValue()));
+            }
+        }
     }
 
     @Nullable
@@ -74,8 +104,7 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
 
     public ITextComponent getDisplayName()
     {
-        ITextComponent t = getTitle();
-        return (t == null) ? new TextComponentString(getName()) : t;
+        return (title == null) ? new TextComponentString(getName()) : title;
     }
 
     public void setParent(@Nullable InfoPage c)
@@ -114,18 +143,18 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
 
     public void addSub(InfoPage c)
     {
-        getPages().put(c.getName(), c);
+        childPages.put(c.getName(), c);
         c.setParent(this);
     }
 
     public InfoPage getSub(String id)
     {
-        InfoPage c = getPages().get(id);
+        InfoPage c = childPages.get(id);
         if(c == null)
         {
             c = new InfoPage(id);
             c.setParent(this);
-            getPages().put(c.getName(), c);
+            childPages.put(c.getName(), c);
         }
 
         return c;
@@ -134,31 +163,31 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
     public void clear()
     {
         setTitle(null);
-        getText().clear();
-        getPages().clear();
+        text.clear();
+        childPages.clear();
         theme = null;
     }
 
     public void cleanup()
     {
         childPages.values().forEach(InfoPage::cleanup);
-        LMMapUtils.removeAll(getPages(), CLEANUP_FILTER);
+        LMMapUtils.removeAll(childPages, CLEANUP_FILTER);
     }
 
     public void sortAll()
     {
-        LMMapUtils.sortMap(getPages(), COMPARATOR);
-        getPages().values().forEach(InfoPage::sortAll);
+        LMMapUtils.sortMap(childPages, COMPARATOR);
+        childPages.values().forEach(InfoPage::sortAll);
     }
 
     public void copyFrom(InfoPage c)
     {
-        for(IInfoTextLine l : c.getText())
+        for(IInfoTextLine l : c.text)
         {
-            getText().add(l == null ? null : l.copy(this));
+            text.add(l == null ? null : l.copy(this));
         }
 
-        getPages().forEach((key, value) ->
+        childPages.forEach((key, value) ->
         {
             InfoPage p1 = new InfoPage(key);
             p1.copyFrom(value);
@@ -166,21 +195,13 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
         });
     }
 
-    public InfoPage copy()
-    {
-        InfoPage page = new InfoPage(getName());
-        page.fromJson(getSerializableElement());
-        return page;
-    }
-
-    @Override
-    public JsonElement getSerializableElement()
+    public JsonElement toJson()
     {
         JsonObject o = new JsonObject();
 
-        if(getTitle() != null)
+        if(title != null)
         {
-            o.add("N", LMJsonUtils.serializeTextComponent(getTitle()));
+            o.add("N", LMJsonUtils.serializeTextComponent(title));
         }
 
         if(!text.isEmpty())
@@ -193,10 +214,10 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
             o.add("T", a);
         }
 
-        if(!getPages().isEmpty())
+        if(!childPages.isEmpty())
         {
             JsonObject o1 = new JsonObject();
-            getPages().forEach((key, value) -> o1.add(key, value.getSerializableElement()));
+            childPages.forEach((key, value) -> o1.add(key, value.toJson()));
             o.add("S", o1);
         }
 
@@ -208,59 +229,8 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
         return o;
     }
 
-    @Override
-    public void fromJson(JsonElement e)
-    {
-        clear();
-
-        if(!e.isJsonObject())
-        {
-            return;
-        }
-
-        JsonObject o = e.getAsJsonObject();
-
-        if(o.has("N"))
-        {
-            setTitle(LMJsonUtils.deserializeTextComponent(o.get("N")));
-        }
-
-        if(o.has("T"))
-        {
-            JsonArray a = o.get("T").getAsJsonArray();
-            for(int i = 0; i < a.size(); i++)
-            {
-                IInfoTextLine line = InfoPageHelper.createLine(this, a.get(i));
-
-                if(line != null)
-                {
-                    getText().add(line);
-                }
-            }
-        }
-
-        if(o.has("S"))
-        {
-            JsonObject o1 = o.get("S").getAsJsonObject();
-
-            for(Map.Entry<String, JsonElement> entry : o1.entrySet())
-            {
-                InfoPage c = new InfoPage(entry.getKey());
-                c.setParent(this);
-                c.fromJson(entry.getValue());
-                getPages().put(c.getName(), c);
-            }
-        }
-
-        if(o.has("C"))
-        {
-            theme = new InfoPageTheme();
-            theme.fromJson(o.get("C"));
-        }
-    }
-
     @Nullable
-    public ITextComponent getTitle()
+    public final ITextComponent getTitle()
     {
         return title;
     }
@@ -271,12 +241,12 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
         return this;
     }
 
-    public List<IInfoTextLine> getText()
+    public final List<IInfoTextLine> getText()
     {
         return text;
     }
 
-    public LinkedHashMap<String, InfoPage> getPages()
+    public final LinkedHashMap<String, InfoPage> getPages()
     {
         return childPages;
     }
@@ -291,12 +261,12 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
         theme = t;
     }
 
-    public void refreshGui(GuiInfo gui)
+    public void refreshGui(IGui gui)
     {
     }
 
     @Nullable
-    public ISpecialInfoButton createSpecialButton(GuiInfo gui)
+    public ISpecialInfoButton createSpecialButton(IGui gui)
     {
         return null;
     }
@@ -307,7 +277,7 @@ public class InfoPage implements IJsonSerializable, IStringSerializable // Guide
         return this;
     }
 
-    public IWidget createWidget(GuiInfo gui)
+    public IWidget createWidget(IGui gui)
     {
         return new ButtonInfoPage(gui, this, pageIcon);
     }

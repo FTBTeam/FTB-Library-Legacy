@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -22,7 +22,7 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     public MessageDisplayInfo(InfoPage page)
     {
         infoID = page.getName();
-        json = page.getSerializableElement();
+        json = page.toJson();
     }
 
     @Override
@@ -48,8 +48,6 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     @Override
     public void onMessage(MessageDisplayInfo m, EntityPlayer player)
     {
-        InfoPage page = new InfoPage(m.infoID);
-        page.fromJson(m.json);
-        new GuiInfo(page).openGui();
+        FTBLibMod.PROXY.displayInfoGui(new InfoPage(m.infoID, null, m.json));
     }
 }

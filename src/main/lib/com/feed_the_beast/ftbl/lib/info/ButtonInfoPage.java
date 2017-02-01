@@ -23,10 +23,12 @@ public class ButtonInfoPage extends ButtonLM
     public IPageIconRenderer iconRenderer;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, InfoPage p, @Nullable IPageIconRenderer t)
+    public ButtonInfoPage(IGui g, InfoPage p, @Nullable IPageIconRenderer t)
     {
-        super(0, 0, g.panelWidth - 36, t == null ? 13 : 18);
-        guiInfo = g;
+        super(0, 0, 0, 0);
+        guiInfo = ((GuiInfo) g);
+        setWidth(guiInfo.panelWidth - 36);
+        setHeight(t == null ? 13 : 18);
         page = p;
         iconRenderer = t;
         updateTitle(g);

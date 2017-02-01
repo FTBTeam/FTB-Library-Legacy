@@ -8,11 +8,14 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.net.MessageLM;
@@ -228,9 +231,23 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
-    public <T extends MessageLM<T>> void handleClientMessage(MessageLM<T> message)
+    public void handleClientMessage(MessageLM<?> message)
     {
-        Minecraft.getMinecraft().addScheduledTask(() -> message.onMessage((T) message, Minecraft.getMinecraft().thePlayer));
+        Minecraft.getMinecraft().addScheduledTask(() ->
+        {
+            message.onMessage(LMUtils.cast(message), Minecraft.getMinecraft().thePlayer);
+
+            if(FTBLibAPI_Impl.LOG_NET)
+            {
+                LMUtils.DEV_LOGGER.info("RX MessageLM: " + message.getClass().getName());
+            }
+        });
+    }
+
+    @Override
+    public void displayInfoGui(InfoPage page)
+    {
+        new GuiInfo(page).openGui();
     }
 
     public static List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)

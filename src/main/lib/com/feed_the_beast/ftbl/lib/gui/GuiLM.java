@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -173,6 +175,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiScreen getWrapper()
     {
         return new GuiWrapper(this);
@@ -185,6 +188,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public final FontRenderer getFont()
     {
         return font;

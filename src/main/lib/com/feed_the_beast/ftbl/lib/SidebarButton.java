@@ -21,7 +21,7 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
 
     public SidebarButton(ResourceLocation id, IImageProvider c, @Nullable IConfigValue b, String dependencies)
     {
-        super(id.toString().toLowerCase().replace(':', '.'));
+        super(id.toString().replace(':', '.'));
         icon = c;
         config = b;
 

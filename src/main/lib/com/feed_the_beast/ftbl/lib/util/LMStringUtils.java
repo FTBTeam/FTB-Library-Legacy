@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.util.IStringSerializable;
 
@@ -23,21 +24,79 @@ public class LMStringUtils
     public static final Charset UTF_8 = Charset.forName("UTF-8");
 
     public static final String STRIP_SEP = ", ";
-    public static final String ALLOWED_TEXT_CHARS = " -_!@#$%^&*()+=\\/,.<>?\'\"[]{}|;:`~";
+    public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
+    public static final int FLAG_ID_ALLOW_EMPTY = 1;
+    public static final int FLAG_ID_FIX = 2;
+    public static final int FLAG_ID_ONLY_LOWERCASE = 4;
+    public static final int FLAG_ID_ONLY_UNDERLINE = 8;
+    public static final int FLAG_ID_ONLY_UNDERLINE_OR_PERIOD = FLAG_ID_ONLY_UNDERLINE | 16;
+    public static final int FLAG_ID_DEFAULTS = FLAG_ID_FIX | FLAG_ID_ONLY_LOWERCASE | FLAG_ID_ONLY_UNDERLINE;
 
     public static final Comparator<Object> IGNORE_CASE_COMPARATOR = (o1, o2) -> String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
-    public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1).compareToIgnoreCase(getID(o2));
+    public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1, FLAG_ID_FIX).compareToIgnoreCase(getID(o2, FLAG_ID_FIX));
 
     public static final Map<String, String> TEMP_MAP = new HashMap<>();
 
-    public static String getID(@Nullable Object o)
+    public static String getID(Object o, int flags)
     {
-        if(o instanceof IStringSerializable)
+        String id = o instanceof IStringSerializable ? ((IStringSerializable) o).getName() : String.valueOf(o.toString());
+
+        boolean fix = Bits.getFlag(flags, FLAG_ID_FIX);
+
+        if(!fix && id.isEmpty() && !Bits.getFlag(flags, FLAG_ID_ALLOW_EMPTY))
         {
-            return ((IStringSerializable) o).getName();
+            throw new NullPointerException("ID can't be empty!");
         }
 
-        return String.valueOf(o);
+        if(Bits.getFlag(flags, FLAG_ID_ONLY_LOWERCASE))
+        {
+            if(fix)
+            {
+                id = id.toLowerCase();
+            }
+            else if(!id.equals(id.toLowerCase()))
+            {
+                throw new IllegalArgumentException("ID can't contain uppercase characters!");
+            }
+        }
+
+        if(Bits.getFlag(flags, FLAG_ID_ONLY_UNDERLINE))
+        {
+            if(fix)
+            {
+                id = id.toLowerCase();
+            }
+            else if(!id.equals(id.toLowerCase()))
+            {
+                throw new IllegalArgumentException("ID can't contain uppercase characters!");
+            }
+        }
+
+        if(Bits.getFlag(flags, FLAG_ID_ONLY_UNDERLINE))
+        {
+            boolean allowPeriod = Bits.getFlag(flags, FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
+
+            char[] chars = id.toCharArray();
+
+            for(int i = 0; i < chars.length; i++)
+            {
+                if(!(chars[i] == '.' && allowPeriod || isTextChar(chars[i], true)))
+                {
+                    if(fix)
+                    {
+                        chars[i] = '_';
+                    }
+                    else
+                    {
+                        throw new IllegalArgumentException("ID contains invalid character: '" + chars[i] + "'!");
+                    }
+                }
+            }
+
+            id = new String(chars);
+        }
+
+        return id;
     }
 
     public static String[] shiftArray(@Nullable String[] s)

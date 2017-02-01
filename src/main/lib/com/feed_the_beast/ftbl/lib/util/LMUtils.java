@@ -36,6 +36,11 @@ public class LMUtils
 
     public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
+    public static <T> T cast(Object o)
+    {
+        return (T) o;
+    }
+
     public static void init(File configFolder)
     {
         folderConfig = configFolder;

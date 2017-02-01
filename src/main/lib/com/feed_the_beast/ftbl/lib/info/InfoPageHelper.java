@@ -10,6 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -115,6 +117,7 @@ public class InfoPageHelper
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static void onClickEvent(ClickEvent clickEvent)
     {
         switch(clickEvent.getAction())

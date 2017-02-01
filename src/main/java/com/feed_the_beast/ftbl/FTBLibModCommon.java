@@ -43,6 +43,7 @@ import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.info.InfoHrLine;
 import com.feed_the_beast.ftbl.lib.info.InfoImageLine;
 import com.feed_the_beast.ftbl.lib.info.InfoListLine;
+import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
 import com.feed_the_beast.ftbl.lib.info.InfoTextLineString;
 import com.feed_the_beast.ftbl.lib.info.ItemListLine;
@@ -333,7 +334,11 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         return null;
     }
 
-    public <T extends MessageLM<T>> void handleClientMessage(MessageLM<T> message)
+    public void handleClientMessage(MessageLM<?> message)
+    {
+    }
+
+    public void displayInfoGui(InfoPage page)
     {
     }
 }

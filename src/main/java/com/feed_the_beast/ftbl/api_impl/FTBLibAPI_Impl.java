@@ -54,7 +54,7 @@ import java.util.Map;
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {
-    private static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
+    public static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
     private Collection<IFTBLibPlugin> plugins;
 
     public void init(ASMDataTable table)
@@ -203,7 +203,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     {
         if(player.worldObj.isRemote)
         {
-            //TODO: Open gui on client side
+            FTBLibMod.PROXY.displayInfoGui(page);
         }
         else
         {
@@ -226,26 +226,23 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public <T extends MessageLM<T>> void handleMessage(MessageLM<T> message, MessageContext context, Side side)
+    public void handleMessage(MessageLM<?> message, MessageContext context, Side side)
     {
         if(side.isServer())
         {
-            final EntityPlayerMP ep = context.getServerHandler().playerEntity;
-            ep.mcServer.addScheduledTask(() -> message.onMessage((T) message, ep));
-
-            if(LOG_NET)
+            context.getServerHandler().playerEntity.mcServer.addScheduledTask(() ->
             {
-                LMUtils.DEV_LOGGER.info("TX MessageLM: " + message.getClass().getName());
-            }
+                message.onMessage(LMUtils.cast(message), context.getServerHandler().playerEntity);
+
+                if(LOG_NET)
+                {
+                    LMUtils.DEV_LOGGER.info("TX MessageLM: " + message.getClass().getName());
+                }
+            });
         }
         else
         {
             FTBLibMod.PROXY.handleClientMessage(message);
-
-            if(LOG_NET)
-            {
-                LMUtils.DEV_LOGGER.info("RX MessageLM: " + message.getClass().getName());
-            }
         }
     }
 }
