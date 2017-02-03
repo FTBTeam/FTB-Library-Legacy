@@ -12,8 +12,6 @@ import java.util.List;
 public class TickHandler implements ITickable
 {
     public static TickHandler INSTANCE;
-
-    //TODO: Make this Thread-safe
     private final List<ServerTickCallback> CALLBACKS = new ArrayList<>();
     private final List<ServerTickCallback> PENDING_CALLBACKS = new ArrayList<>();
     final Collection<ITickable> TICKABLES = new ArrayList<>();

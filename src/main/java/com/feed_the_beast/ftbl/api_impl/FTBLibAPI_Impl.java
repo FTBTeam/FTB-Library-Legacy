@@ -17,6 +17,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
+import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
@@ -180,7 +181,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     {
         if(player != null && player.worldObj.isRemote)
         {
-            //TODO: Send notification on client side
+            FTBLibMod.PROXY.displayNotification(EnumNotificationDisplay.SCREEN, n);
         }
         else if(SharedServerData.INSTANCE.notifications.containsKey(n.getID()))
         {

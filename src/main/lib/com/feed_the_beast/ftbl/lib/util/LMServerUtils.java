@@ -204,7 +204,7 @@ public class LMServerUtils
 
     public static WorldServer getServerWorld()
     {
-        return getServer().worldServers[0];
+        return getServer().worldServerForDimension(0);
     }
 
     public static boolean isOP(GameProfile p)

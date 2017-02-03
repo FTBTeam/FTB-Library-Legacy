@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
@@ -23,8 +24,11 @@ import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.toposort.TopologicalSort;
@@ -248,6 +252,39 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     public void displayInfoGui(InfoPage page)
     {
         new GuiInfo(page).openGui();
+    }
+
+    @Override
+    public void displayNotification(EnumNotificationDisplay display, INotification n)
+    {
+        if(display == EnumNotificationDisplay.SCREEN)
+        {
+            ClientNotifications.add(n);
+            return;
+        }
+
+        List<ITextComponent> list = n.getText();
+
+        if(list.isEmpty())
+        {
+            return;
+        }
+
+        if(list.size() > 1)
+        {
+            list.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, list.get(1)));
+        }
+
+        GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
+
+        if(display == EnumNotificationDisplay.CHAT)
+        {
+            chat.printChatMessageWithOptionalDeletion(list.get(0), n.getID().getChatMessageID());
+        }
+        else
+        {
+            chat.printChatMessage(list.get(0));
+        }
     }
 
     public static List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)

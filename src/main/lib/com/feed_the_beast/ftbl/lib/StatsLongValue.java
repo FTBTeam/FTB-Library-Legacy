@@ -11,14 +11,10 @@ public class StatsLongValue implements IJsonSerializable
 {
     private long value;
 
-    public StatsLongValue(long l)
-    {
-        set(l);
-    }
-
-    public void set(long v)
+    public StatsLongValue set(long v)
     {
         value = v;
+        return this;
     }
 
     public long get()
@@ -27,13 +23,13 @@ public class StatsLongValue implements IJsonSerializable
     }
 
     @Override
-    public void fromJson(JsonElement json)
+    public final void fromJson(JsonElement json)
     {
         set(json.getAsLong());
     }
 
     @Override
-    public JsonElement getSerializableElement()
+    public final JsonElement getSerializableElement()
     {
         return new JsonPrimitive(get());
     }

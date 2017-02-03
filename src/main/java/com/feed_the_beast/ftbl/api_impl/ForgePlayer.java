@@ -48,11 +48,12 @@ import java.util.UUID;
  */
 public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {
+    private static FakePlayer playerForStats;
+
     private final NBTDataStorage dataStorage;
     private String teamID = "";
     private byte flags = 0;
     private GameProfile gameProfile;
-    private StatisticsManagerServer statsManager;
     private EntityPlayerMP entityPlayer;
     private NBTTagCompound playerNBT;
 
@@ -294,7 +295,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     {
         entityPlayer = ep;
         playerNBT = null;
-        statsManager = null;
         FTBLibStats.updateLastSeen(stats());
         new MessageLogin(ep, this).sendTo(entityPlayer);
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
@@ -306,7 +306,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedOutEvent(this));
         entityPlayer = null;
         playerNBT = null;
-        statsManager = null;
     }
 
     public void onDeath(EntityPlayerMP ep, DamageSource ds)
@@ -317,19 +316,19 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         {
             FTBLibStats.updateLastSeen(stats());
             MinecraftForge.EVENT_BUS.post(new ForgePlayerDeathEvent(this, ds));
-            statsManager = null;
         }
     }
 
     @Override
     public StatisticsManagerServer stats()
     {
-        if(statsManager == null)
+        if(playerForStats == null)
         {
-            statsManager = LMServerUtils.getServer().getPlayerList().getPlayerStatsFile(entityPlayer == null ? new FakePlayer(LMServerUtils.getServerWorld(), getProfile()) : entityPlayer);
+            playerForStats = new FakePlayer(LMServerUtils.getServerWorld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
         }
 
-        return statsManager;
+        playerForStats.setUniqueId(getProfile().getId());
+        return LMServerUtils.getServer().getPlayerList().getPlayerStatsFile(playerForStats);
     }
 
     @Override

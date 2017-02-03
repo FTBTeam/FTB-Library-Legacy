@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.StatsLongValue;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
 import net.minecraft.stats.StatList;
@@ -13,8 +15,8 @@ import net.minecraft.util.text.TextComponentTranslation;
  */
 public class FTBLibStats
 {
-    public static final StatBase LAST_SEEN = (new StatBasic("ftbl.stat.last_seen", new TextComponentTranslation("ftbl.stat.last_seen")));
-    public static final StatBase FIRST_JOINED = (new StatBasic("ftbl.stat.first_joined", new TextComponentTranslation("ftbl.stat.first_joined")));
+    public static final StatBase LAST_SEEN = (new StatBasic("ftbl.stat.last_seen", new TextComponentTranslation("ftbl.stat.last_seen"))).setSerializableClazz(StatsLongValue.class);
+    public static final StatBase FIRST_JOINED = (new StatBasic("ftbl.stat.first_joined", new TextComponentTranslation("ftbl.stat.first_joined"))).setSerializableClazz(StatsLongValue.class);
 
     public static final LangKey TIME_PLAYED_LANG = new LangKey("ftbl.stat.time_played");
 
@@ -47,6 +49,16 @@ public class FTBLibStats
         return (v == null) ? 0L : v.get();
     }
 
+    public static Object getLastSeenTimeString(StatisticsManagerServer stats, boolean online)
+    {
+        if(online)
+        {
+            return GuiLang.LABEL_ONLINE.textComponent();
+        }
+
+        return LMStringUtils.getTimeString(System.currentTimeMillis() - getLastSeen(stats, false));
+    }
+
     public static double getLastSeenDeltaInHours(StatisticsManagerServer stats, boolean isOnline)
     {
         if(isOnline)
@@ -54,7 +66,7 @@ public class FTBLibStats
             return 0D;
         }
 
-        return (System.currentTimeMillis() - getLastSeen(stats, isOnline)) / 3600000D;
+        return (System.currentTimeMillis() - getLastSeen(stats, false)) / 3600000D;
     }
 
     public static long getFirstJoined(StatisticsManagerServer stats)
@@ -71,7 +83,7 @@ public class FTBLibStats
 
         if(lv == null)
         {
-            lv = stats.setProgress(FTBLibStats.LAST_SEEN, new StatsLongValue(0L));
+            lv = stats.setProgress(FTBLibStats.LAST_SEEN, new StatsLongValue());
         }
 
         lv.set(ms);
@@ -80,7 +92,7 @@ public class FTBLibStats
 
         if(lv == null)
         {
-            stats.setProgress(FTBLibStats.FIRST_JOINED, new StatsLongValue(ms));
+            stats.setProgress(FTBLibStats.FIRST_JOINED, new StatsLongValue().set(ms));
         }
     }
 }

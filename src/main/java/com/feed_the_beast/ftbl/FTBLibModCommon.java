@@ -19,6 +19,7 @@ import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
+import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
@@ -339,6 +340,10 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     }
 
     public void displayInfoGui(InfoPage page)
+    {
+    }
+
+    public void displayNotification(EnumNotificationDisplay display, INotification n)
     {
     }
 }

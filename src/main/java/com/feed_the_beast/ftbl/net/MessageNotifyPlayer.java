@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationID;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
-import com.feed_the_beast.ftbl.client.ClientNotifications;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Notification;
@@ -11,13 +11,10 @@ import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.List;
@@ -71,39 +68,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
         if(n != null)
         {
-            displayNotification(display, n);
-        }
-    }
-
-    static void displayNotification(EnumNotificationDisplay display, INotification n)
-    {
-        if(display == EnumNotificationDisplay.SCREEN)
-        {
-            ClientNotifications.add(n);
-            return;
-        }
-
-        List<ITextComponent> list = n.getText();
-
-        if(list.isEmpty())
-        {
-            return;
-        }
-
-        if(list.size() > 1)
-        {
-            list.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, list.get(1)));
-        }
-
-        GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
-
-        if(display == EnumNotificationDisplay.CHAT)
-        {
-            chat.printChatMessageWithOptionalDeletion(list.get(0), n.getID().getChatMessageID());
-        }
-        else
-        {
-            chat.printChatMessage(list.get(0));
+            FTBLibMod.PROXY.displayNotification(display, n);
         }
     }
 

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -64,10 +62,10 @@ public class FTBLibClientEventHandler
         }
     }
 
+    /*
     @SubscribeEvent
     public void onDrawDebugText(RenderGameOverlayEvent.Text event)
     {
-        /*
         if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
         {
             if(LMUtils.DEV_ENV)
@@ -98,8 +96,8 @@ public class FTBLibClientEventHandler
                 }
             }
         }
-        */
     }
+     */
 
     // Add Sidebar Buttons //
 
@@ -112,7 +110,7 @@ public class FTBLibClientEventHandler
 
             if(!buttons.isEmpty())
             {
-                ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830, event.getGui());
+                ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830);
                 event.getButtonList().add(renderer);
 
                 if(!LMUtils.isNEILoaded && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
@@ -188,13 +186,12 @@ public class FTBLibClientEventHandler
     {
         if(event.getButton() instanceof ButtonInvLM)
         {
-            ISidebarButton b = ((ButtonInvLM) event.getButton()).button;
-            b.onClicked(MouseButton.LEFT); //TODO: Fix mouse button
+            (((ButtonInvLM) event.getButton()).button).onClicked(MouseButton.LEFT);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    //public void renderGui(RenderGameOverlayEvent event) //TODO: Figure out how to properly do this
+    //public void renderGui(RenderGameOverlayEvent event)
     public void renderGui(TickEvent.RenderTickEvent event)
     {
         //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
@@ -237,7 +234,7 @@ public class FTBLibClientEventHandler
     {
         public final List<ButtonInvLM> buttons;
 
-        public ButtonInvLMRenderer(int id, GuiScreen g)
+        public ButtonInvLMRenderer(int id)
         {
             super(id, -1000, -1000, 0, 0, "");
             buttons = new ArrayList<>();

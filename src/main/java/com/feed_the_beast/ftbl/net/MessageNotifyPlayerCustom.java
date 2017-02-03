@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
@@ -47,7 +48,7 @@ public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlay
 
         if(display != EnumNotificationDisplay.OFF)
         {
-            MessageNotifyPlayer.displayNotification(display, m.notification);
+            FTBLibMod.PROXY.displayNotification(display, m.notification);
         }
     }
 }
