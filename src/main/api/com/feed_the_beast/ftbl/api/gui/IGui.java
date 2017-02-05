@@ -19,6 +19,8 @@ public interface IGui extends IPanel
 
     void openGui();
 
+    void closeGui();
+
     @SideOnly(Side.CLIENT)
     FontRenderer getFont();
 

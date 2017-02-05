@@ -73,6 +73,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     {
     }
 
+    @Override
     public final void closeGui()
     {
         onClosed();

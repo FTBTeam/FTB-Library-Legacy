@@ -72,7 +72,7 @@ public class GuiHelper
 
     public static void drawCenteredString(FontRenderer font, String txt, double x, double y, int color)
     {
-        font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - font.FONT_HEIGHT / 2D), color);
+        font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - 3D), color);
     }
 
     public static void playClickSound()

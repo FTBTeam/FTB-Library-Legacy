@@ -212,7 +212,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             {
                 GuiHelper.playClickSound();
                 shouldClose = 1;
-                closeGui();
+                gui.closeGui();
             }
         };
 
@@ -223,7 +223,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             {
                 GuiHelper.playClickSound();
                 shouldClose = 2;
-                closeGui();
+                gui.closeGui();
             }
         };
 

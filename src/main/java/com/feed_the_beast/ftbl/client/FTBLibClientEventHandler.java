@@ -149,11 +149,6 @@ public class FTBLibClientEventHandler
                     int guiLeft = (event.getGui().width - xSize) / 2;
                     int guiTop = (event.getGui().height - ySize) / 2;
 
-                    if(hasPotions)
-                    {
-                        guiLeft += 60;
-                    }
-
                     int i = 0;
                     for(ISidebarButton button : buttons)
                     {

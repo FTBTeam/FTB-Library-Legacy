@@ -360,17 +360,41 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         boolean uni = getFont().getUnicodeFlag();
         getFont().setUnicodeFlag(useUnicodeFont);
 
+        boolean fixUnicode = useUnicodeFont && getScreenScaleFactor() % 2 == 1;
+
+        if(fixUnicode)
+        {
+            for(int i = 0; i < 256; i++)
+            {
+                mc.getTextureManager().bindTexture(getFont().getUnicodePageLocation(i));
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+            }
+        }
+
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         scissor(panelText.getAX() - 4, posY + 6, panelText.getWidth() + 4, height - 10);
         panelText.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-        getFont().setUnicodeFlag(uni);
+        if(fixUnicode)
+        {
+            for(int i = 0; i < 256; i++)
+            {
+                mc.getTextureManager().bindTexture(getFont().getUnicodePageLocation(i));
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+            }
+        }
+
+        getFont().setUnicodeFlag(false);
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         scissor(panelPages.getAX(), posY + 40, panelPages.getWidth(), height - 44);
         panelPages.renderWidget(this);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+
+        getFont().setUnicodeFlag(uni);
 
         GlStateManager.color(1F, 1F, 1F, 1F);
 
