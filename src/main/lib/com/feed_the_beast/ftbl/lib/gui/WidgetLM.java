@@ -93,7 +93,7 @@ public class WidgetLM implements IWidget
     {
         String t = getTitle(gui);
 
-        if(t != null)
+        if(t != null && !t.isEmpty())
         {
             l.add(t);
         }
