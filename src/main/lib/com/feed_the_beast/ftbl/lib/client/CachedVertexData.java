@@ -41,6 +41,11 @@ public class CachedVertexData
 
     public void draw(Tessellator tessellator, VertexBuffer buffer)
     {
+        if(list.isEmpty())
+        {
+            return;
+        }
+
         buffer.begin(mode, format);
         for(CachedVertex v : list)
         {

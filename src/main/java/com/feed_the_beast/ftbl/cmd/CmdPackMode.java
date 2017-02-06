@@ -68,7 +68,7 @@ public class CmdPackMode extends CommandTreeBase
             {
                 c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
                 c.getStyle().setColor(TextFormatting.GREEN);
-                FTBLibIntegrationInternal.API.reload(ics, EnumReloadType.SERVER_AND_CLIENT);
+                FTBLibIntegrationInternal.API.reload(ics, EnumReloadType.MODE_CHANGED);
             }
 
             ics.addChatMessage(c);

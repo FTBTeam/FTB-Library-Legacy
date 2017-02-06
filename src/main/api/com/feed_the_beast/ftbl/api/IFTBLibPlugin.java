@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 
@@ -10,6 +11,10 @@ import net.minecraftforge.server.command.CommandTreeBase;
 public interface IFTBLibPlugin
 {
     void init(FTBLibAPI api);
+
+    default void loadWorldData(MinecraftServer server)
+    {
+    }
 
     default void onReload(Side side, ICommandSender sender, EnumReloadType type)
     {

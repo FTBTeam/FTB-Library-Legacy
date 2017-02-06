@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -42,6 +43,8 @@ public interface FTBLibAPI
     IUniverse getUniverse();
 
     void addServerCallback(int timer, Runnable runnable);
+
+    void loadWorldData(MinecraftServer server);
 
     void reload(ICommandSender sender, EnumReloadType type);
 

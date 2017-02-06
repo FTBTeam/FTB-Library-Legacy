@@ -76,6 +76,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent event)
     {
+        FTBLibFinals.LOGGER.info("FTBLib Loaded");
         SharedServerData.INSTANCE.reset();
         TickHandler.INSTANCE = new TickHandler();
         PROXY.reloadConfig();
@@ -84,12 +85,13 @@ public class FTBLibMod
         Universe.INSTANCE.init();
         PROXY.worldLoaded();
         LMServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
+        FTBLibIntegrationInternal.API.loadWorldData(event.getServer());
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibIntegrationInternal.API.reload(LMServerUtils.getServer(), EnumReloadType.SERVER_ONLY);
+        FTBLibIntegrationInternal.API.reload(LMServerUtils.getServer(), EnumReloadType.SERVER_STARTED);
     }
 
     @Mod.EventHandler

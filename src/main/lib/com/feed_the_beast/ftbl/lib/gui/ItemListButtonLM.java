@@ -69,12 +69,12 @@ public class ItemListButtonLM extends ButtonLM
         {
             try
             {
-                GuiHelper.renderGuiItem(renderItem, getStack(-1), ax, ay);
+                GuiHelper.renderGuiItem(renderItem, getStack(-1), ax, ay, true);
             }
             catch(Exception ex)
             {
                 GlStateManager.popMatrix();
-                GuiHelper.renderGuiItem(renderItem, LMInvUtils.ERROR_ITEM, ax, ay);
+                GuiHelper.renderGuiItem(renderItem, LMInvUtils.ERROR_ITEM, ax, ay, true);
             }
         }
         else
@@ -83,12 +83,12 @@ public class ItemListButtonLM extends ButtonLM
             {
                 try
                 {
-                    GuiHelper.renderGuiItem(renderItem, getStack(i), ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16);
+                    GuiHelper.renderGuiItem(renderItem, getStack(i), ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, true);
                 }
                 catch(Exception ex)
                 {
                     GlStateManager.popMatrix();
-                    GuiHelper.renderGuiItem(renderItem, LMInvUtils.ERROR_ITEM, ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16);
+                    GuiHelper.renderGuiItem(renderItem, LMInvUtils.ERROR_ITEM, ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, true);
                 }
             }
         }

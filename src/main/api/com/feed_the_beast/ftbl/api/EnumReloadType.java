@@ -9,17 +9,24 @@ import javax.annotation.Nullable;
  */
 public enum EnumReloadType
 {
-    LOGIN(Side.CLIENT),
-    SERVER_ONLY(Side.SERVER),
-    CLIENT_ONLY(Side.CLIENT),
-    SERVER_AND_CLIENT(null),
-    SERVER_ONLY_NOTIFY_CLIENT(Side.SERVER);
+    SERVER_STARTED(Side.SERVER, false),
+    LOGIN(Side.CLIENT, false),
+    MODE_CHANGED(null, true),
+    SERVER_COMMAND(Side.SERVER, true),
+    CLIENT_COMMAND(Side.CLIENT, true);
 
     private final Side side;
+    private final boolean command;
 
-    EnumReloadType(@Nullable Side s)
+    EnumReloadType(@Nullable Side s, boolean b)
     {
         side = s;
+        command = b;
+    }
+
+    public boolean command()
+    {
+        return command;
     }
 
     public boolean reload(Side s)

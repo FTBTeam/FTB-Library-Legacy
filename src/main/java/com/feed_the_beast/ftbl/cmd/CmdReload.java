@@ -18,6 +18,6 @@ public class CmdReload extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
     {
-        FTBLibIntegrationInternal.API.reload(ics, EnumReloadType.SERVER_ONLY_NOTIFY_CLIENT);
+        FTBLibIntegrationInternal.API.reload(ics, EnumReloadType.SERVER_COMMAND);
     }
 }

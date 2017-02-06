@@ -80,17 +80,16 @@ public class GuiHelper
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
-    public static void renderGuiItem(RenderItem itemRender, ItemStack stack, double x, double y)
+    public static void renderGuiItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
     {
+        if(stack == null || stack.getItem() == null)
+        {
+            return;
+        }
+
         itemRender.zLevel = 200F;
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 32F);
-        FontRenderer font = stack.getItem().getFontRenderer(stack);
-
-        if(font == null)
-        {
-            font = Minecraft.getMinecraft().fontRendererObj;
-        }
 
         GlStateManager.enableLighting();
         RenderHelper.enableGUIStandardItemLighting();
@@ -98,7 +97,19 @@ public class GuiHelper
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
         GlStateManager.color(1F, 1F, 1F, 1F);
         itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
-        itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+
+        if(renderOverlay)
+        {
+            FontRenderer font = stack.getItem().getFontRenderer(stack);
+
+            if(font == null)
+            {
+                font = Minecraft.getMinecraft().fontRendererObj;
+            }
+
+            itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+        }
+
         GlStateManager.popMatrix();
         itemRender.zLevel = 0F;
     }

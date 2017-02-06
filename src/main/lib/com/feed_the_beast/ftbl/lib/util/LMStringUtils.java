@@ -589,4 +589,9 @@ public class LMStringUtils
 
         return map;
     }
+
+    public static boolean matchesNode(String key, String node)
+    {
+        return key.equals(node);
+    }
 }

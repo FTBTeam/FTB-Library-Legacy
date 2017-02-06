@@ -57,7 +57,7 @@ public class ClientNotifications
 
             if(notification.getItem() != null)
             {
-                GuiHelper.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D);
+                GuiHelper.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D, true);
             }
 
             for(int i = 0; i < text.length; i++)

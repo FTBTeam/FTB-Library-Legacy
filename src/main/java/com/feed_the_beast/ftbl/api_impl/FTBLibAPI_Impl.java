@@ -39,6 +39,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -112,6 +113,15 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
+    public void loadWorldData(MinecraftServer server)
+    {
+        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+        {
+            plugin.loadWorldData(server);
+        }
+    }
+
+    @Override
     public void reload(ICommandSender sender, EnumReloadType type)
     {
         Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
@@ -145,9 +155,9 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             FTBLibLang.RELOAD_SERVER.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
         }
 
-        if(type == EnumReloadType.SERVER_ONLY_NOTIFY_CLIENT && sender instanceof EntityPlayerMP)
+        if(type == EnumReloadType.SERVER_COMMAND)
         {
-            sendNotification((EntityPlayerMP) sender, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
+            sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         }
     }
 
