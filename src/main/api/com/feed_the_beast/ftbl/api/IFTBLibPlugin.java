@@ -28,6 +28,10 @@ public interface IFTBLibPlugin
     {
     }
 
+    default void configLoaded(boolean startup)
+    {
+    }
+
     default void registerRecipes(IRecipes recipes)
     {
     }

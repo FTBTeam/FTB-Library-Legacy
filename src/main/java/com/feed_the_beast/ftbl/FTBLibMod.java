@@ -53,6 +53,7 @@ public class FTBLibMod
         MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
 
         PROXY.preInit();
+        PROXY.reloadConfig(true);
     }
 
     @Mod.EventHandler
@@ -79,7 +80,6 @@ public class FTBLibMod
         FTBLibFinals.LOGGER.info("FTBLib Loaded");
         SharedServerData.INSTANCE.reset();
         TickHandler.INSTANCE = new TickHandler();
-        PROXY.reloadConfig();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         Universe.INSTANCE = new Universe();
         Universe.INSTANCE.init();

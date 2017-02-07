@@ -131,7 +131,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
         if(type.reload(Side.SERVER))
         {
-            FTBLibMod.PROXY.reloadConfig();
+            FTBLibMod.PROXY.reloadConfig(false);
 
             for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
             {

@@ -590,8 +590,25 @@ public class LMStringUtils
         return map;
     }
 
-    public static boolean matchesNode(String key, String node)
+    public static boolean matchesNode(String[] node, String[] with)
     {
-        return key.equals(node);
+        if(with.length > node.length)
+        {
+            return false;
+        }
+
+        for(int i = 0; i < with.length; i++)
+        {
+            if(with[i].equals("*"))
+            {
+                return true;
+            }
+            else if(!with[i].equals(node[i]))
+            {
+                return false;
+            }
+        }
+
+        return false;
     }
 }

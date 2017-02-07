@@ -156,8 +156,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 
     public void postInit()
     {
-        reloadConfig();
-
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
             plugin.registerRecipes(new LMRecipes());
@@ -281,7 +279,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         CONFIG_FILES.values().forEach(IConfigFile::save);
     }
 
-    public void reloadConfig()
+    public void reloadConfig(boolean startup)
     {
         loadAllFiles();
         JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
@@ -303,6 +301,11 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         }
 
         saveAllFiles();
+
+        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+        {
+            plugin.configLoaded(startup);
+        }
     }
 
     public void worldLoaded()
