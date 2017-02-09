@@ -15,7 +15,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
@@ -231,6 +233,7 @@ public class LMInvUtils
         return !(is1 == null || is2 == null) && (is1.stackSize + is2.stackSize <= is1.getMaxStackSize() && is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
     }
 
+    @Nullable
     public static ItemStack reduceItem(@Nullable ItemStack is)
     {
         if(is == null || is.stackSize <= 0)
@@ -277,6 +280,36 @@ public class LMInvUtils
                 if(is.getTagCompound().hasNoTags())
                 {
                     is.setTagCompound(null);
+                }
+            }
+        }
+    }
+
+    public static void transferItems(IItemHandler from, IItemHandler to, int transfer)
+    {
+        if(transfer <= 0)
+        {
+            return;
+        }
+
+        for(int i = 0; i < from.getSlots(); i++)
+        {
+            ItemStack extracted = from.extractItem(i, transfer, true);
+
+            if(extracted != null && extracted.stackSize > 0)
+            {
+                ItemStack inserted = ItemHandlerHelper.insertItem(to, extracted, false);
+                int s = inserted == null ? extracted.stackSize : (extracted.stackSize - inserted.stackSize);
+
+                if(s > 0)
+                {
+                    from.extractItem(i, s, false);
+                    transfer -= s;
+
+                    if(transfer <= 0)
+                    {
+                        return;
+                    }
                 }
             }
         }
