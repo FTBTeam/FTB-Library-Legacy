@@ -53,11 +53,11 @@ public class PropertyByte extends PropertyBase
         return value;
     }
 
-    public void setByte(byte v)
+    public void setByte(int v)
     {
         byte min = getMin();
         byte max = getMax();
-        value = v < min ? min : (v > max ? max : v);
+        value = v < min ? min : (v > max ? max : (byte) v);
     }
 
     @Nullable
@@ -160,7 +160,7 @@ public class PropertyByte extends PropertyBase
         {
             if(set)
             {
-                setByte((byte) val.getInt());
+                setByte(val.getInt());
                 gui.onChanged(key, getSerializableElement());
             }
 
@@ -183,13 +183,13 @@ public class PropertyByte extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        setByte(((NBTPrimitive) nbt).getByte());
+        setByte(((NBTPrimitive) nbt).getInt());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        setByte(json.getAsByte());
+        setByte(json.getAsInt());
     }
 
     @Override

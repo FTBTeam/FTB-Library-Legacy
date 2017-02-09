@@ -590,7 +590,7 @@ public class LMStringUtils
         return map;
     }
 
-    public static boolean matchesNode(String[] node, String[] with)
+    public static boolean nodesMatch(String[] node, String[] with)
     {
         if(with.length > node.length)
         {

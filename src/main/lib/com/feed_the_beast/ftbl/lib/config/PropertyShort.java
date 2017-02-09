@@ -53,11 +53,11 @@ public class PropertyShort extends PropertyBase
         return value;
     }
 
-    public void setShort(short v)
+    public void setShort(int v)
     {
         short min = getMin();
         short max = getMax();
-        value = v < min ? min : (v > max ? max : v);
+        value = v < min ? min : (v > max ? max : (short) v);
     }
 
     @Nullable
@@ -160,7 +160,7 @@ public class PropertyShort extends PropertyBase
         {
             if(set)
             {
-                setShort((short) val.getInt());
+                setShort(val.getInt());
                 gui.onChanged(key, getSerializableElement());
             }
 
@@ -183,13 +183,13 @@ public class PropertyShort extends PropertyBase
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        setShort(((NBTPrimitive) nbt).getShort());
+        setShort(((NBTPrimitive) nbt).getInt());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        setShort(json.getAsShort());
+        setShort(json.getAsInt());
     }
 
     @Override
