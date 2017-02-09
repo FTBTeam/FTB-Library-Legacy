@@ -20,15 +20,9 @@ public interface IFTBLibRegistry
 
     void addConfig(String file, IConfigKey key, IConfigValue value);
 
-    default ConfigKey addConfig(String file, String id, IConfigValue value, byte... flags)
+    default ConfigKey addConfig(String file, String id, IConfigValue value)
     {
         ConfigKey key = new ConfigKey(id, value.copy());
-
-        for(byte b : flags)
-        {
-            key.addFlag(b);
-        }
-
         addConfig(file, key, value);
         return key;
     }

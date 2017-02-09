@@ -57,7 +57,7 @@ public class ConfigKey extends SimpleConfigKey
         return this;
     }
 
-    public ConfigKey addFlag(byte f)
+    public ConfigKey addFlags(byte f)
     {
         flags |= f;
         return this;

@@ -43,6 +43,7 @@ public class LMJsonUtils
         GsonBuilder gb = new GsonBuilder();
         GSON = gb.create();
         gb.setPrettyPrinting();
+        gb.disableHtmlEscaping();
         GSON_PRETTY = gb.create();
 
         DESERIALIZATION_CONTEXT = new JsonDeserializationContext()

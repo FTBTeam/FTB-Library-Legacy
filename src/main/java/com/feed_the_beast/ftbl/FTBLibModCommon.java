@@ -194,7 +194,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 
         if(configFile == null)
         {
-            configFile = new ConfigFile(new TextComponentString(file), () -> null);
+            configFile = new ConfigFile(new TextComponentString(file), ConfigFile.NULL_FILE_PROVIDER);
             CONFIG_FILES.put(file, configFile);
         }
 

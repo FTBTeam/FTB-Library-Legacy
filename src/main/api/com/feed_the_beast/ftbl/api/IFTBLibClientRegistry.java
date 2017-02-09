@@ -20,7 +20,7 @@ public interface IFTBLibClientRegistry
 
         for(byte b : flags)
         {
-            key.addFlag(b);
+            key.addFlags(b);
         }
 
         addClientConfig(key, value);

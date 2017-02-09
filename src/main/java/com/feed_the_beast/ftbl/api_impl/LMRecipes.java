@@ -52,22 +52,24 @@ public class LMRecipes implements IRecipes
     }
 
     @Override
-    public IRecipe addIRecipe(IRecipe r)
+    public void addIRecipe(IRecipe r)
     {
         CraftingManager.getInstance().getRecipeList().add(r);
-        return r;
     }
 
     @Override
-    public IRecipe addRecipe(ItemStack out, Object... in)
+    public void addRecipe(ItemStack out, Object... in)
     {
-        return addIRecipe(new ShapedOreRecipe(out, fixObjects(in)));
+        if(out.stackSize > 0)
+        {
+            addIRecipe(new ShapedOreRecipe(out, fixObjects(in)));
+        }
     }
 
     @Override
-    public IRecipe addShapelessRecipe(ItemStack out, Object... in)
+    public void addShapelessRecipe(ItemStack out, Object... in)
     {
-        return addIRecipe(new ShapelessOreRecipe(out, fixObjects(in)));
+        addIRecipe(new ShapelessOreRecipe(out, fixObjects(in)));
     }
 
     @Override

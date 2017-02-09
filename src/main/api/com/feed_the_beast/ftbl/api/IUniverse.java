@@ -24,4 +24,6 @@ public interface IUniverse extends INBTSerializable<NBTTagCompound>
 
     @Nullable
     IForgeTeam getTeam(String id);
+
+    Collection<IForgePlayer> getOnlinePlayers();
 }

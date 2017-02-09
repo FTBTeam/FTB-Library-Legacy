@@ -13,6 +13,8 @@ import java.io.File;
  */
 public class ConfigFile extends ConfigTree implements IConfigFile
 {
+    public static final IConfigFileProvider NULL_FILE_PROVIDER = () -> null;
+
     private final ITextComponent displayName;
     private final IConfigFileProvider fileProvider;
 

@@ -8,11 +8,11 @@ import net.minecraft.item.crafting.IRecipe;
  */
 public interface IRecipes
 {
-    IRecipe addIRecipe(IRecipe r);
+    void addIRecipe(IRecipe r);
 
-    IRecipe addRecipe(ItemStack out, Object... in);
+    void addRecipe(ItemStack out, Object... in);
 
-    IRecipe addShapelessRecipe(ItemStack out, Object... in);
+    void addShapelessRecipe(ItemStack out, Object... in);
 
     void addSmelting(ItemStack out, ItemStack in, float xp);
 }

@@ -29,6 +29,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -162,14 +163,20 @@ public class Universe implements IUniverse
         playerMap.clear();
     }
 
+    @Override
     public Collection<IForgePlayer> getOnlinePlayers()
     {
-        Collection<IForgePlayer> l = new HashSet<>();
+        Collection<IForgePlayer> l = Collections.emptySet();
 
         for(IForgePlayer p : playerMap.values())
         {
             if(p.isOnline())
             {
+                if(l.isEmpty())
+                {
+                    l = new HashSet<>();
+                }
+
                 l.add(p);
             }
         }
