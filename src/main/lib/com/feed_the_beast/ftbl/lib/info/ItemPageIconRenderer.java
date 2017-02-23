@@ -63,6 +63,6 @@ public class ItemPageIconRenderer implements IPageIconRenderer
     @Override
     public void renderIcon(IGui gui, IWidget widget, int x, int y)
     {
-        GuiHelper.renderGuiItem(Minecraft.getMinecraft().getRenderItem(), items.get((int) ((System.currentTimeMillis() / 1000L) % items.size())), x, y, true);
+        GuiHelper.drawItem(Minecraft.getMinecraft().getRenderItem(), items.get((int) ((System.currentTimeMillis() / 1000L) % items.size())), x, y, true);
     }
 }

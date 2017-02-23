@@ -90,12 +90,6 @@ public enum GuiIcons implements IImageProvider
     }
 
     @Override
-    public boolean isValid()
-    {
-        return true;
-    }
-
-    @Override
     public ResourceLocation getImage()
     {
         return texture;

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
@@ -89,6 +90,23 @@ public class LMNetUtils
         int y = io.readInt();
         int z = io.readInt();
         return new BlockPos(x, y, z);
+    }
+
+    public static void writeDimPos(ByteBuf io, BlockDimPos pos)
+    {
+        io.writeInt(pos.dim);
+        io.writeInt(pos.posX);
+        io.writeInt(pos.posY);
+        io.writeInt(pos.posZ);
+    }
+
+    public static BlockDimPos readDimPos(ByteBuf io)
+    {
+        int d = io.readInt();
+        int x = io.readInt();
+        int y = io.readInt();
+        int z = io.readInt();
+        return new BlockDimPos(x, y, z, d);
     }
 
     public static void writeUUID(ByteBuf io, UUID id)

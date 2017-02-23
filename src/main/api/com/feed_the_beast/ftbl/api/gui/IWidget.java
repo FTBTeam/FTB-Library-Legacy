@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api.gui;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -8,10 +7,9 @@ import java.util.List;
  */
 public interface IWidget
 {
-    @Nullable
     IPanel getParentPanel();
 
-    void setParentPanel(@Nullable IPanel p);
+    void setParentPanel(IPanel p);
 
     int getX();
 
@@ -31,38 +29,34 @@ public interface IWidget
 
     default int getAX()
     {
-        return (getParentPanel() == null) ? getX() : (getParentPanel().getAX() + getX());
+        return getParentPanel().getAX() + getX();
     }
 
     default int getAY()
     {
-        return (getParentPanel() == null) ? getY() : (getParentPanel().getAY() + getY());
+        return getParentPanel().getAY() + getY();
     }
 
-    default boolean isInside(IWidget w)
+    default boolean collidesWith(int x, int y, int w, int h)
     {
-        double a0 = getAY();
-        double a1 = w.getAY();
-
-        if(a1 + w.getHeight() >= a0 || a1 <= a0 + getHeight())
+        int ay = getAY();
+        if(ay >= y + h || ay + getHeight() <= y)
         {
-            return true;
+            return false;
         }
 
-        a0 = getAX();
-        a1 = w.getAX();
-
-        return (a1 + w.getWidth() < a0 && a1 > a0 + getWidth());
+        int ax = getAX();
+        return ax < x + w && ax + getWidth() > x;
     }
 
-    default boolean isEnabled()
+    default boolean isEnabled(IGui gui)
     {
         return true;
     }
 
     default boolean shouldRender(IGui gui)
     {
-        return gui.isInside(this);
+        return true;
     }
 
     default void mousePressed(IGui gui, IMouseButton button)
@@ -78,7 +72,7 @@ public interface IWidget
         return false;
     }
 
-    default void addMouseOverText(IGui gui, List<String> l)
+    default void addMouseOverText(IGui gui, List<String> list)
     {
     }
 

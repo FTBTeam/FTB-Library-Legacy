@@ -48,10 +48,4 @@ public final class TextureCoords extends ImageProvider
     {
         return maxV;
     }
-
-    @Override
-    public boolean isValid()
-    {
-        return maxU - minU > 0D && maxV - minV > 0D;
-    }
 }

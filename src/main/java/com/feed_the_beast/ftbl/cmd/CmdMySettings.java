@@ -11,7 +11,7 @@ import net.minecraft.util.text.TextComponentString;
 /**
  * Created by LatvianModder on 29.05.2016.
  */
-public class CmdMyServerSettings extends CmdEditConfigBase
+public class CmdMySettings extends CmdEditConfigBase
 {
     private static final ITextComponent TITLE = new TextComponentString("My Server Settings");
 

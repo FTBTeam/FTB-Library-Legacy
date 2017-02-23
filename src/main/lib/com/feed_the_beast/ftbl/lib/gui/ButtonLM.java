@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-
-import javax.annotation.Nullable;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 
 public abstract class ButtonLM extends WidgetLM
 {
-    private String title;
+    private String title = "";
+    private IDrawableObject icon = ImageProvider.NULL;
 
     public ButtonLM(int x, int y, int w, int h)
     {
@@ -26,9 +27,20 @@ public abstract class ButtonLM extends WidgetLM
         return title;
     }
 
-    public void setTitle(@Nullable String s)
+    public void setTitle(String s)
     {
         title = s;
+    }
+
+    public void setIcon(IDrawableObject i)
+    {
+        icon = i;
+    }
+
+    @Override
+    public IDrawableObject getIcon(IGui gui)
+    {
+        return icon;
     }
 
     @Override

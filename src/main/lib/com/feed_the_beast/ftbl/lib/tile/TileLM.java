@@ -142,6 +142,11 @@ public class TileLM extends TileEntity
         currentState = null;
     }
 
+    public void onNeighborChange()
+    {
+        updateContainingBlockInfo();
+    }
+
     public IBlockState getBlockState()
     {
         if(currentState == null)

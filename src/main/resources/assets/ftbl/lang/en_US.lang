@@ -94,6 +94,10 @@ ftbl.lang.team_color.magenta=Magenta
 ftbl.lang.team_color.purple=Purple
 ftbl.lang.team_color.gray=Gray
 
+ftbteam.config.display.color=Color
+ftbteam.config.display.title=Title
+ftbteam.config.display.desc=Description
+
 # Action Buttons
 sidebar_button.ftbl.settings=Client Settings
 sidebar_button.ftbl.my_server_settings=My Server Settings

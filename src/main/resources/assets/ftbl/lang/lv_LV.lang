@@ -90,6 +90,10 @@ ftbl.lang.team_color.magenta=Fuksīns
 ftbl.lang.team_color.purple=Violēts
 ftbl.lang.team_color.gray=Pelēks
 
+ftbteam.config.display.color=Krāsa
+ftbteam.config.display.title=Nosaukums
+ftbteam.config.display.desc=Apraksts
+
 # Action Buttons
 sidebar_button.ftbl.settings=Klienta Uzstādījumi
 sidebar_button.ftbl.my_server_settings=Mani Servera Uzstādījumi

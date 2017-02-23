@@ -51,7 +51,7 @@ import com.feed_the_beast.ftbl.lib.info.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -76,7 +76,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public static final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
     public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
-    private static final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
+    public static final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public static final Collection<String> VISIBLE_TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
     public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
@@ -139,14 +139,14 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addInfoTextLine("hr", (page, json) -> new InfoHrLine(json));
         addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
 
-        addTeamPlayerPermission(FTBLibTeamPermissions.CAN_JOIN, true);
-        addTeamPlayerPermission(FTBLibTeamPermissions.IS_ALLY, true);
-        addTeamPlayerPermission(FTBLibTeamPermissions.IS_ENEMY, true);
-        addTeamPlayerPermission(FTBLibTeamPermissions.EDIT_SETTINGS, false);
-        addTeamPlayerPermission(FTBLibTeamPermissions.EDIT_PERMISSIONS, false);
-        addTeamPlayerPermission(FTBLibTeamPermissions.MANAGE_MEMBERS, false);
-        addTeamPlayerPermission(FTBLibTeamPermissions.MANAGE_ALLIES, false);
-        addTeamPlayerPermission(FTBLibTeamPermissions.MANAGE_ENEMIES, false);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_CAN_JOIN, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ALLY, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ENEMY, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_SETTINGS, true);//false
+        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_PERMISSIONS, true);//false
+        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_MEMBERS, true);//false
+        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ALLIES, true);//false
+        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ENEMIES, true);//false
 
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {

@@ -50,19 +50,19 @@ public class ClientNotifications
         {
             GlStateManager.enableBlend();
 
-            LMColorUtils.setGLColor(LMColorUtils.getColorFromID(notification.getColorID()), 255);
+            LMColorUtils.GL_COLOR.set(LMColorUtils.getColorFromID(notification.getColorID()), 255);
             GuiHelper.drawBlankRect(ax, ay, width, height);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
 
             if(notification.getItem() != null)
             {
-                GuiHelper.renderGuiItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16D) / 2D, true);
+                GuiHelper.drawItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16) / 2, true);
             }
 
             for(int i = 0; i < text.length; i++)
             {
-                mc.fontRendererObj.drawString(text[i], ax + (notification.getItem() != null ? 30 : 10), (int) (ay + i * 11D + (height - text.length * 10D) / 2D), 0xFFFFFFFF);
+                mc.fontRendererObj.drawString(text[i], ax + (notification.getItem() != null ? 30 : 10), ay + i * 11 + (height - text.length * 10) / 2, 0xFFFFFFFF);
             }
         }
     }

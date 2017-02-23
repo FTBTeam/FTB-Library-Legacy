@@ -11,9 +11,11 @@ import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
@@ -23,6 +25,7 @@ import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.ResourceLocation;
@@ -169,10 +172,13 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         MinecraftForge.EVENT_BUS.register(new FTBLibClientEventHandler());
 
         //For Dev reasons
-        if(Minecraft.getMinecraft().getSession().getProfile().getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
+        GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+        if(profile.getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
         {
             LMUtils.userIsLatvianModder = true;
         }
+
+        FTBLibClient.localPlayerHead = new PlayerHeadImage(profile.getName());
     }
 
     @Override

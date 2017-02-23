@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -16,6 +18,7 @@ public class TextBoxLM extends WidgetLM
     public double textRenderX = 4, textRenderY = 4;
     public int textColor = 0xFFFFFFFF;
     private String text = "";
+    public IDrawableObject background = ImageProvider.NULL;
 
     public TextBoxLM(int x, int y, int w, int h)
     {
@@ -151,6 +154,8 @@ public class TextBoxLM extends WidgetLM
     @Override
     public void renderWidget(IGui gui)
     {
+        background.draw(this);
+
         String s = getText();
 
         String ns = s;

@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
@@ -14,6 +15,7 @@ public class SliderLM extends WidgetLM
     public final int sliderSize;
     private double value;
     private boolean isGrabbed;
+    public IDrawableObject slider = ImageProvider.NULL, background = ImageProvider.NULL;
 
     public SliderLM(int x, int y, int w, int h, int ss)
     {
@@ -31,7 +33,7 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> list)
     {
         double min = getDisplayMin();
         double max = getDisplayMax();
@@ -40,44 +42,64 @@ public class SliderLM extends WidgetLM
         {
             String s = "" + (int) MathHelperLM.map(value, 0D, 1D, min, max);
             String t = getTitle(gui);
-            l.add(t == null ? s : (t + ": " + s));
+            list.add(t.isEmpty() ? s : (t + ": " + s));
         }
     }
 
-    public void updateSlider(IGui gui)
+    @Override
+    public void renderWidget(IGui gui)
     {
-        double v = getValue(gui);
-        double v0 = v;
+        int ax = getAX();
+        int ay = getAY();
+        int w = getWidth();
+        int h = getHeight();
 
-        if(isGrabbed(gui))
+        if(isEnabled(gui))
         {
-            if(Mouse.isButtonDown(0))
+            double v = getValue(gui);
+            double v0 = v;
+
+            if(isGrabbed(gui))
             {
-                if(getDirection().isVertical())
+                if(Mouse.isButtonDown(0))
                 {
-                    v = (gui.getMouseY() - (getAY() + (sliderSize / 2D))) / (double) (getHeight() - sliderSize);
+                    if(getDirection().isVertical())
+                    {
+                        v = (gui.getMouseY() - (ay + (sliderSize / 2D))) / (double) (h - sliderSize);
+                    }
+                    else
+                    {
+                        v = (gui.getMouseX() - (ax + (sliderSize / 2D))) / (double) (w - sliderSize);
+                    }
                 }
                 else
                 {
-                    v = (gui.getMouseX() - (getAX() + (sliderSize / 2D))) / (double) (getWidth() - sliderSize);
+                    setGrabbed(gui, false);
                 }
             }
-            else
+
+            if(gui.getMouseWheel() != 0 && canMouseScroll(gui))
             {
-                setGrabbed(gui, false);
+                v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
+            }
+
+            v = MathHelper.clamp_double(v, 0D, 1D);
+
+            if(v0 != v)
+            {
+                setValue(gui, v);
             }
         }
 
-        if(gui.getMouseWheel() != 0 && canMouseScroll(gui))
+        background.draw(ax, ay, w, h);
+
+        if(getDirection().isVertical())
         {
-            v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
+            slider.draw(ax, ay + getValueI(gui, h), w, sliderSize);
         }
-
-        v = MathHelper.clamp_double(v, 0D, 1D);
-
-        if(v0 != v)
+        else
         {
-            setValue(gui, v);
+            slider.draw(ax + getValueI(gui, w), ay, sliderSize, h);
         }
     }
 
@@ -104,7 +126,7 @@ public class SliderLM extends WidgetLM
     {
         if(value != v)
         {
-            value = v;
+            value = MathHelper.clamp_double(v, 0D, 1D);
             onMoved(gui);
         }
     }
@@ -114,21 +136,9 @@ public class SliderLM extends WidgetLM
         return value;
     }
 
-    public int getValueI(IGui gui)
+    public int getValueI(IGui gui, int max)
     {
-        return (int) (getValue(gui) * ((getDirection().isVertical() ? getHeight() : getWidth()) - sliderSize));
-    }
-
-    public void renderSlider(IGui gui, IImageProvider img)
-    {
-        if(getDirection().isVertical())
-        {
-            GuiHelper.render(img, getAX(), getAY() + getValueI(gui), getWidth(), sliderSize);
-        }
-        else
-        {
-            GuiHelper.render(img, getAX() + getValueI(gui), getAY(), sliderSize, getHeight());
-        }
+        return (int) (getValue(gui) * (max - sliderSize));
     }
 
     public double getScrollStep()

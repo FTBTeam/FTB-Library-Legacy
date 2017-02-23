@@ -6,11 +6,11 @@ import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Created by LatvianModder on 23.03.2016.
@@ -65,8 +65,9 @@ public class InfoHrLine extends EmptyInfoPageLine
         @Override
         public void renderWidget(IGui gui)
         {
-            LMColorUtils.setGLColor(color == 0 ? ((GuiInfo) gui).colorText : color);
+            LMColorUtils.GL_COLOR.set(color == 0 ? gui.getTextColor() : color);
             GuiHelper.drawBlankRect(getAX(), getAY() + 1, getWidth(), height);
+            GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
 }

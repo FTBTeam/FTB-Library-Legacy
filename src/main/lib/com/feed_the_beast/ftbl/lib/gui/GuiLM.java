@@ -2,14 +2,13 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -24,15 +23,17 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
 
     public final Minecraft mc;
     private final FontRenderer font;
-    private int screenW, screenH, screenScaleFactor, mouseX, mouseY, mouseWheel;
+    private int mouseX, mouseY, mouseWheel;
     private float partialTicks;
     private boolean refreshWidgets;
+    private ScaledResolution screen;
+    public boolean fixUnicode;
 
     public GuiLM(int w, int h)
     {
         super(0, 0, w, h);
         mc = Minecraft.getMinecraft();
-        font = createFont(mc);
+        font = createFont();
     }
 
     public static void setupDrawing()
@@ -45,28 +46,26 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
 
     public final void initGui()
     {
-        ScaledResolution screen = new ScaledResolution(mc);
-        screenW = screen.getScaledWidth();
-        screenH = screen.getScaledHeight();
-        screenScaleFactor = screen.getScaleFactor();
+        screen = new ScaledResolution(mc);
 
         if(isFullscreen())
         {
             posX = 0;
             posY = 0;
-            setWidth(screenW);
-            setHeight(screenH);
+            setWidth(screen.getScaledWidth());
+            setHeight(screen.getScaledHeight());
         }
 
         onInit();
 
         if(!isFullscreen())
         {
-            posX = (screenW - getWidth()) / 2;
-            posY = (screenH - getHeight()) / 2;
+            posX = (screen.getScaledWidth() - getWidth()) / 2;
+            posY = (screen.getScaledHeight() - getHeight()) / 2;
         }
 
         refreshWidgets();
+        fixUnicode = screen.getScaleFactor() % 2 == 1;
     }
 
     public void onInit()
@@ -102,7 +101,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
         return false;
     }
 
-    protected FontRenderer createFont(Minecraft mc)
+    protected FontRenderer createFont()
     {
         return mc.fontRendererObj;
     }
@@ -121,13 +120,13 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     @Override
     public int getWidth()
     {
-        return isFullscreen() ? screenW : super.getWidth();
+        return isFullscreen() ? screen.getScaledWidth() : super.getWidth();
     }
 
     @Override
     public int getHeight()
     {
-        return isFullscreen() ? screenH : super.getHeight();
+        return isFullscreen() ? screen.getScaledHeight() : super.getHeight();
     }
 
     public final void updateGui(int mx, int my, float pt)
@@ -166,17 +165,17 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
 
     public void drawBackground()
     {
+        getIcon(this).draw(this);
     }
 
     public void drawForeground()
     {
         addMouseOverText(this, TEMP_TEXT_LIST);
-        GuiUtils.drawHoveringText(TEMP_TEXT_LIST, mouseX, Math.max(mouseY, 18), screenW, screenH, 0, font);
+        GuiUtils.drawHoveringText(TEMP_TEXT_LIST, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
         TEMP_TEXT_LIST.clear();
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public GuiScreen getWrapper()
     {
         return new GuiWrapper(this);
@@ -189,28 +188,15 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public final FontRenderer getFont()
     {
         return font;
     }
 
     @Override
-    public final int getScreenWidth()
+    public final ScaledResolution getScreen()
     {
-        return screenW;
-    }
-
-    @Override
-    public final int getScreenHeight()
-    {
-        return screenH;
-    }
-
-    @Override
-    public final int getScreenScaleFactor()
-    {
-        return screenScaleFactor;
+        return screen;
     }
 
     @Override
@@ -240,5 +226,10 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     @Override
     public void onClientDataChanged()
     {
+    }
+
+    public boolean isOpen()
+    {
+        return mc.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) mc.currentScreen).getWrappedGui() == this;
     }
 }

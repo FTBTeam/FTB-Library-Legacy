@@ -1,11 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftbl.lib.math.Converter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -13,18 +8,12 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
 
-import javax.annotation.Nullable;
-
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyByte extends PropertyBase
+public class PropertyByte extends PropertyInt
 {
     public static final String ID = "byte";
-
-    private byte value;
-    private byte minValue = Byte.MIN_VALUE;
-    private byte maxValue = Byte.MAX_VALUE;
 
     public PropertyByte()
     {
@@ -32,14 +21,12 @@ public class PropertyByte extends PropertyBase
 
     public PropertyByte(int v)
     {
-        value = (byte) v;
+        super(v);
     }
 
     public PropertyByte(int v, int min, int max)
     {
-        this(v);
-        minValue = (byte) min;
-        maxValue = (byte) max;
+        super(v, min, max);
     }
 
     @Override
@@ -48,160 +35,40 @@ public class PropertyByte extends PropertyBase
         return ID;
     }
 
-    public byte getByte()
-    {
-        return value;
-    }
-
-    public void setByte(int v)
-    {
-        byte min = getMin();
-        byte max = getMax();
-        value = v < min ? min : (v > max ? max : (byte) v);
-    }
-
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getByte();
-    }
-
-    public PropertyByte setMin(byte v)
-    {
-        minValue = v;
-        return this;
-    }
-
-    public PropertyByte setMax(byte v)
-    {
-        maxValue = v;
-        return this;
-    }
-
-    public byte getMin()
-    {
-        return minValue;
-    }
-
-    public byte getMax()
-    {
-        return maxValue;
-    }
-
-    @Override
-    public String getString()
-    {
-        return Short.toString(getByte());
-    }
-
-    @Override
-    public boolean getBoolean()
-    {
-        return getByte() != 0;
-    }
-
-    @Override
-    public int getInt()
-    {
-        return getByte();
-    }
-
     @Override
     public IConfigValue copy()
     {
-        return new PropertyByte(getByte(), getMin(), getMax());
-    }
-
-    @Override
-    public boolean equalsValue(IConfigValue value)
-    {
-        return getByte() == value.getInt();
-    }
-
-    @Override
-    public int getColor()
-    {
-        return 0xAA5AE8;
-    }
-
-    @Override
-    @Nullable
-    public String getMinValueString()
-    {
-        byte m = getMin();
-
-        if(m != Byte.MIN_VALUE)
-        {
-            return Byte.toString(m);
-        }
-
-        return null;
-    }
-
-    @Override
-    @Nullable
-    public String getMaxValueString()
-    {
-        byte m = getMax();
-
-        if(m != Byte.MAX_VALUE)
-        {
-            return Byte.toString(m);
-        }
-
-        return null;
-    }
-
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-        GuiSelectors.selectJson(this, (val, set) ->
-        {
-            if(set)
-            {
-                setByte(val.getInt());
-                gui.onChanged(key, getSerializableElement());
-            }
-
-            gui.openGui();
-        });
-    }
-
-    @Override
-    public boolean canParse(String text)
-    {
-        return Converter.canParseInt(text);
+        return new PropertyByte(getInt(), getMin(), getMax());
     }
 
     @Override
     public NBTBase serializeNBT()
     {
-        return new NBTTagByte(getByte());
+        return new NBTTagByte((byte) getInt());
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        setByte(((NBTPrimitive) nbt).getInt());
+        setInt(((NBTPrimitive) nbt).getInt());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        setByte(json.getAsInt());
+        setInt(json.getAsInt());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        return new JsonPrimitive(getByte());
+        return new JsonPrimitive(getInt());
     }
 
     @Override
     public void writeData(ByteBuf data)
     {
-        data.writeByte(getByte());
+        data.writeByte(getInt());
         data.writeByte(getMin());
         data.writeByte(getMax());
     }
@@ -209,7 +76,7 @@ public class PropertyByte extends PropertyBase
     @Override
     public void readData(ByteBuf data)
     {
-        setByte(data.readByte());
+        setInt(data.readByte());
         setMin(data.readByte());
         setMax(data.readByte());
     }

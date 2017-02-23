@@ -16,6 +16,8 @@ public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
     MEMBER(2, "member", TextFormatting.GREEN),
     OWNER(3, "owner", TextFormatting.GOLD);
 
+    public static final EnumTeamStatus[] VALUES = values();
+
     private final String name;
     private final int status;
     private final TextFormatting color;

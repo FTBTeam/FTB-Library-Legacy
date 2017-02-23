@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
+import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
@@ -14,15 +15,14 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.SliderLM;
+import com.feed_the_beast.ftbl.lib.gui.TextFieldLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
-import com.feed_the_beast.ftbl.lib.info.ButtonInfoTextLine;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
@@ -55,7 +55,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         }
 
         @Override
-        public boolean isEnabled()
+        public boolean isEnabled(IGui gui)
         {
             return specialInfoButton != null;
         }
@@ -63,13 +63,13 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         private void updateButton(GuiInfo gui)
         {
             specialInfoButton = gui.selectedPage.createSpecialButton(gui);
-            setTitle(isEnabled() ? specialInfoButton.getTitle() : null);
+            setTitle(isEnabled(gui) ? specialInfoButton.getTitle() : "");
         }
 
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
-            if(isEnabled())
+            if(isEnabled(gui))
             {
                 specialInfoButton.onClicked(button);
             }
@@ -78,7 +78,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         @Override
         public void renderWidget(IGui gui)
         {
-            if(isEnabled())
+            if(isEnabled(gui))
             {
                 specialInfoButton.render(gui, getAX(), getAY());
             }
@@ -91,9 +91,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     private final ButtonLM buttonBack;
     private final ButtonSpecial buttonSpecial;
     public int panelWidth;
-    public int colorText, colorBackground;
+    private int colorText, colorBackground;
     public boolean useUnicodeFont;
     private InfoPage selectedPage;
+    private int pagesHeight, textHeight;
 
     public GuiInfo(InfoPage tree)
     {
@@ -117,9 +118,17 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public double getScrollStep()
             {
-                return 20D / (double) panelPages.getHeight();
+                return 20D / (double) pagesHeight;
+            }
+
+            @Override
+            public void onMoved(IGui gui)
+            {
+                panelPages.setScrollY(getValue(gui), pagesHeight);
             }
         };
+
+        sliderPages.slider = TEX_SLIDER;
 
         sliderText = new SliderLM(0, 0, 12, 0, 18)
         {
@@ -138,9 +147,17 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public double getScrollStep()
             {
-                return 30D / (double) panelText.getHeight();
+                return 30D / (double) textHeight;
+            }
+
+            @Override
+            public void onMoved(IGui gui)
+            {
+                panelText.setScrollY(getValue(gui), textHeight);
             }
         };
+
+        sliderText.slider = TEX_SLIDER;
 
         buttonBack = new ButtonLM(0, 0, 14, 11)
         {
@@ -163,7 +180,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void addWidgets()
             {
-                setHeight(0);
+                pagesHeight = 0;
 
                 for(InfoPage c : selectedPage.getPages().values())
                 {
@@ -172,14 +189,16 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                     if(b.getHeight() > 0)
                     {
                         add(b);
-                        b.setY(getHeight());
-                        setHeight(getHeight() + b.getHeight());
+                        b.setY(pagesHeight);
+                        pagesHeight += b.getHeight();
                     }
                 }
 
                 buttonSpecial.updateButton(GuiInfo.this);
             }
         };
+
+        panelPages.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE);
 
         panelText = new PanelLM(0, 0, 0, 0)
         {
@@ -199,7 +218,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new ButtonInfoTextLine(GuiInfo.this, panelText, null) : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new TextFieldLM(0, 0, panelText.getWidth(), -1, getFont(), "") : line.createWidget(GuiInfo.this, panelText));
                 }
 
                 updateWidgetPositions();
@@ -209,19 +228,17 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void updateWidgetPositions()
             {
-                double oldHeight = getHeight();
-                double scroll = oldHeight * sliderText.getValue(GuiInfo.this);
-                setHeight(0);
+                textHeight = 0;
 
                 for(IWidget w : getWidgets())
                 {
-                    w.setY(getHeight());
-                    setHeight(getHeight() + w.getHeight());
+                    w.setY(textHeight);
+                    textHeight += w.getHeight();
                 }
-
-                sliderText.setValue(GuiInfo.this, scroll <= 0D ? 0D : scroll / getHeight());
             }
         };
+
+        panelText.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE | PanelLM.FLAG_UNICODE_FONT);
 
         buttonSpecial = new ButtonSpecial();
     }
@@ -234,13 +251,13 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     public void setSelectedPage(@Nullable InfoPage p)
     {
         sliderText.setValue(this, 0D);
-        panelText.posY = 10;
 
         if(selectedPage != p)
         {
             if(p == null)
             {
                 mc.thePlayer.closeScreen();
+                return;
             }
             else
             {
@@ -258,6 +275,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         }
 
         buttonSpecial.updateButton(this);
+        buttonBack.setIcon(new ColoredObject((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, colorText));
     }
 
     @Override
@@ -265,12 +283,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     {
         selectedPage.refreshGui(this);
 
-        add(sliderPages);
         add(sliderText);
         add(buttonBack);
         add(panelPages);
         add(panelText);
         add(buttonSpecial);
+        add(sliderPages);
     }
 
     @Override
@@ -278,12 +296,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     {
         posX = GuiConfigs.BORDER_WIDTH.getInt();
         posY = GuiConfigs.BORDER_HEIGHT.getInt();
-        int width = getScreenWidth() - posX * 2;
-        int height = getScreenHeight() - posY * 2;
+        int width = getScreen().getScaledWidth() - posX * 2;
+        int height = getScreen().getScaledHeight() - posY * 2;
         setWidth(width);
         setHeight(height);
 
-        panelWidth = (int) (width * 2D / 7D);
+        panelWidth = (int) (width * 0.3D);
 
         panelPages.posX = 10;
         panelPages.posY = 46;
@@ -291,9 +309,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         panelPages.setHeight(height - 56);
 
         panelText.posX = panelWidth + 10;
-        panelText.posY = 10;
+        panelText.posY = 6;
         panelText.setWidth(width - panelWidth - 23 - sliderText.getWidth());
-        panelText.setHeight(height - 20);
+        panelText.setHeight(height - 12);
 
         sliderPages.posX = panelWidth - sliderPages.getWidth() - 10;
         sliderPages.posY = 46;
@@ -317,99 +335,17 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     }
 
     @Override
-    public void renderWidgets()
-    {
-    }
-
-    @Override
     public void drawBackground()
     {
         int width = getWidth();
         int height = getHeight();
 
-        sliderPages.updateSlider(this);
-
-        if(sliderPages.getValue(this) == 0D || panelPages.getHeight() - (height - 56F) <= 0F)
-        {
-            panelPages.posY = 46;
-            sliderPages.setValue(this, 0D);
-        }
-        else
-        {
-            panelPages.posY = (int) (46F - (sliderPages.getValue(this) * (panelPages.getHeight() - (height - 56F))));
-        }
-
-        sliderText.updateSlider(this);
-
-        if(sliderText.getValue(this) == 0D || panelText.getHeight() - (height - 20F) <= 0F)
-        {
-            setSelectedPage(selectedPage);
-        }
-        else
-        {
-            panelText.posY = (int) (10F - (sliderText.getValue(this) * (panelText.getHeight() - (height - 20F))));
-        }
-
-        super.drawBackground();
-
         mc.getTextureManager().bindTexture(TEXTURE);
         GlStateManager.color(1F, 1F, 1F, 1F);
         renderFilling(panelWidth, 0, width - panelWidth, height);
         renderFilling(0, 36, panelWidth, height - 36);
-
-        boolean uni = getFont().getUnicodeFlag();
-        getFont().setUnicodeFlag(useUnicodeFont);
-
-        boolean fixUnicode = useUnicodeFont && getScreenScaleFactor() % 2 == 1;
-
-        if(fixUnicode)
-        {
-            for(int i = 0; i < 256; i++)
-            {
-                mc.getTextureManager().bindTexture(getFont().getUnicodePageLocation(i));
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-            }
-        }
-
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        scissor(panelText.getAX() - 4, posY + 6, panelText.getWidth() + 4, height - 10);
-        panelText.renderWidget(this);
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-        if(fixUnicode)
-        {
-            for(int i = 0; i < 256; i++)
-            {
-                mc.getTextureManager().bindTexture(getFont().getUnicodePageLocation(i));
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-            }
-        }
-
-        getFont().setUnicodeFlag(false);
-
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        scissor(panelPages.getAX(), posY + 42, panelPages.getWidth(), height - 48);
-        panelPages.renderWidget(this);
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-        getFont().setUnicodeFlag(uni);
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
-
-        renderBorders(panelWidth, 0, width - panelWidth, height);
-        renderBorders(0, 36, panelWidth, height - 36);
         renderFilling(0, 0, panelWidth, 36);
-        renderBorders(0, 0, panelWidth, 36);
-
-        sliderPages.renderSlider(this, TEX_SLIDER);
-        sliderText.renderSlider(this, TEX_SLIDER);
-        LMColorUtils.setGLColor(colorText, 255);
-        buttonBack.render((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK);
-
         GlStateManager.color(1F, 1F, 1F, 1F);
-        buttonSpecial.renderWidget(this);
 
         int buttonBackAX = buttonBack.getAX();
         String txt = selectedPage.getDisplayName().getFormattedText();
@@ -422,23 +358,42 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
             if(mouseOver)
             {
-                LMColorUtils.setGLColor(colorBackground, 255);
+                LMColorUtils.GL_COLOR.set(colorBackground, 255);
                 GuiHelper.drawBlankRect(buttonBackAX + buttonBack.getWidth() + 2, posY + 12, txtsize + 6, 13);
                 GlStateManager.color(1F, 1F, 1F, 1F);
                 getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
             }
             else
             {
-                GL11.glEnable(GL11.GL_SCISSOR_TEST);
-                scissor(buttonBackAX + buttonBack.getWidth() + 5, posY + 13, maxtxtsize, 12);
+                GuiHelper.pushScissor(getScreen(), buttonBackAX + buttonBack.getWidth() + 5, posY + 13, maxtxtsize, 12);
                 getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
-                GL11.glDisable(GL11.GL_SCISSOR_TEST);
+                GuiHelper.popScissor();
             }
         }
         else
         {
             getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
         }
+    }
+
+    @Override
+    public void drawForeground()
+    {
+        int width = getWidth();
+        int height = getHeight();
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
+        renderBorders(panelWidth, 0, width - panelWidth, height);
+        renderBorders(0, 36, panelWidth, height - 36);
+        renderBorders(0, 0, panelWidth, 36);
+
+        super.drawForeground();
+    }
+
+    @Override
+    public int getTextColor()
+    {
+        return colorText;
     }
 
     @Override
@@ -453,20 +408,20 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         px += posX;
         py += posY;
 
-        GuiHelper.render(TEX_BG_NN, px, py, 13, 13);
-        GuiHelper.render(TEX_BG_NP, px, py + h - 13, 13, 13);
-        GuiHelper.render(TEX_BG_PN, px + w - 13, py, 13, 13);
-        GuiHelper.render(TEX_BG_PP, px + w - 13, py + h - 13, 13, 13);
+        TEX_BG_MU.draw(px + 13, py, w - 24, 13);
+        TEX_BG_MR.draw(px + w - 13, py + 13, 13, h - 25);
+        TEX_BG_MD.draw(px + 13, py + h - 13, w - 24, 13);
+        TEX_BG_ML.draw(px, py + 13, 13, h - 25);
 
-        GuiHelper.render(TEX_BG_MU, px + 13, py, w - 24, 13);
-        GuiHelper.render(TEX_BG_MR, px + w - 13, py + 13, 13, h - 25);
-        GuiHelper.render(TEX_BG_MD, px + 13, py + h - 13, w - 24, 13);
-        GuiHelper.render(TEX_BG_ML, px, py + 13, 13, h - 25);
+        TEX_BG_NN.draw(px, py, 13, 13);
+        TEX_BG_NP.draw(px, py + h - 13, 13, 13);
+        TEX_BG_PN.draw(px + w - 13, py, 13, 13);
+        TEX_BG_PP.draw(px + w - 13, py + h - 13, 13, 13);
     }
 
     private void renderFilling(int px, int py, int w, int h)
     {
-        LMColorUtils.setGLColor(colorBackground, 255);
+        LMColorUtils.GL_COLOR.set(colorBackground, 255);
         GuiHelper.drawBlankRect(posX + px + 4, posY + py + 4, w - 8, h - 8);
     }
 

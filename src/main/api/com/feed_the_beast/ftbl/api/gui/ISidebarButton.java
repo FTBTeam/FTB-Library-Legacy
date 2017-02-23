@@ -13,7 +13,7 @@ import java.util.Map;
 public interface ISidebarButton extends IStringSerializable
 {
     @Nullable
-    IImageProvider getIcon();
+    IDrawableObject getIcon();
 
     @Nullable
     IConfigValue getConfig();

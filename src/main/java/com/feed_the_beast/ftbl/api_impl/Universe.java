@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlay
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.reg.StringIDRegistry;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -41,11 +40,11 @@ import java.util.UUID;
 public class Universe implements IUniverse
 {
     public static Universe INSTANCE = null;
+    private static final Map<UUID, ForgePlayerFake> FAKE_PLAYER_MAP = new HashMap<>();
 
     public final Map<UUID, ForgePlayer> playerMap = new HashMap<>();
     public final Map<String, ForgeTeam> teams = new HashMap<>();
     private NBTDataStorage dataStorage;
-    public final StringIDRegistry teamPlayerPermisssionIDs = new StringIDRegistry();
 
     public void init()
     {
@@ -90,6 +89,7 @@ public class Universe implements IUniverse
     }
 
     @Override
+    @Nullable
     public ForgePlayer getPlayer(@Nullable Object o)
     {
         if(o == null)
@@ -98,7 +98,17 @@ public class Universe implements IUniverse
         }
         else if(o instanceof FakePlayer)
         {
-            return new ForgePlayerFake((FakePlayer) o);
+            FakePlayer fp = (FakePlayer) o;
+            ForgePlayerFake p = FAKE_PLAYER_MAP.get(fp.getGameProfile().getId());
+
+            if(p == null)
+            {
+                p = new ForgePlayerFake(fp);
+                p.onLoggedIn(fp, false);
+                FAKE_PLAYER_MAP.put(p.getProfile().getId(), p);
+            }
+
+            return p;
         }
         else if(o instanceof UUID)
         {
@@ -204,8 +214,6 @@ public class Universe implements IUniverse
             }
         }
 
-        teamPlayerPermisssionIDs.deserializeNBT(nbt.getCompoundTag("TeamPlayerPermissionIDs"));
-
         teams.clear();
         NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
 
@@ -253,7 +261,6 @@ public class Universe implements IUniverse
         }
 
         nbt.setTag("Teams", teamsTag);
-        nbt.setTag("TeamPlayerPermissionIDs", teamPlayerPermisssionIDs.serializeNBT());
 
         if(dataStorage != null)
         {

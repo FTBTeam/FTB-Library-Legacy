@@ -1,26 +1,47 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Created by LatvianModder on 04.09.2016.
  */
 public class GuiHelper
 {
+    private final static int MAX_SCISSOR = 16;
+    private static final int SCISSOR_X[] = new int[MAX_SCISSOR];
+    private static final int SCISSOR_Y[] = new int[MAX_SCISSOR];
+    private static final int SCISSOR_W[] = new int[MAX_SCISSOR];
+    private static final int SCISSOR_H[] = new int[MAX_SCISSOR];
+    private static int scissorIndex = -1;
+
+    public static void playClickSound()
+    {
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+    }
+
     public static void drawTexturedRect(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
     {
         if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
@@ -28,10 +49,7 @@ public class GuiHelper
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-            buffer.pos(x, y + h, 0D).endVertex();
-            buffer.pos(x + w, y + h, 0D).endVertex();
-            buffer.pos(x + w, y, 0D).endVertex();
-            buffer.pos(x, y, 0D).endVertex();
+            addRectToBuffer(buffer, x, y, w, h);
             tessellator.draw();
         }
         else
@@ -47,40 +65,72 @@ public class GuiHelper
         }
     }
 
-    public static void drawPlayerHead(String username, int x, int y, int w, int h)
-    {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(FTBLibClient.getSkinTexture(username));
-        drawTexturedRect(x, y, w, h, 0.125D, 0.125D, 0.25D, 0.25D);
-        drawTexturedRect(x, y, w, h, 0.625D, 0.125D, 0.75D, 0.25D);
-    }
-
     public static void drawBlankRect(int x, int y, int w, int h)
     {
+        if(w <= 0 || h <= 0)
+        {
+            return;
+        }
+
         GlStateManager.disableTexture2D();
-        drawTexturedRect(x, y, w, h, 0D, 0D, 0D, 0D);
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        addRectToBuffer(buffer, x, y, w, h);
+        tessellator.draw();
         GlStateManager.enableTexture2D();
     }
 
-    public static void render(IImageProvider img, int x, int y, int w, int h)
+    private static void addRectToBuffer(VertexBuffer buffer, int x, int y, int w, int h)
     {
-        if(img.isValid())
+        buffer.pos(x, y + h, 0D).endVertex();
+        buffer.pos(x + w, y + h, 0D).endVertex();
+        buffer.pos(x + w, y, 0D).endVertex();
+        buffer.pos(x, y, 0D).endVertex();
+    }
+
+    public static void drawHollowRect(int x, int y, int w, int h, boolean roundEdges)
+    {
+        if(w <= 1 || h <= 1)
         {
-            img.bindTexture();
-            drawTexturedRect(x, y, w, h, img.getMinU(), img.getMinV(), img.getMaxU(), img.getMaxV());
+            drawBlankRect(x, y, w, h);
+            return;
         }
+
+        GlStateManager.disableTexture2D();
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer buffer = tessellator.getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+
+        addRectToBuffer(buffer, x, y + 1, 1, h - 2);
+        addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2);
+
+        if(roundEdges)
+        {
+            addRectToBuffer(buffer, x + 1, y, w - 2, 1);
+            addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1);
+        }
+        else
+        {
+            addRectToBuffer(buffer, x, y, w, 1);
+            addRectToBuffer(buffer, x, y + h - 1, w, 1);
+        }
+
+        tessellator.draw();
+        GlStateManager.enableTexture2D();
     }
 
     public static void drawCenteredString(FontRenderer font, String txt, double x, double y, int color)
     {
-        font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - 3D), color);
+        font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - 4D), color);
     }
 
-    public static void playClickSound()
+    public static void drawCenteredWidgetTitle(FontRenderer font, WidgetLM widget, String title, int color)
     {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+        drawCenteredString(font, title, widget.getAX() + widget.getWidth() / 2, widget.getAY() + widget.getHeight() / 2, color);
     }
 
-    public static void renderGuiItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
+    public static void drawItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
     {
         if(stack == null || stack.getItem() == null)
         {
@@ -112,5 +162,140 @@ public class GuiHelper
 
         GlStateManager.popMatrix();
         itemRender.zLevel = 0F;
+    }
+
+    public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)
+    {
+        if(scissorIndex == -1)
+        {
+            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        }
+
+        scissorIndex++;
+
+        if(scissorIndex < MAX_SCISSOR)
+        {
+            int scale = screen.getScaleFactor();
+            SCISSOR_X[scissorIndex] = x * scale;
+            SCISSOR_Y[scissorIndex] = (screen.getScaledHeight() - y - h) * scale;
+            SCISSOR_W[scissorIndex] = w * scale;
+            SCISSOR_H[scissorIndex] = h * scale;
+            GL11.glScissor(SCISSOR_X[scissorIndex], SCISSOR_Y[scissorIndex], SCISSOR_W[scissorIndex], SCISSOR_H[scissorIndex]);
+        }
+    }
+
+    public static void popScissor()
+    {
+        scissorIndex--;
+
+        if(scissorIndex == -1)
+        {
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        }
+        else if(scissorIndex < MAX_SCISSOR)
+        {
+            GL11.glScissor(SCISSOR_X[scissorIndex], SCISSOR_Y[scissorIndex], SCISSOR_W[scissorIndex], SCISSOR_H[scissorIndex]);
+        }
+    }
+
+    public static void setFixUnicode(Minecraft mc, boolean enabled)
+    {
+        TextureManager textureManager = mc.getTextureManager();
+        int mode = enabled ? GL11.GL_LINEAR : GL11.GL_NEAREST;
+
+        for(int i = 0; i < 256; i++)
+        {
+            if(FontRenderer.UNICODE_PAGE_LOCATIONS[i] != null)
+            {
+                textureManager.bindTexture(FontRenderer.UNICODE_PAGE_LOCATIONS[i]);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
+            }
+        }
+    }
+
+    public static boolean onClickEvent(ClickEvent clickEvent)
+    {
+        switch(clickEvent.getAction())
+        {
+            case OPEN_URL:
+            {
+                try
+                {
+                    final URI uri = new URI(clickEvent.getValue());
+                    String s = uri.getScheme();
+
+                    if(s == null)
+                    {
+                        throw new URISyntaxException(clickEvent.getValue(), "Missing protocol");
+                    }
+                    if(!s.toLowerCase().contains("http") && !s.toLowerCase().contains("https"))
+                    {
+                        throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
+                    }
+
+                    Minecraft mc = Minecraft.getMinecraft();
+
+                    if(mc.gameSettings.chatLinksPrompt)
+                    {
+                        final GuiScreen currentScreen = mc.currentScreen;
+
+                        mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+                        {
+                            if(result)
+                            {
+                                try
+                                {
+                                    LMNetUtils.openURI(uri);
+                                }
+                                catch(Exception ex)
+                                {
+                                    ex.printStackTrace();
+                                }
+                            }
+                            mc.displayGuiScreen(currentScreen);
+                        }, clickEvent.getValue(), 0, false));
+                    }
+                    else
+                    {
+                        LMNetUtils.openURI(uri);
+                    }
+
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+
+                return false;
+            }
+            case OPEN_FILE:
+            {
+                try
+                {
+                    LMNetUtils.openURI((new File(clickEvent.getValue())).toURI());
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+
+                return false;
+            }
+            case SUGGEST_COMMAND:
+            {
+                //FIXME
+                return true;
+            }
+            case RUN_COMMAND:
+            {
+                FTBLibClient.execClientCommand(clickEvent.getValue(), true);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

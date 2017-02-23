@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
@@ -49,6 +50,7 @@ public class FTBLibClient
     private static EntityItem entityItem;
     //private static IntBuffer VIEWPORT;
     //private static FloatBuffer MODELVIEW, PROJECTION;
+    public static PlayerHeadImage localPlayerHead;
 
     // - Registry - //
 

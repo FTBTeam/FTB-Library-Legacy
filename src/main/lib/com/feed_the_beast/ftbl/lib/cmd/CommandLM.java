@@ -12,11 +12,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class CommandLM extends CommandBase
 {
+    protected static final List<String> LIST_TRUE_FALSE = Collections.unmodifiableList(Arrays.asList("true", "false"));
+
     public static void checkArgs(String[] args, int i, String desc) throws CommandException
     {
         if(args.length < i)

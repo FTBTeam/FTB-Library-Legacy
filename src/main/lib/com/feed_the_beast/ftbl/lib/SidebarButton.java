@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -15,11 +14,11 @@ import java.util.Map;
 
 public abstract class SidebarButton extends FinalIDObject implements ISidebarButton
 {
-    private final IImageProvider icon;
+    private final IDrawableObject icon;
     private final IConfigValue config;
     private Map<String, Boolean> deps;
 
-    public SidebarButton(ResourceLocation id, IImageProvider c, @Nullable IConfigValue b, String dependencies)
+    public SidebarButton(ResourceLocation id, IDrawableObject c, @Nullable IConfigValue b, String dependencies)
     {
         super(id.toString().replace(':', '.'));
         icon = c;
@@ -55,7 +54,7 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
     }
 
     @Override
-    public IImageProvider getIcon()
+    public IDrawableObject getIcon()
     {
         return icon;
     }
@@ -70,7 +69,7 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
     @Override
     public void render(int ax, int ay)
     {
-        GuiHelper.render(icon, ax, ay, 16, 16);
+        icon.draw(ax, ay, 16, 16);
     }
 
     @Override

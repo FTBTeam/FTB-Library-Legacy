@@ -36,6 +36,10 @@ public class MathHelperLM
 
     public static final double SQRT_2 = Math.sqrt(2D);
 
+    public static final float[] NORMALS_X = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
+    public static final float[] NORMALS_Y = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
+    public static final float[] NORMALS_Z = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
+
     public static double sqrt(double d)
     {
         if(d == 0D)
@@ -439,5 +443,10 @@ public class MathHelperLM
         Vec3d vec = new Vec3d(hitX, hitY, hitZ);
         vec.addVector(pos.getX(), pos.getY(), pos.getZ());
         return new RayTraceResult(vec, facing, pos);
+    }
+
+    public static boolean intersects(double ax1, double ay1, double ax2, double ay2, double bx1, double by1, double bx2, double by2)
+    {
+        return ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1;
     }
 }

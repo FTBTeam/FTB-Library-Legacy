@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.reg;
 
-import gnu.trove.map.hash.TShortObjectHashMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 {
-    private final TShortObjectHashMap<K> IDToKey = new TShortObjectHashMap<>();
-    private final Map<K, Short> KeyToID = new HashMap<>();
+    private final TIntObjectHashMap<K> IDToKey = new TIntObjectHashMap<>();
+    private final Map<K, Integer> KeyToID = new HashMap<>();
 
     public void clear()
     {
@@ -32,7 +32,7 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
         return IDToKey.get(numID);
     }
 
-    public short getIDFromKey(K key)
+    public int getIDFromKey(K key)
     {
         return IDToKey.containsValue(key) ? KeyToID.get(key) : 0;
     }
@@ -43,19 +43,19 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 
         keys.forEach(key ->
         {
-            short i = (short) (IDToKey.size() + 1);
+            int i = IDToKey.size() + 1;
             KeyToID.put(key, i);
             IDToKey.put(i, key);
         });
     }
 
-    public short generateID(K key)
+    public int generateID(K key)
     {
-        short i = getIDFromKey(key);
+        int i = getIDFromKey(key);
 
         if(i == 0)
         {
-            i = (short) (IDToKey.size() + 1);
+            i = IDToKey.size() + 1;
             KeyToID.put(key, i);
             IDToKey.put(i, key);
         }
@@ -67,12 +67,12 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 
     public abstract K createKeyFromString(String s);
 
-    public void serialize(TShortObjectHashMap<String> map)
+    public void serialize(TIntObjectHashMap<String> map)
     {
         KeyToID.forEach((key, value) -> map.put(value, createStringFromKey(key)));
     }
 
-    public void deserialize(TShortObjectHashMap<String> map)
+    public void deserialize(TIntObjectHashMap<String> map)
     {
         map.forEachEntry((key, value) ->
         {
@@ -92,7 +92,7 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
     public NBTTagCompound serializeNBT()
     {
         NBTTagCompound nbt = new NBTTagCompound();
-        KeyToID.forEach((key, value) -> nbt.setShort(createStringFromKey(key), value));
+        KeyToID.forEach((key, value) -> nbt.setInteger(createStringFromKey(key), value));
         return nbt;
     }
 
@@ -103,7 +103,7 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 
         for(String key : nbt.getKeySet())
         {
-            short val = nbt.getShort(key);
+            int val = nbt.getInteger(key);
             K key1 = createKeyFromString(key);
             IDToKey.put(val, key1);
             KeyToID.put(key1, val);

@@ -108,12 +108,6 @@ public class InfoImageLine extends EmptyInfoPageLine
     {
         JsonObject o = new JsonObject();
         o.add("id", new JsonPrimitive("img"));
-
-        if(!imageProvider.isValid())
-        {
-            return o;
-        }
-
         o.add("image", new JsonPrimitive(imageProvider.getImage().toString()));
 
         if(imageScale != 1D)
@@ -178,15 +172,15 @@ public class InfoImageLine extends EmptyInfoPageLine
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             checkSize();
-            GuiHelper.render(imageProvider, getAX(), getAY(), getWidth(), getHeight());
+            imageProvider.draw(getAX(), getAY(), getWidth(), getHeight());
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> l)
+        public void addMouseOverText(IGui gui, List<String> list)
         {
             if(hover != null)
             {
-                l.addAll(hover);
+                list.addAll(hover);
             }
         }
 
@@ -196,7 +190,7 @@ public class InfoImageLine extends EmptyInfoPageLine
             if(clickEvent != null)
             {
                 GuiHelper.playClickSound();
-                InfoPageHelper.onClickEvent(clickEvent);
+                GuiHelper.onClickEvent(clickEvent);
             }
         }
     }

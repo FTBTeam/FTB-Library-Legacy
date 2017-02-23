@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerInfoEvent;
@@ -11,8 +12,11 @@ import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -48,11 +52,12 @@ import java.util.UUID;
  */
 public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {
+    private static final IConfigKey HIDE_TEAM_NOTIFICATION = new ConfigKey("ftbl.hide_team_notification", new PropertyBool(false));
     private static FakePlayer playerForStats;
 
     private final NBTDataStorage dataStorage;
     private String teamID = "";
-    private byte flags = 0;
+    private int flags = 0;
     private GameProfile gameProfile;
     private EntityPlayerMP entityPlayer;
     private NBTTagCompound playerNBT;
@@ -61,13 +66,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     {
         setProfile(p);
         dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
-    }
-
-    ForgePlayer(EntityPlayerMP ep)
-    {
-        setProfile(ep.getGameProfile());
-        dataStorage = null;
-        entityPlayer = ep;
     }
 
     @Override
@@ -275,7 +273,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
         if(flags != 0)
         {
-            nbt.setByte("Flags", flags);
+            nbt.setByte("Flags", (byte) flags);
         }
 
         if(teamID != null && !teamID.isEmpty())
@@ -295,8 +293,13 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     {
         entityPlayer = ep;
         playerNBT = null;
-        FTBLibStats.updateLastSeen(stats());
-        new MessageLogin(ep, this).sendTo(entityPlayer);
+
+        if(!isFake())
+        {
+            FTBLibStats.updateLastSeen(stats());
+            new MessageLogin(ep, this).sendTo(entityPlayer);
+        }
+
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
     }
 
@@ -335,6 +338,22 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     public IConfigTree getSettings()
     {
         IConfigTree tree = new ConfigTree();
+
+        tree.add(HIDE_TEAM_NOTIFICATION, new PropertyBool(false)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return Bits.getFlag(getFlags(), FLAG_HIDE_TEAM_NOTIFICATION);
+            }
+
+            @Override
+            public void setBoolean(boolean v)
+            {
+                setFlags(Bits.setFlag(getFlags(), FLAG_HIDE_TEAM_NOTIFICATION, v));
+            }
+        });
+
         MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, tree));
         return tree;
     }
@@ -363,13 +382,13 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     }
 
     @Override
-    public byte getFlags()
+    public int getFlags()
     {
         return flags;
     }
 
     @Override
-    public void setFlags(byte f)
+    public void setFlags(int f)
     {
         flags = f;
     }

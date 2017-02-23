@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
@@ -7,11 +8,17 @@ import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -58,47 +65,62 @@ public class FTBLibEventHandler
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
     {
-        if(e.player instanceof EntityPlayerMP)
+        if(!(e.player instanceof EntityPlayerMP) || Universe.INSTANCE == null)
         {
-            if(Universe.INSTANCE != null)
+            return;
+        }
+
+        EntityPlayerMP ep = (EntityPlayerMP) e.player;
+        ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
+        boolean firstLogin = p == null;
+
+        if(firstLogin)
+        {
+            p = new ForgePlayer(ep.getGameProfile());
+            Universe.INSTANCE.playerMap.put(p.getProfile().getId(), p);
+        }
+        else if(!p.getProfile().getName().equals(ep.getName()))
+        {
+            p.setProfile(ep.getGameProfile());
+        }
+
+        p.onLoggedIn(ep, firstLogin);
+
+        if(firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
+        {
+            String id = p.getProfile().getName().toLowerCase();
+
+            if(Universe.INSTANCE.getTeam(id) != null)
             {
-                EntityPlayerMP ep = (EntityPlayerMP) e.player;
-
-                ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
-
-                boolean firstLogin = p == null;
-
-                if(firstLogin)
-                {
-                    p = new ForgePlayer(ep.getGameProfile());
-                    Universe.INSTANCE.playerMap.put(p.getProfile().getId(), p);
-                }
-                else if(!p.getProfile().getName().equals(ep.getName()))
-                {
-                    p.setProfile(ep.getGameProfile());
-                }
-
-                p.onLoggedIn(ep, firstLogin);
-
-                if(firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
-                {
-                    String id = p.getProfile().getName().toLowerCase();
-
-                    if(Universe.INSTANCE.getTeam(id) != null)
-                    {
-                        id = LMStringUtils.fromUUID(p.getProfile().getId());
-                    }
-
-                    if(Universe.INSTANCE.getTeam(id) == null)
-                    {
-                        ForgeTeam team = new ForgeTeam(id);
-                        team.changeOwner(p);
-                        Universe.INSTANCE.teams.put(team.getName(), team);
-                        MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
-                        MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
-                    }
-                }
+                id = LMStringUtils.fromUUID(p.getProfile().getId());
             }
+
+            if(Universe.INSTANCE.getTeam(id) == null)
+            {
+                ForgeTeam team = new ForgeTeam(id);
+                team.changeOwner(p);
+                Universe.INSTANCE.teams.put(team.getName(), team);
+                MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
+                MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
+            }
+        }
+
+        if(!Bits.getFlag(p.getFlags(), IForgePlayer.FLAG_HIDE_TEAM_NOTIFICATION) && p.getTeam() == null)
+        {
+            ITextComponent c = new TextComponentString("You haven't joined or created a team yet! ");
+            ITextComponent b1 = new TextComponentString("[Click Here]");
+            b1.getStyle().setColor(TextFormatting.GOLD);
+            b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
+            b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("TeamsGUI")));
+            c.appendSibling(b1);
+            c.appendText(" to open TeamsGUI or ");
+            ITextComponent b2 = new TextComponentString("[Click Here]");
+            b2.getStyle().setColor(TextFormatting.GOLD);
+            b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification true"));
+            b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message")));
+            c.appendSibling(b2);
+            c.appendText(" to hide this message.");
+            ep.addChatMessage(c);
         }
     }
 

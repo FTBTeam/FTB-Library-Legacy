@@ -209,7 +209,8 @@ public class LMServerUtils
 
     public static boolean isOP(GameProfile p)
     {
-        return getServer().getPlayerList().canSendCommands(p);
+        MinecraftServer server = getServer();
+        return server == null || server.getPlayerList().canSendCommands(p);
     }
 
     public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)

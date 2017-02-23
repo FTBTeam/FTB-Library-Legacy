@@ -69,12 +69,12 @@ public class ItemListButtonLM extends ButtonLM
         {
             try
             {
-                GuiHelper.renderGuiItem(renderItem, getStack(-1), ax, ay, true);
+                GuiHelper.drawItem(renderItem, getStack(-1), ax, ay, true);
             }
             catch(Exception ex)
             {
                 GlStateManager.popMatrix();
-                GuiHelper.renderGuiItem(renderItem, LMInvUtils.ERROR_ITEM, ax, ay, true);
+                GuiHelper.drawItem(renderItem, LMInvUtils.ERROR_ITEM, ax, ay, true);
             }
         }
         else
@@ -83,19 +83,19 @@ public class ItemListButtonLM extends ButtonLM
             {
                 try
                 {
-                    GuiHelper.renderGuiItem(renderItem, getStack(i), ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, true);
+                    GuiHelper.drawItem(renderItem, getStack(i), ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, true);
                 }
                 catch(Exception ex)
                 {
                     GlStateManager.popMatrix();
-                    GuiHelper.renderGuiItem(renderItem, LMInvUtils.ERROR_ITEM, ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, true);
+                    GuiHelper.drawItem(renderItem, LMInvUtils.ERROR_ITEM, ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, true);
                 }
             }
         }
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> list)
     {
         ItemStack stack;
 
@@ -111,7 +111,7 @@ public class ItemListButtonLM extends ButtonLM
 
             int index = ((mx / 16) % cols + (my / 16) * cols);
 
-            if(index < 0 || index >= list.size())
+            if(index < 0 || index >= this.list.size())
             {
                 return;
             }
@@ -123,8 +123,8 @@ public class ItemListButtonLM extends ButtonLM
             stack = getStack(-1);
         }
 
-        l.add(stack.getDisplayName());
-        stack.getItem().addInformation(stack, Minecraft.getMinecraft().thePlayer, l, false);
+        list.add(stack.getDisplayName());
+        stack.getItem().addInformation(stack, Minecraft.getMinecraft().thePlayer, list, false);
     }
 
     @Override

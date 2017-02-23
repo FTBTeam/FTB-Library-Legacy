@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.client.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -8,6 +9,8 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;
@@ -72,6 +75,17 @@ public class LMColorUtils
             DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = GuiUtils.getColorCode(c, false);
         }
     }
+
+    @SideOnly(Side.CLIENT)
+    public static final Color4I GL_COLOR = new Color4I()
+    {
+        @Override
+        public Color4I set(int r, int g, int b, int a)
+        {
+            GlStateManager.color(r / 255F, g / 255F, b / 255F, a / 255F);
+            return this;
+        }
+    };
 
     public static int getColorFromID(byte col)
     {
@@ -156,16 +170,6 @@ public class LMColorUtils
     public static int getRGBA(int c, int a)
     {
         return getRGBA(getRed(c), getGreen(c), getBlue(c), a);
-    }
-
-    public static void setGLColor(int c, int a)
-    {
-        GlStateManager.color(getRedF(c), getGreenF(c), getBlueF(c), a / 255F);
-    }
-
-    public static void setGLColor(int c)
-    {
-        GlStateManager.color(getRedF(c), getGreenF(c), getBlueF(c), 1F);
     }
 
     public static ByteBuffer toByteBuffer(int pixels[], boolean alpha)

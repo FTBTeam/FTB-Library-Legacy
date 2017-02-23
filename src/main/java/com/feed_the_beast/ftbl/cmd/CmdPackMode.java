@@ -46,7 +46,7 @@ public class CmdPackMode extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             checkArgs(args, 1, "<modeID>");
 
@@ -68,10 +68,10 @@ public class CmdPackMode extends CommandTreeBase
             {
                 c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
                 c.getStyle().setColor(TextFormatting.GREEN);
-                FTBLibIntegrationInternal.API.reload(ics, EnumReloadType.MODE_CHANGED);
+                FTBLibIntegrationInternal.API.reload(sender, EnumReloadType.MODE_CHANGED);
             }
 
-            ics.addChatMessage(c);
+            sender.addChatMessage(c);
         }
     }
 
@@ -90,11 +90,11 @@ public class CmdPackMode extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedServerData.INSTANCE.getPackMode().getName());
             c.getStyle().setColor(TextFormatting.AQUA);
-            ics.addChatMessage(c);
+            sender.addChatMessage(c);
         }
     }
 
@@ -113,11 +113,11 @@ public class CmdPackMode extends CommandTreeBase
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
             ITextComponent c = FTBLibLang.MODE_LIST.textComponent(LMStringUtils.strip(PackModes.INSTANCE.getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
-            ics.addChatMessage(c);
+            sender.addChatMessage(c);
         }
     }
 

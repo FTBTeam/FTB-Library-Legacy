@@ -45,21 +45,6 @@ public class ModelBuilder
         TRANSFORM_MAP = Maps.immutableEnumMap(builder.build());
     }
 
-    public static ModelRotation getRotation(EnumFacing facing)
-    {
-        switch(facing)
-        {
-            case SOUTH:
-                return ModelRotation.X0_Y180;
-            case EAST:
-                return ModelRotation.X0_Y90;
-            case WEST:
-                return ModelRotation.X0_Y270;
-            default:
-                return ModelRotation.X0_Y0;
-        }
-    }
-
     private List<BakedQuad> quads;
     private ModelRotation rotation;
 
@@ -95,7 +80,7 @@ public class ModelBuilder
         }
     }
 
-    public float[] getUV(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face)
+    public static float[] getUV(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face)
     {
         switch(face)
         {
@@ -118,7 +103,7 @@ public class ModelBuilder
         if(sprite != null)
         {
             float[] uv = getUV(fromX, fromY, fromZ, toX, toY, toZ, face);
-            quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, true, true));
+            quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, false, true));
         }
     }
 }

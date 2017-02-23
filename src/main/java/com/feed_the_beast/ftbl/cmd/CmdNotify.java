@@ -45,10 +45,10 @@ public class CmdNotify extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 2, "<player> <id>");
-        EntityPlayerMP player = getPlayer(server, ics, args[0]);
+        EntityPlayerMP player = getPlayer(server, sender, args[0]);
 
         if(args[1].startsWith("{") && args[1].endsWith("}"))
         {

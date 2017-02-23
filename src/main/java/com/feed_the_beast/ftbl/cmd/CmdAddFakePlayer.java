@@ -37,7 +37,7 @@ public class CmdAddFakePlayer extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 2, "<uuid> <name>");
 
@@ -55,6 +55,6 @@ public class CmdAddFakePlayer extends CommandLM
         ForgePlayer p = new ForgePlayer(new GameProfile(id, args[1]));
         Universe.INSTANCE.playerMap.put(p.getProfile().getId(), p);
 
-        ics.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
+        sender.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
     }
 }

@@ -28,16 +28,16 @@ public class CmdSetItemName extends CommandLM
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender ics, String[] args) throws CommandException
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<player>");
-        EntityPlayerMP ep = getCommandSenderAsPlayer(ics);
+        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 
         if(ep.inventory.getCurrentItem() != null)
         {
             ep.inventory.getCurrentItem().setStackDisplayName(String.join("", args));
             ep.openContainer.detectAndSendChanges();
-            ics.addChatMessage(new TextComponentString("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
+            sender.addChatMessage(new TextComponentString("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
         }
     }
 }

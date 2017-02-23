@@ -17,17 +17,15 @@ import java.util.List;
  */
 public class ButtonInfoPage extends ButtonLM
 {
-    public final GuiInfo guiInfo;
     public final InfoPage page;
     public String hover;
     public IPageIconRenderer iconRenderer;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(IGui g, InfoPage p, @Nullable IPageIconRenderer t)
+    public ButtonInfoPage(GuiInfo g, InfoPage p, @Nullable IPageIconRenderer t)
     {
         super(0, 0, 0, 0);
-        guiInfo = ((GuiInfo) g);
-        setWidth(guiInfo.panelWidth - 36);
+        setWidth(g.panelWidth - 36);
         setHeight(t == null ? 13 : 18);
         page = p;
         iconRenderer = t;
@@ -38,14 +36,14 @@ public class ButtonInfoPage extends ButtonLM
     public void onClicked(IGui gui, IMouseButton button)
     {
         GuiHelper.playClickSound();
-        guiInfo.setSelectedPage(page);
+        ((GuiInfo) gui).setSelectedPage(page);
     }
 
-    public void updateTitle(IGui gui)
+    public void updateTitle(GuiInfo gui)
     {
         ITextComponent titleC = page.getDisplayName().createCopy();
 
-        if(guiInfo.getSelectedPage() == page)
+        if(gui.getSelectedPage() == page)
         {
             titleC.getStyle().setBold(true);
         }
@@ -58,25 +56,19 @@ public class ButtonInfoPage extends ButtonLM
         setTitle(titleC.getFormattedText());
         hover = null;
 
-        if(guiInfo.getFont().getStringWidth(getTitle(gui)) > getWidth())
+        if(gui.getFont().getStringWidth(getTitle(gui)) > getWidth())
         {
             hover = page.getDisplayName().getFormattedText();
         }
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> list)
     {
         if(hover != null)
         {
-            l.add(hover);
+            list.add(hover);
         }
-    }
-
-    @Override
-    public boolean shouldRender(IGui gui)
-    {
-        return getParentPanel().isInside(this);
     }
 
     @Override
@@ -86,7 +78,7 @@ public class ButtonInfoPage extends ButtonLM
 
         if(prevMouseOver != mouseOver)
         {
-            updateTitle(gui);
+            updateTitle((GuiInfo) gui);
             prevMouseOver = mouseOver;
         }
 
@@ -97,12 +89,12 @@ public class ButtonInfoPage extends ButtonLM
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             iconRenderer.renderIcon(gui, this, ax + 1, ay + 1);
-            guiInfo.getFont().drawString(getTitle(gui), ax + 19, ay + 6, guiInfo.colorText);
+            gui.getFont().drawString(getTitle(gui), ax + 19, ay + 6, gui.getTextColor());
         }
         else
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            guiInfo.getFont().drawString(getTitle(gui), ax + 1, ay + 1, guiInfo.colorText);
+            gui.getFont().drawString(getTitle(gui), ax + 1, ay + 1, gui.getTextColor());
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

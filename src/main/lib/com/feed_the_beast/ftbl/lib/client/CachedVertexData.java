@@ -5,6 +5,8 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -16,15 +18,32 @@ public class CachedVertexData
     private final VertexFormat format;
     private final List<CachedVertex> list;
     private final boolean hasTex, hasColor, hasNormal;
+    public final Color4I color;
 
-    public CachedVertexData(int m, VertexFormat f)
+    private CachedVertexData(int m, VertexFormat f, Collection<CachedVertex> oldList)
     {
         mode = m;
         format = f;
-        list = new ArrayList<>();
+        list = new ArrayList<>(oldList);
         hasTex = f.hasUvOffset(0);
         hasColor = f.hasColor();
         hasNormal = f.hasNormal();
+        color = new Color4I();
+    }
+
+    public CachedVertexData(int m, VertexFormat f)
+    {
+        this(m, f, Collections.emptyList());
+    }
+
+    public void reset()
+    {
+        list.clear();
+    }
+
+    public CachedVertexData copy()
+    {
+        return new CachedVertexData(mode, format, list);
     }
 
     public CachedVertex pos(double x, double y, double z)
@@ -57,7 +76,7 @@ public class CachedVertexData
     public class CachedVertex
     {
         private double x, y, z, u, v;
-        private int r, g, b, a;
+        private int r = color.red(), g = color.green(), b = color.blue(), a = color.alpha();
         private float nx, ny, nz;
 
         private CachedVertex(double _x, double _y, double _z)

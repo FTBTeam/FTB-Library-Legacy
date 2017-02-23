@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.block;
 
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
+import com.feed_the_beast.ftbl.lib.tile.TileLM;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -29,7 +30,7 @@ public abstract class BlockLM extends Block implements IBlockWithItem
     @Override
     public ItemBlock createItemBlock()
     {
-        return new ItemBlockLM(this, true);
+        return new ItemBlockLM(this, false);
     }
 
     @Override
@@ -62,7 +63,11 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         {
             TileEntity te = world.getTileEntity(pos);
 
-            if(te != null)
+            if(te instanceof TileLM)
+            {
+                ((TileLM) te).onNeighborChange();
+            }
+            else if(te != null)
             {
                 te.updateContainingBlockInfo();
             }

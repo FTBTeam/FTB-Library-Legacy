@@ -71,6 +71,11 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+        if(wrappedGui.fixUnicode)
+        {
+            GuiHelper.setFixUnicode(mc, true);
+        }
+
         wrappedGui.updateGui(mouseX, mouseY, partialTicks);
 
         if(wrappedGui.drawDefaultBackground())
@@ -84,6 +89,11 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
         wrappedGui.renderWidgets();
         GuiLM.setupDrawing();
         wrappedGui.drawForeground();
+
+        if(wrappedGui.fixUnicode)
+        {
+            GuiHelper.setFixUnicode(mc, false);
+        }
     }
 
     @Override

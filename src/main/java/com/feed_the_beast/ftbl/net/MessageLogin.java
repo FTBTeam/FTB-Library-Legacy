@@ -13,17 +13,18 @@ import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
     {
         flags = 0;
-        flags = Bits.setFlag(flags, IS_OP, LMServerUtils.isOP(player.getGameProfile()));
+        flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
         currentMode = SharedServerData.INSTANCE.getPackMode().getName();
         universeID = SharedServerData.INSTANCE.getUniverseID();
         notifications = SharedServerData.INSTANCE.notifications;

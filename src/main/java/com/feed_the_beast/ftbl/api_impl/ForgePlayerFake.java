@@ -11,9 +11,9 @@ import java.util.List;
  */
 public final class ForgePlayerFake extends ForgePlayer
 {
-    public ForgePlayerFake(FakePlayer p)
+    ForgePlayerFake(FakePlayer p)
     {
-        super(p);
+        super(p.getGameProfile());
     }
 
     @Override

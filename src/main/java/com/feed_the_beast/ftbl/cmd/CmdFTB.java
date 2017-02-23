@@ -17,7 +17,7 @@ public class CmdFTB extends CommandTreeBase
     {
         addSubcommand(new CmdReload());
         addSubcommand(new CmdReloadClient());
-        addSubcommand(new CmdMyServerSettings());
+        addSubcommand(new CmdMySettings());
         addSubcommand(new CmdTeam());
         addSubcommand(new CmdPackMode());
         addSubcommand(new CmdNotify());

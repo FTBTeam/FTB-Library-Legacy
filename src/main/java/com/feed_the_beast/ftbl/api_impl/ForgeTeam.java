@@ -19,12 +19,11 @@ import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
-import gnu.trove.TShortCollection;
-import gnu.trove.set.hash.TShortHashSet;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,8 +31,10 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     private String title;
     private String desc;
     private byte flags;
-    private Map<UUID, TShortCollection> playerPermissions;
+    private Map<UUID, Collection<String>> playerPermissions;
 
     public ForgeTeam(String id)
     {
@@ -96,19 +97,18 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         {
             NBTTagCompound nbt1 = new NBTTagCompound();
 
-            for(Map.Entry<UUID, TShortCollection> entry : playerPermissions.entrySet())
+            for(Map.Entry<UUID, Collection<String>> entry : playerPermissions.entrySet())
             {
                 if(!entry.getValue().isEmpty())
                 {
-                    short[] as = entry.getValue().toArray();
-                    int[] ai = new int[as.length];
+                    NBTTagList list = new NBTTagList();
 
-                    for(int i = 0; i < as.length; i++)
+                    for(String s : entry.getValue())
                     {
-                        ai[i] = as[i];
+                        list.appendTag(new NBTTagString(s));
                     }
 
-                    nbt1.setIntArray(LMStringUtils.fromUUID(entry.getKey()), ai);
+                    nbt1.setTag(LMStringUtils.fromUUID(entry.getKey()), list);
                 }
             }
 
@@ -152,15 +152,15 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
                 if(id != null)
                 {
-                    int[] ai = nbt1.getIntArray(s);
-                    TShortHashSet set = new TShortHashSet(ai.length);
+                    NBTTagList list = nbt1.getTagList(s, Constants.NBT.TAG_STRING);
+                    Collection<String> c = new HashSet<>(list.tagCount());
 
-                    for(int i : ai)
+                    for(int i = 0; i < list.tagCount(); i++)
                     {
-                        set.add((short) i);
+                        c.add(list.getStringTagAt(i));
                     }
 
-                    playerPermissions.put(id, set);
+                    playerPermissions.put(id, c);
                 }
             }
         }
@@ -174,7 +174,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 UUID id = LMStringUtils.fromString(list.getStringTagAt(i));
                 if(id != null)
                 {
-                    setHasPermission(id, FTBLibTeamPermissions.CAN_JOIN, true);
+                    setHasPermission(id, FTBLibPerms.TEAM_CAN_JOIN, true);
                 }
             }
         }
@@ -215,6 +215,29 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     }
 
     @Override
+    public EnumTeamStatus getHighestStatus(IForgePlayer player)
+    {
+        if(owner.equalsPlayer(player))
+        {
+            return EnumTeamStatus.OWNER;
+        }
+        else if(hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_IS_ENEMY))
+        {
+            return EnumTeamStatus.ENEMY;
+        }
+        else if(player.getTeam() != null && player.getTeam().equals(this))
+        {
+            return EnumTeamStatus.MEMBER;
+        }
+        else if(hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_IS_ALLY))
+        {
+            return EnumTeamStatus.ALLY;
+        }
+
+        return EnumTeamStatus.NONE;
+    }
+
+    @Override
     public boolean hasStatus(IForgePlayer player, EnumTeamStatus status)
     {
         IForgeTeam team = player.getTeam();
@@ -222,13 +245,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         switch(status)
         {
             case ENEMY:
-                return hasPermission(player.getProfile().getId(), FTBLibTeamPermissions.IS_ENEMY);
+                return hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_IS_ENEMY);
             case OWNER:
                 return owner.equalsPlayer(player);
             case MEMBER:
                 return owner.equalsPlayer(player) || (team != null && team.equals(this));
             case ALLY:
-                return owner.equalsPlayer(player) || (team != null && (team.equals(this) || hasPermission(player.getProfile().getId(), FTBLibTeamPermissions.IS_ALLY)));
+                return owner.equalsPlayer(player) || (team != null && (team.equals(this) || hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_IS_ALLY)));
             default:
                 return false;
         }
@@ -251,11 +274,11 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public boolean addPlayer(IForgePlayer player)
     {
-        if(!hasStatus(player, EnumTeamStatus.MEMBER) && hasPermission(player.getProfile().getId(), FTBLibTeamPermissions.CAN_JOIN))
+        if(!hasStatus(player, EnumTeamStatus.MEMBER) && hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_CAN_JOIN))
         {
             player.setTeamID(getName());
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
-            setHasPermission(player.getProfile().getId(), FTBLibTeamPermissions.CAN_JOIN, false);
+            setHasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_CAN_JOIN, false);
             return true;
         }
 
@@ -353,14 +376,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         {
             return true;
         }
-
-        if(playerPermissions == null)
+        else if(playerPermissions == null)
         {
             return false;
         }
 
-        TShortCollection perms = playerPermissions.get(playerID);
-        return perms != null && perms.contains(Universe.INSTANCE.teamPlayerPermisssionIDs.generateID(permission));
+        Collection<String> perms = playerPermissions.get(playerID);
+        return perms != null && perms.contains(permission);
     }
 
     @Override
@@ -373,34 +395,42 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
                 playerPermissions = new HashMap<>();
             }
 
-            TShortCollection permissions = playerPermissions.get(playerID);
+            Collection<String> permissions = playerPermissions.get(playerID);
 
             if(permissions == null)
             {
-                permissions = new TShortHashSet();
+                permissions = new HashSet<>();
                 playerPermissions.put(playerID, permissions);
             }
 
-            short id = Universe.INSTANCE.teamPlayerPermisssionIDs.generateID(permission);
-            return id != 0 && permissions.add(id);
+            return permissions.add(permission);
         }
         else if(playerPermissions != null)
         {
-            short id = Universe.INSTANCE.teamPlayerPermisssionIDs.getIDFromKey(permission);
-
-            if(id != 0)
-            {
-                return false;
-            }
-
-            TShortCollection permissions = playerPermissions.get(playerID);
+            Collection<String> permissions = playerPermissions.get(playerID);
 
             if(permissions != null)
             {
-                return permissions.remove(id);
+                return permissions.remove(permission);
             }
         }
 
         return false;
+    }
+
+    @Override
+    public Collection<String> getPermissions(UUID playerID, boolean onlyVisible)
+    {
+        Collection<String> c = new ArrayList<>();
+
+        for(String permission : (onlyVisible ? FTBLibModCommon.VISIBLE_TEAM_PLAYER_PERMISSIONS : FTBLibModCommon.TEAM_PLAYER_PERMISSIONS))
+        {
+            if(hasPermission(playerID, permission))
+            {
+                c.add(permission);
+            }
+        }
+
+        return c;
     }
 }

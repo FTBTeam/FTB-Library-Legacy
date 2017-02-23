@@ -78,20 +78,40 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
     {
+        if(wrappedGui.fixUnicode)
+        {
+            GuiHelper.setFixUnicode(mc, true);
+        }
+
         GuiLM.setupDrawing();
         wrappedGui.drawBackground();
         GuiLM.setupDrawing();
         wrappedGui.renderWidgets();
+
+        if(wrappedGui.fixUnicode)
+        {
+            GuiHelper.setFixUnicode(mc, false);
+        }
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mx, int my)
     {
+        if(wrappedGui.fixUnicode)
+        {
+            GuiHelper.setFixUnicode(mc, true);
+        }
+
         GlStateManager.pushMatrix();
         GlStateManager.translate(-guiLeft, -guiTop, 0D);
         GuiLM.setupDrawing();
         wrappedGui.drawForeground();
         GlStateManager.popMatrix();
+
+        if(wrappedGui.fixUnicode)
+        {
+            GuiHelper.setFixUnicode(mc, false);
+        }
     }
 
     @Override

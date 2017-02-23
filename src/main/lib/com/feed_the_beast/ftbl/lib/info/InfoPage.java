@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.RemoveFilter;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMMapUtils;
 import com.google.gson.JsonArray;
@@ -279,6 +280,6 @@ public class InfoPage extends FinalIDObject
 
     public IWidget createWidget(IGui gui)
     {
-        return new ButtonInfoPage(gui, this, pageIcon);
+        return new ButtonInfoPage((GuiInfo) gui, this, pageIcon);
     }
 }

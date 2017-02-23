@@ -1,18 +1,19 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import net.minecraft.client.renderer.GlStateManager;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class WidgetLM implements IWidget
 {
     public int posX, posY;
     private int width, height;
-    private IPanel parentPanel;
+    private IPanel parentPanel = PanelNull.INSTANCE;
 
     public WidgetLM(int x, int y, int w, int h)
     {
@@ -71,37 +72,68 @@ public class WidgetLM implements IWidget
     }
 
     @Override
-    @Nullable
     public IPanel getParentPanel()
     {
         return parentPanel;
     }
 
     @Override
-    public void setParentPanel(@Nullable IPanel p)
+    public void setParentPanel(IPanel p)
     {
         parentPanel = p;
     }
 
-    public final void render(IImageProvider icon)
+    public int renderTitleInCenter()
     {
-        GuiHelper.render(icon, getAX(), getAY(), getWidth(), getHeight());
+        return 0;
+    }
+
+    public String getTitle(IGui gui)
+    {
+        return "";
+    }
+
+    public IDrawableObject getIcon(IGui gui)
+    {
+        return ImageProvider.NULL;
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> list)
     {
+        int col = renderTitleInCenter();
+
+        if(col != 0)
+        {
+            return;
+        }
+
         String t = getTitle(gui);
 
-        if(t != null && !t.isEmpty())
+        if(!t.isEmpty())
         {
-            l.add(t);
+            list.add(t);
         }
     }
 
-    @Nullable
-    public String getTitle(IGui gui)
+    @Override
+    public void renderWidget(IGui gui)
     {
-        return null;
+        int col = renderTitleInCenter();
+
+        if(col != 0)
+        {
+            String t = getTitle(gui);
+
+            if(!t.isEmpty())
+            {
+                GuiHelper.drawCenteredString(gui.getFont(), t, getAX() + getWidth() / 2, getAY() + getHeight() / 2, col);
+                GlStateManager.color(1F, 1F, 1F, 1F);
+            }
+        }
+        else
+        {
+            getIcon(gui).draw(this);
+        }
     }
 }

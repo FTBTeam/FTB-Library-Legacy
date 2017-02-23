@@ -22,7 +22,7 @@ public class GuiSelectors
             @Override
             protected void setValue(IConfigValue value, String text)
             {
-                value.fromJson(LMJsonUtils.fromJson(text));
+                value.fromJson(LMJsonUtils.fromJson(LMJsonUtils.fixJsonString(text)));
             }
         }.openGui();
     }

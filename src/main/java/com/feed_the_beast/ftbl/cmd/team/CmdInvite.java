@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -45,7 +45,7 @@ public class CmdInvite extends CommandLM
         {
             throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
-        else if(!team.hasPermission(p.getProfile().getId(), FTBLibTeamPermissions.MANAGE_MEMBERS))
+        else if(!team.hasPermission(p.getProfile().getId(), FTBLibPerms.TEAM_MANAGE_MEMBERS))
         {
             throw FTBLibLang.COMMAND_PERMISSION.commandError();
         }
@@ -54,7 +54,7 @@ public class CmdInvite extends CommandLM
 
         IForgePlayer p1 = getForgePlayer(args[0]);
 
-        if(team.setHasPermission(p1.getProfile().getId(), FTBLibTeamPermissions.CAN_JOIN, true) && !team.hasStatus(p1, EnumTeamStatus.MEMBER))
+        if(team.setHasPermission(p1.getProfile().getId(), FTBLibPerms.TEAM_CAN_JOIN, true) && !team.hasStatus(p1, EnumTeamStatus.MEMBER))
         {
             FTBLibLang.TEAM_INVITED.printChat(sender, p1.getProfile().getName(), team.getName());
 

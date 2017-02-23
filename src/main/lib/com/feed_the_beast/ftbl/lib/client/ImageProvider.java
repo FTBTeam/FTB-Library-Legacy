@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
+import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.google.common.base.Objects;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -16,9 +17,15 @@ public class ImageProvider implements IImageProvider
     public static final ImageProvider NULL = new ImageProvider(new ResourceLocation("textures/misc/unknown_pack.png"))
     {
         @Override
-        public boolean isValid()
+        @SideOnly(Side.CLIENT)
+        public void draw(int x, int y, int w, int h)
         {
-            return false;
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void draw(IWidget widget)
+        {
         }
     };
 
@@ -29,12 +36,6 @@ public class ImageProvider implements IImageProvider
     {
         texture = tex;
         url = (texture.getResourceDomain().equals("http") || texture.getResourceDomain().equals("https")) ? texture.toString() : "";
-    }
-
-    @Override
-    public boolean isValid()
-    {
-        return true;
     }
 
     @Override

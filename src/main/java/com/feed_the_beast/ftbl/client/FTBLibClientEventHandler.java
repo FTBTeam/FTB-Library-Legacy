@@ -189,12 +189,13 @@ public class FTBLibClientEventHandler
     //public void renderGui(RenderGameOverlayEvent event)
     public void renderGui(TickEvent.RenderTickEvent event)
     {
+        Minecraft mc = Minecraft.getMinecraft();
         //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
-        if(event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().theWorld != null)
+        if(event.phase == TickEvent.Phase.END && mc.theWorld != null && !mc.gameSettings.hideGUI)
         {
             if(ClientNotifications.shouldRenderTemp())
             {
-                ClientNotifications.renderTemp(new ScaledResolution(Minecraft.getMinecraft()));
+                ClientNotifications.renderTemp(new ScaledResolution(mc));
             }
         }
     }

@@ -76,7 +76,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 
     NBTTagCompound getPlayerNBT();
 
-    byte getFlags();
+    int getFlags();
 
-    void setFlags(byte flags);
+    void setFlags(int flags);
 }

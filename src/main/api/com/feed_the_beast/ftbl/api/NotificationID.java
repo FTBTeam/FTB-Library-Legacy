@@ -43,7 +43,7 @@ public final class NotificationID
 
     public boolean equalsID(NotificationID id)
     {
-        return (var == id.var || id.var == -1) && ID.equals(id.ID);
+        return ID.equals(id.ID);
     }
 
     public boolean equals(Object o)

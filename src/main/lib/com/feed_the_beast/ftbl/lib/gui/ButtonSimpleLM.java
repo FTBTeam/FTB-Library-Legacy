@@ -14,7 +14,7 @@ public abstract class ButtonSimpleLM extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> l)
+    public void addMouseOverText(IGui gui, List<String> list)
     {
     }
 
@@ -33,14 +33,14 @@ public abstract class ButtonSimpleLM extends ButtonLM
     {
         int ax = getAX();
         int ay = getAY();
-        LMColorUtils.setGLColor(getButtonColor(gui, gui.isMouseOver(this)));
+        LMColorUtils.GL_COLOR.set(getButtonColor(gui, gui.isMouseOver(this)));
         GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
         GlStateManager.color(1F, 1F, 1F, 1F);
         String title = getTitle(gui);
 
         if(title != null)
         {
-            gui.getFont().drawStringWithShadow(title, ax + (getWidth() - gui.getFont().getStringWidth(title)) / 2, ay + (getHeight() - gui.getFont().FONT_HEIGHT) / 2, getTextColor(gui));
+            gui.getFont().drawString(title, ax + (getWidth() - gui.getFont().getStringWidth(title)) / 2, ay + (getHeight() - gui.getFont().FONT_HEIGHT) / 2, getTextColor(gui));
         }
     }
 }

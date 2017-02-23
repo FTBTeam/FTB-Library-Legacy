@@ -27,6 +27,8 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     EnumTeamColor getColor();
 
+    EnumTeamStatus getHighestStatus(IForgePlayer player);
+
     boolean hasStatus(IForgePlayer player, EnumTeamStatus status);
 
     Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
@@ -57,4 +59,6 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
     boolean hasPermission(UUID playerID, String permission);
 
     boolean setHasPermission(UUID playerID, String permission, boolean val);
+
+    Collection<String> getPermissions(UUID playerID, boolean onlyVisible);
 }

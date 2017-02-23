@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -18,6 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
@@ -54,6 +56,12 @@ public class FTBLibMod
 
         PROXY.preInit();
         PROXY.reloadConfig(true);
+    }
+
+    @Mod.EventHandler
+    public void onInit(FMLInitializationEvent event)
+    {
+        FTBLibPerms.init();
     }
 
     @Mod.EventHandler

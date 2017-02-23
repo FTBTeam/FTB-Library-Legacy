@@ -5,43 +5,51 @@ import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 /**
  * Created by LatvianModder on 20.06.2016.
  */
-public final class Color4I
+public class Color4I
 {
-    public int red, green, blue, alpha;
+    private int red = 255, green = 255, blue = 255, alpha = 255;
 
-    public Color4I()
-    {
-        this(255, 255, 255, 255);
-    }
-
-    public Color4I(int r, int g, int b, int a)
-    {
-        set(r, g, b, a);
-    }
-
-    public void set(int r, int g, int b, int a)
+    public Color4I set(int r, int g, int b, int a)
     {
         red = r;
         green = g;
         blue = b;
         alpha = a;
+        return this;
     }
 
-    public void set(Color4I col)
+    public final Color4I set(Color4I col)
     {
-        set(col.red, col.green, col.blue, col.alpha);
+        return set(col.red, col.green, col.blue, col.alpha);
     }
 
-    public void set(int col)
+    public final Color4I set(int col, int a)
     {
-        set(col, LMColorUtils.getAlpha(col));
+        return set(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), a);
     }
 
-    public void set(int col, int a)
+    public final Color4I set(int col)
     {
-        red = LMColorUtils.getRed(col);
-        green = LMColorUtils.getGreen(col);
-        blue = LMColorUtils.getBlue(col);
-        alpha = a;
+        return set(col, LMColorUtils.getAlpha(col));
+    }
+
+    public final int red()
+    {
+        return red;
+    }
+
+    public final int green()
+    {
+        return green;
+    }
+
+    public final int blue()
+    {
+        return blue;
+    }
+
+    public final int alpha()
+    {
+        return alpha;
     }
 }

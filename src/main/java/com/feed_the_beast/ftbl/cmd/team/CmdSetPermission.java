@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibTeamPermissions;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -64,7 +64,7 @@ public class CmdSetPermission extends CommandLM
         {
             throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
-        else if(!team.hasPermission(p.getProfile().getId(), FTBLibTeamPermissions.EDIT_PERMISSIONS))
+        else if(!team.hasPermission(p.getProfile().getId(), FTBLibPerms.TEAM_EDIT_PERMISSIONS))
         {
             throw FTBLibLang.COMMAND_PERMISSION.commandError();
         }
