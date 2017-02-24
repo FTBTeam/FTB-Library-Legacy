@@ -345,9 +345,39 @@ public class GuiHelper
         }
     }
 
+    //TODO: Improve me to fix occasional offset
     public static List<PositionedTextData> createDataFrom(ITextComponent component, FontRenderer font, int width)
     {
         List<PositionedTextData> list = new ArrayList<>();
+
+        int line = 0;
+        int currentWidth = 0;
+
+        for(ITextComponent t : component.createCopy())
+        {
+            String text = t.getUnformattedComponentText();
+            int textWidth = font.getStringWidth(text);
+
+            while(textWidth > 0)
+            {
+                int w = textWidth;
+                if(w > width - currentWidth)
+                {
+                    w = width - currentWidth;
+                }
+
+                list.add(new PositionedTextData(currentWidth, line * 10, w, 10, t.getStyle()));
+
+                currentWidth += w;
+                textWidth -= w;
+
+                if(currentWidth >= width)
+                {
+                    currentWidth = 0;
+                    line++;
+                }
+            }
+        }
 
         return list;
     }

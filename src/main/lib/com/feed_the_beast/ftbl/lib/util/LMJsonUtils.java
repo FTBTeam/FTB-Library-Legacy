@@ -201,7 +201,7 @@ public class LMJsonUtils
 
     public static JsonElement serializeTextComponent(ITextComponent c)
     {
-        if(c instanceof TextComponentString && c.getStyle().isEmpty())
+        if(c instanceof TextComponentString && c.getStyle().isEmpty() && c.getSiblings().isEmpty())
         {
             return new JsonPrimitive(((TextComponentString) c).getText());
         }

@@ -8,8 +8,6 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.client.ColoredObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -230,8 +228,6 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
         scroll = new PanelScrollBar(-16, 20, 16, 0, 10, configPanel);
         scroll.oneElementSize = 16;
-        scroll.background = new ColoredObject(ImageProvider.NULL, 0x99333333);
-        scroll.slider = new ColoredObject(ImageProvider.NULL, 0x99666666);
     }
 
     @Override

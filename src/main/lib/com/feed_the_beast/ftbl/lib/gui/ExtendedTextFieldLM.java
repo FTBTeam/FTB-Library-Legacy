@@ -31,7 +31,7 @@ public class ExtendedTextFieldLM extends TextFieldLM
 
         for(GuiHelper.PositionedTextData data : textData)
         {
-            if(gui.isMouseOver(data.posX + ax, data.posY + ay, 0, 0))
+            if(gui.isMouseOver(data.posX + ax, data.posY + ay, data.width, data.height))
             {
                 return data;
             }

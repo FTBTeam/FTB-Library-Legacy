@@ -2,12 +2,17 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,6 +26,7 @@ public class PlayerInst
     public final long lastSeen;
     public final String displayName;
     public EnumTeamStatus status;
+    public Map<String, Boolean> permissions;
 
     private PlayerInst(String name)
     {
@@ -28,14 +34,21 @@ public class PlayerInst
         lastSeen = 0;
         displayName = name;
         status = EnumTeamStatus.NONE;
+        permissions = Collections.emptyMap();
     }
 
-    PlayerInst(IForgePlayer player, EnumTeamStatus s)
+    PlayerInst(IForgeTeam team, IForgePlayer player, EnumTeamStatus s, Collection<String> perms)
     {
         profile = player.getProfile();
         lastSeen = player.isOnline() ? 0L : (System.currentTimeMillis() - FTBLibStats.getLastSeen(player.stats(), false));
         displayName = player.getProfile().getName();
         status = s;
+        permissions = new HashMap<>(perms.size());
+
+        for(String id : perms)
+        {
+            permissions.put(id, team.hasPermission(player.getProfile().getId(), id));
+        }
     }
 
     PlayerInst(ByteBuf io)

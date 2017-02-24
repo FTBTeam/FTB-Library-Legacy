@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
@@ -8,6 +9,7 @@ import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -44,6 +46,20 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     private static final TextureCoords TEX_BG_PN = TextureCoords.fromCoords(TEXTURE, 16, 0, 13, 13, 64, 64);
     private static final TextureCoords TEX_BG_NP = TextureCoords.fromCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
     private static final TextureCoords TEX_BG_PP = TextureCoords.fromCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
+
+    public static final IDrawableObject FILLING = (x, y, w, h) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8);
+    public static final IDrawableObject BORDERS = (x, y, w, h) ->
+    {
+        TEX_BG_MU.draw(x + 13, y, w - 24, 13);
+        TEX_BG_MR.draw(x + w - 13, y + 13, 13, h - 25);
+        TEX_BG_MD.draw(x + 13, y + h - 13, w - 24, 13);
+        TEX_BG_ML.draw(x, y + 13, 13, h - 25);
+
+        TEX_BG_NN.draw(x, y, 13, 13);
+        TEX_BG_NP.draw(x, y + h - 13, 13, 13);
+        TEX_BG_PN.draw(x + w - 13, y, 13, 13);
+        TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13);
+    };
 
     private static class ButtonSpecial extends ButtonLM
     {
@@ -180,10 +196,12 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
         sliderPages.oneElementSize = 20;
         sliderPages.slider = TEX_SLIDER;
+        sliderPages.background = ImageProvider.NULL;
 
         sliderText = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
         sliderText.oneElementSize = 30;
         sliderText.slider = TEX_SLIDER;
+        sliderText.background = ImageProvider.NULL;
 
         buttonSpecial = new ButtonSpecial();
     }
@@ -250,7 +268,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         panelPages.posX = 10;
         panelPages.posY = 43;
-        panelPages.setWidth(panelWidth - 20);
+        panelPages.setWidth(panelWidth - 17);
         panelPages.setHeight(height - 49);
 
         panelText.posX = panelWidth + 10;
@@ -286,39 +304,15 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         int height = getHeight();
 
         mc.getTextureManager().bindTexture(TEXTURE);
+        LMColorUtils.GL_COLOR.set(colorBackground, 255);
+        FILLING.draw(posX + panelWidth, posY, width - panelWidth, height);
+        FILLING.draw(posX, posY + 36, panelWidth, height - 36);
+        FILLING.draw(posX, posY, panelWidth, 36);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        renderFilling(panelWidth, 0, width - panelWidth, height);
-        renderFilling(0, 36, panelWidth, height - 36);
-        renderFilling(0, 0, panelWidth, 36);
-        GlStateManager.color(1F, 1F, 1F, 1F);
 
-        int buttonBackAX = buttonBack.getAX();
-        String txt = selectedPage.getDisplayName().getFormattedText();
-        int txtsize = getFont().getStringWidth(txt);
-        int maxtxtsize = panelWidth - (buttonBackAX + buttonBack.getWidth()) + 4;
-
-        if(txtsize > maxtxtsize)
-        {
-            boolean mouseOver = isMouseOver(buttonBackAX + buttonBack.getWidth() + 5, posY + 13, maxtxtsize, 12);
-
-            if(mouseOver)
-            {
-                LMColorUtils.GL_COLOR.set(colorBackground, 255);
-                GuiHelper.drawBlankRect(buttonBackAX + buttonBack.getWidth() + 2, posY + 12, txtsize + 6, 13);
-                GlStateManager.color(1F, 1F, 1F, 1F);
-                getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
-            }
-            else
-            {
-                GuiHelper.pushScissor(getScreen(), buttonBackAX + buttonBack.getWidth() + 5, posY + 13, maxtxtsize, 12);
-                getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
-                GuiHelper.popScissor();
-            }
-        }
-        else
-        {
-            getFont().drawString(txt, buttonBackAX + buttonBack.getWidth() + 5, posY + 14, colorText);
-        }
+        GuiHelper.pushScissor(getScreen(), posX, posY, panelWidth, 36);
+        getFont().drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.getWidth() + 5, posY + 14, colorText);
+        GuiHelper.popScissor();
     }
 
     @Override
@@ -328,9 +322,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         int height = getHeight();
 
         GlStateManager.color(1F, 1F, 1F, 1F);
-        renderBorders(panelWidth, 0, width - panelWidth, height);
-        renderBorders(0, 36, panelWidth, height - 36);
-        renderBorders(0, 0, panelWidth, 36);
+        BORDERS.draw(posX + panelWidth, posY, width - panelWidth, height);
+        BORDERS.draw(posX, posY + 36, panelWidth, height - 36);
+        BORDERS.draw(posX, posY, panelWidth, 36);
 
         super.drawForeground();
     }
@@ -345,29 +339,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     public boolean drawDefaultBackground()
     {
         return false;
-    }
-
-    private void renderBorders(int px, int py, int w, int h)
-    {
-        GlStateManager.color(1F, 1F, 1F, 1F);
-        px += posX;
-        py += posY;
-
-        TEX_BG_MU.draw(px + 13, py, w - 24, 13);
-        TEX_BG_MR.draw(px + w - 13, py + 13, 13, h - 25);
-        TEX_BG_MD.draw(px + 13, py + h - 13, w - 24, 13);
-        TEX_BG_ML.draw(px, py + 13, 13, h - 25);
-
-        TEX_BG_NN.draw(px, py, 13, 13);
-        TEX_BG_NP.draw(px, py + h - 13, 13, 13);
-        TEX_BG_PN.draw(px + w - 13, py, 13, 13);
-        TEX_BG_PP.draw(px + w - 13, py + h - 13, 13, 13);
-    }
-
-    private void renderFilling(int px, int py, int w, int h)
-    {
-        LMColorUtils.GL_COLOR.set(colorBackground, 255);
-        GuiHelper.drawBlankRect(posX + px + 4, posY + py + 4, w - 8, h - 8);
     }
 
     @Override

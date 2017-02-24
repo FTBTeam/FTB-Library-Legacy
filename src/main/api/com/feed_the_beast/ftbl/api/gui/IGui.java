@@ -58,4 +58,10 @@ public interface IGui extends IPanel
     {
         return 0xFF666666;
     }
+
+    @SideOnly(Side.CLIENT)
+    default void drawString(String text, float x, float y)
+    {
+        getFont().drawString(text, x, y, getTextColor(), false);
+    }
 }

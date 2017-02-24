@@ -5,8 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.client.ColoredObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.ButtonSimpleLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
@@ -15,7 +14,7 @@ import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
 
 public abstract class GuiAbstractField extends GuiLM
 {
-    private static final IDrawableObject BACKGROUND = new ColoredObject(ImageProvider.NULL, 0xA8666666);
+    private static final IDrawableObject BACKGROUND = new TexturelessRectangle(0xA8666666);
 
     private final IConfigValue defValue, value;
     private final IGuiFieldCallback callback;
@@ -76,7 +75,7 @@ public abstract class GuiAbstractField extends GuiLM
         textBox.textRenderY = 6;
         textBox.textColor = 0xFFEEEEEE;
         textBox.setSelected(this, true);
-        textBox.background = new ColoredObject(ImageProvider.NULL, 0xFF333333);
+        textBox.background = new TexturelessRectangle(0xFF333333);
     }
 
     protected abstract boolean isValidText(IConfigValue value, String val);

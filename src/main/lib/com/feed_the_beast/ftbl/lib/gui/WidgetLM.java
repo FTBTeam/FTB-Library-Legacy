@@ -83,7 +83,7 @@ public class WidgetLM implements IWidget
         parentPanel = p;
     }
 
-    public int renderTitleInCenter()
+    public int renderTitleInCenter(IGui gui)
     {
         return 0;
     }
@@ -101,7 +101,7 @@ public class WidgetLM implements IWidget
     @Override
     public void addMouseOverText(IGui gui, List<String> list)
     {
-        int col = renderTitleInCenter();
+        int col = renderTitleInCenter(gui);
 
         if(col != 0)
         {
@@ -119,7 +119,9 @@ public class WidgetLM implements IWidget
     @Override
     public void renderWidget(IGui gui)
     {
-        int col = renderTitleInCenter();
+        getIcon(gui).draw(this);
+
+        int col = renderTitleInCenter(gui);
 
         if(col != 0)
         {
@@ -130,10 +132,6 @@ public class WidgetLM implements IWidget
                 GuiHelper.drawCenteredString(gui.getFont(), t, getAX() + getWidth() / 2, getAY() + getHeight() / 2, col);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
-        }
-        else
-        {
-            getIcon(gui).draw(this);
         }
     }
 }

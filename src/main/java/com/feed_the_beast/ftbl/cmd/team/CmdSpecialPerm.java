@@ -96,7 +96,7 @@ public class CmdSpecialPerm extends CommandTreeBase
             }
             else if(team.setHasPermission(p1.getProfile().getId(), perm, true))
             {
-                FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, perm, args[0], true);
+                FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, perm, args[0], "true");
             }
             else
             {
@@ -150,7 +150,7 @@ public class CmdSpecialPerm extends CommandTreeBase
             }
             else if(team.setHasPermission(p1.getProfile().getId(), perm, false))
             {
-                FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, perm, args[0], false);
+                FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, perm, args[0], "false");
             }
             else
             {

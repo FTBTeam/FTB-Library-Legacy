@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
 
@@ -11,10 +11,13 @@ import java.util.List;
 
 public class SliderLM extends WidgetLM
 {
+    public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(0x99666666);
+    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0x99333333);
+
     public final int sliderSize;
     private double value;
     private boolean isGrabbed;
-    public IDrawableObject slider = ImageProvider.NULL, background = ImageProvider.NULL;
+    public IDrawableObject slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
 
     public SliderLM(int x, int y, int w, int h, int ss)
     {

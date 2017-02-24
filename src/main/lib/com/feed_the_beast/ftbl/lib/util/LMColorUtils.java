@@ -87,7 +87,7 @@ public class LMColorUtils
         }
     };
 
-    public static int getColorFromID(byte col)
+    public static int getColorFromID(int col)
     {
         return ID_COLORS[col & 0xFF];
     }

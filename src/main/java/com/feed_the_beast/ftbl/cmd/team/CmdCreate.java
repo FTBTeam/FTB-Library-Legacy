@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
@@ -77,6 +78,17 @@ public class CmdCreate extends CommandLM
         }
 
         ForgeTeam team = new ForgeTeam(args[0]);
+
+        if(args.length > 1)
+        {
+            EnumTeamColor c = EnumTeamColor.NAME_MAP.get(args[1]);
+
+            if(c != null)
+            {
+                team.setColor(c);
+            }
+        }
+
         team.changeOwner(p);
         Universe.INSTANCE.teams.put(team.getName(), team);
 

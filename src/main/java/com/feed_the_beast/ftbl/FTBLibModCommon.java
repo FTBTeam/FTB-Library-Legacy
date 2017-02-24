@@ -139,14 +139,14 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addInfoTextLine("hr", (page, json) -> new InfoHrLine(json));
         addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
 
-        addTeamPlayerPermission(FTBLibPerms.TEAM_CAN_JOIN, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ALLY, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ENEMY, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_SETTINGS, true);//false
-        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_PERMISSIONS, true);//false
-        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_MEMBERS, true);//false
-        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ALLIES, true);//false
-        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ENEMIES, true);//false
+        addTeamPlayerPermission(FTBLibPerms.TEAM_CAN_JOIN, false);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ALLY, false);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ENEMY, false);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_SETTINGS, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_PERMISSIONS, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_MEMBERS, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ALLIES, true);
+        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ENEMIES, true);
 
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {

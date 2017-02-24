@@ -15,15 +15,21 @@ public class TextBoxLM extends WidgetLM
 {
     private boolean isSelected = false;
     public int charLimit = -1;
-    public double textRenderX = 4, textRenderY = 4;
-    public int textColor = 0xFFFFFFFF;
-    private String text = "";
+    public int textRenderX = 4, textRenderY;
+    public int textColor;
     public IDrawableObject background = ImageProvider.NULL;
+
+    public String ghostText = "";
+    private String text = "";
+    private int lineScrollOffset;
+    private int cursorPosition;
+    private int selectionEnd;
 
     public TextBoxLM(int x, int y, int w, int h)
     {
         super(x, y, w, h);
         text = getText();
+        textRenderY = (h - 10) / 2 + 1;
     }
 
     @Override
@@ -160,14 +166,21 @@ public class TextBoxLM extends WidgetLM
 
         String ns = s;
 
-        if(isSelected(gui) && Minecraft.getSystemTime() % 1000L > 500L)
+        if(isSelected(gui))
         {
-            ns += '_';
+            if(Minecraft.getSystemTime() % 1000L > 500L)
+            {
+                ns += '_';
+            }
+        }
+        else if(ns.isEmpty() && !ghostText.isEmpty())
+        {
+            ns = ghostText;
         }
 
         if(ns.length() > 0)
         {
-            int col = textColor;
+            int col = textColor == 0 ? gui.getTextColor() : textColor;
             if(!isValid())
             {
                 col = 0xFFFF0000;
@@ -175,11 +188,11 @@ public class TextBoxLM extends WidgetLM
 
             if(textRenderX == -1)
             {
-                gui.getFont().drawString(ns, (int) (getAX() + textRenderX - (gui.getFont().getStringWidth(s) / 2D) + getWidth() / 2D), (int) (getAY() + textRenderY), col);
+                gui.getFont().drawString(ns, getAX() + textRenderX - (gui.getFont().getStringWidth(s) / 2) + getWidth() / 2, getAY() + textRenderY, col);
             }
             else
             {
-                gui.getFont().drawString(ns, (int) (getAX() + textRenderX), (int) (getAY() + textRenderY), col);
+                gui.getFont().drawString(ns, getAX() + textRenderX, getAY() + textRenderY, col);
             }
         }
     }

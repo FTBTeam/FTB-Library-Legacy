@@ -80,7 +80,7 @@ public class CmdSetPermission extends CommandLM
 
         if(team.setHasPermission(p1.getProfile().getId(), args[1], val))
         {
-            FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, args[1], args[0], val);
+            FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, args[1], args[0], String.valueOf(val));
         }
         else
         {

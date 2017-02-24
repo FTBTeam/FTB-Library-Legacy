@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
+import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.item.EnumDyeColor;
@@ -24,6 +25,7 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
     GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 160);
 
     public static final EnumTeamColor[] VALUES = values();
+    public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
 
     public static EnumTeamColor getFromIndex(int i)
     {

@@ -47,8 +47,7 @@ import java.util.UUID;
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
-    private static final EnumNameMap<EnumTeamColor> COLOR_NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
-    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(COLOR_NAME_MAP, EnumTeamColor.BLUE), new TextComponentTranslation("ftbteam.config.display.color"));
+    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE), new TextComponentTranslation("ftbteam.config.display.color"));
     private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.title"));
     private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.desc"));
 
@@ -195,7 +194,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         owner = Universe.INSTANCE.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
         flags = nbt.getInteger("Flags");
-        color = COLOR_NAME_MAP.get(nbt.getString("Color"));
+        color = EnumTeamColor.NAME_MAP.get(nbt.getString("Color"));
         title = nbt.getString("Title");
         desc = nbt.getString("Desc");
 
@@ -422,7 +421,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         IConfigTree tree = new ConfigTree();
         MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, tree));
 
-        tree.add(KEY_COLOR, new PropertyEnum<EnumTeamColor>(COLOR_NAME_MAP, EnumTeamColor.BLUE)
+        tree.add(KEY_COLOR, new PropertyEnum<EnumTeamColor>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE)
         {
             @Override
             public EnumTeamColor get()

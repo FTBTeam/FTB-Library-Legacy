@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,6 +22,7 @@ import java.util.List;
 public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
+    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0xC8333333).setLineColor(0xFFC0C0C0).setRoundEdges(true);
 
     public final Minecraft mc;
     private final FontRenderer font;

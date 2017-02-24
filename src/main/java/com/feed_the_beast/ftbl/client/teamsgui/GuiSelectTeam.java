@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
@@ -17,6 +19,19 @@ public class GuiSelectTeam extends GuiLM
     private List<TeamInst> teams;
     private final PanelLM panelTeams;
     private final SliderLM scrollTeams;
+
+    private class ButtonTeam extends ButtonLM
+    {
+        public ButtonTeam(int x, int y, int w, int h)
+        {
+            super(x, y, w, h);
+        }
+
+        @Override
+        public void onClicked(IGui gui, IMouseButton button)
+        {
+        }
+    }
 
     public GuiSelectTeam(List<TeamInst> t)
     {
@@ -44,6 +59,6 @@ public class GuiSelectTeam extends GuiLM
     @Override
     public IDrawableObject getIcon(IGui gui)
     {
-        return GuiMyTeam.BACKGROUND;
+        return DEFAULT_BACKGROUND;
     }
 }

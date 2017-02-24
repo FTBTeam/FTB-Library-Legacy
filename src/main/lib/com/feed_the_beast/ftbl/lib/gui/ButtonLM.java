@@ -4,9 +4,13 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 
 public abstract class ButtonLM extends WidgetLM
 {
+    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0).setLineColor(0xFFC0C0C0);
+    public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(0x64E4FFFF);
+
     private String title = "";
     private IDrawableObject icon = ImageProvider.NULL;
 

@@ -30,7 +30,7 @@ public class MessageSelectTeamGuiResponse extends MessageToClient<MessageSelectT
         {
             if(team.hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_CAN_JOIN))
             {
-                teams.add(new TeamInst(universe, team, false));
+                teams.add(new TeamInst(universe, team, player, false));
             }
         }
     }
