@@ -18,12 +18,17 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 04.09.2016.
@@ -130,38 +135,59 @@ public class GuiHelper
         drawCenteredString(font, title, widget.getAX() + widget.getWidth() / 2, widget.getAY() + widget.getHeight() / 2, color);
     }
 
-    public static void drawItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
+    public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)
     {
         if(stack == null || stack.getItem() == null)
         {
-            return;
+            return false;
         }
+
+        boolean result = true;
 
         itemRender.zLevel = 200F;
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 32F);
+
+        if(scaleX != 1 || scaleY != 1)
+        {
+            GlStateManager.scale(scaleX, scaleY, 1);
+        }
 
         GlStateManager.enableLighting();
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.enableRescaleNormal();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
         GlStateManager.color(1F, 1F, 1F, 1F);
-        itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
 
-        if(renderOverlay)
+        try
         {
-            FontRenderer font = stack.getItem().getFontRenderer(stack);
+            itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
 
-            if(font == null)
+            if(renderOverlay)
             {
-                font = Minecraft.getMinecraft().fontRendererObj;
-            }
+                FontRenderer font = stack.getItem().getFontRenderer(stack);
 
-            itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+                if(font == null)
+                {
+                    font = Minecraft.getMinecraft().fontRendererObj;
+                }
+
+                itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+            }
+        }
+        catch(Exception ex)
+        {
+            result = false;
         }
 
         GlStateManager.popMatrix();
         itemRender.zLevel = 0F;
+        return result;
+    }
+
+    public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
+    {
+        return drawItem(itemRender, stack, x, y, 1, 1, renderOverlay);
     }
 
     public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)
@@ -297,5 +323,32 @@ public class GuiHelper
         }
 
         return false;
+    }
+
+    public static class PositionedTextData
+    {
+        public final int posX, posY;
+        public final int width, height;
+        public final ClickEvent clickEvent;
+        public final HoverEvent hoverEvent;
+        public final String insertion;
+
+        public PositionedTextData(int x, int y, int w, int h, Style s)
+        {
+            posX = x;
+            posY = y;
+            width = w;
+            height = h;
+            clickEvent = s.getClickEvent();
+            hoverEvent = s.getHoverEvent();
+            insertion = s.getInsertion();
+        }
+    }
+
+    public static List<PositionedTextData> createDataFrom(ITextComponent component, FontRenderer font, int width)
+    {
+        List<PositionedTextData> list = new ArrayList<>();
+
+        return list;
     }
 }

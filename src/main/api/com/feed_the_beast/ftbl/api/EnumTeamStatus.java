@@ -10,11 +10,12 @@ import net.minecraft.util.text.TextFormatting;
  */
 public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
 {
-    ENEMY(-1, "enemy", TextFormatting.RED),
+    ENEMY(-10, "enemy", TextFormatting.RED),
     NONE(0, "none", TextFormatting.WHITE),
-    ALLY(1, "ally", TextFormatting.BLUE),
-    MEMBER(2, "member", TextFormatting.GREEN),
-    OWNER(3, "owner", TextFormatting.GOLD);
+    INVITED(1, "invited", TextFormatting.WHITE),
+    ALLY(3, "ally", TextFormatting.BLUE),
+    MEMBER(5, "member", TextFormatting.GREEN),
+    OWNER(10, "owner", TextFormatting.GOLD);
 
     public static final EnumTeamStatus[] VALUES = values();
 

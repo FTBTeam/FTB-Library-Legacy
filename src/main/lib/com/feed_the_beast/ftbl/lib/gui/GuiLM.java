@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
@@ -221,6 +222,18 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     public final float getPartialTicks()
     {
         return partialTicks;
+    }
+
+    @Override
+    public final boolean isMouseButtonDown(int button)
+    {
+        return Mouse.isButtonDown(button);
+    }
+
+    @Override
+    public final boolean isKeyDown(int key)
+    {
+        return Keyboard.isKeyDown(key);
     }
 
     @Override

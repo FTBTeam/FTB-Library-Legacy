@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -19,6 +20,7 @@ public class TeamInst extends FinalIDObject
     public String displayName, description;
     public PlayerInst owner;
     public List<PlayerInst> players;
+    public List<ForgeTeam.Message> chatHistory;
 
     public TeamInst(ByteBuf io)
     {
@@ -26,10 +28,10 @@ public class TeamInst extends FinalIDObject
         displayName = ByteBufUtils.readUTF8String(io);
         description = ByteBufUtils.readUTF8String(io);
 
-        int p = io.readInt();
+        int s = io.readInt();
         players = new ArrayList<>();
 
-        while(--p >= 0)
+        while(--s >= 0)
         {
             PlayerInst pi = new PlayerInst(io);
             players.add(pi);
@@ -39,15 +41,30 @@ public class TeamInst extends FinalIDObject
                 owner = pi;
             }
         }
+
+        s = io.readInt();
+        chatHistory = new ArrayList<>(s);
+
+        while(--s >= 0)
+        {
+            chatHistory.add(new ForgeTeam.Message(io));
+        }
     }
 
-    public TeamInst(IUniverse universe, IForgeTeam team)
+    public TeamInst(IUniverse universe, IForgeTeam team, boolean privateData)
     {
         super(team.getName());
         displayName = team.getColor().getTextFormatting() + team.getTitle();
         description = team.getDesc();
 
         players = new ArrayList<>();
+
+        if(!privateData)
+        {
+            owner = new PlayerInst(team.getOwner(), EnumTeamStatus.OWNER);
+            players.add(owner);
+            return;
+        }
 
         for(IForgePlayer p : universe.getPlayers())
         {

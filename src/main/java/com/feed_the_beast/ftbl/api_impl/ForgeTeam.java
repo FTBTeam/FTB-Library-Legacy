@@ -20,7 +20,9 @@ import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
+import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -29,12 +31,14 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,13 +52,64 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.title"));
     private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.desc"));
 
+    public static class Message implements Comparable<Message>
+    {
+        public final UUID sender;
+        public final long time;
+        public final String text;
+
+        public Message(UUID s, long t, String txt)
+        {
+            sender = s;
+            time = t;
+            text = txt;
+        }
+
+        public Message(NBTTagCompound nbt)
+        {
+            sender = nbt.getUniqueId("Sender");
+            time = nbt.getLong("Time");
+            text = nbt.getString("Text");
+        }
+
+        public Message(ByteBuf io)
+        {
+            sender = LMNetUtils.readUUID(io);
+            time = io.readLong();
+            text = ByteBufUtils.readUTF8String(io);
+        }
+
+        public NBTTagCompound toNBT()
+        {
+            NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setUniqueId("Sender", sender);
+            nbt.setLong("Time", time);
+            nbt.setString("Text", text);
+            return nbt;
+        }
+
+        public void write(ByteBuf io)
+        {
+            LMNetUtils.writeUUID(io, sender);
+            io.writeLong(time);
+            ByteBufUtils.writeUTF8String(io, text);
+        }
+
+        @Override
+        public int compareTo(Message o)
+        {
+            return Long.compare(time, o.time);
+        }
+    }
+
     private final NBTDataStorage dataStorage;
     private EnumTeamColor color;
     private IForgePlayer owner;
     private String title;
     private String desc;
-    private byte flags;
+    private int flags;
     private Map<UUID, Collection<String>> playerPermissions;
+    private List<Message> chatHistory;
 
     public ForgeTeam(String id)
     {
@@ -80,7 +135,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("Owner", LMStringUtils.fromUUID(owner.getProfile().getId()));
-        nbt.setByte("Flags", flags);
+        nbt.setByte("Flags", (byte) flags);
         nbt.setString("Color", EnumNameMap.getName(color));
 
         if(!title.isEmpty())
@@ -120,6 +175,18 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             nbt.setTag("Data", dataStorage.serializeNBT());
         }
 
+        if(chatHistory != null && !chatHistory.isEmpty())
+        {
+            NBTTagList list = new NBTTagList();
+
+            for(Message msg : chatHistory)
+            {
+                list.appendTag(msg.toNBT());
+            }
+
+            nbt.setTag("Chat", list);
+        }
+
         return nbt;
     }
 
@@ -127,7 +194,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     public void deserializeNBT(NBTTagCompound nbt)
     {
         owner = Universe.INSTANCE.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
-        flags = nbt.getByte("Flags");
+        flags = nbt.getInteger("Flags");
         color = COLOR_NAME_MAP.get(nbt.getString("Color"));
         title = nbt.getString("Title");
         desc = nbt.getString("Desc");
@@ -183,6 +250,36 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         {
             dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
         }
+
+        if(chatHistory != null)
+        {
+            chatHistory.clear();
+        }
+
+        if(nbt.hasKey("Chat"))
+        {
+            NBTTagList list = nbt.getTagList("Chat", Constants.NBT.TAG_STRING);
+
+            for(int i = 0; i < list.tagCount(); i++)
+            {
+                addMessage(new Message(list.getCompoundTagAt(i)));
+            }
+        }
+    }
+
+    public void addMessage(Message message)
+    {
+        if(chatHistory == null)
+        {
+            chatHistory = new ArrayList<>();
+        }
+
+        while(chatHistory.size() >= 1000)
+        {
+            chatHistory.remove(0);
+        }
+
+        chatHistory.add(message);
     }
 
     @Override
@@ -232,6 +329,10 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         else if(hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_IS_ALLY))
         {
             return EnumTeamStatus.ALLY;
+        }
+        else if(hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_CAN_JOIN))
+        {
+            return EnumTeamStatus.INVITED;
         }
 
         return EnumTeamStatus.NONE;

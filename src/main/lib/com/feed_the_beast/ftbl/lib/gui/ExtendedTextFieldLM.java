@@ -4,9 +4,6 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,37 +13,23 @@ import java.util.List;
  */
 public class ExtendedTextFieldLM extends TextFieldLM
 {
-    private static class CachedTextData extends WidgetLM
-    {
-        private final ClickEvent clickEvent;
-        private final HoverEvent hoverEvent;
-        private final String insertion;
-
-        private CachedTextData(int x, int y, int w, int h, Style s)
-        {
-            super(x, y, w, h);
-            clickEvent = s.getClickEvent();
-            hoverEvent = s.getHoverEvent();
-            insertion = s.getInsertion();
-        }
-    }
-
     public final ITextComponent textComponent;
-    private List<CachedTextData> textData;
+    private List<GuiHelper.PositionedTextData> textData;
 
     public ExtendedTextFieldLM(int x, int y, int width, int height, FontRenderer font, ITextComponent t)
     {
         super(x, y, width, height, font, t.getFormattedText());
         textComponent = t;
+        textData = GuiHelper.createDataFrom(t, font, width);
     }
 
     @Nullable
-    private CachedTextData getDataAtMouse(IGui gui)
+    private GuiHelper.PositionedTextData getDataAtMouse(IGui gui)
     {
         int ax = getAX();
         int ay = getAY();
 
-        for(CachedTextData data : textData)
+        for(GuiHelper.PositionedTextData data : textData)
         {
             if(gui.isMouseOver(data.posX + ax, data.posY + ay, 0, 0))
             {
@@ -60,17 +43,21 @@ public class ExtendedTextFieldLM extends TextFieldLM
     @Override
     public void addMouseOverText(IGui gui, List<String> list)
     {
-        CachedTextData data = getDataAtMouse(gui);
+        GuiHelper.PositionedTextData data = getDataAtMouse(gui);
 
-        if(data != null && data.hoverEvent != null)
+        if(data != null && data.hoverEvent != null) //TODO: Special handling for each data.hoverEvent.getAction()
         {
+            for(String s : data.hoverEvent.getValue().getFormattedText().split("\n"))
+            {
+                list.add(s);
+            }
         }
     }
 
     @Override
     public void onClicked(IGui gui, IMouseButton button)
     {
-        CachedTextData data = getDataAtMouse(gui);
+        GuiHelper.PositionedTextData data = getDataAtMouse(gui);
 
         if(data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
         {

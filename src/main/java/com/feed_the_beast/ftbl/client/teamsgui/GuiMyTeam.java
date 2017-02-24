@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -31,6 +33,8 @@ public class GuiMyTeam extends GuiLM
     private static final int TOP_PANEL_HEIGHT = 20;
     private static final int BOTTOM_PANEL_HEIGHT = 20;
     private static final int LEFT_PANEL_WIDTH = 90;
+
+    static final IDrawableObject BACKGROUND = new TexturelessRectangle(0xC8333333).setLineColor(COLOR).setRoundEdges();
 
     private class ButtonPlayer extends ButtonLM implements Comparable<ButtonPlayer>
     {
@@ -129,17 +133,11 @@ public class GuiMyTeam extends GuiLM
             @Override
             public void updateWidgetPositions()
             {
-                playersHeight = 0;
-
-                for(IWidget widget : getWidgets())
-                {
-                    widget.setY(playersHeight);
-                    playersHeight += widget.getHeight();
-                }
+                playersHeight = alignWidgetsByHeight();
             }
         };
 
-        panelPlayers.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE);
+        panelPlayers.addFlags(IPanel.FLAG_DEFAULTS);
 
         panelText = new PanelLM(LEFT_PANEL_WIDTH + 1, TOP_PANEL_HEIGHT, 0, 0)
         {
@@ -163,17 +161,11 @@ public class GuiMyTeam extends GuiLM
             @Override
             public void updateWidgetPositions()
             {
-                textHeight = 0;
-
-                for(IWidget widget : getWidgets())
-                {
-                    widget.setY(textHeight);
-                    textHeight += widget.getHeight();
-                }
+                textHeight = alignWidgetsByHeight();
             }
         };
 
-        panelText.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE | PanelLM.FLAG_UNICODE_FONT);
+        panelText.addFlags(IPanel.FLAG_DEFAULTS | IPanel.FLAG_UNICODE_FONT);
 
         buttonTeamsGui = new ButtonLM(0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
         {
@@ -337,10 +329,8 @@ public class GuiMyTeam extends GuiLM
 
         boolean playerGui = selectedPlayer != null;
 
-        LMColorUtils.GL_COLOR.set(0xFF333333, 200);
-        GuiHelper.drawBlankRect(ax + 1, ay + 1, width - 2, height - 2);
+        getIcon(this).draw(ax, ay, width, height);
         LMColorUtils.GL_COLOR.set(COLOR);
-        GuiHelper.drawHollowRect(ax, ay, width, height, true);
         GuiHelper.drawBlankRect(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1);
         GuiHelper.drawBlankRect(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1);
         GuiHelper.drawBlankRect(ax + width - 23, ay, 1, TOP_PANEL_HEIGHT);
@@ -376,5 +366,11 @@ public class GuiMyTeam extends GuiLM
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
+    }
+
+    @Override
+    public IDrawableObject getIcon(IGui gui)
+    {
+        return BACKGROUND;
     }
 }

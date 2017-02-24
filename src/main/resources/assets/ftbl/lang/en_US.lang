@@ -98,6 +98,13 @@ ftbteam.config.display.color=Color
 ftbteam.config.display.title=Title
 ftbteam.config.display.desc=Description
 
+ftbl.lang.team_status.enemy=Enemy
+ftbl.lang.team_status.none=None
+ftbl.lang.team_status.invited=Invited
+ftbl.lang.team_status.ally=Ally
+ftbl.lang.team_status.member=Member
+ftbl.lang.team_status.owner=Owner
+
 # Action Buttons
 sidebar_button.ftbl.settings=Client Settings
 sidebar_button.ftbl.my_server_settings=My Server Settings

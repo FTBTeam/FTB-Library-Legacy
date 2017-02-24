@@ -35,6 +35,10 @@ public interface IGui extends IPanel
 
     float getPartialTicks();
 
+    boolean isMouseButtonDown(int button);
+
+    boolean isKeyDown(int key);
+
     default void playSoundFX(SoundEvent e, float pitch)
     {
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));

@@ -69,7 +69,7 @@ public class InfoListLine extends EmptyInfoPageLine
     @Override
     public IWidget createWidget(IGui gui, IPanel parent)
     {
-        return new PanelList(gui);
+        return new PanelList(gui, parent.hasFlag(IPanel.FLAG_UNICODE_FONT));
     }
 
     @Override
@@ -105,21 +105,15 @@ public class InfoListLine extends EmptyInfoPageLine
     {
         private final IGui gui;
 
-        private PanelList(IGui g)
+        private PanelList(IGui g, boolean unicodeFont)
         {
             super(0, 0, 0, 0);
             gui = g;
-        }
+            addFlags(FLAG_DEFAULTS);
 
-        @Override
-        public void updateWidgetPositions()
-        {
-            setHeight(0);
-
-            for(IWidget w : getWidgets())
+            if(unicodeFont)
             {
-                w.setY(getHeight());
-                setHeight(getHeight() + w.getHeight());
+                addFlags(FLAG_UNICODE_FONT);
             }
         }
 
@@ -132,6 +126,12 @@ public class InfoListLine extends EmptyInfoPageLine
             }
 
             updateWidgetPositions();
+        }
+
+        @Override
+        public void updateWidgetPositions()
+        {
+            setHeight(alignWidgetsByHeight());
         }
     }
 }

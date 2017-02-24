@@ -11,10 +11,6 @@ import java.util.List;
 
 public abstract class PanelLM extends WidgetLM implements IPanel
 {
-    public static final int FLAG_ONLY_RENDER_WIDGETS_INSIDE = 1;
-    public static final int FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE = 2;
-    public static final int FLAG_UNICODE_FONT = 4;
-
     private final List<IWidget> widgets;
     private int scrollX = 0, scrollY = 0;
     private int offsetX = 0, offsetY = 0;
@@ -31,9 +27,10 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         flags |= f;
     }
 
-    public boolean hasFlag(int f)
+    @Override
+    public boolean hasFlag(int flag)
     {
-        return (flags & f) != 0;
+        return (flags & flag) != 0;
     }
 
     @Override
@@ -89,40 +86,16 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         }
     }
 
+    @Override
     public void setScrollX(int scroll)
     {
         scrollX = scroll;
     }
 
-    public void setScrollX(double scroll, int elementsWidth)
-    {
-        int width = getWidth();
-        if(elementsWidth < width)
-        {
-            setScrollX(0);
-        }
-        else
-        {
-            setScrollX((int) (scroll * (elementsWidth - width)));
-        }
-    }
-
+    @Override
     public void setScrollY(int scroll)
     {
         scrollY = scroll;
-    }
-
-    public void setScrollY(double scroll, int elementsHeight)
-    {
-        int height = getHeight();
-        if(elementsHeight < height)
-        {
-            setScrollY(0);
-        }
-        else
-        {
-            setScrollY((int) (scroll * (elementsHeight - height)));
-        }
     }
 
     @Override

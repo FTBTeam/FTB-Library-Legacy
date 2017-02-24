@@ -25,7 +25,7 @@ public class MessageMyTeamGuiResponse extends MessageToClient<MessageMyTeamGuiRe
 
     public MessageMyTeamGuiResponse(IUniverse universe, IForgeTeam team, IForgePlayer player)
     {
-        teamInfo = new TeamInst(universe, team);
+        teamInfo = new TeamInst(universe, team, true);
         perms = team.getPermissions(player.getProfile().getId(), false);
     }
 

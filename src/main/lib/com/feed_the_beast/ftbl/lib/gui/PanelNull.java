@@ -137,4 +137,20 @@ public enum PanelNull implements IPanel
     public void renderWidget(IGui gui)
     {
     }
+
+    @Override
+    public void setScrollX(int scroll)
+    {
+    }
+
+    @Override
+    public void setScrollY(int scroll)
+    {
+    }
+
+    @Override
+    public boolean hasFlag(int flag)
+    {
+        return false;
+    }
 }

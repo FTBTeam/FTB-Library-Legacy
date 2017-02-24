@@ -53,6 +53,7 @@ import java.util.UUID;
 public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {
     private static final IConfigKey HIDE_TEAM_NOTIFICATION = new ConfigKey("ftbl.hide_team_notification", new PropertyBool(false));
+    private static final IConfigKey HIDE_NEW_TEAM_MSG_NOTIFICATION = new ConfigKey("ftbl.hide_new_team_msg_notification", new PropertyBool(false));
     private static FakePlayer playerForStats;
 
     private final NBTDataStorage dataStorage;
@@ -257,7 +258,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        setFlags(nbt.getByte("Flags"));
+        setFlags(nbt.getInteger("Flags"));
         setTeamID(nbt.getString("TeamID"));
 
         if(dataStorage != null)
@@ -351,6 +352,21 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
             public void setBoolean(boolean v)
             {
                 setFlags(Bits.setFlag(getFlags(), FLAG_HIDE_TEAM_NOTIFICATION, v));
+            }
+        });
+
+        tree.add(HIDE_NEW_TEAM_MSG_NOTIFICATION, new PropertyBool(false)
+        {
+            @Override
+            public boolean getBoolean()
+            {
+                return Bits.getFlag(getFlags(), FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION);
+            }
+
+            @Override
+            public void setBoolean(boolean v)
+            {
+                setFlags(Bits.setFlag(getFlags(), FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION, v));
             }
         });
 

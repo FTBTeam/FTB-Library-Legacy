@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.lib.client.DrawableItemList;
 import com.feed_the_beast.ftbl.lib.gui.ItemListButtonLM;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.gson.JsonElement;
@@ -69,7 +70,7 @@ public class ItemListLine extends EmptyInfoPageLine
     @Override
     public IWidget createWidget(IGui gui, IPanel parent)
     {
-        return new ItemListButtonLM(0, 0, list, cols);
+        return new ItemListButtonLM(0, 0, new DrawableItemList(list), cols);
     }
 
     @Override

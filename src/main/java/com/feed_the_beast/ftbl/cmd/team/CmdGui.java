@@ -6,11 +6,11 @@ import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.net.MessageMyTeamGuiResponse;
+import com.feed_the_beast.ftbl.net.MessageSelectTeamGuiResponse;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * Created by LatvianModder on 24.02.2017.
@@ -49,7 +49,7 @@ public class CmdGui extends CommandLM
         }
         else
         {
-            sender.addChatMessage(new TextComponentString("Create or join a team with '/ftb team create <name>' or '/ftb team join <name>'! Gui coming soon"));
+            new MessageSelectTeamGuiResponse(universe, p).sendTo(player);
         }
     }
 }

@@ -27,7 +27,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(IGui gui, IMouseButton b)
+    public void mousePressed(IGui gui, IMouseButton button)
     {
         if(charLimit == 0)
         {
@@ -39,7 +39,7 @@ public class TextBoxLM extends WidgetLM
             setSelected(gui, true);
             Keyboard.enableRepeatEvents(true);
 
-            if(b.isRight() && getText().length() > 0)
+            if(button.isRight() && getText().length() > 0)
             {
                 clear();
                 onTextChanged(gui);

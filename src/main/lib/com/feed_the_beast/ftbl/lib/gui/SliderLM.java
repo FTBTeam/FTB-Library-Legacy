@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.input.Mouse;
 
 import java.util.List;
 
@@ -24,9 +23,9 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(IGui gui, IMouseButton b)
+    public void mousePressed(IGui gui, IMouseButton button)
     {
-        if(b.isLeft() && gui.isMouseOver(this))
+        if(gui.isMouseOver(this))
         {
             setGrabbed(gui, true);
         }
@@ -61,7 +60,7 @@ public class SliderLM extends WidgetLM
 
             if(isGrabbed(gui))
             {
-                if(Mouse.isButtonDown(0))
+                if(gui.isMouseButtonDown(0))
                 {
                     if(getDirection().isVertical())
                     {

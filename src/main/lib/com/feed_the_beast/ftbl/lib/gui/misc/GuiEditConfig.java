@@ -6,17 +6,17 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
-import com.feed_the_beast.ftbl.lib.gui.SliderLM;
+import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -156,8 +156,8 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
     private final List<ButtonConfigEntry> configEntryButtons;
     private final PanelLM configPanel;
     private final ButtonLM buttonAccept, buttonCancel;
-    private final SliderLM scroll;
-    private int shouldClose = 0, entryHeight;
+    private final PanelScrollBar scroll;
+    private int shouldClose = 0;
 
     public GuiEditConfig(@Nullable NBTTagCompound nbt, IConfigContainer cc)
     {
@@ -196,11 +196,11 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             @Override
             public void updateWidgetPositions()
             {
-                entryHeight = alignWidgetsByHeight();
+                scroll.elementSize = alignWidgetsByHeight();
             }
         };
 
-        configPanel.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE);
+        configPanel.addFlags(IPanel.FLAG_DEFAULTS);
 
         buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT.translate())
         {
@@ -228,33 +228,8 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
         buttonCancel.setIcon(GuiIcons.CANCEL);
 
-        scroll = new SliderLM(-16, 20, 16, 0, 10)
-        {
-            @Override
-            public boolean canMouseScroll(IGui gui)
-            {
-                return true;
-            }
-
-            @Override
-            public EnumDirection getDirection()
-            {
-                return EnumDirection.VERTICAL;
-            }
-
-            @Override
-            public double getScrollStep()
-            {
-                return 40D / (entryHeight + 20D);
-            }
-
-            @Override
-            public void onMoved(IGui gui)
-            {
-                configPanel.setScrollY(scroll.getValue(gui), entryHeight);
-            }
-        };
-
+        scroll = new PanelScrollBar(-16, 20, 16, 0, 10, configPanel);
+        scroll.oneElementSize = 16;
         scroll.background = new ColoredObject(ImageProvider.NULL, 0x99333333);
         scroll.slider = new ColoredObject(ImageProvider.NULL, 0x99666666);
     }

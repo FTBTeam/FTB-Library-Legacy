@@ -3,18 +3,18 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
-import com.feed_the_beast.ftbl.lib.gui.SliderLM;
+import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.TextFieldLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
@@ -86,78 +86,19 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     }
 
     public final InfoPage pageTree;
-    public final SliderLM sliderPages, sliderText;
     public final PanelLM panelPages, panelText;
+    public final PanelScrollBar sliderPages, sliderText;
     private final ButtonLM buttonBack;
     private final ButtonSpecial buttonSpecial;
     public int panelWidth;
     private int colorText, colorBackground;
     public boolean useUnicodeFont;
     private InfoPage selectedPage;
-    private int pagesHeight, textHeight;
 
     public GuiInfo(InfoPage tree)
     {
         super(0, 0);
         selectedPage = pageTree = tree;
-
-        sliderPages = new SliderLM(0, 0, 12, 0, 18)
-        {
-            @Override
-            public boolean canMouseScroll(IGui gui)
-            {
-                return getMouseX() < panelWidth;
-            }
-
-            @Override
-            public EnumDirection getDirection()
-            {
-                return EnumDirection.VERTICAL;
-            }
-
-            @Override
-            public double getScrollStep()
-            {
-                return 20D / (double) pagesHeight;
-            }
-
-            @Override
-            public void onMoved(IGui gui)
-            {
-                panelPages.setScrollY(getValue(gui), pagesHeight);
-            }
-        };
-
-        sliderPages.slider = TEX_SLIDER;
-
-        sliderText = new SliderLM(0, 0, 12, 0, 18)
-        {
-            @Override
-            public boolean canMouseScroll(IGui gui)
-            {
-                return getMouseX() > panelWidth;
-            }
-
-            @Override
-            public EnumDirection getDirection()
-            {
-                return EnumDirection.VERTICAL;
-            }
-
-            @Override
-            public double getScrollStep()
-            {
-                return 30D / (double) textHeight;
-            }
-
-            @Override
-            public void onMoved(IGui gui)
-            {
-                panelText.setScrollY(getValue(gui), textHeight);
-            }
-        };
-
-        sliderText.slider = TEX_SLIDER;
 
         buttonBack = new ButtonLM(0, 0, 14, 11)
         {
@@ -165,6 +106,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
+                sliderPages.setValue(gui, 0D);
+                sliderText.setValue(gui, 0D);
                 setSelectedPage(selectedPage.getParent());
             }
 
@@ -175,30 +118,30 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
+        buttonBack.setIcon(new ColoredObject(TEX_CLOSE, 0xFF000000 | selectedPage.getTheme().getTextColor()));
+
         panelPages = new PanelLM(0, 0, 0, 0)
         {
             @Override
             public void addWidgets()
             {
-                pagesHeight = 0;
-
                 for(InfoPage c : selectedPage.getPages().values())
                 {
-                    IWidget b = c.createWidget(GuiInfo.this);
-
-                    if(b.getHeight() > 0)
-                    {
-                        add(b);
-                        b.setY(pagesHeight);
-                        pagesHeight += b.getHeight();
-                    }
+                    add(c.createWidget(GuiInfo.this));
                 }
 
                 buttonSpecial.updateButton(GuiInfo.this);
+                updateWidgetPositions();
+            }
+
+            @Override
+            public void updateWidgetPositions()
+            {
+                sliderPages.elementSize = alignWidgetsByHeight();
             }
         };
 
-        panelPages.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE);
+        panelPages.addFlags(IPanel.FLAG_DEFAULTS);
 
         panelText = new PanelLM(0, 0, 0, 0)
         {
@@ -228,17 +171,19 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void updateWidgetPositions()
             {
-                textHeight = 0;
-
-                for(IWidget w : getWidgets())
-                {
-                    w.setY(textHeight);
-                    textHeight += w.getHeight();
-                }
+                sliderText.elementSize = alignWidgetsByHeight();
             }
         };
 
-        panelText.addFlags(PanelLM.FLAG_ONLY_RENDER_WIDGETS_INSIDE | PanelLM.FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE | PanelLM.FLAG_UNICODE_FONT);
+        panelText.addFlags(IPanel.FLAG_DEFAULTS | IPanel.FLAG_UNICODE_FONT);
+
+        sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
+        sliderPages.oneElementSize = 20;
+        sliderPages.slider = TEX_SLIDER;
+
+        sliderText = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
+        sliderText.oneElementSize = 30;
+        sliderText.slider = TEX_SLIDER;
 
         buttonSpecial = new ButtonSpecial();
     }
@@ -304,9 +249,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         panelWidth = (int) (width * 0.3D);
 
         panelPages.posX = 10;
-        panelPages.posY = 46;
+        panelPages.posY = 43;
         panelPages.setWidth(panelWidth - 20);
-        panelPages.setHeight(height - 56);
+        panelPages.setHeight(height - 49);
 
         panelText.posX = panelWidth + 10;
         panelText.posY = 6;

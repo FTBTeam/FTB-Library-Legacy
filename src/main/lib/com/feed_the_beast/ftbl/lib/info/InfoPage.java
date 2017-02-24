@@ -175,10 +175,14 @@ public class InfoPage extends FinalIDObject
         LMMapUtils.removeAll(childPages, CLEANUP_FILTER);
     }
 
-    public void sortAll()
+    public void sort(boolean tree)
     {
         LMMapUtils.sortMap(childPages, COMPARATOR);
-        childPages.values().forEach(InfoPage::sortAll);
+
+        if(tree)
+        {
+            childPages.values().forEach(page -> page.sort(true));
+        }
     }
 
     public void copyFrom(InfoPage c)
