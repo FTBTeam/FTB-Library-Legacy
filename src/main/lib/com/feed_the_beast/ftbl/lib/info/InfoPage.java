@@ -71,12 +71,7 @@ public class InfoPage extends FinalIDObject
             JsonArray a = o.get("T").getAsJsonArray();
             for(int i = 0; i < a.size(); i++)
             {
-                IInfoTextLine line = InfoPageHelper.createLine(this, a.get(i));
-
-                if(line != null)
-                {
-                    text.add(line);
-                }
+                text.add(InfoPageHelper.createLine(this, a.get(i)));
             }
         }
 

@@ -17,7 +17,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftbl.lib.gui.TextFieldLM;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
@@ -177,7 +177,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new TextFieldLM(0, 0, panelText.getWidth(), -1, getFont(), "") : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), 11) : line.createWidget(GuiInfo.this, panelText));
                 }
 
                 updateWidgetPositions();
