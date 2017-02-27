@@ -420,11 +420,16 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public boolean addPlayer(IForgePlayer player)
     {
-        if(!hasStatus(player, EnumTeamStatus.MEMBER) && hasStatus(player, EnumTeamStatus.INVITED))
+        if(hasStatus(player, EnumTeamStatus.INVITED))
         {
             player.setTeamID(getName());
-            MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
-            setStatus(player.getId(), EnumTeamStatus.MEMBER);
+
+            if(!hasStatus(player, EnumTeamStatus.MEMBER))
+            {
+                MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
+                setStatus(player.getId(), EnumTeamStatus.MEMBER);
+            }
+
             return true;
         }
 

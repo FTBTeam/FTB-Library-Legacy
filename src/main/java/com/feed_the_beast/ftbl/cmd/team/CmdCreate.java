@@ -89,8 +89,8 @@ public class CmdCreate extends CommandLM
             }
         }
 
-        team.changeOwner(p);
         Universe.INSTANCE.teams.put(team.getName(), team);
+        team.changeOwner(p);
 
         MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
         MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
