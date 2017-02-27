@@ -36,8 +36,6 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 
     boolean equalsPlayer(@Nullable IForgePlayer player);
 
-    String getTeamID();
-
     void setTeamID(String o);
 
     @Nullable

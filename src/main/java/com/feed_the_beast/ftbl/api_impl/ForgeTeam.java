@@ -347,8 +347,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     private boolean isMember(UUID playerId)
     {
         IForgePlayer player = FTBLibIntegrationInternal.API.getUniverse().getPlayer(playerId);
-
-        return player != null && player.getTeamID().equals(getName());
+        return player != null && equals(player.getTeam());
 
     }
 
@@ -584,5 +583,10 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         }
 
         return list;
+    }
+
+    public boolean isValid()
+    {
+        return !Bits.getFlag(flags, FLAG_INVALID);
     }
 }

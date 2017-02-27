@@ -59,7 +59,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     private final UUID playerId;
     private String playerName;
     private final NBTDataStorage dataStorage;
-    private String teamID = "";
+    private ForgeTeam team = null;
     private int flags = 0;
     private EntityPlayerMP entityPlayer;
     private NBTTagCompound playerNBT;
@@ -73,22 +73,21 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     }
 
     @Override
-    public final String getTeamID()
-    {
-        return teamID;
-    }
-
-    @Override
     public final void setTeamID(String id)
     {
-        teamID = id;
+        team = Universe.INSTANCE.getTeam(id);
     }
 
     @Override
     @Nullable
     public final ForgeTeam getTeam()
     {
-        return teamID.isEmpty() ? null : Universe.INSTANCE.getTeam(teamID);
+        if(team != null && !team.isValid())
+        {
+            return null;
+        }
+
+        return team;
     }
 
     @Override
@@ -292,9 +291,9 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
             nbt.setByte("Flags", (byte) flags);
         }
 
-        if(teamID != null && !teamID.isEmpty())
+        if(team != null && team.isValid())
         {
-            nbt.setString("TeamID", teamID);
+            nbt.setString("TeamID", team.getName());
         }
 
         if(dataStorage != null)
