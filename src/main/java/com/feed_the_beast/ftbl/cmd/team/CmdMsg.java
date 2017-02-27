@@ -23,6 +23,12 @@ public class CmdMsg extends CommandLM
     }
 
     @Override
+    public int getRequiredPermissionLevel()
+    {
+        return 0;
+    }
+
+    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         checkArgs(args, 1, "<message...>");
