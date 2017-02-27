@@ -30,8 +30,7 @@ import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import java.io.File;
 import java.util.Locale;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*",
-        dependencies = "required-after:Forge@[12.18.2.2121,);after:Baubles;after:JEI;after:nei;after:Waila;after:MineTweaker3;after:mcmultipart;after:chiselsandbits")
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = FTBLibFinals.DEPENDENCIES)
 public class FTBLibMod
 {
     @Mod.Instance(FTBLibFinals.MOD_ID)
@@ -90,7 +89,7 @@ public class FTBLibMod
         TickHandler.INSTANCE = new TickHandler();
         LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
         Universe.INSTANCE = new Universe();
-        Universe.INSTANCE.init();
+        Universe.INSTANCE.load();
         PROXY.worldLoaded();
         LMServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
         FTBLibIntegrationInternal.API.loadWorldData(event.getServer());

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.google.gson.JsonElement;
+import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -153,5 +154,17 @@ public class LMNetUtils
     public static ITextComponent readTextComponent(ByteBuf io)
     {
         return LMJsonUtils.deserializeTextComponent(readJsonElement(io));
+    }
+
+    public static void writeProfile(ByteBuf io, GameProfile profile)
+    {
+        writeUUID(io, profile.getId());
+        ByteBufUtils.writeUTF8String(io, profile.getName());
+    }
+
+    public static GameProfile readProfile(ByteBuf io)
+    {
+        UUID id = readUUID(io);
+        return new GameProfile(id, ByteBufUtils.readUTF8String(io));
     }
 }

@@ -16,7 +16,9 @@ public class FTBLibNetHandler
         NET.register(6, new MessageDisplayInfo());
         NET.register(7, new MessageLogin());
         NET.register(8, new MessageNotifyPlayerCustom());
-        NET.register(9, new MessageSelectTeamGuiResponse());
-        NET.register(10, new MessageMyTeamGuiResponse());
+        NET.register(9, new MessageSelectTeamGui());
+        NET.register(10, new MessageMyTeamGui());
+        NET.register(11, new MessageMyTeamAddPlayerGui());
+        NET.register(12, new MessageDisplayTeamMsg());
     }
 }

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -89,7 +90,28 @@ public class TextBoxLM extends WidgetLM
                     }
                     else
                     {
-                        setText(text.substring(0, text.length() - 1));
+                        int toRemove = 0;
+
+                        if(GuiScreen.isShiftKeyDown() && LMStringUtils.isTextChar(text.charAt(text.length() - 1), true))
+                        {
+                            for(int i = text.length() - 1; i >= 0; i--)
+                            {
+                                if(LMStringUtils.isTextChar(text.charAt(i), true))
+                                {
+                                    toRemove++;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            toRemove = 1;
+                        }
+
+                        setText(text.substring(0, text.length() - toRemove));
                     }
                     onTextChanged(gui);
                 }
@@ -110,8 +132,8 @@ public class TextBoxLM extends WidgetLM
             {
                 if(isValid())
                 {
-                    onEnterPressed(gui);
                     setSelected(gui, false);
+                    onEnterPressed(gui);
                 }
             }
             else
@@ -186,14 +208,30 @@ public class TextBoxLM extends WidgetLM
                 col = 0xFFFF0000;
             }
 
+            int ax = getAX();
+            int ay = getAY();
+            int width = getWidth();
+            int height = getHeight();
+            int twidth = gui.getFont().getStringWidth(s);
+
+            GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
+
+            int renderX = textRenderX;
+
             if(textRenderX == -1)
             {
-                gui.getFont().drawString(ns, getAX() + textRenderX - (gui.getFont().getStringWidth(s) / 2) + getWidth() / 2, getAY() + textRenderY, col);
+                renderX = (width - twidth) / 2;
             }
             else
             {
-                gui.getFont().drawString(ns, getAX() + textRenderX, getAY() + textRenderY, col);
+                if(twidth > width - 8)
+                {
+                    renderX -= (twidth - width + 8);
+                }
             }
+
+            gui.getFont().drawString(ns, ax + renderX, ay + textRenderY, col);
+            GuiHelper.popScissor();
         }
     }
 

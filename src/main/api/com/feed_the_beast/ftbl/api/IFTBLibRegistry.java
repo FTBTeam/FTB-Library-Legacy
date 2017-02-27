@@ -35,8 +35,6 @@ public interface IFTBLibRegistry
 
     void addInfoTextLine(String id, IInfoTextLineProvider provider);
 
-    void addTeamPlayerPermission(String permission, boolean visible);
-
     void addSyncData(String mod, ISyncData data);
 
     void addUniverseDataProvider(ResourceLocation id, IDataProvider<IUniverse> provider);

@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,14 +15,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 10.11.2016.
+ * Created by LatvianModder on 11.11.2016.
  */
-public class CmdSetPermission extends CommandLM
+public class CmdSetStatus extends CommandLM
 {
     @Override
     public String getCommandName()
     {
-        return "set_has_permission";
+        return "set_status";
     }
 
     @Override
@@ -33,9 +32,9 @@ public class CmdSetPermission extends CommandLM
     }
 
     @Override
-    public boolean isUsernameIndex(String[] args, int i)
+    public String getCommandUsage(ICommandSender sender)
     {
-        return i == 0;
+        return "/ftb team set_status <player> <status>";
     }
 
     @Override
@@ -43,14 +42,16 @@ public class CmdSetPermission extends CommandLM
     {
         if(args.length == 2)
         {
-            return getListOfStringsMatchingLastWord(args, FTBLibModCommon.VISIBLE_TEAM_PLAYER_PERMISSIONS);
-        }
-        else if(args.length == 3)
-        {
-            return getListOfStringsMatchingLastWord(args, "true", "false");
+            return getListOfStringsMatchingLastWord(args, EnumTeamStatus.VALID_VALUES);
         }
 
         return super.getTabCompletionOptions(server, sender, args, pos);
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int i)
+    {
+        return i == 0;
     }
 
     @Override
@@ -64,27 +65,31 @@ public class CmdSetPermission extends CommandLM
         {
             throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
-        else if(!team.hasPermission(p.getProfile().getId(), FTBLibPerms.TEAM_EDIT_PERMISSIONS))
+        else if(!team.hasStatus(p, EnumTeamStatus.MOD))
         {
             throw FTBLibLang.COMMAND_PERMISSION.commandError();
         }
 
-        checkArgs(args, 3, "<player> <id> <true|false>");
+        checkArgs(args, 2, "<player> <status>");
         IForgePlayer p1 = getForgePlayer(args[0]);
-        boolean val = parseBoolean(args[2]);
 
         if(p1.equals(team.getOwner()))
         {
             throw FTBLibLang.TEAM_PERMISSION_OWNER.commandError();
         }
+        else if(!team.hasStatus(p, EnumTeamStatus.MOD))
+        {
+            throw FTBLibLang.COMMAND_PERMISSION.commandError();
+        }
 
-        if(team.setHasPermission(p1.getProfile().getId(), args[1], val))
+        EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[1].toLowerCase());
+
+        if(status == null || !status.canBeSet())
         {
-            FTBLibLang.TEAM_PERMISSION_SET.printChat(sender, args[1], args[0], String.valueOf(val));
+            throw new IllegalArgumentException(args[1]);
         }
-        else
-        {
-            FTBLibLang.TEAM_PERMISSION_ALREADY_SET.printChat(sender, args[1], args[0], val);
-        }
+
+        team.setStatus(p1.getId(), status);
+        //TODO: Display notification
     }
 }

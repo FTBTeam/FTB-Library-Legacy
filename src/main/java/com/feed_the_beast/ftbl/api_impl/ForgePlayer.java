@@ -56,16 +56,19 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     private static final IConfigKey HIDE_NEW_TEAM_MSG_NOTIFICATION = new ConfigKey("ftbl.hide_new_team_msg_notification", new PropertyBool(false));
     private static FakePlayer playerForStats;
 
+    private final UUID playerId;
+    private String playerName;
     private final NBTDataStorage dataStorage;
     private String teamID = "";
     private int flags = 0;
-    private GameProfile gameProfile;
     private EntityPlayerMP entityPlayer;
     private NBTTagCompound playerNBT;
+    private IConfigTree cachedConfig;
 
     public ForgePlayer(GameProfile p)
     {
-        setProfile(p);
+        playerId = p.getId();
+        playerName = p.getName();
         dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
     }
 
@@ -91,17 +94,29 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public final GameProfile getProfile()
     {
-        if(gameProfile == null)
+        if(isOnline())
         {
-            throw new NullPointerException("GameProfile is null!");
+            return entityPlayer.getGameProfile();
         }
 
-        return gameProfile;
+        return new GameProfile(playerId, playerName);
     }
 
-    public final void setProfile(GameProfile p)
+    @Override
+    public final UUID getId()
     {
-        gameProfile = new GameProfile(p.getId(), p.getName());
+        return playerId;
+    }
+
+    @Override
+    public final String getName()
+    {
+        return playerName;
+    }
+
+    public final void setUsername(String n)
+    {
+        playerName = n;
     }
 
     @Override
@@ -114,17 +129,17 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public final int compareTo(ForgePlayer o)
     {
-        return getProfile().getName().compareToIgnoreCase(o.getProfile().getName());
+        return getName().compareToIgnoreCase(o.getName());
     }
 
     public final String toString()
     {
-        return gameProfile.getName();
+        return playerName;
     }
 
     public final int hashCode()
     {
-        return gameProfile.getId().hashCode();
+        return playerId.hashCode();
     }
 
     public boolean equals(Object o)
@@ -133,13 +148,13 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         {
             return false;
         }
-        else if(o == this || o == gameProfile.getId())
+        else if(o == this || o == playerId)
         {
             return true;
         }
         else if(o instanceof UUID)
         {
-            return gameProfile.getId().equals(o);
+            return playerId.equals(o);
         }
         else if(o instanceof IForgePlayer)
         {
@@ -151,7 +166,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public boolean equalsPlayer(@Nullable IForgePlayer p)
     {
-        return p == this || (p != null && gameProfile.getId().equals(p.getProfile().getId()));
+        return p == this || (p != null && getId().equals(p.getId()));
     }
 
     public Map<EntityEquipmentSlot, ItemStack> getArmor()
@@ -331,16 +346,21 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
             playerForStats = new FakePlayer(LMServerUtils.getServerWorld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
         }
 
-        playerForStats.setUniqueId(getProfile().getId());
+        playerForStats.setUniqueId(getId());
         return LMServerUtils.getServer().getPlayerList().getPlayerStatsFile(playerForStats);
     }
 
     @Override
     public IConfigTree getSettings()
     {
-        IConfigTree tree = new ConfigTree();
+        if(cachedConfig != null)
+        {
+            return cachedConfig;
+        }
 
-        tree.add(HIDE_TEAM_NOTIFICATION, new PropertyBool(false)
+        cachedConfig = new ConfigTree();
+
+        cachedConfig.add(HIDE_TEAM_NOTIFICATION, new PropertyBool(false)
         {
             @Override
             public boolean getBoolean()
@@ -355,7 +375,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
             }
         });
 
-        tree.add(HIDE_NEW_TEAM_MSG_NOTIFICATION, new PropertyBool(false)
+        cachedConfig.add(HIDE_NEW_TEAM_MSG_NOTIFICATION, new PropertyBool(false)
         {
             @Override
             public boolean getBoolean()
@@ -370,8 +390,8 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
             }
         });
 
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, tree));
-        return tree;
+        MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, cachedConfig));
+        return cachedConfig;
     }
 
     @Override
@@ -386,7 +406,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         {
             try
             {
-                playerNBT = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "playerdata/" + getProfile().getId() + ".dat"));
+                playerNBT = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "playerdata/" + getId() + ".dat"));
             }
             catch(Exception ex)
             {

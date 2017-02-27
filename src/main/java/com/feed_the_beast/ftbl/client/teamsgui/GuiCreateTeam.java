@@ -44,7 +44,7 @@ public class GuiCreateTeam extends GuiLM
 
                 if(!textBoxId.getText().isEmpty())
                 {
-                    FTBLibClient.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName(), false);
+                    FTBLibClient.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
                     gui.closeGui();
                 }
             }
@@ -87,9 +87,11 @@ public class GuiCreateTeam extends GuiLM
             }
         };
 
+        textBoxId.setText(mc.thePlayer.getGameProfile().getName().toLowerCase());
         textBoxId.background = ButtonLM.DEFAULT_BACKGROUND;
         textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
         textBoxId.textColor = LMColorUtils.getColorFromID(color.getColorID());
+        textBoxId.setSelected(this, true);
 
         colorButtons = new ArrayList<>();
 
@@ -108,7 +110,7 @@ public class GuiCreateTeam extends GuiLM
             };
 
             b.setIcon(new TexturelessRectangle(LMColorUtils.getColorFromID(EnumTeamColor.VALUES[i].getColorID())).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
-            b.setTitle(EnumTeamColor.VALUES[i].getLangKey().translate());
+            b.setTitle(EnumTeamColor.VALUES[i].getTextFormatting() + EnumTeamColor.VALUES[i].getLangKey().translate());
             colorButtons.add(b);
         }
     }
@@ -118,12 +120,7 @@ public class GuiCreateTeam extends GuiLM
     {
         add(buttonAccept);
         add(buttonCancel);
-
-        for(ButtonLM b : colorButtons)
-        {
-            add(b);
-        }
-
+        addAll(colorButtons);
         add(textBoxId);
     }
 

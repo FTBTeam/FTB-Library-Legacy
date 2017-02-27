@@ -140,6 +140,11 @@ public class FTBLibClient
         }
     }
 
+    public static void execClientCommand(String s)
+    {
+        execClientCommand(s, false);
+    }
+
     public static ResourceLocation getSkinTexture(String username)
     {
         ResourceLocation r = CACHED_SKINS.get(username);

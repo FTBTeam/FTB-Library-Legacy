@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +45,19 @@ public class CheckBoxListLM extends ButtonLM
 
         public CheckBoxEntry select(boolean value)
         {
-            boolean old = isSelected;
             if(checkBoxList.radioButtons)
             {
                 if(value)
                 {
                     for(CheckBoxEntry entry : checkBoxList.entries)
                     {
+                        boolean old1 = entry.isSelected;
                         entry.isSelected = false;
+
+                        if(old1)
+                        {
+                            entry.onValueChanged();
+                        }
                     }
                 }
                 else
@@ -60,6 +66,7 @@ public class CheckBoxListLM extends ButtonLM
                 }
             }
 
+            boolean old = isSelected;
             isSelected = value;
 
             if(old != isSelected)
@@ -134,5 +141,7 @@ public class CheckBoxListLM extends ButtonLM
             (entry.isSelected ? iconSelected : iconDeselected).draw(ax + 1, y + 1, 8, 8);
             gui.drawString(entry.name, ax + 12, y + 1);
         }
+
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 }

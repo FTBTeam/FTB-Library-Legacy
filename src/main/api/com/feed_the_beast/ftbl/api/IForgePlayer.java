@@ -10,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 11.08.2016.
@@ -19,7 +20,14 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
     byte FLAG_HIDE_TEAM_NOTIFICATION = 1;
     byte FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION = 2;
 
-    GameProfile getProfile();
+    UUID getId();
+
+    String getName();
+
+    default GameProfile getProfile()
+    {
+        return new GameProfile(getId(), getName());
+    }
 
     EntityPlayerMP getPlayer();
 

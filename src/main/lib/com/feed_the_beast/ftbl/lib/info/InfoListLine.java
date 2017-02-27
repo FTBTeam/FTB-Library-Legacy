@@ -124,8 +124,6 @@ public class InfoListLine extends EmptyInfoPageLine
             {
                 add(line.createWidget(gui, this));
             }
-
-            updateWidgetPositions();
         }
 
         @Override

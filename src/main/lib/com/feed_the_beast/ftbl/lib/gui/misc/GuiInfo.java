@@ -147,7 +147,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 }
 
                 buttonSpecial.updateButton(GuiInfo.this);
-                updateWidgetPositions();
             }
 
             @Override
@@ -180,14 +179,13 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                     add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), 11) : line.createWidget(GuiInfo.this, panelText));
                 }
 
-                updateWidgetPositions();
                 getFont().setUnicodeFlag(uni);
             }
 
             @Override
             public void updateWidgetPositions()
             {
-                sliderText.elementSize = alignWidgetsByHeight();
+                sliderText.elementSize = alignWidgetsByHeight() + 4;
             }
         };
 

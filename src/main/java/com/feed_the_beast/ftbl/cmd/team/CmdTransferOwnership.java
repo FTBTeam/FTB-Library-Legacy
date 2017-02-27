@@ -55,10 +55,10 @@ public class CmdTransferOwnership extends CommandLM
 
         if(!p1.getTeamID().equals(p.getTeamID()))
         {
-            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getProfile().getName());
+            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
         }
 
         team.changeOwner(p1);
-        FTBLibLang.TEAM_TRANSFERED_OWNERSHIP.printChat(sender, p1.getProfile().getName());
+        FTBLibLang.TEAM_TRANSFERED_OWNERSHIP.printChat(sender, p1.getName());
     }
 }

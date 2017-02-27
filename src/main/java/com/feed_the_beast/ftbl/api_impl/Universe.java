@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlay
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
@@ -46,7 +47,7 @@ public class Universe implements IUniverse
     public final Map<String, ForgeTeam> teams = new HashMap<>();
     private NBTDataStorage dataStorage;
 
-    public void init()
+    public void load()
     {
         dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_UNIVERSE);
         MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
@@ -61,12 +62,122 @@ public class Universe implements IUniverse
             }
 
             playerMap.clear();
+            teams.clear();
 
-            NBTTagCompound nbt = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"));
+            File oldFile = new File(LMUtils.folderWorld, "data/FTBLib.dat");
 
-            if(nbt != null)
+            if(oldFile.exists())
             {
-                deserializeNBT(nbt);
+                NBTTagCompound nbt = LMNBTUtils.readTag(oldFile);
+                MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
+
+                NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
+
+                for(int i = 0; i < list.tagCount(); i++)
+                {
+                    NBTTagCompound tag = list.getCompoundTagAt(i);
+                    UUID id = LMStringUtils.fromString(tag.getString("UUID"));
+
+                    if(id != null)
+                    {
+                        ForgePlayer p = new ForgePlayer(new GameProfile(id, tag.getString("Name")));
+                        p.deserializeNBT(tag);
+                        playerMap.put(id, p);
+                    }
+                }
+
+                NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
+
+                for(int i = 0; i < teamsTag.tagCount(); i++)
+                {
+                    NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
+                    ForgeTeam team = new ForgeTeam(tag2.getString("ID"));
+                    team.deserializeNBT(tag2);
+                    teams.put(team.getName(), team);
+                }
+
+                MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
+
+                if(dataStorage != null)
+                {
+                    dataStorage.deserializeNBT(nbt.hasKey("ForgeCaps") ? nbt.getCompoundTag("ForgeCaps") : nbt.getCompoundTag("Data"));
+                }
+
+                oldFile.delete();
+            }
+            else
+            {
+                File folder = new File(LMUtils.folderWorld, "data/ftb_lib/");
+                MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
+
+                Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
+                Map<String, NBTTagCompound> teamNBT = new HashMap<>();
+
+                File[] files = new File(folder, "players").listFiles();
+
+                if(files != null && files.length > 0)
+                {
+                    for(File f : files)
+                    {
+                        if(f.getName().endsWith(".dat"))
+                        {
+                            UUID uuid = LMStringUtils.fromString(LMFileUtils.getRawFileName(f));
+
+                            if(uuid != null)
+                            {
+                                NBTTagCompound nbt = LMNBTUtils.readTag(f);
+
+                                if(nbt != null)
+                                {
+                                    playerNBT.put(uuid, nbt);
+                                    playerMap.put(uuid, new ForgePlayer(new GameProfile(uuid, nbt.getString("Name"))));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                files = new File(folder, "teams").listFiles();
+
+                if(files != null && files.length > 0)
+                {
+                    for(File f : files)
+                    {
+                        if(f.getName().endsWith(".dat"))
+                        {
+                            NBTTagCompound nbt = LMNBTUtils.readTag(f);
+
+                            if(nbt != null)
+                            {
+                                String s = LMFileUtils.getRawFileName(f);
+                                teamNBT.put(s, nbt);
+                                teams.put(s, new ForgeTeam(s));
+                            }
+                        }
+                    }
+                }
+
+                for(IForgePlayer player : playerMap.values())
+                {
+                    player.deserializeNBT(playerNBT.get(player.getId()));
+                }
+
+                for(IForgeTeam team : teams.values())
+                {
+                    team.deserializeNBT(teamNBT.get(team.getName()));
+                }
+
+                MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
+
+                if(dataStorage != null)
+                {
+                    NBTTagCompound nbt = LMNBTUtils.readTag(new File(folder, "universe.dat"));
+
+                    if(nbt != null)
+                    {
+                        dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
+                    }
+                }
             }
         }
         catch(Exception ex)
@@ -105,7 +216,7 @@ public class Universe implements IUniverse
             {
                 p = new ForgePlayerFake(fp);
                 p.onLoggedIn(fp, false);
-                FAKE_PLAYER_MAP.put(p.getProfile().getId(), p);
+                FAKE_PLAYER_MAP.put(p.getId(), p);
             }
 
             return p;
@@ -121,7 +232,7 @@ public class Universe implements IUniverse
         }
         else if(o instanceof IForgePlayer)
         {
-            return getPlayer(((IForgePlayer) o).getProfile().getId());
+            return getPlayer(((IForgePlayer) o).getId());
         }
         else if(o instanceof EntityPlayer)
         {
@@ -142,7 +253,7 @@ public class Universe implements IUniverse
 
             for(ForgePlayer p : playerMap.values())
             {
-                if(p.getProfile().getName().equalsIgnoreCase(s))
+                if(p.getName().equalsIgnoreCase(s))
                 {
                     return p;
                 }
@@ -194,79 +305,27 @@ public class Universe implements IUniverse
         return l;
     }
 
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
+    public void save(File folder) throws Exception
     {
-        MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
-
-        NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
-
-        for(int i = 0; i < list.tagCount(); i++)
-        {
-            NBTTagCompound tag = list.getCompoundTagAt(i);
-            UUID id = LMStringUtils.fromString(tag.getString("UUID"));
-
-            if(id != null)
-            {
-                ForgePlayer p = new ForgePlayer(new GameProfile(id, tag.getString("Name")));
-                p.deserializeNBT(tag);
-                playerMap.put(id, p);
-            }
-        }
-
-        teams.clear();
-        NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
-
-        for(int i = 0; i < teamsTag.tagCount(); i++)
-        {
-            NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-            ForgeTeam team = new ForgeTeam(tag2.getString("ID"));
-            team.deserializeNBT(tag2);
-            teams.put(team.getName(), team);
-        }
-
-        MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
-
-        if(dataStorage != null)
-        {
-            dataStorage.deserializeNBT(nbt.hasKey("ForgeCaps") ? nbt.getCompoundTag("ForgeCaps") : nbt.getCompoundTag("Data"));
-        }
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        NBTTagCompound nbt1;
-
-        NBTTagList tagPlayers = new NBTTagList();
-
         for(ForgePlayer p : playerMap.values())
         {
-            nbt1 = p.serializeNBT();
-            nbt1.setString("Name", p.getProfile().getName());
-            nbt1.setString("UUID", LMStringUtils.fromUUID(p.getProfile().getId()));
-            tagPlayers.appendTag(nbt1);
+            NBTTagCompound nbt = p.serializeNBT();
+            nbt.setString("Name", p.getName());
+            LMNBTUtils.writeTag(new File(folder, "players/" + LMStringUtils.fromUUID(p.getId()) + ".dat"), nbt);
         }
-
-        nbt.setTag("Players", tagPlayers);
-
-        NBTTagList teamsTag = new NBTTagList();
 
         for(ForgeTeam team : teams.values())
         {
-            nbt1 = team.serializeNBT();
-            nbt1.setString("ID", team.getName());
-            teamsTag.appendTag(nbt1);
+            LMNBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), team.serializeNBT());
         }
 
-        nbt.setTag("Teams", teamsTag);
+        NBTTagCompound nbt = new NBTTagCompound();
 
         if(dataStorage != null)
         {
             nbt.setTag("Data", dataStorage.serializeNBT());
         }
 
-        return nbt;
+        LMNBTUtils.writeTag(new File(folder, "universe.dat"), nbt);
     }
 }

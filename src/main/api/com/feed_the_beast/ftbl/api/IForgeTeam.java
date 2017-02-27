@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -16,6 +17,9 @@ import java.util.UUID;
  */
 public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
 {
+    int FLAG_FREE_TO_JOIN = 1;
+    int FLAG_INVALID = 2;
+
     @Nullable
     INBTSerializable<?> getData(ResourceLocation id);
 
@@ -27,25 +31,27 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     EnumTeamColor getColor();
 
-    EnumTeamStatus getHighestStatus(IForgePlayer player);
+    EnumTeamStatus getHighestStatus(UUID playerId);
 
-    boolean hasStatus(IForgePlayer player, EnumTeamStatus status);
+    boolean hasStatus(UUID playerId, EnumTeamStatus status);
+
+    default EnumTeamStatus getHighestStatus(IForgePlayer player)
+    {
+        return getHighestStatus(player.getId());
+    }
+
+    default boolean hasStatus(IForgePlayer player, EnumTeamStatus status)
+    {
+        return hasStatus(player.getId(), status);
+    }
+
+    void setStatus(UUID playerId, EnumTeamStatus status);
 
     Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
 
-    default boolean canInteract(IForgePlayer player, EnumTeamPrivacyLevel level)
+    default boolean canInteract(UUID playerId, EnumTeamPrivacyLevel level)
     {
-        switch(level)
-        {
-            case EVERYONE:
-                return true;
-            case MEMBERS:
-                return hasStatus(player, EnumTeamStatus.MEMBER);
-            case ALLIES:
-                return hasStatus(player, EnumTeamStatus.ALLY);
-            default:
-                return false;
-        }
+        return hasStatus(playerId, level.getRequiredStatus());
     }
 
     boolean addPlayer(IForgePlayer p);
@@ -56,9 +62,9 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     IConfigTree getSettings();
 
-    boolean hasPermission(UUID playerID, String permission);
+    int getFlags();
 
-    boolean setHasPermission(UUID playerID, String permission, boolean val);
+    void printMessage(ITeamMessage message);
 
-    Collection<String> getPermissions(UUID playerID, boolean onlyVisible);
+    List<ITeamMessage> getMessages();
 }

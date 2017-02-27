@@ -188,7 +188,6 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             public void addWidgets()
             {
                 addAll(configEntryButtons);
-                updateWidgetPositions();
             }
 
             @Override
@@ -237,7 +236,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
     }
 
     @Override
-    public void onInit()
+    public void updateWidgetPositions()
     {
         buttonAccept.posX = getWidth() - 18;
         buttonCancel.posX = getWidth() - 38;

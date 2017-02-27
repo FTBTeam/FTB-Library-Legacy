@@ -9,6 +9,7 @@ public class FTBLibLang
 {
     //@formatter:off
     public static final LangKey
+    DEPRECATED = get("deprecated"),
     MODE_LOADED = get("mode.loaded"),
     MODE_NOT_FOUND = get("mode.not_found"),
     MODE_ALREADY_SET = get("mode.already_set"),
@@ -50,10 +51,9 @@ public class FTBLibLang
     TEAM_NOT_MEMBER = get("team.error.not_member"),
     TEAM_MUST_TRANSFER_OWNERSHIP = get("team.error.must_transfer_ownership"),
     TEAM_ALREADY_INVITED = get("team.error.already_invited"),
-            TEAM_FAILED_TO_JOIN = get("team.error.failed_to_join"),
-            TEAM_PERMISSION_SET = get("team.permission.set"),
-            TEAM_PERMISSION_ALREADY_SET = get("team.permission.already_set"),
-            TEAM_PERMISSION_OWNER = get("team.permission.owner");
+    TEAM_FAILED_TO_JOIN = get("team.error.failed_to_join"),
+    TEAM_STATUS_SET = get("team.status.set"),
+    TEAM_PERMISSION_OWNER = get("team.permission.owner");
     //@formatter:on
 
     private static LangKey get(String s)

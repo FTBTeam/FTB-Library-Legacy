@@ -12,20 +12,28 @@ public interface IPanel extends IWidget
     int FLAG_UNICODE_FONT = 4;
     int FLAG_DEFAULTS = FLAG_ONLY_RENDER_WIDGETS_INSIDE | FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE;
 
-    default void add(IWidget w)
+    default void add(IWidget widget)
     {
-        w.setParentPanel(this);
-        getWidgets().add(w);
+        widget.setParentPanel(this);
+        getWidgets().add(widget);
 
-        if(w instanceof IPanel)
+        if(widget instanceof IPanel)
         {
-            ((IPanel) w).refreshWidgets();
+            ((IPanel) widget).refreshWidgets();
         }
     }
 
-    default void addAll(Iterable<? extends IWidget> l)
+    default void addAll(IWidget... widgets)
     {
-        for(IWidget w : l)
+        for(IWidget w : widgets)
+        {
+            add(w);
+        }
+    }
+
+    default void addAll(Iterable<? extends IWidget> list)
+    {
+        for(IWidget w : list)
         {
             add(w);
         }

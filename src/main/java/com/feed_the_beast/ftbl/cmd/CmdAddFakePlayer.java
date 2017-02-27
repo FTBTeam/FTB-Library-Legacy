@@ -53,7 +53,7 @@ public class CmdAddFakePlayer extends CommandLM
         }
 
         ForgePlayer p = new ForgePlayer(new GameProfile(id, args[1]));
-        Universe.INSTANCE.playerMap.put(p.getProfile().getId(), p);
+        Universe.INSTANCE.playerMap.put(p.getId(), p);
 
         sender.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
     }

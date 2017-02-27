@@ -11,6 +11,6 @@ public enum ForgePlayerNameComparator implements Comparator<IForgePlayer>
     @Override
     public int compare(IForgePlayer o1, IForgePlayer o2)
     {
-        return o1.getProfile().getName().compareToIgnoreCase(o2.getProfile().getName());
+        return o1.getName().compareToIgnoreCase(o2.getName());
     }
 }

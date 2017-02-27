@@ -29,7 +29,7 @@ public class MessageLMPlayerInfo extends MessageToClient<MessageLMPlayerInfo>
 
     public MessageLMPlayerInfo(ForgePlayer owner, ForgePlayer p)
     {
-        playerID = p.getProfile().getId();
+        playerID = p.getId();
 
         info = new ArrayList<>();
         p.getInfo(owner, info);

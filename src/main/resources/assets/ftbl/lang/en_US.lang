@@ -36,6 +36,7 @@ ftbl.dside.left=Left
 ftbl.dside.right=Right
 
 # FTBLib Lang
+ftbl.lang.deprecated=This method is deprecated, please use %s
 ftbl.lang.mode.loaded=Mode set to '%s'!
 ftbl.lang.mode.not_found=Mode does not exist!
 ftbl.lang.mode.already_set=Mode already set!
@@ -97,12 +98,15 @@ ftbl.lang.team_color.gray=Gray
 ftbteam.config.display.color=Color
 ftbteam.config.display.title=Title
 ftbteam.config.display.desc=Description
+ftbteam.config.free_to_join.desc=Anyone can join without invitation
 
 ftbl.lang.team_status.enemy=Enemy
 ftbl.lang.team_status.none=None
+ftbl.lang.team_status.requesting_invite=Requesting Invite
 ftbl.lang.team_status.invited=Invited
 ftbl.lang.team_status.ally=Ally
 ftbl.lang.team_status.member=Member
+ftbl.lang.team_status.mod=Moderator
 ftbl.lang.team_status.owner=Owner
 
 # Action Buttons

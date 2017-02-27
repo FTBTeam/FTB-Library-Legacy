@@ -1,33 +1,32 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
-import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by LatvianModder on 05.02.2017.
  */
-public class TeamInst extends FinalIDObject
+public class MyTeamData extends FinalIDObject
 {
     public String displayName, description;
-    public PlayerInst owner;
-    public List<PlayerInst> players;
-    public List<ForgeTeam.Message> chatHistory;
+    public MyTeamPlayerData owner;
+    public List<MyTeamPlayerData> players;
+    public List<ITeamMessage> chatHistory;
+    public MyTeamPlayerData me;
+    private int myPlayerIndex;
 
-    public TeamInst(ByteBuf io)
+    public MyTeamData(ByteBuf io)
     {
         super(ByteBufUtils.readUTF8String(io));
         displayName = ByteBufUtils.readUTF8String(io);
@@ -38,7 +37,7 @@ public class TeamInst extends FinalIDObject
 
         while(--s >= 0)
         {
-            PlayerInst pi = new PlayerInst(io);
+            MyTeamPlayerData pi = new MyTeamPlayerData(io);
             players.add(pi);
 
             if(owner == null && pi.status == EnumTeamStatus.OWNER)
@@ -47,6 +46,7 @@ public class TeamInst extends FinalIDObject
             }
         }
 
+        me = players.get(io.readInt());
         s = io.readInt();
         chatHistory = new ArrayList<>(s);
 
@@ -56,52 +56,37 @@ public class TeamInst extends FinalIDObject
         }
     }
 
-    public TeamInst(IUniverse universe, IForgeTeam team, IForgePlayer player, boolean privateData)
+    public MyTeamData(IUniverse universe, IForgeTeam team, IForgePlayer player)
     {
         super(team.getName());
         displayName = team.getColor().getTextFormatting() + team.getTitle();
         description = team.getDesc();
 
         players = new ArrayList<>();
-        chatHistory = new ArrayList<>();
+        chatHistory = team.getMessages();
 
-        if(!privateData)
-        {
-            owner = new PlayerInst(team, team.getOwner(), EnumTeamStatus.OWNER, Collections.emptyList());
-            players.add(owner);
-            return;
-        }
-
-        UUID playerId = player.getProfile().getId();
-
-        Collection<String> perms = team.hasPermission(playerId, FTBLibPerms.TEAM_EDIT_PERMISSIONS) ? FTBLibModCommon.VISIBLE_TEAM_PLAYER_PERMISSIONS : Collections.emptyList();
-/* new ArrayList<>();
-        if(perms.isEmpty())
-        {
-            if(team.hasPermission(playerId, FTBLibPerms.TEAM_MANAGE_ALLIES))
-            {
-                perms.add(FTBLibPerms.TEAM_IS_ALLY);
-            }
-
-            if(team.hasPermission(playerId, FTBLibPerms.TEAM_MANAGE_ENEMIES))
-            {
-                perms.add(FTBLibPerms.TEAM_IS_ENEMY);
-            }
-        }*/
-
+        int i = 0;
         for(IForgePlayer p : universe.getPlayers())
         {
             EnumTeamStatus s = team.getHighestStatus(p);
 
-            if(s != EnumTeamStatus.NONE)
+            if(!s.isNone() && (s != EnumTeamStatus.INVITED || !Bits.getFlag(team.getFlags(), IForgeTeam.FLAG_FREE_TO_JOIN)))
             {
-                PlayerInst pi = new PlayerInst(team, p, s, perms);
+                MyTeamPlayerData pi = new MyTeamPlayerData(p, s);
                 players.add(pi);
 
                 if(owner == null && s == EnumTeamStatus.OWNER)
                 {
                     owner = pi;
                 }
+
+                if(p.equalsPlayer(player))
+                {
+                    me = pi;
+                    myPlayerIndex = i;
+                }
+
+                i++;
             }
         }
     }
@@ -113,16 +98,17 @@ public class TeamInst extends FinalIDObject
         ByteBufUtils.writeUTF8String(io, description);
         io.writeInt(players.size());
 
-        for(PlayerInst p : players)
+        for(MyTeamPlayerData p : players)
         {
             p.write(io);
         }
 
+        io.writeInt(myPlayerIndex);
         io.writeInt(chatHistory.size());
 
-        for(ForgeTeam.Message msg : chatHistory)
+        for(ITeamMessage msg : chatHistory)
         {
-            msg.write(io);
+            ForgeTeam.Message.write(io, msg);
         }
     }
 }

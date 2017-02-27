@@ -181,6 +181,7 @@ public class FTBLibClientEventHandler
     {
         if(event.getButton() instanceof ButtonInvLM)
         {
+            GuiHelper.playClickSound();
             (((ButtonInvLM) event.getButton()).button).onClicked(MouseButton.LEFT);
         }
     }

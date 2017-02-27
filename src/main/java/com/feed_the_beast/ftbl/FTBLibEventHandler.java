@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -44,8 +43,7 @@ public class FTBLibEventHandler
         try
         {
             LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
-            LMNBTUtils.writeTag(new File(LMUtils.folderWorld, "data/FTBLib.dat"), Universe.INSTANCE.serializeNBT());
-            //FTBLib.dev_logger.info("ForgeWorldMP Saved");
+            Universe.INSTANCE.save(new File(LMUtils.folderWorld, "data/ftb_lib"));
         }
         catch(Exception ex)
         {
@@ -77,22 +75,22 @@ public class FTBLibEventHandler
         if(firstLogin)
         {
             p = new ForgePlayer(ep.getGameProfile());
-            Universe.INSTANCE.playerMap.put(p.getProfile().getId(), p);
+            Universe.INSTANCE.playerMap.put(p.getId(), p);
         }
-        else if(!p.getProfile().getName().equals(ep.getName()))
+        else if(!p.getName().equals(ep.getName()))
         {
-            p.setProfile(ep.getGameProfile());
+            p.setUsername(ep.getGameProfile().getName());
         }
 
         p.onLoggedIn(ep, firstLogin);
 
         if(firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
         {
-            String id = p.getProfile().getName().toLowerCase();
+            String id = p.getName().toLowerCase();
 
             if(Universe.INSTANCE.getTeam(id) != null)
             {
-                id = LMStringUtils.fromUUID(p.getProfile().getId());
+                id = LMStringUtils.fromUUID(p.getId());
             }
 
             if(Universe.INSTANCE.getTeam(id) == null)

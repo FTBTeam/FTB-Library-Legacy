@@ -46,19 +46,30 @@ public abstract class PanelLM extends WidgetLM implements IPanel
     {
         getWidgets().clear();
         addWidgets();
+        updateWidgetPositions();
     }
 
-    public int alignWidgetsByHeight()
+    protected int alignWidgetsByHeight()
     {
-        int i = 0;
+        return alignWidgetsByHeight(0, 0, 0);
+    }
+
+    protected int alignWidgetsByHeight(int pre, int spacing, int post)
+    {
+        int i = pre;
 
         for(IWidget widget : getWidgets())
         {
             widget.setY(i);
-            i += widget.getHeight();
+            i += widget.getHeight() + spacing;
         }
 
-        return i;
+        if(!getWidgets().isEmpty())
+        {
+            i -= spacing;
+        }
+
+        return i + post;
     }
 
     @Override

@@ -65,13 +65,13 @@ public class CmdJoin extends CommandLM
             {
                 if(p1.isOnline())
                 {
-                    FTBLibLang.TEAM_MEMBER_JOINED.printChat(p1.getPlayer(), p.getProfile().getName());
+                    FTBLibLang.TEAM_MEMBER_JOINED.printChat(p1.getPlayer(), p.getName());
                 }
             }
         }
         else
         {
-            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getProfile().getName());
+            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getName());
         }
     }
 }

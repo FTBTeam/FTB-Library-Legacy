@@ -49,7 +49,7 @@ public class CmdLeave extends CommandLM
             team.removePlayer(p);
             Universe.INSTANCE.teams.remove(team.getName());
 
-            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getProfile().getName());
+            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getName());
             FTBLibLang.TEAM_DELETED.printChat(sender, team.getTitle());
         }
         else
@@ -60,7 +60,7 @@ public class CmdLeave extends CommandLM
             }
 
             team.removePlayer(p);
-            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getProfile().getName());
+            FTBLibLang.TEAM_MEMBER_LEFT.printChat(sender, p.getName());
         }
     }
 }

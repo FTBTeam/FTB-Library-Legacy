@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiSelectTeam;
-import com.feed_the_beast.ftbl.client.teamsgui.TeamInst;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
+import com.feed_the_beast.ftbl.client.teamsgui.PublicTeamData;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import io.netty.buffer.ByteBuf;
@@ -14,24 +14,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageSelectTeamGuiResponse extends MessageToClient<MessageSelectTeamGuiResponse>
+public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 {
-    private List<TeamInst> teams;
+    private List<PublicTeamData> teams;
 
-    public MessageSelectTeamGuiResponse()
+    public MessageSelectTeamGui()
     {
     }
 
-    public MessageSelectTeamGuiResponse(IUniverse universe, IForgePlayer player)
+    public MessageSelectTeamGui(IUniverse universe, IForgePlayer player)
     {
         teams = new ArrayList<>();
 
         for(IForgeTeam team : universe.getTeams())
         {
-            if(team.hasPermission(player.getProfile().getId(), FTBLibPerms.TEAM_CAN_JOIN))
-            {
-                teams.add(new TeamInst(universe, team, player, false));
-            }
+            teams.add(new PublicTeamData(team, team.hasStatus(player, EnumTeamStatus.INVITED)));
         }
     }
 
@@ -48,7 +45,7 @@ public class MessageSelectTeamGuiResponse extends MessageToClient<MessageSelectT
         teams = new ArrayList<>(s);
         while(--s >= 0)
         {
-            teams.add(new TeamInst(io));
+            teams.add(new PublicTeamData(io));
         }
     }
 
@@ -56,14 +53,14 @@ public class MessageSelectTeamGuiResponse extends MessageToClient<MessageSelectT
     public void toBytes(ByteBuf io)
     {
         io.writeInt(teams.size());
-        for(TeamInst t : teams)
+        for(PublicTeamData t : teams)
         {
             t.write(io);
         }
     }
 
     @Override
-    public void onMessage(MessageSelectTeamGuiResponse m, EntityPlayer player)
+    public void onMessage(MessageSelectTeamGui m, EntityPlayer player)
     {
         new GuiSelectTeam(m.teams).openGui();
     }

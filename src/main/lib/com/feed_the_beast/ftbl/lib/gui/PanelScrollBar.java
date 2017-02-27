@@ -44,8 +44,14 @@ public class PanelScrollBar extends SliderLM
     }
 
     @Override
-    public boolean shouldRender(IGui gui)
+    public boolean isEnabled(IGui gui)
     {
         return elementSize > (getDirection().isVertical() ? panel.getHeight() : panel.getHeight());
+    }
+
+    @Override
+    public boolean shouldRender(IGui gui)
+    {
+        return isEnabled(gui);
     }
 }

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -10,7 +9,7 @@ import java.util.Collection;
 /**
  * Created by LatvianModder on 11.08.2016.
  */
-public interface IUniverse extends INBTSerializable<NBTTagCompound>
+public interface IUniverse
 {
     @Nullable
     INBTSerializable<?> getData(ResourceLocation id);

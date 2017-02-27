@@ -51,7 +51,6 @@ import com.feed_the_beast.ftbl.lib.info.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.net.MessageLM;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -63,10 +62,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -76,8 +73,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public static final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
     public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
     public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
-    public static final Collection<String> TEAM_PLAYER_PERMISSIONS = new HashSet<>();
-    public static final Collection<String> VISIBLE_TEAM_PLAYER_PERMISSIONS = new HashSet<>();
     public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
     public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
     public static final Map<ResourceLocation, IDataProvider<IForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
@@ -138,15 +133,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addInfoTextLine("list", InfoListLine::new);
         addInfoTextLine("hr", (page, json) -> new InfoHrLine(json));
         addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
-
-        addTeamPlayerPermission(FTBLibPerms.TEAM_CAN_JOIN, false);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ALLY, false);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_IS_ENEMY, false);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_SETTINGS, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_EDIT_PERMISSIONS, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_MEMBERS, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ALLIES, true);
-        addTeamPlayerPermission(FTBLibPerms.TEAM_MANAGE_ENEMIES, true);
 
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
@@ -223,17 +209,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     public void addInfoTextLine(String id, IInfoTextLineProvider provider)
     {
         InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(), provider);
-    }
-
-    @Override
-    public void addTeamPlayerPermission(String permission, boolean visible)
-    {
-        TEAM_PLAYER_PERMISSIONS.add(permission);
-
-        if(visible)
-        {
-            VISIBLE_TEAM_PLAYER_PERMISSIONS.add(permission);
-        }
     }
 
     @Override

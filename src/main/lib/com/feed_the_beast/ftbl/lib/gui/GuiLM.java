@@ -68,6 +68,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
         }
 
         refreshWidgets();
+        updateWidgetPositions();
         fixUnicode = screen.getScaleFactor() % 2 == 1;
     }
 

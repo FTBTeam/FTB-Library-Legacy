@@ -28,7 +28,7 @@ public class FTBLibActions
         @Override
         public void onClicked(IMouseButton button)
         {
-            FTBLibClient.execClientCommand("/ftb team gui", false);
+            FTBLibClient.execClientCommand("/ftb team gui");
         }
 
         @Override
@@ -76,7 +76,7 @@ public class FTBLibActions
         public void onClicked(IMouseButton button)
         {
             new GuiLoading().openGui();
-            FTBLibClient.execClientCommand("/ftb my_settings", false);
+            FTBLibClient.execClientCommand("/ftb my_settings");
         }
 
         @Override

@@ -56,7 +56,7 @@ public interface IGui extends IPanel
 
     default int getTextColor()
     {
-        return 0xFF666666;
+        return 0xFFC0C0C0;
     }
 
     @SideOnly(Side.CLIENT)

@@ -1,10 +1,13 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
@@ -12,13 +15,14 @@ import com.feed_the_beast.ftbl.lib.gui.CheckBoxListLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
 import com.feed_the_beast.ftbl.lib.gui.TextFieldLM;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
@@ -26,7 +30,10 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 05.02.2017.
@@ -37,30 +44,22 @@ public class GuiMyTeam extends GuiLM
     private static final int BOTTOM_PANEL_HEIGHT = 20;
     private static final int LEFT_PANEL_WIDTH = 90;
 
-    private class ButtonPlayer extends ButtonLM implements Comparable<ButtonPlayer>
+    private class ButtonPlayer extends ButtonLM
     {
-        private final PlayerInst playerInst;
+        private final MyTeamPlayerData playerInst;
 
-        public ButtonPlayer(PlayerInst p)
+        public ButtonPlayer(MyTeamPlayerData p)
         {
             super(0, 0, LEFT_PANEL_WIDTH - 4, 12);
             playerInst = p;
-
-            if(p == PlayerInst.ADD_NEW)
-            {
-                setIcon(GuiIcons.ADD);
-            }
-            else
-            {
-                setIcon(new PlayerHeadImage(p.profile.getName()));
-            }
+            setIcon(new PlayerHeadImage(p.playerName));
         }
 
         @Override
         public void onClicked(IGui gui, IMouseButton button)
         {
             selectedPlayer = playerInst;
-            buttonTeamTitle.setTitle(selectedPlayer.displayName);
+            buttonTeamTitle.setTitle(selectedPlayer.playerName);
             scrollText.setValue(gui, 0D);
             gui.refreshWidgets();
         }
@@ -81,7 +80,7 @@ public class GuiMyTeam extends GuiLM
             GuiHelper.drawBlankRect(ax, ay + getHeight(), getWidth() + 3, 1);
             GlStateManager.color(1F, 1F, 1F, 1F);
             getIcon(gui).draw(ax + 2, ay + 2, 8, 8);
-            gui.drawString(playerInst.status.getColor() + playerInst.displayName, ax + 12, ay + 2);
+            gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
 
             if(isMouseOver(this))
             {
@@ -90,64 +89,49 @@ public class GuiMyTeam extends GuiLM
 
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
-
-        @Override
-        public int compareTo(ButtonPlayer o)
-        {
-            int i = o.playerInst.status.getStatus() - playerInst.status.getStatus();
-
-            if(i == 0)
-            {
-                i = LMUtils.removeFormatting(playerInst.displayName).compareTo(LMUtils.removeFormatting(o.playerInst.displayName));
-            }
-
-            return i;
-        }
     }
 
-    private final Collection<String> permissions;
-    private final Collection<String> allPermissions;
-    private final TeamInst teamInfo;
+    public static GuiMyTeam INSTANCE = null;
+
+    private final MyTeamData teamInfo;
     private final PanelLM panelPlayers, panelText;
     private final ButtonLM buttonTeamsGui, buttonTeamTitle, buttonExitTeam;
-    private PlayerInst selectedPlayer;
+    private MyTeamPlayerData selectedPlayer;
     private final PanelScrollBar scrollPlayers, scrollText;
     private final List<IWidget> topPanelButtons;
+    private final Map<UUID, MyTeamPlayerData> loadedProfiles;
+    private final TextBoxLM chatBox;
 
-    public GuiMyTeam(TeamInst t, Collection<String> p, Collection<String> ap)
+    public GuiMyTeam(MyTeamData t)
     {
         super(0, 0);
+        INSTANCE = this;
         teamInfo = t;
-        permissions = p;
-        allPermissions = ap;
+        Collections.sort(teamInfo.players);
+
+        loadedProfiles = new HashMap<>();
+
+        for(MyTeamPlayerData p : teamInfo.players)
+        {
+            loadedProfiles.put(p.playerId, p);
+        }
 
         panelPlayers = new PanelLM(1, TOP_PANEL_HEIGHT, LEFT_PANEL_WIDTH - 1, 0)
         {
             @Override
             public void addWidgets()
             {
-                List<ButtonPlayer> buttonList = new ArrayList<>(teamInfo.players.size());
-
-                for(PlayerInst p : teamInfo.players)
+                for(MyTeamPlayerData p : teamInfo.players)
                 {
-                    buttonList.add(new ButtonPlayer(p));
+                    add(new ButtonPlayer(p));
                 }
-
-                Collections.sort(buttonList);
-                addAll(buttonList);
-
-                if(permissions.contains(FTBLibPerms.TEAM_MANAGE_MEMBERS) || permissions.contains(FTBLibPerms.TEAM_MANAGE_ALLIES) || permissions.contains(FTBLibPerms.TEAM_MANAGE_ENEMIES))
-                {
-                    add(new ButtonPlayer(PlayerInst.ADD_NEW));
-                }
-
-                updateWidgetPositions();
             }
 
             @Override
             public void updateWidgetPositions()
             {
-                scrollPlayers.elementSize = alignWidgetsByHeight();
+                scrollPlayers.elementSize = alignWidgetsByHeight(0, 1, 0);
+                scrollPlayers.oneElementSize = 13;
             }
         };
 
@@ -160,47 +144,90 @@ public class GuiMyTeam extends GuiLM
             {
                 if(selectedPlayer == null)
                 {
-                    add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "Insane Chat! Wow!"));
+                    for(ITeamMessage msg : teamInfo.chatHistory)
+                    {
+                        add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "<" + loadedProfiles.get(msg.getSender()).playerName + "> " + msg.getMessage()));
+                    }
                 }
-                else if(selectedPlayer == PlayerInst.ADD_NEW)
+                else if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
                 {
-                }
-                else if(selectedPlayer.profile.equals(mc.thePlayer.getGameProfile()))
-                {
-                    add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You can't edit your own permissions!"));
+                    if(selectedPlayer.playerId.equals(mc.thePlayer.getGameProfile().getId()))
+                    {
+                        add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
+                    }
+                    else if(selectedPlayer.playerId.equals(teamInfo.owner.playerId))
+                    {
+                        add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You can't edit owner!"));
+                    }
+                    else
+                    {
+                        add(new TextFieldLM(1, 0, getWidth() - 5, 14, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
+
+                        CheckBoxListLM checkBoxes = new CheckBoxListLM(1, 1, true);
+
+                        EnumTeamStatus[] VALUES;
+
+                        if(selectedPlayer.status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER))
+                        {
+                            VALUES = new EnumTeamStatus[] {EnumTeamStatus.MEMBER, EnumTeamStatus.MOD};
+                        }
+                        else
+                        {
+                            VALUES = new EnumTeamStatus[] {EnumTeamStatus.NONE, EnumTeamStatus.INVITED, EnumTeamStatus.ALLY, EnumTeamStatus.ENEMY};
+                        }
+
+                        for(EnumTeamStatus status : VALUES)
+                        {
+                            if(!status.canBeSet())
+                            {
+                                continue;
+                            }
+
+                            CheckBoxListLM.CheckBoxEntry entry = new CheckBoxListLM.CheckBoxEntry(status.getColor() + status.getLangKey().translate())
+                            {
+                                @Override
+                                public void onValueChanged()
+                                {
+                                    if(isSelected)
+                                    {
+                                        FTBLibClient.execClientCommand("/ftb team set_status " + selectedPlayer.playerId + " " + status.getName());
+                                        selectedPlayer.status = status;
+                                    }
+                                }
+                            };
+
+                            checkBoxes.addBox(GuiMyTeam.this, entry);
+
+                            if(status == selectedPlayer.status)
+                            {
+                                entry.select(true);
+                            }
+                        }
+
+                        add(checkBoxes);
+                    }
                 }
                 else
                 {
-                    CheckBoxListLM checkBoxes = new CheckBoxListLM(1, 1, false);
-
-                    for(String s : allPermissions)
-                    {
-                        CheckBoxListLM.CheckBoxEntry entry = new CheckBoxListLM.CheckBoxEntry(s)
-                        {
-                            @Override
-                            public void onValueChanged()
-                            {
-                                FTBLibClient.execClientCommand("/ftb team set_has_permission " + selectedPlayer.profile.getName() + " " + name + " " + isSelected, false);
-                            }
-                        };
-
-                        checkBoxes.addBox(GuiMyTeam.this, entry);
-                    }
-
-                    add(checkBoxes);
+                    add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You don't have permission to manage players!"));
                 }
-
-                updateWidgetPositions();
             }
 
             @Override
             public void updateWidgetPositions()
             {
-                scrollText.elementSize = alignWidgetsByHeight();
+                if(selectedPlayer == null)
+                {
+                    scrollText.elementSize = alignWidgetsByHeight(2, 1, 2);
+                }
+                else
+                {
+                    scrollText.elementSize = alignWidgetsByHeight();
+                }
             }
         };
 
-        panelText.addFlags(IPanel.FLAG_DEFAULTS | IPanel.FLAG_UNICODE_FONT);
+        panelText.addFlags(IPanel.FLAG_DEFAULTS);
 
         buttonTeamsGui = new ButtonLM(0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
         {
@@ -254,7 +281,7 @@ public class GuiMyTeam extends GuiLM
                 {
                     if(result)
                     {
-                        FTBLibClient.execClientCommand("/ftb team leave", false);
+                        FTBLibClient.execClientCommand("/ftb team leave");
                         closeGui();
                     }
                     else
@@ -283,15 +310,33 @@ public class GuiMyTeam extends GuiLM
 
         topPanelButtons = new ArrayList<>();
 
-        if(permissions.contains(FTBLibPerms.TEAM_EDIT_SETTINGS))
+        if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
         {
-            ButtonLM b = new ButtonLM(0, 2, 16, 16)
+            ButtonLM b;
+
+            b = new ButtonLM(0, 2, 16, 16)
             {
                 @Override
                 public void onClicked(IGui gui, IMouseButton button)
                 {
                     GuiHelper.playClickSound();
-                    FTBLibClient.execClientCommand("/ftb team config", false);
+                    FTBLibClient.execClientCommand("/ftb team gui add_player");
+                    setTitle(GuiLang.BUTTON_REFRESH.translate());
+                    setIcon(GuiIcons.REFRESH);
+                }
+            };
+
+            b.setTitle(GuiLang.BUTTON_ADD.translate());
+            b.setIcon(GuiIcons.ADD);
+            topPanelButtons.add(b);
+
+            b = new ButtonLM(0, 2, 16, 16)
+            {
+                @Override
+                public void onClicked(IGui gui, IMouseButton button)
+                {
+                    GuiHelper.playClickSound();
+                    FTBLibClient.execClientCommand("/ftb team config");
                 }
             };
 
@@ -299,6 +344,21 @@ public class GuiMyTeam extends GuiLM
             b.setIcon(GuiIcons.SETTINGS);
             topPanelButtons.add(b);
         }
+
+        chatBox = new TextBoxLM(LEFT_PANEL_WIDTH, 0, 0, BOTTOM_PANEL_HEIGHT)
+        {
+            @Override
+            public void onEnterPressed(IGui gui)
+            {
+                FTBLibClient.execClientCommand("/ftb team msg " + getText());
+                setText("");
+                setSelected(gui, true);
+            }
+        };
+
+        chatBox.ghostText = TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + "Chat...";
+
+        buttonTeamsGui.onClicked(this, MouseButton.LEFT);
     }
 
     @Override
@@ -312,7 +372,7 @@ public class GuiMyTeam extends GuiLM
 
         for(int i = 0; i < topPanelButtons.size(); i++)
         {
-            topPanelButtons.get(i).setX(width - i * 20);
+            topPanelButtons.get(i).setX(width + (i - topPanelButtons.size()) * 20);
         }
 
         buttonExitTeam.setY(height - BOTTOM_PANEL_HEIGHT + 1);
@@ -325,6 +385,9 @@ public class GuiMyTeam extends GuiLM
 
         panelText.setWidth(width - LEFT_PANEL_WIDTH - 1);
         panelText.setHeight(panelPlayers.getHeight());
+
+        chatBox.setWidth(panelText.getWidth());
+        chatBox.setY(height - BOTTOM_PANEL_HEIGHT + 1);
     }
 
     @Override
@@ -338,6 +401,13 @@ public class GuiMyTeam extends GuiLM
         add(panelText);
         addAll(topPanelButtons);
         add(buttonExitTeam);
+
+        if(selectedPlayer == null)
+        {
+            add(chatBox);
+        }
+
+        scrollText.onMoved(this);
     }
 
     @Override
@@ -364,7 +434,7 @@ public class GuiMyTeam extends GuiLM
 
         if(!playerGui)
         {
-            getFont().drawString(TextFormatting.ITALIC + "Chat...", ax + LEFT_PANEL_WIDTH + 6, ay + height - 14, 0x33FFFFFF);
+            //getFont().drawString(, ax + LEFT_PANEL_WIDTH + 6, ay + height - 14, 0x33FFFFFF);
         }
 
         if(isMouseOver(buttonExitTeam))
@@ -390,5 +460,38 @@ public class GuiMyTeam extends GuiLM
     public int getTextColor()
     {
         return DEFAULT_BACKGROUND.lineColor;
+    }
+
+    public void loadAllPlayers(Collection<MyTeamPlayerData> players)
+    {
+        for(MyTeamPlayerData d : players)
+        {
+            MyTeamPlayerData d1 = loadedProfiles.get(d.playerId);
+
+            if(d1 == null)
+            {
+                loadedProfiles.put(d.playerId, d);
+                teamInfo.players.add(d);
+            }
+            else
+            {
+                d1.isOnline = d.isOnline;
+                d1.status = d.status;
+            }
+        }
+
+        Collections.sort(teamInfo.players);
+        refreshWidgets();
+    }
+
+    public void printMessage(ITeamMessage message)
+    {
+        teamInfo.chatHistory.add(message);
+
+        if(selectedPlayer == null)
+        {
+            panelText.refreshWidgets();
+            scrollText.onMoved(this);
+        }
     }
 }
