@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.util.text.TextFormatting;
 
@@ -90,8 +89,9 @@ public class GuiCreateTeam extends GuiLM
         textBoxId.setText(mc.thePlayer.getGameProfile().getName().toLowerCase());
         textBoxId.background = ButtonLM.DEFAULT_BACKGROUND;
         textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
-        textBoxId.textColor = LMColorUtils.getColorFromID(color.getColorID());
+        textBoxId.textColor = color.getColor();
         textBoxId.setSelected(this, true);
+        textBoxId.charLimit = 35;
 
         colorButtons = new ArrayList<>();
 
@@ -105,11 +105,11 @@ public class GuiCreateTeam extends GuiLM
                 public void onClicked(IGui gui, IMouseButton button)
                 {
                     color = EnumTeamColor.VALUES[i1];
-                    textBoxId.textColor = LMColorUtils.getColorFromID(color.getColorID());
+                    textBoxId.textColor = color.getColor();
                 }
             };
 
-            b.setIcon(new TexturelessRectangle(LMColorUtils.getColorFromID(EnumTeamColor.VALUES[i].getColorID())).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
+            b.setIcon(new TexturelessRectangle(EnumTeamColor.VALUES[i].getColor()).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
             b.setTitle(EnumTeamColor.VALUES[i].getTextFormatting() + EnumTeamColor.VALUES[i].getLangKey().translate());
             colorButtons.add(b);
         }

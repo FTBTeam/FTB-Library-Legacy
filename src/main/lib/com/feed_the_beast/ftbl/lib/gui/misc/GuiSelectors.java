@@ -16,7 +16,7 @@ public class GuiSelectors
             @Override
             protected boolean isValidText(IConfigValue value, String val)
             {
-                return true;
+                return value.canParse(val);
             }
 
             @Override

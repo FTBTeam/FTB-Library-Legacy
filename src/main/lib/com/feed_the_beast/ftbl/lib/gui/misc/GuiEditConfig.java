@@ -21,7 +21,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -127,20 +126,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
                 if(getMouseX() > gui.getWidth() - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
                 {
-                    String min = value.getMinValueString();
-                    String max = value.getMaxValueString();
-
-                    list.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
-
-                    if(min != null)
-                    {
-                        list.add(TextFormatting.AQUA + "Min: " + min);
-                    }
-
-                    if(max != null)
-                    {
-                        list.add(TextFormatting.AQUA + "Max: " + max);
-                    }
+                    value.addInfo(key, list);
                 }
             }
         }
@@ -193,7 +179,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             @Override
             public void updateWidgetPositions()
             {
-                scroll.elementSize = alignWidgetsByHeight();
+                scroll.setElementSize(alignWidgetsByHeight());
             }
         };
 
@@ -226,7 +212,6 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         buttonCancel.setIcon(GuiIcons.CANCEL);
 
         scroll = new PanelScrollBar(-16, 20, 16, 0, 10, configPanel);
-        scroll.oneElementSize = 16;
     }
 
     @Override

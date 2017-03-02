@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -47,16 +48,9 @@ public interface IConfigValue extends IStringSerializable, IExtendedIOObject, IN
         return 0x999999;
     }
 
-    @Nullable
-    default String getMinValueString()
+    default void addInfo(IConfigKey key, List<String> list)
     {
-        return null;
-    }
-
-    @Nullable
-    default String getMaxValueString()
-    {
-        return null;
+        list.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
     }
 
     @Nullable

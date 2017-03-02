@@ -21,12 +21,19 @@ public class TextFieldLM extends ButtonLM
 
         if(!txt.isEmpty())
         {
-            text = font.listFormattedStringToWidth(txt, width);
+            if(width >= 10)
+            {
+                text = font.listFormattedStringToWidth(txt, width);
+            }
+            else
+            {
+                text = Collections.singletonList(txt);
+            }
         }
 
         if(height < 0)
         {
-            setHeight(text.isEmpty() ? 11 : 10 * text.size());
+            setHeight(text.isEmpty() ? 10 : 10 * text.size());
         }
     }
 

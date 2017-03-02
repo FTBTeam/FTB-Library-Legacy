@@ -9,13 +9,37 @@ import com.feed_the_beast.ftbl.api.gui.IPanel;
 public class PanelScrollBar extends SliderLM
 {
     public final IPanel panel;
-    public int elementSize;
-    public int oneElementSize = 16;
+    private int elementSize;
+    private double scrollStep;
 
     public PanelScrollBar(int x, int y, int w, int h, int ss, IPanel p)
     {
         super(x, y, w, h, ss);
         panel = p;
+    }
+
+    public void setElementSize(int s)
+    {
+        elementSize = s;
+
+        if(panel.getWidgets().isEmpty())
+        {
+            setScrollStep(0);
+        }
+        else
+        {
+            setSrollStepFromOneElementSize(elementSize / panel.getWidgets().size());
+        }
+    }
+
+    public void setScrollStep(double v)
+    {
+        scrollStep = v;
+    }
+
+    public void setSrollStepFromOneElementSize(int s)
+    {
+        setScrollStep(s / (double) (elementSize - panel.getHeight()));
     }
 
     @Override
@@ -27,7 +51,7 @@ public class PanelScrollBar extends SliderLM
     @Override
     public double getScrollStep()
     {
-        return (double) oneElementSize / (double) elementSize;
+        return scrollStep;
     }
 
     @Override

@@ -4,11 +4,14 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -19,26 +22,43 @@ public class ClientNotifications
     public static class NotificationWidget
     {
         public final INotification notification;
-        public final String[] text;
+        public final List<String> text;
         public final int height;
         public int width;
 
-        public NotificationWidget(INotification n)
+        public NotificationWidget(INotification n, FontRenderer font)
         {
             notification = n;
             width = 0;
 
-            List<ITextComponent> list = notification.getText();
-            text = new String[list.size()];
-
-            for(int i = 0; i < text.length; i++)
+            if(notification.getText().isEmpty())
             {
-                text[i] = list.get(i).getFormattedText();
+                text = Collections.emptyList();
+            }
+            else
+            {
+                text = new ArrayList<>();
+
+                for(ITextComponent c : notification.getText())
+                {
+                    for(String s : font.listFormattedStringToWidth(c.getFormattedText(), 250))
+                    {
+                        text.add(s);
+                        width = Math.max(width, font.getStringWidth(s));
+                    }
+                }
             }
 
-            if(text.length > 2)
+            width += 20;
+
+            if(notification.getItem() != null)
             {
-                height = 4 + text.length * 12;
+                width += 20;
+            }
+
+            if(text.size() > 2)
+            {
+                height = 4 + text.size() * 12;
             }
             else
             {
@@ -50,7 +70,7 @@ public class ClientNotifications
         {
             GlStateManager.enableBlend();
 
-            LMColorUtils.GL_COLOR.set(LMColorUtils.getColorFromID(notification.getColorID()), 255);
+            LMColorUtils.GL_COLOR.set(notification.getColor());
             GuiHelper.drawBlankRect(ax, ay, width, height);
 
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -60,9 +80,9 @@ public class ClientNotifications
                 GuiHelper.drawItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16) / 2, true);
             }
 
-            for(int i = 0; i < text.length; i++)
+            for(int i = 0; i < text.size(); i++)
             {
-                mc.fontRendererObj.drawString(text[i], ax + (notification.getItem() != null ? 30 : 10), ay + i * 11 + (height - text.length * 10) / 2, 0xFFFFFFFF);
+                mc.fontRendererObj.drawString(text.get(i), ax + (notification.getItem() != null ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
             }
         }
     }
@@ -70,14 +90,14 @@ public class ClientNotifications
     private static class Temp
     {
         private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
+        private static Minecraft mc = Minecraft.getMinecraft();
 
         private long time;
         private NotificationWidget widget;
 
         private Temp(INotification n)
         {
-            widget = new NotificationWidget(n);
-            widget.width = 0;
+            widget = new NotificationWidget(n, mc.fontRendererObj);
             time = -1L;
         }
 
@@ -87,79 +107,43 @@ public class ClientNotifications
             {
                 time = System.currentTimeMillis();
             }
-
-            Minecraft mc = Minecraft.getMinecraft();
-
-            if(widget.width == 0)
+            else if(time <= 0L)
             {
-                for(String s : widget.text)
-                {
-                    widget.width = Math.max(widget.width, mc.fontRendererObj.getStringWidth(s));
-                }
-
-                widget.width += 20;
-
-                if(widget.notification.getItem() != null)
-                {
-                    widget.width += 20;
-                }
+                return true;
             }
 
-            if(time > 0L)
+            int timeExisted = (int) (System.currentTimeMillis() - time);
+            int timer = widget.notification.getTimer() & 0xFFFF;
+
+            if(timeExisted > timer)
             {
-                int timeExisted = (int) (System.currentTimeMillis() - time);
-                int timer = widget.notification.getTimer() & 0xFFFF;
-
-                if(timeExisted > timer)
-                {
-                    time = 0L;
-                    return true;
-                }
-
-                double d1 = 1D;
-
-                if(timer - timeExisted < 300)
-                {
-                    d1 = (timer - timeExisted) / 300D;
-                }
-
-                if(timeExisted < 300)
-                {
-                    d1 = timeExisted / 300D;
-                }
-
-                GlStateManager.pushMatrix();
-                GlStateManager.disableDepth();
-                GlStateManager.depthMask(false);
-                GlStateManager.disableLighting();
-                widget.render(mc, screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
-                GlStateManager.depthMask(true);
-                GlStateManager.color(1F, 1F, 1F, 1F);
-                GlStateManager.enableLighting();
-                GlStateManager.popMatrix();
+                time = 0L;
+                return true;
             }
 
-            return time == 0L;
-        }
-    }
+            double d1 = 1D;
 
-    public static class Perm implements Comparable<Perm>
-    {
-        public static final LinkedHashMap<ResourceLocation, Perm> MAP = new LinkedHashMap<>();
+            if(timer - timeExisted < 300)
+            {
+                d1 = (timer - timeExisted) / 300D;
+            }
 
-        public final INotification notification;
-        public final long timeAdded;
+            if(timeExisted < 300)
+            {
+                d1 = timeExisted / 300D;
+            }
 
-        private Perm(INotification n)
-        {
-            notification = n;
-            timeAdded = System.currentTimeMillis();
-        }
+            GlStateManager.pushMatrix();
+            GlStateManager.disableDepth();
+            GlStateManager.depthMask(false);
+            GlStateManager.disableLighting();
+            widget.render(mc, screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
+            GlStateManager.depthMask(true);
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            GlStateManager.enableLighting();
+            GlStateManager.popMatrix();
 
-        @Override
-        public int compareTo(Perm o)
-        {
-            return Long.compare(o.timeAdded, timeAdded);
+            return false;
         }
     }
 
@@ -180,33 +164,26 @@ public class ClientNotifications
         else if(!Temp.MAP.isEmpty())
         {
             current = new Temp(Temp.MAP.values().iterator().next());
-            Temp.MAP.remove(current.widget.notification.getID().getID());
+            Temp.MAP.remove(current.widget.notification.getId().getID());
         }
     }
 
     public static void add(INotification n)
     {
-        ResourceLocation id = n.getID().getID();
-        Perm.MAP.remove(id);
+        ResourceLocation id = n.getId().getID();
         Temp.MAP.remove(id);
 
-        if(current != null && current.widget.notification.getID().equals(n.getID()))
+        if(current != null && current.widget.notification.getId().equals(n.getId()))
         {
             current = null;
         }
 
         Temp.MAP.put(id, n);
-
-        if(n.isPermanent())
-        {
-            Perm.MAP.put(id, new Perm(n));
-        }
     }
 
     public static void init()
     {
         current = null;
-        Perm.MAP.clear();
         Temp.MAP.clear();
     }
 }

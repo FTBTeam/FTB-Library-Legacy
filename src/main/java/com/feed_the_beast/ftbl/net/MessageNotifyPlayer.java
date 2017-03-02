@@ -2,11 +2,12 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.NotificationID;
+import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -21,17 +22,16 @@ import java.util.List;
 
 public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 {
-    private static final byte FLAG_HAS_TEXT = 1;
-    private static final byte FLAG_HAS_ITEM = 2;
-    private static final byte FLAG_IS_PERMANENT = 4;
+    private static final int FLAG_HAS_TEXT = 1;
+    private static final int FLAG_HAS_ITEM = 2;
 
-    private NotificationID ID;
+    private NotificationId ID;
 
     public MessageNotifyPlayer()
     {
     }
 
-    public MessageNotifyPlayer(NotificationID id)
+    public MessageNotifyPlayer(NotificationId id)
     {
         ID = id;
     }
@@ -72,24 +72,24 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
         }
     }
 
-    private static void writeID(ByteBuf io, NotificationID id)
+    private static void writeID(ByteBuf io, NotificationId id)
     {
         LMNetUtils.writeResourceLocation(io, id.getID());
         io.writeByte(id.getVariant());
     }
 
-    private static NotificationID readID(ByteBuf io)
+    private static NotificationId readID(ByteBuf io)
     {
         ResourceLocation id = LMNetUtils.readResourceLocation(io);
-        return new NotificationID(id, io.readByte());
+        return new NotificationId(id, io.readByte());
     }
 
     static void write(ByteBuf io, INotification n)
     {
-        writeID(io, n.getID());
-        io.writeByte(n.getColorID());
+        writeID(io, n.getId());
+        io.writeInt(n.getColor());
         io.writeShort(n.getTimer());
-        byte flags = 0;
+        int flags = 0;
 
         List<ITextComponent> text = n.getText();
         if(!text.isEmpty())
@@ -101,11 +101,6 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
         if(item != null)
         {
             flags |= FLAG_HAS_ITEM;
-        }
-
-        if(n.isPermanent())
-        {
-            flags |= FLAG_IS_PERMANENT;
         }
 
         io.writeByte(flags);
@@ -129,11 +124,11 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     static Notification read(ByteBuf io)
     {
         Notification n = new Notification(readID(io));
-        n.setColorID(io.readByte());
-        n.setTimer(io.readShort());
-        byte flags = io.readByte();
+        n.setColor(io.readInt());
+        n.setTimer(io.readUnsignedShort());
+        int flags = io.readUnsignedByte();
 
-        if((flags & FLAG_HAS_TEXT) != 0)
+        if(Bits.getFlag(flags, FLAG_HAS_TEXT))
         {
             int s = io.readUnsignedByte();
 
@@ -143,12 +138,11 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
             }
         }
 
-        if((flags & FLAG_HAS_ITEM) != 0)
+        if(Bits.getFlag(flags, FLAG_HAS_ITEM))
         {
             n.setItem(ByteBufUtils.readItemStack(io));
         }
 
-        n.setPermanent((flags & FLAG_IS_PERMANENT) != 0);
         return n;
     }
 }

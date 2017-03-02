@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
+import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
@@ -41,10 +42,10 @@ public class FTBLibActions
         @Override
         public void postRender(int ax, int ay)
         {
-            if(!ClientNotifications.Perm.MAP.isEmpty())
+            if(MyTeamData.unreadMessages > 0)
             {
                 Minecraft mc = Minecraft.getMinecraft();
-                String n = String.valueOf(ClientNotifications.Perm.MAP.size());
+                String n = String.valueOf(MyTeamData.unreadMessages);
                 int nw = mc.fontRendererObj.getStringWidth(n);
                 int width = 16;
                 GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);

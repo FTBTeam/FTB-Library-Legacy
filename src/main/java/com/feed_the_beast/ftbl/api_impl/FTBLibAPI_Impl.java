@@ -193,9 +193,9 @@ public class FTBLibAPI_Impl implements FTBLibAPI
         {
             FTBLibMod.PROXY.displayNotification(EnumNotificationDisplay.SCREEN, n);
         }
-        else if(SharedServerData.INSTANCE.notifications.containsKey(n.getID()))
+        else if(SharedServerData.INSTANCE.notifications.containsKey(n.getId()))
         {
-            new MessageNotifyPlayer(n.getID()).sendTo(player);
+            new MessageNotifyPlayer(n.getId()).sendTo(player);
         }
         else
         {

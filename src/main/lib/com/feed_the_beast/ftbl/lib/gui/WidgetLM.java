@@ -19,8 +19,8 @@ public class WidgetLM implements IWidget
     {
         posX = x;
         posY = y;
-        width = w;
-        height = h;
+        width = Math.max(w, 1);
+        height = Math.max(h, 1);
     }
 
     @Override
@@ -62,13 +62,13 @@ public class WidgetLM implements IWidget
     @Override
     public void setWidth(int v)
     {
-        width = v;
+        width = Math.max(v, 1);
     }
 
     @Override
     public void setHeight(int v)
     {
-        height = v;
+        height = Math.max(v, 1);
     }
 
     @Override

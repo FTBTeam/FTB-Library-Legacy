@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
-import com.feed_the_beast.ftbl.api.NotificationID;
+import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 
 import java.util.Collection;
@@ -20,7 +20,7 @@ public abstract class SharedData implements ISharedData
     public IPackMode currentMode;
     public UUID universeID;
     public final Collection<String> optionalServerMods = new HashSet<>();
-    public final Map<NotificationID, INotification> notifications = new HashMap<>();
+    public final Map<NotificationId, INotification> notifications = new HashMap<>();
 
     SharedData()
     {

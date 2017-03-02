@@ -74,7 +74,7 @@ public class FTBLibEventHandler
 
         if(firstLogin)
         {
-            p = new ForgePlayer(ep.getGameProfile());
+            p = new ForgePlayer(ep.getGameProfile().getId(), ep.getGameProfile().getName());
             Universe.INSTANCE.playerMap.put(p.getId(), p);
         }
         else if(!p.getName().equals(ep.getName()))

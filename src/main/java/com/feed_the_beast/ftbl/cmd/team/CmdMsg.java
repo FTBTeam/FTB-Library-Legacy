@@ -10,6 +10,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.ForgeHooks;
 
 /**
  * Created by LatvianModder on 27.02.2017.
@@ -48,6 +49,6 @@ public class CmdMsg extends CommandLM
             throw new IllegalArgumentException(m);
         }
 
-        team.printMessage(new ForgeTeam.Message(p.getId(), System.currentTimeMillis(), m));
+        team.printMessage(new ForgeTeam.Message(p.getId(), System.currentTimeMillis(), ForgeHooks.newChatWithLinks(m)));
     }
 }

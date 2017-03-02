@@ -20,19 +20,19 @@ import java.util.Set;
  */
 public class JsonElementIO
 {
-    private static final byte NULL = 0;
-    private static final byte ARRAY = 1;
-    private static final byte OBJECT = 2;
-    private static final byte STRING = 3;
-    private static final byte BOOL = 4;
-    private static final byte BYTE = 5;
-    private static final byte SHORT = 6;
-    private static final byte INT = 7;
-    private static final byte LONG = 8;
-    private static final byte FLOAT = 9;
-    private static final byte DOUBLE = 10;
+    private static final int NULL = 0;
+    private static final int ARRAY = 1;
+    private static final int OBJECT = 2;
+    private static final int STRING = 3;
+    private static final int BOOL = 4;
+    private static final int BYTE = 5;
+    private static final int SHORT = 6;
+    private static final int INT = 7;
+    private static final int LONG = 8;
+    private static final int FLOAT = 9;
+    private static final int DOUBLE = 10;
 
-    public static byte getID(@Nullable JsonElement e)
+    public static int getID(@Nullable JsonElement e)
     {
         if(e == null || e.isJsonNull())
         {
@@ -96,7 +96,7 @@ public class JsonElementIO
 
     public static JsonElement read(DataInput data) throws IOException
     {
-        switch(data.readByte())
+        switch(data.readUnsignedByte())
         {
             case NULL:
                 return JsonNull.INSTANCE;
@@ -236,7 +236,7 @@ public class JsonElementIO
 
     public static JsonElement read(ByteBuf data)
     {
-        switch(data.readByte())
+        switch(data.readUnsignedByte())
         {
             case NULL:
                 return JsonNull.INSTANCE;

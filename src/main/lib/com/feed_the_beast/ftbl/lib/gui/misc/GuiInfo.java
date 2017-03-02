@@ -20,7 +20,6 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.info.InfoPageTheme;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
@@ -108,7 +107,6 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     private final ButtonSpecial buttonSpecial;
     public int panelWidth;
     private int colorText, colorBackground;
-    public boolean useUnicodeFont;
     private InfoPage selectedPage;
 
     public GuiInfo(InfoPage tree)
@@ -134,7 +132,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
-        buttonBack.setIcon(new ColoredObject(TEX_CLOSE, 0xFF000000 | selectedPage.getTheme().getTextColor()));
+        buttonBack.setIcon(new ColoredObject(TEX_CLOSE, GuiConfigs.INFO_TEXT.getColor()));
 
         panelPages = new PanelLM(0, 0, 0, 0)
         {
@@ -152,7 +150,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void updateWidgetPositions()
             {
-                sliderPages.elementSize = alignWidgetsByHeight();
+                if(!getWidgets().isEmpty())
+                {
+                    sliderPages.setElementSize(alignWidgetsByHeight());
+                }
             }
         };
 
@@ -172,11 +173,11 @@ public class GuiInfo extends GuiLM implements IClientActionGui
                 }
 
                 boolean uni = getFont().getUnicodeFlag();
-                getFont().setUnicodeFlag(useUnicodeFont);
+                getFont().setUnicodeFlag(true);
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), 11) : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), 10) : line.createWidget(GuiInfo.this, panelText));
                 }
 
                 getFont().setUnicodeFlag(uni);
@@ -185,19 +186,22 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             @Override
             public void updateWidgetPositions()
             {
-                sliderText.elementSize = alignWidgetsByHeight() + 4;
+                if(!getWidgets().isEmpty())
+                {
+                    int s = alignWidgetsByHeight(2, 0, 4);
+                    sliderText.setElementSize(s);
+                    sliderText.setSrollStepFromOneElementSize((s - 6) / getWidgets().size());
+                }
             }
         };
 
         panelText.addFlags(IPanel.FLAG_DEFAULTS | IPanel.FLAG_UNICODE_FONT);
 
         sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
-        sliderPages.oneElementSize = 20;
         sliderPages.slider = TEX_SLIDER;
         sliderPages.background = ImageProvider.NULL;
 
         sliderText = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
-        sliderText.oneElementSize = 30;
         sliderText.slider = TEX_SLIDER;
         sliderText.background = ImageProvider.NULL;
 
@@ -255,8 +259,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     @Override
     public void onInit()
     {
-        posX = GuiConfigs.BORDER_WIDTH.getInt();
-        posY = GuiConfigs.BORDER_HEIGHT.getInt();
+        posX = GuiConfigs.INFO_BORDER_WIDTH.getInt();
+        posY = GuiConfigs.INFO_BORDER_HEIGHT.getInt();
         int width = getScreen().getScaledWidth() - posX * 2;
         int height = getScreen().getScaledHeight() - posY * 2;
         setWidth(width);
@@ -285,11 +289,8 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        InfoPageTheme theme = selectedPage.getTheme();
-
-        colorText = 0xFF000000 | theme.getTextColor();
-        colorBackground = 0xFF000000 | theme.getBackgroundColor();
-        useUnicodeFont = theme.getUseUnicodeFont();
+        colorText = GuiConfigs.INFO_TEXT.getColor();
+        colorBackground = GuiConfigs.INFO_BACKGROUND.getColor();
 
         buttonSpecial.posX = panelWidth - 24;
         buttonSpecial.posY = 10;

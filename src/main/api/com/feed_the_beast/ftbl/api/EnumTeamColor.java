@@ -13,41 +13,36 @@ import net.minecraft.util.text.TextFormatting;
  */
 public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
 {
-    BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 138),
-    CYAN("cyan", EnumDyeColor.CYAN, TextFormatting.AQUA, 136),
-    GREEN("green", EnumDyeColor.GREEN, TextFormatting.GREEN, 118),
-    YELLOW("yellow", EnumDyeColor.YELLOW, TextFormatting.YELLOW, 131),
-    ORANGE("orange", EnumDyeColor.ORANGE, TextFormatting.GOLD, 130),
-    RED("red", EnumDyeColor.RED, TextFormatting.RED, 129),
-    PINK("pink", EnumDyeColor.PINK, TextFormatting.LIGHT_PURPLE, 190),
-    MAGENTA("magenta", EnumDyeColor.MAGENTA, TextFormatting.LIGHT_PURPLE, 143),
-    PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 141),
-    GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 160);
+    BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 0x0094FF),
+    CYAN("cyan", EnumDyeColor.CYAN, TextFormatting.AQUA, 0x00DDFF),
+    GREEN("green", EnumDyeColor.GREEN, TextFormatting.GREEN, 0x23D34C),
+    YELLOW("yellow", EnumDyeColor.YELLOW, TextFormatting.YELLOW, 0xFFD000),
+    ORANGE("orange", EnumDyeColor.ORANGE, TextFormatting.GOLD, 0xFF9400),
+    RED("red", EnumDyeColor.RED, TextFormatting.RED, 0xEA4B4B),
+    PINK("pink", EnumDyeColor.PINK, TextFormatting.LIGHT_PURPLE, 0xE888C9),
+    MAGENTA("magenta", EnumDyeColor.MAGENTA, TextFormatting.LIGHT_PURPLE, 0xFF007F),
+    PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0xB342FF),
+    GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
 
     public static final EnumTeamColor[] VALUES = values();
     public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
 
-    public static EnumTeamColor getFromIndex(int i)
+    public static EnumTeamColor get(int i)
     {
-        if(i < 0 || i >= VALUES.length)
-        {
-            return BLUE;
-        }
-
-        return VALUES[i];
+        return i < 0 || i >= VALUES.length ? BLUE : VALUES[i];
     }
 
     private final String name;
     private final EnumDyeColor dyeColor;
     private final TextFormatting textFormatting;
-    private final byte colorID;
+    private final int color;
 
     EnumTeamColor(String n, EnumDyeColor d, TextFormatting t, int c)
     {
         name = n;
         dyeColor = d;
         textFormatting = t;
-        colorID = (byte) c;
+        color = 0xFF000000 | c;
     }
 
     @Override
@@ -61,9 +56,9 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
         return textFormatting;
     }
 
-    public byte getColorID()
+    public int getColor()
     {
-        return colorID;
+        return color;
     }
 
     public EnumDyeColor getDyeColor()

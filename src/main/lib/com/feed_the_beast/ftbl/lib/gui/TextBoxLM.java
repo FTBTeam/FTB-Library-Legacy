@@ -84,35 +84,28 @@ public class TextBoxLM extends WidgetLM
                 text = getText();
                 if(text.length() > 0)
                 {
-                    if(GuiScreen.isCtrlKeyDown())
+                    int toRemove = 0;
+
+                    if(GuiScreen.isCtrlKeyDown() && LMStringUtils.isTextChar(text.charAt(text.length() - 1), true))
                     {
-                        clear();
+                        for(int i = text.length() - 1; i >= 0; i--)
+                        {
+                            if(LMStringUtils.isTextChar(text.charAt(i), true))
+                            {
+                                toRemove++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
                     }
                     else
                     {
-                        int toRemove = 0;
-
-                        if(GuiScreen.isShiftKeyDown() && LMStringUtils.isTextChar(text.charAt(text.length() - 1), true))
-                        {
-                            for(int i = text.length() - 1; i >= 0; i--)
-                            {
-                                if(LMStringUtils.isTextChar(text.charAt(i), true))
-                                {
-                                    toRemove++;
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            toRemove = 1;
-                        }
-
-                        setText(text.substring(0, text.length() - toRemove));
+                        toRemove = 1;
                     }
+
+                    setText(text.substring(0, text.length() - toRemove));
                     onTextChanged(gui);
                 }
             }

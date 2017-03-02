@@ -281,6 +281,11 @@ public class LMJsonUtils
     @Nonnull
     public static String fixJsonString(@Nonnull String json)
     {
+        if(json.isEmpty())
+        {
+            return "\"\"";
+        }
+
         if(json.indexOf(' ') != -1 && !((json.startsWith("\"") && json.endsWith("\"")) || (json.startsWith("{") && json.endsWith("}")) || (json.startsWith("[") && json.endsWith("]"))))
         {
             json = "\"" + json + "\"";

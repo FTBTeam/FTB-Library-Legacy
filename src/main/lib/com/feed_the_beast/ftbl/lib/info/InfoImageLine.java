@@ -71,6 +71,7 @@ public class InfoImageLine extends EmptyInfoPageLine
 
         if(o.has("click"))
         {
+
         }
 
         if(o.has("hover"))
@@ -153,13 +154,13 @@ public class InfoImageLine extends EmptyInfoPageLine
             int width = getWidth();
             int height = getHeight();
 
-            if(width == 0 || height == 0)
+            if(width == 1 || height == 1)
             {
-                width = imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : imageWidth;
-                height = imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : imageHeight;
+                width = Math.max(imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : imageWidth, 2);
+                height = Math.max(imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : imageHeight, 2);
 
                 double w = Math.min(parent.getWidth(), width * imageScale);
-                double h = height * (w / (width * imageScale)) + 1D;
+                double h = height * (w / (width * imageScale));
 
                 setWidth((int) w);
                 setHeight((int) h);

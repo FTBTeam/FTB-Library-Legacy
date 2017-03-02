@@ -23,6 +23,8 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
@@ -33,11 +35,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -54,35 +57,50 @@ import java.util.UUID;
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
     private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE), new TextComponentTranslation("ftbteam.config.display.color"));
-    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.title"));
-    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString(""), new TextComponentTranslation("ftbteam.config.display.desc"));
+    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString("", 30), new TextComponentTranslation("ftbteam.config.display.title"));
+    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString("", 100), new TextComponentTranslation("ftbteam.config.display.desc"));
     private static final IConfigKey KEY_FREE_TO_JOIN = new ConfigKey("free_to_join", new PropertyBool(false), new TextComponentTranslation("ftbteam.config.free_to_join"));
 
     public static class Message implements ITeamMessage
     {
         private final UUID sender;
         private final long time;
-        private final String text;
+        private final ITextComponent text;
 
-        public Message(UUID s, long t, String txt)
+        public Message(UUID s, long t, ITextComponent txt)
         {
             sender = s;
             time = t;
             text = txt;
         }
 
+        public Message(ITextComponent txt)
+        {
+            this(ForgePlayerFake.SERVER.getId(), System.currentTimeMillis(), txt);
+        }
+
         public Message(NBTTagCompound nbt)
         {
             sender = nbt.getUniqueId("Sender");
             time = nbt.getLong("Time");
-            text = nbt.getString("Text");
+
+            String m = nbt.getString("Msg");
+
+            if(m.isEmpty())
+            {
+                text = ForgeHooks.newChatWithLinks(nbt.getString("Text"));
+            }
+            else
+            {
+                text = ITextComponent.Serializer.jsonToComponent(m);
+            }
         }
 
         public Message(ByteBuf io)
         {
             sender = LMNetUtils.readUUID(io);
             time = io.readLong();
-            text = ByteBufUtils.readUTF8String(io);
+            text = LMNetUtils.readTextComponent(io);
         }
 
         public static NBTTagCompound toNBT(ITeamMessage msg)
@@ -90,7 +108,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             NBTTagCompound nbt = new NBTTagCompound();
             nbt.setUniqueId("Sender", msg.getSender());
             nbt.setLong("Time", msg.getTime());
-            nbt.setString("Text", msg.getMessage());
+            nbt.setString("Msg", ITextComponent.Serializer.componentToJson(msg.getMessage()));
             return nbt;
         }
 
@@ -98,7 +116,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         {
             LMNetUtils.writeUUID(io, msg.getSender());
             io.writeLong(msg.getTime());
-            ByteBufUtils.writeUTF8String(io, msg.getMessage());
+            LMNetUtils.writeTextComponent(io, msg.getMessage());
         }
 
         @Override
@@ -120,7 +138,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         }
 
         @Override
-        public String getMessage()
+        public ITextComponent getMessage()
         {
             return text;
         }
@@ -443,6 +461,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         {
             player.setTeamID("");
             MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerLeftEvent(this, player));
+            printMessage(new Message(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName())));
         }
     }
 
@@ -565,6 +584,11 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
         for(EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
         {
+            if(!ep.getGameProfile().getId().equals(message.getSender()) && !Bits.getFlag(Universe.INSTANCE.getPlayer(ep).getFlags(), IForgePlayer.FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION))
+            {
+                FTBLibIntegrationInternal.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
+            }
+
             m.sendTo(ep);
         }
     }

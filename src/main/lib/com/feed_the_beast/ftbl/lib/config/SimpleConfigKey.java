@@ -19,7 +19,7 @@ public class SimpleConfigKey extends FinalIDObject implements IConfigKey
     }
 
     @Override
-    public byte getFlags()
+    public int getFlags()
     {
         return 0;
     }

@@ -5,18 +5,18 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by LatvianModder on 19.11.2016.
  */
-public final class NotificationID
+public final class NotificationId
 {
     private final ResourceLocation ID;
-    private final byte var;
+    private final int var;
 
-    public NotificationID(ResourceLocation id, int variant)
+    public NotificationId(ResourceLocation id, int variant)
     {
         ID = id;
-        var = (byte) variant;
+        var = variant;
     }
 
-    public NotificationID(String mod, String id, int variant)
+    public NotificationId(String mod, String id, int variant)
     {
         this(new ResourceLocation(mod, id), variant);
     }
@@ -26,7 +26,7 @@ public final class NotificationID
         return ID;
     }
 
-    public byte getVariant()
+    public int getVariant()
     {
         return var;
     }
@@ -41,19 +41,19 @@ public final class NotificationID
         return ID + "@" + var;
     }
 
-    public boolean equalsID(NotificationID id)
+    public boolean equalsID(NotificationId id)
     {
         return ID.equals(id.ID);
     }
 
     public boolean equals(Object o)
     {
-        return o == this || (o instanceof NotificationID && ((NotificationID) o).equalsID(this));
+        return o == this || (o instanceof NotificationId && ((NotificationId) o).equalsID(this));
     }
 
-    public NotificationID variant(int v)
+    public NotificationId variant(int v)
     {
-        return new NotificationID(ID, v);
+        return new NotificationId(ID, v);
     }
 
     public int getChatMessageID()

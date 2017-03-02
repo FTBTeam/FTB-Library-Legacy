@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class LMStringUtils
 {
@@ -25,6 +26,10 @@ public class LMStringUtils
 
     public static final String STRIP_SEP = ", ";
     public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
+    public static final char FORMATTING_CHAR = '\u00a7';
+    public static final String FORMATTING = "\u00a7";
+    public static final Pattern TEXT_FORMATTING_PATTERN = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
+
     public static final int FLAG_ID_ALLOW_EMPTY = 1;
     public static final int FLAG_ID_FIX = 2;
     public static final int FLAG_ID_ONLY_LOWERCASE = 4;
@@ -97,6 +102,11 @@ public class LMStringUtils
         }
 
         return id;
+    }
+
+    public static String removeFormatting(String s)
+    {
+        return s.isEmpty() ? s : TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
     }
 
     public static String[] shiftArray(@Nullable String[] s)

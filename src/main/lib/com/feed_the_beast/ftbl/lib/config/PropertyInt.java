@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftbl.lib.math.Converter;
+import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -13,8 +13,10 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -120,31 +122,23 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    @Nullable
-    public String getMinValueString()
+    public void addInfo(IConfigKey key, List<String> list)
     {
+        super.addInfo(key, list);
+
         int m = getMin();
 
         if(m != Integer.MIN_VALUE)
         {
-            return Integer.toString(m);
+            list.add(TextFormatting.AQUA + "Min: " + m);
         }
 
-        return null;
-    }
-
-    @Override
-    @Nullable
-    public String getMaxValueString()
-    {
-        int m = getMax();
+        m = getMax();
 
         if(m != Integer.MAX_VALUE)
         {
-            return Integer.toString(m);
+            list.add(TextFormatting.AQUA + "Max: " + m);
         }
-
-        return null;
     }
 
     @Override
@@ -165,7 +159,7 @@ public class PropertyInt extends PropertyBase
     @Override
     public boolean canParse(String text)
     {
-        return Converter.canParseInt(text);
+        return MathHelperLM.canParseInt(text);
     }
 
     @Override

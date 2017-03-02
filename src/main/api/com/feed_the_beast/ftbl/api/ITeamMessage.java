@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
+import net.minecraft.util.text.ITextComponent;
+
 import java.util.UUID;
 
 /**
@@ -11,5 +13,5 @@ public interface ITeamMessage extends Comparable<ITeamMessage>
 
     long getTime();
 
-    String getMessage();
+    ITextComponent getMessage();
 }

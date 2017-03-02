@@ -80,7 +80,7 @@ public class Universe implements IUniverse
 
                     if(id != null)
                     {
-                        ForgePlayer p = new ForgePlayer(new GameProfile(id, tag.getString("Name")));
+                        ForgePlayer p = new ForgePlayer(id, tag.getString("Name"));
                         p.deserializeNBT(tag);
                         playerMap.put(id, p);
                     }
@@ -130,7 +130,7 @@ public class Universe implements IUniverse
                                 if(nbt != null)
                                 {
                                     playerNBT.put(uuid, nbt);
-                                    playerMap.put(uuid, new ForgePlayer(new GameProfile(uuid, nbt.getString("Name"))));
+                                    playerMap.put(uuid, new ForgePlayer(uuid, nbt.getString("Name")));
                                 }
                             }
                         }

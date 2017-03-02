@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.NotificationID;
+import com.feed_the_beast.ftbl.api.NotificationId;
+import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -13,17 +14,17 @@ import java.util.List;
 
 public class Notification implements INotification
 {
-    private NotificationID ID;
-    private byte color;
-    private short timer;
-    private boolean isPermanent;
+    private NotificationId id;
+    private int color;
+    private int timer;
     private List<ITextComponent> text;
     private ItemStack item;
 
-    public Notification(NotificationID id)
+    public Notification(NotificationId i)
     {
-        ID = id;
+        id = i;
         text = new ArrayList<>();
+        setDefaults();
     }
 
     public Notification setError(ITextComponent title)
@@ -32,7 +33,7 @@ public class Notification implements INotification
         t.getStyle().setColor(TextFormatting.WHITE);
         addText(t);
         timer = 3000;
-        color = (byte) 145;
+        color = 0xFFCC4949;
         item = new ItemStack(Blocks.BARRIER);
         return this;
     }
@@ -41,23 +42,23 @@ public class Notification implements INotification
     {
         text.clear();
         timer = 3000;
-        color = 0;
+        color = 0xFF606060;
         item = null;
     }
 
     public int hashCode()
     {
-        return ID.hashCode();
+        return id.hashCode();
     }
 
     public boolean equals(Object o)
     {
-        return o == this || (o instanceof INotification && ((INotification) o).getID().equals(getID()));
+        return o == this || (o instanceof INotification && ((INotification) o).getId().equals(getId()));
     }
 
     public String toString()
     {
-        return getID() + ", text:" + getText() + ", col:" + getColorID() + ", timer:" + getTimer() + ", item:" + getItem();
+        return getId() + ", text:" + getText() + ", col:" + LMColorUtils.getHex(color) + ", timer:" + getTimer() + ", item:" + getItem();
     }
 
     public Notification addText(ITextComponent t)
@@ -67,9 +68,9 @@ public class Notification implements INotification
     }
 
     @Override
-    public NotificationID getID()
+    public NotificationId getId()
     {
-        return ID;
+        return id;
     }
 
     @Override
@@ -91,35 +92,24 @@ public class Notification implements INotification
     }
 
     @Override
-    public boolean isPermanent()
-    {
-        return isPermanent;
-    }
-
-    public void setPermanent(boolean v)
-    {
-        isPermanent = v;
-    }
-
-    @Override
-    public short getTimer()
+    public int getTimer()
     {
         return timer;
     }
 
     public Notification setTimer(int t)
     {
-        timer = (short) t;
+        timer = t;
         return this;
     }
 
     @Override
-    public byte getColorID()
+    public int getColor()
     {
         return color;
     }
 
-    public Notification setColorID(byte c)
+    public Notification setColor(int c)
     {
         color = c;
         return this;
@@ -127,12 +117,11 @@ public class Notification implements INotification
 
     public static Notification copy(INotification n)
     {
-        Notification n1 = new Notification(n.getID());
+        Notification n1 = new Notification(n.getId());
         n1.getText().addAll(n.getText());
-        n1.setColorID(n.getColorID());
+        n1.setColor(n.getColor());
         n1.setTimer(n.getTimer());
         n1.setItem(n.getItem());
-        n1.setPermanent(n.isPermanent());
         return n1;
     }
 }

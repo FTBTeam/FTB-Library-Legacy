@@ -32,7 +32,6 @@ public class InfoPage extends FinalIDObject
     private final List<IInfoTextLine> text;
     private final LinkedHashMap<String, InfoPage> childPages;
     public InfoPage parent = null;
-    public InfoPageTheme theme;
     private ITextComponent title;
     private IPageIconRenderer pageIcon;
 
@@ -58,12 +57,6 @@ public class InfoPage extends FinalIDObject
         if(o.has("N"))
         {
             setTitle(LMJsonUtils.deserializeTextComponent(o.get("N")));
-        }
-
-        if(o.has("C"))
-        {
-            theme = new InfoPageTheme();
-            theme.fromJson(o.get("C"));
         }
 
         if(o.has("T"))
@@ -161,7 +154,6 @@ public class InfoPage extends FinalIDObject
         setTitle(null);
         text.clear();
         childPages.clear();
-        theme = null;
     }
 
     public void cleanup()
@@ -221,11 +213,6 @@ public class InfoPage extends FinalIDObject
             o.add("S", o1);
         }
 
-        if(theme != null)
-        {
-            o.add("C", theme.getSerializableElement());
-        }
-
         return o;
     }
 
@@ -249,16 +236,6 @@ public class InfoPage extends FinalIDObject
     public final LinkedHashMap<String, InfoPage> getPages()
     {
         return childPages;
-    }
-
-    public InfoPageTheme getTheme()
-    {
-        return (theme == null) ? ((parent == null) ? InfoPageTheme.DEFAULT : parent.getTheme()) : theme;
-    }
-
-    public void setTheme(@Nullable InfoPageTheme t)
-    {
-        theme = t;
     }
 
     public void refreshGui(IGui gui)

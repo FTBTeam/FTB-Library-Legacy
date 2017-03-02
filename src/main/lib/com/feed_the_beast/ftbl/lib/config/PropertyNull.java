@@ -76,18 +76,9 @@ public enum PropertyNull implements IConfigValue
         return 0;
     }
 
-    @Nullable
     @Override
-    public String getMinValueString()
+    public void addInfo(IConfigKey key, List<String> list)
     {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public String getMaxValueString()
-    {
-        return null;
     }
 
     @Nullable

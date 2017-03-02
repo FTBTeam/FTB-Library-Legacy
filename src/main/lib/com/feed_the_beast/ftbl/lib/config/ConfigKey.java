@@ -12,7 +12,7 @@ public class ConfigKey extends SimpleConfigKey
 {
     private final IConfigValue defValue;
     private ITextComponent displayName;
-    private byte flags;
+    private int flags;
     private String info = "";
 
     public ConfigKey(String id, IConfigValue def, @Nullable ITextComponent dn)
@@ -46,18 +46,18 @@ public class ConfigKey extends SimpleConfigKey
     }
 
     @Override
-    public byte getFlags()
+    public int getFlags()
     {
         return flags;
     }
 
-    public ConfigKey setFlags(byte f)
+    public ConfigKey setFlags(int f)
     {
         flags = f;
         return this;
     }
 
-    public ConfigKey addFlags(byte f)
+    public ConfigKey addFlags(int f)
     {
         flags |= f;
         return this;

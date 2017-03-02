@@ -125,6 +125,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addConfigValueProvider(PropertyItemStackList.ID, PropertyItemStackList::new);
 
         addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
+        addNotification(FTBLibNotifications.NEW_TEAM_MESSAGE);
 
         addInfoTextLine("img", (page, json) -> new InfoImageLine(json));
         addInfoTextLine("image", (page, json) -> new InfoImageLine(json));
@@ -196,7 +197,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     @Override
     public void addNotification(INotification notification)
     {
-        SharedServerData.INSTANCE.notifications.put(notification.getID(), notification);
+        SharedServerData.INSTANCE.notifications.put(notification.getId(), notification);
     }
 
     @Override

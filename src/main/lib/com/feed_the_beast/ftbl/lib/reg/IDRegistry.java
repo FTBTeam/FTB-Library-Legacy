@@ -27,7 +27,7 @@ public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
     }
 
     @Nullable
-    public K getKeyFromID(short numID)
+    public K getKeyFromID(int numID)
     {
         return IDToKey.get(numID);
     }

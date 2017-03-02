@@ -14,26 +14,26 @@ public interface IConfigKey extends IStringSerializable
     /**
      * Will be excluded from writing / reading from files
      */
-    byte EXCLUDED = 1;
+    int EXCLUDED = 1;
 
     /**
      * Will be hidden from config gui
      */
-    byte HIDDEN = 2;
+    int HIDDEN = 2;
 
     /**
      * Will be visible in config gui, but uneditable
      */
-    byte CANT_EDIT = 4;
+    int CANT_EDIT = 4;
 
     /**
      * Use scroll bar on numbers whenever that is available
      */
-    byte USE_SCROLL_BAR = 8;
+    int USE_SCROLL_BAR = 8;
 
-    byte getFlags();
+    int getFlags();
 
-    default boolean getFlag(byte flag)
+    default boolean getFlag(int flag)
     {
         return (getFlags() & flag) != 0;
     }

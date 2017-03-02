@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 
 /**
  * Created by LatvianModder on 12.09.2016.
@@ -24,6 +25,19 @@ public abstract class PropertyBase implements IConfigValue
 
             gui.openGui();
         });
+    }
+
+    @Override
+    public boolean canParse(String text)
+    {
+        try
+        {
+            return !LMJsonUtils.fromJson(text).isJsonNull();
+        }
+        catch(Exception ex)
+        {
+            return false;
+        }
     }
 
     @Override

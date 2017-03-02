@@ -84,7 +84,7 @@ public class CmdSetStatus extends CommandLM
 
         EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[1].toLowerCase());
 
-        if(status == null || !status.canBeSet())
+        if(status == null)
         {
             throw new IllegalArgumentException(args[1]);
         }

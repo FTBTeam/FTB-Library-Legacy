@@ -7,11 +7,14 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
 import com.feed_the_beast.ftbl.lib.gui.CheckBoxListLM;
+import com.feed_the_beast.ftbl.lib.gui.ExtendedTextFieldLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
@@ -25,6 +28,8 @@ import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -130,8 +135,8 @@ public class GuiMyTeam extends GuiLM
             @Override
             public void updateWidgetPositions()
             {
-                scrollPlayers.elementSize = alignWidgetsByHeight(0, 1, 0);
-                scrollPlayers.oneElementSize = 13;
+                scrollPlayers.setElementSize(alignWidgetsByHeight(0, 1, 0));
+                scrollPlayers.setSrollStepFromOneElementSize(13);
             }
         };
 
@@ -146,24 +151,33 @@ public class GuiMyTeam extends GuiLM
                 {
                     for(ITeamMessage msg : teamInfo.chatHistory)
                     {
-                        add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "<" + loadedProfiles.get(msg.getSender()).playerName + "> " + msg.getMessage()));
+                        boolean sentByServer = msg.getSender().equals(ForgePlayerFake.SERVER.getId());
+                        ITextComponent c = new TextComponentString(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
+                        c.appendSibling(msg.getMessage());
+
+                        if(sentByServer)
+                        {
+                            c.getStyle().setColor(TextFormatting.DARK_AQUA);
+                        }
+
+                        add(new ExtendedTextFieldLM(1, 0, getWidth() - 5, -1, getFont(), c));
                     }
                 }
                 else if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
                 {
                     if(selectedPlayer.playerId.equals(mc.thePlayer.getGameProfile().getId()))
                     {
-                        add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
+                        add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
                     }
                     else if(selectedPlayer.playerId.equals(teamInfo.owner.playerId))
                     {
-                        add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You can't edit owner!"));
+                        add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "You can't edit owner!"));
                     }
                     else
                     {
-                        add(new TextFieldLM(1, 0, getWidth() - 5, 14, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
+                        add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
 
-                        CheckBoxListLM checkBoxes = new CheckBoxListLM(1, 1, true);
+                        CheckBoxListLM checkBoxes = new CheckBoxListLM(4, 1, true);
 
                         EnumTeamStatus[] VALUES;
 
@@ -178,11 +192,6 @@ public class GuiMyTeam extends GuiLM
 
                         for(EnumTeamStatus status : VALUES)
                         {
-                            if(!status.canBeSet())
-                            {
-                                continue;
-                            }
-
                             CheckBoxListLM.CheckBoxEntry entry = new CheckBoxListLM.CheckBoxEntry(status.getColor() + status.getLangKey().translate())
                             {
                                 @Override
@@ -205,6 +214,28 @@ public class GuiMyTeam extends GuiLM
                         }
 
                         add(checkBoxes);
+
+                        if(selectedPlayer.status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER))
+                        {
+                            add(new CentredTextButton(4, 0, 40, 16, "Kick")
+                            {
+                                @Override
+                                public void onClicked(IGui gui, IMouseButton button)
+                                {
+                                    GuiHelper.playClickSound();
+                                    mc.displayGuiScreen(new GuiYesNo((result, id) ->
+                                    {
+                                        if(result)
+                                        {
+                                            FTBLibClient.execClientCommand("/ftb team kick " + selectedPlayer.playerName);
+                                            selectedPlayer.status = EnumTeamStatus.NONE;
+                                        }
+
+                                        openGui();
+                                    }, "Kick " + selectedPlayer.playerName + "?", "", 0));
+                                }
+                            });
+                        }
                     }
                 }
                 else
@@ -218,11 +249,12 @@ public class GuiMyTeam extends GuiLM
             {
                 if(selectedPlayer == null)
                 {
-                    scrollText.elementSize = alignWidgetsByHeight(2, 1, 2);
+                    scrollText.setElementSize(alignWidgetsByHeight(2, 1, 2));
+                    scrollText.setSrollStepFromOneElementSize(11);
                 }
                 else
                 {
-                    scrollText.elementSize = alignWidgetsByHeight();
+                    scrollText.setElementSize(alignWidgetsByHeight(2, 4, 2));
                 }
             }
         };
@@ -277,6 +309,7 @@ public class GuiMyTeam extends GuiLM
             @Override
             public void onClicked(IGui gui, IMouseButton button)
             {
+                GuiHelper.playClickSound();
                 mc.displayGuiScreen(new GuiYesNo((result, id) ->
                 {
                     if(result)
@@ -289,8 +322,6 @@ public class GuiMyTeam extends GuiLM
                         openGui();
                     }
                 }, "Exit Team?", TextFormatting.RED + "Warning: You can't rejoin the team, unless you are re-invited!", 0));
-
-                GuiHelper.playClickSound();
             }
 
             @Override
@@ -357,6 +388,7 @@ public class GuiMyTeam extends GuiLM
         };
 
         chatBox.ghostText = TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + "Chat...";
+        chatBox.charLimit = 86;
 
         buttonTeamsGui.onClicked(this, MouseButton.LEFT);
     }

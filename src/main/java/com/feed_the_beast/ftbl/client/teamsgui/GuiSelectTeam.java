@@ -13,7 +13,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +64,7 @@ public class GuiSelectTeam extends GuiLM
             team = t;
             setTitle(team.color.getTextFormatting() + team.displayName);
             setIcon(new PlayerHeadImage(t.ownerName));
-            background = new TexturelessRectangle(team.isInvited ? 0x6620A32B : 0).setLineColor(LMColorUtils.getColorFromID(team.color.getColorID())).setRoundEdges(true);
+            background = new TexturelessRectangle(team.isInvited ? 0x6620A32B : 0).setLineColor(team.color.getColor()).setRoundEdges(true);
         }
 
         @Override
@@ -130,22 +129,24 @@ public class GuiSelectTeam extends GuiLM
             @Override
             public void updateWidgetPositions()
             {
-                scrollTeams.elementSize = 8;
+                int size = 8;
                 int x = 0;
 
                 for(IWidget widget : getWidgets())
                 {
                     widget.setX(8 + x * 40);
-                    widget.setY(scrollTeams.elementSize);
+                    widget.setY(size);
 
                     x++;
 
                     if(x == 4)
                     {
                         x = 0;
-                        scrollTeams.elementSize += 40;
+                        size += 40;
                     }
                 }
+
+                scrollTeams.setElementSize(size);
             }
         };
 

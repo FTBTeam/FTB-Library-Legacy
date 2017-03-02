@@ -9,6 +9,18 @@ public class Color4I
 {
     private int red = 255, green = 255, blue = 255, alpha = 255;
 
+    public Color4I()
+    {
+    }
+
+    public Color4I(int r, int g, int b, int a)
+    {
+        red = r;
+        green = g;
+        blue = b;
+        alpha = a;
+    }
+
     public Color4I set(int r, int g, int b, int a)
     {
         red = r;

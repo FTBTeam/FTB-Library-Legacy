@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Made by LatvianModder
@@ -28,9 +27,6 @@ public class LMUtils
 {
     public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
     public static final Logger DEV_LOGGER = LogManager.getLogger("FTBLibDev");
-    public static final char FORMATTING_CHAR = '\u00a7';
-    public static final String FORMATTING = "\u00a7";
-    public static final Pattern TEXT_FORMATTING_PATTERN = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 
     public static boolean userIsLatvianModder = false, isNEILoaded = false;
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
@@ -122,11 +118,6 @@ public class LMUtils
         }
 
         return Collections.unmodifiableMap(map);
-    }
-
-    public static String removeFormatting(String s)
-    {
-        return s.isEmpty() ? s : TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
     }
 
     @Nullable

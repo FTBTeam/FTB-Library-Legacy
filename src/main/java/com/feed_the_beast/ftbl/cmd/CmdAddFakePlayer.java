@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -52,7 +51,7 @@ public class CmdAddFakePlayer extends CommandLM
             throw FTBLibLang.RAW.commandError("Player already exists!");
         }
 
-        ForgePlayer p = new ForgePlayer(new GameProfile(id, args[1]));
+        ForgePlayer p = new ForgePlayer(id, args[1]);
         Universe.INSTANCE.playerMap.put(p.getId(), p);
 
         sender.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));

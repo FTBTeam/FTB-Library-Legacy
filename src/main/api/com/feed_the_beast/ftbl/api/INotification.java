@@ -11,16 +11,14 @@ import java.util.List;
  */
 public interface INotification
 {
-    NotificationID getID();
+    NotificationId getId();
 
     List<ITextComponent> getText();
 
     @Nullable
     ItemStack getItem();
 
-    boolean isPermanent();
+    int getTimer();
 
-    short getTimer();
-
-    byte getColorID();
+    int getColor();
 }

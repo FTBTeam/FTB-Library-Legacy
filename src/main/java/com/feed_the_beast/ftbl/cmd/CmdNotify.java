@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
@@ -8,6 +9,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
@@ -56,7 +58,7 @@ public class CmdNotify extends CommandLM
         }
         else
         {
-            INotification n = SharedServerData.INSTANCE.notifications.get(args[1]);
+            INotification n = SharedServerData.INSTANCE.notifications.get(new NotificationId(new ResourceLocation(args[1].substring(0, args[1].indexOf('@'))), Integer.parseInt(args[1].substring(args[1].indexOf('@') + 1, args[1].length()))));
 
             if(n == null)
             {

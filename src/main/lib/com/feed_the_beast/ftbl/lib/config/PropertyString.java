@@ -11,9 +11,11 @@ import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -23,6 +25,7 @@ public class PropertyString extends PropertyBase
     public static final String ID = "string";
 
     private String value;
+    private int charLimit;
 
     public PropertyString()
     {
@@ -31,7 +34,13 @@ public class PropertyString extends PropertyBase
 
     public PropertyString(String v)
     {
+        this(v, 0);
+    }
+
+    public PropertyString(String v, int limit)
+    {
         value = v;
+        charLimit = limit;
     }
 
     @Override
@@ -73,7 +82,7 @@ public class PropertyString extends PropertyBase
     @Override
     public IConfigValue copy()
     {
-        return new PropertyString(getString());
+        return new PropertyString(getString(), charLimit);
     }
 
     @Override
@@ -95,6 +104,24 @@ public class PropertyString extends PropertyBase
 
             gui.openGui();
         });
+    }
+
+    @Override
+    public boolean canParse(String text)
+    {
+        String s = LMJsonUtils.fixJsonString(text);
+        return super.canParse(s) && s.length() <= charLimit;
+    }
+
+    @Override
+    public void addInfo(IConfigKey key, List<String> list)
+    {
+        super.addInfo(key, list);
+
+        if(charLimit > 0)
+        {
+            list.add(TextFormatting.AQUA + "Char Limit: " + charLimit);
+        }
     }
 
     @Override
@@ -125,11 +152,13 @@ public class PropertyString extends PropertyBase
     public void writeData(ByteBuf data)
     {
         ByteBufUtils.writeUTF8String(data, getString());
+        data.writeShort(charLimit);
     }
 
     @Override
     public void readData(ByteBuf data)
     {
         setString(ByteBufUtils.readUTF8String(data));
+        charLimit = data.readUnsignedShort();
     }
 }

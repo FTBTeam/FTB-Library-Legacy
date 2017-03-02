@@ -4,14 +4,13 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagByte;
+import net.minecraft.nbt.NBTTagInt;
 
 import javax.annotation.Nullable;
 
@@ -22,13 +21,13 @@ public class PropertyColor extends PropertyBase
 {
     public static final String ID = "color";
 
-    private byte value;
+    private int value;
 
     public PropertyColor()
     {
     }
 
-    public PropertyColor(byte v)
+    public PropertyColor(int v)
     {
         value = v;
     }
@@ -39,12 +38,12 @@ public class PropertyColor extends PropertyBase
         return ID;
     }
 
-    public byte getColorID()
+    public int getColorValue()
     {
         return value;
     }
 
-    public void setColorID(byte v)
+    public void setColorValue(int v)
     {
         value = v;
     }
@@ -53,87 +52,89 @@ public class PropertyColor extends PropertyBase
     @Override
     public Object getValue()
     {
-        return getColorID();
+        return getColorValue();
     }
 
     @Override
     public String getString()
     {
-        return "#" + Integer.toString(getColorID() & 0xFF);
+        return LMColorUtils.getHex(getColorValue());
     }
 
     @Override
     public boolean getBoolean()
     {
-        return getColorID() != 0;
+        return getColorValue() != 0;
     }
 
     @Override
     public int getInt()
     {
-        return getColorID();
+        return getColorValue();
     }
 
     @Override
     public IConfigValue copy()
     {
-        return new PropertyColor(getColorID());
+        return new PropertyColor(getColorValue());
     }
 
     @Override
     public int getColor()
     {
-        return LMColorUtils.getColorFromID(getColorID());
+        return 0xFF000000 | getColorValue();
     }
 
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        GuiSelectors.selectJson(this, (val, set) ->
+        /*
+        GuiSelectors.selectColor(this, (val, set) ->
         {
             if(set)
             {
-                setColorID((byte) val.getInt());
+                setColorValue(val.getInt());
                 gui.onChanged(key, getSerializableElement());
             }
 
             gui.openGui();
         });
+        */
     }
 
     @Override
     public NBTBase serializeNBT()
     {
-        return new NBTTagByte(getColorID());
+        return new NBTTagInt(getInt());
     }
 
     @Override
     public void deserializeNBT(NBTBase nbt)
     {
-        setColorID(((NBTPrimitive) nbt).getByte());
+        setColorValue(((NBTPrimitive) nbt).getInt());
     }
 
     @Override
     public void fromJson(JsonElement json)
     {
-        setColorID(json.getAsByte());
+        setColorValue(json.getAsInt());
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        return new JsonPrimitive(getColorID());
+        return new JsonPrimitive(getInt());
     }
 
     @Override
     public void writeData(ByteBuf data)
     {
-        data.writeByte(getColorID());
+        data.writeInt(getInt());
     }
 
     @Override
     public void readData(ByteBuf data)
     {
-        setColorID(data.readByte());
+        setColorValue(data.readInt());
     }
 }

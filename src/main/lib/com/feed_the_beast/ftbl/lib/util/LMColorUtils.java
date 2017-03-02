@@ -14,13 +14,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.nio.ByteBuffer;
 
 public class LMColorUtils
 {
     private static final int[] CHAT_FORMATTING_COLORS = new int[16];
-    private static final int[] ID_COLORS = new int[256];
     private static final int[] DYE_TEXT_FORMATTING_COLORS = new int[32];
 
     static
@@ -33,40 +31,6 @@ public class LMColorUtils
             int b = (i & 1) * 170 + j;
             CHAT_FORMATTING_COLORS[i] = getRGBA((i == 6) ? r + 85 : r, g, b, 255);
         }
-
-        for(int y = 0; y < 16; y++)
-        {
-            for(int x = 0; x < 16; x++)
-            {
-                if(x == 0)
-                {
-                    if(y > 0)
-                    {
-                        float ry = y == 1 ? 0F : (y == 15) ? 1F : ((y - 1F) / 15F);
-                        ID_COLORS[y * 16] = 0xFF000000 | getRGBAF(ry, ry, ry, 1F);
-                    }
-                }
-                else
-                {
-                    float h = (x - 1F) / 15F;
-                    float b = 1F;
-                    float s = 1F;
-
-                    if(y < 8)
-                    {
-                        b = 0.2F + (y / 8F) * 0.8F;
-                    }
-                    else if(y > 8)
-                    {
-                        s = 1F - (0.2F + ((y - 8) / 9F) * 0.8F);
-                    }
-
-                    ID_COLORS[x + y * 16] = 0xFF000000 | Color.HSBtoRGB(h, s, b);
-                }
-            }
-        }
-
-        ID_COLORS[0] = 0;
 
         for(EnumDyeColor color : EnumDyeColor.values())
         {
@@ -86,11 +50,6 @@ public class LMColorUtils
             return this;
         }
     };
-
-    public static int getColorFromID(int col)
-    {
-        return ID_COLORS[col & 0xFF];
-    }
 
     public static int getChatFormattingColor(int id)
     {

@@ -66,9 +66,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         addClientConfig(FTBLibFinals.MOD_ID, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
         addClientConfig(FTBLibFinals.MOD_ID, "notifications", FTBLibClientConfig.NOTIFICATIONS);
 
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.unicode", GuiConfigs.UNICODE);
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_width", GuiConfigs.BORDER_WIDTH, IConfigKey.USE_SCROLL_BAR);
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_height", GuiConfigs.BORDER_HEIGHT, IConfigKey.USE_SCROLL_BAR);
+        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_width", GuiConfigs.INFO_BORDER_WIDTH, IConfigKey.USE_SCROLL_BAR);
+        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_height", GuiConfigs.INFO_BORDER_HEIGHT, IConfigKey.USE_SCROLL_BAR);
+        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.color_background", GuiConfigs.INFO_BACKGROUND);
+        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.color_text", GuiConfigs.INFO_TEXT);
         addClientConfig(FTBLibFinals.MOD_ID, "gui.enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
 
         addSidebarButton(FTBLibActions.TEAMS_GUI);
@@ -285,7 +286,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
         if(display == EnumNotificationDisplay.CHAT)
         {
-            chat.printChatMessageWithOptionalDeletion(list.get(0), n.getID().getChatMessageID());
+            chat.printChatMessageWithOptionalDeletion(list.get(0), n.getId().getChatMessageID());
         }
         else
         {

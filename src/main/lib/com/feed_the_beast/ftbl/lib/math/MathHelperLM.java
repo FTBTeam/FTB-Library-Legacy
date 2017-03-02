@@ -124,6 +124,32 @@ public class MathHelperLM
         return Math.round(d) == d;
     }
 
+    public static boolean canParseInt(@Nullable String s)
+    {
+        try
+        {
+            Integer.parseInt(s);
+            return true;
+        }
+        catch(Exception e)
+        {
+            return false;
+        }
+    }
+
+    public static boolean canParseDouble(@Nullable String s)
+    {
+        try
+        {
+            Double.parseDouble(s);
+            return true;
+        }
+        catch(Exception e)
+        {
+            return false;
+        }
+    }
+
     public static int lerp_int(int i1, int i2, double f)
     {
         return i1 + (int) ((i2 - i1) * f);

@@ -1,19 +1,24 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by LatvianModder on 09.02.2016.
  */
 public final class ForgePlayerFake extends ForgePlayer
 {
+    public static final ForgePlayerFake SERVER = new ForgePlayerFake(UUID.nameUUIDFromBytes("FTBLib_Server".getBytes()), "Server");
+
+    public ForgePlayerFake(UUID id, String name)
+    {
+        super(id, name);
+    }
+
     ForgePlayerFake(FakePlayer p)
     {
-        super(p.getGameProfile());
+        this(p.getGameProfile().getId(), p.getGameProfile().getName());
     }
 
     @Override
@@ -26,10 +31,5 @@ public final class ForgePlayerFake extends ForgePlayer
     public boolean isOP()
     {
         return false;
-    }
-
-    @Override
-    public void getInfo(IForgePlayer owner, List<ITextComponent> info)
-    {
     }
 }

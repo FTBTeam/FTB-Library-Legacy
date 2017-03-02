@@ -28,6 +28,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -204,8 +205,8 @@ public class GuiHelper
             int scale = screen.getScaleFactor();
             SCISSOR_X[scissorIndex] = x * scale;
             SCISSOR_Y[scissorIndex] = (screen.getScaledHeight() - y - h) * scale;
-            SCISSOR_W[scissorIndex] = w * scale;
-            SCISSOR_H[scissorIndex] = h * scale;
+            SCISSOR_W[scissorIndex] = Math.max(w, 1) * scale;
+            SCISSOR_H[scissorIndex] = Math.max(h, 1) * scale;
             GL11.glScissor(SCISSOR_X[scissorIndex], SCISSOR_Y[scissorIndex], SCISSOR_W[scissorIndex], SCISSOR_H[scissorIndex]);
         }
     }
@@ -348,6 +349,11 @@ public class GuiHelper
     //TODO: Improve me to fix occasional offset
     public static List<PositionedTextData> createDataFrom(ITextComponent component, FontRenderer font, int width)
     {
+        if(width <= 0 || component.getUnformattedText().isEmpty())
+        {
+            return Collections.emptyList();
+        }
+
         List<PositionedTextData> list = new ArrayList<>();
 
         int line = 0;

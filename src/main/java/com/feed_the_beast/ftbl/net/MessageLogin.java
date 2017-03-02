@@ -4,12 +4,14 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.NotificationID;
+import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
+import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
@@ -40,9 +42,10 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     private byte flags;
     private String currentMode;
     private UUID universeID;
-    private Map<NotificationID, INotification> notifications;
+    private Map<NotificationId, INotification> notifications;
     private NBTTagCompound syncData;
     private Collection<String> optionalServerMods;
+    private long lastMessageTime;
 
     public MessageLogin()
     {
@@ -59,6 +62,12 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
         optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
         flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
+
+        IForgeTeam team = forgePlayer.getTeam();
+        if(team != null && team.getMessages().size() > 0)
+        {
+            lastMessageTime = team.getMessages().get(team.getMessages().size() - 1).getTime();
+        }
     }
 
     @Override
@@ -88,6 +97,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
                 ByteBufUtils.writeUTF8String(io, s);
             }
         }
+
+        io.writeLong(lastMessageTime);
     }
 
     @Override
@@ -103,7 +114,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         while(--s >= 0)
         {
             INotification n = MessageNotifyPlayer.read(io);
-            notifications.put(n.getID(), n);
+            notifications.put(n.getId(), n);
         }
 
         syncData = ByteBufUtils.readTag(io);
@@ -118,6 +129,8 @@ public class MessageLogin extends MessageToClient<MessageLogin>
                 optionalServerMods.add(ByteBufUtils.readUTF8String(io));
             }
         }
+
+        lastMessageTime = io.readLong();
     }
 
     @Override
@@ -154,5 +167,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         }
 
         FTBLibFinals.LOGGER.info("Current Mode: " + m.currentMode);
+        MyTeamData.lastMessageTime = m.lastMessageTime;
     }
 }

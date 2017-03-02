@@ -14,11 +14,11 @@ public interface IFTBLibClientRegistry
 {
     void addClientConfig(IConfigKey key, IConfigValue value);
 
-    default ConfigKey addClientConfig(String mod, String id, IConfigValue value, byte... flags)
+    default ConfigKey addClientConfig(String mod, String id, IConfigValue value, int... flags)
     {
         ConfigKey key = new ConfigKey(mod.toLowerCase() + '.' + id, value.copy());
 
-        for(byte b : flags)
+        for(int b : flags)
         {
             key.addFlags(b);
         }
