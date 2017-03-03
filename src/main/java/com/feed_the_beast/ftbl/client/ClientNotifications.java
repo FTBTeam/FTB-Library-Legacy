@@ -53,7 +53,14 @@ public class ClientNotifications
 
             if(notification.getItem() != null)
             {
-                width += 20;
+                if(text.isEmpty())
+                {
+                    width = 32;
+                }
+                else
+                {
+                    width += 20;
+                }
             }
 
             if(text.size() > 2)

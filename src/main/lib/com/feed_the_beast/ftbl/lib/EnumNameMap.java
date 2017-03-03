@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by LatvianModder on 05.06.2016.
@@ -18,6 +17,7 @@ public final class EnumNameMap<E extends Enum<E>>
     public static final String NULL_VALUE = "-";
     public final int size;
     private final Map<String, E> map;
+    private final List<String> keys;
     private final List<E> values;
 
     public EnumNameMap(E[] v, boolean addNull)
@@ -48,6 +48,7 @@ public final class EnumNameMap<E extends Enum<E>>
         }
 
         map = Collections.unmodifiableMap(map1);
+        keys = Collections.unmodifiableList(new ArrayList<>(map.keySet()));
     }
 
     public static String getName(@Nullable Object o)
@@ -95,9 +96,9 @@ public final class EnumNameMap<E extends Enum<E>>
         return getIndex(map.get(s));
     }
 
-    public Set<String> getKeys()
+    public List<String> getKeys()
     {
-        return map.keySet();
+        return keys;
     }
 
     public List<E> getValues()

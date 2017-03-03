@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,18 +54,14 @@ public interface IConfigValue extends IStringSerializable, IExtendedIOObject, IN
         list.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
     }
 
-    @Nullable
     default List<String> getVariants()
     {
-        return null;
+        return Collections.emptyList();
     }
 
     void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button);
 
-    default boolean canParse(String text)
-    {
-        return true;
-    }
+    boolean setValueFromString(String text, boolean simulate);
 
     default boolean isNull()
     {

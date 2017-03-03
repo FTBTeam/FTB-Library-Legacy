@@ -31,9 +31,10 @@ public class TextFieldLM extends ButtonLM
             }
         }
 
-        if(height < 0)
+        if(height <= 0)
         {
-            setHeight(text.isEmpty() ? 10 : 10 * text.size());
+            int h = font.FONT_HEIGHT + 1;
+            setHeight(text.isEmpty() ? h : h * text.size());
         }
     }
 

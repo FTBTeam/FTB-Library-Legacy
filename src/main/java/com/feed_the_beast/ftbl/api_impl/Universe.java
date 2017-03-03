@@ -275,7 +275,7 @@ public class Universe implements IUniverse
     @Nullable
     public ForgeTeam getTeam(String id)
     {
-        return teams.get(id);
+        return id.isEmpty() ? null : teams.get(id);
     }
 
     public void onClosed()

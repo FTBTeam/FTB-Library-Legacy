@@ -82,15 +82,15 @@ public class GuiCreateTeam extends GuiLM
             @Override
             public void onTextChanged(IGui gui)
             {
-                setText(LMStringUtils.getID(getText(), LMStringUtils.FLAG_ID_DEFAULTS));
+                setText(gui, LMStringUtils.getID(getText(), LMStringUtils.FLAG_ID_DEFAULTS), false);
             }
         };
 
-        textBoxId.setText(mc.thePlayer.getGameProfile().getName().toLowerCase());
+        textBoxId.writeText(this, mc.thePlayer.getGameProfile().getName().toLowerCase());
         textBoxId.background = ButtonLM.DEFAULT_BACKGROUND;
         textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
         textBoxId.textColor = color.getColor();
-        textBoxId.setSelected(this, true);
+        textBoxId.setFocused(true);
         textBoxId.charLimit = 35;
 
         colorButtons = new ArrayList<>();

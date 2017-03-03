@@ -87,7 +87,6 @@ public class PropertyStringEnum extends PropertyBase
     }
 
     @Override
-    @Nullable
     public List<String> getVariants()
     {
         return Collections.unmodifiableList(keys);

@@ -2,9 +2,6 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -142,24 +139,19 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+    public boolean setValueFromString(String text, boolean simulate)
     {
-        GuiSelectors.selectJson(this, (val, set) ->
+        if(MathHelperLM.canParseInt(text))
         {
-            if(set)
+            if(!simulate)
             {
-                setInt(val.getInt());
-                gui.onChanged(key, getSerializableElement());
+                setInt(Integer.parseInt(text));
             }
 
-            gui.openGui();
-        });
-    }
+            return true;
+        }
 
-    @Override
-    public boolean canParse(String text)
-    {
-        return MathHelperLM.canParseInt(text);
+        return false;
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class PropertyBool extends PropertyBase
 {
+    private static final List<String> VARIANTS = Arrays.asList("true", "false");
     public static final String ID = "bool";
 
     private boolean value;
@@ -90,7 +91,7 @@ public class PropertyBool extends PropertyBase
     @Override
     public List<String> getVariants()
     {
-        return Arrays.asList("true", "false");
+        return VARIANTS;
     }
 
     @Override

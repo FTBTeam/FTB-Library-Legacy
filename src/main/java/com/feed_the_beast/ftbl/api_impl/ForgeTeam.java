@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
@@ -446,6 +447,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
             {
                 MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
                 setStatus(player.getId(), EnumTeamStatus.MEMBER);
+                printMessage(new Message(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName())));
             }
 
             return true;
@@ -455,7 +457,29 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     }
 
     @Override
-    public void removePlayer(IForgePlayer player)
+    public boolean removePlayer(IForgePlayer player)
+    {
+        if(getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() == 1)
+        {
+            printMessage(new Message(FTBLibLang.TEAM_DELETED.textComponent(getTitle())));
+            MinecraftForge.EVENT_BUS.post(new ForgeTeamDeletedEvent(this));
+            removePlayer0(player);
+            Universe.INSTANCE.teams.remove(getName());
+        }
+        else
+        {
+            if(hasStatus(player, EnumTeamStatus.OWNER))
+            {
+                return false;
+            }
+
+            removePlayer0(player);
+        }
+
+        return true;
+    }
+
+    private void removePlayer0(IForgePlayer player)
     {
         if(hasStatus(player, EnumTeamStatus.MEMBER))
         {
@@ -614,6 +638,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         return list;
     }
 
+    @Override
     public boolean isValid()
     {
         return !Bits.getFlag(flags, FLAG_INVALID);

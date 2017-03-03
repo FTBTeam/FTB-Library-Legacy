@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
+import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
@@ -59,6 +60,6 @@ public class CmdTransferOwnership extends CommandLM
         }
 
         team.changeOwner(p1);
-        FTBLibLang.TEAM_TRANSFERED_OWNERSHIP.printChat(sender, p1.getName());
+        team.printMessage(new ForgeTeam.Message(FTBLibLang.TEAM_TRANSFERED_OWNERSHIP.textComponent(p1.getName())));
     }
 }

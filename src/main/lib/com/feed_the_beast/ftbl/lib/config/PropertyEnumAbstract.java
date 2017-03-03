@@ -15,7 +15,6 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,10 +81,9 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     }
 
     @Override
-    @Nullable
     public List<String> getVariants()
     {
-        return new ArrayList<>(getNameMap().getKeys());
+        return getNameMap().getKeys();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
@@ -13,7 +12,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,17 +57,7 @@ public class CmdJoin extends CommandLM
 
         IForgeTeam team = getTeam(args[0]);
 
-        if(team.addPlayer(p))
-        {
-            for(IForgePlayer p1 : team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER))
-            {
-                if(p1.isOnline())
-                {
-                    FTBLibLang.TEAM_MEMBER_JOINED.printChat(p1.getPlayer(), p.getName());
-                }
-            }
-        }
-        else
+        if(!team.addPlayer(p))
         {
             throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getName());
         }

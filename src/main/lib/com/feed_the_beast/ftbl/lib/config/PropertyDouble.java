@@ -2,9 +2,6 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;
@@ -148,24 +145,19 @@ public class PropertyDouble extends PropertyBase
     }
 
     @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+    public boolean setValueFromString(String text, boolean simulate)
     {
-        GuiSelectors.selectJson(this, (val, set) ->
+        if(MathHelperLM.canParseDouble(text))
         {
-            if(set)
+            if(!simulate)
             {
-                setDouble(val.getDouble());
-                gui.onChanged(key, getSerializableElement());
+                setDouble(Double.parseDouble(text));
             }
 
-            gui.openGui();
-        });
-    }
+            return true;
+        }
 
-    @Override
-    public boolean canParse(String text)
-    {
-        return MathHelperLM.canParseDouble(text);
+        return false;
     }
 
     @Override

@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
 
-public abstract class GuiAbstractField extends GuiLM
+public class GuiConfigValueField extends GuiLM
 {
     private final IConfigValue defValue, value;
     private final IGuiFieldCallback callback;
@@ -19,16 +19,16 @@ public abstract class GuiAbstractField extends GuiLM
     private final ButtonLM buttonCancel, buttonAccept;
     private final TextBoxLM textBox;
 
-    GuiAbstractField(IConfigValue val, IGuiFieldCallback c)
+    GuiConfigValueField(IConfigValue val, IGuiFieldCallback c)
     {
-        super(100, 40);
+        super(200, 60);
         defValue = val.copy();
         value = val.copy();
         callback = c;
 
-        int bsize = getWidth() / 2 - 4;
+        int bsize = getWidth() / 2 - 3;
 
-        buttonCancel = new ButtonLM(2, getHeight() - 18, bsize, 16, GuiLang.BUTTON_CANCEL.translate())
+        buttonCancel = new ButtonLM(2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
             public void onClicked(IGui gui, IMouseButton button)
@@ -46,15 +46,15 @@ public abstract class GuiAbstractField extends GuiLM
 
         buttonCancel.setIcon(ButtonLM.DEFAULT_BACKGROUND);
 
-        buttonAccept = new ButtonLM(getWidth() - bsize - 2, getHeight() - 18, bsize, 16, GuiLang.BUTTON_ACCEPT.translate())
+        buttonAccept = new ButtonLM(getWidth() - bsize - 2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
             public void onClicked(IGui gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
-                if(textBox.isValid())
+
+                if(value.setValueFromString(textBox.getText(), false))
                 {
-                    setValue(value, textBox.getText());
                     callback.onCallback(value, true);
                 }
             }
@@ -68,37 +68,30 @@ public abstract class GuiAbstractField extends GuiLM
 
         buttonAccept.setIcon(ButtonLM.DEFAULT_BACKGROUND);
 
-        textBox = new TextBoxLM(2, 2, getWidth() - 4, 18)
+        textBox = new TextBoxLM(2, 2, getWidth() - 4, 28)
         {
             @Override
-            public boolean isValid()
+            public boolean isValid(String txt)
             {
-                return GuiAbstractField.this.isValidText(value, getText());
+                return value.setValueFromString(txt, true);
+            }
+
+            @Override
+            public void onTextChanged(IGui gui)
+            {
+                textBox.textColor = value.getColor();
             }
 
             @Override
             public void onEnterPressed(IGui gui)
             {
-                buttonAccept.onClicked(GuiAbstractField.this, MouseButton.LEFT);
+                buttonAccept.onClicked(GuiConfigValueField.this, MouseButton.LEFT);
             }
         };
 
-        textBox.setText(val.toString());
-        textBox.textRenderX = -1;
-        textBox.textRenderY = 6;
-        textBox.textColor = 0xFFEEEEEE;
-        textBox.setSelected(this, true);
+        textBox.writeText(this, val.toString());
+        textBox.setFocused(true);
         textBox.background = ButtonLM.DEFAULT_BACKGROUND;
-    }
-
-    protected abstract boolean isValidText(IConfigValue value, String val);
-
-    protected abstract void setValue(IConfigValue value, String val);
-
-    public GuiAbstractField setCharLimit(int i)
-    {
-        textBox.charLimit = i;
-        return this;
     }
 
     @Override
@@ -113,17 +106,6 @@ public abstract class GuiAbstractField extends GuiLM
     public void drawBackground()
     {
         getIcon(this).draw(this);
-        int size = 8 + getFont().getStringWidth(textBox.getText());
-        if(size > getWidth())
-        {
-            setWidth(size);
-            int bsize = size / 2 - 4;
-            buttonAccept.setWidth(bsize);
-            buttonCancel.setWidth(bsize);
-            buttonAccept.posX = getWidth() - bsize - 2;
-            textBox.setWidth(getWidth() - 4);
-            initGui();
-        }
     }
 
     @Override

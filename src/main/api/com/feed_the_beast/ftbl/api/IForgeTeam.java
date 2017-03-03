@@ -20,6 +20,8 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
     int FLAG_FREE_TO_JOIN = 1;
     int FLAG_INVALID = 2;
 
+    boolean isValid();
+
     @Nullable
     INBTSerializable<?> getData(ResourceLocation id);
 
@@ -56,7 +58,7 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     boolean addPlayer(IForgePlayer p);
 
-    void removePlayer(IForgePlayer p);
+    boolean removePlayer(IForgePlayer p);
 
     void changeOwner(IForgePlayer o);
 

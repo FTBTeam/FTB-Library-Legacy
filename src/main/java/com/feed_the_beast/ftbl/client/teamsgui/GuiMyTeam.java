@@ -382,8 +382,8 @@ public class GuiMyTeam extends GuiLM
             public void onEnterPressed(IGui gui)
             {
                 FTBLibClient.execClientCommand("/ftb team msg " + getText());
-                setText("");
-                setSelected(gui, true);
+                setText(gui, "");
+                setFocused(true);
             }
         };
 
@@ -408,7 +408,7 @@ public class GuiMyTeam extends GuiLM
         }
 
         buttonExitTeam.setY(height - BOTTOM_PANEL_HEIGHT + 1);
-        buttonTeamTitle.setWidth(width - LEFT_PANEL_WIDTH - 24);
+        buttonTeamTitle.setWidth(width - LEFT_PANEL_WIDTH - 3 - topPanelButtons.size() * 20);
         panelPlayers.setHeight(height - TOP_PANEL_HEIGHT - BOTTOM_PANEL_HEIGHT);
 
         scrollPlayers.setHeight(panelPlayers.getHeight());

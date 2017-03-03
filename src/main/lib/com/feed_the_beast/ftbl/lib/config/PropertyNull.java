@@ -71,21 +71,8 @@ public enum PropertyNull implements IConfigValue
     }
 
     @Override
-    public double getDouble()
-    {
-        return 0;
-    }
-
-    @Override
     public void addInfo(IConfigKey key, List<String> list)
     {
-    }
-
-    @Nullable
-    @Override
-    public List<String> getVariants()
-    {
-        return null;
     }
 
     @Override
@@ -129,5 +116,11 @@ public enum PropertyNull implements IConfigValue
     public boolean isNull()
     {
         return true;
+    }
+
+    @Override
+    public boolean setValueFromString(String text, boolean simulate)
+    {
+        return false;
     }
 }

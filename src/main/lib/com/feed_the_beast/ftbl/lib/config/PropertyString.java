@@ -2,10 +2,6 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -92,25 +88,10 @@ public class PropertyString extends PropertyBase
     }
 
     @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+    public boolean setValueFromString(String text, boolean simulate)
     {
-        GuiSelectors.selectJson(this, (val, set) ->
-        {
-            if(set)
-            {
-                setString(LMJsonUtils.fixJsonString(val.getString()));
-                gui.onChanged(key, getSerializableElement());
-            }
-
-            gui.openGui();
-        });
-    }
-
-    @Override
-    public boolean canParse(String text)
-    {
-        String s = LMJsonUtils.fixJsonString(text);
-        return super.canParse(s) && s.length() <= charLimit;
+        setString(text);
+        return true;
     }
 
     @Override

@@ -177,7 +177,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), 10) : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), getFont().FONT_HEIGHT + 1) : line.createWidget(GuiInfo.this, panelText));
                 }
 
                 getFont().setUnicodeFlag(uni);
