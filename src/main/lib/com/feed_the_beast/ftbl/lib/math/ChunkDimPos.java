@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.lib.math;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 /**
@@ -19,6 +21,16 @@ public final class ChunkDimPos
     public ChunkDimPos(ChunkPos pos, int d)
     {
         this(pos.chunkXPos, pos.chunkZPos, d);
+    }
+
+    public ChunkDimPos(BlockPos pos, int d)
+    {
+        this(MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ()), d);
+    }
+
+    public ChunkDimPos(Entity entity)
+    {
+        this(MathHelperLM.chunk(entity.posX), MathHelperLM.chunk(entity.posY), entity.dimension);
     }
 
     public boolean equals(Object o)
