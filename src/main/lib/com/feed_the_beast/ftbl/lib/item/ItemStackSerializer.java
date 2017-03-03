@@ -8,80 +8,79 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 
 public class ItemStackSerializer
 {
-    private static String getParseRegex(String s)
+    @Nullable
+    public static ItemStack parseItem(String input)
     {
-        if(s.indexOf(' ') != -1)
-        {
-            return " ";
-        }
-        else if(s.indexOf(';') != -1)
-        {
-            return ";";
-        }
-        else if(s.indexOf('@') != -1)
-        {
-            return "@";
-        }
-        else
-        {
-            return " x ";
-        }
-    }
-
-    public static ItemStack parseItem(String s)
-    {
-        s = s.trim();
-        if(s.isEmpty())
+        input = input.trim();
+        if(input.isEmpty())
         {
             return null;
         }
 
-        String[] s1 = s.split(getParseRegex(s));
+        String[] s1 = input.split(" ");
 
         if(s1.length == 0)
         {
             return null;
         }
 
-        String itemID = s1[0];
-        int meta = 0;
-        int size = 1;
-        String nbt = null;
+        Item item = Item.REGISTRY.getObject(new ResourceLocation(s1[0]));
 
-        if(s1.length > 1)
+        if(item == null)
         {
-            size = Integer.parseInt(s1[1]);
+            return null;
         }
 
-        if(s1.length > 2)
+        int stackSize = 1, meta = 0;
+
+        if(s1.length >= 2)
         {
-            meta = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : Integer.parseInt(s1[2]);
+            stackSize = MathHelper.parseIntWithDefault(s1[1], 1);
         }
+
+        if(s1.length >= 3)
+        {
+            meta = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : MathHelper.parseIntWithDefault(s1[2], 0);
+        }
+
+        ItemStack itemstack = new ItemStack(item, stackSize, meta);
 
         if(s1.length > 3)
         {
-            nbt = LMStringUtils.joinSpaceUntilEnd(3, s1);
+            try
+            {
+                itemstack.setTagCompound(JsonToNBT.getTagFromJson(LMStringUtils.joinSpaceUntilEnd(3, s1)));
+            }
+            catch(Exception ex)
+            {
+            }
         }
 
-        return GameRegistry.makeItemStack(itemID, meta, size, nbt);
+        return itemstack;
     }
 
-    @Nullable
     public static String toString(@Nullable ItemStack is)
     {
-        return (is == null) ? null : Item.REGISTRY.getNameForObject(is.getItem()) + " " + is.stackSize + ' ' + is.getItemDamage();
+        return (is == null) ? "" : Item.REGISTRY.getNameForObject(is.getItem()) + " " + is.stackSize + ' ' + is.getItemDamage();
     }
 
     public static JsonElement serialize(@Nullable ItemStack is)
     {
-        return (is == null) ? JsonNull.INSTANCE : new JsonPrimitive(toString(is));
+        if(is == null)
+        {
+            return JsonNull.INSTANCE;
+        }
+
+        String s = toString(is);
+        return s.isEmpty() ? JsonNull.INSTANCE : new JsonPrimitive(s);
     }
 
     @Nullable
