@@ -10,8 +10,6 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
@@ -84,18 +82,6 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     public List<String> getVariants()
     {
         return getNameMap().getKeys();
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagString(getString());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        set(getNameMap().get(((NBTTagString) nbt).getString()));
     }
 
     @Override

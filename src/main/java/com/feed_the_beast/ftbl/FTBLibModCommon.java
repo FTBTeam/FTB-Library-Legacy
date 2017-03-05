@@ -28,18 +28,17 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyByte;
 import com.feed_the_beast.ftbl.lib.config.PropertyColor;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
-import com.feed_the_beast.ftbl.lib.config.PropertyEntityClassList;
+import com.feed_the_beast.ftbl.lib.config.PropertyEntityClass;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.feed_the_beast.ftbl.lib.config.PropertyIntList;
-import com.feed_the_beast.ftbl.lib.config.PropertyItemStackList;
+import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
 import com.feed_the_beast.ftbl.lib.config.PropertyJson;
+import com.feed_the_beast.ftbl.lib.config.PropertyList;
 import com.feed_the_beast.ftbl.lib.config.PropertyNull;
 import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyStringList;
-import com.feed_the_beast.ftbl.lib.config.PropertyTextComponentList;
+import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.info.InfoHrLine;
 import com.feed_the_beast.ftbl.lib.info.InfoImageLine;
@@ -88,7 +87,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         {
             super(s, def);
             defaultOPValue = def.copy();
-            defaultOPValue.deserializeNBT(defOP.serializeNBT());
+            defaultOPValue.fromJson(defOP.getSerializableElement());
             setInfo(info);
         }
 
@@ -108,6 +107,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addConfig(FTBLibFinals.MOD_ID, "teams.mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
 
         addConfigValueProvider(PropertyNull.ID, () -> PropertyNull.INSTANCE);
+        addConfigValueProvider(PropertyList.ID, () -> new PropertyList(PropertyNull.ID));
         addConfigValueProvider(PropertyBool.ID, PropertyBool::new);
         addConfigValueProvider(PropertyByte.ID, PropertyByte::new);
         addConfigValueProvider(PropertyShort.ID, PropertyShort::new);
@@ -116,13 +116,11 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addConfigValueProvider(PropertyString.ID, PropertyString::new);
         addConfigValueProvider(PropertyColor.ID, PropertyColor::new);
         addConfigValueProvider(PropertyEnumAbstract.ID, PropertyStringEnum::new);
-        addConfigValueProvider(PropertyStringList.ID, PropertyStringList::new);
-        addConfigValueProvider(PropertyIntList.ID, PropertyIntList::new);
         addConfigValueProvider(PropertyJson.ID, PropertyJson::new);
         addConfigValueProvider(PropertyBlockState.ID, PropertyBlockState::new);
-        addConfigValueProvider(PropertyEntityClassList.ID, PropertyEntityClassList::new);
-        addConfigValueProvider(PropertyTextComponentList.ID, PropertyTextComponentList::new);
-        addConfigValueProvider(PropertyItemStackList.ID, PropertyItemStackList::new);
+        addConfigValueProvider(PropertyItemStack.ID, PropertyItemStack::new);
+        addConfigValueProvider(PropertyTextComponent.ID, PropertyTextComponent::new);
+        addConfigValueProvider(PropertyEntityClass.ID, PropertyEntityClass::new);
 
         addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         addNotification(FTBLibNotifications.NEW_TEAM_MESSAGE);

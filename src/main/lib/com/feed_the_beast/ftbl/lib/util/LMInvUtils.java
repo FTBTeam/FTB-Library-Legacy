@@ -194,9 +194,9 @@ public class LMInvUtils
         dropItem(e.worldObj, e.posX, e.posY, e.posZ, item, 0);
     }
 
-    public static void giveItem(EntityPlayer ep, ItemStack item)
+    public static void giveItem(EntityPlayer ep, @Nullable ItemStack item)
     {
-        if(item.stackSize > 0)
+        if(item != null && item.stackSize > 0)
         {
             if(ep.inventory.addItemStackToInventory(item))
             {

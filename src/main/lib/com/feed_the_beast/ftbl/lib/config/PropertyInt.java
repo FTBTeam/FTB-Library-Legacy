@@ -6,9 +6,6 @@ import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
@@ -152,18 +149,6 @@ public class PropertyInt extends PropertyBase
         }
 
         return false;
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagInt(getInt());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setInt(((NBTPrimitive) nbt).getInt());
     }
 
     @Override

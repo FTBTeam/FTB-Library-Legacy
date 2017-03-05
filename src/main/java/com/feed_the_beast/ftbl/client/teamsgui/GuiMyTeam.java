@@ -197,7 +197,7 @@ public class GuiMyTeam extends GuiLM
                                 @Override
                                 public void onValueChanged()
                                 {
-                                    if(isSelected)
+                                    if(value > 0)
                                     {
                                         FTBLibClient.execClientCommand("/ftb team set_status " + selectedPlayer.playerId + " " + status.getName());
                                         selectedPlayer.status = status;
@@ -209,7 +209,7 @@ public class GuiMyTeam extends GuiLM
 
                             if(status == selectedPlayer.status)
                             {
-                                entry.select(true);
+                                entry.select(1);
                             }
                         }
 

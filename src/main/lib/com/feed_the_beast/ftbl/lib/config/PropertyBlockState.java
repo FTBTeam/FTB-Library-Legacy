@@ -7,9 +7,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -79,18 +76,6 @@ public class PropertyBlockState extends PropertyBase
     public IConfigValue copy()
     {
         return new PropertyBlockState(getBlockState());
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagShort((short) getInt());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setBlockState(Block.getStateById(((NBTPrimitive) nbt).getShort() & 0xFFFF));
     }
 
     @Override

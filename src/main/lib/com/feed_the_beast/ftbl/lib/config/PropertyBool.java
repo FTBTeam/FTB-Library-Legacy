@@ -7,9 +7,6 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagByte;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -99,18 +96,6 @@ public class PropertyBool extends PropertyBase
     {
         setBoolean(!getBoolean());
         gui.onChanged(key, getSerializableElement());
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagByte(getBoolean() ? (byte) 1 : 0);
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setBoolean(((NBTPrimitive) nbt).getByte() != 0);
     }
 
     @Override

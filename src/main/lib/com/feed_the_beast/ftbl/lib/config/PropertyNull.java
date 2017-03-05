@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -77,17 +76,6 @@ public enum PropertyNull implements IConfigValue
 
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return null;
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
     {
     }
 

@@ -1,13 +1,10 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
 
 import javax.annotation.Nullable;
 
@@ -93,18 +90,6 @@ public class PropertyJson extends PropertyBase
     public int getColor()
     {
         return 0xFFAA49;
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagString(getJsonElement().toString());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setJsonElement(LMJsonUtils.fromJson(((NBTTagString) nbt).getString()));
     }
 
     @Override

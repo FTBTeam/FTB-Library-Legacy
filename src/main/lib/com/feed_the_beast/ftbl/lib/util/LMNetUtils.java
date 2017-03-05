@@ -146,11 +146,12 @@ public class LMNetUtils
         return JsonElementIO.read(io);
     }
 
-    public static void writeTextComponent(ByteBuf io, ITextComponent t)
+    public static void writeTextComponent(ByteBuf io, @Nullable ITextComponent t)
     {
         writeJsonElement(io, LMJsonUtils.serializeTextComponent(t));
     }
 
+    @Nullable
     public static ITextComponent readTextComponent(ByteBuf io)
     {
         return LMJsonUtils.deserializeTextComponent(readJsonElement(io));

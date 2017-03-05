@@ -4,9 +4,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagByte;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -39,18 +36,6 @@ public class PropertyByte extends PropertyInt
     public IConfigValue copy()
     {
         return new PropertyByte(getInt(), getMin(), getMax());
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagByte((byte) getInt());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setInt(((NBTPrimitive) nbt).getInt());
     }
 
     @Override

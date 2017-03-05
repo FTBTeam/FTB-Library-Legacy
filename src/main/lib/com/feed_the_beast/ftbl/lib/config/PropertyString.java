@@ -5,8 +5,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -103,18 +101,6 @@ public class PropertyString extends PropertyBase
         {
             list.add(TextFormatting.AQUA + "Char Limit: " + charLimit);
         }
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagString(getString());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setString(((NBTTagString) nbt).getString());
     }
 
     @Override

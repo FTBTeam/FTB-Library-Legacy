@@ -8,8 +8,6 @@ import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -164,28 +162,5 @@ public class ConfigTree implements IConfigTree
         });
 
         return o;
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        tree.forEach((key, value) -> nbt.setTag(key.getName(), value.serializeNBT()));
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        NBTTagCompound configTag = (NBTTagCompound) nbt;
-        tree.forEach((key, value) ->
-        {
-            NBTBase base = configTag.getTag(key.getName());
-
-            if(base != null)
-            {
-                value.deserializeNBT(base);
-            }
-        });
     }
 }

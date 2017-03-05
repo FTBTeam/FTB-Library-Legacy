@@ -6,8 +6,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagByte;
 
 import java.util.Collections;
 import java.util.Map;
@@ -78,16 +76,5 @@ public enum EmptyConfigTree implements IConfigTree
     public JsonElement getSerializableElement()
     {
         return JsonNull.INSTANCE;
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagByte((byte) 0);
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
     }
 }

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyColor;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import net.minecraft.client.renderer.GlStateManager;
 
+//FIXME
 public class GuiColorField extends GuiLM
 {
     private final int initCol;

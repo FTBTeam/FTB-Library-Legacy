@@ -2,11 +2,9 @@ package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -16,7 +14,7 @@ import java.util.Objects;
 /**
  * Created by LatvianModder on 11.09.2016.
  */
-public interface IConfigValue extends IStringSerializable, IExtendedIOObject, INBTSerializable<NBTBase>, IJsonSerializable
+public interface IConfigValue extends IStringSerializable, IExtendedIOObject, IJsonSerializable
 {
     @Nullable
     Object getValue();

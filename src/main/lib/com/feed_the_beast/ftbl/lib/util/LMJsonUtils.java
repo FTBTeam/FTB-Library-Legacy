@@ -199,7 +199,7 @@ public class LMJsonUtils
         return new int[] {e.getAsInt()};
     }
 
-    public static JsonElement serializeTextComponent(ITextComponent c)
+    public static JsonElement serializeTextComponent(@Nullable ITextComponent c)
     {
         if(c instanceof TextComponentString && c.getStyle().isEmpty() && c.getSiblings().isEmpty())
         {

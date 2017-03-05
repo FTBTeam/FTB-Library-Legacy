@@ -20,12 +20,13 @@ public class CheckBoxListLM extends ButtonLM
 
     public final boolean radioButtons;
     private final List<CheckBoxEntry> entries;
-    public IDrawableObject iconSelected = DEFAULT_SELECTED_ICON, iconDeselected = ImageProvider.NULL, background = DEFAULT_BACKGROUND;
+    public IDrawableObject background = DEFAULT_BACKGROUND;
+    public IDrawableObject[] icons = {ImageProvider.NULL, DEFAULT_SELECTED_ICON};
 
     public static class CheckBoxEntry
     {
         public String name;
-        public boolean isSelected = false;
+        public int value = 0;
         private CheckBoxListLM checkBoxList;
 
         public CheckBoxEntry(String n)
@@ -35,7 +36,7 @@ public class CheckBoxListLM extends ButtonLM
 
         public void onClicked(IGui gui, IMouseButton button, int index)
         {
-            select(!isSelected);
+            select((value + 1) % checkBoxList.icons.length);
             GuiHelper.playClickSound();
         }
 
@@ -43,16 +44,16 @@ public class CheckBoxListLM extends ButtonLM
         {
         }
 
-        public CheckBoxEntry select(boolean value)
+        public CheckBoxEntry select(int v)
         {
             if(checkBoxList.radioButtons)
             {
-                if(value)
+                if(v > 0)
                 {
                     for(CheckBoxEntry entry : checkBoxList.entries)
                     {
-                        boolean old1 = entry.isSelected;
-                        entry.isSelected = false;
+                        boolean old1 = entry.value > 0;
+                        entry.value = 0;
 
                         if(old1)
                         {
@@ -66,10 +67,10 @@ public class CheckBoxListLM extends ButtonLM
                 }
             }
 
-            boolean old = isSelected;
-            isSelected = value;
+            int old = value;
+            value = v;
 
-            if(old != isSelected)
+            if(old != value)
             {
                 onValueChanged();
             }
@@ -138,7 +139,7 @@ public class CheckBoxListLM extends ButtonLM
             CheckBoxEntry entry = entries.get(i);
             int y = ay + i * 11 + 1;
             background.draw(ax, y, 10, 10);
-            (entry.isSelected ? iconSelected : iconDeselected).draw(ax + 1, y + 1, 8, 8);
+            icons[entry.value].draw(ax + 1, y + 1, 8, 8);
             gui.drawString(entry.name, ax + 12, y + 1);
         }
 

@@ -7,9 +7,6 @@ import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -158,18 +155,6 @@ public class PropertyDouble extends PropertyBase
         }
 
         return false;
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagDouble(getDouble());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setDouble(((NBTPrimitive) nbt).getDouble());
     }
 
     @Override

@@ -9,8 +9,6 @@ import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
@@ -97,18 +95,6 @@ public class PropertyStringEnum extends PropertyBase
     {
         setString(keys.get(MathHelperLM.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
         gui.onChanged(key, getSerializableElement());
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagString(getString());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setString(((NBTTagString) nbt).getString());
     }
 
     @Override

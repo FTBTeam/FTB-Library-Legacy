@@ -5,9 +5,6 @@ import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTPrimitive;
-import net.minecraft.nbt.NBTTagInt;
 
 import javax.annotation.Nullable;
 
@@ -140,18 +137,6 @@ public class PropertyColor extends PropertyBase
         }
 
         return false;
-    }
-
-    @Override
-    public NBTBase serializeNBT()
-    {
-        return new NBTTagInt(getInt());
-    }
-
-    @Override
-    public void deserializeNBT(NBTBase nbt)
-    {
-        setColorValue(((NBTPrimitive) nbt).getInt());
     }
 
     @Override
