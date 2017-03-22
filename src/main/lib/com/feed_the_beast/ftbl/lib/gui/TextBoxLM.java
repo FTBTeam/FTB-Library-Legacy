@@ -83,7 +83,7 @@ public class TextBoxLM extends WidgetLM
     {
         cursorPosition = pos;
         int i = text.length();
-        cursorPosition = MathHelper.clamp_int(cursorPosition, 0, i);
+        cursorPosition = MathHelper.clamp(cursorPosition, 0, i);
         setSelectionPos(gui, cursorPosition);
     }
 
@@ -166,7 +166,7 @@ public class TextBoxLM extends WidgetLM
             lineScrollOffset -= lineScrollOffset - position;
         }
 
-        lineScrollOffset = MathHelper.clamp_int(lineScrollOffset, 0, i);
+        lineScrollOffset = MathHelper.clamp(lineScrollOffset, 0, i);
     }
 
     public int getNthWordFromCursor(int numWords)

@@ -15,7 +15,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdLeave extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "leave";
     }

@@ -120,7 +120,7 @@ public class LMServerUtils
             if(from == 1 && entity.isEntityAlive())
             {
                 // getMode around vanilla End hacks
-                toDim.spawnEntityInWorld(entity);
+                toDim.spawnEntity(entity);
                 toDim.updateEntityWithOptionalForce(entity, false);
             }
         }
@@ -137,7 +137,7 @@ public class LMServerUtils
                 newEntity.readFromNBT(tagCompound);
                 newEntity.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, rotationYaw, rotationPitch);
                 newEntity.forceSpawn = true;
-                toDim.spawnEntityInWorld(newEntity);
+                toDim.spawnEntity(newEntity);
                 newEntity.forceSpawn = false;
             }
             catch(Exception e)
@@ -199,7 +199,7 @@ public class LMServerUtils
 
     public static boolean hasOnlinePlayers()
     {
-        return !getServer().getPlayerList().getPlayerList().isEmpty();
+        return !getServer().getPlayerList().getPlayers().isEmpty();
     }
 
     public static WorldServer getServerWorld()

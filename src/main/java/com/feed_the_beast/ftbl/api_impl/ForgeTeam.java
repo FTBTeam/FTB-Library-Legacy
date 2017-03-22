@@ -627,7 +627,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         Collection<EntityPlayerMP> list = new ArrayList<>();
 
-        for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayerList())
+        for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayers())
         {
             if(hasStatus(ep.getGameProfile().getId(), status))
             {

@@ -66,7 +66,7 @@ public class ItemListButtonLM extends ButtonLM
         if(stack != null)
         {
             list.add(stack.getDisplayName());
-            stack.getItem().addInformation(stack, Minecraft.getMinecraft().thePlayer, list, false);
+            stack.getItem().addInformation(stack, Minecraft.getMinecraft().player, list, false);
         }
     }
 

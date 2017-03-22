@@ -175,7 +175,7 @@ public class LMInvUtils
             ei.motionY = my;
             ei.motionZ = mz;
             ei.setPickupDelay(delay);
-            w.spawnEntityInWorld(ei);
+            w.spawnEntity(ei);
         }
     }
 
@@ -191,7 +191,7 @@ public class LMInvUtils
 
     public static void dropItem(Entity e, ItemStack item)
     {
-        dropItem(e.worldObj, e.posX, e.posY, e.posZ, item, 0);
+        dropItem(e.world, e.posX, e.posY, e.posZ, item, 0);
     }
 
     public static void giveItem(EntityPlayer ep, @Nullable ItemStack item)

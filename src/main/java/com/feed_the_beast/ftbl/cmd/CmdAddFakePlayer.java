@@ -18,15 +18,15 @@ import java.util.UUID;
 public class CmdAddFakePlayer extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "add_fake_player";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " <player>";
+        return '/' + getName() + " <player>";
     }
 
     @Override
@@ -54,6 +54,6 @@ public class CmdAddFakePlayer extends CommandLM
         ForgePlayer p = new ForgePlayer(id, args[1]);
         Universe.INSTANCE.playerMap.put(p.getId(), p);
 
-        sender.addChatMessage(new TextComponentString("Fake player " + args[1] + " added!"));
+        sender.sendMessage(new TextComponentString("Fake player " + args[1] + " added!"));
     }
 }

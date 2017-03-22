@@ -76,7 +76,7 @@ public class PropertyInt extends PropertyBase
 
     public void setInt(int v)
     {
-        value = MathHelper.clamp_int(v, getMin(), getMax());
+        value = MathHelper.clamp(v, getMin(), getMax());
     }
 
     @Override

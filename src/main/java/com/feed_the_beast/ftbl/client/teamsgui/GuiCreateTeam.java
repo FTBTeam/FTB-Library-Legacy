@@ -86,7 +86,7 @@ public class GuiCreateTeam extends GuiLM
             }
         };
 
-        textBoxId.writeText(this, mc.thePlayer.getGameProfile().getName().toLowerCase());
+        textBoxId.writeText(this, mc.player.getGameProfile().getName().toLowerCase());
         textBoxId.background = ButtonLM.DEFAULT_BACKGROUND;
         textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
         textBoxId.textColor = color.getColor();

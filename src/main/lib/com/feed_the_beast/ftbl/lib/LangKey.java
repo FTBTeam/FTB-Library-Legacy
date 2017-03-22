@@ -33,7 +33,7 @@ public final class LangKey implements ILangKeyContainer
 
     public void printChat(ICommandSender ics, Object... o)
     {
-        ics.addChatMessage(textComponent(o));
+        ics.sendMessage(textComponent(o));
     }
 
     public CommandException commandError(Object... o)

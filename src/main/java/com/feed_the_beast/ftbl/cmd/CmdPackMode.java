@@ -23,26 +23,26 @@ public class CmdPackMode extends CommandTreeBase
     public static class CmdSet extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "set";
         }
 
         @Override
-        public String getCommandUsage(ICommandSender ics)
+        public String getUsage(ICommandSender ics)
         {
-            return '/' + getCommandName() + " <modeID>";
+            return '/' + getName() + " <modeID>";
         }
 
         @Override
-        public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+        public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
         {
             if(args.length == 1)
             {
                 return getListOfStringsMatchingLastWord(args, PackModes.INSTANCE.getModes());
             }
 
-            return super.getTabCompletionOptions(server, sender, args, pos);
+            return super.getTabCompletions(server, sender, args, pos);
         }
 
         @Override
@@ -71,14 +71,14 @@ public class CmdPackMode extends CommandTreeBase
                 FTBLibIntegrationInternal.API.reload(sender, EnumReloadType.MODE_CHANGED);
             }
 
-            sender.addChatMessage(c);
+            sender.sendMessage(c);
         }
     }
 
     public static class CmdGet extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "get";
         }
@@ -94,14 +94,14 @@ public class CmdPackMode extends CommandTreeBase
         {
             ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedServerData.INSTANCE.getPackMode().getName());
             c.getStyle().setColor(TextFormatting.AQUA);
-            sender.addChatMessage(c);
+            sender.sendMessage(c);
         }
     }
 
     public static class CmdList extends CommandLM
     {
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return "list";
         }
@@ -117,7 +117,7 @@ public class CmdPackMode extends CommandTreeBase
         {
             ITextComponent c = FTBLibLang.MODE_LIST.textComponent(LMStringUtils.strip(PackModes.INSTANCE.getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
-            sender.addChatMessage(c);
+            sender.sendMessage(c);
         }
     }
 
@@ -129,7 +129,7 @@ public class CmdPackMode extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "packmode";
     }
@@ -147,7 +147,7 @@ public class CmdPackMode extends CommandTreeBase
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.packmode.usage";
     }

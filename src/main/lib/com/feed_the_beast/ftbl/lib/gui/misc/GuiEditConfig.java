@@ -252,7 +252,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
     {
         if(shouldClose == 1 && !modifiedConfig.entrySet().isEmpty())
         {
-            configContainer.saveConfig(mc.thePlayer, extraNBT, modifiedConfig);
+            configContainer.saveConfig(mc.player, extraNBT, modifiedConfig);
         }
     }
 

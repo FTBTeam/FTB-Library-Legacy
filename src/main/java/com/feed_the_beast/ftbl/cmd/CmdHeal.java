@@ -9,7 +9,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdHeal extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "heal";
     }

@@ -66,7 +66,7 @@ public class FTBLibClient
     public static int getDim()
     {
         Minecraft mc = Minecraft.getMinecraft();
-        return mc.thePlayer != null ? mc.theWorld.provider.getDimension() : 0;
+        return mc.world != null ? mc.world.provider.getDimension() : 0;
     }
 
     public static void spawnPart(Particle e)
@@ -134,9 +134,9 @@ public class FTBLibClient
             mc.ingameGUI.getChatGUI().addToSentMessages(s);
         }
 
-        if(ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) == 0)
+        if(ClientCommandHandler.instance.executeCommand(mc.player, s) == 0)
         {
-            mc.thePlayer.sendChatMessage(s);
+            mc.player.sendChatMessage(s);
         }
     }
 
@@ -174,7 +174,7 @@ public class FTBLibClient
             entityItem = new EntityItem(w);
         }
 
-        entityItem.worldObj = w;
+        entityItem.world = w;
         entityItem.hoverStart = 0F;
         entityItem.setEntityItemStack(is);
         Minecraft.getMinecraft().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);

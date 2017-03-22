@@ -20,7 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class CmdCreate extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "create";
     }

@@ -11,11 +11,14 @@
 
 ```
 repositories {
-    maven { url 'https://jitpack.io' }
+    ivy {
+        name "LatMod"
+        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
+    }
 }
 
 dependencies {
-    compile 'com.github.LatvianModder:FTBLib:3.1.1' //Or use 1.9-SNAPSHOT as version, if you want latest
+    deobfCompile 'LatMod:FTBLib:1.10.2-3.3.0:api'
 }
 ```
 

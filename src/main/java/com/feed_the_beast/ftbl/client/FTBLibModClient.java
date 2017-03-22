@@ -246,7 +246,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     {
         Minecraft.getMinecraft().addScheduledTask(() ->
         {
-            message.onMessage(LMUtils.cast(message), Minecraft.getMinecraft().thePlayer);
+            message.onMessage(LMUtils.cast(message), Minecraft.getMinecraft().player);
 
             if(FTBLibAPI_Impl.LOG_NET)
             {

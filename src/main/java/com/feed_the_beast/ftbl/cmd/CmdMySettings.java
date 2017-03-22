@@ -16,7 +16,7 @@ public class CmdMySettings extends CmdEditConfigBase
     private static final ITextComponent TITLE = new TextComponentString("My Server Settings");
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "my_settings";
     }

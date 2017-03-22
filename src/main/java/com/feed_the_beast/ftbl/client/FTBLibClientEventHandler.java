@@ -139,7 +139,7 @@ public class FTBLibClientEventHandler
                         ySize = 136;
                         buttonY = 6;
                     }
-                    boolean hasPotions = !event.getGui().mc.thePlayer.getActivePotionEffects().isEmpty();
+                    boolean hasPotions = !event.getGui().mc.player.getActivePotionEffects().isEmpty();
                     if(hasPotions)
                     {
                         buttonX -= 4;
@@ -192,7 +192,7 @@ public class FTBLibClientEventHandler
     {
         Minecraft mc = Minecraft.getMinecraft();
         //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
-        if(event.phase == TickEvent.Phase.END && mc.theWorld != null && !mc.gameSettings.hideGUI)
+        if(event.phase == TickEvent.Phase.END && mc.world != null && !mc.gameSettings.hideGUI)
         {
             if(ClientNotifications.shouldRenderTemp())
             {

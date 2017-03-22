@@ -22,7 +22,7 @@ public class CmdEditConfig extends CommandTreeBase
         }
 
         @Override
-        public String getCommandName()
+        public String getName()
         {
             return commandName;
         }
@@ -46,13 +46,13 @@ public class CmdEditConfig extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "edit_config";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.edit_config.usage";
     }

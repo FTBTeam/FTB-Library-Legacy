@@ -118,7 +118,7 @@ public class FTBLibEventHandler
             b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message")));
             c.appendSibling(b2);
             c.appendText(" to hide this message.");
-            ep.addChatMessage(c);
+            ep.sendMessage(c);
         }
     }
 

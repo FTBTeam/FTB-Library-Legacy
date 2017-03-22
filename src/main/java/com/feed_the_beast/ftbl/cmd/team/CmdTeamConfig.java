@@ -17,7 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 public class CmdTeamConfig extends CmdEditConfigBase
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "config";
     }

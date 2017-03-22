@@ -81,13 +81,13 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     {
         onClosed();
 
-        if(mc.thePlayer == null)
+        if(mc.player == null)
         {
             mc.displayGuiScreen(null);
         }
         else
         {
-            mc.thePlayer.closeScreen();
+            mc.player.closeScreen();
         }
     }
 

@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdTransferOwnership extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "transfer_ownership";
     }

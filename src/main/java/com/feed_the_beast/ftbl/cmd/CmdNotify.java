@@ -18,26 +18,26 @@ import java.util.List;
 public class CmdNotify extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "notify";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return "/" + getCommandName() + " <player> <id>";
+        return "/" + getName() + " <player> <id>";
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 2)
         {
             return getListOfStringsMatchingLastWord(args, SharedServerData.INSTANCE.notifications.keySet());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override

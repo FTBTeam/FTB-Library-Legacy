@@ -23,7 +23,7 @@ public class CmdTeam extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "team";
     }
@@ -41,7 +41,7 @@ public class CmdTeam extends CommandTreeBase
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.team.usage";
     }

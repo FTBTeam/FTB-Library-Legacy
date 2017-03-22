@@ -85,7 +85,7 @@ public class SliderLM extends WidgetLM
                 v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
             }
 
-            v = MathHelper.clamp_double(v, 0D, 1D);
+            v = MathHelper.clamp(v, 0D, 1D);
 
             if(v0 != v)
             {
@@ -128,7 +128,7 @@ public class SliderLM extends WidgetLM
     {
         if(value != v)
         {
-            value = MathHelper.clamp_double(v, 0D, 1D);
+            value = MathHelper.clamp(v, 0D, 1D);
             onMoved(gui);
         }
     }

@@ -28,7 +28,7 @@ import java.util.UUID;
 public class CmdGui extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "gui";
     }

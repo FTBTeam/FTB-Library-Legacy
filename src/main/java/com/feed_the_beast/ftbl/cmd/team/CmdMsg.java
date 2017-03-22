@@ -18,7 +18,7 @@ import net.minecraftforge.common.ForgeHooks;
 public class CmdMsg extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "msg";
     }

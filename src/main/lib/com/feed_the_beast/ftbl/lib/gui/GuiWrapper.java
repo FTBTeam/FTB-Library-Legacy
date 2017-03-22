@@ -55,7 +55,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
             return;
         }
 
-        if(key == Keyboard.KEY_ESCAPE || (mc.theWorld != null && mc.gameSettings.keyBindInventory.isActiveAndMatches(key)))
+        if(key == Keyboard.KEY_ESCAPE || (mc.world != null && mc.gameSettings.keyBindInventory.isActiveAndMatches(key)))
         {
             if(wrappedGui.onClosedByKey())
             {

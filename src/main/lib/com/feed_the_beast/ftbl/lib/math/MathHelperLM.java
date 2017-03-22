@@ -118,7 +118,7 @@ public class MathHelperLM
 
     public static int chunk(double d)
     {
-        return chunk(MathHelper.floor_double(d));
+        return chunk(MathHelper.floor(d));
     }
 
     public static boolean isRound(double d)
@@ -193,7 +193,7 @@ public class MathHelperLM
 
     public static int getRotations(double yaw, int max)
     {
-        return MathHelper.floor_double((yaw * max / 360D) + 0.5D) & (max - 1);
+        return MathHelper.floor((yaw * max / 360D) + 0.5D) & (max - 1);
     }
 
     public static int getRotYaw(EnumFacing facing)
@@ -240,7 +240,7 @@ public class MathHelperLM
 
     public static Vec3d getEyePosition(EntityPlayer ep)
     {
-        return new Vec3d(ep.posX, ep.worldObj.isRemote ? ep.posY : (ep.posY + ep.getEyeHeight()), ep.posZ);
+        return new Vec3d(ep.posX, ep.world.isRemote ? ep.posY : (ep.posY + ep.getEyeHeight()), ep.posZ);
     }
 
     @Nullable
@@ -251,7 +251,7 @@ public class MathHelperLM
         float f3 = MathHelper.sin(-playerIn.rotationYaw * RAD_F - PI_F);
         float f4 = -MathHelper.cos(-playerIn.rotationPitch * RAD_F);
         Vec3d vec3d1 = vec3d.addVector(f3 * f4 * dist, MathHelper.sin(-playerIn.rotationPitch * RAD_F) * dist, f2 * f4 * dist);
-        return playerIn.worldObj.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
+        return playerIn.world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
     }
 
     @Nullable

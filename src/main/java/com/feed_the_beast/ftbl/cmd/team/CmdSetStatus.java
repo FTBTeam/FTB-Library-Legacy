@@ -20,7 +20,7 @@ import java.util.List;
 public class CmdSetStatus extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "set_status";
     }
@@ -32,20 +32,20 @@ public class CmdSetStatus extends CommandLM
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "/ftb team set_status <player> <status>";
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         if(args.length == 2)
         {
             return getListOfStringsMatchingLastWord(args, EnumTeamStatus.VALID_VALUES);
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override

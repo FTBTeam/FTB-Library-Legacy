@@ -43,12 +43,12 @@ public class ItemStackSerializer
 
         if(s1.length >= 2)
         {
-            stackSize = MathHelper.parseIntWithDefault(s1[1], 1);
+            stackSize = MathHelper.getInt(s1[1], 1);
         }
 
         if(s1.length >= 3)
         {
-            meta = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : MathHelper.parseIntWithDefault(s1[2], 0);
+            meta = (s1[2].charAt(0) == '*') ? OreDictionary.WILDCARD_VALUE : MathHelper.getInt(s1[2], 0);
         }
 
         ItemStack itemstack = new ItemStack(item, stackSize, meta);

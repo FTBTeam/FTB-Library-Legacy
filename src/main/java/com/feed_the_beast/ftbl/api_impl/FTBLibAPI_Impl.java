@@ -141,7 +141,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
         if(LMServerUtils.hasOnlinePlayers())
         {
-            for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayerList())
+            for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayers())
             {
                 NBTTagCompound syncData = new NBTTagCompound();
                 IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
@@ -189,7 +189,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void sendNotification(@Nullable EntityPlayer player, INotification n)
     {
-        if(player != null && player.worldObj.isRemote)
+        if(player != null && player.world.isRemote)
         {
             FTBLibMod.PROXY.displayNotification(EnumNotificationDisplay.SCREEN, n);
         }
@@ -212,7 +212,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void displayInfoGui(EntityPlayer player, InfoPage page)
     {
-        if(player.worldObj.isRemote)
+        if(player.world.isRemote)
         {
             FTBLibMod.PROXY.displayInfoGui(page);
         }

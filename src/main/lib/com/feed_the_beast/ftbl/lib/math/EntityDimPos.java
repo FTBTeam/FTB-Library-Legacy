@@ -67,7 +67,7 @@ public final class EntityDimPos
 
     public BlockPos toBlockPos()
     {
-        return new BlockPos(MathHelper.floor_double(pos.xCoord), MathHelper.floor_double(pos.yCoord), MathHelper.floor_double(pos.zCoord));
+        return new BlockPos(MathHelper.floor(pos.xCoord), MathHelper.floor(pos.yCoord), MathHelper.floor(pos.zCoord));
     }
 
     public BlockDimPos toBlockDimPos()

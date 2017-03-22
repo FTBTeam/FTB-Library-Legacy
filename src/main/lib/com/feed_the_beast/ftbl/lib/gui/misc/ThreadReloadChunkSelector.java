@@ -206,7 +206,7 @@ public class ThreadReloadChunkSelector extends Thread
         int cx, cz, x, z, wx, wz, by, color, topY;
         boolean depth = GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean();
 
-        int startY = Minecraft.getMinecraft().thePlayer.getPosition().getY();
+        int startY = Minecraft.getMinecraft().player.getPosition().getY();
 
         try
         {
@@ -243,7 +243,7 @@ public class ThreadReloadChunkSelector extends Thread
 
                                         if(depth)
                                         {
-                                            color = LMColorUtils.addBrightness(color, MathHelper.clamp_int(by - startY, -30, 30) * 5);
+                                            color = LMColorUtils.addBrightness(color, MathHelper.clamp(by - startY, -30, 30) * 5);
                                         }
 
                                         PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);

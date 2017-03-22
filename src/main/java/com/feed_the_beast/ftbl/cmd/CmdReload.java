@@ -10,7 +10,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdReload extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "reload";
     }

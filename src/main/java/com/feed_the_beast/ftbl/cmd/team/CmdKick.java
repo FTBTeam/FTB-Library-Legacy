@@ -16,7 +16,7 @@ import net.minecraft.server.MinecraftServer;
 public class CmdKick extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "kick";
     }

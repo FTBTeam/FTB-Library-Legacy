@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.tile;
 
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -91,7 +90,7 @@ public class TileLM extends TileEntity
         if(rerenderBlock())
         {
             IBlockState state = getBlockState();
-            worldObj.notifyBlockUpdate(pos, state, state, 7);
+            world.notifyBlockUpdate(pos, state, state, 7);
         }
     }
 
@@ -123,15 +122,17 @@ public class TileLM extends TileEntity
 
     protected void sendDirtyUpdate()
     {
-        if(worldObj != null && !worldObj.isRemote)
+        if(world != null && !world.isRemote)
         {
             updateContainingBlockInfo();
-            worldObj.markChunkDirty(getPos(), this);
+            world.markChunkDirty(getPos(), this);
 
+            /*
             if(updateComparator() && getBlockType() != Blocks.AIR)
             {
                 worldObj.updateComparatorOutputLevel(getPos(), getBlockType());
             }
+            */
         }
     }
 
@@ -151,7 +152,7 @@ public class TileLM extends TileEntity
     {
         if(currentState == null)
         {
-            currentState = worldObj.getBlockState(getPos());
+            currentState = world.getBlockState(getPos());
         }
 
         return currentState;
@@ -159,21 +160,21 @@ public class TileLM extends TileEntity
 
     public final boolean isServerSide()
     {
-        return worldObj != null && !worldObj.isRemote;
+        return world != null && !world.isRemote;
     }
 
     public void notifyNeighbors()
     {
-        worldObj.notifyBlockOfStateChange(getPos(), getBlockType());
+        world.notifyBlockOfStateChange(getPos(), getBlockType());
     }
 
     public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)
     {
-        worldObj.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch);
+        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch);
     }
 
     public BlockDimPos getDimPos()
     {
-        return new BlockDimPos(pos, hasWorldObj() ? worldObj.provider.getDimension() : 0);
+        return new BlockDimPos(pos, hasWorld() ? world.provider.getDimension() : 0);
     }
 }

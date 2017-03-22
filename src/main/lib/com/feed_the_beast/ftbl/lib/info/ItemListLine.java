@@ -28,7 +28,7 @@ public class ItemListLine extends EmptyInfoPageLine
     public ItemListLine(Collection<ItemStack> l, int columns)
     {
         list = new ArrayList<>(l);
-        cols = MathHelper.clamp_int(columns, 0, 16);
+        cols = MathHelper.clamp(columns, 0, 16);
     }
 
     public ItemListLine(JsonElement json)
@@ -38,7 +38,7 @@ public class ItemListLine extends EmptyInfoPageLine
         if(json.isJsonObject())
         {
             JsonObject o = json.getAsJsonObject();
-            cols = MathHelper.clamp_int(o.has("columns") ? o.get("columns").getAsInt() : 8, 0, 16);
+            cols = MathHelper.clamp(o.has("columns") ? o.get("columns").getAsInt() : 8, 0, 16);
 
             if(o.has("items"))
             {

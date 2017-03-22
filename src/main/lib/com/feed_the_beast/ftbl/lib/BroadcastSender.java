@@ -28,13 +28,13 @@ public enum BroadcastSender implements ICommandSender
     }
 
     @Override
-    public void addChatMessage(ITextComponent component)
+    public void sendMessage(ITextComponent component)
     {
         LMServerUtils.getServer().getPlayerList().sendChatMsgImpl(component, true);
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(int permLevel, String commandName)
+    public boolean canUseCommand(int permLevel, String commandName)
     {
         return true;
     }

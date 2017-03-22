@@ -165,7 +165,7 @@ public class GuiMyTeam extends GuiLM
                 }
                 else if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
                 {
-                    if(selectedPlayer.playerId.equals(mc.thePlayer.getGameProfile().getId()))
+                    if(selectedPlayer.playerId.equals(mc.player.getGameProfile().getId()))
                     {
                         add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
                     }

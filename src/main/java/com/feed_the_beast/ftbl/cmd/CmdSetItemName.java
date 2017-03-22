@@ -10,7 +10,7 @@ import net.minecraft.util.text.TextComponentString;
 public class CmdSetItemName extends CommandLM
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "set_item_name";
     }
@@ -22,9 +22,9 @@ public class CmdSetItemName extends CommandLM
     }
 
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return '/' + getCommandName() + " <name...>";
+        return '/' + getName() + " <name...>";
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CmdSetItemName extends CommandLM
         {
             ep.inventory.getCurrentItem().setStackDisplayName(String.join("", args));
             ep.openContainer.detectAndSendChanges();
-            sender.addChatMessage(new TextComponentString("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
+            sender.sendMessage(new TextComponentString("Item name set to '" + ep.inventory.getCurrentItem().getDisplayName() + "'!"));
         }
     }
 }

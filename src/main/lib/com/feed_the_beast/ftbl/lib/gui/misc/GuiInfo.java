@@ -221,7 +221,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         {
             if(p == null)
             {
-                mc.thePlayer.closeScreen();
+                mc.player.closeScreen();
                 return;
             }
             else

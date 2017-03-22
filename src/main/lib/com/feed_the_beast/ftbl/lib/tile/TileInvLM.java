@@ -93,7 +93,7 @@ public class TileInvLM extends TileLM
 
                 if(item != null && item.stackSize > 0)
                 {
-                    LMInvUtils.dropItem(worldObj, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
+                    LMInvUtils.dropItem(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
                 }
             }
         }

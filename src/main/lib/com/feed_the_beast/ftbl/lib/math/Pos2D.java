@@ -24,7 +24,7 @@ public class Pos2D
 
     public Pos2I toPos2I()
     {
-        return new Pos2I(MathHelper.floor_double(x), MathHelper.floor_double(y));
+        return new Pos2I(MathHelper.floor(x), MathHelper.floor(y));
     }
 
     public int hashCode()

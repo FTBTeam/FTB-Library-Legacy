@@ -30,13 +30,13 @@ import java.util.Map;
 public abstract class CmdEditConfigBase extends CommandLM
 {
     @Override
-    public String getCommandUsage(ICommandSender ics)
+    public String getUsage(ICommandSender ics)
     {
-        return "/" + getCommandName() + " [ID] [value]";
+        return "/" + getName() + " [ID] [value]";
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
     {
         try
         {
@@ -71,7 +71,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             //sender.addChatMessage(c);
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 
     @Override
@@ -104,7 +104,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             try
             {
                 JsonElement value = LMJsonUtils.fromJson(LMJsonUtils.fixJsonString(json));
-                sender.addChatMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
+                sender.sendMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
                 JsonObject json1 = new JsonObject();
                 json1.add(args[0], value);
                 cc.saveConfig(sender, null, json1);
@@ -116,7 +116,7 @@ public abstract class CmdEditConfigBase extends CommandLM
             }
         }
 
-        sender.addChatMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
+        sender.sendMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
     }
 
     public abstract IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;

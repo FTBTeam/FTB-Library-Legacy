@@ -37,7 +37,7 @@ public class CmdFTB extends CommandTreeBase
     }
 
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "ftb";
     }
@@ -55,7 +55,7 @@ public class CmdFTB extends CommandTreeBase
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "command.ftb.usage";
     }
