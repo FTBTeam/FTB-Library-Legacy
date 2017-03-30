@@ -46,7 +46,7 @@ public interface FTBLibAPI
 
     void loadWorldData(MinecraftServer server);
 
-    void reload(ICommandSender sender, EnumReloadType type);
+    void reload(Side side, ICommandSender sender, EnumReloadType type);
 
     void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 

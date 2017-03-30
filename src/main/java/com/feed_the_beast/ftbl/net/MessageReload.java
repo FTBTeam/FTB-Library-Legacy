@@ -2,14 +2,11 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
-import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -67,9 +64,7 @@ public class MessageReload extends MessageToClient<MessageReload>
     @Override
     public void onMessage(MessageReload m, EntityPlayer player)
     {
-        long ms = System.currentTimeMillis();
-
-        EnumReloadType type = EnumReloadType.values()[m.typeID];
+        EnumReloadType type = m.typeID >= EnumReloadType.VALUES.length ? EnumReloadType.MODE_CHANGED : EnumReloadType.VALUES[m.typeID];
 
         SharedClientData.INSTANCE.universeID = m.universeID;
         SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
@@ -84,21 +79,9 @@ public class MessageReload extends MessageToClient<MessageReload>
             }
         }
 
-        //TODO: new EventFTBWorldClient(ForgeWorldSP.inst).post();
-
-        if(type.reload(Side.CLIENT))
+        if(type != EnumReloadType.RELOAD_COMMAND)
         {
-            for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-            {
-                plugin.onReload(Side.CLIENT, player, type);
-            }
-
-            if(type != EnumReloadType.LOGIN)
-            {
-                FTBLibLang.RELOAD_CLIENT.printChat(player, (System.currentTimeMillis() - ms) + "ms");
-            }
-
-            FTBLibFinals.LOGGER.info("Current Mode: " + FTBLibIntegrationInternal.API.getClientData().getPackMode().getName());
+            FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, type);
         }
     }
 }

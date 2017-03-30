@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.Locale;
@@ -51,22 +52,24 @@ public class FTBLibMod
         ODItems.preInit();
         FTBLibStats.init();
 
-        MinecraftForge.EVENT_BUS.register(new FTBLibEventHandler());
+        MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.class);
 
         PROXY.preInit();
-        PROXY.reloadConfig(true);
+        PROXY.reloadConfig(event.getModState());
     }
 
     @Mod.EventHandler
     public void onInit(FMLInitializationEvent event)
     {
         FTBLibPerms.init();
+        PROXY.reloadConfig(event.getModState());
     }
 
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
         PROXY.postInit();
+        PROXY.reloadConfig(event.getModState());
     }
 
     @Mod.EventHandler
@@ -98,7 +101,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibIntegrationInternal.API.reload(LMServerUtils.getServer(), EnumReloadType.SERVER_STARTED);
+        FTBLibIntegrationInternal.API.reload(Side.SERVER, LMServerUtils.getServer(), EnumReloadType.CREATED);
     }
 
     @Mod.EventHandler

@@ -33,7 +33,7 @@ import java.util.Map;
 public class FTBLibEventHandler
 {
     @SubscribeEvent
-    public void onWorldSaved(WorldEvent.Save event)
+    public static void onWorldSaved(WorldEvent.Save event)
     {
         if(event.getWorld().provider.getDimension() != 0 || !(event.getWorld() instanceof WorldServer))
         {
@@ -53,7 +53,7 @@ public class FTBLibEventHandler
 
     @SubscribeEvent
     @Optional.Method(modid = "mercurius")
-    public void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
+    public static void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
     {
         Map<String, Object> map = new HashMap<>();
         map.put("FTB_PackMode", SharedServerData.INSTANCE.getPackMode().getName());
@@ -61,7 +61,7 @@ public class FTBLibEventHandler
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
     {
         if(!(e.player instanceof EntityPlayerMP) || Universe.INSTANCE == null)
         {
@@ -123,7 +123,7 @@ public class FTBLibEventHandler
     }
 
     @SubscribeEvent
-    public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
+    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
     {
         if(e.player instanceof EntityPlayerMP && Universe.INSTANCE != null)
         {
@@ -137,7 +137,7 @@ public class FTBLibEventHandler
     }
 
     @SubscribeEvent
-    public void onPlayerDeath(LivingDeathEvent e)
+    public static void onPlayerDeath(LivingDeathEvent e)
     {
         if(e.getEntity() instanceof EntityPlayerMP && Universe.INSTANCE != null)
         {
@@ -153,7 +153,7 @@ public class FTBLibEventHandler
 
     /*
     @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent e)
+    public static void onPlayerInteract(PlayerInteractEvent e)
     {
     }
     */

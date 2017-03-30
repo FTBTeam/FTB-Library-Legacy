@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
-import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.INotification;
@@ -13,7 +12,6 @@ import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -160,13 +158,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
         }
 
         FTBLibClient.CACHED_SKINS.clear();
-
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.onReload(Side.CLIENT, player, EnumReloadType.LOGIN);
-        }
-
-        FTBLibFinals.LOGGER.info("Current Mode: " + m.currentMode);
+        FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, EnumReloadType.CREATED);
         MyTeamData.lastMessageTime = m.lastMessageTime;
     }
 }

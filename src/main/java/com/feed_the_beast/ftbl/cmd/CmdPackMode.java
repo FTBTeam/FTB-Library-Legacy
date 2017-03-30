@@ -13,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nullable;
@@ -68,7 +69,7 @@ public class CmdPackMode extends CommandTreeBase
             {
                 c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
                 c.getStyle().setColor(TextFormatting.GREEN);
-                FTBLibIntegrationInternal.API.reload(sender, EnumReloadType.MODE_CHANGED);
+                FTBLibIntegrationInternal.API.reload(Side.SERVER, sender, EnumReloadType.MODE_CHANGED);
             }
 
             sender.sendMessage(c);

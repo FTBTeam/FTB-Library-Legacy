@@ -21,6 +21,7 @@ import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
@@ -43,6 +44,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -122,24 +124,23 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void reload(ICommandSender sender, EnumReloadType type)
+    public void reload(Side side, ICommandSender sender, EnumReloadType type)
     {
-        Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
-        Preconditions.checkArgument(type != EnumReloadType.LOGIN, "ReloadType can't be LOGIN!");
-
         long ms = System.currentTimeMillis();
+        boolean serverSide = side.isServer();
 
-        if(type.reload(Side.SERVER))
+        if(serverSide)
         {
-            FTBLibMod.PROXY.reloadConfig(false);
-
-            for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-            {
-                plugin.onReload(Side.SERVER, sender, type);
-            }
+            Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
+            FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
         }
 
-        if(LMServerUtils.hasOnlinePlayers())
+        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+        {
+            plugin.onReload(side, sender, type);
+        }
+
+        if(serverSide && LMServerUtils.hasOnlinePlayers())
         {
             for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayers())
             {
@@ -150,15 +151,14 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             }
         }
 
-        if(type.reload(Side.SERVER))
-        {
-            FTBLibLang.RELOAD_SERVER.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
-        }
+        (serverSide ? FTBLibLang.RELOAD_SERVER : FTBLibLang.RELOAD_CLIENT).printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
 
-        if(type == EnumReloadType.SERVER_COMMAND)
+        if(serverSide && type == EnumReloadType.RELOAD_COMMAND)
         {
             sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         }
+
+        FTBLibFinals.LOGGER.info("Reloaded " + side + " on packmode '" + getSidedData(side).getPackMode() + "'");
     }
 
     @Override

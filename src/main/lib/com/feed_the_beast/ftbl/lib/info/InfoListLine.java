@@ -107,7 +107,7 @@ public class InfoListLine extends EmptyInfoPageLine
 
         private PanelList(IGui g, boolean unicodeFont)
         {
-            super(0, 0, 0, 0);
+            super(12, 0, 0, 0);
             gui = g;
             addFlags(FLAG_DEFAULTS);
 
@@ -124,11 +124,14 @@ public class InfoListLine extends EmptyInfoPageLine
             {
                 add(line.createWidget(gui, this));
             }
+
+            updateWidgetPositions();
         }
 
         @Override
         public void updateWidgetPositions()
         {
+            setWidth(getParentPanel().getWidth());
             setHeight(alignWidgetsByHeight());
         }
     }

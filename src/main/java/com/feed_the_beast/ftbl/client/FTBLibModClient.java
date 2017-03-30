@@ -170,7 +170,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         SIDEBAR_BUTTONS.addAll(sortedSidebarButtonList);
         FTBLibFinals.LOGGER.info("Sorted sidebar buttons to " + SIDEBAR_BUTTONS);
 
-        MinecraftForge.EVENT_BUS.register(new FTBLibClientEventHandler());
+        MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.class);
 
         //For Dev reasons
         GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();

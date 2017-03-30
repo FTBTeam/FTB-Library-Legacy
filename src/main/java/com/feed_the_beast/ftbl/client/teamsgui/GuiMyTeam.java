@@ -149,15 +149,32 @@ public class GuiMyTeam extends GuiLM
             {
                 if(selectedPlayer == null)
                 {
+                    int messageID = 0;
+                    
                     for(ITeamMessage msg : teamInfo.chatHistory)
                     {
                         boolean sentByServer = msg.getSender().equals(ForgePlayerFake.SERVER.getId());
-                        ITextComponent c = new TextComponentString(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
+                        ITextComponent c;
+
+                        if(!sentByServer && loadedProfiles.get(msg.getSender()) == null)
+                        {
+                            c = new TextComponentString("<Removed>");
+                            c.getStyle().setColor(TextFormatting.DARK_GRAY);
+                        }
+                        else
+                        {
+                            c = new TextComponentString(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
+                        }
+
                         c.appendSibling(msg.getMessage());
 
                         if(sentByServer)
                         {
                             c.getStyle().setColor(TextFormatting.DARK_AQUA);
+                        }
+                        else if(++messageID % 2 == 0)
+                        {
+                            c.getStyle().setColor(TextFormatting.WHITE);
                         }
 
                         add(new ExtendedTextFieldLM(1, 0, getWidth() - 5, -1, getFont(), c));

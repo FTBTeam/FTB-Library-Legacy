@@ -132,4 +132,20 @@ public class CachedVertexData
             buffer.endVertex();
         }
     }
+
+    public void rect(int x, int y, int w, int h)
+    {
+        pos(x, y + h, 0D);
+        pos(x + w, y + h, 0D);
+        pos(x + w, y, 0D);
+        pos(x, y, 0D);
+    }
+
+    public void rectWithTexture(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
+    {
+        pos(x, y + h, 0D).tex(u0, v1);
+        pos(x + w, y + h, 0D).tex(u1, v1);
+        pos(x + w, y, 0D).tex(u1, v0);
+        pos(x, y, 0D).tex(u0, v0);
+    }
 }

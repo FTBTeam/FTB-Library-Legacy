@@ -31,7 +31,7 @@ import java.util.List;
 public class FTBLibClientEventHandler
 {
     @SubscribeEvent
-    public void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
+    public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
     {
         SharedClientData.INSTANCE.reset();
     }
@@ -44,7 +44,7 @@ public class FTBLibClientEventHandler
     */
 
     @SubscribeEvent
-    public void onTooltip(ItemTooltipEvent event)
+    public static void onTooltip(ItemTooltipEvent event)
     {
         if(FTBLibClientConfig.ITEM_ORE_NAMES.getBoolean())
         {
@@ -64,7 +64,7 @@ public class FTBLibClientEventHandler
 
     /*
     @SubscribeEvent
-    public void onDrawDebugText(RenderGameOverlayEvent.Text event)
+    public static void onDrawDebugText(RenderGameOverlayEvent.Text event)
     {
         if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
         {
@@ -102,7 +102,7 @@ public class FTBLibClientEventHandler
     // Add Sidebar Buttons //
 
     @SubscribeEvent
-    public void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
+    public static void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
@@ -177,7 +177,7 @@ public class FTBLibClientEventHandler
     }
 
     @SubscribeEvent
-    public void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
+    public static void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
     {
         if(event.getButton() instanceof ButtonInvLM)
         {
@@ -188,7 +188,7 @@ public class FTBLibClientEventHandler
 
     @SubscribeEvent(priority = EventPriority.LOW)
     //public void renderGui(RenderGameOverlayEvent event)
-    public void renderGui(TickEvent.RenderTickEvent event)
+    public static void renderGui(TickEvent.RenderTickEvent event)
     {
         Minecraft mc = Minecraft.getMinecraft();
         //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
@@ -202,7 +202,7 @@ public class FTBLibClientEventHandler
     }
 
     @SubscribeEvent
-    public void renderWorld(RenderWorldLastEvent event)
+    public static void renderWorld(RenderWorldLastEvent event)
     {
         FTBLibClient.updateRenderInfo();
     }

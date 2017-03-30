@@ -1,36 +1,36 @@
 package com.feed_the_beast.ftbl.api;
 
-import net.minecraftforge.fml.relauncher.Side;
-
-import javax.annotation.Nullable;
-
 /**
  * Created by LatvianModder on 24.04.2016.
  */
 public enum EnumReloadType
 {
-    SERVER_STARTED(Side.SERVER, false),
-    LOGIN(Side.CLIENT, false),
-    MODE_CHANGED(null, true),
-    SERVER_COMMAND(Side.SERVER, true),
-    CLIENT_COMMAND(Side.CLIENT, true);
+    /**
+     * On client side - logged in, on server side - world created
+     */
+    CREATED(false),
 
-    private final Side side;
+    /**
+     * On client side - mode change packet received, on server side - /packmode set [mode]
+     */
+    MODE_CHANGED(true),
+
+    /**
+     * On client side - /reload_client, on server side - /reload
+     */
+    RELOAD_COMMAND(true);
+
+    public static final EnumReloadType[] VALUES = values();
+
     private final boolean command;
 
-    EnumReloadType(@Nullable Side s, boolean b)
+    EnumReloadType(boolean b)
     {
-        side = s;
         command = b;
     }
 
     public boolean command()
     {
         return command;
-    }
-
-    public boolean reload(Side s)
-    {
-        return side == null || side == s;
     }
 }

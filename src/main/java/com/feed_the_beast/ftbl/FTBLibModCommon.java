@@ -58,6 +58,7 @@ import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.LoaderState;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -253,9 +254,10 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         CONFIG_FILES.values().forEach(IConfigFile::save);
     }
 
-    public void reloadConfig(boolean startup)
+    public void reloadConfig(LoaderState.ModState state)
     {
         loadAllFiles();
+
         JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
 
         if(overridesE.isJsonObject())
@@ -272,13 +274,16 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
                     }
                 }
             });
-        }
 
-        saveAllFiles();
+            if(state.ordinal() >= LoaderState.ModState.POSTINITIALIZED.ordinal())
+            {
+                saveAllFiles();
+            }
+        }
 
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
-            plugin.configLoaded(startup);
+            plugin.configLoaded(state);
         }
     }
 
