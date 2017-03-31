@@ -4,11 +4,16 @@ import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +74,7 @@ public class InfoListLine extends EmptyInfoPageLine
     @Override
     public IWidget createWidget(IGui gui, IPanel parent)
     {
-        return new PanelList(gui, parent.hasFlag(IPanel.FLAG_UNICODE_FONT));
+        return new PanelList((GuiInfo) gui, parent.hasFlag(IPanel.FLAG_UNICODE_FONT));
     }
 
     @Override
@@ -103,11 +108,11 @@ public class InfoListLine extends EmptyInfoPageLine
 
     private class PanelList extends PanelLM
     {
-        private final IGui gui;
+        private final GuiInfo gui;
 
-        private PanelList(IGui g, boolean unicodeFont)
+        private PanelList(GuiInfo g, boolean unicodeFont)
         {
-            super(12, 0, 0, 0);
+            super(0, 0, 0, 0);
             gui = g;
             addFlags(FLAG_DEFAULTS);
 
@@ -120,9 +125,13 @@ public class InfoListLine extends EmptyInfoPageLine
         @Override
         public void addWidgets()
         {
+            setWidth(gui.panelText.getWidth() - (getAX() - gui.panelText.getAX()) - 8);
+
             for(IInfoTextLine line : textLines)
             {
-                add(line.createWidget(gui, this));
+                IWidget widget = line.createWidget(gui, this);
+                widget.setX(widget.getX() + 8);
+                add(widget);
             }
 
             updateWidgetPositions();
@@ -131,8 +140,20 @@ public class InfoListLine extends EmptyInfoPageLine
         @Override
         public void updateWidgetPositions()
         {
-            setWidth(getParentPanel().getWidth());
-            setHeight(alignWidgetsByHeight());
+            setHeight(alignWidgets(EnumDirection.VERTICAL));
+        }
+
+        @Override
+        protected void renderWidget(IGui gui, IWidget widget, int ax, int ay, int w, int h)
+        {
+            widget.renderWidget(gui);
+
+            if(widget.getClass() != WidgetLM.class && !(widget instanceof PanelList))
+            {
+                LMColorUtils.GL_COLOR.set(gui.getTextColor());
+                GuiInfo.TEX_BULLET.draw(ax + 1, widget.getAY() + 3, 4, 4);
+                GlStateManager.color(1F, 1F, 1F, 1F);
+            }
         }
     }
 }

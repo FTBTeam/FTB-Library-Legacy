@@ -17,7 +17,7 @@ public class CmdHeal extends CommandLM
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+        EntityPlayerMP ep = args.length >= 1 ? getPlayer(server, sender, args[0]) : getCommandSenderAsPlayer(sender);
         ep.setHealth(ep.getMaxHealth());
         ep.getFoodStats().addStats(40, 40F);
         ep.extinguish();

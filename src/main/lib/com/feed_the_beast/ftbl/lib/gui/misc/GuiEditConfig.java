@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
@@ -179,7 +180,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             @Override
             public void updateWidgetPositions()
             {
-                scroll.setElementSize(alignWidgetsByHeight());
+                scroll.setElementSize(alignWidgets(EnumDirection.VERTICAL));
             }
         };
 

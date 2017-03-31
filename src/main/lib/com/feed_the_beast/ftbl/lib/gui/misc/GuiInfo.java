@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
@@ -34,7 +35,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     private static final TextureCoords TEX_SLIDER = TextureCoords.fromCoords(TEXTURE, 0, 30, 12, 18, 64, 64);
     private static final TextureCoords TEX_BACK = TextureCoords.fromCoords(TEXTURE, 13, 30, 14, 11, 64, 64);
     private static final TextureCoords TEX_CLOSE = TextureCoords.fromCoords(TEXTURE, 13, 41, 14, 11, 64, 64);
-    private static final TextureCoords TEX_BULLET = TextureCoords.fromCoords(TEXTURE, 0, 49, 6, 6, 64, 64);
+    public static final TextureCoords TEX_BULLET = TextureCoords.fromCoords(TEXTURE, 0, 49, 6, 6, 64, 64);
 
     private static final TextureCoords TEX_BG_MU = TextureCoords.fromCoords(TEXTURE, 14, 0, 1, 13, 64, 64);
     private static final TextureCoords TEX_BG_MD = TextureCoords.fromCoords(TEXTURE, 14, 16, 1, 13, 64, 64);
@@ -152,7 +153,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 if(!getWidgets().isEmpty())
                 {
-                    sliderPages.setElementSize(alignWidgetsByHeight());
+                    sliderPages.setElementSize(alignWidgets(EnumDirection.VERTICAL));
                 }
             }
         };
@@ -188,7 +189,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             {
                 if(!getWidgets().isEmpty())
                 {
-                    int s = alignWidgetsByHeight(2, 0, 4);
+                    int s = alignWidgets(EnumDirection.VERTICAL, 2, 0, 4);
                     sliderText.setElementSize(s);
                     sliderText.setSrollStepFromOneElementSize((s - 6) / getWidgets().size());
                 }

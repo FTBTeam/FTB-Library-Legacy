@@ -49,19 +49,27 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         updateWidgetPositions();
     }
 
-    protected int alignWidgetsByHeight()
+    protected int alignWidgets(EnumDirection direction)
     {
-        return alignWidgetsByHeight(0, 0, 0);
+        return alignWidgets(direction, 0, 0, 0);
     }
 
-    protected int alignWidgetsByHeight(int pre, int spacing, int post)
+    protected int alignWidgets(EnumDirection direction, int pre, int spacing, int post)
     {
         int i = pre;
 
         for(IWidget widget : getWidgets())
         {
-            widget.setY(i);
-            i += widget.getHeight() + spacing;
+            if(direction.isVertical())
+            {
+                widget.setY(i);
+                i += widget.getHeight() + spacing;
+            }
+            else
+            {
+                widget.setX(i);
+                i += widget.getWidth() + spacing;
+            }
         }
 
         if(!getWidgets().isEmpty())
@@ -127,13 +135,15 @@ public abstract class PanelLM extends WidgetLM implements IPanel
             GuiHelper.pushScissor(gui.getScreen(), ax, ay, w, h);
         }
 
+        renderPanelBackground(gui, ax, ay, w, h);
+
         setOffset(true);
 
         for(IWidget widget : getWidgets())
         {
             if(widget.shouldRender(gui) && (!renderInside || widget.collidesWith(ax, ay, w, h)))
             {
-                widget.renderWidget(gui);
+                renderWidget(gui, widget, ax, ay, w, h);
             }
         }
 
@@ -145,6 +155,15 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         }
 
         gui.getFont().setUnicodeFlag(unicode);
+    }
+
+    protected void renderPanelBackground(IGui gui, int ax, int ay, int w, int h)
+    {
+    }
+
+    protected void renderWidget(IGui gui, IWidget widget, int ax, int ay, int w, int h)
+    {
+        widget.renderWidget(gui);
     }
 
     @Override

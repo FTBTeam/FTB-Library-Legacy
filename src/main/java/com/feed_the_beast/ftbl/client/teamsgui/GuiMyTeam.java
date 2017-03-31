@@ -14,6 +14,7 @@ import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
 import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
 import com.feed_the_beast.ftbl.lib.gui.CheckBoxListLM;
+import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.ExtendedTextFieldLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -135,7 +136,7 @@ public class GuiMyTeam extends GuiLM
             @Override
             public void updateWidgetPositions()
             {
-                scrollPlayers.setElementSize(alignWidgetsByHeight(0, 1, 0));
+                scrollPlayers.setElementSize(alignWidgets(EnumDirection.VERTICAL, 0, 1, 0));
                 scrollPlayers.setSrollStepFromOneElementSize(13);
             }
         };
@@ -150,7 +151,7 @@ public class GuiMyTeam extends GuiLM
                 if(selectedPlayer == null)
                 {
                     int messageID = 0;
-                    
+
                     for(ITeamMessage msg : teamInfo.chatHistory)
                     {
                         boolean sentByServer = msg.getSender().equals(ForgePlayerFake.SERVER.getId());
@@ -266,12 +267,12 @@ public class GuiMyTeam extends GuiLM
             {
                 if(selectedPlayer == null)
                 {
-                    scrollText.setElementSize(alignWidgetsByHeight(2, 1, 2));
+                    scrollText.setElementSize(alignWidgets(EnumDirection.VERTICAL, 2, 1, 2));
                     scrollText.setSrollStepFromOneElementSize(11);
                 }
                 else
                 {
-                    scrollText.setElementSize(alignWidgetsByHeight(2, 4, 2));
+                    scrollText.setElementSize(alignWidgets(EnumDirection.VERTICAL, 2, 4, 2));
                 }
             }
         };
