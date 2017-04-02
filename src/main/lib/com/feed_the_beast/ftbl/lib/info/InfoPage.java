@@ -27,7 +27,7 @@ import java.util.Map;
 public class InfoPage extends FinalIDObject
 {
     private static final Comparator<Map.Entry<String, InfoPage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
-    private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().childPages.isEmpty() && InfoPageHelper.getUnformattedText(entry.getValue()).trim().isEmpty();
+    private static final RemoveFilter<Map.Entry<String, InfoPage>> CLEANUP_FILTER = entry -> entry.getValue().isEmpty();
 
     private final List<IInfoTextLine> text;
     private final LinkedHashMap<String, InfoPage> childPages;
@@ -160,6 +160,24 @@ public class InfoPage extends FinalIDObject
     {
         childPages.values().forEach(InfoPage::cleanup);
         LMMapUtils.removeAll(childPages, CLEANUP_FILTER);
+    }
+
+    public boolean isEmpty()
+    {
+        if(!childPages.isEmpty())
+        {
+            return false;
+        }
+
+        for(IInfoTextLine line : text)
+        {
+            if(!line.isEmpty())
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void sort(boolean tree)

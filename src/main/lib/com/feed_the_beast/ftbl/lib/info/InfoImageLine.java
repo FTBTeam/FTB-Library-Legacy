@@ -57,6 +57,10 @@ public class InfoImageLine extends EmptyInfoPageLine
         {
             imageScale = o.get("scale").getAsDouble();
         }
+        else if(o.has("size"))
+        {
+            imageWidth = imageHeight = o.get("size").getAsInt();
+        }
         else
         {
             if(o.has("width"))
@@ -69,9 +73,22 @@ public class InfoImageLine extends EmptyInfoPageLine
             }
         }
 
-        if(o.has("click"))
+        if(o.has("clickEvent"))
         {
+            JsonObject o1 = o.get("clickEvent").getAsJsonObject();
 
+            if(o1 != null)
+            {
+                JsonPrimitive a = o1.getAsJsonPrimitive("action");
+                ClickEvent.Action action = a == null ? null : ClickEvent.Action.getValueByCanonicalName(a.getAsString());
+                JsonPrimitive v = o1.getAsJsonPrimitive("value");
+                String s = v == null ? null : v.getAsString();
+
+                if(action != null && s != null && action.shouldAllowInChat())
+                {
+                    clickEvent = new ClickEvent(action, s);
+                }
+            }
         }
 
         if(o.has("hover"))
@@ -136,6 +153,12 @@ public class InfoImageLine extends EmptyInfoPageLine
         return o;
     }
 
+    @Override
+    public boolean isEmpty()
+    {
+        return false;
+    }
+
     private class ButtonInfoImage extends ButtonLM
     {
         private final IPanel parent;
@@ -173,7 +196,7 @@ public class InfoImageLine extends EmptyInfoPageLine
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             checkSize();
-            imageProvider.draw(getAX(), getAY(), getWidth(), getHeight());
+            imageProvider.draw(this);
         }
 
         @Override

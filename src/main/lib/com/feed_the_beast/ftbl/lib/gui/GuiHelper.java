@@ -193,9 +193,18 @@ public class GuiHelper
 
     public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)
     {
+        pushScissor(screen, x, y, w, h, false);
+    }
+
+    public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h, boolean ingorePrevious)
+    {
         if(scissorIndex == -1)
         {
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        }
+        else if(!ingorePrevious)
+        {
+            //FIXME
         }
 
         scissorIndex++;

@@ -39,7 +39,7 @@ public class InfoPageHelper
             else
             {
                 String s1 = c.getUnformattedText();
-                sb.append((s1 == null || s1.isEmpty()) ? "\n" : s1);
+                sb.append(s1.isEmpty() ? "\n" : s1);
             }
 
             if(i != s - 1)

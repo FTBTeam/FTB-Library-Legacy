@@ -14,17 +14,63 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.IStringSerializable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
 public class InfoListLine extends EmptyInfoPageLine
 {
+    public enum Type implements IStringSerializable
+    {
+        SIMPLE("simple", EnumDirection.VERTICAL, false),
+        UNORDERED("unordered", EnumDirection.VERTICAL, true),
+        ORDERED("ordered", EnumDirection.VERTICAL, true),
+        ORDERED_LETTER("ordered_letter", EnumDirection.VERTICAL, true),
+        HORIZONTAL("horizontal", EnumDirection.HORIZONTAL, false);
+
+        private static final Map<String, Type> MAP = new HashMap<>();
+
+        static
+        {
+            for(Type t : values())
+            {
+                MAP.put(t.name, t);
+            }
+        }
+
+        private final String name;
+        public final EnumDirection direction;
+        public final boolean hasBullet;
+
+        Type(String s, EnumDirection d, boolean b)
+        {
+            name = s;
+            direction = d;
+            hasBullet = b;
+        }
+
+        @Override
+        public String getName()
+        {
+            return name;
+        }
+
+        public static Type get(String s)
+        {
+            Type t = MAP.get(s);
+            return t == null ? UNORDERED : t;
+        }
+    }
+
     private final List<IInfoTextLine> textLines;
-    private final boolean ordered;
+    private final Type type;
+    private final int spacing;
 
     public InfoListLine(InfoPage p, JsonElement json)
     {
@@ -47,7 +93,8 @@ public class InfoListLine extends EmptyInfoPageLine
                 }
             }
 
-            ordered = o.has("ordered") && o.get("ordered").getAsBoolean();
+            type = o.has("type") ? Type.get(o.get("type").getAsString()) : Type.UNORDERED;
+            spacing = o.has("spacing") ? o.get("spacing").getAsInt() : 0;
         }
         else
         {
@@ -61,14 +108,16 @@ public class InfoListLine extends EmptyInfoPageLine
                 }
             }
 
-            ordered = false;
+            type = Type.UNORDERED;
+            spacing = 0;
         }
     }
 
-    public InfoListLine(List<IInfoTextLine> l, boolean o)
+    public InfoListLine(List<IInfoTextLine> l, Type t, int s)
     {
         textLines = l;
-        ordered = o;
+        type = t;
+        spacing = s;
     }
 
     @Override
@@ -80,7 +129,7 @@ public class InfoListLine extends EmptyInfoPageLine
     @Override
     public IInfoTextLine copy(InfoPage page)
     {
-        InfoListLine line = new InfoListLine(new ArrayList<>(textLines.size()), ordered);
+        InfoListLine line = new InfoListLine(new ArrayList<>(textLines.size()), type, spacing);
         for(IInfoTextLine line1 : textLines)
         {
             line.textLines.add(line1.copy(page));
@@ -93,7 +142,7 @@ public class InfoListLine extends EmptyInfoPageLine
     {
         JsonObject o = new JsonObject();
         o.add("id", new JsonPrimitive("list"));
-        o.add("ordered", new JsonPrimitive(ordered));
+        o.add("type", new JsonPrimitive(type.name));
 
         JsonArray a = new JsonArray();
 
@@ -106,6 +155,20 @@ public class InfoListLine extends EmptyInfoPageLine
         return o;
     }
 
+    @Override
+    public boolean isEmpty()
+    {
+        for(IInfoTextLine line : textLines)
+        {
+            if(!line.isEmpty())
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private class PanelList extends PanelLM
     {
         private final GuiInfo gui;
@@ -114,7 +177,7 @@ public class InfoListLine extends EmptyInfoPageLine
         {
             super(0, 0, 0, 0);
             gui = g;
-            addFlags(FLAG_DEFAULTS);
+            //addFlags(FLAG_DEFAULTS);
 
             if(unicodeFont)
             {
@@ -125,12 +188,17 @@ public class InfoListLine extends EmptyInfoPageLine
         @Override
         public void addWidgets()
         {
-            setWidth(gui.panelText.getWidth() - (getAX() - gui.panelText.getAX()) - 8);
+            setWidth(gui.panelText.getWidth() - (getAX() - gui.panelText.getAX()) - (type.hasBullet ? 8 : 0));
 
             for(IInfoTextLine line : textLines)
             {
                 IWidget widget = line.createWidget(gui, this);
-                widget.setX(widget.getX() + 8);
+
+                if(type.hasBullet)
+                {
+                    widget.setX(widget.getX() + 8);
+                }
+
                 add(widget);
             }
 
@@ -140,7 +208,19 @@ public class InfoListLine extends EmptyInfoPageLine
         @Override
         public void updateWidgetPositions()
         {
-            setHeight(alignWidgets(EnumDirection.VERTICAL));
+            setHeight(alignWidgets(type.direction, 0, spacing, 0));
+
+            if(type.direction.isHorizontal())
+            {
+                int h = 0;
+
+                for(IWidget w : getWidgets())
+                {
+                    h = Math.max(h, w.getHeight());
+                }
+
+                setHeight(h);
+            }
         }
 
         @Override
@@ -148,7 +228,7 @@ public class InfoListLine extends EmptyInfoPageLine
         {
             widget.renderWidget(gui);
 
-            if(widget.getClass() != WidgetLM.class && !(widget instanceof PanelList))
+            if(type.hasBullet && widget.getClass() != WidgetLM.class && !(widget instanceof PanelList))
             {
                 LMColorUtils.GL_COLOR.set(gui.getTextColor());
                 GuiInfo.TEX_BULLET.draw(ax + 1, widget.getAY() + 3, 4, 4);

@@ -70,4 +70,10 @@ public class InfoHrLine extends EmptyInfoPageLine
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return false;
+    }
 }

@@ -17,4 +17,9 @@ public enum EnumDirection
     {
         return this == VERTICAL;
     }
+
+    public EnumDirection getOpposite()
+    {
+        return isHorizontal() ? VERTICAL : HORIZONTAL;
+    }
 }

@@ -78,4 +78,10 @@ public class ItemListLine extends EmptyInfoPageLine
     {
         return new ItemListLine(list, cols);
     }
+
+    @Override
+    public boolean isEmpty()
+    {
+        return list.isEmpty();
+    }
 }

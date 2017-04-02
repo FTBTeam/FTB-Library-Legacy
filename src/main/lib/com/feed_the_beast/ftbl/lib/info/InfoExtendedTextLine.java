@@ -29,10 +29,9 @@ public class InfoExtendedTextLine extends EmptyInfoPageLine
     }
 
     @Override
-    @Nullable
     public String getUnformattedText()
     {
-        return textComponent == null ? null : textComponent.getUnformattedText();
+        return textComponent == null ? "" : textComponent.getUnformattedText();
     }
 
     @Override
