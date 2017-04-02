@@ -36,6 +36,7 @@ ftbl.dside.left=左面
 ftbl.dside.right=右面
 
 # FTBLib Lang
+ftbl.lang.deprecated=不赞成这种方法，请使用 %s
 ftbl.lang.mode.loaded=模式设置为 '%s' !
 ftbl.lang.mode.not_found=模式不存在!
 ftbl.lang.mode.already_set=模式已经设置!
@@ -58,6 +59,7 @@ ftbl.lang.delete_item=你想删除 '%s' 么?
 ftbl.lang.server_forced=服务器覆盖了 '%s'
 ftbl.lang.commands=指令
 ftbl.lang.my_permissions=我的权限
+ftbl.lang.all_permissions=所有的权限
 ftbl.lang.difficulty=难度: %s
 
 # Teams
@@ -78,6 +80,9 @@ ftbl.lang.team.error.not_member=%s 不是这个组的组员!
 ftbl.lang.team.error.must_transfer_ownership=你必须转让组长权限!
 ftbl.lang.team.error.already_invited=%s 已经被邀请!
 ftbl.lang.team.error.failed_to_join=不能加入这个组!
+ftbl.lang.team.permission.set=权限 '%s' 对于 %s 设置为 %s
+ftbl.lang.team.permission.already_set=权限 '%s' 对于 %s 已经设置为 %b!
+ftbl.lang.team.permission.owner=不能改变组长的权限！
 
 ftbl.lang.team_color.blue=蓝色
 ftbl.lang.team_color.cyan=青色
@@ -89,6 +94,20 @@ ftbl.lang.team_color.pink=粉红色
 ftbl.lang.team_color.magenta=品红色
 ftbl.lang.team_color.purple=紫色
 ftbl.lang.team_color.gray=灰色
+
+ftbteam.config.display.color=颜色
+ftbteam.config.display.title=标题
+ftbteam.config.display.desc=描述
+ftbteam.config.free_to_join.desc=任何人都可以不需邀请即可加入
+
+ftbl.lang.team_status.enemy=敌对
+ftbl.lang.team_status.none=无
+ftbl.lang.team_status.requesting_invite=请求邀请
+ftbl.lang.team_status.invited=邀请
+ftbl.lang.team_status.ally=结盟
+ftbl.lang.team_status.member=组员
+ftbl.lang.team_status.mod=仲裁者
+ftbl.lang.team_status.owner=组长
 
 # Action Buttons
 sidebar_button.ftbl.settings=客户端设定
@@ -121,3 +140,6 @@ click_action.show_cmd=显示指令
 click_action.url=打开URL
 click_action.file=打开文件
 click_action.gui=打开Gui
+
+# Guide
+ftbl.guide=FTBLib
