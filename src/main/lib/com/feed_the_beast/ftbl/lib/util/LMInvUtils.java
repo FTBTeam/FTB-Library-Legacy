@@ -34,7 +34,7 @@ public class LMInvUtils
 
     static
     {
-        ERROR_ITEM.setStackDisplayName("Error!");
+        ERROR_ITEM.setStackDisplayName("Broken Item!");
     }
 
     public static void addPlayerSlots(Container container, EntityPlayer player, int posX, int posY, boolean ignoreCurrent)

@@ -171,7 +171,7 @@ public class InfoPage extends FinalIDObject
 
         for(IInfoTextLine line : text)
         {
-            if(!line.isEmpty())
+            if(line != null && !line.isEmpty())
             {
                 return false;
             }

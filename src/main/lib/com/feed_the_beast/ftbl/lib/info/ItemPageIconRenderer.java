@@ -5,10 +5,10 @@ import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
+import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -31,7 +31,15 @@ public class ItemPageIconRenderer implements IPageIconRenderer
     public ItemPageIconRenderer(Item item)
     {
         items = new ArrayList<>();
-        item.getSubItems(item, CreativeTabs.SEARCH, items);
+
+        try
+        {
+            item.getSubItems(item, CreativeTabs.SEARCH, items);
+        }
+        catch(Exception ex)
+        {
+            items.clear();
+        }
     }
 
     public ItemPageIconRenderer(JsonElement json)
@@ -54,15 +62,16 @@ public class ItemPageIconRenderer implements IPageIconRenderer
         }
         catch(Exception ex)
         {
-            ItemStack item = new ItemStack(Blocks.BARRIER);
-            item.setStackDisplayName("Broken Item!");
-            items = Collections.singletonList(item);
+            items = Collections.singletonList(LMInvUtils.ERROR_ITEM);
         }
     }
 
     @Override
     public void renderIcon(IGui gui, IWidget widget, int x, int y)
     {
-        GuiHelper.drawItem(Minecraft.getMinecraft().getRenderItem(), items.get((int) ((System.currentTimeMillis() / 1000L) % items.size())), x, y, true);
+        if(!items.isEmpty())
+        {
+            GuiHelper.drawItem(Minecraft.getMinecraft().getRenderItem(), items.get((int) ((System.currentTimeMillis() / 1000L) % items.size())), x, y, true);
+        }
     }
 }
