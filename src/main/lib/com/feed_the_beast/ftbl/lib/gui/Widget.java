@@ -9,8 +9,7 @@ import java.util.List;
 
 public class Widget
 {
-    public int posX, posY;
-    private int width, height;
+    public int posX, posY, width, height;
     private Panel parentPanel = PanelNull.INSTANCE;
 
     public Widget(int x, int y, int w, int h)
@@ -19,26 +18,6 @@ public class Widget
         posY = y;
         width = Math.max(w, 1);
         height = Math.max(h, 1);
-    }
-
-    public final int getX()
-    {
-        return posX;
-    }
-
-    public final int getY()
-    {
-        return posY;
-    }
-
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public int getHeight()
-    {
-        return height;
     }
 
     public void setX(int v)
@@ -73,24 +52,24 @@ public class Widget
 
     public int getAX()
     {
-        return getParentPanel().getAX() + getX();
+        return getParentPanel().getAX() + posX;
     }
 
     public int getAY()
     {
-        return getParentPanel().getAY() + getY();
+        return getParentPanel().getAY() + posY;
     }
 
     public boolean collidesWith(int x, int y, int w, int h)
     {
         int ay = getAY();
-        if(ay >= y + h || ay + getHeight() <= y)
+        if(ay >= y + h || ay + width <= y)
         {
             return false;
         }
 
         int ax = getAX();
-        return ax < x + w && ax + getWidth() > x;
+        return ax < x + w && ax + height > x;
     }
 
     public boolean isEnabled(GuiBase gui)
@@ -147,7 +126,7 @@ public class Widget
 
             if(!t.isEmpty())
             {
-                GuiHelper.drawCenteredString(gui.getFont(), t, getAX() + getWidth() / 2, getAY() + getHeight() / 2, col);
+                GuiHelper.drawCenteredString(gui.getFont(), t, getAX() + width / 2, getAY() + height / 2, col);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }

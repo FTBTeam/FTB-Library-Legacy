@@ -36,7 +36,7 @@ public class PanelScrollBar extends Slider
 
     public void setSrollStepFromOneElementSize(int s)
     {
-        setScrollStep(s / (double) (elementSize - panel.getHeight()));
+        setScrollStep(s / (double) (elementSize - panel.height));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class PanelScrollBar extends Slider
     @Override
     public boolean isEnabled(GuiBase gui)
     {
-        return elementSize > (getDirection().isVertical() ? panel.getHeight() : panel.getHeight());
+        return elementSize > (getDirection().isVertical() ? panel.height : panel.width);
     }
 
     @Override

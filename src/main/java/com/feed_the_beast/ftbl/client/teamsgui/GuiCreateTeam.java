@@ -32,8 +32,8 @@ public class GuiCreateTeam extends GuiBase
         super(154, 102);
         color = EnumTeamColor.VALUES[MathHelperLM.RAND.nextInt(EnumTeamColor.VALUES.length)];
 
-        int bwidth = getWidth() / 2 - 6;
-        buttonAccept = new Button(getWidth() - bwidth - 4, getHeight() - 20, bwidth, 16)
+        int bwidth = width / 2 - 6;
+        buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
         {
             @Override
             public void onClicked(GuiBase gui, IMouseButton button)
@@ -57,7 +57,7 @@ public class GuiCreateTeam extends GuiBase
         buttonAccept.setTitle(GuiLang.BUTTON_ACCEPT.translate());
         buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
 
-        buttonCancel = new Button(4, getHeight() - 20, bwidth, 16)
+        buttonCancel = new Button(4, height - 20, bwidth, 16)
         {
             @Override
             public void onClicked(GuiBase gui, IMouseButton button)
@@ -76,7 +76,7 @@ public class GuiCreateTeam extends GuiBase
         buttonCancel.setTitle(GuiLang.BUTTON_CANCEL.translate());
         buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
-        textBoxId = new TextBox(4, 4, getWidth() - 8, 16)
+        textBoxId = new TextBox(4, 4, width - 8, 16)
         {
             @Override
             public void onTextChanged(GuiBase gui)

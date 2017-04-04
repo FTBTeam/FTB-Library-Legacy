@@ -81,7 +81,6 @@ public abstract class Panel extends Widget
 
     public void setScrollX(double scroll, int elementsWidth)
     {
-        int width = getWidth();
         if(elementsWidth < width)
         {
             setScrollX(0);
@@ -94,7 +93,6 @@ public abstract class Panel extends Widget
 
     public void setScrollY(double scroll, int elementsHeight)
     {
-        int height = getHeight();
         if(elementsHeight < height)
         {
             setScrollY(0);
@@ -119,12 +117,12 @@ public abstract class Panel extends Widget
             if(direction.isVertical())
             {
                 widget.setY(i);
-                i += widget.getHeight() + spacing;
+                i += widget.height + spacing;
             }
             else
             {
                 widget.setX(i);
-                i += widget.getWidth() + spacing;
+                i += widget.width + spacing;
             }
         }
 
@@ -181,23 +179,21 @@ public abstract class Panel extends Widget
 
         int ax = getAX();
         int ay = getAY();
-        int w = getWidth();
-        int h = getHeight();
 
         if(renderInside)
         {
-            GuiHelper.pushScissor(gui.getScreen(), ax, ay, w, h);
+            GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
         }
 
-        renderPanelBackground(gui, ax, ay, w, h);
+        renderPanelBackground(gui, ax, ay);
 
         setOffset(true);
 
         for(Widget widget : getWidgets())
         {
-            if(widget.shouldRender(gui) && (!renderInside || widget.collidesWith(ax, ay, w, h)))
+            if(widget.shouldRender(gui) && (!renderInside || widget.collidesWith(ax, ay, width, height)))
             {
-                renderWidget(gui, widget, ax, ay, w, h);
+                renderWidget(gui, widget, ax, ay, width, height);
             }
         }
 
@@ -211,7 +207,7 @@ public abstract class Panel extends Widget
         gui.getFont().setUnicodeFlag(unicode);
     }
 
-    protected void renderPanelBackground(GuiBase gui, int ax, int ay, int w, int h)
+    protected void renderPanelBackground(GuiBase gui, int ax, int ay)
     {
     }
 

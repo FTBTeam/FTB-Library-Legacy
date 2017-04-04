@@ -30,11 +30,6 @@ public class PanelNull extends Panel
     }
 
     @Override
-    public void setX(int v)
-    {
-    }
-
-    @Override
     public void setY(int v)
     {
     }

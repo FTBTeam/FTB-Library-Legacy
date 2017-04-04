@@ -56,7 +56,7 @@ public class ButtonInfoPage extends Button
         setTitle(titleC.getFormattedText());
         hover = null;
 
-        if(gui.getFont().getStringWidth(getTitle(gui)) > getWidth())
+        if(gui.getFont().getStringWidth(getTitle(gui)) > width)
         {
             hover = page.getDisplayName().getFormattedText();
         }

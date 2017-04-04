@@ -54,7 +54,7 @@ public class GuiLoading extends GuiBase
 
         if(isLoading())
         {
-            renderLoading(getAX(), getAY(), getWidth(), getHeight());
+            renderLoading(getAX(), getAY(), width, height);
         }
         else
         {

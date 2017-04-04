@@ -52,8 +52,6 @@ public class Slider extends Widget
     {
         int ax = getAX();
         int ay = getAY();
-        int w = getWidth();
-        int h = getHeight();
 
         if(isEnabled(gui))
         {
@@ -66,11 +64,11 @@ public class Slider extends Widget
                 {
                     if(getDirection().isVertical())
                     {
-                        v = (gui.getMouseY() - (ay + (sliderSize / 2D))) / (double) (h - sliderSize);
+                        v = (gui.getMouseY() - (ay + (sliderSize / 2D))) / (double) (height - sliderSize);
                     }
                     else
                     {
-                        v = (gui.getMouseX() - (ax + (sliderSize / 2D))) / (double) (w - sliderSize);
+                        v = (gui.getMouseX() - (ax + (sliderSize / 2D))) / (double) (width - sliderSize);
                     }
                 }
                 else
@@ -92,15 +90,15 @@ public class Slider extends Widget
             }
         }
 
-        background.draw(ax, ay, w, h);
+        background.draw(ax, ay, width, height);
 
         if(getDirection().isVertical())
         {
-            slider.draw(ax, ay + getValueI(gui, h), w, sliderSize);
+            slider.draw(ax, ay + getValueI(gui, height), width, sliderSize);
         }
         else
         {
-            slider.draw(ax + getValueI(gui, w), ay, sliderSize, h);
+            slider.draw(ax + getValueI(gui, width), ay, sliderSize, height);
         }
     }
 

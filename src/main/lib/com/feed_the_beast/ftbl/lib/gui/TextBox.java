@@ -147,7 +147,7 @@ public class TextBox extends Widget
             lineScrollOffset = i;
         }
 
-        int j = getWidth() - 10;
+        int j = width - 10;
         String s = gui.getFont().trimStringToWidth(text.substring(lineScrollOffset), j);
         int k = s.length() + lineScrollOffset;
 
@@ -285,7 +285,7 @@ public class TextBox extends Widget
                 if(isFocused)
                 {
                     int i = gui.getMouseX() - getAX();
-                    String s = gui.getFont().trimStringToWidth(text.substring(lineScrollOffset), getWidth());
+                    String s = gui.getFont().trimStringToWidth(text.substring(lineScrollOffset), width);
                     setCursorPosition(gui, gui.getFont().trimStringToWidth(s, i).length() + lineScrollOffset);
                 }
             }
@@ -466,14 +466,12 @@ public class TextBox extends Widget
         FontRenderer font = gui.getFont();
         int ax = getAX();
         int ay = getAY();
-        int width = getWidth();
-        int height = getHeight();
         GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
 
         int col = validText ? (textColor == 0 ? gui.getTextColor() : textColor) : 0xFFFF0000;
         int j = cursorPosition - lineScrollOffset;
         int k = selectionEnd - lineScrollOffset;
-        String s = font.trimStringToWidth(textToDraw.substring(lineScrollOffset), getWidth());
+        String s = font.trimStringToWidth(textToDraw.substring(lineScrollOffset), width);
         boolean flag = j >= 0 && j <= s.length();
         boolean flag1 = isFocused() && flag && (Minecraft.getSystemTime() % 1000L > 500L);
         int textX = ax + 4;

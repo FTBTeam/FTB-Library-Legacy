@@ -186,7 +186,7 @@ public class InfoListLine extends EmptyInfoPageLine
         @Override
         public void addWidgets()
         {
-            setWidth(gui.panelText.getWidth() - (getAX() - gui.panelText.getAX()) - (type.hasBullet ? 8 : 0));
+            setWidth(gui.panelText.width - (getAX() - gui.panelText.getAX()) - (type.hasBullet ? 8 : 0));
 
             for(IInfoTextLine line : textLines)
             {
@@ -194,7 +194,7 @@ public class InfoListLine extends EmptyInfoPageLine
 
                 if(type.hasBullet)
                 {
-                    widget.setX(widget.getX() + 8);
+                    widget.setX(widget.posX + 8);
                 }
 
                 add(widget);
@@ -214,7 +214,7 @@ public class InfoListLine extends EmptyInfoPageLine
 
                 for(Widget w : getWidgets())
                 {
-                    h = Math.max(h, w.getHeight());
+                    h = Math.max(h, w.height);
                 }
 
                 setHeight(h);

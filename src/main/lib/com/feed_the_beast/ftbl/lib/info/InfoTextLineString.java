@@ -34,7 +34,7 @@ public class InfoTextLineString extends EmptyInfoPageLine
     @Override
     public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new TextField(0, 0, parent.getWidth(), -1, gui.getFont(), text);
+        return new TextField(0, 0, parent.width, -1, gui.getFont(), text);
     }
 
     @Override

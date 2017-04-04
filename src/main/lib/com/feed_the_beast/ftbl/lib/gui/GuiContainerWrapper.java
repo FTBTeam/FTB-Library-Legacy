@@ -30,8 +30,8 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
         wrappedGui.initGui();
         guiLeft = wrappedGui.getAX();
         guiTop = wrappedGui.getAY();
-        xSize = wrappedGui.getWidth();
-        ySize = wrappedGui.getHeight();
+        xSize = wrappedGui.width;
+        ySize = wrappedGui.height;
     }
 
     @Override

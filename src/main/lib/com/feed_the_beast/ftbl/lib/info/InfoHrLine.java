@@ -58,14 +58,14 @@ public class InfoHrLine extends EmptyInfoPageLine
     {
         private WidgetInfoHr(Panel parent)
         {
-            super(0, 1, parent.getWidth(), height + 2);
+            super(0, 1, parent.width, InfoHrLine.this.height + 2);
         }
 
         @Override
         public void renderWidget(GuiBase gui)
         {
             LMColorUtils.GL_COLOR.set(color == 0 ? gui.getTextColor() : color);
-            GuiHelper.drawBlankRect(getAX(), getAY() + 1, getWidth(), height);
+            GuiHelper.drawBlankRect(getAX(), getAY() + 1, width, height);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }

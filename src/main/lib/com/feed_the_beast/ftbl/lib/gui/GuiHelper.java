@@ -133,7 +133,7 @@ public class GuiHelper
 
     public static void drawCenteredWidgetTitle(FontRenderer font, Widget widget, String title, int color)
     {
-        drawCenteredString(font, title, widget.getAX() + widget.getWidth() / 2, widget.getAY() + widget.getHeight() / 2, color);
+        drawCenteredString(font, title, widget.getAX() + widget.width / 2, widget.getAY() + widget.height / 2, color);
     }
 
     public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)

@@ -52,7 +52,7 @@ public class ItemListButton extends Button
             int mx = gui.getMouseX() - getAX() - 2;
             int my = gui.getMouseY() - getAY() - 2;
 
-            if(mx < 0 || my < 0 || mx >= getWidth() - 4 || my >= getHeight() - 4)
+            if(mx < 0 || my < 0 || mx >= width - 4 || my >= height - 4)
             {
                 return;
             }

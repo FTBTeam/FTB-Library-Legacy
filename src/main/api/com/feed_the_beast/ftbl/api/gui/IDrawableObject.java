@@ -15,6 +15,6 @@ public interface IDrawableObject
     @SideOnly(Side.CLIENT)
     default void draw(Widget widget)
     {
-        draw(widget.getAX(), widget.getAY(), widget.getWidth(), widget.getHeight());
+        draw(widget.getAX(), widget.getAY(), widget.width, widget.height);
     }
 }

@@ -66,8 +66,8 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
         if(!isFullscreen())
         {
-            posX = (screen.getScaledWidth() - getWidth()) / 2;
-            posY = (screen.getScaledHeight() - getHeight()) / 2;
+            posX = (screen.getScaledWidth() - width) / 2;
+            posY = (screen.getScaledHeight() - height) / 2;
         }
 
         refreshWidgets();
@@ -121,18 +121,6 @@ public abstract class GuiBase extends Panel implements IClientActionGui
     public boolean isFullscreen()
     {
         return false;
-    }
-
-    @Override
-    public int getWidth()
-    {
-        return isFullscreen() ? screen.getScaledWidth() : super.getWidth();
-    }
-
-    @Override
-    public int getHeight()
-    {
-        return isFullscreen() ? screen.getScaledHeight() : super.getHeight();
     }
 
     public final void updateGui(int mx, int my, float pt)
@@ -243,7 +231,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
     public boolean isMouseOver(Widget w)
     {
-        return isMouseOver(w.getAX(), w.getAY(), w.getWidth(), w.getHeight());
+        return isMouseOver(w.getAX(), w.getAY(), w.width, w.height);
     }
 
     public int getTextColor()

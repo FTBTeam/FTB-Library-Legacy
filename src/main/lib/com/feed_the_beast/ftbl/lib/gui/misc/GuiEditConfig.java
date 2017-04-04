@@ -68,7 +68,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
             if(mouseOver)
             {
                 GlStateManager.color(1F, 1F, 1F, 0.13F);
-                GuiHelper.drawBlankRect(ax, ay, getWidth(), getHeight());
+                GuiHelper.drawBlankRect(ax, ay, width, height);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
@@ -90,14 +90,14 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
                 textCol = LMColorUtils.addBrightness(textCol, 60);
             }
 
-            if(mouseOver && getMouseX() > ax + getWidth() - slen - 9)
+            if(mouseOver && getMouseX() > ax + width - slen - 9)
             {
                 GlStateManager.color(1F, 1F, 1F, 0.13F);
-                GuiHelper.drawBlankRect(ax + getWidth() - slen - 8, ay, slen + 8, getHeight());
+                GuiHelper.drawBlankRect(ax + width - slen - 8, ay, slen + 8, height);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
 
-            getFont().drawString(s, gui.getWidth() - (slen + 20), ay + 4, textCol);
+            getFont().drawString(s, gui.width - (slen + 20), ay + 4, textCol);
         }
 
         @Override
@@ -123,7 +123,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
                     }
                 }
 
-                if(getMouseX() > gui.getWidth() - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
+                if(getMouseX() > gui.width - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
                 {
                     value.addInfo(key, list);
                 }
@@ -222,14 +222,14 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
     @Override
     public void updateWidgetPositions()
     {
-        buttonAccept.posX = getWidth() - 18;
-        buttonCancel.posX = getWidth() - 38;
+        buttonAccept.posX = width - 18;
+        buttonCancel.posX = width - 38;
 
-        configPanel.setHeight(getHeight() - 20);
-        configPanel.setWidth(getWidth());
+        configPanel.setHeight(height - 20);
+        configPanel.setWidth(width);
 
-        scroll.posX = getWidth() - 16;
-        scroll.setHeight(configPanel.getHeight());
+        scroll.posX = width - 16;
+        scroll.setHeight(configPanel.height);
 
         for(ButtonConfigEntry b : configEntryButtons)
         {
@@ -272,7 +272,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
     public void drawBackground()
     {
         LMColorUtils.GL_COLOR.set(0x99333333);
-        GuiHelper.drawBlankRect(0, 0, getWidth(), 20);
+        GuiHelper.drawBlankRect(0, 0, width, 20);
         getFont().drawString(getTitle(this), 6, 6, 0xFFFFFFFF);
         GlStateManager.color(1F, 1F, 1F, 1F);
     }

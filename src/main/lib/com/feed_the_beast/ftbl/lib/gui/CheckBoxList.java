@@ -93,8 +93,8 @@ public class CheckBoxList extends Button
     {
         checkBox.checkBoxList = this;
         entries.add(checkBox);
-        setWidth(Math.max(getWidth(), gui.getFont().getStringWidth(checkBox.name)));
-        setHeight(getHeight() + 11);
+        setWidth(Math.max(width, gui.getFont().getStringWidth(checkBox.name)));
+        setHeight(height + 11);
     }
 
     public CheckBoxEntry addBox(GuiBase gui, String name)

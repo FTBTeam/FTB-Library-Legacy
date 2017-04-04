@@ -174,15 +174,12 @@ public class InfoImageLine extends EmptyInfoPageLine
         {
             imageProvider.bindTexture();
 
-            int width = getWidth();
-            int height = getHeight();
-
             if(width == 1 || height == 1)
             {
                 width = Math.max(imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : imageWidth, 2);
                 height = Math.max(imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : imageHeight, 2);
 
-                double w = Math.min(parent.getWidth(), width * imageScale);
+                double w = Math.min(parent.width, width * imageScale);
                 double h = height * (w / (width * imageScale));
 
                 setWidth((int) w);

@@ -80,15 +80,15 @@ public class GuiMyTeam extends GuiBase
             int ay = getAY();
 
             LMColorUtils.GL_COLOR.set(DEFAULT_BACKGROUND.lineColor);
-            //GuiHelper.render(ENTRY_TEX, ax, ay, getWidth(), getHeight());
-            GuiHelper.drawBlankRect(ax, ay + getHeight(), getWidth() + 3, 1);
+            //GuiHelper.render(ENTRY_TEX, ax, ay, width, getHeight());
+            GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1);
             GlStateManager.color(1F, 1F, 1F, 1F);
             getIcon(gui).draw(ax + 2, ay + 2, 8, 8);
             gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
 
             if(isMouseOver(this))
             {
-                Button.DEFAULT_MOUSE_OVER.draw(ax, ay, getWidth() + 3, getHeight());
+                Button.DEFAULT_MOUSE_OVER.draw(ax, ay, width + 3, height);
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -176,22 +176,22 @@ public class GuiMyTeam extends GuiBase
                             c.getStyle().setColor(TextFormatting.WHITE);
                         }
 
-                        add(new ExtendedTextField(1, 0, getWidth() - 5, -1, getFont(), c));
+                        add(new ExtendedTextField(1, 0, width - 5, -1, getFont(), c));
                     }
                 }
                 else if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
                 {
                     if(selectedPlayer.playerId.equals(mc.player.getGameProfile().getId()))
                     {
-                        add(new TextField(4, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
+                        add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit yourself!"));
                     }
                     else if(selectedPlayer.playerId.equals(teamInfo.owner.playerId))
                     {
-                        add(new TextField(4, 0, getWidth() - 5, -1, getFont(), "You can't edit owner!"));
+                        add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit owner!"));
                     }
                     else
                     {
-                        add(new TextField(4, 0, getWidth() - 5, -1, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
+                        add(new TextField(4, 0, width - 5, -1, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
 
                         CheckBoxList checkBoxes = new CheckBoxList(4, 1, true);
 
@@ -256,7 +256,7 @@ public class GuiMyTeam extends GuiBase
                 }
                 else
                 {
-                    add(new TextField(1, 0, getWidth() - 5, -1, getFont(), "You don't have permission to manage players!"));
+                    add(new TextField(1, 0, width - 5, -1, getFont(), "You don't have permission to manage players!"));
                 }
             }
 
@@ -415,9 +415,6 @@ public class GuiMyTeam extends GuiBase
         setWidth(getScreen().getScaledWidth() - 30);
         setHeight(getScreen().getScaledHeight() - 30);
 
-        int width = getWidth();
-        int height = getHeight();
-
         for(int i = 0; i < topPanelButtons.size(); i++)
         {
             topPanelButtons.get(i).setX(width + (i - topPanelButtons.size()) * 20);
@@ -427,14 +424,14 @@ public class GuiMyTeam extends GuiBase
         buttonTeamTitle.setWidth(width - LEFT_PANEL_WIDTH - 3 - topPanelButtons.size() * 20);
         panelPlayers.setHeight(height - TOP_PANEL_HEIGHT - BOTTOM_PANEL_HEIGHT);
 
-        scrollPlayers.setHeight(panelPlayers.getHeight());
-        scrollText.setHeight(panelPlayers.getHeight());
+        scrollPlayers.setHeight(panelPlayers.height);
+        scrollText.setHeight(panelPlayers.height);
         scrollText.setX(width - 4);
 
         panelText.setWidth(width - LEFT_PANEL_WIDTH - 1);
-        panelText.setHeight(panelPlayers.getHeight());
+        panelText.setHeight(panelPlayers.height);
 
-        chatBox.setWidth(panelText.getWidth());
+        chatBox.setWidth(panelText.width);
         chatBox.setY(height - BOTTOM_PANEL_HEIGHT + 1);
     }
 
@@ -463,8 +460,6 @@ public class GuiMyTeam extends GuiBase
     {
         int ax = getAX();
         int ay = getAY();
-        int width = getWidth();
-        int height = getHeight();
 
         boolean playerGui = selectedPlayer != null;
 

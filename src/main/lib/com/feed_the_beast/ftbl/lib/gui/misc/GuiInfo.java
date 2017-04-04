@@ -175,7 +175,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new Widget(0, 0, panelText.getWidth(), getFont().FONT_HEIGHT + 1) : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new Widget(0, 0, panelText.width, getFont().FONT_HEIGHT + 1) : line.createWidget(GuiInfo.this, panelText));
                 }
 
                 getFont().setUnicodeFlag(uni);
@@ -259,10 +259,8 @@ public class GuiInfo extends GuiBase implements IClientActionGui
     {
         posX = GuiConfigs.INFO_BORDER_WIDTH.getInt();
         posY = GuiConfigs.INFO_BORDER_HEIGHT.getInt();
-        int width = getScreen().getScaledWidth() - posX * 2;
-        int height = getScreen().getScaledHeight() - posY * 2;
-        setWidth(width);
-        setHeight(height);
+        setWidth(getScreen().getScaledWidth() - posX * 2);
+        setHeight(getScreen().getScaledHeight() - posY * 2);
 
         panelWidth = (int) (width * 0.3D);
 
@@ -273,16 +271,16 @@ public class GuiInfo extends GuiBase implements IClientActionGui
 
         panelText.posX = panelWidth + 10;
         panelText.posY = 6;
-        panelText.setWidth(width - panelWidth - 23 - sliderText.getWidth());
+        panelText.setWidth(width - panelWidth - 23 - sliderText.width);
         panelText.setHeight(height - 12);
 
-        sliderPages.posX = panelWidth - sliderPages.getWidth() - 10;
+        sliderPages.posX = panelWidth - sliderPages.width - 10;
         sliderPages.posY = 46;
         sliderPages.setHeight(height - 56);
 
         sliderText.posY = 10;
         sliderText.setHeight(height - 20);
-        sliderText.posX = width - 10 - sliderText.getWidth();
+        sliderText.posX = width - 10 - sliderText.width;
 
         buttonBack.posX = 12;
         buttonBack.posY = 12;
@@ -297,9 +295,6 @@ public class GuiInfo extends GuiBase implements IClientActionGui
     @Override
     public void drawBackground()
     {
-        int width = getWidth();
-        int height = getHeight();
-
         mc.getTextureManager().bindTexture(TEXTURE);
         LMColorUtils.GL_COLOR.set(colorBackground, 255);
         FILLING.draw(posX + panelWidth, posY, width - panelWidth, height);
@@ -308,16 +303,13 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         GlStateManager.color(1F, 1F, 1F, 1F);
 
         GuiHelper.pushScissor(getScreen(), posX, posY, panelWidth, 36);
-        getFont().drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.getWidth() + 5, posY + 14, colorText);
+        getFont().drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.width + 5, posY + 14, colorText);
         GuiHelper.popScissor();
     }
 
     @Override
     public void drawForeground()
     {
-        int width = getWidth();
-        int height = getHeight();
-
         GlStateManager.color(1F, 1F, 1F, 1F);
         BORDERS.draw(posX + panelWidth, posY, width - panelWidth, height);
         BORDERS.draw(posX, posY + 36, panelWidth, height - 36);

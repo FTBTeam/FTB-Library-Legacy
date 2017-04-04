@@ -25,9 +25,9 @@ public class GuiConfigValueField extends GuiBase
         value = val.copy();
         callback = c;
 
-        int bsize = getWidth() / 2 - 3;
+        int bsize = width / 2 - 3;
 
-        buttonCancel = new Button(2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
+        buttonCancel = new Button(2, height - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
             public void onClicked(GuiBase gui, IMouseButton button)
@@ -45,7 +45,7 @@ public class GuiConfigValueField extends GuiBase
 
         buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
-        buttonAccept = new Button(getWidth() - bsize - 2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
+        buttonAccept = new Button(width - bsize - 2, height - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
             public void onClicked(GuiBase gui, IMouseButton button)
@@ -67,7 +67,7 @@ public class GuiConfigValueField extends GuiBase
 
         buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
 
-        textBox = new TextBox(2, 2, getWidth() - 4, 28)
+        textBox = new TextBox(2, 2, width - 4, 28)
         {
             @Override
             public boolean isValid(String txt)
