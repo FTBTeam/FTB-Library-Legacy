@@ -101,7 +101,14 @@ public class PropertyBool extends PropertyBase
     @Override
     public void fromJson(JsonElement json)
     {
-        setBoolean(json.getAsBoolean());
+        if(json.getAsString().equals("toggle"))
+        {
+            setBoolean(!getBoolean());
+        }
+        else
+        {
+            setBoolean(json.getAsBoolean());
+        }
     }
 
     @Override
