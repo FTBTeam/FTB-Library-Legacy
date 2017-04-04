@@ -2,22 +2,21 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
+import com.feed_the_beast.ftbl.lib.gui.TextBox;
 
-public class GuiConfigValueField extends GuiLM
+public class GuiConfigValueField extends GuiBase
 {
     private final IConfigValue defValue, value;
     private final IGuiFieldCallback callback;
 
-    private final ButtonLM buttonCancel, buttonAccept;
-    private final TextBoxLM textBox;
+    private final Button buttonCancel, buttonAccept;
+    private final TextBox textBox;
 
     GuiConfigValueField(IConfigValue val, IGuiFieldCallback c)
     {
@@ -28,28 +27,28 @@ public class GuiConfigValueField extends GuiLM
 
         int bsize = getWidth() / 2 - 3;
 
-        buttonCancel = new ButtonLM(2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
+        buttonCancel = new Button(2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 callback.onCallback(defValue, false);
             }
 
             @Override
-            public int renderTitleInCenter(IGui gui)
+            public int renderTitleInCenter(GuiBase gui)
             {
                 return gui.getTextColor();
             }
         };
 
-        buttonCancel.setIcon(ButtonLM.DEFAULT_BACKGROUND);
+        buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
-        buttonAccept = new ButtonLM(getWidth() - bsize - 2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
+        buttonAccept = new Button(getWidth() - bsize - 2, getHeight() - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
 
@@ -60,15 +59,15 @@ public class GuiConfigValueField extends GuiLM
             }
 
             @Override
-            public int renderTitleInCenter(IGui gui)
+            public int renderTitleInCenter(GuiBase gui)
             {
                 return gui.getTextColor();
             }
         };
 
-        buttonAccept.setIcon(ButtonLM.DEFAULT_BACKGROUND);
+        buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
 
-        textBox = new TextBoxLM(2, 2, getWidth() - 4, 28)
+        textBox = new TextBox(2, 2, getWidth() - 4, 28)
         {
             @Override
             public boolean isValid(String txt)
@@ -77,13 +76,13 @@ public class GuiConfigValueField extends GuiLM
             }
 
             @Override
-            public void onTextChanged(IGui gui)
+            public void onTextChanged(GuiBase gui)
             {
                 textBox.textColor = value.getColor();
             }
 
             @Override
-            public void onEnterPressed(IGui gui)
+            public void onEnterPressed(GuiBase gui)
             {
                 buttonAccept.onClicked(GuiConfigValueField.this, MouseButton.LEFT);
             }
@@ -91,7 +90,7 @@ public class GuiConfigValueField extends GuiLM
 
         textBox.writeText(this, val.toString());
         textBox.setFocused(true);
-        textBox.background = ButtonLM.DEFAULT_BACKGROUND;
+        textBox.background = Button.DEFAULT_BACKGROUND;
     }
 
     @Override
@@ -109,7 +108,7 @@ public class GuiConfigValueField extends GuiLM
     }
 
     @Override
-    public IDrawableObject getIcon(IGui gui)
+    public IDrawableObject getIcon(GuiBase gui)
     {
         return DEFAULT_BACKGROUND;
     }

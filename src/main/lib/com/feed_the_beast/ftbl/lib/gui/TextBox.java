@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.client.Minecraft;
@@ -15,7 +14,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 
-public class TextBoxLM extends WidgetLM
+public class TextBox extends Widget
 {
     private boolean isFocused = false;
     public int charLimit = 250;
@@ -29,7 +28,7 @@ public class TextBoxLM extends WidgetLM
     private int selectionEnd;
     private boolean validText;
 
-    public TextBoxLM(int x, int y, int w, int h)
+    public TextBox(int x, int y, int w, int h)
     {
         super(x, y, w, h);
         text = getText();
@@ -55,7 +54,7 @@ public class TextBoxLM extends WidgetLM
         return text.substring(cursorPosition < selectionEnd ? cursorPosition : selectionEnd, cursorPosition < selectionEnd ? selectionEnd : cursorPosition);
     }
 
-    public final void setText(IGui gui, String s, boolean triggerChange)
+    public final void setText(GuiBase gui, String s, boolean triggerChange)
     {
         text = s;
 
@@ -74,12 +73,12 @@ public class TextBoxLM extends WidgetLM
         }
     }
 
-    public final void setText(IGui gui, String s)
+    public final void setText(GuiBase gui, String s)
     {
         setText(gui, s, true);
     }
 
-    public void setCursorPosition(IGui gui, int pos)
+    public void setCursorPosition(GuiBase gui, int pos)
     {
         cursorPosition = pos;
         int i = text.length();
@@ -87,12 +86,12 @@ public class TextBoxLM extends WidgetLM
         setSelectionPos(gui, cursorPosition);
     }
 
-    public void moveCursorBy(IGui gui, int num)
+    public void moveCursorBy(GuiBase gui, int num)
     {
         setCursorPosition(gui, selectionEnd + num);
     }
 
-    public void writeText(IGui gui, String textToWrite)
+    public void writeText(GuiBase gui, String textToWrite)
     {
         String s = "";
         String s1 = ChatAllowedCharacters.filterAllowedCharacters(textToWrite);
@@ -127,7 +126,7 @@ public class TextBoxLM extends WidgetLM
         moveCursorBy(gui, i - selectionEnd + l);
     }
 
-    public void setSelectionPos(IGui gui, int position)
+    public void setSelectionPos(GuiBase gui, int position)
     {
         int i = text.length();
 
@@ -221,7 +220,7 @@ public class TextBoxLM extends WidgetLM
         return i;
     }
 
-    public void deleteWords(IGui gui, int num)
+    public void deleteWords(GuiBase gui, int num)
     {
         if(!text.isEmpty())
         {
@@ -236,7 +235,7 @@ public class TextBoxLM extends WidgetLM
         }
     }
 
-    public void deleteFromCursor(IGui gui, int num)
+    public void deleteFromCursor(GuiBase gui, int num)
     {
         if(text.isEmpty())
         {
@@ -274,7 +273,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public void mousePressed(IGui gui, IMouseButton button)
+    public void mousePressed(GuiBase gui, IMouseButton button)
     {
         if(gui.isMouseOver(this))
         {
@@ -303,7 +302,7 @@ public class TextBoxLM extends WidgetLM
     }
 
     @Override
-    public boolean keyPressed(IGui gui, int keyCode, char keyChar)
+    public boolean keyPressed(GuiBase gui, int keyCode, char keyChar)
     {
         if(!isFocused())
         {
@@ -445,20 +444,20 @@ public class TextBoxLM extends WidgetLM
         }
     }
 
-    public void onTextChanged(IGui gui)
+    public void onTextChanged(GuiBase gui)
     {
     }
 
-    public void onTabPressed(IGui gui)
+    public void onTabPressed(GuiBase gui)
     {
     }
 
-    public void onEnterPressed(IGui gui)
+    public void onEnterPressed(GuiBase gui)
     {
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         background.draw(this);
 

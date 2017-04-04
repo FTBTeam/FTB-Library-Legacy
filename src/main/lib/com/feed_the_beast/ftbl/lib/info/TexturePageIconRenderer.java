@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 
 /**
  * Created by LatvianModder on 06.10.2016.
@@ -25,7 +25,7 @@ public class TexturePageIconRenderer implements IPageIconRenderer
     */
 
     @Override
-    public void renderIcon(IGui gui, IWidget widget, int x, int y)
+    public void renderIcon(GuiBase gui, Widget widget, int x, int y)
     {
         /*
         icon.bindTexture();

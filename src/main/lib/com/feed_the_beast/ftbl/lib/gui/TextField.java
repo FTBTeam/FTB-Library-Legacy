@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,11 +10,11 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-public class TextFieldLM extends ButtonLM
+public class TextField extends Button
 {
     public List<String> text = Collections.emptyList();
 
-    public TextFieldLM(int x, int y, int width, int height, FontRenderer font, String txt)
+    public TextField(int x, int y, int width, int height, FontRenderer font, String txt)
     {
         super(x, y, width, height);
 
@@ -39,17 +38,17 @@ public class TextFieldLM extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
     }
 
     @Override
-    public void onClicked(IGui gui, IMouseButton button)
+    public void onClicked(GuiBase gui, IMouseButton button)
     {
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         if(text.isEmpty())
         {

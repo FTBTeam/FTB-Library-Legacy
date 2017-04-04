@@ -1,18 +1,15 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-
 /**
  * Created by LatvianModder on 24.02.2017.
  */
-public class PanelScrollBar extends SliderLM
+public class PanelScrollBar extends Slider
 {
-    public final IPanel panel;
+    public final Panel panel;
     private int elementSize;
     private double scrollStep;
 
-    public PanelScrollBar(int x, int y, int w, int h, int ss, IPanel p)
+    public PanelScrollBar(int x, int y, int w, int h, int ss, Panel p)
     {
         super(x, y, w, h, ss);
         panel = p;
@@ -43,7 +40,7 @@ public class PanelScrollBar extends SliderLM
     }
 
     @Override
-    public boolean canMouseScroll(IGui gui)
+    public boolean canMouseScroll(GuiBase gui)
     {
         return super.canMouseScroll(gui) || gui.isMouseOver(panel);
     }
@@ -55,7 +52,7 @@ public class PanelScrollBar extends SliderLM
     }
 
     @Override
-    public void onMoved(IGui gui)
+    public void onMoved(GuiBase gui)
     {
         if(getDirection().isVertical())
         {
@@ -68,13 +65,13 @@ public class PanelScrollBar extends SliderLM
     }
 
     @Override
-    public boolean isEnabled(IGui gui)
+    public boolean isEnabled(GuiBase gui)
     {
         return elementSize > (getDirection().isVertical() ? panel.getHeight() : panel.getHeight());
     }
 
     @Override
-    public boolean shouldRender(IGui gui)
+    public boolean shouldRender(GuiBase gui)
     {
         return isEnabled(gui);
     }

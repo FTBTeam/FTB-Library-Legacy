@@ -13,9 +13,9 @@ import java.io.IOException;
  */
 public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionGui
 {
-    private GuiLM wrappedGui;
+    private GuiBase wrappedGui;
 
-    public GuiWrapper(GuiLM g)
+    public GuiWrapper(GuiBase g)
     {
         wrappedGui = g;
     }
@@ -83,11 +83,11 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
             drawDefaultBackground();
         }
 
-        GuiLM.setupDrawing();
+        GuiBase.setupDrawing();
         wrappedGui.drawBackground();
-        GuiLM.setupDrawing();
+        GuiBase.setupDrawing();
         wrappedGui.renderWidgets();
-        GuiLM.setupDrawing();
+        GuiBase.setupDrawing();
         wrappedGui.drawForeground();
 
         if(wrappedGui.fixUnicode)
@@ -97,7 +97,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
     }
 
     @Override
-    public GuiLM getWrappedGui()
+    public GuiBase getWrappedGui()
     {
         return wrappedGui;
     }

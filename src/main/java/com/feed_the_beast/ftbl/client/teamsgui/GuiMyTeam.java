@@ -3,28 +3,26 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
-import com.feed_the_beast.ftbl.lib.gui.CheckBoxListLM;
+import com.feed_the_beast.ftbl.lib.gui.CheckBoxList;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
-import com.feed_the_beast.ftbl.lib.gui.ExtendedTextFieldLM;
+import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
-import com.feed_the_beast.ftbl.lib.gui.TextBoxLM;
-import com.feed_the_beast.ftbl.lib.gui.TextFieldLM;
+import com.feed_the_beast.ftbl.lib.gui.TextBox;
+import com.feed_the_beast.ftbl.lib.gui.TextField;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.client.gui.GuiYesNo;
@@ -44,13 +42,13 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 05.02.2017.
  */
-public class GuiMyTeam extends GuiLM
+public class GuiMyTeam extends GuiBase
 {
     private static final int TOP_PANEL_HEIGHT = 20;
     private static final int BOTTOM_PANEL_HEIGHT = 20;
     private static final int LEFT_PANEL_WIDTH = 90;
 
-    private class ButtonPlayer extends ButtonLM
+    private class ButtonPlayer extends Button
     {
         private final MyTeamPlayerData playerInst;
 
@@ -62,7 +60,7 @@ public class GuiMyTeam extends GuiLM
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             selectedPlayer = playerInst;
             buttonTeamTitle.setTitle(selectedPlayer.playerName);
@@ -71,12 +69,12 @@ public class GuiMyTeam extends GuiLM
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> list)
+        public void addMouseOverText(GuiBase gui, List<String> list)
         {
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -90,7 +88,7 @@ public class GuiMyTeam extends GuiLM
 
             if(isMouseOver(this))
             {
-                ButtonLM.DEFAULT_MOUSE_OVER.draw(ax, ay, getWidth() + 3, getHeight());
+                Button.DEFAULT_MOUSE_OVER.draw(ax, ay, getWidth() + 3, getHeight());
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -100,13 +98,13 @@ public class GuiMyTeam extends GuiLM
     public static GuiMyTeam INSTANCE = null;
 
     private final MyTeamData teamInfo;
-    private final PanelLM panelPlayers, panelText;
-    private final ButtonLM buttonTeamsGui, buttonTeamTitle, buttonExitTeam;
+    private final Panel panelPlayers, panelText;
+    private final Button buttonTeamsGui, buttonTeamTitle, buttonExitTeam;
     private MyTeamPlayerData selectedPlayer;
     private final PanelScrollBar scrollPlayers, scrollText;
-    private final List<IWidget> topPanelButtons;
+    private final List<Widget> topPanelButtons;
     private final Map<UUID, MyTeamPlayerData> loadedProfiles;
-    private final TextBoxLM chatBox;
+    private final TextBox chatBox;
 
     public GuiMyTeam(MyTeamData t)
     {
@@ -122,7 +120,7 @@ public class GuiMyTeam extends GuiLM
             loadedProfiles.put(p.playerId, p);
         }
 
-        panelPlayers = new PanelLM(1, TOP_PANEL_HEIGHT, LEFT_PANEL_WIDTH - 1, 0)
+        panelPlayers = new Panel(1, TOP_PANEL_HEIGHT, LEFT_PANEL_WIDTH - 1, 0)
         {
             @Override
             public void addWidgets()
@@ -141,9 +139,9 @@ public class GuiMyTeam extends GuiLM
             }
         };
 
-        panelPlayers.addFlags(IPanel.FLAG_DEFAULTS);
+        panelPlayers.addFlags(Panel.FLAG_DEFAULTS);
 
-        panelText = new PanelLM(LEFT_PANEL_WIDTH + 1, TOP_PANEL_HEIGHT, 0, 0)
+        panelText = new Panel(LEFT_PANEL_WIDTH + 1, TOP_PANEL_HEIGHT, 0, 0)
         {
             @Override
             public void addWidgets()
@@ -178,24 +176,24 @@ public class GuiMyTeam extends GuiLM
                             c.getStyle().setColor(TextFormatting.WHITE);
                         }
 
-                        add(new ExtendedTextFieldLM(1, 0, getWidth() - 5, -1, getFont(), c));
+                        add(new ExtendedTextField(1, 0, getWidth() - 5, -1, getFont(), c));
                     }
                 }
                 else if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
                 {
                     if(selectedPlayer.playerId.equals(mc.player.getGameProfile().getId()))
                     {
-                        add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
+                        add(new TextField(4, 0, getWidth() - 5, -1, getFont(), "You can't edit yourself!"));
                     }
                     else if(selectedPlayer.playerId.equals(teamInfo.owner.playerId))
                     {
-                        add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "You can't edit owner!"));
+                        add(new TextField(4, 0, getWidth() - 5, -1, getFont(), "You can't edit owner!"));
                     }
                     else
                     {
-                        add(new TextFieldLM(4, 0, getWidth() - 5, -1, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
+                        add(new TextField(4, 0, getWidth() - 5, -1, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
 
-                        CheckBoxListLM checkBoxes = new CheckBoxListLM(4, 1, true);
+                        CheckBoxList checkBoxes = new CheckBoxList(4, 1, true);
 
                         EnumTeamStatus[] VALUES;
 
@@ -210,7 +208,7 @@ public class GuiMyTeam extends GuiLM
 
                         for(EnumTeamStatus status : VALUES)
                         {
-                            CheckBoxListLM.CheckBoxEntry entry = new CheckBoxListLM.CheckBoxEntry(status.getColor() + status.getLangKey().translate())
+                            CheckBoxList.CheckBoxEntry entry = new CheckBoxList.CheckBoxEntry(status.getColor() + status.getLangKey().translate())
                             {
                                 @Override
                                 public void onValueChanged()
@@ -238,7 +236,7 @@ public class GuiMyTeam extends GuiLM
                             add(new CentredTextButton(4, 0, 40, 16, "Kick")
                             {
                                 @Override
-                                public void onClicked(IGui gui, IMouseButton button)
+                                public void onClicked(GuiBase gui, IMouseButton button)
                                 {
                                     GuiHelper.playClickSound();
                                     mc.displayGuiScreen(new GuiYesNo((result, id) ->
@@ -258,7 +256,7 @@ public class GuiMyTeam extends GuiLM
                 }
                 else
                 {
-                    add(new TextFieldLM(1, 0, getWidth() - 5, -1, getFont(), "You don't have permission to manage players!"));
+                    add(new TextField(1, 0, getWidth() - 5, -1, getFont(), "You don't have permission to manage players!"));
                 }
             }
 
@@ -277,12 +275,12 @@ public class GuiMyTeam extends GuiLM
             }
         };
 
-        panelText.addFlags(IPanel.FLAG_DEFAULTS);
+        panelText.addFlags(Panel.FLAG_DEFAULTS);
 
-        buttonTeamsGui = new ButtonLM(0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
+        buttonTeamsGui = new Button(0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 selectedPlayer = null;
                 buttonTeamTitle.setTitle(teamInfo.displayName);
@@ -291,7 +289,7 @@ public class GuiMyTeam extends GuiLM
             }
 
             @Override
-            public int renderTitleInCenter(IGui gui)
+            public int renderTitleInCenter(GuiBase gui)
             {
                 return gui.getTextColor();
             }
@@ -299,15 +297,15 @@ public class GuiMyTeam extends GuiLM
 
         buttonTeamsGui.setTitle("Teams GUI");
 
-        buttonTeamTitle = new ButtonLM(LEFT_PANEL_WIDTH + 1, 1, 0, TOP_PANEL_HEIGHT - 2)
+        buttonTeamTitle = new Button(LEFT_PANEL_WIDTH + 1, 1, 0, TOP_PANEL_HEIGHT - 2)
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
             }
 
             @Override
-            public void addMouseOverText(IGui gui, List<String> list)
+            public void addMouseOverText(GuiBase gui, List<String> list)
             {
                 if(!teamInfo.description.isEmpty())
                 {
@@ -316,16 +314,16 @@ public class GuiMyTeam extends GuiLM
             }
 
             @Override
-            public int renderTitleInCenter(IGui gui)
+            public int renderTitleInCenter(GuiBase gui)
             {
                 return gui.getTextColor();
             }
         };
 
-        buttonExitTeam = new ButtonLM(1, 0, LEFT_PANEL_WIDTH - 1, BOTTOM_PANEL_HEIGHT - 2)
+        buttonExitTeam = new Button(1, 0, LEFT_PANEL_WIDTH - 1, BOTTOM_PANEL_HEIGHT - 2)
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 mc.displayGuiScreen(new GuiYesNo((result, id) ->
@@ -343,7 +341,7 @@ public class GuiMyTeam extends GuiLM
             }
 
             @Override
-            public int renderTitleInCenter(IGui gui)
+            public int renderTitleInCenter(GuiBase gui)
             {
                 return 0xFFEA8383;
             }
@@ -361,12 +359,12 @@ public class GuiMyTeam extends GuiLM
 
         if(teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
         {
-            ButtonLM b;
+            Button b;
 
-            b = new ButtonLM(0, 2, 16, 16)
+            b = new Button(0, 2, 16, 16)
             {
                 @Override
-                public void onClicked(IGui gui, IMouseButton button)
+                public void onClicked(GuiBase gui, IMouseButton button)
                 {
                     GuiHelper.playClickSound();
                     FTBLibClient.execClientCommand("/ftb team gui add_player");
@@ -379,10 +377,10 @@ public class GuiMyTeam extends GuiLM
             b.setIcon(GuiIcons.ADD);
             topPanelButtons.add(b);
 
-            b = new ButtonLM(0, 2, 16, 16)
+            b = new Button(0, 2, 16, 16)
             {
                 @Override
-                public void onClicked(IGui gui, IMouseButton button)
+                public void onClicked(GuiBase gui, IMouseButton button)
                 {
                     GuiHelper.playClickSound();
                     FTBLibClient.execClientCommand("/ftb team config");
@@ -394,10 +392,10 @@ public class GuiMyTeam extends GuiLM
             topPanelButtons.add(b);
         }
 
-        chatBox = new TextBoxLM(LEFT_PANEL_WIDTH, 0, 0, BOTTOM_PANEL_HEIGHT)
+        chatBox = new TextBox(LEFT_PANEL_WIDTH, 0, 0, BOTTOM_PANEL_HEIGHT)
         {
             @Override
-            public void onEnterPressed(IGui gui)
+            public void onEnterPressed(GuiBase gui)
             {
                 FTBLibClient.execClientCommand("/ftb team msg " + getText());
                 setText(gui, "");
@@ -489,19 +487,19 @@ public class GuiMyTeam extends GuiLM
 
         if(isMouseOver(buttonExitTeam))
         {
-            ButtonLM.DEFAULT_MOUSE_OVER.draw(buttonExitTeam);
+            Button.DEFAULT_MOUSE_OVER.draw(buttonExitTeam);
         }
 
         if(isMouseOver(buttonTeamsGui))
         {
-            ButtonLM.DEFAULT_MOUSE_OVER.draw(buttonTeamsGui);
+            Button.DEFAULT_MOUSE_OVER.draw(buttonTeamsGui);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override
-    public IDrawableObject getIcon(IGui gui)
+    public IDrawableObject getIcon(GuiBase gui)
     {
         return DEFAULT_BACKGROUND;
     }

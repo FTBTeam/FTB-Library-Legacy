@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import net.minecraft.client.Minecraft;
@@ -8,12 +7,12 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ItemListButtonLM extends ButtonLM
+public class ItemListButton extends Button
 {
     private final DrawableItem item;
     private final int cols;
 
-    public ItemListButtonLM(int x, int y, DrawableItem i, int c)
+    public ItemListButton(int x, int y, DrawableItem i, int c)
     {
         super(x, y, 16, 16);
         item = i;
@@ -24,7 +23,7 @@ public class ItemListButtonLM extends ButtonLM
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         int ax = getAX();
         int ay = getAY();
@@ -44,7 +43,7 @@ public class ItemListButtonLM extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
         int index = -1;
 
@@ -71,7 +70,7 @@ public class ItemListButtonLM extends ButtonLM
     }
 
     @Override
-    public void onClicked(IGui gui, IMouseButton button)
+    public void onClicked(GuiBase gui, IMouseButton button)
     {
         /*
         if(cols == 0)

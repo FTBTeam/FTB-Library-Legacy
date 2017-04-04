@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-public class ButtonInfoPage extends ButtonLM
+public class ButtonInfoPage extends Button
 {
     public final InfoPage page;
     public String hover;
@@ -33,7 +33,7 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void onClicked(IGui gui, IMouseButton button)
+    public void onClicked(GuiBase gui, IMouseButton button)
     {
         GuiHelper.playClickSound();
         ((GuiInfo) gui).setSelectedPage(page);
@@ -63,7 +63,7 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
         if(hover != null)
         {
@@ -72,7 +72,7 @@ public class ButtonInfoPage extends ButtonLM
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         boolean mouseOver = gui.isMouseOver(this);
 

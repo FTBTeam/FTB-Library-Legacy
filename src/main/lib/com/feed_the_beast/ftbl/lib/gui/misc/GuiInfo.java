@@ -2,23 +2,20 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -28,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class GuiInfo extends GuiLM implements IClientActionGui
+public class GuiInfo extends GuiBase implements IClientActionGui
 {
     private static final ResourceLocation TEXTURE = FTBLibFinals.get("textures/gui/info.png");
 
@@ -61,7 +58,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13);
     };
 
-    private static class ButtonSpecial extends ButtonLM
+    private static class ButtonSpecial extends Button
     {
         private ISpecialInfoButton specialInfoButton;
 
@@ -71,7 +68,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         }
 
         @Override
-        public boolean isEnabled(IGui gui)
+        public boolean isEnabled(GuiBase gui)
         {
             return specialInfoButton != null;
         }
@@ -83,7 +80,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             if(isEnabled(gui))
             {
@@ -92,7 +89,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             if(isEnabled(gui))
             {
@@ -102,9 +99,9 @@ public class GuiInfo extends GuiLM implements IClientActionGui
     }
 
     public final InfoPage pageTree;
-    public final PanelLM panelPages, panelText;
+    public final Panel panelPages, panelText;
     public final PanelScrollBar sliderPages, sliderText;
-    private final ButtonLM buttonBack;
+    private final Button buttonBack;
     private final ButtonSpecial buttonSpecial;
     public int panelWidth;
     private int colorText, colorBackground;
@@ -115,10 +112,10 @@ public class GuiInfo extends GuiLM implements IClientActionGui
         super(0, 0);
         selectedPage = pageTree = tree;
 
-        buttonBack = new ButtonLM(0, 0, 14, 11)
+        buttonBack = new Button(0, 0, 14, 11)
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 sliderPages.setValue(gui, 0D);
@@ -127,7 +124,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
 
             @Override
-            public String getTitle(IGui gui)
+            public String getTitle(GuiBase gui)
             {
                 return (selectedPage.getParent() == null) ? GuiLang.BUTTON_CLOSE.translate() : GuiLang.BUTTON_BACK.translate();
             }
@@ -135,7 +132,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
         buttonBack.setIcon(new ColoredObject(TEX_CLOSE, GuiConfigs.INFO_TEXT.getColor()));
 
-        panelPages = new PanelLM(0, 0, 0, 0)
+        panelPages = new Panel(0, 0, 0, 0)
         {
             @Override
             public void addWidgets()
@@ -158,14 +155,14 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
-        panelPages.addFlags(IPanel.FLAG_DEFAULTS);
+        panelPages.addFlags(Panel.FLAG_DEFAULTS);
 
-        panelText = new PanelLM(0, 0, 0, 0)
+        panelText = new Panel(0, 0, 0, 0)
         {
             @Override
             public void addWidgets()
             {
-                for(IWidget w : panelPages.getWidgets())
+                for(Widget w : panelPages.getWidgets())
                 {
                     if(w instanceof ButtonInfoPage)
                     {
@@ -178,7 +175,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
 
                 for(IInfoTextLine line : selectedPage.getText())
                 {
-                    add(line == null ? new WidgetLM(0, 0, panelText.getWidth(), getFont().FONT_HEIGHT + 1) : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new Widget(0, 0, panelText.getWidth(), getFont().FONT_HEIGHT + 1) : line.createWidget(GuiInfo.this, panelText));
                 }
 
                 getFont().setUnicodeFlag(uni);
@@ -196,7 +193,7 @@ public class GuiInfo extends GuiLM implements IClientActionGui
             }
         };
 
-        panelText.addFlags(IPanel.FLAG_DEFAULTS | IPanel.FLAG_UNICODE_FONT);
+        panelText.addFlags(Panel.FLAG_DEFAULTS | Panel.FLAG_UNICODE_FONT);
 
         sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
         sliderPages.slider = TEX_SLIDER;

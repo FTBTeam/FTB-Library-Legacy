@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.google.gson.JsonElement;
 
@@ -13,7 +13,7 @@ public interface IInfoTextLine
 {
     String getUnformattedText();
 
-    IWidget createWidget(IGui gui, IPanel parent);
+    Widget createWidget(GuiBase gui, Panel parent);
 
     IInfoTextLine copy(InfoPage page);
 

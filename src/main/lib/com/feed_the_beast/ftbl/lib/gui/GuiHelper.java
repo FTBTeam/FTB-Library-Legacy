@@ -131,7 +131,7 @@ public class GuiHelper
         font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - 4D), color);
     }
 
-    public static void drawCenteredWidgetTitle(FontRenderer font, WidgetLM widget, String title, int color)
+    public static void drawCenteredWidgetTitle(FontRenderer font, Widget widget, String title, int color)
     {
         drawCenteredString(font, title, widget.getAX() + widget.getWidth() / 2, widget.getAY() + widget.getHeight() / 2, color);
     }

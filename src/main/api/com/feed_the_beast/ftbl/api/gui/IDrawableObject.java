@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,7 +13,7 @@ public interface IDrawableObject
     void draw(int x, int y, int w, int h);
 
     @SideOnly(Side.CLIENT)
-    default void draw(IWidget widget)
+    default void draw(Widget widget)
     {
         draw(widget.getAX(), widget.getAY(), widget.getWidth(), widget.getHeight());
     }

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.lib.client.DrawableItemList;
-import com.feed_the_beast.ftbl.lib.gui.ItemListButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.ItemListButton;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -68,9 +68,9 @@ public class ItemListLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(IGui gui, IPanel parent)
+    public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new ItemListButtonLM(0, 0, new DrawableItemList(list), cols);
+        return new ItemListButton(0, 0, new DrawableItemList(list), cols);
     }
 
     @Override

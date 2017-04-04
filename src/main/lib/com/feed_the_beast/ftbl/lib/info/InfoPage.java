@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.RemoveFilter;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMMapUtils;
@@ -256,12 +256,12 @@ public class InfoPage extends FinalIDObject
         return childPages;
     }
 
-    public void refreshGui(IGui gui)
+    public void refreshGui(GuiBase gui)
     {
     }
 
     @Nullable
-    public ISpecialInfoButton createSpecialButton(IGui gui)
+    public ISpecialInfoButton createSpecialButton(GuiBase gui)
     {
         return null;
     }
@@ -272,7 +272,7 @@ public class InfoPage extends FinalIDObject
         return this;
     }
 
-    public IWidget createWidget(IGui gui)
+    public Widget createWidget(GuiBase gui)
     {
         return new ButtonInfoPage((GuiInfo) gui, this, pageIcon);
     }

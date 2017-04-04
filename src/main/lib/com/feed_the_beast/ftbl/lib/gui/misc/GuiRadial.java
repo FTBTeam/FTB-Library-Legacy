@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 13.02.2017.
  */
-public class GuiRadial extends GuiLM
+public class GuiRadial extends GuiBase
 {
     public static class Entry
     {

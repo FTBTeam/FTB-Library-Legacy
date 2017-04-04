@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 
 /**
  * Created by LatvianModder on 06.10.2016.
  */
 public interface IPageIconRenderer
 {
-    void renderIcon(IGui gui, IWidget widget, int x, int y);
+    void renderIcon(GuiBase gui, Widget widget, int x, int y);
 }

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
 import com.google.gson.JsonElement;
@@ -67,7 +67,7 @@ public class ItemPageIconRenderer implements IPageIconRenderer
     }
 
     @Override
-    public void renderIcon(IGui gui, IWidget widget, int x, int y)
+    public void renderIcon(GuiBase gui, Widget widget, int x, int y)
     {
         if(!items.isEmpty())
         {

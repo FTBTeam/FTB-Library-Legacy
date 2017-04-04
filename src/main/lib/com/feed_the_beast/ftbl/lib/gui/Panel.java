@@ -1,22 +1,24 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class PanelLM extends WidgetLM implements IPanel
+public abstract class Panel extends Widget
 {
-    private final List<IWidget> widgets;
+    public static final int FLAG_ONLY_RENDER_WIDGETS_INSIDE = 1;
+    public static final int FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE = 2;
+    public static final int FLAG_UNICODE_FONT = 4;
+    public static final int FLAG_DEFAULTS = FLAG_ONLY_RENDER_WIDGETS_INSIDE | FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE;
+
+    private final List<Widget> widgets;
     private int scrollX = 0, scrollY = 0;
     private int offsetX = 0, offsetY = 0;
     private int flags = 0;
 
-    public PanelLM(int x, int y, int w, int h)
+    public Panel(int x, int y, int w, int h)
     {
         super(x, y, w, h);
         widgets = new ArrayList<>();
@@ -27,26 +29,80 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         flags |= f;
     }
 
-    @Override
     public boolean hasFlag(int flag)
     {
         return (flags & flag) != 0;
     }
 
-    @Override
-    public Collection<IWidget> getWidgets()
+    public Collection<Widget> getWidgets()
     {
         return widgets;
     }
 
     public abstract void addWidgets();
 
-    @Override
     public void refreshWidgets()
     {
         getWidgets().clear();
         addWidgets();
         updateWidgetPositions();
+    }
+
+    public void add(Widget widget)
+    {
+        widget.setParentPanel(this);
+        getWidgets().add(widget);
+
+        if(widget instanceof Panel)
+        {
+            ((Panel) widget).refreshWidgets();
+        }
+    }
+
+    public void addAll(Widget... widgets)
+    {
+        for(Widget w : widgets)
+        {
+            add(w);
+        }
+    }
+
+    public void addAll(Iterable<? extends Widget> list)
+    {
+        for(Widget w : list)
+        {
+            add(w);
+        }
+    }
+
+    public void updateWidgetPositions()
+    {
+    }
+
+    public void setScrollX(double scroll, int elementsWidth)
+    {
+        int width = getWidth();
+        if(elementsWidth < width)
+        {
+            setScrollX(0);
+        }
+        else
+        {
+            setScrollX((int) (scroll * (elementsWidth - width)));
+        }
+    }
+
+    public void setScrollY(double scroll, int elementsHeight)
+    {
+        int height = getHeight();
+        if(elementsHeight < height)
+        {
+            setScrollY(0);
+        }
+        else
+        {
+            setScrollY((int) (scroll * (elementsHeight - height)));
+        }
     }
 
     protected int alignWidgets(EnumDirection direction)
@@ -58,7 +114,7 @@ public abstract class PanelLM extends WidgetLM implements IPanel
     {
         int i = pre;
 
-        for(IWidget widget : getWidgets())
+        for(Widget widget : getWidgets())
         {
             if(direction.isVertical())
             {
@@ -105,20 +161,18 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         }
     }
 
-    @Override
     public void setScrollX(int scroll)
     {
         scrollX = scroll;
     }
 
-    @Override
     public void setScrollY(int scroll)
     {
         scrollY = scroll;
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         boolean renderInside = hasFlag(FLAG_ONLY_RENDER_WIDGETS_INSIDE);
         boolean useUnicodeFont = hasFlag(FLAG_UNICODE_FONT);
@@ -139,7 +193,7 @@ public abstract class PanelLM extends WidgetLM implements IPanel
 
         setOffset(true);
 
-        for(IWidget widget : getWidgets())
+        for(Widget widget : getWidgets())
         {
             if(widget.shouldRender(gui) && (!renderInside || widget.collidesWith(ax, ay, w, h)))
             {
@@ -157,17 +211,17 @@ public abstract class PanelLM extends WidgetLM implements IPanel
         gui.getFont().setUnicodeFlag(unicode);
     }
 
-    protected void renderPanelBackground(IGui gui, int ax, int ay, int w, int h)
+    protected void renderPanelBackground(GuiBase gui, int ax, int ay, int w, int h)
     {
     }
 
-    protected void renderWidget(IGui gui, IWidget widget, int ax, int ay, int w, int h)
+    protected void renderWidget(GuiBase gui, Widget widget, int ax, int ay, int w, int h)
     {
         widget.renderWidget(gui);
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
         if(hasFlag(FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
         {
@@ -176,7 +230,7 @@ public abstract class PanelLM extends WidgetLM implements IPanel
 
         setOffset(true);
 
-        for(IWidget w : getWidgets())
+        for(Widget w : getWidgets())
         {
             if(w.isEnabled(gui) && gui.isMouseOver(w))
             {
@@ -188,7 +242,7 @@ public abstract class PanelLM extends WidgetLM implements IPanel
     }
 
     @Override
-    public void mousePressed(IGui gui, IMouseButton button)
+    public void mousePressed(GuiBase gui, IMouseButton button)
     {
         if(hasFlag(FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
         {
@@ -197,7 +251,7 @@ public abstract class PanelLM extends WidgetLM implements IPanel
 
         setOffset(true);
 
-        for(IWidget w : getWidgets())
+        for(Widget w : getWidgets())
         {
             if(w.isEnabled(gui))
             {
@@ -209,11 +263,11 @@ public abstract class PanelLM extends WidgetLM implements IPanel
     }
 
     @Override
-    public void mouseReleased(IGui gui)
+    public void mouseReleased(GuiBase gui)
     {
         setOffset(true);
 
-        for(IWidget w : getWidgets())
+        for(Widget w : getWidgets())
         {
             if(w.isEnabled(gui))
             {
@@ -225,11 +279,11 @@ public abstract class PanelLM extends WidgetLM implements IPanel
     }
 
     @Override
-    public boolean keyPressed(IGui gui, int key, char keyChar)
+    public boolean keyPressed(GuiBase gui, int key, char keyChar)
     {
         setOffset(true);
 
-        for(IWidget w : getWidgets())
+        for(Widget w : getWidgets())
         {
             if(w.isEnabled(gui) && w.keyPressed(gui, key, keyChar))
             {

@@ -1,18 +1,16 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,12 +18,12 @@ import java.util.List;
 /**
  * Created by LatvianModder on 24.02.2017.
  */
-public class GuiSelectTeam extends GuiLM
+public class GuiSelectTeam extends GuiBase
 {
-    private final PanelLM panelTeams;
+    private final Panel panelTeams;
     private final PanelScrollBar scrollTeams;
 
-    private static class ButtonCreateTeam extends ButtonLM
+    private static class ButtonCreateTeam extends Button
     {
         private final IDrawableObject background;
 
@@ -38,13 +36,13 @@ public class GuiSelectTeam extends GuiLM
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             new GuiCreateTeam().openGui();
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -53,7 +51,7 @@ public class GuiSelectTeam extends GuiLM
         }
     }
 
-    private static class ButtonTeam extends ButtonLM
+    private static class ButtonTeam extends Button
     {
         private final PublicTeamData team;
         private final IDrawableObject background;
@@ -68,7 +66,7 @@ public class GuiSelectTeam extends GuiLM
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             if(team.isInvited)
             {
@@ -83,7 +81,7 @@ public class GuiSelectTeam extends GuiLM
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             int ax = getAX();
             int ay = getAY();
@@ -92,7 +90,7 @@ public class GuiSelectTeam extends GuiLM
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> list)
+        public void addMouseOverText(GuiBase gui, List<String> list)
         {
             list.add(getTitle(gui));
             list.add("ID: " + team.getName());
@@ -113,7 +111,7 @@ public class GuiSelectTeam extends GuiLM
         super(192, 170);
         Collections.sort(teams);
 
-        panelTeams = new PanelLM(0, 1, 168, 168)
+        panelTeams = new Panel(0, 1, 168, 168)
         {
             @Override
             public void addWidgets()
@@ -132,7 +130,7 @@ public class GuiSelectTeam extends GuiLM
                 int size = 8;
                 int x = 0;
 
-                for(IWidget widget : getWidgets())
+                for(Widget widget : getWidgets())
                 {
                     widget.setX(8 + x * 40);
                     widget.setY(size);
@@ -150,18 +148,18 @@ public class GuiSelectTeam extends GuiLM
             }
         };
 
-        panelTeams.addFlags(IPanel.FLAG_DEFAULTS);
+        panelTeams.addFlags(Panel.FLAG_DEFAULTS);
 
         scrollTeams = new PanelScrollBar(168, 8, 16, 152, 10, panelTeams)
         {
             @Override
-            public boolean shouldRender(IGui gui)
+            public boolean shouldRender(GuiBase gui)
             {
                 return true;
             }
         };
 
-        scrollTeams.background = ButtonLM.DEFAULT_BACKGROUND;
+        scrollTeams.background = Button.DEFAULT_BACKGROUND;
     }
 
     @Override
@@ -172,7 +170,7 @@ public class GuiSelectTeam extends GuiLM
     }
 
     @Override
-    public IDrawableObject getIcon(IGui gui)
+    public IDrawableObject getIcon(GuiBase gui)
     {
         return DEFAULT_BACKGROUND;
     }

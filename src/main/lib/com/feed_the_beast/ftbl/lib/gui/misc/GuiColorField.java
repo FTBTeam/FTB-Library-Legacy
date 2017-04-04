@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.lib.config.PropertyColor;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import net.minecraft.client.renderer.GlStateManager;
 
 //FIXME
-public class GuiColorField extends GuiLM
+public class GuiColorField extends GuiBase
 {
     private final int initCol;
     private final IGuiFieldCallback callback;

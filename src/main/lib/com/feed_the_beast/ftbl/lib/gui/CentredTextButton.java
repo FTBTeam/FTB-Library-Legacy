@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-
 /**
  * Created by LatvianModder on 02.03.2017.
  */
-public abstract class CentredTextButton extends ButtonLM
+public abstract class CentredTextButton extends Button
 {
     public CentredTextButton(int x, int y, int w, int h, String txt)
     {
@@ -14,13 +12,13 @@ public abstract class CentredTextButton extends ButtonLM
     }
 
     @Override
-    public int renderTitleInCenter(IGui gui)
+    public int renderTitleInCenter(GuiBase gui)
     {
         return gui.getTextColor();
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         super.renderWidget(gui);
 

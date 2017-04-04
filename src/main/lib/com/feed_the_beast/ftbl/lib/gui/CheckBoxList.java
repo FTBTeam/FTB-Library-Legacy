@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 24.02.2017.
  */
-public class CheckBoxListLM extends ButtonLM
+public class CheckBoxList extends Button
 {
     public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(0xFFE0E0E0);
     public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0xFF919191);
@@ -27,20 +26,20 @@ public class CheckBoxListLM extends ButtonLM
     {
         public String name;
         public int value = 0;
-        private CheckBoxListLM checkBoxList;
+        private CheckBoxList checkBoxList;
 
         public CheckBoxEntry(String n)
         {
             name = n;
         }
 
-        public void onClicked(IGui gui, IMouseButton button, int index)
+        public void onClicked(GuiBase gui, IMouseButton button, int index)
         {
             select((value + 1) % checkBoxList.icons.length);
             GuiHelper.playClickSound();
         }
 
-        public void addMouseOverText(IGui gui, List<String> list)
+        public void addMouseOverText(GuiBase gui, List<String> list)
         {
         }
 
@@ -83,14 +82,14 @@ public class CheckBoxListLM extends ButtonLM
         }
     }
 
-    public CheckBoxListLM(int x, int y, boolean radiobutton)
+    public CheckBoxList(int x, int y, boolean radiobutton)
     {
         super(x, y, 10, 2);
         radioButtons = radiobutton;
         entries = new ArrayList<>();
     }
 
-    public void addBox(IGui gui, CheckBoxEntry checkBox)
+    public void addBox(GuiBase gui, CheckBoxEntry checkBox)
     {
         checkBox.checkBoxList = this;
         entries.add(checkBox);
@@ -98,7 +97,7 @@ public class CheckBoxListLM extends ButtonLM
         setHeight(getHeight() + 11);
     }
 
-    public CheckBoxEntry addBox(IGui gui, String name)
+    public CheckBoxEntry addBox(GuiBase gui, String name)
     {
         CheckBoxEntry entry = new CheckBoxEntry(name);
         addBox(gui, entry);
@@ -106,7 +105,7 @@ public class CheckBoxListLM extends ButtonLM
     }
 
     @Override
-    public void onClicked(IGui gui, IMouseButton button)
+    public void onClicked(GuiBase gui, IMouseButton button)
     {
         int y = gui.getMouseY() - getAY();
 
@@ -124,12 +123,12 @@ public class CheckBoxListLM extends ButtonLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         int ax = getAX();
         int ay = getAY();

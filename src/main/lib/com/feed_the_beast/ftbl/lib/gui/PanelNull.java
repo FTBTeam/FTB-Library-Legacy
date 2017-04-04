@@ -1,9 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -12,43 +9,24 @@ import java.util.List;
 /**
  * Created by LatvianModder on 13.02.2017.
  */
-public enum PanelNull implements IPanel
+public class PanelNull extends Panel
 {
-    INSTANCE;
+    public static final PanelNull INSTANCE = new PanelNull();
+
+    public PanelNull()
+    {
+        super(0, 0, 0, 0);
+    }
 
     @Override
-    public IPanel getParentPanel()
+    public Panel getParentPanel()
     {
         return this;
     }
 
     @Override
-    public void setParentPanel(IPanel p)
+    public void setParentPanel(Panel p)
     {
-    }
-
-    @Override
-    public int getX()
-    {
-        return 0;
-    }
-
-    @Override
-    public int getY()
-    {
-        return 0;
-    }
-
-    @Override
-    public int getWidth()
-    {
-        return 1;
-    }
-
-    @Override
-    public int getHeight()
-    {
-        return 1;
     }
 
     @Override
@@ -84,9 +62,14 @@ public enum PanelNull implements IPanel
     }
 
     @Override
-    public Collection<IWidget> getWidgets()
+    public Collection<Widget> getWidgets()
     {
         return Collections.emptyList();
+    }
+
+    @Override
+    public void addWidgets()
+    {
     }
 
     @Override
@@ -101,40 +84,40 @@ public enum PanelNull implements IPanel
     }
 
     @Override
-    public boolean isEnabled(IGui gui)
+    public boolean isEnabled(GuiBase gui)
     {
         return false;
     }
 
     @Override
-    public boolean shouldRender(IGui gui)
+    public boolean shouldRender(GuiBase gui)
     {
         return false;
     }
 
     @Override
-    public void mousePressed(IGui gui, IMouseButton button)
+    public void mousePressed(GuiBase gui, IMouseButton button)
     {
     }
 
     @Override
-    public void mouseReleased(IGui gui)
+    public void mouseReleased(GuiBase gui)
     {
     }
 
     @Override
-    public boolean keyPressed(IGui gui, int key, char keyChar)
+    public boolean keyPressed(GuiBase gui, int key, char keyChar)
     {
         return false;
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
     }
 

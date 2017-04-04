@@ -4,17 +4,15 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
@@ -30,11 +28,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class GuiEditConfig extends GuiLM implements IGuiEditConfig
+public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
     public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) -> o1.getKey().getDisplayName().getFormattedText().compareTo(o2.getKey().getDisplayName().getFormattedText());
 
-    public class ButtonConfigEntry extends ButtonLM
+    public class ButtonConfigEntry extends Button
     {
         public final IConfigKey key;
         public final IConfigValue value;
@@ -60,7 +58,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             boolean mouseOver = getMouseY() >= 20 && gui.isMouseOver(this);
 
@@ -103,7 +101,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             if(getMouseY() >= 20 && !key.getFlag(IConfigKey.CANT_EDIT))
             {
@@ -113,7 +111,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> list)
+        public void addMouseOverText(GuiBase gui, List<String> list)
         {
             if(getMouseY() > 18)
             {
@@ -139,8 +137,8 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
     private final String title;
     private final List<ButtonConfigEntry> configEntryButtons;
-    private final PanelLM configPanel;
-    private final ButtonLM buttonAccept, buttonCancel;
+    private final Panel configPanel;
+    private final Button buttonAccept, buttonCancel;
     private final PanelScrollBar scroll;
     private int shouldClose = 0;
 
@@ -169,7 +167,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             }
         }
 
-        configPanel = new PanelLM(0, 20, 0, 20)
+        configPanel = new Panel(0, 20, 0, 20)
         {
             @Override
             public void addWidgets()
@@ -184,12 +182,12 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
             }
         };
 
-        configPanel.addFlags(IPanel.FLAG_DEFAULTS);
+        configPanel.addFlags(Panel.FLAG_DEFAULTS);
 
-        buttonAccept = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT.translate())
+        buttonAccept = new Button(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 shouldClose = 1;
@@ -199,10 +197,10 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
 
         buttonAccept.setIcon(GuiIcons.ACCEPT);
 
-        buttonCancel = new ButtonLM(0, 2, 16, 16, GuiLang.BUTTON_CANCEL.translate())
+        buttonCancel = new Button(0, 2, 16, 16, GuiLang.BUTTON_CANCEL.translate())
         {
             @Override
-            public void onClicked(IGui gui, IMouseButton button)
+            public void onClicked(GuiBase gui, IMouseButton button)
             {
                 GuiHelper.playClickSound();
                 shouldClose = 2;
@@ -280,7 +278,7 @@ public class GuiEditConfig extends GuiLM implements IGuiEditConfig
     }
 
     @Override
-    public String getTitle(IGui gui)
+    public String getTitle(GuiBase gui)
     {
         return title;
     }

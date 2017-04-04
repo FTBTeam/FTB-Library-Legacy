@@ -1,15 +1,18 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -19,7 +22,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 09.06.2016.
  */
-public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
+public abstract class GuiBase extends Panel implements IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
     public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0xC8333333).setLineColor(0xFFC0C0C0).setRoundEdges(true);
@@ -32,7 +35,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     private ScaledResolution screen;
     public boolean fixUnicode;
 
-    public GuiLM(int w, int h)
+    public GuiBase(int w, int h)
     {
         super(0, 0, w, h);
         mc = Minecraft.getMinecraft();
@@ -76,7 +79,6 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     {
     }
 
-    @Override
     public final void closeGui()
     {
         onClosed();
@@ -148,7 +150,7 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
     }
 
     @Override
-    public final void renderWidget(IGui gui)
+    public final void renderWidget(GuiBase gui)
     {
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.disableLighting();
@@ -179,64 +181,80 @@ public abstract class GuiLM extends PanelLM implements IGui, IClientActionGui
         TEMP_TEXT_LIST.clear();
     }
 
-    @Override
     public GuiScreen getWrapper()
     {
         return new GuiWrapper(this);
     }
 
-    @Override
     public final void openGui()
     {
         mc.displayGuiScreen(getWrapper());
     }
 
-    @Override
     public final FontRenderer getFont()
     {
         return font;
     }
 
-    @Override
     public final ScaledResolution getScreen()
     {
         return screen;
     }
 
-    @Override
     public final int getMouseX()
     {
         return mouseX;
     }
 
-    @Override
     public final int getMouseY()
     {
         return mouseY;
     }
 
-    @Override
     public final int getMouseWheel()
     {
         return mouseWheel;
     }
 
-    @Override
     public final float getPartialTicks()
     {
         return partialTicks;
     }
 
-    @Override
     public final boolean isMouseButtonDown(int button)
     {
         return Mouse.isButtonDown(button);
     }
 
-    @Override
     public final boolean isKeyDown(int key)
     {
         return Keyboard.isKeyDown(key);
+    }
+
+    public void playSoundFX(SoundEvent e, float pitch)
+    {
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
+    }
+
+    public boolean isMouseOver(int x, int y, int w, int h)
+    {
+        return getMouseX() >= x && getMouseY() >= y && getMouseX() < x + w && getMouseY() < y + h;
+    }
+
+    public boolean isMouseOver(Widget w)
+    {
+        return isMouseOver(w.getAX(), w.getAY(), w.getWidth(), w.getHeight());
+    }
+
+    public int getTextColor()
+    {
+        return 0xFFC0C0C0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void drawString(String text, float x, float y)
+    {
+        getFont().drawString(text, x, y, getTextColor(), false);
     }
 
     @Override

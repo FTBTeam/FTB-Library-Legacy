@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.lib.gui.TextFieldLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.TextField;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
@@ -32,9 +32,9 @@ public class InfoTextLineString extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(IGui gui, IPanel parent)
+    public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new TextFieldLM(0, 0, parent.getWidth(), -1, gui.getFont(), text);
+        return new TextField(0, 0, parent.getWidth(), -1, gui.getFont(), text);
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.lib.gui.ExtendedTextFieldLM;
+import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.util.text.ITextComponent;
@@ -35,9 +35,9 @@ public class InfoExtendedTextLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(IGui gui, IPanel parent)
+    public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new ExtendedTextFieldLM(0, 0, parent.getWidth(), -1, gui.getFont(), textComponent);
+        return new ExtendedTextField(0, 0, parent.getWidth(), -1, gui.getFont(), textComponent);
     }
 
     @Override

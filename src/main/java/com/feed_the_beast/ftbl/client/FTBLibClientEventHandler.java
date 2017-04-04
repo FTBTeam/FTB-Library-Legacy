@@ -87,8 +87,8 @@ public class FTBLibClientEventHandler
 
                 //if(pos.z >= 0D)
                 {
-                    //GuiLM.drawBlankRect(width2 + pos.getX() * 30D - 8D, height2 + pos.getY() * 30D - 8D, 0F, 16D, 16D);
-                    GuiLM.drawBlankRect(width2 + pos.getX() * width2 - 4D, height2 + pos.getY() * height2 - 4D, 0F, 8D, 8D);
+                    //GuiBase.drawBlankRect(width2 + pos.getX() * 30D - 8D, height2 + pos.getY() * 30D - 8D, 0F, 16D, 16D);
+                    GuiBase.drawBlankRect(width2 + pos.getX() * width2 - 4D, height2 + pos.getY() * height2 - 4D, 0F, 8D, 8D);
 
                     event.getRight().add(pos.toString());
 

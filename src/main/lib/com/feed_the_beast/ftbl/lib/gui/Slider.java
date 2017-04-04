@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
@@ -9,7 +8,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
-public class SliderLM extends WidgetLM
+public class Slider extends Widget
 {
     public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(0x99666666);
     public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0x99333333);
@@ -19,14 +18,14 @@ public class SliderLM extends WidgetLM
     private boolean isGrabbed;
     public IDrawableObject slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
 
-    public SliderLM(int x, int y, int w, int h, int ss)
+    public Slider(int x, int y, int w, int h, int ss)
     {
         super(x, y, w, h);
         sliderSize = ss;
     }
 
     @Override
-    public void mousePressed(IGui gui, IMouseButton button)
+    public void mousePressed(GuiBase gui, IMouseButton button)
     {
         if(gui.isMouseOver(this))
         {
@@ -35,7 +34,7 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
         double min = getDisplayMin();
         double max = getDisplayMax();
@@ -49,7 +48,7 @@ public class SliderLM extends WidgetLM
     }
 
     @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         int ax = getAX();
         int ay = getAY();
@@ -105,26 +104,26 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    public boolean isGrabbed(IGui gui)
+    public boolean isGrabbed(GuiBase gui)
     {
         return isGrabbed;
     }
 
-    public void setGrabbed(IGui gui, boolean b)
+    public void setGrabbed(GuiBase gui, boolean b)
     {
         isGrabbed = b;
     }
 
-    public void onMoved(IGui gui)
+    public void onMoved(GuiBase gui)
     {
     }
 
-    public boolean canMouseScroll(IGui gui)
+    public boolean canMouseScroll(GuiBase gui)
     {
         return gui.isMouseOver(this);
     }
 
-    public void setValue(IGui gui, double v)
+    public void setValue(GuiBase gui, double v)
     {
         if(value != v)
         {
@@ -133,12 +132,12 @@ public class SliderLM extends WidgetLM
         }
     }
 
-    public double getValue(IGui gui)
+    public double getValue(GuiBase gui)
     {
         return value;
     }
 
-    public int getValueI(IGui gui, int max)
+    public int getValueI(GuiBase gui, int max)
     {
         return (int) (getValue(gui) * (max - sliderSize));
     }

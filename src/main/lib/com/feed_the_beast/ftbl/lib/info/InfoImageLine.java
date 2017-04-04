@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.gui.ButtonLM;
+import com.feed_the_beast.ftbl.lib.gui.Button;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -103,7 +103,7 @@ public class InfoImageLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(IGui gui, IPanel parent)
+    public Widget createWidget(GuiBase gui, Panel parent)
     {
         return new ButtonInfoImage(parent);
     }
@@ -159,11 +159,11 @@ public class InfoImageLine extends EmptyInfoPageLine
         return false;
     }
 
-    private class ButtonInfoImage extends ButtonLM
+    private class ButtonInfoImage extends Button
     {
-        private final IPanel parent;
+        private final Panel parent;
 
-        private ButtonInfoImage(IPanel p)
+        private ButtonInfoImage(Panel p)
         {
             super(0, 0, 0, 0);
             parent = p;
@@ -192,7 +192,7 @@ public class InfoImageLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             checkSize();
@@ -200,7 +200,7 @@ public class InfoImageLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void addMouseOverText(IGui gui, List<String> list)
+        public void addMouseOverText(GuiBase gui, List<String> list)
         {
             if(hover != null)
             {
@@ -209,7 +209,7 @@ public class InfoImageLine extends EmptyInfoPageLine
         }
 
         @Override
-        public void onClicked(IGui gui, IMouseButton button)
+        public void onClicked(GuiBase gui, IMouseButton button)
         {
             if(clickEvent != null)
             {

@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
-import com.feed_the_beast.ftbl.lib.gui.PanelLM;
-import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonArray;
@@ -121,9 +119,9 @@ public class InfoListLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(IGui gui, IPanel parent)
+    public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new PanelList((GuiInfo) gui, parent.hasFlag(IPanel.FLAG_UNICODE_FONT));
+        return new PanelList((GuiInfo) gui, parent.hasFlag(Panel.FLAG_UNICODE_FONT));
     }
 
     @Override
@@ -169,7 +167,7 @@ public class InfoListLine extends EmptyInfoPageLine
         return true;
     }
 
-    private class PanelList extends PanelLM
+    private class PanelList extends Panel
     {
         private final GuiInfo gui;
 
@@ -192,7 +190,7 @@ public class InfoListLine extends EmptyInfoPageLine
 
             for(IInfoTextLine line : textLines)
             {
-                IWidget widget = line.createWidget(gui, this);
+                Widget widget = line.createWidget(gui, this);
 
                 if(type.hasBullet)
                 {
@@ -214,7 +212,7 @@ public class InfoListLine extends EmptyInfoPageLine
             {
                 int h = 0;
 
-                for(IWidget w : getWidgets())
+                for(Widget w : getWidgets())
                 {
                     h = Math.max(h, w.getHeight());
                 }
@@ -224,11 +222,11 @@ public class InfoListLine extends EmptyInfoPageLine
         }
 
         @Override
-        protected void renderWidget(IGui gui, IWidget widget, int ax, int ay, int w, int h)
+        protected void renderWidget(GuiBase gui, Widget widget, int ax, int ay, int w, int h)
         {
             widget.renderWidget(gui);
 
-            if(type.hasBullet && widget.getClass() != WidgetLM.class && !(widget instanceof PanelList))
+            if(type.hasBullet && widget.getClass() != Widget.class && !(widget instanceof PanelList))
             {
                 LMColorUtils.GL_COLOR.set(gui.getTextColor());
                 GuiInfo.TEX_BULLET.draw(ax + 1, widget.getAY() + 3, 4, 4);

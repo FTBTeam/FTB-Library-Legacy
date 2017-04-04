@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.lib.info;
 
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.WidgetLM;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,7 +33,7 @@ public class InfoHrLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IWidget createWidget(IGui gui, IPanel parent)
+    public Widget createWidget(GuiBase gui, Panel parent)
     {
         return new WidgetInfoHr(parent);
     }
@@ -55,15 +54,15 @@ public class InfoHrLine extends EmptyInfoPageLine
         return o;
     }
 
-    private class WidgetInfoHr extends WidgetLM
+    private class WidgetInfoHr extends Widget
     {
-        private WidgetInfoHr(IPanel parent)
+        private WidgetInfoHr(Panel parent)
         {
             super(0, 1, parent.getWidth(), height + 2);
         }
 
         @Override
-        public void renderWidget(IGui gui)
+        public void renderWidget(GuiBase gui)
         {
             LMColorUtils.GL_COLOR.set(color == 0 ? gui.getTextColor() : color);
             GuiHelper.drawBlankRect(getAX(), getAY() + 1, getWidth(), height);

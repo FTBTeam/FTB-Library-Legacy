@@ -1,21 +1,19 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IGui;
-import com.feed_the_beast.ftbl.api.gui.IPanel;
-import com.feed_the_beast.ftbl.api.gui.IWidget;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
-public class WidgetLM implements IWidget
+public class Widget
 {
     public int posX, posY;
     private int width, height;
-    private IPanel parentPanel = PanelNull.INSTANCE;
+    private Panel parentPanel = PanelNull.INSTANCE;
 
-    public WidgetLM(int x, int y, int w, int h)
+    public Widget(int x, int y, int w, int h)
     {
         posX = x;
         posY = y;
@@ -23,83 +21,104 @@ public class WidgetLM implements IWidget
         height = Math.max(h, 1);
     }
 
-    @Override
     public final int getX()
     {
         return posX;
     }
 
-    @Override
     public final int getY()
     {
         return posY;
     }
 
-    @Override
     public int getWidth()
     {
         return width;
     }
 
-    @Override
     public int getHeight()
     {
         return height;
     }
 
-    @Override
-    public final void setX(int v)
+    public void setX(int v)
     {
         posX = v;
     }
 
-    @Override
-    public final void setY(int v)
+    public void setY(int v)
     {
         posY = v;
     }
 
-    @Override
     public void setWidth(int v)
     {
         width = Math.max(v, 1);
     }
 
-    @Override
     public void setHeight(int v)
     {
         height = Math.max(v, 1);
     }
 
-    @Override
-    public IPanel getParentPanel()
+    public Panel getParentPanel()
     {
         return parentPanel;
     }
 
-    @Override
-    public void setParentPanel(IPanel p)
+    public void setParentPanel(Panel p)
     {
         parentPanel = p;
     }
 
-    public int renderTitleInCenter(IGui gui)
+    public int getAX()
+    {
+        return getParentPanel().getAX() + getX();
+    }
+
+    public int getAY()
+    {
+        return getParentPanel().getAY() + getY();
+    }
+
+    public boolean collidesWith(int x, int y, int w, int h)
+    {
+        int ay = getAY();
+        if(ay >= y + h || ay + getHeight() <= y)
+        {
+            return false;
+        }
+
+        int ax = getAX();
+        return ax < x + w && ax + getWidth() > x;
+    }
+
+    public boolean isEnabled(GuiBase gui)
+    {
+        return true;
+    }
+
+    public boolean shouldRender(GuiBase gui)
+    {
+        return true;
+    }
+
+    public int renderTitleInCenter(GuiBase gui)
     {
         return 0;
     }
 
-    public String getTitle(IGui gui)
+    public String getTitle(GuiBase gui)
     {
         return "";
     }
 
-    public IDrawableObject getIcon(IGui gui)
+    public IDrawableObject getIcon(GuiBase gui)
     {
         return ImageProvider.NULL;
     }
 
-    @Override
-    public void addMouseOverText(IGui gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> list)
     {
         int col = renderTitleInCenter(gui);
 
@@ -116,8 +135,7 @@ public class WidgetLM implements IWidget
         }
     }
 
-    @Override
-    public void renderWidget(IGui gui)
+    public void renderWidget(GuiBase gui)
     {
         getIcon(gui).draw(this);
 
@@ -133,5 +151,18 @@ public class WidgetLM implements IWidget
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
+    }
+
+    public void mousePressed(GuiBase gui, IMouseButton button)
+    {
+    }
+
+    public void mouseReleased(GuiBase gui)
+    {
+    }
+
+    public boolean keyPressed(GuiBase gui, int key, char keyChar)
+    {
+        return false;
     }
 }

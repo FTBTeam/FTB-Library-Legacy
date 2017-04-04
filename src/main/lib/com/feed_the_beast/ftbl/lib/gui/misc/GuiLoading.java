@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
+import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.GuiLM;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by LatvianModder on 27.06.2016.
  */
-public class GuiLoading extends GuiLM
+public class GuiLoading extends GuiBase
 {
     public static final ResourceLocation TEXTURE = FTBLibFinals.get("textures/gui/loading.png");
     private boolean startedLoading = false;
