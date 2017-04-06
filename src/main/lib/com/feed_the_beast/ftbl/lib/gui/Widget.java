@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -82,9 +83,9 @@ public class Widget
         return true;
     }
 
-    public int renderTitleInCenter(GuiBase gui)
+    public Color4I renderTitleInCenter(GuiBase gui)
     {
-        return 0;
+        return Color4I.NONE;
     }
 
     public String getTitle(GuiBase gui)
@@ -99,9 +100,9 @@ public class Widget
 
     public void addMouseOverText(GuiBase gui, List<String> list)
     {
-        int col = renderTitleInCenter(gui);
+        Color4I col = renderTitleInCenter(gui);
 
-        if(col != 0)
+        if(col.hasColor())
         {
             return;
         }
@@ -116,17 +117,17 @@ public class Widget
 
     public void renderWidget(GuiBase gui)
     {
-        getIcon(gui).draw(this);
+        getIcon(gui).draw(this, Color4I.NONE);
 
-        int col = renderTitleInCenter(gui);
+        Color4I col = renderTitleInCenter(gui);
 
-        if(col != 0)
+        if(col.hasColor())
         {
             String t = getTitle(gui);
 
             if(!t.isEmpty())
             {
-                GuiHelper.drawCenteredString(gui.getFont(), t, getAX() + width / 2, getAY() + height / 2, col);
+                gui.drawCenteredString(t, getAX() + width / 2, getAY() + height / 2, col);
                 GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }

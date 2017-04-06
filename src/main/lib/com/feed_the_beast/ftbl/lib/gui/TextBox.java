@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -18,7 +19,7 @@ public class TextBox extends Widget
 {
     private boolean isFocused = false;
     public int charLimit = 250;
-    public int textColor;
+    public Color4I textColor = Color4I.NONE;
     public IDrawableObject background = ImageProvider.NULL;
 
     public String ghostText = "";
@@ -459,7 +460,7 @@ public class TextBox extends Widget
     @Override
     public void renderWidget(GuiBase gui)
     {
-        background.draw(this);
+        background.draw(this, Color4I.NONE);
 
         String textToDraw = (!isFocused() && text.isEmpty()) ? ghostText : text;
 
@@ -468,7 +469,7 @@ public class TextBox extends Widget
         int ay = getAY();
         GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
 
-        int col = validText ? (textColor == 0 ? gui.getTextColor() : textColor) : 0xFFFF0000;
+        Color4I col = validText ? (textColor.hasColor() ? textColor : gui.getContentColor()) : Color4I.RED;
         int j = cursorPosition - lineScrollOffset;
         int k = selectionEnd - lineScrollOffset;
         String s = font.trimStringToWidth(textToDraw.substring(lineScrollOffset), width);
@@ -486,7 +487,7 @@ public class TextBox extends Widget
         if(!s.isEmpty())
         {
             String s1 = flag ? s.substring(0, j) : s;
-            textX1 = font.drawString(s1, textX, textY, col);
+            textX1 = font.drawString(s1, textX, textY, col.rgba());
         }
 
         boolean drawCursor = cursorPosition < textToDraw.length() || textToDraw.length() >= charLimit;
@@ -504,18 +505,18 @@ public class TextBox extends Widget
 
         if(!s.isEmpty() && flag && j < s.length())
         {
-            font.drawString(s.substring(j), textX1, textY, col);
+            font.drawString(s.substring(j), textX1, textY, col.rgba());
         }
 
         if(flag1)
         {
             if(drawCursor)
             {
-                GuiHelper.drawBlankRect(cursorX, textY - 1, 1, font.FONT_HEIGHT + 2);
+                GuiHelper.drawBlankRect(cursorX, textY - 1, 1, font.FONT_HEIGHT + 2, col);
             }
             else
             {
-                GuiHelper.drawBlankRect(cursorX, textY + font.FONT_HEIGHT - 2, 5, 1);
+                GuiHelper.drawBlankRect(cursorX, textY + font.FONT_HEIGHT - 2, 5, 1, col);
             }
         }
 

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.item.ItemStack;
 
@@ -61,9 +62,9 @@ public class DrawableItemList extends DrawableItem
     }
 
     @Override
-    public void draw(int x, int y, int w, int h)
+    public void draw(int x, int y, int w, int h, Color4I col)
     {
-        super.draw(x, y, w, h);
+        super.draw(x, y, w, h, col);
 
         if(!list.isEmpty())
         {

@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -32,7 +34,7 @@ public class GuiSelectTeam extends GuiBase
             super(0, 0, 32, 32);
             setTitle("Create a New Team");
             setIcon(GuiIcons.ADD);
-            background = new TexturelessRectangle(0).setLineColor(0xFFFFFFFF).setRoundEdges(true);
+            background = new TexturelessRectangle(Color4I.NONE).setLineColor(Color4I.WHITE).setRoundEdges(true);
         }
 
         @Override
@@ -46,8 +48,8 @@ public class GuiSelectTeam extends GuiBase
         {
             int ax = getAX();
             int ay = getAY();
-            background.draw(ax, ay, 32, 32);
-            getIcon(gui).draw(ax + 8, ay + 8, 16, 16);
+            background.draw(ax, ay, 32, 32, Color4I.NONE);
+            getIcon(gui).draw(ax + 8, ay + 8, 16, 16, Color4I.NONE);
         }
     }
 
@@ -55,6 +57,7 @@ public class GuiSelectTeam extends GuiBase
     {
         private final PublicTeamData team;
         private final IDrawableObject background;
+        private static final Color4I INVITED_COLOR = new ImmutableColor4I(0x6620A32B);
 
         private ButtonTeam(PublicTeamData t)
         {
@@ -62,7 +65,7 @@ public class GuiSelectTeam extends GuiBase
             team = t;
             setTitle(team.color.getTextFormatting() + team.displayName);
             setIcon(new PlayerHeadImage(t.ownerName));
-            background = new TexturelessRectangle(team.isInvited ? 0x6620A32B : 0).setLineColor(team.color.getColor()).setRoundEdges(true);
+            background = new TexturelessRectangle(team.isInvited ? INVITED_COLOR : Color4I.NONE).setLineColor(team.color.getColor()).setRoundEdges(true);
         }
 
         @Override
@@ -85,8 +88,8 @@ public class GuiSelectTeam extends GuiBase
         {
             int ax = getAX();
             int ay = getAY();
-            background.draw(ax, ay, 32, 32);
-            getIcon(gui).draw(ax + 8, ay + 8, 16, 16);
+            background.draw(ax, ay, 32, 32, Color4I.NONE);
+            getIcon(gui).draw(ax + 8, ay + 8, 16, 16, Color4I.NONE);
         }
 
         @Override

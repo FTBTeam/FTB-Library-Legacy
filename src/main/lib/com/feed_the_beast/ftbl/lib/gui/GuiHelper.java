@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
 import net.minecraft.client.Minecraft;
@@ -48,32 +49,29 @@ public class GuiHelper
         Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
-    public static void drawTexturedRect(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
+    public static void drawTexturedRect(int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
     {
-        if(u0 == 0D && v0 == 0D && u1 == 0D && v1 == 0D)
+        if(u0 == u1 || v0 == v1)
         {
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-            addRectToBuffer(buffer, x, y, w, h);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+            addRectToBuffer(buffer, x, y, w, h, col);
             tessellator.draw();
         }
         else
         {
             Tessellator tessellator = Tessellator.getInstance();
             VertexBuffer buffer = tessellator.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-            buffer.pos(x, y + h, 0D).tex(u0, v1).endVertex();
-            buffer.pos(x + w, y + h, 0D).tex(u1, v1).endVertex();
-            buffer.pos(x + w, y, 0D).tex(u1, v0).endVertex();
-            buffer.pos(x, y, 0D).tex(u0, v0).endVertex();
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+            addRectToBufferWithUV(buffer, x, y, w, h, col, u0, v0, u1, v1);
             tessellator.draw();
         }
     }
 
-    public static void drawBlankRect(int x, int y, int w, int h)
+    public static void drawBlankRect(int x, int y, int w, int h, Color4I col)
     {
-        if(w <= 0 || h <= 0)
+        if(w <= 0 || h <= 0 || !col.hasColor())
         {
             return;
         }
@@ -81,59 +79,62 @@ public class GuiHelper
         GlStateManager.disableTexture2D();
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-        addRectToBuffer(buffer, x, y, w, h);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        addRectToBuffer(buffer, x, y, w, h, col);
         tessellator.draw();
         GlStateManager.enableTexture2D();
     }
 
-    private static void addRectToBuffer(VertexBuffer buffer, int x, int y, int w, int h)
+    private static void addRectToBuffer(VertexBuffer buffer, int x, int y, int w, int h, Color4I col)
     {
-        buffer.pos(x, y + h, 0D).endVertex();
-        buffer.pos(x + w, y + h, 0D).endVertex();
-        buffer.pos(x + w, y, 0D).endVertex();
-        buffer.pos(x, y, 0D).endVertex();
+        buffer.pos(x, y + h, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+        buffer.pos(x + w, y + h, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+        buffer.pos(x + w, y, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+        buffer.pos(x, y, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
     }
 
-    public static void drawHollowRect(int x, int y, int w, int h, boolean roundEdges)
+    private static void addRectToBufferWithUV(VertexBuffer buffer, int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
     {
-        if(w <= 1 || h <= 1)
+        buffer.pos(x, y + h, 0D).tex(u0, v1).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+        buffer.pos(x + w, y + h, 0D).tex(u1, v1).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+        buffer.pos(x + w, y, 0D).tex(u1, v0).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+        buffer.pos(x, y, 0D).tex(u0, v0).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+    }
+
+    public static void drawHollowRect(int x, int y, int w, int h, Color4I col, boolean roundEdges)
+    {
+        if(w <= 1 || h <= 1 || !col.hasColor())
         {
-            drawBlankRect(x, y, w, h);
+            drawBlankRect(x, y, w, h, col);
             return;
         }
 
         GlStateManager.disableTexture2D();
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-        addRectToBuffer(buffer, x, y + 1, 1, h - 2);
-        addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2);
+        addRectToBuffer(buffer, x, y + 1, 1, h - 2, col);
+        addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, col);
 
         if(roundEdges)
         {
-            addRectToBuffer(buffer, x + 1, y, w - 2, 1);
-            addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1);
+            addRectToBuffer(buffer, x + 1, y, w - 2, 1, col);
+            addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1, col);
         }
         else
         {
-            addRectToBuffer(buffer, x, y, w, 1);
-            addRectToBuffer(buffer, x, y + h - 1, w, 1);
+            addRectToBuffer(buffer, x, y, w, 1, col);
+            addRectToBuffer(buffer, x, y + h - 1, w, 1, col);
         }
 
         tessellator.draw();
         GlStateManager.enableTexture2D();
     }
 
-    public static void drawCenteredString(FontRenderer font, String txt, double x, double y, int color)
+    public static void drawCenteredString(FontRenderer font, String txt, float x, float y, Color4I color)
     {
-        font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2D), (int) (y - 4D), color);
-    }
-
-    public static void drawCenteredWidgetTitle(FontRenderer font, Widget widget, String title, int color)
-    {
-        drawCenteredString(font, title, widget.getAX() + widget.width / 2, widget.getAY() + widget.height / 2, color);
+        font.drawString(txt, x - font.getStringWidth(txt) / 2, y - font.FONT_HEIGHT / 2F, color.rgba(), false);
     }
 
     public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)

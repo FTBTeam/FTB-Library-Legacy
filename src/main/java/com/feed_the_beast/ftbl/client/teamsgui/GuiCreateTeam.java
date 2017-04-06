@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -48,9 +49,9 @@ public class GuiCreateTeam extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return gui.getTextColor();
+                return gui.getContentColor();
             }
         };
 
@@ -67,9 +68,9 @@ public class GuiCreateTeam extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return gui.getTextColor();
+                return gui.getContentColor();
             }
         };
 

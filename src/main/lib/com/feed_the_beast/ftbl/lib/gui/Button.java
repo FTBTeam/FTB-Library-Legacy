@@ -2,13 +2,15 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 
 public abstract class Button extends Widget
 {
-    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0).setLineColor(0xFFC0C0C0);
-    public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(0x64E4FFFF);
+    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(new ImmutableColor4I(0xFFC0C0C0));
+    public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(new ImmutableColor4I(0x64E4FFFF));
 
     private String title = "";
     private IDrawableObject icon = ImageProvider.NULL;

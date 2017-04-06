@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -10,11 +11,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface IDrawableObject
 {
     @SideOnly(Side.CLIENT)
-    void draw(int x, int y, int w, int h);
+    void draw(int x, int y, int w, int h, Color4I col);
 
     @SideOnly(Side.CLIENT)
-    default void draw(Widget widget)
+    default void draw(Widget widget, Color4I col)
     {
-        draw(widget.getAX(), widget.getAY(), widget.width, widget.height);
+        draw(widget.getAX(), widget.getAY(), widget.width, widget.height, col);
     }
 }

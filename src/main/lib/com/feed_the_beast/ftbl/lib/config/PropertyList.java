@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -19,6 +21,7 @@ import java.util.List;
 public final class PropertyList extends PropertyBase implements Iterable<IConfigValue>
 {
     public static final String ID = "list";
+    public static final Color4I COLOR = new ImmutableColor4I(0xFFFFAA49);
 
     private final List<IConfigValue> list;
     private String valueId;
@@ -218,9 +221,9 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
     }
 
     @Override
-    public int getColor()
+    public Color4I getColor()
     {
-        return 0xFFAA49;
+        return COLOR;
     }
 
     @Override

@@ -11,5 +11,5 @@ public interface IMouseButton
 
     boolean isMiddle();
 
-    int getButtonID();
+    int getButtonId();
 }

@@ -89,12 +89,12 @@ public class ButtonInfoPage extends Button
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
             iconRenderer.renderIcon(gui, this, ax + 1, ay + 1);
-            gui.getFont().drawString(getTitle(gui), ax + 19, ay + 6, gui.getTextColor());
+            gui.drawString(getTitle(gui), ax + 19, ay + 6);
         }
         else
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            gui.getFont().drawString(getTitle(gui), ax + 1, ay + 1, gui.getTextColor());
+            gui.drawString(getTitle(gui), ax + 1, ay + 1);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

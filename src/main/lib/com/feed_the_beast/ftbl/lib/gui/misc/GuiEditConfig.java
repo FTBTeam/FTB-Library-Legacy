@@ -5,6 +5,8 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
@@ -14,7 +16,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,7 +31,8 @@ import java.util.Map;
 
 public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
-    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) -> o1.getKey().getDisplayName().getFormattedText().compareTo(o2.getKey().getDisplayName().getFormattedText());
+    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = Comparator.comparing(o -> o.getKey().getDisplayName().getFormattedText());
+    public static final Color4I COLOR_BACKGROUND = new ImmutableColor4I(0x99333333);
 
     public class ButtonConfigEntry extends Button
     {
@@ -55,55 +57,59 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
             {
                 info = getFont().listFormattedStringToWidth(id.getInfo(), 230);
             }
+
+            if(info == null || info.isEmpty())
+            {
+                info = Collections.emptyList();
+            }
         }
 
         @Override
         public void renderWidget(GuiBase gui)
         {
-            boolean mouseOver = getMouseY() >= 20 && gui.isMouseOver(this);
+            boolean mouseOver = gui.getMouseY() >= 20 && gui.isMouseOver(this);
 
             int ax = getAX();
             int ay = getAY();
 
             if(mouseOver)
             {
-                GlStateManager.color(1F, 1F, 1F, 0.13F);
-                GuiHelper.drawBlankRect(ax, ay, width, height);
-                GlStateManager.color(1F, 1F, 1F, 1F);
+                GuiHelper.drawBlankRect(ax, ay, width, height, Color4I.WHITE_A33);
             }
 
-            getFont().drawString(keyText, ax + 4, ay + 4, mouseOver ? 0xFFFFFFFF : 0xFF999999);
+            gui.drawString(keyText, ax + 4, ay + 4, mouseOver ? Color4I.WHITE : Color4I.GRAY);
+            GlStateManager.color(1F, 1F, 1F, 1F);
 
             String s = value.getString();
 
-            int slen = getFont().getStringWidth(s);
+            int slen = gui.getFont().getStringWidth(s);
 
             if(slen > 150)
             {
-                s = getFont().trimStringToWidth(s, 150) + "...";
+                s = gui.getFont().trimStringToWidth(s, 150) + "...";
                 slen = 152;
             }
 
-            int textCol = 0xFF000000 | value.getColor();
+            Color4I textCol = value.getColor().copy(false, 255);
+
             if(mouseOver)
             {
-                textCol = LMColorUtils.addBrightness(textCol, 60);
+                textCol.addBrightness(60);
             }
 
-            if(mouseOver && getMouseX() > ax + width - slen - 9)
+            if(mouseOver && gui.getMouseX() > ax + width - slen - 9)
             {
-                GlStateManager.color(1F, 1F, 1F, 0.13F);
-                GuiHelper.drawBlankRect(ax + width - slen - 8, ay, slen + 8, height);
-                GlStateManager.color(1F, 1F, 1F, 1F);
+                GuiHelper.drawBlankRect(ax + width - slen - 8, ay, slen + 8, height, Color4I.WHITE_A33);
             }
 
-            getFont().drawString(s, gui.width - (slen + 20), ay + 4, textCol);
+            gui.drawString(s, gui.width - (slen + 20), ay + 4, textCol);
+            GlStateManager.color(1F, 1F, 1F, 1F);
         }
 
         @Override
         public void onClicked(GuiBase gui, IMouseButton button)
         {
-            if(getMouseY() >= 20 && !key.getFlag(IConfigKey.CANT_EDIT))
+            if(gui.getMouseY() >= 20 && !key.getFlag(IConfigKey.CANT_EDIT))
             {
                 GuiHelper.playClickSound();
                 value.onClicked(GuiEditConfig.this, key, button);
@@ -113,17 +119,14 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
         @Override
         public void addMouseOverText(GuiBase gui, List<String> list)
         {
-            if(getMouseY() > 18)
+            if(gui.getMouseY() > 18)
             {
-                if(getMouseX() < getAX() + getFont().getStringWidth(keyText) + 10)
+                if(!info.isEmpty() && gui.getMouseX() < getAX() + gui.getFont().getStringWidth(keyText) + 10)
                 {
-                    if(info != null)
-                    {
-                        list.addAll(info);
-                    }
+                    list.addAll(info);
                 }
 
-                if(getMouseX() > gui.width - (Math.min(150, getFont().getStringWidth(value.getString())) + 25))
+                if(gui.getMouseX() > gui.width - (Math.min(150, gui.getFont().getStringWidth(value.getString())) + 25))
                 {
                     value.addInfo(key, list);
                 }
@@ -271,8 +274,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
     @Override
     public void drawBackground()
     {
-        LMColorUtils.GL_COLOR.set(0x99333333);
-        GuiHelper.drawBlankRect(0, 0, width, 20);
+        GuiHelper.drawBlankRect(0, 0, width, 20, COLOR_BACKGROUND);
         getFont().drawString(getTitle(this), 6, 6, 0xFFFFFFFF);
         GlStateManager.color(1F, 1F, 1F, 1F);
     }

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -20,5 +21,5 @@ public interface INotification
 
     int getTimer();
 
-    int getColor();
+    Color4I getColor();
 }

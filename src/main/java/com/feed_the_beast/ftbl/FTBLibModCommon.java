@@ -140,11 +140,18 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         }
     }
 
-    public void postInit()
+    public void postInit(LoaderState.ModState state)
     {
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
             plugin.registerRecipes(new LMRecipes());
+        }
+
+        reloadConfig(state);
+
+        for(IConfigFile file : CONFIG_FILES.values())
+        {
+            file.save();
         }
     }
 

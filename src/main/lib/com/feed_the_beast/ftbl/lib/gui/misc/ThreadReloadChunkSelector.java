@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ThreadReloadChunkSelector extends Thread
 {
@@ -29,6 +30,7 @@ public class ThreadReloadChunkSelector extends Thread
     private static final PixelBuffer PIXELS = new PixelBuffer(GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16);
     private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
     private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
+    private static final Function<IBlockState, Integer> COLOR_GETTER = state -> 0xFF000000 | getBlockColor0(state);
     public final World worldObj;
     private final int startX, startZ;
     private boolean cancelled = false;
@@ -86,19 +88,6 @@ public class ThreadReloadChunkSelector extends Thread
         worldObj = w;
         startX = sx;
         startZ = sz;
-    }
-
-    private static int getBlockColor(IBlockState state)
-    {
-        Integer col = COLOR_CACHE.get(state);
-
-        if(col == null)
-        {
-            col = 0xFF000000 | getBlockColor0(state);
-            COLOR_CACHE.put(state, col);
-        }
-
-        return col;
     }
 
     private static int getBlockColor0(IBlockState state)
@@ -239,7 +228,7 @@ public class ThreadReloadChunkSelector extends Thread
 
                                     if(state.getBlock() != Blocks.TALLGRASS && !worldObj.isAirBlock(CURRENT_BLOCK_POS))
                                     {
-                                        color = getBlockColor(state);
+                                        color = COLOR_CACHE.computeIfAbsent(state, COLOR_GETTER);
 
                                         if(depth)
                                         {

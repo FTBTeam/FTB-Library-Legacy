@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -10,15 +10,15 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class TexturelessRectangle implements IDrawableObject
 {
-    public int color, lineColor;
+    public Color4I color, lineColor = Color4I.NONE;
     public boolean roundEdges = false;
 
-    public TexturelessRectangle(int col)
+    public TexturelessRectangle(Color4I col)
     {
         color = col;
     }
 
-    public TexturelessRectangle setLineColor(int col)
+    public TexturelessRectangle setLineColor(Color4I col)
     {
         lineColor = col;
         return this;
@@ -32,36 +32,30 @@ public class TexturelessRectangle implements IDrawableObject
 
     public TexturelessRectangle copy()
     {
-        TexturelessRectangle t = new TexturelessRectangle(color);
-        t.lineColor = lineColor;
+        TexturelessRectangle t = new TexturelessRectangle(color.copy(false));
+        t.lineColor = lineColor.copy(false);
         t.roundEdges = roundEdges;
         return t;
     }
 
     @Override
-    public void draw(int x, int y, int w, int h)
+    public void draw(int x, int y, int w, int h, Color4I col)
     {
-        if(roundEdges || lineColor != 0)
+        Color4I c = col.hasColor() ? col : color;
+
+        if(roundEdges || lineColor.hasColor())
         {
-            if(color != 0)
+            if(c.hasColor())
             {
-                LMColorUtils.GL_COLOR.set(color);
-                GuiHelper.drawBlankRect(x + 1, y + 1, w - 2, h - 2);
+                GuiHelper.drawBlankRect(x + 1, y + 1, w - 2, h - 2, c);
             }
 
-            if(lineColor != 0)
-            {
-                LMColorUtils.GL_COLOR.set(lineColor);
-            }
-
-            GuiHelper.drawHollowRect(x, y, w, h, roundEdges);
+            GuiHelper.drawHollowRect(x, y, w, h, lineColor.hasColor() ? lineColor : c, roundEdges);
             GlStateManager.color(1F, 1F, 1F, 1F);
         }
-        else if(color != 0)
+        else if(c.hasColor())
         {
-            LMColorUtils.GL_COLOR.set(color);
-            GuiHelper.drawBlankRect(x, y, w, h);
-            GlStateManager.color(1F, 1F, 1F, 1F);
+            GuiHelper.drawBlankRect(x, y, w, h, c);
         }
     }
 }

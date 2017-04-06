@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
@@ -10,6 +12,7 @@ import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
@@ -67,6 +70,12 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
             }
 
             cc.saveConfig(player, m.extraNBT, m.groupData);
+
+            for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
+            {
+                plugin.configLoaded(LoaderState.ModState.AVAILABLE);
+            }
+
             FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
         }
     }

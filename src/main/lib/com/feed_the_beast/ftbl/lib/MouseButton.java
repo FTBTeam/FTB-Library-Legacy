@@ -57,7 +57,7 @@ public class MouseButton implements IMouseButton
     }
 
     @Override
-    public int getButtonID()
+    public int getButtonId()
     {
         return ID;
     }

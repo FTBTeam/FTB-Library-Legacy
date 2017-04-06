@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationId;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -15,7 +14,7 @@ import java.util.List;
 public class Notification implements INotification
 {
     private NotificationId id;
-    private int color;
+    private Color4I color;
     private int timer;
     private List<ITextComponent> text;
     private ItemStack item;
@@ -33,7 +32,7 @@ public class Notification implements INotification
         t.getStyle().setColor(TextFormatting.WHITE);
         addText(t);
         timer = 3000;
-        color = 0xFFCC4949;
+        color = Color4I.LIGHT_RED;
         item = new ItemStack(Blocks.BARRIER);
         return this;
     }
@@ -42,7 +41,7 @@ public class Notification implements INotification
     {
         text.clear();
         timer = 3000;
-        color = 0xFF606060;
+        color = Color4I.GRAY;
         item = null;
     }
 
@@ -58,12 +57,16 @@ public class Notification implements INotification
 
     public String toString()
     {
-        return getId() + ", text:" + getText() + ", col:" + LMColorUtils.getHex(color) + ", timer:" + getTimer() + ", item:" + getItem();
+        return getId() + ", text:" + getText() + ", col:" + color + ", timer:" + getTimer() + ", item:" + getItem();
     }
 
-    public Notification addText(ITextComponent t)
+    public Notification addText(@Nullable ITextComponent t)
     {
-        text.add(t);
+        if(t != null)
+        {
+            text.add(t);
+        }
+
         return this;
     }
 
@@ -104,12 +107,12 @@ public class Notification implements INotification
     }
 
     @Override
-    public int getColor()
+    public Color4I getColor()
     {
         return color;
     }
 
-    public Notification setColor(int c)
+    public Notification setColor(Color4I c)
     {
         color = c;
         return this;
@@ -119,7 +122,7 @@ public class Notification implements INotification
     {
         Notification n1 = new Notification(n.getId());
         n1.getText().addAll(n.getText());
-        n1.setColor(n.getColor());
+        n1.setColor(n.getColor().copy(false));
         n1.setTimer(n.getTimer());
         n1.setItem(n.getItem());
         return n1;

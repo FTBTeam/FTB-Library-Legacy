@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
@@ -87,7 +88,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     static void write(ByteBuf io, INotification n)
     {
         writeID(io, n.getId());
-        io.writeInt(n.getColor());
+        io.writeInt(n.getColor().rgba());
         io.writeShort(n.getTimer());
         int flags = 0;
 
@@ -124,7 +125,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     static Notification read(ByteBuf io)
     {
         Notification n = new Notification(readID(io));
-        n.setColor(io.readInt());
+        n.setColor(new Color4I(io.readInt()));
         n.setTimer(io.readUnsignedShort());
         int flags = io.readUnsignedByte();
 

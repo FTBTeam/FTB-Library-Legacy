@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
@@ -11,7 +12,7 @@ import net.minecraft.util.text.TextFormatting;
 /**
  * Created by LatvianModder on 07.06.2016.
  */
-public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
+public enum EnumTeamColor implements IStringSerializable
 {
     BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 0x0094FF),
     CYAN("cyan", EnumDyeColor.CYAN, TextFormatting.AQUA, 0x00DDFF),
@@ -35,14 +36,16 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
     private final String name;
     private final EnumDyeColor dyeColor;
     private final TextFormatting textFormatting;
-    private final int color;
+    private final Color4I color;
+    private final LangKey langKey;
 
     EnumTeamColor(String n, EnumDyeColor d, TextFormatting t, int c)
     {
         name = n;
         dyeColor = d;
         textFormatting = t;
-        color = 0xFF000000 | c;
+        color = new ImmutableColor4I(0xFF000000 | c);
+        langKey = EnumDyeColorHelper.get(dyeColor).getLangKey();
     }
 
     @Override
@@ -56,7 +59,7 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
         return textFormatting;
     }
 
-    public int getColor()
+    public Color4I getColor()
     {
         return color;
     }
@@ -66,9 +69,8 @@ public enum EnumTeamColor implements IStringSerializable, ILangKeyContainer
         return dyeColor;
     }
 
-    @Override
     public LangKey getLangKey()
     {
-        return EnumDyeColorHelper.get(getDyeColor()).getLangKey();
+        return langKey;
     }
 }

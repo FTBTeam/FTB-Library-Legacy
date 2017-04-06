@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.client.Color4I;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -44,10 +44,9 @@ public class LMColorUtils
     public static final Color4I GL_COLOR = new Color4I()
     {
         @Override
-        public Color4I set(int r, int g, int b, int a)
+        protected void onColorSet()
         {
-            GlStateManager.color(r / 255F, g / 255F, b / 255F, a / 255F);
-            return this;
+            GlStateManager.color(redf(), greenf(), bluef(), alphaf());
         }
     };
 

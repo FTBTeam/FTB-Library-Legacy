@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -247,18 +248,18 @@ public class FTBLibClientEventHandler
 
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
             GlStateManager.color(1F, 1F, 1F, 1F);
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.render(b.xPosition, b.yPosition);
+                if(b.button.getIcon() != null)
+                {
+                    b.button.getIcon().draw(b.xPosition, b.yPosition, b.width, b.height, Color4I.NONE);
+                }
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
-                    GlStateManager.color(1F, 1F, 1F, 0.3F);
-                    GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
+                    GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height, Color4I.WHITE_A33);
                 }
             }
 
@@ -293,10 +294,9 @@ public class FTBLibClientEventHandler
 
                     GlStateManager.enableBlend();
                     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                    GlStateManager.color(0.13F, 0.13F, 0.13F, 1F);
-                    GuiHelper.drawBlankRect(-3, -2, tw + 6, 12);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
+                    GuiHelper.drawBlankRect(-3, -2, tw + 6, 12, Color4I.DARK_GRAY);
                     mc.fontRendererObj.drawString(b.title, 0, 0, 0xFFFFFFFF);
+                    GlStateManager.color(1F, 1F, 1F, 1F);
                     GlStateManager.popMatrix();
                 }
             }

@@ -26,8 +26,6 @@ public interface ISidebarButton extends IStringSerializable
         return null;
     }
 
-    void render(int ax, int ay);
-
     default void postRender(int ax, int ay)
     {
     }

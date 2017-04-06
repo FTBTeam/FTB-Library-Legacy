@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -11,6 +13,8 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -18,6 +22,25 @@ import java.util.List;
 public class PropertyInt extends PropertyBase
 {
     public static final String ID = "int";
+    public static final Color4I COLOR = new ImmutableColor4I(0xFFAA5AE8);
+
+    public static PropertyInt create(int defValue, int min, int max, IntSupplier getter, IntConsumer setter)
+    {
+        return new PropertyInt(defValue, min, max)
+        {
+            @Override
+            public int getInt()
+            {
+                return getter.getAsInt();
+            }
+
+            @Override
+            public void setInt(int v)
+            {
+                setter.accept(v);
+            }
+        };
+    }
 
     private int value;
     private int minValue = Integer.MIN_VALUE;
@@ -110,9 +133,9 @@ public class PropertyInt extends PropertyBase
     }
 
     @Override
-    public int getColor()
+    public Color4I getColor()
     {
-        return 0xAA5AE8;
+        return COLOR;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
+
 /**
  * Created by LatvianModder on 02.03.2017.
  */
@@ -12,9 +14,9 @@ public abstract class CentredTextButton extends Button
     }
 
     @Override
-    public int renderTitleInCenter(GuiBase gui)
+    public Color4I renderTitleInCenter(GuiBase gui)
     {
-        return gui.getTextColor();
+        return gui.getContentColor();
     }
 
     @Override
@@ -24,7 +26,7 @@ public abstract class CentredTextButton extends Button
 
         if(gui.isMouseOver(this))
         {
-            DEFAULT_MOUSE_OVER.draw(this);
+            DEFAULT_MOUSE_OVER.draw(this, Color4I.NONE);
         }
     }
 }

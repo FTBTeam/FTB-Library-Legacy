@@ -2,12 +2,11 @@ package com.feed_the_beast.ftbl.api.security;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.IStringSerializable;
 
-public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
+public enum EnumPrivacyLevel implements IStringSerializable
 {
     PUBLIC("public"),
     PRIVATE("private"),
@@ -32,7 +31,6 @@ public enum EnumPrivacyLevel implements IStringSerializable, ILangKeyContainer
         return name;
     }
 
-    @Override
     public LangKey getLangKey()
     {
         return langKey;

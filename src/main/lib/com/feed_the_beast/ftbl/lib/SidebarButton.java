@@ -67,12 +67,6 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
     }
 
     @Override
-    public void render(int ax, int ay)
-    {
-        icon.draw(ax, ay, 16, 16);
-    }
-
-    @Override
     public Map<String, Boolean> getDependencies()
     {
         return deps;

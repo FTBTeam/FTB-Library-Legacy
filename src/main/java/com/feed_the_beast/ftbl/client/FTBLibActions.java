@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
@@ -48,10 +49,10 @@ public class FTBLibActions
                 String n = String.valueOf(MyTeamData.unreadMessages);
                 int nw = mc.fontRendererObj.getStringWidth(n);
                 int width = 16;
-                GlStateManager.color(1F, 0.13F, 0.13F, 0.66F);
-                GuiHelper.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9);
-                GlStateManager.color(1F, 1F, 1F, 1F);
+                GuiHelper.drawBlankRect(ax + width - nw, ay - 4, nw + 1, 9, Color4I.LIGHT_RED);
+
                 mc.fontRendererObj.drawString(n, ax + width - nw + 1, ay - 3, 0xFFFFFFFF);
+                GlStateManager.color(1F, 1F, 1F, 1F);
             }
         }
 

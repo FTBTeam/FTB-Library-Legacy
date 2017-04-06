@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 
@@ -38,7 +39,7 @@ public class TexturePageIconRenderer implements IPageIconRenderer
             GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         }
         */
-        icon.draw(x, y, 16, 16);
+        icon.draw(x, y, 16, 16, Color4I.NONE);
         /*
         if(iconBlur)
         {

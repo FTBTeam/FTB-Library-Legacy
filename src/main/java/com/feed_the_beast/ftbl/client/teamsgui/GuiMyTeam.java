@@ -5,6 +5,8 @@ import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
@@ -47,6 +49,7 @@ public class GuiMyTeam extends GuiBase
     private static final int TOP_PANEL_HEIGHT = 20;
     private static final int BOTTOM_PANEL_HEIGHT = 20;
     private static final int LEFT_PANEL_WIDTH = 90;
+    private static final Color4I EXIT_TEAM_COLOR = new ImmutableColor4I(0xFFEA8383);
 
     private class ButtonPlayer extends Button
     {
@@ -81,14 +84,13 @@ public class GuiMyTeam extends GuiBase
 
             LMColorUtils.GL_COLOR.set(DEFAULT_BACKGROUND.lineColor);
             //GuiHelper.render(ENTRY_TEX, ax, ay, width, getHeight());
-            GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1);
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            getIcon(gui).draw(ax + 2, ay + 2, 8, 8);
+            GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1, Color4I.WHITE);
+            getIcon(gui).draw(ax + 2, ay + 2, 8, 8, Color4I.NONE);
             gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
 
             if(isMouseOver(this))
             {
-                Button.DEFAULT_MOUSE_OVER.draw(ax, ay, width + 3, height);
+                Button.DEFAULT_MOUSE_OVER.draw(ax, ay, width + 3, height, Color4I.NONE);
             }
 
             GlStateManager.color(1F, 1F, 1F, 1F);
@@ -289,9 +291,9 @@ public class GuiMyTeam extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return gui.getTextColor();
+                return gui.getContentColor();
             }
         };
 
@@ -314,9 +316,9 @@ public class GuiMyTeam extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return gui.getTextColor();
+                return gui.getContentColor();
             }
         };
 
@@ -341,9 +343,9 @@ public class GuiMyTeam extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return 0xFFEA8383;
+                return EXIT_TEAM_COLOR;
             }
         };
 
@@ -352,8 +354,8 @@ public class GuiMyTeam extends GuiBase
         scrollPlayers = new PanelScrollBar(LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 14, panelPlayers);
         scrollText = new PanelScrollBar(0, TOP_PANEL_HEIGHT, 3, 0, 14, panelText);
 
-        scrollText.background = scrollPlayers.background = new TexturelessRectangle(0x78666666);
-        scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(0x50FFFFFF);
+        scrollText.background = scrollPlayers.background = new TexturelessRectangle(new ImmutableColor4I(0x78666666));
+        scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(new ImmutableColor4I(0x50FFFFFF));
 
         topPanelButtons = new ArrayList<>();
 
@@ -463,17 +465,16 @@ public class GuiMyTeam extends GuiBase
 
         boolean playerGui = selectedPlayer != null;
 
-        getIcon(this).draw(ax, ay, width, height);
-        LMColorUtils.GL_COLOR.set(DEFAULT_BACKGROUND.lineColor);
-        GuiHelper.drawBlankRect(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1);
-        GuiHelper.drawBlankRect(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1);
+        getIcon(this).draw(ax, ay, width, height, Color4I.NONE);
+        GuiHelper.drawBlankRect(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1, DEFAULT_BACKGROUND.lineColor);
+        GuiHelper.drawBlankRect(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1, DEFAULT_BACKGROUND.lineColor);
 
         if(!topPanelButtons.isEmpty())
         {
-            GuiHelper.drawBlankRect(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT);
+            GuiHelper.drawBlankRect(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT, DEFAULT_BACKGROUND.lineColor);
         }
 
-        GuiHelper.drawBlankRect(ax + LEFT_PANEL_WIDTH, ay, 1, height);
+        GuiHelper.drawBlankRect(ax + LEFT_PANEL_WIDTH, ay, 1, height, DEFAULT_BACKGROUND.lineColor);
 
         if(!playerGui)
         {
@@ -482,15 +483,13 @@ public class GuiMyTeam extends GuiBase
 
         if(isMouseOver(buttonExitTeam))
         {
-            Button.DEFAULT_MOUSE_OVER.draw(buttonExitTeam);
+            Button.DEFAULT_MOUSE_OVER.draw(buttonExitTeam, Color4I.NONE);
         }
 
         if(isMouseOver(buttonTeamsGui))
         {
-            Button.DEFAULT_MOUSE_OVER.draw(buttonTeamsGui);
+            Button.DEFAULT_MOUSE_OVER.draw(buttonTeamsGui, Color4I.NONE);
         }
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override
@@ -500,7 +499,7 @@ public class GuiMyTeam extends GuiBase
     }
 
     @Override
-    public int getTextColor()
+    public Color4I getContentColor()
     {
         return DEFAULT_BACKGROUND.lineColor;
     }

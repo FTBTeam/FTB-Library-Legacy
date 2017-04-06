@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
@@ -79,9 +80,9 @@ public class PropertyStringEnum extends PropertyBase
     }
 
     @Override
-    public int getColor()
+    public Color4I getColor()
     {
-        return 0x0094FF;
+        return PropertyEnumAbstract.COLOR;
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -77,10 +76,8 @@ public class ClientNotifications
         {
             GlStateManager.enableBlend();
 
-            LMColorUtils.GL_COLOR.set(notification.getColor());
-            GuiHelper.drawBlankRect(ax, ay, width, height);
-
             GlStateManager.color(1F, 1F, 1F, 1F);
+            GuiHelper.drawBlankRect(ax, ay, width, height, notification.getColor());
 
             if(notification.getItem() != null)
             {

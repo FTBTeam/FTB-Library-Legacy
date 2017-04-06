@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -37,9 +38,9 @@ public class GuiConfigValueField extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return gui.getTextColor();
+                return gui.getContentColor();
             }
         };
 
@@ -59,9 +60,9 @@ public class GuiConfigValueField extends GuiBase
             }
 
             @Override
-            public int renderTitleInCenter(GuiBase gui)
+            public Color4I renderTitleInCenter(GuiBase gui)
             {
-                return gui.getTextColor();
+                return gui.getContentColor();
             }
         };
 
@@ -78,7 +79,7 @@ public class GuiConfigValueField extends GuiBase
             @Override
             public void onTextChanged(GuiBase gui)
             {
-                textBox.textColor = value.getColor();
+                textBox.textColor.set(value.getColor(), 255);
             }
 
             @Override
@@ -104,7 +105,7 @@ public class GuiConfigValueField extends GuiBase
     @Override
     public void drawBackground()
     {
-        getIcon(this).draw(this);
+        getIcon(this).draw(this, Color4I.NONE);
     }
 
     @Override

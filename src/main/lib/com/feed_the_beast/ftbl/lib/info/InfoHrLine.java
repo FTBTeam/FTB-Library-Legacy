@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.info;
 
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
@@ -9,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Created by LatvianModder on 23.03.2016.
@@ -17,9 +17,9 @@ import net.minecraft.client.renderer.GlStateManager;
 public class InfoHrLine extends EmptyInfoPageLine
 {
     public final int height;
-    public final int color;
+    public final Color4I color;
 
-    public InfoHrLine(int h, int c)
+    public InfoHrLine(int h, Color4I c)
     {
         height = h;
         color = c;
@@ -29,7 +29,7 @@ public class InfoHrLine extends EmptyInfoPageLine
     {
         JsonObject o = e.getAsJsonObject();
         height = o.has("height") ? Math.max(1, o.get("height").getAsInt()) : 1;
-        color = o.has("color") ? LMColorUtils.deserialize(o.get("color")) : 0;
+        color = o.has("color") ? new Color4I(0xFF000000 | LMColorUtils.deserialize(o.get("color"))) : Color4I.NONE;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class InfoHrLine extends EmptyInfoPageLine
         JsonObject o = new JsonObject();
         o.add("id", new JsonPrimitive("hr"));
         o.add("height", new JsonPrimitive(height));
-        o.add("color", LMColorUtils.serialize(color));
+        o.add("color", color.toJson());
         return o;
     }
 
@@ -64,9 +64,7 @@ public class InfoHrLine extends EmptyInfoPageLine
         @Override
         public void renderWidget(GuiBase gui)
         {
-            LMColorUtils.GL_COLOR.set(color == 0 ? gui.getTextColor() : color);
-            GuiHelper.drawBlankRect(getAX(), getAY() + 1, width, height);
-            GlStateManager.color(1F, 1F, 1F, 1F);
+            GuiHelper.drawBlankRect(getAX(), getAY() + 1, width, height, color.hasColor() ? color : gui.getContentColor());
         }
     }
 

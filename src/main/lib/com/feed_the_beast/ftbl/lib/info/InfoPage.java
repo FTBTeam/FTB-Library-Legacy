@@ -34,6 +34,7 @@ public class InfoPage extends FinalIDObject
     public InfoPage parent = null;
     private ITextComponent title;
     private IPageIconRenderer pageIcon;
+    public ISpecialInfoButton specialButton;
 
     public InfoPage(String id)
     {
@@ -260,10 +261,10 @@ public class InfoPage extends FinalIDObject
     {
     }
 
-    @Nullable
-    public ISpecialInfoButton createSpecialButton(GuiBase gui)
+    public InfoPage setSpecialButton(ISpecialInfoButton button)
     {
-        return null;
+        specialButton = button;
+        return this;
     }
 
     public InfoPage setIcon(IPageIconRenderer icon)
@@ -275,5 +276,10 @@ public class InfoPage extends FinalIDObject
     public Widget createWidget(GuiBase gui)
     {
         return new ButtonInfoPage((GuiInfo) gui, this, pageIcon);
+    }
+
+    public ISpecialInfoButton getSpecialButton()
+    {
+        return specialButton;
     }
 }

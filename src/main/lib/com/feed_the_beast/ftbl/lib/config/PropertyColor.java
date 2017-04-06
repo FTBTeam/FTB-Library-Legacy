@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -15,15 +15,15 @@ public class PropertyColor extends PropertyBase
 {
     public static final String ID = "color";
 
-    private int value;
+    private final Color4I value = Color4I.WHITE.copy(false);
 
     public PropertyColor()
     {
     }
 
-    public PropertyColor(int v)
+    public PropertyColor(Color4I v)
     {
-        value = v;
+        value.set(v);
     }
 
     @Override
@@ -32,51 +32,41 @@ public class PropertyColor extends PropertyBase
         return ID;
     }
 
-    public int getColorValue()
+    @Override
+    public Color4I getColor()
     {
         return value;
-    }
-
-    public void setColorValue(int v)
-    {
-        value = v;
     }
 
     @Nullable
     @Override
     public Object getValue()
     {
-        return getColorValue();
+        return getColor();
     }
 
     @Override
     public String getString()
     {
-        return LMColorUtils.getHex(getColorValue());
+        return getColor().toString();
     }
 
     @Override
     public boolean getBoolean()
     {
-        return getColorValue() != 0;
+        return getColor().hasColor();
     }
 
     @Override
     public int getInt()
     {
-        return getColorValue();
+        return getColor().rgba();
     }
 
     @Override
     public IConfigValue copy()
     {
-        return new PropertyColor(getColorValue());
-    }
-
-    @Override
-    public int getColor()
-    {
-        return 0xFF000000 | getColorValue();
+        return new PropertyColor(getColor());
     }
 
     @Override
@@ -105,7 +95,7 @@ public class PropertyColor extends PropertyBase
 
                     if(!simulate)
                     {
-                        setColorValue(LMColorUtils.getRGBA(c[0], c[1], c[2], c[3]));
+                        getColor().set(c[0], c[1], c[2], c[3]);
                     }
 
                     return true;
@@ -126,7 +116,7 @@ public class PropertyColor extends PropertyBase
 
                 if(!simulate)
                 {
-                    setColorValue(hex);
+                    getColor().set(0xFF000000 | hex);
                 }
 
                 return true;
@@ -142,7 +132,7 @@ public class PropertyColor extends PropertyBase
     @Override
     public void fromJson(JsonElement json)
     {
-        setColorValue(json.getAsInt());
+        getColor().set(0xFF000000 | json.getAsInt());
     }
 
     @Override
@@ -160,6 +150,6 @@ public class PropertyColor extends PropertyBase
     @Override
     public void readData(ByteBuf data)
     {
-        setColorValue(data.readInt());
+        getColor().set(data.readInt());
     }
 }

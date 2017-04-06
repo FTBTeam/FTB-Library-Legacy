@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -30,14 +31,14 @@ public class ItemListButton extends Button
 
         if(cols == 0)
         {
-            item.draw(ax, ay, 16, 16);
+            item.draw(ax, ay, 16, 16, Color4I.NONE);
         }
         else
         {
             for(int i = item.getItemCount() - 1; i >= 0; i--)
             {
                 item.setIndex(i);
-                item.draw(ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, 16, 16);
+                item.draw(ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, 16, 16, Color4I.NONE);
             }
         }
     }

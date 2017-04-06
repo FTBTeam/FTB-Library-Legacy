@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api.gui;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
@@ -23,10 +24,10 @@ public interface IImageProvider extends IDrawableObject
 
     @Override
     @SideOnly(Side.CLIENT)
-    default void draw(int x, int y, int w, int h)
+    default void draw(int x, int y, int w, int h, Color4I col)
     {
         bindTexture();
-        GuiHelper.drawTexturedRect(x, y, w, h, getMinU(), getMinV(), getMaxU(), getMaxV());
+        GuiHelper.drawTexturedRect(x, y, w, h, col.hasColor() ? col : Color4I.WHITE, getMinU(), getMinV(), getMaxU(), getMaxV());
     }
 
     default double getMinU()

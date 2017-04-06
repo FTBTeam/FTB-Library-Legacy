@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
@@ -42,9 +43,9 @@ public interface IConfigValue extends IStringSerializable, IExtendedIOObject, IJ
         return Objects.equals(getValue(), value.getValue());
     }
 
-    default int getColor()
+    default Color4I getColor()
     {
-        return 0x999999;
+        return Color4I.GRAY;
     }
 
     default void addInfo(IConfigKey key, List<String> list)

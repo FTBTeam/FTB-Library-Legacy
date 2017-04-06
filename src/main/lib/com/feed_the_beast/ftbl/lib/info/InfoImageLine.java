@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib.info;
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -14,7 +15,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
@@ -191,9 +191,8 @@ public class InfoImageLine extends EmptyInfoPageLine
         @Override
         public void renderWidget(GuiBase gui)
         {
-            GlStateManager.color(1F, 1F, 1F, 1F);
             checkSize();
-            imageProvider.draw(this);
+            imageProvider.draw(this, Color4I.NONE);
         }
 
         @Override

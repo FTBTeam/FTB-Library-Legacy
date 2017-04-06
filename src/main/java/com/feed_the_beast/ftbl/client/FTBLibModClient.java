@@ -34,6 +34,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.toposort.TopologicalSort;
 
 import javax.annotation.Nullable;
@@ -183,9 +184,9 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
-    public void postInit()
+    public void postInit(LoaderState.ModState state)
     {
-        super.postInit();
+        super.postInit(state);
     }
 
     @Override

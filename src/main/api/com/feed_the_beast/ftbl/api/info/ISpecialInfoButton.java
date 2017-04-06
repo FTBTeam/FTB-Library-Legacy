@@ -1,14 +1,16 @@
 package com.feed_the_beast.ftbl.api.info;
 
-import com.feed_the_beast.ftbl.api.gui.IClickable;
+import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 
 /**
- * Created by LatvianModder on 02.09.2016.
+ * @author LatvianModder
  */
-public interface ISpecialInfoButton extends IClickable
+public interface ISpecialInfoButton
 {
-    String getTitle();
+    String getTitle(GuiBase gui);
 
-    void render(GuiBase gui, int ax, int ay);
+    void onClicked(GuiBase gui, IMouseButton button);
+
+    void draw(GuiBase gui, int x, int y, int w, int h);
 }

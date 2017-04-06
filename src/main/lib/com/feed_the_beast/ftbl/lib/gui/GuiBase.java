@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -11,8 +13,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -25,7 +25,8 @@ import java.util.List;
 public abstract class GuiBase extends Panel implements IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
-    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0xC8333333).setLineColor(0xFFC0C0C0).setRoundEdges(true);
+    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(new ImmutableColor4I(0xC8333333)).setLineColor(new ImmutableColor4I(0xFFC0C0C0)).setRoundEdges(true);
+    public static final Color4I DEFAULT_CONTENT_COLOR = new ImmutableColor4I(0xFFC0C0C0);
 
     public final Minecraft mc;
     private final FontRenderer font;
@@ -159,7 +160,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
     public void drawBackground()
     {
-        getIcon(this).draw(this);
+        getIcon(this).draw(this, Color4I.NONE);
     }
 
     public void drawForeground()
@@ -234,15 +235,29 @@ public abstract class GuiBase extends Panel implements IClientActionGui
         return isMouseOver(w.getAX(), w.getAY(), w.width, w.height);
     }
 
-    public int getTextColor()
+    public Color4I getContentColor()
     {
-        return 0xFFC0C0C0;
+        return DEFAULT_CONTENT_COLOR;
     }
 
-    @SideOnly(Side.CLIENT)
+    public void drawString(String text, float x, float y, Color4I col)
+    {
+        getFont().drawString(text, x, y, col.rgba(), false);
+    }
+
     public void drawString(String text, float x, float y)
     {
-        getFont().drawString(text, x, y, getTextColor(), false);
+        drawString(text, x, y, getContentColor());
+    }
+
+    public void drawCenteredString(String text, float x, float y, Color4I col)
+    {
+        GuiHelper.drawCenteredString(getFont(), text, x, y, col);
+    }
+
+    public void drawCenteredString(String text, float x, float y)
+    {
+        drawCenteredString(text, x, y, getContentColor());
     }
 
     @Override

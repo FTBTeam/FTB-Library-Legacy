@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
 import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
@@ -19,7 +20,6 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -44,18 +44,19 @@ public class GuiInfo extends GuiBase implements IClientActionGui
     private static final TextureCoords TEX_BG_NP = TextureCoords.fromCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
     private static final TextureCoords TEX_BG_PP = TextureCoords.fromCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
 
-    public static final IDrawableObject FILLING = (x, y, w, h) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8);
-    public static final IDrawableObject BORDERS = (x, y, w, h) ->
+    public static final IDrawableObject FILLING = (x, y, w, h, col) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : GuiConfigs.INFO_BACKGROUND.getColor());
+    public static final IDrawableObject BORDERS = (x, y, w, h, col) ->
     {
-        TEX_BG_MU.draw(x + 13, y, w - 24, 13);
-        TEX_BG_MR.draw(x + w - 13, y + 13, 13, h - 25);
-        TEX_BG_MD.draw(x + 13, y + h - 13, w - 24, 13);
-        TEX_BG_ML.draw(x, y + 13, 13, h - 25);
+        Color4I c = col.hasColor() ? col : Color4I.WHITE;
+        TEX_BG_MU.draw(x + 13, y, w - 24, 13, c);
+        TEX_BG_MR.draw(x + w - 13, y + 13, 13, h - 25, c);
+        TEX_BG_MD.draw(x + 13, y + h - 13, w - 24, 13, c);
+        TEX_BG_ML.draw(x, y + 13, 13, h - 25, c);
 
-        TEX_BG_NN.draw(x, y, 13, 13);
-        TEX_BG_NP.draw(x, y + h - 13, 13, 13);
-        TEX_BG_PN.draw(x + w - 13, y, 13, 13);
-        TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13);
+        TEX_BG_NN.draw(x, y, 13, 13, c);
+        TEX_BG_NP.draw(x, y + h - 13, 13, 13, c);
+        TEX_BG_PN.draw(x + w - 13, y, 13, 13, c);
+        TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13, c);
     };
 
     private static class ButtonSpecial extends Button
@@ -75,8 +76,8 @@ public class GuiInfo extends GuiBase implements IClientActionGui
 
         private void updateButton(GuiInfo gui)
         {
-            specialInfoButton = gui.selectedPage.createSpecialButton(gui);
-            setTitle(isEnabled(gui) ? specialInfoButton.getTitle() : "");
+            specialInfoButton = gui.selectedPage.getSpecialButton();
+            setTitle(isEnabled(gui) ? specialInfoButton.getTitle(gui) : "");
         }
 
         @Override
@@ -84,7 +85,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         {
             if(isEnabled(gui))
             {
-                specialInfoButton.onClicked(button);
+                specialInfoButton.onClicked(gui, button);
             }
         }
 
@@ -93,7 +94,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         {
             if(isEnabled(gui))
             {
-                specialInfoButton.render(gui, getAX(), getAY());
+                specialInfoButton.draw(gui, getAX(), getAY(), width, height);
             }
         }
     }
@@ -104,7 +105,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
     private final Button buttonBack;
     private final ButtonSpecial buttonSpecial;
     public int panelWidth;
-    private int colorText, colorBackground;
+
     private InfoPage selectedPage;
 
     public GuiInfo(InfoPage tree)
@@ -238,7 +239,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         }
 
         buttonSpecial.updateButton(this);
-        buttonBack.setIcon(new ColoredObject((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, colorText));
+        buttonBack.setIcon(new ColoredObject((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
     }
 
     @Override
@@ -285,9 +286,6 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         buttonBack.posX = 12;
         buttonBack.posY = 12;
 
-        colorText = GuiConfigs.INFO_TEXT.getColor();
-        colorBackground = GuiConfigs.INFO_BACKGROUND.getColor();
-
         buttonSpecial.posX = panelWidth - 24;
         buttonSpecial.posY = 10;
     }
@@ -296,32 +294,31 @@ public class GuiInfo extends GuiBase implements IClientActionGui
     public void drawBackground()
     {
         mc.getTextureManager().bindTexture(TEXTURE);
-        LMColorUtils.GL_COLOR.set(colorBackground, 255);
-        FILLING.draw(posX + panelWidth, posY, width - panelWidth, height);
-        FILLING.draw(posX, posY + 36, panelWidth, height - 36);
-        FILLING.draw(posX, posY, panelWidth, 36);
-        GlStateManager.color(1F, 1F, 1F, 1F);
+        FILLING.draw(posX + panelWidth, posY, width - panelWidth, height, Color4I.NONE);
+        FILLING.draw(posX, posY + 36, panelWidth, height - 36, Color4I.NONE);
+        FILLING.draw(posX, posY, panelWidth, 36, Color4I.NONE);
 
         GuiHelper.pushScissor(getScreen(), posX, posY, panelWidth, 36);
-        getFont().drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.width + 5, posY + 14, colorText);
+        drawString(selectedPage.getDisplayName().getFormattedText(), buttonBack.getAX() + buttonBack.width + 5, posY + 14);
         GuiHelper.popScissor();
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override
     public void drawForeground()
     {
         GlStateManager.color(1F, 1F, 1F, 1F);
-        BORDERS.draw(posX + panelWidth, posY, width - panelWidth, height);
-        BORDERS.draw(posX, posY + 36, panelWidth, height - 36);
-        BORDERS.draw(posX, posY, panelWidth, 36);
+        BORDERS.draw(posX + panelWidth, posY, width - panelWidth, height, Color4I.NONE);
+        BORDERS.draw(posX, posY + 36, panelWidth, height - 36, Color4I.NONE);
+        BORDERS.draw(posX, posY, panelWidth, 36, Color4I.NONE);
 
         super.drawForeground();
     }
 
     @Override
-    public int getTextColor()
+    public Color4I getContentColor()
     {
-        return colorText;
+        return GuiConfigs.INFO_TEXT.getColor();
     }
 
     @Override

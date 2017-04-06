@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.google.common.base.Objects;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,13 +19,13 @@ public class ImageProvider implements IImageProvider
     {
         @Override
         @SideOnly(Side.CLIENT)
-        public void draw(int x, int y, int w, int h)
+        public void draw(int x, int y, int w, int h, Color4I col)
         {
         }
 
         @Override
         @SideOnly(Side.CLIENT)
-        public void draw(Widget widget)
+        public void draw(Widget widget, Color4I col)
         {
         }
     };

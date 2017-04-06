@@ -68,8 +68,7 @@ public class FTBLibMod
     @Mod.EventHandler
     public void onPostInit(FMLPostInitializationEvent event)
     {
-        PROXY.postInit();
-        PROXY.reloadConfig(event.getModState());
+        PROXY.postInit(event.getModState());
     }
 
     @Mod.EventHandler

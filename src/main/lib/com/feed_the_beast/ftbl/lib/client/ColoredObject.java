@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -21,23 +21,21 @@ public class ColoredObject implements IDrawableObject
 
     public ColoredObject(IDrawableObject p, int c)
     {
-        parent = p;
-        color = new Color4I();
-        color.set(c);
+        this(p, new Color4I(c));
     }
 
     @Override
-    public void draw(int x, int y, int w, int h)
+    public void draw(int x, int y, int w, int h, Color4I col)
     {
-        LMColorUtils.GL_COLOR.set(color);
+        Color4I col1 = col.hasColor() ? col : color;
 
         if(parent == ImageProvider.NULL)
         {
-            GuiHelper.drawBlankRect(x, y, w, h);
+            GuiHelper.drawBlankRect(x, y, w, h, col1);
         }
         else
         {
-            parent.draw(x, y, w, h);
+            parent.draw(x, y, w, h, col1);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);

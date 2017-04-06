@@ -6,12 +6,10 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.IStringSerializable;
 
 import java.util.ArrayList;
@@ -228,9 +226,7 @@ public class InfoListLine extends EmptyInfoPageLine
 
             if(type.hasBullet && widget.getClass() != Widget.class && !(widget instanceof PanelList))
             {
-                LMColorUtils.GL_COLOR.set(gui.getTextColor());
-                GuiInfo.TEX_BULLET.draw(ax + 1, widget.getAY() + 3, 4, 4);
-                GlStateManager.color(1F, 1F, 1F, 1F);
+                GuiInfo.TEX_BULLET.draw(ax + 1, widget.getAY() + 3, 4, 4, gui.getContentColor());
             }
         }
     }

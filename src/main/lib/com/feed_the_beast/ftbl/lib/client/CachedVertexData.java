@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;

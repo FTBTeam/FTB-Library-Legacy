@@ -2,6 +2,8 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,8 +16,8 @@ import java.util.List;
  */
 public class CheckBoxList extends Button
 {
-    public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(0xFFE0E0E0);
-    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0xFF919191);
+    public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(new ImmutableColor4I(0xFFE0E0E0));
+    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new ImmutableColor4I(0xFF919191));
 
     public final boolean radioButtons;
     private final List<CheckBoxEntry> entries;
@@ -137,11 +139,10 @@ public class CheckBoxList extends Button
         {
             CheckBoxEntry entry = entries.get(i);
             int y = ay + i * 11 + 1;
-            background.draw(ax, y, 10, 10);
-            icons[entry.value].draw(ax + 1, y + 1, 8, 8);
+            background.draw(ax, y, 10, 10, Color4I.NONE);
+            icons[entry.value].draw(ax + 1, y + 1, 8, 8, Color4I.NONE);
             gui.drawString(entry.name, ax + 12, y + 1);
+            GlStateManager.color(1F, 1F, 1F, 1F);
         }
-
-        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 }

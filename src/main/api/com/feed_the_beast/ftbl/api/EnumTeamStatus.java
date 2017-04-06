@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.ILangKeyContainer;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
@@ -12,7 +11,7 @@ import java.util.LinkedHashSet;
 /**
  * Created by LatvianModder on 26.05.2016.
  */
-public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
+public enum EnumTeamStatus implements IStringSerializable
 {
     ENEMY(-10, "enemy", TextFormatting.RED, true),
     NONE(0, "none", TextFormatting.WHITE, true),
@@ -69,7 +68,6 @@ public enum EnumTeamStatus implements IStringSerializable, ILangKeyContainer
         return color;
     }
 
-    @Override
     public LangKey getLangKey()
     {
         return langKey;

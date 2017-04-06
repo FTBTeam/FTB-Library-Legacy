@@ -60,7 +60,7 @@ public class TextField extends Button
 
         for(int i = 0; i < text.size(); i++)
         {
-            gui.getFont().drawString(text.get(i), ax, ay + i * 10 + 1, gui.getTextColor());
+            gui.drawString(text.get(i), ax, ay + i * 10 + 1);
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
