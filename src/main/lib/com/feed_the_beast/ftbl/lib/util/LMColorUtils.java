@@ -1,16 +1,12 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;
@@ -39,16 +35,6 @@ public class LMColorUtils
             DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = GuiUtils.getColorCode(c, false);
         }
     }
-
-    @SideOnly(Side.CLIENT)
-    public static final Color4I GL_COLOR = new Color4I()
-    {
-        @Override
-        protected void onColorSet()
-        {
-            GlStateManager.color(redf(), greenf(), bluef(), alphaf());
-        }
-    };
 
     public static int getChatFormattingColor(int id)
     {

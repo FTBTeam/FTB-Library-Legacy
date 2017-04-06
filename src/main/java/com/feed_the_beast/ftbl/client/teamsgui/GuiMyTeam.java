@@ -25,7 +25,6 @@ import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -82,18 +81,16 @@ public class GuiMyTeam extends GuiBase
             int ax = getAX();
             int ay = getAY();
 
-            LMColorUtils.GL_COLOR.set(DEFAULT_BACKGROUND.lineColor);
             //GuiHelper.render(ENTRY_TEX, ax, ay, width, getHeight());
-            GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1, Color4I.WHITE);
+            GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1, DEFAULT_BACKGROUND.lineColor);
             getIcon(gui).draw(ax + 2, ay + 2, 8, 8, Color4I.NONE);
             gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
+            GlStateManager.color(1F, 1F, 1F, 1F);
 
             if(isMouseOver(this))
             {
                 Button.DEFAULT_MOUSE_OVER.draw(ax, ay, width + 3, height, Color4I.NONE);
             }
-
-            GlStateManager.color(1F, 1F, 1F, 1F);
         }
     }
 
