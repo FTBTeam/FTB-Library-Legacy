@@ -125,6 +125,11 @@ public class InfoPage extends FinalIDObject
                 text.add(new InfoExtendedTextLine(c));
             }
         }
+        else if(o instanceof InfoPage)
+        {
+            InfoPage p = (InfoPage) o;
+
+        }
         else
         {
             text.add(new InfoTextLineString(String.valueOf(o)));
@@ -152,7 +157,6 @@ public class InfoPage extends FinalIDObject
 
     public void clear()
     {
-        setTitle(null);
         text.clear();
         childPages.clear();
     }

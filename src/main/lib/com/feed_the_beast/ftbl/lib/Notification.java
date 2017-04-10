@@ -122,7 +122,7 @@ public class Notification implements INotification
     {
         Notification n1 = new Notification(n.getId());
         n1.getText().addAll(n.getText());
-        n1.setColor(n.getColor().copy(false));
+        n1.setColor(new Color4I(true, n.getColor()));
         n1.setTimer(n.getTimer());
         n1.setItem(n.getItem());
         return n1;

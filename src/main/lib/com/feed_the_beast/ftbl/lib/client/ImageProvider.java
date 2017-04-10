@@ -1,11 +1,14 @@
 package com.feed_the_beast.ftbl.lib.client;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.common.base.Objects;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,6 +32,30 @@ public class ImageProvider implements IImageProvider
         {
         }
     };
+
+    public static IDrawableObject get(String id)
+    {
+        return id.isEmpty() ? NULL : get(new ResourceLocation(id));
+    }
+
+    public static IDrawableObject get(ResourceLocation id)
+    {
+        if(id.getResourceDomain().equals("item"))
+        {
+            ItemStack stack = ItemStackSerializer.parseItem(id.getResourcePath());
+
+            if(stack != null)
+            {
+                return new DrawableItem(stack);
+            }
+        }
+        else if(id.getResourcePath().isEmpty())
+        {
+            return NULL;
+        }
+
+        return new ImageProvider(id);
+    }
 
     private final ResourceLocation texture;
     private final String url;

@@ -29,7 +29,7 @@ public class InfoHrLine extends EmptyInfoPageLine
     {
         JsonObject o = e.getAsJsonObject();
         height = o.has("height") ? Math.max(1, o.get("height").getAsInt()) : 1;
-        color = o.has("color") ? new Color4I(0xFF000000 | LMColorUtils.deserialize(o.get("color"))) : Color4I.NONE;
+        color = o.has("color") ? new Color4I(true, 0xFF000000 | LMColorUtils.deserialize(o.get("color"))) : Color4I.NONE;
     }
 
     @Override

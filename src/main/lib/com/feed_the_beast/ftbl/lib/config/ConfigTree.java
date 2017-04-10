@@ -4,11 +4,10 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.HashMap;
@@ -22,6 +21,7 @@ public class ConfigTree implements IConfigTree
 {
     private static final int HAS_DISPLAY_NAME = 1;
     private static final int HAS_INFO = 2;
+    private static final int HAS_GROUP = 4;
 
     private final Map<IConfigKey, IConfigValue> tree;
 
@@ -57,38 +57,48 @@ public class ConfigTree implements IConfigTree
         tree.forEach((key, value) ->
         {
             ByteBufUtils.writeUTF8String(data, key.getName());
-            data.writeByte(key.getFlags());
+            data.writeInt(key.getFlags());
 
             IConfigValue defValue = key.getDefValue();
             ByteBufUtils.writeUTF8String(data, defValue.getName());
             defValue.writeData(data);
 
-            byte extraFlags = 0;
+            int extraFlags = 0;
 
-            ITextComponent rawDN = key.getRawDisplayName();
+            String displayName = key.getNameLangKey();
 
-            if(rawDN != null)
+            if(!displayName.isEmpty())
             {
                 extraFlags |= HAS_DISPLAY_NAME;
             }
 
-            String info = key.getInfo();
+            String info = key.getInfoLangKey();
 
             if(!info.isEmpty())
             {
                 extraFlags |= HAS_INFO;
             }
 
+            if(!key.getGroup().isEmpty())
+            {
+                extraFlags |= HAS_GROUP;
+            }
+
             data.writeByte(extraFlags);
 
-            if(rawDN != null)
+            if(!displayName.isEmpty())
             {
-                LMNetUtils.writeTextComponent(data, rawDN);
+                ByteBufUtils.writeUTF8String(data, displayName);
             }
 
             if(!info.isEmpty())
             {
                 ByteBufUtils.writeUTF8String(data, info);
+            }
+
+            if(!key.getGroup().isEmpty())
+            {
+                ByteBufUtils.writeUTF8String(data, key.getGroup());
             }
 
             ByteBufUtils.writeUTF8String(data, value.getName());
@@ -105,7 +115,7 @@ public class ConfigTree implements IConfigTree
         while(--s >= 0)
         {
             String id = ByteBufUtils.readUTF8String(data);
-            byte flags = data.readByte();
+            int flags = data.readInt();
 
             IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
             value.readData(data);
@@ -113,16 +123,21 @@ public class ConfigTree implements IConfigTree
             ConfigKey key = new ConfigKey(id, value);
             key.setFlags(flags);
 
-            byte extraFlags = data.readByte();
+            int extraFlags = data.readUnsignedByte();
 
-            if((extraFlags & HAS_DISPLAY_NAME) != 0)
+            if(Bits.getFlag(extraFlags, HAS_DISPLAY_NAME))
             {
-                key.setDisplayName(LMNetUtils.readTextComponent(data));
+                key.setNameLangKey(ByteBufUtils.readUTF8String(data));
             }
 
-            if((extraFlags & HAS_INFO) != 0)
+            if(Bits.getFlag(extraFlags, HAS_INFO))
             {
-                key.setInfo(ByteBufUtils.readUTF8String(data));
+                key.setInfoLangKey(ByteBufUtils.readUTF8String(data));
+            }
+
+            if(Bits.getFlag(extraFlags, HAS_GROUP))
+            {
+                key.setGroup(ByteBufUtils.readUTF8String(data));
             }
 
             value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));

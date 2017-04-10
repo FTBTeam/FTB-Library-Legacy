@@ -1,10 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-
-import javax.annotation.Nullable;
+import net.minecraft.util.text.translation.I18n;
 
 /**
  * Created by LatvianModder on 11.09.2016.
@@ -40,14 +37,42 @@ public interface IConfigKey extends IStringSerializable
 
     IConfigValue getDefValue();
 
-    @Nullable
-    ITextComponent getRawDisplayName();
-
-    default ITextComponent getDisplayName()
+    default String getNameLangKey()
     {
-        ITextComponent t = getRawDisplayName();
-        return t == null ? new TextComponentTranslation("config." + getName() + ".name") : t;
+        return "";
     }
 
-    String getInfo();
+    default String getInfoLangKey()
+    {
+        return "";
+    }
+
+    default String getGroup()
+    {
+        return "";
+    }
+
+    default String getDisplayName()
+    {
+        String key = getNameLangKey();
+
+        if(key.isEmpty())
+        {
+            key = "config." + getName() + ".name";
+        }
+
+        return I18n.canTranslate(key) ? I18n.translateToLocal(key) : getName();
+    }
+
+    default String getInfo()
+    {
+        String key = getInfoLangKey();
+
+        if(key.isEmpty())
+        {
+            key = "config." + getName() + ".info";
+        }
+
+        return I18n.canTranslate(key) ? I18n.translateToLocal(key) : "";
+    }
 }

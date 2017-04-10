@@ -29,7 +29,7 @@ public class CachedVertexData
         hasTex = f.hasUvOffset(0);
         hasColor = f.hasColor();
         hasNormal = f.hasNormal();
-        color = new Color4I();
+        color = new Color4I(true, Color4I.WHITE);
     }
 
     public CachedVertexData(int m, VertexFormat f)

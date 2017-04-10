@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.config;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -19,7 +18,7 @@ import java.util.List;
 public class PropertyString extends PropertyBase
 {
     public static final String ID = "string";
-    public static final Color4I COLOR = new ImmutableColor4I(0xFFFFAA49);
+    public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
 
     private String value;
     private int charLimit;

@@ -1,9 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import net.minecraft.util.text.ITextComponent;
-
-import javax.annotation.Nullable;
 
 /**
  * Created by LatvianModder on 26.08.2016.
@@ -11,38 +8,43 @@ import javax.annotation.Nullable;
 public class ConfigKey extends SimpleConfigKey
 {
     private final IConfigValue defValue;
-    private ITextComponent displayName;
     private int flags;
-    private String info = "";
+    private String displayNameLangKey, infoLangKey = "", group = "";
 
-    public ConfigKey(String id, IConfigValue def, @Nullable ITextComponent dn)
+    public ConfigKey(String id, IConfigValue def, String dn)
     {
         super(id);
         defValue = def;
-        displayName = dn;
+        displayNameLangKey = dn;
     }
 
     public ConfigKey(String id, IConfigValue def)
     {
-        this(id, def, null);
+        this(id, def, "");
+    }
+
+    public ConfigKey setNameLangKey(String key)
+    {
+        displayNameLangKey = key;
+        return this;
+    }
+
+    public ConfigKey setInfoLangKey(String key)
+    {
+        infoLangKey = key;
+        return this;
+    }
+
+    public ConfigKey setGroup(String g)
+    {
+        group = g;
+        return this;
     }
 
     @Override
     public IConfigValue getDefValue()
     {
         return defValue;
-    }
-
-    @Override
-    @Nullable
-    public ITextComponent getRawDisplayName()
-    {
-        return displayName;
-    }
-
-    public void setDisplayName(@Nullable ITextComponent c)
-    {
-        displayName = c;
     }
 
     @Override
@@ -64,13 +66,20 @@ public class ConfigKey extends SimpleConfigKey
     }
 
     @Override
-    public String getInfo()
+    public String getNameLangKey()
     {
-        return info;
+        return displayNameLangKey;
     }
 
-    public void setInfo(String... s)
+    @Override
+    public String getInfoLangKey()
     {
-        info = s.length == 0 ? "" : (s.length == 1 ? s[0] : String.join("\n", s));
+        return infoLangKey;
+    }
+
+    @Override
+    public String getGroup()
+    {
+        return group;
     }
 }

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyColor;
@@ -25,7 +24,7 @@ public class GuiConfigs
 
     public static final PropertyInt INFO_BORDER_WIDTH = new PropertyInt(15).setMin(0).setMax(200);
     public static final PropertyInt INFO_BORDER_HEIGHT = new PropertyInt(15).setMin(0).setMax(200);
-    public static final PropertyColor INFO_BACKGROUND = new PropertyColor(new Color4I(0xFFF7F4DA));
-    public static final PropertyColor INFO_TEXT = new PropertyColor(new Color4I(0xFF7B6534));
+    public static final PropertyColor INFO_BACKGROUND = new PropertyColor(0xFFF7F4DA);
+    public static final PropertyColor INFO_TEXT = new PropertyColor(0xFF7B6534);
     public static final PropertyBool ENABLE_CHUNK_SELECTOR_DEPTH = new PropertyBool(true);
 }

@@ -10,17 +10,18 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class TexturelessRectangle implements IDrawableObject
 {
-    public Color4I color, lineColor = Color4I.NONE;
+    public final Color4I color, lineColor;
     public boolean roundEdges = false;
 
     public TexturelessRectangle(Color4I col)
     {
-        color = col;
+        color = new Color4I(true, col);
+        lineColor = new Color4I(true, Color4I.NONE);
     }
 
     public TexturelessRectangle setLineColor(Color4I col)
     {
-        lineColor = col;
+        lineColor.set(col);
         return this;
     }
 
@@ -32,8 +33,8 @@ public class TexturelessRectangle implements IDrawableObject
 
     public TexturelessRectangle copy()
     {
-        TexturelessRectangle t = new TexturelessRectangle(color.copy(false));
-        t.lineColor = lineColor.copy(false);
+        TexturelessRectangle t = new TexturelessRectangle(color);
+        t.lineColor.set(lineColor);
         t.roundEdges = roundEdges;
         return t;
     }

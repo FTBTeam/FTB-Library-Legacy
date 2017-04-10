@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
@@ -23,7 +22,7 @@ import java.util.List;
 public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBase
 {
     public static final String ID = "enum";
-    public static final Color4I COLOR = new ImmutableColor4I(0xFF0094FF);
+    public static final Color4I COLOR = new Color4I(false, 0xFF0094FF);
 
     @Override
     public String getName()

@@ -151,11 +151,14 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             }
         }
 
-        (serverSide ? FTBLibLang.RELOAD_SERVER : FTBLibLang.RELOAD_CLIENT).printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
-
-        if(serverSide && type == EnumReloadType.RELOAD_COMMAND)
+        if(type != EnumReloadType.CREATED)
         {
-            sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
+            (serverSide ? FTBLibLang.RELOAD_SERVER : FTBLibLang.RELOAD_CLIENT).printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+
+            if(serverSide && type == EnumReloadType.RELOAD_COMMAND)
+            {
+                sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
+            }
         }
 
         FTBLibFinals.LOGGER.info("Reloaded " + side + " on packmode '" + getSidedData(side).getPackMode() + "'");

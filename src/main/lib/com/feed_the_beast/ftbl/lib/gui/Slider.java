@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
 import net.minecraft.util.math.MathHelper;
@@ -12,8 +11,8 @@ import java.util.List;
 
 public class Slider extends Widget
 {
-    public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(new ImmutableColor4I(0x99666666));
-    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new ImmutableColor4I(0x99333333));
+    public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(new Color4I(false, 0x99666666));
+    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x99333333));
 
     public final int sliderSize;
     private double value;

@@ -15,7 +15,7 @@ public class PropertyColor extends PropertyBase
 {
     public static final String ID = "color";
 
-    private final Color4I value = Color4I.WHITE.copy(false);
+    private final Color4I value = new Color4I(true, Color4I.WHITE);
 
     public PropertyColor()
     {
@@ -23,7 +23,12 @@ public class PropertyColor extends PropertyBase
 
     public PropertyColor(Color4I v)
     {
-        value.set(v);
+        value.set(v, 255);
+    }
+
+    public PropertyColor(int col)
+    {
+        value.set(0xFF000000 | col);
     }
 
     @Override

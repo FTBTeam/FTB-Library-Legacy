@@ -134,7 +134,7 @@ public class GuiHelper
 
     public static void drawCenteredString(FontRenderer font, String txt, float x, float y, Color4I color)
     {
-        font.drawString(txt, x - font.getStringWidth(txt) / 2, y - font.FONT_HEIGHT / 2F, color.rgba(), false);
+        font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2F), (int) (y - font.FONT_HEIGHT / 2F), color.rgba(), false);
     }
 
     public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)

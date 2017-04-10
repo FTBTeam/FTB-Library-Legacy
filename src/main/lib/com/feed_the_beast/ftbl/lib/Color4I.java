@@ -7,27 +7,30 @@ import net.minecraft.util.math.MathHelper;
 /**
  * @author LatvianModder
  */
-public class Color4I
+public final class Color4I
 {
-    public static final Color4I NONE = new ImmutableColor4I(0x00000000);
+    public static final Color4I NONE = new Color4I(false, 0x00000000);
 
-    public static final Color4I BLACK = new ImmutableColor4I(0xFF000000);
-    public static final Color4I DARK_GRAY = new ImmutableColor4I(0xFF212121);
-    public static final Color4I GRAY = new ImmutableColor4I(0xFF999999);
-    public static final Color4I WHITE = new ImmutableColor4I(0xFFFFFFFF);
-    public static final Color4I WHITE_A33 = new ImmutableColor4I(0x21FFFFFF);
+    public static final Color4I BLACK = new Color4I(false, 0xFF000000);
+    public static final Color4I DARK_GRAY = new Color4I(false, 0xFF212121);
+    public static final Color4I GRAY = new Color4I(false, 0xFF999999);
+    public static final Color4I WHITE = new Color4I(false, 0xFFFFFFFF);
+    public static final Color4I WHITE_A33 = new Color4I(false, 0x21FFFFFF);
 
-    public static final Color4I RED = new ImmutableColor4I(0xFFFF0000);
-    public static final Color4I LIGHT_RED = new ImmutableColor4I(0xFFFF5656);
+    public static final Color4I RED = new Color4I(false, 0xFFFF0000);
+    public static final Color4I LIGHT_RED = new Color4I(false, 0xFFFF5656);
 
+    private final boolean canEdit;
     private int red = 255, green = 255, blue = 255, alpha = 255, rgba = 0xFFFFFFFF;
 
-    public Color4I()
+    public Color4I(boolean canEdit)
     {
+        this.canEdit = canEdit;
     }
 
-    public Color4I(int r, int g, int b, int a)
+    public Color4I(boolean canEdit, int r, int g, int b, int a)
     {
+        this.canEdit = canEdit;
         red = r;
         green = g;
         blue = b;
@@ -35,146 +38,150 @@ public class Color4I
         rgba = LMColorUtils.getRGBA(red, green, blue, alpha);
     }
 
-    public Color4I(int col)
+    public Color4I(boolean canEdit, int rgba)
     {
-        red = LMColorUtils.getRed(col);
-        green = LMColorUtils.getGreen(col);
-        blue = LMColorUtils.getBlue(col);
-        alpha = LMColorUtils.getAlpha(col);
-        rgba = col;
+        this.canEdit = canEdit;
+        red = LMColorUtils.getRed(rgba);
+        green = LMColorUtils.getGreen(rgba);
+        blue = LMColorUtils.getBlue(rgba);
+        alpha = LMColorUtils.getAlpha(rgba);
+        this.rgba = rgba;
     }
 
-    public Color4I(Color4I col)
+    public Color4I(boolean canEdit, Color4I col, int a)
     {
-        this(col.red, col.green, col.blue, col.alpha);
+        this(canEdit, col.red, col.green, col.blue, a);
     }
 
-    protected boolean canSetColor(int r, int g, int b, int a)
+    public Color4I(boolean canEdit, Color4I col)
     {
-        return true;
+        this(canEdit, col, col.alpha);
     }
 
-    protected void onColorSet()
+    public boolean canEdit()
     {
+        return canEdit;
     }
 
-    public final Color4I set(int r, int g, int b, int a)
+    public void set(int r, int g, int b, int a)
     {
-        if(canSetColor(r, g, b, a))
+        if(canEdit)
         {
             red = r;
             green = g;
             blue = b;
             alpha = a;
             rgba = LMColorUtils.getRGBA(red, green, blue, alpha);
-            onColorSet();
         }
-
-        return this;
     }
 
-    public final Color4I set(Color4I col, int a)
+    public void set(Color4I col, int a)
     {
-        return set(col.red, col.green, col.blue, a);
+        if(canEdit)
+        {
+            set(col.red, col.green, col.blue, a);
+        }
     }
 
-    public final Color4I set(Color4I col)
+    public void set(Color4I col)
     {
-        return set(col, col.alpha);
+        if(canEdit)
+        {
+            set(col, col.alpha);
+        }
     }
 
-    public final Color4I set(int col, int a)
+    public void set(int col, int a)
     {
-        return set(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), a);
+        if(canEdit)
+        {
+            set(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), a);
+        }
     }
 
-    public final Color4I set(int col)
+    public void set(int col)
     {
-        return set(col, LMColorUtils.getAlpha(col));
+        if(canEdit)
+        {
+            set(col, LMColorUtils.getAlpha(col));
+        }
     }
 
-    public final int red()
+    public int red()
     {
         return red;
     }
 
-    public final int green()
+    public int green()
     {
         return green;
     }
 
-    public final int blue()
+    public int blue()
     {
         return blue;
     }
 
-    public final int alpha()
+    public int alpha()
     {
         return alpha;
     }
 
-    public final float redf()
+    public float redf()
     {
         return red / 255F;
     }
 
-    public final float greenf()
+    public float greenf()
     {
         return green / 255F;
     }
 
-    public final float bluef()
+    public float bluef()
     {
         return blue / 255F;
     }
 
-    public final float alphaf()
+    public float alphaf()
     {
         return alpha / 255F;
     }
 
-    public final int rgba()
+    public int rgba()
     {
         return rgba;
     }
 
-    public final boolean hasColor()
+    public boolean hasColor()
     {
         return alpha > 0;
     }
 
-    public final Color4I copy(boolean immutable, int a)
-    {
-        return immutable ? new ImmutableColor4I(red, green, blue, a) : new Color4I(red, green, blue, a);
-    }
-
-    public final Color4I copy(boolean immutable)
-    {
-        return copy(immutable, alpha);
-    }
-
-    public final int hashCode()
+    public int hashCode()
     {
         return rgba();
     }
 
-    public final boolean equals(Object o)
+    public boolean equals(Object o)
     {
         return o == this || (o != null && o.hashCode() == rgba());
     }
 
-    public final String toString()
+    public String toString()
     {
         return LMColorUtils.getHex(rgba());
     }
 
-    public final JsonElement toJson()
+    public JsonElement toJson()
     {
         return LMColorUtils.serialize(rgba());
     }
 
     public void addBrightness(int b)
     {
-        set(MathHelper.clamp(red + b, 0, 255), MathHelper.clamp(green + b, 0, 255), MathHelper.clamp(blue + b, 0, 255), alpha);
+        if(canEdit)
+        {
+            set(MathHelper.clamp(red + b, 0, 255), MathHelper.clamp(green + b, 0, 255), MathHelper.clamp(blue + b, 0, 255), alpha);
+        }
     }
 }

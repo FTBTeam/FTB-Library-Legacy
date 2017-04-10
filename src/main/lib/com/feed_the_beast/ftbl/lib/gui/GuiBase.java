@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -25,8 +24,8 @@ import java.util.List;
 public abstract class GuiBase extends Panel implements IClientActionGui
 {
     private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
-    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(new ImmutableColor4I(0xC8333333)).setLineColor(new ImmutableColor4I(0xFFC0C0C0)).setRoundEdges(true);
-    public static final Color4I DEFAULT_CONTENT_COLOR = new ImmutableColor4I(0xFFC0C0C0);
+    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xC8333333)).setLineColor(new Color4I(false, 0xFFC0C0C0)).setRoundEdges(true);
+    public static final Color4I DEFAULT_CONTENT_COLOR = new Color4I(false, 0xFFC0C0C0);
 
     public final Minecraft mc;
     private final FontRenderer font;
@@ -242,7 +241,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
     public void drawString(String text, float x, float y, Color4I col)
     {
-        getFont().drawString(text, x, y, col.rgba(), false);
+        getFont().drawString(text, (int) x, (int) y, col.rgba(), false);
     }
 
     public void drawString(String text, float x, float y)

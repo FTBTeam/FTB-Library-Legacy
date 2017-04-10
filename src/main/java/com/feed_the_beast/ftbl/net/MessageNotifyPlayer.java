@@ -125,7 +125,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     static Notification read(ByteBuf io)
     {
         Notification n = new Notification(readID(io));
-        n.setColor(new Color4I(io.readInt()));
+        n.setColor(new Color4I(true, io.readInt()));
         n.setTimer(io.readUnsignedShort());
         int flags = io.readUnsignedByte();
 

@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
@@ -31,8 +30,8 @@ import java.util.Map;
 
 public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
-    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = Comparator.comparing(o -> o.getKey().getDisplayName().getFormattedText());
-    public static final Color4I COLOR_BACKGROUND = new ImmutableColor4I(0x99333333);
+    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = Comparator.comparing(o -> o.getKey().getDisplayName());
+    public static final Color4I COLOR_BACKGROUND = new Color4I(false, 0x99333333);
 
     public class ButtonConfigEntry extends Button
     {
@@ -46,16 +45,17 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
             super(0, 0, 0, 16);
             key = id;
             value = e;
-            keyText = id.getDisplayName().getUnformattedText();
+            keyText = id.getDisplayName();
+            String infoText = id.getInfo();
 
-            if(keyText.startsWith("config.") && keyText.endsWith(".name"))
+            if(!infoText.isEmpty())
             {
-                keyText = id.getName();
-            }
+                info = new ArrayList<>();
 
-            if(!id.getInfo().isEmpty())
-            {
-                info = getFont().listFormattedStringToWidth(id.getInfo(), 230);
+                for(String s : infoText.split("\\\\n"))
+                {
+                    info.addAll(getFont().listFormattedStringToWidth(s, 230));
+                }
             }
 
             if(info == null || info.isEmpty())
@@ -90,7 +90,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
                 slen = 152;
             }
 
-            Color4I textCol = value.getColor().copy(false, 255);
+            Color4I textCol = new Color4I(true, value.getColor(), 255);
 
             if(mouseOver)
             {

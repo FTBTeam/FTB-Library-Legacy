@@ -37,7 +37,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
@@ -57,10 +56,10 @@ import java.util.UUID;
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
-    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE), new TextComponentTranslation("ftbteam.config.display.color"));
-    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString("", 30), new TextComponentTranslation("ftbteam.config.display.title"));
-    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString("", 100), new TextComponentTranslation("ftbteam.config.display.desc"));
-    private static final IConfigKey KEY_FREE_TO_JOIN = new ConfigKey("free_to_join", new PropertyBool(false), new TextComponentTranslation("ftbteam.config.free_to_join"));
+    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE), "ftbteam.config.display.color");
+    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString("", 30), "ftbteam.config.display.title");
+    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString("", 100), "ftbteam.config.display.desc");
+    private static final IConfigKey KEY_FREE_TO_JOIN = new ConfigKey("free_to_join", new PropertyBool(false), "ftbteam.config.free_to_join");
 
     public static class Message implements ITeamMessage
     {

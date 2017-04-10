@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,8 +15,8 @@ import java.util.List;
  */
 public class CheckBoxList extends Button
 {
-    public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(new ImmutableColor4I(0xFFE0E0E0));
-    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new ImmutableColor4I(0xFF919191));
+    public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(new Color4I(false, 0xFFE0E0E0));
+    public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xFF919191));
 
     public final boolean radioButtons;
     private final List<CheckBoxEntry> entries;

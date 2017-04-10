@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
@@ -48,7 +47,7 @@ public class GuiMyTeam extends GuiBase
     private static final int TOP_PANEL_HEIGHT = 20;
     private static final int BOTTOM_PANEL_HEIGHT = 20;
     private static final int LEFT_PANEL_WIDTH = 90;
-    private static final Color4I EXIT_TEAM_COLOR = new ImmutableColor4I(0xFFEA8383);
+    private static final Color4I EXIT_TEAM_COLOR = new Color4I(false, 0xFFEA8383);
 
     private class ButtonPlayer extends Button
     {
@@ -351,8 +350,8 @@ public class GuiMyTeam extends GuiBase
         scrollPlayers = new PanelScrollBar(LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 14, panelPlayers);
         scrollText = new PanelScrollBar(0, TOP_PANEL_HEIGHT, 3, 0, 14, panelText);
 
-        scrollText.background = scrollPlayers.background = new TexturelessRectangle(new ImmutableColor4I(0x78666666));
-        scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(new ImmutableColor4I(0x50FFFFFF));
+        scrollText.background = scrollPlayers.background = new TexturelessRectangle(new Color4I(false, 0x78666666));
+        scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(new Color4I(false, 0x50FFFFFF));
 
         topPanelButtons = new ArrayList<>();
 

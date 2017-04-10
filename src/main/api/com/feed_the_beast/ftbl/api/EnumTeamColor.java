@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
@@ -44,7 +43,7 @@ public enum EnumTeamColor implements IStringSerializable
         name = n;
         dyeColor = d;
         textFormatting = t;
-        color = new ImmutableColor4I(0xFF000000 | c);
+        color = new Color4I(false, 0xFF000000 | c);
         langKey = EnumDyeColorHelper.get(dyeColor).getLangKey();
     }
 

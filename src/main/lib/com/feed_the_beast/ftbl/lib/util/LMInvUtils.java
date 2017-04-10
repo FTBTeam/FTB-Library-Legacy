@@ -320,6 +320,7 @@ public class LMInvUtils
      *
      * @author Azanor
      */
+    @Nullable
     public static IInventory getBaubles(EntityPlayer player)
     {
         IInventory ot = null;

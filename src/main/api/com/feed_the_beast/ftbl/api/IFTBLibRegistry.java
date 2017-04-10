@@ -20,10 +20,13 @@ public interface IFTBLibRegistry
 
     void addConfig(String file, IConfigKey key, IConfigValue value);
 
-    default ConfigKey addConfig(String file, String id, IConfigValue value)
+    default ConfigKey addConfig(String group, String id, IConfigValue value)
     {
-        ConfigKey key = new ConfigKey(id, value.copy());
+        int i = group.indexOf('.');
+        String file = i >= 0 ? group.substring(0, i) : group;
+        ConfigKey key = new ConfigKey(id, value.copy(), "config." + group + "." + id + ".name");
         addConfig(file, key, value);
+        key.setInfoLangKey("config." + group + "." + id + ".info");
         return key;
     }
 
@@ -43,5 +46,5 @@ public interface IFTBLibRegistry
 
     void addTeamDataProvider(ResourceLocation id, IDataProvider<IForgeTeam> provider);
 
-    void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP, String... description);
+    void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP);
 }

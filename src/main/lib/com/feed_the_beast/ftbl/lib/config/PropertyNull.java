@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.ImmutableColor4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import io.netty.buffer.ByteBuf;
@@ -21,7 +20,7 @@ public enum PropertyNull implements IConfigValue
     INSTANCE;
 
     public static final String ID = "null";
-    public static final Color4I COLOR = new ImmutableColor4I(0xFF333333);
+    public static final Color4I COLOR = new Color4I(false, 0xFF333333);
 
     @Override
     public String getName()

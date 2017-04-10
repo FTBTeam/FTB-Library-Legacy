@@ -84,12 +84,11 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     {
         private final IConfigValue defaultOPValue;
 
-        private RankConfig(String s, IConfigValue def, IConfigValue defOP, String... info)
+        private RankConfig(String s, IConfigValue def, IConfigValue defOP)
         {
             super(s, def);
             defaultOPValue = def.copy();
             defaultOPValue.fromJson(defOP.getSerializableElement());
-            setInfo(info);
         }
 
         @Override
@@ -243,11 +242,12 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     }
 
     @Override
-    public void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP, String... description)
+    public void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP)
     {
         Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
         RankConfig c = new RankConfig(id, defPlayer, defOP);
-        c.setInfo(description);
+        c.setNameLangKey("rank_config." + id + ".name");
+        c.setInfoLangKey("rank_config." + id + ".info");
         RANK_CONFIGS.put(c.getName(), c);
     }
 

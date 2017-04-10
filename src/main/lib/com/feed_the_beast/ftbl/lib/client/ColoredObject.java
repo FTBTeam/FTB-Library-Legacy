@@ -21,7 +21,7 @@ public class ColoredObject implements IDrawableObject
 
     public ColoredObject(IDrawableObject p, int c)
     {
-        this(p, new Color4I(c));
+        this(p, new Color4I(true, c));
     }
 
     @Override
