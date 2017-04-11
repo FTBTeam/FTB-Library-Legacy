@@ -15,6 +15,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,19 +31,64 @@ import java.util.Map;
 
 public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
-    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = Comparator.comparing(o -> o.getKey().getDisplayName());
+    public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) ->
+    {
+        int i = o1.getKey().getGroup().compareToIgnoreCase(o2.getKey().getGroup());
+        return i == 0 ? o1.getKey().getDisplayName().compareToIgnoreCase(o2.getKey().getDisplayName()) : i;
+    };
+
     public static final Color4I COLOR_BACKGROUND = new Color4I(false, 0x99333333);
+
+    public class ButtonConfigGroup extends Button
+    {
+        public final String groupId;
+        public boolean collapsed = false;
+
+        public ButtonConfigGroup(String id)
+        {
+            super(0, 0, 0, 16);
+            groupId = id;
+            setTitle("[-] " + groupId);
+        }
+
+        @Override
+        public Color4I renderTitleInCenter(GuiBase gui)
+        {
+            return gui.getContentColor();
+        }
+
+        @Override
+        public void renderWidget(GuiBase gui)
+        {
+            super.renderWidget(gui);
+
+            if(gui.isMouseOver(this))
+            {
+                DEFAULT_MOUSE_OVER.draw(this, Color4I.NONE);
+            }
+        }
+
+        @Override
+        public void onClicked(GuiBase gui, IMouseButton button)
+        {
+            collapsed = !collapsed;
+            setTitle((collapsed ? "[+] " : "[-] ") + groupId);
+            gui.refreshWidgets();
+        }
+    }
 
     public class ButtonConfigEntry extends Button
     {
+        public final ButtonConfigGroup group;
         public final IConfigKey key;
         public final IConfigValue value;
         public String keyText;
         public List<String> info;
 
-        public ButtonConfigEntry(IConfigKey id, IConfigValue e)
+        public ButtonConfigEntry(ButtonConfigGroup g, IConfigKey id, IConfigValue e)
         {
             super(0, 0, 0, 16);
+            group = g;
             key = id;
             value = e;
             keyText = id.getDisplayName();
@@ -139,7 +185,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
     private final JsonObject modifiedConfig;
 
     private final String title;
-    private final List<ButtonConfigEntry> configEntryButtons;
+    private final List<Widget> configEntryButtons;
     private final Panel configPanel;
     private final Button buttonAccept, buttonCancel;
     private final PanelScrollBar scroll;
@@ -160,13 +206,24 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
         List<Map.Entry<IConfigKey, IConfigValue>> list = new ArrayList<>();
         list.addAll(configContainer.getConfigTree().getTree().entrySet());
-        Collections.sort(list, COMPARATOR);
 
-        for(Map.Entry<IConfigKey, IConfigValue> entry : list)
+        if(!list.isEmpty())
         {
-            if(!entry.getKey().getFlag(IConfigKey.HIDDEN))
+            Collections.sort(list, COMPARATOR);
+            ButtonConfigGroup group = null;
+
+            for(Map.Entry<IConfigKey, IConfigValue> entry : list)
             {
-                configEntryButtons.add(new ButtonConfigEntry(entry.getKey(), entry.getValue().copy()));
+                if(!entry.getKey().getFlag(IConfigKey.HIDDEN))
+                {
+                    if(group == null || !group.groupId.equalsIgnoreCase(entry.getKey().getGroup()))
+                    {
+                        group = new ButtonConfigGroup(entry.getKey().getGroup());
+                        configEntryButtons.add(group);
+                    }
+
+                    configEntryButtons.add(new ButtonConfigEntry(group, entry.getKey(), entry.getValue().copy()));
+                }
             }
         }
 
@@ -175,7 +232,13 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
             @Override
             public void addWidgets()
             {
-                addAll(configEntryButtons);
+                for(Widget w : configEntryButtons)
+                {
+                    if(!(w instanceof ButtonConfigEntry) || !((ButtonConfigEntry) w).group.collapsed)
+                    {
+                        add(w);
+                    }
+                }
             }
 
             @Override
@@ -234,7 +297,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
         scroll.posX = width - 16;
         scroll.setHeight(configPanel.height);
 
-        for(ButtonConfigEntry b : configEntryButtons)
+        for(Widget b : configEntryButtons)
         {
             b.setWidth(scroll.posX);
         }

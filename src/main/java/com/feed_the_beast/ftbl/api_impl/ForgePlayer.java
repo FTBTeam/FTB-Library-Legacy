@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
@@ -51,16 +52,26 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     private String playerName;
     private final NBTDataStorage dataStorage;
     private ForgeTeam team = null;
-    private int flags = 0;
+    private final PropertyBool hideTeamNotification;
+    private final PropertyBool hideNewTeamMsgNotification;
     private EntityPlayerMP entityPlayer;
     private NBTTagCompound playerNBT;
-    private IConfigTree cachedConfig;
+    private final IConfigTree cachedConfig;
 
     public ForgePlayer(UUID id, String name)
     {
         playerId = id;
         playerName = name;
         dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
+        hideTeamNotification = new PropertyBool();
+        hideNewTeamMsgNotification = new PropertyBool();
+
+        cachedConfig = new ConfigTree();
+        ForgePlayerSettingsEvent event = new ForgePlayerSettingsEvent(this, cachedConfig);
+        MinecraftForge.EVENT_BUS.post(event);
+        String group = FTBLibFinals.MOD_ID;
+        event.add(group, "hide_team_notification", hideTeamNotification);
+        event.add(group, "hide_new_team_msg_notification", hideNewTeamMsgNotification);
     }
 
     @Override
@@ -209,7 +220,18 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        setFlags(nbt.getInteger("Flags"));
+        if(nbt.hasKey("Flags"))
+        {
+            int flags = nbt.getInteger("Flags");
+            hideTeamNotification.setBoolean(Bits.getFlag(flags, 1));
+            hideNewTeamMsgNotification.setBoolean(Bits.getFlag(flags, 2));
+        }
+        else
+        {
+            hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
+            hideNewTeamMsgNotification.setBoolean(nbt.getBoolean("HideNewTeamMsgNotification"));
+        }
+
         setTeamID(nbt.getString("TeamID"));
 
         if(dataStorage != null)
@@ -223,10 +245,8 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        if(flags != 0)
-        {
-            nbt.setByte("Flags", (byte) flags);
-        }
+        nbt.setBoolean("HideTeamNotification", hideTeamNotification.getBoolean());
+        nbt.setBoolean("HideNewTeamMsgNotification", hideNewTeamMsgNotification.getBoolean());
 
         if(team != null && team.isValid())
         {
@@ -289,44 +309,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public IConfigTree getSettings()
     {
-        if(cachedConfig != null)
-        {
-            return cachedConfig;
-        }
-
-        cachedConfig = new ConfigTree();
-
-        cachedConfig.add(HIDE_TEAM_NOTIFICATION, new PropertyBool(false)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return Bits.getFlag(getFlags(), FLAG_HIDE_TEAM_NOTIFICATION);
-            }
-
-            @Override
-            public void setBoolean(boolean v)
-            {
-                setFlags(Bits.setFlag(getFlags(), FLAG_HIDE_TEAM_NOTIFICATION, v));
-            }
-        });
-
-        cachedConfig.add(HIDE_NEW_TEAM_MSG_NOTIFICATION, new PropertyBool(false)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return Bits.getFlag(getFlags(), FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION);
-            }
-
-            @Override
-            public void setBoolean(boolean v)
-            {
-                setFlags(Bits.setFlag(getFlags(), FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION, v));
-            }
-        });
-
-        MinecraftForge.EVENT_BUS.post(new ForgePlayerSettingsEvent(this, cachedConfig));
         return cachedConfig;
     }
 
@@ -354,14 +336,14 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     }
 
     @Override
-    public int getFlags()
+    public boolean hideTeamNotification()
     {
-        return flags;
+        return hideTeamNotification.getBoolean();
     }
 
     @Override
-    public void setFlags(int f)
+    public boolean hideNewTeamMsgNotification()
     {
-        flags = f;
+        return hideNewTeamMsgNotification.getBoolean();
     }
 }

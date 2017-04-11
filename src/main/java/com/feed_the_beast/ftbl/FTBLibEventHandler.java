@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
@@ -8,7 +7,6 @@ import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -103,7 +101,7 @@ public class FTBLibEventHandler
             }
         }
 
-        if(!Bits.getFlag(p.getFlags(), IForgePlayer.FLAG_HIDE_TEAM_NOTIFICATION) && p.getTeam() == null)
+        if(!p.hideTeamNotification() && p.getTeam() == null)
         {
             ITextComponent c = new TextComponentString("You haven't joined or created a team yet! ");
             ITextComponent b1 = new TextComponentString("[Click Here]");

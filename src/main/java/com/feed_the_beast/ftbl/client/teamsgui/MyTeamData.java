@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -73,7 +72,7 @@ public class MyTeamData extends FinalIDObject
         {
             EnumTeamStatus s = team.getHighestStatus(p);
 
-            if(!s.isNone() && (s != EnumTeamStatus.INVITED || !Bits.getFlag(team.getFlags(), IForgeTeam.FLAG_FREE_TO_JOIN)))
+            if(!s.isNone() && (s != EnumTeamStatus.INVITED || team.freeToJoin()))
             {
                 MyTeamPlayerData pi = new MyTeamPlayerData(p, s);
                 players.add(pi);

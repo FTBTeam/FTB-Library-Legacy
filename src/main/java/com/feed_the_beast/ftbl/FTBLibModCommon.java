@@ -180,17 +180,31 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     }
 
     @Override
-    public void addConfig(String file, IConfigKey key, IConfigValue value)
+    public IConfigKey addConfig(String group0, String id, IConfigValue value)
     {
-        IConfigFile configFile = CONFIG_FILES.get(file);
+        int i = group0.indexOf('.');
 
-        if(configFile == null)
+        String file;
+        String group;
+
+        if(i >= 0)
         {
-            configFile = new ConfigFile(new TextComponentString(file), ConfigFile.NULL_FILE_PROVIDER);
-            CONFIG_FILES.put(file, configFile);
+            file = group0.substring(0, i);
+            group = group0.substring(i + 1);
+        }
+        else
+        {
+            file = group0;
+            group = "";
         }
 
+        ConfigKey key = new ConfigKey(id, value.copy(), group, "config");
+        key.setGroup(group0);
+        key.setNameLangKey("config." + group0 + "." + id + ".name");
+        key.setInfoLangKey("config." + group0 + "." + id + ".info");
+        IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(new TextComponentString(f), ConfigFile.NULL_FILE_PROVIDER));
         configFile.add(key, value);
+        return key;
     }
 
     @Override

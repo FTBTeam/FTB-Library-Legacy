@@ -89,10 +89,10 @@ public class ModelBuilder
                 return new float[] {fromX, fromZ, toX, toZ};
             case NORTH:
             case SOUTH:
-                return new float[] {fromX, fromY, toX, toY};
+                return new float[] {toX, toY, fromX, fromY};
             case EAST:
             case WEST:
-                return new float[] {fromZ, fromY, toZ, toY};
+                return new float[] {fromZ, toY, toZ, fromY};
         }
 
         return new float[] {0F, 0F, 1F, 1F};

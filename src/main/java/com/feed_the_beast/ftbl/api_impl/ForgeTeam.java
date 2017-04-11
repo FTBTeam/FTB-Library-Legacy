@@ -8,21 +8,19 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
@@ -56,11 +54,6 @@ import java.util.UUID;
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
-    private static final IConfigKey KEY_COLOR = new ConfigKey("display.color", new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE), "ftbteam.config.display.color");
-    private static final IConfigKey KEY_TITLE = new ConfigKey("display.title", new PropertyString("", 30), "ftbteam.config.display.title");
-    private static final IConfigKey KEY_DESC = new ConfigKey("display.desc", new PropertyString("", 100), "ftbteam.config.display.desc");
-    private static final IConfigKey KEY_FREE_TO_JOIN = new ConfigKey("free_to_join", new PropertyBool(false), "ftbteam.config.free_to_join");
-
     public static class Message implements ITeamMessage
     {
         private final UUID sender;
@@ -144,26 +137,37 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         }
     }
 
+    private boolean isValid;
     private final NBTDataStorage dataStorage;
-    private EnumTeamColor color;
+    private final PropertyEnum<EnumTeamColor> color;
     private IForgePlayer owner;
-    private String title;
-    private String desc;
-    private int flags;
+    private final PropertyString title;
+    private final PropertyString desc;
+    private final PropertyBool freeToJoin;
     private List<ITeamMessage> chatHistory;
     private Map<UUID, EnumTeamStatus> players;
-    private IConfigTree cachedConfig;
+    private final IConfigTree cachedConfig;
 
     public ForgeTeam(String id)
     {
         super(id);
-        color = EnumTeamColor.BLUE;
-
-        title = "";
-        desc = "";
-        flags = 0;
-
+        isValid = true;
+        color = new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE);
+        title = new PropertyString("");
+        desc = new PropertyString("");
+        freeToJoin = new PropertyBool(false);
         dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
+
+        cachedConfig = new ConfigTree();
+        ForgeTeamSettingsEvent event = new ForgeTeamSettingsEvent(this, cachedConfig);
+        MinecraftForge.EVENT_BUS.post(event);
+
+        String group = FTBLibFinals.MOD_ID;
+        event.add(group, "free_to_join", freeToJoin);
+        group = FTBLibFinals.MOD_ID + ".display";
+        event.add(group, "color", color);
+        event.add(group, "title", title);
+        event.add(group, "desc", desc);
     }
 
     @Override
@@ -178,18 +182,24 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setString("Owner", LMStringUtils.fromUUID(owner.getId()));
-        nbt.setByte("Flags", (byte) flags);
-        nbt.setString("Color", EnumNameMap.getName(color));
+        nbt.setString("Color", color.getString());
+
+        if(color.get() == null)
+        {
+            color.set(EnumTeamColor.BLUE);
+        }
 
         if(!title.isEmpty())
         {
-            nbt.setString("Title", title);
+            nbt.setString("Title", title.getString());
         }
 
         if(!desc.isEmpty())
         {
-            nbt.setString("Desc", desc);
+            nbt.setString("Desc", desc.getString());
         }
+
+        nbt.setBoolean("FreeToJoin", freeToJoin.getBoolean());
 
         if(players != null && !players.isEmpty())
         {
@@ -227,10 +237,20 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     public void deserializeNBT(NBTTagCompound nbt)
     {
         owner = Universe.INSTANCE.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
-        flags = nbt.getInteger("Flags");
-        color = EnumTeamColor.NAME_MAP.get(nbt.getString("Color"));
-        title = nbt.getString("Title");
-        desc = nbt.getString("Desc");
+        color.setValueFromString(nbt.getString("Color"), false);
+        title.setString(nbt.getString("Title"));
+        desc.setString(nbt.getString("Desc"));
+
+        if(nbt.hasKey("Flags"))
+        {
+            int flags = nbt.getInteger("Flags");
+            freeToJoin.setBoolean(Bits.getFlag(flags, 1));
+            isValid = !Bits.getFlag(flags, 2);
+        }
+        else
+        {
+            freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
+        }
 
         if(players != null)
         {
@@ -317,24 +337,24 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public String getTitle()
     {
-        return title.isEmpty() ? (owner.getName() + (owner.getName().endsWith("s") ? "' Team" : "'s Team")) : title;
+        return title.isEmpty() ? (owner.getName() + (owner.getName().endsWith("s") ? "' Team" : "'s Team")) : title.getString();
     }
 
     @Override
     public String getDesc()
     {
-        return desc;
+        return desc.getString();
     }
 
     @Override
     public EnumTeamColor getColor()
     {
-        return color;
+        return color.getNonnull();
     }
 
     public void setColor(EnumTeamColor col)
     {
-        color = col;
+        color.set(col);
     }
 
     @Override
@@ -382,7 +402,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
         {
             status = EnumTeamStatus.NONE;
 
-            if(Bits.getFlag(flags, FLAG_FREE_TO_JOIN))
+            if(freeToJoin.getBoolean())
             {
                 status = EnumTeamStatus.INVITED;
             }
@@ -511,81 +531,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public IConfigTree getSettings()
     {
-        if(cachedConfig != null)
-        {
-            return cachedConfig;
-        }
-
-        cachedConfig = new ConfigTree();
-        MinecraftForge.EVENT_BUS.post(new ForgeTeamSettingsEvent(this, cachedConfig));
-
-        cachedConfig.add(KEY_COLOR, new PropertyEnum<EnumTeamColor>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE)
-        {
-            @Override
-            public EnumTeamColor get()
-            {
-                return color;
-            }
-
-            @Override
-            public void set(@Nullable EnumTeamColor e)
-            {
-                color = e == null ? EnumTeamColor.BLUE : e;
-            }
-        });
-
-        cachedConfig.add(KEY_TITLE, new PropertyString("")
-        {
-            @Override
-            public void setString(String v)
-            {
-                title = v.trim();
-            }
-
-            @Override
-            public String getString()
-            {
-                return title;
-            }
-        });
-
-        cachedConfig.add(KEY_DESC, new PropertyString("")
-        {
-            @Override
-            public void setString(String v)
-            {
-                desc = v.trim();
-            }
-
-            @Override
-            public String getString()
-            {
-                return desc;
-            }
-        });
-
-        cachedConfig.add(KEY_FREE_TO_JOIN, new PropertyBool(false)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return Bits.getFlag(flags, FLAG_FREE_TO_JOIN);
-            }
-
-            @Override
-            public void setBoolean(boolean v)
-            {
-                flags = Bits.setFlag(flags, FLAG_FREE_TO_JOIN, v);
-            }
-        });
-
         return cachedConfig;
-    }
-
-    @Override
-    public int getFlags()
-    {
-        return flags;
     }
 
     @Override
@@ -607,7 +553,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
         for(EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
         {
-            if(!ep.getGameProfile().getId().equals(message.getSender()) && !Bits.getFlag(Universe.INSTANCE.getPlayer(ep).getFlags(), IForgePlayer.FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION))
+            if(!ep.getGameProfile().getId().equals(message.getSender()) && !Universe.INSTANCE.getPlayer(ep).hideNewTeamMsgNotification())
             {
                 FTBLibIntegrationInternal.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
             }
@@ -640,6 +586,12 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public boolean isValid()
     {
-        return !Bits.getFlag(flags, FLAG_INVALID);
+        return isValid;
+    }
+
+    @Override
+    public boolean freeToJoin()
+    {
+        return freeToJoin.getBoolean();
     }
 }

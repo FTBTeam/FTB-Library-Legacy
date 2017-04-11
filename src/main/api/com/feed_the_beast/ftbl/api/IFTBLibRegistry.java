@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -18,17 +17,7 @@ public interface IFTBLibRegistry
 
     void addConfigValueProvider(String id, IConfigValueProvider provider);
 
-    void addConfig(String file, IConfigKey key, IConfigValue value);
-
-    default ConfigKey addConfig(String group, String id, IConfigValue value)
-    {
-        int i = group.indexOf('.');
-        String file = i >= 0 ? group.substring(0, i) : group;
-        ConfigKey key = new ConfigKey(id, value.copy(), "config." + group + "." + id + ".name");
-        addConfig(file, key, value);
-        key.setInfoLangKey("config." + group + "." + id + ".info");
-        return key;
-    }
+    IConfigKey addConfig(String group, String id, IConfigValue value);
 
     void addOptionalServerMod(String mod);
 

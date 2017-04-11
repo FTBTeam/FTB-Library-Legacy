@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IRecipes;
-import com.feed_the_beast.ftbl.api.item.IMaterial;
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -21,10 +20,6 @@ public class LMRecipes implements IRecipes
         if(o == null)
         {
             return null;
-        }
-        else if(o instanceof IMaterial)
-        {
-            return ((IMaterial) o).getStack(1);
         }
         else if(o instanceof EnumDyeColor)
         {

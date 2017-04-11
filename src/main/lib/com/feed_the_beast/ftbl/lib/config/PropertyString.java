@@ -130,4 +130,9 @@ public class PropertyString extends PropertyBase
         setString(ByteBufUtils.readUTF8String(data));
         charLimit = data.readUnsignedShort();
     }
+
+    public boolean isEmpty()
+    {
+        return getString().isEmpty();
+    }
 }

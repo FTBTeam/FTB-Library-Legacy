@@ -17,9 +17,6 @@ import java.util.UUID;
  */
 public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
 {
-    int FLAG_FREE_TO_JOIN = 1;
-    int FLAG_INVALID = 2;
-
     boolean isValid();
 
     @Nullable
@@ -64,9 +61,9 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
     IConfigTree getSettings();
 
-    int getFlags();
-
     void printMessage(ITeamMessage message);
 
     List<ITeamMessage> getMessages();
+
+    boolean freeToJoin();
 }

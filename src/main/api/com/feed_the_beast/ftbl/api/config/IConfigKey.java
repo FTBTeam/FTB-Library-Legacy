@@ -35,6 +35,11 @@ public interface IConfigKey extends IStringSerializable
         return (getFlags() & flag) != 0;
     }
 
+    default IConfigKey addFlags(int flags)
+    {
+        return this;
+    }
+
     IConfigValue getDefValue();
 
     default String getNameLangKey()
@@ -74,5 +79,20 @@ public interface IConfigKey extends IStringSerializable
         }
 
         return I18n.canTranslate(key) ? I18n.translateToLocal(key) : "";
+    }
+
+    default IConfigKey setNameLangKey(String name)
+    {
+        return this;
+    }
+
+    default IConfigKey setInfoLangKey(String name)
+    {
+        return this;
+    }
+
+    default IConfigKey setGroup(String name)
+    {
+        return this;
     }
 }

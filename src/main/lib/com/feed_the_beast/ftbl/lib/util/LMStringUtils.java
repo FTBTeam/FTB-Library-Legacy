@@ -458,11 +458,7 @@ public class LMStringUtils
 
         d = ((long) (d * 1000D)) / 1000D;
         String s = String.valueOf(d);
-        if(s.endsWith(".0"))
-        {
-            return s.substring(0, s.length() - 2);
-        }
-        return s;
+        return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
     }
 
     public static String getTimeString(long millis)

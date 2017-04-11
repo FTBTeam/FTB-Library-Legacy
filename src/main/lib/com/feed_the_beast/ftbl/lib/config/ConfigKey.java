@@ -18,23 +18,34 @@ public class ConfigKey extends SimpleConfigKey
         displayNameLangKey = dn;
     }
 
+    public ConfigKey(String id, IConfigValue def, String group, String prefix)
+    {
+        this(group.isEmpty() ? id : (group + "." + id), def);
+        setGroup(group);
+        setNameLangKey(prefix + "." + getName() + ".name");
+        setInfoLangKey(prefix + "." + getName() + ".info");
+    }
+
     public ConfigKey(String id, IConfigValue def)
     {
         this(id, def, "");
     }
 
+    @Override
     public ConfigKey setNameLangKey(String key)
     {
         displayNameLangKey = key;
         return this;
     }
 
+    @Override
     public ConfigKey setInfoLangKey(String key)
     {
         infoLangKey = key;
         return this;
     }
 
+    @Override
     public ConfigKey setGroup(String g)
     {
         group = g;
@@ -59,6 +70,7 @@ public class ConfigKey extends SimpleConfigKey
         return this;
     }
 
+    @Override
     public ConfigKey addFlags(int f)
     {
         flags |= f;

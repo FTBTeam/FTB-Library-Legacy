@@ -17,9 +17,6 @@ import java.util.UUID;
  */
 public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 {
-    int FLAG_HIDE_TEAM_NOTIFICATION = 1;
-    int FLAG_HIDE_NEW_TEAM_MSG_NOTIFICATION = 2;
-
     UUID getId();
 
     String getName();
@@ -83,7 +80,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 
     NBTTagCompound getPlayerNBT();
 
-    int getFlags();
+    boolean hideTeamNotification();
 
-    void setFlags(int flags);
+    boolean hideNewTeamMsgNotification();
 }

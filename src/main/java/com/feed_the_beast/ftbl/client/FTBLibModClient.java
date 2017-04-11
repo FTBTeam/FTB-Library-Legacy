@@ -63,15 +63,17 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
         clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button." + FTBLibActions.SETTINGS.getName()), () -> new File(LMUtils.folderLocal, "client_config.json"));
 
-        addClientConfig(FTBLibFinals.MOD_ID, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
-        addClientConfig(FTBLibFinals.MOD_ID, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
-        addClientConfig(FTBLibFinals.MOD_ID, "notifications", FTBLibClientConfig.NOTIFICATIONS);
-
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_width", GuiConfigs.INFO_BORDER_WIDTH, IConfigKey.USE_SCROLL_BAR);
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.border_height", GuiConfigs.INFO_BORDER_HEIGHT, IConfigKey.USE_SCROLL_BAR);
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.color_background", GuiConfigs.INFO_BACKGROUND);
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.info.color_text", GuiConfigs.INFO_TEXT);
-        addClientConfig(FTBLibFinals.MOD_ID, "gui.enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
+        String group = FTBLibFinals.MOD_ID;
+        addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
+        addClientConfig(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
+        addClientConfig(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
+        group = FTBLibFinals.MOD_ID + ".gui";
+        addClientConfig(group, "gui.enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
+        group = FTBLibFinals.MOD_ID + ".gui.info";
+        addClientConfig(group, "border_width", GuiConfigs.INFO_BORDER_WIDTH).addFlags(IConfigKey.USE_SCROLL_BAR);
+        addClientConfig(group, "border_height", GuiConfigs.INFO_BORDER_HEIGHT).addFlags(IConfigKey.USE_SCROLL_BAR);
+        addClientConfig(group, "color_background", GuiConfigs.INFO_BACKGROUND);
+        addClientConfig(group, "color_text", GuiConfigs.INFO_TEXT);
 
         addSidebarButton(FTBLibActions.TEAMS_GUI);
         addSidebarButton(FTBLibActions.SETTINGS);
@@ -219,9 +221,11 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
-    public void addClientConfig(IConfigKey key, IConfigValue value)
+    public IConfigKey addClientConfig(String group, String id, IConfigValue value)
     {
+        ConfigKey key = new ConfigKey(id, value.copy(), group, "client_config");
         clientConfig.add(key, value);
+        return key;
     }
 
     @Override
