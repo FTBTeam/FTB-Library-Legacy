@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.math;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 
 public class Pos2D
@@ -39,7 +39,7 @@ public class Pos2D
 
     public String toString()
     {
-        return "[" + LMStringUtils.formatDouble(x) + ',' + ' ' + LMStringUtils.formatDouble(y) + ']';
+        return "[" + StringUtils.formatDouble(x) + ',' + ' ' + StringUtils.formatDouble(y) + ']';
     }
 
     public boolean equals(Object o)

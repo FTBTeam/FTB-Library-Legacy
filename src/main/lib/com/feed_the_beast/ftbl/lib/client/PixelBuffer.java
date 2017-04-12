@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
@@ -184,6 +184,6 @@ public class PixelBuffer implements IPixelBuffer
 
     public void addHSB(float h, float s, float b)
     {
-        LMColorUtils.addHSB(pixels, h, s, b);
+        ColorUtils.addHSB(pixels, h, s, b);
     }
 }

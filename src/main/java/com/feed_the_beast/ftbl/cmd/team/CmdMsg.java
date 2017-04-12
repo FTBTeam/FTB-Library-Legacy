@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,7 +15,7 @@ import net.minecraftforge.common.ForgeHooks;
 /**
  * Created by LatvianModder on 27.02.2017.
  */
-public class CmdMsg extends CommandLM
+public class CmdMsg extends CmdBase
 {
     @Override
     public String getName()
@@ -42,7 +42,7 @@ public class CmdMsg extends CommandLM
             throw FTBLibLang.TEAM_NO_TEAM.commandError();
         }
 
-        String m = LMStringUtils.joinSpaceUntilEnd(0, args);
+        String m = StringUtils.joinSpaceUntilEnd(0, args);
 
         if(m == null || m.isEmpty())
         {

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -49,7 +49,7 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
     public void fromJson(JsonElement json)
     {
         JsonObject group = json.getAsJsonObject();
-        universeID = group.has("world_id") ? LMStringUtils.fromString(group.get("world_id").getAsString()) : null;
+        universeID = group.has("world_id") ? StringUtils.fromString(group.get("world_id").getAsString()) : null;
         currentMode = group.has("mode") ? FTBLibIntegrationInternal.API.getPackModes().getMode(group.get("mode").getAsString()) : FTBLibIntegrationInternal.API.getPackModes().getDefault();
     }
 
@@ -57,7 +57,7 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
     public JsonElement getSerializableElement()
     {
         JsonObject o = new JsonObject();
-        o.add("world_id", new JsonPrimitive(LMStringUtils.fromUUID(getUniverseID())));
+        o.add("world_id", new JsonPrimitive(StringUtils.fromUUID(getUniverseID())));
         o.add("mode", new JsonPrimitive(getPackMode().getName()));
         return o;
     }

@@ -30,7 +30,7 @@ import java.util.Map;
  * Type for Lists: new TypeToken<List<E>>() {}.getType()
  */
 @ParametersAreNullableByDefault
-public class LMJsonUtils
+public class JsonUtils
 {
     public static final JsonDeserializationContext DESERIALIZATION_CONTEXT;
     public static final JsonSerializationContext SERIALIZATION_CONTEXT, PRETTY_SERIALIZATION_CONTEXT;
@@ -97,7 +97,7 @@ public class LMJsonUtils
     {
         try
         {
-            LMFileUtils.save(f, toJson(gson, o));
+            FileUtils.save(f, toJson(gson, o));
             return true;
         }
         catch(Exception e)
@@ -138,7 +138,7 @@ public class LMJsonUtils
             }
 
             FileInputStream fis = new FileInputStream(json);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, LMStringUtils.UTF_8));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StringUtils.UTF_8));
             JsonElement e = fromJson(reader);
             reader.close();
             fis.close();

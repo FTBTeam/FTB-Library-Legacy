@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.IStringSerializable;
 
 public class FinalIDObject implements IStringSerializable
@@ -9,12 +9,12 @@ public class FinalIDObject implements IStringSerializable
 
     public FinalIDObject(String id, int flags)
     {
-        ID = LMStringUtils.getID(id, flags);
+        ID = StringUtils.getId(id, flags);
     }
 
     public FinalIDObject(String id)
     {
-        this(id, LMStringUtils.FLAG_ID_DEFAULTS);
+        this(id, StringUtils.FLAG_ID_DEFAULTS);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class FinalIDObject implements IStringSerializable
     @Override
     public final boolean equals(Object o)
     {
-        return o == this || o == ID || (o != null && ID.equals(LMStringUtils.getID(o, LMStringUtils.FLAG_ID_FIX)));
+        return o == this || o == ID || (o != null && ID.equals(StringUtils.getId(o, StringUtils.FLAG_ID_FIX)));
     }
 }

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.io;
 
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 
 import javax.imageio.ImageIO;
@@ -53,17 +53,17 @@ public final class Response
 
     public String asString() throws Exception
     {
-        return LMStringUtils.readString(getStream());
+        return StringUtils.readString(getStream());
     }
 
     public List<String> asStringList() throws Exception
     {
-        return LMStringUtils.readStringList(getStream());
+        return StringUtils.readStringList(getStream());
     }
 
     public JsonElement asJson() throws Exception
     {
-        return LMJsonUtils.fromJson(new BufferedReader(new InputStreamReader(getStream())));
+        return JsonUtils.fromJson(new BufferedReader(new InputStreamReader(getStream())));
     }
 
     public BufferedImage asImage() throws Exception

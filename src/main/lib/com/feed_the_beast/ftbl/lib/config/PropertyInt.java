@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.config;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -160,7 +160,7 @@ public class PropertyInt extends PropertyBase
     @Override
     public boolean setValueFromString(String text, boolean simulate)
     {
-        if(MathHelperLM.canParseInt(text))
+        if(MathUtils.canParseInt(text))
         {
             if(!simulate)
             {

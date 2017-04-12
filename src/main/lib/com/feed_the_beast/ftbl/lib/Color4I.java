@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.util.math.MathHelper;
 
@@ -35,16 +35,16 @@ public final class Color4I
         green = g;
         blue = b;
         alpha = a;
-        rgba = LMColorUtils.getRGBA(red, green, blue, alpha);
+        rgba = ColorUtils.getRGBA(red, green, blue, alpha);
     }
 
     public Color4I(boolean canEdit, int rgba)
     {
         this.canEdit = canEdit;
-        red = LMColorUtils.getRed(rgba);
-        green = LMColorUtils.getGreen(rgba);
-        blue = LMColorUtils.getBlue(rgba);
-        alpha = LMColorUtils.getAlpha(rgba);
+        red = ColorUtils.getRed(rgba);
+        green = ColorUtils.getGreen(rgba);
+        blue = ColorUtils.getBlue(rgba);
+        alpha = ColorUtils.getAlpha(rgba);
         this.rgba = rgba;
     }
 
@@ -71,7 +71,7 @@ public final class Color4I
             green = g;
             blue = b;
             alpha = a;
-            rgba = LMColorUtils.getRGBA(red, green, blue, alpha);
+            rgba = ColorUtils.getRGBA(red, green, blue, alpha);
         }
     }
 
@@ -95,7 +95,7 @@ public final class Color4I
     {
         if(canEdit)
         {
-            set(LMColorUtils.getRed(col), LMColorUtils.getGreen(col), LMColorUtils.getBlue(col), a);
+            set(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col), a);
         }
     }
 
@@ -103,7 +103,7 @@ public final class Color4I
     {
         if(canEdit)
         {
-            set(col, LMColorUtils.getAlpha(col));
+            set(col, ColorUtils.getAlpha(col));
         }
     }
 
@@ -169,12 +169,12 @@ public final class Color4I
 
     public String toString()
     {
-        return LMColorUtils.getHex(rgba());
+        return ColorUtils.getHex(rgba());
     }
 
     public JsonElement toJson()
     {
-        return LMColorUtils.serialize(rgba());
+        return ColorUtils.serialize(rgba());
     }
 
     public void addBrightness(int b)

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 /**
  * Created by LatvianModder on 20.06.2016.
  */
-public class CmdKick extends CommandLM
+public class CmdKick extends CmdBase
 {
     @Override
     public String getName()

@@ -1,11 +1,10 @@
-package com.feed_the_beast.ftbl.lib.tile;
+package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
-import com.feed_the_beast.ftbl.api.tile.IRedstoneMode;
-import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import net.minecraft.util.IStringSerializable;
 
-public enum EnumRedstoneMode implements IRedstoneMode
+public enum EnumRedstoneMode implements IStringSerializable
 {
     DISABLED("disabled"),
     ACTIVE_HIGH("active_high"),
@@ -25,7 +24,6 @@ public enum EnumRedstoneMode implements IRedstoneMode
         langKey = new LangKey("ftbl.redstonemode." + name);
     }
 
-    @Override
     public LangKey getLangKey()
     {
         return langKey;
@@ -37,7 +35,6 @@ public enum EnumRedstoneMode implements IRedstoneMode
         return name;
     }
 
-    @Override
     public boolean isActive(boolean rsHigh)
     {
         switch(this)
@@ -53,7 +50,6 @@ public enum EnumRedstoneMode implements IRedstoneMode
         }
     }
 
-    @Override
     public IImageProvider getIcon()
     {
         switch(this)

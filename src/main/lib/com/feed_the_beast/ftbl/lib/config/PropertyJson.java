@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
@@ -55,13 +55,13 @@ public class PropertyJson extends PropertyBase
     @Override
     public void writeData(ByteBuf data)
     {
-        LMNetUtils.writeJsonElement(data, getJsonElement());
+        NetUtils.writeJsonElement(data, getJsonElement());
     }
 
     @Override
     public void readData(ByteBuf data)
     {
-        setJsonElement(LMNetUtils.readJsonElement(data));
+        setJsonElement(NetUtils.readJsonElement(data));
     }
 
     @Override

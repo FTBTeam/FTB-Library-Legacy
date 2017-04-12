@@ -5,7 +5,7 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * Created by LatvianModder on 14.05.2016.
  */
-public abstract class MessageToServer<E extends MessageToServer<E>> extends MessageLM<E>
+public abstract class MessageToServer<E extends MessageToServer<E>> extends MessageBase<E>
 {
     @Override
     final Side getReceivingSide()

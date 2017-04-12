@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.net.MessageLM;
+import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -60,5 +60,5 @@ public interface FTBLibAPI
 
     Map<String, IRankConfig> getRankConfigRegistry();
 
-    void handleMessage(MessageLM<?> message, MessageContext context, Side side);
+    void handleMessage(MessageBase<?> message, MessageContext context, Side side);
 }

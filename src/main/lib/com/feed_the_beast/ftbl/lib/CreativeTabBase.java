@@ -11,24 +11,24 @@ import java.util.List;
 /**
  * Created by LatvianModder on 06.02.2016.
  */
-public class CreativeTabLM extends CreativeTabs
+public class CreativeTabBase extends CreativeTabs
 {
     private final List<ItemStack> iconItems;
     private long timer = 1000L;
 
-    public CreativeTabLM(String label)
+    public CreativeTabBase(String label)
     {
         super(label);
         iconItems = new ArrayList<>();
     }
 
-    public CreativeTabLM addIcon(ItemStack is)
+    public CreativeTabBase addIcon(ItemStack is)
     {
         iconItems.add(is);
         return this;
     }
 
-    public CreativeTabLM setTimer(long t)
+    public CreativeTabBase setTimer(long t)
     {
         timer = Math.max(50, t);
         return this;

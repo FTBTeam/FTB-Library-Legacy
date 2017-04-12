@@ -8,8 +8,8 @@ import com.feed_the_beast.ftbl.lib.RemoveFilter;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMMapUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.MapUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -57,7 +57,7 @@ public class InfoPage extends FinalIDObject
 
         if(o.has("N"))
         {
-            setTitle(LMJsonUtils.deserializeTextComponent(o.get("N")));
+            setTitle(JsonUtils.deserializeTextComponent(o.get("N")));
         }
 
         if(o.has("T"))
@@ -164,7 +164,7 @@ public class InfoPage extends FinalIDObject
     public void cleanup()
     {
         childPages.values().forEach(InfoPage::cleanup);
-        LMMapUtils.removeAll(childPages, CLEANUP_FILTER);
+        MapUtils.removeAll(childPages, CLEANUP_FILTER);
     }
 
     public boolean isEmpty()
@@ -187,7 +187,7 @@ public class InfoPage extends FinalIDObject
 
     public void sort(boolean tree)
     {
-        LMMapUtils.sortMap(childPages, COMPARATOR);
+        MapUtils.sortMap(childPages, COMPARATOR);
 
         if(tree)
         {
@@ -216,7 +216,7 @@ public class InfoPage extends FinalIDObject
 
         if(title != null)
         {
-            o.add("N", LMJsonUtils.serializeTextComponent(title));
+            o.add("N", JsonUtils.serializeTextComponent(title));
         }
 
         if(!text.isEmpty())

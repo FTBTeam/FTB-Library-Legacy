@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 
 public class FTBLibNetHandler
 {
-    public static final LMNetworkWrapper NET = LMNetworkWrapper.newWrapper("FTBL");
+    public static final NetworkWrapper NET = NetworkWrapper.newWrapper("FTBL");
 
     public static void init()
     {

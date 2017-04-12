@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 06.01.2016.
  */
-public class LMListUtils
+public class ListUtils
 {
     public static String toString(Collection<?> c)
     {

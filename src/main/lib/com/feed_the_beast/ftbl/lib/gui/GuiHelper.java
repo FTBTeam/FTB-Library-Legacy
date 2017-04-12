@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -283,7 +283,7 @@ public class GuiHelper
                             {
                                 try
                                 {
-                                    LMNetUtils.openURI(uri);
+                                    NetUtils.openURI(uri);
                                 }
                                 catch(Exception ex)
                                 {
@@ -295,7 +295,7 @@ public class GuiHelper
                     }
                     else
                     {
-                        LMNetUtils.openURI(uri);
+                        NetUtils.openURI(uri);
                     }
 
                     return true;
@@ -311,7 +311,7 @@ public class GuiHelper
             {
                 try
                 {
-                    LMNetUtils.openURI((new File(clickEvent.getValue())).toURI());
+                    NetUtils.openURI((new File(clickEvent.getValue())).toURI());
                     return true;
                 }
                 catch(Exception ex)

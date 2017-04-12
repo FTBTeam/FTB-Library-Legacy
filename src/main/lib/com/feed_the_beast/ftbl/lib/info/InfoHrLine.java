@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -29,7 +29,7 @@ public class InfoHrLine extends EmptyInfoPageLine
     {
         JsonObject o = e.getAsJsonObject();
         height = o.has("height") ? Math.max(1, o.get("height").getAsInt()) : 1;
-        color = o.has("color") ? new Color4I(true, 0xFF000000 | LMColorUtils.deserialize(o.get("color"))) : Color4I.NONE;
+        color = o.has("color") ? new Color4I(true, 0xFF000000 | ColorUtils.deserialize(o.get("color"))) : Color4I.NONE;
     }
 
     @Override

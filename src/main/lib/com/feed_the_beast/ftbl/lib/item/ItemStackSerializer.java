@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.item;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
@@ -57,7 +57,7 @@ public class ItemStackSerializer
         {
             try
             {
-                itemstack.setTagCompound(JsonToNBT.getTagFromJson(LMStringUtils.joinSpaceUntilEnd(3, s1)));
+                itemstack.setTagCompound(JsonToNBT.getTagFromJson(StringUtils.joinSpaceUntilEnd(3, s1)));
             }
             catch(Exception ex)
             {

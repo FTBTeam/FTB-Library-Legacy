@@ -1,11 +1,10 @@
-package com.feed_the_beast.ftbl.lib.tile;
+package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
-import com.feed_the_beast.ftbl.api.tile.IInvMode;
-import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import net.minecraft.util.IStringSerializable;
 
-public enum EnumInvMode implements IInvMode
+public enum EnumInvMode implements IStringSerializable
 {
     IO("io"),
     IN("in"),
@@ -30,13 +29,11 @@ public enum EnumInvMode implements IInvMode
         return name;
     }
 
-    @Override
     public LangKey getLangKey()
     {
         return langKey;
     }
 
-    @Override
     public IImageProvider getIcon()
     {
         switch(this)
@@ -52,13 +49,11 @@ public enum EnumInvMode implements IInvMode
         }
     }
 
-    @Override
     public boolean canInsert()
     {
         return this == IO || this == IN;
     }
 
-    @Override
     public boolean canExtract()
     {
         return this == IO || this == OUT;

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
@@ -21,7 +21,7 @@ public class IconSet
     {
         textures = new ResourceLocation[6];
 
-        Map<String, String> map = LMStringUtils.parse(LMStringUtils.TEMP_MAP, v);
+        Map<String, String> map = StringUtils.parse(StringUtils.TEMP_MAP, v);
 
         String s = map.get("all");
 

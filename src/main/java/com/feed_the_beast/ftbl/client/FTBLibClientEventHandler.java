@@ -8,14 +8,13 @@ import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -114,7 +113,7 @@ public class FTBLibClientEventHandler
                 ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830);
                 event.getButtonList().add(renderer);
 
-                if(!LMUtils.isNEILoaded && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+                if(!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                 {
                     int i = 0;
                     for(ISidebarButton button : buttons)
@@ -217,9 +216,7 @@ public class FTBLibClientEventHandler
         {
             super(id, x, y, 16, 16, "");
             button = b;
-
-            ITextComponent c = b.getDisplayNameOverride();
-            title = ((c == null) ? new TextComponentTranslation("sidebar_button." + b.getName()) : c).getFormattedText();
+            title = StringUtils.translate("sidebar_button." + b.getName());
         }
 
         @Override
@@ -275,7 +272,7 @@ public class FTBLibClientEventHandler
 
                     int tw = mc.fontRendererObj.getStringWidth(b.title);
 
-                    if(LMUtils.isNEILoaded || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+                    if(LMUtils.isNEILoaded() || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                     {
                         mx1 -= tw + 8;
                         my1 += 4;

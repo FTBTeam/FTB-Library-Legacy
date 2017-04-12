@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class LMNBTUtils
+public class NBTUtils
 {
     public static String[] getMapKeys(NBTTagCompound tag)
     {
@@ -20,14 +20,14 @@ public class LMNBTUtils
         {
             return new String[0];
         }
-        return LMListUtils.toStringArray(tag.getKeySet());
+        return ListUtils.toStringArray(tag.getKeySet());
     }
 
     public static void writeTag(File f, NBTTagCompound tag)
     {
         try
         {
-            CompressedStreamTools.write(tag, LMFileUtils.newFile(f));
+            CompressedStreamTools.write(tag, FileUtils.newFile(f));
         }
         catch(Exception ex)
         {
@@ -130,7 +130,7 @@ public class LMNBTUtils
         }
         else if(string)
         {
-            return tag.hasKey(key) ? LMStringUtils.fromString(tag.getString(key)) : null;
+            return tag.hasKey(key) ? StringUtils.fromString(tag.getString(key)) : null;
         }
         else
         {
@@ -148,7 +148,7 @@ public class LMNBTUtils
         }
         if(string)
         {
-            tag.setString(key, LMStringUtils.fromUUID(uuid));
+            tag.setString(key, StringUtils.fromUUID(uuid));
         }
         else
         {

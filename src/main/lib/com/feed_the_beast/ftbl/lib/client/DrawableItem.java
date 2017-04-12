@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
@@ -41,7 +41,7 @@ public class DrawableItem implements IDrawableObject
     {
         if(!GuiHelper.drawItem(Minecraft.getMinecraft().getRenderItem(), stack, x, y, w / 16D, h / 16D, true))
         {
-            stack = LMInvUtils.ERROR_ITEM;
+            stack = InvUtils.ERROR_ITEM;
         }
     }
 }

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.internal;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.StatsLongValue;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
 import net.minecraft.stats.StatList;
@@ -56,7 +56,7 @@ public class FTBLibStats
             return GuiLang.LABEL_ONLINE.textComponent();
         }
 
-        return LMStringUtils.getTimeString(System.currentTimeMillis() - getLastSeen(stats, false));
+        return StringUtils.getTimeString(System.currentTimeMillis() - getLastSeen(stats, false));
     }
 
     public static double getLastSeenDeltaInHours(StatisticsManagerServer stats, boolean isOnline)

@@ -24,7 +24,7 @@ import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
@@ -189,7 +189,7 @@ public class GuiMyTeam extends GuiBase
                     }
                     else
                     {
-                        add(new TextField(4, 0, width - 5, -1, getFont(), "ID: " + LMStringUtils.fromUUID(selectedPlayer.playerId)));
+                        add(new TextField(4, 0, width - 5, -1, getFont(), "ID: " + StringUtils.fromUUID(selectedPlayer.playerId)));
 
                         CheckBoxList checkBoxes = new CheckBoxList(4, 1, true);
 

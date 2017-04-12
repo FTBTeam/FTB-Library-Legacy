@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 
 /**
@@ -33,7 +33,7 @@ public abstract class PropertyBase implements IConfigValue
     {
         try
         {
-            JsonElement json = LMJsonUtils.fromJson(text);
+            JsonElement json = JsonUtils.fromJson(text);
 
             if(!json.isJsonNull())
             {

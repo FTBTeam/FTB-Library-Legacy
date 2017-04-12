@@ -8,8 +8,8 @@ import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 07.06.2016.
  */
-public abstract class CmdEditConfigBase extends CommandLM
+public abstract class CmdEditConfigBase extends CmdBase
 {
     @Override
     public String getUsage(ICommandSender ics)
@@ -98,12 +98,12 @@ public abstract class CmdEditConfigBase extends CommandLM
 
         if(args.length >= 2)
         {
-            String json = String.valueOf(LMStringUtils.joinSpaceUntilEnd(1, args));
+            String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
             FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
 
             try
             {
-                JsonElement value = LMJsonUtils.fromJson(LMJsonUtils.fixJsonString(json));
+                JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
                 sender.sendMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
                 JsonObject json1 = new JsonObject();
                 json1.add(args[0], value);

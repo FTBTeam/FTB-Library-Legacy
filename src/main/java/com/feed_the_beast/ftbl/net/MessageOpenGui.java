@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -38,7 +38,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -46,8 +46,8 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        guiID = LMNetUtils.readResourceLocation(io);
-        pos = LMNetUtils.readPos(io);
+        guiID = NetUtils.readResourceLocation(io);
+        pos = NetUtils.readPos(io);
         data = ByteBufUtils.readTag(io);
         windowID = io.readUnsignedByte();
     }
@@ -55,8 +55,8 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writeResourceLocation(io, guiID);
-        LMNetUtils.writePos(io, pos);
+        NetUtils.writeResourceLocation(io, guiID);
+        NetUtils.writePos(io, pos);
         ByteBufUtils.writeTag(io, data);
         io.writeByte(windowID);
     }

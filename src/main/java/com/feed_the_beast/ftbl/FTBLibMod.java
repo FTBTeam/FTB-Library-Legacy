@@ -12,8 +12,8 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -93,14 +93,14 @@ public class FTBLibMod
         Universe.INSTANCE = new Universe();
         Universe.INSTANCE.load();
         PROXY.worldLoaded();
-        LMServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
+        ServerUtils.addTickable(event.getServer(), TickHandler.INSTANCE);
         FTBLibIntegrationInternal.API.loadWorldData(event.getServer());
     }
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event)
     {
-        FTBLibIntegrationInternal.API.reload(Side.SERVER, LMServerUtils.getServer(), EnumReloadType.CREATED);
+        FTBLibIntegrationInternal.API.reload(Side.SERVER, ServerUtils.getServer(), EnumReloadType.CREATED);
     }
 
     @Mod.EventHandler

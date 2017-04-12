@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -28,7 +28,7 @@ public class MyTeamPlayerData implements Comparable<MyTeamPlayerData>
 
     public MyTeamPlayerData(ByteBuf io)
     {
-        playerId = LMNetUtils.readUUID(io);
+        playerId = NetUtils.readUUID(io);
         playerName = ByteBufUtils.readUTF8String(io);
         isOnline = io.readBoolean();
         status = EnumTeamStatus.VALUES[io.readByte()];
@@ -36,7 +36,7 @@ public class MyTeamPlayerData implements Comparable<MyTeamPlayerData>
 
     public void write(ByteBuf io)
     {
-        LMNetUtils.writeUUID(io, playerId);
+        NetUtils.writeUUID(io, playerId);
         ByteBufUtils.writeUTF8String(io, playerName);
         io.writeBoolean(isOnline);
         io.writeByte(status.ordinal());

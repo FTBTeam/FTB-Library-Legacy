@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 20.06.2016.
  */
-public class CmdJoin extends CommandLM
+public class CmdJoin extends CmdBase
 {
     @Override
     public String getName()

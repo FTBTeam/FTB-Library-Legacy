@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.io;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 
 import javax.annotation.Nullable;
 import java.io.DataInput;
@@ -154,7 +154,7 @@ public final class ByteIOStream implements DataInput, DataOutput
     public String toString(boolean compressed)
     {
         byte[] b = compressed ? toCompressedByteArray() : toByteArray();
-        return "[ (" + b.length + ") " + LMStringUtils.stripB(b) + " ]";
+        return "[ (" + b.length + ") " + StringUtils.stripB(b) + " ]";
     }
 
     public OutputStream createOutputStream()

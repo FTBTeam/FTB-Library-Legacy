@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
@@ -10,11 +11,12 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlay
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.NBTUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,7 +56,7 @@ public class Universe implements IUniverse
 
         try
         {
-            JsonElement worldData = LMJsonUtils.fromJson(new File(LMUtils.folderWorld, "world_data.json"));
+            JsonElement worldData = JsonUtils.fromJson(new File(LMUtils.folderWorld, "world_data.json"));
 
             if(worldData.isJsonObject())
             {
@@ -68,7 +70,7 @@ public class Universe implements IUniverse
 
             if(oldFile.exists())
             {
-                NBTTagCompound nbt = LMNBTUtils.readTag(oldFile);
+                NBTTagCompound nbt = NBTUtils.readTag(oldFile);
                 MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
 
                 NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
@@ -76,7 +78,7 @@ public class Universe implements IUniverse
                 for(int i = 0; i < list.tagCount(); i++)
                 {
                     NBTTagCompound tag = list.getCompoundTagAt(i);
-                    UUID id = LMStringUtils.fromString(tag.getString("UUID"));
+                    UUID id = StringUtils.fromString(tag.getString("UUID"));
 
                     if(id != null)
                     {
@@ -121,11 +123,11 @@ public class Universe implements IUniverse
                     {
                         if(f.getName().endsWith(".dat"))
                         {
-                            UUID uuid = LMStringUtils.fromString(LMFileUtils.getRawFileName(f));
+                            UUID uuid = StringUtils.fromString(FileUtils.getRawFileName(f));
 
                             if(uuid != null)
                             {
-                                NBTTagCompound nbt = LMNBTUtils.readTag(f);
+                                NBTTagCompound nbt = NBTUtils.readTag(f);
 
                                 if(nbt != null)
                                 {
@@ -145,11 +147,11 @@ public class Universe implements IUniverse
                     {
                         if(f.getName().endsWith(".dat"))
                         {
-                            NBTTagCompound nbt = LMNBTUtils.readTag(f);
+                            NBTTagCompound nbt = NBTUtils.readTag(f);
 
                             if(nbt != null)
                             {
-                                String s = LMFileUtils.getRawFileName(f);
+                                String s = FileUtils.getRawFileName(f);
                                 teamNBT.put(s, nbt);
                                 teams.put(s, new ForgeTeam(s));
                             }
@@ -171,7 +173,7 @@ public class Universe implements IUniverse
 
                 if(dataStorage != null)
                 {
-                    NBTTagCompound nbt = LMNBTUtils.readTag(new File(folder, "universe.dat"));
+                    NBTTagCompound nbt = NBTUtils.readTag(new File(folder, "universe.dat"));
 
                     if(nbt != null)
                     {
@@ -236,11 +238,24 @@ public class Universe implements IUniverse
         }
         else if(o instanceof EntityPlayer)
         {
-            return getPlayer(((EntityPlayer) o).getGameProfile().getId());
+            return getPlayer(((EntityPlayer) o).getGameProfile());
         }
         else if(o instanceof GameProfile)
         {
-            return getPlayer(((GameProfile) o).getId());
+            GameProfile profile = (GameProfile) o;
+            ForgePlayer player = getPlayer(profile.getId());
+
+            if(player == null && FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS.get().get(!ServerUtils.getServer().isDedicatedServer()))
+            {
+                player = getPlayer(profile.getName());
+
+                if(player != null)
+                {
+                    playerMap.put(profile.getId(), player);
+                }
+            }
+
+            return player;
         }
         else if(o instanceof CharSequence)
         {
@@ -259,7 +274,7 @@ public class Universe implements IUniverse
                 }
             }
 
-            return getPlayer(LMStringUtils.fromString(s));
+            return getPlayer(StringUtils.fromString(s));
         }
 
         return null;
@@ -311,12 +326,12 @@ public class Universe implements IUniverse
         {
             NBTTagCompound nbt = p.serializeNBT();
             nbt.setString("Name", p.getName());
-            LMNBTUtils.writeTag(new File(folder, "players/" + LMStringUtils.fromUUID(p.getId()) + ".dat"), nbt);
+            NBTUtils.writeTag(new File(folder, "players/" + StringUtils.fromUUID(p.getId()) + ".dat"), nbt);
         }
 
         for(ForgeTeam team : teams.values())
         {
-            LMNBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), team.serializeNBT());
+            NBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), team.serializeNBT());
         }
 
         NBTTagCompound nbt = new NBTTagCompound();
@@ -326,6 +341,6 @@ public class Universe implements IUniverse
             nbt.setTag("Data", dataStorage.serializeNBT());
         }
 
-        LMNBTUtils.writeTag(new File(folder, "universe.dat"), nbt);
+        NBTUtils.writeTag(new File(folder, "universe.dat"), nbt);
     }
 }

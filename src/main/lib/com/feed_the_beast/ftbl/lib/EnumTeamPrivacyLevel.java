@@ -1,7 +1,6 @@
-package com.feed_the_beast.ftbl.api.security;
+package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 
 /**

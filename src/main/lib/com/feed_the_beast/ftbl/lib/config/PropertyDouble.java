@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.lib.config;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -131,21 +131,21 @@ public class PropertyDouble extends PropertyBase
 
         if(m != Double.NEGATIVE_INFINITY)
         {
-            list.add(TextFormatting.AQUA + "Min: " + LMStringUtils.formatDouble(m));
+            list.add(TextFormatting.AQUA + "Min: " + StringUtils.formatDouble(m));
         }
 
         m = getMax();
 
         if(m != Double.POSITIVE_INFINITY)
         {
-            list.add(TextFormatting.AQUA + "Max: " + LMStringUtils.formatDouble(m));
+            list.add(TextFormatting.AQUA + "Max: " + StringUtils.formatDouble(m));
         }
     }
 
     @Override
     public boolean setValueFromString(String text, boolean simulate)
     {
-        if(MathHelperLM.canParseDouble(text))
+        if(MathUtils.canParseDouble(text))
         {
             if(!simulate)
             {

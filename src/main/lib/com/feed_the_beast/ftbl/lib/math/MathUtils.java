@@ -20,7 +20,7 @@ import java.util.Random;
 /**
  * Made by LatvianModder
  */
-public class MathHelperLM
+public class MathUtils
 {
     public static final Random RAND = new Random();
     public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");

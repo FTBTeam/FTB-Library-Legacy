@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 31.07.2016.
  */
-public class LMNetUtils
+public class NetUtils
 {
     @Nullable
     public static String getHostAddress()
@@ -41,7 +41,7 @@ public class LMNetUtils
     {
         try
         {
-            return LMStringUtils.readString(new URL("http://checkip.amazonaws.com").openStream());
+            return StringUtils.readString(new URL("http://checkip.amazonaws.com").openStream());
         }
         catch(Exception e)
         {
@@ -125,15 +125,12 @@ public class LMNetUtils
 
     public static void writeResourceLocation(ByteBuf io, ResourceLocation r)
     {
-        ByteBufUtils.writeUTF8String(io, r.getResourceDomain());
-        ByteBufUtils.writeUTF8String(io, r.getResourcePath());
+        ByteBufUtils.writeUTF8String(io, r.toString());
     }
 
     public static ResourceLocation readResourceLocation(ByteBuf io)
     {
-        String d = ByteBufUtils.readUTF8String(io);
-        String p = ByteBufUtils.readUTF8String(io);
-        return new ResourceLocation(d, p);
+        return new ResourceLocation(ByteBufUtils.readUTF8String(io));
     }
 
     public static void writeJsonElement(ByteBuf io, JsonElement e)
@@ -148,13 +145,13 @@ public class LMNetUtils
 
     public static void writeTextComponent(ByteBuf io, @Nullable ITextComponent t)
     {
-        writeJsonElement(io, LMJsonUtils.serializeTextComponent(t));
+        writeJsonElement(io, JsonUtils.serializeTextComponent(t));
     }
 
     @Nullable
     public static ITextComponent readTextComponent(ByteBuf io)
     {
-        return LMJsonUtils.deserializeTextComponent(readJsonElement(io));
+        return JsonUtils.deserializeTextComponent(readJsonElement(io));
     }
 
     public static void writeProfile(ByteBuf io, GameProfile profile)

@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbl.lib;
 
-import net.minecraft.client.resources.I18n;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by LatvianModder on 17.04.2016.
@@ -27,10 +25,14 @@ public final class LangKey implements IStringSerializable
         return key;
     }
 
-    @SideOnly(Side.CLIENT)
+    public String translate()
+    {
+        return StringUtils.translate(key);
+    }
+
     public String translate(Object... o)
     {
-        return I18n.format(key, o);
+        return StringUtils.translate(key, o);
     }
 
     public ITextComponent textComponent(Object... o)
@@ -38,9 +40,9 @@ public final class LangKey implements IStringSerializable
         return new TextComponentTranslation(key, o);
     }
 
-    public void printChat(ICommandSender ics, Object... o)
+    public void printChat(ICommandSender sender, Object... o)
     {
-        ics.sendMessage(textComponent(o));
+        sender.sendMessage(textComponent(o));
     }
 
     public CommandException commandError(Object... o)

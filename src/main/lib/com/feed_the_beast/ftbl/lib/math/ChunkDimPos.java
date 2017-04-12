@@ -25,12 +25,12 @@ public final class ChunkDimPos
 
     public ChunkDimPos(BlockPos pos, int d)
     {
-        this(MathHelperLM.chunk(pos.getX()), MathHelperLM.chunk(pos.getZ()), d);
+        this(MathUtils.chunk(pos.getX()), MathUtils.chunk(pos.getZ()), d);
     }
 
     public ChunkDimPos(Entity entity)
     {
-        this(MathHelperLM.chunk(entity.posX), MathHelperLM.chunk(entity.posY), entity.dimension);
+        this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posY), entity.dimension);
     }
 
     public boolean equals(Object o)

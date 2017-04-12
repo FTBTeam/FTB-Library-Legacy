@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by LatvianModder on 06.01.2016.
  */
-public class LMMapUtils
+public class MapUtils
 {
     public static String toString(Map<?, ?> map)
     {

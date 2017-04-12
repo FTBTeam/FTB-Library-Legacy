@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.Universe;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-public class CmdAddFakePlayer extends CommandLM
+public class CmdAddFakePlayer extends CmdBase
 {
     @Override
     public String getName()
@@ -40,7 +40,7 @@ public class CmdAddFakePlayer extends CommandLM
     {
         checkArgs(args, 2, "<uuid> <name>");
 
-        UUID id = LMStringUtils.fromString(args[0]);
+        UUID id = StringUtils.fromString(args[0]);
         if(id == null)
         {
             throw FTBLibLang.RAW.commandError("Invalid UUID!");

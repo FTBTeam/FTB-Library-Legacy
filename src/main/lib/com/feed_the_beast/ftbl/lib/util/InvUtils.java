@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 /**
  * Made by LatvianModder
  */
-public class LMInvUtils
+public class InvUtils
 {
     public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
     private static Method baublesMethod = null;

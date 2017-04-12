@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +38,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -46,14 +46,14 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
     @Override
     public void fromBytes(ByteBuf io)
     {
-        groupData = LMNetUtils.readJsonElement(io).getAsJsonObject();
+        groupData = NetUtils.readJsonElement(io).getAsJsonObject();
         extraNBT = ByteBufUtils.readTag(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        LMNetUtils.writeJsonElement(io, groupData);
+        NetUtils.writeJsonElement(io, groupData);
         ByteBufUtils.writeTag(io, extraNBT);
     }
 

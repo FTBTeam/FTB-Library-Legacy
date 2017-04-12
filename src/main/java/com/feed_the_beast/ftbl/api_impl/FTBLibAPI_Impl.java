@@ -25,9 +25,9 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
-import com.feed_the_beast.ftbl.lib.net.MessageLM;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
@@ -140,9 +140,9 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             plugin.onReload(side, sender, type);
         }
 
-        if(serverSide && LMServerUtils.hasOnlinePlayers())
+        if(serverSide && ServerUtils.hasOnlinePlayers())
         {
-            for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayers())
+            for(EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
             {
                 NBTTagCompound syncData = new NBTTagCompound();
                 IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
@@ -240,7 +240,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void handleMessage(MessageLM<?> message, MessageContext context, Side side)
+    public void handleMessage(MessageBase<?> message, MessageContext context, Side side)
     {
         if(side.isServer())
         {
@@ -250,7 +250,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 
                 if(LOG_NET)
                 {
-                    LMUtils.DEV_LOGGER.info("TX MessageLM: " + message.getClass().getName());
+                    LMUtils.DEV_LOGGER.info("TX MessageBase: " + message.getClass().getName());
                 }
             });
         }

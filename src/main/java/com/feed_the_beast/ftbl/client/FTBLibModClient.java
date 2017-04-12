@@ -21,10 +21,10 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.net.MessageLM;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.net.MessageBase;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
@@ -66,9 +66,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         String group = FTBLibFinals.MOD_ID;
         addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
         addClientConfig(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
+        addClientConfig(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
         addClientConfig(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
         group = FTBLibFinals.MOD_ID + ".gui";
-        addClientConfig(group, "gui.enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
+        addClientConfig(group, "enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
         group = FTBLibFinals.MOD_ID + ".gui.info";
         addClientConfig(group, "border_width", GuiConfigs.INFO_BORDER_WIDTH).addFlags(IConfigKey.USE_SCROLL_BAR);
         addClientConfig(group, "border_height", GuiConfigs.INFO_BORDER_HEIGHT).addFlags(IConfigKey.USE_SCROLL_BAR);
@@ -84,13 +85,18 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
             plugin.registerClient(this);
         }
 
-        SIDEBAR_BUTTON_MAP.forEach((key, button) ->
+        SIDEBAR_BUTTON_MAP.values().forEach(button ->
         {
             IConfigValue value = button.getConfig();
 
             if(value != null)
             {
-                clientConfig.add(new ConfigKey("sidebar_button." + button.getName(), value.copy()), value);
+                ConfigKey key = new ConfigKey(button.getName(), value.copy());
+                key.setGroup("sidebar_button");
+                key.setNameLangKey("sidebar_button." + key.getName());
+                key.setInfoLangKey("sidebar_button." + key.getName() + ".info");
+
+                clientConfig.add(key, value);
             }
         });
 
@@ -177,7 +183,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
         //For Dev reasons
         GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
-        if(profile.getId().equals(LMStringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
+        if(profile.getId().equals(StringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
         {
             LMUtils.userIsLatvianModder = true;
         }
@@ -194,10 +200,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     @Override
     public void spawnDust(World w, double x, double y, double z, int col)
     {
-        float alpha = LMColorUtils.getAlphaF(col);
-        float red = LMColorUtils.getRedF(col);
-        float green = LMColorUtils.getGreenF(col);
-        float blue = LMColorUtils.getBlueF(col);
+        float alpha = ColorUtils.getAlphaF(col);
+        float red = ColorUtils.getRedF(col);
+        float green = ColorUtils.getGreenF(col);
+        float blue = ColorUtils.getBlueF(col);
         if(alpha <= 0F)
         {
             alpha = 1F;
@@ -247,7 +253,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
-    public void handleClientMessage(MessageLM<?> message)
+    public void handleClientMessage(MessageBase<?> message)
     {
         Minecraft.getMinecraft().addScheduledTask(() ->
         {
@@ -255,7 +261,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
             if(FTBLibAPI_Impl.LOG_NET)
             {
-                LMUtils.DEV_LOGGER.info("RX MessageLM: " + message.getClass().getName());
+                LMUtils.DEV_LOGGER.info("RX MessageBase: " + message.getClass().getName());
             }
         });
     }

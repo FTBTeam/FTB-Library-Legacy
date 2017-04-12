@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -17,7 +17,7 @@ import net.minecraftforge.common.MinecraftForge;
 /**
  * Created by LatvianModder on 20.06.2016.
  */
-public class CmdCreate extends CommandLM
+public class CmdCreate extends CmdBase
 {
     @Override
     public String getName()

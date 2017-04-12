@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.IPackModes;
-import com.feed_the_beast.ftbl.lib.util.LMFileUtils;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -28,8 +28,8 @@ public enum PackModes implements IPackModes
 
     public void load()
     {
-        File file = LMFileUtils.newFile(new File(LMUtils.folderModpack, "packmodes.json"));
-        JsonElement el = LMJsonUtils.fromJson(file);
+        File file = FileUtils.newFile(new File(LMUtils.folderModpack, "packmodes.json"));
+        JsonElement el = JsonUtils.fromJson(file);
 
         JsonObject o = isValid(el) ? el.getAsJsonObject() : createDefault();
 
@@ -65,7 +65,7 @@ public enum PackModes implements IPackModes
         }
 
         customData = Collections.unmodifiableMap(customData0);
-        LMJsonUtils.toJson(file, INSTANCE.toJsonObject());
+        JsonUtils.toJson(file, INSTANCE.toJsonObject());
     }
 
     private boolean isValid(JsonElement e)

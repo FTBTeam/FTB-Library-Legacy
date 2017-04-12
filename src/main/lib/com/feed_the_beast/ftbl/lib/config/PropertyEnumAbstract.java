@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -120,7 +120,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
     @Override
     public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
     {
-        set(getNameMap().getFromIndex(MathHelperLM.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().size)));
+        set(getNameMap().getFromIndex(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().size)));
         gui.onChanged(key, getSerializableElement());
     }
 }

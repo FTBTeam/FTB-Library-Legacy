@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -26,7 +26,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
         displayName = ByteBufUtils.readUTF8String(io);
         description = ByteBufUtils.readUTF8String(io);
         color = EnumTeamColor.VALUES[io.readUnsignedByte()];
-        ownerId = LMNetUtils.readUUID(io);
+        ownerId = NetUtils.readUUID(io);
         ownerName = ByteBufUtils.readUTF8String(io);
         isInvited = io.readBoolean();
     }
@@ -48,7 +48,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
         ByteBufUtils.writeUTF8String(io, displayName);
         ByteBufUtils.writeUTF8String(io, description);
         io.writeByte(color.ordinal());
-        LMNetUtils.writeUUID(io, ownerId);
+        NetUtils.writeUUID(io, ownerId);
         ByteBufUtils.writeUTF8String(io, ownerName);
         io.writeBoolean(isInvited);
     }

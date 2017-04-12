@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.ITextComponent;
@@ -85,24 +85,24 @@ public class PropertyTextComponent extends PropertyBase
     @Override
     public void fromJson(JsonElement e)
     {
-        setText(LMJsonUtils.deserializeTextComponent(e));
+        setText(JsonUtils.deserializeTextComponent(e));
     }
 
     @Override
     public JsonElement getSerializableElement()
     {
-        return LMJsonUtils.serializeTextComponent(getText());
+        return JsonUtils.serializeTextComponent(getText());
     }
 
     @Override
     public void writeData(ByteBuf data)
     {
-        LMNetUtils.writeTextComponent(data, getText());
+        NetUtils.writeTextComponent(data, getText());
     }
 
     @Override
     public void readData(ByteBuf data)
     {
-        setText(LMNetUtils.readTextComponent(data));
+        setText(NetUtils.readTextComponent(data));
     }
 }

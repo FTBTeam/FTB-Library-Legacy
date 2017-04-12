@@ -74,7 +74,7 @@ public final class BlockDimPos
 
     public ChunkDimPos toChunkPos()
     {
-        return new ChunkDimPos(MathHelperLM.chunk(posX), MathHelperLM.chunk(posZ), dim);
+        return new ChunkDimPos(MathUtils.chunk(posX), MathUtils.chunk(posZ), dim);
     }
 
     public BlockPos getBlockPos()

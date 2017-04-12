@@ -5,13 +5,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LMConnection
+public class HttpConnection
 {
     public final RequestMethod type;
     public final String url;
     public byte[] data;
 
-    public LMConnection(RequestMethod t, String s)
+    public HttpConnection(RequestMethod t, String s)
     {
         type = t;
         url = s;

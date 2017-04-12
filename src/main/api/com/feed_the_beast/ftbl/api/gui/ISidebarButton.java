@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -19,12 +18,6 @@ public interface ISidebarButton extends IStringSerializable
     IConfigValue getConfig();
 
     void onClicked(IMouseButton button);
-
-    @Nullable
-    default ITextComponent getDisplayNameOverride()
-    {
-        return null;
-    }
 
     default void postRender(int ax, int ay)
     {

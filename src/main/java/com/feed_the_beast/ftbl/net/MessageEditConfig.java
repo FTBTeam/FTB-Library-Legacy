@@ -6,10 +6,10 @@ import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,7 +54,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -63,7 +63,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public void fromBytes(ByteBuf io)
     {
         RX_NBT = ByteBufUtils.readTag(io);
-        title = LMNetUtils.readTextComponent(io);
+        title = NetUtils.readTextComponent(io);
         RX_CONFIG_TREE.readData(io);
     }
 
@@ -71,7 +71,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
     public void toBytes(ByteBuf io)
     {
         ByteBufUtils.writeTag(io, extraNBT);
-        LMNetUtils.writeTextComponent(io, title);
+        NetUtils.writeTextComponent(io, title);
         group.writeData(io);
     }
 

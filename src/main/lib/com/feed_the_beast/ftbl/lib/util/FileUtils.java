@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-public class LMFileUtils
+public class FileUtils
 {
     public static final int KB = 1024;
     public static final int MB = KB * 1024;
@@ -57,7 +57,7 @@ public class LMFileUtils
 
     public static void save(File f, String s) throws Exception
     {
-        OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(f)), LMStringUtils.UTF_8);
+        OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(f)), StringUtils.UTF_8);
         BufferedWriter br = new BufferedWriter(fw);
         br.write(s);
         br.close();
@@ -66,12 +66,12 @@ public class LMFileUtils
 
     public static List<String> load(File f) throws Exception
     {
-        return LMStringUtils.readStringList(new FileInputStream(f));
+        return StringUtils.readStringList(new FileInputStream(f));
     }
 
     public static String loadAsText(File f) throws Exception
     {
-        return LMStringUtils.readString(new FileInputStream(f));
+        return StringUtils.readString(new FileInputStream(f));
     }
 
     public static boolean downloadFile(String url, File out)

@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.lib.cmd.CommandLM;
+import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class CmdPackMode extends CommandTreeBase
 {
-    public static class CmdSet extends CommandLM
+    public static class CmdSet extends CmdBase
     {
         @Override
         public String getName()
@@ -76,7 +76,7 @@ public class CmdPackMode extends CommandTreeBase
         }
     }
 
-    public static class CmdGet extends CommandLM
+    public static class CmdGet extends CmdBase
     {
         @Override
         public String getName()
@@ -99,7 +99,7 @@ public class CmdPackMode extends CommandTreeBase
         }
     }
 
-    public static class CmdList extends CommandLM
+    public static class CmdList extends CmdBase
     {
         @Override
         public String getName()
@@ -116,7 +116,7 @@ public class CmdPackMode extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            ITextComponent c = FTBLibLang.MODE_LIST.textComponent(LMStringUtils.strip(PackModes.INSTANCE.getModes()));
+            ITextComponent c = FTBLibLang.MODE_LIST.textComponent(StringUtils.strip(PackModes.INSTANCE.getModes()));
             c.getStyle().setColor(TextFormatting.AQUA);
             sender.sendMessage(c);
         }

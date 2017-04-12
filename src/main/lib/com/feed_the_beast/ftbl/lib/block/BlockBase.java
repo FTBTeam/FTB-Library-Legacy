@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.block;
 
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
-import com.feed_the_beast.ftbl.lib.tile.TileLM;
+import com.feed_the_beast.ftbl.lib.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -13,11 +13,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class BlockLM extends Block implements IBlockWithItem
+public abstract class BlockBase extends Block implements IBlockWithItem
 {
     //Model String = BlockStateSerializer.INSTANCE.get(getDefaultState())
 
-    public BlockLM(String id, Material material, MapColor color)
+    public BlockBase(String id, Material material, MapColor color)
     {
         super(material, color);
         setRegistryName(id);
@@ -30,7 +30,7 @@ public abstract class BlockLM extends Block implements IBlockWithItem
     @Override
     public ItemBlock createItemBlock()
     {
-        return new ItemBlockLM(this, false);
+        return new ItemBlockBase(this, false);
     }
 
     @Override
@@ -63,9 +63,9 @@ public abstract class BlockLM extends Block implements IBlockWithItem
         {
             TileEntity te = world.getTileEntity(pos);
 
-            if(te instanceof TileLM)
+            if(te instanceof TileBase)
             {
-                ((TileLM) te).onNeighborChange();
+                ((TileBase) te).onNeighborChange();
             }
             else if(te != null)
             {

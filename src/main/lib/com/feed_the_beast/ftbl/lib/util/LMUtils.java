@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.launchwrapper.Launch;
@@ -36,6 +37,11 @@ public class LMUtils
     public static <T> T cast(Object o)
     {
         return (T) o;
+    }
+
+    public static boolean isNEILoaded()
+    {
+        return isNEILoaded && !FTBLibClientConfig.IGNORE_NEI.getBoolean();
     }
 
     public static void init(File configFolder)

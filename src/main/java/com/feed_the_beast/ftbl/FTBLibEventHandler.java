@@ -7,9 +7,9 @@ import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -40,7 +40,7 @@ public class FTBLibEventHandler
 
         try
         {
-            LMJsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
+            JsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
             Universe.INSTANCE.save(new File(LMUtils.folderWorld, "data/ftb_lib"));
         }
         catch(Exception ex)
@@ -88,7 +88,7 @@ public class FTBLibEventHandler
 
             if(Universe.INSTANCE.getTeam(id) != null)
             {
-                id = LMStringUtils.fromUUID(p.getId());
+                id = StringUtils.fromUUID(p.getId());
             }
 
             if(Universe.INSTANCE.getTeam(id) == null)

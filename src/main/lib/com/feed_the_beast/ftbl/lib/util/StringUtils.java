@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.translation.I18n;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-public class LMStringUtils
+public class StringUtils
 {
     public static final int DAY24 = 24 * 60 * 60;
     public static final Charset UTF_8 = Charset.forName("UTF-8");
@@ -38,11 +39,11 @@ public class LMStringUtils
     public static final int FLAG_ID_DEFAULTS = FLAG_ID_FIX | FLAG_ID_ONLY_LOWERCASE | FLAG_ID_ONLY_UNDERLINE;
 
     public static final Comparator<Object> IGNORE_CASE_COMPARATOR = (o1, o2) -> String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
-    public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1, FLAG_ID_FIX).compareToIgnoreCase(getID(o2, FLAG_ID_FIX));
+    public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getId(o1, FLAG_ID_FIX).compareToIgnoreCase(getId(o2, FLAG_ID_FIX));
 
     public static final Map<String, String> TEMP_MAP = new HashMap<>();
 
-    public static String getID(Object o, int flags)
+    public static String getId(Object o, int flags)
     {
         String id = o instanceof IStringSerializable ? ((IStringSerializable) o).getName() : String.valueOf(o.toString());
 
@@ -280,7 +281,7 @@ public class LMStringUtils
 
         for(int i = 0; i < o.length; i++)
         {
-            sb.append(MathHelperLM.toSmallDouble(o[i]));
+            sb.append(MathUtils.toSmallDouble(o[i]));
             if(i != o.length - 1)
             {
                 sb.append(STRIP_SEP);
@@ -616,5 +617,20 @@ public class LMStringUtils
         }
 
         return false;
+    }
+
+    public static String translate(String key)
+    {
+        return I18n.translateToLocal(key);
+    }
+
+    public static String translate(String key, Object... objects)
+    {
+        return I18n.translateToLocalFormatted(key, objects);
+    }
+
+    public static boolean canTranslate(String key)
+    {
+        return I18n.canTranslate(key);
     }
 }

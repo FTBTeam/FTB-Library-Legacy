@@ -39,6 +39,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyShort;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
+import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
 import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.info.InfoHrLine;
 import com.feed_the_beast.ftbl.lib.info.InfoImageLine;
@@ -50,13 +51,14 @@ import com.feed_the_beast.ftbl.lib.info.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
-import com.feed_the_beast.ftbl.lib.net.MessageLM;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.net.MessageBase;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.LoaderState;
 
@@ -103,12 +105,17 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addOptionalServerMod(FTBLibFinals.MOD_ID);
         addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbl.json"));
 
-        addConfig(FTBLibFinals.MOD_ID, "teams.autocreate_on_login", FTBLibConfig.AUTOCREATE_TEAMS);
-        addConfig(FTBLibFinals.MOD_ID, "teams.mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
+        String group = FTBLibFinals.MOD_ID;
+        addConfig(group, "mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
+        addConfig(group, "merge_offline_mode_players", FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS);
+        group = FTBLibFinals.MOD_ID + ".teams";
+        addConfig(group, "autocreate_on_login", FTBLibConfig.AUTOCREATE_TEAMS);
+        addConfig(group, "max_team_chat_history", FTBLibConfig.MAX_TEAM_CHAT_HISTORY);
 
         addConfigValueProvider(PropertyNull.ID, () -> PropertyNull.INSTANCE);
         addConfigValueProvider(PropertyList.ID, () -> new PropertyList(PropertyNull.ID));
         addConfigValueProvider(PropertyBool.ID, PropertyBool::new);
+        addConfigValueProvider(PropertyTristate.ID, PropertyTristate::new);
         addConfigValueProvider(PropertyByte.ID, PropertyByte::new);
         addConfigValueProvider(PropertyShort.ID, PropertyShort::new);
         addConfigValueProvider(PropertyInt.ID, PropertyInt::new);
@@ -168,7 +175,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         if(id.charAt(0) != '-')
         {
             id = id.toLowerCase();
-            ConfigFile configFile = new ConfigFile(new TextComponentString(id), provider);
+            ConfigFile configFile = new ConfigFile(new TextComponentTranslation("config_group." + id + ".name"), provider);
             CONFIG_FILES.put(id, configFile);
         }
     }
@@ -279,7 +286,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     {
         loadAllFiles();
 
-        JsonElement overridesE = LMJsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
+        JsonElement overridesE = JsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
 
         if(overridesE.isJsonObject())
         {
@@ -338,7 +345,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         return null;
     }
 
-    public void handleClientMessage(MessageLM<?> message)
+    public void handleClientMessage(MessageBase<?> message)
     {
     }
 

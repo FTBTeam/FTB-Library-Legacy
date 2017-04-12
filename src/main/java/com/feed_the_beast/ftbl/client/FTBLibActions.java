@@ -18,10 +18,6 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-
-import javax.annotation.Nullable;
 
 public class FTBLibActions
 {
@@ -31,13 +27,6 @@ public class FTBLibActions
         public void onClicked(IMouseButton button)
         {
             FTBLibClient.execClientCommand("/ftb team gui");
-        }
-
-        @Override
-        @Nullable
-        public ITextComponent getDisplayNameOverride()
-        {
-            return new TextComponentString("TeamsGUI");
         }
 
         @Override

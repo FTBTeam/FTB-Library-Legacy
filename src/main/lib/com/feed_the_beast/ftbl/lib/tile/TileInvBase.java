@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
-import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -10,11 +10,11 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public class TileInvLM extends TileLM
+public class TileInvBase extends TileBase
 {
     public final ItemStackHandler itemHandler;
 
-    public TileInvLM(int size)
+    public TileInvBase(int size)
     {
         itemHandler = createHandler(size);
     }
@@ -27,7 +27,7 @@ public class TileInvLM extends TileLM
             protected void onContentsChanged(int slot)
             {
                 super.onContentsChanged(slot);
-                TileInvLM.this.markDirty();
+                TileInvBase.this.markDirty();
             }
         };
     }
@@ -93,7 +93,7 @@ public class TileInvLM extends TileLM
 
                 if(item != null && item.stackSize > 0)
                 {
-                    LMInvUtils.dropItem(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
+                    InvUtils.dropItem(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
                 }
             }
         }

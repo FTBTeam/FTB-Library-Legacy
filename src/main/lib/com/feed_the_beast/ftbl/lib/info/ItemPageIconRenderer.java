@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
-import com.feed_the_beast.ftbl.lib.util.LMInvUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
@@ -62,7 +62,7 @@ public class ItemPageIconRenderer implements IPageIconRenderer
         }
         catch(Exception ex)
         {
-            items = Collections.singletonList(LMInvUtils.ERROR_ITEM);
+            items = Collections.singletonList(InvUtils.ERROR_ITEM);
         }
     }
 

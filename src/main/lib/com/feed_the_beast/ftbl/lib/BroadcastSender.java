@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -30,7 +30,7 @@ public enum BroadcastSender implements ICommandSender
     @Override
     public void sendMessage(ITextComponent component)
     {
-        LMServerUtils.getServer().getPlayerList().sendChatMsgImpl(component, true);
+        ServerUtils.getServer().getPlayerList().sendChatMsgImpl(component, true);
     }
 
     @Override
@@ -42,7 +42,7 @@ public enum BroadcastSender implements ICommandSender
     @Override
     public BlockPos getPosition()
     {
-        return LMServerUtils.getServerWorld().getSpawnCoordinate();
+        return ServerUtils.getServerWorld().getSpawnCoordinate();
     }
 
     @Override
@@ -54,7 +54,7 @@ public enum BroadcastSender implements ICommandSender
     @Override
     public World getEntityWorld()
     {
-        return LMServerUtils.getServerWorld();
+        return ServerUtils.getServerWorld();
     }
 
     @Override
@@ -77,6 +77,6 @@ public enum BroadcastSender implements ICommandSender
     @Override
     public MinecraftServer getServer()
     {
-        return LMServerUtils.getServer();
+        return ServerUtils.getServer();
     }
 }

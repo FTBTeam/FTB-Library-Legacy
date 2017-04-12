@@ -15,9 +15,9 @@ import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -69,7 +69,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -79,7 +79,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     {
         io.writeByte(flags);
         ByteBufUtils.writeUTF8String(io, currentMode);
-        LMNetUtils.writeUUID(io, universeID);
+        NetUtils.writeUUID(io, universeID);
 
         io.writeShort(notifications.size());
         notifications.forEach((key, value) -> MessageNotifyPlayer.write(io, value));
@@ -104,7 +104,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     {
         flags = io.readByte();
         currentMode = ByteBufUtils.readUTF8String(io);
-        universeID = LMNetUtils.readUUID(io);
+        universeID = NetUtils.readUUID(io);
 
         int s = io.readUnsignedShort();
         notifications = new HashMap<>(s);

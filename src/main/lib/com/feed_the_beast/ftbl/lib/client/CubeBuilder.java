@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -55,9 +55,9 @@ public class CubeBuilder
 
     public CubeBuilder add(EnumFacing facing)
     {
-        float normalX = MathHelperLM.NORMALS_X[facing.getIndex()];
-        float normalY = MathHelperLM.NORMALS_Y[facing.getIndex()];
-        float normalZ = MathHelperLM.NORMALS_Z[facing.getIndex()];
+        float normalX = MathUtils.NORMALS_X[facing.getIndex()];
+        float normalY = MathUtils.NORMALS_Y[facing.getIndex()];
+        float normalZ = MathUtils.NORMALS_Z[facing.getIndex()];
 
         switch(facing)
         {

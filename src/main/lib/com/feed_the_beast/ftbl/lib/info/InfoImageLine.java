@@ -10,7 +10,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -97,7 +97,7 @@ public class InfoImageLine extends EmptyInfoPageLine
 
             for(JsonElement e1 : o.get("hover").getAsJsonArray())
             {
-                hover.add(LMJsonUtils.deserializeTextComponent(e1).getFormattedText());
+                hover.add(JsonUtils.deserializeTextComponent(e1).getFormattedText());
             }
         }
     }

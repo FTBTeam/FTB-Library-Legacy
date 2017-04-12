@@ -3,22 +3,20 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibStats;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.util.LMNBTUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.NBTUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.net.MessageLogin;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
@@ -44,8 +42,6 @@ import java.util.UUID;
  */
 public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {
-    private static final IConfigKey HIDE_TEAM_NOTIFICATION = new ConfigKey("ftbl.hide_team_notification", new PropertyBool(false));
-    private static final IConfigKey HIDE_NEW_TEAM_MSG_NOTIFICATION = new ConfigKey("ftbl.hide_new_team_msg_notification", new PropertyBool(false));
     private static FakePlayer playerForStats;
 
     private final UUID playerId;
@@ -214,7 +210,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     @Override
     public boolean isOP()
     {
-        return LMServerUtils.isOP(getProfile());
+        return ServerUtils.isOP(getProfile());
     }
 
     @Override
@@ -299,11 +295,11 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     {
         if(playerForStats == null)
         {
-            playerForStats = new FakePlayer(LMServerUtils.getServerWorld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
+            playerForStats = new FakePlayer(ServerUtils.getServerWorld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
         }
 
         playerForStats.setUniqueId(getId());
-        return LMServerUtils.getServer().getPlayerList().getPlayerStatsFile(playerForStats);
+        return ServerUtils.getServer().getPlayerList().getPlayerStatsFile(playerForStats);
     }
 
     @Override
@@ -324,7 +320,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
         {
             try
             {
-                playerNBT = LMNBTUtils.readTag(new File(LMUtils.folderWorld, "playerdata/" + getId() + ".dat"));
+                playerNBT = NBTUtils.readTag(new File(LMUtils.folderWorld, "playerdata/" + getId() + ".dat"));
             }
             catch(Exception ex)
             {

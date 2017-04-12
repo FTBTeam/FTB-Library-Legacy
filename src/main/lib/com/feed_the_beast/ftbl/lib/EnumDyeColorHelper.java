@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,7 @@ public class EnumDyeColorHelper // ItemDye
     {
         dye = col;
         langKey = new LangKey("item.fireworksCharge." + col.getUnlocalizedName());
-        oreName = LMStringUtils.firstUppercase(col.getUnlocalizedName());
+        oreName = StringUtils.firstUppercase(col.getUnlocalizedName());
     }
 
     public static EnumDyeColorHelper get(EnumDyeColor dye)

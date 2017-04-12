@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.security.EnumTeamPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;

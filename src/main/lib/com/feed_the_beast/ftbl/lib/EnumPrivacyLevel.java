@@ -1,8 +1,6 @@
-package com.feed_the_beast.ftbl.api.security;
+package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
-import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.IStringSerializable;
 

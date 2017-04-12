@@ -13,13 +13,13 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Map;
 
-public class LMNetworkWrapper // SimpleNetworkWrapper
+public class NetworkWrapper // SimpleNetworkWrapper
 {
     private final SimpleIndexedCodec packetCodec;
     private final FMLEmbeddedChannel serverChannels;
     private final FMLEmbeddedChannel clientChannels;
 
-    private LMNetworkWrapper(String s)
+    private NetworkWrapper(String s)
     {
         packetCodec = new SimpleIndexedCodec();
         Map<Side, FMLEmbeddedChannel> channels = NetworkRegistry.INSTANCE.newChannel(s, packetCodec);
@@ -27,9 +27,9 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
         clientChannels = channels.get(Side.CLIENT);
     }
 
-    public static LMNetworkWrapper newWrapper(String ID)
+    public static NetworkWrapper newWrapper(String ID)
     {
-        return new LMNetworkWrapper(ID);
+        return new NetworkWrapper(ID);
     }
 
     private FMLEmbeddedChannel get(Side s)
@@ -37,7 +37,7 @@ public class LMNetworkWrapper // SimpleNetworkWrapper
         return s.isServer() ? serverChannels : clientChannels;
     }
 
-    public void register(int discriminator, MessageLM<?> m)
+    public void register(int discriminator, MessageBase<?> m)
     {
         try
         {

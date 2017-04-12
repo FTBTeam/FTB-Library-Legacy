@@ -17,7 +17,7 @@ public class Noise
 
     static
     {
-        float d = 0.5F * MathHelperLM.RAD_F;
+        float d = 0.5F * MathUtils.RAD_F;
         for(int i = 0; i < PERLIN_COS_TABLE.length; i++)
         {
             PERLIN_COS_TABLE[i] = MathHelper.cos(i * d);

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.lib.client.PixelBuffer;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMColorUtils;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
@@ -131,7 +131,7 @@ public class ThreadReloadChunkSelector extends Thread
             return 0xFFA530;
         }
         //else if(b.getMaterial(state) == Material.water)
-        //	return LMColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
+        //	return ColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(worldObj, pos), 200);
         else if(b == Blocks.RED_FLOWER)
         {
             switch(state.getValue(Blocks.RED_FLOWER.getTypeProperty()))
@@ -178,9 +178,9 @@ public class ThreadReloadChunkSelector extends Thread
         }
 
         //if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
-        //	return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -40);
+        //	return ColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -40);
         //else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY))
-        //	return LMColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
+        //	return ColorUtils.addBrightness(b.colorMultiplier(worldObj, pos), -15);
 
         return state.getMapColor().colorValue;
     }
@@ -189,7 +189,7 @@ public class ThreadReloadChunkSelector extends Thread
     public void run()
     {
         Arrays.fill(PIXELS.getPixels(), 0);
-        pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+        pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
 
         Chunk chunk;
         int cx, cz, x, z, wx, wz, by, color, topY;
@@ -207,8 +207,8 @@ public class ThreadReloadChunkSelector extends Thread
 
                     if(chunk != null)
                     {
-                        x = MathHelperLM.unchunk(startX + cx);
-                        z = MathHelperLM.unchunk(startZ + cz);
+                        x = MathUtils.unchunk(startX + cx);
+                        z = MathUtils.unchunk(startZ + cz);
                         topY = Math.max(255, chunk.getTopFilledSegment() + 15);
 
                         for(wz = 0; wz < 16; wz++)
@@ -232,7 +232,7 @@ public class ThreadReloadChunkSelector extends Thread
 
                                         if(depth)
                                         {
-                                            color = LMColorUtils.addBrightness(color, MathHelper.clamp(by - startY, -30, 30) * 5);
+                                            color = ColorUtils.addBrightness(color, MathHelper.clamp(by - startY, -30, 30) * 5);
                                         }
 
                                         PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);
@@ -243,7 +243,7 @@ public class ThreadReloadChunkSelector extends Thread
                         }
                     }
 
-                    pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+                    pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
                 }
             }
         }
@@ -252,7 +252,7 @@ public class ThreadReloadChunkSelector extends Thread
             e.printStackTrace();
         }
 
-        pixelBuffer = LMColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+        pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
         instance = null;
     }
 }

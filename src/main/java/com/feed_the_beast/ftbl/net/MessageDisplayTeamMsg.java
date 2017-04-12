@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiMyTeam;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -22,7 +22,7 @@ public class MessageDisplayTeamMsg extends MessageToClient<MessageDisplayTeamMsg
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }

@@ -9,9 +9,9 @@ import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -75,13 +75,13 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
     private static void writeID(ByteBuf io, NotificationId id)
     {
-        LMNetUtils.writeResourceLocation(io, id.getID());
+        NetUtils.writeResourceLocation(io, id.getID());
         io.writeByte(id.getVariant());
     }
 
     private static NotificationId readID(ByteBuf io)
     {
-        ResourceLocation id = LMNetUtils.readResourceLocation(io);
+        ResourceLocation id = NetUtils.readResourceLocation(io);
         return new NotificationId(id, io.readByte());
     }
 
@@ -112,7 +112,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
             for(ITextComponent t : text)
             {
-                LMNetUtils.writeTextComponent(io, t);
+                NetUtils.writeTextComponent(io, t);
             }
         }
 
@@ -135,7 +135,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
             while(--s >= 0)
             {
-                n.addText(LMNetUtils.readTextComponent(io));
+                n.addText(NetUtils.readTextComponent(io));
             }
         }
 

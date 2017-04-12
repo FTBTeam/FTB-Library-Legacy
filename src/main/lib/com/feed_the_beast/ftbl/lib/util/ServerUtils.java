@@ -38,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by LatvianModder on 08.09.2016.
  */
-public class LMServerUtils
+public class ServerUtils
 {
     public static final EnumNameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = new EnumNameMap<>(TextFormatting.values(), false);
 
@@ -110,7 +110,7 @@ public class LMServerUtils
         int from = entity.dimension;
         float rotationYaw = entity.rotationYaw;
         float rotationPitch = entity.rotationPitch;
-        MinecraftServer server = LMServerUtils.getServer();
+        MinecraftServer server = ServerUtils.getServer();
         WorldServer fromDim = server.worldServerForDimension(from);
         WorldServer toDim = server.worldServerForDimension(dim);
 

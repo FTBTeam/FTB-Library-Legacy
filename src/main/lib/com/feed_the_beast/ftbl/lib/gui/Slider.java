@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class Slider extends Widget
 
         if(min < max)
         {
-            String s = "" + (int) MathHelperLM.map(value, 0D, 1D, min, max);
+            String s = "" + (int) MathUtils.map(value, 0D, 1D, min, max);
             String t = getTitle(gui);
             list.add(t.isEmpty() ? s : (t + ": " + s));
         }

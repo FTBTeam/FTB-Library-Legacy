@@ -2,9 +2,9 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -35,14 +35,14 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     public void fromBytes(ByteBuf io)
     {
         infoID = ByteBufUtils.readUTF8String(io);
-        json = LMNetUtils.readJsonElement(io);
+        json = NetUtils.readJsonElement(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
         ByteBufUtils.writeUTF8String(io, infoID);
-        LMNetUtils.writeJsonElement(io, json);
+        NetUtils.writeJsonElement(io, json);
     }
 
     @Override

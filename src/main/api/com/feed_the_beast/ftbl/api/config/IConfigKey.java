@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.translation.I18n;
 
 /**
  * Created by LatvianModder on 11.09.2016.
@@ -66,7 +66,7 @@ public interface IConfigKey extends IStringSerializable
             key = "config." + getName() + ".name";
         }
 
-        return I18n.canTranslate(key) ? I18n.translateToLocal(key) : getName();
+        return StringUtils.canTranslate(key) ? StringUtils.translate(key) : getName();
     }
 
     default String getInfo()
@@ -78,7 +78,7 @@ public interface IConfigKey extends IStringSerializable
             key = "config." + getName() + ".info";
         }
 
-        return I18n.canTranslate(key) ? I18n.translateToLocal(key) : "";
+        return StringUtils.canTranslate(key) ? StringUtils.translate(key) : "";
     }
 
     default IConfigKey setNameLangKey(String name)

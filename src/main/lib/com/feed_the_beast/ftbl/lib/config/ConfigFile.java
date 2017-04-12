@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.util.text.ITextComponent;
 
@@ -31,11 +31,11 @@ public class ConfigFile extends ConfigTree implements IConfigFile
 
         if(f != null)
         {
-            JsonElement e = LMJsonUtils.fromJson(f);
+            JsonElement e = JsonUtils.fromJson(f);
 
             if(e.isJsonObject())
             {
-                fromJson(LMJsonUtils.fromJsonTree(e.getAsJsonObject()));
+                fromJson(JsonUtils.fromJsonTree(e.getAsJsonObject()));
             }
         }
     }
@@ -47,7 +47,7 @@ public class ConfigFile extends ConfigTree implements IConfigFile
 
         if(f != null)
         {
-            LMJsonUtils.toJson(f, LMJsonUtils.toJsonTree(getSerializableElement().getAsJsonObject().entrySet()));
+            JsonUtils.toJson(f, JsonUtils.toJsonTree(getSerializableElement().getAsJsonObject().entrySet()));
         }
     }
 

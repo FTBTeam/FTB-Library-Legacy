@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -58,7 +58,7 @@ public class DrawableItemList extends DrawableItem
     @Override
     public void setIndex(int i)
     {
-        stack = list.get(MathHelperLM.wrap(i, list.size()));
+        stack = list.get(MathUtils.wrap(i, list.size()));
     }
 
     @Override

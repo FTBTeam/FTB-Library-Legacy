@@ -11,7 +11,7 @@ import net.minecraft.util.SoundEvent;
 
 import javax.annotation.Nullable;
 
-public class TileLM extends TileEntity
+public class TileBase extends TileEntity
 {
     private boolean isDirty = true;
     private IBlockState currentState;

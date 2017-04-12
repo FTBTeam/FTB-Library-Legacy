@@ -25,9 +25,9 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
-import com.feed_the_beast.ftbl.lib.util.LMServerUtils;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayTeamMsg;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -91,9 +91,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
         public Message(ByteBuf io)
         {
-            sender = LMNetUtils.readUUID(io);
+            sender = NetUtils.readUUID(io);
             time = io.readLong();
-            text = LMNetUtils.readTextComponent(io);
+            text = NetUtils.readTextComponent(io);
         }
 
         public static NBTTagCompound toNBT(ITeamMessage msg)
@@ -107,9 +107,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
         public static void write(ByteBuf io, ITeamMessage msg)
         {
-            LMNetUtils.writeUUID(io, msg.getSender());
+            NetUtils.writeUUID(io, msg.getSender());
             io.writeLong(msg.getTime());
-            LMNetUtils.writeTextComponent(io, msg.getMessage());
+            NetUtils.writeTextComponent(io, msg.getMessage());
         }
 
         @Override
@@ -181,7 +181,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     public NBTTagCompound serializeNBT()
     {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("Owner", LMStringUtils.fromUUID(owner.getId()));
+        nbt.setString("Owner", StringUtils.fromUUID(owner.getId()));
         nbt.setString("Color", color.getString());
 
         if(color.get() == null)
@@ -207,7 +207,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
             for(Map.Entry<UUID, EnumTeamStatus> entry : players.entrySet())
             {
-                nbt1.setString(LMStringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
+                nbt1.setString(StringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
             }
 
             nbt.setTag("Players", nbt1);
@@ -236,7 +236,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     @Override
     public void deserializeNBT(NBTTagCompound nbt)
     {
-        owner = Universe.INSTANCE.getPlayer(LMStringUtils.fromString(nbt.getString("Owner")));
+        owner = Universe.INSTANCE.getPlayer(StringUtils.fromString(nbt.getString("Owner")));
         color.setValueFromString(nbt.getString("Color"), false);
         title.setString(nbt.getString("Title"));
         desc.setString(nbt.getString("Desc"));
@@ -268,7 +268,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
             for(String s : nbt1.getKeySet())
             {
-                UUID id = LMStringUtils.fromString(s);
+                UUID id = StringUtils.fromString(s);
 
                 if(id != null)
                 {
@@ -293,7 +293,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
             for(int i = 0; i < list.tagCount(); i++)
             {
-                UUID id = LMStringUtils.fromString(list.getStringTagAt(i));
+                UUID id = StringUtils.fromString(list.getStringTagAt(i));
 
                 if(id != null && !players.containsKey(id))
                 {
@@ -572,7 +572,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
     {
         Collection<EntityPlayerMP> list = new ArrayList<>();
 
-        for(EntityPlayerMP ep : LMServerUtils.getServer().getPlayerList().getPlayers())
+        for(EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
         {
             if(hasStatus(ep.getGameProfile().getId(), status))
             {

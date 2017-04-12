@@ -7,9 +7,9 @@ import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
-import com.feed_the_beast.ftbl.lib.net.LMNetworkWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
-import com.feed_the_beast.ftbl.lib.util.LMNetUtils;
+import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,7 +38,7 @@ public class MessageReload extends MessageToClient<MessageReload>
     }
 
     @Override
-    public LMNetworkWrapper getWrapper()
+    public NetworkWrapper getWrapper()
     {
         return FTBLibNetHandler.NET;
     }
@@ -49,7 +49,7 @@ public class MessageReload extends MessageToClient<MessageReload>
         io.writeByte(typeID);
         ByteBufUtils.writeTag(io, syncData);
         ByteBufUtils.writeUTF8String(io, currentMode);
-        LMNetUtils.writeUUID(io, universeID);
+        NetUtils.writeUUID(io, universeID);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MessageReload extends MessageToClient<MessageReload>
         typeID = io.readUnsignedByte();
         syncData = ByteBufUtils.readTag(io);
         currentMode = ByteBufUtils.readUTF8String(io);
-        universeID = LMNetUtils.readUUID(io);
+        universeID = NetUtils.readUUID(io);
     }
 
     @Override

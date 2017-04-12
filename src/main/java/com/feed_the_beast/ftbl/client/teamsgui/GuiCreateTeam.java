@@ -11,8 +11,8 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
-import com.feed_the_beast.ftbl.lib.math.MathHelperLM;
-import com.feed_the_beast.ftbl.lib.util.LMStringUtils;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class GuiCreateTeam extends GuiBase
     public GuiCreateTeam()
     {
         super(154, 102);
-        color = EnumTeamColor.VALUES[MathHelperLM.RAND.nextInt(EnumTeamColor.VALUES.length)];
+        color = EnumTeamColor.VALUES[MathUtils.RAND.nextInt(EnumTeamColor.VALUES.length)];
 
         int bwidth = width / 2 - 6;
         buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
@@ -82,7 +82,7 @@ public class GuiCreateTeam extends GuiBase
             @Override
             public void onTextChanged(GuiBase gui)
             {
-                setText(gui, LMStringUtils.getID(getText(), LMStringUtils.FLAG_ID_DEFAULTS), false);
+                setText(gui, StringUtils.getId(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
             }
         };
 

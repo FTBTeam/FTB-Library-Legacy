@@ -7,13 +7,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public abstract class MessageLM<E extends MessageLM<E>> implements IMessage, IMessageHandler<E, IMessage>
+public abstract class MessageBase<E extends MessageBase<E>> implements IMessage, IMessageHandler<E, IMessage>
 {
-    MessageLM()
+    MessageBase()
     {
     }
 
-    public abstract LMNetworkWrapper getWrapper();
+    public abstract NetworkWrapper getWrapper();
 
     abstract Side getReceivingSide();
 

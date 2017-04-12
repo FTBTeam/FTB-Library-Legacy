@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.LMJsonUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.util.text.ITextComponent;
 
@@ -25,7 +25,7 @@ public class InfoExtendedTextLine extends EmptyInfoPageLine
 
     public InfoExtendedTextLine(JsonElement json)
     {
-        textComponent = LMJsonUtils.deserializeTextComponent(json);
+        textComponent = JsonUtils.deserializeTextComponent(json);
     }
 
     @Override
@@ -49,6 +49,6 @@ public class InfoExtendedTextLine extends EmptyInfoPageLine
     @Override
     public JsonElement getJson()
     {
-        return LMJsonUtils.serializeTextComponent(textComponent);
+        return JsonUtils.serializeTextComponent(textComponent);
     }
 }
