@@ -8,12 +8,12 @@ public class FTBLibFinals
 {
     public static final String MOD_ID = "ftbl";
     public static final Logger LOGGER = LogManager.getLogger("FTBLib");
-    public static final String DEPENDENCIES = "required-after:Forge@["
+    public static final String DEPENDENCIES = /*"required-after:Forge@["
             + net.minecraftforge.common.ForgeVersion.majorVersion + '.'
             + net.minecraftforge.common.ForgeVersion.minorVersion + '.'
             + net.minecraftforge.common.ForgeVersion.revisionVersion + '.'
             + net.minecraftforge.common.ForgeVersion.buildVersion + ",);" +
-            "after:Baubles;" +
+            */"after:Baubles;" +
             "after:JEI;" +
             "after:nei;" +
             "after:Waila;" +

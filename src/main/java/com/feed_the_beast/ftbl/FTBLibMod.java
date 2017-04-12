@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 import java.util.Locale;
 
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", dependencies = FTBLibFinals.DEPENDENCIES)
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,1.12)", dependencies = FTBLibFinals.DEPENDENCIES)
 public class FTBLibMod
 {
     @Mod.Instance(FTBLibFinals.MOD_ID)
