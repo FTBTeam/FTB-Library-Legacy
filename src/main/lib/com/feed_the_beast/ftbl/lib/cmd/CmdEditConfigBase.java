@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +47,7 @@ public abstract class CmdEditConfigBase extends CmdBase
             {
                 List<IConfigKey> keys = new ArrayList<>();
                 keys.addAll(map.keySet());
-                Collections.sort(keys, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+                Collections.sort(keys, StringUtils.ID_COMPARATOR);
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)
@@ -86,10 +87,10 @@ public abstract class CmdEditConfigBase extends CmdBase
         checkArgs(args, 1, "[ID] [value]");
 
         IConfigContainer cc = getConfigContainer(sender);
-        IConfigKey key = new SimpleConfigKey(args[0]);
         IConfigTree tree = cc.getConfigTree();
+        IConfigKey key = tree.getKey(args[0]);
 
-        if(!tree.has(key))
+        if(key == null)
         {
             throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //TODO: Lang
         }
@@ -104,7 +105,7 @@ public abstract class CmdEditConfigBase extends CmdBase
             try
             {
                 JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
-                sender.sendMessage(new TextComponentString(args[0] + " set to " + value)); //TODO: Lang
+                sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + value)); //TODO: Lang
                 JsonObject json1 = new JsonObject();
                 json1.add(args[0], value);
                 cc.saveConfig(sender, null, json1);

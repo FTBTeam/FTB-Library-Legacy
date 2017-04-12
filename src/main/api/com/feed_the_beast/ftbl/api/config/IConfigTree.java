@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyNull;
 import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import net.minecraft.util.IJsonSerializable;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -40,4 +41,18 @@ public interface IConfigTree extends IExtendedIOObject, IJsonSerializable
     }
 
     IConfigTree copy();
+
+    @Nullable
+    default IConfigKey getKey(String id)
+    {
+        for(IConfigKey key : getTree().keySet())
+        {
+            if(key.getName().equalsIgnoreCase(id))
+            {
+                return key;
+            }
+        }
+
+        return null;
+    }
 }

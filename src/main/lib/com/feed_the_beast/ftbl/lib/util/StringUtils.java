@@ -47,6 +47,11 @@ public class StringUtils
     {
         String id = o instanceof IStringSerializable ? ((IStringSerializable) o).getName() : String.valueOf(o.toString());
 
+        if(flags == 0)
+        {
+            return id;
+        }
+
         boolean fix = Bits.getFlag(flags, FLAG_ID_FIX);
 
         if(!fix && id.isEmpty() && !Bits.getFlag(flags, FLAG_ID_ALLOW_EMPTY))
