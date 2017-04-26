@@ -1,8 +1,8 @@
-package com.feed_the_beast.ftbl.lib.info;
+package com.feed_the_beast.ftbl.lib.guide;
 
 import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -20,12 +20,13 @@ import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-public class InfoImageLine extends EmptyInfoPageLine
+public class GuideImageLine extends EmptyGuidePageLine
 {
     public IImageProvider imageProvider = ImageProvider.NULL;
     public int imageWidth, imageHeight;
@@ -33,11 +34,11 @@ public class InfoImageLine extends EmptyInfoPageLine
     public ClickEvent clickEvent;
     public List<String> hover;
 
-    public InfoImageLine()
+    public GuideImageLine()
     {
     }
 
-    public InfoImageLine(JsonElement e)
+    public GuideImageLine(JsonElement e)
     {
         imageProvider = ImageProvider.NULL;
         imageWidth = imageHeight = 0;
@@ -75,20 +76,7 @@ public class InfoImageLine extends EmptyInfoPageLine
 
         if(o.has("clickEvent"))
         {
-            JsonObject o1 = o.get("clickEvent").getAsJsonObject();
-
-            if(o1 != null)
-            {
-                JsonPrimitive a = o1.getAsJsonPrimitive("action");
-                ClickEvent.Action action = a == null ? null : ClickEvent.Action.getValueByCanonicalName(a.getAsString());
-                JsonPrimitive v = o1.getAsJsonPrimitive("value");
-                String s = v == null ? null : v.getAsString();
-
-                if(action != null && s != null && action.shouldAllowInChat())
-                {
-                    clickEvent = new ClickEvent(action, s);
-                }
-            }
+            clickEvent = JsonUtils.deserializeClickEvent(o.get("clickEvent"));
         }
 
         if(o.has("hover"))
@@ -100,6 +88,11 @@ public class InfoImageLine extends EmptyInfoPageLine
                 hover.add(JsonUtils.deserializeTextComponent(e1).getFormattedText());
             }
         }
+
+        if(hover == null || hover.isEmpty())
+        {
+            hover = Collections.emptyList();
+        }
     }
 
     @Override
@@ -109,15 +102,15 @@ public class InfoImageLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IInfoTextLine copy(InfoPage page)
+    public IGuideTextLine copy(GuidePage page)
     {
-        InfoImageLine line = new InfoImageLine();
+        GuideImageLine line = new GuideImageLine();
         line.imageProvider = imageProvider;
         line.imageWidth = imageWidth;
         line.imageHeight = imageHeight;
         line.imageScale = imageScale;
         line.clickEvent = clickEvent;
-        line.hover = new ArrayList<>(hover);
+        line.hover = hover.isEmpty() ? Collections.emptyList() : new ArrayList<>(hover);
         return line;
     }
 
@@ -138,7 +131,12 @@ public class InfoImageLine extends EmptyInfoPageLine
             o.add("height", new JsonPrimitive(imageHeight));
         }
 
-        if(hover != null)
+        if(clickEvent != null)
+        {
+            o.add("click", JsonUtils.serializeClickEvent(clickEvent));
+        }
+
+        if(!hover.isEmpty())
         {
             JsonArray a = new JsonArray();
 
@@ -198,7 +196,7 @@ public class InfoImageLine extends EmptyInfoPageLine
         @Override
         public void addMouseOverText(GuiBase gui, List<String> list)
         {
-            if(hover != null)
+            if(!hover.isEmpty())
             {
                 list.addAll(hover);
             }
@@ -207,10 +205,9 @@ public class InfoImageLine extends EmptyInfoPageLine
         @Override
         public void onClicked(GuiBase gui, IMouseButton button)
         {
-            if(clickEvent != null)
+            if(GuiHelper.onClickEvent(clickEvent))
             {
                 GuiHelper.playClickSound();
-                GuiHelper.onClickEvent(clickEvent);
             }
         }
     }

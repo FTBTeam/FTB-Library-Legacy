@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
 import com.feed_the_beast.ftbl.lib.gui.CheckBoxList;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -27,6 +26,7 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -132,7 +132,7 @@ public class GuiMyTeam extends GuiBase
             @Override
             public void updateWidgetPositions()
             {
-                scrollPlayers.setElementSize(alignWidgets(EnumDirection.VERTICAL, 0, 1, 0));
+                scrollPlayers.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL, 0, 1, 0));
                 scrollPlayers.setSrollStepFromOneElementSize(13);
             }
         };
@@ -263,12 +263,12 @@ public class GuiMyTeam extends GuiBase
             {
                 if(selectedPlayer == null)
                 {
-                    scrollText.setElementSize(alignWidgets(EnumDirection.VERTICAL, 2, 1, 2));
+                    scrollText.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL, 2, 1, 2));
                     scrollText.setSrollStepFromOneElementSize(11);
                 }
                 else
                 {
-                    scrollText.setElementSize(alignWidgets(EnumDirection.VERTICAL, 2, 4, 2));
+                    scrollText.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL, 2, 4, 2));
                 }
             }
         };

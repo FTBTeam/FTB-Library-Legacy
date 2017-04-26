@@ -1,11 +1,12 @@
-package com.feed_the_beast.ftbl.lib.info;
+package com.feed_the_beast.ftbl.lib.guide;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.info.IPageIconRenderer;
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
@@ -15,14 +16,14 @@ import java.util.List;
 /**
  * Created by LatvianModder on 04.03.2016.
  */
-public class ButtonInfoPage extends Button
+public class ButtonGuidePage extends Button
 {
-    public final InfoPage page;
+    public final GuidePage page;
     public String hover;
-    public IPageIconRenderer iconRenderer;
+    public IDrawableObject iconRenderer;
     private boolean prevMouseOver = false;
 
-    public ButtonInfoPage(GuiInfo g, InfoPage p, @Nullable IPageIconRenderer t)
+    public ButtonGuidePage(GuiGuide g, GuidePage p, @Nullable IDrawableObject t)
     {
         super(0, 0, 0, 0);
         setWidth(g.panelWidth - 36);
@@ -36,10 +37,10 @@ public class ButtonInfoPage extends Button
     public void onClicked(GuiBase gui, IMouseButton button)
     {
         GuiHelper.playClickSound();
-        ((GuiInfo) gui).setSelectedPage(page);
+        ((GuiGuide) gui).setSelectedPage(page);
     }
 
-    public void updateTitle(GuiInfo gui)
+    public void updateTitle(GuiGuide gui)
     {
         ITextComponent titleC = page.getDisplayName().createCopy();
 
@@ -78,7 +79,7 @@ public class ButtonInfoPage extends Button
 
         if(prevMouseOver != mouseOver)
         {
-            updateTitle((GuiInfo) gui);
+            updateTitle((GuiGuide) gui);
             prevMouseOver = mouseOver;
         }
 
@@ -88,7 +89,7 @@ public class ButtonInfoPage extends Button
         if(iconRenderer != null)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            iconRenderer.renderIcon(gui, this, ax + 1, ay + 1);
+            iconRenderer.draw(ax + 1, ay + 1, 16, 16, Color4I.NONE);
             gui.drawString(getTitle(gui), ax + 19, ay + 6);
         }
         else

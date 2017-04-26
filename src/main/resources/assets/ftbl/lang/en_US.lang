@@ -37,6 +37,7 @@ ftbl.dside.right=Right
 
 # FTBLib Lang
 wip=Work In Progress!
+example=Example:
 ftbl.lang.team_config_option=Team config option
 ftbl.lang.deprecated=This method is deprecated, please use %s
 ftbl.lang.mode.loaded=Mode set to '%s'!

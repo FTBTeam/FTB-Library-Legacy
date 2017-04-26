@@ -3,29 +3,29 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
-import com.feed_the_beast.ftbl.api.info.ISpecialInfoButton;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
+import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.Button;
-import com.feed_the_beast.ftbl.lib.gui.EnumDirection;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.info.ButtonInfoPage;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.ButtonGuidePage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
-public class GuiInfo extends GuiBase implements IClientActionGui
+public class GuiGuide extends GuiBase implements IClientActionGui
 {
     private static final ResourceLocation TEXTURE = FTBLibFinals.get("textures/gui/info.png");
 
@@ -61,7 +61,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
 
     private static class ButtonSpecial extends Button
     {
-        private ISpecialInfoButton specialInfoButton;
+        private SpecialGuideButton specialInfoButton;
 
         public ButtonSpecial()
         {
@@ -74,18 +74,18 @@ public class GuiInfo extends GuiBase implements IClientActionGui
             return specialInfoButton != null;
         }
 
-        private void updateButton(GuiInfo gui)
+        private void updateButton(GuiGuide gui)
         {
             specialInfoButton = gui.selectedPage.getSpecialButton();
-            setTitle(isEnabled(gui) ? specialInfoButton.getTitle(gui) : "");
+            setTitle(isEnabled(gui) ? specialInfoButton.title.getFormattedText() : "");
         }
 
         @Override
         public void onClicked(GuiBase gui, IMouseButton button)
         {
-            if(isEnabled(gui))
+            if(isEnabled(gui) && GuiHelper.onClickEvent(specialInfoButton.clickEvent))
             {
-                specialInfoButton.onClicked(gui, button);
+                GuiHelper.playClickSound();
             }
         }
 
@@ -94,21 +94,21 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         {
             if(isEnabled(gui))
             {
-                specialInfoButton.draw(gui, getAX(), getAY(), width, height);
+                specialInfoButton.icon.draw(getAX(), getAY(), width, height, Color4I.NONE);
             }
         }
     }
 
-    public final InfoPage pageTree;
+    public final GuidePage pageTree;
     public final Panel panelPages, panelText;
     public final PanelScrollBar sliderPages, sliderText;
     private final Button buttonBack;
     private final ButtonSpecial buttonSpecial;
     public int panelWidth;
 
-    private InfoPage selectedPage;
+    private GuidePage selectedPage;
 
-    public GuiInfo(InfoPage tree)
+    public GuiGuide(GuidePage tree)
     {
         super(0, 0);
         selectedPage = pageTree = tree;
@@ -121,13 +121,13 @@ public class GuiInfo extends GuiBase implements IClientActionGui
                 GuiHelper.playClickSound();
                 sliderPages.setValue(gui, 0D);
                 sliderText.setValue(gui, 0D);
-                setSelectedPage(selectedPage.getParent());
+                setSelectedPage(selectedPage.parent);
             }
 
             @Override
             public String getTitle(GuiBase gui)
             {
-                return (selectedPage.getParent() == null) ? GuiLang.BUTTON_CLOSE.translate() : GuiLang.BUTTON_BACK.translate();
+                return (selectedPage.parent == null) ? GuiLang.BUTTON_CLOSE.translate() : GuiLang.BUTTON_BACK.translate();
             }
         };
 
@@ -138,20 +138,20 @@ public class GuiInfo extends GuiBase implements IClientActionGui
             @Override
             public void addWidgets()
             {
-                for(InfoPage c : selectedPage.getPages().values())
+                for(GuidePage c : selectedPage.childPages.values())
                 {
-                    add(c.createWidget(GuiInfo.this));
+                    add(c.createWidget(GuiGuide.this));
                 }
 
-                buttonSpecial.updateButton(GuiInfo.this);
+                buttonSpecial.updateButton(GuiGuide.this);
             }
 
             @Override
             public void updateWidgetPositions()
             {
-                if(!getWidgets().isEmpty())
+                if(!widgets.isEmpty())
                 {
-                    sliderPages.setElementSize(alignWidgets(EnumDirection.VERTICAL));
+                    sliderPages.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL));
                 }
             }
         };
@@ -163,20 +163,20 @@ public class GuiInfo extends GuiBase implements IClientActionGui
             @Override
             public void addWidgets()
             {
-                for(Widget w : panelPages.getWidgets())
+                for(Widget w : panelPages.widgets)
                 {
-                    if(w instanceof ButtonInfoPage)
+                    if(w instanceof ButtonGuidePage)
                     {
-                        ((ButtonInfoPage) w).updateTitle(GuiInfo.this);
+                        ((ButtonGuidePage) w).updateTitle(GuiGuide.this);
                     }
                 }
 
                 boolean uni = getFont().getUnicodeFlag();
                 getFont().setUnicodeFlag(true);
 
-                for(IInfoTextLine line : selectedPage.getText())
+                for(IGuideTextLine line : selectedPage.text)
                 {
-                    add(line == null ? new Widget(0, 0, panelText.width, getFont().FONT_HEIGHT + 1) : line.createWidget(GuiInfo.this, panelText));
+                    add(line == null ? new Widget(0, 0, panelText.width, getFont().FONT_HEIGHT + 1) : line.createWidget(GuiGuide.this, panelText));
                 }
 
                 getFont().setUnicodeFlag(uni);
@@ -185,11 +185,11 @@ public class GuiInfo extends GuiBase implements IClientActionGui
             @Override
             public void updateWidgetPositions()
             {
-                if(!getWidgets().isEmpty())
+                if(!widgets.isEmpty())
                 {
-                    int s = alignWidgets(EnumDirection.VERTICAL, 2, 0, 4);
+                    int s = alignWidgets(EnumFacing.Plane.VERTICAL, 2, 0, 4);
                     sliderText.setElementSize(s);
-                    sliderText.setSrollStepFromOneElementSize((s - 6) / getWidgets().size());
+                    sliderText.setSrollStepFromOneElementSize((s - 6) / widgets.size());
                 }
             }
         };
@@ -207,12 +207,12 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         buttonSpecial = new ButtonSpecial();
     }
 
-    public InfoPage getSelectedPage()
+    public GuidePage getSelectedPage()
     {
         return selectedPage;
     }
 
-    public void setSelectedPage(@Nullable InfoPage p)
+    public void setSelectedPage(@Nullable GuidePage p)
     {
         sliderText.setValue(this, 0D);
 
@@ -227,7 +227,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
             {
                 selectedPage = p;
 
-                if(p.getPages().isEmpty())
+                if(p.childPages.isEmpty())
                 {
                     panelText.refreshWidgets();
                 }
@@ -239,7 +239,7 @@ public class GuiInfo extends GuiBase implements IClientActionGui
         }
 
         buttonSpecial.updateButton(this);
-        buttonBack.setIcon(new ColoredObject((selectedPage.getParent() == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
+        buttonBack.setIcon(new ColoredObject((selectedPage.parent == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
     }
 
     @Override

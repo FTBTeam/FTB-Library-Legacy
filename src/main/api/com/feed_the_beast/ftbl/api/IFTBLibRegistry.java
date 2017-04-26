@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
-import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -25,7 +25,7 @@ public interface IFTBLibRegistry
 
     void addGuiContainer(ResourceLocation id, IContainerProvider provider);
 
-    void addInfoTextLine(String id, IInfoTextLineProvider provider);
+    void addInfoTextLine(String id, IGuideTextLineProvider provider);
 
     void addSyncData(String mod, ISyncData data);
 

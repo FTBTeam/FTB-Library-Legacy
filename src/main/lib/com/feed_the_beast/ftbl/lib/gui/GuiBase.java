@@ -34,6 +34,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
     private boolean refreshWidgets;
     private ScaledResolution screen;
     public boolean fixUnicode;
+    private boolean shiftDown;
 
     public GuiBase(int w, int h)
     {
@@ -267,5 +268,15 @@ public abstract class GuiBase extends Panel implements IClientActionGui
     public boolean isOpen()
     {
         return mc.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) mc.currentScreen).getWrappedGui() == this;
+    }
+
+    public boolean isShiftDown()
+    {
+        return GuiScreen.isShiftKeyDown();
+    }
+
+    public boolean isCtrlDown()
+    {
+        return GuiScreen.isCtrlKeyDown();
     }
 }

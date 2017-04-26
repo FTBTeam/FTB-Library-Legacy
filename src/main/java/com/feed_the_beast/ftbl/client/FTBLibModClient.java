@@ -17,8 +17,8 @@ import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiInfo;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
@@ -267,9 +267,9 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
-    public void displayInfoGui(InfoPage page)
+    public void displayGuide(GuidePage page)
     {
-        new GuiInfo(page).openGui();
+        new GuiGuide(page).openGui();
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class Slider extends Widget
     public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(new Color4I(false, 0x99666666));
     public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x99333333));
 
-    public final int sliderSize;
+    public int sliderSize;
     private double value;
     private boolean isGrabbed;
     public IDrawableObject slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
@@ -63,7 +64,7 @@ public class Slider extends Widget
             {
                 if(gui.isMouseButtonDown(0))
                 {
-                    if(getDirection().isVertical())
+                    if(getPlane() == EnumFacing.Plane.VERTICAL)
                     {
                         v = (gui.getMouseY() - (ay + (sliderSize / 2D))) / (double) (height - sliderSize);
                     }
@@ -78,7 +79,7 @@ public class Slider extends Widget
                 }
             }
 
-            if(gui.getMouseWheel() != 0 && canMouseScroll(gui))
+            if(gui.getMouseWheel() != 0 && canMouseScroll(gui) && gui.isShiftDown() == (getPlane() == EnumFacing.Plane.HORIZONTAL))
             {
                 v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
             }
@@ -93,7 +94,7 @@ public class Slider extends Widget
 
         background.draw(ax, ay, width, height, Color4I.NONE);
 
-        if(getDirection().isVertical())
+        if(getPlane() == EnumFacing.Plane.VERTICAL)
         {
             slider.draw(ax, ay + getValueI(gui, height), width, sliderSize, Color4I.NONE);
         }
@@ -146,9 +147,9 @@ public class Slider extends Widget
         return 0.1D;
     }
 
-    public EnumDirection getDirection()
+    public EnumFacing.Plane getPlane()
     {
-        return EnumDirection.VERTICAL;
+        return EnumFacing.Plane.VERTICAL;
     }
 
     public double getDisplayMin()

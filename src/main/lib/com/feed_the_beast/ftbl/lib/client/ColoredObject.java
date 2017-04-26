@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by LatvianModder on 23.02.2017.
@@ -39,5 +40,11 @@ public class ColoredObject implements IDrawableObject
         }
 
         GlStateManager.color(1F, 1F, 1F, 1F);
+    }
+
+    @Override
+    public ResourceLocation getImage()
+    {
+        return new ResourceLocation("colored_object:" + parent.getImage());
     }
 }

@@ -18,7 +18,7 @@ import java.util.function.IntSupplier;
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyInt extends PropertyBase
+public class PropertyInt extends PropertyBase implements IntSupplier
 {
     public static final String ID = "int";
     public static final Color4I COLOR = new Color4I(false, 0xFFAA5AE8);
@@ -199,5 +199,11 @@ public class PropertyInt extends PropertyBase
         setInt(data.readInt());
         setMin(data.readInt());
         setMax(data.readInt());
+    }
+
+    @Override
+    public int getAsInt()
+    {
+        return getInt();
     }
 }

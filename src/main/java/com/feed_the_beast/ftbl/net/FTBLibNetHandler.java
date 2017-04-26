@@ -13,7 +13,7 @@ public class FTBLibNetHandler
         NET.register(3, new MessageEditConfigResponse());
         NET.register(4, new MessageOpenGui());
         NET.register(5, new MessageNotifyPlayer());
-        NET.register(6, new MessageDisplayInfo());
+        NET.register(6, new MessageDisplayGuide());
         NET.register(7, new MessageLogin());
         NET.register(8, new MessageNotifyPlayerCustom());
         NET.register(9, new MessageSelectTeamGui());

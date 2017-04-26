@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by LatvianModder on 24.02.2017.
@@ -58,5 +59,11 @@ public class TexturelessRectangle implements IDrawableObject
         {
             GuiHelper.drawBlankRect(x, y, w, h, c);
         }
+    }
+
+    @Override
+    public ResourceLocation getImage()
+    {
+        return new ResourceLocation("rect:" + color + "," + lineColor + "," + roundEdges);
     }
 }

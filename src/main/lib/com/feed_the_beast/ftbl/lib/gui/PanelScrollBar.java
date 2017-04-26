@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import net.minecraft.util.EnumFacing;
+
 /**
  * Created by LatvianModder on 24.02.2017.
  */
@@ -19,13 +21,13 @@ public class PanelScrollBar extends Slider
     {
         elementSize = s;
 
-        if(panel.getWidgets().isEmpty())
+        if(panel.widgets.isEmpty())
         {
             setScrollStep(0);
         }
         else
         {
-            setSrollStepFromOneElementSize(elementSize / panel.getWidgets().size());
+            setSrollStepFromOneElementSize(elementSize / panel.widgets.size());
         }
     }
 
@@ -36,7 +38,7 @@ public class PanelScrollBar extends Slider
 
     public void setSrollStepFromOneElementSize(int s)
     {
-        setScrollStep(s / (double) (elementSize - panel.height));
+        setScrollStep(s / (double) (elementSize - (getPlane() == EnumFacing.Plane.VERTICAL ? panel.height : panel.width)));
     }
 
     @Override
@@ -54,7 +56,7 @@ public class PanelScrollBar extends Slider
     @Override
     public void onMoved(GuiBase gui)
     {
-        if(getDirection().isVertical())
+        if(getPlane() == EnumFacing.Plane.VERTICAL)
         {
             panel.setScrollY(getValue(gui), elementSize);
         }
@@ -67,7 +69,7 @@ public class PanelScrollBar extends Slider
     @Override
     public boolean isEnabled(GuiBase gui)
     {
-        return elementSize > (getDirection().isVertical() ? panel.height : panel.width);
+        return elementSize > (getPlane() == EnumFacing.Plane.VERTICAL ? panel.height : panel.width);
     }
 
     @Override

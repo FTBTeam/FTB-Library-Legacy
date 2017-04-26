@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -10,18 +10,18 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
+public class MessageDisplayGuide extends MessageToClient<MessageDisplayGuide>
 {
-    private String infoID;
+    private String id;
     private JsonElement json;
 
-    public MessageDisplayInfo()
+    public MessageDisplayGuide()
     {
     }
 
-    public MessageDisplayInfo(InfoPage page)
+    public MessageDisplayGuide(GuidePage page)
     {
-        infoID = page.getName();
+        id = page.getName();
         json = page.toJson();
     }
 
@@ -34,20 +34,20 @@ public class MessageDisplayInfo extends MessageToClient<MessageDisplayInfo>
     @Override
     public void fromBytes(ByteBuf io)
     {
-        infoID = ByteBufUtils.readUTF8String(io);
+        id = ByteBufUtils.readUTF8String(io);
         json = NetUtils.readJsonElement(io);
     }
 
     @Override
     public void toBytes(ByteBuf io)
     {
-        ByteBufUtils.writeUTF8String(io, infoID);
+        ByteBufUtils.writeUTF8String(io, id);
         NetUtils.writeJsonElement(io, json);
     }
 
     @Override
-    public void onMessage(MessageDisplayInfo m, EntityPlayer player)
+    public void onMessage(MessageDisplayGuide m, EntityPlayer player)
     {
-        FTBLibMod.PROXY.displayInfoGui(new InfoPage(m.infoID, null, m.json));
+        FTBLibMod.PROXY.displayGuide(new GuidePage(m.id, null, m.json));
     }
 }

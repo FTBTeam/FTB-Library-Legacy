@@ -132,7 +132,7 @@ public class GuiSelectTeam extends GuiBase
                 int size = 8;
                 int x = 0;
 
-                for(Widget widget : getWidgets())
+                for(Widget widget : widgets)
                 {
                     widget.setX(8 + x * 40);
                     widget.setY(size);

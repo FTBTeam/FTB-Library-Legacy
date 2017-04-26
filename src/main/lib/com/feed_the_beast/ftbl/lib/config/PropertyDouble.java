@@ -12,11 +12,12 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.DoubleSupplier;
 
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyDouble extends PropertyBase
+public class PropertyDouble extends PropertyBase implements DoubleSupplier
 {
     public static final String ID = "double";
 
@@ -184,5 +185,11 @@ public class PropertyDouble extends PropertyBase
         setDouble(data.readDouble());
         setMin(data.readDouble());
         setMax(data.readDouble());
+    }
+
+    @Override
+    public double getAsDouble()
+    {
+        return getDouble();
     }
 }

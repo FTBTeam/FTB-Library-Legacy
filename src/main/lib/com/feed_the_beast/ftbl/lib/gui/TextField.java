@@ -35,6 +35,11 @@ public class TextField extends Button
             int h = font.FONT_HEIGHT + 1;
             setHeight(text.isEmpty() ? h : h * text.size());
         }
+
+        if(text.size() == 1 && !text.get(0).isEmpty())
+        {
+            setWidth(font.getStringWidth(text.get(0)));
+        }
     }
 
     @Override

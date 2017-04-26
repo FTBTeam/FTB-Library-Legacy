@@ -20,7 +20,7 @@ import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -28,7 +28,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.net.MessageDisplayInfo;
+import com.feed_the_beast.ftbl.net.MessageDisplayGuide;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
 import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
@@ -213,15 +213,15 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     }
 
     @Override
-    public void displayInfoGui(EntityPlayer player, InfoPage page)
+    public void displayGuide(EntityPlayer player, GuidePage page)
     {
         if(player.world.isRemote)
         {
-            FTBLibMod.PROXY.displayInfoGui(page);
+            FTBLibMod.PROXY.displayGuide(page);
         }
         else
         {
-            new MessageDisplayInfo(page).sendTo(player);
+            new MessageDisplayGuide(page).sendTo(player);
         }
     }
 

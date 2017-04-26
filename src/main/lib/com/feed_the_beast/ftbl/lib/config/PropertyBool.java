@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 /**
  * Created by LatvianModder on 26.08.2016.
  */
-public class PropertyBool extends PropertyBase
+public class PropertyBool extends PropertyBase implements BooleanSupplier
 {
     private static final List<String> VARIANTS = Arrays.asList("true", "false");
     public static final String ID = "bool";
@@ -150,5 +150,11 @@ public class PropertyBool extends PropertyBase
     public void readData(ByteBuf data)
     {
         setBoolean(data.readBoolean());
+    }
+
+    @Override
+    public boolean getAsBoolean()
+    {
+        return getBoolean();
     }
 }

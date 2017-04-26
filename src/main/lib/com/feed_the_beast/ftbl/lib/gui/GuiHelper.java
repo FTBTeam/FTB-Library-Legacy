@@ -25,6 +25,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -251,8 +252,13 @@ public class GuiHelper
         }
     }
 
-    public static boolean onClickEvent(ClickEvent clickEvent)
+    public static boolean onClickEvent(@Nullable ClickEvent clickEvent)
     {
+        if(clickEvent == null)
+        {
+            return false;
+        }
+
         switch(clickEvent.getAction())
         {
             case OPEN_URL:

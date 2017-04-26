@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,7 +54,7 @@ public interface FTBLibAPI
 
     void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 
-    void displayInfoGui(EntityPlayer player, InfoPage page);
+    void displayGuide(EntityPlayer player, GuidePage page);
 
     IConfigValue getConfigValueFromID(String id);
 

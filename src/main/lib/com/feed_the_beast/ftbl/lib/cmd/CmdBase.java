@@ -50,7 +50,7 @@ public abstract class CmdBase extends CommandBase
     @Override
     public String getUsage(ICommandSender ics)
     {
-        return '/' + getName();
+        return "commands." + getName() + ".usage";
     }
 
     @Override

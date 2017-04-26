@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public abstract class Panel extends Widget
@@ -13,7 +14,7 @@ public abstract class Panel extends Widget
     public static final int FLAG_UNICODE_FONT = 4;
     public static final int FLAG_DEFAULTS = FLAG_ONLY_RENDER_WIDGETS_INSIDE | FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE;
 
-    private final List<Widget> widgets;
+    public final List<Widget> widgets;
     private int scrollX = 0, scrollY = 0;
     private int offsetX = 0, offsetY = 0;
     private int flags = 0;
@@ -34,16 +35,11 @@ public abstract class Panel extends Widget
         return (flags & flag) != 0;
     }
 
-    public Collection<Widget> getWidgets()
-    {
-        return widgets;
-    }
-
     public abstract void addWidgets();
 
     public void refreshWidgets()
     {
-        getWidgets().clear();
+        widgets.clear();
         addWidgets();
         updateWidgetPositions();
     }
@@ -51,7 +47,7 @@ public abstract class Panel extends Widget
     public void add(Widget widget)
     {
         widget.setParentPanel(this);
-        getWidgets().add(widget);
+        widgets.add(widget);
 
         if(widget instanceof Panel)
         {
@@ -103,18 +99,18 @@ public abstract class Panel extends Widget
         }
     }
 
-    protected int alignWidgets(EnumDirection direction)
+    protected int alignWidgets(EnumFacing.Plane direction)
     {
         return alignWidgets(direction, 0, 0, 0);
     }
 
-    protected int alignWidgets(EnumDirection direction, int pre, int spacing, int post)
+    protected int alignWidgets(EnumFacing.Plane direction, int pre, int spacing, int post)
     {
         int i = pre;
 
-        for(Widget widget : getWidgets())
+        for(Widget widget : widgets)
         {
-            if(direction.isVertical())
+            if(direction == EnumFacing.Plane.VERTICAL)
             {
                 widget.setY(i);
                 i += widget.height + spacing;
@@ -126,7 +122,7 @@ public abstract class Panel extends Widget
             }
         }
 
-        if(!getWidgets().isEmpty())
+        if(!widgets.isEmpty())
         {
             i -= spacing;
         }
@@ -189,11 +185,13 @@ public abstract class Panel extends Widget
 
         setOffset(true);
 
-        for(Widget widget : getWidgets())
+        for(int i = 0; i < widgets.size(); i++)
         {
+            Widget widget = widgets.get(i);
+
             if(widget.shouldRender(gui) && (!renderInside || widget.collidesWith(ax, ay, width, height)))
             {
-                renderWidget(gui, widget, ax, ay, width, height);
+                renderWidget(gui, widget, i, ax + offsetX, ay + offsetY, width, height);
             }
         }
 
@@ -209,9 +207,10 @@ public abstract class Panel extends Widget
 
     protected void renderPanelBackground(GuiBase gui, int ax, int ay)
     {
+        getIcon(gui).draw(ax, ay, width, height, Color4I.NONE);
     }
 
-    protected void renderWidget(GuiBase gui, Widget widget, int ax, int ay, int w, int h)
+    protected void renderWidget(GuiBase gui, Widget widget, int index, int ax, int ay, int w, int h)
     {
         widget.renderWidget(gui);
     }
@@ -226,7 +225,7 @@ public abstract class Panel extends Widget
 
         setOffset(true);
 
-        for(Widget w : getWidgets())
+        for(Widget w : widgets)
         {
             if(w.isEnabled(gui) && gui.isMouseOver(w))
             {
@@ -247,7 +246,7 @@ public abstract class Panel extends Widget
 
         setOffset(true);
 
-        for(Widget w : getWidgets())
+        for(Widget w : widgets)
         {
             if(w.isEnabled(gui))
             {
@@ -263,7 +262,7 @@ public abstract class Panel extends Widget
     {
         setOffset(true);
 
-        for(Widget w : getWidgets())
+        for(Widget w : widgets)
         {
             if(w.isEnabled(gui))
             {
@@ -279,7 +278,7 @@ public abstract class Panel extends Widget
     {
         setOffset(true);
 
-        for(Widget w : getWidgets())
+        for(Widget w : widgets)
         {
             if(w.isEnabled(gui) && w.keyPressed(gui, key, keyChar))
             {

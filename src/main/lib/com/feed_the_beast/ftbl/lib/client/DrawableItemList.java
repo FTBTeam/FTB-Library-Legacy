@@ -1,11 +1,19 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.feed_the_beast.ftbl.lib.util.InvUtils;
+import com.google.gson.JsonElement;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,7 +21,7 @@ import java.util.List;
  */
 public class DrawableItemList extends DrawableItem
 {
-    public final List<ItemStack> list;
+    public List<ItemStack> list;
 
     public DrawableItemList(List<ItemStack> l)
     {
@@ -34,6 +42,52 @@ public class DrawableItemList extends DrawableItem
         else
         {
             list = l;
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public DrawableItemList(Item item)
+    {
+        super(null);
+        list = new ArrayList<>();
+
+        try
+        {
+            item.getSubItems(item, CreativeTabs.SEARCH, list);
+        }
+        catch(Exception ex)
+        {
+            list.clear();
+        }
+    }
+
+    public DrawableItemList(JsonElement json)
+    {
+        super(null);
+        try
+        {
+            if(json.isJsonArray())
+            {
+                list = new ArrayList<>(json.getAsJsonArray().size());
+
+                for(JsonElement e : json.getAsJsonArray())
+                {
+                    ItemStack stack = ItemStackSerializer.parseItem(e.getAsString());
+
+                    if(stack != null)
+                    {
+                        list.add(stack);
+                    }
+                }
+            }
+            else
+            {
+                list = Collections.singletonList(ItemStackSerializer.parseItem(json.getAsString()));
+            }
+        }
+        catch(Exception ex)
+        {
+            list = Collections.singletonList(InvUtils.ERROR_ITEM);
         }
     }
 

@@ -3,9 +3,11 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -43,5 +45,11 @@ public class DrawableItem implements IDrawableObject
         {
             stack = InvUtils.ERROR_ITEM;
         }
+    }
+
+    @Override
+    public ResourceLocation getImage()
+    {
+        return new ResourceLocation("item:" + ItemStackSerializer.toString(stack));
     }
 }

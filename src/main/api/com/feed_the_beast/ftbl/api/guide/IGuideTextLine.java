@@ -1,21 +1,21 @@
-package com.feed_the_beast.ftbl.api.info;
+package com.feed_the_beast.ftbl.api.guide;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.google.gson.JsonElement;
 
 /**
  * Created by LatvianModder on 08.08.2016.
  */
-public interface IInfoTextLine
+public interface IGuideTextLine
 {
     String getUnformattedText();
 
     Widget createWidget(GuiBase gui, Panel parent);
 
-    IInfoTextLine copy(InfoPage page);
+    IGuideTextLine copy(GuidePage page);
 
     JsonElement getJson();
 

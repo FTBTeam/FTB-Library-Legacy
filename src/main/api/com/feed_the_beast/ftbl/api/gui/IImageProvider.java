@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api.gui;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -16,8 +15,6 @@ public interface IImageProvider extends IDrawableObject
     {
         return false;
     }
-
-    ResourceLocation getImage();
 
     @SideOnly(Side.CLIENT)
     ITextureObject bindTexture();

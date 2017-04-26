@@ -19,8 +19,9 @@ public final class EnumNameMap<E extends Enum<E>>
     private final Map<String, E> map;
     private final List<String> keys;
     private final List<E> values;
+    private final E defaultValue;
 
-    public EnumNameMap(E[] v, boolean addNull)
+    public EnumNameMap(E[] v, boolean addNull, @Nullable E def)
     {
         List<E> list = new ArrayList<>();
 
@@ -49,6 +50,12 @@ public final class EnumNameMap<E extends Enum<E>>
 
         map = Collections.unmodifiableMap(map1);
         keys = Collections.unmodifiableList(new ArrayList<>(map.keySet()));
+        defaultValue = def;
+    }
+
+    public EnumNameMap(E[] v, boolean addNull)
+    {
+        this(v, addNull, null);
     }
 
     public static String getName(@Nullable Object o)
@@ -72,11 +79,12 @@ public final class EnumNameMap<E extends Enum<E>>
     {
         if(s == null || s.isEmpty() || s.charAt(0) == '-')
         {
-            return null;
+            return defaultValue;
         }
         else
         {
-            return map.get(s);
+            E e = map.get(s);
+            return e == null ? defaultValue : e;
         }
     }
 
@@ -104,5 +112,11 @@ public final class EnumNameMap<E extends Enum<E>>
     public List<E> getValues()
     {
         return values;
+    }
+
+    @Nullable
+    public E getDefaultValue()
+    {
+        return defaultValue;
     }
 }

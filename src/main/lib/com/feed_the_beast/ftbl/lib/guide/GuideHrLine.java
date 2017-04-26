@@ -1,6 +1,6 @@
-package com.feed_the_beast.ftbl.lib.info;
+package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -14,18 +14,18 @@ import com.google.gson.JsonPrimitive;
 /**
  * Created by LatvianModder on 23.03.2016.
  */
-public class InfoHrLine extends EmptyInfoPageLine
+public class GuideHrLine extends EmptyGuidePageLine
 {
     public final int height;
     public final Color4I color;
 
-    public InfoHrLine(int h, Color4I c)
+    public GuideHrLine(int h, Color4I c)
     {
         height = h;
         color = c;
     }
 
-    public InfoHrLine(JsonElement e)
+    public GuideHrLine(JsonElement e)
     {
         JsonObject o = e.getAsJsonObject();
         height = o.has("height") ? Math.max(1, o.get("height").getAsInt()) : 1;
@@ -39,9 +39,9 @@ public class InfoHrLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IInfoTextLine copy(InfoPage page)
+    public IGuideTextLine copy(GuidePage page)
     {
-        return new InfoHrLine(height, color);
+        return new GuideHrLine(height, color);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class InfoHrLine extends EmptyInfoPageLine
     {
         private WidgetInfoHr(Panel parent)
         {
-            super(0, 1, parent.width, InfoHrLine.this.height + 2);
+            super(0, 1, parent.width, GuideHrLine.this.height + 2);
         }
 
         @Override

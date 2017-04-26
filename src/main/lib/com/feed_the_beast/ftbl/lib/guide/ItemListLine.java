@@ -1,6 +1,6 @@
-package com.feed_the_beast.ftbl.lib.info;
+package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.client.DrawableItemList;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.ItemListButton;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by LatvianModder on 25.01.2017.
  */
-public class ItemListLine extends EmptyInfoPageLine
+public class ItemListLine extends EmptyGuidePageLine
 {
     private final List<ItemStack> list;
     private final int cols;
@@ -74,7 +74,7 @@ public class ItemListLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IInfoTextLine copy(InfoPage page)
+    public IGuideTextLine copy(GuidePage page)
     {
         return new ItemListLine(list, cols);
     }

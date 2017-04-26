@@ -1,6 +1,6 @@
-package com.feed_the_beast.ftbl.lib.info;
+package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.info.IInfoTextLine;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
@@ -14,16 +14,16 @@ import javax.annotation.Nullable;
 /**
  * Created by LatvianModder on 20.03.2016.
  */
-public class InfoExtendedTextLine extends EmptyInfoPageLine
+public class GuideExtendedTextLine extends EmptyGuidePageLine
 {
     public final ITextComponent textComponent;
 
-    public InfoExtendedTextLine(@Nullable ITextComponent cc)
+    public GuideExtendedTextLine(@Nullable ITextComponent cc)
     {
         textComponent = cc;
     }
 
-    public InfoExtendedTextLine(JsonElement json)
+    public GuideExtendedTextLine(JsonElement json)
     {
         textComponent = JsonUtils.deserializeTextComponent(json);
     }
@@ -41,9 +41,9 @@ public class InfoExtendedTextLine extends EmptyInfoPageLine
     }
 
     @Override
-    public IInfoTextLine copy(InfoPage page)
+    public IGuideTextLine copy(GuidePage page)
     {
-        return new InfoExtendedTextLine(textComponent.createCopy());
+        return new GuideExtendedTextLine(textComponent.createCopy());
     }
 
     @Override

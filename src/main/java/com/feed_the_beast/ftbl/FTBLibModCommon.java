@@ -16,7 +16,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
-import com.feed_the_beast.ftbl.api.info.IInfoTextLineProvider;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
@@ -40,14 +40,14 @@ import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
-import com.feed_the_beast.ftbl.lib.info.InfoExtendedTextLine;
-import com.feed_the_beast.ftbl.lib.info.InfoHrLine;
-import com.feed_the_beast.ftbl.lib.info.InfoImageLine;
-import com.feed_the_beast.ftbl.lib.info.InfoListLine;
-import com.feed_the_beast.ftbl.lib.info.InfoPage;
-import com.feed_the_beast.ftbl.lib.info.InfoPageHelper;
-import com.feed_the_beast.ftbl.lib.info.InfoTextLineString;
-import com.feed_the_beast.ftbl.lib.info.ItemListLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideImageLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
+import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
+import com.feed_the_beast.ftbl.lib.guide.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
@@ -132,12 +132,12 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         addNotification(FTBLibNotifications.NEW_TEAM_MESSAGE);
 
-        addInfoTextLine("img", (page, json) -> new InfoImageLine(json));
-        addInfoTextLine("image", (page, json) -> new InfoImageLine(json));
-        addInfoTextLine("text_component", (page, json) -> new InfoExtendedTextLine(json));
-        addInfoTextLine("text", (page, json) -> new InfoTextLineString(json));
-        addInfoTextLine("list", InfoListLine::new);
-        addInfoTextLine("hr", (page, json) -> new InfoHrLine(json));
+        addInfoTextLine("img", (page, json) -> new GuideImageLine(json));
+        addInfoTextLine("image", (page, json) -> new GuideImageLine(json));
+        addInfoTextLine("text_component", (page, json) -> new GuideExtendedTextLine(json));
+        addInfoTextLine("text", (page, json) -> new GuideTextLineString(json));
+        addInfoTextLine("list", GuideListLine::new);
+        addInfoTextLine("hr", (page, json) -> new GuideHrLine(json));
         addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
 
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
@@ -233,9 +233,9 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     }
 
     @Override
-    public void addInfoTextLine(String id, IInfoTextLineProvider provider)
+    public void addInfoTextLine(String id, IGuideTextLineProvider provider)
     {
-        InfoPageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(), provider);
+        GuidePageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(), provider);
     }
 
     @Override
@@ -349,7 +349,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     {
     }
 
-    public void displayInfoGui(InfoPage page)
+    public void displayGuide(GuidePage page)
     {
     }
 

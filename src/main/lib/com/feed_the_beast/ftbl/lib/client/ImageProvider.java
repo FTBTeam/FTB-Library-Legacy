@@ -44,7 +44,7 @@ public class ImageProvider implements IImageProvider
         {
             ItemStack stack = ItemStackSerializer.parseItem(id.getResourcePath());
 
-            if(stack != null)
+            if(stack != null && stack.stackSize > 0)
             {
                 return new DrawableItem(stack);
             }

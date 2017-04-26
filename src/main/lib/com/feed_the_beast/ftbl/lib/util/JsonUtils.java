@@ -13,6 +13,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -213,6 +215,81 @@ public class JsonUtils
     public static ITextComponent deserializeTextComponent(JsonElement e)
     {
         return (e == null || e.isJsonNull()) ? null : ITextComponent.Serializer.GSON.fromJson(e, ITextComponent.class);
+    }
+
+    public static JsonElement serializeClickEvent(@Nullable ClickEvent event)
+    {
+        if(event == null)
+        {
+            return JsonNull.INSTANCE;
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static ClickEvent deserializeClickEvent(JsonElement e)
+    {
+        if(e == null || !e.isJsonObject())
+        {
+            return null;
+        }
+
+        JsonObject o = e.getAsJsonObject();
+
+        if(o != null)
+        {
+            JsonPrimitive a = o.getAsJsonPrimitive("action");
+            ClickEvent.Action action = a == null ? null : ClickEvent.Action.getValueByCanonicalName(a.getAsString());
+            JsonPrimitive v = o.getAsJsonPrimitive("value");
+            String s = v == null ? null : v.getAsString();
+
+            if(action != null && s != null && action.shouldAllowInChat())
+            {
+                return new ClickEvent(action, s);
+            }
+        }
+
+        return null;
+    }
+
+    public static JsonElement serializeHoverEvent(@Nullable HoverEvent event)
+    {
+        if(event == null)
+        {
+            return JsonNull.INSTANCE;
+        }
+
+        JsonObject o = new JsonObject();
+        o.add("action", new JsonPrimitive(event.getAction().getCanonicalName()));
+        o.add("value", serializeTextComponent(event.getValue()));
+        return o;
+    }
+
+    @Nullable
+    public static HoverEvent deserializeHoverEvent(JsonElement e)
+    {
+        if(e == null || !e.isJsonObject())
+        {
+            return null;
+        }
+
+        JsonObject o = e.getAsJsonObject();
+
+        if(o != null)
+        {
+            JsonPrimitive a = o.getAsJsonPrimitive("action");
+            HoverEvent.Action action = a == null ? null : HoverEvent.Action.getValueByCanonicalName(a.getAsString());
+            JsonPrimitive v = o.getAsJsonPrimitive("value");
+            ITextComponent t = v == null ? null : deserializeTextComponent(v);
+
+            if(action != null && t != null && action.shouldAllowInChat())
+            {
+                return new HoverEvent(action, t);
+            }
+        }
+
+        return null;
     }
 
     public static JsonObject fromJsonTree(@Nonnull JsonObject o)

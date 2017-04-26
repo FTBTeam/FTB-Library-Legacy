@@ -2,8 +2,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -54,12 +52,6 @@ public class PanelNull extends Panel
     public int getAY()
     {
         return 0;
-    }
-
-    @Override
-    public Collection<Widget> getWidgets()
-    {
-        return Collections.emptyList();
     }
 
     @Override
