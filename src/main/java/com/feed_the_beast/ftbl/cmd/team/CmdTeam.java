@@ -1,16 +1,15 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.CommandTreeBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 
 /**
  * Created by LatvianModder on 29.05.2016.
  */
-public class CmdTeam extends CommandTreeBase
+public class CmdTeam extends CmdTreeBase
 {
     public CmdTeam()
     {
+        super("team");
         addSubcommand(new CmdGui());
         addSubcommand(new CmdTeamConfig());
         addSubcommand(new CmdCreate());
@@ -20,29 +19,5 @@ public class CmdTeam extends CommandTreeBase
         addSubcommand(new CmdJoin());
         addSubcommand(new CmdSetStatus());
         addSubcommand(new CmdMsg());
-    }
-
-    @Override
-    public String getName()
-    {
-        return "team";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-    {
-        return true;
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "command.ftb.team.usage";
     }
 }

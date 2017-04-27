@@ -1,11 +1,13 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
+import com.feed_the_beast.ftbl.api.ICustomPermission;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.server.MinecraftServer;
@@ -16,8 +18,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CmdBase extends CommandBase
+public abstract class CmdBase extends CommandBase implements ICustomPermission
 {
+    public enum Level
+    {
+        ALL(0),
+        OP(2);
+
+        public final int level;
+
+        Level(int l)
+        {
+            level = l;
+        }
+
+        public boolean checkPermission(ICommandSender sender, ICommand command)
+        {
+            return level <= 0 || sender.canUseCommand(level, command.getName());
+        }
+    }
+
     protected static final List<String> LIST_TRUE_FALSE = Collections.unmodifiableList(Arrays.asList("true", "false"));
 
     public static void checkArgs(String[] args, int i, String desc) throws CommandException
@@ -35,22 +55,54 @@ public abstract class CmdBase extends CommandBase
         }
     }
 
-    @Override
-    public int getRequiredPermissionLevel()
+    private final String name;
+    public final Level level;
+    private String customPermission;
+    private String usage;
+
+    public CmdBase(String n, Level l)
     {
-        return 2;
+        name = n;
+        level = l;
+        setCustomPermissionPrefix("");
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender ics)
+    public final String getName()
     {
-        return getRequiredPermissionLevel() == 0 || super.checkPermission(server, ics);
+        return name;
     }
 
     @Override
-    public String getUsage(ICommandSender ics)
+    public final String getCustomPermission()
     {
-        return "commands." + getName() + ".usage";
+        return customPermission;
+    }
+
+    @Override
+    public final int getRequiredPermissionLevel()
+    {
+        return level.level;
+    }
+
+    @Override
+    public final String getUsage(ICommandSender ics)
+    {
+        return usage;
+    }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender)
+    {
+        return level.checkPermission(sender, this);
+    }
+
+    @Override
+    public void setCustomPermissionPrefix(String prefix)
+    {
+        String s = prefix.isEmpty() ? name : (prefix + "." + name);
+        customPermission = "command." + s;
+        usage = "commands." + s + ".usage";
     }
 
     @Override

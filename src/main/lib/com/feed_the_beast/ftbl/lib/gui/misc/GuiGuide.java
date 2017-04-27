@@ -233,6 +233,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
                 }
                 else
                 {
+                    sliderPages.setValue(this, 0);
                     refreshWidgets();
                 }
             }

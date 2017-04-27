@@ -17,16 +17,9 @@ import net.minecraftforge.common.ForgeHooks;
  */
 public class CmdMsg extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdMsg()
     {
-        return "msg";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("msg", Level.ALL);
     }
 
     @Override

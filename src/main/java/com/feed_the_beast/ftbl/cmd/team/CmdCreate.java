@@ -19,10 +19,9 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class CmdCreate extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdCreate()
     {
-        return "create";
+        super("create", Level.ALL);
     }
 
     private static boolean isValidTeamID(String s)
@@ -49,12 +48,6 @@ public class CmdCreate extends CmdBase
     }
 
     @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
         EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
@@ -65,7 +58,7 @@ public class CmdCreate extends CmdBase
             throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
         }
 
-        checkArgs(args, 1, "<ID>");
+        checkArgs(args, 1, "<id> [color]");
 
         if(!isValidTeamID(args[0]))
         {

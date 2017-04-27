@@ -15,16 +15,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdKick extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdKick()
     {
-        return "kick";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("kick", Level.ALL);
     }
 
     @Override

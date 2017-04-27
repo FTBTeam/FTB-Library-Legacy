@@ -10,10 +10,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CmdReload extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdReload()
     {
-        return "reload";
+        super("reload", Level.OP);
     }
 
     @Override

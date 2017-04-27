@@ -14,16 +14,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdLeave extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdLeave()
     {
-        return "leave";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("leave", Level.ALL);
     }
 
     @Override

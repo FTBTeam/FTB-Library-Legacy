@@ -17,16 +17,9 @@ import java.util.UUID;
  */
 public class CmdAddFakePlayer extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdAddFakePlayer()
     {
-        return "add_fake_player";
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return '/' + getName() + " <player>";
+        super("add_fake_player", Level.OP);
     }
 
     @Override

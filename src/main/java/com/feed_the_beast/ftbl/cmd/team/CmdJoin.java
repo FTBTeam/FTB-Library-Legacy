@@ -19,16 +19,9 @@ import java.util.List;
  */
 public class CmdJoin extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdJoin()
     {
-        return "join";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("join", Level.ALL);
     }
 
     @Override

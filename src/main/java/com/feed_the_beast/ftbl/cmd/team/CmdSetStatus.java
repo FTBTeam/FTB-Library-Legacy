@@ -19,22 +19,9 @@ import java.util.List;
  */
 public class CmdSetStatus extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdSetStatus()
     {
-        return "set_status";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "/ftb team set_status <player> <status>";
+        super("set_status", Level.ALL);
     }
 
     @Override

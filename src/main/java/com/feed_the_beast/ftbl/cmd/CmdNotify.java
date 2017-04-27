@@ -17,16 +17,9 @@ import java.util.List;
 
 public class CmdNotify extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdNotify()
     {
-        return "notify";
-    }
-
-    @Override
-    public String getUsage(ICommandSender ics)
-    {
-        return "/" + getName() + " <player> <id>";
+        super("notify", Level.OP);
     }
 
     @Override

@@ -9,7 +9,6 @@ public class FTBLibLang
 {
     //@formatter:off
     public static final LangKey
-    DEPRECATED = get("deprecated"),
     MODE_LOADED = get("mode.loaded"),
     MODE_NOT_FOUND = get("mode.not_found"),
     MODE_ALREADY_SET = get("mode.already_set"),
@@ -22,6 +21,8 @@ public class FTBLibLang
 
     //@Deprecated
     RAW = get("raw"),
+    WIP = new LangKey("wip"),
+    DEPRECATED = get("deprecated"),
     COMMAND_PERMISSION = new LangKey("commands.generic.permission"),
     MISSING_ARGS = get("missing_args"),
     MISSING_ARGS_NUM = get("missing_args_num"),

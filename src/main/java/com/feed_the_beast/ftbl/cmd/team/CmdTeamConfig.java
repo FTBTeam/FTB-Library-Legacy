@@ -16,16 +16,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
  */
 public class CmdTeamConfig extends CmdEditConfigBase
 {
-    @Override
-    public String getName()
+    public CmdTeamConfig()
     {
-        return "config";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("config", Level.ALL);
     }
 
     @Override

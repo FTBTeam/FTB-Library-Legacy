@@ -4,27 +4,20 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraftforge.server.command.CommandTreeBase;
 
-public class CmdEditConfig extends CommandTreeBase
+public class CmdEditConfig extends CmdTreeBase
 {
     public static class CmdEditConfigFile extends CmdEditConfigBase
     {
-        private String commandName;
         private IConfigContainer configContainer;
 
         public CmdEditConfigFile(String id, IConfigContainer c)
         {
-            commandName = id;
+            super(id, Level.OP);
             configContainer = c;
-        }
-
-        @Override
-        public String getName()
-        {
-            return commandName;
         }
 
         @Override
@@ -36,6 +29,7 @@ public class CmdEditConfig extends CommandTreeBase
 
     public CmdEditConfig()
     {
+        super("edit_config");
         FTBLibModCommon.CONFIG_FILES.forEach((key, value) ->
         {
             if(value != FTBLibMod.PROXY.getClientConfig())
@@ -43,17 +37,5 @@ public class CmdEditConfig extends CommandTreeBase
                 addSubcommand(new CmdEditConfigFile(key, value));
             }
         });
-    }
-
-    @Override
-    public String getName()
-    {
-        return "edit_config";
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "command.ftb.edit_config.usage";
     }
 }

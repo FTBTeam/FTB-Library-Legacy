@@ -10,16 +10,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CmdReloadClient extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdReloadClient()
     {
-        return "reload_client";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("reload_client", Level.ALL);
     }
 
     @Override

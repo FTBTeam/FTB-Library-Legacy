@@ -15,16 +15,9 @@ public class CmdMySettings extends CmdEditConfigBase
 {
     private static final ITextComponent TITLE = new TextComponentString("My Server Settings");
 
-    @Override
-    public String getName()
+    public CmdMySettings()
     {
-        return "my_settings";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("my_settings", Level.ALL);
     }
 
     @Override

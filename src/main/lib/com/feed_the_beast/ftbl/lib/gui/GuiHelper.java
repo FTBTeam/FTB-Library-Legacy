@@ -334,7 +334,7 @@ public class GuiHelper
             }
             case RUN_COMMAND:
             {
-                FTBLibClient.execClientCommand(clickEvent.getValue(), true);
+                FTBLibClient.execClientCommand(clickEvent.getValue(), false);
                 return true;
             }
         }

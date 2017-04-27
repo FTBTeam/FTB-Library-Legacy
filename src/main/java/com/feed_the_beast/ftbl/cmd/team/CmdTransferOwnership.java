@@ -16,16 +16,9 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdTransferOwnership extends CmdBase
 {
-    @Override
-    public String getName()
+    public CmdTransferOwnership()
     {
-        return "transfer_ownership";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
+        super("transfer_ownership", Level.ALL);
     }
 
     @Override

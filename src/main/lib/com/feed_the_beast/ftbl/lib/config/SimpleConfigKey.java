@@ -12,7 +12,7 @@ public class SimpleConfigKey extends FinalIDObject implements IConfigKey
 {
     public SimpleConfigKey(String id)
     {
-        super(id, StringUtils.FLAG_ID_DEFAULTS | StringUtils.FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
+        super(id, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_UNDERLINE | StringUtils.FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
     }
 
     @Override

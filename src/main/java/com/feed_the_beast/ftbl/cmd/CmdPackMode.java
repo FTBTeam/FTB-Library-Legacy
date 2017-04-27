@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -14,25 +15,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.server.command.CommandTreeBase;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CmdPackMode extends CommandTreeBase
+public class CmdPackMode extends CmdTreeBase
 {
     public static class CmdSet extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdSet()
         {
-            return "set";
-        }
-
-        @Override
-        public String getUsage(ICommandSender ics)
-        {
-            return '/' + getName() + " <modeID>";
+            super("set", Level.OP);
         }
 
         @Override
@@ -49,7 +42,7 @@ public class CmdPackMode extends CommandTreeBase
         @Override
         public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
         {
-            checkArgs(args, 1, "<modeID>");
+            checkArgs(args, 1, "<mode>");
 
             ITextComponent c;
 
@@ -78,16 +71,9 @@ public class CmdPackMode extends CommandTreeBase
 
     public static class CmdGet extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdGet()
         {
-            return "get";
-        }
-
-        @Override
-        public int getRequiredPermissionLevel()
-        {
-            return 0;
+            super("get", Level.ALL);
         }
 
         @Override
@@ -101,16 +87,9 @@ public class CmdPackMode extends CommandTreeBase
 
     public static class CmdList extends CmdBase
     {
-        @Override
-        public String getName()
+        public CmdList()
         {
-            return "list";
-        }
-
-        @Override
-        public int getRequiredPermissionLevel()
-        {
-            return 0;
+            super("list", Level.ALL);
         }
 
         @Override
@@ -124,32 +103,9 @@ public class CmdPackMode extends CommandTreeBase
 
     public CmdPackMode()
     {
+        super("packmode");
         addSubcommand(new CmdSet());
         addSubcommand(new CmdGet());
         addSubcommand(new CmdList());
-    }
-
-    @Override
-    public String getName()
-    {
-        return "packmode";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
-
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender ics)
-    {
-        return true;
-    }
-
-    @Override
-    public String getUsage(ICommandSender sender)
-    {
-        return "command.ftb.packmode.usage";
     }
 }

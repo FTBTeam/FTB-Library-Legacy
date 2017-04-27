@@ -30,10 +30,9 @@ import java.util.Map;
  */
 public abstract class CmdEditConfigBase extends CmdBase
 {
-    @Override
-    public String getUsage(ICommandSender ics)
+    public CmdEditConfigBase(String n, Level l)
     {
-        return "/" + getName() + " [ID] [value]";
+        super(n, l);
     }
 
     @Override
