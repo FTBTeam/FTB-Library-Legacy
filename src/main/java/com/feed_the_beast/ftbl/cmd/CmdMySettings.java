@@ -6,14 +6,14 @@ import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Created by LatvianModder on 29.05.2016.
  */
 public class CmdMySettings extends CmdEditConfigBase
 {
-    private static final ITextComponent TITLE = new TextComponentString("My Server Settings");
+    private static final ITextComponent TITLE = new TextComponentTranslation("sidebar_button.ftbl.my_server_settings");
 
     public CmdMySettings()
     {

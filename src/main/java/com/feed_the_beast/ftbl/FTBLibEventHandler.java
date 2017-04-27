@@ -174,12 +174,12 @@ public class FTBLibEventHandler
 
         for(SidebarButton button : FTBLibModClient.getSidebarButtons(true))
         {
-            if(button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".desc"))
+            if(button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
             {
                 GuidePage page1 = page.getSub(button.getName());
                 page1.setIcon(button.icon);
                 page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-                page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".desc"));
+                page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
             }
         }
 

@@ -16,13 +16,14 @@ import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
+import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
@@ -44,6 +45,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -117,10 +119,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
     @Override
     public void loadWorldData(MinecraftServer server)
     {
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.loadWorldData(server);
-        }
+        MinecraftForge.EVENT_BUS.post(new LoadWorldDataEvent(server));
     }
 
     @Override
@@ -135,10 +134,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
             FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
         }
 
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.onReload(side, sender, type);
-        }
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent(side, sender, type));
 
         if(serverSide && ServerUtils.hasOnlinePlayers())
         {

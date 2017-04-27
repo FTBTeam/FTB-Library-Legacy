@@ -147,8 +147,11 @@ ftbl.lang.team_status.owner=Owner
 
 # Action Buttons
 sidebar_button.ftbl.teams_gui=Teams GUI
+sidebar_button.ftbl.teams_gui.info=Opens Teams GUI where you can manage your team, chat with them and edit team settings
 sidebar_button.ftbl.settings=Client Settings
+sidebar_button.ftbl.settings.info=Edit client-side-only settings
 sidebar_button.ftbl.my_server_settings=My Server Settings
+sidebar_button.ftbl.my_server_settings.info=Edit per-server settings for your player
 sidebar_button.ftbl.notifications=Notifications
 
 # Privacy Level

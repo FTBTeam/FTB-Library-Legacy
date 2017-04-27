@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.IDataProvider;
-import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -15,9 +14,10 @@ import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
+import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
-import com.feed_the_beast.ftbl.api_impl.LMRecipes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
@@ -49,7 +49,6 @@ import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.guide.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -60,6 +59,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
 
 import javax.annotation.Nullable;
@@ -140,19 +140,11 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addInfoTextLine("hr", (page, json) -> new GuideHrLine(json));
         addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
 
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.registerCommon(this);
-        }
+        MinecraftForge.EVENT_BUS.post(new FTBLibRegistryEvent(this));
     }
 
     public void postInit(LoaderState.ModState state)
     {
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.registerRecipes(new LMRecipes());
-        }
-
         reloadConfig(state);
 
         for(IConfigFile file : CONFIG_FILES.values())
@@ -309,10 +301,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
             }
         }
 
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.configLoaded(state);
-        }
+        MinecraftForge.EVENT_BUS.post(new ConfigLoadedEvent(state));
     }
 
     public void worldLoaded()

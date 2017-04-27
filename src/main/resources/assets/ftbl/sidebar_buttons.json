@@ -14,7 +14,7 @@
 		"dependencies": "after:ftbl.teams_gui",
 		"clickEvent": {
 			"action": "run_command",
-			"value": "new GuiEditConfig(null, FTBLibMod.PROXY.getClientConfig()).openGui();"
+			"value": "/ftbc client_config"
 		}
 	},
 	"my_server_settings": {

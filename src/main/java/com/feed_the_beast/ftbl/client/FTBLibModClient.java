@@ -2,13 +2,14 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
-import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ParticleColoredDust;
@@ -19,7 +20,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -39,6 +39,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.toposort.TopologicalSort;
@@ -84,10 +85,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         addClientConfig(group, "color_background", GuiConfigs.INFO_BACKGROUND);
         addClientConfig(group, "color_text", GuiConfigs.INFO_TEXT);
 
-        for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
-        {
-            plugin.registerClient(this);
-        }
+        MinecraftForge.EVENT_BUS.post(new FTBLibClientRegistryEvent(this));
 
         //For Dev reasons
         GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
@@ -238,6 +236,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     public void postInit(LoaderState.ModState state)
     {
         super.postInit(state);
+        ClientCommandHandler.instance.registerCommand(new CmdFTBC());
     }
 
     @Override

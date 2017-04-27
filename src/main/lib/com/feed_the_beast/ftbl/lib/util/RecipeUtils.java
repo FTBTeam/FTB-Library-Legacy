@@ -1,6 +1,5 @@
-package com.feed_the_beast.ftbl.api_impl;
+package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.api.IRecipes;
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
@@ -12,7 +11,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import javax.annotation.Nullable;
 
-public class LMRecipes implements IRecipes
+public class RecipeUtils
 {
     @Nullable
     public static Object getFrom(@Nullable Object o)
@@ -46,14 +45,12 @@ public class LMRecipes implements IRecipes
         return in;
     }
 
-    @Override
-    public void addIRecipe(IRecipe r)
+    public static void addIRecipe(IRecipe r)
     {
         CraftingManager.getInstance().getRecipeList().add(r);
     }
 
-    @Override
-    public void addRecipe(ItemStack out, Object... in)
+    public static void addRecipe(ItemStack out, Object... in)
     {
         if(out.stackSize > 0)
         {
@@ -61,14 +58,12 @@ public class LMRecipes implements IRecipes
         }
     }
 
-    @Override
-    public void addShapelessRecipe(ItemStack out, Object... in)
+    public static void addShapelessRecipe(ItemStack out, Object... in)
     {
         addIRecipe(new ShapelessOreRecipe(out, fixObjects(in)));
     }
 
-    @Override
-    public void addSmelting(ItemStack out, ItemStack in, float xp)
+    public static void addSmelting(ItemStack out, ItemStack in, float xp)
     {
         FurnaceRecipes.instance().addSmeltingRecipe(in, out, xp);
     }
