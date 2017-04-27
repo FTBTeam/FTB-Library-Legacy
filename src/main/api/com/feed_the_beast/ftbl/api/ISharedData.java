@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.api;
 
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -16,5 +16,5 @@ public interface ISharedData
 
     UUID getUniverseID();
 
-    boolean hasOptionalServerMod(@Nullable String id);
+    Collection<String> optionalServerMods();
 }

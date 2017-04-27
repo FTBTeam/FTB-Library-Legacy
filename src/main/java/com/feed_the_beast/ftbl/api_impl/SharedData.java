@@ -53,4 +53,10 @@ public abstract class SharedData implements ISharedData
 
         return universeID;
     }
+
+    @Override
+    public Collection<String> optionalServerMods()
+    {
+        return optionalServerMods;
+    }
 }

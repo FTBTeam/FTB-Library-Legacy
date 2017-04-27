@@ -1,0 +1,31 @@
+{
+	"teams_gui": {
+		"icon": "ftbl:textures/gui/teams.png",
+		"dependencies": "before:*",
+		"clickEvent": {
+			"action": "run_command",
+			"value": "/ftb team gui"
+		},
+		"required_server_mods": ["ftbl"],
+		"loading_screen": true
+	},
+	"settings": {
+		"icon": "ftbl:textures/icons/settings.png",
+		"dependencies": "after:ftbl.teams_gui",
+		"clickEvent": {
+			"action": "run_command",
+			"value": "new GuiEditConfig(null, FTBLibMod.PROXY.getClientConfig()).openGui();"
+		}
+	},
+	"my_server_settings": {
+		"icon": "ftbl:textures/icons/settings_red.png",
+		"dependencies": "after:ftbl.settings",
+		"clickEvent": {
+			"action": "run_command",
+			"value": "/ftb my_settings"
+		},
+		"required_server_mods": ["ftbl"],
+		"loading_screen": true,
+		"config": true
+	}
+}

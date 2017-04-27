@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
+import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
@@ -106,7 +107,7 @@ public class FTBLibClientEventHandler
     {
         if(event.getGui() instanceof InventoryEffectRenderer)
         {
-            List<ISidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
+            List<SidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
 
             if(!buttons.isEmpty())
             {
@@ -116,7 +117,7 @@ public class FTBLibClientEventHandler
                 if(!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
                 {
                     int i = 0;
-                    for(ISidebarButton button : buttons)
+                    for(SidebarButton button : buttons)
                     {
                         int x = i % 4;
                         int y = i / 4;
@@ -150,7 +151,7 @@ public class FTBLibClientEventHandler
                     int guiTop = (event.getGui().height - ySize) / 2;
 
                     int i = 0;
-                    for(ISidebarButton button : buttons)
+                    for(SidebarButton button : buttons)
                     {
                         ButtonInvLM b;
 
@@ -209,14 +210,16 @@ public class FTBLibClientEventHandler
 
     private static class ButtonInvLM extends GuiButton
     {
-        public final ISidebarButton button;
+        public final SidebarButton button;
         public final String title;
+        public final boolean renderMessages;
 
-        public ButtonInvLM(int id, ISidebarButton b, int x, int y)
+        public ButtonInvLM(int id, SidebarButton b, int x, int y)
         {
             super(id, x, y, 16, 16, "");
             button = b;
             title = StringUtils.translate("sidebar_button." + b.getName());
+            renderMessages = b.getName().equals("ftbl.teams_gui");
         }
 
         @Override
@@ -249,10 +252,7 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                if(b.button.getIcon() != null)
-                {
-                    b.button.getIcon().draw(b.xPosition, b.yPosition, b.width, b.height, Color4I.NONE);
-                }
+                b.button.icon.draw(b.xPosition, b.yPosition, b.width, b.height, Color4I.NONE);
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {
@@ -262,7 +262,16 @@ public class FTBLibClientEventHandler
 
             for(ButtonInvLM b : buttons)
             {
-                b.button.postRender(b.xPosition, b.yPosition);
+                if(b.renderMessages && MyTeamData.unreadMessages > 0)
+                {
+                    String n = String.valueOf(MyTeamData.unreadMessages);
+                    int nw = mc.fontRendererObj.getStringWidth(n);
+                    int width = 16;
+                    GuiHelper.drawBlankRect(b.xPosition + width - nw, b.yPosition - 4, nw + 1, 9, Color4I.LIGHT_RED);
+
+                    mc.fontRendererObj.drawString(n, b.xPosition + width - nw + 1, b.yPosition - 3, 0xFFFFFFFF);
+                    GlStateManager.color(1F, 1F, 1F, 1F);
+                }
 
                 if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
                 {

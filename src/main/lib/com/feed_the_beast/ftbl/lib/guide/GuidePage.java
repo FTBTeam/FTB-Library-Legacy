@@ -48,6 +48,7 @@ public class GuidePage extends FinalIDObject
     public GuidePage(String id, @Nullable GuidePage p, JsonElement json)
     {
         this(id);
+        parent = p;
 
         if(!json.isJsonObject())
         {
@@ -164,7 +165,14 @@ public class GuidePage extends FinalIDObject
 
     public GuidePage getSub(String id)
     {
-        return childPages.computeIfAbsent(id, i -> addSub(new GuidePage(i)));
+        GuidePage p = childPages.get(id);
+
+        if(p == null)
+        {
+            p = addSub(new GuidePage(id));
+        }
+
+        return p;
     }
 
     public void clear()

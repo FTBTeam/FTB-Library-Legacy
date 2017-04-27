@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
-import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
@@ -23,11 +22,18 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.MapUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -39,29 +45,31 @@ import net.minecraftforge.fml.common.toposort.TopologicalSort;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientRegistry
+public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientRegistry, IResourceManagerReloadListener
 {
     private IConfigFile clientConfig;
-    private static final Map<String, ISidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
-    private static final List<ISidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
-    private static final ISidebarButton DBUTTON_BEFORE_ALL = new SidebarButton.Dummy(new ResourceLocation("before_all"));
-    private static final ISidebarButton DBUTTON_AFTER_ALL = new SidebarButton.Dummy(new ResourceLocation("after_all"));
-    private static final ISidebarButton DBUTTON_BEFORE = new SidebarButton.Dummy(new ResourceLocation("before"));
-    private static final ISidebarButton DBUTTON_AFTER = new SidebarButton.Dummy(new ResourceLocation("after"));
+    private static final Map<String, SidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
+    private static final List<SidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
+    private static final SidebarButton DBUTTON_BEFORE_ALL = new SidebarButton(new ResourceLocation("before_all"));
+    private static final SidebarButton DBUTTON_AFTER_ALL = new SidebarButton(new ResourceLocation("after_all"));
+    private static final SidebarButton DBUTTON_BEFORE = new SidebarButton(new ResourceLocation("before"));
+    private static final SidebarButton DBUTTON_AFTER = new SidebarButton(new ResourceLocation("after"));
     private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 
     @Override
     public void preInit()
     {
         super.preInit();
-
-        clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button." + FTBLibActions.SETTINGS.getName()), () -> new File(LMUtils.folderLocal, "client_config.json"));
+        MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.class);
+        clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button.ftbl.settings"), () -> new File(LMUtils.folderLocal, "client_config.json"));
 
         String group = FTBLibFinals.MOD_ID;
         addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
@@ -76,31 +84,76 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         addClientConfig(group, "color_background", GuiConfigs.INFO_BACKGROUND);
         addClientConfig(group, "color_text", GuiConfigs.INFO_TEXT);
 
-        addSidebarButton(FTBLibActions.TEAMS_GUI);
-        addSidebarButton(FTBLibActions.SETTINGS);
-        addSidebarButton(FTBLibActions.MY_SERVER_SETTINGS);
-
         for(IFTBLibPlugin plugin : FTBLibIntegrationInternal.API.getAllPlugins())
         {
             plugin.registerClient(this);
         }
 
-        SIDEBAR_BUTTON_MAP.values().forEach(button ->
+        //For Dev reasons
+        GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+        if(profile.getId().equals(StringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
         {
-            IConfigValue value = button.getConfig();
+            LMUtils.userIsLatvianModder = true;
+        }
 
-            if(value != null)
+        FTBLibClient.localPlayerHead = new PlayerHeadImage(profile.getName());
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager manager)
+    {
+        SIDEBAR_BUTTON_MAP.clear();
+        MapUtils.removeAll(clientConfig.getTree(), entry -> entry.getKey().getGroup().equals("sidebar_button"));
+
+        for(String domain : manager.getResourceDomains())
+        {
+            try
             {
-                ConfigKey key = new ConfigKey(button.getName(), value.copy());
-                key.setGroup("sidebar_button");
-                key.setNameLangKey("sidebar_button." + key.getName());
-                key.setInfoLangKey("sidebar_button." + key.getName() + ".info");
+                for(IResource resource : manager.getAllResources(new ResourceLocation(domain, "sidebar_buttons.json")))
+                {
+                    JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
 
-                clientConfig.add(key, value);
+                    if(json.isJsonObject())
+                    {
+                        for(Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
+                        {
+                            if(entry.getValue().isJsonObject())
+                            {
+                                SidebarButton button = new SidebarButton(new ResourceLocation(domain, entry.getKey()), entry.getValue().getAsJsonObject());
+
+                                if(!button.devOnly && !LMUtils.DEV_ENV)
+                                {
+                                    continue;
+                                }
+
+                                SIDEBAR_BUTTON_MAP.put(button.getName(), button);
+
+                                if(button.config != null)
+                                {
+                                    ConfigKey key = new ConfigKey(button.getName(), button.config.copy());
+                                    key.setGroup("sidebar_button");
+                                    key.setNameLangKey("sidebar_button." + key.getName());
+                                    key.setInfoLangKey("sidebar_button." + key.getName() + ".info");
+                                    clientConfig.add(key, button.config);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        });
+            catch(Exception ex)
+            {
+                //LMUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
 
-        TopologicalSort.DirectedGraph<ISidebarButton> sidebarButtonGraph = new TopologicalSort.DirectedGraph<>();
+                if(!(ex instanceof FileNotFoundException))
+                {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        TopologicalSort.DirectedGraph<SidebarButton> sidebarButtonGraph = new TopologicalSort.DirectedGraph<>();
         sidebarButtonGraph.addNode(DBUTTON_BEFORE_ALL);
         sidebarButtonGraph.addNode(DBUTTON_BEFORE);
         sidebarButtonGraph.addNode(DBUTTON_AFTER_ALL);
@@ -111,16 +164,16 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
         SIDEBAR_BUTTON_MAP.values().forEach(sidebarButtonGraph::addNode);
 
-        for(ISidebarButton button : SIDEBAR_BUTTON_MAP.values())
+        for(SidebarButton button : SIDEBAR_BUTTON_MAP.values())
         {
             boolean preDepAdded = false;
             boolean postDepAdded = false;
 
-            for(Map.Entry<String, Boolean> entry : button.getDependencies().entrySet())
+            for(Map.Entry<String, Boolean> entry : button.dependencies.entrySet())
             {
                 if(entry.getValue())
                 {
-                    for(String id : button.getDependencies().keySet())
+                    for(String id : button.dependencies.keySet())
                     {
                         postDepAdded = true;
 
@@ -173,22 +226,12 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
             }
         }
 
-        List<ISidebarButton> sortedSidebarButtonList = TopologicalSort.topologicalSort(sidebarButtonGraph);
+        List<SidebarButton> sortedSidebarButtonList = TopologicalSort.topologicalSort(sidebarButtonGraph);
         sortedSidebarButtonList.removeAll(Arrays.asList(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE, DBUTTON_AFTER, DBUTTON_AFTER_ALL));
         SIDEBAR_BUTTONS.clear();
         SIDEBAR_BUTTONS.addAll(sortedSidebarButtonList);
-        FTBLibFinals.LOGGER.info("Sorted sidebar buttons to " + SIDEBAR_BUTTONS);
-
-        MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.class);
-
-        //For Dev reasons
-        GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
-        if(profile.getId().equals(StringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
-        {
-            LMUtils.userIsLatvianModder = true;
-        }
-
-        FTBLibClient.localPlayerHead = new PlayerHeadImage(profile.getName());
+        clientConfig.load();
+        clientConfig.save();
     }
 
     @Override
@@ -238,12 +281,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     public void addGui(ResourceLocation id, IGuiProvider provider)
     {
         GUI_PROVIDERS.put(id, provider);
-    }
-
-    @Override
-    public void addSidebarButton(ISidebarButton button)
-    {
-        SIDEBAR_BUTTON_MAP.put(button.getName(), button);
     }
 
     @Override
@@ -305,18 +342,18 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
         }
     }
 
-    public static List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)
+    public static List<SidebarButton> getSidebarButtons(boolean ignoreConfig)
     {
         if(ignoreConfig)
         {
             return SIDEBAR_BUTTONS;
         }
 
-        List<ISidebarButton> list = new ArrayList<>();
+        List<SidebarButton> list = new ArrayList<>();
 
-        for(ISidebarButton button : SIDEBAR_BUTTONS)
+        for(SidebarButton button : SIDEBAR_BUTTONS)
         {
-            if(button.isVisible() && (button.getConfig() == null || button.getConfig().getBoolean()))
+            if(button.isVisible() && (button.config == null || button.config.getBoolean()))
             {
                 list.add(button);
             }

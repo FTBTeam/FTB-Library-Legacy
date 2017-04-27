@@ -135,7 +135,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
     public void onMessage(MessageLogin m, EntityPlayer player)
     {
         SharedClientData.INSTANCE.reset();
-        SharedClientData.INSTANCE.hasServer = true;
         SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
         SharedClientData.INSTANCE.universeID = m.universeID;
         SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);

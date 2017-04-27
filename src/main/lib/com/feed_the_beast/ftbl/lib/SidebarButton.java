@@ -3,32 +3,76 @@ package com.feed_the_beast.ftbl.lib;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.config.PropertyBool;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.event.ClickEvent;
 
-import javax.annotation.Nullable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public abstract class SidebarButton extends FinalIDObject implements ISidebarButton
+public class SidebarButton extends FinalIDObject
 {
-    private final IDrawableObject icon;
-    private final IConfigValue config;
-    private Map<String, Boolean> deps;
+    public IDrawableObject icon = ImageProvider.NULL;
+    public IConfigValue config = null;
+    public final Map<String, Boolean> dependencies = new HashMap<>();
+    public final List<String> requiredServerMods = new ArrayList<>();
+    private ClickEvent clickEvent;
+    public boolean requiresOp, devOnly, hideWithNEI, loadingScreen;
 
-    public SidebarButton(ResourceLocation id, IDrawableObject c, @Nullable IConfigValue b, String dependencies)
+    public SidebarButton(ResourceLocation id)
     {
         super(id.toString().replace(':', '.'));
-        icon = c;
-        config = b;
+    }
 
-        if(!dependencies.isEmpty())
+    public SidebarButton(ResourceLocation id, JsonObject o)
+    {
+        this(id);
+
+        if(o.has("icon"))
         {
-            deps = new HashMap<>();
+            icon = ImageProvider.get(o.get("icon").getAsString());
+        }
 
-            for(String s : dependencies.split(";"))
+        if(icon == ImageProvider.NULL)
+        {
+            icon = GuiIcons.ACCEPT_GRAY;
+        }
+        if(o.has("dependencies"))
+        {
+            setDependencies(o.get("dependencies").getAsString());
+        }
+        if(o.has("clickEvent"))
+        {
+            clickEvent = JsonUtils.deserializeClickEvent(o.get("clickEvent"));
+        }
+        if(o.has("config"))
+        {
+            config = new PropertyBool(o.get("config").getAsBoolean());
+        }
+
+        requiresOp = o.has("requires_op") && o.get("requires_op").getAsBoolean();
+        devOnly = o.has("dev_only") && o.get("dev_only").getAsBoolean();
+        hideWithNEI = o.has("hide_with_nei") && o.get("hide_with_nei").getAsBoolean();
+        loadingScreen = o.has("loading_screen") && o.get("loading_screen").getAsBoolean();
+    }
+
+    public void setDependencies(String deps)
+    {
+        dependencies.clear();
+
+        if(!deps.isEmpty())
+        {
+            for(String s : deps.split(";"))
             {
                 int index = s.indexOf(':');
 
@@ -37,51 +81,32 @@ public abstract class SidebarButton extends FinalIDObject implements ISidebarBut
                     switch(s.substring(0, index))
                     {
                         case "before":
-                            deps.put(s.substring(index + 1, s.length()), true);
+                            dependencies.put(s.substring(index + 1, s.length()), true);
                             break;
                         case "after":
-                            deps.put(s.substring(index + 1, s.length()), false);
+                            dependencies.put(s.substring(index + 1, s.length()), false);
                             break;
                     }
                 }
             }
         }
+    }
 
-        if(deps == null || deps.isEmpty())
+    public void onClicked(IMouseButton button)
+    {
+        if(clickEvent != null)
         {
-            deps = Collections.emptyMap();
+            if(loadingScreen)
+            {
+                new GuiLoading().openGui();
+            }
+
+            GuiHelper.onClickEvent(clickEvent);
         }
     }
 
-    @Override
-    public IDrawableObject getIcon()
+    public boolean isVisible()
     {
-        return icon;
-    }
-
-    @Override
-    @Nullable
-    public IConfigValue getConfig()
-    {
-        return config;
-    }
-
-    @Override
-    public Map<String, Boolean> getDependencies()
-    {
-        return deps;
-    }
-
-    public static class Dummy extends SidebarButton
-    {
-        public Dummy(ResourceLocation id)
-        {
-            super(id, ImageProvider.NULL, null, "");
-        }
-
-        @Override
-        public void onClicked(IMouseButton button)
-        {
-        }
+        return !(hideWithNEI && LMUtils.isNEILoaded()) && !(requiresOp && !FTBLibIntegrationInternal.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibIntegrationInternal.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
     }
 }

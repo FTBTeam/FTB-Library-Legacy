@@ -1,11 +1,18 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
+import com.feed_the_beast.ftbl.client.FTBLibModClient;
+import com.feed_the_beast.ftbl.lib.SidebarButton;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -13,6 +20,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -25,6 +33,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,4 +164,25 @@ public class FTBLibEventHandler
     {
     }
     */
+
+    @SubscribeEvent
+    public static void onGuideEvent(ClientGuideEvent event)
+    {
+        GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
+        page.setIcon(ImageProvider.get("ftbl:textures/gui/teams.png"));
+        page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
+
+        for(SidebarButton button : FTBLibModClient.getSidebarButtons(true))
+        {
+            if(button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".desc"))
+            {
+                GuidePage page1 = page.getSub(button.getName());
+                page1.setIcon(button.icon);
+                page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
+                page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".desc"));
+            }
+        }
+
+        event.add(page);
+    }
 }

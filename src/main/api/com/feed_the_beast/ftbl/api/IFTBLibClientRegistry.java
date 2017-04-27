@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
-import com.feed_the_beast.ftbl.api.gui.ISidebarButton;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -14,6 +13,4 @@ public interface IFTBLibClientRegistry
     IConfigKey addClientConfig(String group, String id, IConfigValue value);
 
     void addGui(ResourceLocation id, IGuiProvider provider);
-
-    void addSidebarButton(ISidebarButton provider);
 }

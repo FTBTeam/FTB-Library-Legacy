@@ -9,8 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 
-import javax.annotation.Nullable;
-
 /**
  * Created by LatvianModder on 12.11.2016.
  */
@@ -37,12 +35,6 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
 
         currentMode = m;
         return 0;
-    }
-
-    @Override
-    public boolean hasOptionalServerMod(@Nullable String id)
-    {
-        return id == null || optionalServerMods.contains(id);
     }
 
     @Override
