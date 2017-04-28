@@ -5,9 +5,10 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -16,26 +17,11 @@ import javax.annotation.Nullable;
  */
 public class DrawableItem implements IDrawableObject
 {
-    protected ItemStack stack;
+    public ItemStack stack;
 
     public DrawableItem(@Nullable ItemStack is)
     {
         stack = is;
-    }
-
-    public int getItemCount()
-    {
-        return 1;
-    }
-
-    @Nullable
-    public ItemStack getStack(int index)
-    {
-        return stack;
-    }
-
-    public void setIndex(int i)
-    {
     }
 
     @Override
@@ -48,8 +34,8 @@ public class DrawableItem implements IDrawableObject
     }
 
     @Override
-    public ResourceLocation getImage()
+    public JsonElement getJson()
     {
-        return new ResourceLocation("item:" + ItemStackSerializer.toString(stack));
+        return new JsonPrimitive("item:" + ItemStackSerializer.toString(stack));
     }
 }

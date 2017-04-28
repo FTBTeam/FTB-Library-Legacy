@@ -15,7 +15,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -36,13 +35,14 @@ public class GuidePage extends FinalIDObject
     public GuidePage parent;
     private ITextComponent title;
     private IDrawableObject pageIcon;
-    public SpecialGuideButton specialButton;
+    public final List<SpecialGuideButton> specialButtons;
 
     public GuidePage(String id)
     {
         super(id);
         text = new ArrayList<>();
         childPages = new LinkedHashMap<>(0);
+        specialButtons = new ArrayList<>();
     }
 
     public GuidePage(String id, @Nullable GuidePage p, JsonElement json)
@@ -80,11 +80,14 @@ public class GuidePage extends FinalIDObject
         }
         if(o.has("icon"))
         {
-            pageIcon = ImageProvider.get(o.get("icon").getAsString());
+            pageIcon = ImageProvider.get(o.get("icon"));
         }
-        if(o.has("button"))
+        if(o.has("buttons"))
         {
-            specialButton = new SpecialGuideButton(o.get("button").getAsJsonObject());
+            for(JsonElement e : o.get("buttons").getAsJsonArray())
+            {
+                specialButtons.add(new SpecialGuideButton(e.getAsJsonObject()));
+            }
         }
     }
 
@@ -175,6 +178,22 @@ public class GuidePage extends FinalIDObject
         return p;
     }
 
+    @Nullable
+    public GuidePage getSubRaw(String id)
+    {
+        int i = id.indexOf('.');
+
+        if(i >= 0)
+        {
+            GuidePage page = childPages.get(id.substring(0, i));
+            return page == null ? null : page.getSubRaw(id.substring(i + 1));
+        }
+        else
+        {
+            return childPages.get(id);
+        }
+    }
+
     public void clear()
     {
         text.clear();
@@ -250,11 +269,18 @@ public class GuidePage extends FinalIDObject
         }
         if(pageIcon != null)
         {
-            o.add("icon", new JsonPrimitive(pageIcon.getImage().toString()));
+            o.add("icon", pageIcon.getJson());
         }
-        if(specialButton != null)
+        if(!specialButtons.isEmpty())
         {
-            o.add("button", specialButton.serialize());
+            JsonArray a = new JsonArray();
+
+            for(SpecialGuideButton button : specialButtons)
+            {
+                a.add(button.serialize());
+            }
+
+            o.add("buttons", a);
         }
 
         return o;
@@ -276,9 +302,9 @@ public class GuidePage extends FinalIDObject
     {
     }
 
-    public final GuidePage setSpecialButton(SpecialGuideButton button)
+    public final GuidePage addSpecialButton(SpecialGuideButton button)
     {
-        specialButton = button;
+        specialButtons.add(button);
         return this;
     }
 
@@ -291,10 +317,5 @@ public class GuidePage extends FinalIDObject
     public Widget createWidget(GuiBase gui)
     {
         return new ButtonGuidePage((GuiGuide) gui, this, pageIcon);
-    }
-
-    public final SpecialGuideButton getSpecialButton()
-    {
-        return specialButton;
     }
 }

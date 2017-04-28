@@ -1,50 +1,49 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
-import com.feed_the_beast.ftbl.lib.client.DrawableItemList;
+import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.gui.DrawableObjectListButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
-import com.feed_the_beast.ftbl.lib.gui.ItemListButton;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by LatvianModder on 25.01.2017.
  */
-public class ItemListLine extends EmptyGuidePageLine
+public class DrawableObjectListLine extends EmptyGuidePageLine
 {
-    private final List<ItemStack> list;
+    private final DrawableObjectList list;
     private final int cols;
 
-    public ItemListLine(Collection<ItemStack> l, int columns)
+    public DrawableObjectListLine(DrawableObjectList l, int columns)
     {
-        list = new ArrayList<>(l);
+        list = l;
         cols = MathHelper.clamp(columns, 0, 16);
     }
 
-    public ItemListLine(JsonElement json)
+    public DrawableObjectListLine(JsonElement json)
     {
-        list = new ArrayList<>();
+        list = new DrawableObjectList(Collections.emptyList());
 
         if(json.isJsonObject())
         {
             JsonObject o = json.getAsJsonObject();
             cols = MathHelper.clamp(o.has("columns") ? o.get("columns").getAsInt() : 8, 0, 16);
 
-            if(o.has("items"))
+            if(o.has("objects"))
             {
-                for(JsonElement e : o.get("items").getAsJsonArray())
+                for(JsonElement e : o.get("objects").getAsJsonArray())
                 {
-                    list.add(ItemStackSerializer.deserialize(e));
+                    list.list.add(ImageProvider.get(e));
                 }
             }
         }
@@ -54,7 +53,7 @@ public class ItemListLine extends EmptyGuidePageLine
 
             for(JsonElement e : json.getAsJsonArray())
             {
-                list.add(ItemStackSerializer.deserialize(e));
+                list.list.add(ImageProvider.get(e));
             }
         }
     }
@@ -64,24 +63,33 @@ public class ItemListLine extends EmptyGuidePageLine
     {
         JsonObject o = new JsonObject();
         o.add("id", new JsonPrimitive("item_list"));
+        o.add("columns", new JsonPrimitive(cols));
+        JsonArray a = new JsonArray();
+
+        for(IDrawableObject item : list.list)
+        {
+            a.add(item.getJson());
+        }
+
+        o.add("objects", a);
         return o;
     }
 
     @Override
     public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new ItemListButton(0, 0, new DrawableItemList(list), cols);
+        return new DrawableObjectListButton(0, 0, list, cols);
     }
 
     @Override
     public IGuideTextLine copy(GuidePage page)
     {
-        return new ItemListLine(list, cols);
+        return new DrawableObjectListLine(list, cols);
     }
 
     @Override
     public boolean isEmpty()
     {
-        return list.isEmpty();
+        return list.list.isEmpty();
     }
 }

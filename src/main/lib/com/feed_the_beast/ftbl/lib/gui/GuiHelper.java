@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -259,6 +260,8 @@ public class GuiHelper
             return false;
         }
 
+        Minecraft mc = Minecraft.getMinecraft();
+
         switch(clickEvent.getAction())
         {
             case OPEN_URL:
@@ -276,8 +279,6 @@ public class GuiHelper
                     {
                         throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
                     }
-
-                    Minecraft mc = Minecraft.getMinecraft();
 
                     if(mc.gameSettings.chatLinksPrompt)
                     {
@@ -336,6 +337,13 @@ public class GuiHelper
             {
                 FTBLibClient.execClientCommand(clickEvent.getValue(), false);
                 return true;
+            }
+            case CHANGE_PAGE:
+            {
+                if(mc.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) mc.currentScreen).getWrappedGui().changePage(clickEvent.getValue()))
+                {
+                    return true;
+                }
             }
         }
 

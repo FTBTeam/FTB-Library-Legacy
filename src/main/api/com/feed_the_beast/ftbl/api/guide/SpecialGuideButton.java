@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
@@ -28,7 +27,7 @@ public class SpecialGuideButton
     public SpecialGuideButton(JsonObject o)
     {
         title = o.has("title") ? JsonUtils.deserializeTextComponent(o.get("title")) : new TextComponentString("");
-        icon = o.has("icon") ? ImageProvider.get(o.get("icon").getAsString()) : ImageProvider.NULL;
+        icon = o.has("icon") ? ImageProvider.get(o.get("icon")) : ImageProvider.NULL;
         clickEvent = o.has("clickEvent") ? JsonUtils.deserializeClickEvent(o.get("clickEvent")) : null;
     }
 
@@ -36,7 +35,7 @@ public class SpecialGuideButton
     {
         JsonObject o = new JsonObject();
         o.add("title", JsonUtils.serializeTextComponent(title));
-        o.add("icon", new JsonPrimitive(icon.getImage().toString()));
+        o.add("icon", icon.getJson());
         if(clickEvent != null)
         {
             o.add("clickEvent", JsonUtils.serializeClickEvent(clickEvent));

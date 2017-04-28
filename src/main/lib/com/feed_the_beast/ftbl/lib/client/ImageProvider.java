@@ -5,7 +5,10 @@ import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.common.base.Objects;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.item.ItemStack;
@@ -32,6 +35,33 @@ public class ImageProvider implements IImageProvider
         {
         }
     };
+
+    public static IDrawableObject get(JsonElement json)
+    {
+        if(json.isJsonNull())
+        {
+            return NULL;
+        }
+        else if(json.isJsonObject())
+        {
+            JsonObject o = json.getAsJsonObject();
+
+            if(o.has("id"))
+            {
+                switch(o.get("id").getAsString())
+                {
+                    case "colored":
+                        Color4I col = new Color4I(true, ColorUtils.deserialize(o.get("color")));
+                        return new ColoredObject(get(o.get("parent").getAsJsonObject()), o.has("color_alpha") ? new Color4I(true, col, o.get("color_alpha").getAsInt()) : col);
+                }
+            }
+        }
+        else if(json.isJsonArray())
+        {
+        }
+
+        return get(json.getAsString());
+    }
 
     public static IDrawableObject get(String id)
     {
@@ -101,7 +131,7 @@ public class ImageProvider implements IImageProvider
         {
             return true;
         }
-        else if(o instanceof ITextureObject)
+        else if(o instanceof IImageProvider)
         {
             IImageProvider img = (IImageProvider) o;
             return texture.equals(img.getImage()) && getMinU() == img.getMinU() && getMinV() == img.getMinV() && getMaxU() == img.getMaxU() && getMaxV() == img.getMaxV();

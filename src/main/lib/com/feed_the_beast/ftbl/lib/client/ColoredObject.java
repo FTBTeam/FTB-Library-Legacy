@@ -3,8 +3,10 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by LatvianModder on 23.02.2017.
@@ -43,8 +45,20 @@ public class ColoredObject implements IDrawableObject
     }
 
     @Override
-    public ResourceLocation getImage()
+    public JsonObject getJson()
     {
-        return new ResourceLocation("colored_object:" + parent.getImage());
+        JsonObject o = new JsonObject();
+        o.add("id", new JsonPrimitive("colored"));
+
+        if(color.hasColor())
+        {
+            o.add("color", ColorUtils.serialize(color.rgba()));
+            if(color.alpha() != 255)
+            {
+                o.add("color_alpha", new JsonPrimitive(color.alpha()));
+            }
+        }
+        o.add("parent", parent.getJson());
+        return o;
     }
 }

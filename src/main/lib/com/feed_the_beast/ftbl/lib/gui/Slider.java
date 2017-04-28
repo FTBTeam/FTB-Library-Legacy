@@ -27,12 +27,15 @@ public class Slider extends Widget
     }
 
     @Override
-    public void mousePressed(GuiBase gui, IMouseButton button)
+    public boolean mousePressed(GuiBase gui, IMouseButton button)
     {
         if(gui.isMouseOver(this))
         {
             setGrabbed(gui, true);
+            return true;
         }
+
+        return false;
     }
 
     @Override

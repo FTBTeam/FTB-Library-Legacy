@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import net.minecraft.util.ResourceLocation;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,8 +21,8 @@ public interface IDrawableObject
         draw(widget.getAX(), widget.getAY(), widget.width, widget.height, col);
     }
 
-    default ResourceLocation getImage()
+    default JsonElement getJson()
     {
-        return new ResourceLocation("none:none");
+        return JsonNull.INSTANCE;
     }
 }

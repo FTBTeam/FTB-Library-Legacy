@@ -40,6 +40,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
+import com.feed_the_beast.ftbl.lib.guide.DrawableObjectListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideImageLine;
@@ -47,7 +48,6 @@ import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
-import com.feed_the_beast.ftbl.lib.guide.ItemListLine;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
@@ -58,7 +58,6 @@ import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
 
@@ -138,7 +137,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addInfoTextLine("text", (page, json) -> new GuideTextLineString(json));
         addInfoTextLine("list", GuideListLine::new);
         addInfoTextLine("hr", (page, json) -> new GuideHrLine(json));
-        addInfoTextLine("item_list", (page, json) -> new ItemListLine(json));
+        addInfoTextLine("item_list", (page, json) -> new DrawableObjectListLine(json));
 
         MinecraftForge.EVENT_BUS.post(new FTBLibRegistryEvent(this));
     }
@@ -154,10 +153,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     }
 
     public void loadRegistries()
-    {
-    }
-
-    public void spawnDust(World worldObj, double x, double y, double z, int i)
     {
     }
 

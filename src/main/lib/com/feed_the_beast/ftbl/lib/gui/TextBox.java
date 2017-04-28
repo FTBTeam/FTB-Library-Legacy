@@ -274,7 +274,7 @@ public class TextBox extends Widget
     }
 
     @Override
-    public void mousePressed(GuiBase gui, IMouseButton button)
+    public boolean mousePressed(GuiBase gui, IMouseButton button)
     {
         if(gui.isMouseOver(this))
         {
@@ -294,12 +294,16 @@ public class TextBox extends Widget
             {
                 setText(gui, "");
             }
+
+            return true;
         }
         else
         {
             Keyboard.enableRepeatEvents(false);
             setFocused(false);
         }
+
+        return false;
     }
 
     @Override

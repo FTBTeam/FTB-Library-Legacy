@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
-import com.feed_the_beast.ftbl.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
@@ -21,7 +20,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
-import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.MapUtils;
@@ -38,7 +36,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
@@ -237,21 +234,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     {
         super.postInit(state);
         ClientCommandHandler.instance.registerCommand(new CmdFTBC());
-    }
-
-    @Override
-    public void spawnDust(World w, double x, double y, double z, int col)
-    {
-        float alpha = ColorUtils.getAlphaF(col);
-        float red = ColorUtils.getRedF(col);
-        float green = ColorUtils.getGreenF(col);
-        float blue = ColorUtils.getBlueF(col);
-        if(alpha <= 0F)
-        {
-            alpha = 1F;
-        }
-
-        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleColoredDust(w, x, y, z, red, green, blue, alpha));
     }
 
     @Override

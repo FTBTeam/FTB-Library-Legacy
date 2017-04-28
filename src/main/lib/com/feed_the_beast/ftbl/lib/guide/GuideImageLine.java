@@ -176,9 +176,9 @@ public class GuideImageLine extends EmptyGuidePageLine
             {
                 width = Math.max(imageWidth == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) : imageWidth, 2);
                 height = Math.max(imageHeight == 0 ? GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) : imageHeight, 2);
-
-                double w = Math.min(parent.width, width * imageScale);
-                double h = height * (w / (width * imageScale));
+                double scale = imageScale < 0 ? (1D / -imageScale) : imageScale;
+                double w = Math.min(parent.width, width * scale);
+                double h = height * (w / (width * scale));
 
                 setWidth((int) w);
                 setHeight((int) h);

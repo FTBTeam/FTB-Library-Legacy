@@ -83,8 +83,9 @@ public class PanelNull extends Panel
     }
 
     @Override
-    public void mousePressed(GuiBase gui, IMouseButton button)
+    public boolean mousePressed(GuiBase gui, IMouseButton button)
     {
+        return false;
     }
 
     @Override

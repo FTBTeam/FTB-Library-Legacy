@@ -1,22 +1,24 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class ItemListButton extends Button
+public class DrawableObjectListButton extends Button
 {
-    private final DrawableItem item;
+    private final DrawableObjectList list;
     private final int cols;
 
-    public ItemListButton(int x, int y, DrawableItem i, int c)
+    public DrawableObjectListButton(int x, int y, DrawableObjectList i, int c)
     {
         super(x, y, 16, 16);
-        item = i;
+        list = i;
 
         cols = c;
         setWidth(cols == 0 ? 16 : (4 + Math.min(cols, i.getItemCount()) * 16));
@@ -31,20 +33,20 @@ public class ItemListButton extends Button
 
         if(cols == 0)
         {
-            item.draw(ax, ay, 16, 16, Color4I.NONE);
+            list.draw(ax, ay, 16, 16, Color4I.NONE);
         }
         else
         {
-            for(int i = item.getItemCount() - 1; i >= 0; i--)
+            for(int i = list.getItemCount() - 1; i >= 0; i--)
             {
-                item.setIndex(i);
-                item.draw(ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, 16, 16, Color4I.NONE);
+                list.setIndex(i);
+                list.draw(ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, 16, 16, Color4I.NONE);
             }
         }
     }
 
     @Override
-    public void addMouseOverText(GuiBase gui, List<String> list)
+    public void addMouseOverText(GuiBase gui, List<String> l)
     {
         int index = -1;
 
@@ -61,12 +63,13 @@ public class ItemListButton extends Button
             index = ((mx / 16) % cols + (my / 16) * cols);
         }
 
-        ItemStack stack = item.getStack(index);
+        IDrawableObject object = list.getObject(index);
 
-        if(stack != null)
+        if(object instanceof DrawableItem)
         {
-            list.add(stack.getDisplayName());
-            stack.getItem().addInformation(stack, Minecraft.getMinecraft().player, list, false);
+            ItemStack stack = ((DrawableItem) object).stack;
+            l.add(stack.getDisplayName());
+            stack.getItem().addInformation(stack, Minecraft.getMinecraft().player, l, false);
         }
     }
 

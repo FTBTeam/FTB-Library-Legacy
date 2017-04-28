@@ -48,12 +48,15 @@ public abstract class Button extends Widget
     }
 
     @Override
-    public void mousePressed(GuiBase gui, IMouseButton button)
+    public boolean mousePressed(GuiBase gui, IMouseButton button)
     {
         if(gui.isMouseOver(this))
         {
             onClicked(gui, button);
+            return true;
         }
+
+        return false;
     }
 
     public abstract void onClicked(GuiBase gui, IMouseButton button);

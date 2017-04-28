@@ -133,8 +133,9 @@ public class Widget
         }
     }
 
-    public void mousePressed(GuiBase gui, IMouseButton button)
+    public boolean mousePressed(GuiBase gui, IMouseButton button)
     {
+        return false;
     }
 
     public void mouseReleased(GuiBase gui)

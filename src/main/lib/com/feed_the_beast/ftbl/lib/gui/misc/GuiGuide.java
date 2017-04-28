@@ -24,6 +24,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiGuide extends GuiBase implements IClientActionGui
 {
@@ -61,29 +63,19 @@ public class GuiGuide extends GuiBase implements IClientActionGui
 
     private static class ButtonSpecial extends Button
     {
-        private SpecialGuideButton specialInfoButton;
+        private final SpecialGuideButton specialInfoButton;
 
-        public ButtonSpecial()
+        public ButtonSpecial(SpecialGuideButton b)
         {
             super(0, 0, 16, 16);
-        }
-
-        @Override
-        public boolean isEnabled(GuiBase gui)
-        {
-            return specialInfoButton != null;
-        }
-
-        private void updateButton(GuiGuide gui)
-        {
-            specialInfoButton = gui.selectedPage.getSpecialButton();
-            setTitle(isEnabled(gui) ? specialInfoButton.title.getFormattedText() : "");
+            specialInfoButton = b;
+            setTitle(specialInfoButton.title.getFormattedText());
         }
 
         @Override
         public void onClicked(GuiBase gui, IMouseButton button)
         {
-            if(isEnabled(gui) && GuiHelper.onClickEvent(specialInfoButton.clickEvent))
+            if(GuiHelper.onClickEvent(specialInfoButton.clickEvent))
             {
                 GuiHelper.playClickSound();
             }
@@ -92,19 +84,16 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         @Override
         public void renderWidget(GuiBase gui)
         {
-            if(isEnabled(gui))
-            {
-                specialInfoButton.icon.draw(getAX(), getAY(), width, height, Color4I.NONE);
-            }
+            specialInfoButton.icon.draw(getAX(), getAY(), width, height, Color4I.NONE);
         }
     }
 
     public final GuidePage pageTree;
-    public final Panel panelPages, panelText;
+    public final Panel panelPages, panelText, panelTitle;
     public final PanelScrollBar sliderPages, sliderText;
     private final Button buttonBack;
-    private final ButtonSpecial buttonSpecial;
     public int panelWidth;
+    private final List<ButtonSpecial> specialButtons;
 
     private GuidePage selectedPage;
 
@@ -113,7 +102,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         super(0, 0);
         selectedPage = pageTree = tree;
 
-        buttonBack = new Button(0, 0, 14, 11)
+        buttonBack = new Button(12, 12, 14, 11)
         {
             @Override
             public void onClicked(GuiBase gui, IMouseButton button)
@@ -143,7 +132,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
                     add(c.createWidget(GuiGuide.this));
                 }
 
-                buttonSpecial.updateButton(GuiGuide.this);
+                panelTitle.refreshWidgets();
             }
 
             @Override
@@ -196,6 +185,25 @@ public class GuiGuide extends GuiBase implements IClientActionGui
 
         panelText.addFlags(Panel.FLAG_DEFAULTS | Panel.FLAG_UNICODE_FONT);
 
+        panelTitle = new Panel(0, 0, 0, 0)
+        {
+            @Override
+            public void addWidgets()
+            {
+                add(buttonBack);
+                buttonBack.setIcon(new ColoredObject((selectedPage.parent == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
+
+                specialButtons.clear();
+
+                for(SpecialGuideButton button : selectedPage.specialButtons)
+                {
+                    specialButtons.add(new ButtonSpecial(button));
+                }
+
+                addAll(specialButtons);
+            }
+        };
+
         sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
         sliderPages.slider = TEX_SLIDER;
         sliderPages.background = ImageProvider.NULL;
@@ -204,7 +212,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         sliderText.slider = TEX_SLIDER;
         sliderText.background = ImageProvider.NULL;
 
-        buttonSpecial = new ButtonSpecial();
+        specialButtons = new ArrayList<>();
     }
 
     public GuidePage getSelectedPage()
@@ -239,8 +247,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
             }
         }
 
-        buttonSpecial.updateButton(this);
-        buttonBack.setIcon(new ColoredObject((selectedPage.parent == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
+        panelTitle.refreshWidgets();
     }
 
     @Override
@@ -249,11 +256,17 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         selectedPage.refreshGui(this);
 
         add(sliderText);
-        add(buttonBack);
         add(panelPages);
         add(panelText);
-        add(buttonSpecial);
+        add(panelTitle);
         add(sliderPages);
+
+        for(int i = 0; i < specialButtons.size(); i++)
+        {
+            ButtonSpecial b = specialButtons.get(i);
+            b.posX = panelWidth - 24 - 20 * i;
+            b.posY = 10;
+        }
     }
 
     @Override
@@ -265,6 +278,9 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         setHeight(getScreen().getScaledHeight() - posY * 2);
 
         panelWidth = (int) (width * 0.3D);
+
+        panelTitle.width = panelWidth;
+        panelTitle.height = 46;
 
         panelPages.posX = 10;
         panelPages.posY = 43;
@@ -283,12 +299,6 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         sliderText.posY = 10;
         sliderText.setHeight(height - 20);
         sliderText.posX = width - 10 - sliderText.width;
-
-        buttonBack.posX = 12;
-        buttonBack.posY = 12;
-
-        buttonSpecial.posX = panelWidth - 24;
-        buttonSpecial.posY = 10;
     }
 
     @Override
@@ -332,5 +342,23 @@ public class GuiGuide extends GuiBase implements IClientActionGui
     public void onClientDataChanged()
     {
         refreshWidgets();
+    }
+
+    @Override
+    public boolean changePage(String value)
+    {
+        GuidePage page = pageTree.getSubRaw(value);
+
+        if(page != null)
+        {
+            if(page.parent != null)
+            {
+                setSelectedPage(page.parent);
+            }
+
+            setSelectedPage(page);
+        }
+
+        return false;
     }
 }

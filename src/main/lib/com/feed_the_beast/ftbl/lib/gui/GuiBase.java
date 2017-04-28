@@ -279,4 +279,9 @@ public abstract class GuiBase extends Panel implements IClientActionGui
     {
         return GuiScreen.isCtrlKeyDown();
     }
+
+    public boolean changePage(String value)
+    {
+        return false;
+    }
 }

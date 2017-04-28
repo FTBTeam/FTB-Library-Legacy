@@ -237,11 +237,11 @@ public abstract class Panel extends Widget
     }
 
     @Override
-    public void mousePressed(GuiBase gui, IMouseButton button)
+    public boolean mousePressed(GuiBase gui, IMouseButton button)
     {
         if(hasFlag(FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
         {
-            return;
+            return false;
         }
 
         setOffset(true);
@@ -250,11 +250,16 @@ public abstract class Panel extends Widget
         {
             if(w.isEnabled(gui))
             {
-                w.mousePressed(gui, button);
+                if(w.mousePressed(gui, button))
+                {
+                    setOffset(false);
+                    return true;
+                }
             }
         }
 
         setOffset(false);
+        return false;
     }
 
     @Override

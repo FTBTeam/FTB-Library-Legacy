@@ -40,7 +40,7 @@ public class SidebarButton extends FinalIDObject
 
         if(o.has("icon"))
         {
-            icon = ImageProvider.get(o.get("icon").getAsString());
+            icon = ImageProvider.get(o.get("icon"));
         }
 
         if(icon == ImageProvider.NULL)

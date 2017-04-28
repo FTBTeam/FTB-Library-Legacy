@@ -3,8 +3,11 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.util.ColorUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Created by LatvianModder on 24.02.2017.
@@ -62,8 +65,32 @@ public class TexturelessRectangle implements IDrawableObject
     }
 
     @Override
-    public ResourceLocation getImage()
+    public JsonElement getJson()
     {
-        return new ResourceLocation("rect:" + color + "," + lineColor + "," + roundEdges);
+        JsonObject o = new JsonObject();
+        o.add("id", new JsonPrimitive("rect"));
+        if(color.hasColor())
+        {
+            o.add("color", ColorUtils.serialize(color.rgba()));
+
+            if(color.alpha() != 255)
+            {
+                o.add("color_alpha", new JsonPrimitive(color.alpha()));
+            }
+        }
+        if(lineColor.hasColor())
+        {
+            o.add("line_color", ColorUtils.serialize(lineColor.rgba()));
+
+            if(lineColor.alpha() != 255)
+            {
+                o.add("line_color_alpha", new JsonPrimitive(lineColor.alpha()));
+            }
+        }
+        if(roundEdges)
+        {
+            o.add("round_edges", new JsonPrimitive(true));
+        }
+        return o;
     }
 }

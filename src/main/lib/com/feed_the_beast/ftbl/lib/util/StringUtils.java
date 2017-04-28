@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.util;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.translation.I18n;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -148,10 +147,10 @@ public class StringUtils
         return out.toString();
     }
 
-    public static List<String> readStringList(InputStream is) throws Exception
+    public static List<String> readStringList(Reader r) throws Exception
     {
         List<String> l = new ArrayList<>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, UTF_8));
+        BufferedReader reader = new BufferedReader(r);
         String s;
         while((s = reader.readLine()) != null)
         {
@@ -159,6 +158,11 @@ public class StringUtils
         }
         reader.close();
         return l;
+    }
+
+    public static List<String> readStringList(InputStream is) throws Exception
+    {
+        return readStringList(new InputStreamReader(is, UTF_8));
     }
 
     public static List<String> toStringList(String s, String regex)
@@ -626,16 +630,16 @@ public class StringUtils
 
     public static String translate(String key)
     {
-        return I18n.translateToLocal(key);
+        return UtilsCommon.INSTANCE.translate(key);
     }
 
     public static String translate(String key, Object... objects)
     {
-        return I18n.translateToLocalFormatted(key, objects);
+        return UtilsCommon.INSTANCE.translate(key, objects);
     }
 
     public static boolean canTranslate(String key)
     {
-        return I18n.canTranslate(key);
+        return UtilsCommon.INSTANCE.canTranslate(key);
     }
 }

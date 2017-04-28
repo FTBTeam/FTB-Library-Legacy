@@ -57,7 +57,7 @@ public class GuideTitlePage extends GuidePage
 
         if(o.has("icon"))
         {
-            setIcon(ImageProvider.get(o.get("icon").getAsString()));
+            setIcon(ImageProvider.get(o.get("icon")));
         }
         else
         {
@@ -65,7 +65,7 @@ public class GuideTitlePage extends GuidePage
         }
         if(o.has("button"))
         {
-            setSpecialButton(new SpecialGuideButton(o.get("button").getAsJsonObject()));
+            addSpecialButton(new SpecialGuideButton(o.get("button").getAsJsonObject()));
         }
 
         type = o.has("type") ? GuideType.getFromString(o.get("type").getAsString()) : GuideType.OTHER;

@@ -2,7 +2,10 @@ package com.feed_the_beast.ftbl.api.gui;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -16,6 +19,8 @@ public interface IImageProvider extends IDrawableObject
         return false;
     }
 
+    ResourceLocation getImage();
+
     @SideOnly(Side.CLIENT)
     ITextureObject bindTexture();
 
@@ -25,6 +30,12 @@ public interface IImageProvider extends IDrawableObject
     {
         bindTexture();
         GuiHelper.drawTexturedRect(x, y, w, h, col.hasColor() ? col : Color4I.WHITE, getMinU(), getMinV(), getMaxU(), getMaxV());
+    }
+
+    @Override
+    default JsonElement getJson()
+    {
+        return new JsonPrimitive(getImage().toString());
     }
 
     default double getMinU()
