@@ -261,6 +261,8 @@ public class GuiGuide extends GuiBase implements IClientActionGui
         add(panelTitle);
         add(sliderPages);
 
+        panelPages.setWidth(panelWidth - (sliderPages.isEnabled(this) ? 32 : 17));
+
         for(int i = 0; i < specialButtons.size(); i++)
         {
             ButtonSpecial b = specialButtons.get(i);

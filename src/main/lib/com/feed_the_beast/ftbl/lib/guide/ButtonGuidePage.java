@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -20,16 +19,16 @@ public class ButtonGuidePage extends Button
 {
     public final GuidePage page;
     public String hover;
-    public IDrawableObject iconRenderer;
+    private boolean mouseOver;
     private boolean prevMouseOver = false;
+    private boolean isSmall;
 
-    public ButtonGuidePage(GuiGuide g, GuidePage p, @Nullable IDrawableObject t)
+    public ButtonGuidePage(GuiGuide g, GuidePage p, boolean small)
     {
         super(0, 0, 0, 0);
-        setWidth(g.panelWidth - 36);
-        setHeight(t == null ? 13 : 18);
         page = p;
-        iconRenderer = t;
+        isSmall = small;
+        setHeight((p.getIcon() == ImageProvider.NULL || isSmall) ? 13 : 18);
         updateTitle(g);
     }
 
@@ -49,15 +48,16 @@ public class ButtonGuidePage extends Button
             titleC.getStyle().setBold(true);
         }
 
-        if(gui.isMouseOver(this))
+        if(mouseOver)
         {
             titleC.getStyle().setUnderlined(true);
         }
 
         setTitle(titleC.getFormattedText());
         hover = null;
+        setWidth(gui.getFont().getStringWidth(getTitle(gui)) + (page.getIcon() != ImageProvider.NULL ? height : 0));
 
-        if(gui.getFont().getStringWidth(getTitle(gui)) > width)
+        if(width > getParentPanel().width)
         {
             hover = page.getDisplayName().getFormattedText();
         }
@@ -75,7 +75,14 @@ public class ButtonGuidePage extends Button
     @Override
     public void renderWidget(GuiBase gui)
     {
-        boolean mouseOver = gui.isMouseOver(this);
+        mouseOver = gui.isMouseOver(this);
+
+        if(mouseOver)
+        {
+            getParentPanel().setOffset(false);
+            mouseOver = gui.isMouseOver(getParentPanel());
+            getParentPanel().setOffset(true);
+        }
 
         if(prevMouseOver != mouseOver)
         {
@@ -86,11 +93,11 @@ public class ButtonGuidePage extends Button
         int ay = getAY();
         int ax = getAX();
 
-        if(iconRenderer != null)
+        if(page.getIcon() != ImageProvider.NULL)
         {
             GlStateManager.color(1F, 1F, 1F, 1F);
-            iconRenderer.draw(ax + 1, ay + 1, 16, 16, Color4I.NONE);
-            gui.drawString(getTitle(gui), ax + 19, ay + 6);
+            page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16, Color4I.NONE);
+            gui.drawString(getTitle(gui), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
         }
         else
         {

@@ -41,12 +41,13 @@ import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
 import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
 import com.feed_the_beast.ftbl.lib.guide.DrawableObjectListLine;
+import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideImageLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideListLine;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuidePageHelper;
+import com.feed_the_beast.ftbl.lib.guide.GuideSwitchLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
@@ -138,6 +139,8 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addInfoTextLine("list", GuideListLine::new);
         addInfoTextLine("hr", (page, json) -> new GuideHrLine(json));
         addInfoTextLine("item_list", (page, json) -> new DrawableObjectListLine(json));
+        addInfoTextLine("switch", GuideSwitchLine::new);
+        addInfoTextLine("contents", (page, json) -> new GuideContentsLine(page));
 
         MinecraftForge.EVENT_BUS.post(new FTBLibRegistryEvent(this));
     }
@@ -222,7 +225,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
     @Override
     public void addInfoTextLine(String id, IGuideTextLineProvider provider)
     {
-        GuidePageHelper.INFO_TEXT_LINE_PROVIDERS.put(id.toLowerCase(), provider);
+        GuidePage.LINE_PROVIDERS.put(id.toLowerCase(), provider);
     }
 
     @Override

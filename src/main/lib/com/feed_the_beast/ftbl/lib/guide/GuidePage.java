@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.guide;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
+import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.RemoveFilter;
@@ -17,10 +18,13 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +33,7 @@ public class GuidePage extends FinalIDObject
 {
     private static final Comparator<Map.Entry<String, GuidePage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
     private static final RemoveFilter<Map.Entry<String, GuidePage>> CLEANUP_FILTER = entry -> entry.getValue().isEmpty();
+    public static final Map<String, IGuideTextLineProvider> LINE_PROVIDERS = new HashMap<>();
 
     public final List<IGuideTextLine> text;
     public final LinkedHashMap<String, GuidePage> childPages;
@@ -42,6 +47,7 @@ public class GuidePage extends FinalIDObject
         super(id);
         text = new ArrayList<>();
         childPages = new LinkedHashMap<>(0);
+        pageIcon = ImageProvider.NULL;
         specialButtons = new ArrayList<>();
     }
 
@@ -66,7 +72,7 @@ public class GuidePage extends FinalIDObject
             JsonArray a = o.get("text").getAsJsonArray();
             for(int i = 0; i < a.size(); i++)
             {
-                text.add(GuidePageHelper.createLine(this, a.get(i)));
+                text.add(createLine(a.get(i)));
             }
         }
         if(o.has("pages"))
@@ -267,7 +273,7 @@ public class GuidePage extends FinalIDObject
             childPages.forEach((key, value) -> o1.add(key, value.toJson()));
             o.add("pages", o1);
         }
-        if(pageIcon != null)
+        if(pageIcon != ImageProvider.NULL)
         {
             o.add("icon", pageIcon.getJson());
         }
@@ -314,8 +320,83 @@ public class GuidePage extends FinalIDObject
         return this;
     }
 
+    public IDrawableObject getIcon()
+    {
+        return pageIcon;
+    }
+
     public Widget createWidget(GuiBase gui)
     {
-        return new ButtonGuidePage((GuiGuide) gui, this, pageIcon);
+        return new ButtonGuidePage((GuiGuide) gui, this, false);
+    }
+
+    public Side getSide()
+    {
+        return parent == null ? Side.CLIENT : parent.getSide();
+    }
+
+    @Nullable
+    public IGuideTextLine createLine(@Nullable JsonElement json)
+    {
+        if(json == null || json.isJsonNull())
+        {
+            return null;
+        }
+        else if(json.isJsonPrimitive())
+        {
+            String s = json.getAsString();
+            return s.trim().isEmpty() ? null : new GuideTextLineString(s);
+        }
+        else if(json.isJsonArray())
+        {
+            return new GuideExtendedTextLine(json);
+        }
+        else
+        {
+            JsonObject o = json.getAsJsonObject();
+            IGuideTextLineProvider provider = null;
+
+            if(o.has("id"))
+            {
+                String id = o.get("id").getAsString();
+                provider = LINE_PROVIDERS.get(id);
+
+                if(provider == null)
+                {
+                    ITextComponent component = new TextComponentString("Unknown ID: " + id);
+                    component.getStyle().setColor(TextFormatting.DARK_RED);
+                    component.getStyle().setBold(true);
+                    return new GuideExtendedTextLine(component);
+                }
+            }
+            /*
+            else
+            {
+                provider = null;
+
+                for(Map.Entry<String, JsonElement> entry : o.entrySet())
+                {
+                    provider = INFO_TEXT_LINE_PROVIDERS.get(entry.getKey());
+
+                    if(provider != null)
+                    {
+                        break;
+                    }
+                }
+            }*/
+
+            IGuideTextLine line;
+
+            if(provider != null)
+            {
+                line = provider.create(this, json);
+            }
+            else
+            {
+                line = new GuideExtendedTextLine(json);
+            }
+
+            return line;
+        }
     }
 }

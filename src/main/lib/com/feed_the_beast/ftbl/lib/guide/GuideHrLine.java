@@ -35,7 +35,7 @@ public class GuideHrLine extends EmptyGuidePageLine
     @Override
     public Widget createWidget(GuiBase gui, Panel parent)
     {
-        return new WidgetInfoHr(parent);
+        return new WidgetGuideHr(parent);
     }
 
     @Override
@@ -54,9 +54,9 @@ public class GuideHrLine extends EmptyGuidePageLine
         return o;
     }
 
-    private class WidgetInfoHr extends Widget
+    private class WidgetGuideHr extends Widget
     {
-        private WidgetInfoHr(Panel parent)
+        private WidgetGuideHr(Panel parent)
         {
             super(0, 1, parent.width, GuideHrLine.this.height + 2);
         }
@@ -64,7 +64,7 @@ public class GuideHrLine extends EmptyGuidePageLine
         @Override
         public void renderWidget(GuiBase gui)
         {
-            GuiHelper.drawBlankRect(getAX(), getAY() + 1, width, height, color.hasColor() ? color : gui.getContentColor());
+            GuiHelper.drawBlankRect(getAX(), getAY() + 1, width, GuideHrLine.this.height, color.hasColor() ? color : gui.getContentColor());
         }
     }
 

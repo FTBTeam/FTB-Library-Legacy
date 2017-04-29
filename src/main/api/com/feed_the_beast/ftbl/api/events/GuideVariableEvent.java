@@ -2,12 +2,14 @@ package com.feed_the_beast.ftbl.api.events;
 
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
+@Cancelable
 public class GuideVariableEvent extends Event
 {
     private final Side side;
@@ -20,7 +22,7 @@ public class GuideVariableEvent extends Event
         side = s;
         page = p;
         variable = id;
-        value = "";
+        value = "default";
     }
 
     public Side getSide()

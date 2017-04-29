@@ -96,7 +96,7 @@ public class GuideListLine extends EmptyGuidePageLine
             {
                 for(JsonElement element : o.get("list").getAsJsonArray())
                 {
-                    IGuideTextLine line = GuidePageHelper.createLine(p, element);
+                    IGuideTextLine line = p.createLine(element);
 
                     if(line != null)
                     {
@@ -113,7 +113,7 @@ public class GuideListLine extends EmptyGuidePageLine
         {
             for(JsonElement element : json.getAsJsonArray())
             {
-                IGuideTextLine line = GuidePageHelper.createLine(p, element);
+                IGuideTextLine line = p.createLine(element);
 
                 if(line != null)
                 {

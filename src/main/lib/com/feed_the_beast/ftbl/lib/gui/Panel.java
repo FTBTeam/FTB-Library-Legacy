@@ -142,7 +142,7 @@ public abstract class Panel extends Widget
         return super.getAY() + offsetY;
     }
 
-    protected void setOffset(boolean flag)
+    public void setOffset(boolean flag)
     {
         if(flag)
         {

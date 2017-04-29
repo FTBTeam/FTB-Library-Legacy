@@ -21,7 +21,7 @@ public class DrawableObjectList implements IDrawableObject
 {
     public final List<IDrawableObject> list;
     private IDrawableObject current = ImageProvider.NULL;
-    public int timer = 1000;
+    public long timer = 1000L;
 
     public DrawableObjectList(Collection<IDrawableObject> l)
     {
@@ -99,7 +99,7 @@ public class DrawableObjectList implements IDrawableObject
 
         if(!list.isEmpty())
         {
-            setIndex((int) (System.currentTimeMillis() / 1000L));
+            setIndex((int) (System.currentTimeMillis() / timer));
         }
     }
 }
