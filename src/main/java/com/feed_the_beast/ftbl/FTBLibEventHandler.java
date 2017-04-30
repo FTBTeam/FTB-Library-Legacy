@@ -31,6 +31,8 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.util.Collections;
@@ -166,6 +168,7 @@ public class FTBLibEventHandler
     */
 
     @SubscribeEvent
+    @SideOnly(Side.CLIENT)
     public static void onGuideEvent(ClientGuideEvent event)
     {
         GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
