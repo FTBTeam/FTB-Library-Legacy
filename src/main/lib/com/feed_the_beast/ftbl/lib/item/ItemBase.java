@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.item;
 
-import net.minecraft.item.Item;
+import mcjty.lib.compat.CompatItem;
 
-public class ItemBase extends Item
+public class ItemBase extends CompatItem
 {
     public ItemBase(String id)
     {

@@ -101,7 +101,8 @@ team_config.ftbl.display.title.name=Title
 team_config.ftbl.display.title.info=Displays when you enter a claimed chunk
 team_config.ftbl.display.desc.name=Description
 team_config.ftbl.display.desc.info=Displays under Title
-team_config.ftbl.free_to_join.desc.name=Anyone can join without invitation
+team_config.ftbl.free_to_join.name=Free to Join
+team_config.ftbl.free_to_join.info=Anyone can join without invitation
 
 # Teams
 ftbl.lang.team.config='%s' team config
