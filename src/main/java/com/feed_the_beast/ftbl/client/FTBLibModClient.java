@@ -117,7 +117,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
                             {
                                 SidebarButton button = new SidebarButton(new ResourceLocation(domain, entry.getKey()), entry.getValue().getAsJsonObject());
 
-                                if(!button.devOnly && !LMUtils.DEV_ENV)
+                                if(button.devOnly && !LMUtils.DEV_ENV)
                                 {
                                     continue;
                                 }
