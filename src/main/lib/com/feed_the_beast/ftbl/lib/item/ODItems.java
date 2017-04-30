@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ODItems
 {
-    public static final ItemStack WOOL = new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE);
     public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
 
     //@formatter:off
@@ -21,6 +20,7 @@ public class ODItems
     WOOD = "logWood",
     SAPLING = "treeSapling",
     PLANKS = "plankWood",
+    SLAB = "slabWood",
     STICK = "stickWood",
     GLASS = "blockGlassColorless",
     GLASS_ANY = "blockGlass",
@@ -62,6 +62,7 @@ public class ODItems
     LEAD = "ingotLead",
     BRONZE = "ingotBronze",
     SILVER = "ingotSilver",
+    NETHER_INGOT = "ingotBrickNether",
 
     RUBY = "gemRuby",
     SAPPHIRE = "gemSapphire",
