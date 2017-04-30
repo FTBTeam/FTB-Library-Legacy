@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationId;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.client.DrawableItem;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -17,7 +20,7 @@ public class Notification implements INotification
     private Color4I color;
     private int timer;
     private List<ITextComponent> text;
-    private ItemStack item;
+    private IDrawableObject icon;
 
     public Notification(NotificationId i)
     {
@@ -33,7 +36,7 @@ public class Notification implements INotification
         addText(t);
         timer = 3000;
         color = Color4I.LIGHT_RED;
-        item = new ItemStack(Blocks.BARRIER);
+        icon = new DrawableItem(new ItemStack(Blocks.BARRIER));
         return this;
     }
 
@@ -42,7 +45,7 @@ public class Notification implements INotification
         text.clear();
         timer = 3000;
         color = Color4I.GRAY;
-        item = null;
+        icon = ImageProvider.NULL;
     }
 
     public int hashCode()
@@ -57,7 +60,7 @@ public class Notification implements INotification
 
     public String toString()
     {
-        return getId() + ", text:" + getText() + ", col:" + color + ", timer:" + getTimer() + ", item:" + getItem();
+        return getId() + ", text:" + getText() + ", col:" + color + ", timer:" + getTimer() + ", icon:" + getIcon().getJson();
     }
 
     public Notification addText(@Nullable ITextComponent t)
@@ -83,14 +86,14 @@ public class Notification implements INotification
     }
 
     @Override
-    public ItemStack getItem()
+    public IDrawableObject getIcon()
     {
-        return item;
+        return icon;
     }
 
-    public Notification setItem(@Nullable ItemStack is)
+    public Notification setIcon(IDrawableObject i)
     {
-        item = is;
+        icon = i;
         return this;
     }
 
@@ -124,7 +127,7 @@ public class Notification implements INotification
         n1.getText().addAll(n.getText());
         n1.setColor(new Color4I(true, n.getColor()));
         n1.setTimer(n.getTimer());
-        n1.setItem(n.getItem());
+        n1.setIcon(n.getIcon());
         return n1;
     }
 }

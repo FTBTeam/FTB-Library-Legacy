@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -91,7 +92,7 @@ public class TileInvBase extends TileBase
             {
                 ItemStack item = itemHandler.getStackInSlot(i);
 
-                if(item != null && item.stackSize > 0)
+                if(!ItemStackTools.isEmpty(item))
                 {
                     InvUtils.dropItem(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
                 }

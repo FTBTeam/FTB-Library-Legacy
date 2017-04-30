@@ -21,8 +21,6 @@ import com.feed_the_beast.ftbl.net.MessageLogin;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.DamageSource;
@@ -33,8 +31,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -165,28 +161,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     public boolean equalsPlayer(@Nullable IForgePlayer p)
     {
         return p == this || (p != null && getId().equals(p.getId()));
-    }
-
-    public Map<EntityEquipmentSlot, ItemStack> getArmor()
-    {
-        Map<EntityEquipmentSlot, ItemStack> map = new HashMap<>();
-
-        EntityPlayerMP ep = getPlayer();
-
-        if(ep != null)
-        {
-            for(EntityEquipmentSlot e : EntityEquipmentSlot.values())
-            {
-                ItemStack is = ep.getItemStackFromSlot(e);
-
-                if(is != null)
-                {
-                    map.put(e, is.copy());
-                }
-            }
-        }
-
-        return map;
     }
 
     @Override

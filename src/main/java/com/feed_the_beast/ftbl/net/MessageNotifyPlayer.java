@@ -3,21 +3,21 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationId;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import java.util.List;
 
@@ -98,8 +98,8 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
             flags |= FLAG_HAS_TEXT;
         }
 
-        ItemStack item = n.getItem();
-        if(item != null)
+        IDrawableObject icon = n.getIcon();
+        if(icon != ImageProvider.NULL)
         {
             flags |= FLAG_HAS_ITEM;
         }
@@ -116,9 +116,9 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
             }
         }
 
-        if(item != null)
+        if(icon != ImageProvider.NULL)
         {
-            ByteBufUtils.writeItemStack(io, item);
+            NetUtils.writeJsonElement(io, icon.getJson());
         }
     }
 
@@ -141,7 +141,7 @@ public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 
         if(Bits.getFlag(flags, FLAG_HAS_ITEM))
         {
-            n.setItem(ByteBufUtils.readItemStack(io));
+            n.setIcon(ImageProvider.get(NetUtils.readJsonElement(io)));
         }
 
         return n;

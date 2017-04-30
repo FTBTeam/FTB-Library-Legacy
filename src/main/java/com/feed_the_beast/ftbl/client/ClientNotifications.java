@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -50,7 +52,7 @@ public class ClientNotifications
 
             width += 20;
 
-            if(notification.getItem() != null)
+            if(notification.getIcon() != ImageProvider.NULL)
             {
                 if(text.isEmpty())
                 {
@@ -79,14 +81,14 @@ public class ClientNotifications
             GlStateManager.color(1F, 1F, 1F, 1F);
             GuiHelper.drawBlankRect(ax, ay, width, height, notification.getColor());
 
-            if(notification.getItem() != null)
+            if(notification.getIcon() != ImageProvider.NULL)
             {
-                GuiHelper.drawItem(mc.getRenderItem(), notification.getItem(), ax + 8, ay + (height - 16) / 2, true);
+                notification.getIcon().draw(ax + 8, ay + (height - 16) / 2, 16, 16, Color4I.NONE);
             }
 
             for(int i = 0; i < text.size(); i++)
             {
-                mc.fontRendererObj.drawString(text.get(i), ax + (notification.getItem() != null ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
+                mc.fontRendererObj.drawString(text.get(i), ax + (notification.getIcon() != ImageProvider.NULL ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
             }
         }
     }
