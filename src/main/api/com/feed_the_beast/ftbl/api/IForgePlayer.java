@@ -83,4 +83,6 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
     boolean hideTeamNotification();
 
     boolean hideNewTeamMsgNotification();
+
+    boolean isLoggingOut();
 }

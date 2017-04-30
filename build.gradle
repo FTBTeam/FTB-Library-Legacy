@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = System.properties['mod_version'];
+version = System.properties['mod_version']
 if (version == null) {
     version = "Dev"
 }
@@ -37,10 +37,14 @@ repositories {
         name "Mercurius"
         artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]"
     }
+    maven {
+        url "http://maven.k-4u.nl"
+    }
 }
 
 dependencies {
-    compile 'Mercurius:Mercurius:1.10.2-1.0.1'
+    compile "Mercurius:Mercurius:1.10.2-1.0.1"
+    deobfCompile "com.github.mcjty:compatlayer:1.10-0.2.7"
 }
 
 sourceSets {

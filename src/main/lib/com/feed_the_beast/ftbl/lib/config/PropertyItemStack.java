@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -47,28 +48,29 @@ public class PropertyItemStack extends PropertyBase
     public boolean matchesItem(@Nullable ItemStack itemStack, int sizeMode)
     {
         ItemStack is = getItem();
+        int issize = ItemStackTools.getStackSize(is);
+        int stackSize = ItemStackTools.getStackSize(itemStack);
 
-        if(is == null || itemStack == null)
+        if(issize == 0 || stackSize == 0)
         {
-            return is == itemStack;
+            return issize == stackSize;
         }
 
         Item item0 = itemStack.getItem();
         int meta = itemStack.getMetadata();
-        int stackSize = itemStack.stackSize;
 
         if(is.getItem() == item0 && is.getMetadata() == meta)
         {
             switch(sizeMode)
             {
                 case 1:
-                    if(is.stackSize == stackSize)
+                    if(issize == stackSize)
                     {
                         return true;
                     }
                     break;
                 case 2:
-                    if(is.stackSize <= stackSize)
+                    if(issize <= stackSize)
                     {
                         return true;
                     }
@@ -97,7 +99,7 @@ public class PropertyItemStack extends PropertyBase
     public String getString()
     {
         ItemStack is = getItem();
-        return is == null ? "null" : (is.stackSize + "x " + is.getDisplayName());
+        return ItemStackTools.getStackSize(is) + "x " + (is == null ? "Air" : is.getDisplayName());
     }
 
     @Override
@@ -109,8 +111,7 @@ public class PropertyItemStack extends PropertyBase
     @Override
     public int getInt()
     {
-        ItemStack is = getItem();
-        return is == null ? 0 : is.stackSize;
+        return ItemStackTools.getStackSize(getItem());
     }
 
     @Override

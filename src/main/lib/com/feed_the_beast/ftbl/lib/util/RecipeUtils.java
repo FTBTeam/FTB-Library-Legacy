@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -18,7 +19,7 @@ public class RecipeUtils
     {
         if(o == null)
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
         else if(o instanceof EnumDyeColor)
         {
@@ -26,13 +27,6 @@ public class RecipeUtils
         }
 
         return o;
-    }
-
-    public static ItemStack size(ItemStack is, int s)
-    {
-        ItemStack is1 = is.copy();
-        is1.stackSize = s;
-        return is1;
     }
 
     public static Object[] fixObjects(Object[] in)
@@ -52,7 +46,7 @@ public class RecipeUtils
 
     public static void addRecipe(ItemStack out, Object... in)
     {
-        if(out.stackSize > 0)
+        if(!ItemStackTools.isEmpty(out))
         {
             addIRecipe(new ShapedOreRecipe(out, fixObjects(in)));
         }

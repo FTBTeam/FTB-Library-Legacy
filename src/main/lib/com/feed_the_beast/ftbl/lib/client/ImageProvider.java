@@ -9,12 +9,16 @@ import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LatvianModder on 12.06.2016.
@@ -58,6 +62,14 @@ public class ImageProvider implements IImageProvider
         }
         else if(json.isJsonArray())
         {
+            List<IDrawableObject> list = new ArrayList<>();
+
+            for(JsonElement e : json.getAsJsonArray())
+            {
+                list.add(get(e));
+            }
+
+            return list.isEmpty() ? NULL : new DrawableObjectList(list);
         }
 
         return get(json.getAsString());
@@ -74,7 +86,7 @@ public class ImageProvider implements IImageProvider
         {
             ItemStack stack = ItemStackSerializer.parseItem(id.getResourcePath());
 
-            if(stack != null && stack.stackSize > 0)
+            if(!ItemStackTools.isEmpty(stack))
             {
                 return new DrawableItem(stack);
             }

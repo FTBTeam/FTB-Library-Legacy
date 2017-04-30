@@ -53,6 +53,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     private EntityPlayerMP entityPlayer;
     private NBTTagCompound playerNBT;
     private final IConfigTree cachedConfig;
+    private boolean loggingOut;
 
     public ForgePlayer(UUID id, String name)
     {
@@ -261,6 +262,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     {
         entityPlayer = ep;
         playerNBT = null;
+        loggingOut = false;
 
         if(!isFake())
         {
@@ -273,6 +275,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
     public void onLoggedOut()
     {
+        loggingOut = true;
         FTBLibStats.updateLastSeen(stats());
         MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedOutEvent(this));
         entityPlayer = null;
@@ -341,5 +344,16 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
     public boolean hideNewTeamMsgNotification()
     {
         return hideNewTeamMsgNotification.getBoolean();
+    }
+
+    public void setLoggingOut(boolean v)
+    {
+        loggingOut = v;
+    }
+
+    @Override
+    public boolean isLoggingOut()
+    {
+        return loggingOut;
     }
 }

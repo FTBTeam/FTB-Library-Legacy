@@ -4,10 +4,10 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -22,21 +22,21 @@ public class ItemStackSerializer
         input = input.trim();
         if(input.isEmpty())
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
         String[] s1 = input.split(" ");
 
         if(s1.length == 0)
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
         Item item = Item.REGISTRY.getObject(new ResourceLocation(s1[0]));
 
         if(item == null)
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
         int stackSize = 1, meta = 0;
@@ -69,12 +69,13 @@ public class ItemStackSerializer
 
     public static String toString(@Nullable ItemStack is)
     {
-        return (is == null) ? "" : Item.REGISTRY.getNameForObject(is.getItem()) + " " + is.stackSize + ' ' + is.getItemDamage();
+        int s = ItemStackTools.getStackSize(is);
+        return (s == 0) ? "" : Item.REGISTRY.getNameForObject(is.getItem()) + " " + s + ' ' + is.getItemDamage();
     }
 
     public static JsonElement serialize(@Nullable ItemStack is)
     {
-        if(is == null)
+        if(ItemStackTools.getStackSize(is) == 0)
         {
             return JsonNull.INSTANCE;
         }
@@ -88,7 +89,7 @@ public class ItemStackSerializer
     {
         if(e.isJsonNull())
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
         else if(e.isJsonPrimitive())
         {
@@ -98,12 +99,11 @@ public class ItemStackSerializer
         {
             try
             {
-                NBTTagCompound nbt = JsonToNBT.getTagFromJson(e.toString());
-                return ItemStack.loadItemStackFromNBT(nbt);
+                return ItemStackTools.loadFromNBT(JsonToNBT.getTagFromJson(e.toString()));
             }
             catch(Exception ex)
             {
-                return null;
+                return ItemStackTools.getEmptyStack();
             }
         }
     }

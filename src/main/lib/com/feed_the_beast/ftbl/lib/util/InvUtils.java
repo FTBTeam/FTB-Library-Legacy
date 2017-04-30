@@ -2,16 +2,15 @@ package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.item.ToolLevel;
 import com.feed_the_beast.ftbl.lib.item.ToolType;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
@@ -21,15 +20,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 /**
  * Made by LatvianModder
  */
 public class InvUtils
 {
-    public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
     private static Method baublesMethod = null;
-
     public static final ItemStack ERROR_ITEM = new ItemStack(Blocks.BARRIER);
 
     static
@@ -79,32 +77,32 @@ public class InvUtils
     {
         if(nonPlayerSlots <= 0)
         {
-            return null;
+            return ItemStackTools.getEmptyStack();
         }
 
-        ItemStack is = null;
+        ItemStack is = ItemStackTools.getEmptyStack();
         Slot slot = container.inventorySlots.get(index);
 
         if(slot != null && slot.getHasStack())
         {
             ItemStack is1 = slot.getStack();
-            is = is1.copy();
+            is = ItemStackTools.safeCopy(is1);
 
             if(index < nonPlayerSlots)
             {
                 if(!container.mergeItemStack(is1, nonPlayerSlots, container.inventorySlots.size(), true))
                 {
-                    return null;
+                    return ItemStackTools.getEmptyStack();
                 }
             }
             else if(!container.mergeItemStack(is1, 0, nonPlayerSlots, false))
             {
-                return null;
+                return ItemStackTools.getEmptyStack();
             }
 
-            if(is1.stackSize == 0)
+            if(ItemStackTools.isEmpty(is1))
             {
-                slot.putStack(null);
+                slot.putStack(ItemStackTools.getEmptyStack());
             }
             else
             {
@@ -115,46 +113,29 @@ public class InvUtils
         return is;
     }
 
-    public static ItemStack singleCopy(@Nullable ItemStack is)
-    {
-        if(is != null && is.stackSize > 0)
-        {
-            ItemStack is1 = is.copy();
-            is1.stackSize = 1;
-            return is1;
-        }
-
-        return null;
-    }
-
-    public static boolean itemsEquals(@Nullable ItemStack is1, @Nullable ItemStack is2, boolean size, boolean nbt)
-    {
-        return is1 == null && is2 == null || !(is1 == null || is2 == null) && is1.getItem() == is2.getItem() && is1.getItemDamage() == is2.getItemDamage() && (!nbt || ItemStack.areItemStackTagsEqual(is1, is2)) && (!size || (is1.stackSize == is2.stackSize));
-    }
-
     @Nullable
     public static ItemStack getAndSplit(IItemHandlerModifiable itemHandler, int index, int amount)
     {
-        if(index >= 0 && index < itemHandler.getSlots() && itemHandler.getStackInSlot(index) != null && amount > 0)
+        if(index >= 0 && index < itemHandler.getSlots() && !ItemStackTools.isEmpty(itemHandler.getStackInSlot(index)) && amount > 0)
         {
             ItemStack itemstack = itemHandler.getStackInSlot(index).splitStack(amount);
 
-            if(itemHandler.getStackInSlot(index).stackSize == 0)
+            if(ItemStackTools.isEmpty(itemHandler.getStackInSlot(index)))
             {
-                itemHandler.setStackInSlot(index, null);
+                itemHandler.setStackInSlot(index, ItemStackTools.getEmptyStack());
             }
 
             return itemstack;
         }
 
-        return null;
+        return ItemStackTools.getEmptyStack();
     }
 
     @Nullable
     public static ItemStack getAndRemove(IItemHandlerModifiable itemHandler, int index)
     {
         ItemStack itemStack = itemHandler.getStackInSlot(index);
-        itemHandler.setStackInSlot(index, null);
+        itemHandler.setStackInSlot(index, ItemStackTools.getEmptyStack());
         return itemStack;
     }
 
@@ -162,15 +143,15 @@ public class InvUtils
     {
         for(int i = 0; i < itemHandler.getSlots(); i++)
         {
-            itemHandler.setStackInSlot(i, null);
+            itemHandler.setStackInSlot(i, ItemStackTools.getEmptyStack());
         }
     }
 
     public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack item, int delay)
     {
-        if(item.stackSize > 0)
+        if(!ItemStackTools.isEmpty(item))
         {
-            EntityItem ei = new EntityItem(w, x, y, z, item.copy());
+            EntityItem ei = new EntityItem(w, x, y, z, ItemStackTools.safeCopy(item));
             ei.motionX = mx;
             ei.motionY = my;
             ei.motionZ = mz;
@@ -196,7 +177,7 @@ public class InvUtils
 
     public static void giveItem(EntityPlayer ep, @Nullable ItemStack item)
     {
-        if(item != null && item.stackSize > 0)
+        if(!ItemStackTools.isEmpty(item))
         {
             if(ep.inventory.addItemStackToInventory(item))
             {
@@ -220,7 +201,7 @@ public class InvUtils
         {
             for(ItemStack item : items)
             {
-                if(item != null && item.stackSize > 0)
+                if(!ItemStackTools.isEmpty(item))
                 {
                     dropItem(w, x, y, z, item, 10);
                 }
@@ -228,85 +209,33 @@ public class InvUtils
         }
     }
 
-    public static boolean canStack(@Nullable ItemStack is1, @Nullable ItemStack is2)
-    {
-        return !(is1 == null || is2 == null) && (is1.stackSize + is2.stackSize <= is1.getMaxStackSize() && is1.stackSize + is2.stackSize <= is2.getMaxStackSize());
-    }
-
-    @Nullable
-    public static ItemStack reduceItem(@Nullable ItemStack is)
-    {
-        if(is == null || is.stackSize <= 0)
-        {
-            return null;
-        }
-
-        if(is.stackSize == 1)
-        {
-            if(is.getItem().hasContainerItem(is))
-            {
-                return is.getItem().getContainerItem(is);
-            }
-            return null;
-        }
-
-        is.splitStack(1);
-        return is;
-    }
-
     public static boolean isWrench(@Nullable ItemStack is)
     {
-        return is != null && is.getItem().getHarvestLevel(is, ToolType.WRENCH.getName(), null, null) >= ToolLevel.BASIC.ordinal();
+        return !ItemStackTools.isEmpty(is) && is.getItem().getHarvestLevel(is, ToolType.WRENCH.getName(), null, null) >= ToolLevel.BASIC.ordinal();
     }
 
-    public static void removeDisplayName(ItemStack is)
+    public static void transferItems(IItemHandler from, IItemHandler to, int amount, Predicate<ItemStack> filter)
     {
-        if(is.hasTagCompound())
-        {
-            if(is.getTagCompound().hasKey("display"))
-            {
-                NBTTagCompound tag1 = is.getTagCompound().getCompoundTag("display");
-
-                if(tag1.hasKey("Name"))
-                {
-                    tag1.removeTag("Name");
-
-                    if(tag1.hasNoTags())
-                    {
-                        is.getTagCompound().removeTag("display");
-                    }
-                }
-
-                if(is.getTagCompound().hasNoTags())
-                {
-                    is.setTagCompound(null);
-                }
-            }
-        }
-    }
-
-    public static void transferItems(IItemHandler from, IItemHandler to, int transfer)
-    {
-        if(transfer <= 0)
+        if(amount <= 0)
         {
             return;
         }
 
         for(int i = 0; i < from.getSlots(); i++)
         {
-            ItemStack extracted = from.extractItem(i, transfer, true);
+            ItemStack extracted = from.extractItem(i, amount, true);
 
-            if(extracted != null && extracted.stackSize > 0)
+            if(!ItemStackTools.isEmpty(extracted) && filter.test(extracted))
             {
                 ItemStack inserted = ItemHandlerHelper.insertItem(to, extracted, false);
-                int s = inserted == null ? extracted.stackSize : (extracted.stackSize - inserted.stackSize);
+                int s = ItemStackTools.getStackSize(extracted) - ItemStackTools.getStackSize(inserted);
 
                 if(s > 0)
                 {
                     from.extractItem(i, s, false);
-                    transfer -= s;
+                    amount -= s;
 
-                    if(transfer <= 0)
+                    if(amount <= 0)
                     {
                         return;
                     }

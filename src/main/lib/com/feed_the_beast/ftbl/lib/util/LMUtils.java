@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Made by LatvianModder
@@ -33,10 +34,16 @@ public class LMUtils
     public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
 
     public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
+    private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
 
     public static <T> T cast(Object o)
     {
         return (T) o;
+    }
+
+    public static <T> Predicate<T> alwaysTruePredicate()
+    {
+        return (Predicate<T>) PREDICATE_ALWAYS_TRUE;
     }
 
     public static boolean isNEILoaded()

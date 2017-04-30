@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -141,7 +142,7 @@ public class GuiHelper
 
     public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)
     {
-        if(stack == null || stack.getItem() == null)
+        if(ItemStackTools.getStackSize(stack) == 0)
         {
             return false;
         }
