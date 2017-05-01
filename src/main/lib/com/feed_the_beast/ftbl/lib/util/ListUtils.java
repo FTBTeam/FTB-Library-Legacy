@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.RemoveFilter;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by LatvianModder on 06.01.2016.
@@ -81,7 +80,7 @@ public class ListUtils
         }
     }
 
-    public static <E> void removeAll(List<E> list, @Nullable RemoveFilter<E> f)
+    public static <E> void removeAll(List<E> list, @Nullable Predicate<E> f)
     {
         if(f == null)
         {
@@ -91,7 +90,7 @@ public class ListUtils
         {
             for(int i = list.size() - 1; i >= 0; i--)
             {
-                if(f.remove(list.get(i)))
+                if(f.test(list.get(i)))
                 {
                     list.remove(i);
                 }

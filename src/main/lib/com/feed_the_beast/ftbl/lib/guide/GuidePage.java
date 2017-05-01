@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.RemoveFilter;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
@@ -28,11 +27,12 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class GuidePage extends FinalIDObject
 {
     private static final Comparator<Map.Entry<String, GuidePage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
-    private static final RemoveFilter<Map.Entry<String, GuidePage>> CLEANUP_FILTER = entry -> entry.getValue().isEmpty();
+    private static final Predicate<Map.Entry<String, GuidePage>> CLEANUP_FILTER = entry -> entry.getValue().isEmpty();
     public static final Map<String, IGuideTextLineProvider> LINE_PROVIDERS = new HashMap<>();
 
     public final List<IGuideTextLine> text;

@@ -19,6 +19,6 @@ public class ItemBlockBase extends ItemBlock
     @Override
     public int getMetadata(int metadata)
     {
-        return metadata;
+        return getHasSubtypes() ? metadata : 0;
     }
 }

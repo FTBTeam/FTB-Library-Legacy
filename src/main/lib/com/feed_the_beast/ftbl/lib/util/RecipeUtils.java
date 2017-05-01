@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -14,8 +15,7 @@ import javax.annotation.Nullable;
 
 public class RecipeUtils
 {
-    @Nullable
-    public static Object getFrom(@Nullable Object o)
+    public static Object fixObject(@Nullable Object o)
     {
         if(o == null)
         {
@@ -33,7 +33,7 @@ public class RecipeUtils
     {
         for(int i = 0; i < in.length; i++)
         {
-            in[i] = getFrom(in[i]);
+            in[i] = fixObject(in[i]);
         }
 
         return in;
@@ -60,5 +60,10 @@ public class RecipeUtils
     public static void addSmelting(ItemStack out, ItemStack in, float xp)
     {
         FurnaceRecipes.instance().addSmeltingRecipe(in, out, xp);
+    }
+
+    public static void addCircularRecipe(ItemStack out, Object center, Object around)
+    {
+        GameRegistry.addRecipe(new ShapedOreRecipe(out, "AAA", "ACA", "AAA", 'C', fixObject(center), 'A', fixObject(around)));
     }
 }

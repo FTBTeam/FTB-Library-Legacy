@@ -35,7 +35,6 @@ public class PropertyItemStack extends PropertyBase
         return ID;
     }
 
-    @Nullable
     public ItemStack getItem()
     {
         return value;
@@ -45,16 +44,19 @@ public class PropertyItemStack extends PropertyBase
      * @param sizeMode 0 - ignore stack size, 1 - itemStack size must be equal, 2 - itemStack size must be equal or larger
      * @return stack that is equal to itemStack. null if none match
      */
-    public boolean matchesItem(@Nullable ItemStack itemStack, int sizeMode)
+    public boolean matchesItem(ItemStack itemStack, int sizeMode)
     {
         ItemStack is = getItem();
+        boolean isempty = ItemStackTools.isEmpty(is);
+        boolean stackempty = ItemStackTools.isEmpty(itemStack);
+
+        if(isempty || stackempty)
+        {
+            return isempty == stackempty;
+        }
+
         int issize = ItemStackTools.getStackSize(is);
         int stackSize = ItemStackTools.getStackSize(itemStack);
-
-        if(issize == 0 || stackSize == 0)
-        {
-            return issize == stackSize;
-        }
 
         Item item0 = itemStack.getItem();
         int meta = itemStack.getMetadata();
@@ -99,7 +101,7 @@ public class PropertyItemStack extends PropertyBase
     public String getString()
     {
         ItemStack is = getItem();
-        return ItemStackTools.getStackSize(is) + "x " + (is == null ? "Air" : is.getDisplayName());
+        return ItemStackTools.getStackSize(is) + "x " + (ItemStackTools.isEmpty(is) ? "Air" : is.getDisplayName());
     }
 
     @Override

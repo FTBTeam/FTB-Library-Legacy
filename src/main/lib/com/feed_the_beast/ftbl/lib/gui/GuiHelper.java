@@ -142,7 +142,7 @@ public class GuiHelper
 
     public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)
     {
-        if(ItemStackTools.getStackSize(stack) == 0)
+        if(ItemStackTools.isEmpty(stack))
         {
             return false;
         }

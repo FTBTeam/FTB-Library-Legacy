@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.RemoveFilter;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Created by LatvianModder on 06.01.2016.
@@ -99,7 +98,7 @@ public class MapUtils
         };
     }
 
-    public static <K, V> void removeAll(Map<K, V> map, @Nullable RemoveFilter<Map.Entry<K, V>> f)
+    public static <K, V> void removeAll(Map<K, V> map, @Nullable Predicate<Map.Entry<K, V>> f)
     {
         if(f == null)
         {
@@ -112,7 +111,7 @@ public class MapUtils
 
             for(Map.Entry<K, V> e : set)
             {
-                if(!f.remove(e))
+                if(!f.test(e))
                 {
                     map.put(e.getKey(), e.getValue());
                 }

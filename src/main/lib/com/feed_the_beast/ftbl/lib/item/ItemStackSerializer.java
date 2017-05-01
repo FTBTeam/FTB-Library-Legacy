@@ -12,11 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nullable;
-
 public class ItemStackSerializer
 {
-    @Nullable
     public static ItemStack parseItem(String input)
     {
         input = input.trim();
@@ -25,7 +22,7 @@ public class ItemStackSerializer
             return ItemStackTools.getEmptyStack();
         }
 
-        String[] s1 = input.split(" ");
+        String[] s1 = input.split(" "); //TODO: Use split limit
 
         if(s1.length == 0)
         {
@@ -67,24 +64,22 @@ public class ItemStackSerializer
         return itemstack;
     }
 
-    public static String toString(@Nullable ItemStack is)
+    public static String toString(ItemStack is)
     {
-        int s = ItemStackTools.getStackSize(is);
-        return (s == 0) ? "" : Item.REGISTRY.getNameForObject(is.getItem()) + " " + s + ' ' + is.getItemDamage();
-    }
-
-    public static JsonElement serialize(@Nullable ItemStack is)
-    {
-        if(ItemStackTools.getStackSize(is) == 0)
+        if(ItemStackTools.isEmpty(is))
         {
-            return JsonNull.INSTANCE;
+            return "";
         }
 
+        return Item.REGISTRY.getNameForObject(is.getItem()) + " " + ItemStackTools.getStackSize(is) + ' ' + is.getItemDamage();
+    }
+
+    public static JsonElement serialize(ItemStack is)
+    {
         String s = toString(is);
         return s.isEmpty() ? JsonNull.INSTANCE : new JsonPrimitive(s);
     }
 
-    @Nullable
     public static ItemStack deserialize(JsonElement e)
     {
         if(e.isJsonNull())
