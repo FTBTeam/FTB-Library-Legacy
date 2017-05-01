@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.math;
 
+import net.minecraft.block.BlockLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
@@ -41,6 +42,101 @@ public class MathUtils
     public static final float[] NORMALS_X = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
     public static final float[] NORMALS_Y = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
     public static final float[] NORMALS_Z = new float[] {0F, 0F, -1F, 1F, 0F, 0F};
+
+    public static final int FACING_BIT_DOWN = 1;
+    public static final int FACING_BIT_UP = 2;
+    public static final int FACING_BIT_NORTH = 4;
+    public static final int FACING_BIT_SOUTH = 8;
+    public static final int FACING_BIT_WEST = 16;
+    public static final int FACING_BIT_EAST = 32;
+    public static final int FACING_BIT[] = {FACING_BIT_DOWN, FACING_BIT_UP, FACING_BIT_NORTH, FACING_BIT_SOUTH, FACING_BIT_WEST, FACING_BIT_EAST};
+    public static final int OPPOSITE[] = {1, 0, 3, 2, 5, 4};
+    public static final int OPPOSITE_BIT[] = {2, 1, 8, 4, 32, 16};
+
+    @Nullable
+    public static EnumFacing getFacing(int i)
+    {
+        return i < 0 || i > 5 ? null : EnumFacing.VALUES[i];
+    }
+
+    public static int getFacingIndex(@Nullable EnumFacing facing)
+    {
+        return facing == null ? -1 : facing.getIndex();
+    }
+
+    private static boolean isNumberBetween(int num, int num1, int num2)
+    {
+        int min = Math.min(num1, num2);
+        int max = Math.max(num1, num2);
+        return num >= min && num <= max;
+    }
+
+    public static BlockLog.EnumAxis getAxis(BlockPos pos1, BlockPos pos2)
+    {
+        int x = pos1.getX() - pos2.getX();
+        int y = pos1.getY() - pos2.getY();
+        int z = pos1.getZ() - pos2.getZ();
+
+        if(x != 0 && y == 0 && z == 0)
+        {
+            return BlockLog.EnumAxis.X;
+        }
+        else if(x == 0 && y != 0 && z == 0)
+        {
+            return BlockLog.EnumAxis.Y;
+        }
+        else if(x == 0 && y == 0 && z != 0)
+        {
+            return BlockLog.EnumAxis.Z;
+        }
+
+        return BlockLog.EnumAxis.NONE;
+    }
+
+    public static boolean isPosBetween(BlockPos pos, BlockPos pos1, BlockPos pos2)
+    {
+        switch(getAxis(pos1, pos2))
+        {
+            case X:
+                return isNumberBetween(pos.getX(), pos1.getX(), pos2.getX());
+            case Y:
+                return isNumberBetween(pos.getY(), pos1.getY(), pos2.getY());
+            case Z:
+                return isNumberBetween(pos.getZ(), pos1.getZ(), pos2.getZ());
+            default:
+                return pos1.equals(pos) || pos2.equals(pos);
+        }
+    }
+
+    @Nullable
+    public static EnumFacing getFacing(BlockPos pos1, BlockPos pos2)
+    {
+        if(pos1.getY() > pos2.getY())
+        {
+            return EnumFacing.DOWN;
+        }
+        else if(pos1.getY() < pos2.getY())
+        {
+            return EnumFacing.UP;
+        }
+        else if(pos1.getZ() > pos2.getZ())
+        {
+            return EnumFacing.NORTH;
+        }
+        else if(pos1.getZ() < pos2.getZ())
+        {
+            return EnumFacing.SOUTH;
+        }
+        else if(pos1.getX() > pos2.getX())
+        {
+            return EnumFacing.WEST;
+        }
+        else if(pos1.getX() < pos2.getX())
+        {
+            return EnumFacing.EAST;
+        }
+        return null;
+    }
 
     public static double sqrt(double d)
     {

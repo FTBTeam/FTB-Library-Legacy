@@ -53,25 +53,4 @@ public class CreativeTabBase extends CompatCreativeTabs
     {
         return getIconItemStack().getItem();
     }
-
-    @Override
-    public int getIconItemDamage()
-    {
-        return getIconItemStack().getItemDamage();
-    }
-
-    @Override
-    public void displayAllRelevantItems(List<ItemStack> list)
-    {
-        for(Item item : Item.REGISTRY)
-        {
-            if(item != null)
-            {
-                if(item.getCreativeTab() == this)
-                {
-                    item.getSubItems(item, this, list);
-                }
-            }
-        }
-    }
 }

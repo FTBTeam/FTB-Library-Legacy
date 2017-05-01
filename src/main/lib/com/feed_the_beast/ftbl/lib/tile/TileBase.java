@@ -165,7 +165,7 @@ public class TileBase extends TileEntity
 
     public void notifyNeighbors()
     {
-        world.notifyBlockOfStateChange(getPos(), getBlockType());
+        world.notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
     }
 
     public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)

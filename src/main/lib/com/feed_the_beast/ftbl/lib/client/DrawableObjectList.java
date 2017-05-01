@@ -3,15 +3,9 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,27 +39,6 @@ public class DrawableObjectList implements IDrawableObject
         if(!list.isEmpty())
         {
             current = list.get(0);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public DrawableObjectList(Item item)
-    {
-        this(Collections.emptyList());
-
-        try
-        {
-            List<ItemStack> stacks = new ArrayList<>();
-            item.getSubItems(item, CreativeTabs.SEARCH, stacks);
-
-            for(ItemStack stack : stacks)
-            {
-                list.add(new DrawableItem(stack));
-            }
-        }
-        catch(Exception ex)
-        {
-            list.clear();
         }
     }
 

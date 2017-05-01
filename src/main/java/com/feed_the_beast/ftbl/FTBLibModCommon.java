@@ -28,7 +28,6 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyByte;
 import com.feed_the_beast.ftbl.lib.config.PropertyColor;
 import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
-import com.feed_the_beast.ftbl.lib.config.PropertyEntityClass;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnumAbstract;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
@@ -127,7 +126,6 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         addConfigValueProvider(PropertyBlockState.ID, PropertyBlockState::new);
         addConfigValueProvider(PropertyItemStack.ID, PropertyItemStack::new);
         addConfigValueProvider(PropertyTextComponent.ID, PropertyTextComponent::new);
-        addConfigValueProvider(PropertyEntityClass.ID, PropertyEntityClass::new);
 
         addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
         addNotification(FTBLibNotifications.NEW_TEAM_MESSAGE);

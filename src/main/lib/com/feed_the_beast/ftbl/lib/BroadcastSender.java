@@ -30,7 +30,7 @@ public enum BroadcastSender implements ICommandSender
     @Override
     public void sendMessage(ITextComponent component)
     {
-        ServerUtils.getServer().getPlayerList().sendChatMsgImpl(component, true);
+        ServerUtils.getServer().getPlayerList().sendMessage(component, true);
     }
 
     @Override

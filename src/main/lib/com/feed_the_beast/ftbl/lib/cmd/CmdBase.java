@@ -134,7 +134,7 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
         if(p == null || p.isFake())
         {
-            throw new PlayerNotFoundException();
+            throw new PlayerNotFoundException("commands.generic.player.notFound", String.valueOf(o));
         }
 
         return p;
