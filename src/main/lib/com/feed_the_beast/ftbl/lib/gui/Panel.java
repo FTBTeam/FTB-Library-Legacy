@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,35 +98,9 @@ public abstract class Panel extends Widget
         }
     }
 
-    protected int alignWidgets(EnumFacing.Plane direction)
+    protected final int align(WidgetLayout layout)
     {
-        return alignWidgets(direction, 0, 0, 0);
-    }
-
-    protected int alignWidgets(EnumFacing.Plane direction, int pre, int spacing, int post)
-    {
-        int i = pre;
-
-        for(Widget widget : widgets)
-        {
-            if(direction == EnumFacing.Plane.VERTICAL)
-            {
-                widget.setY(i);
-                i += widget.height + spacing;
-            }
-            else
-            {
-                widget.setX(i);
-                i += widget.width + spacing;
-            }
-        }
-
-        if(!widgets.isEmpty())
-        {
-            i -= spacing;
-        }
-
-        return i + post;
+        return layout.align(this);
     }
 
     @Override

@@ -4,11 +4,11 @@ import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.util.EnumFacing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class GuideContentsLine extends EmptyGuidePageLine
         @Override
         public void updateWidgetPositions()
         {
-            setHeight(alignWidgets(EnumFacing.Plane.VERTICAL));
+            setHeight(align(WidgetLayout.VERTICAL));
         }
     }
 

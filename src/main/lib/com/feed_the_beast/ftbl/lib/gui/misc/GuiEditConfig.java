@@ -15,12 +15,12 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -293,7 +293,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
             @Override
             public void updateWidgetPositions()
             {
-                scroll.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL));
+                scroll.setElementSize(align(WidgetLayout.VERTICAL));
             }
         };
 

@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -193,6 +194,7 @@ public class GuideListLine extends EmptyGuidePageLine
     {
         private final GuiGuide gui;
         private final PanelScrollBar scrollBar;
+        private final WidgetLayout layout;
 
         private PanelList(GuiGuide g, boolean unicodeFont)
         {
@@ -215,6 +217,8 @@ public class GuideListLine extends EmptyGuidePageLine
             {
                 addFlags(FLAG_UNICODE_FONT);
             }
+
+            layout = type.plane == EnumFacing.Plane.VERTICAL ? new WidgetLayout.Vertical(0, spacing, 0) : new WidgetLayout.Horizontal(0, spacing, 0);
         }
 
         @Override
@@ -248,7 +252,7 @@ public class GuideListLine extends EmptyGuidePageLine
                 return;
             }
 
-            alignWidgets(type.plane, 0, spacing, 0);
+            align(layout);
             Widget last = widgets.get(widgets.size() - 1);
             int s;
 

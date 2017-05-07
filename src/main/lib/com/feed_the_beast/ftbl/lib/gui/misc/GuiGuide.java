@@ -16,11 +16,11 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.guide.ButtonGuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -140,7 +140,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
             {
                 if(!widgets.isEmpty())
                 {
-                    sliderPages.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL));
+                    sliderPages.setElementSize(align(WidgetLayout.VERTICAL));
                 }
             }
         };
@@ -149,6 +149,8 @@ public class GuiGuide extends GuiBase implements IClientActionGui
 
         panelText = new Panel(0, 0, 0, 0)
         {
+            private final WidgetLayout LAYOUT = new WidgetLayout.Vertical(2, 0, 4);
+
             @Override
             public void addWidgets()
             {
@@ -176,7 +178,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
             {
                 if(!widgets.isEmpty())
                 {
-                    int s = alignWidgets(EnumFacing.Plane.VERTICAL, 2, 0, 4);
+                    int s = align(LAYOUT);
                     sliderText.setElementSize(s);
                     sliderText.setSrollStepFromOneElementSize((s - 6) / widgets.size());
                 }

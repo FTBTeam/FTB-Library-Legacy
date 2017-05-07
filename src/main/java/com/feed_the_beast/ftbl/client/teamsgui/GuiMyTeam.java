@@ -23,10 +23,10 @@ import com.feed_the_beast.ftbl.lib.gui.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -48,6 +48,9 @@ public class GuiMyTeam extends GuiBase
     private static final int BOTTOM_PANEL_HEIGHT = 20;
     private static final int LEFT_PANEL_WIDTH = 90;
     private static final Color4I EXIT_TEAM_COLOR = new Color4I(false, 0xFFEA8383);
+    private static final WidgetLayout LAYOUT_V_0_1_0 = new WidgetLayout.Vertical(0, 1, 0);
+    private static final WidgetLayout LAYOUT_V_2_1_2 = new WidgetLayout.Vertical(2, 1, 2);
+    private static final WidgetLayout LAYOUT_V_2_4_2 = new WidgetLayout.Vertical(2, 4, 2);
 
     private class ButtonPlayer extends Button
     {
@@ -132,7 +135,7 @@ public class GuiMyTeam extends GuiBase
             @Override
             public void updateWidgetPositions()
             {
-                scrollPlayers.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL, 0, 1, 0));
+                scrollPlayers.setElementSize(align(LAYOUT_V_0_1_0));
                 scrollPlayers.setSrollStepFromOneElementSize(13);
             }
         };
@@ -263,12 +266,12 @@ public class GuiMyTeam extends GuiBase
             {
                 if(selectedPlayer == null)
                 {
-                    scrollText.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL, 2, 1, 2));
+                    scrollText.setElementSize(align(LAYOUT_V_2_1_2));
                     scrollText.setSrollStepFromOneElementSize(11);
                 }
                 else
                 {
-                    scrollText.setElementSize(alignWidgets(EnumFacing.Plane.VERTICAL, 2, 4, 2));
+                    scrollText.setElementSize(align(LAYOUT_V_2_4_2));
                 }
             }
         };
