@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftbl.lib.block;
 
 import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
-import com.feed_the_beast.ftbl.lib.tile.TileBase;
-import mcjty.lib.compat.CompatBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -10,10 +9,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class BlockBase extends CompatBlock implements IBlockWithItem
+public abstract class BlockBase extends Block implements IBlockWithItem
 {
     //Model String = BlockStateSerializer.INSTANCE.get(getDefaultState())
 
@@ -54,23 +52,5 @@ public abstract class BlockBase extends CompatBlock implements IBlockWithItem
         }
 
         return false;
-    }
-
-    @Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor)
-    {
-        if(hasTileEntity(world.getBlockState(pos)))
-        {
-            TileEntity te = world.getTileEntity(pos);
-
-            if(te instanceof TileBase)
-            {
-                ((TileBase) te).onNeighborChange();
-            }
-            else if(te != null)
-            {
-                te.updateContainingBlockInfo();
-            }
-        }
     }
 }
