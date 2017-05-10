@@ -22,6 +22,7 @@ import javax.annotation.ParametersAreNullableByDefault;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -127,7 +128,16 @@ public class JsonUtils
 
     public static JsonElement fromJson(Reader json)
     {
-        return (json == null) ? JsonNull.INSTANCE : PARSER.parse(json);
+        try
+        {
+            JsonElement element = PARSER.parse(json);
+            json.close();
+            return element;
+        }
+        catch(IOException e)
+        {
+            return JsonNull.INSTANCE;
+        }
     }
 
     public static JsonElement fromJson(File json)

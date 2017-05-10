@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
-import mcjty.lib.tools.ItemStackTools;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -43,7 +41,6 @@ public class TileInvBase extends TileBase
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
     {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-
     }
 
     @Override
@@ -57,46 +54,22 @@ public class TileInvBase extends TileBase
     }
 
     @Override
-    public void writeTileData(NBTTagCompound nbt)
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
-        super.writeTileData(nbt);
+        super.writeToNBT(nbt);
         nbt.setTag("Items", itemHandler.serializeNBT());
+        return nbt;
     }
 
     @Override
-    public void readTileData(NBTTagCompound nbt)
+    public void readFromNBT(NBTTagCompound nbt)
     {
-        super.readTileData(nbt);
-        itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
-    }
-
-    @Override
-    public void writeTileClientData(NBTTagCompound nbt)
-    {
-        super.writeTileClientData(nbt);
-        nbt.setTag("Items", itemHandler.serializeNBT());
-    }
-
-    @Override
-    public void readTileClientData(NBTTagCompound nbt)
-    {
-        super.readTileClientData(nbt);
+        super.readFromNBT(nbt);
         itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
     }
 
     public void dropItems()
     {
-        if(isServerSide() && itemHandler != null && itemHandler.getSlots() > 0)
-        {
-            for(int i = 0; i < itemHandler.getSlots(); i++)
-            {
-                ItemStack item = itemHandler.getStackInSlot(i);
-
-                if(!ItemStackTools.isEmpty(item))
-                {
-                    InvUtils.dropItem(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, item, 10);
-                }
-            }
-        }
+        InvUtils.dropAllItems(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, itemHandler);
     }
 }

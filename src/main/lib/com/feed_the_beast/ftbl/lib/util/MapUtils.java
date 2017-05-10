@@ -2,13 +2,10 @@ package com.feed_the_beast.ftbl.lib.util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * Created by LatvianModder on 06.01.2016.
@@ -61,15 +58,13 @@ public class MapUtils
     @SuppressWarnings("unchecked")
     public static <K, V> List<Map.Entry<K, V>> sortedEntryList(Map<K, V> map, @Nullable Comparator<Map.Entry<K, V>> c)
     {
-        List<Map.Entry<K, V>> list = new ArrayList<>();
-
         if(c == null)
         {
             c = (o1, o2) -> ((Comparable) o1.getKey()).compareTo(o2.getKey());
         }
 
-        list.addAll(map.entrySet());
-        Collections.sort(list, c);
+        List<Map.Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(c);
         return list;
     }
 
@@ -98,34 +93,13 @@ public class MapUtils
         };
     }
 
-    public static <K, V> void removeAll(Map<K, V> map, @Nullable Predicate<Map.Entry<K, V>> f)
-    {
-        if(f == null)
-        {
-            map.clear();
-        }
-        else
-        {
-            List<Map.Entry<K, V>> set = new ArrayList<>(map.entrySet());
-            map.clear();
-
-            for(Map.Entry<K, V> e : set)
-            {
-                if(!f.test(e))
-                {
-                    map.put(e.getKey(), e.getValue());
-                }
-            }
-        }
-    }
-
-    public static <K, V> void sortMap(LinkedHashMap<K, V> map, Comparator<Map.Entry<K, V>> comparator)
+    public static <K, V> void sortMap(Map<K, V> map, Comparator<Map.Entry<K, V>> comparator)
     {
         if(!map.isEmpty())
         {
             List<Map.Entry<K, V>> list = new ArrayList<>();
             list.addAll(map.entrySet());
-            Collections.sort(list, comparator);
+            list.sort(comparator);
             map.clear();
 
             for(Map.Entry<K, V> e : list)

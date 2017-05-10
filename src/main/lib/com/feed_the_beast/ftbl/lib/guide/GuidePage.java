@@ -27,12 +27,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class GuidePage extends FinalIDObject
 {
     private static final Comparator<Map.Entry<String, GuidePage>> COMPARATOR = (o1, o2) -> o1.getValue().getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getValue().getDisplayName().getUnformattedText());
-    private static final Predicate<Map.Entry<String, GuidePage>> CLEANUP_FILTER = entry -> entry.getValue().isEmpty();
     public static final Map<String, IGuideTextLineProvider> LINE_PROVIDERS = new HashMap<>();
 
     public final List<IGuideTextLine> text;
@@ -209,7 +207,7 @@ public class GuidePage extends FinalIDObject
     public void cleanup()
     {
         childPages.values().forEach(GuidePage::cleanup);
-        MapUtils.removeAll(childPages, CLEANUP_FILTER);
+        childPages.values().removeIf(GuidePage::isEmpty);
     }
 
     public boolean isEmpty()

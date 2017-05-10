@@ -23,7 +23,7 @@ import java.util.List;
  */
 public abstract class GuiBase extends Panel implements IClientActionGui
 {
-    private static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
+    public static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
     public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xC8333333)).setLineColor(new Color4I(false, 0xFFC0C0C0)).setRoundEdges(true);
     public static final Color4I DEFAULT_CONTENT_COLOR = new Color4I(false, 0xFFC0C0C0);
 

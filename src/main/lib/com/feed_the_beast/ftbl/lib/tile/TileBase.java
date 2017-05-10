@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.lib.tile;
 
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -9,75 +11,62 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 
-import javax.annotation.Nullable;
-
 public class TileBase extends TileEntity
 {
     private boolean isDirty = true;
     private IBlockState currentState;
 
     @Override
-    public final NBTTagCompound writeToNBT(NBTTagCompound tag)
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(tag);
-        writeTileData(tag);
-        return tag;
+        super.writeToNBT(nbt);
+        return nbt;
     }
 
     @Override
-    public final void readFromNBT(NBTTagCompound tag)
+    public void readFromNBT(NBTTagCompound nbt)
     {
-        super.readFromNBT(tag);
-        readTileData(tag);
+        super.readFromNBT(nbt);
     }
 
     @Override
-    @Nullable
     public final SPacketUpdateTileEntity getUpdatePacket()
     {
-        return new SPacketUpdateTileEntity(getPos(), 0, getUpdateTag());
+        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
     }
 
     @Override
-    public final NBTTagCompound getUpdateTag()
+    public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        writeTileClientData(tag);
-        return tag;
-    }
-
-    @Override
-    public final void onDataPacket(NetworkManager m, SPacketUpdateTileEntity p)
-    {
-        handleUpdateTag(p.getNbtCompound());
+        handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override
     public final void handleUpdateTag(NBTTagCompound tag)
     {
-        readTileClientData(tag);
+        onUpdateTag(tag);
         onUpdatePacket();
+        markDirty();
     }
 
-    public void writeTileData(NBTTagCompound nbt)
+    @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    public void onUpdateTag(NBTTagCompound nbt)
+    {
+        readFromNBT(nbt);
+    }
+
+    public void onUpdatePacket()
     {
     }
 
-    public void readTileData(NBTTagCompound nbt)
+    protected boolean notifyBlock()
     {
-    }
-
-    public void writeTileClientData(NBTTagCompound nbt)
-    {
-    }
-
-    public void readTileClientData(NBTTagCompound nbt)
-    {
-    }
-
-    protected boolean rerenderBlock()
-    {
-        return false;
+        return true;
     }
 
     protected boolean updateComparator()
@@ -85,24 +74,10 @@ public class TileBase extends TileEntity
         return false;
     }
 
-    protected void onUpdatePacket()
-    {
-        if(rerenderBlock())
-        {
-            IBlockState state = getBlockState();
-            world.notifyBlockUpdate(pos, state, state, 7);
-        }
-    }
-
     @Override
     public void onLoad()
     {
         isDirty = true;
-    }
-
-    @Override
-    public void onChunkUnload()
-    {
     }
 
     @Override
@@ -120,19 +95,29 @@ public class TileBase extends TileEntity
         }
     }
 
+    @Override
+    public final Block getBlockType()
+    {
+        return getBlockState().getBlock();
+    }
+
     protected void sendDirtyUpdate()
     {
-        if(world != null && !world.isRemote)
-        {
-            updateContainingBlockInfo();
-            world.markChunkDirty(getPos(), this);
+        updateContainingBlockInfo();
 
-            /*
+        if(world != null)
+        {
+            world.markChunkDirty(pos, this);
+
+            if(notifyBlock())
+            {
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 8);
+            }
+
             if(updateComparator() && getBlockType() != Blocks.AIR)
             {
-                worldObj.updateComparatorOutputLevel(getPos(), getBlockType());
+                world.updateComparatorOutputLevel(pos, getBlockType());
             }
-            */
         }
     }
 
@@ -143,11 +128,21 @@ public class TileBase extends TileEntity
         currentState = null;
     }
 
+    public IBlockState createState(IBlockState state)
+    {
+        return state;
+    }
+
     public IBlockState getBlockState()
     {
         if(currentState == null)
         {
-            currentState = world.getBlockState(getPos());
+            if(world == null)
+            {
+                return Blocks.AIR.getDefaultState();
+            }
+
+            currentState = createState(world.getBlockState(getPos()));
         }
 
         return currentState;

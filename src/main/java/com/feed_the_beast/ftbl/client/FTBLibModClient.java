@@ -22,7 +22,6 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbl.lib.util.MapUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
@@ -99,7 +98,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     public void onResourceManagerReload(IResourceManager manager)
     {
         SIDEBAR_BUTTON_MAP.clear();
-        MapUtils.removeAll(clientConfig.getTree(), entry -> entry.getKey().getGroup().equals("sidebar_button"));
+        clientConfig.getTree().entrySet().removeIf(entry -> entry.getKey().getGroup().equals("sidebar_button"));
 
         for(String domain : manager.getResourceDomains())
         {

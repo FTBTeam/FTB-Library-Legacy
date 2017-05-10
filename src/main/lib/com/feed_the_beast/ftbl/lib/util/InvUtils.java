@@ -195,15 +195,31 @@ public class InvUtils
         }
     }
 
-    public static void dropAllItems(World w, double x, double y, double z, Iterable<ItemStack> items)
+    public static void dropAllItems(World world, double x, double y, double z, Iterable<ItemStack> items)
     {
-        if(!w.isRemote)
+        if(!world.isRemote)
         {
             for(ItemStack item : items)
             {
                 if(!ItemStackTools.isEmpty(item))
                 {
-                    dropItem(w, x, y, z, item, 10);
+                    dropItem(world, x, y, z, item, 10);
+                }
+            }
+        }
+    }
+
+    public static void dropAllItems(World world, double x, double y, double z, @Nullable IItemHandler itemHandler)
+    {
+        if(!world.isRemote && itemHandler != null && itemHandler.getSlots() > 0)
+        {
+            for(int i = 0; i < itemHandler.getSlots(); i++)
+            {
+                ItemStack item = itemHandler.getStackInSlot(i);
+
+                if(!ItemStackTools.isEmpty(item))
+                {
+                    dropItem(world, x, y, z, item, 10);
                 }
             }
         }

@@ -24,6 +24,11 @@ public abstract class Panel extends Widget
         widgets = new ArrayList<>();
     }
 
+    public Panel()
+    {
+        this(0, 0, 0, 0);
+    }
+
     public void addFlags(int f)
     {
         flags |= f;
