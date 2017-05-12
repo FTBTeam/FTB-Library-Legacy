@@ -93,6 +93,14 @@ public class NetUtils
         return new BlockPos(x, y, z);
     }
 
+    public static BlockPos.MutableBlockPos readMutablePos(ByteBuf io)
+    {
+        int x = io.readInt();
+        int y = io.readInt();
+        int z = io.readInt();
+        return new BlockPos.MutableBlockPos(x, y, z);
+    }
+
     public static void writeDimPos(ByteBuf io, BlockDimPos pos)
     {
         io.writeInt(pos.dim);
