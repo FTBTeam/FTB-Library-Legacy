@@ -37,7 +37,7 @@ public class MathUtils
     public static final float TWO_PI_F = (float) TWO_PI;
     public static final float HALF_PI_F = (float) HALF_PI;
 
-    public static final double SQRT_2 = Math.sqrt(2D);
+    public static final double SQRT_2 = sqrt(2D);
 
     public static final float[] NORMALS_X = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
     public static final float[] NORMALS_Y = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
@@ -64,7 +64,7 @@ public class MathUtils
         return facing == null ? -1 : facing.getIndex();
     }
 
-    private static boolean isNumberBetween(int num, int num1, int num2)
+    public static boolean isNumberBetween(int num, int num1, int num2)
     {
         int min = Math.min(num1, num2);
         int max = Math.max(num1, num2);
@@ -95,46 +95,68 @@ public class MathUtils
 
     public static boolean isPosBetween(BlockPos pos, BlockPos pos1, BlockPos pos2)
     {
-        switch(getAxis(pos1, pos2))
+        int posx = pos.getX();
+        int posy = pos.getY();
+        int posz = pos.getZ();
+
+        int pos1x = pos1.getX();
+        int pos1y = pos1.getY();
+        int pos1z = pos1.getZ();
+
+        if(posx == pos1x && posy == pos1y && posz == pos1z)
         {
-            case X:
-                return isNumberBetween(pos.getX(), pos1.getX(), pos2.getX());
-            case Y:
-                return isNumberBetween(pos.getY(), pos1.getY(), pos2.getY());
-            case Z:
-                return isNumberBetween(pos.getZ(), pos1.getZ(), pos2.getZ());
-            default:
-                return pos1.equals(pos) || pos2.equals(pos);
+            return true;
         }
+
+        int pos2x = pos2.getX();
+        int pos2y = pos2.getY();
+        int pos2z = pos2.getZ();
+
+        if(posx == pos2x && posy == pos2y && posz == pos2z)
+        {
+            return true;
+        }
+
+        int x = pos1x - pos2x;
+        int y = pos1y - pos2y;
+        int z = pos1z - pos2z;
+
+        if(x != 0 && y == 0 && z == 0)
+        {
+            return posy == pos1y && posz == pos1z && isNumberBetween(posx, pos1x, pos2x);
+        }
+        else if(x == 0 && y != 0 && z == 0)
+        {
+            return posx == pos1x && posz == pos1z && isNumberBetween(posy, pos1y, pos2y);
+        }
+        else if(x == 0 && y == 0 && z != 0)
+        {
+            return posx == pos1x && posy == pos1y && isNumberBetween(posz, pos1z, pos2z);
+        }
+
+        return false;
     }
 
     @Nullable
     public static EnumFacing getFacing(BlockPos pos1, BlockPos pos2)
     {
-        if(pos1.getY() > pos2.getY())
+        int x = pos2.getX() - pos1.getX();
+        int y = pos2.getY() - pos1.getY();
+        int z = pos2.getZ() - pos1.getZ();
+
+        if(x != 0 && y == 0 && z == 0)
         {
-            return EnumFacing.DOWN;
+            return x > 0 ? EnumFacing.EAST : EnumFacing.WEST;
         }
-        else if(pos1.getY() < pos2.getY())
+        else if(x == 0 && y != 0 && z == 0)
         {
-            return EnumFacing.UP;
+            return y > 0 ? EnumFacing.UP : EnumFacing.DOWN;
         }
-        else if(pos1.getZ() > pos2.getZ())
+        else if(x == 0 && y == 0 && z != 0)
         {
-            return EnumFacing.NORTH;
+            return z > 0 ? EnumFacing.SOUTH : EnumFacing.NORTH;
         }
-        else if(pos1.getZ() < pos2.getZ())
-        {
-            return EnumFacing.SOUTH;
-        }
-        else if(pos1.getX() > pos2.getX())
-        {
-            return EnumFacing.WEST;
-        }
-        else if(pos1.getX() < pos2.getX())
-        {
-            return EnumFacing.EAST;
-        }
+
         return null;
     }
 
@@ -278,7 +300,7 @@ public class MathUtils
         double x = x2 - x1;
         double y = y2 - y1;
         double z = z2 - z1;
-        double d = Math.sqrt(x * x + y * y + z * z);
+        double d = sqrt(x * x + y * y + z * z);
         return new Vec3d(x1 + (x / d) * (d * p), y1 + (y / d) * (d * p), z1 + (z / d) * (d * p));
     }
 

@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -136,10 +137,7 @@ public class CachedVertexData
 
     public void rect(int x, int y, int w, int h)
     {
-        pos(x, y + h, 0D);
-        pos(x + w, y + h, 0D);
-        pos(x + w, y, 0D);
-        pos(x, y, 0D);
+        rectWithTexture(x, y, w, h, 0D, 0D, 1D, 1D);
     }
 
     public void rectWithTexture(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
@@ -148,5 +146,47 @@ public class CachedVertexData
         pos(x + w, y + h, 0D).tex(u1, v1);
         pos(x + w, y, 0D).tex(u1, v0);
         pos(x, y, 0D).tex(u0, v0);
+    }
+
+    public void centeredCube(double x, double y, double z, double w, double h, double d)
+    {
+        //TODO: Texture
+        pos(x + w, y + h, z - d);
+        pos(x - w, y + h, z - d);
+        pos(x - w, y + h, z + d);
+        pos(x + w, y + h, z + d);
+        pos(x + w, y - h, z + d);
+        pos(x - w, y - h, z + d);
+        pos(x - w, y - h, z - d);
+        pos(x + w, y - h, z - d);
+        pos(x + w, y + h, z + d);
+        pos(x - w, y + h, z + d);
+        pos(x - w, y - h, z + d);
+        pos(x + w, y - h, z + d);
+        pos(x + w, y - h, z - d);
+        pos(x - w, y - h, z - d);
+        pos(x - w, y + h, z - d);
+        pos(x + w, y + h, z - d);
+        pos(x - w, y + h, z + d);
+        pos(x - w, y + h, z - d);
+        pos(x - w, y - h, z - d);
+        pos(x - w, y - h, z + d);
+        pos(x + w, y + h, z - d);
+        pos(x + w, y + h, z + d);
+        pos(x + w, y - h, z + d);
+        pos(x + w, y - h, z - d);
+    }
+
+    public void centeredCube(double x, double y, double z, double r)
+    {
+        centeredCube(x, y, z, r, r, r);
+    }
+
+    public void cube(AxisAlignedBB aabb)
+    {
+        double w = (aabb.maxX - aabb.minX) / 2D;
+        double h = (aabb.maxY - aabb.minY) / 2D;
+        double d = (aabb.maxZ - aabb.minZ) / 2D;
+        centeredCube(aabb.minX + w, aabb.minY + h, aabb.minZ + d, w, h, d);
     }
 }
