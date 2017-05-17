@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
 /**
- * Created by LatvianModder on 14.03.2016.
+ * @author LatvianModder
  */
 public final class ChunkDimPos
 {

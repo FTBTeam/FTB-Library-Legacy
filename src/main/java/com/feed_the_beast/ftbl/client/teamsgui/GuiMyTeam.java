@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 05.02.2017.
+ * @author LatvianModder
  */
 public class GuiMyTeam extends GuiBase
 {

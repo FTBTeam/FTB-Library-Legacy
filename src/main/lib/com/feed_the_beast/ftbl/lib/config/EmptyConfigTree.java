@@ -10,13 +10,13 @@ import io.netty.buffer.ByteBuf;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * Created by LatvianModder on 24.09.2016.
- */
 public enum EmptyConfigTree implements IConfigTree
 {
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     @Override
     public void writeData(ByteBuf data)
     {

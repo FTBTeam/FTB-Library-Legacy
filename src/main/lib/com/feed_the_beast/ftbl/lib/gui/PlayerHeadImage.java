@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by LatvianModder on 22.02.2017.
+ * @author LatvianModder
  */
 public class PlayerHeadImage implements IImageProvider
 {

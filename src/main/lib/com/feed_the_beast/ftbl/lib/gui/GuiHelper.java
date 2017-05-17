@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 04.09.2016.
+ * @author LatvianModder
  */
 public class GuiHelper
 {

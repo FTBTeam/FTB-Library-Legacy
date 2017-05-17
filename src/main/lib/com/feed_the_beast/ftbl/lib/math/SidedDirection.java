@@ -58,34 +58,26 @@ public enum SidedDirection
         }
         else if(rot3D == EnumFacing.DOWN)
         {
-            if(side != EnumFacing.DOWN && side != EnumFacing.UP)
+            if(rot2D == side)
             {
-                if(rot2D == side)
-                {
-                    return TOP;
-                }
-                else if(rot2D == side.getOpposite())
-                {
-                    return BOTTOM;
-                }
+                return TOP;
             }
-
+            else if(rot2D == side.getOpposite())
+            {
+                return BOTTOM;
+            }
             return getSide(side, rot2D);
         }
         else if(rot3D == EnumFacing.UP)
         {
-            if(side != EnumFacing.DOWN && side != EnumFacing.UP)
+            if(rot2D == side)
             {
-                if(rot2D == side)
-                {
-                    return BOTTOM;
-                }
-                else if(rot2D == side.getOpposite())
-                {
-                    return TOP;
-                }
+                return BOTTOM;
             }
-
+            else if(rot2D == side.getOpposite())
+            {
+                return TOP;
+            }
             return getSide(side, rot2D);
         }
         else

@@ -9,7 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import java.io.File;
 
 /**
- * Created by LatvianModder on 12.09.2016.
+ * @author LatvianModder
  */
 public class ConfigFile extends ConfigTree implements IConfigFile
 {

@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import java.io.File;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public class PackMode extends FinalIDObject implements IPackMode
 {

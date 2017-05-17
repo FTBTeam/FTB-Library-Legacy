@@ -20,13 +20,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 07.06.2016.
+ * @author LatvianModder
  */
 public abstract class CmdEditConfigBase extends CmdBase
 {
@@ -36,7 +36,7 @@ public abstract class CmdEditConfigBase extends CmdBase
     }
 
     @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         try
         {
@@ -46,7 +46,7 @@ public abstract class CmdEditConfigBase extends CmdBase
             {
                 List<IConfigKey> keys = new ArrayList<>();
                 keys.addAll(map.keySet());
-                Collections.sort(keys, StringUtils.ID_COMPARATOR);
+                keys.sort(StringUtils.ID_COMPARATOR);
                 return getListOfStringsMatchingLastWord(args, keys);
             }
             else if(args.length == 2)
@@ -57,7 +57,7 @@ public abstract class CmdEditConfigBase extends CmdBase
                 {
                     List<String> variants = entry.getVariants();
 
-                    if(variants != null && !variants.isEmpty())
+                    if(!variants.isEmpty())
                     {
                         return getListOfStringsMatchingLastWord(args, variants);
                     }

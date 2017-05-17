@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
- * Created by LatvianModder on 12.11.2016.
+ * @author LatvianModder
  */
 public interface ISharedServerData extends ISharedData
 {

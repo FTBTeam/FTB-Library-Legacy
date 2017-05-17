@@ -8,9 +8,6 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
 
-/**
- * Created by LatvianModder on 07.06.2016.
- */
 public enum EnumTeamColor implements IStringSerializable
 {
     BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 0x0094FF),
@@ -24,6 +21,9 @@ public enum EnumTeamColor implements IStringSerializable
     PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0xB342FF),
     GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumTeamColor[] VALUES = values();
     public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
 

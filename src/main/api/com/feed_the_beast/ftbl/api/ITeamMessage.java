@@ -5,7 +5,7 @@ import net.minecraft.util.text.ITextComponent;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 27.02.2017.
+ * @author LatvianModder
  */
 public interface ITeamMessage extends Comparable<ITeamMessage>
 {

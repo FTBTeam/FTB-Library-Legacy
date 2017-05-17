@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 21.12.2016.
+ * @author LatvianModder
  */
 public class SpriteSet
 {

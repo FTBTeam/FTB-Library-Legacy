@@ -6,9 +6,6 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
-/**
- * Created by LatvianModder on 18.02.2017.
- */
 public enum EnumRotation implements IStringSerializable
 {
     NORMAL("normal"),
@@ -16,6 +13,9 @@ public enum EnumRotation implements IStringSerializable
     UPSIDE_DOWN("upside_down"),
     FACING_UP("up");
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumRotation[] VALUES = values();
 
     private final String name;

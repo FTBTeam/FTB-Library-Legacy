@@ -5,7 +5,7 @@ import net.minecraft.util.IStringSerializable;
 import java.io.File;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public interface IPackMode extends IStringSerializable
 {

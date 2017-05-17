@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 08.09.2016.
+ * @author LatvianModder
  */
 public class ServerUtils
 {
@@ -229,6 +229,7 @@ public class ServerUtils
     }
 
     //null - can't, TRUE - always spawns, FALSE - only spawns at night
+    @Nullable
     public static Boolean canMobSpawn(World world, BlockPos pos)
     {
         if(pos.getY() < 0 || pos.getY() >= 256)
@@ -256,6 +257,7 @@ public class ServerUtils
         return Boolean.TRUE;
     }
 
+    @Nullable
     public static Entity getEntityByUUID(World worldObj, UUID uuid)
     {
         for(Entity e : worldObj.loadedEntityList)

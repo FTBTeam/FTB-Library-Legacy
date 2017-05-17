@@ -2,7 +2,7 @@
 	"teams_gui": {
 		"icon": "ftbl:textures/gui/teams.png",
 		"dependencies": "before:*",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftb team gui"
 		},
@@ -12,7 +12,7 @@
 	"settings": {
 		"icon": "ftbl:textures/icons/settings.png",
 		"dependencies": "after:ftbl.teams_gui",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftbc client_config"
 		}
@@ -20,7 +20,7 @@
 	"my_server_settings": {
 		"icon": "ftbl:textures/icons/settings_red.png",
 		"dependencies": "after:ftbl.settings",
-		"clickEvent": {
+		"click": {
 			"action": "run_command",
 			"value": "/ftb my_settings"
 		},

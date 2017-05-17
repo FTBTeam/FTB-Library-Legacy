@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 03.01.2017.
+ * @author LatvianModder
  */
 public class ModelBuilder
 {

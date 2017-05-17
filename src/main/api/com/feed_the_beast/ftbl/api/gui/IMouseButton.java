@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.gui;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public interface IMouseButton
 {

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 10.10.2016.
+ * @author LatvianModder
  */
 public class TickHandler implements ITickable
 {

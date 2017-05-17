@@ -8,7 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
- * Created by LatvianModder on 17.04.2016.
+ * @author LatvianModder
  */
 public final class LangKey implements IStringSerializable
 {

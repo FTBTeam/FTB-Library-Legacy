@@ -17,7 +17,7 @@ import net.minecraft.util.math.MathHelper;
 import java.util.Collections;
 
 /**
- * Created by LatvianModder on 25.01.2017.
+ * @author LatvianModder
  */
 public class DrawableObjectListLine extends EmptyGuidePageLine
 {

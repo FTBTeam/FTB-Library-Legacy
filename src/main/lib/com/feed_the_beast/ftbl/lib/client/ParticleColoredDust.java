@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by LatvianModder on 15.11.2016.
+ * @author LatvianModder
  */
 @SideOnly(Side.CLIENT)
 public class ParticleColoredDust extends ParticleRedstone

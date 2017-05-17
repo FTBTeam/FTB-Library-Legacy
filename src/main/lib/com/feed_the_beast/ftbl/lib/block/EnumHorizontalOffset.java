@@ -3,9 +3,6 @@ package com.feed_the_beast.ftbl.lib.block;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 
-/**
- * Created by LatvianModder on 19.02.2017.
- */
 public enum EnumHorizontalOffset implements IStringSerializable
 {
     CENTER("center", new BlockPos(0, 0, 0)),
@@ -18,6 +15,9 @@ public enum EnumHorizontalOffset implements IStringSerializable
     WEST("west", new BlockPos(-1, 0, 0)),
     NORTH_WEST("north_west", new BlockPos(-1, 0, 1));
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumHorizontalOffset[] VALUES = values();
     private static final EnumHorizontalOffset[] OPPOSITES = {CENTER, SOUTH, SOUTH_WEST, WEST, NORTH_WEST, NORTH, NORTH_EAST, EAST, SOUTH_EAST};
 

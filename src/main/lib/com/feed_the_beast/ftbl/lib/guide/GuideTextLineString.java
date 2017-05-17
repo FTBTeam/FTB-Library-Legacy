@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 /**
- * Created by LatvianModder on 08.08.2016.
+ * @author LatvianModder
  */
 public class GuideTextLineString extends EmptyGuidePageLine
 {

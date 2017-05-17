@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 
 /**
- * Created by LatvianModder on 08.08.2016.
+ * @author LatvianModder
  */
 public abstract class EmptyGuidePageLine implements IGuideTextLine
 {

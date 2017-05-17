@@ -1,8 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-/**
- * Created by LatvianModder on 24.04.2016.
- */
 public enum EnumReloadType
 {
     /**
@@ -20,6 +17,9 @@ public enum EnumReloadType
      */
     RELOAD_COMMAND(true);
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumReloadType[] VALUES = values();
 
     private final boolean command;

@@ -5,10 +5,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 23.02.2017.
+ * @author LatvianModder
  */
 public class ExtendedTextField extends TextField
 {
@@ -46,10 +47,7 @@ public class ExtendedTextField extends TextField
 
         if(data != null && data.hoverEvent != null) //TODO: Special handling for each data.hoverEvent.getAction()
         {
-            for(String s : data.hoverEvent.getValue().getFormattedText().split("\n"))
-            {
-                list.add(s);
-            }
+            Collections.addAll(list, data.hoverEvent.getValue().getFormattedText().split("\n"));
         }
     }
 

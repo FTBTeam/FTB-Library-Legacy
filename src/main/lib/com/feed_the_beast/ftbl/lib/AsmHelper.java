@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 14.10.2016.
+ * @author LatvianModder
  */
 public class AsmHelper
 {
@@ -61,7 +61,7 @@ public class AsmHelper
         if(DUMP_INFO)
         {
             ArrayList<ASMDataTable.ASMData> list = new ArrayList<>(table.getAll(annotationClass.getName()));
-            Collections.sort(list, ASM_DATA_COMPARATOR);
+            list.sort(ASM_DATA_COMPARATOR);
             return list;
         }
 

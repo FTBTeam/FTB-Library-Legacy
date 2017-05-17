@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
 {

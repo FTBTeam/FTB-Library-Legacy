@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 23.03.2016.
+ * @author LatvianModder
  */
 public class GuideListLine extends EmptyGuidePageLine
 {

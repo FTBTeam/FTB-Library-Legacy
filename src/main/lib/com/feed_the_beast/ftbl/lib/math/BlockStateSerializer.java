@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by LatvianModder on 29.04.2016.
+ * @author LatvianModder
  */
 @SideOnly(Side.CLIENT)
 public class BlockStateSerializer extends DefaultStateMapper

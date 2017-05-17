@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by LatvianModder on 18.05.2016.
+ * @author LatvianModder
  */
 public class ForgeTeamEvent extends Event
 {

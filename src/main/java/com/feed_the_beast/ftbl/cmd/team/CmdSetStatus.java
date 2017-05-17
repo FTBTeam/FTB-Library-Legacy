@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 11.11.2016.
+ * @author LatvianModder
  */
 public class CmdSetStatus extends CmdBase
 {

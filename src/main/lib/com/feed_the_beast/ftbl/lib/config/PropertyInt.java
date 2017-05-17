@@ -16,7 +16,7 @@ import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyInt extends PropertyBase implements IntSupplier
 {

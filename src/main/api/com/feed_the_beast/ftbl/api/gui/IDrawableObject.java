@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by LatvianModder on 22.02.2017.
+ * @author LatvianModder
  */
 public interface IDrawableObject
 {

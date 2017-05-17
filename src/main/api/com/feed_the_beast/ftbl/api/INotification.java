@@ -7,7 +7,7 @@ import net.minecraft.util.text.ITextComponent;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 17.08.2016.
+ * @author LatvianModder
  */
 public interface INotification
 {

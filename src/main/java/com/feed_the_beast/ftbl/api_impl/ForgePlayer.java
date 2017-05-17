@@ -34,7 +34,7 @@ import java.io.File;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 09.02.2016.
+ * @author LatvianModder
  */
 public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 {

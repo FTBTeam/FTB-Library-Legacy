@@ -11,7 +11,7 @@ import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
- * Created by LatvianModder on 04.07.2016.
+ * @author LatvianModder
  */
 public class FTBLibStats
 {

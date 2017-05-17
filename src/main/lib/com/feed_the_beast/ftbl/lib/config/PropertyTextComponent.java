@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 24.09.2016.
+ * @author LatvianModder
  */
 public class PropertyTextComponent extends PropertyBase
 {

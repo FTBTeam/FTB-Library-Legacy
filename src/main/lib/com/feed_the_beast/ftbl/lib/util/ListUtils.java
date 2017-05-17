@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * Created by LatvianModder on 06.01.2016.
+ * @author LatvianModder
  */
 public class ListUtils
 {
@@ -107,7 +107,7 @@ public class ListUtils
 
         List<E> list = new ArrayList<>(c.size());
         list.addAll(c);
-        Collections.sort(list, comparator);
+        list.sort(comparator);
         return list;
     }
 

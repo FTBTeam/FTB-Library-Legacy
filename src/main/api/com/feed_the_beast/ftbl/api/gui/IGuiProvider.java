@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 13.11.2016.
+ * @author LatvianModder
  */
 public interface IGuiProvider
 {

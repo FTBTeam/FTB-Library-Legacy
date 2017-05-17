@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 
 /**
- * Created by LatvianModder on 04.07.2016.
+ * @author LatvianModder
  */
 public class StatsLongValue implements IJsonSerializable
 {

@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 09.02.2016.
+ * @author LatvianModder
  */
 public final class ForgePlayerFake extends ForgePlayer
 {

@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Created by LatvianModder on 14.09.2016.
+ * @author LatvianModder
  */
 public class PropertyEnum<E extends Enum<E>> extends PropertyEnumAbstract<E>
 {

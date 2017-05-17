@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 05.02.2017.
+ * @author LatvianModder
  */
 public class PublicTeamData extends FinalIDObject implements Comparable<PublicTeamData>
 {

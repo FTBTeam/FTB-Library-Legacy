@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.item;
 
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
@@ -22,7 +21,7 @@ public class ItemStackSerializer
             return ItemStackTools.getEmptyStack();
         }
 
-        String[] s1 = input.split(" "); //TODO: Use split limit
+        String[] s1 = input.split(" ", 4); //TODO: Use split limit
 
         if(s1.length == 0)
         {
@@ -50,11 +49,11 @@ public class ItemStackSerializer
 
         ItemStack itemstack = new ItemStack(item, stackSize, meta);
 
-        if(s1.length > 3)
+        if(s1.length >= 4)
         {
             try
             {
-                itemstack.setTagCompound(JsonToNBT.getTagFromJson(StringUtils.joinSpaceUntilEnd(3, s1)));
+                itemstack.setTagCompound(JsonToNBT.getTagFromJson(s1[3]));
             }
             catch(Exception ex)
             {

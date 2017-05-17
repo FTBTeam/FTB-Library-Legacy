@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyShort extends PropertyInt
 {
     public static final String ID = "short";
+
+    private boolean unsigned = false;
 
     public PropertyShort()
     {
@@ -26,6 +26,24 @@ public class PropertyShort extends PropertyInt
         super(v, min, max);
     }
 
+    public PropertyShort(int v, int min, int max, boolean u)
+    {
+        this(v, min, max);
+        unsigned = u;
+    }
+
+    public PropertyShort setUnsigned()
+    {
+        unsigned = true;
+        return this;
+    }
+
+    @Override
+    public void setInt(int v)
+    {
+        super.setInt(unsigned ? (v & 0xFFFF) : ((short) v));
+    }
+
     @Override
     public String getName()
     {
@@ -35,24 +53,13 @@ public class PropertyShort extends PropertyInt
     @Override
     public IConfigValue copy()
     {
-        return new PropertyShort(getInt(), getMin(), getMax());
-    }
-
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        setInt(json.getAsInt());
-    }
-
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getInt());
+        return new PropertyShort(getInt(), getMin(), getMax(), unsigned);
     }
 
     @Override
     public void writeData(ByteBuf data)
     {
+        data.writeBoolean(unsigned);
         data.writeShort(getInt());
         data.writeShort(getMin());
         data.writeShort(getMax());
@@ -61,8 +68,9 @@ public class PropertyShort extends PropertyInt
     @Override
     public void readData(ByteBuf data)
     {
-        setInt(data.readShort());
-        setMin(data.readShort());
-        setMax(data.readShort());
+        unsigned = data.readBoolean();
+        setInt(unsigned ? data.readUnsignedShort() : data.readShort());
+        setMin(unsigned ? data.readUnsignedShort() : data.readShort());
+        setMax(unsigned ? data.readUnsignedShort() : data.readShort());
     }
 }

@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 /**
- * Created by LatvianModder on 20.06.2016.
+ * @author LatvianModder
  */
 public class CmdTransferOwnership extends CmdBase
 {

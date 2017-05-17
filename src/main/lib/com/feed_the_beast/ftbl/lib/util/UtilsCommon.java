@@ -28,7 +28,12 @@ public class UtilsCommon
         return I18n.canTranslate(key);
     }
 
-    public void spawnDust(World worldObj, double x, double y, double z, Color4I i)
+    public void spawnDust(World world, double x, double y, double z, float r, float g, float b, float a)
     {
+    }
+
+    public void spawnDust(World world, double x, double y, double z, Color4I col)
+    {
+        spawnDust(world, x, y, z, col.redf(), col.greenf(), col.bluef(), col.alphaf());
     }
 }

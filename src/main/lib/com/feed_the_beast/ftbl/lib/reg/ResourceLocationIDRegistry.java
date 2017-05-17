@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.reg;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by LatvianModder on 17.09.2016.
+ * @author LatvianModder
  */
 public class ResourceLocationIDRegistry extends IDRegistry<ResourceLocation>
 {

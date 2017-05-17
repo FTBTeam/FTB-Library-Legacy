@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 10.10.2016.
+ * @author LatvianModder
  */
 public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 {

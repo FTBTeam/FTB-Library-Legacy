@@ -40,7 +40,7 @@ public final class EntityDimPos
 
     public boolean equalsPos(EntityDimPos p)
     {
-        return (p == this) || (p != null && pos.xCoord == p.pos.xCoord && pos.yCoord == p.pos.yCoord && pos.zCoord == p.pos.zCoord && dim == p.dim);
+        return p == this || (pos.xCoord == p.pos.xCoord && pos.yCoord == p.pos.yCoord && pos.zCoord == p.pos.zCoord && dim == p.dim);
     }
 
     public boolean equals(Object o)

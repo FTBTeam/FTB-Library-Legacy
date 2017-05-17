@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 09.06.2016.
+ * @author LatvianModder
  */
 public abstract class GuiBase extends Panel implements IClientActionGui
 {

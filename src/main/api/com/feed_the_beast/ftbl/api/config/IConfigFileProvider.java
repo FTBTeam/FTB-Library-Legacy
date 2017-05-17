@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 
 /**
- * Created by LatvianModder on 17.09.2016.
+ * @author LatvianModder
  */
 public interface IConfigFileProvider
 {

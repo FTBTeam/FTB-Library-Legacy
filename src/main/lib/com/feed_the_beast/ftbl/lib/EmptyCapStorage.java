@@ -5,7 +5,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 
 /**
- * Created by LatvianModder on 06.08.2016.
+ * @author LatvianModder
  */
 public class EmptyCapStorage<T> implements Capability.IStorage<T>
 {

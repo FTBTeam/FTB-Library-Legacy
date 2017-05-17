@@ -3,15 +3,15 @@ package com.feed_the_beast.ftbl.api.guide;
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 
-/**
- * Created by PC on 02.10.2016.
- */
 public enum GuideFormat implements IStringSerializable
 {
     JSON("json"),
     MD("md"),
     UNSUPPORTED("unsupported");
 
+    /**
+     * @author LatvianModder
+     */
     private static final EnumNameMap<GuideFormat> NAME_MAP = new EnumNameMap<>(values(), false);
 
     private final String name;

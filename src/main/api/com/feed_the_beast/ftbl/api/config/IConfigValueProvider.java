@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.config;
 
 /**
- * Created by LatvianModder on 17.09.2016.
+ * @author LatvianModder
  */
 public interface IConfigValueProvider
 {

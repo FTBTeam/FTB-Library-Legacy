@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 05.06.2016.
+ * @author LatvianModder
  */
 public final class EnumNameMap<E extends Enum<E>>
 {

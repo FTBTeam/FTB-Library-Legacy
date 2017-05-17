@@ -9,7 +9,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
 /**
- * Created by LatvianModder on 02.09.2016.
+ * @author LatvianModder
  */
 public class SpecialGuideButton
 {
@@ -28,7 +28,7 @@ public class SpecialGuideButton
     {
         title = o.has("title") ? JsonUtils.deserializeTextComponent(o.get("title")) : new TextComponentString("");
         icon = o.has("icon") ? ImageProvider.get(o.get("icon")) : ImageProvider.NULL;
-        clickEvent = o.has("clickEvent") ? JsonUtils.deserializeClickEvent(o.get("clickEvent")) : null;
+        clickEvent = o.has("click") ? JsonUtils.deserializeClickEvent(o.get("click")) : null;
     }
 
     public JsonObject serialize()
@@ -38,7 +38,7 @@ public class SpecialGuideButton
         o.add("icon", icon.getJson());
         if(clickEvent != null)
         {
-            o.add("clickEvent", JsonUtils.serializeClickEvent(clickEvent));
+            o.add("click", JsonUtils.serializeClickEvent(clickEvent));
         }
         return o;
     }

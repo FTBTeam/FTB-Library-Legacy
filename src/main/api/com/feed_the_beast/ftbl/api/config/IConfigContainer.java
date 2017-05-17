@@ -8,7 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 07.06.2016.
+ * @author LatvianModder
  */
 public interface IConfigContainer
 {

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by LatvianModder on 15.01.2017.
+ * @author LatvianModder
  */
 public interface IImageProvider extends IDrawableObject
 {

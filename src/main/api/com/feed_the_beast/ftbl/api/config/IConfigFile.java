@@ -7,7 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 12.09.2016.
+ * @author LatvianModder
  */
 public interface IConfigFile extends IConfigTree, IConfigContainer
 {

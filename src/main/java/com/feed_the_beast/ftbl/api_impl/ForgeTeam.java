@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 26.05.2016.
+ * @author LatvianModder
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {

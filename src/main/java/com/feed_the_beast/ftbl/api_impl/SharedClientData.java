@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
 
 /**
- * Created by LatvianModder on 12.11.2016.
+ * @author LatvianModder
  */
 public class SharedClientData extends SharedData implements ISharedClientData
 {

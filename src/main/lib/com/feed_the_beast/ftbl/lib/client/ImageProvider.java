@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 12.06.2016.
+ * @author LatvianModder
  */
 public class ImageProvider implements IImageProvider
 {

@@ -8,7 +8,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 19.03.2017.
+ * @author LatvianModder
  */
 public class BlockPosContainer
 {

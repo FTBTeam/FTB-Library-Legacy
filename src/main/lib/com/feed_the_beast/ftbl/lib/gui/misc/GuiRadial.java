@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 13.02.2017.
+ * @author LatvianModder
  */
 public class GuiRadial extends GuiBase
 {

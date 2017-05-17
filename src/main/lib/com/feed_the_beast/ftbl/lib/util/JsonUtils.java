@@ -128,6 +128,11 @@ public class JsonUtils
 
     public static JsonElement fromJson(Reader json)
     {
+        if(json == null)
+        {
+            return JsonNull.INSTANCE;
+        }
+
         try
         {
             JsonElement element = PARSER.parse(json);
@@ -234,7 +239,10 @@ public class JsonUtils
             return JsonNull.INSTANCE;
         }
 
-        return null;
+        JsonObject o = new JsonObject();
+        o.add("action", new JsonPrimitive(event.getAction().getCanonicalName()));
+        o.add("value", new JsonPrimitive(event.getValue()));
+        return o;
     }
 
     @Nullable
@@ -331,7 +339,7 @@ public class JsonUtils
         return o1;
     }
 
-    private static String lastKeyPart(String s)
+    private static String lastKeyPart(@Nonnull String s)
     {
         int idx = s.lastIndexOf('.');
 

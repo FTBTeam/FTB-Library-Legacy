@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyByte extends PropertyInt
 {
     public static final String ID = "byte";
+
+    private boolean unsigned = false;
 
     public PropertyByte()
     {
@@ -26,6 +26,24 @@ public class PropertyByte extends PropertyInt
         super(v, min, max);
     }
 
+    public PropertyByte(int v, int min, int max, boolean u)
+    {
+        this(v, min, max);
+        unsigned = u;
+    }
+
+    public PropertyByte setUnsigned()
+    {
+        unsigned = true;
+        return this;
+    }
+
+    @Override
+    public void setInt(int v)
+    {
+        super.setInt(unsigned ? (v & 0xFF) : ((byte) v));
+    }
+
     @Override
     public String getName()
     {
@@ -35,24 +53,13 @@ public class PropertyByte extends PropertyInt
     @Override
     public IConfigValue copy()
     {
-        return new PropertyByte(getInt(), getMin(), getMax());
-    }
-
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        setInt(json.getAsInt());
-    }
-
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getInt());
+        return new PropertyByte(getInt(), getMin(), getMax(), unsigned);
     }
 
     @Override
     public void writeData(ByteBuf data)
     {
+        data.writeBoolean(unsigned);
         data.writeByte(getInt());
         data.writeByte(getMin());
         data.writeByte(getMax());
@@ -61,8 +68,9 @@ public class PropertyByte extends PropertyInt
     @Override
     public void readData(ByteBuf data)
     {
-        setInt(data.readByte());
-        setMin(data.readByte());
-        setMax(data.readByte());
+        unsigned = data.readBoolean();
+        setInt(unsigned ? data.readUnsignedByte() : data.readByte());
+        setMin(unsigned ? data.readUnsignedByte() : data.readByte());
+        setMax(unsigned ? data.readUnsignedByte() : data.readByte());
     }
 }

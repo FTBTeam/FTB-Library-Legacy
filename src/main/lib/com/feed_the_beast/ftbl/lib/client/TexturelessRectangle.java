@@ -10,7 +10,7 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
- * Created by LatvianModder on 24.02.2017.
+ * @author LatvianModder
  */
 public class TexturelessRectangle implements IDrawableObject
 {

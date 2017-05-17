@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
 /**
- * Created by LatvianModder on 15.11.2016.
+ * @author LatvianModder
  */
 public interface IFTBLibPlugin
 {

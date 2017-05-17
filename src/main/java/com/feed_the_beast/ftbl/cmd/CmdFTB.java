@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
- * Created by LatvianModder on 08.06.2016.
+ * @author LatvianModder
  */
 public class CmdFTB extends CmdTreeBase
 {

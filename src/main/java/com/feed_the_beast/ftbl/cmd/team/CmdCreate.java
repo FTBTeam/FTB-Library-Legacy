@@ -15,7 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
- * Created by LatvianModder on 20.06.2016.
+ * @author LatvianModder
  */
 public class CmdCreate extends CmdBase
 {
@@ -26,7 +26,7 @@ public class CmdCreate extends CmdBase
 
     private static boolean isValidTeamID(String s)
     {
-        if(s != null && !s.isEmpty())
+        if(!s.isEmpty())
         {
             for(int i = 0; i < s.length(); i++)
             {

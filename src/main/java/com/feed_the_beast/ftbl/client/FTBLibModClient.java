@@ -264,6 +264,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
     }
 
     @Override
+    @Nullable
     public IConfigFile getClientConfig()
     {
         return clientConfig;

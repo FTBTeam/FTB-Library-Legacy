@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 
 /**
- * Created by LatvianModder on 31.07.2016.
+ * @author LatvianModder
  */
 public class FTBLibNotifications
 {

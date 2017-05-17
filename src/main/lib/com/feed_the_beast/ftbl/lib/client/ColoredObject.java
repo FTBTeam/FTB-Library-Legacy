@@ -9,7 +9,7 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
- * Created by LatvianModder on 23.02.2017.
+ * @author LatvianModder
  */
 public class ColoredObject implements IDrawableObject
 {

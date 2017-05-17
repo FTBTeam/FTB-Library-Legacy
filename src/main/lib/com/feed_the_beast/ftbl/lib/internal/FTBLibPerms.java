@@ -4,7 +4,7 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
- * Created by LatvianModder on 10.11.2016.
+ * @author LatvianModder
  */
 public class FTBLibPerms
 {

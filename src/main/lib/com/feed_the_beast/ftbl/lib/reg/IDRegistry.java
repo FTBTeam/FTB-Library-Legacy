@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 17.08.2016.
+ * @author LatvianModder
  */
 public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 {

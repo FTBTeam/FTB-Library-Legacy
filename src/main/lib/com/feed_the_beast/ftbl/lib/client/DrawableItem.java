@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 24.02.2017.
+ * @author LatvianModder
  */
 public class DrawableItem implements IDrawableObject
 {

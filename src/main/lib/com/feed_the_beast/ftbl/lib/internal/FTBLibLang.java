@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.internal;
 import com.feed_the_beast.ftbl.lib.LangKey;
 
 /**
- * Created by LatvianModder on 13.04.2016.
+ * @author LatvianModder
  */
 public class FTBLibLang
 {

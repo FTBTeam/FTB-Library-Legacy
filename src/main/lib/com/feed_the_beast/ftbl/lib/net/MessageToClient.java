@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 14.05.2016.
+ * @author LatvianModder
  */
 public abstract class MessageToClient<E extends MessageToClient<E>> extends MessageBase<E>
 {

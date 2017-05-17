@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * Created by LatvianModder on 10.09.2016.
+ * @author LatvianModder
  */
 public interface ISyncData
 {

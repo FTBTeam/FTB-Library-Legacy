@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by LatvianModder on 11.09.2016.
+ * @author LatvianModder
  */
 public interface IConfigValue extends IStringSerializable, IExtendedIOObject, IJsonSerializable
 {

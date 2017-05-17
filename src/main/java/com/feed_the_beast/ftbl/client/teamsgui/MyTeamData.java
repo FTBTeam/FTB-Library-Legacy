@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 05.02.2017.
+ * @author LatvianModder
  */
 public class MyTeamData extends FinalIDObject
 {

@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 31.07.2016.
+ * @author LatvianModder
  */
 public class NetUtils
 {

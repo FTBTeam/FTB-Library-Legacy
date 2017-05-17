@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.lib.Color4I;
 
 /**
- * Created by LatvianModder on 02.03.2017.
+ * @author LatvianModder
  */
 public abstract class CentredTextButton extends Button
 {

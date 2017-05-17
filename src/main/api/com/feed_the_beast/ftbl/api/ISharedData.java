@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public interface ISharedData
 {

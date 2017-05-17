@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by LatvianModder on 23.01.2016.
+ * @author LatvianModder
  */
 public class JsonElementIO
 {

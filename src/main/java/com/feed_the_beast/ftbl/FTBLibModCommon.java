@@ -325,6 +325,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
         return storage.isEmpty() ? null : storage;
     }
 
+    @Nullable
     public IConfigFile getClientConfig()
     {
         return null;

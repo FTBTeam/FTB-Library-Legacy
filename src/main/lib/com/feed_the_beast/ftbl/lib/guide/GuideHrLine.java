@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 /**
- * Created by LatvianModder on 23.03.2016.
+ * @author LatvianModder
  */
 public class GuideHrLine extends EmptyGuidePageLine
 {

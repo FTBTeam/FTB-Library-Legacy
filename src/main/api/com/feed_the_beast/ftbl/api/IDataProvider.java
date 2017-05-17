@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
- * Created by LatvianModder on 13.11.2016.
+ * @author LatvianModder
  */
 public interface IDataProvider<T>
 {

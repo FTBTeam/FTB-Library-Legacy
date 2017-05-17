@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 19.01.2017.
+ * @author LatvianModder
  */
 public class BasicConfigContainer implements IConfigContainer
 {

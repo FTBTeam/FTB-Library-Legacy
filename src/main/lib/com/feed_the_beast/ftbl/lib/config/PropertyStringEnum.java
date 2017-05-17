@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyStringEnum extends PropertyBase
 {

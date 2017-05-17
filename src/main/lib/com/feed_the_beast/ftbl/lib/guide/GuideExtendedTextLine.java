@@ -12,7 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 20.03.2016.
+ * @author LatvianModder
  */
 public class GuideExtendedTextLine extends EmptyGuidePageLine
 {

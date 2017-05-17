@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 04.03.2016.
+ * @author LatvianModder
  */
 public class TextField extends Button
 {

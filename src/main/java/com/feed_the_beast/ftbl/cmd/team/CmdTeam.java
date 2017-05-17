@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 
 /**
- * Created by LatvianModder on 29.05.2016.
+ * @author LatvianModder
  */
 public class CmdTeam extends CmdTreeBase
 {

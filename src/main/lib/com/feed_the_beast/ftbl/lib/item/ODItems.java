@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.item;
 
+import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -121,7 +122,7 @@ public class ODItems
         {
             return l.get(0);
         }
-        return null;
+        return ItemStackTools.getEmptyStack();
     }
 
     public static boolean hasOre(String s)

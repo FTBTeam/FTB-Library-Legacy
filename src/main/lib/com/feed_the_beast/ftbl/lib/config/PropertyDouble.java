@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.DoubleSupplier;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyDouble extends PropertyBase implements DoubleSupplier
 {

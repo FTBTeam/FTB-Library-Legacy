@@ -9,7 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 
 /**
- * Created by LatvianModder on 29.05.2016.
+ * @author LatvianModder
  */
 public class CmdMySettings extends CmdEditConfigBase
 {

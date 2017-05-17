@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.IUniverse;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * Created by LatvianModder on 18.05.2016.
+ * @author LatvianModder
  */
 public abstract class ForgeUniverseEvent extends Event
 {

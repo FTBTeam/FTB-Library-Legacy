@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 import javax.annotation.Nullable;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyJson extends PropertyBase
 {

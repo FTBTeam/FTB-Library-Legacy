@@ -5,7 +5,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
 /**
- * Created by LatvianModder on 29.01.2016.
+ * @author LatvianModder
  */
 public final class BlockDimPos
 {
@@ -89,6 +89,6 @@ public final class BlockDimPos
 
     public boolean equalsPos(BlockDimPos p)
     {
-        return p != null && (p == this || (p.dim == dim && p.posX == posX && p.posY == posY && p.posZ == posZ));
+        return p == this || (p.dim == dim && p.posX == posX && p.posY == posY && p.posZ == posZ);
     }
 }

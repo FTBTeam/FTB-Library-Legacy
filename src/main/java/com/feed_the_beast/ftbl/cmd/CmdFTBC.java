@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
- * Created by LatvianModder on 08.06.2016.
+ * @author LatvianModder
  */
 public class CmdFTBC extends CmdTreeBase
 {

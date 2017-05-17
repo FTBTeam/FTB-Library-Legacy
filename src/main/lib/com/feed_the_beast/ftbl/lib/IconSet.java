@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 21.12.2016.
+ * @author LatvianModder
  */
 public class IconSet
 {

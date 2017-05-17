@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -27,6 +28,7 @@ import java.util.function.Predicate;
  */
 public class InvUtils
 {
+    private static Boolean baublesLoaded = null;
     private static Method baublesMethod = null;
     public static final ItemStack ERROR_ITEM = new ItemStack(Blocks.BARRIER);
 
@@ -72,7 +74,6 @@ public class InvUtils
         }
     }
 
-    @Nullable
     public static ItemStack transferStackInSlot(Container container, int index, int nonPlayerSlots)
     {
         if(nonPlayerSlots <= 0)
@@ -113,7 +114,6 @@ public class InvUtils
         return is;
     }
 
-    @Nullable
     public static ItemStack getAndSplit(IItemHandlerModifiable itemHandler, int index, int amount)
     {
         if(index >= 0 && index < itemHandler.getSlots() && !ItemStackTools.isEmpty(itemHandler.getStackInSlot(index)) && amount > 0)
@@ -131,7 +131,6 @@ public class InvUtils
         return ItemStackTools.getEmptyStack();
     }
 
-    @Nullable
     public static ItemStack getAndRemove(IItemHandlerModifiable itemHandler, int index)
     {
         ItemStack itemStack = itemHandler.getStackInSlot(index);
@@ -175,7 +174,7 @@ public class InvUtils
         dropItem(e.world, e.posX, e.posY, e.posZ, item, 0);
     }
 
-    public static void giveItem(EntityPlayer ep, @Nullable ItemStack item)
+    public static void giveItem(EntityPlayer ep, ItemStack item)
     {
         if(!ItemStackTools.isEmpty(item))
         {
@@ -225,7 +224,7 @@ public class InvUtils
         }
     }
 
-    public static boolean isWrench(@Nullable ItemStack is)
+    public static boolean isWrench(ItemStack is)
     {
         return !ItemStackTools.isEmpty(is) && is.getItem().getHarvestLevel(is, ToolType.WRENCH.getName(), null, null) >= ToolLevel.BASIC.ordinal();
     }
@@ -268,6 +267,16 @@ public class InvUtils
     @Nullable
     public static IInventory getBaubles(EntityPlayer player)
     {
+        if(baublesLoaded == null)
+        {
+            baublesLoaded = Loader.isModLoaded("Baubles");
+        }
+
+        if(!baublesLoaded)
+        {
+            return null;
+        }
+
         IInventory ot = null;
 
         try

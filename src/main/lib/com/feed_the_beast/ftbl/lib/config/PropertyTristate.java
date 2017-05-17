@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyTristate extends PropertyBase
 {

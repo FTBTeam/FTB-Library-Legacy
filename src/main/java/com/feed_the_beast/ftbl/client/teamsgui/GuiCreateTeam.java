@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 24.02.2017.
+ * @author LatvianModder
  */
 public class GuiCreateTeam extends GuiBase
 {

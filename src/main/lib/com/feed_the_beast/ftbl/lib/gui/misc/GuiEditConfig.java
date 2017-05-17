@@ -258,7 +258,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
         if(!list.isEmpty())
         {
-            Collections.sort(list, COMPARATOR);
+            list.sort(COMPARATOR);
             ButtonConfigGroup group = null;
 
             for(Map.Entry<IConfigKey, IConfigValue> entry : list)

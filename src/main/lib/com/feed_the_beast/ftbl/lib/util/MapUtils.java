@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 06.01.2016.
+ * @author LatvianModder
  */
 public class MapUtils
 {

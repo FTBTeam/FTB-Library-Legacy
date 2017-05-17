@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by LatvianModder on 11.11.2016.
+ * @author LatvianModder
  */
 public class GuiConfigs
 {

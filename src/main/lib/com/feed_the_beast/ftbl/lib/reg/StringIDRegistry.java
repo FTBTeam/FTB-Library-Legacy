@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.reg;
 
 /**
- * Created by LatvianModder on 17.09.2016.
+ * @author LatvianModder
  */
 public class StringIDRegistry extends IDRegistry<String>
 {

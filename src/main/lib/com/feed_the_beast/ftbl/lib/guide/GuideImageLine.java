@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -24,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 23.03.2016.
+ * @author LatvianModder
  */
 public class GuideImageLine extends EmptyGuidePageLine
 {
@@ -74,9 +75,9 @@ public class GuideImageLine extends EmptyGuidePageLine
             }
         }
 
-        if(o.has("clickEvent"))
+        if(o.has("click"))
         {
-            clickEvent = JsonUtils.deserializeClickEvent(o.get("clickEvent"));
+            clickEvent = JsonUtils.deserializeClickEvent(o.get("click"));
         }
 
         if(o.has("hover"))
@@ -85,7 +86,8 @@ public class GuideImageLine extends EmptyGuidePageLine
 
             for(JsonElement e1 : o.get("hover").getAsJsonArray())
             {
-                hover.add(JsonUtils.deserializeTextComponent(e1).getFormattedText());
+                ITextComponent c = JsonUtils.deserializeTextComponent(e1);
+                hover.add(c == null ? "" : c.getFormattedText());
             }
         }
 

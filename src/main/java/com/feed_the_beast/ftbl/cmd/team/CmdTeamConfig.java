@@ -12,7 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
- * Created by LatvianModder on 20.06.2016.
+ * @author LatvianModder
  */
 public class CmdTeamConfig extends CmdEditConfigBase
 {

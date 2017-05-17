@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 12.09.2016.
+ * @author LatvianModder
  */
 public interface IConfigTree extends IExtendedIOObject, IJsonSerializable
 {

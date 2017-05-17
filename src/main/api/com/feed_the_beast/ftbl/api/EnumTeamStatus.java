@@ -8,9 +8,6 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
-/**
- * Created by LatvianModder on 26.05.2016.
- */
 public enum EnumTeamStatus implements IStringSerializable
 {
     ENEMY(-10, "enemy", TextFormatting.RED, true),
@@ -22,6 +19,9 @@ public enum EnumTeamStatus implements IStringSerializable
     MOD(80, "mod", TextFormatting.DARK_PURPLE, true),
     OWNER(100, "owner", TextFormatting.GOLD, false);
 
+    /**
+     * @author LatvianModder
+     */
     public static final EnumTeamStatus[] VALUES = values();
     public static final EnumNameMap<EnumTeamStatus> NAME_MAP = new EnumNameMap<>(VALUES, false);
     public static final Collection<EnumTeamStatus> VALID_VALUES = new LinkedHashSet<>();

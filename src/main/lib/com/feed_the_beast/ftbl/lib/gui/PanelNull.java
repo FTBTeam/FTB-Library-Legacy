@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 13.02.2017.
+ * @author LatvianModder
  */
 public class PanelNull extends Panel
 {

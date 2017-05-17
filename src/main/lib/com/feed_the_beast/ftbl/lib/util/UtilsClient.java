@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ParticleColoredDust;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -32,8 +31,8 @@ public class UtilsClient extends UtilsCommon
     }
 
     @Override
-    public void spawnDust(World w, double x, double y, double z, Color4I col)
+    public void spawnDust(World world, double x, double y, double z, float r, float g, float b, float a)
     {
-        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleColoredDust(w, x, y, z, col.redf(), col.greenf(), col.bluef(), col.alphaf()));
+        Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleColoredDust(world, x, y, z, r, g, b, a));
     }
 }

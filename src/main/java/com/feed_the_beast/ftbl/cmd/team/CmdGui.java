@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 24.02.2017.
+ * @author LatvianModder
  */
 public class CmdGui extends CmdBase
 {

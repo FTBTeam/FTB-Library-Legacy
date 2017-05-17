@@ -184,4 +184,59 @@ public final class Color4I
             set(MathHelper.clamp(red + b, 0, 255), MathHelper.clamp(green + b, 0, 255), MathHelper.clamp(blue + b, 0, 255), alpha);
         }
     }
+
+    public void setFromHSB(float h, float s, float b)
+    {
+        if(!canEdit)
+        {
+            return;
+        }
+
+        red = green = blue = 0;
+        if(s == 0)
+        {
+            red = green = blue = (int) (b * 255F + 0.5F);
+        }
+        else
+        {
+            float h6 = (h - MathHelper.floor(h)) * 6F;
+            float f = h6 - MathHelper.floor(h6);
+            float p = b * (1F - s);
+            float q = b * (1F - s * f);
+            float t = b * (1F - (s * (1F - f)));
+            switch((int) h6)
+            {
+                case 0:
+                    red = (int) (b * 255F + 0.5F);
+                    green = (int) (t * 255F + 0.5F);
+                    blue = (int) (p * 255F + 0.5F);
+                    break;
+                case 1:
+                    red = (int) (q * 255F + 0.5F);
+                    green = (int) (b * 255F + 0.5F);
+                    blue = (int) (p * 255F + 0.5F);
+                    break;
+                case 2:
+                    red = (int) (p * 255F + 0.5F);
+                    green = (int) (b * 255F + 0.5F);
+                    blue = (int) (t * 255F + 0.5F);
+                    break;
+                case 3:
+                    red = (int) (p * 255F + 0.5F);
+                    green = (int) (q * 255F + 0.5F);
+                    blue = (int) (b * 255F + 0.5F);
+                    break;
+                case 4:
+                    red = (int) (t * 255F + 0.5F);
+                    green = (int) (p * 255F + 0.5F);
+                    blue = (int) (b * 255F + 0.5F);
+                    break;
+                case 5:
+                    red = (int) (b * 255F + 0.5F);
+                    green = (int) (p * 255F + 0.5F);
+                    blue = (int) (q * 255F + 0.5F);
+                    break;
+            }
+        }
+    }
 }

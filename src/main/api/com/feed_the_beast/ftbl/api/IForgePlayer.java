@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 {

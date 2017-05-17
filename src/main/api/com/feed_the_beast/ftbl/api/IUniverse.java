@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public interface IUniverse
 {

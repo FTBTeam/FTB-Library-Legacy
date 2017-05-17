@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import javax.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -224,22 +223,16 @@ public class FileUtils
         return new File(c.getProtectionDomain().getCodeSource().getLocation().getFile());
     }
 
-    @Nullable
     public static String getRawFileName(File f)
     {
-        if(!f.exists())
-        {
-            return null;
-        }
-        else if(f.isDirectory())
+        if(f.isDirectory())
         {
             return f.getName();
         }
-        else if(f.isFile())
+        else
         {
             String s = f.getName();
             return s.substring(0, s.lastIndexOf('.'));
         }
-        return null;
     }
 }

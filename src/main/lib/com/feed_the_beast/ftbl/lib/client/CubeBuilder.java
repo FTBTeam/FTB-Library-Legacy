@@ -6,9 +6,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CubeBuilder
 {
     public static class Face
@@ -22,14 +19,12 @@ public class CubeBuilder
     }
 
     private final CachedVertexData data;
-    private final List<Face> faces;
     private double minX, minY, minZ, maxX, maxY, maxZ;
     private double minU, minV, maxU, maxV;
 
     public CubeBuilder(VertexFormat f)
     {
         data = new CachedVertexData(GL11.GL_QUADS, f);
-        faces = new ArrayList<>();
     }
 
     public CubeBuilder setSize(double x0, double y0, double z0, double x1, double y1, double z1)

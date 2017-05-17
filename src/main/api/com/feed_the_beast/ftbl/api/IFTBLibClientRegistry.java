@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by LatvianModder on 15.11.2016.
+ * @author LatvianModder
  */
 public interface IFTBLibClientRegistry
 {

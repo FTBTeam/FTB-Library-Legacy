@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by LatvianModder on 09.02.2016.
+ * @author LatvianModder
  */
 public class Universe implements IUniverse
 {

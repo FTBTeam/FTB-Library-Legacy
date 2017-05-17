@@ -13,7 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.ForgeHooks;
 
 /**
- * Created by LatvianModder on 27.02.2017.
+ * @author LatvianModder
  */
 public class CmdMsg extends CmdBase
 {

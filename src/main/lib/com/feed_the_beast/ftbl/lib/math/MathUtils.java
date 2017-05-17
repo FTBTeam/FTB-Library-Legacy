@@ -3,8 +3,6 @@ package com.feed_the_beast.ftbl.lib.math;
 import net.minecraft.block.BlockLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -424,6 +422,7 @@ public class MathUtils
         return collisionRayTrace(w, blockPos, start, end, boxesa);
     }
 
+    @Nullable
     public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, AxisAlignedBB aabb)
     {
         Vec3d pos = start.addVector(-blockPos.getX(), -blockPos.getY(), -blockPos.getZ());
@@ -462,7 +461,7 @@ public class MathUtils
         }
         Vec3d v = null;
 
-        if(xmin != null && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v)))
+        if(xmin != null)// && (v == null || pos.squareDistanceTo(xmin) < pos.squareDistanceTo(v)))
         {
             v = xmin;
         }
@@ -594,15 +593,5 @@ public class MathUtils
     public static boolean intersects(double ax1, double ay1, double ax2, double ay2, double bx1, double by1, double bx2, double by2)
     {
         return ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1;
-    }
-
-    public static BlockPos offsetIfItemBlock(BlockPos pos, @Nullable EnumFacing facing, @Nullable ItemStack stack)
-    {
-        if(facing != null && stack != null && stack.getItem() != null && stack.getItem() instanceof ItemBlock)
-        {
-            pos = pos.offset(facing);
-        }
-
-        return pos;
     }
 }

@@ -12,13 +12,13 @@ import io.netty.buffer.ByteBuf;
 import javax.annotation.Nullable;
 import java.util.List;
 
-/**
- * Created by LatvianModder on 12.09.2016.
- */
 public enum PropertyNull implements IConfigValue
 {
     INSTANCE;
 
+    /**
+     * @author LatvianModder
+     */
     public static final String ID = "null";
     public static final Color4I COLOR = new Color4I(false, 0xFF333333);
 

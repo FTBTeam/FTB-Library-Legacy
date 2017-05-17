@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 import java.io.IOException;
 
 /**
- * Created by LatvianModder on 09.06.2016.
+ * @author LatvianModder
  */
 public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionGui
 {

@@ -16,7 +16,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public class PropertyBool extends PropertyBase implements BooleanSupplier
 {

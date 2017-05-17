@@ -10,7 +10,7 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 
 /**
- * Created by LatvianModder on 12.11.2016.
+ * @author LatvianModder
  */
 public class SharedServerData extends SharedData implements ISharedServerData, IJsonSerializable
 {

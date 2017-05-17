@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 
 /**
- * Created by LatvianModder on 23.04.2016.
+ * @author LatvianModder
  */
 public class MouseButton implements IMouseButton
 {

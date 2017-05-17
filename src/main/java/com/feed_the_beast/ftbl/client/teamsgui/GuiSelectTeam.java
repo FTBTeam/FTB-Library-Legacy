@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 24.02.2017.
+ * @author LatvianModder
  */
 public class GuiSelectTeam extends GuiBase
 {

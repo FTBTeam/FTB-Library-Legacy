@@ -51,9 +51,9 @@ public class SidebarButton extends FinalIDObject
         {
             setDependencies(o.get("dependencies").getAsString());
         }
-        if(o.has("clickEvent"))
+        if(o.has("click"))
         {
-            clickEvent = JsonUtils.deserializeClickEvent(o.get("clickEvent"));
+            clickEvent = JsonUtils.deserializeClickEvent(o.get("click"));
         }
         if(o.has("config"))
         {

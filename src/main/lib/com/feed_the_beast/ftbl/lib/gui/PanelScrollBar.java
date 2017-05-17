@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 import net.minecraft.util.EnumFacing;
 
 /**
- * Created by LatvianModder on 24.02.2017.
+ * @author LatvianModder
  */
 public class PanelScrollBar extends Slider
 {

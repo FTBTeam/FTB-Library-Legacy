@@ -56,7 +56,7 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Created by LatvianModder on 11.08.2016.
+ * @author LatvianModder
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {

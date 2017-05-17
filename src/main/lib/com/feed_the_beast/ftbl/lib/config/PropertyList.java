@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by LatvianModder on 26.08.2016.
+ * @author LatvianModder
  */
 public final class PropertyList extends PropertyBase implements Iterable<IConfigValue>
 {
@@ -50,7 +50,6 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
         return ID;
     }
 
-    @Nullable
     @Override
     public Object getValue()
     {
