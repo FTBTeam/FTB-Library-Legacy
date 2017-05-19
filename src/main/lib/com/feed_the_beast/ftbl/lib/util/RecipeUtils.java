@@ -7,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -64,6 +63,18 @@ public class RecipeUtils
 
     public static void addCircularRecipe(ItemStack out, Object center, Object around)
     {
-        GameRegistry.addRecipe(new ShapedOreRecipe(out, "AAA", "ACA", "AAA", 'C', fixObject(center), 'A', fixObject(around)));
+        addRecipe(out, "AAA", "ACA", "AAA", 'C', center, 'A', around);
+    }
+
+    public static void addCheckerboardRecipe(ItemStack out, @Nullable Object center, Object inner, Object outer)
+    {
+        if(center == null)
+        {
+            addRecipe(out, "OIO", "ICI", "OIO", 'I', inner, 'O', outer);
+        }
+        else
+        {
+            addRecipe(out, "OIO", "ICI", "OIO", 'C', center, 'I', inner, 'O', outer);
+        }
     }
 }

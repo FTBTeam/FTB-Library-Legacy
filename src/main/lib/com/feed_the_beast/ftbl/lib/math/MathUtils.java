@@ -51,6 +51,9 @@ public class MathUtils
     public static final int OPPOSITE[] = {1, 0, 3, 2, 5, 4};
     public static final int OPPOSITE_BIT[] = {2, 1, 8, 4, 32, 16};
 
+    public static final int ROTATION_X[] = {0, 180, 90, 90, 90, 90};
+    public static final int ROTATION_Y[] = {0, 0, 180, 0, 90, 270};
+
     @Nullable
     public static EnumFacing getFacing(int i)
     {

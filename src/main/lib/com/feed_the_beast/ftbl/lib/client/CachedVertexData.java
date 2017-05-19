@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class CachedVertexData
     private final List<CachedVertex> list;
     private final boolean hasTex, hasColor, hasNormal;
     public final Color4I color;
+    public double minU = 0D, minV = 0D, maxU = 1D, maxV = 1D;
 
     private CachedVertexData(int m, VertexFormat f, Collection<CachedVertex> oldList)
     {
@@ -137,44 +140,112 @@ public class CachedVertexData
 
     public void rect(int x, int y, int w, int h)
     {
-        rectWithTexture(x, y, w, h, 0D, 0D, 1D, 1D);
+        pos(x, y + h, 0D).tex(minU, maxV);
+        pos(x + w, y + h, 0D).tex(maxU, maxV);
+        pos(x + w, y, 0D).tex(maxU, minV);
+        pos(x, y, 0D).tex(minU, minV);
     }
 
-    public void rectWithTexture(int x, int y, int w, int h, double u0, double v0, double u1, double v1)
+    public void cubeFace(EnumFacing facing, double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
     {
-        pos(x, y + h, 0D).tex(u0, v1);
-        pos(x + w, y + h, 0D).tex(u1, v1);
-        pos(x + w, y, 0D).tex(u1, v0);
-        pos(x, y, 0D).tex(u0, v0);
+        float normalX = MathUtils.NORMALS_X[facing.getIndex()];
+        float normalY = MathUtils.NORMALS_Y[facing.getIndex()];
+        float normalZ = MathUtils.NORMALS_Z[facing.getIndex()];
+
+        switch(facing)
+        {
+            case DOWN:
+                pos(minX, minY, minZ).tex(minU, minV).normal(normalX, normalY, normalZ);
+                pos(maxX, minY, minZ).tex(maxU, minV).normal(normalX, normalY, normalZ);
+                pos(maxX, minY, maxZ).tex(maxU, maxV).normal(normalX, normalY, normalZ);
+                pos(minX, minY, maxZ).tex(minU, maxV).normal(normalX, normalY, normalZ);
+                break;
+            case UP:
+                pos(minX, maxY, minZ).tex(minU, minV).normal(normalX, normalY, normalZ);
+                pos(minX, maxY, maxZ).tex(minU, maxV).normal(normalX, normalY, normalZ);
+                pos(maxX, maxY, maxZ).tex(maxU, maxV).normal(normalX, normalY, normalZ);
+                pos(maxX, maxY, minZ).tex(maxU, minV).normal(normalX, normalY, normalZ);
+                break;
+            case NORTH:
+                pos(minX, minY, minZ).tex(maxU, maxV).normal(normalX, normalY, normalZ);
+                pos(minX, maxY, minZ).tex(maxU, minV).normal(normalX, normalY, normalZ);
+                pos(maxX, maxY, minZ).tex(minU, minV).normal(normalX, normalY, normalZ);
+                pos(maxX, minY, minZ).tex(minU, maxV).normal(normalX, normalY, normalZ);
+                break;
+            case SOUTH:
+                pos(minX, minY, maxZ).tex(minU, maxV).normal(normalX, normalY, normalZ);
+                pos(maxX, minY, maxZ).tex(maxU, maxV).normal(normalX, normalY, normalZ);
+                pos(maxX, maxY, maxZ).tex(maxU, minV).normal(normalX, normalY, normalZ);
+                pos(minX, maxY, maxZ).tex(minU, minV).normal(normalX, normalY, normalZ);
+                break;
+            case WEST:
+                pos(minX, minY, minZ).tex(minU, maxV).normal(normalX, normalY, normalZ);
+                pos(minX, minY, maxZ).tex(maxU, maxV).normal(normalX, normalY, normalZ);
+                pos(minX, maxY, maxZ).tex(maxU, minV).normal(normalX, normalY, normalZ);
+                pos(minX, maxY, minZ).tex(minU, minV).normal(normalX, normalY, normalZ);
+                break;
+            case EAST:
+                pos(maxX, minY, minZ).tex(maxU, maxV).normal(normalX, normalY, normalZ);
+                pos(maxX, maxY, minZ).tex(maxU, minV).normal(normalX, normalY, normalZ);
+                pos(maxX, maxY, maxZ).tex(minU, minV).normal(normalX, normalY, normalZ);
+                pos(maxX, minY, maxZ).tex(minU, maxV).normal(normalX, normalY, normalZ);
+                break;
+        }
     }
 
-    public void centeredCube(double x, double y, double z, double w, double h, double d)
+    public void cube(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
     {
-        //TODO: Texture
-        pos(x + w, y + h, z - d);
-        pos(x - w, y + h, z - d);
-        pos(x - w, y + h, z + d);
-        pos(x + w, y + h, z + d);
-        pos(x + w, y - h, z + d);
-        pos(x - w, y - h, z + d);
-        pos(x - w, y - h, z - d);
-        pos(x + w, y - h, z - d);
-        pos(x + w, y + h, z + d);
-        pos(x - w, y + h, z + d);
-        pos(x - w, y - h, z + d);
-        pos(x + w, y - h, z + d);
-        pos(x + w, y - h, z - d);
-        pos(x - w, y - h, z - d);
-        pos(x - w, y + h, z - d);
-        pos(x + w, y + h, z - d);
-        pos(x - w, y + h, z + d);
-        pos(x - w, y + h, z - d);
-        pos(x - w, y - h, z - d);
-        pos(x - w, y - h, z + d);
-        pos(x + w, y + h, z - d);
-        pos(x + w, y + h, z + d);
-        pos(x + w, y - h, z + d);
-        pos(x + w, y - h, z - d);
+        for(EnumFacing facing : EnumFacing.VALUES)
+        {
+            cubeFace(facing, minX, minY, minZ, maxX, maxY, maxZ);
+        }
+    }
+
+    public void cubeSides(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    {
+        for(EnumFacing facing : EnumFacing.VALUES)
+        {
+            if(facing.getAxis() != EnumFacing.Axis.Y)
+            {
+                cubeFace(facing, minX, minY, minZ, maxX, maxY, maxZ);
+            }
+        }
+    }
+
+    public void centeredCube(double x, double y, double z, double rx, double ry, double rz)
+    {
+        cube(x - rx, y - ry, z - rz, x + rx, y + ry, z + rz);
+        /*
+        pos(x + rx, y + ry, z - rz);
+        pos(x - rx, y + ry, z - rz);
+        pos(x - rx, y + ry, z + rz);
+        pos(x + rx, y + ry, z + rz);
+
+        pos(x + rx, y - ry, z + rz);
+        pos(x - rx, y - ry, z + rz);
+        pos(x - rx, y - ry, z - rz);
+        pos(x + rx, y - ry, z - rz);
+
+        pos(x + rx, y + ry, z + rz);
+        pos(x - rx, y + ry, z + rz);
+        pos(x - rx, y - ry, z + rz);
+        pos(x + rx, y - ry, z + rz);
+
+        pos(x + rx, y - ry, z - rz);
+        pos(x - rx, y - ry, z - rz);
+        pos(x - rx, y + ry, z - rz);
+        pos(x + rx, y + ry, z - rz);
+
+        pos(x - rx, y + ry, z + rz);
+        pos(x - rx, y + ry, z - rz);
+        pos(x - rx, y - ry, z - rz);
+        pos(x - rx, y - ry, z + rz);
+
+        pos(x + rx, y + ry, z - rz);
+        pos(x + rx, y + ry, z + rz);
+        pos(x + rx, y - ry, z + rz);
+        pos(x + rx, y - ry, z - rz);
+        */
     }
 
     public void centeredCube(double x, double y, double z, double r)
@@ -184,9 +255,6 @@ public class CachedVertexData
 
     public void cube(AxisAlignedBB aabb)
     {
-        double w = (aabb.maxX - aabb.minX) / 2D;
-        double h = (aabb.maxY - aabb.minY) / 2D;
-        double d = (aabb.maxZ - aabb.minZ) / 2D;
-        centeredCube(aabb.minX + w, aabb.minY + h, aabb.minZ + d, w, h, d);
+        cube(aabb.minX, aabb.minY, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
     }
 }
