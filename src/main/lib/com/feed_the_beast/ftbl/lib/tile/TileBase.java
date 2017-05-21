@@ -111,7 +111,7 @@ public class TileBase extends TileEntity
 
             if(notifyBlock())
             {
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 8);
+                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 255);
             }
 
             if(updateComparator() && getBlockType() != Blocks.AIR)

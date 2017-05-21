@@ -10,8 +10,6 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
-
 /**
  * @author LatvianModder
  */
@@ -19,7 +17,7 @@ public class DrawableItem implements IDrawableObject
 {
     public ItemStack stack;
 
-    public DrawableItem(@Nullable ItemStack is)
+    public DrawableItem(ItemStack is)
     {
         stack = is;
     }

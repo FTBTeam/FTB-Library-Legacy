@@ -151,11 +151,11 @@ public class GuiHelper
 
         itemRender.zLevel = 200F;
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, 32F);
+        GlStateManager.translate(x, y, 32D);
 
-        if(scaleX != 1 || scaleY != 1)
+        if(scaleX != 1D || scaleY != 1D)
         {
-            GlStateManager.scale(scaleX, scaleY, 1);
+            GlStateManager.scale(scaleX, scaleY, 1D);
         }
 
         GlStateManager.enableLighting();
@@ -192,7 +192,7 @@ public class GuiHelper
 
     public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
     {
-        return drawItem(itemRender, stack, x, y, 1, 1, renderOverlay);
+        return drawItem(itemRender, stack, x, y, 1D, 1D, renderOverlay);
     }
 
     public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)
