@@ -47,6 +47,8 @@ public class ModelBuilder
 
     private List<BakedQuad> quads;
     private ModelRotation rotation;
+    private boolean uvLocked = true;
+    private boolean shade = true;
 
     public ModelBuilder(ModelRotation r)
     {
@@ -59,9 +61,19 @@ public class ModelBuilder
         rotation = r;
     }
 
+    public void setUVLocked(boolean b)
+    {
+        uvLocked = b;
+    }
+
+    public void setShade(boolean b)
+    {
+        shade = b;
+    }
+
     public List<BakedQuad> getQuads()
     {
-        return new ArrayList<>(quads);
+        return quads;
     }
 
     public void addCube(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, SpriteSet sprites)
@@ -93,9 +105,9 @@ public class ModelBuilder
             case EAST:
             case WEST:
                 return new float[] {fromZ, toY, toZ, fromY};
+            default:
+                return new float[] {0F, 0F, 1F, 1F};
         }
-
-        return new float[] {0F, 0F, 1F, 1F};
     }
 
     public void addQuad(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face, @Nullable TextureAtlasSprite sprite)
@@ -103,7 +115,7 @@ public class ModelBuilder
         if(sprite != null)
         {
             float[] uv = getUV(fromX, fromY, fromZ, toX, toY, toZ, face);
-            quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, false, true));
+            quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, uvLocked, shade));
         }
     }
 }
