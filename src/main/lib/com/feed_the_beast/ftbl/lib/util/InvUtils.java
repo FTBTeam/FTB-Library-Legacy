@@ -269,7 +269,7 @@ public class InvUtils
     {
         if(baublesLoaded == null)
         {
-            baublesLoaded = Loader.isModLoaded("Baubles");
+            baublesLoaded = Loader.isModLoaded("Baubles") || Loader.isModLoaded("baubles");
         }
 
         if(!baublesLoaded)
