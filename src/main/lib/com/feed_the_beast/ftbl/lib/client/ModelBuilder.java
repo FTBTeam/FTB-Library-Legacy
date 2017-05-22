@@ -76,46 +76,63 @@ public class ModelBuilder
         return quads;
     }
 
-    public void addCube(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, SpriteSet sprites)
+    public void addCube(Vector3f from, Vector3f to, SpriteSet sprites)
     {
         for(EnumFacing facing : EnumFacing.VALUES)
         {
-            addQuad(fromX, fromY, fromZ, toX, toY, toZ, facing, sprites.get(facing));
+            addQuad(from, to, facing, sprites.get(facing));
+        }
+    }
+
+    public void addCube(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, SpriteSet sprites)
+    {
+        addCube(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), sprites);
+    }
+
+    public void addInvertedCube(Vector3f from, Vector3f to, SpriteSet sprites)
+    {
+        for(EnumFacing facing : EnumFacing.VALUES)
+        {
+            addQuad(to, from, facing, sprites.get(facing));
         }
     }
 
     public void addInvertedCube(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, SpriteSet sprites)
     {
-        for(EnumFacing facing : EnumFacing.VALUES)
-        {
-            addQuad(toX, toY, toZ, fromX, fromY, fromZ, facing, sprites.get(facing));
-        }
+        addInvertedCube(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), sprites);
     }
 
-    public static float[] getUV(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face)
+    private static float[] getUV(Vector3f from, Vector3f to, EnumFacing face)
     {
         switch(face)
         {
             case DOWN:
+                return new float[] {from.x, 16F - to.z, to.x, 16F - from.z};
             case UP:
-                return new float[] {fromX, fromZ, toX, toZ};
+                return new float[] {from.x, from.z, to.x, to.z};
             case NORTH:
-            case SOUTH:
-                return new float[] {toX, toY, fromX, fromY};
-            case EAST:
-            case WEST:
-                return new float[] {fromZ, toY, toZ, fromY};
             default:
-                return new float[] {0F, 0F, 1F, 1F};
+                return new float[] {16F - to.x, 16F - to.y, 16F - from.x, 16F - from.y};
+            case SOUTH:
+                return new float[] {from.x, 16F - to.y, to.x, 16F - from.y};
+            case WEST:
+                return new float[] {from.z, 16F - to.y, to.z, 16F - from.y};
+            case EAST:
+                return new float[] {16F - to.z, 16F - to.y, 16F - from.z, 16F - from.y};
+        }
+    }
+
+    public void addQuad(Vector3f from, Vector3f to, EnumFacing face, @Nullable TextureAtlasSprite sprite)
+    {
+        if(sprite != null)
+        {
+            float[] uv = getUV(from, to, face);
+            quads.add(BAKERY.makeBakedQuad(from, to, new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, uvLocked, shade));
         }
     }
 
     public void addQuad(float fromX, float fromY, float fromZ, float toX, float toY, float toZ, EnumFacing face, @Nullable TextureAtlasSprite sprite)
     {
-        if(sprite != null)
-        {
-            float[] uv = getUV(fromX, fromY, fromZ, toX, toY, toZ, face);
-            quads.add(BAKERY.makeBakedQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, uvLocked, shade));
-        }
+        addQuad(new Vector3f(fromX, fromY, fromZ), new Vector3f(toX, toY, toZ), face, sprite);
     }
 }
