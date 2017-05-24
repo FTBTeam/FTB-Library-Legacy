@@ -1,4 +1,4 @@
-# FTBLib
+# FTBLib [![](http://cf.way2muchnoise.eu/ftblib.svg)](https://minecraft.curseforge.com/projects/ftblib) [![](http://cf.way2muchnoise.eu/versions/ftblib.svg)](https://minecraft.curseforge.com/projects/ftblib)
 
 ### Building the mod
 
