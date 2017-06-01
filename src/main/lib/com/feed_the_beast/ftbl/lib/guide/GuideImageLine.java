@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
@@ -15,7 +15,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
@@ -29,7 +28,7 @@ import java.util.List;
  */
 public class GuideImageLine extends EmptyGuidePageLine
 {
-    public IImageProvider imageProvider = ImageProvider.NULL;
+    public IDrawableObject imageProvider = ImageProvider.NULL;
     public int imageWidth, imageHeight;
     public double imageScale = 1D;
     public ClickEvent clickEvent;
@@ -53,7 +52,7 @@ public class GuideImageLine extends EmptyGuidePageLine
             return;
         }
 
-        imageProvider = new ImageProvider(new ResourceLocation(o.get("image").getAsString()));
+        imageProvider = ImageProvider.get(o.get("image"));
 
         if(o.has("scale"))
         {
@@ -121,7 +120,7 @@ public class GuideImageLine extends EmptyGuidePageLine
     {
         JsonObject o = new JsonObject();
         o.add("id", new JsonPrimitive("img"));
-        o.add("image", new JsonPrimitive(imageProvider.getImage().toString()));
+        o.add("image", imageProvider.getJson());
 
         if(imageScale != 1D)
         {

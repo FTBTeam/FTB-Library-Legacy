@@ -152,7 +152,6 @@ public class GuiChunkSelectorBase extends GuiBase
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.enableTexture2D();
-        mc.getTextureManager().bindTexture(GuiConfigs.TEX_CHUNK_CLAIMING);
 
         for(MapButton mapButton : mapButtons)
         {
@@ -185,8 +184,7 @@ public class GuiChunkSelectorBase extends GuiBase
             GlStateManager.pushMatrix();
             //GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
             GlStateManager.rotate(mc.player.rotationYaw + 180F, 0F, 0F, 1F);
-            mc.getTextureManager().bindTexture(GuiConfigs.TEX_ENTITY);
-            GuiHelper.drawTexturedRect(-8, -8, 16, 16, Color4I.WHITE_A33, 0D, 0D, 1D, 1D);
+            GuiConfigs.TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A33);
             GlStateManager.popMatrix();
             FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
             GlStateManager.popMatrix();

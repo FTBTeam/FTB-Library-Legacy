@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import mcjty.lib.tools.ItemStackTools;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -23,9 +23,9 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ImageProvider implements IImageProvider
+public class ImageProvider implements IDrawableObject
 {
-    public static final ImageProvider NULL = new ImageProvider(new ResourceLocation("textures/misc/unknown_pack.png"))
+    public static final ImageProvider NULL = new ImageProvider("textures/misc/unknown_pack.png", 0D, 0D, 1D, 1D)
     {
         @Override
         @SideOnly(Side.CLIENT)
@@ -77,63 +77,58 @@ public class ImageProvider implements IImageProvider
 
     public static IDrawableObject get(String id)
     {
-        return id.isEmpty() ? NULL : get(new ResourceLocation(id));
-    }
-
-    public static IDrawableObject get(ResourceLocation id)
-    {
-        if(id.getResourceDomain().equals("item"))
+        if(id.isEmpty())
         {
-            ItemStack stack = ItemStackSerializer.parseItem(id.getResourcePath());
+            return NULL;
+        }
+        else if(id.startsWith("item:"))
+        {
+            ItemStack stack = ItemStackSerializer.parseItem(id.substring(5));
 
             if(!ItemStackTools.isEmpty(stack))
             {
                 return new DrawableItem(stack);
             }
         }
-        else if(id.getResourcePath().isEmpty())
+        else if(id.startsWith("http:") || id.startsWith("https:"))
         {
-            return NULL;
+            return new URLImageProvider(id, 0D, 0D, 1D, 1D);
         }
 
-        return new ImageProvider(id);
+        return new ImageProvider(id, 0D, 0D, 1D, 1D);
     }
 
-    private final ResourceLocation texture;
-    private final String url;
+    public final ResourceLocation texture;
+    public final double minU, minV, maxU, maxV;
 
-    public ImageProvider(ResourceLocation tex)
+    ImageProvider(String tex, double u0, double v0, double u1, double v1)
     {
-        texture = tex;
-        url = (texture.getResourceDomain().equals("http") || texture.getResourceDomain().equals("https")) ? texture.toString() : "";
-    }
-
-    @Override
-    public boolean isURL()
-    {
-        return url.length() > 0;
-    }
-
-    @Override
-    public final ResourceLocation getImage()
-    {
-        return texture;
+        texture = new ResourceLocation(tex);
+        minU = Math.min(u0, u1);
+        minV = Math.min(v0, v1);
+        maxU = Math.max(u0, u1);
+        maxV = Math.max(v0, v1);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public ITextureObject bindTexture()
     {
-        if(isURL())
-        {
-            ITextureObject obj = FTBLibClient.getDownloadImage(texture, url, ImageProvider.NULL.getImage(), null);
-            GlStateManager.bindTexture(obj.getGlTextureId());
-            return obj;
-        }
-        else
-        {
-            return FTBLibClient.bindTexture(texture);
-        }
+        return FTBLibClient.bindTexture(texture);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void draw(int x, int y, int w, int h, Color4I col)
+    {
+        bindTexture();
+        GuiHelper.drawTexturedRect(x, y, w, h, col.hasColor() ? col : Color4I.WHITE, minU, minV, maxU, maxV);
+    }
+
+    @Override
+    public JsonElement getJson()
+    {
+        return new JsonPrimitive(texture.toString());
     }
 
     @Override
@@ -143,10 +138,10 @@ public class ImageProvider implements IImageProvider
         {
             return true;
         }
-        else if(o instanceof IImageProvider)
+        else if(o instanceof ImageProvider)
         {
-            IImageProvider img = (IImageProvider) o;
-            return texture.equals(img.getImage()) && getMinU() == img.getMinU() && getMinV() == img.getMinV() && getMaxU() == img.getMaxU() && getMaxV() == img.getMaxV();
+            ImageProvider img = (ImageProvider) o;
+            return texture.equals(img.texture) && minU == img.minU && minV == img.minV && maxU == img.maxU && maxV == img.maxV;
         }
         return false;
     }
@@ -154,12 +149,18 @@ public class ImageProvider implements IImageProvider
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(texture, getMinU(), getMinV(), getMaxU(), getMaxV());
+        return Objects.hashCode(texture, minU, minV, maxU, maxV);
     }
 
     @Override
     public String toString()
     {
-        return Double.toString(getMinU()) + ',' + getMinV() + ',' + getMaxU() + ',' + getMaxV();
+        return Double.toString(minU) + ',' + minV + ',' + maxU + ',' + maxV;
+    }
+
+    @Override
+    public IDrawableObject withUV(double u0, double v0, double u1, double v1)
+    {
+        return new ImageProvider(texture.toString(), u0, v0, u1, v1);
     }
 }

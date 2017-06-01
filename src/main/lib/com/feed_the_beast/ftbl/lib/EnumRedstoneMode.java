@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.IStringSerializable;
 
@@ -50,7 +50,7 @@ public enum EnumRedstoneMode implements IStringSerializable
         }
     }
 
-    public IImageProvider getIcon()
+    public IDrawableObject getIcon()
     {
         switch(this)
         {

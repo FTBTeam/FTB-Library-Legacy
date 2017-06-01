@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.client.TextureCoords;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -21,7 +20,6 @@ import com.feed_the_beast.ftbl.lib.guide.ButtonGuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -29,22 +27,22 @@ import java.util.List;
 
 public class GuiGuide extends GuiBase implements IClientActionGui
 {
-    private static final ResourceLocation TEXTURE = FTBLibFinals.get("textures/gui/info.png");
+    private static final IDrawableObject TEXTURE = ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/info.png");
 
-    private static final TextureCoords TEX_SLIDER = TextureCoords.fromCoords(TEXTURE, 0, 30, 12, 18, 64, 64);
-    private static final TextureCoords TEX_BACK = TextureCoords.fromCoords(TEXTURE, 13, 30, 14, 11, 64, 64);
-    private static final TextureCoords TEX_CLOSE = TextureCoords.fromCoords(TEXTURE, 13, 41, 14, 11, 64, 64);
-    public static final TextureCoords TEX_BULLET = TextureCoords.fromCoords(TEXTURE, 0, 49, 6, 6, 64, 64);
+    private static final IDrawableObject TEX_SLIDER = TEXTURE.withUVfromCoords(0, 30, 12, 18, 64, 64);
+    private static final IDrawableObject TEX_BACK = TEXTURE.withUVfromCoords(13, 30, 14, 11, 64, 64);
+    private static final IDrawableObject TEX_CLOSE = TEXTURE.withUVfromCoords(13, 41, 14, 11, 64, 64);
+    public static final IDrawableObject TEX_BULLET = TEXTURE.withUVfromCoords(0, 49, 6, 6, 64, 64);
 
-    private static final TextureCoords TEX_BG_MU = TextureCoords.fromCoords(TEXTURE, 14, 0, 1, 13, 64, 64);
-    private static final TextureCoords TEX_BG_MD = TextureCoords.fromCoords(TEXTURE, 14, 16, 1, 13, 64, 64);
-    private static final TextureCoords TEX_BG_ML = TextureCoords.fromCoords(TEXTURE, 0, 14, 13, 1, 64, 64);
-    private static final TextureCoords TEX_BG_MR = TextureCoords.fromCoords(TEXTURE, 16, 14, 13, 1, 64, 64);
+    private static final IDrawableObject TEX_BG_MU = TEXTURE.withUVfromCoords(14, 0, 1, 13, 64, 64);
+    private static final IDrawableObject TEX_BG_MD = TEXTURE.withUVfromCoords(14, 16, 1, 13, 64, 64);
+    private static final IDrawableObject TEX_BG_ML = TEXTURE.withUVfromCoords(0, 14, 13, 1, 64, 64);
+    private static final IDrawableObject TEX_BG_MR = TEXTURE.withUVfromCoords(16, 14, 13, 1, 64, 64);
 
-    private static final TextureCoords TEX_BG_NN = TextureCoords.fromCoords(TEXTURE, 0, 0, 13, 13, 64, 64);
-    private static final TextureCoords TEX_BG_PN = TextureCoords.fromCoords(TEXTURE, 16, 0, 13, 13, 64, 64);
-    private static final TextureCoords TEX_BG_NP = TextureCoords.fromCoords(TEXTURE, 0, 16, 13, 13, 64, 64);
-    private static final TextureCoords TEX_BG_PP = TextureCoords.fromCoords(TEXTURE, 16, 16, 13, 13, 64, 64);
+    private static final IDrawableObject TEX_BG_NN = TEXTURE.withUVfromCoords(0, 0, 13, 13, 64, 64);
+    private static final IDrawableObject TEX_BG_PN = TEXTURE.withUVfromCoords(16, 0, 13, 13, 64, 64);
+    private static final IDrawableObject TEX_BG_NP = TEXTURE.withUVfromCoords(0, 16, 13, 13, 64, 64);
+    private static final IDrawableObject TEX_BG_PP = TEXTURE.withUVfromCoords(16, 16, 13, 13, 64, 64);
 
     public static final IDrawableObject FILLING = (x, y, w, h, col) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : GuiConfigs.INFO_BACKGROUND.getColor());
     public static final IDrawableObject BORDERS = (x, y, w, h, col) ->
@@ -308,7 +306,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
     @Override
     public void drawBackground()
     {
-        mc.getTextureManager().bindTexture(TEXTURE);
+        TEXTURE.bindTexture();
         FILLING.draw(posX + panelWidth, posY, width - panelWidth, height, Color4I.NONE);
         FILLING.draw(posX, posY + 36, panelWidth, height - 36, Color4I.NONE);
         FILLING.draw(posX, posY, panelWidth, 36, Color4I.NONE);

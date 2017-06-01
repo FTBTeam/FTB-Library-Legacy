@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.lib.client.TextureCoords;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyColor;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * @author LatvianModder
@@ -17,10 +17,7 @@ public class GuiConfigs
     public static final int CHUNK_SELECTOR_TILES_GUI2 = 7;
     public static final double CHUNK_SELECTOR_UV = (double) CHUNK_SELECTOR_TILES_GUI / (double) CHUNK_SELECTOR_TILES_TEX;
 
-    public static final ResourceLocation TEX_ENTITY = FTBLibFinals.get("textures/gui/entity.png");
-    public static final ResourceLocation TEX_CHUNK_CLAIMING = FTBLibFinals.get("textures/gui/chunk_selectors.png");
-    public static final TextureCoords TEX_FILLED = TextureCoords.fromUV(TEX_CHUNK_CLAIMING, 0D, 0D, 0.5D, 1D);
-    public static final TextureCoords TEX_BORDER = TextureCoords.fromUV(TEX_CHUNK_CLAIMING, 0.5D, 0D, 1D, 1D);
+    public static final IDrawableObject TEX_ENTITY = ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/entity.png");
 
     public static final PropertyInt INFO_BORDER_WIDTH = new PropertyInt(15, 0, 200);
     public static final PropertyInt INFO_BORDER_HEIGHT = new PropertyInt(15, 0, 200);

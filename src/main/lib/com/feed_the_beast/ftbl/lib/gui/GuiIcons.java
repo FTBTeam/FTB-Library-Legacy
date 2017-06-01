@@ -1,104 +1,86 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IImageProvider;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum GuiIcons implements IImageProvider
+public class GuiIcons
 {
-    UP("up"),
-    DOWN("down"),
-    LEFT("left"),
-    RIGHT("right"),
-    ACCEPT("accept"),
-    ADD("add"),
-    REMOVE("remove"),
-    INFO("info"),
-    ACCEPT_GRAY("accept_gray"),
-    ADD_GRAY("add_gray"),
-    REMOVE_GRAY("remove_gray"),
-    INFO_GRAY("info_gray"),
-    SETTINGS("settings"),
-    SETTINGS_RED("settings_red"),
-    CANCEL("cancel"),
-    BACK("back"),
-    CLOSE("close"),
-    REFRESH("refresh"),
-    PLAYER("player"),
-    PLAYER_GRAY("player_gray"),
-    ONLINE("online"),
-    SORT_AZ("sort_az"),
-    FRIENDS("friends"),
-    BUG("bug"),
-    JACKET("jacket"),
-    BED("bed"),
-    BELL("bell"),
-    COMPASS("compass"),
-    MAP("map"),
-    SHIELD("shield"),
-    ART("art"),
-    MONEY_BAG("money_bag"),
-    CONTROLLER("controller"),
-    FEATHER("feather"),
-    CAMERA("camera"),
-    INV_IO("inv_io"),
-    INV_IN("inv_in"),
-    INV_OUT("inv_out"),
-    INV_NONE("inv_none"),
-    RS_NONE("rs_none"),
-    RS_HIGH("rs_high"),
-    RS_LOW("rs_low"),
-    RS_PULSE("rs_pulse"),
-    SECURITY_PUBLIC("security_public"),
-    SECURITY_PRIVATE("security_private"),
-    SECURITY_TEAM("security_team"),
-    COLOR_BLANK("color_blank"),
-    COLOR_HSB("color_hsb"),
-    COLOR_RGB("color_rgb"),
-    ONLINE_RED("online_red"),
-    NOTES("notes"),
-    CHAT("chat"),
-    BIN("bin"),
-    MARKER("marker"),
-    BEACON("beacon"),
-    DICE("dice"),
-    DIAMOND("diamond"),
-    TIME("time"),
-    GLOBE("globe"),
-    MONEY("money"),
-    CHECK("check"),
-    STAR("star"),
-    HEART("heart"),
-    BOOK("book"),
-    BOOK_RED("book_red"),
-    TOGGLE_GAMEMODE("toggle_gamemode"),
-    TOGGLE_RAIN("toggle_rain"),
-    TOGGLE_DAY("toggle_day"),
-    TOGGLE_NIGHT("toggle_night");
+    //@formatter:off
+    public static final IDrawableObject
+    UP = get("up"),
+    DOWN = get("down"),
+    LEFT = get("left"),
+    RIGHT = get("right"),
+    ACCEPT = get("accept"),
+    ADD = get("add"),
+    REMOVE = get("remove"),
+    INFO = get("info"),
+    ACCEPT_GRAY = get("accept_gray"),
+    ADD_GRAY = get("add_gray"),
+    REMOVE_GRAY = get("remove_gray"),
+    INFO_GRAY = get("info_gray"),
+    SETTINGS = get("settings"),
+    SETTINGS_RED = get("settings_red"),
+    CANCEL = get("cancel"),
+    BACK = get("back"),
+    CLOSE = get("close"),
+    REFRESH = get("refresh"),
+    PLAYER = get("player"),
+    PLAYER_GRAY = get("player_gray"),
+    ONLINE = get("online"),
+    SORT_AZ = get("sort_az"),
+    FRIENDS = get("friends"),
+    BUG = get("bug"),
+    JACKET = get("jacket"),
+    BED = get("bed"),
+    BELL = get("bell"),
+    COMPASS = get("compass"),
+    MAP = get("map"),
+    SHIELD = get("shield"),
+    ART = get("art"),
+    MONEY_BAG = get("money_bag"),
+    CONTROLLER = get("controller"),
+    FEATHER = get("feather"),
+    CAMERA = get("camera"),
+    INV_IO = get("inv_io"),
+    INV_IN = get("inv_in"),
+    INV_OUT = get("inv_out"),
+    INV_NONE = get("inv_none"),
+    RS_NONE = get("rs_none"),
+    RS_HIGH = get("rs_high"),
+    RS_LOW = get("rs_low"),
+    RS_PULSE = get("rs_pulse"),
+    SECURITY_PUBLIC = get("security_public"),
+    SECURITY_PRIVATE = get("security_private"),
+    SECURITY_TEAM = get("security_team"),
+    COLOR_BLANK = get("color_blank"),
+    COLOR_HSB = get("color_hsb"),
+    COLOR_RGB = get("color_rgb"),
+    ONLINE_RED = get("online_red"),
+    NOTES = get("notes"),
+    CHAT = get("chat"),
+    BIN = get("bin"),
+    MARKER = get("marker"),
+    BEACON = get("beacon"),
+    DICE = get("dice"),
+    DIAMOND = get("diamond"),
+    TIME = get("time"),
+    GLOBE = get("globe"),
+    MONEY = get("money"),
+    CHECK = get("check"),
+    STAR = get("star"),
+    HEART = get("heart"),
+    BOOK = get("book"),
+    BOOK_RED = get("book_red"),
+    TOGGLE_GAMEMODE = get("toggle_gamemode"),
+    TOGGLE_RAIN = get("toggle_rain"),
+    TOGGLE_DAY = get("toggle_day"),
+    TOGGLE_NIGHT = get("toggle_night");
+    //@formatter:on
 
-    public static final GuiIcons[] VALUES = values();
-
-    private final ResourceLocation texture;
-
-    GuiIcons(String s)
+    private static IDrawableObject get(String id)
     {
-        texture = FTBLibFinals.get("textures/icons/" + s + ".png");
-    }
-
-    @Override
-    public ResourceLocation getImage()
-    {
-        return texture;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public ITextureObject bindTexture()
-    {
-        return FTBLibClient.bindTexture(texture);
+        return ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/icons/" + id + ".png");
     }
 }

@@ -172,7 +172,7 @@ public class FTBLibEventHandler
     public static void onGuideEvent(ClientGuideEvent event)
     {
         GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
-        page.setIcon(ImageProvider.get("ftbl:textures/gui/teams.png"));
+        page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
         page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
 
         for(SidebarButton button : FTBLibModClient.getSidebarButtons(true))

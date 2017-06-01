@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.ModContainer;
@@ -61,7 +60,7 @@ public class GuideTitlePage extends GuidePage
         }
         else
         {
-            setIcon(new ImageProvider(new ResourceLocation(id, "textures/icon.png")));
+            setIcon(ImageProvider.get(id + ":textures/icon.png"));
         }
         if(o.has("button"))
         {
