@@ -16,6 +16,11 @@ public class ItemBlockBase extends ItemBlock
         }
     }
 
+    public ItemBlockBase(Block b)
+    {
+        this(b, false);
+    }
+
     @Override
     public int getMetadata(int metadata)
     {

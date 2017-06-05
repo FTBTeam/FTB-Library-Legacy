@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 public class StringUtils
 {
@@ -28,7 +27,6 @@ public class StringUtils
     public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
     public static final char FORMATTING_CHAR = '\u00a7';
     public static final String FORMATTING = "\u00a7";
-    public static final Pattern TEXT_FORMATTING_PATTERN = Pattern.compile("(?i)" + FORMATTING + "[0-9A-FK-OR]");
 
     public static final int FLAG_ID_ALLOW_EMPTY = 1;
     public static final int FLAG_ID_FIX = 2;
@@ -109,9 +107,104 @@ public class StringUtils
         return id;
     }
 
-    public static String removeFormatting(String s)
+    public String toString(@Nullable Object object)
     {
-        return s.isEmpty() ? s : TEXT_FORMATTING_PATTERN.matcher(s).replaceAll("");
+        if(object == null)
+        {
+            return "null";
+        }
+        else if(object.getClass().isArray())
+        {
+            Object[] objects = (Object[]) object;
+
+            if(objects.length == 0)
+            {
+                return "[]";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append('[');
+
+            for(int i = 0; i < objects.length; i++)
+            {
+                sb.append(toString(objects[i]));
+
+                if(i != objects.length - 1)
+                {
+                    sb.append(',');
+                    sb.append(' ');
+                }
+            }
+
+            sb.append(']');
+            return sb.toString();
+        }
+        else if(object instanceof Map)
+        {
+            Map<?, ?> map = (Map<?, ?>) object;
+
+            if(map.isEmpty())
+            {
+                return "{}";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append('{');
+
+            int s = map.size();
+            int i = 0;
+            for(Map.Entry<?, ?> e : map.entrySet())
+            {
+                sb.append(toString(e.getKey()));
+                sb.append(':');
+                sb.append(' ');
+                sb.append(toString(e.getValue()));
+
+                i++;
+                if(i != s)
+                {
+                    sb.append(',');
+                    sb.append(' ');
+                }
+            }
+
+            sb.append(' ');
+
+            sb.append('}');
+            return sb.toString();
+        }
+        else if(object instanceof Collection)
+        {
+            Collection<?> c = (Collection) object;
+
+            if(c.isEmpty())
+            {
+                return "[]";
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append('[');
+
+            int s = c.size();
+            int i = 0;
+
+            for(Object o : c)
+            {
+                sb.append(toString(o));
+
+                i++;
+                if(i != s)
+                {
+                    sb.append(',');
+                    sb.append(' ');
+                }
+            }
+
+            sb.append(']');
+            return sb.toString();
+        }
+
+        return object.toString();
     }
 
     public static String[] shiftArray(@Nullable String[] s)

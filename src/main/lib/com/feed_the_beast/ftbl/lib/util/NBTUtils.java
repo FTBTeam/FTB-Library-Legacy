@@ -10,15 +10,6 @@ import java.util.List;
 
 public class NBTUtils
 {
-    public static String[] getMapKeys(@Nullable NBTTagCompound tag)
-    {
-        if(tag == null || tag.hasNoTags())
-        {
-            return new String[0];
-        }
-        return ListUtils.toStringArray(tag.getKeySet());
-    }
-
     public static void writeTag(File f, NBTTagCompound tag)
     {
         try

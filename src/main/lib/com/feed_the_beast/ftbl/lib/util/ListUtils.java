@@ -13,62 +13,6 @@ import java.util.function.Predicate;
  */
 public class ListUtils
 {
-    public static String toString(Collection<?> c)
-    {
-        String[] s = toStringArray(c);
-        if(s.length == 0)
-        {
-            return "[ ]";
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        sb.append(' ');
-
-        for(int i = 0; i < s.length; i++)
-        {
-            sb.append(s[i]);
-
-            if(i != s.length - 1)
-            {
-                sb.append(',');
-                sb.append(' ');
-            }
-        }
-
-        sb.append(' ');
-        sb.append(']');
-        return sb.toString();
-    }
-
-    public static String[] toStringArray(Collection<?> c)
-    {
-        String[] s = new String[c.size()];
-        if(s.length == 0)
-        {
-            return s;
-        }
-        int i = -1;
-        for(Object o : c)
-        {
-            s[++i] = String.valueOf(o);
-        }
-        return s;
-    }
-
-    public static List<String> toStringList(Collection<?> c)
-    {
-        List<String> list = new ArrayList<>(c.size());
-        if(c.isEmpty())
-        {
-            return list;
-        }
-        for(Object o : c)
-        {
-            list.add(String.valueOf(o));
-        }
-        return list;
-    }
-
     public static void removeNullValues(List<?> list)
     {
         for(int i = list.size() - 1; i >= 0; i--)

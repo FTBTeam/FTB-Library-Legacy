@@ -12,39 +12,6 @@ import java.util.Map;
  */
 public class MapUtils
 {
-    public static String toString(Map<?, ?> map)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        sb.append(' ');
-
-        int s = map.size();
-
-        if(s > 0)
-        {
-            int i = 0;
-            for(Map.Entry<?, ?> e : map.entrySet())
-            {
-                sb.append(e.getKey());
-                sb.append(':');
-                sb.append(' ');
-                sb.append(e.getValue());
-
-                if(i != s - 1)
-                {
-                    sb.append(',');
-                    sb.append(' ');
-                }
-                i++;
-            }
-
-            sb.append(' ');
-        }
-
-        sb.append('}');
-        return sb.toString();
-    }
-
     public static <K, V> Map<V, K> inverse(Map<K, V> map)
     {
         Map<V, K> map1 = new HashMap<>();
