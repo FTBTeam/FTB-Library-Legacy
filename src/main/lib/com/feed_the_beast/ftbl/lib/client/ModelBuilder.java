@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.lib.client;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.BlockPartFace;
@@ -9,7 +11,9 @@ import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -45,13 +49,17 @@ public class ModelBuilder
         TRANSFORM_MAP = Maps.immutableEnumMap(builder.build());
     }
 
+    public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(String.valueOf(location));
+
+    public final VertexFormat format;
     private List<BakedQuad> quads;
     private ModelRotation rotation;
     private boolean uvLocked = true;
-    private boolean shade = true;
+    private boolean shade = false;
 
-    public ModelBuilder(ModelRotation r)
+    public ModelBuilder(VertexFormat f, ModelRotation r)
     {
+        format = f;
         quads = new ArrayList<>();
         rotation = r;
     }

@@ -33,6 +33,7 @@ public class ODItems
     OBSIDIAN = "obsidian",
     CHEST = "chest",
     CHEST_WOOD = "chestWood",
+    CRAFTING_TABLE = "workbench",
     QUARTZ_BLOCK = "blockQuartz",
 
     SLIMEBALL = "slimeball",
