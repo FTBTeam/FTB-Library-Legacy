@@ -55,7 +55,7 @@ public class ModelBuilder
     private List<BakedQuad> quads;
     private ModelRotation rotation;
     private boolean uvLocked = true;
-    private boolean shade = false;
+    private boolean shade = true;
 
     public ModelBuilder(VertexFormat f, ModelRotation r)
     {
