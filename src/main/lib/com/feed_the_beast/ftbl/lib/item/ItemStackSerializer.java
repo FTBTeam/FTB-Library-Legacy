@@ -70,7 +70,15 @@ public class ItemStackSerializer
             return "";
         }
 
-        return Item.REGISTRY.getNameForObject(is.getItem()) + " " + ItemStackTools.getStackSize(is) + ' ' + is.getItemDamage();
+        String output = Item.REGISTRY.getNameForObject(is.getItem()) + " " + ItemStackTools.getStackSize(is) + ' ' + is.getItemDamage();
+
+        NBTTagCompound tagCompound = is.getTagCompound();
+        if (null != tagCompound)
+        {
+          output += " " + tagCompound.toString();
+        }
+
+        return output;
     }
 
     public static JsonElement serialize(ItemStack is)
