@@ -71,14 +71,7 @@ public class ItemStackSerializer
         }
 
         String output = Item.REGISTRY.getNameForObject(is.getItem()) + " " + ItemStackTools.getStackSize(is) + ' ' + is.getItemDamage();
-
-        NBTTagCompound tagCompound = is.getTagCompound();
-        if (null != tagCompound)
-        {
-          output += " " + tagCompound.toString();
-        }
-
-        return output;
+        return is.hasTagCompound() ? (output + ' ' + is.getTagCompound()) : output;
     }
 
     public static JsonElement serialize(ItemStack is)
