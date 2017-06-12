@@ -15,6 +15,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -106,75 +107,26 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
 	{
-		if (event.getGui() instanceof InventoryEffectRenderer)
+		if (!(event.getGui() instanceof InventoryEffectRenderer))
 		{
-			List<SidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
+			return;
+		}
 
-			if (!buttons.isEmpty())
+		List<SidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
+
+		if (!buttons.isEmpty())
+		{
+			ButtonInvLMRenderer renderer = new ButtonInvLMRenderer();
+			event.getButtonList().add(renderer);
+
+			for (int i = 0; i < buttons.size(); i++)
 			{
-				ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830);
-				event.getButtonList().add(renderer);
-
-				if (!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
-				{
-					int i = 0;
-					for (SidebarButton button : buttons)
-					{
-						int x = i % 4;
-						int y = i / 4;
-						ButtonInvLM b = new ButtonInvLM(495830 + i, button, 4 + x * 18, 4 + y * 18);
-						event.getButtonList().add(b);
-						renderer.buttons.add(b);
-						i++;
-					}
-				}
-				else
-				{
-					int xSize = 176;
-					int ySize = 166;
-					int buttonX = -17;
-					int buttonY = 8;
-
-					if (event.getGui() instanceof GuiContainerCreative)
-					{
-						xSize = 195;
-						ySize = 136;
-						buttonY = 6;
-					}
-					boolean hasPotions = !event.getGui().mc.player.getActivePotionEffects().isEmpty();
-					if (hasPotions)
-					{
-						buttonX -= 4;
-						buttonY -= 26;
-					}
-
-					int guiLeft = (event.getGui().width - xSize) / 2;
-					int guiTop = (event.getGui().height - ySize) / 2;
-
-					int i = 0;
-					for (SidebarButton button : buttons)
-					{
-						ButtonInvLM b;
-
-						if (hasPotions)
-						{
-							int x = i % 8;
-							int y = i / 8;
-							b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
-						}
-						else
-						{
-							int x = i / 8;
-							int y = i % 8;
-							b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
-						}
-
-						event.getButtonList().add(b);
-						renderer.buttons.add(b);
-						i++;
-					}
-				}
+				ButtonInvLM b = new ButtonInvLM(i, buttons.get(i));
+				event.getButtonList().add(b);
+				renderer.buttons.add(b);
 			}
+
+			renderer.updateButtonPositions();
 		}
 	}
 
@@ -211,13 +163,15 @@ public class FTBLibClientEventHandler
 
 	private static class ButtonInvLM extends GuiButton
 	{
+		public final int index;
 		public final SidebarButton button;
 		public final String title;
 		public final boolean renderMessages;
 
-		public ButtonInvLM(int id, SidebarButton b, int x, int y)
+		public ButtonInvLM(int id, SidebarButton b)
 		{
-			super(id, x, y, 16, 16, "");
+			super(495830 + id, -16, -16, 16, 16, "");
+			index = id;
 			button = b;
 			title = StringUtils.translate("sidebar_button." + b.getName());
 			renderMessages = b.getName().equals("ftbl.teams_gui");
@@ -232,11 +186,98 @@ public class FTBLibClientEventHandler
 	private static class ButtonInvLMRenderer extends GuiButton
 	{
 		public final List<ButtonInvLM> buttons;
+		private int prevGuiLeft = -1, prevGuiTop = -1;
 
-		public ButtonInvLMRenderer(int id)
+		public ButtonInvLMRenderer()
 		{
-			super(id, -1000, -1000, 0, 0, "");
+			super(495829, -1000, -1000, 0, 0, "");
 			buttons = new ArrayList<>();
+		}
+
+		public void updateButtonPositions()
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+
+			if (!(mc.currentScreen instanceof InventoryEffectRenderer))
+			{
+				return;
+			}
+
+			InventoryEffectRenderer gui = (InventoryEffectRenderer) mc.currentScreen;
+			int guiLeft = GuiHelper.getGuiX(gui);
+			int guiTop = GuiHelper.getGuiY(gui);
+
+			if (prevGuiLeft != guiLeft || prevGuiTop != guiTop)
+			{
+				prevGuiLeft = guiLeft;
+				prevGuiTop = guiTop;
+			}
+
+			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).field_192045_A.func_191878_b());
+
+			if (!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+			{
+				int x = 0;
+				int y = 0;
+
+				for (ButtonInvLM button : buttons)
+				{
+					button.xPosition = 4 + x * 18;
+					button.yPosition = 4 + y * 18;
+
+					if (hasPotions)
+					{
+						x++;
+
+						if (x >= 15 || 4 + x * 18 >= gui.height)
+						{
+							x = 0;
+							y++;
+						}
+					}
+					else
+					{
+						x++;
+
+						if (x == 4)
+						{
+							x = 0;
+							y++;
+						}
+					}
+				}
+			}
+			else
+			{
+				int buttonX = -17;
+				int buttonY = 8;
+
+				if (gui instanceof GuiContainerCreative)
+				{
+					buttonY = 6;
+				}
+
+				if (hasPotions)
+				{
+					buttonX -= 4;
+					buttonY -= 26;
+				}
+
+				for (ButtonInvLM button : buttons)
+				{
+					if (hasPotions)
+					{
+						button.xPosition = guiLeft + buttonX - (button.index % 8) * 18;
+						button.yPosition = guiTop + buttonY - (button.index / 8) * 18;
+					}
+					else
+					{
+						button.xPosition = guiLeft + buttonX - (button.index / 8) * 18;
+						button.yPosition = guiTop + buttonY + (button.index % 8) * 18;
+					}
+
+				}
+			}
 		}
 
 		@Override
@@ -244,6 +285,8 @@ public class FTBLibClientEventHandler
 		{
 			//if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
 			//	return;
+
+			updateButtonPositions();
 
 			zLevel = 0F;
 			FontRenderer font = mc.fontRendererObj;

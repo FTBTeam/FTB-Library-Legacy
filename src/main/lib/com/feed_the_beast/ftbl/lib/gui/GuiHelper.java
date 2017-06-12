@@ -10,6 +10,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -45,6 +46,26 @@ public class GuiHelper
 	private static final int SCISSOR_W[] = new int[MAX_SCISSOR];
 	private static final int SCISSOR_H[] = new int[MAX_SCISSOR];
 	private static int scissorIndex = -1;
+
+	public static int getGuiWidth(GuiContainer gui)
+	{
+		return gui.xSize;
+	}
+
+	public static int getGuiHeight(GuiContainer gui)
+	{
+		return gui.ySize;
+	}
+
+	public static int getGuiX(GuiContainer gui)
+	{
+		return gui.guiLeft;
+	}
+
+	public static int getGuiY(GuiContainer gui)
+	{
+		return gui.guiTop;
+	}
 
 	public static void playClickSound()
 	{
