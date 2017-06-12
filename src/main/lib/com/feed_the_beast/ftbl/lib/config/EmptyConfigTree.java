@@ -12,69 +12,69 @@ import java.util.Map;
 
 public enum EmptyConfigTree implements IConfigTree
 {
-    INSTANCE;
+	INSTANCE;
 
-    /**
-     * @author LatvianModder
-     */
-    @Override
-    public void writeData(ByteBuf data)
-    {
-    }
+	/**
+	 * @author LatvianModder
+	 */
+	@Override
+	public void writeData(ByteBuf data)
+	{
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+	}
 
-    @Override
-    public Map<IConfigKey, IConfigValue> getTree()
-    {
-        return Collections.emptyMap();
-    }
+	@Override
+	public Map<IConfigKey, IConfigValue> getTree()
+	{
+		return Collections.emptyMap();
+	}
 
-    @Override
-    public void add(IConfigKey key, IConfigValue value)
-    {
-    }
+	@Override
+	public void add(IConfigKey key, IConfigValue value)
+	{
+	}
 
-    @Override
-    public boolean has(IConfigKey key)
-    {
-        return false;
-    }
+	@Override
+	public boolean has(IConfigKey key)
+	{
+		return false;
+	}
 
-    @Override
-    public void remove(IConfigKey key)
-    {
-    }
+	@Override
+	public void remove(IConfigKey key)
+	{
+	}
 
-    @Override
-    public IConfigValue get(IConfigKey key)
-    {
-        return PropertyNull.INSTANCE;
-    }
+	@Override
+	public IConfigValue get(IConfigKey key)
+	{
+		return PropertyNull.INSTANCE;
+	}
 
-    @Override
-    public boolean isEmpty()
-    {
-        return true;
-    }
+	@Override
+	public boolean isEmpty()
+	{
+		return true;
+	}
 
-    @Override
-    public IConfigTree copy()
-    {
-        return this;
-    }
+	@Override
+	public IConfigTree copy()
+	{
+		return this;
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return JsonNull.INSTANCE;
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return JsonNull.INSTANCE;
+	}
 }

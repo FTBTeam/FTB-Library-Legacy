@@ -14,25 +14,25 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdLeave extends CmdBase
 {
-    public CmdLeave()
-    {
-        super("leave", Level.ALL);
-    }
+	public CmdLeave()
+	{
+		super("leave", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(ep);
-        IForgeTeam team = p.getTeam();
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(ep);
+		IForgeTeam team = p.getTeam();
 
-        if(team == null)
-        {
-            throw FTBLibLang.TEAM_NO_TEAM.commandError();
-        }
-        else if(!team.removePlayer(p))
-        {
-            throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
-        }
-    }
+		if (team == null)
+		{
+			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+		}
+		else if (!team.removePlayer(p))
+		{
+			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
+		}
+	}
 }

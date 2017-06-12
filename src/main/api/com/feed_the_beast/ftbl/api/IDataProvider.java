@@ -8,5 +8,5 @@ import net.minecraftforge.common.util.INBTSerializable;
  */
 public interface IDataProvider<T>
 {
-    INBTSerializable<NBTBase> getData(T owner);
+	INBTSerializable<NBTBase> getData(T owner);
 }

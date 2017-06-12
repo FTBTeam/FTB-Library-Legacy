@@ -7,11 +7,11 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public interface ISharedClientData extends ISharedData
 {
-    @Override
-    default Side getSide()
-    {
-        return Side.CLIENT;
-    }
+	@Override
+	default Side getSide()
+	{
+		return Side.CLIENT;
+	}
 
-    boolean isClientOP();
+	boolean isClientOP();
 }

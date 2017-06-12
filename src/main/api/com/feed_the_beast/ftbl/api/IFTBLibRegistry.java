@@ -13,27 +13,27 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface IFTBLibRegistry
 {
-    void addConfigFileProvider(String id, IConfigFileProvider provider);
+	void addConfigFileProvider(String id, IConfigFileProvider provider);
 
-    void addConfigValueProvider(String id, IConfigValueProvider provider);
+	void addConfigValueProvider(String id, IConfigValueProvider provider);
 
-    IConfigKey addConfig(String group, String id, IConfigValue value);
+	IConfigKey addConfig(String group, String id, IConfigValue value);
 
-    void addOptionalServerMod(String mod);
+	void addOptionalServerMod(String mod);
 
-    void addNotification(INotification notification);
+	void addNotification(INotification notification);
 
-    void addGuiContainer(ResourceLocation id, IContainerProvider provider);
+	void addGuiContainer(ResourceLocation id, IContainerProvider provider);
 
-    void addInfoTextLine(String id, IGuideTextLineProvider provider);
+	void addInfoTextLine(String id, IGuideTextLineProvider provider);
 
-    void addSyncData(String mod, ISyncData data);
+	void addSyncData(String mod, ISyncData data);
 
-    void addUniverseDataProvider(ResourceLocation id, IDataProvider<IUniverse> provider);
+	void addUniverseDataProvider(ResourceLocation id, IDataProvider<IUniverse> provider);
 
-    void addPlayerDataProvider(ResourceLocation id, IDataProvider<IForgePlayer> provider);
+	void addPlayerDataProvider(ResourceLocation id, IDataProvider<IForgePlayer> provider);
 
-    void addTeamDataProvider(ResourceLocation id, IDataProvider<IForgeTeam> provider);
+	void addTeamDataProvider(ResourceLocation id, IDataProvider<IForgeTeam> provider);
 
-    void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP);
+	void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP);
 }

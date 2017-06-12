@@ -11,50 +11,50 @@ import java.util.function.Supplier;
  */
 public class PropertyEnum<E extends Enum<E>> extends PropertyEnumAbstract<E>
 {
-    private final EnumNameMap<E> nameMap;
-    private E value;
+	private final EnumNameMap<E> nameMap;
+	private E value;
 
-    public static <T extends Enum<T>> PropertyEnum<T> create(EnumNameMap<T> nm, @Nullable T e, Supplier<T> getter, Consumer<T> setter)
-    {
-        return new PropertyEnum<T>(nm, e)
-        {
-            @Nullable
-            @Override
-            public T get()
-            {
-                return getter.get();
-            }
+	public static <T extends Enum<T>> PropertyEnum<T> create(EnumNameMap<T> nm, @Nullable T e, Supplier<T> getter, Consumer<T> setter)
+	{
+		return new PropertyEnum<T>(nm, e)
+		{
+			@Nullable
+			@Override
+			public T get()
+			{
+				return getter.get();
+			}
 
-            @Override
-            public void set(@Nullable T e)
-            {
-                setter.accept(e);
-            }
-        };
-    }
+			@Override
+			public void set(@Nullable T e)
+			{
+				setter.accept(e);
+			}
+		};
+	}
 
-    public PropertyEnum(EnumNameMap<E> nm, @Nullable E e)
-    {
-        nameMap = nm;
-        value = e;
-    }
+	public PropertyEnum(EnumNameMap<E> nm, @Nullable E e)
+	{
+		nameMap = nm;
+		value = e;
+	}
 
-    @Override
-    public EnumNameMap<E> getNameMap()
-    {
-        return nameMap;
-    }
+	@Override
+	public EnumNameMap<E> getNameMap()
+	{
+		return nameMap;
+	}
 
-    @Nullable
-    @Override
-    public E get()
-    {
-        return value;
-    }
+	@Nullable
+	@Override
+	public E get()
+	{
+		return value;
+	}
 
-    @Override
-    public void set(@Nullable E e)
-    {
-        value = e;
-    }
+	@Override
+	public void set(@Nullable E e)
+	{
+		value = e;
+	}
 }

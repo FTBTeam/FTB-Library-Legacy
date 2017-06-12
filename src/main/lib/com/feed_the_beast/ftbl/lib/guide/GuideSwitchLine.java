@@ -25,153 +25,153 @@ import java.util.Map;
  */
 public class GuideSwitchLine extends EmptyGuidePageLine
 {
-    private final GuidePage page;
-    private final Map<String, List<IGuideTextLine>> textLinesMap;
-    private final ResourceLocation id;
+	private final GuidePage page;
+	private final Map<String, List<IGuideTextLine>> textLinesMap;
+	private final ResourceLocation id;
 
-    public GuideSwitchLine(GuidePage p, JsonElement json)
-    {
-        textLinesMap = new HashMap<>();
-        page = p;
-        JsonObject o = json.getAsJsonObject();
-        id = new ResourceLocation(o.get("var").getAsString());
+	public GuideSwitchLine(GuidePage p, JsonElement json)
+	{
+		textLinesMap = new HashMap<>();
+		page = p;
+		JsonObject o = json.getAsJsonObject();
+		id = new ResourceLocation(o.get("var").getAsString());
 
-        for(Map.Entry<String, JsonElement> entry : o.get("switch").getAsJsonObject().entrySet())
-        {
-            List<IGuideTextLine> textLines = new ArrayList<>();
+		for (Map.Entry<String, JsonElement> entry : o.get("switch").getAsJsonObject().entrySet())
+		{
+			List<IGuideTextLine> textLines = new ArrayList<>();
 
-            if(entry.getValue().isJsonArray())
-            {
-                for(JsonElement element : entry.getValue().getAsJsonArray())
-                {
-                    IGuideTextLine line = page.createLine(element);
+			if (entry.getValue().isJsonArray())
+			{
+				for (JsonElement element : entry.getValue().getAsJsonArray())
+				{
+					IGuideTextLine line = page.createLine(element);
 
-                    if(line != null)
-                    {
-                        textLines.add(line);
-                    }
-                }
-            }
-            else
-            {
-                textLines.add(page.createLine(entry.getValue()));
-            }
+					if (line != null)
+					{
+						textLines.add(line);
+					}
+				}
+			}
+			else
+			{
+				textLines.add(page.createLine(entry.getValue()));
+			}
 
-            textLinesMap.put(entry.getKey(), textLines);
-        }
-    }
+			textLinesMap.put(entry.getKey(), textLines);
+		}
+	}
 
-    public GuideSwitchLine(GuidePage p, Map<String, List<IGuideTextLine>> m, ResourceLocation i)
-    {
-        page = p;
-        textLinesMap = m;
-        id = i;
-    }
+	public GuideSwitchLine(GuidePage p, Map<String, List<IGuideTextLine>> m, ResourceLocation i)
+	{
+		page = p;
+		textLinesMap = m;
+		id = i;
+	}
 
-    @Override
-    public Widget createWidget(GuiBase gui, Panel parent)
-    {
-        return new PanelList((GuiGuide) gui);
-    }
+	@Override
+	public Widget createWidget(GuiBase gui, Panel parent)
+	{
+		return new PanelList((GuiGuide) gui);
+	}
 
-    @Override
-    public IGuideTextLine copy(GuidePage page)
-    {
-        GuideSwitchLine line = new GuideSwitchLine(page, new HashMap<>(), id);
-        for(Map.Entry<String, List<IGuideTextLine>> entry : textLinesMap.entrySet())
-        {
-            List<IGuideTextLine> textLines = new ArrayList<>();
+	@Override
+	public IGuideTextLine copy(GuidePage page)
+	{
+		GuideSwitchLine line = new GuideSwitchLine(page, new HashMap<>(), id);
+		for (Map.Entry<String, List<IGuideTextLine>> entry : textLinesMap.entrySet())
+		{
+			List<IGuideTextLine> textLines = new ArrayList<>();
 
-            for(IGuideTextLine line1 : textLines)
-            {
-                textLines.add(line1.copy(page));
-            }
+			for (IGuideTextLine line1 : textLines)
+			{
+				textLines.add(line1.copy(page));
+			}
 
-            line.textLinesMap.put(entry.getKey(), textLines);
-        }
+			line.textLinesMap.put(entry.getKey(), textLines);
+		}
 
-        return line;
-    }
+		return line;
+	}
 
-    @Override
-    public JsonElement getJson()
-    {
-        JsonObject o = new JsonObject();
-        o.add("id", new JsonPrimitive("switch"));
-        o.add("var", new JsonPrimitive(id.toString()));
-        JsonObject o1 = new JsonObject();
+	@Override
+	public JsonElement getJson()
+	{
+		JsonObject o = new JsonObject();
+		o.add("id", new JsonPrimitive("switch"));
+		o.add("var", new JsonPrimitive(id.toString()));
+		JsonObject o1 = new JsonObject();
 
-        for(Map.Entry<String, List<IGuideTextLine>> entry : textLinesMap.entrySet())
-        {
-            JsonArray a = new JsonArray();
+		for (Map.Entry<String, List<IGuideTextLine>> entry : textLinesMap.entrySet())
+		{
+			JsonArray a = new JsonArray();
 
-            for(IGuideTextLine line : entry.getValue())
-            {
-                a.add(line.getJson());
-            }
-            o.add(entry.getKey(), a);
-        }
+			for (IGuideTextLine line : entry.getValue())
+			{
+				a.add(line.getJson());
+			}
+			o.add(entry.getKey(), a);
+		}
 
-        o.add("switch", o1);
-        return o;
-    }
+		o.add("switch", o1);
+		return o;
+	}
 
-    @Override
-    public boolean isEmpty()
-    {
-        if(textLinesMap.isEmpty())
-        {
-            return true;
-        }
+	@Override
+	public boolean isEmpty()
+	{
+		if (textLinesMap.isEmpty())
+		{
+			return true;
+		}
 
-        for(List<IGuideTextLine> lines : textLinesMap.values())
-        {
-            for(IGuideTextLine line : lines)
-            {
-                if(!line.isEmpty())
-                {
-                    return false;
-                }
-            }
-        }
+		for (List<IGuideTextLine> lines : textLinesMap.values())
+		{
+			for (IGuideTextLine line : lines)
+			{
+				if (!line.isEmpty())
+				{
+					return false;
+				}
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public List<IGuideTextLine> get(String id)
-    {
-        List<IGuideTextLine> list = textLinesMap.get(id);
+	public List<IGuideTextLine> get(String id)
+	{
+		List<IGuideTextLine> list = textLinesMap.get(id);
 
-        if(list == null)
-        {
-            list = textLinesMap.get("default");
-        }
+		if (list == null)
+		{
+			list = textLinesMap.get("default");
+		}
 
-        return (list == null || list.isEmpty()) ? Collections.emptyList() : list;
-    }
+		return (list == null || list.isEmpty()) ? Collections.emptyList() : list;
+	}
 
-    private class PanelList extends Panel
-    {
-        private final GuiGuide gui;
+	private class PanelList extends Panel
+	{
+		private final GuiGuide gui;
 
-        private PanelList(GuiGuide g)
-        {
-            super(0, 0, 0, 0);
-            gui = g;
-        }
+		private PanelList(GuiGuide g)
+		{
+			super(0, 0, 0, 0);
+			gui = g;
+		}
 
-        @Override
-        public void addWidgets()
-        {
-            if(!isEmpty())
-            {
-                GuideVariableEvent event = new GuideVariableEvent(Side.CLIENT, page, id);
-                MinecraftForge.EVENT_BUS.post(event);
-                for(IGuideTextLine line : get(event.getValue()))
-                {
-                    getParentPanel().add(line.createWidget(gui, getParentPanel()));
-                }
-            }
-        }
-    }
+		@Override
+		public void addWidgets()
+		{
+			if (!isEmpty())
+			{
+				GuideVariableEvent event = new GuideVariableEvent(Side.CLIENT, page, id);
+				MinecraftForge.EVENT_BUS.post(event);
+				for (IGuideTextLine line : get(event.getValue()))
+				{
+					getParentPanel().add(line.createWidget(gui, getParentPanel()));
+				}
+			}
+		}
+	}
 }

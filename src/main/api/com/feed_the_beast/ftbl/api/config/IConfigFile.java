@@ -11,20 +11,20 @@ import javax.annotation.Nullable;
  */
 public interface IConfigFile extends IConfigTree, IConfigContainer
 {
-    void load();
+	void load();
 
-    void save();
+	void save();
 
-    @Override
-    default IConfigTree getConfigTree()
-    {
-        return this;
-    }
+	@Override
+	default IConfigTree getConfigTree()
+	{
+		return this;
+	}
 
-    @Override
-    default void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-    {
-        fromJson(json);
-        save();
-    }
+	@Override
+	default void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+	{
+		fromJson(json);
+		save();
+	}
 }

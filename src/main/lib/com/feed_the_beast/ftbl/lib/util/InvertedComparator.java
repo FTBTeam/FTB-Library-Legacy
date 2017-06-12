@@ -7,16 +7,16 @@ import java.util.Comparator;
  */
 public class InvertedComparator<T> implements Comparator<T>
 {
-    private final Comparator<T> comparator;
+	private final Comparator<T> comparator;
 
-    public InvertedComparator(Comparator<T> c)
-    {
-        comparator = c;
-    }
+	public InvertedComparator(Comparator<T> c)
+	{
+		comparator = c;
+	}
 
-    @Override
-    public int compare(T o1, T o2)
-    {
-        return comparator.compare(o2, o1);
-    }
+	@Override
+	public int compare(T o1, T o2)
+	{
+		return comparator.compare(o2, o1);
+	}
 }

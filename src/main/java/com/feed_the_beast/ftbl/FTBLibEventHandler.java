@@ -41,151 +41,151 @@ import java.util.Map;
 
 public class FTBLibEventHandler
 {
-    @SubscribeEvent
-    public static void onWorldSaved(WorldEvent.Save event)
-    {
-        if(event.getWorld().provider.getDimension() != 0 || !(event.getWorld() instanceof WorldServer))
-        {
-            return;
-        }
+	@SubscribeEvent
+	public static void onWorldSaved(WorldEvent.Save event)
+	{
+		if (event.getWorld().provider.getDimension() != 0 || !(event.getWorld() instanceof WorldServer))
+		{
+			return;
+		}
 
-        try
-        {
-            JsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
-            Universe.INSTANCE.save(new File(LMUtils.folderWorld, "data/ftb_lib"));
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
+		try
+		{
+			JsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
+			Universe.INSTANCE.save(new File(LMUtils.folderWorld, "data/ftb_lib"));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
-    @SubscribeEvent
-    @Optional.Method(modid = "mercurius")
-    public static void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
-    {
-        Map<String, Object> map = new HashMap<>();
-        map.put("FTB_PackMode", SharedServerData.INSTANCE.getPackMode().getName());
-        event.addEventData(FTBLibFinals.MOD_ID, map);
-    }
+	@SubscribeEvent
+	@Optional.Method(modid = "mercurius")
+	public static void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
+	{
+		Map<String, Object> map = new HashMap<>();
+		map.put("FTB_PackMode", SharedServerData.INSTANCE.getPackMode().getName());
+		event.addEventData(FTBLibFinals.MOD_ID, map);
+	}
 
-    @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
-    {
-        if(!(e.player instanceof EntityPlayerMP) || Universe.INSTANCE == null)
-        {
-            return;
-        }
+	@SubscribeEvent
+	public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e)
+	{
+		if (!(e.player instanceof EntityPlayerMP) || Universe.INSTANCE == null)
+		{
+			return;
+		}
 
-        EntityPlayerMP ep = (EntityPlayerMP) e.player;
-        ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
-        boolean firstLogin = p == null;
+		EntityPlayerMP ep = (EntityPlayerMP) e.player;
+		ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
+		boolean firstLogin = p == null;
 
-        if(firstLogin)
-        {
-            p = new ForgePlayer(ep.getGameProfile().getId(), ep.getGameProfile().getName());
-            Universe.INSTANCE.playerMap.put(p.getId(), p);
-        }
-        else if(!p.getName().equals(ep.getName()))
-        {
-            p.setUsername(ep.getGameProfile().getName());
-        }
+		if (firstLogin)
+		{
+			p = new ForgePlayer(ep.getGameProfile().getId(), ep.getGameProfile().getName());
+			Universe.INSTANCE.playerMap.put(p.getId(), p);
+		}
+		else if (!p.getName().equals(ep.getName()))
+		{
+			p.setUsername(ep.getGameProfile().getName());
+		}
 
-        p.onLoggedIn(ep, firstLogin);
+		p.onLoggedIn(ep, firstLogin);
 
-        if(firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
-        {
-            String id = p.getName().toLowerCase();
+		if (firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
+		{
+			String id = p.getName().toLowerCase();
 
-            if(Universe.INSTANCE.getTeam(id) != null)
-            {
-                id = StringUtils.fromUUID(p.getId());
-            }
+			if (Universe.INSTANCE.getTeam(id) != null)
+			{
+				id = StringUtils.fromUUID(p.getId());
+			}
 
-            if(Universe.INSTANCE.getTeam(id) == null)
-            {
-                ForgeTeam team = new ForgeTeam(id);
-                team.changeOwner(p);
-                Universe.INSTANCE.teams.put(team.getName(), team);
-                MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
-                MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
-            }
-        }
+			if (Universe.INSTANCE.getTeam(id) == null)
+			{
+				ForgeTeam team = new ForgeTeam(id);
+				team.changeOwner(p);
+				Universe.INSTANCE.teams.put(team.getName(), team);
+				MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
+				MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
+			}
+		}
 
-        if(!p.hideTeamNotification() && p.getTeam() == null)
-        {
-            ITextComponent c = new TextComponentString("You haven't joined or created a team yet! ");
-            ITextComponent b1 = new TextComponentString("[Click Here]");
-            b1.getStyle().setColor(TextFormatting.GOLD);
-            b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
-            b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("TeamsGUI")));
-            c.appendSibling(b1);
-            c.appendText(" to open TeamsGUI or ");
-            ITextComponent b2 = new TextComponentString("[Click Here]");
-            b2.getStyle().setColor(TextFormatting.GOLD);
-            b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification true"));
-            b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message")));
-            c.appendSibling(b2);
-            c.appendText(" to hide this message.");
-            ep.sendMessage(c);
-        }
-    }
+		if (!p.hideTeamNotification() && p.getTeam() == null)
+		{
+			ITextComponent c = new TextComponentString("You haven't joined or created a team yet! ");
+			ITextComponent b1 = new TextComponentString("[Click Here]");
+			b1.getStyle().setColor(TextFormatting.GOLD);
+			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
+			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("TeamsGUI")));
+			c.appendSibling(b1);
+			c.appendText(" to open TeamsGUI or ");
+			ITextComponent b2 = new TextComponentString("[Click Here]");
+			b2.getStyle().setColor(TextFormatting.GOLD);
+			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification true"));
+			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message")));
+			c.appendSibling(b2);
+			c.appendText(" to hide this message.");
+			ep.sendMessage(c);
+		}
+	}
 
-    @SubscribeEvent
-    public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
-    {
-        if(e.player instanceof EntityPlayerMP && Universe.INSTANCE != null)
-        {
-            ForgePlayer p = Universe.INSTANCE.getPlayer(e.player);
+	@SubscribeEvent
+	public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent e)
+	{
+		if (e.player instanceof EntityPlayerMP && Universe.INSTANCE != null)
+		{
+			ForgePlayer p = Universe.INSTANCE.getPlayer(e.player);
 
-            if(p != null)
-            {
-                p.onLoggedOut();
-            }
-        }
-    }
+			if (p != null)
+			{
+				p.onLoggedOut();
+			}
+		}
+	}
 
-    @SubscribeEvent
-    public static void onPlayerDeath(LivingDeathEvent e)
-    {
-        if(e.getEntity() instanceof EntityPlayerMP && Universe.INSTANCE != null)
-        {
-            EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
-            ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
+	@SubscribeEvent
+	public static void onPlayerDeath(LivingDeathEvent e)
+	{
+		if (e.getEntity() instanceof EntityPlayerMP && Universe.INSTANCE != null)
+		{
+			EntityPlayerMP ep = (EntityPlayerMP) e.getEntity();
+			ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
 
-            if(p != null)
-            {
-                p.onDeath(ep, e.getSource());
-            }
-        }
-    }
+			if (p != null)
+			{
+				p.onDeath(ep, e.getSource());
+			}
+		}
+	}
 
     /*
-    @SubscribeEvent
+	@SubscribeEvent
     public static void onPlayerInteract(PlayerInteractEvent e)
     {
     }
     */
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public static void onGuideEvent(ClientGuideEvent event)
-    {
-        GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
-        page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-        page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void onGuideEvent(ClientGuideEvent event)
+	{
+		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
+		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
+		page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
 
-        for(SidebarButton button : FTBLibModClient.getSidebarButtons(true))
-        {
-            if(button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
-            {
-                GuidePage page1 = page.getSub(button.getName());
-                page1.setIcon(button.icon);
-                page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-                page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
-            }
-        }
+		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
+		{
+			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
+			{
+				GuidePage page1 = page.getSub(button.getName());
+				page1.setIcon(button.icon);
+				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
+				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
+			}
+		}
 
-        event.add(page);
-    }
+		event.add(page);
+	}
 }

@@ -10,12 +10,12 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class CmdFTBC extends CmdTreeBase
 {
-    public CmdFTBC()
-    {
-        super("ftbc");
-        addSubcommand(new CmdClientConfig());
+	public CmdFTBC()
+	{
+		super("ftbc");
+		addSubcommand(new CmdClientConfig());
 
-        MinecraftForge.EVENT_BUS.post(new RegisterFTBClientCommandsEvent(this));
-        setCustomPermissionPrefix("");
-    }
+		MinecraftForge.EVENT_BUS.post(new RegisterFTBClientCommandsEvent(this));
+		setCustomPermissionPrefix("");
+	}
 }

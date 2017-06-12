@@ -17,122 +17,122 @@ import java.util.List;
  */
 public class PropertyString extends PropertyBase
 {
-    public static final String ID = "string";
-    public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
+	public static final String ID = "string";
+	public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
 
-    private String value;
-    private int charLimit;
+	private String value;
+	private int charLimit;
 
-    public PropertyString()
-    {
-        this("");
-    }
+	public PropertyString()
+	{
+		this("");
+	}
 
-    public PropertyString(String v)
-    {
-        this(v, 0);
-    }
+	public PropertyString(String v)
+	{
+		this(v, 0);
+	}
 
-    public PropertyString(String v, int limit)
-    {
-        value = v;
-        charLimit = limit;
-    }
+	public PropertyString(String v, int limit)
+	{
+		value = v;
+		charLimit = limit;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Override
-    public String getString()
-    {
-        return value;
-    }
+	@Override
+	public String getString()
+	{
+		return value;
+	}
 
-    public void setString(String v)
-    {
-        value = v;
-    }
+	public void setString(String v)
+	{
+		value = v;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getString();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getString();
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return getString().equals("true");
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return getString().equals("true");
+	}
 
-    @Override
-    public int getInt()
-    {
-        return Integer.parseInt(getString());
-    }
+	@Override
+	public int getInt()
+	{
+		return Integer.parseInt(getString());
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyString(getString(), charLimit);
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyString(getString(), charLimit);
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return COLOR;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return COLOR;
+	}
 
-    @Override
-    public boolean setValueFromString(String text, boolean simulate)
-    {
-        setString(text);
-        return true;
-    }
+	@Override
+	public boolean setValueFromString(String text, boolean simulate)
+	{
+		setString(text);
+		return true;
+	}
 
-    @Override
-    public void addInfo(IConfigKey key, List<String> list)
-    {
-        super.addInfo(key, list);
+	@Override
+	public void addInfo(IConfigKey key, List<String> list)
+	{
+		super.addInfo(key, list);
 
-        if(charLimit > 0)
-        {
-            list.add(TextFormatting.AQUA + "Char Limit: " + charLimit);
-        }
-    }
+		if (charLimit > 0)
+		{
+			list.add(TextFormatting.AQUA + "Char Limit: " + charLimit);
+		}
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        setString(json.getAsString());
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		setString(json.getAsString());
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getString());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(getString());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        ByteBufUtils.writeUTF8String(data, getString());
-        data.writeShort(charLimit);
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		ByteBufUtils.writeUTF8String(data, getString());
+		data.writeShort(charLimit);
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        setString(ByteBufUtils.readUTF8String(data));
-        charLimit = data.readUnsignedShort();
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		setString(ByteBufUtils.readUTF8String(data));
+		charLimit = data.readUnsignedShort();
+	}
 
-    public boolean isEmpty()
-    {
-        return getString().isEmpty();
-    }
+	public boolean isEmpty()
+	{
+		return getString().isEmpty();
+	}
 }

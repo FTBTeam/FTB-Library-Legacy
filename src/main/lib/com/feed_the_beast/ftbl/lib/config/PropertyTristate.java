@@ -19,139 +19,139 @@ import java.util.function.Supplier;
  */
 public class PropertyTristate extends PropertyBase
 {
-    public static final String ID = "tristate";
+	public static final String ID = "tristate";
 
-    public static PropertyTristate create(EnumTristate defValue, Supplier<EnumTristate> getter, Consumer<EnumTristate> setter)
-    {
-        return new PropertyTristate(defValue)
-        {
-            @Override
-            public EnumTristate get()
-            {
-                return getter.get();
-            }
+	public static PropertyTristate create(EnumTristate defValue, Supplier<EnumTristate> getter, Consumer<EnumTristate> setter)
+	{
+		return new PropertyTristate(defValue)
+		{
+			@Override
+			public EnumTristate get()
+			{
+				return getter.get();
+			}
 
-            @Override
-            public void set(EnumTristate v)
-            {
-                setter.accept(v);
-            }
-        };
-    }
+			@Override
+			public void set(EnumTristate v)
+			{
+				setter.accept(v);
+			}
+		};
+	}
 
-    private EnumTristate value;
+	private EnumTristate value;
 
-    public PropertyTristate()
-    {
-        value = EnumTristate.DEFAULT;
-    }
+	public PropertyTristate()
+	{
+		value = EnumTristate.DEFAULT;
+	}
 
-    public PropertyTristate(EnumTristate v)
-    {
-        value = v;
-    }
+	public PropertyTristate(EnumTristate v)
+	{
+		value = v;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return value.isTrue();
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return value.isTrue();
+	}
 
-    public EnumTristate get()
-    {
-        return value;
-    }
+	public EnumTristate get()
+	{
+		return value;
+	}
 
-    public void set(EnumTristate v)
-    {
-        value = v;
-    }
+	public void set(EnumTristate v)
+	{
+		value = v;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return get();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return get();
+	}
 
-    @Override
-    public String getString()
-    {
-        return get().getName();
-    }
+	@Override
+	public String getString()
+	{
+		return get().getName();
+	}
 
-    @Override
-    public int getInt()
-    {
-        return get().ordinal();
-    }
+	@Override
+	public int getInt()
+	{
+		return get().ordinal();
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyTristate(get());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyTristate(get());
+	}
 
-    @Override
-    public boolean equalsValue(IConfigValue value)
-    {
-        return get() == value.getValue();
-    }
+	@Override
+	public boolean equalsValue(IConfigValue value)
+	{
+		return get() == value.getValue();
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return get().getColor();
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return get().getColor();
+	}
 
-    @Override
-    public List<String> getVariants()
-    {
-        return EnumTristate.NAME_MAP.getKeys();
-    }
+	@Override
+	public List<String> getVariants()
+	{
+		return EnumTristate.NAME_MAP.getKeys();
+	}
 
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-        set(get().getNext());
-        gui.onChanged(key, getSerializableElement());
-    }
+	@Override
+	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	{
+		set(get().getNext());
+		gui.onChanged(key, getSerializableElement());
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        if(json.getAsString().equals("toggle"))
-        {
-            set(get().getOpposite());
-        }
-        else
-        {
-            EnumTristate state = EnumTristate.NAME_MAP.get(json.getAsString());
-            set(state == null ? EnumTristate.DEFAULT : state);
-        }
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		if (json.getAsString().equals("toggle"))
+		{
+			set(get().getOpposite());
+		}
+		else
+		{
+			EnumTristate state = EnumTristate.NAME_MAP.get(json.getAsString());
+			set(state == null ? EnumTristate.DEFAULT : state);
+		}
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(get().getName());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(get().getName());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeByte(get().ordinal());
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeByte(get().ordinal());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        set(EnumTristate.VALUES[data.readUnsignedByte()]);
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		set(EnumTristate.VALUES[data.readUnsignedByte()]);
+	}
 }

@@ -8,15 +8,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class LoadWorldDataEvent extends Event
 {
-    private final MinecraftServer server;
+	private final MinecraftServer server;
 
-    public LoadWorldDataEvent(MinecraftServer s)
-    {
-        server = s;
-    }
+	public LoadWorldDataEvent(MinecraftServer s)
+	{
+		server = s;
+	}
 
-    public MinecraftServer getServer()
-    {
-        return server;
-    }
+	public MinecraftServer getServer()
+	{
+		return server;
+	}
 }

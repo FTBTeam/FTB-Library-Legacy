@@ -8,15 +8,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class ConfigLoadedEvent extends Event
 {
-    private final LoaderState.ModState state;
+	private final LoaderState.ModState state;
 
-    public ConfigLoadedEvent(LoaderState.ModState s)
-    {
-        state = s;
-    }
+	public ConfigLoadedEvent(LoaderState.ModState s)
+	{
+		state = s;
+	}
 
-    public LoaderState.ModState getState()
-    {
-        return state;
-    }
+	public LoaderState.ModState getState()
+	{
+		return state;
+	}
 }

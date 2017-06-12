@@ -13,52 +13,52 @@ import java.util.List;
  */
 public class ExtendedTextField extends TextField
 {
-    public final ITextComponent textComponent;
-    private List<GuiHelper.PositionedTextData> textData;
+	public final ITextComponent textComponent;
+	private List<GuiHelper.PositionedTextData> textData;
 
-    public ExtendedTextField(int x, int y, int width, int height, FontRenderer font, ITextComponent t)
-    {
-        super(x, y, width, height, font, t.getFormattedText());
-        textComponent = t;
-        textData = GuiHelper.createDataFrom(t, font, width);
-    }
+	public ExtendedTextField(int x, int y, int width, int height, FontRenderer font, ITextComponent t)
+	{
+		super(x, y, width, height, font, t.getFormattedText());
+		textComponent = t;
+		textData = GuiHelper.createDataFrom(t, font, width);
+	}
 
-    @Nullable
-    private GuiHelper.PositionedTextData getDataAtMouse(GuiBase gui)
-    {
-        int ax = getAX();
-        int ay = getAY();
+	@Nullable
+	private GuiHelper.PositionedTextData getDataAtMouse(GuiBase gui)
+	{
+		int ax = getAX();
+		int ay = getAY();
 
-        for(GuiHelper.PositionedTextData data : textData)
-        {
-            if(gui.isMouseOver(data.posX + ax, data.posY + ay, data.width, data.height))
-            {
-                return data;
-            }
-        }
+		for (GuiHelper.PositionedTextData data : textData)
+		{
+			if (gui.isMouseOver(data.posX + ax, data.posY + ay, data.width, data.height))
+			{
+				return data;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public void addMouseOverText(GuiBase gui, List<String> list)
-    {
-        GuiHelper.PositionedTextData data = getDataAtMouse(gui);
+	@Override
+	public void addMouseOverText(GuiBase gui, List<String> list)
+	{
+		GuiHelper.PositionedTextData data = getDataAtMouse(gui);
 
-        if(data != null && data.hoverEvent != null) //TODO: Special handling for each data.hoverEvent.getAction()
-        {
-            Collections.addAll(list, data.hoverEvent.getValue().getFormattedText().split("\n"));
-        }
-    }
+		if (data != null && data.hoverEvent != null) //TODO: Special handling for each data.hoverEvent.getAction()
+		{
+			Collections.addAll(list, data.hoverEvent.getValue().getFormattedText().split("\n"));
+		}
+	}
 
-    @Override
-    public void onClicked(GuiBase gui, IMouseButton button)
-    {
-        GuiHelper.PositionedTextData data = getDataAtMouse(gui);
+	@Override
+	public void onClicked(GuiBase gui, IMouseButton button)
+	{
+		GuiHelper.PositionedTextData data = getDataAtMouse(gui);
 
-        if(data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
-        {
-            GuiHelper.playClickSound();
-        }
-    }
+		if (data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
+		{
+			GuiHelper.playClickSound();
+		}
+	}
 }

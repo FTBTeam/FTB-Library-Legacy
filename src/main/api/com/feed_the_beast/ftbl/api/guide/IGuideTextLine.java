@@ -11,16 +11,16 @@ import com.google.gson.JsonElement;
  */
 public interface IGuideTextLine
 {
-    String getUnformattedText();
+	String getUnformattedText();
 
-    Widget createWidget(GuiBase gui, Panel parent);
+	Widget createWidget(GuiBase gui, Panel parent);
 
-    IGuideTextLine copy(GuidePage page);
+	IGuideTextLine copy(GuidePage page);
 
-    JsonElement getJson();
+	JsonElement getJson();
 
-    default boolean isEmpty()
-    {
-        return getUnformattedText().isEmpty();
-    }
+	default boolean isEmpty()
+	{
+		return getUnformattedText().isEmpty();
+	}
 }

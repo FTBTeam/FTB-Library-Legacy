@@ -19,177 +19,177 @@ import java.util.function.DoubleSupplier;
  */
 public class PropertyDouble extends PropertyBase implements DoubleSupplier
 {
-    public static final String ID = "double";
+	public static final String ID = "double";
 
-    private double value;
-    private double min = Double.NEGATIVE_INFINITY;
-    private double max = Double.POSITIVE_INFINITY;
+	private double value;
+	private double min = Double.NEGATIVE_INFINITY;
+	private double max = Double.POSITIVE_INFINITY;
 
-    public PropertyDouble()
-    {
-    }
+	public PropertyDouble()
+	{
+	}
 
-    public PropertyDouble(double v)
-    {
-        value = v;
-    }
+	public PropertyDouble(double v)
+	{
+		value = v;
+	}
 
-    public PropertyDouble(double v, double mn, double mx)
-    {
-        value = v;
-        min = mn;
-        max = mx;
-    }
+	public PropertyDouble(double v, double mn, double mx)
+	{
+		value = v;
+		min = mn;
+		max = mx;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Override
-    public double getDouble()
-    {
-        return value;
-    }
+	@Override
+	public double getDouble()
+	{
+		return value;
+	}
 
-    public void setDouble(double v)
-    {
-        value = v;
-    }
+	public void setDouble(double v)
+	{
+		value = v;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getDouble();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getDouble();
+	}
 
-    public PropertyDouble setMin(double v)
-    {
-        min = v;
-        return this;
-    }
+	public PropertyDouble setMin(double v)
+	{
+		min = v;
+		return this;
+	}
 
-    public PropertyDouble setMax(double v)
-    {
-        max = v;
-        return this;
-    }
+	public PropertyDouble setMax(double v)
+	{
+		max = v;
+		return this;
+	}
 
-    public double getMin()
-    {
-        return min;
-    }
+	public double getMin()
+	{
+		return min;
+	}
 
-    public double getMax()
-    {
-        return max;
-    }
+	public double getMax()
+	{
+		return max;
+	}
 
-    @Override
-    public String getString()
-    {
-        return Double.toString(getDouble());
-    }
+	@Override
+	public String getString()
+	{
+		return Double.toString(getDouble());
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return getDouble() != 0D;
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return getDouble() != 0D;
+	}
 
-    @Override
-    public int getInt()
-    {
-        return (int) getDouble();
-    }
+	@Override
+	public int getInt()
+	{
+		return (int) getDouble();
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyDouble(getDouble());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyDouble(getDouble());
+	}
 
-    @Override
-    public boolean equalsValue(IConfigValue value)
-    {
-        return getDouble() == value.getDouble();
-    }
+	@Override
+	public boolean equalsValue(IConfigValue value)
+	{
+		return getDouble() == value.getDouble();
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return PropertyInt.COLOR;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return PropertyInt.COLOR;
+	}
 
-    @Override
-    public void addInfo(IConfigKey key, List<String> list)
-    {
-        super.addInfo(key, list);
+	@Override
+	public void addInfo(IConfigKey key, List<String> list)
+	{
+		super.addInfo(key, list);
 
-        double m = getMin();
+		double m = getMin();
 
-        if(m != Double.NEGATIVE_INFINITY)
-        {
-            list.add(TextFormatting.AQUA + "Min: " + StringUtils.formatDouble(m));
-        }
+		if (m != Double.NEGATIVE_INFINITY)
+		{
+			list.add(TextFormatting.AQUA + "Min: " + StringUtils.formatDouble(m));
+		}
 
-        m = getMax();
+		m = getMax();
 
-        if(m != Double.POSITIVE_INFINITY)
-        {
-            list.add(TextFormatting.AQUA + "Max: " + StringUtils.formatDouble(m));
-        }
-    }
+		if (m != Double.POSITIVE_INFINITY)
+		{
+			list.add(TextFormatting.AQUA + "Max: " + StringUtils.formatDouble(m));
+		}
+	}
 
-    @Override
-    public boolean setValueFromString(String text, boolean simulate)
-    {
-        if(MathUtils.canParseDouble(text))
-        {
-            if(!simulate)
-            {
-                setDouble(Double.parseDouble(text));
-            }
+	@Override
+	public boolean setValueFromString(String text, boolean simulate)
+	{
+		if (MathUtils.canParseDouble(text))
+		{
+			if (!simulate)
+			{
+				setDouble(Double.parseDouble(text));
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        setDouble(json.getAsDouble());
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		setDouble(json.getAsDouble());
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getDouble());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(getDouble());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeDouble(getDouble());
-        data.writeDouble(getMin());
-        data.writeDouble(getMax());
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeDouble(getDouble());
+		data.writeDouble(getMin());
+		data.writeDouble(getMax());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        setDouble(data.readDouble());
-        setMin(data.readDouble());
-        setMax(data.readDouble());
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		setDouble(data.readDouble());
+		setMin(data.readDouble());
+		setMax(data.readDouble());
+	}
 
-    @Override
-    public double getAsDouble()
-    {
-        return getDouble();
-    }
+	@Override
+	public double getAsDouble()
+	{
+		return getDouble();
+	}
 }

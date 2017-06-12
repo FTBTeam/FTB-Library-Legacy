@@ -18,75 +18,75 @@ import java.util.List;
  */
 public class GuideContentsLine extends EmptyGuidePageLine
 {
-    private final GuidePage page;
+	private final GuidePage page;
 
-    public GuideContentsLine(GuidePage p)
-    {
-        page = p;
-    }
+	public GuideContentsLine(GuidePage p)
+	{
+		page = p;
+	}
 
-    @Override
-    public Widget createWidget(GuiBase gui, Panel parent)
-    {
-        return new PanelGuideContents((GuiGuide) gui);
-    }
+	@Override
+	public Widget createWidget(GuiBase gui, Panel parent)
+	{
+		return new PanelGuideContents((GuiGuide) gui);
+	}
 
-    @Override
-    public IGuideTextLine copy(GuidePage page)
-    {
-        return new GuideContentsLine(page);
-    }
+	@Override
+	public IGuideTextLine copy(GuidePage page)
+	{
+		return new GuideContentsLine(page);
+	}
 
-    @Override
-    public JsonElement getJson()
-    {
-        JsonObject o = new JsonObject();
-        o.add("id", new JsonPrimitive("contents"));
-        return o;
-    }
+	@Override
+	public JsonElement getJson()
+	{
+		JsonObject o = new JsonObject();
+		o.add("id", new JsonPrimitive("contents"));
+		return o;
+	}
 
-    private class PanelGuideContents extends Panel
-    {
-        private final List<Widget> buttons;
+	private class PanelGuideContents extends Panel
+	{
+		private final List<Widget> buttons;
 
-        private PanelGuideContents(GuiGuide gui)
-        {
-            super(0, 0, 10, 10);
-            buttons = new ArrayList<>();
-            addButtons(gui, page, 0);
-        }
+		private PanelGuideContents(GuiGuide gui)
+		{
+			super(0, 0, 10, 10);
+			buttons = new ArrayList<>();
+			addButtons(gui, page, 0);
+		}
 
-        private void addButtons(GuiGuide gui, GuidePage from, int level)
-        {
-            setWidth(10000);
+		private void addButtons(GuiGuide gui, GuidePage from, int level)
+		{
+			setWidth(10000);
 
-            for(GuidePage p : from.childPages.values())
-            {
-                Widget w = new ButtonGuidePage(gui, p, true);
-                w.posX = level * 12;
-                w.width = 1000;
-                buttons.add(w);
-                addButtons(gui, p, level + 1);
-            }
-        }
+			for (GuidePage p : from.childPages.values())
+			{
+				Widget w = new ButtonGuidePage(gui, p, true);
+				w.posX = level * 12;
+				w.width = 1000;
+				buttons.add(w);
+				addButtons(gui, p, level + 1);
+			}
+		}
 
-        @Override
-        public void addWidgets()
-        {
-            addAll(buttons);
-            updateWidgetPositions();
-        }
+		@Override
+		public void addWidgets()
+		{
+			addAll(buttons);
+			updateWidgetPositions();
+		}
 
-        @Override
-        public void updateWidgetPositions()
-        {
-            setHeight(align(WidgetLayout.VERTICAL));
-        }
-    }
+		@Override
+		public void updateWidgetPositions()
+		{
+			setHeight(align(WidgetLayout.VERTICAL));
+		}
+	}
 
-    @Override
-    public boolean isEmpty()
-    {
-        return page.childPages.isEmpty();
-    }
+	@Override
+	public boolean isEmpty()
+	{
+		return page.childPages.isEmpty();
+	}
 }

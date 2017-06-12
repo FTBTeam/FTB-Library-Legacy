@@ -9,5 +9,5 @@ import java.io.File;
  */
 public interface IPackMode extends IStringSerializable
 {
-    File getFolder();
+	File getFolder();
 }

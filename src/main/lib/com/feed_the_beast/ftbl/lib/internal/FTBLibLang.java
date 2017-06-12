@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.lib.LangKey;
  */
 public class FTBLibLang
 {
-    //@formatter:off
+	//@formatter:off
     public static final LangKey
     MODE_LOADED = get("mode.loaded"),
     MODE_NOT_FOUND = get("mode.not_found"),
@@ -57,8 +57,8 @@ public class FTBLibLang
     TEAM_PERMISSION_OWNER = get("team.permission.owner");
     //@formatter:on
 
-    private static LangKey get(String s)
-    {
-        return new LangKey("ftbl.lang." + s);
-    }
+	private static LangKey get(String s)
+	{
+		return new LangKey("ftbl.lang." + s);
+	}
 }

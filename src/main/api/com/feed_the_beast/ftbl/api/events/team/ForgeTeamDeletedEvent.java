@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
  */
 public class ForgeTeamDeletedEvent extends ForgeTeamEvent
 {
-    public ForgeTeamDeletedEvent(IForgeTeam team)
-    {
-        super(team);
-    }
+	public ForgeTeamDeletedEvent(IForgeTeam team)
+	{
+		super(team);
+	}
 }

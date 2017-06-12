@@ -10,11 +10,11 @@ import java.util.UUID;
  */
 public interface ISharedData
 {
-    Side getSide();
+	Side getSide();
 
-    IPackMode getPackMode();
+	IPackMode getPackMode();
 
-    UUID getUniverseID();
+	UUID getUniverseID();
 
-    Collection<String> optionalServerMods();
+	Collection<String> optionalServerMods();
 }

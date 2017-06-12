@@ -18,178 +18,178 @@ import java.util.List;
 
 public class ClientNotifications
 {
-    private static Temp current;
+	private static Temp current;
 
-    public static class NotificationWidget
-    {
-        public final INotification notification;
-        public final List<String> text;
-        public final int height;
-        public int width;
+	public static class NotificationWidget
+	{
+		public final INotification notification;
+		public final List<String> text;
+		public final int height;
+		public int width;
 
-        public NotificationWidget(INotification n, FontRenderer font)
-        {
-            notification = n;
-            width = 0;
+		public NotificationWidget(INotification n, FontRenderer font)
+		{
+			notification = n;
+			width = 0;
 
-            if(notification.getText().isEmpty())
-            {
-                text = Collections.emptyList();
-            }
-            else
-            {
-                text = new ArrayList<>();
+			if (notification.getText().isEmpty())
+			{
+				text = Collections.emptyList();
+			}
+			else
+			{
+				text = new ArrayList<>();
 
-                for(ITextComponent c : notification.getText())
-                {
-                    for(String s : font.listFormattedStringToWidth(c.getFormattedText(), 250))
-                    {
-                        text.add(s);
-                        width = Math.max(width, font.getStringWidth(s));
-                    }
-                }
-            }
+				for (ITextComponent c : notification.getText())
+				{
+					for (String s : font.listFormattedStringToWidth(c.getFormattedText(), 250))
+					{
+						text.add(s);
+						width = Math.max(width, font.getStringWidth(s));
+					}
+				}
+			}
 
-            width += 20;
+			width += 20;
 
-            if(notification.getIcon() != ImageProvider.NULL)
-            {
-                if(text.isEmpty())
-                {
-                    width = 32;
-                }
-                else
-                {
-                    width += 20;
-                }
-            }
+			if (notification.getIcon() != ImageProvider.NULL)
+			{
+				if (text.isEmpty())
+				{
+					width = 32;
+				}
+				else
+				{
+					width += 20;
+				}
+			}
 
-            if(text.size() > 2)
-            {
-                height = 4 + text.size() * 12;
-            }
-            else
-            {
-                height = 32;
-            }
-        }
+			if (text.size() > 2)
+			{
+				height = 4 + text.size() * 12;
+			}
+			else
+			{
+				height = 32;
+			}
+		}
 
-        public void render(Minecraft mc, int ax, int ay)
-        {
-            GlStateManager.enableBlend();
+		public void render(Minecraft mc, int ax, int ay)
+		{
+			GlStateManager.enableBlend();
 
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            GuiHelper.drawBlankRect(ax, ay, width, height, notification.getColor());
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GuiHelper.drawBlankRect(ax, ay, width, height, notification.getColor());
 
-            if(notification.getIcon() != ImageProvider.NULL)
-            {
-                notification.getIcon().draw(ax + 8, ay + (height - 16) / 2, 16, 16, Color4I.NONE);
-            }
+			if (notification.getIcon() != ImageProvider.NULL)
+			{
+				notification.getIcon().draw(ax + 8, ay + (height - 16) / 2, 16, 16, Color4I.NONE);
+			}
 
-            for(int i = 0; i < text.size(); i++)
-            {
-                mc.fontRendererObj.drawString(text.get(i), ax + (notification.getIcon() != ImageProvider.NULL ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
-            }
-        }
-    }
+			for (int i = 0; i < text.size(); i++)
+			{
+				mc.fontRendererObj.drawString(text.get(i), ax + (notification.getIcon() != ImageProvider.NULL ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
+			}
+		}
+	}
 
-    private static class Temp
-    {
-        private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
-        private static Minecraft mc = Minecraft.getMinecraft();
+	private static class Temp
+	{
+		private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
+		private static Minecraft mc = Minecraft.getMinecraft();
 
-        private long time;
-        private NotificationWidget widget;
+		private long time;
+		private NotificationWidget widget;
 
-        private Temp(INotification n)
-        {
-            widget = new NotificationWidget(n, mc.fontRendererObj);
-            time = -1L;
-        }
+		private Temp(INotification n)
+		{
+			widget = new NotificationWidget(n, mc.fontRendererObj);
+			time = -1L;
+		}
 
-        public boolean render(ScaledResolution screen)
-        {
-            if(time == -1L)
-            {
-                time = System.currentTimeMillis();
-            }
-            else if(time <= 0L)
-            {
-                return true;
-            }
+		public boolean render(ScaledResolution screen)
+		{
+			if (time == -1L)
+			{
+				time = System.currentTimeMillis();
+			}
+			else if (time <= 0L)
+			{
+				return true;
+			}
 
-            int timeExisted = (int) (System.currentTimeMillis() - time);
-            int timer = widget.notification.getTimer() & 0xFFFF;
+			int timeExisted = (int) (System.currentTimeMillis() - time);
+			int timer = widget.notification.getTimer() & 0xFFFF;
 
-            if(timeExisted > timer)
-            {
-                time = 0L;
-                return true;
-            }
+			if (timeExisted > timer)
+			{
+				time = 0L;
+				return true;
+			}
 
-            double d1 = 1D;
+			double d1 = 1D;
 
-            if(timer - timeExisted < 300)
-            {
-                d1 = (timer - timeExisted) / 300D;
-            }
+			if (timer - timeExisted < 300)
+			{
+				d1 = (timer - timeExisted) / 300D;
+			}
 
-            if(timeExisted < 300)
-            {
-                d1 = timeExisted / 300D;
-            }
+			if (timeExisted < 300)
+			{
+				d1 = timeExisted / 300D;
+			}
 
-            GlStateManager.pushMatrix();
-            GlStateManager.disableDepth();
-            GlStateManager.depthMask(false);
-            GlStateManager.disableLighting();
-            widget.render(mc, screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
-            GlStateManager.depthMask(true);
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            GlStateManager.enableLighting();
-            GlStateManager.popMatrix();
+			GlStateManager.pushMatrix();
+			GlStateManager.disableDepth();
+			GlStateManager.depthMask(false);
+			GlStateManager.disableLighting();
+			widget.render(mc, screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
+			GlStateManager.depthMask(true);
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
 
-            return false;
-        }
-    }
+			return false;
+		}
+	}
 
-    static boolean shouldRenderTemp()
-    {
-        return current != null || !Temp.MAP.isEmpty();
-    }
+	static boolean shouldRenderTemp()
+	{
+		return current != null || !Temp.MAP.isEmpty();
+	}
 
-    static void renderTemp(ScaledResolution screen)
-    {
-        if(current != null)
-        {
-            if(current.render(screen))
-            {
-                current = null;
-            }
-        }
-        else if(!Temp.MAP.isEmpty())
-        {
-            current = new Temp(Temp.MAP.values().iterator().next());
-            Temp.MAP.remove(current.widget.notification.getId().getID());
-        }
-    }
+	static void renderTemp(ScaledResolution screen)
+	{
+		if (current != null)
+		{
+			if (current.render(screen))
+			{
+				current = null;
+			}
+		}
+		else if (!Temp.MAP.isEmpty())
+		{
+			current = new Temp(Temp.MAP.values().iterator().next());
+			Temp.MAP.remove(current.widget.notification.getId().getID());
+		}
+	}
 
-    public static void add(INotification n)
-    {
-        ResourceLocation id = n.getId().getID();
-        Temp.MAP.remove(id);
+	public static void add(INotification n)
+	{
+		ResourceLocation id = n.getId().getID();
+		Temp.MAP.remove(id);
 
-        if(current != null && current.widget.notification.getId().equals(n.getId()))
-        {
-            current = null;
-        }
+		if (current != null && current.widget.notification.getId().equals(n.getId()))
+		{
+			current = null;
+		}
 
-        Temp.MAP.put(id, n);
-    }
+		Temp.MAP.put(id, n);
+	}
 
-    public static void init()
-    {
-        current = null;
-        Temp.MAP.clear();
-    }
+	public static void init()
+	{
+		current = null;
+		Temp.MAP.clear();
+	}
 }

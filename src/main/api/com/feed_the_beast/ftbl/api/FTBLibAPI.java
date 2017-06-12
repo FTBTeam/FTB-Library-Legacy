@@ -24,41 +24,41 @@ import java.util.Map;
  */
 public interface FTBLibAPI
 {
-    Collection<IFTBLibPlugin> getAllPlugins();
+	Collection<IFTBLibPlugin> getAllPlugins();
 
-    Collection<ITickable> ticking();
+	Collection<ITickable> ticking();
 
-    IPackModes getPackModes();
+	IPackModes getPackModes();
 
-    ISharedServerData getServerData();
+	ISharedServerData getServerData();
 
-    ISharedClientData getClientData();
+	ISharedClientData getClientData();
 
-    default ISharedData getSidedData(Side side)
-    {
-        return side.isServer() ? getServerData() : getClientData();
-    }
+	default ISharedData getSidedData(Side side)
+	{
+		return side.isServer() ? getServerData() : getClientData();
+	}
 
-    @Nullable
-    IUniverse getUniverse();
+	@Nullable
+	IUniverse getUniverse();
 
-    void addServerCallback(int timer, Runnable runnable);
+	void addServerCallback(int timer, Runnable runnable);
 
-    void loadWorldData(MinecraftServer server);
+	void loadWorldData(MinecraftServer server);
 
-    void reload(Side side, ICommandSender sender, EnumReloadType type);
+	void reload(Side side, ICommandSender sender, EnumReloadType type);
 
-    void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
+	void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
-    void sendNotification(@Nullable EntityPlayer player, INotification n);
+	void sendNotification(@Nullable EntityPlayer player, INotification n);
 
-    void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
+	void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 
-    void displayGuide(EntityPlayer player, GuidePage page);
+	void displayGuide(EntityPlayer player, GuidePage page);
 
-    IConfigValue getConfigValueFromID(String id);
+	IConfigValue getConfigValueFromID(String id);
 
-    Map<String, IRankConfig> getRankConfigRegistry();
+	Map<String, IRankConfig> getRankConfigRegistry();
 
-    void handleMessage(MessageBase<?> message, MessageContext context, Side side);
+	void handleMessage(MessageBase<?> message, MessageContext context, Side side);
 }

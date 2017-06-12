@@ -17,46 +17,46 @@ import java.util.UUID;
  */
 public abstract class SharedData implements ISharedData
 {
-    public IPackMode currentMode;
-    public UUID universeID;
-    public final Collection<String> optionalServerMods = new HashSet<>();
-    public final Map<NotificationId, INotification> notifications = new HashMap<>();
+	public IPackMode currentMode;
+	public UUID universeID;
+	public final Collection<String> optionalServerMods = new HashSet<>();
+	public final Map<NotificationId, INotification> notifications = new HashMap<>();
 
-    SharedData()
-    {
-    }
+	SharedData()
+	{
+	}
 
-    public void reset()
-    {
-        currentMode = null;
-        universeID = null;
-    }
+	public void reset()
+	{
+		currentMode = null;
+		universeID = null;
+	}
 
-    @Override
-    public IPackMode getPackMode()
-    {
-        if(currentMode == null)
-        {
-            currentMode = getSide().isClient() ? new PackMode("default") : FTBLibIntegrationInternal.API.getPackModes().getDefault();
-        }
+	@Override
+	public IPackMode getPackMode()
+	{
+		if (currentMode == null)
+		{
+			currentMode = getSide().isClient() ? new PackMode("default") : FTBLibIntegrationInternal.API.getPackModes().getDefault();
+		}
 
-        return currentMode;
-    }
+		return currentMode;
+	}
 
-    @Override
-    public UUID getUniverseID()
-    {
-        if(universeID == null || (universeID.getLeastSignificantBits() == 0L && universeID.getMostSignificantBits() == 0L))
-        {
-            universeID = UUID.randomUUID();
-        }
+	@Override
+	public UUID getUniverseID()
+	{
+		if (universeID == null || (universeID.getLeastSignificantBits() == 0L && universeID.getMostSignificantBits() == 0L))
+		{
+			universeID = UUID.randomUUID();
+		}
 
-        return universeID;
-    }
+		return universeID;
+	}
 
-    @Override
-    public Collection<String> optionalServerMods()
-    {
-        return optionalServerMods;
-    }
+	@Override
+	public Collection<String> optionalServerMods()
+	{
+		return optionalServerMods;
+	}
 }

@@ -13,47 +13,47 @@ import java.io.File;
  */
 public class ConfigFile extends ConfigTree implements IConfigFile
 {
-    public static final IConfigFileProvider NULL_FILE_PROVIDER = () -> null;
+	public static final IConfigFileProvider NULL_FILE_PROVIDER = () -> null;
 
-    private final ITextComponent displayName;
-    private final IConfigFileProvider fileProvider;
+	private final ITextComponent displayName;
+	private final IConfigFileProvider fileProvider;
 
-    public ConfigFile(ITextComponent n, IConfigFileProvider p)
-    {
-        displayName = n;
-        fileProvider = p;
-    }
+	public ConfigFile(ITextComponent n, IConfigFileProvider p)
+	{
+		displayName = n;
+		fileProvider = p;
+	}
 
-    @Override
-    public void load()
-    {
-        File f = fileProvider.getFile();
+	@Override
+	public void load()
+	{
+		File f = fileProvider.getFile();
 
-        if(f != null)
-        {
-            JsonElement e = JsonUtils.fromJson(f);
+		if (f != null)
+		{
+			JsonElement e = JsonUtils.fromJson(f);
 
-            if(e.isJsonObject())
-            {
-                fromJson(JsonUtils.fromJsonTree(e.getAsJsonObject()));
-            }
-        }
-    }
+			if (e.isJsonObject())
+			{
+				fromJson(JsonUtils.fromJsonTree(e.getAsJsonObject()));
+			}
+		}
+	}
 
-    @Override
-    public void save()
-    {
-        File f = fileProvider.getFile();
+	@Override
+	public void save()
+	{
+		File f = fileProvider.getFile();
 
-        if(f != null)
-        {
-            JsonUtils.toJson(f, JsonUtils.toJsonTree(getSerializableElement().getAsJsonObject().entrySet()));
-        }
-    }
+		if (f != null)
+		{
+			JsonUtils.toJson(f, JsonUtils.toJsonTree(getSerializableElement().getAsJsonObject().entrySet()));
+		}
+	}
 
-    @Override
-    public ITextComponent getTitle()
-    {
-        return displayName;
-    }
+	@Override
+	public ITextComponent getTitle()
+	{
+		return displayName;
+	}
 }

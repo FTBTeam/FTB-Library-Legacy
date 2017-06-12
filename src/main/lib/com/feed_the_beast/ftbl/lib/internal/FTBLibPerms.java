@@ -8,10 +8,10 @@ import net.minecraftforge.server.permission.PermissionAPI;
  */
 public class FTBLibPerms
 {
-    public static final String SHOW_OP_BUTTONS = "ftbl.op_buttons";
+	public static final String SHOW_OP_BUTTONS = "ftbl.op_buttons";
 
-    public static void init()
-    {
-        PermissionAPI.registerNode(SHOW_OP_BUTTONS, DefaultPermissionLevel.OP, "Node for displaying OP-specific buttons in inventory");
-    }
+	public static void init()
+	{
+		PermissionAPI.registerNode(SHOW_OP_BUTTONS, DefaultPermissionLevel.OP, "Node for displaying OP-specific buttons in inventory");
+	}
 }

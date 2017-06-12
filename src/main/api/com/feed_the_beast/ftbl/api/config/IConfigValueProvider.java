@@ -5,5 +5,5 @@ package com.feed_the_beast.ftbl.api.config;
  */
 public interface IConfigValueProvider
 {
-    IConfigValue createConfigValue();
+	IConfigValue createConfigValue();
 }

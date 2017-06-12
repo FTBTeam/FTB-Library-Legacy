@@ -60,199 +60,199 @@ import java.util.Map;
  */
 public class FTBLibAPI_Impl implements FTBLibAPI
 {
-    public static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
-    private Collection<IFTBLibPlugin> plugins;
+	public static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
+	private Collection<IFTBLibPlugin> plugins;
 
-    public void init(ASMDataTable table)
-    {
-        plugins = AsmHelper.findPlugins(table, IFTBLibPlugin.class, FTBLibPlugin.class);
+	public void init(ASMDataTable table)
+	{
+		plugins = AsmHelper.findPlugins(table, IFTBLibPlugin.class, FTBLibPlugin.class);
 
-        for(IFTBLibPlugin p : plugins)
-        {
-            p.init(this);
-        }
-    }
+		for (IFTBLibPlugin p : plugins)
+		{
+			p.init(this);
+		}
+	}
 
-    @Override
-    public Collection<IFTBLibPlugin> getAllPlugins()
-    {
-        return plugins;
-    }
+	@Override
+	public Collection<IFTBLibPlugin> getAllPlugins()
+	{
+		return plugins;
+	}
 
-    @Override
-    public Collection<ITickable> ticking()
-    {
-        return TickHandler.INSTANCE.TICKABLES;
-    }
+	@Override
+	public Collection<ITickable> ticking()
+	{
+		return TickHandler.INSTANCE.TICKABLES;
+	}
 
-    @Override
-    public IPackModes getPackModes()
-    {
-        return PackModes.INSTANCE;
-    }
+	@Override
+	public IPackModes getPackModes()
+	{
+		return PackModes.INSTANCE;
+	}
 
-    @Override
-    public ISharedServerData getServerData()
-    {
-        return SharedServerData.INSTANCE;
-    }
+	@Override
+	public ISharedServerData getServerData()
+	{
+		return SharedServerData.INSTANCE;
+	}
 
-    @Override
-    public ISharedClientData getClientData()
-    {
-        return SharedClientData.INSTANCE;
-    }
+	@Override
+	public ISharedClientData getClientData()
+	{
+		return SharedClientData.INSTANCE;
+	}
 
-    @Override
-    @Nullable
-    public IUniverse getUniverse()
-    {
-        return Universe.INSTANCE;
-    }
+	@Override
+	@Nullable
+	public IUniverse getUniverse()
+	{
+		return Universe.INSTANCE;
+	}
 
-    @Override
-    public void addServerCallback(int timer, Runnable runnable)
-    {
-        TickHandler.INSTANCE.addServerCallback(timer, runnable);
-    }
+	@Override
+	public void addServerCallback(int timer, Runnable runnable)
+	{
+		TickHandler.INSTANCE.addServerCallback(timer, runnable);
+	}
 
-    @Override
-    public void loadWorldData(MinecraftServer server)
-    {
-        MinecraftForge.EVENT_BUS.post(new LoadWorldDataEvent(server));
-    }
+	@Override
+	public void loadWorldData(MinecraftServer server)
+	{
+		MinecraftForge.EVENT_BUS.post(new LoadWorldDataEvent(server));
+	}
 
-    @Override
-    public void reload(Side side, ICommandSender sender, EnumReloadType type)
-    {
-        long ms = System.currentTimeMillis();
-        boolean serverSide = side.isServer();
+	@Override
+	public void reload(Side side, ICommandSender sender, EnumReloadType type)
+	{
+		long ms = System.currentTimeMillis();
+		boolean serverSide = side.isServer();
 
-        if(serverSide)
-        {
-            Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
-            FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
-        }
+		if (serverSide)
+		{
+			Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
+			FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
+		}
 
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent(side, sender, type));
+		MinecraftForge.EVENT_BUS.post(new ReloadEvent(side, sender, type));
 
-        if(serverSide && ServerUtils.hasOnlinePlayers())
-        {
-            for(EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
-            {
-                NBTTagCompound syncData = new NBTTagCompound();
-                IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
-                FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
-                new MessageReload(type, syncData).sendTo(ep);
-            }
-        }
+		if (serverSide && ServerUtils.hasOnlinePlayers())
+		{
+			for (EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
+			{
+				NBTTagCompound syncData = new NBTTagCompound();
+				IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
+				FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
+				new MessageReload(type, syncData).sendTo(ep);
+			}
+		}
 
-        if(type != EnumReloadType.CREATED)
-        {
-            (serverSide ? FTBLibLang.RELOAD_SERVER : FTBLibLang.RELOAD_CLIENT).printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+		if (type != EnumReloadType.CREATED)
+		{
+			(serverSide ? FTBLibLang.RELOAD_SERVER : FTBLibLang.RELOAD_CLIENT).printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
 
-            if(serverSide && type == EnumReloadType.RELOAD_COMMAND)
-            {
-                sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
-            }
-        }
+			if (serverSide && type == EnumReloadType.RELOAD_COMMAND)
+			{
+				sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
+			}
+		}
 
-        FTBLibFinals.LOGGER.info("Reloaded " + side + " on packmode '" + getSidedData(side).getPackMode() + "'");
-    }
+		FTBLibFinals.LOGGER.info("Reloaded " + side + " on packmode '" + getSidedData(side).getPackMode() + "'");
+	}
 
-    @Override
-    public void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
-    {
-        IContainerProvider containerProvider = FTBLibModCommon.GUI_CONTAINER_PROVIDERS.get(guiID);
+	@Override
+	public void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
+	{
+		IContainerProvider containerProvider = FTBLibModCommon.GUI_CONTAINER_PROVIDERS.get(guiID);
 
-        if(containerProvider == null)
-        {
-            return;
-        }
+		if (containerProvider == null)
+		{
+			return;
+		}
 
-        Container c = containerProvider.getContainer(player, pos, data);
+		Container c = containerProvider.getContainer(player, pos, data);
 
-        player.getNextWindowId();
-        player.closeContainer();
+		player.getNextWindowId();
+		player.closeContainer();
 
-        if(c != null)
-        {
-            player.openContainer = c;
-        }
+		if (c != null)
+		{
+			player.openContainer = c;
+		}
 
-        player.openContainer.windowId = player.currentWindowId;
-        player.openContainer.addListener(player);
-        new MessageOpenGui(guiID, pos, data, player.currentWindowId).sendTo(player);
-    }
+		player.openContainer.windowId = player.currentWindowId;
+		player.openContainer.addListener(player);
+		new MessageOpenGui(guiID, pos, data, player.currentWindowId).sendTo(player);
+	}
 
-    @Override
-    public void sendNotification(@Nullable EntityPlayer player, INotification n)
-    {
-        if(player != null && player.world.isRemote)
-        {
-            FTBLibMod.PROXY.displayNotification(EnumNotificationDisplay.SCREEN, n);
-        }
-        else if(SharedServerData.INSTANCE.notifications.containsKey(n.getId()))
-        {
-            new MessageNotifyPlayer(n.getId()).sendTo(player);
-        }
-        else
-        {
-            new MessageNotifyPlayerCustom(n).sendTo(player);
-        }
-    }
+	@Override
+	public void sendNotification(@Nullable EntityPlayer player, INotification n)
+	{
+		if (player != null && player.world.isRemote)
+		{
+			FTBLibMod.PROXY.displayNotification(EnumNotificationDisplay.SCREEN, n);
+		}
+		else if (SharedServerData.INSTANCE.notifications.containsKey(n.getId()))
+		{
+			new MessageNotifyPlayer(n.getId()).sendTo(player);
+		}
+		else
+		{
+			new MessageNotifyPlayerCustom(n).sendTo(player);
+		}
+	}
 
-    @Override
-    public void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
-    {
-        new MessageEditConfig(player.getGameProfile().getId(), nbt, configContainer).sendTo(player);
-    }
+	@Override
+	public void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
+	{
+		new MessageEditConfig(player.getGameProfile().getId(), nbt, configContainer).sendTo(player);
+	}
 
-    @Override
-    public void displayGuide(EntityPlayer player, GuidePage page)
-    {
-        if(player.world.isRemote)
-        {
-            FTBLibMod.PROXY.displayGuide(page);
-        }
-        else
-        {
-            new MessageDisplayGuide(page).sendTo(player);
-        }
-    }
+	@Override
+	public void displayGuide(EntityPlayer player, GuidePage page)
+	{
+		if (player.world.isRemote)
+		{
+			FTBLibMod.PROXY.displayGuide(page);
+		}
+		else
+		{
+			new MessageDisplayGuide(page).sendTo(player);
+		}
+	}
 
-    @Override
-    public IConfigValue getConfigValueFromID(String id)
-    {
-        IConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
-        Preconditions.checkNotNull(provider, "Unknown Config ID: " + id);
-        return provider.createConfigValue();
-    }
+	@Override
+	public IConfigValue getConfigValueFromID(String id)
+	{
+		IConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
+		Preconditions.checkNotNull(provider, "Unknown Config ID: " + id);
+		return provider.createConfigValue();
+	}
 
-    @Override
-    public Map<String, IRankConfig> getRankConfigRegistry()
-    {
-        return FTBLibModCommon.RANK_CONFIGS_MIRROR;
-    }
+	@Override
+	public Map<String, IRankConfig> getRankConfigRegistry()
+	{
+		return FTBLibModCommon.RANK_CONFIGS_MIRROR;
+	}
 
-    @Override
-    public void handleMessage(MessageBase<?> message, MessageContext context, Side side)
-    {
-        if(side.isServer())
-        {
-            context.getServerHandler().playerEntity.mcServer.addScheduledTask(() ->
-            {
-                message.onMessage(LMUtils.cast(message), context.getServerHandler().playerEntity);
+	@Override
+	public void handleMessage(MessageBase<?> message, MessageContext context, Side side)
+	{
+		if (side.isServer())
+		{
+			context.getServerHandler().playerEntity.mcServer.addScheduledTask(() ->
+			{
+				message.onMessage(LMUtils.cast(message), context.getServerHandler().playerEntity);
 
-                if(LOG_NET)
-                {
-                    LMUtils.DEV_LOGGER.info("TX MessageBase: " + message.getClass().getName());
-                }
-            });
-        }
-        else
-        {
-            FTBLibMod.PROXY.handleClientMessage(message);
-        }
-    }
+				if (LOG_NET)
+				{
+					LMUtils.DEV_LOGGER.info("TX MessageBase: " + message.getClass().getName());
+				}
+			});
+		}
+		else
+		{
+			FTBLibMod.PROXY.handleClientMessage(message);
+		}
+	}
 }

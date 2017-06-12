@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface IFTBLibClientRegistry
 {
-    IConfigKey addClientConfig(String group, String id, IConfigValue value);
+	IConfigKey addClientConfig(String group, String id, IConfigValue value);
 
-    void addGui(ResourceLocation id, IGuiProvider provider);
+	void addGui(ResourceLocation id, IGuiProvider provider);
 }

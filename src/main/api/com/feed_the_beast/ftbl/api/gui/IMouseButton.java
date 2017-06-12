@@ -5,11 +5,11 @@ package com.feed_the_beast.ftbl.api.gui;
  */
 public interface IMouseButton
 {
-    boolean isLeft();
+	boolean isLeft();
 
-    boolean isRight();
+	boolean isRight();
 
-    boolean isMiddle();
+	boolean isMiddle();
 
-    int getButtonId();
+	int getButtonId();
 }

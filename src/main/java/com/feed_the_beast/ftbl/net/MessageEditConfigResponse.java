@@ -19,59 +19,59 @@ import javax.annotation.Nullable;
 
 public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
 {
-    private JsonObject groupData;
-    private NBTTagCompound extraNBT;
+	private JsonObject groupData;
+	private NBTTagCompound extraNBT;
 
-    public MessageEditConfigResponse()
-    {
-    }
+	public MessageEditConfigResponse()
+	{
+	}
 
-    public MessageEditConfigResponse(@Nullable NBTTagCompound nbt, JsonObject json)
-    {
-        groupData = json;
-        extraNBT = nbt;
+	public MessageEditConfigResponse(@Nullable NBTTagCompound nbt, JsonObject json)
+	{
+		groupData = json;
+		extraNBT = nbt;
 
-        if(LMUtils.DEV_ENV)
-        {
-            LMUtils.DEV_LOGGER.info("TX Response: " + groupData);
-        }
-    }
+		if (LMUtils.DEV_ENV)
+		{
+			LMUtils.DEV_LOGGER.info("TX Response: " + groupData);
+		}
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        groupData = NetUtils.readJsonElement(io).getAsJsonObject();
-        extraNBT = ByteBufUtils.readTag(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		groupData = NetUtils.readJsonElement(io).getAsJsonObject();
+		extraNBT = ByteBufUtils.readTag(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        NetUtils.writeJsonElement(io, groupData);
-        ByteBufUtils.writeTag(io, extraNBT);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		NetUtils.writeJsonElement(io, groupData);
+		ByteBufUtils.writeTag(io, extraNBT);
+	}
 
-    @Override
-    public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
-    {
-        IConfigContainer cc = FTBLibModCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
+	@Override
+	public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
+	{
+		IConfigContainer cc = FTBLibModCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
 
-        if(cc != null)
-        {
-            if(LMUtils.DEV_ENV)
-            {
-                LMUtils.DEV_LOGGER.info("RX Response: " + m.groupData);
-            }
+		if (cc != null)
+		{
+			if (LMUtils.DEV_ENV)
+			{
+				LMUtils.DEV_LOGGER.info("RX Response: " + m.groupData);
+			}
 
-            cc.saveConfig(player, m.extraNBT, m.groupData);
-            MinecraftForge.EVENT_BUS.post(new ConfigLoadedEvent(LoaderState.ModState.AVAILABLE));
-            FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
-        }
-    }
+			cc.saveConfig(player, m.extraNBT, m.groupData);
+			MinecraftForge.EVENT_BUS.post(new ConfigLoadedEvent(LoaderState.ModState.AVAILABLE));
+			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
+		}
+	}
 }

@@ -8,25 +8,25 @@ import java.awt.image.BufferedImage;
  */
 public interface IPixelBuffer
 {
-    int getWidth();
+	int getWidth();
 
-    int getHeight();
+	int getHeight();
 
-    int[] getPixels();
+	int[] getPixels();
 
-    void setPixels(int[] pixels);
+	void setPixels(int[] pixels);
 
-    int getRGB(int x, int y);
+	int getRGB(int x, int y);
 
-    int[] getRGB(int startX, int startY, int w, int h, @Nullable int[] rgbArray);
+	int[] getRGB(int startX, int startY, int w, int h, @Nullable int[] rgbArray);
 
-    void setRGB(int x, int y, int col);
+	void setRGB(int x, int y, int col);
 
-    void setRGB(int startX, int startY, int w, int h, int[] rgbArray);
+	void setRGB(int startX, int startY, int w, int h, int[] rgbArray);
 
-    void setRGB(int startX, int startY, IPixelBuffer buffer);
+	void setRGB(int startX, int startY, IPixelBuffer buffer);
 
-    BufferedImage toImage(int type);
+	BufferedImage toImage(int type);
 
-    IPixelBuffer getSubimage(int x, int y, int w, int h);
+	IPixelBuffer getSubimage(int x, int y, int w, int h);
 }

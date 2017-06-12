@@ -21,106 +21,106 @@ import java.util.List;
  */
 public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBase
 {
-    public static final String ID = "enum";
-    public static final Color4I COLOR = new Color4I(false, 0xFF0094FF);
+	public static final String ID = "enum";
+	public static final Color4I COLOR = new Color4I(false, 0xFF0094FF);
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    public abstract EnumNameMap<E> getNameMap();
+	public abstract EnumNameMap<E> getNameMap();
 
-    @Nullable
-    public abstract E get();
+	@Nullable
+	public abstract E get();
 
-    public abstract void set(@Nullable E e);
+	public abstract void set(@Nullable E e);
 
-    public E getNonnull()
-    {
-        E e = get();
-        Preconditions.checkNotNull(e);
-        return e;
-    }
+	public E getNonnull()
+	{
+		E e = get();
+		Preconditions.checkNotNull(e);
+		return e;
+	}
 
-    @Override
-    public Object getValue()
-    {
-        return get();
-    }
+	@Override
+	public Object getValue()
+	{
+		return get();
+	}
 
-    @Override
-    public String getString()
-    {
-        return EnumNameMap.getName(getValue());
-    }
+	@Override
+	public String getString()
+	{
+		return EnumNameMap.getName(getValue());
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return getValue() != null;
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return getValue() != null;
+	}
 
-    @Override
-    public int getInt()
-    {
-        return getNameMap().getIndex(getValue());
-    }
+	@Override
+	public int getInt()
+	{
+		return getNameMap().getIndex(getValue());
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyEnum<>(getNameMap(), getNameMap().getFromIndex(getInt()));
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyEnum<>(getNameMap(), getNameMap().getFromIndex(getInt()));
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return COLOR;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return COLOR;
+	}
 
-    @Override
-    public List<String> getVariants()
-    {
-        return getNameMap().getKeys();
-    }
+	@Override
+	public List<String> getVariants()
+	{
+		return getNameMap().getKeys();
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        set(getNameMap().get(json.getAsString()));
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		set(getNameMap().get(json.getAsString()));
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getString());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(getString());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeShort(getNameMap().size);
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeShort(getNameMap().size);
 
-        for(String s : getNameMap().getKeys())
-        {
-            ByteBufUtils.writeUTF8String(data, s);
-        }
+		for (String s : getNameMap().getKeys())
+		{
+			ByteBufUtils.writeUTF8String(data, s);
+		}
 
-        data.writeShort(getNameMap().getIndex(getValue()));
-    }
+		data.writeShort(getNameMap().getIndex(getValue()));
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        throw new IllegalStateException("Can't read Abstract Enum Property!");
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		throw new IllegalStateException("Can't read Abstract Enum Property!");
+	}
 
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-        set(getNameMap().getFromIndex(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().size)));
-        gui.onChanged(key, getSerializableElement());
-    }
+	@Override
+	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	{
+		set(getNameMap().getFromIndex(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().size)));
+		gui.onChanged(key, getSerializableElement());
+	}
 }

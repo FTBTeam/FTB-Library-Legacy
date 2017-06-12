@@ -16,27 +16,27 @@ import net.minecraft.entity.player.EntityPlayerMP;
  */
 public class CmdTeamConfig extends CmdEditConfigBase
 {
-    public CmdTeamConfig()
-    {
-        super("config", Level.ALL);
-    }
+	public CmdTeamConfig()
+	{
+		super("config", Level.ALL);
+	}
 
-    @Override
-    public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(ep);
-        IForgeTeam team = p.getTeam();
+	@Override
+	public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(ep);
+		IForgeTeam team = p.getTeam();
 
-        if(team == null)
-        {
-            throw FTBLibLang.TEAM_NO_TEAM.commandError();
-        }
-        else if(!team.hasStatus(p, EnumTeamStatus.MOD))
-        {
-            throw FTBLibLang.COMMAND_PERMISSION.commandError();
-        }
+		if (team == null)
+		{
+			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+		}
+		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
+		{
+			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+		}
 
-        return new BasicConfigContainer(FTBLibLang.TEAM_CONFIG.textComponent(team.getName()), team.getSettings());
-    }
+		return new BasicConfigContainer(FTBLibLang.TEAM_CONFIG.textComponent(team.getName()), team.getSettings());
+	}
 }

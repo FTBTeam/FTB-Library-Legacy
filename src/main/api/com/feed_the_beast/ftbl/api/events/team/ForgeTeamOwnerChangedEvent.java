@@ -8,23 +8,23 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
  */
 public class ForgeTeamOwnerChangedEvent extends ForgeTeamEvent
 {
-    private final IForgePlayer oldOwner;
-    private final IForgePlayer newOwner;
+	private final IForgePlayer oldOwner;
+	private final IForgePlayer newOwner;
 
-    public ForgeTeamOwnerChangedEvent(IForgeTeam team, IForgePlayer o0, IForgePlayer o1)
-    {
-        super(team);
-        oldOwner = o0;
-        newOwner = o1;
-    }
+	public ForgeTeamOwnerChangedEvent(IForgeTeam team, IForgePlayer o0, IForgePlayer o1)
+	{
+		super(team);
+		oldOwner = o0;
+		newOwner = o1;
+	}
 
-    public IForgePlayer getOldOwner()
-    {
-        return oldOwner;
-    }
+	public IForgePlayer getOldOwner()
+	{
+		return oldOwner;
+	}
 
-    public IForgePlayer getNewOwner()
-    {
-        return newOwner;
-    }
+	public IForgePlayer getNewOwner()
+	{
+		return newOwner;
+	}
 }

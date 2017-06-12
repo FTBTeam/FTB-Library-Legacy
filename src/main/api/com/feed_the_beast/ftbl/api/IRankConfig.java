@@ -8,5 +8,5 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
  */
 public interface IRankConfig extends IConfigKey
 {
-    IConfigValue getDefOPValue();
+	IConfigValue getDefOPValue();
 }

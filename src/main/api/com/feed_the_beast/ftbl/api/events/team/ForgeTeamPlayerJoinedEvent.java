@@ -8,16 +8,16 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
  */
 public class ForgeTeamPlayerJoinedEvent extends ForgeTeamEvent
 {
-    private final IForgePlayer player;
+	private final IForgePlayer player;
 
-    public ForgeTeamPlayerJoinedEvent(IForgeTeam team, IForgePlayer p)
-    {
-        super(team);
-        player = p;
-    }
+	public ForgeTeamPlayerJoinedEvent(IForgeTeam team, IForgePlayer p)
+	{
+		super(team);
+		player = p;
+	}
 
-    public IForgePlayer getPlayer()
-    {
-        return player;
-    }
+	public IForgePlayer getPlayer()
+	{
+		return player;
+	}
 }

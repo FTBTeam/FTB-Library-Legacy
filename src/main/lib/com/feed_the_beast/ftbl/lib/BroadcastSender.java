@@ -13,70 +13,70 @@ import net.minecraft.world.World;
 
 public enum BroadcastSender implements ICommandSender
 {
-    INSTANCE;
+	INSTANCE;
 
-    @Override
-    public String getName()
-    {
-        return "[Server]";
-    }
+	@Override
+	public String getName()
+	{
+		return "[Server]";
+	}
 
-    @Override
-    public ITextComponent getDisplayName()
-    {
-        return new TextComponentString(getName());
-    }
+	@Override
+	public ITextComponent getDisplayName()
+	{
+		return new TextComponentString(getName());
+	}
 
-    @Override
-    public void sendMessage(ITextComponent component)
-    {
-        ServerUtils.getServer().getPlayerList().sendMessage(component, true);
-    }
+	@Override
+	public void sendMessage(ITextComponent component)
+	{
+		ServerUtils.getServer().getPlayerList().sendMessage(component, true);
+	}
 
-    @Override
-    public boolean canUseCommand(int permLevel, String commandName)
-    {
-        return true;
-    }
+	@Override
+	public boolean canUseCommand(int permLevel, String commandName)
+	{
+		return true;
+	}
 
-    @Override
-    public BlockPos getPosition()
-    {
-        return ServerUtils.getServerWorld().getSpawnCoordinate();
-    }
+	@Override
+	public BlockPos getPosition()
+	{
+		return ServerUtils.getServerWorld().getSpawnCoordinate();
+	}
 
-    @Override
-    public Vec3d getPositionVector()
-    {
-        return new Vec3d(getPosition());
-    }
+	@Override
+	public Vec3d getPositionVector()
+	{
+		return new Vec3d(getPosition());
+	}
 
-    @Override
-    public World getEntityWorld()
-    {
-        return ServerUtils.getServerWorld();
-    }
+	@Override
+	public World getEntityWorld()
+	{
+		return ServerUtils.getServerWorld();
+	}
 
-    @Override
-    public Entity getCommandSenderEntity()
-    {
-        return null;
-    }
+	@Override
+	public Entity getCommandSenderEntity()
+	{
+		return null;
+	}
 
-    @Override
-    public boolean sendCommandFeedback()
-    {
-        return false;
-    }
+	@Override
+	public boolean sendCommandFeedback()
+	{
+		return false;
+	}
 
-    @Override
-    public void setCommandStat(CommandResultStats.Type type, int amount)
-    {
-    }
+	@Override
+	public void setCommandStat(CommandResultStats.Type type, int amount)
+	{
+	}
 
-    @Override
-    public MinecraftServer getServer()
-    {
-        return ServerUtils.getServer();
-    }
+	@Override
+	public MinecraftServer getServer()
+	{
+		return ServerUtils.getServer();
+	}
 }

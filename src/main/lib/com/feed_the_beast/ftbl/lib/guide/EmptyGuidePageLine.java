@@ -9,15 +9,15 @@ import com.google.gson.JsonNull;
  */
 public abstract class EmptyGuidePageLine implements IGuideTextLine
 {
-    @Override
-    public String getUnformattedText()
-    {
-        return "";
-    }
+	@Override
+	public String getUnformattedText()
+	{
+		return "";
+	}
 
-    @Override
-    public JsonElement getJson()
-    {
-        return JsonNull.INSTANCE;
-    }
+	@Override
+	public JsonElement getJson()
+	{
+		return JsonNull.INSTANCE;
+	}
 }

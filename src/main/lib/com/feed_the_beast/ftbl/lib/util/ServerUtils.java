@@ -40,244 +40,244 @@ import java.util.UUID;
  */
 public class ServerUtils
 {
-    public static final EnumNameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = new EnumNameMap<>(TextFormatting.values(), false);
+	public static final EnumNameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = new EnumNameMap<>(TextFormatting.values(), false);
 
-    private static class TeleporterBlank extends Teleporter
-    {
-        private TeleporterBlank(WorldServer w)
-        {
-            super(w);
-        }
+	private static class TeleporterBlank extends Teleporter
+	{
+		private TeleporterBlank(WorldServer w)
+		{
+			super(w);
+		}
 
-        @Override
-        public boolean makePortal(Entity e)
-        {
-            return true;
-        }
+		@Override
+		public boolean makePortal(Entity e)
+		{
+			return true;
+		}
 
-        @Override
-        public boolean placeInExistingPortal(Entity e, float f)
-        {
-            return true;
-        }
+		@Override
+		public boolean placeInExistingPortal(Entity e, float f)
+		{
+			return true;
+		}
 
-        @Override
-        public void placeInPortal(Entity entity, float f)
-        {
-            entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
-            entity.motionX = 0D;
-            entity.motionY = 0D;
-            entity.motionZ = 0D;
-            entity.fallDistance = 0F;
-        }
+		@Override
+		public void placeInPortal(Entity entity, float f)
+		{
+			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
+			entity.motionX = 0D;
+			entity.motionY = 0D;
+			entity.motionZ = 0D;
+			entity.fallDistance = 0F;
+		}
 
-        @Override
-        public void removeStalePortalLocations(long l)
-        {
-        }
-    }
+		@Override
+		public void removeStalePortalLocations(long l)
+		{
+		}
+	}
 
-    public static boolean teleportPlayer(Entity entity, EntityDimPos pos)
-    {
-        return teleportPlayer(entity, pos.pos, pos.dim);
-    }
+	public static boolean teleportPlayer(Entity entity, EntityDimPos pos)
+	{
+		return teleportPlayer(entity, pos.pos, pos.dim);
+	}
 
-    public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
-    {
-        return teleportPlayer(entity, pos.toVec(), pos.dim);
-    }
+	public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
+	{
+		return teleportPlayer(entity, pos.toVec(), pos.dim);
+	}
 
-    public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
-    {
-        entity.fallDistance = 0F;
-        EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
+	public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
+	{
+		entity.fallDistance = 0F;
+		EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
 
-        if(dim == entity.dimension)
-        {
-            if(pos.xCoord == entity.posX && pos.yCoord == entity.posY && pos.zCoord == entity.posZ)
-            {
-                return true;
-            }
+		if (dim == entity.dimension)
+		{
+			if (pos.xCoord == entity.posX && pos.yCoord == entity.posY && pos.zCoord == entity.posZ)
+			{
+				return true;
+			}
 
-            if(player != null)
-            {
-                player.connection.setPlayerLocation(pos.xCoord, pos.yCoord, pos.zCoord, player.rotationYaw, player.rotationPitch);
-                return true;
-            }
-        }
+			if (player != null)
+			{
+				player.connection.setPlayerLocation(pos.xCoord, pos.yCoord, pos.zCoord, player.rotationYaw, player.rotationPitch);
+				return true;
+			}
+		}
 
-        //FTBLib.dev_logger.info("Teleporting " + entity + " from " + new EntityPos(entity) + " to " + new EntityPos(x, y, z, dim));
-        int from = entity.dimension;
-        float rotationYaw = entity.rotationYaw;
-        float rotationPitch = entity.rotationPitch;
-        MinecraftServer server = ServerUtils.getServer();
-        WorldServer fromDim = server.worldServerForDimension(from);
-        WorldServer toDim = server.worldServerForDimension(dim);
+		//FTBLib.dev_logger.info("Teleporting " + entity + " from " + new EntityPos(entity) + " to " + new EntityPos(x, y, z, dim));
+		int from = entity.dimension;
+		float rotationYaw = entity.rotationYaw;
+		float rotationPitch = entity.rotationPitch;
+		MinecraftServer server = ServerUtils.getServer();
+		WorldServer fromDim = server.worldServerForDimension(from);
+		WorldServer toDim = server.worldServerForDimension(dim);
 
-        if(player != null)
-        {
-            server.getPlayerList().transferPlayerToDimension(player, dim, new TeleporterBlank(toDim));
-            if(from == 1 && entity.isEntityAlive())
-            {
-                // getMode around vanilla End hacks
-                toDim.spawnEntity(entity);
-                toDim.updateEntityWithOptionalForce(entity, false);
-            }
-        }
-        else
-        {
-            NBTTagCompound tagCompound = new NBTTagCompound();
-            entity.writeToNBT(tagCompound);
-            Class<? extends Entity> entityClass = entity.getClass();
-            fromDim.removeEntity(entity);
+		if (player != null)
+		{
+			server.getPlayerList().transferPlayerToDimension(player, dim, new TeleporterBlank(toDim));
+			if (from == 1 && entity.isEntityAlive())
+			{
+				// getMode around vanilla End hacks
+				toDim.spawnEntity(entity);
+				toDim.updateEntityWithOptionalForce(entity, false);
+			}
+		}
+		else
+		{
+			NBTTagCompound tagCompound = new NBTTagCompound();
+			entity.writeToNBT(tagCompound);
+			Class<? extends Entity> entityClass = entity.getClass();
+			fromDim.removeEntity(entity);
 
-            try
-            {
-                Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
-                newEntity.readFromNBT(tagCompound);
-                newEntity.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, rotationYaw, rotationPitch);
-                newEntity.forceSpawn = true;
-                toDim.spawnEntity(newEntity);
-                newEntity.forceSpawn = false;
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
+			try
+			{
+				Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
+				newEntity.readFromNBT(tagCompound);
+				newEntity.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, rotationYaw, rotationPitch);
+				newEntity.forceSpawn = true;
+				toDim.spawnEntity(newEntity);
+				newEntity.forceSpawn = false;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 
-        entity.fallDistance = 0;
-        entity.rotationYaw = rotationYaw;
-        entity.rotationPitch = rotationPitch;
+		entity.fallDistance = 0;
+		entity.rotationYaw = rotationYaw;
+		entity.rotationPitch = rotationPitch;
 
-        if(player != null)
-        {
-            player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
-        }
-        else
-        {
-            entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
-        }
+		if (player != null)
+		{
+			player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
+		}
+		else
+		{
+			entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public static double getMovementFactor(int dim)
-    {
-        switch(dim)
-        {
-            case 0:
-                return 1D;
-            case -1:
-                return 8D;
-            case 1:
-                return 1D;
-            default:
-            {
-                WorldServer w = DimensionManager.getWorld(dim);
-                return (w == null) ? 1D : w.provider.getMovementFactor();
-            }
-        }
-    }
+	public static double getMovementFactor(int dim)
+	{
+		switch (dim)
+		{
+			case 0:
+				return 1D;
+			case -1:
+				return 8D;
+			case 1:
+				return 1D;
+			default:
+			{
+				WorldServer w = DimensionManager.getWorld(dim);
+				return (w == null) ? 1D : w.provider.getMovementFactor();
+			}
+		}
+	}
 
-    @Nullable
-    public static BlockDimPos getSpawnPoint(int dim)
-    {
-        WorldServer w = DimensionManager.getWorld(dim);
-        return (w == null) ? null : new BlockDimPos(w.getSpawnPoint(), dim);
-    }
+	@Nullable
+	public static BlockDimPos getSpawnPoint(int dim)
+	{
+		WorldServer w = DimensionManager.getWorld(dim);
+		return (w == null) ? null : new BlockDimPos(w.getSpawnPoint(), dim);
+	}
 
-    public static ITextComponent getChatComponent(Object o)
-    {
-        return (o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString(String.valueOf(o));
-    }
+	public static ITextComponent getChatComponent(Object o)
+	{
+		return (o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString(String.valueOf(o));
+	}
 
-    public static MinecraftServer getServer()
-    {
-        return FMLCommonHandler.instance().getMinecraftServerInstance();
-    }
+	public static MinecraftServer getServer()
+	{
+		return FMLCommonHandler.instance().getMinecraftServerInstance();
+	}
 
-    public static boolean hasOnlinePlayers()
-    {
-        return !getServer().getPlayerList().getPlayers().isEmpty();
-    }
+	public static boolean hasOnlinePlayers()
+	{
+		return !getServer().getPlayerList().getPlayers().isEmpty();
+	}
 
-    public static WorldServer getServerWorld()
-    {
-        return getServer().worldServerForDimension(0);
-    }
+	public static WorldServer getServerWorld()
+	{
+		return getServer().worldServerForDimension(0);
+	}
 
-    public static boolean isOP(GameProfile p)
-    {
-        MinecraftServer server = getServer();
-        return server == null || server.getPlayerList().canSendCommands(p);
-    }
+	public static boolean isOP(GameProfile p)
+	{
+		MinecraftServer server = getServer();
+		return server == null || server.getPlayerList().canSendCommands(p);
+	}
 
-    public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
-    {
-        Collection<ICommand> commands = new HashSet<>();
+	public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
+	{
+		Collection<ICommand> commands = new HashSet<>();
 
-        for(ICommand c : server.getCommandManager().getCommands().values())
-        {
-            if(c.checkPermission(server, sender))
-            {
-                commands.add(c);
-            }
-        }
+		for (ICommand c : server.getCommandManager().getCommands().values())
+		{
+			if (c.checkPermission(server, sender))
+			{
+				commands.add(c);
+			}
+		}
 
-        return commands;
-    }
+		return commands;
+	}
 
-    //null - can't, TRUE - always spawns, FALSE - only spawns at night
-    @Nullable
-    public static Boolean canMobSpawn(World world, BlockPos pos)
-    {
-        if(pos.getY() < 0 || pos.getY() >= 256)
-        {
-            return null;
-        }
+	//null - can't, TRUE - always spawns, FALSE - only spawns at night
+	@Nullable
+	public static Boolean canMobSpawn(World world, BlockPos pos)
+	{
+		if (pos.getY() < 0 || pos.getY() >= 256)
+		{
+			return null;
+		}
 
-        Chunk chunk = world.getChunkFromBlockCoords(pos);
+		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
-        if(!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
-        {
-            return null;
-        }
+		if (!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
+		{
+			return null;
+		}
 
-        AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
-        if(!world.checkNoEntityCollision(aabb) || world.containsAnyLiquid(aabb))
-        {
-            return null;
-        }
+		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
+		if (!world.checkNoEntityCollision(aabb) || world.containsAnyLiquid(aabb))
+		{
+			return null;
+		}
 
-        if(chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8)
-        {
-            return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
-    }
+		if (chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8)
+		{
+			return Boolean.FALSE;
+		}
+		return Boolean.TRUE;
+	}
 
-    @Nullable
-    public static Entity getEntityByUUID(World worldObj, UUID uuid)
-    {
-        for(Entity e : worldObj.loadedEntityList)
-        {
-            if(e.getUniqueID().equals(uuid))
-            {
-                return e;
-            }
-        }
+	@Nullable
+	public static Entity getEntityByUUID(World worldObj, UUID uuid)
+	{
+		for (Entity e : worldObj.loadedEntityList)
+		{
+			if (e.getUniqueID().equals(uuid))
+			{
+				return e;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public static void addTickable(MinecraftServer server, ITickable tickable)
-    {
-        server.tickables.add(tickable);
-    }
+	public static void addTickable(MinecraftServer server, ITickable tickable)
+	{
+		server.tickables.add(tickable);
+	}
 
-    public static Set<ICommand> getCommandSet(CommandHandler handler)
-    {
-        return handler.commandSet;
-    }
+	public static Set<ICommand> getCommandSet(CommandHandler handler)
+	{
+		return handler.commandSet;
+	}
 }

@@ -9,64 +9,64 @@ import net.minecraft.util.math.ChunkPos;
  */
 public final class ChunkDimPos
 {
-    public final int posX, posZ, dim;
+	public final int posX, posZ, dim;
 
-    public ChunkDimPos(int x, int z, int d)
-    {
-        posX = x;
-        posZ = z;
-        dim = d;
-    }
+	public ChunkDimPos(int x, int z, int d)
+	{
+		posX = x;
+		posZ = z;
+		dim = d;
+	}
 
-    public ChunkDimPos(ChunkPos pos, int d)
-    {
-        this(pos.chunkXPos, pos.chunkZPos, d);
-    }
+	public ChunkDimPos(ChunkPos pos, int d)
+	{
+		this(pos.chunkXPos, pos.chunkZPos, d);
+	}
 
-    public ChunkDimPos(BlockPos pos, int d)
-    {
-        this(MathUtils.chunk(pos.getX()), MathUtils.chunk(pos.getZ()), d);
-    }
+	public ChunkDimPos(BlockPos pos, int d)
+	{
+		this(MathUtils.chunk(pos.getX()), MathUtils.chunk(pos.getZ()), d);
+	}
 
-    public ChunkDimPos(Entity entity)
-    {
-        this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posY), entity.dimension);
-    }
+	public ChunkDimPos(Entity entity)
+	{
+		this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posY), entity.dimension);
+	}
 
-    public boolean equals(Object o)
-    {
-        if(o == null)
-        {
-            return false;
-        }
-        else if(o == this)
-        {
-            return true;
-        }
-        else if(o instanceof ChunkDimPos)
-        {
-            return equalsChunkDimPos((ChunkDimPos) o);
-        }
-        return false;
-    }
+	public boolean equals(Object o)
+	{
+		if (o == null)
+		{
+			return false;
+		}
+		else if (o == this)
+		{
+			return true;
+		}
+		else if (o instanceof ChunkDimPos)
+		{
+			return equalsChunkDimPos((ChunkDimPos) o);
+		}
+		return false;
+	}
 
-    public boolean equalsChunkDimPos(ChunkDimPos p)
-    {
-        return p == this || (p.dim == dim && p.posX == posX && p.posZ == posZ);
-    }
+	public boolean equalsChunkDimPos(ChunkDimPos p)
+	{
+		return p == this || (p.dim == dim && p.posX == posX && p.posZ == posZ);
+	}
 
-    public String toString()
-    {
-        return "[" + dim + '@' + posX + ',' + posZ + ']';
-    }
+	public String toString()
+	{
+		return "[" + dim + '@' + posX + ',' + posZ + ']';
+	}
 
-    public int hashCode()
-    {
-        return 31 * (31 * posX + posZ) + dim;
-    }
+	public int hashCode()
+	{
+		return 31 * (31 * posX + posZ) + dim;
+	}
 
-    public ChunkPos getChunkPos()
-    {
-        return new ChunkPos(posX, posZ);
-    }
+	public ChunkPos getChunkPos()
+	{
+		return new ChunkPos(posX, posZ);
+	}
 }

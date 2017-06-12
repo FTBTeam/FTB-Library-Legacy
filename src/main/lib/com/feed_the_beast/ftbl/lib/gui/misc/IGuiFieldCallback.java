@@ -7,5 +7,5 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
  */
 public interface IGuiFieldCallback
 {
-    void onCallback(IConfigValue value, boolean set);
+	void onCallback(IConfigValue value, boolean set);
 }

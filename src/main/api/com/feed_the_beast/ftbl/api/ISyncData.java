@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public interface ISyncData
 {
-    NBTTagCompound writeSyncData(EntityPlayerMP player, IForgePlayer forgePlayer);
+	NBTTagCompound writeSyncData(EntityPlayerMP player, IForgePlayer forgePlayer);
 
-    void readSyncData(NBTTagCompound nbt);
+	void readSyncData(NBTTagCompound nbt);
 }

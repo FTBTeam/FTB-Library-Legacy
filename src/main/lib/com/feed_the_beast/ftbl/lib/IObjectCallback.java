@@ -7,5 +7,5 @@ import java.lang.reflect.Field;
  */
 public interface IObjectCallback<T>
 {
-    void onCallback(T obj, Field field, IAnnotationInfo info) throws Exception;
+	void onCallback(T obj, Field field, IAnnotationInfo info) throws Exception;
 }

@@ -14,15 +14,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class BlockStateSerializer extends DefaultStateMapper
 {
-    public static final BlockStateSerializer INSTANCE = new BlockStateSerializer();
+	public static final BlockStateSerializer INSTANCE = new BlockStateSerializer();
 
-    private BlockStateSerializer()
-    {
-    }
+	private BlockStateSerializer()
+	{
+	}
 
-    public ModelResourceLocation get(IBlockState state)
-    {
-        ResourceLocation id = Block.REGISTRY.getNameForObject(state.getBlock());
-        return new ModelResourceLocation(new ResourceLocation(id.getResourceDomain(), "blocks/" + id.getResourcePath()), getPropertyString(state.getProperties()));
-    }
+	public ModelResourceLocation get(IBlockState state)
+	{
+		ResourceLocation id = Block.REGISTRY.getNameForObject(state.getBlock());
+		return new ModelResourceLocation(new ResourceLocation(id.getResourceDomain(), "blocks/" + id.getResourcePath()), getPropertyString(state.getProperties()));
+	}
 }

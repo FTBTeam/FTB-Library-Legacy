@@ -8,15 +8,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class FTBLibRegistryEvent extends Event
 {
-    private final IFTBLibRegistry reg;
+	private final IFTBLibRegistry reg;
 
-    public FTBLibRegistryEvent(IFTBLibRegistry r)
-    {
-        reg = r;
-    }
+	public FTBLibRegistryEvent(IFTBLibRegistry r)
+	{
+		reg = r;
+	}
 
-    public IFTBLibRegistry getRegistry()
-    {
-        return reg;
-    }
+	public IFTBLibRegistry getRegistry()
+	{
+		return reg;
+	}
 }

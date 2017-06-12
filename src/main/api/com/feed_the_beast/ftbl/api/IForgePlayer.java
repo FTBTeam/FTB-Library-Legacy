@@ -17,72 +17,72 @@ import java.util.UUID;
  */
 public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 {
-    UUID getId();
+	UUID getId();
 
-    String getName();
+	String getName();
 
-    default GameProfile getProfile()
-    {
-        return new GameProfile(getId(), getName());
-    }
+	default GameProfile getProfile()
+	{
+		return new GameProfile(getId(), getName());
+	}
 
-    EntityPlayerMP getPlayer();
+	EntityPlayerMP getPlayer();
 
-    @Nullable
-    INBTSerializable<?> getData(ResourceLocation id);
+	@Nullable
+	INBTSerializable<?> getData(ResourceLocation id);
 
-    boolean equalsPlayer(@Nullable IForgePlayer player);
+	boolean equalsPlayer(@Nullable IForgePlayer player);
 
-    void setTeamID(String o);
+	void setTeamID(String o);
 
-    @Nullable
-    IForgeTeam getTeam();
+	@Nullable
+	IForgeTeam getTeam();
 
-    default boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level)
-    {
-        if(level == EnumPrivacyLevel.PUBLIC || owner == null)
-        {
-            return true;
-        }
-        else if(owner.equalsPlayer(this))
-        {
-            return true;
-        }
-        else if(level == EnumPrivacyLevel.PRIVATE)
-        {
-            return false;
-        }
-        else if(level == EnumPrivacyLevel.TEAM)
-        {
-            IForgeTeam team = owner.getTeam();
+	default boolean canInteract(@Nullable IForgePlayer owner, EnumPrivacyLevel level)
+	{
+		if (level == EnumPrivacyLevel.PUBLIC || owner == null)
+		{
+			return true;
+		}
+		else if (owner.equalsPlayer(this))
+		{
+			return true;
+		}
+		else if (level == EnumPrivacyLevel.PRIVATE)
+		{
+			return false;
+		}
+		else if (level == EnumPrivacyLevel.TEAM)
+		{
+			IForgeTeam team = owner.getTeam();
 
-            if(team != null)
-            {
-                if(team.hasStatus(this, EnumTeamStatus.ALLY))
-                {
-                    return true;
-                }
-            }
-        }
+			if (team != null)
+			{
+				if (team.hasStatus(this, EnumTeamStatus.ALLY))
+				{
+					return true;
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    boolean isOnline();
+	boolean isOnline();
 
-    boolean isFake();
+	boolean isFake();
 
-    boolean isOP();
+	boolean isOP();
 
-    StatisticsManagerServer stats();
+	StatisticsManagerServer stats();
 
-    IConfigTree getSettings();
+	IConfigTree getSettings();
 
-    NBTTagCompound getPlayerNBT();
+	NBTTagCompound getPlayerNBT();
 
-    boolean hideTeamNotification();
+	boolean hideTeamNotification();
 
-    boolean hideNewTeamMsgNotification();
+	boolean hideNewTeamMsgNotification();
 
-    boolean isLoggingOut();
+	boolean isLoggingOut();
 }

@@ -11,18 +11,18 @@ import java.util.Collection;
  */
 public interface IUniverse
 {
-    @Nullable
-    INBTSerializable<?> getData(ResourceLocation id);
+	@Nullable
+	INBTSerializable<?> getData(ResourceLocation id);
 
-    Collection<? extends IForgePlayer> getPlayers();
+	Collection<? extends IForgePlayer> getPlayers();
 
-    @Nullable
-    IForgePlayer getPlayer(@Nullable Object o);
+	@Nullable
+	IForgePlayer getPlayer(@Nullable Object o);
 
-    Collection<? extends IForgeTeam> getTeams();
+	Collection<? extends IForgeTeam> getTeams();
 
-    @Nullable
-    IForgeTeam getTeam(String id);
+	@Nullable
+	IForgeTeam getTeam(String id);
 
-    Collection<IForgePlayer> getOnlinePlayers();
+	Collection<IForgePlayer> getOnlinePlayers();
 }

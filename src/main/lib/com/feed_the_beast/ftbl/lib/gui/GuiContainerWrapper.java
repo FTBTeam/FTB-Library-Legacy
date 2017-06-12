@@ -15,130 +15,130 @@ import java.io.IOException;
  */
 public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IClientActionGui
 {
-    private GuiBase wrappedGui;
+	private GuiBase wrappedGui;
 
-    public GuiContainerWrapper(GuiBase g, Container c)
-    {
-        super(c);
-        wrappedGui = g;
-    }
+	public GuiContainerWrapper(GuiBase g, Container c)
+	{
+		super(c);
+		wrappedGui = g;
+	}
 
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-        wrappedGui.initGui();
-        guiLeft = wrappedGui.getAX();
-        guiTop = wrappedGui.getAY();
-        xSize = wrappedGui.width;
-        ySize = wrappedGui.height;
-    }
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		wrappedGui.initGui();
+		guiLeft = wrappedGui.getAX();
+		guiTop = wrappedGui.getAY();
+		xSize = wrappedGui.width;
+		ySize = wrappedGui.height;
+	}
 
-    @Override
-    public boolean doesGuiPauseGame()
-    {
-        return wrappedGui.doesGuiPauseGame();
-    }
+	@Override
+	public boolean doesGuiPauseGame()
+	{
+		return wrappedGui.doesGuiPauseGame();
+	}
 
-    @Override
-    protected final void mouseClicked(int mx, int my, int b) throws IOException
-    {
-        wrappedGui.mousePressed(wrappedGui, MouseButton.get(b));
-        super.mouseClicked(mx, my, b);
-    }
+	@Override
+	protected final void mouseClicked(int mx, int my, int b) throws IOException
+	{
+		wrappedGui.mousePressed(wrappedGui, MouseButton.get(b));
+		super.mouseClicked(mx, my, b);
+	}
 
-    @Override
-    protected void mouseReleased(int mx, int my, int state)
-    {
-        wrappedGui.mouseReleased(wrappedGui);
-        super.mouseReleased(mx, my, state);
-    }
+	@Override
+	protected void mouseReleased(int mx, int my, int state)
+	{
+		wrappedGui.mouseReleased(wrappedGui);
+		super.mouseReleased(mx, my, state);
+	}
 
-    @Override
-    protected void keyTyped(char keyChar, int key) throws IOException
-    {
-        if(wrappedGui.keyPressed(wrappedGui, key, keyChar))
-        {
-            return;
-        }
+	@Override
+	protected void keyTyped(char keyChar, int key) throws IOException
+	{
+		if (wrappedGui.keyPressed(wrappedGui, key, keyChar))
+		{
+			return;
+		}
 
-        if(key == Keyboard.KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(key))
-        {
-            if(wrappedGui.onClosedByKey())
-            {
-                wrappedGui.closeGui();
-            }
+		if (key == Keyboard.KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(key))
+		{
+			if (wrappedGui.onClosedByKey())
+			{
+				wrappedGui.closeGui();
+			}
 
-            return;
-        }
+			return;
+		}
 
-        super.keyTyped(keyChar, key);
-    }
+		super.keyTyped(keyChar, key);
+	}
 
-    @Override
-    protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
-    {
-        if(wrappedGui.fixUnicode)
-        {
-            GuiHelper.setFixUnicode(mc, true);
-        }
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
+	{
+		if (wrappedGui.fixUnicode)
+		{
+			GuiHelper.setFixUnicode(mc, true);
+		}
 
-        GuiBase.setupDrawing();
-        wrappedGui.drawBackground();
-        GuiBase.setupDrawing();
-        wrappedGui.renderWidgets();
+		GuiBase.setupDrawing();
+		wrappedGui.drawBackground();
+		GuiBase.setupDrawing();
+		wrappedGui.renderWidgets();
 
-        if(wrappedGui.fixUnicode)
-        {
-            GuiHelper.setFixUnicode(mc, false);
-        }
-    }
+		if (wrappedGui.fixUnicode)
+		{
+			GuiHelper.setFixUnicode(mc, false);
+		}
+	}
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mx, int my)
-    {
-        if(wrappedGui.fixUnicode)
-        {
-            GuiHelper.setFixUnicode(mc, true);
-        }
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mx, int my)
+	{
+		if (wrappedGui.fixUnicode)
+		{
+			GuiHelper.setFixUnicode(mc, true);
+		}
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(-guiLeft, -guiTop, 0D);
-        GuiBase.setupDrawing();
-        wrappedGui.drawForeground();
-        GlStateManager.popMatrix();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-guiLeft, -guiTop, 0D);
+		GuiBase.setupDrawing();
+		wrappedGui.drawForeground();
+		GlStateManager.popMatrix();
 
-        if(wrappedGui.fixUnicode)
-        {
-            GuiHelper.setFixUnicode(mc, false);
-        }
-    }
+		if (wrappedGui.fixUnicode)
+		{
+			GuiHelper.setFixUnicode(mc, false);
+		}
+	}
 
-    @Override
-    public void drawDefaultBackground()
-    {
-        if(wrappedGui.drawDefaultBackground())
-        {
-            super.drawDefaultBackground();
-        }
-    }
+	@Override
+	public void drawDefaultBackground()
+	{
+		if (wrappedGui.drawDefaultBackground())
+		{
+			super.drawDefaultBackground();
+		}
+	}
 
-    @Override
-    public void drawScreen(int mx, int my, float f)
-    {
-        wrappedGui.updateGui(mx, my, f);
-        super.drawScreen(mx, my, f);
-    }
+	@Override
+	public void drawScreen(int mx, int my, float f)
+	{
+		wrappedGui.updateGui(mx, my, f);
+		super.drawScreen(mx, my, f);
+	}
 
-    @Override
-    public GuiBase getWrappedGui()
-    {
-        return wrappedGui;
-    }
+	@Override
+	public GuiBase getWrappedGui()
+	{
+		return wrappedGui;
+	}
 
-    @Override
-    public void onClientDataChanged()
-    {
-        wrappedGui.onClientDataChanged();
-    }
+	@Override
+	public void onClientDataChanged()
+	{
+		wrappedGui.onClientDataChanged();
+	}
 }

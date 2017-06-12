@@ -5,5 +5,5 @@ package com.feed_the_beast.ftbl.api;
  */
 public interface IFTBLibPlugin
 {
-    void init(FTBLibAPI api);
+	void init(FTBLibAPI api);
 }

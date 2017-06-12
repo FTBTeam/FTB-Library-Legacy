@@ -12,41 +12,41 @@ import net.minecraft.util.text.TextComponentTranslation;
  */
 public final class LangKey implements IStringSerializable
 {
-    private final String key;
+	private final String key;
 
-    public LangKey(String s)
-    {
-        key = s;
-    }
+	public LangKey(String s)
+	{
+		key = s;
+	}
 
-    @Override
-    public String getName()
-    {
-        return key;
-    }
+	@Override
+	public String getName()
+	{
+		return key;
+	}
 
-    public String translate()
-    {
-        return StringUtils.translate(key);
-    }
+	public String translate()
+	{
+		return StringUtils.translate(key);
+	}
 
-    public String translate(Object... o)
-    {
-        return StringUtils.translate(key, o);
-    }
+	public String translate(Object... o)
+	{
+		return StringUtils.translate(key, o);
+	}
 
-    public ITextComponent textComponent(Object... o)
-    {
-        return new TextComponentTranslation(key, o);
-    }
+	public ITextComponent textComponent(Object... o)
+	{
+		return new TextComponentTranslation(key, o);
+	}
 
-    public void printChat(ICommandSender sender, Object... o)
-    {
-        sender.sendMessage(textComponent(o));
-    }
+	public void printChat(ICommandSender sender, Object... o)
+	{
+		sender.sendMessage(textComponent(o));
+	}
 
-    public CommandException commandError(Object... o)
-    {
-        return new CommandException(key, o);
-    }
+	public CommandException commandError(Object... o)
+	{
+		return new CommandException(key, o);
+	}
 }

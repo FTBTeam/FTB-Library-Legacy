@@ -17,53 +17,53 @@ import java.util.UUID;
  */
 public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
 {
-    boolean isValid();
+	boolean isValid();
 
-    @Nullable
-    INBTSerializable<?> getData(ResourceLocation id);
+	@Nullable
+	INBTSerializable<?> getData(ResourceLocation id);
 
-    IForgePlayer getOwner();
+	IForgePlayer getOwner();
 
-    String getTitle();
+	String getTitle();
 
-    String getDesc();
+	String getDesc();
 
-    EnumTeamColor getColor();
+	EnumTeamColor getColor();
 
-    EnumTeamStatus getHighestStatus(UUID playerId);
+	EnumTeamStatus getHighestStatus(UUID playerId);
 
-    boolean hasStatus(UUID playerId, EnumTeamStatus status);
+	boolean hasStatus(UUID playerId, EnumTeamStatus status);
 
-    default EnumTeamStatus getHighestStatus(IForgePlayer player)
-    {
-        return getHighestStatus(player.getId());
-    }
+	default EnumTeamStatus getHighestStatus(IForgePlayer player)
+	{
+		return getHighestStatus(player.getId());
+	}
 
-    default boolean hasStatus(IForgePlayer player, EnumTeamStatus status)
-    {
-        return hasStatus(player.getId(), status);
-    }
+	default boolean hasStatus(IForgePlayer player, EnumTeamStatus status)
+	{
+		return hasStatus(player.getId(), status);
+	}
 
-    void setStatus(UUID playerId, EnumTeamStatus status);
+	void setStatus(UUID playerId, EnumTeamStatus status);
 
-    Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
+	Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
 
-    default boolean canInteract(UUID playerId, EnumTeamPrivacyLevel level)
-    {
-        return hasStatus(playerId, level.getRequiredStatus());
-    }
+	default boolean canInteract(UUID playerId, EnumTeamPrivacyLevel level)
+	{
+		return hasStatus(playerId, level.getRequiredStatus());
+	}
 
-    boolean addPlayer(IForgePlayer p);
+	boolean addPlayer(IForgePlayer p);
 
-    boolean removePlayer(IForgePlayer p);
+	boolean removePlayer(IForgePlayer p);
 
-    void changeOwner(IForgePlayer o);
+	void changeOwner(IForgePlayer o);
 
-    IConfigTree getSettings();
+	IConfigTree getSettings();
 
-    void printMessage(ITeamMessage message);
+	void printMessage(ITeamMessage message);
 
-    List<ITeamMessage> getMessages();
+	List<ITeamMessage> getMessages();
 
-    boolean freeToJoin();
+	boolean freeToJoin();
 }

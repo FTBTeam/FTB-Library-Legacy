@@ -14,99 +14,99 @@ import java.util.Map;
  */
 public abstract class IDRegistry<K> implements INBTSerializable<NBTTagCompound>
 {
-    private final TIntObjectHashMap<K> IDToKey = new TIntObjectHashMap<>();
-    private final Map<K, Integer> KeyToID = new HashMap<>();
+	private final TIntObjectHashMap<K> IDToKey = new TIntObjectHashMap<>();
+	private final Map<K, Integer> KeyToID = new HashMap<>();
 
-    public void clear()
-    {
-        if(!IDToKey.isEmpty())
-        {
-            IDToKey.clear();
-            KeyToID.clear();
-        }
-    }
+	public void clear()
+	{
+		if (!IDToKey.isEmpty())
+		{
+			IDToKey.clear();
+			KeyToID.clear();
+		}
+	}
 
-    @Nullable
-    public K getKeyFromID(int numID)
-    {
-        return IDToKey.get(numID);
-    }
+	@Nullable
+	public K getKeyFromID(int numID)
+	{
+		return IDToKey.get(numID);
+	}
 
-    public int getIDFromKey(K key)
-    {
-        return IDToKey.containsValue(key) ? KeyToID.get(key) : 0;
-    }
+	public int getIDFromKey(K key)
+	{
+		return IDToKey.containsValue(key) ? KeyToID.get(key) : 0;
+	}
 
-    public void generateIDs(Collection<K> keys)
-    {
-        clear();
+	public void generateIDs(Collection<K> keys)
+	{
+		clear();
 
-        keys.forEach(key ->
-        {
-            int i = IDToKey.size() + 1;
-            KeyToID.put(key, i);
-            IDToKey.put(i, key);
-        });
-    }
+		keys.forEach(key ->
+		{
+			int i = IDToKey.size() + 1;
+			KeyToID.put(key, i);
+			IDToKey.put(i, key);
+		});
+	}
 
-    public int generateID(K key)
-    {
-        int i = getIDFromKey(key);
+	public int generateID(K key)
+	{
+		int i = getIDFromKey(key);
 
-        if(i == 0)
-        {
-            i = IDToKey.size() + 1;
-            KeyToID.put(key, i);
-            IDToKey.put(i, key);
-        }
+		if (i == 0)
+		{
+			i = IDToKey.size() + 1;
+			KeyToID.put(key, i);
+			IDToKey.put(i, key);
+		}
 
-        return i;
-    }
+		return i;
+	}
 
-    public abstract String createStringFromKey(K k);
+	public abstract String createStringFromKey(K k);
 
-    public abstract K createKeyFromString(String s);
+	public abstract K createKeyFromString(String s);
 
-    public void serialize(TIntObjectHashMap<String> map)
-    {
-        KeyToID.forEach((key, value) -> map.put(value, createStringFromKey(key)));
-    }
+	public void serialize(TIntObjectHashMap<String> map)
+	{
+		KeyToID.forEach((key, value) -> map.put(value, createStringFromKey(key)));
+	}
 
-    public void deserialize(TIntObjectHashMap<String> map)
-    {
-        map.forEachEntry((key, value) ->
-        {
-            K value1 = createKeyFromString(value);
-            IDToKey.put(key, value1);
-            KeyToID.put(value1, key);
-            return true;
-        });
-    }
+	public void deserialize(TIntObjectHashMap<String> map)
+	{
+		map.forEachEntry((key, value) ->
+		{
+			K value1 = createKeyFromString(value);
+			IDToKey.put(key, value1);
+			KeyToID.put(value1, key);
+			return true;
+		});
+	}
 
-    public String toString()
-    {
-        return IDToKey.toString();
-    }
+	public String toString()
+	{
+		return IDToKey.toString();
+	}
 
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        KeyToID.forEach((key, value) -> nbt.setInteger(createStringFromKey(key), value));
-        return nbt;
-    }
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		KeyToID.forEach((key, value) -> nbt.setInteger(createStringFromKey(key), value));
+		return nbt;
+	}
 
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
-        clear();
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		clear();
 
-        for(String key : nbt.getKeySet())
-        {
-            int val = nbt.getInteger(key);
-            K key1 = createKeyFromString(key);
-            IDToKey.put(val, key1);
-            KeyToID.put(key1, val);
-        }
-    }
+		for (String key : nbt.getKeySet())
+		{
+			int val = nbt.getInteger(key);
+			K key1 = createKeyFromString(key);
+			IDToKey.put(val, key1);
+			KeyToID.put(key1, val);
+		}
+	}
 }

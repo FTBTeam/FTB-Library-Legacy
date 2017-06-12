@@ -20,62 +20,62 @@ import javax.annotation.Nullable;
 
 public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
-    private ResourceLocation guiID;
-    private BlockPos pos;
-    private NBTTagCompound data;
-    private int windowID;
+	private ResourceLocation guiID;
+	private BlockPos pos;
+	private NBTTagCompound data;
+	private int windowID;
 
-    public MessageOpenGui()
-    {
-    }
+	public MessageOpenGui()
+	{
+	}
 
-    public MessageOpenGui(ResourceLocation key, BlockPos p, @Nullable NBTTagCompound tag, int wid)
-    {
-        guiID = key;
-        pos = p;
-        data = tag;
-        windowID = wid;
-    }
+	public MessageOpenGui(ResourceLocation key, BlockPos p, @Nullable NBTTagCompound tag, int wid)
+	{
+		guiID = key;
+		pos = p;
+		data = tag;
+		windowID = wid;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        guiID = NetUtils.readResourceLocation(io);
-        pos = NetUtils.readPos(io);
-        data = ByteBufUtils.readTag(io);
-        windowID = io.readUnsignedByte();
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		guiID = NetUtils.readResourceLocation(io);
+		pos = NetUtils.readPos(io);
+		data = ByteBufUtils.readTag(io);
+		windowID = io.readUnsignedByte();
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        NetUtils.writeResourceLocation(io, guiID);
-        NetUtils.writePos(io, pos);
-        ByteBufUtils.writeTag(io, data);
-        io.writeByte(windowID);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		NetUtils.writeResourceLocation(io, guiID);
+		NetUtils.writePos(io, pos);
+		ByteBufUtils.writeTag(io, data);
+		io.writeByte(windowID);
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void onMessage(MessageOpenGui m, EntityPlayer player)
-    {
-        IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiID);
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void onMessage(MessageOpenGui m, EntityPlayer player)
+	{
+		IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiID);
 
-        if(guiProvider != null)
-        {
-            GuiScreen g = guiProvider.getGui(player, m.pos, m.data);
+		if (guiProvider != null)
+		{
+			GuiScreen g = guiProvider.getGui(player, m.pos, m.data);
 
-            if(g != null)
-            {
-                Minecraft.getMinecraft().displayGuiScreen(g);
-                player.openContainer.windowId = m.windowID;
-            }
-        }
-    }
+			if (g != null)
+			{
+				Minecraft.getMinecraft().displayGuiScreen(g);
+				player.openContainer.windowId = m.windowID;
+			}
+		}
+	}
 }

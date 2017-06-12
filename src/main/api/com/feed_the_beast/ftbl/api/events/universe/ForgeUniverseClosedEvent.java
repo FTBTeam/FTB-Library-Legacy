@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.api.IUniverse;
  */
 public class ForgeUniverseClosedEvent extends ForgeUniverseEvent
 {
-    public ForgeUniverseClosedEvent(IUniverse universe)
-    {
-        super(universe);
-    }
+	public ForgeUniverseClosedEvent(IUniverse universe)
+	{
+		super(universe);
+	}
 }

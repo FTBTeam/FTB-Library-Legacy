@@ -1,15 +1,17 @@
-[{
-  "modid": "ftbl",
-  "name": "FTBLib",
-  "description": "FTBLib",
-  "version": "${version}",
-  "mcversion": "1.11.2",
-  "url": "http://minecraft.curseforge.com/projects/ftblib",
-  "updateUrl": "",
-  "authorList": ["LatvianModder","Jared"],
-  "credits": "",
-  "logoFile": "assets/ftbl/textures/logo.png",
-  "screenshots": [],
-  "parent":"",
-  "dependencies": []
-}]
+[
+	{
+		"modid": "ftbl",
+		"name": "FTBLib",
+		"description": "FTBLib",
+		"version": "${version}",
+		"mcversion": "1.11.2",
+		"url": "http://minecraft.curseforge.com/projects/ftblib",
+		"updateUrl": "",
+		"authorList": ["LatvianModder", "Jared"],
+		"credits": "",
+		"logoFile": "assets/ftbl/textures/logo.png",
+		"screenshots": [],
+		"parent": "",
+		"dependencies": []
+	}
+]

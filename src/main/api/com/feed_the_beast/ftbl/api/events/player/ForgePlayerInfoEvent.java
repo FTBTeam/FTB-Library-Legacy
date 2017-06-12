@@ -10,23 +10,23 @@ import java.util.List;
  */
 public class ForgePlayerInfoEvent extends ForgePlayerEvent
 {
-    private final List<ITextComponent> list;
-    private final long currentTime;
+	private final List<ITextComponent> list;
+	private final long currentTime;
 
-    public ForgePlayerInfoEvent(IForgePlayer player, List<ITextComponent> l, long t)
-    {
-        super(player);
-        list = l;
-        currentTime = t;
-    }
+	public ForgePlayerInfoEvent(IForgePlayer player, List<ITextComponent> l, long t)
+	{
+		super(player);
+		list = l;
+		currentTime = t;
+	}
 
-    public List<ITextComponent> getInfo()
-    {
-        return list;
-    }
+	public List<ITextComponent> getInfo()
+	{
+		return list;
+	}
 
-    public long getCurrentTime()
-    {
-        return currentTime;
-    }
+	public long getCurrentTime()
+	{
+		return currentTime;
+	}
 }

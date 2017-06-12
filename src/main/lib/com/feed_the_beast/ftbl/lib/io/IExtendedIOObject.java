@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
  */
 public interface IExtendedIOObject
 {
-    void writeData(ByteBuf data);
+	void writeData(ByteBuf data);
 
-    void readData(ByteBuf data);
+	void readData(ByteBuf data);
 }

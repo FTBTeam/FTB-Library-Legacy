@@ -12,6 +12,6 @@ import javax.annotation.Nullable;
  */
 public interface IContainerProvider
 {
-    @Nullable
-    Container getContainer(EntityPlayer player, BlockPos pos, @Nullable NBTTagCompound nbt);
+	@Nullable
+	Container getContainer(EntityPlayer player, BlockPos pos, @Nullable NBTTagCompound nbt);
 }

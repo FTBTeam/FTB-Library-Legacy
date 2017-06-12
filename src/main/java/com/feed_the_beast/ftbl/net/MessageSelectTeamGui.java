@@ -16,52 +16,52 @@ import java.util.List;
 
 public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 {
-    private List<PublicTeamData> teams;
+	private List<PublicTeamData> teams;
 
-    public MessageSelectTeamGui()
-    {
-    }
+	public MessageSelectTeamGui()
+	{
+	}
 
-    public MessageSelectTeamGui(IUniverse universe, IForgePlayer player)
-    {
-        teams = new ArrayList<>();
+	public MessageSelectTeamGui(IUniverse universe, IForgePlayer player)
+	{
+		teams = new ArrayList<>();
 
-        for(IForgeTeam team : universe.getTeams())
-        {
-            teams.add(new PublicTeamData(team, team.hasStatus(player, EnumTeamStatus.INVITED)));
-        }
-    }
+		for (IForgeTeam team : universe.getTeams())
+		{
+			teams.add(new PublicTeamData(team, team.hasStatus(player, EnumTeamStatus.INVITED)));
+		}
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        int s = io.readInt();
-        teams = new ArrayList<>(s);
-        while(--s >= 0)
-        {
-            teams.add(new PublicTeamData(io));
-        }
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		int s = io.readInt();
+		teams = new ArrayList<>(s);
+		while (--s >= 0)
+		{
+			teams.add(new PublicTeamData(io));
+		}
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        io.writeInt(teams.size());
-        for(PublicTeamData t : teams)
-        {
-            t.write(io);
-        }
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(teams.size());
+		for (PublicTeamData t : teams)
+		{
+			t.write(io);
+		}
+	}
 
-    @Override
-    public void onMessage(MessageSelectTeamGui m, EntityPlayer player)
-    {
-        new GuiSelectTeam(m.teams).openGui();
-    }
+	@Override
+	public void onMessage(MessageSelectTeamGui m, EntityPlayer player)
+	{
+		new GuiSelectTeam(m.teams).openGui();
+	}
 }

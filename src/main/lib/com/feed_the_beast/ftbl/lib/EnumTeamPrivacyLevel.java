@@ -5,33 +5,33 @@ import net.minecraft.util.IStringSerializable;
 
 public enum EnumTeamPrivacyLevel implements IStringSerializable
 {
-    EVERYONE("everyone", EnumTeamStatus.NONE),
-    ALLIES("allies", EnumTeamStatus.ALLY),
-    MEMBERS("members", EnumTeamStatus.MEMBER);
+	EVERYONE("everyone", EnumTeamStatus.NONE),
+	ALLIES("allies", EnumTeamStatus.ALLY),
+	MEMBERS("members", EnumTeamStatus.MEMBER);
 
-    /**
-     * @author LatvianModder
-     */
-    public static final EnumTeamPrivacyLevel[] VALUES = values();
-    public static final EnumNameMap<EnumTeamPrivacyLevel> NAME_MAP = new EnumNameMap<>(VALUES, false);
+	/**
+	 * @author LatvianModder
+	 */
+	public static final EnumTeamPrivacyLevel[] VALUES = values();
+	public static final EnumNameMap<EnumTeamPrivacyLevel> NAME_MAP = new EnumNameMap<>(VALUES, false);
 
-    private final String name;
-    private final EnumTeamStatus status;
+	private final String name;
+	private final EnumTeamStatus status;
 
-    EnumTeamPrivacyLevel(String n, EnumTeamStatus s)
-    {
-        name = n;
-        status = s;
-    }
+	EnumTeamPrivacyLevel(String n, EnumTeamStatus s)
+	{
+		name = n;
+		status = s;
+	}
 
-    @Override
-    public String getName()
-    {
-        return name;
-    }
+	@Override
+	public String getName()
+	{
+		return name;
+	}
 
-    public EnumTeamStatus getRequiredStatus()
-    {
-        return status;
-    }
+	public EnumTeamStatus getRequiredStatus()
+	{
+		return status;
+	}
 }

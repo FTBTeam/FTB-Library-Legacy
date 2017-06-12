@@ -10,14 +10,14 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CmdReloadClient extends CmdBase
 {
-    public CmdReloadClient()
-    {
-        super("reload_client", Level.ALL);
-    }
+	public CmdReloadClient()
+	{
+		super("reload_client", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        FTBLibIntegrationInternal.API.reload(Side.CLIENT, sender, EnumReloadType.RELOAD_COMMAND);
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		FTBLibIntegrationInternal.API.reload(Side.CLIENT, sender, EnumReloadType.RELOAD_COMMAND);
+	}
 }

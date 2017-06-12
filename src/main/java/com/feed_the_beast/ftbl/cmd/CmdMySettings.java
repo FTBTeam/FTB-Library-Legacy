@@ -13,16 +13,16 @@ import net.minecraft.util.text.TextComponentTranslation;
  */
 public class CmdMySettings extends CmdEditConfigBase
 {
-    private static final ITextComponent TITLE = new TextComponentTranslation("sidebar_button.ftbl.my_server_settings");
+	private static final ITextComponent TITLE = new TextComponentTranslation("sidebar_button.ftbl.my_server_settings");
 
-    public CmdMySettings()
-    {
-        super("my_settings", Level.ALL);
-    }
+	public CmdMySettings()
+	{
+		super("my_settings", Level.ALL);
+	}
 
-    @Override
-    public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
-    {
-        return new BasicConfigContainer(TITLE, getForgePlayer(sender).getSettings());
-    }
+	@Override
+	public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+	{
+		return new BasicConfigContainer(TITLE, getForgePlayer(sender).getSettings());
+	}
 }

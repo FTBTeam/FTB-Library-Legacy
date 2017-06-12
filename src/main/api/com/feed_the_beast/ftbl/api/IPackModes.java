@@ -10,14 +10,14 @@ import java.util.Collection;
  */
 public interface IPackModes
 {
-    Collection<IPackMode> getModes();
+	Collection<IPackMode> getModes();
 
-    @Nullable
-    IPackMode getRawMode(String id);
+	@Nullable
+	IPackMode getRawMode(String id);
 
-    IPackMode getMode(String id);
+	IPackMode getMode(String id);
 
-    IPackMode getDefault();
+	IPackMode getDefault();
 
-    JsonElement getCustomData(String id);
+	JsonElement getCustomData(String id);
 }

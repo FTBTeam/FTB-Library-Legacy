@@ -20,68 +20,68 @@ import java.util.UUID;
 
 public class MessageReload extends MessageToClient<MessageReload>
 {
-    private int typeID;
-    private NBTTagCompound syncData;
-    private String currentMode;
-    private UUID universeID;
+	private int typeID;
+	private NBTTagCompound syncData;
+	private String currentMode;
+	private UUID universeID;
 
-    public MessageReload()
-    {
-    }
+	public MessageReload()
+	{
+	}
 
-    public MessageReload(EnumReloadType t, NBTTagCompound sync)
-    {
-        typeID = t.ordinal();
-        syncData = sync;
-        currentMode = SharedServerData.INSTANCE.getPackMode().getName();
-        universeID = SharedServerData.INSTANCE.getUniverseID();
-    }
+	public MessageReload(EnumReloadType t, NBTTagCompound sync)
+	{
+		typeID = t.ordinal();
+		syncData = sync;
+		currentMode = SharedServerData.INSTANCE.getPackMode().getName();
+		universeID = SharedServerData.INSTANCE.getUniverseID();
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        io.writeByte(typeID);
-        ByteBufUtils.writeTag(io, syncData);
-        ByteBufUtils.writeUTF8String(io, currentMode);
-        NetUtils.writeUUID(io, universeID);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeByte(typeID);
+		ByteBufUtils.writeTag(io, syncData);
+		ByteBufUtils.writeUTF8String(io, currentMode);
+		NetUtils.writeUUID(io, universeID);
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        typeID = io.readUnsignedByte();
-        syncData = ByteBufUtils.readTag(io);
-        currentMode = ByteBufUtils.readUTF8String(io);
-        universeID = NetUtils.readUUID(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		typeID = io.readUnsignedByte();
+		syncData = ByteBufUtils.readTag(io);
+		currentMode = ByteBufUtils.readUTF8String(io);
+		universeID = NetUtils.readUUID(io);
+	}
 
-    @Override
-    public void onMessage(MessageReload m, EntityPlayer player)
-    {
-        EnumReloadType type = m.typeID >= EnumReloadType.VALUES.length ? EnumReloadType.MODE_CHANGED : EnumReloadType.VALUES[m.typeID];
+	@Override
+	public void onMessage(MessageReload m, EntityPlayer player)
+	{
+		EnumReloadType type = m.typeID >= EnumReloadType.VALUES.length ? EnumReloadType.MODE_CHANGED : EnumReloadType.VALUES[m.typeID];
 
-        SharedClientData.INSTANCE.universeID = m.universeID;
-        SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
+		SharedClientData.INSTANCE.universeID = m.universeID;
+		SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
-        for(String key : m.syncData.getKeySet())
-        {
-            ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
+		for (String key : m.syncData.getKeySet())
+		{
+			ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
 
-            if(nbt != null)
-            {
-                nbt.readSyncData(m.syncData.getCompoundTag(key));
-            }
-        }
+			if (nbt != null)
+			{
+				nbt.readSyncData(m.syncData.getCompoundTag(key));
+			}
+		}
 
-        if(type != EnumReloadType.RELOAD_COMMAND)
-        {
-            FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, type);
-        }
-    }
+		if (type != EnumReloadType.RELOAD_COMMAND)
+		{
+			FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, type);
+		}
+	}
 }

@@ -12,32 +12,32 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class URLImageProvider extends ImageProvider
 {
-    public final String url;
+	public final String url;
 
-    URLImageProvider(String _url, double u0, double v0, double u1, double v1)
-    {
-        super(_url, u0, v0, u1, v1);
-        url = _url;
-    }
+	URLImageProvider(String _url, double u0, double v0, double u1, double v1)
+	{
+		super(_url, u0, v0, u1, v1);
+		url = _url;
+	}
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public ITextureObject bindTexture()
-    {
-        ITextureObject obj = FTBLibClient.getDownloadImage(texture, url, ImageProvider.NULL.texture, null);
-        GlStateManager.bindTexture(obj.getGlTextureId());
-        return obj;
-    }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public ITextureObject bindTexture()
+	{
+		ITextureObject obj = FTBLibClient.getDownloadImage(texture, url, ImageProvider.NULL.texture, null);
+		GlStateManager.bindTexture(obj.getGlTextureId());
+		return obj;
+	}
 
-    @Override
-    public JsonElement getJson()
-    {
-        return new JsonPrimitive(url);
-    }
+	@Override
+	public JsonElement getJson()
+	{
+		return new JsonPrimitive(url);
+	}
 
-    @Override
-    public ImageProvider withUV(double u0, double v0, double u1, double v1)
-    {
-        return new URLImageProvider(url, u0, v0, u1, v1);
-    }
+	@Override
+	public ImageProvider withUV(double u0, double v0, double u1, double v1)
+	{
+		return new URLImageProvider(url, u0, v0, u1, v1);
+	}
 }

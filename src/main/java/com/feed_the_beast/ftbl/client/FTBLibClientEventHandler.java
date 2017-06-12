@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -31,40 +32,40 @@ import java.util.List;
 
 public class FTBLibClientEventHandler
 {
-    @SubscribeEvent
-    public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
-    {
-        SharedClientData.INSTANCE.reset();
-    }
+	@SubscribeEvent
+	public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
+	{
+		SharedClientData.INSTANCE.reset();
+	}
 
     /* TODO: Close world / destroy cached data
-    @SubscribeEvent
+	@SubscribeEvent
     public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
     }
     */
 
-    @SubscribeEvent
-    public static void onTooltip(ItemTooltipEvent event)
-    {
-        if(FTBLibClientConfig.ITEM_ORE_NAMES.getBoolean())
-        {
-            Collection<String> ores = ODItems.getOreNames(event.getItemStack());
+	@SubscribeEvent
+	public static void onTooltip(ItemTooltipEvent event)
+	{
+		if (FTBLibClientConfig.ITEM_ORE_NAMES.getBoolean())
+		{
+			Collection<String> ores = ODItems.getOreNames(event.getItemStack());
 
-            if(!ores.isEmpty())
-            {
-                event.getToolTip().add("Ore Dictionary names:");
+			if (!ores.isEmpty())
+			{
+				event.getToolTip().add("Ore Dictionary names:");
 
-                for(String or : ores)
-                {
-                    event.getToolTip().add("> " + or);
-                }
-            }
-        }
-    }
+				for (String or : ores)
+				{
+					event.getToolTip().add("> " + or);
+				}
+			}
+		}
+	}
 
     /*
-    @SubscribeEvent
+	@SubscribeEvent
     public static void onDrawDebugText(RenderGameOverlayEvent.Text event)
     {
         if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
@@ -100,214 +101,215 @@ public class FTBLibClientEventHandler
     }
      */
 
-    // Add Sidebar Buttons //
+	// Add Sidebar Buttons //
 
-    @SubscribeEvent
-    public static void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
-    {
-        if(event.getGui() instanceof InventoryEffectRenderer)
-        {
-            List<SidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
+	@SubscribeEvent
+	public static void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
+	{
+		if (event.getGui() instanceof InventoryEffectRenderer)
+		{
+			List<SidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
 
-            if(!buttons.isEmpty())
-            {
-                ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830);
-                event.getButtonList().add(renderer);
+			if (!buttons.isEmpty())
+			{
+				ButtonInvLMRenderer renderer = new ButtonInvLMRenderer(495830);
+				event.getButtonList().add(renderer);
 
-                if(!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
-                {
-                    int i = 0;
-                    for(SidebarButton button : buttons)
-                    {
-                        int x = i % 4;
-                        int y = i / 4;
-                        ButtonInvLM b = new ButtonInvLM(495830 + i, button, 4 + x * 18, 4 + y * 18);
-                        event.getButtonList().add(b);
-                        renderer.buttons.add(b);
-                        i++;
-                    }
-                }
-                else
-                {
-                    int xSize = 176;
-                    int ySize = 166;
-                    int buttonX = -17;
-                    int buttonY = 8;
+				if (!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+				{
+					int i = 0;
+					for (SidebarButton button : buttons)
+					{
+						int x = i % 4;
+						int y = i / 4;
+						ButtonInvLM b = new ButtonInvLM(495830 + i, button, 4 + x * 18, 4 + y * 18);
+						event.getButtonList().add(b);
+						renderer.buttons.add(b);
+						i++;
+					}
+				}
+				else
+				{
+					int xSize = 176;
+					int ySize = 166;
+					int buttonX = -17;
+					int buttonY = 8;
 
-                    if(event.getGui() instanceof GuiContainerCreative)
-                    {
-                        xSize = 195;
-                        ySize = 136;
-                        buttonY = 6;
-                    }
-                    boolean hasPotions = !event.getGui().mc.player.getActivePotionEffects().isEmpty();
-                    if(hasPotions)
-                    {
-                        buttonX -= 4;
-                        buttonY -= 26;
-                    }
+					if (event.getGui() instanceof GuiContainerCreative)
+					{
+						xSize = 195;
+						ySize = 136;
+						buttonY = 6;
+					}
+					boolean hasPotions = !event.getGui().mc.player.getActivePotionEffects().isEmpty();
+					if (hasPotions)
+					{
+						buttonX -= 4;
+						buttonY -= 26;
+					}
 
-                    int guiLeft = (event.getGui().width - xSize) / 2;
-                    int guiTop = (event.getGui().height - ySize) / 2;
+					int guiLeft = (event.getGui().width - xSize) / 2;
+					int guiTop = (event.getGui().height - ySize) / 2;
 
-                    int i = 0;
-                    for(SidebarButton button : buttons)
-                    {
-                        ButtonInvLM b;
+					int i = 0;
+					for (SidebarButton button : buttons)
+					{
+						ButtonInvLM b;
 
-                        if(hasPotions)
-                        {
-                            int x = i % 8;
-                            int y = i / 8;
-                            b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
-                        }
-                        else
-                        {
-                            int x = i / 8;
-                            int y = i % 8;
-                            b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
-                        }
+						if (hasPotions)
+						{
+							int x = i % 8;
+							int y = i / 8;
+							b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY - y * 18);
+						}
+						else
+						{
+							int x = i / 8;
+							int y = i % 8;
+							b = new ButtonInvLM(495830 + i, button, guiLeft + buttonX - 18 * x, guiTop + buttonY + 18 * y);
+						}
 
-                        event.getButtonList().add(b);
-                        renderer.buttons.add(b);
-                        i++;
-                    }
-                }
-            }
-        }
-    }
+						event.getButtonList().add(b);
+						renderer.buttons.add(b);
+						i++;
+					}
+				}
+			}
+		}
+	}
 
-    @SubscribeEvent
-    public static void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
-    {
-        if(event.getButton() instanceof ButtonInvLM)
-        {
-            GuiHelper.playClickSound();
-            (((ButtonInvLM) event.getButton()).button).onClicked(MouseButton.LEFT);
-        }
-    }
+	@SubscribeEvent
+	public static void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
+	{
+		if (event.getButton() instanceof ButtonInvLM)
+		{
+			GuiHelper.playClickSound();
+			(((ButtonInvLM) event.getButton()).button).onClicked(MouseButton.LEFT);
+		}
+	}
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    //public void renderGui(RenderGameOverlayEvent event)
-    public static void renderGui(TickEvent.RenderTickEvent event)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        //if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
-        if(event.phase == TickEvent.Phase.END && mc.world != null && !mc.gameSettings.hideGUI)
-        {
-            if(ClientNotifications.shouldRenderTemp())
-            {
-                ClientNotifications.renderTemp(new ScaledResolution(mc));
-            }
-        }
-    }
+	@SubscribeEvent(priority = EventPriority.LOW)
+	//public void renderGui(RenderGameOverlayEvent event)
+	public static void renderGui(TickEvent.RenderTickEvent event)
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+		//if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
+		if (event.phase == TickEvent.Phase.END && mc.world != null && !mc.gameSettings.hideGUI)
+		{
+			if (ClientNotifications.shouldRenderTemp())
+			{
+				ClientNotifications.renderTemp(new ScaledResolution(mc));
+			}
+		}
+	}
 
-    @SubscribeEvent
-    public static void renderWorld(RenderWorldLastEvent event)
-    {
-        FTBLibClient.updateRenderInfo();
-    }
+	@SubscribeEvent
+	public static void renderWorld(RenderWorldLastEvent event)
+	{
+		FTBLibClient.updateRenderInfo();
+	}
 
-    private static class ButtonInvLM extends GuiButton
-    {
-        public final SidebarButton button;
-        public final String title;
-        public final boolean renderMessages;
+	private static class ButtonInvLM extends GuiButton
+	{
+		public final SidebarButton button;
+		public final String title;
+		public final boolean renderMessages;
 
-        public ButtonInvLM(int id, SidebarButton b, int x, int y)
-        {
-            super(id, x, y, 16, 16, "");
-            button = b;
-            title = StringUtils.translate("sidebar_button." + b.getName());
-            renderMessages = b.getName().equals("ftbl.teams_gui");
-        }
+		public ButtonInvLM(int id, SidebarButton b, int x, int y)
+		{
+			super(id, x, y, 16, 16, "");
+			button = b;
+			title = StringUtils.translate("sidebar_button." + b.getName());
+			renderMessages = b.getName().equals("ftbl.teams_gui");
+		}
 
-        @Override
-        public void drawButton(Minecraft mc, int mx, int my)
-        {
-        }
-    }
+		@Override
+		public void func_191745_a(Minecraft mc, int mx, int my, float p_191745_4_)
+		{
+		}
+	}
 
-    private static class ButtonInvLMRenderer extends GuiButton
-    {
-        public final List<ButtonInvLM> buttons;
+	private static class ButtonInvLMRenderer extends GuiButton
+	{
+		public final List<ButtonInvLM> buttons;
 
-        public ButtonInvLMRenderer(int id)
-        {
-            super(id, -1000, -1000, 0, 0, "");
-            buttons = new ArrayList<>();
-        }
+		public ButtonInvLMRenderer(int id)
+		{
+			super(id, -1000, -1000, 0, 0, "");
+			buttons = new ArrayList<>();
+		}
 
-        @Override
-        public void drawButton(Minecraft mc, int mx, int my)
-        {
-            //if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
-            //	return;
+		@Override
+		public void func_191745_a(Minecraft mc, int mx, int my, float p_191745_4_)
+		{
+			//if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
+			//	return;
 
-            zLevel = 0F;
+			zLevel = 0F;
+			FontRenderer font = mc.fontRendererObj;
 
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.color(1F, 1F, 1F, 1F);
 
-            for(ButtonInvLM b : buttons)
-            {
-                b.button.icon.draw(b.xPosition, b.yPosition, b.width, b.height, Color4I.NONE);
+			for (ButtonInvLM b : buttons)
+			{
+				b.button.icon.draw(b.xPosition, b.yPosition, b.width, b.height, Color4I.NONE);
 
-                if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
-                {
-                    GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height, Color4I.WHITE_A33);
-                }
-            }
+				if (mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
+				{
+					GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height, Color4I.WHITE_A33);
+				}
+			}
 
-            for(ButtonInvLM b : buttons)
-            {
-                if(b.renderMessages && MyTeamData.unreadMessages > 0)
-                {
-                    String n = String.valueOf(MyTeamData.unreadMessages);
-                    int nw = mc.fontRendererObj.getStringWidth(n);
-                    int width = 16;
-                    GuiHelper.drawBlankRect(b.xPosition + width - nw, b.yPosition - 4, nw + 1, 9, Color4I.LIGHT_RED);
+			for (ButtonInvLM b : buttons)
+			{
+				if (b.renderMessages && MyTeamData.unreadMessages > 0)
+				{
+					String n = String.valueOf(MyTeamData.unreadMessages);
+					int nw = font.getStringWidth(n);
+					int width = 16;
+					GuiHelper.drawBlankRect(b.xPosition + width - nw, b.yPosition - 4, nw + 1, 9, Color4I.LIGHT_RED);
 
-                    mc.fontRendererObj.drawString(n, b.xPosition + width - nw + 1, b.yPosition - 3, 0xFFFFFFFF);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
-                }
+					font.drawString(n, b.xPosition + width - nw + 1, b.yPosition - 3, 0xFFFFFFFF);
+					GlStateManager.color(1F, 1F, 1F, 1F);
+				}
 
-                if(mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
-                {
-                    GlStateManager.pushMatrix();
-                    double mx1 = mx - 4D;
-                    double my1 = my - 12D;
+				if (mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
+				{
+					GlStateManager.pushMatrix();
+					double mx1 = mx - 4D;
+					double my1 = my - 12D;
 
-                    int tw = mc.fontRendererObj.getStringWidth(b.title);
+					int tw = font.getStringWidth(b.title);
 
-                    if(LMUtils.isNEILoaded() || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
-                    {
-                        mx1 -= tw + 8;
-                        my1 += 4;
-                    }
+					if (LMUtils.isNEILoaded() || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+					{
+						mx1 -= tw + 8;
+						my1 += 4;
+					}
 
-                    if(mx1 < 4D)
-                    {
-                        mx1 = 4D;
-                    }
-                    if(my1 < 4D)
-                    {
-                        my1 = 4D;
-                    }
+					if (mx1 < 4D)
+					{
+						mx1 = 4D;
+					}
+					if (my1 < 4D)
+					{
+						my1 = 4D;
+					}
 
-                    GlStateManager.translate(mx1, my1, zLevel);
+					GlStateManager.translate(mx1, my1, zLevel);
 
-                    GlStateManager.enableBlend();
-                    GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                    GuiHelper.drawBlankRect(-3, -2, tw + 6, 12, Color4I.DARK_GRAY);
-                    mc.fontRendererObj.drawString(b.title, 0, 0, 0xFFFFFFFF);
-                    GlStateManager.color(1F, 1F, 1F, 1F);
-                    GlStateManager.popMatrix();
-                }
-            }
+					GlStateManager.enableBlend();
+					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					GuiHelper.drawBlankRect(-3, -2, tw + 6, 12, Color4I.DARK_GRAY);
+					font.drawString(b.title, 0, 0, 0xFFFFFFFF);
+					GlStateManager.color(1F, 1F, 1F, 1F);
+					GlStateManager.popMatrix();
+				}
+			}
 
-            GlStateManager.color(1F, 1F, 1F, 1F);
-        }
-    }
+			GlStateManager.color(1F, 1F, 1F, 1F);
+		}
+	}
 }

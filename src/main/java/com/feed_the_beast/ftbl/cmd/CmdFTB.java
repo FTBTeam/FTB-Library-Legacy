@@ -11,24 +11,24 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class CmdFTB extends CmdTreeBase
 {
-    public CmdFTB(boolean dedi)
-    {
-        super("ftb");
-        addSubcommand(new CmdReload());
-        addSubcommand(new CmdReloadClient());
-        addSubcommand(new CmdMySettings());
-        addSubcommand(new CmdTeam());
-        addSubcommand(new CmdPackMode());
-        addSubcommand(new CmdNotify());
-        addSubcommand(new CmdEditGamerules());
-        addSubcommand(new CmdEditConfig());
+	public CmdFTB(boolean dedi)
+	{
+		super("ftb");
+		addSubcommand(new CmdReload());
+		addSubcommand(new CmdReloadClient());
+		addSubcommand(new CmdMySettings());
+		addSubcommand(new CmdTeam());
+		addSubcommand(new CmdPackMode());
+		addSubcommand(new CmdNotify());
+		addSubcommand(new CmdEditGamerules());
+		addSubcommand(new CmdEditConfig());
 
-        if(LMUtils.DEV_ENV)
-        {
-            addSubcommand(new CmdAddFakePlayer());
-        }
+		if (LMUtils.DEV_ENV)
+		{
+			addSubcommand(new CmdAddFakePlayer());
+		}
 
-        MinecraftForge.EVENT_BUS.post(new RegisterFTBCommandsEvent(this, dedi));
-        setCustomPermissionPrefix("");
-    }
+		MinecraftForge.EVENT_BUS.post(new RegisterFTBCommandsEvent(this, dedi));
+		setCustomPermissionPrefix("");
+	}
 }

@@ -16,96 +16,96 @@ import javax.annotation.Nullable;
  */
 public class PropertyBlockState extends PropertyBase
 {
-    public static final String ID = "blockstate";
-    public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
+	public static final String ID = "blockstate";
+	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
 
-    private IBlockState value;
+	private IBlockState value;
 
-    public PropertyBlockState()
-    {
-        this(AIR_STATE);
-    }
+	public PropertyBlockState()
+	{
+		this(AIR_STATE);
+	}
 
-    public PropertyBlockState(IBlockState state)
-    {
-        value = state;
-    }
+	public PropertyBlockState(IBlockState state)
+	{
+		value = state;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    public IBlockState getBlockState()
-    {
-        return value;
-    }
+	public IBlockState getBlockState()
+	{
+		return value;
+	}
 
-    public void setBlockState(IBlockState state)
-    {
-        value = state;
-    }
+	public void setBlockState(IBlockState state)
+	{
+		value = state;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getBlockState();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getBlockState();
+	}
 
-    @Override
-    public String getString()
-    {
-        return getBlockState().toString();
-    }
+	@Override
+	public String getString()
+	{
+		return getBlockState().toString();
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return getBlockState() != Blocks.AIR.getDefaultState();
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return getBlockState() != Blocks.AIR.getDefaultState();
+	}
 
-    @Override
-    public int getInt()
-    {
-        return Block.getStateId(getBlockState());
-    }
+	@Override
+	public int getInt()
+	{
+		return Block.getStateId(getBlockState());
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyBlockState(getBlockState());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyBlockState(getBlockState());
+	}
 
-    @Override
-    public void fromJson(JsonElement o)
-    {
-        value = Blocks.AIR.getDefaultState();
+	@Override
+	public void fromJson(JsonElement o)
+	{
+		value = Blocks.AIR.getDefaultState();
 
-        if(o.isJsonPrimitive())
-        {
-            value = Block.REGISTRY.getObject(new ResourceLocation(o.getAsString())).getDefaultState();
-        }
+		if (o.isJsonPrimitive())
+		{
+			value = Block.REGISTRY.getObject(new ResourceLocation(o.getAsString())).getDefaultState();
+		}
 
-        setBlockState(value);
-    }
+		setBlockState(value);
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeShort(getInt());
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeShort(getInt());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        setBlockState(Block.getStateById(data.readUnsignedShort()));
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		setBlockState(Block.getStateById(data.readUnsignedShort()));
+	}
 }

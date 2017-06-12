@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
  */
 public interface IGuiEditConfig
 {
-    void onChanged(IConfigKey key, JsonElement json);
+	void onChanged(IConfigKey key, JsonElement json);
 
-    void openGui();
+	void openGui();
 }

@@ -8,15 +8,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public abstract class ForgePlayerEvent extends Event
 {
-    private final IForgePlayer player;
+	private final IForgePlayer player;
 
-    public ForgePlayerEvent(IForgePlayer p)
-    {
-        player = p;
-    }
+	public ForgePlayerEvent(IForgePlayer p)
+	{
+		player = p;
+	}
 
-    public IForgePlayer getPlayer()
-    {
-        return player;
-    }
+	public IForgePlayer getPlayer()
+	{
+		return player;
+	}
 }

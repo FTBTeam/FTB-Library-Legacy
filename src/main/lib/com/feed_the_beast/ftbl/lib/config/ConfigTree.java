@@ -19,163 +19,163 @@ import java.util.Map;
  */
 public class ConfigTree implements IConfigTree
 {
-    private static final int HAS_DISPLAY_NAME = 1;
-    private static final int HAS_INFO = 2;
-    private static final int HAS_GROUP = 4;
+	private static final int HAS_DISPLAY_NAME = 1;
+	private static final int HAS_INFO = 2;
+	private static final int HAS_GROUP = 4;
 
-    private final Map<IConfigKey, IConfigValue> tree;
+	private final Map<IConfigKey, IConfigValue> tree;
 
-    public ConfigTree(boolean linked)
-    {
-        tree = linked ? new LinkedHashMap<>() : new HashMap<>();
-    }
+	public ConfigTree(boolean linked)
+	{
+		tree = linked ? new LinkedHashMap<>() : new HashMap<>();
+	}
 
-    public ConfigTree()
-    {
-        this(false);
-    }
+	public ConfigTree()
+	{
+		this(false);
+	}
 
-    @Override
-    public final Map<IConfigKey, IConfigValue> getTree()
-    {
-        return tree;
-    }
+	@Override
+	public final Map<IConfigKey, IConfigValue> getTree()
+	{
+		return tree;
+	}
 
-    @Override
-    public IConfigTree copy()
-    {
-        ConfigTree t = new ConfigTree();
-        getTree().forEach((key, value) -> t.add(key, value.copy()));
-        return t;
-    }
+	@Override
+	public IConfigTree copy()
+	{
+		ConfigTree t = new ConfigTree();
+		getTree().forEach((key, value) -> t.add(key, value.copy()));
+		return t;
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeShort(tree.size());
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeShort(tree.size());
 
-        tree.forEach((key, value) ->
-        {
-            ByteBufUtils.writeUTF8String(data, key.getName());
-            data.writeInt(key.getFlags());
+		tree.forEach((key, value) ->
+		{
+			ByteBufUtils.writeUTF8String(data, key.getName());
+			data.writeInt(key.getFlags());
 
-            IConfigValue defValue = key.getDefValue();
-            ByteBufUtils.writeUTF8String(data, defValue.getName());
-            defValue.writeData(data);
+			IConfigValue defValue = key.getDefValue();
+			ByteBufUtils.writeUTF8String(data, defValue.getName());
+			defValue.writeData(data);
 
-            int extraFlags = 0;
+			int extraFlags = 0;
 
-            String displayName = key.getNameLangKey();
+			String displayName = key.getNameLangKey();
 
-            if(!displayName.isEmpty())
-            {
-                extraFlags |= HAS_DISPLAY_NAME;
-            }
+			if (!displayName.isEmpty())
+			{
+				extraFlags |= HAS_DISPLAY_NAME;
+			}
 
-            String info = key.getInfoLangKey();
+			String info = key.getInfoLangKey();
 
-            if(!info.isEmpty())
-            {
-                extraFlags |= HAS_INFO;
-            }
+			if (!info.isEmpty())
+			{
+				extraFlags |= HAS_INFO;
+			}
 
-            if(!key.getGroup().isEmpty())
-            {
-                extraFlags |= HAS_GROUP;
-            }
+			if (!key.getGroup().isEmpty())
+			{
+				extraFlags |= HAS_GROUP;
+			}
 
-            data.writeByte(extraFlags);
+			data.writeByte(extraFlags);
 
-            if(!displayName.isEmpty())
-            {
-                ByteBufUtils.writeUTF8String(data, displayName);
-            }
+			if (!displayName.isEmpty())
+			{
+				ByteBufUtils.writeUTF8String(data, displayName);
+			}
 
-            if(!info.isEmpty())
-            {
-                ByteBufUtils.writeUTF8String(data, info);
-            }
+			if (!info.isEmpty())
+			{
+				ByteBufUtils.writeUTF8String(data, info);
+			}
 
-            if(!key.getGroup().isEmpty())
-            {
-                ByteBufUtils.writeUTF8String(data, key.getGroup());
-            }
+			if (!key.getGroup().isEmpty())
+			{
+				ByteBufUtils.writeUTF8String(data, key.getGroup());
+			}
 
-            ByteBufUtils.writeUTF8String(data, value.getName());
-            value.writeData(data);
-        });
-    }
+			ByteBufUtils.writeUTF8String(data, value.getName());
+			value.writeData(data);
+		});
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        int s = data.readUnsignedShort();
-        tree.clear();
+	@Override
+	public void readData(ByteBuf data)
+	{
+		int s = data.readUnsignedShort();
+		tree.clear();
 
-        while(--s >= 0)
-        {
-            String id = ByteBufUtils.readUTF8String(data);
-            int flags = data.readInt();
+		while (--s >= 0)
+		{
+			String id = ByteBufUtils.readUTF8String(data);
+			int flags = data.readInt();
 
-            IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
-            value.readData(data);
+			IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
+			value.readData(data);
 
-            ConfigKey key = new ConfigKey(id, value);
-            key.setFlags(flags);
+			ConfigKey key = new ConfigKey(id, value);
+			key.setFlags(flags);
 
-            int extraFlags = data.readUnsignedByte();
+			int extraFlags = data.readUnsignedByte();
 
-            if(Bits.getFlag(extraFlags, HAS_DISPLAY_NAME))
-            {
-                key.setNameLangKey(ByteBufUtils.readUTF8String(data));
-            }
+			if (Bits.getFlag(extraFlags, HAS_DISPLAY_NAME))
+			{
+				key.setNameLangKey(ByteBufUtils.readUTF8String(data));
+			}
 
-            if(Bits.getFlag(extraFlags, HAS_INFO))
-            {
-                key.setInfoLangKey(ByteBufUtils.readUTF8String(data));
-            }
+			if (Bits.getFlag(extraFlags, HAS_INFO))
+			{
+				key.setInfoLangKey(ByteBufUtils.readUTF8String(data));
+			}
 
-            if(Bits.getFlag(extraFlags, HAS_GROUP))
-            {
-                key.setGroup(ByteBufUtils.readUTF8String(data));
-            }
+			if (Bits.getFlag(extraFlags, HAS_GROUP))
+			{
+				key.setGroup(ByteBufUtils.readUTF8String(data));
+			}
 
-            value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
-            value.readData(data);
-            tree.put(key, value);
-        }
-    }
+			value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
+			value.readData(data);
+			tree.put(key, value);
+		}
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        JsonObject o = json.getAsJsonObject();
-        getTree().forEach((key, value) ->
-        {
-            if(!key.getFlag(IConfigKey.EXCLUDED))
-            {
-                JsonElement e = o.get(key.getName());
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		JsonObject o = json.getAsJsonObject();
+		getTree().forEach((key, value) ->
+		{
+			if (!key.getFlag(IConfigKey.EXCLUDED))
+			{
+				JsonElement e = o.get(key.getName());
 
-                if(e != null)
-                {
-                    value.fromJson(e);
-                }
-            }
-        });
-    }
+				if (e != null)
+				{
+					value.fromJson(e);
+				}
+			}
+		});
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        JsonObject o = new JsonObject();
-        tree.forEach((key, value) ->
-        {
-            if(!key.getFlag(IConfigKey.EXCLUDED))
-            {
-                o.add(key.getName(), value.getSerializableElement());
-            }
-        });
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		JsonObject o = new JsonObject();
+		tree.forEach((key, value) ->
+		{
+			if (!key.getFlag(IConfigKey.EXCLUDED))
+			{
+				o.add(key.getName(), value.getSerializableElement());
+			}
+		});
 
-        return o;
-    }
+		return o;
+	}
 }

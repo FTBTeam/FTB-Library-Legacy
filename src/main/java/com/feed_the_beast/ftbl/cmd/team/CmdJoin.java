@@ -19,40 +19,40 @@ import java.util.List;
  */
 public class CmdJoin extends CmdBase
 {
-    public CmdJoin()
-    {
-        super("join", Level.ALL);
-    }
+	public CmdJoin()
+	{
+		super("join", Level.ALL);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 1)
-        {
-            return getListOfStringsMatchingLastWord(args, Universe.INSTANCE.teams.keySet());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, Universe.INSTANCE.teams.keySet());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(ep);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(ep);
 
-        if(p.getTeam() != null)
-        {
-            throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
-        }
+		if (p.getTeam() != null)
+		{
+			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
+		}
 
-        checkArgs(args, 1, "<ID>");
+		checkArgs(args, 1, "<ID>");
 
-        IForgeTeam team = getTeam(args[0]);
+		IForgeTeam team = getTeam(args[0]);
 
-        if(!team.addPlayer(p))
-        {
-            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getName());
-        }
-    }
+		if (!team.addPlayer(p))
+		{
+			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getName());
+		}
+	}
 }

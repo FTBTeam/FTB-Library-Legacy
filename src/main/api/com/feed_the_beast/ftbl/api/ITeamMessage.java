@@ -9,9 +9,9 @@ import java.util.UUID;
  */
 public interface ITeamMessage extends Comparable<ITeamMessage>
 {
-    UUID getSender();
+	UUID getSender();
 
-    long getTime();
+	long getTime();
 
-    ITextComponent getMessage();
+	ITextComponent getMessage();
 }

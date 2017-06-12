@@ -21,91 +21,91 @@ import java.util.List;
 
 public class CmdPackMode extends CmdTreeBase
 {
-    public static class CmdSet extends CmdBase
-    {
-        public CmdSet()
-        {
-            super("set", Level.OP);
-        }
+	public static class CmdSet extends CmdBase
+	{
+		public CmdSet()
+		{
+			super("set", Level.OP);
+		}
 
-        @Override
-        public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-        {
-            if(args.length == 1)
-            {
-                return getListOfStringsMatchingLastWord(args, PackModes.INSTANCE.getModes());
-            }
+		@Override
+		public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+		{
+			if (args.length == 1)
+			{
+				return getListOfStringsMatchingLastWord(args, PackModes.INSTANCE.getModes());
+			}
 
-            return super.getTabCompletions(server, sender, args, pos);
-        }
+			return super.getTabCompletions(server, sender, args, pos);
+		}
 
-        @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-        {
-            checkArgs(args, 1, "<mode>");
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			checkArgs(args, 1, "<mode>");
 
-            ITextComponent c;
+			ITextComponent c;
 
-            int i = SharedServerData.INSTANCE.setMode(args[0]);
+			int i = SharedServerData.INSTANCE.setMode(args[0]);
 
-            if(i == 1)
-            {
-                c = FTBLibLang.MODE_NOT_FOUND.textComponent();
-                c.getStyle().setColor(TextFormatting.RED);
-            }
-            else if(i == 2)
-            {
-                c = FTBLibLang.MODE_ALREADY_SET.textComponent();
-                c.getStyle().setColor(TextFormatting.RED);
-            }
-            else
-            {
-                c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
-                c.getStyle().setColor(TextFormatting.GREEN);
-                FTBLibIntegrationInternal.API.reload(Side.SERVER, sender, EnumReloadType.MODE_CHANGED);
-            }
+			if (i == 1)
+			{
+				c = FTBLibLang.MODE_NOT_FOUND.textComponent();
+				c.getStyle().setColor(TextFormatting.RED);
+			}
+			else if (i == 2)
+			{
+				c = FTBLibLang.MODE_ALREADY_SET.textComponent();
+				c.getStyle().setColor(TextFormatting.RED);
+			}
+			else
+			{
+				c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
+				c.getStyle().setColor(TextFormatting.GREEN);
+				FTBLibIntegrationInternal.API.reload(Side.SERVER, sender, EnumReloadType.MODE_CHANGED);
+			}
 
-            sender.sendMessage(c);
-        }
-    }
+			sender.sendMessage(c);
+		}
+	}
 
-    public static class CmdGet extends CmdBase
-    {
-        public CmdGet()
-        {
-            super("get", Level.ALL);
-        }
+	public static class CmdGet extends CmdBase
+	{
+		public CmdGet()
+		{
+			super("get", Level.ALL);
+		}
 
-        @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-        {
-            ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedServerData.INSTANCE.getPackMode().getName());
-            c.getStyle().setColor(TextFormatting.AQUA);
-            sender.sendMessage(c);
-        }
-    }
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			ITextComponent c = FTBLibLang.MODE_CURRENT.textComponent(SharedServerData.INSTANCE.getPackMode().getName());
+			c.getStyle().setColor(TextFormatting.AQUA);
+			sender.sendMessage(c);
+		}
+	}
 
-    public static class CmdList extends CmdBase
-    {
-        public CmdList()
-        {
-            super("list", Level.ALL);
-        }
+	public static class CmdList extends CmdBase
+	{
+		public CmdList()
+		{
+			super("list", Level.ALL);
+		}
 
-        @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-        {
-            ITextComponent c = FTBLibLang.MODE_LIST.textComponent(StringUtils.strip(PackModes.INSTANCE.getModes()));
-            c.getStyle().setColor(TextFormatting.AQUA);
-            sender.sendMessage(c);
-        }
-    }
+		@Override
+		public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+		{
+			ITextComponent c = FTBLibLang.MODE_LIST.textComponent(StringUtils.strip(PackModes.INSTANCE.getModes()));
+			c.getStyle().setColor(TextFormatting.AQUA);
+			sender.sendMessage(c);
+		}
+	}
 
-    public CmdPackMode()
-    {
-        super("packmode");
-        addSubcommand(new CmdSet());
-        addSubcommand(new CmdGet());
-        addSubcommand(new CmdList());
-    }
+	public CmdPackMode()
+	{
+		super("packmode");
+		addSubcommand(new CmdSet());
+		addSubcommand(new CmdGet());
+		addSubcommand(new CmdList());
+	}
 }

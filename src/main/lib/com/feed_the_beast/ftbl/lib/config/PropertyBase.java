@@ -13,54 +13,54 @@ import com.google.gson.JsonElement;
  */
 public abstract class PropertyBase implements IConfigValue
 {
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-        GuiSelectors.selectJson(this, (value, set) ->
-        {
-            if(set)
-            {
-                fromJson(value.getSerializableElement());
-                gui.onChanged(key, getSerializableElement());
-            }
+	@Override
+	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	{
+		GuiSelectors.selectJson(this, (value, set) ->
+		{
+			if (set)
+			{
+				fromJson(value.getSerializableElement());
+				gui.onChanged(key, getSerializableElement());
+			}
 
-            gui.openGui();
-        });
-    }
+			gui.openGui();
+		});
+	}
 
-    @Override
-    public boolean setValueFromString(String text, boolean simulate)
-    {
-        try
-        {
-            JsonElement json = JsonUtils.fromJson(text);
+	@Override
+	public boolean setValueFromString(String text, boolean simulate)
+	{
+		try
+		{
+			JsonElement json = JsonUtils.fromJson(text);
 
-            if(!json.isJsonNull())
-            {
-                if(!simulate)
-                {
-                    fromJson(json);
-                }
+			if (!json.isJsonNull())
+			{
+				if (!simulate)
+				{
+					fromJson(json);
+				}
 
-                return true;
-            }
-        }
-        catch(Exception ex)
-        {
-        }
+				return true;
+			}
+		}
+		catch (Exception ex)
+		{
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    @Override
-    public boolean equals(Object o)
-    {
-        return o instanceof IConfigValue && equalsValue((IConfigValue) o);
-    }
+	@Override
+	public boolean equals(Object o)
+	{
+		return o instanceof IConfigValue && equalsValue((IConfigValue) o);
+	}
 
-    @Override
-    public String toString()
-    {
-        return getString();
-    }
+	@Override
+	public String toString()
+	{
+		return getString();
+	}
 }

@@ -7,5 +7,5 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
  */
 public interface IGuiWrapper
 {
-    GuiBase getWrappedGui();
+	GuiBase getWrappedGui();
 }

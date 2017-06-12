@@ -23,110 +23,110 @@ import java.util.List;
  */
 public class GuiCreateTeam extends GuiBase
 {
-    private EnumTeamColor color;
-    private final Button buttonAccept, buttonCancel;
-    private final List<Button> colorButtons;
-    private final TextBox textBoxId;
+	private EnumTeamColor color;
+	private final Button buttonAccept, buttonCancel;
+	private final List<Button> colorButtons;
+	private final TextBox textBoxId;
 
-    public GuiCreateTeam()
-    {
-        super(154, 102);
-        color = EnumTeamColor.VALUES[MathUtils.RAND.nextInt(EnumTeamColor.VALUES.length)];
+	public GuiCreateTeam()
+	{
+		super(154, 102);
+		color = EnumTeamColor.VALUES[MathUtils.RAND.nextInt(EnumTeamColor.VALUES.length)];
 
-        int bwidth = width / 2 - 6;
-        buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
-        {
-            @Override
-            public void onClicked(GuiBase gui, IMouseButton button)
-            {
-                GuiHelper.playClickSound();
+		int bwidth = width / 2 - 6;
+		buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
+		{
+			@Override
+			public void onClicked(GuiBase gui, IMouseButton button)
+			{
+				GuiHelper.playClickSound();
 
-                if(!textBoxId.getText().isEmpty())
-                {
-                    FTBLibClient.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
-                    gui.closeGui();
-                }
-            }
+				if (!textBoxId.getText().isEmpty())
+				{
+					FTBLibClient.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
+					gui.closeGui();
+				}
+			}
 
-            @Override
-            public Color4I renderTitleInCenter(GuiBase gui)
-            {
-                return gui.getContentColor();
-            }
-        };
+			@Override
+			public Color4I renderTitleInCenter(GuiBase gui)
+			{
+				return gui.getContentColor();
+			}
+		};
 
-        buttonAccept.setTitle(GuiLang.BUTTON_ACCEPT.translate());
-        buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
+		buttonAccept.setTitle(GuiLang.BUTTON_ACCEPT.translate());
+		buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
 
-        buttonCancel = new Button(4, height - 20, bwidth, 16)
-        {
-            @Override
-            public void onClicked(GuiBase gui, IMouseButton button)
-            {
-                GuiHelper.playClickSound();
-                gui.closeGui();
-            }
+		buttonCancel = new Button(4, height - 20, bwidth, 16)
+		{
+			@Override
+			public void onClicked(GuiBase gui, IMouseButton button)
+			{
+				GuiHelper.playClickSound();
+				gui.closeGui();
+			}
 
-            @Override
-            public Color4I renderTitleInCenter(GuiBase gui)
-            {
-                return gui.getContentColor();
-            }
-        };
+			@Override
+			public Color4I renderTitleInCenter(GuiBase gui)
+			{
+				return gui.getContentColor();
+			}
+		};
 
-        buttonCancel.setTitle(GuiLang.BUTTON_CANCEL.translate());
-        buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
+		buttonCancel.setTitle(GuiLang.BUTTON_CANCEL.translate());
+		buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
-        textBoxId = new TextBox(4, 4, width - 8, 16)
-        {
-            @Override
-            public void onTextChanged(GuiBase gui)
-            {
-                setText(gui, StringUtils.getId(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
-            }
-        };
+		textBoxId = new TextBox(4, 4, width - 8, 16)
+		{
+			@Override
+			public void onTextChanged(GuiBase gui)
+			{
+				setText(gui, StringUtils.getId(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
+			}
+		};
 
-        textBoxId.writeText(this, mc.player.getGameProfile().getName().toLowerCase());
-        textBoxId.background = Button.DEFAULT_BACKGROUND;
-        textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
-        textBoxId.textColor = color.getColor();
-        textBoxId.setFocused(true);
-        textBoxId.charLimit = 35;
+		textBoxId.writeText(this, mc.player.getGameProfile().getName().toLowerCase());
+		textBoxId.background = Button.DEFAULT_BACKGROUND;
+		textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
+		textBoxId.textColor = color.getColor();
+		textBoxId.setFocused(true);
+		textBoxId.charLimit = 35;
 
-        colorButtons = new ArrayList<>();
+		colorButtons = new ArrayList<>();
 
-        for(int i = 0; i < EnumTeamColor.VALUES.length; i++)
-        {
-            final int i1 = i;
+		for (int i = 0; i < EnumTeamColor.VALUES.length; i++)
+		{
+			final int i1 = i;
 
-            Button b = new Button(4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
-            {
-                @Override
-                public void onClicked(GuiBase gui, IMouseButton button)
-                {
-                    color = EnumTeamColor.VALUES[i1];
-                    textBoxId.textColor = color.getColor();
-                }
-            };
+			Button b = new Button(4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
+			{
+				@Override
+				public void onClicked(GuiBase gui, IMouseButton button)
+				{
+					color = EnumTeamColor.VALUES[i1];
+					textBoxId.textColor = color.getColor();
+				}
+			};
 
-            b.setIcon(new TexturelessRectangle(EnumTeamColor.VALUES[i].getColor()).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
-            b.setTitle(EnumTeamColor.VALUES[i].getTextFormatting() + EnumTeamColor.VALUES[i].getLangKey().translate());
-            colorButtons.add(b);
-        }
-    }
+			b.setIcon(new TexturelessRectangle(EnumTeamColor.VALUES[i].getColor()).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
+			b.setTitle(EnumTeamColor.VALUES[i].getTextFormatting() + EnumTeamColor.VALUES[i].getLangKey().translate());
+			colorButtons.add(b);
+		}
+	}
 
-    @Override
-    public void addWidgets()
-    {
-        add(buttonAccept);
-        add(buttonCancel);
-        addAll(colorButtons);
-        add(textBoxId);
-    }
+	@Override
+	public void addWidgets()
+	{
+		add(buttonAccept);
+		add(buttonCancel);
+		addAll(colorButtons);
+		add(textBoxId);
+	}
 
-    @Override
-    public IDrawableObject getIcon(GuiBase gui)
-    {
-        return DEFAULT_BACKGROUND;
-    }
+	@Override
+	public IDrawableObject getIcon(GuiBase gui)
+	{
+		return DEFAULT_BACKGROUND;
+	}
 }

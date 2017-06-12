@@ -7,14 +7,14 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public abstract class MessageToServer<E extends MessageToServer<E>> extends MessageBase<E>
 {
-    @Override
-    final Side getReceivingSide()
-    {
-        return Side.SERVER;
-    }
+	@Override
+	final Side getReceivingSide()
+	{
+		return Side.SERVER;
+	}
 
-    public final void sendToServer()
-    {
-        getWrapper().sendToServer(this);
-    }
+	public final void sendToServer()
+	{
+		getWrapper().sendToServer(this);
+	}
 }

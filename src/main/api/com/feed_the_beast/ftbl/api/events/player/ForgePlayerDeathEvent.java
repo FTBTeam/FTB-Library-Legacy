@@ -8,16 +8,16 @@ import net.minecraft.util.DamageSource;
  */
 public class ForgePlayerDeathEvent extends ForgePlayerEvent
 {
-    private final DamageSource damageSource;
+	private final DamageSource damageSource;
 
-    public ForgePlayerDeathEvent(IForgePlayer player, DamageSource ds)
-    {
-        super(player);
-        damageSource = ds;
-    }
+	public ForgePlayerDeathEvent(IForgePlayer player, DamageSource ds)
+	{
+		super(player);
+		damageSource = ds;
+	}
 
-    public DamageSource getDamageSource()
-    {
-        return damageSource;
-    }
+	public DamageSource getDamageSource()
+	{
+		return damageSource;
+	}
 }

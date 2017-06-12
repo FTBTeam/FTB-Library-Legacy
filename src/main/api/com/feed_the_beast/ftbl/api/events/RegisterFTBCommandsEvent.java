@@ -10,30 +10,30 @@ import net.minecraftforge.server.command.CommandTreeBase;
  */
 public class RegisterFTBCommandsEvent extends Event
 {
-    private final CommandTreeBase command;
-    private final boolean dedi;
+	private final CommandTreeBase command;
+	private final boolean dedi;
 
-    public RegisterFTBCommandsEvent(CommandTreeBase c, boolean d)
-    {
-        command = c;
-        dedi = d;
-    }
+	public RegisterFTBCommandsEvent(CommandTreeBase c, boolean d)
+	{
+		command = c;
+		dedi = d;
+	}
 
-    public void add(ICommand cmd)
-    {
-        command.addSubcommand(cmd);
-    }
+	public void add(ICommand cmd)
+	{
+		command.addSubcommand(cmd);
+	}
 
-    public void add(ICommand cmd, IConfigValue value)
-    {
-        if(value.getBoolean())
-        {
-            add(cmd);
-        }
-    }
+	public void add(ICommand cmd, IConfigValue value)
+	{
+		if (value.getBoolean())
+		{
+			add(cmd);
+		}
+	}
 
-    public boolean isDedicatedServer()
-    {
-        return dedi;
-    }
+	public boolean isDedicatedServer()
+	{
+		return dedi;
+	}
 }

@@ -7,9 +7,9 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public interface ISharedServerData extends ISharedData
 {
-    @Override
-    default Side getSide()
-    {
-        return Side.SERVER;
-    }
+	@Override
+	default Side getSide()
+	{
+		return Side.SERVER;
+	}
 }

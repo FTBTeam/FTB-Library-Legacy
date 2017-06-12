@@ -6,29 +6,29 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class ServerInfoEvent extends Event
 {
-    private final GuidePage file;
-    private final IForgePlayer player;
-    private final boolean isOP;
+	private final GuidePage file;
+	private final IForgePlayer player;
+	private final boolean isOP;
 
-    public ServerInfoEvent(GuidePage f, IForgePlayer p, boolean o)
-    {
-        file = f;
-        player = p;
-        isOP = o;
-    }
+	public ServerInfoEvent(GuidePage f, IForgePlayer p, boolean o)
+	{
+		file = f;
+		player = p;
+		isOP = o;
+	}
 
-    public GuidePage getFile()
-    {
-        return file;
-    }
+	public GuidePage getFile()
+	{
+		return file;
+	}
 
-    public IForgePlayer getPlayer()
-    {
-        return player;
-    }
+	public IForgePlayer getPlayer()
+	{
+		return player;
+	}
 
-    public boolean isOP()
-    {
-        return isOP;
-    }
+	public boolean isOP()
+	{
+		return isOP;
+	}
 }

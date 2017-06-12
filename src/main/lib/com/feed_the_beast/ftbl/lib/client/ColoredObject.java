@@ -13,52 +13,52 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class ColoredObject implements IDrawableObject
 {
-    public final IDrawableObject parent;
-    public final Color4I color;
+	public final IDrawableObject parent;
+	public final Color4I color;
 
-    public ColoredObject(IDrawableObject p, Color4I c)
-    {
-        parent = p;
-        color = c;
-    }
+	public ColoredObject(IDrawableObject p, Color4I c)
+	{
+		parent = p;
+		color = c;
+	}
 
-    public ColoredObject(IDrawableObject p, int c)
-    {
-        this(p, new Color4I(true, c));
-    }
+	public ColoredObject(IDrawableObject p, int c)
+	{
+		this(p, new Color4I(true, c));
+	}
 
-    @Override
-    public void draw(int x, int y, int w, int h, Color4I col)
-    {
-        Color4I col1 = col.hasColor() ? col : color;
+	@Override
+	public void draw(int x, int y, int w, int h, Color4I col)
+	{
+		Color4I col1 = col.hasColor() ? col : color;
 
-        if(parent == ImageProvider.NULL)
-        {
-            GuiHelper.drawBlankRect(x, y, w, h, col1);
-        }
-        else
-        {
-            parent.draw(x, y, w, h, col1);
-        }
+		if (parent == ImageProvider.NULL)
+		{
+			GuiHelper.drawBlankRect(x, y, w, h, col1);
+		}
+		else
+		{
+			parent.draw(x, y, w, h, col1);
+		}
 
-        GlStateManager.color(1F, 1F, 1F, 1F);
-    }
+		GlStateManager.color(1F, 1F, 1F, 1F);
+	}
 
-    @Override
-    public JsonObject getJson()
-    {
-        JsonObject o = new JsonObject();
-        o.add("id", new JsonPrimitive("colored"));
+	@Override
+	public JsonObject getJson()
+	{
+		JsonObject o = new JsonObject();
+		o.add("id", new JsonPrimitive("colored"));
 
-        if(color.hasColor())
-        {
-            o.add("color", ColorUtils.serialize(color.rgba()));
-            if(color.alpha() != 255)
-            {
-                o.add("color_alpha", new JsonPrimitive(color.alpha()));
-            }
-        }
-        o.add("parent", parent.getJson());
-        return o;
-    }
+		if (color.hasColor())
+		{
+			o.add("color", ColorUtils.serialize(color.rgba()));
+			if (color.alpha() != 255)
+			{
+				o.add("color_alpha", new JsonPrimitive(color.alpha()));
+			}
+		}
+		o.add("parent", parent.getJson());
+		return o;
+	}
 }

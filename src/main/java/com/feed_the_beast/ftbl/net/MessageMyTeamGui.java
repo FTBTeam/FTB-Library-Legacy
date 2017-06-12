@@ -12,38 +12,38 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 {
-    private MyTeamData teamInfo;
+	private MyTeamData teamInfo;
 
-    public MessageMyTeamGui()
-    {
-    }
+	public MessageMyTeamGui()
+	{
+	}
 
-    public MessageMyTeamGui(IUniverse universe, IForgeTeam team, IForgePlayer player)
-    {
-        teamInfo = new MyTeamData(universe, team, player);
-    }
+	public MessageMyTeamGui(IUniverse universe, IForgeTeam team, IForgePlayer player)
+	{
+		teamInfo = new MyTeamData(universe, team, player);
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        teamInfo = new MyTeamData(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		teamInfo = new MyTeamData(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        teamInfo.write(io);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		teamInfo.write(io);
+	}
 
-    @Override
-    public void onMessage(MessageMyTeamGui m, EntityPlayer player)
-    {
-        new GuiMyTeam(m.teamInfo).openGui();
-    }
+	@Override
+	public void onMessage(MessageMyTeamGui m, EntityPlayer player)
+	{
+		new GuiMyTeam(m.teamInfo).openGui();
+	}
 }

@@ -7,8 +7,8 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
  */
 public class ForgePlayerLoggedOutEvent extends ForgePlayerEvent
 {
-    public ForgePlayerLoggedOutEvent(IForgePlayer player)
-    {
-        super(player);
-    }
+	public ForgePlayerLoggedOutEvent(IForgePlayer player)
+	{
+		super(player);
+	}
 }

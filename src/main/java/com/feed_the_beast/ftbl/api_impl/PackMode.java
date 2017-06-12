@@ -11,19 +11,19 @@ import java.io.File;
  */
 public class PackMode extends FinalIDObject implements IPackMode
 {
-    public PackMode(String id)
-    {
-        super(id);
-    }
+	public PackMode(String id)
+	{
+		super(id);
+	}
 
-    @Override
-    public File getFolder()
-    {
-        File f = new File(LMUtils.folderModpack, getName());
-        if(!f.exists())
-        {
-            f.mkdirs();
-        }
-        return f;
-    }
+	@Override
+	public File getFolder()
+	{
+		File f = new File(LMUtils.folderModpack, getName());
+		if (!f.exists())
+		{
+			f.mkdirs();
+		}
+		return f;
+	}
 }

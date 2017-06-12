@@ -15,55 +15,55 @@ import java.util.Map;
  */
 public class IconSet
 {
-    public final ResourceLocation[] textures;
+	public final ResourceLocation[] textures;
 
-    public IconSet(String v)
-    {
-        textures = new ResourceLocation[6];
+	public IconSet(String v)
+	{
+		textures = new ResourceLocation[6];
 
-        Map<String, String> map = StringUtils.parse(StringUtils.TEMP_MAP, v);
+		Map<String, String> map = StringUtils.parse(StringUtils.TEMP_MAP, v);
 
-        String s = map.get("all");
+		String s = map.get("all");
 
-        if(s != null)
-        {
-            ResourceLocation tex = new ResourceLocation(s);
+		if (s != null)
+		{
+			ResourceLocation tex = new ResourceLocation(s);
 
-            for(int i = 0; i < 6; i++)
-            {
-                textures[i] = tex;
-            }
-        }
+			for (int i = 0; i < 6; i++)
+			{
+				textures[i] = tex;
+			}
+		}
 
-        for(EnumFacing facing : EnumFacing.VALUES)
-        {
-            s = map.get(facing.getName());
+		for (EnumFacing facing : EnumFacing.VALUES)
+		{
+			s = map.get(facing.getName());
 
-            if(s != null)
-            {
-                textures[facing.ordinal()] = new ResourceLocation(s);
-            }
-        }
-    }
+			if (s != null)
+			{
+				textures[facing.ordinal()] = new ResourceLocation(s);
+			}
+		}
+	}
 
-    @Nullable
-    public ResourceLocation getTexture(EnumFacing face)
-    {
-        return textures[face.ordinal()];
-    }
+	@Nullable
+	public ResourceLocation getTexture(EnumFacing face)
+	{
+		return textures[face.ordinal()];
+	}
 
-    public Collection<ResourceLocation> getTextures()
-    {
-        List<ResourceLocation> list = new ArrayList<>();
+	public Collection<ResourceLocation> getTextures()
+	{
+		List<ResourceLocation> list = new ArrayList<>();
 
-        for(int i = 0; i < 6; i++)
-        {
-            if(textures[i] != null)
-            {
-                list.add(textures[i]);
-            }
-        }
+		for (int i = 0; i < 6; i++)
+		{
+			if (textures[i] != null)
+			{
+				list.add(textures[i]);
+			}
+		}
 
-        return list;
-    }
+		return list;
+	}
 }

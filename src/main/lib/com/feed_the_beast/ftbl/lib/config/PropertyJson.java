@@ -14,95 +14,95 @@ import javax.annotation.Nullable;
  */
 public class PropertyJson extends PropertyBase
 {
-    public static final String ID = "json";
-    public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
+	public static final String ID = "json";
+	public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
 
-    private JsonElement value;
+	private JsonElement value;
 
-    public PropertyJson()
-    {
-        this(new JsonObject());
-    }
+	public PropertyJson()
+	{
+		this(new JsonObject());
+	}
 
-    public PropertyJson(JsonElement v)
-    {
-        value = v;
-    }
+	public PropertyJson(JsonElement v)
+	{
+		value = v;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getJsonElement();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getJsonElement();
+	}
 
-    public void setJsonElement(JsonElement v)
-    {
-        value = v;
-    }
+	public void setJsonElement(JsonElement v)
+	{
+		value = v;
+	}
 
-    public JsonElement getJsonElement()
-    {
-        return value;
-    }
+	public JsonElement getJsonElement()
+	{
+		return value;
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        NetUtils.writeJsonElement(data, getJsonElement());
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		NetUtils.writeJsonElement(data, getJsonElement());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        setJsonElement(NetUtils.readJsonElement(data));
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		setJsonElement(NetUtils.readJsonElement(data));
+	}
 
-    @Override
-    public String getString()
-    {
-        return getJsonElement().toString();
-    }
+	@Override
+	public String getString()
+	{
+		return getJsonElement().toString();
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return getJsonElement().getAsBoolean();
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return getJsonElement().getAsBoolean();
+	}
 
-    @Override
-    public int getInt()
-    {
-        return getJsonElement().getAsInt();
-    }
+	@Override
+	public int getInt()
+	{
+		return getJsonElement().getAsInt();
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyJson(getJsonElement());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyJson(getJsonElement());
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return COLOR;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return COLOR;
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        setJsonElement(json);
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		setJsonElement(json);
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return getJsonElement();
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return getJsonElement();
+	}
 }

@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 
 public class GuiIcons
 {
-    //@formatter:off
+	//@formatter:off
     public static final IDrawableObject
     UP = get("up"),
     DOWN = get("down"),
@@ -79,8 +79,8 @@ public class GuiIcons
     TOGGLE_NIGHT = get("toggle_night");
     //@formatter:on
 
-    private static IDrawableObject get(String id)
-    {
-        return ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/icons/" + id + ".png");
-    }
+	private static IDrawableObject get(String id)
+	{
+		return ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/icons/" + id + ".png");
+	}
 }

@@ -12,70 +12,70 @@ import javax.annotation.Nullable;
  */
 public class BlockPosContainer
 {
-    private final World world;
-    private final BlockPos pos;
-    private IBlockState state;
+	private final World world;
+	private final BlockPos pos;
+	private IBlockState state;
 
-    public BlockPosContainer(World w, BlockPos p, @Nullable IBlockState s)
-    {
-        world = w;
-        pos = p;
-        state = s;
-    }
+	public BlockPosContainer(World w, BlockPos p, @Nullable IBlockState s)
+	{
+		world = w;
+		pos = p;
+		state = s;
+	}
 
-    public BlockPosContainer(PlayerInteractEvent event)
-    {
-        this(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos()));
-    }
+	public BlockPosContainer(PlayerInteractEvent event)
+	{
+		this(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos()));
+	}
 
-    public World getWorld()
-    {
-        return world;
-    }
+	public World getWorld()
+	{
+		return world;
+	}
 
-    public BlockPos getPos()
-    {
-        return pos;
-    }
+	public BlockPos getPos()
+	{
+		return pos;
+	}
 
-    public BlockPosContainer resetState()
-    {
-        state = null;
-        return this;
-    }
+	public BlockPosContainer resetState()
+	{
+		state = null;
+		return this;
+	}
 
-    public IBlockState getState()
-    {
-        if(state == null)
-        {
-            state = getWorld().getBlockState(getPos());
-        }
+	public IBlockState getState()
+	{
+		if (state == null)
+		{
+			state = getWorld().getBlockState(getPos());
+		}
 
-        return state;
-    }
+		return state;
+	}
 
-    public boolean equals(Object o)
-    {
-        if(o == this)
-        {
-            return true;
-        }
-        else if(o instanceof BlockPosContainer)
-        {
-            BlockPosContainer c = (BlockPosContainer) o;
-            return c.getWorld() == getWorld() && c.getPos().equals(getPos());
-        }
+	public boolean equals(Object o)
+	{
+		if (o == this)
+		{
+			return true;
+		}
+		else if (o instanceof BlockPosContainer)
+		{
+			BlockPosContainer c = (BlockPosContainer) o;
+			return c.getWorld() == getWorld() && c.getPos().equals(getPos());
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public int hashCode()
-    {
-        return getWorld().hashCode() ^ getPos().hashCode();
-    }
+	public int hashCode()
+	{
+		return getWorld().hashCode() ^ getPos().hashCode();
+	}
 
-    public String toString()
-    {
-        return getState().toString() + '@' + getPos().getX() + ',' + getPos().getY() + ',' + getPos().getZ() + '@' + getWorld().provider.getDimension();
-    }
+	public String toString()
+	{
+		return getState().toString() + '@' + getPos().getX() + ',' + getPos().getY() + ',' + getPos().getZ() + '@' + getWorld().provider.getDimension();
+	}
 }

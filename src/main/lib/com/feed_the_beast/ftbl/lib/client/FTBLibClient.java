@@ -5,12 +5,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
@@ -32,201 +32,201 @@ import java.util.Objects;
 
 public class FTBLibClient
 {
-    public static final Frustum FRUSTUM = new Frustum();
-    public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
-    /*
-    private static final Vector4f OBJECTCOORDS = new Vector4f();
-    private static final Vector4f TEMP_POINT = new Vector4f();
-    private static final Matrix4f MATRIX_MVM = new Matrix4f();
-    private static final Matrix4f MATRIX_PJM = new Matrix4f();
-    private static final Matrix4f MATRIX_OUT = new Matrix4f();
-    */
-    public static boolean isFirstPerson;
-    public static int currentDim, playerPosHash;
-    public static double playerX, playerY, playerZ;
-    public static double renderX, renderY, renderZ;
-    private static float lastBrightnessX, lastBrightnessY;
-    private static EntityItem entityItem;
-    //private static IntBuffer VIEWPORT;
-    //private static FloatBuffer MODELVIEW, PROJECTION;
-    public static PlayerHeadImage localPlayerHead;
+	public static final Frustum FRUSTUM = new Frustum();
+	public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
+	/*
+	private static final Vector4f OBJECTCOORDS = new Vector4f();
+	private static final Vector4f TEMP_POINT = new Vector4f();
+	private static final Matrix4f MATRIX_MVM = new Matrix4f();
+	private static final Matrix4f MATRIX_PJM = new Matrix4f();
+	private static final Matrix4f MATRIX_OUT = new Matrix4f();
+	*/
+	public static boolean isFirstPerson;
+	public static int currentDim, playerPosHash;
+	public static double playerX, playerY, playerZ;
+	public static double renderX, renderY, renderZ;
+	private static float lastBrightnessX, lastBrightnessY;
+	private static EntityItem entityItem;
+	//private static IntBuffer VIEWPORT;
+	//private static FloatBuffer MODELVIEW, PROJECTION;
+	public static PlayerHeadImage localPlayerHead;
 
-    // - Registry - //
+	// - Registry - //
 
     /*
-    public static <T extends Entity> void addEntityRenderer(@Nonnull Class<T> c, @Nonnull IRenderFactory<? super T> r)
+	public static <T extends Entity> void addEntityRenderer(@Nonnull Class<T> c, @Nonnull IRenderFactory<? super T> r)
     {
         RenderingRegistry.registerEntityRenderingHandler(c, r);
     }
     */
 
-    // -- //
+	// -- //
 
-    public static int getDim()
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        return mc.world != null ? mc.world.provider.getDimension() : 0;
-    }
+	public static int getDim()
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+		return mc.world != null ? mc.world.provider.getDimension() : 0;
+	}
 
-    public static void spawnPart(Particle e)
-    {
-        Minecraft.getMinecraft().effectRenderer.addEffect(e);
-    }
+	public static void spawnPart(Particle e)
+	{
+		Minecraft.getMinecraft().effectRenderer.addEffect(e);
+	}
 
-    public static void onGuiClientAction()
-    {
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+	public static void onGuiClientAction()
+	{
+		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if(screen instanceof IClientActionGui)
-        {
-            ((IClientActionGui) screen).onClientDataChanged();
-        }
-    }
+		if (screen instanceof IClientActionGui)
+		{
+			((IClientActionGui) screen).onClientDataChanged();
+		}
+	}
 
-    public static void pushMaxBrightness()
-    {
-        lastBrightnessX = OpenGlHelper.lastBrightnessX;
-        lastBrightnessY = OpenGlHelper.lastBrightnessY;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-    }
+	public static void pushMaxBrightness()
+	{
+		lastBrightnessX = OpenGlHelper.lastBrightnessX;
+		lastBrightnessY = OpenGlHelper.lastBrightnessY;
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+	}
 
-    public static void popMaxBrightness()
-    {
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
-    }
+	public static void popMaxBrightness()
+	{
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
+	}
 
-    public static ITextureObject bindTexture(ResourceLocation texture)
-    {
-        TextureManager t = Minecraft.getMinecraft().getTextureManager();
+	public static ITextureObject bindTexture(ResourceLocation texture)
+	{
+		TextureManager t = Minecraft.getMinecraft().getTextureManager();
 
-        ITextureObject textureObject = t.getTexture(texture);
-        if(textureObject == null)
-        {
-            textureObject = new SimpleTexture(texture);
-            t.loadTexture(texture, textureObject);
-        }
+		ITextureObject textureObject = t.getTexture(texture);
+		if (textureObject == null)
+		{
+			textureObject = new SimpleTexture(texture);
+			t.loadTexture(texture, textureObject);
+		}
 
-        GlStateManager.bindTexture(textureObject.getGlTextureId());
-        return textureObject;
-    }
+		GlStateManager.bindTexture(textureObject.getGlTextureId());
+		return textureObject;
+	}
 
-    public static ITextureObject getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
-    {
-        TextureManager t = Minecraft.getMinecraft().getTextureManager();
-        ITextureObject img = t.getTexture(out);
+	public static ITextureObject getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
+	{
+		TextureManager t = Minecraft.getMinecraft().getTextureManager();
+		ITextureObject img = t.getTexture(out);
 
-        if(img == null)
-        {
-            img = new ThreadDownloadImageData(null, url, def, buffer);
-            t.loadTexture(out, img);
-        }
+		if (img == null)
+		{
+			img = new ThreadDownloadImageData(null, url, def, buffer);
+			t.loadTexture(out, img);
+		}
 
-        return img;
-    }
+		return img;
+	}
 
-    public static void execClientCommand(String s, boolean printChat)
-    {
-        Minecraft mc = Minecraft.getMinecraft();
+	public static void execClientCommand(String s, boolean printChat)
+	{
+		Minecraft mc = Minecraft.getMinecraft();
 
-        if(printChat)
-        {
-            mc.ingameGUI.getChatGUI().addToSentMessages(s);
-        }
+		if (printChat)
+		{
+			mc.ingameGUI.getChatGUI().addToSentMessages(s);
+		}
 
-        if(ClientCommandHandler.instance.executeCommand(mc.player, s) == 0)
-        {
-            mc.player.sendChatMessage(s);
-        }
-    }
+		if (ClientCommandHandler.instance.executeCommand(mc.player, s) == 0)
+		{
+			mc.player.sendChatMessage(s);
+		}
+	}
 
-    public static void execClientCommand(String s)
-    {
-        execClientCommand(s, false);
-    }
+	public static void execClientCommand(String s)
+	{
+		execClientCommand(s, false);
+	}
 
-    public static ResourceLocation getSkinTexture(String username)
-    {
-        ResourceLocation r = CACHED_SKINS.get(username);
+	public static ResourceLocation getSkinTexture(String username)
+	{
+		ResourceLocation r = CACHED_SKINS.get(username);
 
-        if(r == null)
-        {
-            r = AbstractClientPlayer.getLocationSkin(username);
+		if (r == null)
+		{
+			r = AbstractClientPlayer.getLocationSkin(username);
 
-            try
-            {
-                AbstractClientPlayer.getDownloadImageSkin(r, username);
-                CACHED_SKINS.put(username, r);
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
+			try
+			{
+				AbstractClientPlayer.getDownloadImageSkin(r, username);
+				CACHED_SKINS.put(username, r);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 
-        return r;
-    }
+		return r;
+	}
 
-    public static void renderItem(World w, ItemStack is)
-    {
-        if(entityItem == null)
-        {
-            entityItem = new EntityItem(w);
-        }
+	public static void renderItem(World w, ItemStack is)
+	{
+		if (entityItem == null)
+		{
+			entityItem = new EntityItem(w);
+		}
 
-        entityItem.world = w;
-        entityItem.hoverStart = 0F;
-        entityItem.setEntityItemStack(is);
-        Minecraft.getMinecraft().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
-    }
+		entityItem.world = w;
+		entityItem.hoverStart = 0F;
+		entityItem.setEntityItemStack(is);
+		Minecraft.getMinecraft().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
+	}
 
-    public static void drawOutlinedBoundingBox(AxisAlignedBB bb)
-    {
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
+	public static void drawOutlinedBoundingBox(AxisAlignedBB bb)
+	{
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
 
-        buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-        buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
-        buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
-        buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-        tessellator.draw();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		tessellator.draw();
 
-        buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-        buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
-        buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
-        buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-        tessellator.draw();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		tessellator.draw();
 
-        buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-        buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-        buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
-        buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
-        buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
-        buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
-        buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
-        tessellator.draw();
-    }
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
+		buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
+		buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		tessellator.draw();
+	}
 
-    public static void updateRenderInfo()
-    {
-        Minecraft mc = Minecraft.getMinecraft();
-        isFirstPerson = mc.gameSettings.thirdPersonView == 0;
-        currentDim = FTBLibClient.getDim();
-        //mc.thePlayer.posX
+	public static void updateRenderInfo()
+	{
+		Minecraft mc = Minecraft.getMinecraft();
+		isFirstPerson = mc.gameSettings.thirdPersonView == 0;
+		currentDim = FTBLibClient.getDim();
+		//mc.thePlayer.posX
 
-        playerX = mc.getRenderManager().viewerPosX;
-        playerY = mc.getRenderManager().viewerPosY;
-        playerZ = mc.getRenderManager().viewerPosZ;
-        renderX = TileEntityRendererDispatcher.staticPlayerX;
-        renderY = TileEntityRendererDispatcher.staticPlayerY;
-        renderZ = TileEntityRendererDispatcher.staticPlayerZ;
-        playerPosHash = Objects.hash(currentDim, playerX, playerY, playerZ);
-        FRUSTUM.setPosition(playerX, playerY, playerZ);
+		playerX = mc.getRenderManager().viewerPosX;
+		playerY = mc.getRenderManager().viewerPosY;
+		playerZ = mc.getRenderManager().viewerPosZ;
+		renderX = TileEntityRendererDispatcher.staticPlayerX;
+		renderY = TileEntityRendererDispatcher.staticPlayerY;
+		renderZ = TileEntityRendererDispatcher.staticPlayerZ;
+		playerPosHash = Objects.hash(currentDim, playerX, playerY, playerZ);
+		FRUSTUM.setPosition(playerX, playerY, playerZ);
 
         /*
         VIEWPORT = null;
@@ -267,8 +267,8 @@ public class FTBLibClient
         // System.out.println(MODELVIEW);
         // System.out.println(PROJECTION);
         */
-    }
-    
+	}
+	
     /*
     public static Vector4f worldToViewport(float x, float y, float z)
     {

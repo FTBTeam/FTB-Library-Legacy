@@ -23,117 +23,117 @@ import java.util.List;
  */
 public class PropertyStringEnum extends PropertyBase
 {
-    private List<String> keys;
-    private String value;
+	private List<String> keys;
+	private String value;
 
-    public PropertyStringEnum()
-    {
-        this(Collections.emptyList(), "");
-    }
+	public PropertyStringEnum()
+	{
+		this(Collections.emptyList(), "");
+	}
 
-    public PropertyStringEnum(Collection<String> k, String v)
-    {
-        keys = new ArrayList<>(k);
-        value = v;
-    }
+	public PropertyStringEnum(Collection<String> k, String v)
+	{
+		keys = new ArrayList<>(k);
+		value = v;
+	}
 
-    @Override
-    public String getName()
-    {
-        return PropertyEnumAbstract.ID;
-    }
+	@Override
+	public String getName()
+	{
+		return PropertyEnumAbstract.ID;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getString();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getString();
+	}
 
-    public void setString(String v)
-    {
-        value = v;
-    }
+	public void setString(String v)
+	{
+		value = v;
+	}
 
-    @Override
-    public String getString()
-    {
-        return value;
-    }
+	@Override
+	public String getString()
+	{
+		return value;
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return !value.equals(EnumNameMap.NULL_VALUE);
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return !value.equals(EnumNameMap.NULL_VALUE);
+	}
 
-    @Override
-    public int getInt()
-    {
-        return keys.indexOf(value);
-    }
+	@Override
+	public int getInt()
+	{
+		return keys.indexOf(value);
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyStringEnum(keys, getString());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyStringEnum(keys, getString());
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return PropertyEnumAbstract.COLOR;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return PropertyEnumAbstract.COLOR;
+	}
 
-    @Override
-    public List<String> getVariants()
-    {
-        return Collections.unmodifiableList(keys);
-    }
+	@Override
+	public List<String> getVariants()
+	{
+		return Collections.unmodifiableList(keys);
+	}
 
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-        setString(keys.get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
-        gui.onChanged(key, getSerializableElement());
-    }
+	@Override
+	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	{
+		setString(keys.get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
+		gui.onChanged(key, getSerializableElement());
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        setString(json.getAsString());
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		setString(json.getAsString());
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getString());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(getString());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeShort(keys.size());
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeShort(keys.size());
 
-        for(String s : keys)
-        {
-            ByteBufUtils.writeUTF8String(data, s);
-        }
+		for (String s : keys)
+		{
+			ByteBufUtils.writeUTF8String(data, s);
+		}
 
-        data.writeShort(getInt());
-    }
+		data.writeShort(getInt());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        keys.clear();
-        int s = data.readUnsignedShort();
+	@Override
+	public void readData(ByteBuf data)
+	{
+		keys.clear();
+		int s = data.readUnsignedShort();
 
-        while(--s >= 0)
-        {
-            keys.add(ByteBufUtils.readUTF8String(data));
-        }
+		while (--s >= 0)
+		{
+			keys.add(ByteBufUtils.readUTF8String(data));
+		}
 
-        setString(keys.get(data.readUnsignedShort()));
-    }
+		setString(keys.get(data.readUnsignedShort()));
+	}
 }

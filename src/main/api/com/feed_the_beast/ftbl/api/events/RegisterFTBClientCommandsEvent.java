@@ -9,15 +9,15 @@ import net.minecraftforge.server.command.CommandTreeBase;
  */
 public class RegisterFTBClientCommandsEvent extends Event
 {
-    private final CommandTreeBase command;
+	private final CommandTreeBase command;
 
-    public RegisterFTBClientCommandsEvent(CommandTreeBase c)
-    {
-        command = c;
-    }
+	public RegisterFTBClientCommandsEvent(CommandTreeBase c)
+	{
+		command = c;
+	}
 
-    public void add(ICommand cmd)
-    {
-        command.addSubcommand(cmd);
-    }
+	public void add(ICommand cmd)
+	{
+		command.addSubcommand(cmd);
+	}
 }

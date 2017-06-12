@@ -22,67 +22,67 @@ import java.util.UUID;
 
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
-    private static NBTTagCompound RX_NBT;
-    private static final IConfigTree RX_CONFIG_TREE = new ConfigTree()
-    {
-        @Override
-        public void fromJson(JsonElement json)
-        {
-            new MessageEditConfigResponse(RX_NBT, json.getAsJsonObject()).sendToServer();
-        }
-    };
+	private static NBTTagCompound RX_NBT;
+	private static final IConfigTree RX_CONFIG_TREE = new ConfigTree()
+	{
+		@Override
+		public void fromJson(JsonElement json)
+		{
+			new MessageEditConfigResponse(RX_NBT, json.getAsJsonObject()).sendToServer();
+		}
+	};
 
-    private IConfigTree group;
-    private NBTTagCompound extraNBT;
-    private ITextComponent title;
+	private IConfigTree group;
+	private NBTTagCompound extraNBT;
+	private ITextComponent title;
 
-    public MessageEditConfig()
-    {
-    }
+	public MessageEditConfig()
+	{
+	}
 
-    public MessageEditConfig(UUID id, @Nullable NBTTagCompound nbt, IConfigContainer c)
-    {
-        FTBLibModCommon.TEMP_SERVER_CONFIG.put(id, c);
-        group = c.getConfigTree().copy();
-        extraNBT = nbt;
-        title = c.getTitle();
+	public MessageEditConfig(UUID id, @Nullable NBTTagCompound nbt, IConfigContainer c)
+	{
+		FTBLibModCommon.TEMP_SERVER_CONFIG.put(id, c);
+		group = c.getConfigTree().copy();
+		extraNBT = nbt;
+		title = c.getTitle();
 
-        if(LMUtils.DEV_ENV)
-        {
-            LMUtils.DEV_LOGGER.info("TX Send: " + group.getTree());
-        }
-    }
+		if (LMUtils.DEV_ENV)
+		{
+			LMUtils.DEV_LOGGER.info("TX Send: " + group.getTree());
+		}
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        RX_NBT = ByteBufUtils.readTag(io);
-        title = NetUtils.readTextComponent(io);
-        RX_CONFIG_TREE.readData(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		RX_NBT = ByteBufUtils.readTag(io);
+		title = NetUtils.readTextComponent(io);
+		RX_CONFIG_TREE.readData(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        ByteBufUtils.writeTag(io, extraNBT);
-        NetUtils.writeTextComponent(io, title);
-        group.writeData(io);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		ByteBufUtils.writeTag(io, extraNBT);
+		NetUtils.writeTextComponent(io, title);
+		group.writeData(io);
+	}
 
-    @Override
-    public void onMessage(final MessageEditConfig m, EntityPlayer player)
-    {
-        if(LMUtils.DEV_ENV)
-        {
-            LMUtils.DEV_LOGGER.info("RX Send: " + RX_CONFIG_TREE.getTree());
-        }
+	@Override
+	public void onMessage(final MessageEditConfig m, EntityPlayer player)
+	{
+		if (LMUtils.DEV_ENV)
+		{
+			LMUtils.DEV_LOGGER.info("RX Send: " + RX_CONFIG_TREE.getTree());
+		}
 
-        new GuiEditConfig(RX_NBT, new BasicConfigContainer(m.title, RX_CONFIG_TREE)).openGui();
-    }
+		new GuiEditConfig(RX_NBT, new BasicConfigContainer(m.title, RX_CONFIG_TREE)).openGui();
+	}
 }

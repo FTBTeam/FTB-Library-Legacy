@@ -8,56 +8,56 @@ import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 
 public abstract class Button extends Widget
 {
-    public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(new Color4I(false, 0xFFC0C0C0));
-    public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(Color4I.WHITE_A33);
+	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(new Color4I(false, 0xFFC0C0C0));
+	public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(Color4I.WHITE_A33);
 
-    private String title = "";
-    private IDrawableObject icon = ImageProvider.NULL;
+	private String title = "";
+	private IDrawableObject icon = ImageProvider.NULL;
 
-    public Button(int x, int y, int w, int h)
-    {
-        super(x, y, w, h);
-    }
+	public Button(int x, int y, int w, int h)
+	{
+		super(x, y, w, h);
+	}
 
-    public Button(int x, int y, int w, int h, String t)
-    {
-        this(x, y, w, h);
-        setTitle(t);
-    }
+	public Button(int x, int y, int w, int h, String t)
+	{
+		this(x, y, w, h);
+		setTitle(t);
+	}
 
-    @Override
-    public String getTitle(GuiBase gui)
-    {
-        return title;
-    }
+	@Override
+	public String getTitle(GuiBase gui)
+	{
+		return title;
+	}
 
-    public void setTitle(String s)
-    {
-        title = s;
-    }
+	public void setTitle(String s)
+	{
+		title = s;
+	}
 
-    public void setIcon(IDrawableObject i)
-    {
-        icon = i;
-    }
+	public void setIcon(IDrawableObject i)
+	{
+		icon = i;
+	}
 
-    @Override
-    public IDrawableObject getIcon(GuiBase gui)
-    {
-        return icon;
-    }
+	@Override
+	public IDrawableObject getIcon(GuiBase gui)
+	{
+		return icon;
+	}
 
-    @Override
-    public boolean mousePressed(GuiBase gui, IMouseButton button)
-    {
-        if(gui.isMouseOver(this))
-        {
-            onClicked(gui, button);
-            return true;
-        }
+	@Override
+	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	{
+		if (gui.isMouseOver(this))
+		{
+			onClicked(gui, button);
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public abstract void onClicked(GuiBase gui, IMouseButton button);
+	public abstract void onClicked(GuiBase gui, IMouseButton button);
 }

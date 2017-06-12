@@ -5,9 +5,9 @@ package com.feed_the_beast.ftbl.api;
  */
 public interface ICustomPermission
 {
-    default void setCustomPermissionPrefix(String prefix)
-    {
-    }
+	default void setCustomPermissionPrefix(String prefix)
+	{
+	}
 
-    String getCustomPermission();
+	String getCustomPermission();
 }

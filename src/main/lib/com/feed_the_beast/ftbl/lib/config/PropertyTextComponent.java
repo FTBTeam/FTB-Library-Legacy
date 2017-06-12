@@ -14,95 +14,95 @@ import javax.annotation.Nullable;
  */
 public class PropertyTextComponent extends PropertyBase
 {
-    public static final String ID = "text_component";
+	public static final String ID = "text_component";
 
-    private ITextComponent value;
+	private ITextComponent value;
 
-    public PropertyTextComponent()
-    {
-    }
+	public PropertyTextComponent()
+	{
+	}
 
-    public PropertyTextComponent(@Nullable ITextComponent c)
-    {
-        value = c;
-    }
+	public PropertyTextComponent(@Nullable ITextComponent c)
+	{
+		value = c;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Nullable
-    public ITextComponent getText()
-    {
-        return value;
-    }
+	@Nullable
+	public ITextComponent getText()
+	{
+		return value;
+	}
 
-    public void setText(@Nullable ITextComponent c)
-    {
-        value = c;
-    }
+	public void setText(@Nullable ITextComponent c)
+	{
+		value = c;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getText();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getText();
+	}
 
-    @Override
-    public String getString()
-    {
-        ITextComponent c = getText();
-        return c == null ? "" : c.getFormattedText();
-    }
+	@Override
+	public String getString()
+	{
+		ITextComponent c = getText();
+		return c == null ? "" : c.getFormattedText();
+	}
 
-    @Override
-    public String toString()
-    {
-        return getSerializableElement().toString();
-    }
+	@Override
+	public String toString()
+	{
+		return getSerializableElement().toString();
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return !getString().isEmpty();
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return !getString().isEmpty();
+	}
 
-    @Override
-    public int getInt()
-    {
-        return getString().length();
-    }
+	@Override
+	public int getInt()
+	{
+		return getString().length();
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyTextComponent(getText());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyTextComponent(getText());
+	}
 
-    @Override
-    public void fromJson(JsonElement e)
-    {
-        setText(JsonUtils.deserializeTextComponent(e));
-    }
+	@Override
+	public void fromJson(JsonElement e)
+	{
+		setText(JsonUtils.deserializeTextComponent(e));
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return JsonUtils.serializeTextComponent(getText());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return JsonUtils.serializeTextComponent(getText());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        NetUtils.writeTextComponent(data, getText());
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		NetUtils.writeTextComponent(data, getText());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        setText(NetUtils.readTextComponent(data));
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		setText(NetUtils.readTextComponent(data));
+	}
 }

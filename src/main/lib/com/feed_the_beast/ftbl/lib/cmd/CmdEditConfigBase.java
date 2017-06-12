@@ -30,94 +30,94 @@ import java.util.Map;
  */
 public abstract class CmdEditConfigBase extends CmdBase
 {
-    public CmdEditConfigBase(String n, Level l)
-    {
-        super(n, l);
-    }
+	public CmdEditConfigBase(String n, Level l)
+	{
+		super(n, l);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        try
-        {
-            Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).getConfigTree().getTree();
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		try
+		{
+			Map<IConfigKey, IConfigValue> map = getConfigContainer(sender).getConfigTree().getTree();
 
-            if(args.length == 1)
-            {
-                List<IConfigKey> keys = new ArrayList<>();
-                keys.addAll(map.keySet());
-                keys.sort(StringUtils.ID_COMPARATOR);
-                return getListOfStringsMatchingLastWord(args, keys);
-            }
-            else if(args.length == 2)
-            {
-                IConfigValue entry = map.get(new SimpleConfigKey(args[0]));
+			if (args.length == 1)
+			{
+				List<IConfigKey> keys = new ArrayList<>();
+				keys.addAll(map.keySet());
+				keys.sort(StringUtils.ID_COMPARATOR);
+				return getListOfStringsMatchingLastWord(args, keys);
+			}
+			else if (args.length == 2)
+			{
+				IConfigValue entry = map.get(new SimpleConfigKey(args[0]));
 
-                if(entry != null)
-                {
-                    List<String> variants = entry.getVariants();
+				if (entry != null)
+				{
+					List<String> variants = entry.getVariants();
 
-                    if(!variants.isEmpty())
-                    {
-                        return getListOfStringsMatchingLastWord(args, variants);
-                    }
-                }
-            }
-        }
-        catch(CommandException ex)
-        {
-            //ITextComponent c = new TextComponentTranslation(ex.getMessage(), ex.getErrorObjects());
-            //c.getStyle().setColor(TextFormatting.DARK_RED);
-            //sender.addChatMessage(c);
-        }
+					if (!variants.isEmpty())
+					{
+						return getListOfStringsMatchingLastWord(args, variants);
+					}
+				}
+			}
+		}
+		catch (CommandException ex)
+		{
+			//ITextComponent c = new TextComponentTranslation(ex.getMessage(), ex.getErrorObjects());
+			//c.getStyle().setColor(TextFormatting.DARK_RED);
+			//sender.addChatMessage(c);
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        if(args.length == 0 && sender instanceof EntityPlayerMP)
-        {
-            FTBLibIntegrationInternal.API.editServerConfig(getCommandSenderAsPlayer(sender), null, getConfigContainer(sender));
-            return;
-        }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		if (args.length == 0 && sender instanceof EntityPlayerMP)
+		{
+			FTBLibIntegrationInternal.API.editServerConfig(getCommandSenderAsPlayer(sender), null, getConfigContainer(sender));
+			return;
+		}
 
-        checkArgs(args, 1, "[ID] [value]");
+		checkArgs(args, 1, "[ID] [value]");
 
-        IConfigContainer cc = getConfigContainer(sender);
-        IConfigTree tree = cc.getConfigTree();
-        IConfigKey key = tree.getKey(args[0]);
+		IConfigContainer cc = getConfigContainer(sender);
+		IConfigTree tree = cc.getConfigTree();
+		IConfigKey key = tree.getKey(args[0]);
 
-        if(key == null)
-        {
-            throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //TODO: Lang
-        }
+		if (key == null)
+		{
+			throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //TODO: Lang
+		}
 
-        IConfigValue entry = tree.get(key);
+		IConfigValue entry = tree.get(key);
 
-        if(args.length >= 2)
-        {
-            String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
-            FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
+		if (args.length >= 2)
+		{
+			String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
+			FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
 
-            try
-            {
-                JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
-                sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + value)); //TODO: Lang
-                JsonObject json1 = new JsonObject();
-                json1.add(args[0], value);
-                cc.saveConfig(sender, null, json1);
-                return;
-            }
-            catch(Exception ex)
-            {
-                throw FTBLibLang.RAW.commandError(ex.toString());
-            }
-        }
+			try
+			{
+				JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
+				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + value)); //TODO: Lang
+				JsonObject json1 = new JsonObject();
+				json1.add(args[0], value);
+				cc.saveConfig(sender, null, json1);
+				return;
+			}
+			catch (Exception ex)
+			{
+				throw FTBLibLang.RAW.commandError(ex.toString());
+			}
+		}
 
-        sender.sendMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
-    }
+		sender.sendMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
+	}
 
-    public abstract IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;
+	public abstract IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;
 }

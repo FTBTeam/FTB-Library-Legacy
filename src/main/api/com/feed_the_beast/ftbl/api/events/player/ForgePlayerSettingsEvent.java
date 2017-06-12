@@ -11,18 +11,18 @@ import com.feed_the_beast.ftbl.lib.config.ConfigKey;
  */
 public class ForgePlayerSettingsEvent extends ForgePlayerEvent
 {
-    private final IConfigTree settings;
+	private final IConfigTree settings;
 
-    public ForgePlayerSettingsEvent(IForgePlayer player, IConfigTree tree)
-    {
-        super(player);
-        settings = tree;
-    }
+	public ForgePlayerSettingsEvent(IForgePlayer player, IConfigTree tree)
+	{
+		super(player);
+		settings = tree;
+	}
 
-    public IConfigKey add(String group, String id, IConfigValue value)
-    {
-        ConfigKey key = new ConfigKey(id, value, group, "player_config");
-        settings.add(key, value);
-        return key;
-    }
+	public IConfigKey add(String group, String id, IConfigValue value)
+	{
+		ConfigKey key = new ConfigKey(id, value, group, "player_config");
+		settings.add(key, value);
+		return key;
+	}
 }

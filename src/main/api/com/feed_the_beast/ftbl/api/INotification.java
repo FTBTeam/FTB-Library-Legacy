@@ -11,13 +11,13 @@ import java.util.List;
  */
 public interface INotification
 {
-    NotificationId getId();
+	NotificationId getId();
 
-    List<ITextComponent> getText();
+	List<ITextComponent> getText();
 
-    IDrawableObject getIcon();
+	IDrawableObject getIcon();
 
-    int getTimer();
+	int getTimer();
 
-    Color4I getColor();
+	Color4I getColor();
 }

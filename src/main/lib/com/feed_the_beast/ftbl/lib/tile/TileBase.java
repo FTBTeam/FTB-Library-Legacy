@@ -13,158 +13,158 @@ import net.minecraft.util.SoundEvent;
 
 public class TileBase extends TileEntity
 {
-    private boolean isDirty = true;
-    private IBlockState currentState;
+	private boolean isDirty = true;
+	private IBlockState currentState;
 
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
-        super.writeToNBT(nbt);
-        return nbt;
-    }
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		return nbt;
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+	}
 
-    @Override
-    public final SPacketUpdateTileEntity getUpdatePacket()
-    {
-        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
-    }
+	@Override
+	public final SPacketUpdateTileEntity getUpdatePacket()
+	{
+		return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+	}
 
-    @Override
-    public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-    {
-        handleUpdateTag(pkt.getNbtCompound());
-    }
+	@Override
+	public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
+	{
+		handleUpdateTag(pkt.getNbtCompound());
+	}
 
-    @Override
-    public final void handleUpdateTag(NBTTagCompound tag)
-    {
-        onUpdateTag(tag);
-        onUpdatePacket();
-        markDirty();
-    }
+	@Override
+	public final void handleUpdateTag(NBTTagCompound tag)
+	{
+		onUpdateTag(tag);
+		onUpdatePacket();
+		markDirty();
+	}
 
-    @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        return writeToNBT(new NBTTagCompound());
-    }
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		return writeToNBT(new NBTTagCompound());
+	}
 
-    public void onUpdateTag(NBTTagCompound nbt)
-    {
-        readFromNBT(nbt);
-    }
+	public void onUpdateTag(NBTTagCompound nbt)
+	{
+		readFromNBT(nbt);
+	}
 
-    public void onUpdatePacket()
-    {
-    }
+	public void onUpdatePacket()
+	{
+	}
 
-    protected boolean notifyBlock()
-    {
-        return true;
-    }
+	protected boolean notifyBlock()
+	{
+		return true;
+	}
 
-    protected boolean updateComparator()
-    {
-        return false;
-    }
+	protected boolean updateComparator()
+	{
+		return false;
+	}
 
-    @Override
-    public void onLoad()
-    {
-        isDirty = true;
-    }
+	@Override
+	public void onLoad()
+	{
+		isDirty = true;
+	}
 
-    @Override
-    public void markDirty()
-    {
-        isDirty = true;
-    }
+	@Override
+	public void markDirty()
+	{
+		isDirty = true;
+	}
 
-    public final void checkIfDirty()
-    {
-        if(isDirty)
-        {
-            sendDirtyUpdate();
-            isDirty = false;
-        }
-    }
+	public final void checkIfDirty()
+	{
+		if (isDirty)
+		{
+			sendDirtyUpdate();
+			isDirty = false;
+		}
+	}
 
-    @Override
-    public final Block getBlockType()
-    {
-        return getBlockState().getBlock();
-    }
+	@Override
+	public final Block getBlockType()
+	{
+		return getBlockState().getBlock();
+	}
 
-    protected void sendDirtyUpdate()
-    {
-        updateContainingBlockInfo();
+	protected void sendDirtyUpdate()
+	{
+		updateContainingBlockInfo();
 
-        if(world != null)
-        {
-            world.markChunkDirty(pos, this);
+		if (world != null)
+		{
+			world.markChunkDirty(pos, this);
 
-            if(notifyBlock())
-            {
-                world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 255);
-            }
+			if (notifyBlock())
+			{
+				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 255);
+			}
 
-            if(updateComparator() && getBlockType() != Blocks.AIR)
-            {
-                world.updateComparatorOutputLevel(pos, getBlockType());
-            }
-        }
-    }
+			if (updateComparator() && getBlockType() != Blocks.AIR)
+			{
+				world.updateComparatorOutputLevel(pos, getBlockType());
+			}
+		}
+	}
 
-    @Override
-    public void updateContainingBlockInfo()
-    {
-        super.updateContainingBlockInfo();
-        currentState = null;
-    }
+	@Override
+	public void updateContainingBlockInfo()
+	{
+		super.updateContainingBlockInfo();
+		currentState = null;
+	}
 
-    public IBlockState createState(IBlockState state)
-    {
-        return state;
-    }
+	public IBlockState createState(IBlockState state)
+	{
+		return state;
+	}
 
-    public IBlockState getBlockState()
-    {
-        if(currentState == null)
-        {
-            if(world == null)
-            {
-                return Blocks.AIR.getDefaultState();
-            }
+	public IBlockState getBlockState()
+	{
+		if (currentState == null)
+		{
+			if (world == null)
+			{
+				return Blocks.AIR.getDefaultState();
+			}
 
-            currentState = createState(world.getBlockState(getPos()));
-        }
+			currentState = createState(world.getBlockState(getPos()));
+		}
 
-        return currentState;
-    }
+		return currentState;
+	}
 
-    public final boolean isServerSide()
-    {
-        return world != null && !world.isRemote;
-    }
+	public final boolean isServerSide()
+	{
+		return world != null && !world.isRemote;
+	}
 
-    public void notifyNeighbors()
-    {
-        world.notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
-    }
+	public void notifyNeighbors()
+	{
+		world.notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
+	}
 
-    public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)
-    {
-        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch);
-    }
+	public void playSound(SoundEvent event, SoundCategory category, float volume, float pitch)
+	{
+		world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, event, category, volume, pitch);
+	}
 
-    public BlockDimPos getDimPos()
-    {
-        return new BlockDimPos(pos, hasWorld() ? world.provider.getDimension() : 0);
-    }
+	public BlockDimPos getDimPos()
+	{
+		return new BlockDimPos(pos, hasWorld() ? world.provider.getDimension() : 0);
+	}
 }

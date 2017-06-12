@@ -8,5 +8,5 @@ import com.google.gson.JsonElement;
  */
 public interface IGuideTextLineProvider
 {
-    IGuideTextLine create(GuidePage page, JsonElement json);
+	IGuideTextLine create(GuidePage page, JsonElement json);
 }

@@ -17,53 +17,53 @@ import java.util.Objects;
  */
 public interface IConfigValue extends IStringSerializable, IExtendedIOObject, IJsonSerializable
 {
-    @Nullable
-    Object getValue();
+	@Nullable
+	Object getValue();
 
-    String getString();
+	String getString();
 
-    boolean getBoolean();
+	boolean getBoolean();
 
-    int getInt();
+	int getInt();
 
-    default double getDouble()
-    {
-        return getInt();
-    }
+	default double getDouble()
+	{
+		return getInt();
+	}
 
-    default boolean containsInt(int val)
-    {
-        return getInt() == val;
-    }
+	default boolean containsInt(int val)
+	{
+		return getInt() == val;
+	}
 
-    IConfigValue copy();
+	IConfigValue copy();
 
-    default boolean equalsValue(IConfigValue value)
-    {
-        return Objects.equals(getValue(), value.getValue());
-    }
+	default boolean equalsValue(IConfigValue value)
+	{
+		return Objects.equals(getValue(), value.getValue());
+	}
 
-    default Color4I getColor()
-    {
-        return Color4I.GRAY;
-    }
+	default Color4I getColor()
+	{
+		return Color4I.GRAY;
+	}
 
-    default void addInfo(IConfigKey key, List<String> list)
-    {
-        list.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
-    }
+	default void addInfo(IConfigKey key, List<String> list)
+	{
+		list.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
+	}
 
-    default List<String> getVariants()
-    {
-        return Collections.emptyList();
-    }
+	default List<String> getVariants()
+	{
+		return Collections.emptyList();
+	}
 
-    void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button);
+	void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button);
 
-    boolean setValueFromString(String text, boolean simulate);
+	boolean setValueFromString(String text, boolean simulate);
 
-    default boolean isNull()
-    {
-        return false;
-    }
+	default boolean isNull()
+	{
+		return false;
+	}
 }

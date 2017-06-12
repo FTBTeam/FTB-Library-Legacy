@@ -9,22 +9,22 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class MessageBase<E extends MessageBase<E>> implements IMessage, IMessageHandler<E, IMessage>
 {
-    MessageBase()
-    {
-    }
+	MessageBase()
+	{
+	}
 
-    public abstract NetworkWrapper getWrapper();
+	public abstract NetworkWrapper getWrapper();
 
-    abstract Side getReceivingSide();
+	abstract Side getReceivingSide();
 
-    @Override
-    public final IMessage onMessage(final E m, MessageContext ctx)
-    {
-        FTBLibIntegrationInternal.API.handleMessage(m, ctx, getReceivingSide());
-        return null;
-    }
+	@Override
+	public final IMessage onMessage(final E m, MessageContext ctx)
+	{
+		FTBLibIntegrationInternal.API.handleMessage(m, ctx, getReceivingSide());
+		return null;
+	}
 
-    public void onMessage(E m, EntityPlayer player)
-    {
-    }
+	public void onMessage(E m, EntityPlayer player)
+	{
+	}
 }

@@ -9,29 +9,29 @@ import java.util.function.Function;
 
 public class ClientGuideEvent extends Event
 {
-    private final Map<String, GuideTitlePage> map;
-    private final IResourceManager resourceManager;
-    private final Function<String, GuideTitlePage> modGuideProvider;
+	private final Map<String, GuideTitlePage> map;
+	private final IResourceManager resourceManager;
+	private final Function<String, GuideTitlePage> modGuideProvider;
 
-    public ClientGuideEvent(Map<String, GuideTitlePage> m, IResourceManager r, Function<String, GuideTitlePage> f)
-    {
-        map = m;
-        resourceManager = r;
-        modGuideProvider = f;
-    }
+	public ClientGuideEvent(Map<String, GuideTitlePage> m, IResourceManager r, Function<String, GuideTitlePage> f)
+	{
+		map = m;
+		resourceManager = r;
+		modGuideProvider = f;
+	}
 
-    public void add(GuideTitlePage page)
-    {
-        map.put(page.getName(), page);
-    }
+	public void add(GuideTitlePage page)
+	{
+		map.put(page.getName(), page);
+	}
 
-    public GuideTitlePage getModGuide(String modid)
-    {
-        return map.computeIfAbsent(modid, modGuideProvider);
-    }
+	public GuideTitlePage getModGuide(String modid)
+	{
+		return map.computeIfAbsent(modid, modGuideProvider);
+	}
 
-    public IResourceManager getResourceManager()
-    {
-        return resourceManager;
-    }
+	public IResourceManager getResourceManager()
+	{
+		return resourceManager;
+	}
 }

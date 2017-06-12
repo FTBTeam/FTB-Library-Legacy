@@ -54,544 +54,544 @@ import java.util.UUID;
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
-    public static class Message implements ITeamMessage
-    {
-        private final UUID sender;
-        private final long time;
-        private final ITextComponent text;
-
-        public Message(UUID s, long t, ITextComponent txt)
-        {
-            sender = s;
-            time = t;
-            text = txt;
-        }
-
-        public Message(ITextComponent txt)
-        {
-            this(ForgePlayerFake.SERVER.getId(), System.currentTimeMillis(), txt);
-        }
-
-        public Message(NBTTagCompound nbt)
-        {
-            sender = nbt.getUniqueId("Sender");
-            time = nbt.getLong("Time");
-
-            String m = nbt.getString("Msg");
-
-            if(m.isEmpty())
-            {
-                text = ForgeHooks.newChatWithLinks(nbt.getString("Text"));
-            }
-            else
-            {
-                text = ITextComponent.Serializer.jsonToComponent(m);
-            }
-        }
-
-        public Message(ByteBuf io)
-        {
-            sender = NetUtils.readUUID(io);
-            time = io.readLong();
-            text = NetUtils.readTextComponent(io);
-        }
-
-        public static NBTTagCompound toNBT(ITeamMessage msg)
-        {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setUniqueId("Sender", msg.getSender());
-            nbt.setLong("Time", msg.getTime());
-            nbt.setString("Msg", ITextComponent.Serializer.componentToJson(msg.getMessage()));
-            return nbt;
-        }
-
-        public static void write(ByteBuf io, ITeamMessage msg)
-        {
-            NetUtils.writeUUID(io, msg.getSender());
-            io.writeLong(msg.getTime());
-            NetUtils.writeTextComponent(io, msg.getMessage());
-        }
-
-        @Override
-        public int compareTo(ITeamMessage o)
-        {
-            return Long.compare(getTime(), o.getTime());
-        }
-
-        @Override
-        public UUID getSender()
-        {
-            return sender;
-        }
-
-        @Override
-        public long getTime()
-        {
-            return time;
-        }
-
-        @Override
-        public ITextComponent getMessage()
-        {
-            return text;
-        }
-    }
-
-    private boolean isValid;
-    private final NBTDataStorage dataStorage;
-    private final PropertyEnum<EnumTeamColor> color;
-    private IForgePlayer owner;
-    private final PropertyString title;
-    private final PropertyString desc;
-    private final PropertyBool freeToJoin;
-    private List<ITeamMessage> chatHistory;
-    private Map<UUID, EnumTeamStatus> players;
-    private final IConfigTree cachedConfig;
-
-    public ForgeTeam(String id)
-    {
-        super(id);
-        isValid = true;
-        color = new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE);
-        title = new PropertyString("");
-        desc = new PropertyString("");
-        freeToJoin = new PropertyBool(false);
-        dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
-
-        cachedConfig = new ConfigTree();
-        ForgeTeamSettingsEvent event = new ForgeTeamSettingsEvent(this, cachedConfig);
-        MinecraftForge.EVENT_BUS.post(event);
-
-        String group = FTBLibFinals.MOD_ID;
-        event.add(group, "free_to_join", freeToJoin);
-        group = FTBLibFinals.MOD_ID + ".display";
-        event.add(group, "color", color);
-        event.add(group, "title", title);
-        event.add(group, "desc", desc);
-    }
-
-    @Override
-    @Nullable
-    public INBTSerializable<?> getData(ResourceLocation id)
-    {
-        return dataStorage == null ? null : dataStorage.get(id);
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString("Owner", StringUtils.fromUUID(owner.getId()));
-        nbt.setString("Color", color.getString());
-
-        if(color.get() == null)
-        {
-            color.set(EnumTeamColor.BLUE);
-        }
-
-        if(!title.isEmpty())
-        {
-            nbt.setString("Title", title.getString());
-        }
-
-        if(!desc.isEmpty())
-        {
-            nbt.setString("Desc", desc.getString());
-        }
-
-        nbt.setBoolean("FreeToJoin", freeToJoin.getBoolean());
-
-        if(players != null && !players.isEmpty())
-        {
-            NBTTagCompound nbt1 = new NBTTagCompound();
-
-            for(Map.Entry<UUID, EnumTeamStatus> entry : players.entrySet())
-            {
-                nbt1.setString(StringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
-            }
-
-            nbt.setTag("Players", nbt1);
-        }
-
-        if(dataStorage != null)
-        {
-            nbt.setTag("Data", dataStorage.serializeNBT());
-        }
-
-        if(chatHistory != null && !chatHistory.isEmpty())
-        {
-            NBTTagList list = new NBTTagList();
-
-            for(ITeamMessage msg : chatHistory)
-            {
-                list.appendTag(Message.toNBT(msg));
-            }
-
-            nbt.setTag("Chat", list);
-        }
-
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt)
-    {
-        owner = Universe.INSTANCE.getPlayer(StringUtils.fromString(nbt.getString("Owner")));
-        color.setValueFromString(nbt.getString("Color"), false);
-        title.setString(nbt.getString("Title"));
-        desc.setString(nbt.getString("Desc"));
-
-        if(nbt.hasKey("Flags"))
-        {
-            int flags = nbt.getInteger("Flags");
-            freeToJoin.setBoolean(Bits.getFlag(flags, 1));
-            isValid = !Bits.getFlag(flags, 2);
-        }
-        else
-        {
-            freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
-        }
-
-        if(players != null)
-        {
-            players.clear();
-        }
-
-        if(nbt.hasKey("Players"))
-        {
-            if(players == null)
-            {
-                players = new HashMap<>();
-            }
-
-            NBTTagCompound nbt1 = nbt.getCompoundTag("Players");
-
-            for(String s : nbt1.getKeySet())
-            {
-                UUID id = StringUtils.fromString(s);
-
-                if(id != null)
-                {
-                    EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(nbt1.getString(s));
-
-                    if(status != null && status.canBeSet())
-                    {
-                        players.put(id, status);
-                    }
-                }
-            }
-        }
-
-        if(nbt.hasKey("Invited"))
-        {
-            if(players == null)
-            {
-                players = new HashMap<>();
-            }
-
-            NBTTagList list = nbt.getTagList("Invited", Constants.NBT.TAG_STRING);
-
-            for(int i = 0; i < list.tagCount(); i++)
-            {
-                UUID id = StringUtils.fromString(list.getStringTagAt(i));
-
-                if(id != null && !players.containsKey(id))
-                {
-                    players.put(id, EnumTeamStatus.INVITED);
-                }
-            }
-        }
-
-        if(dataStorage != null)
-        {
-            dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
-        }
-
-        if(chatHistory != null)
-        {
-            chatHistory.clear();
-        }
-
-        if(nbt.hasKey("Chat"))
-        {
-            if(chatHistory == null)
-            {
-                chatHistory = new ArrayList<>();
-            }
-
-            NBTTagList list = nbt.getTagList("Chat", Constants.NBT.TAG_COMPOUND);
-
-            for(int i = 0; i < list.tagCount(); i++)
-            {
-                chatHistory.add(new Message(list.getCompoundTagAt(i)));
-            }
-        }
-    }
-
-    @Override
-    public IForgePlayer getOwner()
-    {
-        return owner;
-    }
-
-    @Override
-    public String getTitle()
-    {
-        return title.isEmpty() ? (owner.getName() + (owner.getName().endsWith("s") ? "' Team" : "'s Team")) : title.getString();
-    }
-
-    @Override
-    public String getDesc()
-    {
-        return desc.getString();
-    }
-
-    @Override
-    public EnumTeamColor getColor()
-    {
-        return color.getNonnull();
-    }
-
-    public void setColor(EnumTeamColor col)
-    {
-        color.set(col);
-    }
-
-    @Override
-    public EnumTeamStatus getHighestStatus(UUID playerId)
-    {
-        if(owner.getId().equals(playerId))
-        {
-            return EnumTeamStatus.OWNER;
-        }
-
-        EnumTeamStatus status = getSetStatus(playerId);
-
-        if(status == EnumTeamStatus.MOD)
-        {
-            if(!isMember(playerId))
-            {
-                status = EnumTeamStatus.NONE;
-            }
-        }
-        else if(!status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER) && isMember(playerId))
-        {
-            status = EnumTeamStatus.MEMBER;
-        }
-
-        return status;
-    }
-
-    private boolean isMember(UUID playerId)
-    {
-        IForgePlayer player = FTBLibIntegrationInternal.API.getUniverse().getPlayer(playerId);
-        return player != null && equals(player.getTeam());
-
-    }
-
-    private EnumTeamStatus getSetStatus(UUID playerId)
-    {
-        if(players == null || players.isEmpty())
-        {
-            return EnumTeamStatus.NONE;
-        }
-
-        EnumTeamStatus status = players.get(playerId);
-
-        if(status == null)
-        {
-            status = EnumTeamStatus.NONE;
-
-            if(freeToJoin.getBoolean())
-            {
-                status = EnumTeamStatus.INVITED;
-            }
-        }
-
-        return status;
-    }
-
-    @Override
-    public boolean hasStatus(UUID playerId, EnumTeamStatus status)
-    {
-        if(status.isNone())
-        {
-            return true;
-        }
-
-        EnumTeamStatus status1 = getHighestStatus(playerId);
-        return status1.isEqualOrGreaterThan(status);
-    }
-
-    @Override
-    public void setStatus(UUID playerId, EnumTeamStatus status)
-    {
-        if(status.canBeSet() && !status.isNone())
-        {
-            if(players == null)
-            {
-                players = new HashMap<>();
-            }
-
-            players.put(playerId, status);
-        }
-        else if(players != null)
-        {
-            players.remove(playerId);
-        }
-    }
-
-    @Override
-    public Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status)
-    {
-        for(IForgePlayer p : Universe.INSTANCE.getPlayers())
-        {
-            if(hasStatus(p, status))
-            {
-                c.add(p);
-            }
-        }
-
-        return c;
-    }
-
-    @Override
-    public boolean addPlayer(IForgePlayer player)
-    {
-        if(hasStatus(player, EnumTeamStatus.INVITED))
-        {
-            player.setTeamID(getName());
-
-            if(!hasStatus(player, EnumTeamStatus.MEMBER))
-            {
-                MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
-                setStatus(player.getId(), EnumTeamStatus.MEMBER);
-                printMessage(new Message(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName())));
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean removePlayer(IForgePlayer player)
-    {
-        if(getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() == 1)
-        {
-            printMessage(new Message(FTBLibLang.TEAM_DELETED.textComponent(getTitle())));
-            MinecraftForge.EVENT_BUS.post(new ForgeTeamDeletedEvent(this));
-            removePlayer0(player);
-            Universe.INSTANCE.teams.remove(getName());
-        }
-        else
-        {
-            if(hasStatus(player, EnumTeamStatus.OWNER))
-            {
-                return false;
-            }
-
-            removePlayer0(player);
-        }
-
-        return true;
-    }
-
-    private void removePlayer0(IForgePlayer player)
-    {
-        if(hasStatus(player, EnumTeamStatus.MEMBER))
-        {
-            player.setTeamID("");
-            MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerLeftEvent(this, player));
-            printMessage(new Message(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName())));
-        }
-    }
-
-    @Override
-    public void changeOwner(IForgePlayer newOwner)
-    {
-        if(owner == null)
-        {
-            owner = newOwner;
-            newOwner.setTeamID(getName());
-        }
-        else
-        {
-            IForgePlayer oldOwner = owner;
-
-            if(!oldOwner.equalsPlayer(newOwner) && hasStatus(newOwner, EnumTeamStatus.MEMBER))
-            {
-                owner = newOwner;
-                MinecraftForge.EVENT_BUS.post(new ForgeTeamOwnerChangedEvent(this, oldOwner, newOwner));
-            }
-        }
-    }
-
-    @Override
-    public IConfigTree getSettings()
-    {
-        return cachedConfig;
-    }
-
-    @Override
-    public void printMessage(ITeamMessage message)
-    {
-        if(chatHistory == null)
-        {
-            chatHistory = new ArrayList<>();
-        }
-
-        while(chatHistory.size() >= FTBLibConfig.MAX_TEAM_CHAT_HISTORY.getInt())
-        {
-            chatHistory.remove(0);
-        }
-
-        chatHistory.add(message);
-
-        MessageDisplayTeamMsg m = new MessageDisplayTeamMsg(message);
-
-        for(EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
-        {
-            if(!ep.getGameProfile().getId().equals(message.getSender()) && !Universe.INSTANCE.getPlayer(ep).hideNewTeamMsgNotification())
-            {
-                FTBLibIntegrationInternal.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
-            }
-
-            m.sendTo(ep);
-        }
-    }
-
-    @Override
-    public List<ITeamMessage> getMessages()
-    {
-        return chatHistory == null ? Collections.emptyList() : chatHistory;
-    }
-
-    public Collection<EntityPlayerMP> getOnlineTeamPlayers(EnumTeamStatus status)
-    {
-        Collection<EntityPlayerMP> list = new ArrayList<>();
-
-        for(EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
-        {
-            if(hasStatus(ep.getGameProfile().getId(), status))
-            {
-                list.add(ep);
-            }
-        }
-
-        return list;
-    }
-
-    @Override
-    public boolean isValid()
-    {
-        return isValid;
-    }
-
-    @Override
-    public boolean freeToJoin()
-    {
-        return freeToJoin.getBoolean();
-    }
+	public static class Message implements ITeamMessage
+	{
+		private final UUID sender;
+		private final long time;
+		private final ITextComponent text;
+
+		public Message(UUID s, long t, ITextComponent txt)
+		{
+			sender = s;
+			time = t;
+			text = txt;
+		}
+
+		public Message(ITextComponent txt)
+		{
+			this(ForgePlayerFake.SERVER.getId(), System.currentTimeMillis(), txt);
+		}
+
+		public Message(NBTTagCompound nbt)
+		{
+			sender = nbt.getUniqueId("Sender");
+			time = nbt.getLong("Time");
+
+			String m = nbt.getString("Msg");
+
+			if (m.isEmpty())
+			{
+				text = ForgeHooks.newChatWithLinks(nbt.getString("Text"));
+			}
+			else
+			{
+				text = ITextComponent.Serializer.jsonToComponent(m);
+			}
+		}
+
+		public Message(ByteBuf io)
+		{
+			sender = NetUtils.readUUID(io);
+			time = io.readLong();
+			text = NetUtils.readTextComponent(io);
+		}
+
+		public static NBTTagCompound toNBT(ITeamMessage msg)
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setUniqueId("Sender", msg.getSender());
+			nbt.setLong("Time", msg.getTime());
+			nbt.setString("Msg", ITextComponent.Serializer.componentToJson(msg.getMessage()));
+			return nbt;
+		}
+
+		public static void write(ByteBuf io, ITeamMessage msg)
+		{
+			NetUtils.writeUUID(io, msg.getSender());
+			io.writeLong(msg.getTime());
+			NetUtils.writeTextComponent(io, msg.getMessage());
+		}
+
+		@Override
+		public int compareTo(ITeamMessage o)
+		{
+			return Long.compare(getTime(), o.getTime());
+		}
+
+		@Override
+		public UUID getSender()
+		{
+			return sender;
+		}
+
+		@Override
+		public long getTime()
+		{
+			return time;
+		}
+
+		@Override
+		public ITextComponent getMessage()
+		{
+			return text;
+		}
+	}
+
+	private boolean isValid;
+	private final NBTDataStorage dataStorage;
+	private final PropertyEnum<EnumTeamColor> color;
+	private IForgePlayer owner;
+	private final PropertyString title;
+	private final PropertyString desc;
+	private final PropertyBool freeToJoin;
+	private List<ITeamMessage> chatHistory;
+	private Map<UUID, EnumTeamStatus> players;
+	private final IConfigTree cachedConfig;
+
+	public ForgeTeam(String id)
+	{
+		super(id);
+		isValid = true;
+		color = new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE);
+		title = new PropertyString("");
+		desc = new PropertyString("");
+		freeToJoin = new PropertyBool(false);
+		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
+
+		cachedConfig = new ConfigTree();
+		ForgeTeamSettingsEvent event = new ForgeTeamSettingsEvent(this, cachedConfig);
+		MinecraftForge.EVENT_BUS.post(event);
+
+		String group = FTBLibFinals.MOD_ID;
+		event.add(group, "free_to_join", freeToJoin);
+		group = FTBLibFinals.MOD_ID + ".display";
+		event.add(group, "color", color);
+		event.add(group, "title", title);
+		event.add(group, "desc", desc);
+	}
+
+	@Override
+	@Nullable
+	public INBTSerializable<?> getData(ResourceLocation id)
+	{
+		return dataStorage == null ? null : dataStorage.get(id);
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setString("Owner", StringUtils.fromUUID(owner.getId()));
+		nbt.setString("Color", color.getString());
+
+		if (color.get() == null)
+		{
+			color.set(EnumTeamColor.BLUE);
+		}
+
+		if (!title.isEmpty())
+		{
+			nbt.setString("Title", title.getString());
+		}
+
+		if (!desc.isEmpty())
+		{
+			nbt.setString("Desc", desc.getString());
+		}
+
+		nbt.setBoolean("FreeToJoin", freeToJoin.getBoolean());
+
+		if (players != null && !players.isEmpty())
+		{
+			NBTTagCompound nbt1 = new NBTTagCompound();
+
+			for (Map.Entry<UUID, EnumTeamStatus> entry : players.entrySet())
+			{
+				nbt1.setString(StringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
+			}
+
+			nbt.setTag("Players", nbt1);
+		}
+
+		if (dataStorage != null)
+		{
+			nbt.setTag("Data", dataStorage.serializeNBT());
+		}
+
+		if (chatHistory != null && !chatHistory.isEmpty())
+		{
+			NBTTagList list = new NBTTagList();
+
+			for (ITeamMessage msg : chatHistory)
+			{
+				list.appendTag(Message.toNBT(msg));
+			}
+
+			nbt.setTag("Chat", list);
+		}
+
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		owner = Universe.INSTANCE.getPlayer(StringUtils.fromString(nbt.getString("Owner")));
+		color.setValueFromString(nbt.getString("Color"), false);
+		title.setString(nbt.getString("Title"));
+		desc.setString(nbt.getString("Desc"));
+
+		if (nbt.hasKey("Flags"))
+		{
+			int flags = nbt.getInteger("Flags");
+			freeToJoin.setBoolean(Bits.getFlag(flags, 1));
+			isValid = !Bits.getFlag(flags, 2);
+		}
+		else
+		{
+			freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
+		}
+
+		if (players != null)
+		{
+			players.clear();
+		}
+
+		if (nbt.hasKey("Players"))
+		{
+			if (players == null)
+			{
+				players = new HashMap<>();
+			}
+
+			NBTTagCompound nbt1 = nbt.getCompoundTag("Players");
+
+			for (String s : nbt1.getKeySet())
+			{
+				UUID id = StringUtils.fromString(s);
+
+				if (id != null)
+				{
+					EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(nbt1.getString(s));
+
+					if (status != null && status.canBeSet())
+					{
+						players.put(id, status);
+					}
+				}
+			}
+		}
+
+		if (nbt.hasKey("Invited"))
+		{
+			if (players == null)
+			{
+				players = new HashMap<>();
+			}
+
+			NBTTagList list = nbt.getTagList("Invited", Constants.NBT.TAG_STRING);
+
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				UUID id = StringUtils.fromString(list.getStringTagAt(i));
+
+				if (id != null && !players.containsKey(id))
+				{
+					players.put(id, EnumTeamStatus.INVITED);
+				}
+			}
+		}
+
+		if (dataStorage != null)
+		{
+			dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
+		}
+
+		if (chatHistory != null)
+		{
+			chatHistory.clear();
+		}
+
+		if (nbt.hasKey("Chat"))
+		{
+			if (chatHistory == null)
+			{
+				chatHistory = new ArrayList<>();
+			}
+
+			NBTTagList list = nbt.getTagList("Chat", Constants.NBT.TAG_COMPOUND);
+
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				chatHistory.add(new Message(list.getCompoundTagAt(i)));
+			}
+		}
+	}
+
+	@Override
+	public IForgePlayer getOwner()
+	{
+		return owner;
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return title.isEmpty() ? (owner.getName() + (owner.getName().endsWith("s") ? "' Team" : "'s Team")) : title.getString();
+	}
+
+	@Override
+	public String getDesc()
+	{
+		return desc.getString();
+	}
+
+	@Override
+	public EnumTeamColor getColor()
+	{
+		return color.getNonnull();
+	}
+
+	public void setColor(EnumTeamColor col)
+	{
+		color.set(col);
+	}
+
+	@Override
+	public EnumTeamStatus getHighestStatus(UUID playerId)
+	{
+		if (owner.getId().equals(playerId))
+		{
+			return EnumTeamStatus.OWNER;
+		}
+
+		EnumTeamStatus status = getSetStatus(playerId);
+
+		if (status == EnumTeamStatus.MOD)
+		{
+			if (!isMember(playerId))
+			{
+				status = EnumTeamStatus.NONE;
+			}
+		}
+		else if (!status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER) && isMember(playerId))
+		{
+			status = EnumTeamStatus.MEMBER;
+		}
+
+		return status;
+	}
+
+	private boolean isMember(UUID playerId)
+	{
+		IForgePlayer player = FTBLibIntegrationInternal.API.getUniverse().getPlayer(playerId);
+		return player != null && equals(player.getTeam());
+
+	}
+
+	private EnumTeamStatus getSetStatus(UUID playerId)
+	{
+		if (players == null || players.isEmpty())
+		{
+			return EnumTeamStatus.NONE;
+		}
+
+		EnumTeamStatus status = players.get(playerId);
+
+		if (status == null)
+		{
+			status = EnumTeamStatus.NONE;
+
+			if (freeToJoin.getBoolean())
+			{
+				status = EnumTeamStatus.INVITED;
+			}
+		}
+
+		return status;
+	}
+
+	@Override
+	public boolean hasStatus(UUID playerId, EnumTeamStatus status)
+	{
+		if (status.isNone())
+		{
+			return true;
+		}
+
+		EnumTeamStatus status1 = getHighestStatus(playerId);
+		return status1.isEqualOrGreaterThan(status);
+	}
+
+	@Override
+	public void setStatus(UUID playerId, EnumTeamStatus status)
+	{
+		if (status.canBeSet() && !status.isNone())
+		{
+			if (players == null)
+			{
+				players = new HashMap<>();
+			}
+
+			players.put(playerId, status);
+		}
+		else if (players != null)
+		{
+			players.remove(playerId);
+		}
+	}
+
+	@Override
+	public Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status)
+	{
+		for (IForgePlayer p : Universe.INSTANCE.getPlayers())
+		{
+			if (hasStatus(p, status))
+			{
+				c.add(p);
+			}
+		}
+
+		return c;
+	}
+
+	@Override
+	public boolean addPlayer(IForgePlayer player)
+	{
+		if (hasStatus(player, EnumTeamStatus.INVITED))
+		{
+			player.setTeamID(getName());
+
+			if (!hasStatus(player, EnumTeamStatus.MEMBER))
+			{
+				MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
+				setStatus(player.getId(), EnumTeamStatus.MEMBER);
+				printMessage(new Message(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName())));
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean removePlayer(IForgePlayer player)
+	{
+		if (getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() == 1)
+		{
+			printMessage(new Message(FTBLibLang.TEAM_DELETED.textComponent(getTitle())));
+			MinecraftForge.EVENT_BUS.post(new ForgeTeamDeletedEvent(this));
+			removePlayer0(player);
+			Universe.INSTANCE.teams.remove(getName());
+		}
+		else
+		{
+			if (hasStatus(player, EnumTeamStatus.OWNER))
+			{
+				return false;
+			}
+
+			removePlayer0(player);
+		}
+
+		return true;
+	}
+
+	private void removePlayer0(IForgePlayer player)
+	{
+		if (hasStatus(player, EnumTeamStatus.MEMBER))
+		{
+			player.setTeamID("");
+			MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerLeftEvent(this, player));
+			printMessage(new Message(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName())));
+		}
+	}
+
+	@Override
+	public void changeOwner(IForgePlayer newOwner)
+	{
+		if (owner == null)
+		{
+			owner = newOwner;
+			newOwner.setTeamID(getName());
+		}
+		else
+		{
+			IForgePlayer oldOwner = owner;
+
+			if (!oldOwner.equalsPlayer(newOwner) && hasStatus(newOwner, EnumTeamStatus.MEMBER))
+			{
+				owner = newOwner;
+				MinecraftForge.EVENT_BUS.post(new ForgeTeamOwnerChangedEvent(this, oldOwner, newOwner));
+			}
+		}
+	}
+
+	@Override
+	public IConfigTree getSettings()
+	{
+		return cachedConfig;
+	}
+
+	@Override
+	public void printMessage(ITeamMessage message)
+	{
+		if (chatHistory == null)
+		{
+			chatHistory = new ArrayList<>();
+		}
+
+		while (chatHistory.size() >= FTBLibConfig.MAX_TEAM_CHAT_HISTORY.getInt())
+		{
+			chatHistory.remove(0);
+		}
+
+		chatHistory.add(message);
+
+		MessageDisplayTeamMsg m = new MessageDisplayTeamMsg(message);
+
+		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
+		{
+			if (!ep.getGameProfile().getId().equals(message.getSender()) && !Universe.INSTANCE.getPlayer(ep).hideNewTeamMsgNotification())
+			{
+				FTBLibIntegrationInternal.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
+			}
+
+			m.sendTo(ep);
+		}
+	}
+
+	@Override
+	public List<ITeamMessage> getMessages()
+	{
+		return chatHistory == null ? Collections.emptyList() : chatHistory;
+	}
+
+	public Collection<EntityPlayerMP> getOnlineTeamPlayers(EnumTeamStatus status)
+	{
+		Collection<EntityPlayerMP> list = new ArrayList<>();
+
+		for (EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
+		{
+			if (hasStatus(ep.getGameProfile().getId(), status))
+			{
+				list.add(ep);
+			}
+		}
+
+		return list;
+	}
+
+	@Override
+	public boolean isValid()
+	{
+		return isValid;
+	}
+
+	@Override
+	public boolean freeToJoin()
+	{
+		return freeToJoin.getBoolean();
+	}
 }

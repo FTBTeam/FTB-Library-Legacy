@@ -9,15 +9,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class ForgeTeamEvent extends Event
 {
-    private final IForgeTeam team;
+	private final IForgeTeam team;
 
-    public ForgeTeamEvent(IForgeTeam t)
-    {
-        team = Preconditions.checkNotNull(t, "Null IForgeTeam in ForgeTeamEvent!");
-    }
+	public ForgeTeamEvent(IForgeTeam t)
+	{
+		team = Preconditions.checkNotNull(t, "Null IForgeTeam in ForgeTeamEvent!");
+	}
 
-    public IForgeTeam getTeam()
-    {
-        return team;
-    }
+	public IForgeTeam getTeam()
+	{
+		return team;
+	}
 }

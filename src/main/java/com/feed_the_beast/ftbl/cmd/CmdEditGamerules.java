@@ -24,105 +24,105 @@ import javax.annotation.Nullable;
  */
 public class CmdEditGamerules extends CmdEditConfigBase
 {
-    private static final ITextComponent TITLE = new TextComponentString("Game Rules");
-    private GameRules rules, oldRules;
-    private IConfigTree tree;
+	private static final ITextComponent TITLE = new TextComponentString("Game Rules");
+	private GameRules rules, oldRules;
+	private IConfigTree tree;
 
-    public IConfigContainer container = new IConfigContainer()
-    {
-        @Override
-        public IConfigTree getConfigTree()
-        {
-            if(oldRules != rules)
-            {
-                oldRules = rules;
-                tree = new ConfigTree();
+	public IConfigContainer container = new IConfigContainer()
+	{
+		@Override
+		public IConfigTree getConfigTree()
+		{
+			if (oldRules != rules)
+			{
+				oldRules = rules;
+				tree = new ConfigTree();
 
-                for(String rule : rules.getRules())
-                {
-                    IConfigValue value;
+				for (String rule : rules.getRules())
+				{
+					IConfigValue value;
 
-                    if(rules.areSameType(rule, GameRules.ValueType.BOOLEAN_VALUE))
-                    {
-                        value = new PropertyBool(rules.getBoolean(rule))
-                        {
-                            @Override
-                            public void setBoolean(boolean v)
-                            {
-                                rules.setOrCreateGameRule(rule, v ? "true" : "false");
-                            }
+					if (rules.areSameType(rule, GameRules.ValueType.BOOLEAN_VALUE))
+					{
+						value = new PropertyBool(rules.getBoolean(rule))
+						{
+							@Override
+							public void setBoolean(boolean v)
+							{
+								rules.setOrCreateGameRule(rule, v ? "true" : "false");
+							}
 
-                            @Override
-                            public boolean getBoolean()
-                            {
-                                return rules.getBoolean(rule);
-                            }
-                        };
-                    }
-                    else if(rules.areSameType(rule, GameRules.ValueType.NUMERICAL_VALUE))
-                    {
-                        value = new PropertyInt(rules.getInt(rule))
-                        {
-                            @Override
-                            public void setInt(int v)
-                            {
-                                rules.setOrCreateGameRule(rule, Integer.toString(v));
-                            }
+							@Override
+							public boolean getBoolean()
+							{
+								return rules.getBoolean(rule);
+							}
+						};
+					}
+					else if (rules.areSameType(rule, GameRules.ValueType.NUMERICAL_VALUE))
+					{
+						value = new PropertyInt(rules.getInt(rule))
+						{
+							@Override
+							public void setInt(int v)
+							{
+								rules.setOrCreateGameRule(rule, Integer.toString(v));
+							}
 
-                            @Override
-                            public int getInt()
-                            {
-                                return rules.getInt(rule);
-                            }
-                        };
-                    }
-                    else
-                    {
-                        value = new PropertyString(rules.getString(rule))
-                        {
-                            @Override
-                            public void setString(String v)
-                            {
-                                rules.setOrCreateGameRule(rule, v);
-                            }
+							@Override
+							public int getInt()
+							{
+								return rules.getInt(rule);
+							}
+						};
+					}
+					else
+					{
+						value = new PropertyString(rules.getString(rule))
+						{
+							@Override
+							public void setString(String v)
+							{
+								rules.setOrCreateGameRule(rule, v);
+							}
 
-                            @Override
-                            public String getString()
-                            {
-                                return rules.getString(rule);
-                            }
-                        };
-                    }
+							@Override
+							public String getString()
+							{
+								return rules.getString(rule);
+							}
+						};
+					}
 
-                    tree.add(new ConfigKey(rule, value), value);
-                }
-            }
+					tree.add(new ConfigKey(rule, value), value);
+				}
+			}
 
-            return tree;
-        }
+			return tree;
+		}
 
-        @Override
-        public ITextComponent getTitle()
-        {
-            return TITLE;
-        }
+		@Override
+		public ITextComponent getTitle()
+		{
+			return TITLE;
+		}
 
-        @Override
-        public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-        {
-            getConfigTree().fromJson(json);
-        }
-    };
+		@Override
+		public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+		{
+			getConfigTree().fromJson(json);
+		}
+	};
 
-    public CmdEditGamerules()
-    {
-        super("edit_gamerules", Level.OP);
-    }
+	public CmdEditGamerules()
+	{
+		super("edit_gamerules", Level.OP);
+	}
 
-    @Override
-    public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
-    {
-        rules = sender.getEntityWorld().getGameRules();
-        return container;
-    }
+	@Override
+	public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+	{
+		rules = sender.getEntityWorld().getGameRules();
+		return container;
+	}
 }

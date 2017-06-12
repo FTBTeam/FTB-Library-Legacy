@@ -10,41 +10,41 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageDisplayTeamMsg extends MessageToClient<MessageDisplayTeamMsg>
 {
-    private ITeamMessage message;
+	private ITeamMessage message;
 
-    public MessageDisplayTeamMsg()
-    {
-    }
+	public MessageDisplayTeamMsg()
+	{
+	}
 
-    public MessageDisplayTeamMsg(ITeamMessage m)
-    {
-        message = m;
-    }
+	public MessageDisplayTeamMsg(ITeamMessage m)
+	{
+		message = m;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        message = new ForgeTeam.Message(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		message = new ForgeTeam.Message(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        ForgeTeam.Message.write(io, message);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		ForgeTeam.Message.write(io, message);
+	}
 
-    @Override
-    public void onMessage(MessageDisplayTeamMsg m, EntityPlayer player)
-    {
-        if(GuiMyTeam.INSTANCE != null)
-        {
-            GuiMyTeam.INSTANCE.printMessage(m.message);
-        }
-    }
+	@Override
+	public void onMessage(MessageDisplayTeamMsg m, EntityPlayer player)
+	{
+		if (GuiMyTeam.INSTANCE != null)
+		{
+			GuiMyTeam.INSTANCE.printMessage(m.message);
+		}
+	}
 }

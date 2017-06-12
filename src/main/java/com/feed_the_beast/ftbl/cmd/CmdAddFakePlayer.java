@@ -17,36 +17,36 @@ import java.util.UUID;
  */
 public class CmdAddFakePlayer extends CmdBase
 {
-    public CmdAddFakePlayer()
-    {
-        super("add_fake_player", Level.OP);
-    }
+	public CmdAddFakePlayer()
+	{
+		super("add_fake_player", Level.OP);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 2, "<uuid> <name>");
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 2, "<uuid> <name>");
 
-        UUID id = StringUtils.fromString(args[0]);
-        if(id == null)
-        {
-            throw FTBLibLang.RAW.commandError("Invalid UUID!");
-        }
+		UUID id = StringUtils.fromString(args[0]);
+		if (id == null)
+		{
+			throw FTBLibLang.RAW.commandError("Invalid UUID!");
+		}
 
-        if(Universe.INSTANCE.getPlayer(id) != null || Universe.INSTANCE.getPlayer(args[1]) != null)
-        {
-            throw FTBLibLang.RAW.commandError("Player already exists!");
-        }
+		if (Universe.INSTANCE.getPlayer(id) != null || Universe.INSTANCE.getPlayer(args[1]) != null)
+		{
+			throw FTBLibLang.RAW.commandError("Player already exists!");
+		}
 
-        ForgePlayer p = new ForgePlayer(id, args[1]);
-        Universe.INSTANCE.playerMap.put(p.getId(), p);
+		ForgePlayer p = new ForgePlayer(id, args[1]);
+		Universe.INSTANCE.playerMap.put(p.getId(), p);
 
-        sender.sendMessage(new TextComponentString("Fake player " + args[1] + " added!"));
-    }
+		sender.sendMessage(new TextComponentString("Fake player " + args[1] + " added!"));
+	}
 }

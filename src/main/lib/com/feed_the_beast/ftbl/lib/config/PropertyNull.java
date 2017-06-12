@@ -14,103 +14,103 @@ import java.util.List;
 
 public enum PropertyNull implements IConfigValue
 {
-    INSTANCE;
+	INSTANCE;
 
-    /**
-     * @author LatvianModder
-     */
-    public static final String ID = "null";
-    public static final Color4I COLOR = new Color4I(false, 0xFF333333);
+	/**
+	 * @author LatvianModder
+	 */
+	public static final String ID = "null";
+	public static final Color4I COLOR = new Color4I(false, 0xFF333333);
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Override
-    @Nullable
-    public Object getValue()
-    {
-        return null;
-    }
+	@Override
+	@Nullable
+	public Object getValue()
+	{
+		return null;
+	}
 
-    @Override
-    public String getString()
-    {
-        return "null";
-    }
+	@Override
+	public String getString()
+	{
+		return "null";
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return false;
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return false;
+	}
 
-    @Override
-    public int getInt()
-    {
-        return 0;
-    }
+	@Override
+	public int getInt()
+	{
+		return 0;
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return INSTANCE;
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return INSTANCE;
+	}
 
-    @Override
-    public boolean equalsValue(IConfigValue value)
-    {
-        return value == this;
-    }
+	@Override
+	public boolean equalsValue(IConfigValue value)
+	{
+		return value == this;
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return COLOR;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return COLOR;
+	}
 
-    @Override
-    public void addInfo(IConfigKey key, List<String> list)
-    {
-    }
+	@Override
+	public void addInfo(IConfigKey key, List<String> list)
+	{
+	}
 
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-    }
+	@Override
+	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	{
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return JsonNull.INSTANCE;
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return JsonNull.INSTANCE;
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+	}
 
-    @Override
-    public boolean isNull()
-    {
-        return true;
-    }
+	@Override
+	public boolean isNull()
+	{
+		return true;
+	}
 
-    @Override
-    public boolean setValueFromString(String text, boolean simulate)
-    {
-        return false;
-    }
+	@Override
+	public boolean setValueFromString(String text, boolean simulate)
+	{
+		return false;
+	}
 }

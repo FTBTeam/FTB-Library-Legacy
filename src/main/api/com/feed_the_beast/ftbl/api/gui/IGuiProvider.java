@@ -12,6 +12,6 @@ import javax.annotation.Nullable;
  */
 public interface IGuiProvider
 {
-    @Nullable
-    GuiScreen getGui(EntityPlayer player, BlockPos pos, @Nullable NBTTagCompound data);
+	@Nullable
+	GuiScreen getGui(EntityPlayer player, BlockPos pos, @Nullable NBTTagCompound data);
 }

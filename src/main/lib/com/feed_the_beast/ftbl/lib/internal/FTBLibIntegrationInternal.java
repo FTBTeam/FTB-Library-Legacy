@@ -6,17 +6,17 @@ import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 
 public enum FTBLibIntegrationInternal implements IFTBLibPlugin
 {
-    @FTBLibPlugin
-    INSTANCE;
+	@FTBLibPlugin
+	INSTANCE;
 
-    /**
-     * @author LatvianModder
-     */
-    public static FTBLibAPI API;
+	/**
+	 * @author LatvianModder
+	 */
+	public static FTBLibAPI API;
 
-    @Override
-    public void init(FTBLibAPI api)
-    {
-        API = api;
-    }
+	@Override
+	public void init(FTBLibAPI api)
+	{
+		API = api;
+	}
 }

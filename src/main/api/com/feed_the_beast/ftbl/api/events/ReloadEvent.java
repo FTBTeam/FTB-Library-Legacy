@@ -10,29 +10,29 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class ReloadEvent extends Event
 {
-    private final Side side;
-    private final ICommandSender sender;
-    private final EnumReloadType type;
+	private final Side side;
+	private final ICommandSender sender;
+	private final EnumReloadType type;
 
-    public ReloadEvent(Side s, ICommandSender c, EnumReloadType t)
-    {
-        side = s;
-        sender = c;
-        type = t;
-    }
+	public ReloadEvent(Side s, ICommandSender c, EnumReloadType t)
+	{
+		side = s;
+		sender = c;
+		type = t;
+	}
 
-    public Side getSide()
-    {
-        return side;
-    }
+	public Side getSide()
+	{
+		return side;
+	}
 
-    public ICommandSender getSender()
-    {
-        return sender;
-    }
+	public ICommandSender getSender()
+	{
+		return sender;
+	}
 
-    public EnumReloadType getType()
-    {
-        return type;
-    }
+	public EnumReloadType getType()
+	{
+		return type;
+	}
 }

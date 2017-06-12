@@ -8,13 +8,13 @@ import com.feed_the_beast.ftbl.lib.config.PropertyColor;
  */
 public class GuiSelectors
 {
-    public static void selectJson(IConfigValue value, IGuiFieldCallback callback)
-    {
-        new GuiConfigValueField(value, callback).openGui();
-    }
+	public static void selectJson(IConfigValue value, IGuiFieldCallback callback)
+	{
+		new GuiConfigValueField(value, callback).openGui();
+	}
 
-    public static void selectColor(PropertyColor value, IGuiFieldCallback callback)
-    {
-        new GuiColorField(value, callback).openGui();
-    }
+	public static void selectColor(PropertyColor value, IGuiFieldCallback callback)
+	{
+		new GuiColorField(value, callback).openGui();
+	}
 }

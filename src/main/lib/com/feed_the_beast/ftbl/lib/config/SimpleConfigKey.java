@@ -10,20 +10,20 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
  */
 public class SimpleConfigKey extends FinalIDObject implements IConfigKey
 {
-    public SimpleConfigKey(String id)
-    {
-        super(id, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_UNDERLINE | StringUtils.FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
-    }
+	public SimpleConfigKey(String id)
+	{
+		super(id, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_UNDERLINE | StringUtils.FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
+	}
 
-    @Override
-    public int getFlags()
-    {
-        return 0;
-    }
+	@Override
+	public int getFlags()
+	{
+		return 0;
+	}
 
-    @Override
-    public IConfigValue getDefValue()
-    {
-        return PropertyNull.INSTANCE;
-    }
+	@Override
+	public IConfigValue getDefValue()
+	{
+		return PropertyNull.INSTANCE;
+	}
 }

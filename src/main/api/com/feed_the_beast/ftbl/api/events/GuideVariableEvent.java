@@ -12,41 +12,41 @@ import net.minecraftforge.fml.relauncher.Side;
 @Cancelable
 public class GuideVariableEvent extends Event
 {
-    private final Side side;
-    private final GuidePage page;
-    private final ResourceLocation variable;
-    private String value;
+	private final Side side;
+	private final GuidePage page;
+	private final ResourceLocation variable;
+	private String value;
 
-    public GuideVariableEvent(Side s, GuidePage p, ResourceLocation id)
-    {
-        side = s;
-        page = p;
-        variable = id;
-        value = "default";
-    }
+	public GuideVariableEvent(Side s, GuidePage p, ResourceLocation id)
+	{
+		side = s;
+		page = p;
+		variable = id;
+		value = "default";
+	}
 
-    public Side getSide()
-    {
-        return side;
-    }
+	public Side getSide()
+	{
+		return side;
+	}
 
-    public GuidePage getPage()
-    {
-        return page;
-    }
+	public GuidePage getPage()
+	{
+		return page;
+	}
 
-    public ResourceLocation getVariable()
-    {
-        return variable;
-    }
+	public ResourceLocation getVariable()
+	{
+		return variable;
+	}
 
-    public void setValue(String val)
-    {
-        value = val;
-    }
+	public void setValue(String val)
+	{
+		value = val;
+	}
 
-    public String getValue()
-    {
-        return value;
-    }
+	public String getValue()
+	{
+		return value;
+	}
 }

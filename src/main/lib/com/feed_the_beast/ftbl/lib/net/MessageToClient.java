@@ -13,31 +13,31 @@ import javax.annotation.Nullable;
  */
 public abstract class MessageToClient<E extends MessageToClient<E>> extends MessageBase<E>
 {
-    @Override
-    final Side getReceivingSide()
-    {
-        return Side.CLIENT;
-    }
+	@Override
+	final Side getReceivingSide()
+	{
+		return Side.CLIENT;
+	}
 
-    public final void sendTo(@Nullable EntityPlayer player)
-    {
-        if(player != null)
-        {
-            getWrapper().sendTo(this, (EntityPlayerMP) player);
-        }
-        else
-        {
-            getWrapper().sendToAll(this);
-        }
-    }
+	public final void sendTo(@Nullable EntityPlayer player)
+	{
+		if (player != null)
+		{
+			getWrapper().sendTo(this, (EntityPlayerMP) player);
+		}
+		else
+		{
+			getWrapper().sendToAll(this);
+		}
+	}
 
-    public final void sendToDimension(int dim)
-    {
-        getWrapper().sendToDimension(this, dim);
-    }
+	public final void sendToDimension(int dim)
+	{
+		getWrapper().sendToDimension(this, dim);
+	}
 
-    public final void sendToAllAround(int dim, BlockPos pos, double range)
-    {
-        getWrapper().sendToAllAround(this, new NetworkRegistry.TargetPoint(dim, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, range));
-    }
+	public final void sendToAllAround(int dim, BlockPos pos, double range)
+	{
+		getWrapper().sendToAllAround(this, new NetworkRegistry.TargetPoint(dim, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, range));
+	}
 }

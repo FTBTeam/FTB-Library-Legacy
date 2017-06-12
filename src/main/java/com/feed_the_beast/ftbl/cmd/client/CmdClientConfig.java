@@ -12,14 +12,14 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdClientConfig extends CmdBase
 {
-    public CmdClientConfig()
-    {
-        super("client_config", Level.ALL);
-    }
+	public CmdClientConfig()
+	{
+		super("client_config", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        new GuiEditConfig(null, FTBLibMod.PROXY.getClientConfig()).openGui();
-    }
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		new GuiEditConfig(null, FTBLibMod.PROXY.getClientConfig()).openGui();
+	}
 }

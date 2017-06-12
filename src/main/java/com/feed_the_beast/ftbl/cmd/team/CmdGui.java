@@ -27,64 +27,64 @@ import java.util.UUID;
  */
 public class CmdGui extends CmdBase
 {
-    public CmdGui()
-    {
-        super("gui", Level.ALL);
-    }
+	public CmdGui()
+	{
+		super("gui", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        IUniverse universe = FTBLibIntegrationInternal.API.getUniverse();
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		IUniverse universe = FTBLibIntegrationInternal.API.getUniverse();
 
-        if(universe == null)
-        {
-            return;
-        }
+		if (universe == null)
+		{
+			return;
+		}
 
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(player);
-        IForgeTeam team = p.getTeam();
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+		IForgeTeam team = p.getTeam();
 
-        if(team != null)
-        {
-            if(args.length >= 1 && args[0].equals("add_player"))
-            {
-                if(!team.hasStatus(p, EnumTeamStatus.MOD))
-                {
-                    throw FTBLibLang.COMMAND_PERMISSION.commandError();
-                }
+		if (team != null)
+		{
+			if (args.length >= 1 && args[0].equals("add_player"))
+			{
+				if (!team.hasStatus(p, EnumTeamStatus.MOD))
+				{
+					throw FTBLibLang.COMMAND_PERMISSION.commandError();
+				}
 
-                if(args.length >= 3)
-                {
-                    UUID id = StringUtils.fromString(args[1]);
-                    EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[2]);
+				if (args.length >= 3)
+				{
+					UUID id = StringUtils.fromString(args[1]);
+					EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[2]);
 
-                    if(id != null && status != null && status.canBeSet() && !team.hasStatus(id, EnumTeamStatus.MEMBER) && (!status.isEqualOrGreaterThan(EnumTeamStatus.MOD) || team.hasStatus(p, EnumTeamStatus.OWNER)))
-                    {
-                        team.setStatus(id, status);
-                    }
-                }
-                else
-                {
-                    Collection<MyTeamPlayerData> players = new ArrayList<>();
+					if (id != null && status != null && status.canBeSet() && !team.hasStatus(id, EnumTeamStatus.MEMBER) && (!status.isEqualOrGreaterThan(EnumTeamStatus.MOD) || team.hasStatus(p, EnumTeamStatus.OWNER)))
+					{
+						team.setStatus(id, status);
+					}
+				}
+				else
+				{
+					Collection<MyTeamPlayerData> players = new ArrayList<>();
 
-                    for(IForgePlayer player1 : Universe.INSTANCE.getPlayers())
-                    {
-                        players.add(new MyTeamPlayerData(player1, team.getHighestStatus(player1)));
-                    }
+					for (IForgePlayer player1 : Universe.INSTANCE.getPlayers())
+					{
+						players.add(new MyTeamPlayerData(player1, team.getHighestStatus(player1)));
+					}
 
-                    new MessageMyTeamAddPlayerGui(players).sendTo(player);
-                }
-            }
-            else
-            {
-                new MessageMyTeamGui(universe, team, p).sendTo(player);
-            }
-        }
-        else
-        {
-            new MessageSelectTeamGui(universe, p).sendTo(player);
-        }
-    }
+					new MessageMyTeamAddPlayerGui(players).sendTo(player);
+				}
+			}
+			else
+			{
+				new MessageMyTeamGui(universe, team, p).sendTo(player);
+			}
+		}
+		else
+		{
+			new MessageSelectTeamGui(universe, p).sendTo(player);
+		}
+	}
 }

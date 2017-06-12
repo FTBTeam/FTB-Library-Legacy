@@ -20,141 +20,141 @@ import java.util.function.Consumer;
  */
 public class PropertyBool extends PropertyBase implements BooleanSupplier
 {
-    private static final List<String> VARIANTS = Arrays.asList("true", "false");
-    public static final String ID = "bool";
-    public static final Color4I COLOR_TRUE = new Color4I(false, 0xFF33AA33);
-    public static final Color4I COLOR_FALSE = new Color4I(false, 0xFFD52834);
+	private static final List<String> VARIANTS = Arrays.asList("true", "false");
+	public static final String ID = "bool";
+	public static final Color4I COLOR_TRUE = new Color4I(false, 0xFF33AA33);
+	public static final Color4I COLOR_FALSE = new Color4I(false, 0xFFD52834);
 
-    public static PropertyBool create(boolean defValue, BooleanSupplier getter, Consumer<Boolean> setter)
-    {
-        return new PropertyBool(defValue)
-        {
-            @Override
-            public boolean getBoolean()
-            {
-                return getter.getAsBoolean();
-            }
+	public static PropertyBool create(boolean defValue, BooleanSupplier getter, Consumer<Boolean> setter)
+	{
+		return new PropertyBool(defValue)
+		{
+			@Override
+			public boolean getBoolean()
+			{
+				return getter.getAsBoolean();
+			}
 
-            @Override
-            public void setBoolean(boolean v)
-            {
-                setter.accept(v);
-            }
-        };
-    }
+			@Override
+			public void setBoolean(boolean v)
+			{
+				setter.accept(v);
+			}
+		};
+	}
 
-    private boolean value;
+	private boolean value;
 
-    public PropertyBool()
-    {
-    }
+	public PropertyBool()
+	{
+	}
 
-    public PropertyBool(boolean v)
-    {
-        value = v;
-    }
+	public PropertyBool(boolean v)
+	{
+		value = v;
+	}
 
-    @Override
-    public String getName()
-    {
-        return ID;
-    }
+	@Override
+	public String getName()
+	{
+		return ID;
+	}
 
-    @Override
-    public boolean getBoolean()
-    {
-        return value;
-    }
+	@Override
+	public boolean getBoolean()
+	{
+		return value;
+	}
 
-    public void setBoolean(boolean v)
-    {
-        value = v;
-    }
+	public void setBoolean(boolean v)
+	{
+		value = v;
+	}
 
-    @Nullable
-    @Override
-    public Object getValue()
-    {
-        return getBoolean();
-    }
+	@Nullable
+	@Override
+	public Object getValue()
+	{
+		return getBoolean();
+	}
 
-    @Override
-    public String getString()
-    {
-        return value ? "true" : "false";
-    }
+	@Override
+	public String getString()
+	{
+		return value ? "true" : "false";
+	}
 
-    @Override
-    public int getInt()
-    {
-        return getBoolean() ? 1 : 0;
-    }
+	@Override
+	public int getInt()
+	{
+		return getBoolean() ? 1 : 0;
+	}
 
-    @Override
-    public IConfigValue copy()
-    {
-        return new PropertyBool(getBoolean());
-    }
+	@Override
+	public IConfigValue copy()
+	{
+		return new PropertyBool(getBoolean());
+	}
 
-    @Override
-    public boolean equalsValue(IConfigValue value)
-    {
-        return getBoolean() == value.getBoolean();
-    }
+	@Override
+	public boolean equalsValue(IConfigValue value)
+	{
+		return getBoolean() == value.getBoolean();
+	}
 
-    @Override
-    public Color4I getColor()
-    {
-        return getBoolean() ? COLOR_TRUE : COLOR_FALSE;
-    }
+	@Override
+	public Color4I getColor()
+	{
+		return getBoolean() ? COLOR_TRUE : COLOR_FALSE;
+	}
 
-    @Override
-    public List<String> getVariants()
-    {
-        return VARIANTS;
-    }
+	@Override
+	public List<String> getVariants()
+	{
+		return VARIANTS;
+	}
 
-    @Override
-    public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
-    {
-        setBoolean(!getBoolean());
-        gui.onChanged(key, getSerializableElement());
-    }
+	@Override
+	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	{
+		setBoolean(!getBoolean());
+		gui.onChanged(key, getSerializableElement());
+	}
 
-    @Override
-    public void fromJson(JsonElement json)
-    {
-        if(json.getAsString().equals("toggle"))
-        {
-            setBoolean(!getBoolean());
-        }
-        else
-        {
-            setBoolean(json.getAsBoolean());
-        }
-    }
+	@Override
+	public void fromJson(JsonElement json)
+	{
+		if (json.getAsString().equals("toggle"))
+		{
+			setBoolean(!getBoolean());
+		}
+		else
+		{
+			setBoolean(json.getAsBoolean());
+		}
+	}
 
-    @Override
-    public JsonElement getSerializableElement()
-    {
-        return new JsonPrimitive(getBoolean());
-    }
+	@Override
+	public JsonElement getSerializableElement()
+	{
+		return new JsonPrimitive(getBoolean());
+	}
 
-    @Override
-    public void writeData(ByteBuf data)
-    {
-        data.writeBoolean(getBoolean());
-    }
+	@Override
+	public void writeData(ByteBuf data)
+	{
+		data.writeBoolean(getBoolean());
+	}
 
-    @Override
-    public void readData(ByteBuf data)
-    {
-        setBoolean(data.readBoolean());
-    }
+	@Override
+	public void readData(ByteBuf data)
+	{
+		setBoolean(data.readBoolean());
+	}
 
-    @Override
-    public boolean getAsBoolean()
-    {
-        return getBoolean();
-    }
+	@Override
+	public boolean getAsBoolean()
+	{
+		return getBoolean();
+	}
 }

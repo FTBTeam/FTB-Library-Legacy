@@ -8,6 +8,6 @@ import java.io.File;
  */
 public interface IConfigFileProvider
 {
-    @Nullable
-    File getFile();
+	@Nullable
+	File getFile();
 }

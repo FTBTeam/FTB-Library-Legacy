@@ -17,31 +17,31 @@ import net.minecraftforge.common.ForgeHooks;
  */
 public class CmdMsg extends CmdBase
 {
-    public CmdMsg()
-    {
-        super("msg", Level.ALL);
-    }
+	public CmdMsg()
+	{
+		super("msg", Level.ALL);
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 1, "<message...>");
-        EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(player);
-        IForgeTeam team = p.getTeam();
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 1, "<message...>");
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
+		IForgeTeam team = p.getTeam();
 
-        if(team == null)
-        {
-            throw FTBLibLang.TEAM_NO_TEAM.commandError();
-        }
+		if (team == null)
+		{
+			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+		}
 
-        String m = StringUtils.joinSpaceUntilEnd(0, args);
+		String m = StringUtils.joinSpaceUntilEnd(0, args);
 
-        if(m == null || m.isEmpty())
-        {
-            throw new IllegalArgumentException(m);
-        }
+		if (m == null || m.isEmpty())
+		{
+			throw new IllegalArgumentException(m);
+		}
 
-        team.printMessage(new ForgeTeam.Message(p.getId(), System.currentTimeMillis(), ForgeHooks.newChatWithLinks(m)));
-    }
+		team.printMessage(new ForgeTeam.Message(p.getId(), System.currentTimeMillis(), ForgeHooks.newChatWithLinks(m)));
+	}
 }

@@ -13,39 +13,39 @@ import com.google.gson.JsonPrimitive;
  */
 public class GuideTextLineString extends EmptyGuidePageLine
 {
-    private final String text;
+	private final String text;
 
-    public GuideTextLineString(String t)
-    {
-        text = t;
-    }
+	public GuideTextLineString(String t)
+	{
+		text = t;
+	}
 
-    public GuideTextLineString(JsonElement e)
-    {
-        text = e.getAsString();
-    }
+	public GuideTextLineString(JsonElement e)
+	{
+		text = e.getAsString();
+	}
 
-    @Override
-    public String getUnformattedText()
-    {
-        return text;
-    }
+	@Override
+	public String getUnformattedText()
+	{
+		return text;
+	}
 
-    @Override
-    public Widget createWidget(GuiBase gui, Panel parent)
-    {
-        return new TextField(0, 0, parent.width, -1, gui.getFont(), text);
-    }
+	@Override
+	public Widget createWidget(GuiBase gui, Panel parent)
+	{
+		return new TextField(0, 0, parent.width, -1, gui.getFont(), text);
+	}
 
-    @Override
-    public JsonElement getJson()
-    {
-        return new JsonPrimitive(text);
-    }
+	@Override
+	public JsonElement getJson()
+	{
+		return new JsonPrimitive(text);
+	}
 
-    @Override
-    public IGuideTextLine copy(GuidePage page)
-    {
-        return new GuideTextLineString(text);
-    }
+	@Override
+	public IGuideTextLine copy(GuidePage page)
+	{
+		return new GuideTextLineString(text);
+	}
 }

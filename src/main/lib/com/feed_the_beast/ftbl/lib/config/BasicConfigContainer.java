@@ -14,30 +14,30 @@ import javax.annotation.Nullable;
  */
 public class BasicConfigContainer implements IConfigContainer
 {
-    private final ITextComponent title;
-    private final IConfigTree tree;
+	private final ITextComponent title;
+	private final IConfigTree tree;
 
-    public BasicConfigContainer(ITextComponent n, IConfigTree t)
-    {
-        title = n;
-        tree = t;
-    }
+	public BasicConfigContainer(ITextComponent n, IConfigTree t)
+	{
+		title = n;
+		tree = t;
+	}
 
-    @Override
-    public IConfigTree getConfigTree()
-    {
-        return tree;
-    }
+	@Override
+	public IConfigTree getConfigTree()
+	{
+		return tree;
+	}
 
-    @Override
-    public ITextComponent getTitle()
-    {
-        return title;
-    }
+	@Override
+	public ITextComponent getTitle()
+	{
+		return title;
+	}
 
-    @Override
-    public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
-    {
-        getConfigTree().fromJson(json);
-    }
+	@Override
+	public void saveConfig(ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+	{
+		getConfigTree().fromJson(json);
+	}
 }

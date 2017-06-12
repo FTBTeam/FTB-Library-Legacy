@@ -23,127 +23,127 @@ import java.util.List;
 
 public class MessageNotifyPlayer extends MessageToClient<MessageNotifyPlayer>
 {
-    private static final int FLAG_HAS_TEXT = 1;
-    private static final int FLAG_HAS_ITEM = 2;
+	private static final int FLAG_HAS_TEXT = 1;
+	private static final int FLAG_HAS_ITEM = 2;
 
-    private NotificationId ID;
+	private NotificationId ID;
 
-    public MessageNotifyPlayer()
-    {
-    }
+	public MessageNotifyPlayer()
+	{
+	}
 
-    public MessageNotifyPlayer(NotificationId id)
-    {
-        ID = id;
-    }
+	public MessageNotifyPlayer(NotificationId id)
+	{
+		ID = id;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        ID = readID(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		ID = readID(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        writeID(io, ID);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		writeID(io, ID);
+	}
 
-    @Override
-    public void onMessage(MessageNotifyPlayer m, EntityPlayer player)
-    {
-        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
+	@Override
+	public void onMessage(MessageNotifyPlayer m, EntityPlayer player)
+	{
+		EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
 
-        if(display == EnumNotificationDisplay.OFF)
-        {
-            return;
-        }
+		if (display == EnumNotificationDisplay.OFF)
+		{
+			return;
+		}
 
-        INotification n = SharedClientData.INSTANCE.notifications.get(m.ID);
+		INotification n = SharedClientData.INSTANCE.notifications.get(m.ID);
 
-        if(n != null)
-        {
-            FTBLibMod.PROXY.displayNotification(display, n);
-        }
-    }
+		if (n != null)
+		{
+			FTBLibMod.PROXY.displayNotification(display, n);
+		}
+	}
 
-    private static void writeID(ByteBuf io, NotificationId id)
-    {
-        NetUtils.writeResourceLocation(io, id.getID());
-        io.writeByte(id.getVariant());
-    }
+	private static void writeID(ByteBuf io, NotificationId id)
+	{
+		NetUtils.writeResourceLocation(io, id.getID());
+		io.writeByte(id.getVariant());
+	}
 
-    private static NotificationId readID(ByteBuf io)
-    {
-        ResourceLocation id = NetUtils.readResourceLocation(io);
-        return new NotificationId(id, io.readByte());
-    }
+	private static NotificationId readID(ByteBuf io)
+	{
+		ResourceLocation id = NetUtils.readResourceLocation(io);
+		return new NotificationId(id, io.readByte());
+	}
 
-    static void write(ByteBuf io, INotification n)
-    {
-        writeID(io, n.getId());
-        io.writeInt(n.getColor().rgba());
-        io.writeShort(n.getTimer());
-        int flags = 0;
+	static void write(ByteBuf io, INotification n)
+	{
+		writeID(io, n.getId());
+		io.writeInt(n.getColor().rgba());
+		io.writeShort(n.getTimer());
+		int flags = 0;
 
-        List<ITextComponent> text = n.getText();
-        if(!text.isEmpty())
-        {
-            flags |= FLAG_HAS_TEXT;
-        }
+		List<ITextComponent> text = n.getText();
+		if (!text.isEmpty())
+		{
+			flags |= FLAG_HAS_TEXT;
+		}
 
-        IDrawableObject icon = n.getIcon();
-        if(icon != ImageProvider.NULL)
-        {
-            flags |= FLAG_HAS_ITEM;
-        }
+		IDrawableObject icon = n.getIcon();
+		if (icon != ImageProvider.NULL)
+		{
+			flags |= FLAG_HAS_ITEM;
+		}
 
-        io.writeByte(flags);
+		io.writeByte(flags);
 
-        if(!text.isEmpty())
-        {
-            io.writeByte(text.size());
+		if (!text.isEmpty())
+		{
+			io.writeByte(text.size());
 
-            for(ITextComponent t : text)
-            {
-                NetUtils.writeTextComponent(io, t);
-            }
-        }
+			for (ITextComponent t : text)
+			{
+				NetUtils.writeTextComponent(io, t);
+			}
+		}
 
-        if(icon != ImageProvider.NULL)
-        {
-            NetUtils.writeJsonElement(io, icon.getJson());
-        }
-    }
+		if (icon != ImageProvider.NULL)
+		{
+			NetUtils.writeJsonElement(io, icon.getJson());
+		}
+	}
 
-    static Notification read(ByteBuf io)
-    {
-        Notification n = new Notification(readID(io));
-        n.setColor(new Color4I(true, io.readInt()));
-        n.setTimer(io.readUnsignedShort());
-        int flags = io.readUnsignedByte();
+	static Notification read(ByteBuf io)
+	{
+		Notification n = new Notification(readID(io));
+		n.setColor(new Color4I(true, io.readInt()));
+		n.setTimer(io.readUnsignedShort());
+		int flags = io.readUnsignedByte();
 
-        if(Bits.getFlag(flags, FLAG_HAS_TEXT))
-        {
-            int s = io.readUnsignedByte();
+		if (Bits.getFlag(flags, FLAG_HAS_TEXT))
+		{
+			int s = io.readUnsignedByte();
 
-            while(--s >= 0)
-            {
-                n.addText(NetUtils.readTextComponent(io));
-            }
-        }
+			while (--s >= 0)
+			{
+				n.addText(NetUtils.readTextComponent(io));
+			}
+		}
 
-        if(Bits.getFlag(flags, FLAG_HAS_ITEM))
-        {
-            n.setIcon(ImageProvider.get(NetUtils.readJsonElement(io)));
-        }
+		if (Bits.getFlag(flags, FLAG_HAS_ITEM))
+		{
+			n.setIcon(ImageProvider.get(NetUtils.readJsonElement(io)));
+		}
 
-        return n;
-    }
+		return n;
+	}
 }

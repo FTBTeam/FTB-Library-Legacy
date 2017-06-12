@@ -4,24 +4,24 @@ import net.minecraft.util.IStringSerializable;
 
 public enum ToolType implements IStringSerializable
 {
-    PICK("pick"),
-    SHOVEL("shovel"),
-    AXE("axe"),
-    WRENCH("wrench");
+	PICK("pick"),
+	SHOVEL("shovel"),
+	AXE("axe"),
+	WRENCH("wrench");
 
-    /**
-     * @author LatvianModder
-     */
-    private String name;
+	/**
+	 * @author LatvianModder
+	 */
+	private String name;
 
-    ToolType(String n)
-    {
-        name = n;
-    }
+	ToolType(String n)
+	{
+		name = n;
+	}
 
-    @Override
-    public String getName()
-    {
-        return name;
-    }
+	@Override
+	public String getName()
+	{
+		return name;
+	}
 }

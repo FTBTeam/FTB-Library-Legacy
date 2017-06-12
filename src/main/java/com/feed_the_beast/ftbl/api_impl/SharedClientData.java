@@ -7,25 +7,25 @@ import com.feed_the_beast.ftbl.api.ISharedClientData;
  */
 public class SharedClientData extends SharedData implements ISharedClientData
 {
-    public static final SharedClientData INSTANCE = new SharedClientData();
-    public boolean isClientPlayerOP;
+	public static final SharedClientData INSTANCE = new SharedClientData();
+	public boolean isClientPlayerOP;
 
-    private SharedClientData()
-    {
-    }
+	private SharedClientData()
+	{
+	}
 
-    @Override
-    public void reset()
-    {
-        super.reset();
-        optionalServerMods.clear();
-        notifications.clear();
-        isClientPlayerOP = false;
-    }
+	@Override
+	public void reset()
+	{
+		super.reset();
+		optionalServerMods.clear();
+		notifications.clear();
+		isClientPlayerOP = false;
+	}
 
-    @Override
-    public boolean isClientOP()
-    {
-        return isClientPlayerOP;
-    }
+	@Override
+	public boolean isClientOP()
+	{
+		return isClientPlayerOP;
+	}
 }

@@ -15,49 +15,49 @@ import net.minecraft.server.MinecraftServer;
  */
 public class CmdKick extends CmdBase
 {
-    public CmdKick()
-    {
-        super("kick", Level.ALL);
-    }
+	public CmdKick()
+	{
+		super("kick", Level.ALL);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-        IForgePlayer p = getForgePlayer(ep);
-        IForgeTeam team = p.getTeam();
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(ep);
+		IForgeTeam team = p.getTeam();
 
-        if(team == null)
-        {
-            throw FTBLibLang.TEAM_NO_TEAM.commandError();
-        }
-        else if(!team.hasStatus(p, EnumTeamStatus.MOD))
-        {
-            throw FTBLibLang.COMMAND_PERMISSION.commandError();
-        }
+		if (team == null)
+		{
+			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+		}
+		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
+		{
+			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+		}
 
-        checkArgs(args, 1, "<player>");
+		checkArgs(args, 1, "<player>");
 
-        IForgePlayer p1 = getForgePlayer(args[0]);
+		IForgePlayer p1 = getForgePlayer(args[0]);
 
-        if(!team.hasStatus(p1, EnumTeamStatus.MEMBER))
-        {
-            throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
-        }
+		if (!team.hasStatus(p1, EnumTeamStatus.MEMBER))
+		{
+			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
+		}
 
-        if(!p1.equalsPlayer(p))
-        {
-            team.removePlayer(p1);
-        }
-        else
-        {
-            throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
-        }
-    }
+		if (!p1.equalsPlayer(p))
+		{
+			team.removePlayer(p1);
+		}
+		else
+		{
+			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
+		}
+	}
 }

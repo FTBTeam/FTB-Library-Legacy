@@ -6,11 +6,11 @@ import java.util.Comparator;
 
 public enum ForgePlayerNameComparator implements Comparator<IForgePlayer>
 {
-    INSTANCE;
+	INSTANCE;
 
-    @Override
-    public int compare(IForgePlayer o1, IForgePlayer o2)
-    {
-        return o1.getName().compareToIgnoreCase(o2.getName());
-    }
+	@Override
+	public int compare(IForgePlayer o1, IForgePlayer o2)
+	{
+		return o1.getName().compareToIgnoreCase(o2.getName());
+	}
 }

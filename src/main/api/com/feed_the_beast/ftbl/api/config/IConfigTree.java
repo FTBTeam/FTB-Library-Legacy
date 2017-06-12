@@ -12,47 +12,47 @@ import java.util.Map;
  */
 public interface IConfigTree extends IExtendedIOObject, IJsonSerializable
 {
-    Map<IConfigKey, IConfigValue> getTree();
+	Map<IConfigKey, IConfigValue> getTree();
 
-    default void add(IConfigKey key, IConfigValue value)
-    {
-        getTree().put(key, value);
-    }
+	default void add(IConfigKey key, IConfigValue value)
+	{
+		getTree().put(key, value);
+	}
 
-    default boolean has(IConfigKey key)
-    {
-        return getTree().containsKey(key);
-    }
+	default boolean has(IConfigKey key)
+	{
+		return getTree().containsKey(key);
+	}
 
-    default void remove(IConfigKey key)
-    {
-        getTree().remove(key);
-    }
+	default void remove(IConfigKey key)
+	{
+		getTree().remove(key);
+	}
 
-    default IConfigValue get(IConfigKey key)
-    {
-        IConfigValue v = getTree().get(key);
-        return (v == null) ? PropertyNull.INSTANCE : v;
-    }
+	default IConfigValue get(IConfigKey key)
+	{
+		IConfigValue v = getTree().get(key);
+		return (v == null) ? PropertyNull.INSTANCE : v;
+	}
 
-    default boolean isEmpty()
-    {
-        return getTree().isEmpty();
-    }
+	default boolean isEmpty()
+	{
+		return getTree().isEmpty();
+	}
 
-    IConfigTree copy();
+	IConfigTree copy();
 
-    @Nullable
-    default IConfigKey getKey(String id)
-    {
-        for(IConfigKey key : getTree().keySet())
-        {
-            if(key.getName().equalsIgnoreCase(id))
-            {
-                return key;
-            }
-        }
+	@Nullable
+	default IConfigKey getKey(String id)
+	{
+		for (IConfigKey key : getTree().keySet())
+		{
+			if (key.getName().equalsIgnoreCase(id))
+			{
+				return key;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

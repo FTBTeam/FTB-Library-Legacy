@@ -13,66 +13,66 @@ import java.util.List;
 
 public final class Response
 {
-    private RequestMethod method;
-    private long millis;
-    private int code;
-    private InputStream stream;
+	private RequestMethod method;
+	private long millis;
+	private int code;
+	private InputStream stream;
 
-    public Response(RequestMethod m, long ms, int c, InputStream is)
-    {
-        method = m;
-        millis = ms;
-        code = c;
-        stream = is;
-    }
+	public Response(RequestMethod m, long ms, int c, InputStream is)
+	{
+		method = m;
+		millis = ms;
+		code = c;
+		stream = is;
+	}
 
-    public Response(InputStream is)
-    {
-        this(RequestMethod.GET, 0L, 200, is);
-    }
+	public Response(InputStream is)
+	{
+		this(RequestMethod.GET, 0L, 200, is);
+	}
 
-    public RequestMethod getMethod()
-    {
-        return method;
-    }
+	public RequestMethod getMethod()
+	{
+		return method;
+	}
 
-    public long getMillis()
-    {
-        return millis;
-    }
+	public long getMillis()
+	{
+		return millis;
+	}
 
-    public int getResponseCode()
-    {
-        return code;
-    }
+	public int getResponseCode()
+	{
+		return code;
+	}
 
-    public InputStream getStream()
-    {
-        return stream;
-    }
+	public InputStream getStream()
+	{
+		return stream;
+	}
 
-    public String asString() throws Exception
-    {
-        return StringUtils.readString(getStream());
-    }
+	public String asString() throws Exception
+	{
+		return StringUtils.readString(getStream());
+	}
 
-    public List<String> asStringList() throws Exception
-    {
-        return StringUtils.readStringList(getStream());
-    }
+	public List<String> asStringList() throws Exception
+	{
+		return StringUtils.readStringList(getStream());
+	}
 
-    public JsonElement asJson() throws Exception
-    {
-        return JsonUtils.fromJson(new BufferedReader(new InputStreamReader(getStream())));
-    }
+	public JsonElement asJson() throws Exception
+	{
+		return JsonUtils.fromJson(new BufferedReader(new InputStreamReader(getStream())));
+	}
 
-    public BufferedImage asImage() throws Exception
-    {
-        return ImageIO.read(getStream());
-    }
+	public BufferedImage asImage() throws Exception
+	{
+		return ImageIO.read(getStream());
+	}
 
-    public String toString()
-    {
-        return getMethod() + "-" + Integer.toString(getResponseCode());
-    }
+	public String toString()
+	{
+		return getMethod() + "-" + Integer.toString(getResponseCode());
+	}
 }

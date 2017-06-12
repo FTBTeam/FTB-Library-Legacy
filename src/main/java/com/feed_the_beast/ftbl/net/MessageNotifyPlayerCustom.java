@@ -12,43 +12,43 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MessageNotifyPlayerCustom extends MessageToClient<MessageNotifyPlayerCustom>
 {
-    private INotification notification;
+	private INotification notification;
 
-    public MessageNotifyPlayerCustom()
-    {
-    }
+	public MessageNotifyPlayerCustom()
+	{
+	}
 
-    public MessageNotifyPlayerCustom(INotification n)
-    {
-        notification = Notification.copy(n);
-    }
+	public MessageNotifyPlayerCustom(INotification n)
+	{
+		notification = Notification.copy(n);
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        notification = MessageNotifyPlayer.read(io);
-    }
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		notification = MessageNotifyPlayer.read(io);
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        MessageNotifyPlayer.write(io, notification);
-    }
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		MessageNotifyPlayer.write(io, notification);
+	}
 
-    @Override
-    public void onMessage(MessageNotifyPlayerCustom m, EntityPlayer player)
-    {
-        EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
+	@Override
+	public void onMessage(MessageNotifyPlayerCustom m, EntityPlayer player)
+	{
+		EnumNotificationDisplay display = FTBLibClientConfig.NOTIFICATIONS.getNonnull();
 
-        if(display != EnumNotificationDisplay.OFF)
-        {
-            FTBLibMod.PROXY.displayNotification(display, m.notification);
-        }
-    }
+		if (display != EnumNotificationDisplay.OFF)
+		{
+			FTBLibMod.PROXY.displayNotification(display, m.notification);
+		}
+	}
 }

@@ -12,52 +12,52 @@ import java.util.Collection;
 
 public class MessageMyTeamAddPlayerGui extends MessageToClient<MessageMyTeamAddPlayerGui>
 {
-    private Collection<MyTeamPlayerData> players;
+	private Collection<MyTeamPlayerData> players;
 
-    public MessageMyTeamAddPlayerGui()
-    {
-    }
+	public MessageMyTeamAddPlayerGui()
+	{
+	}
 
-    public MessageMyTeamAddPlayerGui(Collection<MyTeamPlayerData> p)
-    {
-        players = p;
-    }
+	public MessageMyTeamAddPlayerGui(Collection<MyTeamPlayerData> p)
+	{
+		players = p;
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        int s = io.readInt();
-        players = new ArrayList<>(s);
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		int s = io.readInt();
+		players = new ArrayList<>(s);
 
-        while(--s >= 0)
-        {
-            players.add(new MyTeamPlayerData(io));
-        }
-    }
+		while (--s >= 0)
+		{
+			players.add(new MyTeamPlayerData(io));
+		}
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        io.writeInt(players.size());
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeInt(players.size());
 
-        for(MyTeamPlayerData d : players)
-        {
-            d.write(io);
-        }
-    }
+		for (MyTeamPlayerData d : players)
+		{
+			d.write(io);
+		}
+	}
 
-    @Override
-    public void onMessage(MessageMyTeamAddPlayerGui m, EntityPlayer player)
-    {
-        if(GuiMyTeam.INSTANCE != null)
-        {
-            GuiMyTeam.INSTANCE.loadAllPlayers(m.players);
-        }
-    }
+	@Override
+	public void onMessage(MessageMyTeamAddPlayerGui m, EntityPlayer player)
+	{
+		if (GuiMyTeam.INSTANCE != null)
+		{
+			GuiMyTeam.INSTANCE.loadAllPlayers(m.players);
+		}
+	}
 }

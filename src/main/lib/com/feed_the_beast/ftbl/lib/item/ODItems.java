@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.item;
 
-import mcjty.lib.tools.ItemStackTools;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -13,9 +12,9 @@ import java.util.List;
 
 public class ODItems
 {
-    public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
+	public static final ItemStack WOOL_WHITE = new ItemStack(Blocks.WOOL, 1, 0);
 
-    //@formatter:off
+	//@formatter:off
     public static final String
 
     WOOD = "logWood",
@@ -77,75 +76,75 @@ public class ODItems
     NUGGET_SILVER = "nuggetSilver";
     //@formatter:on
 
-    public static void preInit()
-    {
-        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.BEEF));
-        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.PORKCHOP));
-        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.CHICKEN));
-        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.MUTTON));
-        OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.RABBIT));
+	public static void preInit()
+	{
+		OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.BEEF));
+		OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.PORKCHOP));
+		OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.CHICKEN));
+		OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.MUTTON));
+		OreDictionary.registerOre(MEAT_RAW, new ItemStack(Items.RABBIT));
 
-        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_BEEF));
-        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_PORKCHOP));
-        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_CHICKEN));
-        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_MUTTON));
-        OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_RABBIT));
-    }
+		OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_BEEF));
+		OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_PORKCHOP));
+		OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_CHICKEN));
+		OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_MUTTON));
+		OreDictionary.registerOre(MEAT_COOKED, new ItemStack(Items.COOKED_RABBIT));
+	}
 
-    public static Collection<String> getOreNames(ItemStack is)
-    {
-        int[] ai = OreDictionary.getOreIDs(is);
+	public static Collection<String> getOreNames(ItemStack is)
+	{
+		int[] ai = OreDictionary.getOreIDs(is);
 
-        if(ai.length > 0)
-        {
-            Collection<String> l = new HashSet<>(ai.length);
+		if (ai.length > 0)
+		{
+			Collection<String> l = new HashSet<>(ai.length);
 
-            for(int i : ai)
-            {
-                l.add(OreDictionary.getOreName(i));
-            }
+			for (int i : ai)
+			{
+				l.add(OreDictionary.getOreName(i));
+			}
 
-            return l;
-        }
+			return l;
+		}
 
-        return Collections.emptySet();
-    }
+		return Collections.emptySet();
+	}
 
-    public static List<ItemStack> getOres(String name)
-    {
-        return OreDictionary.getOres(name);
-    }
+	public static List<ItemStack> getOres(String name)
+	{
+		return OreDictionary.getOres(name);
+	}
 
-    public static ItemStack getFirstOre(String name)
-    {
-        List<ItemStack> l = getOres(name);
-        if(!l.isEmpty())
-        {
-            return l.get(0);
-        }
-        return ItemStackTools.getEmptyStack();
-    }
+	public static ItemStack getFirstOre(String name)
+	{
+		List<ItemStack> l = getOres(name);
+		if (!l.isEmpty())
+		{
+			return l.get(0);
+		}
+		return ItemStack.EMPTY;
+	}
 
-    public static boolean hasOre(String s)
-    {
-        return !getOres(s).isEmpty();
-    }
+	public static boolean hasOre(String s)
+	{
+		return !getOres(s).isEmpty();
+	}
 
-    public static boolean itemHasOre(ItemStack is, String s)
-    {
-        int[] ai = OreDictionary.getOreIDs(is);
+	public static boolean itemHasOre(ItemStack is, String s)
+	{
+		int[] ai = OreDictionary.getOreIDs(is);
 
-        if(ai.length > 0)
-        {
-            for(int i : ai)
-            {
-                if(s.equals(OreDictionary.getOreName(i)))
-                {
-                    return true;
-                }
-            }
-        }
+		if (ai.length > 0)
+		{
+			for (int i : ai)
+			{
+				if (s.equals(OreDictionary.getOreName(i)))
+				{
+					return true;
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

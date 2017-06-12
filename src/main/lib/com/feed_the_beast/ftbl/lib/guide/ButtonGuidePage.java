@@ -17,94 +17,94 @@ import java.util.List;
  */
 public class ButtonGuidePage extends Button
 {
-    public final GuidePage page;
-    public String hover;
-    private boolean mouseOver;
-    private boolean prevMouseOver = false;
-    private boolean isSmall;
+	public final GuidePage page;
+	public String hover;
+	private boolean mouseOver;
+	private boolean prevMouseOver = false;
+	private boolean isSmall;
 
-    public ButtonGuidePage(GuiGuide g, GuidePage p, boolean small)
-    {
-        super(0, 0, 0, 0);
-        page = p;
-        isSmall = small;
-        setHeight((p.getIcon() == ImageProvider.NULL || isSmall) ? 13 : 18);
-        updateTitle(g);
-    }
+	public ButtonGuidePage(GuiGuide g, GuidePage p, boolean small)
+	{
+		super(0, 0, 0, 0);
+		page = p;
+		isSmall = small;
+		setHeight((p.getIcon() == ImageProvider.NULL || isSmall) ? 13 : 18);
+		updateTitle(g);
+	}
 
-    @Override
-    public void onClicked(GuiBase gui, IMouseButton button)
-    {
-        GuiHelper.playClickSound();
-        ((GuiGuide) gui).setSelectedPage(page);
-    }
+	@Override
+	public void onClicked(GuiBase gui, IMouseButton button)
+	{
+		GuiHelper.playClickSound();
+		((GuiGuide) gui).setSelectedPage(page);
+	}
 
-    public void updateTitle(GuiGuide gui)
-    {
-        ITextComponent titleC = page.getDisplayName().createCopy();
+	public void updateTitle(GuiGuide gui)
+	{
+		ITextComponent titleC = page.getDisplayName().createCopy();
 
-        if(gui.getSelectedPage() == page)
-        {
-            titleC.getStyle().setBold(true);
-        }
+		if (gui.getSelectedPage() == page)
+		{
+			titleC.getStyle().setBold(true);
+		}
 
-        if(mouseOver)
-        {
-            titleC.getStyle().setUnderlined(true);
-        }
+		if (mouseOver)
+		{
+			titleC.getStyle().setUnderlined(true);
+		}
 
-        setTitle(titleC.getFormattedText());
-        hover = null;
-        setWidth(gui.getFont().getStringWidth(getTitle(gui)) + (page.getIcon() != ImageProvider.NULL ? height : 0));
+		setTitle(titleC.getFormattedText());
+		hover = null;
+		setWidth(gui.getFont().getStringWidth(getTitle(gui)) + (page.getIcon() != ImageProvider.NULL ? height : 0));
 
-        if(width > getParentPanel().width)
-        {
-            hover = page.getDisplayName().getFormattedText();
-        }
-    }
+		if (width > getParentPanel().width)
+		{
+			hover = page.getDisplayName().getFormattedText();
+		}
+	}
 
-    @Override
-    public void addMouseOverText(GuiBase gui, List<String> list)
-    {
-        if(hover != null)
-        {
-            list.add(hover);
-        }
-    }
+	@Override
+	public void addMouseOverText(GuiBase gui, List<String> list)
+	{
+		if (hover != null)
+		{
+			list.add(hover);
+		}
+	}
 
-    @Override
-    public void renderWidget(GuiBase gui)
-    {
-        mouseOver = gui.isMouseOver(this);
+	@Override
+	public void renderWidget(GuiBase gui)
+	{
+		mouseOver = gui.isMouseOver(this);
 
-        if(mouseOver)
-        {
-            getParentPanel().setOffset(false);
-            mouseOver = gui.isMouseOver(getParentPanel());
-            getParentPanel().setOffset(true);
-        }
+		if (mouseOver)
+		{
+			getParentPanel().setOffset(false);
+			mouseOver = gui.isMouseOver(getParentPanel());
+			getParentPanel().setOffset(true);
+		}
 
-        if(prevMouseOver != mouseOver)
-        {
-            updateTitle((GuiGuide) gui);
-            prevMouseOver = mouseOver;
-        }
+		if (prevMouseOver != mouseOver)
+		{
+			updateTitle((GuiGuide) gui);
+			prevMouseOver = mouseOver;
+		}
 
-        int ay = getAY();
-        int ax = getAX();
+		int ay = getAY();
+		int ax = getAX();
 
-        if(page.getIcon() != ImageProvider.NULL)
-        {
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16, Color4I.NONE);
-            gui.drawString(getTitle(gui), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
-        }
-        else
-        {
-            GlStateManager.color(1F, 1F, 1F, 1F);
-            gui.drawString(getTitle(gui), ax + 1, ay + 1);
-        }
+		if (page.getIcon() != ImageProvider.NULL)
+		{
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16, Color4I.NONE);
+			gui.drawString(getTitle(gui), ax + (isSmall ? 13 : 19), ay + (isSmall ? 1 : 6));
+		}
+		else
+		{
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			gui.drawString(getTitle(gui), ax + 1, ay + 1);
+		}
 
-        GlStateManager.color(1F, 1F, 1F, 1F);
-    }
+		GlStateManager.color(1F, 1F, 1F, 1F);
+	}
 }

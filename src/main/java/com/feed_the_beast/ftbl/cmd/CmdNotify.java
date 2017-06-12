@@ -17,48 +17,48 @@ import java.util.List;
 
 public class CmdNotify extends CmdBase
 {
-    public CmdNotify()
-    {
-        super("notify", Level.OP);
-    }
+	public CmdNotify()
+	{
+		super("notify", Level.OP);
+	}
 
-    @Override
-    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-    {
-        if(args.length == 2)
-        {
-            return getListOfStringsMatchingLastWord(args, SharedServerData.INSTANCE.notifications.keySet());
-        }
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 2)
+		{
+			return getListOfStringsMatchingLastWord(args, SharedServerData.INSTANCE.notifications.keySet());
+		}
 
-        return super.getTabCompletions(server, sender, args, pos);
-    }
+		return super.getTabCompletions(server, sender, args, pos);
+	}
 
-    @Override
-    public boolean isUsernameIndex(String[] args, int i)
-    {
-        return i == 0;
-    }
+	@Override
+	public boolean isUsernameIndex(String[] args, int i)
+	{
+		return i == 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
-    {
-        checkArgs(args, 2, "<player> <id>");
-        EntityPlayerMP player = getPlayer(server, sender, args[0]);
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
+	{
+		checkArgs(args, 2, "<player> <id>");
+		EntityPlayerMP player = getPlayer(server, sender, args[0]);
 
-        if(args[1].startsWith("{") && args[1].endsWith("}"))
-        {
-            //TODO: Custom notification support
-        }
-        else
-        {
-            INotification n = SharedServerData.INSTANCE.notifications.get(new NotificationId(new ResourceLocation(args[1].substring(0, args[1].indexOf('@'))), Integer.parseInt(args[1].substring(args[1].indexOf('@') + 1, args[1].length()))));
+		if (args[1].startsWith("{") && args[1].endsWith("}"))
+		{
+			//TODO: Custom notification support
+		}
+		else
+		{
+			INotification n = SharedServerData.INSTANCE.notifications.get(new NotificationId(new ResourceLocation(args[1].substring(0, args[1].indexOf('@'))), Integer.parseInt(args[1].substring(args[1].indexOf('@') + 1, args[1].length()))));
 
-            if(n == null)
-            {
-                throw new IllegalArgumentException("Notification '" + args[1] + "' not found!");
-            }
+			if (n == null)
+			{
+				throw new IllegalArgumentException("Notification '" + args[1] + "' not found!");
+			}
 
-            FTBLibIntegrationInternal.API.sendNotification(player, n);
-        }
-    }
+			FTBLibIntegrationInternal.API.sendNotification(player, n);
+		}
+	}
 }

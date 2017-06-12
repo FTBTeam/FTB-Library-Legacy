@@ -10,32 +10,32 @@ import net.minecraft.command.ICommandSender;
 
 public class CmdEditConfig extends CmdTreeBase
 {
-    public static class CmdEditConfigFile extends CmdEditConfigBase
-    {
-        private IConfigContainer configContainer;
+	public static class CmdEditConfigFile extends CmdEditConfigBase
+	{
+		private IConfigContainer configContainer;
 
-        public CmdEditConfigFile(String id, IConfigContainer c)
-        {
-            super(id, Level.OP);
-            configContainer = c;
-        }
+		public CmdEditConfigFile(String id, IConfigContainer c)
+		{
+			super(id, Level.OP);
+			configContainer = c;
+		}
 
-        @Override
-        public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
-        {
-            return configContainer;
-        }
-    }
+		@Override
+		public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+		{
+			return configContainer;
+		}
+	}
 
-    public CmdEditConfig()
-    {
-        super("edit_config");
-        FTBLibModCommon.CONFIG_FILES.forEach((key, value) ->
-        {
-            if(value != FTBLibMod.PROXY.getClientConfig())
-            {
-                addSubcommand(new CmdEditConfigFile(key, value));
-            }
-        });
-    }
+	public CmdEditConfig()
+	{
+		super("edit_config");
+		FTBLibModCommon.CONFIG_FILES.forEach((key, value) ->
+		{
+			if (value != FTBLibMod.PROXY.getClientConfig())
+			{
+				addSubcommand(new CmdEditConfigFile(key, value));
+			}
+		});
+	}
 }

@@ -34,130 +34,130 @@ import java.util.UUID;
 
 public class MessageLogin extends MessageToClient<MessageLogin>
 {
-    private static final byte IS_OP = 1;
-    private static final byte OPTIONAL_SERVER_MODS = 2;
+	private static final byte IS_OP = 1;
+	private static final byte OPTIONAL_SERVER_MODS = 2;
 
-    private byte flags;
-    private String currentMode;
-    private UUID universeID;
-    private Map<NotificationId, INotification> notifications;
-    private NBTTagCompound syncData;
-    private Collection<String> optionalServerMods;
-    private long lastMessageTime;
+	private byte flags;
+	private String currentMode;
+	private UUID universeID;
+	private Map<NotificationId, INotification> notifications;
+	private NBTTagCompound syncData;
+	private Collection<String> optionalServerMods;
+	private long lastMessageTime;
 
-    public MessageLogin()
-    {
-    }
+	public MessageLogin()
+	{
+	}
 
-    public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
-    {
-        flags = 0;
-        flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
-        currentMode = SharedServerData.INSTANCE.getPackMode().getName();
-        universeID = SharedServerData.INSTANCE.getUniverseID();
-        notifications = SharedServerData.INSTANCE.notifications;
-        syncData = new NBTTagCompound();
-        FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
-        optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
-        flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
+	public MessageLogin(EntityPlayerMP player, IForgePlayer forgePlayer)
+	{
+		flags = 0;
+		flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
+		currentMode = SharedServerData.INSTANCE.getPackMode().getName();
+		universeID = SharedServerData.INSTANCE.getUniverseID();
+		notifications = SharedServerData.INSTANCE.notifications;
+		syncData = new NBTTagCompound();
+		FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
+		optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
+		flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
 
-        IForgeTeam team = forgePlayer.getTeam();
-        if(team != null && team.getMessages().size() > 0)
-        {
-            lastMessageTime = team.getMessages().get(team.getMessages().size() - 1).getTime();
-        }
-    }
+		IForgeTeam team = forgePlayer.getTeam();
+		if (team != null && team.getMessages().size() > 0)
+		{
+			lastMessageTime = team.getMessages().get(team.getMessages().size() - 1).getTime();
+		}
+	}
 
-    @Override
-    public NetworkWrapper getWrapper()
-    {
-        return FTBLibNetHandler.NET;
-    }
+	@Override
+	public NetworkWrapper getWrapper()
+	{
+		return FTBLibNetHandler.NET;
+	}
 
-    @Override
-    public void toBytes(ByteBuf io)
-    {
-        io.writeByte(flags);
-        ByteBufUtils.writeUTF8String(io, currentMode);
-        NetUtils.writeUUID(io, universeID);
+	@Override
+	public void toBytes(ByteBuf io)
+	{
+		io.writeByte(flags);
+		ByteBufUtils.writeUTF8String(io, currentMode);
+		NetUtils.writeUUID(io, universeID);
 
-        io.writeShort(notifications.size());
-        notifications.forEach((key, value) -> MessageNotifyPlayer.write(io, value));
+		io.writeShort(notifications.size());
+		notifications.forEach((key, value) -> MessageNotifyPlayer.write(io, value));
 
-        ByteBufUtils.writeTag(io, syncData);
+		ByteBufUtils.writeTag(io, syncData);
 
-        if(!optionalServerMods.isEmpty())
-        {
-            io.writeShort(optionalServerMods.size());
+		if (!optionalServerMods.isEmpty())
+		{
+			io.writeShort(optionalServerMods.size());
 
-            for(String s : optionalServerMods)
-            {
-                ByteBufUtils.writeUTF8String(io, s);
-            }
-        }
+			for (String s : optionalServerMods)
+			{
+				ByteBufUtils.writeUTF8String(io, s);
+			}
+		}
 
-        io.writeLong(lastMessageTime);
-    }
+		io.writeLong(lastMessageTime);
+	}
 
-    @Override
-    public void fromBytes(ByteBuf io)
-    {
-        flags = io.readByte();
-        currentMode = ByteBufUtils.readUTF8String(io);
-        universeID = NetUtils.readUUID(io);
+	@Override
+	public void fromBytes(ByteBuf io)
+	{
+		flags = io.readByte();
+		currentMode = ByteBufUtils.readUTF8String(io);
+		universeID = NetUtils.readUUID(io);
 
-        int s = io.readUnsignedShort();
-        notifications = new HashMap<>(s);
+		int s = io.readUnsignedShort();
+		notifications = new HashMap<>(s);
 
-        while(--s >= 0)
-        {
-            INotification n = MessageNotifyPlayer.read(io);
-            notifications.put(n.getId(), n);
-        }
+		while (--s >= 0)
+		{
+			INotification n = MessageNotifyPlayer.read(io);
+			notifications.put(n.getId(), n);
+		}
 
-        syncData = ByteBufUtils.readTag(io);
+		syncData = ByteBufUtils.readTag(io);
 
-        if(Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
-        {
-            s = io.readUnsignedShort();
-            optionalServerMods = new HashSet<>(s);
+		if (Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
+		{
+			s = io.readUnsignedShort();
+			optionalServerMods = new HashSet<>(s);
 
-            while(--s >= 0)
-            {
-                optionalServerMods.add(ByteBufUtils.readUTF8String(io));
-            }
-        }
+			while (--s >= 0)
+			{
+				optionalServerMods.add(ByteBufUtils.readUTF8String(io));
+			}
+		}
 
-        lastMessageTime = io.readLong();
-    }
+		lastMessageTime = io.readLong();
+	}
 
-    @Override
-    public void onMessage(MessageLogin m, EntityPlayer player)
-    {
-        SharedClientData.INSTANCE.reset();
-        SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
-        SharedClientData.INSTANCE.universeID = m.universeID;
-        SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
+	@Override
+	public void onMessage(MessageLogin m, EntityPlayer player)
+	{
+		SharedClientData.INSTANCE.reset();
+		SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
+		SharedClientData.INSTANCE.universeID = m.universeID;
+		SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
-        if(m.optionalServerMods != null && !m.optionalServerMods.isEmpty())
-        {
-            SharedClientData.INSTANCE.optionalServerMods.addAll(m.optionalServerMods);
-        }
+		if (m.optionalServerMods != null && !m.optionalServerMods.isEmpty())
+		{
+			SharedClientData.INSTANCE.optionalServerMods.addAll(m.optionalServerMods);
+		}
 
-        SharedClientData.INSTANCE.notifications.putAll(m.notifications);
+		SharedClientData.INSTANCE.notifications.putAll(m.notifications);
 
-        for(String key : m.syncData.getKeySet())
-        {
-            ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
+		for (String key : m.syncData.getKeySet())
+		{
+			ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
 
-            if(nbt != null)
-            {
-                nbt.readSyncData(m.syncData.getCompoundTag(key));
-            }
-        }
+			if (nbt != null)
+			{
+				nbt.readSyncData(m.syncData.getCompoundTag(key));
+			}
+		}
 
-        FTBLibClient.CACHED_SKINS.clear();
-        FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, EnumReloadType.CREATED);
-        MyTeamData.lastMessageTime = m.lastMessageTime;
-    }
+		FTBLibClient.CACHED_SKINS.clear();
+		FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, EnumReloadType.CREATED);
+		MyTeamData.lastMessageTime = m.lastMessageTime;
+	}
 }
