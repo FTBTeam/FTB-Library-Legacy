@@ -4,7 +4,7 @@
 		"name": "FTBLib",
 		"description": "FTBLib",
 		"version": "${version}",
-		"mcversion": "1.11.2",
+		"mcversion": "1.12",
 		"url": "http://minecraft.curseforge.com/projects/ftblib",
 		"updateUrl": "",
 		"authorList": ["LatvianModder", "Jared"],
