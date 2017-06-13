@@ -229,7 +229,7 @@ public class JsonUtils
 	@Nullable
 	public static ITextComponent deserializeTextComponent(JsonElement e)
 	{
-		return (e == null || e.isJsonNull()) ? null : ITextComponent.Serializer.GSON.fromJson(e, ITextComponent.class);
+		return (e == null || e.isJsonNull()) ? null : (e.isJsonPrimitive() ? new TextComponentString(e.getAsString()) : ITextComponent.Serializer.GSON.fromJson(e, ITextComponent.class));
 	}
 
 	public static JsonElement serializeClickEvent(@Nullable ClickEvent event)

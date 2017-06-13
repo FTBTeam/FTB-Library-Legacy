@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.api.block.IBlockWithItem;
+import com.feed_the_beast.ftbl.api.game.IBlockWithItem;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;

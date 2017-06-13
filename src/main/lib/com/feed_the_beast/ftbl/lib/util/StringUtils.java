@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class StringUtils
 {
@@ -107,7 +108,7 @@ public class StringUtils
 		return id;
 	}
 
-	public String toString(@Nullable Object object)
+	public static String toString(@Nullable Object object, @Nullable Function<Object, String> nameSupplier)
 	{
 		if (object == null)
 		{
@@ -127,7 +128,7 @@ public class StringUtils
 
 			for (int i = 0; i < objects.length; i++)
 			{
-				sb.append(toString(objects[i]));
+				sb.append(toString(objects[i], nameSupplier));
 
 				if (i != objects.length - 1)
 				{
@@ -155,10 +156,10 @@ public class StringUtils
 			int i = 0;
 			for (Map.Entry<?, ?> e : map.entrySet())
 			{
-				sb.append(toString(e.getKey()));
+				sb.append(toString(e.getKey(), nameSupplier));
 				sb.append(':');
 				sb.append(' ');
-				sb.append(toString(e.getValue()));
+				sb.append(toString(e.getValue(), nameSupplier));
 
 				i++;
 				if (i != s)
@@ -190,7 +191,7 @@ public class StringUtils
 
 			for (Object o : c)
 			{
-				sb.append(toString(o));
+				sb.append(toString(o, nameSupplier));
 
 				i++;
 				if (i != s)
@@ -204,7 +205,8 @@ public class StringUtils
 			return sb.toString();
 		}
 
-		return object.toString();
+		String s = nameSupplier == null ? null : nameSupplier.apply(object);
+		return s == null ? object.toString() : s;
 	}
 
 	public static String[] shiftArray(@Nullable String[] s)

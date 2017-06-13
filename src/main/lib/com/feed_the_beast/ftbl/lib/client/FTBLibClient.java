@@ -228,63 +228,61 @@ public class FTBLibClient
 		playerPosHash = Objects.hash(currentDim, playerX, playerY, playerZ);
 		FRUSTUM.setPosition(playerX, playerY, playerZ);
 
-        /*
-        VIEWPORT = null;
+		/*
+		VIEWPORT = null;
 
-        if(VIEWPORT == null)
-        {
-            try
-            {
-                Field f = ReflectionHelper.findField(ActiveRenderInfo.class, "field_178814_a", "VIEWPORT");
-                f.setAccessible(true);
-                VIEWPORT = (IntBuffer) f.get(null);
+		if (VIEWPORT == null)
+		{
+			try
+			{
+				Field f = ReflectionHelper.findField(ActiveRenderInfo.class, "field_178814_a", "VIEWPORT");
+				f.setAccessible(true);
+				VIEWPORT = (IntBuffer) f.get(null);
 
-                ClippingHelperImpl inst = (ClippingHelperImpl) ClippingHelperImpl.getInstance();
+				ClippingHelperImpl inst = (ClippingHelperImpl) ClippingHelperImpl.getInstance();
 
-                f = ReflectionHelper.findField(ClippingHelperImpl.class, "field_78562_g", "modelviewMatrixBuffer");
-                f.setAccessible(true);
-                MODELVIEW = (FloatBuffer) f.get(inst);
+				f = ReflectionHelper.findField(ClippingHelperImpl.class, "field_78562_g", "modelviewMatrixBuffer");
+				f.setAccessible(true);
+				MODELVIEW = (FloatBuffer) f.get(inst);
 
-                f = ReflectionHelper.findField(ClippingHelperImpl.class, "field_78561_f", "projectionMatrixBuffer");
-                f.setAccessible(true);
-                PROJECTION = (FloatBuffer) f.get(inst);
-            }
-            catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
+				f = ReflectionHelper.findField(ClippingHelperImpl.class, "field_78561_f", "projectionMatrixBuffer");
+				f.setAccessible(true);
+				PROJECTION = (FloatBuffer) f.get(inst);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
 
-        MODELVIEW.flip().limit(16);
-        MATRIX_MVM.load(MODELVIEW);
+		MODELVIEW.flip().limit(16);
+		MATRIX_MVM.load(MODELVIEW);
 
-        PROJECTION.flip().limit(16);
-        MATRIX_PJM.load(PROJECTION);
+		PROJECTION.flip().limit(16);
+		MATRIX_PJM.load(PROJECTION);
 
-        Matrix4f.mul(MATRIX_MVM, MATRIX_PJM, MATRIX_OUT);
+		Matrix4f.mul(MATRIX_MVM, MATRIX_PJM, MATRIX_OUT);
 
-        // System.out.println(VIEWPORT);
-        // System.out.println(MODELVIEW);
-        // System.out.println(PROJECTION);
-        */
+		// System.out.println(VIEWPORT);
+		// System.out.println(MODELVIEW);
+		// System.out.println(PROJECTION);
 	}
-	
-    /*
-    public static Vector4f worldToViewport(float x, float y, float z)
-    {
-        TEMP_POINT.x = x;
-        TEMP_POINT.y = y;
-        TEMP_POINT.z = z;
-        TEMP_POINT.w = 1F;
 
-        Matrix4f.transform(MATRIX_OUT, TEMP_POINT, OBJECTCOORDS);
+	public static Vector4f worldToViewport(float x, float y, float z)
+	{
+		TEMP_POINT.x = x;
+		TEMP_POINT.y = y;
+		TEMP_POINT.z = z;
+		TEMP_POINT.w = 1F;
 
-        if(Math.abs(OBJECTCOORDS.w) > 0.0000001F)
-        {
-            OBJECTCOORDS.scale(1F / OBJECTCOORDS.w);
-        }
+		Matrix4f.transform(MATRIX_OUT, TEMP_POINT, OBJECTCOORDS);
 
-        return OBJECTCOORDS;
-    }
-    */
+		if (Math.abs(OBJECTCOORDS.w) > 0.0000001F)
+		{
+			OBJECTCOORDS.scale(1F / OBJECTCOORDS.w);
+		}
+
+		return OBJECTCOORDS;
+		*/
+	}
 }
