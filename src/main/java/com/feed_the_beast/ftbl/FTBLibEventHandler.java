@@ -19,8 +19,6 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -114,17 +112,17 @@ public class FTBLibEventHandler
 
 		if (!p.hideTeamNotification() && p.getTeam() == null)
 		{
-			ITextComponent c = new TextComponentString("You haven't joined or created a team yet! ");
-			ITextComponent b1 = new TextComponentString("[Click Here]");
+			ITextComponent c = StringUtils.text("You haven't joined or created a team yet! ");
+			ITextComponent b1 = StringUtils.text("[Click Here]");
 			b1.getStyle().setColor(TextFormatting.GOLD);
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
-			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("TeamsGUI")));
+			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text("TeamsGUI")));
 			c.appendSibling(b1);
 			c.appendText(" to open TeamsGUI or ");
-			ITextComponent b2 = new TextComponentString("[Click Here]");
+			ITextComponent b2 = StringUtils.text("[Click Here]");
 			b2.getStyle().setColor(TextFormatting.GOLD);
 			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification true"));
-			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message")));
+			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text("Hide This Message")));
 			c.appendSibling(b2);
 			c.appendText(" to hide this message.");
 			ep.sendMessage(c);
@@ -173,7 +171,7 @@ public class FTBLibEventHandler
 	{
 		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
 		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
+		page.setTitle(StringUtils.translation("config_group.sidebar_button.name"));
 
 		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
 		{
@@ -181,8 +179,8 @@ public class FTBLibEventHandler
 			{
 				GuidePage page1 = page.getSub(button.getName());
 				page1.setIcon(button.icon);
-				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
+				page1.setTitle(StringUtils.translation("sidebar_button." + button.getName()));
+				page1.println(StringUtils.translation("sidebar_button." + button.getName() + ".info"));
 			}
 		}
 

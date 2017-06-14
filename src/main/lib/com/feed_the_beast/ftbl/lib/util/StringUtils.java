@@ -3,6 +3,10 @@ package com.feed_the_beast.ftbl.lib.util;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -721,6 +725,28 @@ public class StringUtils
 		}
 
 		return false;
+	}
+
+	public static ITextComponent text(String text)
+	{
+		return new TextComponentString(text);
+	}
+
+	public static ITextComponent text(String text, TextFormatting color)
+	{
+		ITextComponent t = text(text);
+		t.getStyle().setColor(color);
+		return t;
+	}
+
+	public static ITextComponent translation(String key, Object... o)
+	{
+		return new TextComponentTranslation(key, o);
+	}
+
+	public static ITextComponent translation(String key)
+	{
+		return translation(key, LMUtils.NO_OBJECTS);
 	}
 
 	public static String translate(String key)

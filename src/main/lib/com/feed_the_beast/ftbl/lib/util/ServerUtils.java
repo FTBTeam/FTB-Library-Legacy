@@ -17,8 +17,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Teleporter;
@@ -178,18 +176,6 @@ public class ServerUtils
 				return (w == null) ? 1D : w.provider.getMovementFactor();
 			}
 		}
-	}
-
-	@Nullable
-	public static BlockDimPos getSpawnPoint(int dim)
-	{
-		WorldServer w = DimensionManager.getWorld(dim);
-		return (w == null) ? null : new BlockDimPos(w.getSpawnPoint(), dim);
-	}
-
-	public static ITextComponent getChatComponent(Object o)
-	{
-		return (o instanceof ITextComponent) ? (ITextComponent) o : new TextComponentString(String.valueOf(o));
 	}
 
 	public static MinecraftServer getServer()

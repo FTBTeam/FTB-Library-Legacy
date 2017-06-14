@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.MapUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -102,7 +103,7 @@ public class GuidePage extends FinalIDObject
 
 	public ITextComponent getDisplayName()
 	{
-		return (title == null) ? new TextComponentString(getName()) : title;
+		return (title == null) ? StringUtils.text(getName()) : title;
 	}
 
 	public void println(@Nullable Object o)
@@ -123,7 +124,7 @@ public class GuidePage extends FinalIDObject
 				}
 				else if (text.startsWith("# "))
 				{
-					ITextComponent component = new TextComponentString(text.substring(2));
+					ITextComponent component = StringUtils.text(text.substring(2));
 					component.getStyle().setBold(true);
 					component.getStyle().setUnderlined(true);
 					println(component);
@@ -131,7 +132,7 @@ public class GuidePage extends FinalIDObject
 				}
 				else if (text.startsWith("## "))
 				{
-					ITextComponent component = new TextComponentString(text.substring(3));
+					ITextComponent component = StringUtils.text(text.substring(3));
 					component.getStyle().setBold(true);
 					println(component);
 					return;
@@ -361,7 +362,7 @@ public class GuidePage extends FinalIDObject
 
 				if (provider == null)
 				{
-					ITextComponent component = new TextComponentString("Unknown ID: " + id);
+					ITextComponent component = StringUtils.text("Unknown ID: " + id);
 					component.getStyle().setColor(TextFormatting.DARK_RED);
 					component.getStyle().setBold(true);
 					return new GuideExtendedTextLine(component);

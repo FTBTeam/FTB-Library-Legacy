@@ -17,8 +17,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -104,7 +102,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 			try
 			{
 				JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
-				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + value)); //TODO: Lang
+				sender.sendMessage(StringUtils.text("'").appendSibling(StringUtils.translation(key.getNameLangKey())).appendText("' set to " + value)); //TODO: Lang
 				JsonObject json1 = new JsonObject();
 				json1.add(args[0], value);
 				cc.saveConfig(sender, null, json1);
@@ -116,7 +114,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 			}
 		}
 
-		sender.sendMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
+		sender.sendMessage(StringUtils.text(String.valueOf(entry.getSerializableElement())));
 	}
 
 	public abstract IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;

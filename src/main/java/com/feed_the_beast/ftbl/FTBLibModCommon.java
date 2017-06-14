@@ -53,11 +53,10 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
 
@@ -163,7 +162,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 		if (id.charAt(0) != '-')
 		{
 			id = id.toLowerCase();
-			ConfigFile configFile = new ConfigFile(new TextComponentTranslation("config_group." + id + ".name"), provider);
+			ConfigFile configFile = new ConfigFile(StringUtils.translation("config_group." + id + ".name"), provider);
 			CONFIG_FILES.put(id, configFile);
 		}
 	}
@@ -197,7 +196,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 		key.setGroup(group0);
 		key.setNameLangKey("config." + group0 + "." + id + ".name");
 		key.setInfoLangKey("config." + group0 + "." + id + ".info");
-		IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(new TextComponentString(f), ConfigFile.NULL_FILE_PROVIDER));
+		IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(StringUtils.text(f), ConfigFile.NULL_FILE_PROVIDER));
 		configFile.add(key, value);
 		return key;
 	}

@@ -28,7 +28,6 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -158,12 +157,12 @@ public class GuiMyTeam extends GuiBase
 
 						if (!sentByServer && loadedProfiles.get(msg.getSender()) == null)
 						{
-							c = new TextComponentString("<Removed>");
+							c = StringUtils.text("<Removed>");
 							c.getStyle().setColor(TextFormatting.DARK_GRAY);
 						}
 						else
 						{
-							c = new TextComponentString(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
+							c = StringUtils.text(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
 						}
 
 						c.appendSibling(msg.getMessage());

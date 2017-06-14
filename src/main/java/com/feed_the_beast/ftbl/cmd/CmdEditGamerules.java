@@ -9,12 +9,12 @@ import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyInt;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameRules;
 
 import javax.annotation.Nullable;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  */
 public class CmdEditGamerules extends CmdEditConfigBase
 {
-	private static final ITextComponent TITLE = new TextComponentString("Game Rules");
+	private static final ITextComponent TITLE = StringUtils.text("Game Rules");
 	private GameRules rules, oldRules;
 	private IConfigTree tree;
 

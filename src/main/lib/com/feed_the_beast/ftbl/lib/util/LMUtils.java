@@ -35,6 +35,7 @@ public class LMUtils
 
 	public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
+	public static final Object[] NO_OBJECTS = { };
 
 	public static <T> T cast(Object o)
 	{

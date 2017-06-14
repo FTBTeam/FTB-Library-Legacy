@@ -10,12 +10,10 @@ import net.minecraft.world.World;
  */
 public class UtilsClient extends UtilsCommon
 {
-	private static final Object[] NO_OBJECTS = { };
-
 	@Override
 	String translate(String key)
 	{
-		return I18n.format(key, NO_OBJECTS);
+		return I18n.format(key, LMUtils.NO_OBJECTS);
 	}
 
 	@Override

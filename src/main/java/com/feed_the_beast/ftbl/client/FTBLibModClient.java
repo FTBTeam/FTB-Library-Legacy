@@ -33,7 +33,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,7 +65,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	{
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.class);
-		clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button.ftbl.settings"), () -> new File(LMUtils.folderLocal, "client_config.json"));
+		clientConfig = new ConfigFile(StringUtils.translation("sidebar_button.ftbl.settings"), () -> new File(LMUtils.folderLocal, "client_config.json"));
 
 		String group = FTBLibFinals.MOD_ID;
 		addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);

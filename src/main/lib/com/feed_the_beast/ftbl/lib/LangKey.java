@@ -5,7 +5,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * @author LatvianModder
@@ -35,9 +34,14 @@ public final class LangKey implements IStringSerializable
 		return StringUtils.translate(key, o);
 	}
 
+	public ITextComponent textComponent()
+	{
+		return StringUtils.translation(key);
+	}
+
 	public ITextComponent textComponent(Object... o)
 	{
-		return new TextComponentTranslation(key, o);
+		return StringUtils.translation(key, o);
 	}
 
 	public void printChat(ICommandSender sender, Object... o)

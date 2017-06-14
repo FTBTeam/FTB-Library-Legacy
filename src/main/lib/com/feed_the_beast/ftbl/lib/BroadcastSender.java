@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -8,12 +9,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.WorldServer;
 
 public enum BroadcastSender implements ICommandSender
 {
 	INSTANCE;
+	private static final ITextComponent DISPLAY_NAME = StringUtils.text("[Server]", TextFormatting.LIGHT_PURPLE);
 
 	@Override
 	public String getName()
@@ -24,7 +26,7 @@ public enum BroadcastSender implements ICommandSender
 	@Override
 	public ITextComponent getDisplayName()
 	{
-		return new TextComponentString(getName());
+		return DISPLAY_NAME;
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public enum BroadcastSender implements ICommandSender
 	@Override
 	public BlockPos getPosition()
 	{
-		return ServerUtils.getServerWorld().getSpawnCoordinate();
+		return getEntityWorld().getSpawnCoordinate();
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public enum BroadcastSender implements ICommandSender
 	}
 
 	@Override
-	public World getEntityWorld()
+	public WorldServer getEntityWorld()
 	{
 		return ServerUtils.getServerWorld();
 	}
