@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.CustomStyle;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.IStringSerializable;
@@ -729,7 +730,9 @@ public class StringUtils
 
 	public static ITextComponent text(String text)
 	{
-		return new TextComponentString(text);
+		ITextComponent c = new TextComponentString(text);
+		c.setStyle(new CustomStyle());
+		return c;
 	}
 
 	public static ITextComponent text(String text, TextFormatting color)
@@ -741,7 +744,9 @@ public class StringUtils
 
 	public static ITextComponent translation(String key, Object... o)
 	{
-		return new TextComponentTranslation(key, o);
+		ITextComponent c = new TextComponentTranslation(key, o);
+		c.setStyle(new CustomStyle());
+		return c;
 	}
 
 	public static ITextComponent translation(String key)

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.CustomStyle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,7 +13,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentKeybind;
+import net.minecraft.util.text.TextComponentScore;
+import net.minecraft.util.text.TextComponentSelector;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
@@ -218,18 +225,319 @@ public class JsonUtils
 
 	public static JsonElement serializeTextComponent(@Nullable ITextComponent c)
 	{
+		if (c == null)
+		{
+			return JsonNull.INSTANCE;
+		}
+
 		if (c instanceof TextComponentString && c.getStyle().isEmpty() && c.getSiblings().isEmpty())
 		{
 			return new JsonPrimitive(((TextComponentString) c).getText());
 		}
 
-		return (c == null) ? JsonNull.INSTANCE : ITextComponent.Serializer.GSON.toJsonTree(c, ITextComponent.class);
+		JsonObject o = new JsonObject();
+		Style s = c.getStyle();
+
+		if (!s.isEmpty())
+		{
+			if (s.bold != null)
+			{
+				o.addProperty("bold", s.bold);
+			}
+
+			if (s.italic != null)
+			{
+				o.addProperty("italic", s.italic);
+			}
+
+			if (s.underlined != null)
+			{
+				o.addProperty("underlined", s.underlined);
+			}
+
+			if (s.strikethrough != null)
+			{
+				o.addProperty("strikethrough", s.strikethrough);
+			}
+
+			if (s.obfuscated != null)
+			{
+				o.addProperty("obfuscated", s.obfuscated);
+			}
+
+			if (s instanceof CustomStyle)
+			{
+				CustomStyle cs = (CustomStyle) s;
+
+				if (cs.code != null)
+				{
+					o.addProperty("code", s.obfuscated);
+				}
+			}
+
+			if (s.color != null)
+			{
+				o.addProperty("color", s.color.getFriendlyName());
+			}
+
+			if (s.insertion != null)
+			{
+				o.addProperty("insertion", s.insertion);
+			}
+
+			if (s.clickEvent != null)
+			{
+				o.add("clickEvent", serializeClickEvent(s.clickEvent));
+			}
+
+			if (s.hoverEvent != null)
+			{
+				o.add("hoverEvent", serializeHoverEvent(s.hoverEvent));
+			}
+		}
+
+		if (!c.getSiblings().isEmpty())
+		{
+			JsonArray a = new JsonArray();
+
+			for (ITextComponent itextcomponent : c.getSiblings())
+			{
+				a.add(serializeTextComponent(itextcomponent));
+			}
+
+			o.add("extra", a);
+		}
+
+		if (c instanceof TextComponentString)
+		{
+			o.addProperty("text", ((TextComponentString) c).getText());
+		}
+		else if (c instanceof TextComponentTranslation)
+		{
+			TextComponentTranslation t = (TextComponentTranslation) c;
+			o.addProperty("translate", t.getKey());
+
+			if (t.getFormatArgs().length > 0)
+			{
+				JsonArray a = new JsonArray();
+
+				for (Object object : t.getFormatArgs())
+				{
+					if (object instanceof ITextComponent)
+					{
+						a.add(serializeTextComponent((ITextComponent) object));
+					}
+					else
+					{
+						a.add(new JsonPrimitive(String.valueOf(object)));
+					}
+				}
+
+				o.add("with", a);
+			}
+		}
+		else if (c instanceof TextComponentScore)
+		{
+			TextComponentScore t = (TextComponentScore) c;
+			JsonObject o1 = new JsonObject();
+			o1.addProperty("name", t.getName());
+			o1.addProperty("objective", t.getObjective());
+			o1.addProperty("value", t.getUnformattedComponentText());
+			o.add("score", o1);
+		}
+		else if (c instanceof TextComponentSelector)
+		{
+			o.addProperty("selector", ((TextComponentSelector) c).getSelector());
+		}
+		else
+		{
+			if (!(c instanceof TextComponentKeybind))
+			{
+				throw new IllegalArgumentException("Don't know how to serialize " + c + " as a Component");
+			}
+
+			o.addProperty("keybind", ((TextComponentKeybind) c).func_193633_h());
+		}
+
+		return o;
 	}
 
 	@Nullable
 	public static ITextComponent deserializeTextComponent(JsonElement e)
 	{
-		return (e == null || e.isJsonNull()) ? null : (e.isJsonPrimitive() ? StringUtils.text(e.getAsString()) : ITextComponent.Serializer.GSON.fromJson(e, ITextComponent.class));
+		if (e == null || e.isJsonNull())
+		{
+			return null;
+		}
+		else if (e.isJsonPrimitive())
+		{
+			return StringUtils.text(e.getAsString());
+		}
+		else if (!e.isJsonObject())
+		{
+			if (!e.isJsonArray())
+			{
+				throw new JsonParseException("Don't know how to turn " + e + " into a Component");
+			}
+
+			ITextComponent t = null;
+
+			for (JsonElement jsonelement : e.getAsJsonArray())
+			{
+				ITextComponent t2 = deserializeTextComponent(jsonelement);
+
+				if (t == null)
+				{
+					t = t2;
+				}
+				else
+				{
+					t.appendSibling(t2);
+				}
+			}
+
+			return t;
+		}
+		else
+		{
+			JsonObject o = e.getAsJsonObject();
+			ITextComponent t;
+
+			if (o.has("text"))
+			{
+				t = new TextComponentString(o.get("text").getAsString());
+			}
+			else if (o.has("translate"))
+			{
+				String s = o.get("translate").getAsString();
+
+				if (o.has("with"))
+				{
+					JsonArray a = o.getAsJsonArray("with");
+					Object[] o1 = new Object[a.size()];
+
+					for (int i = 0; i < o1.length; ++i)
+					{
+						o1[i] = deserializeTextComponent(a.get(i));
+
+						if (o1[i] instanceof TextComponentString)
+						{
+							TextComponentString t2 = (TextComponentString) o1[i];
+
+							if (t2.getStyle().isEmpty() && t2.getSiblings().isEmpty())
+							{
+								o1[i] = t2.getText();
+							}
+						}
+					}
+
+					t = new TextComponentTranslation(s, o1);
+				}
+				else
+				{
+					t = new TextComponentTranslation(s, LMUtils.NO_OBJECTS);
+				}
+			}
+			else if (o.has("score"))
+			{
+				JsonObject o1 = o.getAsJsonObject("score");
+
+				if (!o1.has("name") || !o1.has("objective"))
+				{
+					throw new JsonParseException("A score component needs a least a name and an objective");
+				}
+
+				t = new TextComponentScore(net.minecraft.util.JsonUtils.getString(o1, "name"), net.minecraft.util.JsonUtils.getString(o1, "objective"));
+
+				if (o1.has("value"))
+				{
+					((TextComponentScore) t).setValue(net.minecraft.util.JsonUtils.getString(o1, "value"));
+				}
+			}
+			else if (o.has("selector"))
+			{
+				t = new TextComponentSelector(net.minecraft.util.JsonUtils.getString(o, "selector"));
+			}
+			else
+			{
+				if (!o.has("keybind"))
+				{
+					throw new JsonParseException("Don't know how to turn " + e + " into a Component");
+				}
+
+				t = new TextComponentKeybind(net.minecraft.util.JsonUtils.getString(o, "keybind"));
+			}
+
+			if (o.has("extra"))
+			{
+				JsonArray a = o.getAsJsonArray("extra");
+
+				if (a.size() <= 0)
+				{
+					throw new JsonParseException("Unexpected empty array of components");
+				}
+
+				for (int j = 0; j < a.size(); ++j)
+				{
+					t.appendSibling(deserializeTextComponent(a.get(j)));
+				}
+			}
+
+			CustomStyle style = new CustomStyle();
+
+			if (o.has("bold"))
+			{
+				style.bold = o.get("bold").getAsBoolean();
+			}
+
+			if (o.has("italic"))
+			{
+				style.italic = o.get("italic").getAsBoolean();
+			}
+
+			if (o.has("underlined"))
+			{
+				style.underlined = o.get("underlined").getAsBoolean();
+			}
+
+			if (o.has("strikethrough"))
+			{
+				style.strikethrough = o.get("strikethrough").getAsBoolean();
+			}
+
+			if (o.has("obfuscated"))
+			{
+				style.obfuscated = o.get("obfuscated").getAsBoolean();
+			}
+
+			if (o.has("code"))
+			{
+				style.code = o.get("code").getAsBoolean();
+			}
+
+			if (o.has("color"))
+			{
+				style.color = TextFormatting.getValueByName(o.get("color").getAsString());
+			}
+
+			if (o.has("insertion"))
+			{
+				style.insertion = o.get("insertion").getAsString();
+			}
+
+			if (o.has("clickEvent"))
+			{
+				style.clickEvent = deserializeClickEvent(o.get("clickEvent"));
+			}
+
+			if (o.has("hoverEvent"))
+			{
+				style.hoverEvent = deserializeHoverEvent(o.get("hoverEvent"));
+			}
+
+			t.setStyle(style);
+			return t;
+		}
 	}
 
 	public static JsonElement serializeClickEvent(@Nullable ClickEvent event)
@@ -240,8 +548,8 @@ public class JsonUtils
 		}
 
 		JsonObject o = new JsonObject();
-		o.add("action", new JsonPrimitive(event.getAction().getCanonicalName()));
-		o.add("value", new JsonPrimitive(event.getValue()));
+		o.addProperty("action", event.getAction().getCanonicalName());
+		o.addProperty("value", event.getValue());
 		return o;
 	}
 
@@ -279,7 +587,7 @@ public class JsonUtils
 		}
 
 		JsonObject o = new JsonObject();
-		o.add("action", new JsonPrimitive(event.getAction().getCanonicalName()));
+		o.addProperty("action", event.getAction().getCanonicalName());
 		o.add("value", serializeTextComponent(event.getValue()));
 		return o;
 	}
@@ -317,7 +625,7 @@ public class JsonUtils
 		return map;
 	}
 
-	private static void fromJsonTree0(@Nonnull JsonObject map, String id0, @Nonnull JsonObject o)
+	private static void fromJsonTree0(@Nonnull JsonObject map, @Nullable String id0, @Nonnull JsonObject o)
 	{
 		for (Map.Entry<String, JsonElement> entry : o.entrySet())
 		{
