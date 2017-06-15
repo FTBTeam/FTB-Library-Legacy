@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -118,7 +119,7 @@ public class CustomStyle extends Style
 		}
 
 		@Override
-		public CustomStyle setCode(Boolean obfuscated)
+		public CustomStyle setCode(@Nullable Boolean obfuscated)
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -273,5 +274,55 @@ public class CustomStyle extends Style
 		CustomStyle style = new CustomStyle();
 		style.deepCopyFrom(this);
 		return style;
+	}
+
+	@Override
+	public String getFormattingCode()
+	{
+		if (isEmpty())
+		{
+			return parentStyle != null ? parentStyle.getFormattingCode() : "";
+		}
+		else
+		{
+			StringBuilder sb = new StringBuilder();
+
+			if (getColor() != null)
+			{
+				sb.append(getColor());
+			}
+
+			if (getBold())
+			{
+				sb.append(TextFormatting.BOLD);
+			}
+
+			if (getItalic())
+			{
+				sb.append(TextFormatting.ITALIC);
+			}
+
+			if (getUnderlined())
+			{
+				sb.append(TextFormatting.UNDERLINE);
+			}
+
+			if (getObfuscated())
+			{
+				sb.append(TextFormatting.OBFUSCATED);
+			}
+
+			if (getCode())
+			{
+				sb.append(StringUtils.FORMATTING + '`');
+			}
+
+			if (getStrikethrough())
+			{
+				sb.append(TextFormatting.STRIKETHROUGH);
+			}
+
+			return sb.toString();
+		}
 	}
 }

@@ -51,7 +51,7 @@ public class FTBLibClientEventHandler
 	{
 		if (FTBLibClientConfig.ITEM_ORE_NAMES.getBoolean())
 		{
-			Collection<String> ores = ODItems.getOreNames(event.getItemStack());
+			Collection<String> ores = ODItems.getOreNames(null, event.getItemStack());
 
 			if (!ores.isEmpty())
 			{

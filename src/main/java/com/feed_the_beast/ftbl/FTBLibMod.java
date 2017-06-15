@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
-import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
@@ -48,7 +47,6 @@ public class FTBLibMod
 		LMUtils.init(event.getModConfigurationDirectory());
 		PackModes.INSTANCE.load();
 		FTBLibNetHandler.init();
-		ODItems.preInit();
 
 		MinecraftForge.EVENT_BUS.register(FTBLibEventHandler.class);
 
