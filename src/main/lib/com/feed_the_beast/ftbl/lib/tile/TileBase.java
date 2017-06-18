@@ -17,22 +17,10 @@ public class TileBase extends TileEntity
 	private IBlockState currentState;
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-	{
-		super.writeToNBT(nbt);
-		return nbt;
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
-		super.readFromNBT(nbt);
-	}
-
-	@Override
 	public final SPacketUpdateTileEntity getUpdatePacket()
 	{
-		return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
+		NBTTagCompound nbt = getUpdateTag();
+		return nbt.hasNoTags() ? null : new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -44,18 +32,25 @@ public class TileBase extends TileEntity
 	@Override
 	public final void handleUpdateTag(NBTTagCompound tag)
 	{
-		onUpdateTag(tag);
+		readUpdateTag(tag);
 		onUpdatePacket();
 		markDirty();
 	}
 
 	@Override
-	public NBTTagCompound getUpdateTag()
+	public final NBTTagCompound getUpdateTag()
 	{
-		return writeToNBT(new NBTTagCompound());
+		NBTTagCompound nbt = super.getUpdateTag();
+		writeUpdateTag(nbt);
+		return nbt;
 	}
 
-	public void onUpdateTag(NBTTagCompound nbt)
+	public void writeUpdateTag(NBTTagCompound nbt)
+	{
+		writeToNBT(nbt);
+	}
+
+	public void readUpdateTag(NBTTagCompound nbt)
 	{
 		readFromNBT(nbt);
 	}
