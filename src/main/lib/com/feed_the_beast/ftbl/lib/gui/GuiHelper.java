@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
@@ -69,7 +68,7 @@ public class GuiHelper
 
 	public static void playClickSound()
 	{
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+		FTBLibClient.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
 	}
 
 	public static void drawTexturedRect(int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
@@ -194,7 +193,7 @@ public class GuiHelper
 
 				if (font == null)
 				{
-					font = Minecraft.getMinecraft().fontRendererObj;
+					font = FTBLibClient.MC.fontRenderer;
 				}
 
 				itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
@@ -258,9 +257,9 @@ public class GuiHelper
 		}
 	}
 
-	public static void setFixUnicode(Minecraft mc, boolean enabled)
+	public static void setFixUnicode(boolean enabled)
 	{
-		TextureManager textureManager = mc.getTextureManager();
+		TextureManager textureManager = FTBLibClient.MC.getTextureManager();
 		int mode = enabled ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 
 		for (int i = 0; i < 256; i++)
@@ -281,8 +280,6 @@ public class GuiHelper
 			return false;
 		}
 
-		Minecraft mc = Minecraft.getMinecraft();
-
 		switch (clickEvent.getAction())
 		{
 			case OPEN_URL:
@@ -301,11 +298,11 @@ public class GuiHelper
 						throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
 					}
 
-					if (mc.gameSettings.chatLinksPrompt)
+					if (FTBLibClient.MC.gameSettings.chatLinksPrompt)
 					{
-						final GuiScreen currentScreen = mc.currentScreen;
+						final GuiScreen currentScreen = FTBLibClient.MC.currentScreen;
 
-						mc.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+						FTBLibClient.MC.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
 						{
 							if (result)
 							{
@@ -318,7 +315,7 @@ public class GuiHelper
 									ex.printStackTrace();
 								}
 							}
-							mc.displayGuiScreen(currentScreen);
+							FTBLibClient.MC.displayGuiScreen(currentScreen);
 						}, clickEvent.getValue(), 0, false));
 					}
 					else
@@ -361,7 +358,7 @@ public class GuiHelper
 			}
 			case CHANGE_PAGE:
 			{
-				if (mc.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) mc.currentScreen).getWrappedGui().changePage(clickEvent.getValue()))
+				if (FTBLibClient.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) FTBLibClient.MC.currentScreen).getWrappedGui().changePage(clickEvent.getValue()))
 				{
 					return true;
 				}

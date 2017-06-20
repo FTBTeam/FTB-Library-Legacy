@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,6 +31,7 @@ import java.util.Objects;
 
 public class FTBLibClient
 {
+	public static final Minecraft MC = Minecraft.getMinecraft();
 	public static final Frustum FRUSTUM = new Frustum();
 	public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
 	/*
@@ -64,22 +64,19 @@ public class FTBLibClient
 
 	public static int getDim()
 	{
-		Minecraft mc = Minecraft.getMinecraft();
-		return mc.world != null ? mc.world.provider.getDimension() : 0;
+		return MC.world != null ? MC.world.provider.getDimension() : 0;
 	}
 
 	public static void spawnPart(Particle e)
 	{
-		Minecraft.getMinecraft().effectRenderer.addEffect(e);
+		MC.effectRenderer.addEffect(e);
 	}
 
 	public static void onGuiClientAction()
 	{
-		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-
-		if (screen instanceof IClientActionGui)
+		if (MC.currentScreen instanceof IClientActionGui)
 		{
-			((IClientActionGui) screen).onClientDataChanged();
+			((IClientActionGui) MC.currentScreen).onClientDataChanged();
 		}
 	}
 
@@ -97,7 +94,7 @@ public class FTBLibClient
 
 	public static ITextureObject bindTexture(ResourceLocation texture)
 	{
-		TextureManager t = Minecraft.getMinecraft().getTextureManager();
+		TextureManager t = MC.getTextureManager();
 
 		ITextureObject textureObject = t.getTexture(texture);
 		if (textureObject == null)
@@ -112,7 +109,7 @@ public class FTBLibClient
 
 	public static ITextureObject getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
 	{
-		TextureManager t = Minecraft.getMinecraft().getTextureManager();
+		TextureManager t = MC.getTextureManager();
 		ITextureObject img = t.getTexture(out);
 
 		if (img == null)
@@ -126,7 +123,7 @@ public class FTBLibClient
 
 	public static void execClientCommand(String s, boolean printChat)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = MC;
 
 		if (printChat)
 		{
@@ -175,8 +172,8 @@ public class FTBLibClient
 
 		entityItem.world = w;
 		entityItem.hoverStart = 0F;
-		entityItem.setEntityItemStack(is);
-		Minecraft.getMinecraft().getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
+		entityItem.setItem(is);
+		MC.getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
 	}
 
 	public static void drawOutlinedBoundingBox(AxisAlignedBB bb)
@@ -214,7 +211,7 @@ public class FTBLibClient
 
 	public static void updateRenderInfo()
 	{
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = MC;
 		isFirstPerson = mc.gameSettings.thirdPersonView == 0;
 		currentDim = FTBLibClient.getDim();
 		//mc.thePlayer.posX

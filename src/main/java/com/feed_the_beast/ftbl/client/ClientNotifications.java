@@ -18,6 +18,7 @@ import java.util.List;
 
 public class ClientNotifications
 {
+	private static final Minecraft MC = Minecraft.getMinecraft();
 	private static Temp current;
 
 	public static class NotificationWidget
@@ -26,11 +27,13 @@ public class ClientNotifications
 		public final List<String> text;
 		public final int height;
 		public int width;
+		public final FontRenderer font;
 
-		public NotificationWidget(INotification n, FontRenderer font)
+		public NotificationWidget(INotification n, FontRenderer f)
 		{
 			notification = n;
 			width = 0;
+			font = f;
 
 			if (notification.getText().isEmpty())
 			{
@@ -74,7 +77,7 @@ public class ClientNotifications
 			}
 		}
 
-		public void render(Minecraft mc, int ax, int ay)
+		public void render(int ax, int ay)
 		{
 			GlStateManager.enableBlend();
 
@@ -88,7 +91,7 @@ public class ClientNotifications
 
 			for (int i = 0; i < text.size(); i++)
 			{
-				mc.fontRendererObj.drawString(text.get(i), ax + (notification.getIcon() != ImageProvider.NULL ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
+				font.drawString(text.get(i), ax + (notification.getIcon() != ImageProvider.NULL ? 30 : 10), ay + i * 11 + (height - text.size() * 10) / 2, 0xFFFFFFFF);
 			}
 		}
 	}
@@ -96,14 +99,13 @@ public class ClientNotifications
 	private static class Temp
 	{
 		private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
-		private static Minecraft mc = Minecraft.getMinecraft();
 
 		private long time;
 		private NotificationWidget widget;
 
 		private Temp(INotification n)
 		{
-			widget = new NotificationWidget(n, mc.fontRendererObj);
+			widget = new NotificationWidget(n, MC.fontRenderer);
 			time = -1L;
 		}
 
@@ -143,7 +145,7 @@ public class ClientNotifications
 			GlStateManager.disableDepth();
 			GlStateManager.depthMask(false);
 			GlStateManager.disableLighting();
-			widget.render(mc, screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
+			widget.render(screen.getScaledWidth() - widget.width - 4, (int) (d1 * widget.height) - widget.height);
 			GlStateManager.depthMask(true);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.enableLighting();

@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.lib.client.PixelBuffer;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -206,8 +205,8 @@ public class ThreadReloadChunkSelector extends Thread
 
 					if (chunk != null)
 					{
-						x = MathUtils.unchunk(startX + cx);
-						z = MathUtils.unchunk(startZ + cz);
+						x = (startX + cx) << 4;
+						z = (startZ + cz) << 4;
 						topY = Math.max(255, chunk.getTopFilledSegment() + 15);
 
 						for (wz = 0; wz < 16; wz++)

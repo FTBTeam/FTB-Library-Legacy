@@ -9,11 +9,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -230,11 +228,6 @@ public class MathUtils
 		return i >> 4;
 	}
 
-	public static int unchunk(int i)
-	{
-		return i << 4;
-	}
-
 	public static int chunk(double d)
 	{
 		return chunk(MathHelper.floor(d));
@@ -307,7 +300,7 @@ public class MathUtils
 
 	public static Vec3d getMidPoint(Vec3d v1, Vec3d v2, double p)
 	{
-		return getMidPoint(v1.xCoord, v1.yCoord, v1.zCoord, v2.xCoord, v2.yCoord, v2.zCoord, p);
+		return getMidPoint(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, p);
 	}
 
 	public static int getRotations(double yaw, int max)
@@ -387,16 +380,17 @@ public class MathUtils
 	}
 
 	@Nullable
-	public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, AxisAlignedBB[] boxes)
+	public static RayTraceResult collisionRayTrace(BlockPos blockPos, Vec3d start, Vec3d end, Iterable<AxisAlignedBB> boxes)
 	{
 		RayTraceResult current = null;
 		double dist = Double.POSITIVE_INFINITY;
+		int i = 0;
 
-		for (int i = 0; i < boxes.length; i++)
+		for (AxisAlignedBB aabb : boxes)
 		{
-			if (boxes[i] != null)
+			if (aabb != null)
 			{
-				RayTraceResult mop = collisionRayTrace(w, blockPos, start, end, boxes[i]);
+				RayTraceResult mop = collisionRayTrace(blockPos, start, end, aabb);
 
 				if (mop != null)
 				{
@@ -409,24 +403,15 @@ public class MathUtils
 					}
 				}
 			}
+
+			i++;
 		}
 
 		return current;
 	}
 
 	@Nullable
-	public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, List<AxisAlignedBB> boxes)
-	{
-		AxisAlignedBB[] boxesa = new AxisAlignedBB[boxes.size()];
-		for (int i = 0; i < boxesa.length; i++)
-		{
-			boxesa[i] = boxes.get(i).addCoord(0D, 0D, 0D);
-		}
-		return collisionRayTrace(w, blockPos, start, end, boxesa);
-	}
-
-	@Nullable
-	public static RayTraceResult collisionRayTrace(World w, BlockPos blockPos, Vec3d start, Vec3d end, AxisAlignedBB aabb)
+	public static RayTraceResult collisionRayTrace(BlockPos blockPos, Vec3d start, Vec3d end, AxisAlignedBB aabb)
 	{
 		Vec3d pos = start.addVector(-blockPos.getX(), -blockPos.getY(), -blockPos.getZ());
 		Vec3d rot = end.addVector(-blockPos.getX(), -blockPos.getY(), -blockPos.getZ());
@@ -527,17 +512,17 @@ public class MathUtils
 
 	private static boolean isVecInsideYZBounds(@Nullable Vec3d v, AxisAlignedBB aabb)
 	{
-		return v != null && (v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ);
+		return v != null && (v.y >= aabb.minY && v.y <= aabb.maxY && v.z >= aabb.minZ && v.z <= aabb.maxZ);
 	}
 
 	private static boolean isVecInsideXZBounds(@Nullable Vec3d v, AxisAlignedBB aabb)
 	{
-		return v != null && (v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.zCoord >= aabb.minZ && v.zCoord <= aabb.maxZ);
+		return v != null && (v.x >= aabb.minX && v.x <= aabb.maxX && v.z >= aabb.minZ && v.z <= aabb.maxZ);
 	}
 
 	private static boolean isVecInsideXYBounds(@Nullable Vec3d v, AxisAlignedBB aabb)
 	{
-		return v != null && (v.xCoord >= aabb.minX && v.xCoord <= aabb.maxX && v.yCoord >= aabb.minY && v.yCoord <= aabb.maxY);
+		return v != null && (v.x >= aabb.minX && v.x <= aabb.maxX && v.y >= aabb.minY && v.y <= aabb.maxY);
 	}
 
 	public static RayTraceResult getMOPFrom(BlockPos pos, EnumFacing s, float hitX, float hitY, float hitZ)

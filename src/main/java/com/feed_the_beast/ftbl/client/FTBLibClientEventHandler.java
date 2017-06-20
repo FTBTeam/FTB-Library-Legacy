@@ -178,7 +178,7 @@ public class FTBLibClientEventHandler
 		}
 
 		@Override
-		public void func_191745_a(Minecraft mc, int mx, int my, float p_191745_4_)
+		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 		{
 		}
 	}
@@ -222,8 +222,8 @@ public class FTBLibClientEventHandler
 
 				for (ButtonInvLM button : buttons)
 				{
-					button.xPosition = 4 + x * 18;
-					button.yPosition = 4 + y * 18;
+					button.x = 4 + x * 18;
+					button.y = 4 + y * 18;
 
 					if (hasPotions)
 					{
@@ -267,13 +267,13 @@ public class FTBLibClientEventHandler
 				{
 					if (hasPotions)
 					{
-						button.xPosition = guiLeft + buttonX - (button.index % 8) * 18;
-						button.yPosition = guiTop + buttonY - (button.index / 8) * 18;
+						button.x = guiLeft + buttonX - (button.index % 8) * 18;
+						button.y = guiTop + buttonY - (button.index / 8) * 18;
 					}
 					else
 					{
-						button.xPosition = guiLeft + buttonX - (button.index / 8) * 18;
-						button.yPosition = guiTop + buttonY + (button.index % 8) * 18;
+						button.x = guiLeft + buttonX - (button.index / 8) * 18;
+						button.y = guiTop + buttonY + (button.index % 8) * 18;
 					}
 
 				}
@@ -281,7 +281,7 @@ public class FTBLibClientEventHandler
 		}
 
 		@Override
-		public void func_191745_a(Minecraft mc, int mx, int my, float p_191745_4_)
+		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 		{
 			//if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
 			//	return;
@@ -289,7 +289,7 @@ public class FTBLibClientEventHandler
 			updateButtonPositions();
 
 			zLevel = 0F;
-			FontRenderer font = mc.fontRendererObj;
+			FontRenderer font = mc.fontRenderer;
 
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -297,11 +297,11 @@ public class FTBLibClientEventHandler
 
 			for (ButtonInvLM b : buttons)
 			{
-				b.button.icon.draw(b.xPosition, b.yPosition, b.width, b.height, Color4I.NONE);
+				b.button.icon.draw(b.x, b.y, b.width, b.height, Color4I.NONE);
 
-				if (mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
+				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
-					GuiHelper.drawBlankRect(b.xPosition, b.yPosition, b.width, b.height, Color4I.WHITE_A33);
+					GuiHelper.drawBlankRect(b.x, b.y, b.width, b.height, Color4I.WHITE_A33);
 				}
 			}
 
@@ -312,13 +312,13 @@ public class FTBLibClientEventHandler
 					String n = String.valueOf(MyTeamData.unreadMessages);
 					int nw = font.getStringWidth(n);
 					int width = 16;
-					GuiHelper.drawBlankRect(b.xPosition + width - nw, b.yPosition - 4, nw + 1, 9, Color4I.LIGHT_RED);
+					GuiHelper.drawBlankRect(b.x + width - nw, b.y - 4, nw + 1, 9, Color4I.LIGHT_RED);
 
-					font.drawString(n, b.xPosition + width - nw + 1, b.yPosition - 3, 0xFFFFFFFF);
+					font.drawString(n, b.x + width - nw + 1, b.y - 3, 0xFFFFFFFF);
 					GlStateManager.color(1F, 1F, 1F, 1F);
 				}
 
-				if (mx >= b.xPosition && my >= b.yPosition && mx < b.xPosition + b.width && my < b.yPosition + b.height)
+				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
 					GlStateManager.pushMatrix();
 					double mx1 = mx - 4D;

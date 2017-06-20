@@ -240,9 +240,9 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 	{
 		if (side.isServer())
 		{
-			context.getServerHandler().playerEntity.mcServer.addScheduledTask(() ->
+			context.getServerHandler().player.mcServer.addScheduledTask(() ->
 			{
-				message.onMessage(LMUtils.cast(message), context.getServerHandler().playerEntity);
+				message.onMessage(LMUtils.cast(message), context.getServerHandler().player);
 
 				if (LOG_NET)
 				{

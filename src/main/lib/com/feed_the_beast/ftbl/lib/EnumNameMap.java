@@ -1,6 +1,9 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -23,7 +26,7 @@ public final class EnumNameMap<E extends Enum<E>>
 
 	public EnumNameMap(E[] v, boolean addNull, @Nullable E def)
 	{
-		List<E> list = new ArrayList<>();
+		List<E> list = new ArrayList<>(v.length + (addNull ? 1 : 0));
 
 		for (E e : v)
 		{
@@ -55,7 +58,7 @@ public final class EnumNameMap<E extends Enum<E>>
 
 	public EnumNameMap(E[] v, boolean addNull)
 	{
-		this(v, addNull, null);
+		this(v, addNull, addNull ? null : v[0]);
 	}
 
 	public static String getName(@Nullable Object o)
@@ -91,7 +94,7 @@ public final class EnumNameMap<E extends Enum<E>>
 	@Nullable
 	public E getFromIndex(int index)
 	{
-		return values.get(index);
+		return index < 0 || index >= values.size() ? defaultValue : values.get(index);
 	}
 
 	public int getIndex(@Nullable Object e)
@@ -118,5 +121,30 @@ public final class EnumNameMap<E extends Enum<E>>
 	public E getDefaultValue()
 	{
 		return defaultValue;
+	}
+
+	@Nullable
+	public E readFromNBT(NBTTagCompound nbt, String name, EnumSaveType type)
+	{
+		return (!type.save || nbt.hasKey(name, Constants.NBT.TAG_ANY_NUMERIC)) ? getFromIndex(nbt.getInteger(name)) : get(nbt.getString(name));
+	}
+
+	public void writeToNBT(NBTTagCompound nbt, String name, EnumSaveType type, @Nullable Object value)
+	{
+		if (!type.save)
+		{
+			if (values.size() >= 128)
+			{
+				nbt.setShort(name, (short) getIndex(value));
+			}
+			else
+			{
+				nbt.setByte(name, (byte) getIndex(value));
+			}
+		}
+		else
+		{
+			nbt.setString(name, getName(value));
+		}
 	}
 }

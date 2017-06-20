@@ -356,7 +356,7 @@ public class JsonUtils
 				throw new IllegalArgumentException("Don't know how to serialize " + c + " as a Component");
 			}
 
-			o.addProperty("keybind", ((TextComponentKeybind) c).func_193633_h());
+			o.addProperty("keybind", ((TextComponentKeybind) c).getKeybind());
 		}
 
 		return o;

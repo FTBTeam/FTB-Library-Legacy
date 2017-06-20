@@ -54,17 +54,14 @@ public class TileInvBase extends TileBase
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		super.writeToNBT(nbt);
 		nbt.setTag("Items", itemHandler.serializeNBT());
-		return nbt;
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
+	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
-		super.readFromNBT(nbt);
 		itemHandler.deserializeNBT(nbt.getCompoundTag("Items"));
 	}
 

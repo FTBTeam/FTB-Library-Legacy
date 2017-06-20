@@ -110,7 +110,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	protected FontRenderer createFont()
 	{
-		return mc.fontRendererObj;
+		return mc.fontRenderer;
 	}
 
 	@Override

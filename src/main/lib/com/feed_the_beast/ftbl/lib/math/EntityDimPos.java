@@ -14,7 +14,7 @@ public final class EntityDimPos
 
 	public EntityDimPos(Vec3d p, int d)
 	{
-		pos = new Vec3d(p.xCoord, p.yCoord, p.zCoord);
+		pos = new Vec3d(p.x, p.y, p.z);
 		dim = d;
 	}
 
@@ -25,22 +25,22 @@ public final class EntityDimPos
 
 	public int hashCode()
 	{
-		return Arrays.hashCode(new double[] {pos.xCoord, pos.yCoord, pos.zCoord, dim});
+		return Arrays.hashCode(new double[] {pos.x, pos.y, pos.z, dim});
 	}
 
 	public String toString()
 	{
-		return "[" + dim + '@' + pos.xCoord + ',' + pos.yCoord + ',' + pos.zCoord + ']';
+		return "[" + dim + '@' + pos.x + ',' + pos.y + ',' + pos.z + ']';
 	}
 
 	public boolean equalsPos(Entity e)
 	{
-		return pos.xCoord == e.posX && pos.yCoord == e.posY && pos.zCoord == e.posZ && dim == e.dimension;
+		return pos.x == e.posX && pos.y == e.posY && pos.z == e.posZ && dim == e.dimension;
 	}
 
 	public boolean equalsPos(EntityDimPos p)
 	{
-		return p == this || (pos.xCoord == p.pos.xCoord && pos.yCoord == p.pos.yCoord && pos.zCoord == p.pos.zCoord && dim == p.dim);
+		return p == this || (pos.x == p.pos.x && pos.y == p.pos.y && pos.z == p.pos.z && dim == p.dim);
 	}
 
 	public boolean equals(Object o)
@@ -67,7 +67,7 @@ public final class EntityDimPos
 
 	public BlockPos toBlockPos()
 	{
-		return new BlockPos(MathHelper.floor(pos.xCoord), MathHelper.floor(pos.yCoord), MathHelper.floor(pos.zCoord));
+		return new BlockPos(MathHelper.floor(pos.x), MathHelper.floor(pos.y), MathHelper.floor(pos.z));
 	}
 
 	public BlockDimPos toBlockDimPos()

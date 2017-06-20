@@ -92,14 +92,14 @@ public class ServerUtils
 
 		if (dim == entity.dimension)
 		{
-			if (pos.xCoord == entity.posX && pos.yCoord == entity.posY && pos.zCoord == entity.posZ)
+			if (pos.x == entity.posX && pos.y == entity.posY && pos.z == entity.posZ)
 			{
 				return true;
 			}
 
 			if (player != null)
 			{
-				player.connection.setPlayerLocation(pos.xCoord, pos.yCoord, pos.zCoord, player.rotationYaw, player.rotationPitch);
+				player.connection.setPlayerLocation(pos.x, pos.y, pos.z, player.rotationYaw, player.rotationPitch);
 				return true;
 			}
 		}
@@ -109,8 +109,8 @@ public class ServerUtils
 		float rotationYaw = entity.rotationYaw;
 		float rotationPitch = entity.rotationPitch;
 		MinecraftServer server = ServerUtils.getServer();
-		WorldServer fromDim = server.worldServerForDimension(from);
-		WorldServer toDim = server.worldServerForDimension(dim);
+		WorldServer fromDim = server.getWorld(from);
+		WorldServer toDim = server.getWorld(dim);
 
 		if (player != null)
 		{
@@ -133,7 +133,7 @@ public class ServerUtils
 			{
 				Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
 				newEntity.readFromNBT(tagCompound);
-				newEntity.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, rotationYaw, rotationPitch);
+				newEntity.setLocationAndAngles(pos.x, pos.y, pos.z, rotationYaw, rotationPitch);
 				newEntity.forceSpawn = true;
 				toDim.spawnEntity(newEntity);
 				newEntity.forceSpawn = false;
@@ -150,11 +150,11 @@ public class ServerUtils
 
 		if (player != null)
 		{
-			player.setPositionAndUpdate(pos.xCoord, pos.yCoord, pos.zCoord);
+			player.setPositionAndUpdate(pos.x, pos.y, pos.z);
 		}
 		else
 		{
-			entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+			entity.setPosition(pos.x, pos.y, pos.z);
 		}
 
 		return true;
@@ -190,7 +190,7 @@ public class ServerUtils
 
 	public static WorldServer getServerWorld()
 	{
-		return getServer().worldServerForDimension(0);
+		return getServer().getWorld(0);
 	}
 
 	public static boolean isOP(GameProfile p)

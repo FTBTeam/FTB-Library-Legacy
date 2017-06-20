@@ -11,52 +11,75 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 
+import javax.annotation.Nullable;
+
 public class TileBase extends TileEntity
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
 
+	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
+	{
+	}
+
+	protected void readData(NBTTagCompound nbt, EnumSaveType type)
+	{
+	}
+
 	@Override
+	public final NBTTagCompound writeToNBT(NBTTagCompound nbt)
+	{
+		nbt = super.writeToNBT(nbt);
+		writeData(nbt, EnumSaveType.SAVE);
+		return nbt;
+	}
+
+	@Override
+	public final void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		readData(nbt, EnumSaveType.SAVE);
+	}
+
+	@Override
+	@Nullable
 	public final SPacketUpdateTileEntity getUpdatePacket()
 	{
-		NBTTagCompound nbt = getUpdateTag();
+		NBTTagCompound nbt = super.writeToNBT(new NBTTagCompound());
+		writeData(nbt, EnumSaveType.NET_UPDATE);
+		nbt.removeTag("id");
+		nbt.removeTag("x");
+		nbt.removeTag("y");
+		nbt.removeTag("z");
 		return nbt.hasNoTags() ? null : new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
 	public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
-		handleUpdateTag(pkt.getNbtCompound());
-	}
-
-	@Override
-	public final void handleUpdateTag(NBTTagCompound tag)
-	{
-		readUpdateTag(tag);
+		readData(pkt.getNbtCompound(), EnumSaveType.NET_UPDATE);
 		onUpdatePacket();
-		markDirty();
 	}
 
 	@Override
 	public final NBTTagCompound getUpdateTag()
 	{
 		NBTTagCompound nbt = super.getUpdateTag();
-		writeUpdateTag(nbt);
+		writeData(nbt, EnumSaveType.NET_FULL);
+		nbt.removeTag("id");
 		return nbt;
 	}
 
-	public void writeUpdateTag(NBTTagCompound nbt)
+	@Override
+	public final void handleUpdateTag(NBTTagCompound tag)
 	{
-		writeToNBT(nbt);
-	}
-
-	public void readUpdateTag(NBTTagCompound nbt)
-	{
-		readFromNBT(nbt);
+		readData(tag, EnumSaveType.NET_FULL);
+		onUpdatePacket();
 	}
 
 	public void onUpdatePacket()
 	{
+		markDirty();
 	}
 
 	protected boolean notifyBlock()

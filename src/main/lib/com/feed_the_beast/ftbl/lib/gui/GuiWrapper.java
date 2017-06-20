@@ -73,7 +73,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
 	{
 		if (wrappedGui.fixUnicode)
 		{
-			GuiHelper.setFixUnicode(mc, true);
+			GuiHelper.setFixUnicode(true);
 		}
 
 		wrappedGui.updateGui(mouseX, mouseY, partialTicks);
@@ -92,7 +92,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
 
 		if (wrappedGui.fixUnicode)
 		{
-			GuiHelper.setFixUnicode(mc, false);
+			GuiHelper.setFixUnicode(false);
 		}
 	}
 

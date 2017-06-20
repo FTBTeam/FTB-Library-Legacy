@@ -20,7 +20,7 @@ public final class ChunkDimPos
 
 	public ChunkDimPos(ChunkPos pos, int d)
 	{
-		this(pos.chunkXPos, pos.chunkZPos, d);
+		this(pos.x, pos.z, d);
 	}
 
 	public ChunkDimPos(BlockPos pos, int d)

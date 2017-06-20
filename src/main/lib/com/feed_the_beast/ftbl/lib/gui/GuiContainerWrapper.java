@@ -80,7 +80,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
 	{
 		if (wrappedGui.fixUnicode)
 		{
-			GuiHelper.setFixUnicode(mc, true);
+			GuiHelper.setFixUnicode(true);
 		}
 
 		GuiBase.setupDrawing();
@@ -90,7 +90,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
 
 		if (wrappedGui.fixUnicode)
 		{
-			GuiHelper.setFixUnicode(mc, false);
+			GuiHelper.setFixUnicode(false);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
 	{
 		if (wrappedGui.fixUnicode)
 		{
-			GuiHelper.setFixUnicode(mc, true);
+			GuiHelper.setFixUnicode(true);
 		}
 
 		GlStateManager.pushMatrix();
@@ -110,7 +110,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper, IC
 
 		if (wrappedGui.fixUnicode)
 		{
-			GuiHelper.setFixUnicode(mc, false);
+			GuiHelper.setFixUnicode(false);
 		}
 	}
 

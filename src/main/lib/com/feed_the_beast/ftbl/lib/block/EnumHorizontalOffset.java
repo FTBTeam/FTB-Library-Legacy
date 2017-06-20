@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.block;
 
+import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 
@@ -20,6 +21,7 @@ public enum EnumHorizontalOffset implements IStringSerializable
 	 */
 	public static final EnumHorizontalOffset[] VALUES = values();
 	private static final EnumHorizontalOffset[] OPPOSITES = {CENTER, SOUTH, SOUTH_WEST, WEST, NORTH_WEST, NORTH, NORTH_EAST, EAST, SOUTH_EAST};
+	public static final EnumNameMap<EnumHorizontalOffset> NAME_MAP = new EnumNameMap<>(VALUES, false);
 
 	private final String name;
 	private final BlockPos offset;
