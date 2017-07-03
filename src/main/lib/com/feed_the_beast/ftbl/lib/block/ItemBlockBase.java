@@ -8,6 +8,7 @@ public class ItemBlockBase extends ItemBlock
 	public ItemBlockBase(Block b, boolean hasSubtypes)
 	{
 		super(b);
+		setRegistryName(b.getRegistryName());
 
 		if (hasSubtypes)
 		{

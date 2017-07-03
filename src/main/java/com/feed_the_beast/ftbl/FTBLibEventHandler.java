@@ -76,6 +76,12 @@ public class FTBLibEventHandler
 		}
 
 		EntityPlayerMP ep = (EntityPlayerMP) e.player;
+
+		if (ep.mcServer.getPlayerList().isWhiteListEnabled() && !ep.mcServer.getPlayerList().getWhitelistedPlayers().isWhitelisted(ep.getGameProfile()))
+		{
+			return;
+		}
+
 		ForgePlayer p = Universe.INSTANCE.getPlayer(ep);
 		boolean firstLogin = p == null;
 

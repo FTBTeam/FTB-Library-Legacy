@@ -213,7 +213,7 @@ public class FTBLibClientEventHandler
 				prevGuiTop = guiTop;
 			}
 
-			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).field_192045_A.func_191878_b());
+			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).recipeBookGui.isVisible());
 
 			if (!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
 			{
