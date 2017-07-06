@@ -77,7 +77,7 @@ public class FTBLibEventHandler
 
 		EntityPlayerMP ep = (EntityPlayerMP) e.player;
 
-		if (ep.mcServer.getPlayerList().isWhiteListEnabled() && !ep.mcServer.getPlayerList().getWhitelistedPlayers().isWhitelisted(ep.getGameProfile()))
+		if (!ep.mcServer.getPlayerList().canJoin(ep.getGameProfile()))
 		{
 			return;
 		}

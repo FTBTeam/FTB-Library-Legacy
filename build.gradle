@@ -23,16 +23,13 @@ compileJava {
 }
 
 minecraft {
-	version = "1.12-14.21.1.2387"
+	version = "1.12-14.21.1.2397"
 	runDir = "run"
 	mappings = "snapshot_20170624"
 }
 
 repositories {
-	ivy {
-		name "Mercurius"
-		artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]"
-	}
+	ivy { name "Mercurius" artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]" }
 }
 
 dependencies {
