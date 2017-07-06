@@ -29,7 +29,7 @@ minecraft {
 }
 
 repositories {
-	ivy { name "Mercurius" artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]" }
+	ivy { name "Mercurius"; artifactPattern "https://addons-origin.cursecdn.com/files/2332/590/[module]-[revision](-[classifier]).[ext]" }
 }
 
 dependencies {
