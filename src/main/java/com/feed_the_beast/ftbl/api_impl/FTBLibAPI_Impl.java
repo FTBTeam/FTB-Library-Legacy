@@ -134,7 +134,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 			FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
 		}
 
-		MinecraftForge.EVENT_BUS.post(new ReloadEvent(side, sender, type));
+		MinecraftForge.EVENT_BUS.post(new ReloadEvent(side, sender, type, this));
 
 		if (serverSide && ServerUtils.hasOnlinePlayers())
 		{
