@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
+import net.minecraft.command.ICommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -75,7 +76,13 @@ public class FTBLibMod
 
 		if (FTBLibConfig.MIRROR_FTB_COMMANDS.getBoolean())
 		{
-			cmd.getSubCommands().forEach(event::registerServerCommand);
+			for (ICommand command : cmd.getSubCommands())
+			{
+				if (!command.getName().equals("reload"))
+				{
+					event.registerServerCommand(command);
+				}
+			}
 		}
 	}
 

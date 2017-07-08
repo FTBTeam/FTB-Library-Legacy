@@ -4,14 +4,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 public class ODItems
 {
-	public static Collection<String> getOreNames(@Nullable Collection<String> l, ItemStack is)
+	public static Set<String> getOreNames(@Nullable Set<String> l, ItemStack is)
 	{
+		if (is.isEmpty())
+		{
+			return l == null ? Collections.emptySet() : l;
+		}
+
 		int[] ai = OreDictionary.getOreIDs(is);
 
 		if (ai.length > 0)
