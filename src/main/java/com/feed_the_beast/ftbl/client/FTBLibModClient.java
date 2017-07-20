@@ -35,8 +35,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.toposort.TopologicalSort;
 
 import javax.annotation.Nullable;
@@ -61,10 +61,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 
 	@Override
-	public void preInit()
+	public void preInit(FMLPreInitializationEvent event)
 	{
-		super.preInit();
-		MinecraftForge.EVENT_BUS.register(FTBLibClientEventHandler.class);
+		super.preInit(event);
+
 		clientConfig = new ConfigFile(StringUtils.translation("sidebar_button.ftbl.settings"), () -> new File(LMUtils.folderLocal, "client_config.json"));
 
 		String group = FTBLibFinals.MOD_ID;
@@ -80,7 +80,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 		addClientConfig(group, "color_background", GuiConfigs.INFO_BACKGROUND);
 		addClientConfig(group, "color_text", GuiConfigs.INFO_TEXT);
 
-		MinecraftForge.EVENT_BUS.post(new FTBLibClientRegistryEvent(this));
+		new FTBLibClientRegistryEvent(this).post();
 
 		//For Dev reasons
 		GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();

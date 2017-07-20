@@ -23,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -52,7 +51,7 @@ public class Universe implements IUniverse
 	public void load()
 	{
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_UNIVERSE);
-		MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedEvent(this));
+		new ForgeUniverseLoadedEvent(this).post();
 
 		try
 		{
@@ -71,7 +70,7 @@ public class Universe implements IUniverse
 			if (oldFile.exists())
 			{
 				NBTTagCompound nbt = NBTUtils.readTag(oldFile);
-				MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
+				new ForgeUniverseLoadedBeforePlayersEvent(this).post();
 
 				NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
 
@@ -98,7 +97,7 @@ public class Universe implements IUniverse
 					teams.put(team.getName(), team);
 				}
 
-				MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
+				new ForgeUniversePostLoadedEvent(this).post();
 
 				if (dataStorage != null)
 				{
@@ -110,7 +109,7 @@ public class Universe implements IUniverse
 			else
 			{
 				File folder = new File(LMUtils.folderWorld, "data/ftb_lib/");
-				MinecraftForge.EVENT_BUS.post(new ForgeUniverseLoadedBeforePlayersEvent(this));
+				new ForgeUniverseLoadedBeforePlayersEvent(this).post();
 
 				Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
 				Map<String, NBTTagCompound> teamNBT = new HashMap<>();
@@ -169,7 +168,7 @@ public class Universe implements IUniverse
 					team.deserializeNBT(teamNBT.get(team.getName()));
 				}
 
-				MinecraftForge.EVENT_BUS.post(new ForgeUniversePostLoadedEvent(this));
+				new ForgeUniversePostLoadedEvent(this).post();
 
 				if (dataStorage != null)
 				{
@@ -295,7 +294,7 @@ public class Universe implements IUniverse
 
 	public void onClosed()
 	{
-		MinecraftForge.EVENT_BUS.post(new ForgeUniverseClosedEvent(this));
+		new ForgeUniverseClosedEvent(this).post();
 		playerMap.clear();
 	}
 

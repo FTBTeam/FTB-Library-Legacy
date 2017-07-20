@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -81,7 +81,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
 		if (type != EnumReloadType.RELOAD_COMMAND)
 		{
-			FTBLibIntegrationInternal.API.reload(Side.CLIENT, player, type);
+			FTBLibAPI.API.reload(Side.CLIENT, player, type);
 		}
 	}
 }

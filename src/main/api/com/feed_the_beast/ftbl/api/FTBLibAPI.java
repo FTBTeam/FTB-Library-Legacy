@@ -22,43 +22,42 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public interface FTBLibAPI
+public abstract class FTBLibAPI
 {
-	Collection<IFTBLibPlugin> getAllPlugins();
+	public static FTBLibAPI API;
 
-	Collection<ITickable> ticking();
+	public abstract Collection<ITickable> ticking();
 
-	IPackModes getPackModes();
+	public abstract IPackModes getPackModes();
 
-	ISharedServerData getServerData();
+	public abstract ISharedServerData getServerData();
 
-	ISharedClientData getClientData();
+	public abstract ISharedClientData getClientData();
 
-	default ISharedData getSidedData(Side side)
+	public ISharedData getSidedData(Side side)
 	{
 		return side.isServer() ? getServerData() : getClientData();
 	}
 
-	@Nullable
-	IUniverse getUniverse();
+	public abstract IUniverse getUniverse();
 
-	void addServerCallback(int timer, Runnable runnable);
+	public abstract void addServerCallback(int timer, Runnable runnable);
 
-	void loadWorldData(MinecraftServer server);
+	public abstract void loadWorldData(MinecraftServer server);
 
-	void reload(Side side, ICommandSender sender, EnumReloadType type);
+	public abstract void reload(Side side, ICommandSender sender, EnumReloadType type);
 
-	void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
+	public abstract void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
-	void sendNotification(@Nullable EntityPlayer player, INotification n);
+	public abstract void sendNotification(@Nullable EntityPlayer player, INotification n);
 
-	void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
+	public abstract void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 
-	void displayGuide(EntityPlayer player, GuidePage page);
+	public abstract void displayGuide(EntityPlayer player, GuidePage page);
 
-	IConfigValue getConfigValueFromID(String id);
+	public abstract IConfigValue getConfigValueFromID(String id);
 
-	Map<String, IRankConfig> getRankConfigRegistry();
+	public abstract Map<String, IRankConfig> getRankConfigRegistry();
 
-	void handleMessage(MessageBase<?> message, MessageContext context, Side side);
+	public abstract void handleMessage(MessageBase<?> message, MessageContext context, Side side);
 }

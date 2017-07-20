@@ -56,7 +56,7 @@ public class AsmHelper
 		}
 	}
 
-	private static Collection<ASMDataTable.ASMData> getASMData(ASMDataTable table, Class<? extends Annotation> annotationClass)
+	public static Collection<ASMDataTable.ASMData> getASMData(ASMDataTable table, Class<? extends Annotation> annotationClass)
 	{
 		if (DUMP_INFO)
 		{

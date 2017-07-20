@@ -2,13 +2,12 @@ package com.feed_the_beast.ftbl.api.events;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import net.minecraft.command.ICommand;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.server.command.CommandTreeBase;
 
 /**
  * @author LatvianModder
  */
-public class RegisterFTBCommandsEvent extends Event
+public class RegisterFTBCommandsEvent extends FTBLibEvent
 {
 	private final CommandTreeBase command;
 	private final boolean dedi;

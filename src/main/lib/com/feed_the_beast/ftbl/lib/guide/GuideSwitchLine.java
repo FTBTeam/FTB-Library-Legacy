@@ -11,7 +11,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.ArrayList;
@@ -166,7 +165,7 @@ public class GuideSwitchLine extends EmptyGuidePageLine
 			if (!isEmpty())
 			{
 				GuideVariableEvent event = new GuideVariableEvent(Side.CLIENT, page, id);
-				MinecraftForge.EVENT_BUS.post(event);
+				event.post();
 				for (IGuideTextLine line : get(event.getValue()))
 				{
 					getParentPanel().add(line.createWidget(gui, getParentPanel()));

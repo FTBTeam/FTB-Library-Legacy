@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.lib.math;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
@@ -19,6 +21,11 @@ public final class BlockDimPos
 		dim = d;
 	}
 
+	public BlockDimPos(double x, double y, double z, int d)
+	{
+		this(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z), d);
+	}
+
 	public BlockDimPos(Vec3i p, int d)
 	{
 		this(p.getX(), p.getY(), p.getZ(), d);
@@ -27,6 +34,11 @@ public final class BlockDimPos
 	public BlockDimPos(int[] ai)
 	{
 		this(ai[0], ai[1], ai[2], ai[3]);
+	}
+
+	public BlockDimPos(Entity entity)
+	{
+		this(entity.posX, entity.posY, entity.posZ, entity.dimension);
 	}
 
 	public int[] toIntArray()
@@ -65,11 +77,6 @@ public final class BlockDimPos
 	public Vec3d toVec()
 	{
 		return new Vec3d(posX + 0.5D, posY + 0.5D, posZ + 0.5D);
-	}
-
-	public EntityDimPos toEntityPos()
-	{
-		return new EntityDimPos(toVec(), dim);
 	}
 
 	public ChunkDimPos toChunkPos()

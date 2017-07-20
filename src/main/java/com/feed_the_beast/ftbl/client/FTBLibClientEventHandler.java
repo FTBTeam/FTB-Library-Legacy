@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
@@ -25,12 +26,14 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@EventHandler(Side.CLIENT)
 public class FTBLibClientEventHandler
 {
 	@SubscribeEvent

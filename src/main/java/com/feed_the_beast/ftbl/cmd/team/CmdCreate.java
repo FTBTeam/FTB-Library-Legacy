@@ -12,7 +12,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.MinecraftForge;
 
 /**
  * @author LatvianModder
@@ -85,8 +84,8 @@ public class CmdCreate extends CmdBase
 		Universe.INSTANCE.teams.put(team.getName(), team);
 		team.changeOwner(p);
 
-		MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
-		MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
+		new ForgeTeamCreatedEvent(team).post();
+		new ForgeTeamPlayerJoinedEvent(team, p).post();
 
 		FTBLibLang.TEAM_CREATED.printChat(sender, team.getName());
 	}

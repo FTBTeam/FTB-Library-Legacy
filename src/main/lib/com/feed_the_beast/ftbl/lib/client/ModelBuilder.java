@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
@@ -8,18 +7,23 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.BlockPartFace;
 import net.minecraft.client.renderer.block.model.FaceBakery;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.common.model.TRSRTransformation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
+import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -27,7 +31,7 @@ import java.util.List;
 public class ModelBuilder
 {
 	private static final FaceBakery BAKERY = new FaceBakery();
-	public static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORM_MAP;
+	private static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORM_MAP;
 
 	private static TRSRTransformation get(float tx, float ty, float tz, float ax, float ay, float az, float s)
 	{
@@ -49,7 +53,12 @@ public class ModelBuilder
 		TRANSFORM_MAP = Maps.immutableEnumMap(builder.build());
 	}
 
-	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(String.valueOf(location));
+	public static Pair<? extends IBakedModel, Matrix4f> handlePerspective(IBakedModel model, ItemCameraTransforms.TransformType cameraTransformType)
+	{
+		return PerspectiveMapWrapper.handlePerspective(model, TRANSFORM_MAP, cameraTransformType);
+	}
+
+	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> Minecraft.getMinecraft().getTextureMapBlocks().registerSprite(location);
 
 	public final VertexFormat format;
 	private List<BakedQuad> quads;

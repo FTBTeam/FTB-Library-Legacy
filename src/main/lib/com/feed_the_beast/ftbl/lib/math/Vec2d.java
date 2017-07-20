@@ -3,15 +3,15 @@ package com.feed_the_beast.ftbl.lib.math;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
 
-public class Pos2D
+public class Vec2d
 {
 	public double x, y;
 
-	public Pos2D()
+	public Vec2d()
 	{
 	}
 
-	public Pos2D(double px, double py)
+	public Vec2d(double px, double py)
 	{
 		set(px, py);
 	}
@@ -22,9 +22,9 @@ public class Pos2D
 		y = py;
 	}
 
-	public Pos2I toPos2I()
+	public Vec2i toPos2I()
 	{
-		return new Pos2I(MathHelper.floor(x), MathHelper.floor(y));
+		return new Vec2i(MathHelper.floor(x), MathHelper.floor(y));
 	}
 
 	public int hashCode()
@@ -32,7 +32,7 @@ public class Pos2D
 		return Double.hashCode(x) * 31 + Double.hashCode(y);
 	}
 
-	public boolean equalsPos(Pos2D o)
+	public boolean equalsPos(Vec2d o)
 	{
 		return o.x == x && o.y == y;
 	}
@@ -44,11 +44,11 @@ public class Pos2D
 
 	public boolean equals(Object o)
 	{
-		return o != null && (o == this || (o instanceof Pos2D && equalsPos((Pos2D) o)));
+		return o != null && (o == this || (o instanceof Vec2d && equalsPos((Vec2d) o)));
 	}
 
-	public Pos2D copy()
+	public Vec2d copy()
 	{
-		return new Pos2D(x, y);
+		return new Vec2d(x, y);
 	}
 }

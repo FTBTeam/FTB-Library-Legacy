@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.config.SimpleConfigKey;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -77,7 +77,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 	{
 		if (args.length == 0 && sender instanceof EntityPlayerMP)
 		{
-			FTBLibIntegrationInternal.API.editServerConfig(getCommandSenderAsPlayer(sender), null, getConfigContainer(sender));
+			FTBLibAPI.API.editServerConfig(getCommandSenderAsPlayer(sender), null, getConfigContainer(sender));
 			return;
 		}
 

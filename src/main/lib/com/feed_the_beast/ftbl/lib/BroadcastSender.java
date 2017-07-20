@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandResultStats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,6 +34,14 @@ public enum BroadcastSender implements ICommandSender
 	public void sendMessage(ITextComponent component)
 	{
 		ServerUtils.getServer().getPlayerList().sendMessage(component, true);
+	}
+
+	public void sendStatusMessage(ITextComponent component, boolean actionBar)
+	{
+		for (EntityPlayer player : ServerUtils.getServer().getPlayerList().getPlayers())
+		{
+			player.sendStatusMessage(component, actionBar);
+		}
 	}
 
 	@Override

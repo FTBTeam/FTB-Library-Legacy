@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.math.EntityDimPos;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
@@ -75,17 +74,12 @@ public class ServerUtils
 		}
 	}
 
-	public static boolean teleportPlayer(Entity entity, EntityDimPos pos)
+	public static void teleportPlayer(Entity entity, BlockDimPos pos)
 	{
-		return teleportPlayer(entity, pos.pos, pos.dim);
+		teleportPlayer(entity, pos.toVec(), pos.dim);
 	}
 
-	public static boolean teleportPlayer(Entity entity, BlockDimPos pos)
-	{
-		return teleportPlayer(entity, pos.toVec(), pos.dim);
-	}
-
-	public static boolean teleportPlayer(Entity entity, Vec3d pos, int dim)
+	public static void teleportPlayer(Entity entity, Vec3d pos, int dim)
 	{
 		entity.fallDistance = 0F;
 		EntityPlayerMP player = entity instanceof EntityPlayer ? (EntityPlayerMP) entity : null;
@@ -94,13 +88,13 @@ public class ServerUtils
 		{
 			if (pos.x == entity.posX && pos.y == entity.posY && pos.z == entity.posZ)
 			{
-				return true;
+				return;
 			}
 
 			if (player != null)
 			{
 				player.connection.setPlayerLocation(pos.x, pos.y, pos.z, player.rotationYaw, player.rotationPitch);
-				return true;
+				return;
 			}
 		}
 
@@ -156,8 +150,6 @@ public class ServerUtils
 		{
 			entity.setPosition(pos.x, pos.y, pos.z);
 		}
-
-		return true;
 	}
 
 	public static double getMovementFactor(int dim)

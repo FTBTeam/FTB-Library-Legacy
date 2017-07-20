@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -58,7 +58,7 @@ public class CmdNotify extends CmdBase
 				throw new IllegalArgumentException("Notification '" + args[1] + "' not found!");
 			}
 
-			FTBLibIntegrationInternal.API.sendNotification(player, n);
+			FTBLibAPI.API.sendNotification(player, n);
 		}
 	}
 }

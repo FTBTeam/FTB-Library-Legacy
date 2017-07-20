@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
@@ -170,7 +170,7 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 		}
 
 		int s = data.readUnsignedShort();
-		IConfigValue blank = FTBLibIntegrationInternal.API.getConfigValueFromID(valueId);
+		IConfigValue blank = FTBLibAPI.API.getConfigValueFromID(valueId);
 
 		while (--s >= 0)
 		{
@@ -240,7 +240,7 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 			return;
 		}
 
-		IConfigValue blank = FTBLibIntegrationInternal.API.getConfigValueFromID(valueId);
+		IConfigValue blank = FTBLibAPI.API.getConfigValueFromID(valueId);
 
 		for (JsonElement e : a)
 		{

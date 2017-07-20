@@ -11,7 +11,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
-import java.text.DecimalFormat;
 import java.util.Random;
 
 /**
@@ -20,7 +19,6 @@ import java.util.Random;
 public class MathUtils
 {
 	public static final Random RAND = new Random();
-	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
 
 	public static final double RAD = Math.PI / 180D;
 	public static final double DEG = 180D / Math.PI;
@@ -32,8 +30,6 @@ public class MathUtils
 	public static final float DEG_F = (float) DEG;
 	public static final float TWO_PI_F = (float) TWO_PI;
 	public static final float HALF_PI_F = (float) HALF_PI;
-
-	public static final double SQRT_2 = sqrt(2D);
 
 	public static final float[] NORMALS_X = new float[] {0F, 0F, 0F, 0F, -1F, 1F};
 	public static final float[] NORMALS_Y = new float[] {-1F, 1F, 0F, 0F, 0F, 0F};
@@ -272,11 +268,6 @@ public class MathUtils
 	public static double lerp_double(double f1, double f2, double f)
 	{
 		return f1 + (f2 - f1) * f;
-	}
-
-	public static String toSmallDouble(double d)
-	{
-		return SMALL_DOUBLE_FORMATTER.format(d);
 	}
 
 	public static double map(double val, double min1, double max1, double min2, double max2)

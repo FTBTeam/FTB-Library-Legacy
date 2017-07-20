@@ -1,13 +1,13 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamPlayerData;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageMyTeamAddPlayerGui;
@@ -35,13 +35,7 @@ public class CmdGui extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		IUniverse universe = FTBLibIntegrationInternal.API.getUniverse();
-
-		if (universe == null)
-		{
-			return;
-		}
-
+		IUniverse universe = FTBLibAPI.API.getUniverse();
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		IForgePlayer p = getForgePlayer(player);
 		IForgeTeam team = p.getTeam();

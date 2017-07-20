@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
 import com.feed_the_beast.ftbl.api.NotificationId;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ public abstract class SharedData implements ISharedData
 	{
 		if (currentMode == null)
 		{
-			currentMode = getSide().isClient() ? new PackMode("default") : FTBLibIntegrationInternal.API.getPackModes().getDefault();
+			currentMode = getSide().isClient() ? new PackMode("default") : FTBLibAPI.API.getPackModes().getDefault();
 		}
 
 		return currentMode;

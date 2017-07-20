@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.api.EnumReloadType;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
@@ -62,7 +62,7 @@ public class CmdPackMode extends CmdTreeBase
 			{
 				c = FTBLibLang.MODE_LOADED.textComponent(args[0]);
 				c.getStyle().setColor(TextFormatting.GREEN);
-				FTBLibIntegrationInternal.API.reload(Side.SERVER, sender, EnumReloadType.MODE_CHANGED);
+				FTBLibAPI.API.reload(Side.SERVER, sender, EnumReloadType.MODE_CHANGED);
 			}
 
 			sender.sendMessage(c);

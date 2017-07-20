@@ -11,7 +11,6 @@ import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -70,7 +69,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 			}
 
 			cc.saveConfig(player, m.extraNBT, m.groupData);
-			MinecraftForge.EVENT_BUS.post(new ConfigLoadedEvent(LoaderState.ModState.AVAILABLE));
+			new ConfigLoadedEvent(LoaderState.ModState.AVAILABLE).post();
 			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
 		}
 	}

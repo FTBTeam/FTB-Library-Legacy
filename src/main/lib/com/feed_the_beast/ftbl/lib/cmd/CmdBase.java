@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ICustomPermission;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -130,7 +130,7 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 	public static IForgePlayer getForgePlayer(Object o) throws CommandException
 	{
-		IForgePlayer p = FTBLibIntegrationInternal.API.getUniverse().getPlayer(o);
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(o);
 
 		if (p == null || p.isFake())
 		{
@@ -142,7 +142,7 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 	public static IForgeTeam getTeam(String s) throws CommandException
 	{
-		IForgeTeam team = FTBLibIntegrationInternal.API.getUniverse().getTeam(s);
+		IForgeTeam team = FTBLibAPI.API.getUniverse().getTeam(s);
 
 		if (team != null)
 		{

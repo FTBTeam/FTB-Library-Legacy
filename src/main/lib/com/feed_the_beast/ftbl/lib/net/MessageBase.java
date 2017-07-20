@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.net;
 
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -20,7 +20,7 @@ public abstract class MessageBase<E extends MessageBase<E>> implements IMessage,
 	@Override
 	public final IMessage onMessage(final E m, MessageContext ctx)
 	{
-		FTBLibIntegrationInternal.API.handleMessage(m, ctx, getReceivingSide());
+		FTBLibAPI.API.handleMessage(m, ctx, getReceivingSide());
 		return null;
 	}
 

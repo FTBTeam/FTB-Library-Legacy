@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftbl.lib.math;
 
-public class Pos2I
+public class Vec2i
 {
 	public int x, y;
 
-	public Pos2I()
+	public Vec2i()
 	{
 	}
 
-	public Pos2I(int px, int py)
+	public Vec2i(int px, int py)
 	{
 		set(px, py);
 	}
@@ -19,9 +19,9 @@ public class Pos2I
 		y = py;
 	}
 
-	public Pos2D toPos2D()
+	public Vec2d toPos2D()
 	{
-		return new Pos2D(x, y);
+		return new Vec2d(x, y);
 	}
 
 	public int hashCode()
@@ -29,7 +29,7 @@ public class Pos2I
 		return x * 31 + y;
 	}
 
-	public boolean equalsPos(Pos2I o)
+	public boolean equalsPos(Vec2i o)
 	{
 		return o.x == x && o.y == y;
 	}
@@ -41,11 +41,11 @@ public class Pos2I
 
 	public boolean equals(Object o)
 	{
-		return o != null && (o == this || (o instanceof Pos2I && equalsPos((Pos2I) o)));
+		return o != null && (o == this || (o instanceof Vec2i && equalsPos((Vec2i) o)));
 	}
 
-	public Pos2I copy()
+	public Vec2i copy()
 	{
-		return new Pos2I(x, y);
+		return new Vec2i(x, y);
 	}
 }

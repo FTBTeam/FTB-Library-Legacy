@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IDataProvider;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
@@ -18,8 +20,11 @@ import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
+import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
+import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
+import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
@@ -54,21 +59,30 @@ import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
+public class FTBLibModCommon implements IFTBLibRegistry
 {
+	private static final EnumSet<Side> DEFAULT_SIDES = EnumSet.allOf(Side.class);
 	public static final Map<String, IConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
 	public static final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
 	public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
@@ -98,8 +112,85 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 		}
 	}
 
-	public void preInit()
+	private void registerEventHandler(ASMDataTable.ASMData data, Side side) throws Exception
 	{
+		@SuppressWarnings("unchecked")
+		List<ModAnnotation.EnumHolder> sidesEnum = (List<ModAnnotation.EnumHolder>) data.getAnnotationInfo().get("value");
+		EnumSet<Side> sides = DEFAULT_SIDES;
+		if (sidesEnum != null)
+		{
+			sides = EnumSet.noneOf(Side.class);
+
+			for (ModAnnotation.EnumHolder h : sidesEnum)
+			{
+				sides.add(Side.valueOf(h.getValue()));
+			}
+		}
+
+		if (sides != DEFAULT_SIDES && !sides.contains(side))
+		{
+			return;
+		}
+
+		@SuppressWarnings("unchecked")
+		List<String> requiredMods = (List<String>) data.getAnnotationInfo().get("requiredMods");
+
+		if (requiredMods != null && !requiredMods.isEmpty())
+		{
+			for (String s : requiredMods)
+			{
+				if (!isModLoaded(s.split(";")))
+				{
+					return;
+				}
+			}
+		}
+
+		Class<?> c = Class.forName(data.getObjectName());
+		MinecraftForge.EVENT_BUS.register(c);
+	}
+
+	private static boolean isModLoaded(String[] mods)
+	{
+		for (String mod : mods)
+		{
+			if (mod.startsWith("!"))
+			{
+				if (Loader.isModLoaded(mod.substring(1)))
+				{
+					return false;
+				}
+			}
+			else if (Loader.isModLoaded(mod))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
+		FTBLibAPI.API = new FTBLibAPI_Impl();
+		LMUtils.init(event.getModConfigurationDirectory());
+		Side side = event.getSide();
+
+		for (ASMDataTable.ASMData data : AsmHelper.getASMData(event.getAsmData(), EventHandler.class))
+		{
+			try
+			{
+				registerEventHandler(data, side);
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
+		PackModes.INSTANCE.load();
+		FTBLibNetHandler.init();
+
 		addOptionalServerMod(FTBLibFinals.MOD_ID);
 		addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbl.json"));
 
@@ -139,7 +230,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 		addInfoTextLine("switch", GuideSwitchLine::new);
 		addInfoTextLine("contents", (page, json) -> new GuideContentsLine(page));
 
-		MinecraftForge.EVENT_BUS.post(new FTBLibRegistryEvent(this));
+		new FTBLibRegistryEvent(this).post();
 	}
 
 	public void postInit(LoaderState.ModState state)
@@ -296,7 +387,7 @@ public class FTBLibModCommon implements IFTBLibRegistry // FTBLibModClient
 			}
 		}
 
-		MinecraftForge.EVENT_BUS.post(new ConfigLoadedEvent(state));
+		new ConfigLoadedEvent(state).post();
 	}
 
 	public void worldLoaded()

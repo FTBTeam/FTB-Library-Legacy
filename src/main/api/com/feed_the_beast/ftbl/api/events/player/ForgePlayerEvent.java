@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.api.events.player;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import com.feed_the_beast.ftbl.api.events.FTBLibEvent;
 
 /**
  * @author LatvianModder
  */
-public abstract class ForgePlayerEvent extends Event
+public abstract class ForgePlayerEvent extends FTBLibEvent
 {
 	private final IForgePlayer player;
 

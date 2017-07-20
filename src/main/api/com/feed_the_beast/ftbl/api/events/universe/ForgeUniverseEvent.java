@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.api.events.universe;
 
 import com.feed_the_beast.ftbl.api.IUniverse;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import com.feed_the_beast.ftbl.api.events.FTBLibEvent;
 
 /**
  * @author LatvianModder
  */
-public abstract class ForgeUniverseEvent extends Event
+public abstract class ForgeUniverseEvent extends FTBLibEvent
 {
 	private final IUniverse universe;
 

@@ -4,8 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.FTBLibPlugin;
-import com.feed_the_beast.ftbl.api.IFTBLibPlugin;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackModes;
@@ -20,7 +18,6 @@ import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
-import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -45,9 +42,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.LoaderState;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -58,26 +53,9 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class FTBLibAPI_Impl implements FTBLibAPI
+public class FTBLibAPI_Impl extends FTBLibAPI
 {
 	public static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
-	private Collection<IFTBLibPlugin> plugins;
-
-	public void init(ASMDataTable table)
-	{
-		plugins = AsmHelper.findPlugins(table, IFTBLibPlugin.class, FTBLibPlugin.class);
-
-		for (IFTBLibPlugin p : plugins)
-		{
-			p.init(this);
-		}
-	}
-
-	@Override
-	public Collection<IFTBLibPlugin> getAllPlugins()
-	{
-		return plugins;
-	}
 
 	@Override
 	public Collection<ITickable> ticking()
@@ -104,9 +82,9 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 	}
 
 	@Override
-	@Nullable
 	public IUniverse getUniverse()
 	{
+		Preconditions.checkNotNull(Universe.INSTANCE);
 		return Universe.INSTANCE;
 	}
 
@@ -119,7 +97,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 	@Override
 	public void loadWorldData(MinecraftServer server)
 	{
-		MinecraftForge.EVENT_BUS.post(new LoadWorldDataEvent(server));
+		new LoadWorldDataEvent(server).post();
 	}
 
 	@Override
@@ -134,7 +112,7 @@ public class FTBLibAPI_Impl implements FTBLibAPI
 			FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
 		}
 
-		MinecraftForge.EVENT_BUS.post(new ReloadEvent(side, sender, type, this));
+		new ReloadEvent(side, sender, type).post();
 
 		if (serverSide && ServerUtils.hasOnlinePlayers())
 		{

@@ -24,7 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -60,7 +59,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
 		cachedConfig = new ConfigTree();
 		ForgePlayerSettingsEvent event = new ForgePlayerSettingsEvent(this, cachedConfig);
-		MinecraftForge.EVENT_BUS.post(event);
+		event.post();
 		String group = FTBLibFinals.MOD_ID;
 		event.add(group, "hide_team_notification", hideTeamNotification);
 		event.add(group, "hide_new_team_msg_notification", hideNewTeamMsgNotification);
@@ -243,14 +242,14 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 			new MessageLogin(ep, this).sendTo(entityPlayer);
 		}
 
-		MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedInEvent(this, firstLogin));
+		new ForgePlayerLoggedInEvent(this, firstLogin).post();
 	}
 
 	public void onLoggedOut()
 	{
 		loggingOut = true;
 		//FTBLibStats.updateLastSeen(stats());
-		MinecraftForge.EVENT_BUS.post(new ForgePlayerLoggedOutEvent(this));
+		new ForgePlayerLoggedOutEvent(this).post();
 		entityPlayer = null;
 		playerNBT = null;
 	}
@@ -262,7 +261,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		if (isOnline())
 		{
 			//FTBLibStats.updateLastSeen(stats());
-			MinecraftForge.EVENT_BUS.post(new ForgePlayerDeathEvent(this, ds));
+			new ForgePlayerDeathEvent(this, ds).post();
 		}
 	}
 

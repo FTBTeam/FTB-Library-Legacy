@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -117,7 +117,7 @@ public class ConfigTree implements IConfigTree
 			String id = ByteBufUtils.readUTF8String(data);
 			int flags = data.readInt();
 
-			IConfigValue value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
+			IConfigValue value = FTBLibAPI.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
 			value.readData(data);
 
 			ConfigKey key = new ConfigKey(id, value);
@@ -140,7 +140,7 @@ public class ConfigTree implements IConfigTree
 				key.setGroup(ByteBufUtils.readUTF8String(data));
 			}
 
-			value = FTBLibIntegrationInternal.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
+			value = FTBLibAPI.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
 			value.readData(data);
 			tree.put(key, value);
 		}

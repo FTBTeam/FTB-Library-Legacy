@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
@@ -21,7 +22,6 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -36,7 +36,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -160,7 +159,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 		cachedConfig = new ConfigTree();
 		ForgeTeamSettingsEvent event = new ForgeTeamSettingsEvent(this, cachedConfig);
-		MinecraftForge.EVENT_BUS.post(event);
+		event.post();
 
 		String group = FTBLibFinals.MOD_ID;
 		event.add(group, "free_to_join", freeToJoin);
@@ -384,7 +383,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 	private boolean isMember(UUID playerId)
 	{
-		IForgePlayer player = FTBLibIntegrationInternal.API.getUniverse().getPlayer(playerId);
+		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(playerId);
 		return player != null && equals(player.getTeam());
 
 	}
@@ -464,7 +463,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 			if (!hasStatus(player, EnumTeamStatus.MEMBER))
 			{
-				MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(this, player));
+				new ForgeTeamPlayerJoinedEvent(this, player).post();
 				setStatus(player.getId(), EnumTeamStatus.MEMBER);
 				printMessage(new Message(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName())));
 			}
@@ -481,7 +480,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		if (getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() == 1)
 		{
 			printMessage(new Message(FTBLibLang.TEAM_DELETED.textComponent(getTitle())));
-			MinecraftForge.EVENT_BUS.post(new ForgeTeamDeletedEvent(this));
+			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
 			Universe.INSTANCE.teams.remove(getName());
 		}
@@ -503,7 +502,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		if (hasStatus(player, EnumTeamStatus.MEMBER))
 		{
 			player.setTeamID("");
-			MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerLeftEvent(this, player));
+			new ForgeTeamPlayerLeftEvent(this, player).post();
 			printMessage(new Message(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName())));
 		}
 	}
@@ -523,7 +522,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 			if (!oldOwner.equalsPlayer(newOwner) && hasStatus(newOwner, EnumTeamStatus.MEMBER))
 			{
 				owner = newOwner;
-				MinecraftForge.EVENT_BUS.post(new ForgeTeamOwnerChangedEvent(this, oldOwner, newOwner));
+				new ForgeTeamOwnerChangedEvent(this, oldOwner, newOwner).post();
 			}
 		}
 	}
@@ -555,7 +554,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		{
 			if (!ep.getGameProfile().getId().equals(message.getSender()) && !Universe.INSTANCE.getPlayer(ep).hideNewTeamMsgNotification())
 			{
-				FTBLibIntegrationInternal.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
+				FTBLibAPI.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
 			}
 
 			m.sendTo(ep);

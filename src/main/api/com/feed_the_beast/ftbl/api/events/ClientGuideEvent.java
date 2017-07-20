@@ -2,12 +2,11 @@ package com.feed_the_beast.ftbl.api.events;
 
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 import java.util.Map;
 import java.util.function.Function;
 
-public class ClientGuideEvent extends Event
+public class ClientGuideEvent extends FTBLibEvent
 {
 	private final Map<String, GuideTitlePage> map;
 	private final IResourceManager resourceManager;

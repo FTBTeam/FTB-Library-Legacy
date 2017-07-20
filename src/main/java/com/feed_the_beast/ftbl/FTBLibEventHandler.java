@@ -1,19 +1,12 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
+import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
-import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
-import com.feed_the_beast.ftbl.client.FTBLibModClient;
-import com.feed_the_beast.ftbl.lib.SidebarButton;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -23,20 +16,14 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
+@EventHandler
 public class FTBLibEventHandler
 {
 	@SubscribeEvent
@@ -56,15 +43,6 @@ public class FTBLibEventHandler
 		{
 			ex.printStackTrace();
 		}
-	}
-
-	@SubscribeEvent
-	@Optional.Method(modid = "mercurius")
-	public static void onAnalytics(net.minecraftforge.mercurius.binding.StatsCollectionEvent event)
-	{
-		Map<String, Object> map = new HashMap<>();
-		map.put("FTB_PackMode", SharedServerData.INSTANCE.getPackMode().getName());
-		event.addEventData(FTBLibFinals.MOD_ID, map);
 	}
 
 	@SubscribeEvent
@@ -111,8 +89,8 @@ public class FTBLibEventHandler
 				ForgeTeam team = new ForgeTeam(id);
 				team.changeOwner(p);
 				Universe.INSTANCE.teams.put(team.getName(), team);
-				MinecraftForge.EVENT_BUS.post(new ForgeTeamCreatedEvent(team));
-				MinecraftForge.EVENT_BUS.post(new ForgeTeamPlayerJoinedEvent(team, p));
+				new ForgeTeamCreatedEvent(team).post();
+				new ForgeTeamPlayerJoinedEvent(team, p).post();
 			}
 		}
 
@@ -170,26 +148,4 @@ public class FTBLibEventHandler
     {
     }
     */
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public static void onGuideEvent(ClientGuideEvent event)
-	{
-		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
-		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(StringUtils.translation("config_group.sidebar_button.name"));
-
-		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
-		{
-			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
-			{
-				GuidePage page1 = page.getSub(button.getName());
-				page1.setIcon(button.icon);
-				page1.setTitle(StringUtils.translation("sidebar_button." + button.getName()));
-				page1.println(StringUtils.translation("sidebar_button." + button.getName() + ".info"));
-			}
-		}
-
-		event.add(page);
-	}
 }

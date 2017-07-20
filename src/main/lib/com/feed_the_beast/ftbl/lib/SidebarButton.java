@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
@@ -8,7 +9,6 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibIntegrationInternal;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
@@ -107,6 +107,6 @@ public class SidebarButton extends FinalIDObject
 
 	public boolean isVisible()
 	{
-		return !(hideWithNEI && LMUtils.isNEILoaded()) && !(requiresOp && !FTBLibIntegrationInternal.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibIntegrationInternal.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
+		return !(hideWithNEI && LMUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
 	}
 }

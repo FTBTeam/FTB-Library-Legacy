@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.CustomStyle;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -15,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -45,6 +45,7 @@ public class StringUtils
 	public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getId(o1, FLAG_ID_FIX).compareToIgnoreCase(getId(o2, FLAG_ID_FIX));
 
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
+	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
 
 	public static String getId(Object o, int flags)
 	{
@@ -390,7 +391,7 @@ public class StringUtils
 
 		for (int i = 0; i < o.length; i++)
 		{
-			sb.append(MathUtils.toSmallDouble(o[i]));
+			sb.append(formatDouble(o[i]));
 			if (i != o.length - 1)
 			{
 				sb.append(STRIP_SEP);
@@ -551,7 +552,7 @@ public class StringUtils
 		return s.isEmpty() ? s : s.replace("^\\s*(.*?)\\s*$", "$1");
 	}
 
-	public static String formatDouble(double d) //TODO: Replace with number formatter
+	public static String formatDouble(double d)
 	{
 		if (d == Double.POSITIVE_INFINITY)
 		{
@@ -565,10 +566,12 @@ public class StringUtils
 		{
 			return "NaN";
 		}
+		else if (d == 0D)
+		{
+			return "0.00";
+		}
 
-		d = ((long) (d * 1000D)) / 1000D;
-		String s = String.valueOf(d);
-		return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
+		return SMALL_DOUBLE_FORMATTER.format(d);
 	}
 
 	public static String getTimeString(long millis)
