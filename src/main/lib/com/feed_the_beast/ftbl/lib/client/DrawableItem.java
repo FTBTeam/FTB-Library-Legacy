@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftbl.lib.util.InvUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -25,7 +24,7 @@ public class DrawableItem implements IDrawableObject
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		if (!GuiHelper.drawItem(Minecraft.getMinecraft().getRenderItem(), stack, x, y, w / 16D, h / 16D, true))
+		if (!GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true, col))
 		{
 			stack = InvUtils.ERROR_ITEM;
 		}

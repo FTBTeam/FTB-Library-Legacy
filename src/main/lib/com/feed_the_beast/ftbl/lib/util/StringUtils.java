@@ -49,7 +49,7 @@ public class StringUtils
 
 	public static String getId(Object o, int flags)
 	{
-		String id = o instanceof IStringSerializable ? ((IStringSerializable) o).getName() : String.valueOf(o.toString());
+		String id = o instanceof IStringSerializable ? ((IStringSerializable) o).getName() : ((o instanceof Enum<?>) ? ((Enum<?>) o).name() : String.valueOf(o));
 
 		if (flags == 0)
 		{
@@ -731,18 +731,35 @@ public class StringUtils
 		return false;
 	}
 
+	public static ITextComponent color(ITextComponent component, TextFormatting color)
+	{
+		component.getStyle().setColor(color);
+		return component;
+	}
+
+	public static ITextComponent bold(ITextComponent component, boolean value)
+	{
+		component.getStyle().setBold(value);
+		return component;
+	}
+
+	public static ITextComponent italic(ITextComponent component, boolean value)
+	{
+		component.getStyle().setItalic(value);
+		return component;
+	}
+
+	public static ITextComponent underlined(ITextComponent component, boolean value)
+	{
+		component.getStyle().setUnderlined(value);
+		return component;
+	}
+
 	public static ITextComponent text(String text)
 	{
 		ITextComponent c = new TextComponentString(text);
 		c.setStyle(new CustomStyle());
 		return c;
-	}
-
-	public static ITextComponent text(String text, TextFormatting color)
-	{
-		ITextComponent t = text(text);
-		t.getStyle().setColor(color);
-		return t;
 	}
 
 	public static ITextComponent translation(String key, Object... o)

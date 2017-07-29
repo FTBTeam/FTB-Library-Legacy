@@ -6,6 +6,9 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumRotation implements IStringSerializable
 {
 	NORMAL("normal"),

@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -421,7 +422,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	{
 		if (shouldClose == 1 && !modifiedConfig.entrySet().isEmpty())
 		{
-			configContainer.saveConfig(mc.player, extraNBT, modifiedConfig);
+			configContainer.saveConfig(FTBLibClient.MC.player, extraNBT, modifiedConfig);
 		}
 	}
 

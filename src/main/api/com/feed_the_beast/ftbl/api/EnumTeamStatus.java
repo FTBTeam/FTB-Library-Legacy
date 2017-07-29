@@ -1,13 +1,16 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumTeamStatus implements IStringSerializable
 {
 	ENEMY(-10, "enemy", TextFormatting.RED, true),
@@ -19,11 +22,9 @@ public enum EnumTeamStatus implements IStringSerializable
 	MOD(80, "mod", TextFormatting.DARK_PURPLE, true),
 	OWNER(100, "owner", TextFormatting.GOLD, false);
 
-	/**
-	 * @author LatvianModder
-	 */
+
 	public static final EnumTeamStatus[] VALUES = values();
-	public static final EnumNameMap<EnumTeamStatus> NAME_MAP = new EnumNameMap<>(VALUES, false);
+	public static final NameMap<EnumTeamStatus> NAME_MAP = NameMap.create(NONE, VALUES);
 	public static final Collection<EnumTeamStatus> VALID_VALUES = new LinkedHashSet<>();
 
 	static

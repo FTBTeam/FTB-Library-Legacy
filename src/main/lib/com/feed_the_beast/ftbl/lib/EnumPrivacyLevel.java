@@ -4,6 +4,9 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumPrivacyLevel implements IStringSerializable
 {
 	PUBLIC("public"),
@@ -12,7 +15,7 @@ public enum EnumPrivacyLevel implements IStringSerializable
 
 	public static final EnumPrivacyLevel[] VALUES = values();
 	public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.privacy");
-	public static final EnumNameMap<EnumPrivacyLevel> NAME_MAP = new EnumNameMap<>(EnumPrivacyLevel.VALUES, false);
+	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.create(PUBLIC, VALUES);
 
 	private final String name;
 	private final LangKey langKey;

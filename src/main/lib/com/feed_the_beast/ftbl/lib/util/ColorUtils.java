@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -14,8 +15,8 @@ import java.nio.ByteBuffer;
 
 public class ColorUtils
 {
-	private static final int[] CHAT_FORMATTING_COLORS = new int[16];
-	private static final int[] DYE_TEXT_FORMATTING_COLORS = new int[32];
+	private static final Color4I[] CHAT_FORMATTING_COLORS = new Color4I[16];
+	private static final Color4I[] DYE_TEXT_FORMATTING_COLORS = new Color4I[32];
 
 	static
 	{
@@ -25,18 +26,18 @@ public class ColorUtils
 			int r = (i >> 2 & 1) * 170 + j;
 			int g = (i >> 1 & 1) * 170 + j;
 			int b = (i & 1) * 170 + j;
-			CHAT_FORMATTING_COLORS[i] = getRGBA((i == 6) ? r + 85 : r, g, b, 255);
+			CHAT_FORMATTING_COLORS[i] = new Color4I(false, getRGBA((i == 6) ? r + 85 : r, g, b, 255));
 		}
 
 		for (EnumDyeColor color : EnumDyeColor.values())
 		{
 			char c = getTextFormattingChar(getFromDyeColor(color));
-			DYE_TEXT_FORMATTING_COLORS[color.getMetadata()] = GuiUtils.getColorCode(c, true);
-			DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = GuiUtils.getColorCode(c, false);
+			DYE_TEXT_FORMATTING_COLORS[color.getMetadata()] = new Color4I(false, GuiUtils.getColorCode(c, true));
+			DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = new Color4I(false, GuiUtils.getColorCode(c, false));
 		}
 	}
 
-	public static int getChatFormattingColor(int id)
+	public static Color4I getChatFormattingColor(int id)
 	{
 		return CHAT_FORMATTING_COLORS[id & 0xF];
 	}
@@ -190,7 +191,7 @@ public class ColorUtils
 		return formatting.formattingCode;
 	}
 
-	public static int getDyeColor(EnumDyeColor color, boolean isLighter)
+	public static Color4I getDyeColor(EnumDyeColor color, boolean isLighter)
 	{
 		return DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + (isLighter ? 0 : 16)];
 	}

@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 
+/**
+ * @author LatvianModder
+ */
 public class FTBLibNetHandler
 {
 	public static final NetworkWrapper NET = NetworkWrapper.newWrapper("FTBL");
@@ -12,10 +15,10 @@ public class FTBLibNetHandler
 		NET.register(2, new MessageEditConfig());
 		NET.register(3, new MessageEditConfigResponse());
 		NET.register(4, new MessageOpenGui());
-		NET.register(5, new MessageNotifyPlayer());
+		//5
 		NET.register(6, new MessageDisplayGuide());
 		NET.register(7, new MessageLogin());
-		NET.register(8, new MessageNotifyPlayerCustom());
+		//8
 		NET.register(9, new MessageSelectTeamGui());
 		NET.register(10, new MessageMyTeamGui());
 		NET.register(11, new MessageMyTeamAddPlayerGui());

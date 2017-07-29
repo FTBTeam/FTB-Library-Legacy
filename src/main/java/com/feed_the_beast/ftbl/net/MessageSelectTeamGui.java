@@ -14,6 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 {
 	private List<PublicTeamData> teams;

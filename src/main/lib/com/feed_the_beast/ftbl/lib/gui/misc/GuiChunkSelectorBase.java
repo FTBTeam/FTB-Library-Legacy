@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.ChunkPos;
 import org.lwjgl.opengl.GL11;
 
@@ -105,8 +106,8 @@ public class GuiChunkSelectorBase extends GuiBase
 	{
 		super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
 
-		startX = MathUtils.chunk(mc.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-		startZ = MathUtils.chunk(mc.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+		startX = MathUtils.chunk(FTBLibClient.MC.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+		startZ = MathUtils.chunk(FTBLibClient.MC.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
 
 		panelButtons = new Panel(0, 0, 16, 0)
 		{
@@ -171,19 +172,21 @@ public class GuiChunkSelectorBase extends GuiBase
 		buffer.setTranslation(0D, 0D, 0D);
 		GlStateManager.enableTexture2D();
 
-		int cx = MathUtils.chunk(mc.player.posX);
-		int cy = MathUtils.chunk(mc.player.posZ);
+		EntityPlayer player = FTBLibClient.MC.player;
+
+		int cx = MathUtils.chunk(player.posX);
+		int cy = MathUtils.chunk(player.posZ);
 
 		if (cx >= startX && cy >= startZ && cx < startX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI && cy < startZ + GuiConfigs.CHUNK_SELECTOR_TILES_GUI)
 		{
-			double x = ((cx - startX) * 16D + MathUtils.wrap(mc.player.posX, 16D));
-			double y = ((cy - startZ) * 16D + MathUtils.wrap(mc.player.posZ, 16D));
+			double x = ((cx - startX) * 16D + MathUtils.wrap(player.posX, 16D));
+			double y = ((cy - startZ) * 16D + MathUtils.wrap(player.posZ, 16D));
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(posX + x, posY + y, 0D);
 			GlStateManager.pushMatrix();
 			//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
-			GlStateManager.rotate(mc.player.rotationYaw + 180F, 0F, 0F, 1F);
+			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
 			GuiConfigs.TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A33);
 			GlStateManager.popMatrix();
 			FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);

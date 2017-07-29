@@ -5,9 +5,7 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
@@ -27,11 +25,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageLogin extends MessageToClient<MessageLogin>
 {
 	private static final byte IS_OP = 1;
@@ -39,8 +38,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
 	private byte flags;
 	private String currentMode;
-	private UUID universeID;
-	private Map<NotificationId, INotification> notifications;
+	private UUID universeId;
 	private NBTTagCompound syncData;
 	private Collection<String> optionalServerMods;
 	private long lastMessageTime;
@@ -54,8 +52,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 		flags = 0;
 		flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
 		currentMode = SharedServerData.INSTANCE.getPackMode().getName();
-		universeID = SharedServerData.INSTANCE.getUniverseID();
-		notifications = SharedServerData.INSTANCE.notifications;
+		universeId = SharedServerData.INSTANCE.getUniverseID();
 		syncData = new NBTTagCompound();
 		FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
 		optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
@@ -79,11 +76,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	{
 		io.writeByte(flags);
 		ByteBufUtils.writeUTF8String(io, currentMode);
-		NetUtils.writeUUID(io, universeID);
-
-		io.writeShort(notifications.size());
-		notifications.forEach((key, value) -> MessageNotifyPlayer.write(io, value));
-
+		NetUtils.writeUUID(io, universeId);
 		ByteBufUtils.writeTag(io, syncData);
 
 		if (!optionalServerMods.isEmpty())
@@ -104,22 +97,12 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	{
 		flags = io.readByte();
 		currentMode = ByteBufUtils.readUTF8String(io);
-		universeID = NetUtils.readUUID(io);
-
-		int s = io.readUnsignedShort();
-		notifications = new HashMap<>(s);
-
-		while (--s >= 0)
-		{
-			INotification n = MessageNotifyPlayer.read(io);
-			notifications.put(n.getId(), n);
-		}
-
+		universeId = NetUtils.readUUID(io);
 		syncData = ByteBufUtils.readTag(io);
 
 		if (Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
 		{
-			s = io.readUnsignedShort();
+			int s = io.readUnsignedShort();
 			optionalServerMods = new HashSet<>(s);
 
 			while (--s >= 0)
@@ -136,15 +119,13 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	{
 		SharedClientData.INSTANCE.reset();
 		SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
-		SharedClientData.INSTANCE.universeID = m.universeID;
+		SharedClientData.INSTANCE.universeID = m.universeId;
 		SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
 		if (m.optionalServerMods != null && !m.optionalServerMods.isEmpty())
 		{
 			SharedClientData.INSTANCE.optionalServerMods.addAll(m.optionalServerMods);
 		}
-
-		SharedClientData.INSTANCE.notifications.putAll(m.notifications);
 
 		for (String key : m.syncData.getKeySet())
 		{

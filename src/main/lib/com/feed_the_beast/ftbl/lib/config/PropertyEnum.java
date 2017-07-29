@@ -1,59 +1,56 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
  */
-public class PropertyEnum<E extends Enum<E>> extends PropertyEnumAbstract<E>
+public class PropertyEnum<E> extends PropertyEnumAbstract<E>
 {
-	private final EnumNameMap<E> nameMap;
+	private final NameMap<E> nameMap;
 	private E value;
 
-	public static <T extends Enum<T>> PropertyEnum<T> create(EnumNameMap<T> nm, @Nullable T e, Supplier<T> getter, Consumer<T> setter)
+	public static <T extends Enum<T>> PropertyEnum<T> create(NameMap<T> nm, Supplier<T> getter, Consumer<T> setter)
 	{
-		return new PropertyEnum<T>(nm, e)
+		return new PropertyEnum<T>(nm)
 		{
-			@Nullable
 			@Override
-			public T get()
+			public T getValue()
 			{
 				return getter.get();
 			}
 
 			@Override
-			public void set(@Nullable T e)
+			public void setValue(T e)
 			{
 				setter.accept(e);
 			}
 		};
 	}
 
-	public PropertyEnum(EnumNameMap<E> nm, @Nullable E e)
+	public PropertyEnum(NameMap<E> nm)
 	{
 		nameMap = nm;
-		value = e;
+		value = nm.defaultValue;
 	}
 
 	@Override
-	public EnumNameMap<E> getNameMap()
+	public NameMap<E> getNameMap()
 	{
 		return nameMap;
 	}
 
-	@Nullable
 	@Override
-	public E get()
+	public E getValue()
 	{
 		return value;
 	}
 
 	@Override
-	public void set(@Nullable E e)
+	public void setValue(E e)
 	{
 		value = e;
 	}

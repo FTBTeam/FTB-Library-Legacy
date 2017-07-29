@@ -6,6 +6,9 @@ import net.minecraft.client.resources.IResourceManager;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * @author LatvianModder
+ */
 public class ClientGuideEvent extends FTBLibEvent
 {
 	private final Map<String, GuideTitlePage> map;

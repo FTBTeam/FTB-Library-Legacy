@@ -8,6 +8,9 @@ import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
+/**
+ * @author LatvianModder
+ */
 public class CmdEditConfig extends CmdTreeBase
 {
 	public static class CmdEditConfigFile extends CmdEditConfigBase

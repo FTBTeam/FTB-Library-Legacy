@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -228,7 +229,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
 		{
 			if (p == null)
 			{
-				mc.player.closeScreen();
+				FTBLibClient.MC.player.closeScreen();
 				return;
 			}
 			else

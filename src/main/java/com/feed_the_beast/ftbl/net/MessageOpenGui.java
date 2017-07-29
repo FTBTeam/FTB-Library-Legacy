@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,7 +73,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
 			if (g != null)
 			{
-				Minecraft.getMinecraft().displayGuiScreen(g);
+				FTBLibClient.MC.displayGuiScreen(g);
 				player.openContainer.windowId = m.windowID;
 			}
 		}

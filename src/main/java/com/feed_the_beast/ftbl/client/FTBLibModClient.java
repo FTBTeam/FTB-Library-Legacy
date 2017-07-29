@@ -25,7 +25,6 @@ import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
@@ -33,7 +32,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -49,6 +47,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author LatvianModder
+ */
 public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientRegistry, IResourceManagerReloadListener
 {
 	private IConfigFile clientConfig;
@@ -72,6 +73,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 		addClientConfig(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
 		addClientConfig(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
 		addClientConfig(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
+		addClientConfig(group, "replace_status_message_with_notification", FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION);
 		group = FTBLibFinals.MOD_ID + ".gui";
 		addClientConfig(group, "enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
 		group = FTBLibFinals.MOD_ID + ".gui.info";
@@ -83,14 +85,14 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 		new FTBLibClientRegistryEvent(this).post();
 
 		//For Dev reasons
-		GameProfile profile = Minecraft.getMinecraft().getSession().getProfile();
+		GameProfile profile = FTBLibClient.MC.getSession().getProfile();
 		if (profile.getId().equals(StringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
 		{
 			LMUtils.userIsLatvianModder = true;
 		}
 
 		FTBLibClient.localPlayerHead = new PlayerHeadImage(profile.getName());
-		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(this);
+		((IReloadableResourceManager) FTBLibClient.MC.getResourceManager()).registerReloadListener(this);
 	}
 
 	@Override
@@ -272,9 +274,9 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	@Override
 	public void handleClientMessage(MessageBase<?> message)
 	{
-		Minecraft.getMinecraft().addScheduledTask(() ->
+		FTBLibClient.MC.addScheduledTask(() ->
 		{
-			message.onMessage(LMUtils.cast(message), Minecraft.getMinecraft().player);
+			message.onMessage(LMUtils.cast(message), FTBLibClient.MC.player);
 
 			if (FTBLibAPI_Impl.LOG_NET)
 			{
@@ -294,31 +296,26 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	{
 		if (display == EnumNotificationDisplay.SCREEN)
 		{
-			ClientNotifications.add(n);
+			FTBLibClientEventHandler.addNotification(n);
 			return;
 		}
 
-		List<ITextComponent> list = n.getText();
+		ITextComponent text = n.getText();
 
-		if (list.isEmpty())
+		if (text == null)
 		{
 			return;
 		}
 
-		if (list.size() > 1)
-		{
-			list.get(0).getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, list.get(1)));
-		}
-
-		GuiNewChat chat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
+		GuiNewChat chat = FTBLibClient.MC.ingameGUI.getChatGUI();
 
 		if (display == EnumNotificationDisplay.CHAT)
 		{
-			chat.printChatMessageWithOptionalDeletion(list.get(0), n.getId().getChatMessageID());
+			chat.printChatMessageWithOptionalDeletion(text, 2348927 + (n.getId().hashCode() & 0xFFFF));
 		}
 		else
 		{
-			chat.printChatMessage(list.get(0));
+			chat.printChatMessage(text);
 		}
 	}
 

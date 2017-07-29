@@ -66,8 +66,8 @@ public class GuideTitlePage extends GuidePage
 			addSpecialButton(new SpecialGuideButton(o.get("button").getAsJsonObject()));
 		}
 
-		type = o.has("type") ? GuideType.getFromString(o.get("type").getAsString()) : GuideType.OTHER;
-		format = o.has("format") ? GuideFormat.getFromString(o.get("format").getAsString()) : GuideFormat.JSON;
+		type = o.has("type") ? GuideType.NAME_MAP.get(o.get("type").getAsString()) : GuideType.OTHER;
+		format = o.has("format") ? GuideFormat.NAME_MAP.get(o.get("format").getAsString()) : GuideFormat.JSON;
 
 		List<String> l = new ArrayList<>();
 

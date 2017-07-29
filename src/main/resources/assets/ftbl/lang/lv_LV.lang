@@ -112,12 +112,12 @@ ftbl.redstonemode.active_high=Aktīvs Ieslēgts
 ftbl.redstonemode.active_low=Aktīvs Izslēgts
 ftbl.redstonemode.pulse=Pulss
 
-# Inventory Mode
-ftbl.invmode=Inventāra Režīms
-ftbl.invmode.io=IO
-ftbl.invmode.in=Tikai Ielikt
-ftbl.invmode.out=Tikai Izņemt
-ftbl.invmode.none=Atslēgts
+# IO ModeMode
+ftbl.io=IO Režīms
+ftbl.io.io=IO
+ftbl.io.in=Tikai Ieeja
+ftbl.io.out=Tikai Izeja
+ftbl.io.none=Atslēgts
 
 # Click Actions
 click_action.cmd=Komanda

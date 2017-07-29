@@ -10,6 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageMyTeamAddPlayerGui extends MessageToClient<MessageMyTeamAddPlayerGui>
 {
 	private Collection<MyTeamPlayerData> players;

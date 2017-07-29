@@ -269,9 +269,9 @@ public class JsonUtils
 			{
 				CustomStyle cs = (CustomStyle) s;
 
-				if (cs.code != null)
+				if (cs.monospaced != null)
 				{
-					o.addProperty("code", s.obfuscated);
+					o.addProperty("monospaced", cs.monospaced);
 				}
 			}
 
@@ -510,14 +510,19 @@ public class JsonUtils
 				style.obfuscated = o.get("obfuscated").getAsBoolean();
 			}
 
-			if (o.has("code"))
+			if (o.has("monospaced"))
 			{
-				style.code = o.get("code").getAsBoolean();
+				style.monospaced = o.get("monospaced").getAsBoolean();
 			}
 
 			if (o.has("color"))
 			{
 				style.color = TextFormatting.getValueByName(o.get("color").getAsString());
+			}
+
+			if (o.has("background"))
+			{
+				style.background = TextFormatting.getValueByName(o.get("background").getAsString());
 			}
 
 			if (o.has("insertion"))

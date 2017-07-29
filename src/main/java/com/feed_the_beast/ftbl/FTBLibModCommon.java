@@ -54,7 +54,6 @@ import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideSwitchLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -80,6 +79,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * @author LatvianModder
+ */
 public class FTBLibModCommon implements IFTBLibRegistry
 {
 	private static final EnumSet<Side> DEFAULT_SIDES = EnumSet.allOf(Side.class);
@@ -217,9 +219,6 @@ public class FTBLibModCommon implements IFTBLibRegistry
 		addConfigValueProvider(PropertyItemStack.ID, PropertyItemStack::new);
 		addConfigValueProvider(PropertyTextComponent.ID, PropertyTextComponent::new);
 
-		addNotification(FTBLibNotifications.RELOAD_CLIENT_CONFIG);
-		addNotification(FTBLibNotifications.NEW_TEAM_MESSAGE);
-
 		addInfoTextLine("img", (page, json) -> new GuideImageLine(json));
 		addInfoTextLine("image", (page, json) -> new GuideImageLine(json));
 		addInfoTextLine("text_component", (page, json) -> new GuideExtendedTextLine(json));
@@ -296,12 +295,6 @@ public class FTBLibModCommon implements IFTBLibRegistry
 	public void addOptionalServerMod(String mod)
 	{
 		SharedServerData.INSTANCE.optionalServerMods.add(mod);
-	}
-
-	@Override
-	public void addNotification(INotification notification)
-	{
-		SharedServerData.INSTANCE.notifications.put(notification.getId(), notification);
 	}
 
 	@Override

@@ -2,12 +2,15 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.EnumDyeColorHelper;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumTeamColor implements IStringSerializable
 {
 	BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 0x0094FF),
@@ -21,16 +24,7 @@ public enum EnumTeamColor implements IStringSerializable
 	PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0xB342FF),
 	GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
 
-	/**
-	 * @author LatvianModder
-	 */
-	public static final EnumTeamColor[] VALUES = values();
-	public static final EnumNameMap<EnumTeamColor> NAME_MAP = new EnumNameMap<>(EnumTeamColor.values(), false);
-
-	public static EnumTeamColor get(int i)
-	{
-		return i < 0 || i >= VALUES.length ? BLUE : VALUES[i];
-	}
+	public static final NameMap<EnumTeamColor> NAME_MAP = NameMap.create(BLUE, values());
 
 	private final String name;
 	private final EnumDyeColor dyeColor;

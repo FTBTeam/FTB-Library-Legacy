@@ -4,6 +4,9 @@ import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 
+/**
+ * @author LatvianModder
+ */
 public class ItemBlockBase extends ItemBlock
 {
 	public ItemBlockBase(Block b, boolean hasSubtypes)

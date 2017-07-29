@@ -10,6 +10,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageDisplayGuide extends MessageToClient<MessageDisplayGuide>
 {
 	private String id;

@@ -19,6 +19,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * @author LatvianModder
+ */
 public class CmdPackMode extends CmdTreeBase
 {
 	public static class CmdSet extends CmdBase

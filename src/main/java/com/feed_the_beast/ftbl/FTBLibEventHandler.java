@@ -23,6 +23,9 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
 
+/**
+ * @author LatvianModder
+ */
 @EventHandler
 public class FTBLibEventHandler
 {

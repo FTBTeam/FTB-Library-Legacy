@@ -113,28 +113,20 @@ public class PropertyTristate extends PropertyBase
 	@Override
 	public List<String> getVariants()
 	{
-		return EnumTristate.NAME_MAP.getKeys();
+		return EnumTristate.NAME_MAP.keys;
 	}
 
 	@Override
 	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
 	{
-		set(get().getNext());
+		set(EnumTristate.NAME_MAP.getNext(get()));
 		gui.onChanged(key, getSerializableElement());
 	}
 
 	@Override
 	public void fromJson(JsonElement json)
 	{
-		if (json.getAsString().equals("toggle"))
-		{
-			set(get().getOpposite());
-		}
-		else
-		{
-			EnumTristate state = EnumTristate.NAME_MAP.get(json.getAsString());
-			set(state == null ? EnumTristate.DEFAULT : state);
-		}
+		set(json.getAsString().equals("toggle") ? get().getOpposite() : EnumTristate.NAME_MAP.get(json.getAsString()));
 	}
 
 	@Override
@@ -152,6 +144,6 @@ public class PropertyTristate extends PropertyBase
 	@Override
 	public void readData(ByteBuf data)
 	{
-		set(EnumTristate.VALUES[data.readUnsignedByte()]);
+		set(EnumTristate.NAME_MAP.get(data.readUnsignedByte()));
 	}
 }

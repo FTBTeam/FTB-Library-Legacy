@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -64,7 +63,7 @@ public class PropertyStringEnum extends PropertyBase
 	@Override
 	public boolean getBoolean()
 	{
-		return !value.equals(EnumNameMap.NULL_VALUE);
+		return !value.equals("-");
 	}
 
 	@Override

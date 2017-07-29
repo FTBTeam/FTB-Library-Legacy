@@ -5,21 +5,20 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @author LatvianModder
  */
-public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBase
+public abstract class PropertyEnumAbstract<E> extends PropertyBase
 {
 	public static final String ID = "enum";
 	public static final Color4I COLOR = new Color4I(false, 0xFF0094FF);
@@ -30,36 +29,24 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
 		return ID;
 	}
 
-	public abstract EnumNameMap<E> getNameMap();
-
-	@Nullable
-	public abstract E get();
-
-	public abstract void set(@Nullable E e);
-
-	public E getNonnull()
-	{
-		E e = get();
-		Preconditions.checkNotNull(e);
-		return e;
-	}
-
 	@Override
-	public Object getValue()
-	{
-		return get();
-	}
+	@Nonnull
+	public abstract E getValue();
+
+	public abstract NameMap<E> getNameMap();
+
+	public abstract void setValue(E e);
 
 	@Override
 	public String getString()
 	{
-		return EnumNameMap.getName(getValue());
+		return NameMap.getName(getValue());
 	}
 
 	@Override
 	public boolean getBoolean()
 	{
-		return getValue() != null;
+		return !getString().equals("-");
 	}
 
 	@Override
@@ -71,7 +58,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
 	@Override
 	public IConfigValue copy()
 	{
-		return new PropertyEnum<>(getNameMap(), getNameMap().getFromIndex(getInt()));
+		return new PropertyEnum<>(getNameMap().withDefault(getNameMap().get(getInt())));
 	}
 
 	@Override
@@ -83,13 +70,13 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
 	@Override
 	public List<String> getVariants()
 	{
-		return getNameMap().getKeys();
+		return getNameMap().keys;
 	}
 
 	@Override
 	public void fromJson(JsonElement json)
 	{
-		set(getNameMap().get(json.getAsString()));
+		setValue(getNameMap().get(json.getAsString()));
 	}
 
 	@Override
@@ -101,9 +88,9 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
 	@Override
 	public void writeData(ByteBuf data)
 	{
-		data.writeShort(getNameMap().size);
+		data.writeShort(getNameMap().values.size());
 
-		for (String s : getNameMap().getKeys())
+		for (String s : getNameMap().keys)
 		{
 			ByteBufUtils.writeUTF8String(data, s);
 		}
@@ -120,7 +107,7 @@ public abstract class PropertyEnumAbstract<E extends Enum<E>> extends PropertyBa
 	@Override
 	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
 	{
-		set(getNameMap().getFromIndex(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().size)));
+		setValue(getNameMap().get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().values.size())));
 		gui.onChanged(key, getSerializableElement());
 	}
 }

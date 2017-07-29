@@ -8,6 +8,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * @author LatvianModder
+ */
 public class CmdReloadClient extends CmdBase
 {
 	public CmdReloadClient()

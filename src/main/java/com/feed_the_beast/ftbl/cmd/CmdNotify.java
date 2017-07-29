@@ -1,20 +1,18 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.NotificationId;
-import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * @author LatvianModder
+ */
 public class CmdNotify extends CmdBase
 {
 	public CmdNotify()
@@ -27,7 +25,7 @@ public class CmdNotify extends CmdBase
 	{
 		if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, SharedServerData.INSTANCE.notifications.keySet());
+			return getListOfStringsMatchingLastWord(args, "{\"id\":\"minecraft:test\", \"text\":[\"Hi\"]}");
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -48,17 +46,7 @@ public class CmdNotify extends CmdBase
 		if (args[1].startsWith("{") && args[1].endsWith("}"))
 		{
 			//TODO: Custom notification support
-		}
-		else
-		{
-			INotification n = SharedServerData.INSTANCE.notifications.get(new NotificationId(new ResourceLocation(args[1].substring(0, args[1].indexOf('@'))), Integer.parseInt(args[1].substring(args[1].indexOf('@') + 1, args[1].length()))));
-
-			if (n == null)
-			{
-				throw new IllegalArgumentException("Notification '" + args[1] + "' not found!");
-			}
-
-			FTBLibAPI.API.sendNotification(player, n);
+			//FTBLibAPI.API.sendNotification(player, n);
 		}
 	}
 }

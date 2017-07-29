@@ -25,7 +25,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 		super(ByteBufUtils.readUTF8String(io));
 		displayName = ByteBufUtils.readUTF8String(io);
 		description = ByteBufUtils.readUTF8String(io);
-		color = EnumTeamColor.VALUES[io.readUnsignedByte()];
+		color = EnumTeamColor.NAME_MAP.read(io);
 		ownerId = NetUtils.readUUID(io);
 		ownerName = ByteBufUtils.readUTF8String(io);
 		isInvited = io.readBoolean();
@@ -47,7 +47,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 		ByteBufUtils.writeUTF8String(io, getName());
 		ByteBufUtils.writeUTF8String(io, displayName);
 		ByteBufUtils.writeUTF8String(io, description);
-		io.writeByte(color.ordinal());
+		EnumTeamColor.NAME_MAP.write(io, color);
 		NetUtils.writeUUID(io, ownerId);
 		ByteBufUtils.writeUTF8String(io, ownerName);
 		io.writeBoolean(isInvited);

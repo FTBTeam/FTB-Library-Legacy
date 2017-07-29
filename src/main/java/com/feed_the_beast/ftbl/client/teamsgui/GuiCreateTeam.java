@@ -31,7 +31,7 @@ public class GuiCreateTeam extends GuiBase
 	public GuiCreateTeam()
 	{
 		super(154, 102);
-		color = EnumTeamColor.VALUES[MathUtils.RAND.nextInt(EnumTeamColor.VALUES.length)];
+		color = EnumTeamColor.NAME_MAP.getRandom(MathUtils.RAND);
 
 		int bwidth = width / 2 - 6;
 		buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
@@ -86,7 +86,7 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
-		textBoxId.writeText(this, mc.player.getGameProfile().getName().toLowerCase());
+		textBoxId.writeText(this, FTBLibClient.MC.player.getGameProfile().getName().toLowerCase());
 		textBoxId.background = Button.DEFAULT_BACKGROUND;
 		textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
 		textBoxId.textColor = color.getColor();
@@ -94,23 +94,24 @@ public class GuiCreateTeam extends GuiBase
 		textBoxId.charLimit = 35;
 
 		colorButtons = new ArrayList<>();
+		int i = 0;
 
-		for (int i = 0; i < EnumTeamColor.VALUES.length; i++)
+		for (EnumTeamColor col : EnumTeamColor.NAME_MAP)
 		{
-			final int i1 = i;
+			i++;
 
 			Button b = new Button(4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
 			{
 				@Override
 				public void onClicked(GuiBase gui, IMouseButton button)
 				{
-					color = EnumTeamColor.VALUES[i1];
+					color = col;
 					textBoxId.textColor = color.getColor();
 				}
 			};
 
-			b.setIcon(new TexturelessRectangle(EnumTeamColor.VALUES[i].getColor()).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
-			b.setTitle(EnumTeamColor.VALUES[i].getTextFormatting() + EnumTeamColor.VALUES[i].getLangKey().translate());
+			b.setIcon(new TexturelessRectangle(col.getColor()).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
+			b.setTitle(col.getTextFormatting() + col.getLangKey().translate());
 			colorButtons.add(b);
 		}
 	}

@@ -19,7 +19,6 @@ public class SharedClientData extends SharedData implements ISharedClientData
 	{
 		super.reset();
 		optionalServerMods.clear();
-		notifications.clear();
 		isClientPlayerOP = false;
 	}
 

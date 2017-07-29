@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -27,7 +27,6 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xC8333333)).setLineColor(new Color4I(false, 0xFFC0C0C0)).setRoundEdges(true);
 	public static final Color4I DEFAULT_CONTENT_COLOR = new Color4I(false, 0xFFC0C0C0);
 
-	public final Minecraft mc;
 	private final FontRenderer font;
 	private int mouseX, mouseY, mouseWheel;
 	private float partialTicks;
@@ -39,7 +38,6 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 	public GuiBase(int w, int h)
 	{
 		super(0, 0, w, h);
-		mc = Minecraft.getMinecraft();
 		font = createFont();
 	}
 
@@ -53,7 +51,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public final void initGui()
 	{
-		screen = new ScaledResolution(mc);
+		screen = new ScaledResolution(FTBLibClient.MC);
 
 		if (isFullscreen())
 		{
@@ -84,13 +82,13 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 	{
 		onClosed();
 
-		if (mc.player == null)
+		if (FTBLibClient.MC.player == null)
 		{
-			mc.displayGuiScreen(null);
+			FTBLibClient.MC.displayGuiScreen(null);
 		}
 		else
 		{
-			mc.player.closeScreen();
+			FTBLibClient.MC.player.closeScreen();
 		}
 	}
 
@@ -110,7 +108,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	protected FontRenderer createFont()
 	{
-		return mc.fontRenderer;
+		return FTBLibClient.MC.fontRenderer;
 	}
 
 	@Override
@@ -177,7 +175,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public final void openGui()
 	{
-		mc.displayGuiScreen(getWrapper());
+		FTBLibClient.MC.displayGuiScreen(getWrapper());
 	}
 
 	public final FontRenderer getFont()
@@ -222,7 +220,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public void playSoundFX(SoundEvent e, float pitch)
 	{
-		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
+		FTBLibClient.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
 	}
 
 	public boolean isMouseOver(int x, int y, int w, int h)
@@ -267,7 +265,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public boolean isOpen()
 	{
-		return mc.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) mc.currentScreen).getWrappedGui() == this;
+		return FTBLibClient.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) FTBLibClient.MC.currentScreen).getWrappedGui() == this;
 	}
 
 	public boolean isShiftDown()

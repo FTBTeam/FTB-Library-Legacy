@@ -159,16 +159,17 @@ public class GuiHelper
 		font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2F), (int) (y - font.FONT_HEIGHT / 2F), color.rgba(), false);
 	}
 
-	public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)
+	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay, Color4I color)
 	{
-		if (stack.isEmpty())
+		if (stack.isEmpty() || color.hasColor() && color.alpha() < 100) //TODO: Figure out how to change color
 		{
 			return false;
 		}
 
 		boolean result = true;
 
-		itemRender.zLevel = 200F;
+		RenderItem renderItem = FTBLibClient.MC.getRenderItem();
+		renderItem.zLevel = 200F;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 32D);
 
@@ -185,7 +186,7 @@ public class GuiHelper
 
 		try
 		{
-			itemRender.renderItemAndEffectIntoGUI(stack, 0, 0);
+			renderItem.renderItemAndEffectIntoGUI(stack, 0, 0);
 
 			if (renderOverlay)
 			{
@@ -196,7 +197,7 @@ public class GuiHelper
 					font = FTBLibClient.MC.fontRenderer;
 				}
 
-				itemRender.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
+				renderItem.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
 			}
 		}
 		catch (Exception ex)
@@ -205,13 +206,13 @@ public class GuiHelper
 		}
 
 		GlStateManager.popMatrix();
-		itemRender.zLevel = 0F;
+		renderItem.zLevel = 0F;
 		return result;
 	}
 
-	public static boolean drawItem(RenderItem itemRender, ItemStack stack, double x, double y, boolean renderOverlay)
+	public static boolean drawItem(ItemStack stack, double x, double y, boolean renderOverlay, Color4I color)
 	{
-		return drawItem(itemRender, stack, x, y, 1D, 1D, renderOverlay);
+		return drawItem(stack, x, y, 1D, 1D, renderOverlay, color);
 	}
 
 	public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)

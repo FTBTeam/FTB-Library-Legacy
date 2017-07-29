@@ -3,6 +3,9 @@ package com.feed_the_beast.ftbl.lib;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * @author LatvianModder
+ */
 public class FinalIDObject implements IStringSerializable
 {
 	private final String ID;

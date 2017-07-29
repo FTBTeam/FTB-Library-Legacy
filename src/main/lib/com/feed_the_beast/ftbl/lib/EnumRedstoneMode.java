@@ -4,6 +4,9 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumRedstoneMode implements IStringSerializable
 {
 	DISABLED("disabled"),
@@ -11,8 +14,8 @@ public enum EnumRedstoneMode implements IStringSerializable
 	ACTIVE_LOW("active_low"),
 	PULSE("pulse");
 
-	public static final EnumRedstoneMode[] VALUES = {DISABLED, ACTIVE_HIGH, ACTIVE_LOW};
-	public static final EnumRedstoneMode[] VALUES_WITH_PULSE = {DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE};
+	public static final NameMap<EnumRedstoneMode> NAME_MAP = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW);
+	public static final NameMap<EnumRedstoneMode> NAME_MAP_WITH_PULSE = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE);
 	public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.redstonemode");
 
 	private final LangKey langKey;

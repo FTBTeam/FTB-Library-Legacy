@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.guide;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
@@ -36,7 +36,7 @@ public class GuideListLine extends EmptyGuidePageLine
 		NUMBER("number", 12),
 		LETTER("letter", 10);
 
-		public static final EnumNameMap<Ordering> NAME_MAP = new EnumNameMap<>(Ordering.values(), false, Ordering.BULLET);
+		public static final NameMap<Ordering> NAME_MAP = NameMap.create(BULLET, values());
 
 		private final String name;
 		public final int size;
@@ -60,7 +60,7 @@ public class GuideListLine extends EmptyGuidePageLine
 		CODE("code", EnumFacing.Plane.VERTICAL, Ordering.NONE),
 		HORIZONTAL("horizontal", EnumFacing.Plane.HORIZONTAL, Ordering.NONE);
 
-		public static final EnumNameMap<Type> NAME_MAP = new EnumNameMap<>(Type.values(), false, Type.NONE);
+		public static final NameMap<Type> NAME_MAP = NameMap.create(NONE, values());
 
 		private final String name;
 		public final EnumFacing.Plane plane;

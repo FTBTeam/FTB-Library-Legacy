@@ -1,18 +1,18 @@
 package com.feed_the_beast.ftbl.api.guide;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * @author LatvianModder
+ */
 public enum GuideType implements IStringSerializable
 {
 	MOD("mod"),
 	MODPACK("modpack"),
 	OTHER("other");
 
-	/**
-	 * @author LatvianModder
-	 */
-	private static final EnumNameMap<GuideType> NAME_MAP = new EnumNameMap<>(values(), false);
+	public static final NameMap<GuideType> NAME_MAP = NameMap.create(OTHER, values());
 
 	private final String name;
 
@@ -25,11 +25,5 @@ public enum GuideType implements IStringSerializable
 	public String getName()
 	{
 		return name;
-	}
-
-	public static GuideType getFromString(String s)
-	{
-		GuideType type = NAME_MAP.get(s);
-		return (type == null) ? OTHER : type;
 	}
 }

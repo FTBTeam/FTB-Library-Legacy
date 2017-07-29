@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
@@ -10,25 +10,22 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public enum EnumTristate implements IStringSerializable
 {
-	TRUE("true", Event.Result.ALLOW, PropertyBool.COLOR_TRUE, 1, 1),
-	FALSE("false", Event.Result.DENY, PropertyBool.COLOR_FALSE, 2, 0),
-	DEFAULT("default", Event.Result.DEFAULT, PropertyEnumAbstract.COLOR, 0, 2);
+	TRUE("true", Event.Result.ALLOW, PropertyBool.COLOR_TRUE, 1),
+	FALSE("false", Event.Result.DENY, PropertyBool.COLOR_FALSE, 0),
+	DEFAULT("default", Event.Result.DEFAULT, PropertyEnumAbstract.COLOR, 2);
 
-	public static final EnumTristate[] VALUES = values();
-	public static final EnumNameMap<EnumTristate> NAME_MAP = new EnumNameMap<>(VALUES, false);
+	public static final NameMap<EnumTristate> NAME_MAP = NameMap.create(DEFAULT, values());
 
 	private final String name;
 	private final Event.Result result;
 	private final Color4I color;
-	private final int next;
 	private final int opposite;
 
-	EnumTristate(String s, Event.Result r, Color4I c, int n, int o)
+	EnumTristate(String s, Event.Result r, Color4I c, int o)
 	{
 		name = s;
 		result = r;
 		color = c;
-		next = n;
 		opposite = o;
 	}
 
@@ -68,13 +65,8 @@ public enum EnumTristate implements IStringSerializable
 		return isDefault() ? def : isTrue();
 	}
 
-	public EnumTristate getNext()
-	{
-		return VALUES[next];
-	}
-
 	public EnumTristate getOpposite()
 	{
-		return VALUES[opposite];
+		return NAME_MAP.get(opposite);
 	}
 }

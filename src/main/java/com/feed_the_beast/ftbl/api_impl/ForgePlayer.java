@@ -309,7 +309,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	@Override
 	public boolean hideTeamNotification()
 	{
-		return hideTeamNotification.getBoolean();
+		return hideTeamNotification.getBoolean() || isFake();
 	}
 
 	@Override

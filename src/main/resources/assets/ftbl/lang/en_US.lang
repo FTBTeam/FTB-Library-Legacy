@@ -78,6 +78,7 @@ config.ftbl.teams.max_team_chat_history.name=Max Chat History
 
 # Client Config
 client_config.ftbl.item_ore_names.name=Display Item OreDictionary names
+client_config.ftbl.item_ore_names.tooltip=Ore Dictionary Names:
 client_config.ftbl.action_buttons_on_top.name=Action Buttons on Top
 client_config.ftbl.ignore_nei.name=Ignore NEI
 client_config.ftbl.action_buttons_on_top.info=When NEI is installed, buttons will ignore this setting and be on left of your inventory, unless Ignore NEI is enabled
@@ -168,12 +169,12 @@ ftbl.redstonemode.active_high=Active High
 ftbl.redstonemode.active_low=Active Low
 ftbl.redstonemode.pulse=Pulse
 
-# Inventory Mode
-ftbl.invmode=Inventory Mode
-ftbl.invmode.io=IO
-ftbl.invmode.in=Insert Only
-ftbl.invmode.out=Extract Only
-ftbl.invmode.none=Disabled
+# IO Mode
+ftbl.io=IO Mode
+ftbl.io.io=IO
+ftbl.io.in=Input Only
+ftbl.io.out=Output Only
+ftbl.io.none=Disabled
 
 # Click Actions
 click_action.cmd=Command

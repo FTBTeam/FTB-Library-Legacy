@@ -168,12 +168,12 @@ ftbl.redstonemode.active_high=高强度信号
 ftbl.redstonemode.active_low=低强度信号
 ftbl.redstonemode.pulse=脉冲
 
-# Inventory Mode
-ftbl.invmode=存储模式
-ftbl.invmode.io=IO
-ftbl.invmode.in=只能输入
-ftbl.invmode.out=只能输出
-ftbl.invmode.none=禁止
+# IO Mode
+# ftbl.io=存储模式
+# ftbl.io.io=IO
+# ftbl.io.in=只能输入
+# ftbl.io.out=只能输出
+# ftbl.io.none=禁止
 
 # Click Actions
 click_action.cmd=指令

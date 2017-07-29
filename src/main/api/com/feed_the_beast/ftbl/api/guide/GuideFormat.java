@@ -1,18 +1,18 @@
 package com.feed_the_beast.ftbl.api.guide;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * @author LatvianModder
+ */
 public enum GuideFormat implements IStringSerializable
 {
 	JSON("json"),
 	MD("md"),
 	UNSUPPORTED("unsupported");
 
-	/**
-	 * @author LatvianModder
-	 */
-	private static final EnumNameMap<GuideFormat> NAME_MAP = new EnumNameMap<>(values(), false);
+	public static final NameMap<GuideFormat> NAME_MAP = NameMap.create(UNSUPPORTED, values());
 
 	private final String name;
 
@@ -25,11 +25,5 @@ public enum GuideFormat implements IStringSerializable
 	public String getName()
 	{
 		return name;
-	}
-
-	public static GuideFormat getFromString(String s)
-	{
-		GuideFormat type = NAME_MAP.get(s);
-		return (type == null) ? UNSUPPORTED : type;
 	}
 }

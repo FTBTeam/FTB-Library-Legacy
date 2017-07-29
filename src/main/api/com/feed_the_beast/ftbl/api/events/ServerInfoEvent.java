@@ -3,6 +3,9 @@ package com.feed_the_beast.ftbl.api.events;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 
+/**
+ * @author LatvianModder
+ */
 public class ServerInfoEvent extends FTBLibEvent
 {
 	private final GuidePage file;

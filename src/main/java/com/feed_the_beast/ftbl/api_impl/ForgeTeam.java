@@ -151,7 +151,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	{
 		super(id);
 		isValid = true;
-		color = new PropertyEnum<>(EnumTeamColor.NAME_MAP, EnumTeamColor.BLUE);
+		color = new PropertyEnum<>(EnumTeamColor.NAME_MAP);
 		title = new PropertyString("");
 		desc = new PropertyString("");
 		freeToJoin = new PropertyBool(false);
@@ -182,11 +182,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		NBTTagCompound nbt = new NBTTagCompound();
 		nbt.setString("Owner", StringUtils.fromUUID(owner.getId()));
 		nbt.setString("Color", color.getString());
-
-		if (color.get() == null)
-		{
-			color.set(EnumTeamColor.BLUE);
-		}
 
 		if (!title.isEmpty())
 		{
@@ -348,12 +343,12 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public EnumTeamColor getColor()
 	{
-		return color.getNonnull();
+		return color.getValue();
 	}
 
 	public void setColor(EnumTeamColor col)
 	{
-		color.set(col);
+		color.setValue(col);
 	}
 
 	@Override
@@ -554,7 +549,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		{
 			if (!ep.getGameProfile().getId().equals(message.getSender()) && !Universe.INSTANCE.getPlayer(ep).hideNewTeamMsgNotification())
 			{
-				FTBLibAPI.API.sendNotification(ep, FTBLibNotifications.NEW_TEAM_MESSAGE);
+				FTBLibNotifications.NEW_TEAM_MESSAGE.send(ep);
 			}
 
 			m.sendTo(ep);

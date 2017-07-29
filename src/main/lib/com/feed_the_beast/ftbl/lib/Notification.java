@@ -1,50 +1,63 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.NotificationId;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @author LatvianModder
+ */
 public class Notification implements INotification
 {
-	private NotificationId id;
-	private Color4I color;
+	private final ResourceLocation id;
+	private final ITextComponent text;
 	private int timer;
-	private List<ITextComponent> text;
 	private IDrawableObject icon;
 
-	public Notification(NotificationId i)
+	public Notification(ResourceLocation i)
 	{
 		id = i;
-		text = new ArrayList<>();
+		text = StringUtils.text("");
 		setDefaults();
+	}
+
+	public Notification(ResourceLocation i, ITextComponent c)
+	{
+		this(i);
+		addLine(c);
+	}
+
+	public Notification(INotification n)
+	{
+		this(n.getId());
+		addLine(n.getText().createCopy());
+		setTimer(n.getTimer());
+		setIcon(n.getIcon());
 	}
 
 	public Notification setError(ITextComponent title)
 	{
-		ITextComponent t = title.createCopy();
-		t.getStyle().setColor(TextFormatting.WHITE);
-		addText(t);
-		timer = 3000;
-		color = Color4I.LIGHT_RED;
-		icon = new DrawableItem(new ItemStack(Blocks.BARRIER));
+		setDefaults();
+		addLine(StringUtils.color(title.createCopy(), TextFormatting.DARK_RED));
+		setIcon(new DrawableItem(new ItemStack(Blocks.BARRIER)));
 		return this;
 	}
 
 	public void setDefaults()
 	{
-		text.clear();
+		text.getSiblings().clear();
 		timer = 3000;
-		color = Color4I.GRAY;
 		icon = ImageProvider.NULL;
 	}
 
@@ -60,27 +73,28 @@ public class Notification implements INotification
 
 	public String toString()
 	{
-		return getId() + ", text:" + getText() + ", col:" + color + ", timer:" + getTimer() + ", icon:" + getIcon().getJson();
+		return getId() + ", text:" + getText() + ", timer:" + getTimer() + ", icon:" + getIcon().getJson();
 	}
 
-	public Notification addText(@Nullable ITextComponent t)
+	public Notification addLine(ITextComponent component)
 	{
-		if (t != null)
+		if (!text.getSiblings().isEmpty())
 		{
-			text.add(t);
+			appendText("\n");
 		}
 
+		appendSibling(component);
 		return this;
 	}
 
 	@Override
-	public NotificationId getId()
+	public ResourceLocation getId()
 	{
 		return id;
 	}
 
 	@Override
-	public List<ITextComponent> getText()
+	public ITextComponent getText()
 	{
 		return text;
 	}
@@ -110,24 +124,65 @@ public class Notification implements INotification
 	}
 
 	@Override
-	public Color4I getColor()
+	public ITextComponent setStyle(Style style)
 	{
-		return color;
-	}
-
-	public Notification setColor(Color4I c)
-	{
-		color = c;
+		text.setStyle(style);
 		return this;
 	}
 
-	public static Notification copy(INotification n)
+	@Override
+	public Style getStyle()
 	{
-		Notification n1 = new Notification(n.getId());
-		n1.getText().addAll(n.getText());
-		n1.setColor(new Color4I(true, n.getColor()));
-		n1.setTimer(n.getTimer());
-		n1.setIcon(n.getIcon());
-		return n1;
+		return text.getStyle();
+	}
+
+	@Override
+	public ITextComponent appendText(String string)
+	{
+		text.appendText(string);
+		return this;
+	}
+
+	@Override
+	public ITextComponent appendSibling(ITextComponent component)
+	{
+		text.appendSibling(component);
+		return this;
+	}
+
+	@Override
+	public String getUnformattedComponentText()
+	{
+		return text.getUnformattedComponentText();
+	}
+
+	@Override
+	public String getUnformattedText()
+	{
+		return text.getUnformattedText();
+	}
+
+	@Override
+	public String getFormattedText()
+	{
+		return text.getFormattedText();
+	}
+
+	@Override
+	public List<ITextComponent> getSiblings()
+	{
+		return text.getSiblings();
+	}
+
+	@Override
+	public ITextComponent createCopy()
+	{
+		return new Notification(this);
+	}
+
+	@Override
+	public Iterator<ITextComponent> iterator()
+	{
+		return text.iterator();
 	}
 }

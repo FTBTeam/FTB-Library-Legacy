@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
 	private static NBTTagCompound RX_NBT;

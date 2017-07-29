@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IPackModes;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
@@ -17,19 +16,17 @@ import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
-import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
+import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayGuide;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
-import com.feed_the_beast.ftbl.net.MessageNotifyPlayer;
-import com.feed_the_beast.ftbl.net.MessageNotifyPlayerCustom;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageReload;
 import com.google.common.base.Preconditions;
@@ -127,11 +124,20 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 
 		if (type != EnumReloadType.CREATED)
 		{
-			(serverSide ? FTBLibLang.RELOAD_SERVER : FTBLibLang.RELOAD_CLIENT).printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+			if (!serverSide)
+			{
+				FTBLibLang.RELOAD_CLIENT.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+			}
 
 			if (serverSide && type == EnumReloadType.RELOAD_COMMAND)
 			{
-				sendNotification(null, FTBLibNotifications.RELOAD_CLIENT_CONFIG);
+				Notification notification = new Notification(FTBLibFinals.get("reload_client_config"));
+				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent((System.currentTimeMillis() - ms) + "ms"));
+				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent());
+				notification.addLine(StringUtils.text("/ftb reload_client"));
+				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent());
+				notification.setTimer(7000);
+				notification.send(null);
 			}
 		}
 
@@ -161,23 +167,6 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 		player.openContainer.windowId = player.currentWindowId;
 		player.openContainer.addListener(player);
 		new MessageOpenGui(guiID, pos, data, player.currentWindowId).sendTo(player);
-	}
-
-	@Override
-	public void sendNotification(@Nullable EntityPlayer player, INotification n)
-	{
-		if (player != null && player.world.isRemote)
-		{
-			FTBLibMod.PROXY.displayNotification(EnumNotificationDisplay.SCREEN, n);
-		}
-		else if (SharedServerData.INSTANCE.notifications.containsKey(n.getId()))
-		{
-			new MessageNotifyPlayer(n.getId()).sendTo(player);
-		}
-		else
-		{
-			new MessageNotifyPlayerCustom(n).sendTo(player);
-		}
 	}
 
 	@Override

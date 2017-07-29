@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.BlockPartFace;
@@ -58,7 +57,7 @@ public class ModelBuilder
 		return PerspectiveMapWrapper.handlePerspective(model, TRANSFORM_MAP, cameraTransformType);
 	}
 
-	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> Minecraft.getMinecraft().getTextureMapBlocks().registerSprite(location);
+	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> FTBLibClient.MC.getTextureMapBlocks().registerSprite(location);
 
 	public final VertexFormat format;
 	private List<BakedQuad> quads;

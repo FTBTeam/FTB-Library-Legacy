@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
@@ -16,6 +17,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Teleporter;
@@ -37,29 +39,36 @@ import java.util.UUID;
  */
 public class ServerUtils
 {
-	public static final EnumNameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = new EnumNameMap<>(TextFormatting.values(), false);
+	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TextFormatting.values());
+
+	public enum SpawnType
+	{
+		CANT_SPAWN,
+		ALWAYS_SPAWNS,
+		ONLY_AT_NIGHT
+	}
 
 	private static class TeleporterBlank extends Teleporter
 	{
-		private TeleporterBlank(WorldServer w)
+		private TeleporterBlank(WorldServer world)
 		{
-			super(w);
+			super(world);
 		}
 
 		@Override
-		public boolean makePortal(Entity e)
-		{
-			return true;
-		}
-
-		@Override
-		public boolean placeInExistingPortal(Entity e, float f)
+		public boolean makePortal(Entity entity)
 		{
 			return true;
 		}
 
 		@Override
-		public void placeInPortal(Entity entity, float f)
+		public boolean placeInExistingPortal(Entity entity, float rotationYaw)
+		{
+			return true;
+		}
+
+		@Override
+		public void placeInPortal(Entity entity, float rotationYaw)
 		{
 			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
 			entity.motionX = 0D;
@@ -69,7 +78,7 @@ public class ServerUtils
 		}
 
 		@Override
-		public void removeStalePortalLocations(long l)
+		public void removeStalePortalLocations(long worldTime)
 		{
 		}
 	}
@@ -172,7 +181,9 @@ public class ServerUtils
 
 	public static MinecraftServer getServer()
 	{
-		return FMLCommonHandler.instance().getMinecraftServerInstance();
+		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+		Preconditions.checkNotNull(server);
+		return server;
 	}
 
 	public static boolean hasOnlinePlayers()
@@ -187,8 +198,7 @@ public class ServerUtils
 
 	public static boolean isOP(GameProfile p)
 	{
-		MinecraftServer server = getServer();
-		return server == null || server.getPlayerList().canSendCommands(p);
+		return getServer().getPlayerList().canSendCommands(p);
 	}
 
 	public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
@@ -206,33 +216,27 @@ public class ServerUtils
 		return commands;
 	}
 
-	//null - can't, TRUE - always spawns, FALSE - only spawns at night
-	@Nullable
-	public static Boolean canMobSpawn(World world, BlockPos pos)
+	public static SpawnType canMobSpawn(World world, BlockPos pos)
 	{
 		if (pos.getY() < 0 || pos.getY() >= 256)
 		{
-			return null;
+			return SpawnType.CANT_SPAWN;
 		}
 
 		Chunk chunk = world.getChunkFromBlockCoords(pos);
 
 		if (!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
 		{
-			return null;
+			return SpawnType.CANT_SPAWN;
 		}
 
 		AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.2, pos.getY() + 0.01, pos.getZ() + 0.2, pos.getX() + 0.8, pos.getY() + 1.8, pos.getZ() + 0.8);
 		if (!world.checkNoEntityCollision(aabb) || world.containsAnyLiquid(aabb))
 		{
-			return null;
+			return SpawnType.CANT_SPAWN;
 		}
 
-		if (chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8)
-		{
-			return Boolean.FALSE;
-		}
-		return Boolean.TRUE;
+		return chunk.getLightFor(EnumSkyBlock.SKY, pos) >= 8 ? SpawnType.ONLY_AT_NIGHT : SpawnType.ALWAYS_SPAWNS;
 	}
 
 	@Nullable
@@ -257,5 +261,20 @@ public class ServerUtils
 	public static Set<ICommand> getCommandSet(CommandHandler handler)
 	{
 		return handler.commandSet;
+	}
+
+	public static void notify(@Nullable EntityPlayer player, ITextComponent component)
+	{
+		if (player == null)
+		{
+			for (EntityPlayer player1 : ServerUtils.getServer().getPlayerList().getPlayers())
+			{
+				player1.sendStatusMessage(component, true);
+			}
+		}
+		else
+		{
+			player.sendStatusMessage(component, true);
+		}
 	}
 }

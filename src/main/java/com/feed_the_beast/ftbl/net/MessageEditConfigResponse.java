@@ -16,6 +16,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
 {
 	private JsonObject groupData;

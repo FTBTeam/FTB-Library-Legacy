@@ -18,6 +18,9 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
 
+/**
+ * @author LatvianModder
+ */
 public class MessageReload extends MessageToClient<MessageReload>
 {
 	private int typeID;

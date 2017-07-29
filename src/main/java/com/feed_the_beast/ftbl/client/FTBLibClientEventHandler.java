@@ -1,12 +1,15 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.LMUtils;
@@ -15,39 +18,187 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.chat.IChatListener;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ChatType;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * @author LatvianModder
+ */
 @EventHandler(Side.CLIENT)
 public class FTBLibClientEventHandler
 {
+	private static Temp currentNotification;
+	private static final Notification MINECRAFT_NOTIFICATION = new Notification(new ResourceLocation("minecraft", "status"));
+
+	private static final IChatListener CHAT_LISTENER = (type, component) ->
+	{
+		if (type == ChatType.GAME_INFO)
+		{
+			if (component instanceof INotification)
+			{
+				addNotification((INotification) component);
+			}
+			else if (FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION.getBoolean())
+			{
+				MINECRAFT_NOTIFICATION.setDefaults();
+				MINECRAFT_NOTIFICATION.addLine(component);
+				addNotification(MINECRAFT_NOTIFICATION);
+			}
+			else
+			{
+				FTBLibClient.MC.ingameGUI.setOverlayMessage(component.getFormattedText(), false);
+			}
+		}
+	};
+
+	public static class NotificationWidget
+	{
+		public final INotification notification;
+		public final List<String> text;
+		public final int height;
+		public int width;
+		public final FontRenderer font;
+
+		public NotificationWidget(INotification n, FontRenderer f)
+		{
+			notification = n;
+			width = 0;
+			font = f;
+
+			if (notification.getText() == null)
+			{
+				text = Collections.emptyList();
+				width = 20;
+				height = 20;
+			}
+			else
+			{
+				text = new ArrayList<>();
+				width = 0;
+
+				for (String s : font.listFormattedStringToWidth(notification.getText().getFormattedText(), 250))
+				{
+					for (String line : s.split("\n"))
+					{
+						text.add(line);
+						width = Math.max(width, font.getStringWidth(line));
+					}
+				}
+
+				width += 4;
+				height = text.size() * 12;
+
+				if (notification.getIcon() != ImageProvider.NULL)
+				{
+					width += 10;
+				}
+			}
+		}
+	}
+
+	private static class Temp
+	{
+		private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
+
+		private long time;
+		private NotificationWidget widget;
+
+		private Temp(INotification n)
+		{
+			widget = new NotificationWidget(n, FTBLibClient.MC.fontRenderer);
+			time = -1L;
+		}
+
+		public boolean render(ScaledResolution screen)
+		{
+			if (time == -1L)
+			{
+				time = System.currentTimeMillis();
+			}
+			else if (time <= 0L)
+			{
+				return true;
+			}
+
+			int timeExisted = (int) (System.currentTimeMillis() - time);
+			int timer = widget.notification.getTimer() & 0xFFFF;
+			int alpha = 255;
+
+			if (timeExisted >= timer)
+			{
+				time = 0L;
+				return true;
+			}
+			else if (timeExisted >= timer - 255)
+			{
+				alpha = timer - timeExisted;
+			}
+
+			if (alpha <= 1)
+			{
+				return true;
+			}
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate((int) (screen.getScaledWidth() / 2F), (int) (screen.getScaledHeight() - 68F), 0F);
+			GlStateManager.disableDepth();
+			GlStateManager.depthMask(false);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.color(1F, 1F, 1F, 1F);
+
+			if (widget.notification.getIcon() != ImageProvider.NULL)
+			{
+				int s = widget.text.isEmpty() ? 16 : 8;
+				widget.notification.getIcon().draw(0, (widget.height - s) / 2, s, s, alpha == 255 ? Color4I.NONE : new Color4I(false, Color4I.WHITE, alpha));
+			}
+
+			int offy = -(widget.text.size() * 11) / 2;
+
+			for (int i = 0; i < widget.text.size(); i++)
+			{
+				String string = widget.text.get(i);
+				widget.font.drawStringWithShadow(string, (widget.notification.getIcon() != ImageProvider.NULL ? 10 : 0) - widget.font.getStringWidth(string) / 2, offy + i * 11, 0xFFFFFF | (alpha << 24));
+			}
+
+			GlStateManager.depthMask(true);
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.enableLighting();
+			GlStateManager.popMatrix();
+
+			return false;
+		}
+	}
+
 	@SubscribeEvent
 	public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
 	{
 		SharedClientData.INSTANCE.reset();
+		currentNotification = null;
+		Temp.MAP.clear();
+		FTBLibClient.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).clear();
+		FTBLibClient.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).add(CHAT_LISTENER);
 	}
-
-    /* TODO: Close world / destroy cached data
-	@SubscribeEvent
-    public void onDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
-    {
-    }
-    */
 
 	@SubscribeEvent
 	public static void onTooltip(ItemTooltipEvent event)
@@ -58,7 +209,7 @@ public class FTBLibClientEventHandler
 
 			if (!ores.isEmpty())
 			{
-				event.getToolTip().add("Ore Dictionary names:");
+				event.getToolTip().add(StringUtils.translate("client_config.ftbl.item_ore_names.tooltip"));
 
 				for (String or : ores)
 				{
@@ -67,45 +218,6 @@ public class FTBLibClientEventHandler
 			}
 		}
 	}
-
-    /*
-	@SubscribeEvent
-    public static void onDrawDebugText(RenderGameOverlayEvent.Text event)
-    {
-        if(!Minecraft.getMinecraft().gameSettings.showDebugInfo)
-        {
-            if(LMUtils.DEV_ENV)
-            {
-                event.getLeft().add("[MC " + TextFormatting.GOLD + Loader.MC_VERSION + TextFormatting.WHITE + " DevEnv]");
-            }
-        }
-
-        Minecraft mc = FTBLibClient.mc();
-        ScaledResolution scaledResolution = new ScaledResolution(mc);
-        double width2 = scaledResolution.getScaledWidth_double();
-        double height2 = scaledResolution.getScaledHeight_double();
-
-        for(Entity entity : mc.theWorld.loadedEntityList)
-        {
-            if(entity != mc.thePlayer && entity.getDistanceSqToEntity(mc.thePlayer) <= 256D)
-            {
-                Vector4f pos = LMFrustumUtils.worldToViewport((float) entity.posX, (float) entity.posY, (float) entity.posZ);
-
-                //if(pos.z >= 0D)
-                {
-                    //GuiBase.drawBlankRect(width2 + pos.getX() * 30D - 8D, height2 + pos.getY() * 30D - 8D, 0F, 16D, 16D);
-                    GuiBase.drawBlankRect(width2 + pos.getX() * width2 - 4D, height2 + pos.getY() * height2 - 4D, 0F, 8D, 8D);
-
-                    event.getRight().add(pos.toString());
-
-                    //System.out.println(pos);
-                }
-            }
-        }
-    }
-     */
-
-	// Add Sidebar Buttons //
 
 	@SubscribeEvent
 	public static void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
@@ -119,12 +231,12 @@ public class FTBLibClientEventHandler
 
 		if (!buttons.isEmpty())
 		{
-			ButtonInvLMRenderer renderer = new ButtonInvLMRenderer();
+			GuiButtonSidebarGroup renderer = new GuiButtonSidebarGroup();
 			event.getButtonList().add(renderer);
 
 			for (int i = 0; i < buttons.size(); i++)
 			{
-				ButtonInvLM b = new ButtonInvLM(i, buttons.get(i));
+				GuiButtonSidebar b = new GuiButtonSidebar(i, buttons.get(i));
 				event.getButtonList().add(b);
 				renderer.buttons.add(b);
 			}
@@ -136,42 +248,65 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
 	{
-		if (event.getButton() instanceof ButtonInvLM)
+		if (event.getButton() instanceof GuiButtonSidebar)
 		{
 			GuiHelper.playClickSound();
-			(((ButtonInvLM) event.getButton()).button).onClicked(MouseButton.LEFT);
+			(((GuiButtonSidebar) event.getButton()).button).onClicked(MouseButton.LEFT);
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOW)
-	//public void renderGui(RenderGameOverlayEvent event)
-	public static void renderGui(TickEvent.RenderTickEvent event)
+	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
+	public static void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event)
 	{
-		Minecraft mc = Minecraft.getMinecraft();
-		//if(event.getType() == RenderGameOverlayEvent.ElementType.ALL)
-		if (event.phase == TickEvent.Phase.END && mc.world != null && !mc.gameSettings.hideGUI)
+		if ((currentNotification != null || !Temp.MAP.isEmpty()) && event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
 		{
-			if (ClientNotifications.shouldRenderTemp())
+			if (currentNotification != null)
 			{
-				ClientNotifications.renderTemp(new ScaledResolution(mc));
+				if (currentNotification.render(event.getResolution()))
+				{
+					currentNotification = null;
+				}
+
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.disableLighting();
+				GlStateManager.enableBlend();
+				GlStateManager.enableTexture2D();
+			}
+			else if (!Temp.MAP.isEmpty())
+			{
+				currentNotification = new Temp(Temp.MAP.values().iterator().next());
+				Temp.MAP.remove(currentNotification.widget.notification.getId());
 			}
 		}
 	}
 
-	@SubscribeEvent
+	public static void addNotification(INotification n)
+	{
+		ResourceLocation id = n.getId();
+		Temp.MAP.remove(id);
+
+		if (currentNotification != null && currentNotification.widget.notification.getId().equals(n.getId()))
+		{
+			currentNotification = null;
+		}
+
+		Temp.MAP.put(id, n);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void renderWorld(RenderWorldLastEvent event)
 	{
 		FTBLibClient.updateRenderInfo();
 	}
 
-	private static class ButtonInvLM extends GuiButton
+	private static class GuiButtonSidebar extends GuiButton
 	{
 		public final int index;
 		public final SidebarButton button;
 		public final String title;
 		public final boolean renderMessages;
 
-		public ButtonInvLM(int id, SidebarButton b)
+		public GuiButtonSidebar(int id, SidebarButton b)
 		{
 			super(495830 + id, -16, -16, 16, 16, "");
 			index = id;
@@ -186,12 +321,12 @@ public class FTBLibClientEventHandler
 		}
 	}
 
-	private static class ButtonInvLMRenderer extends GuiButton
+	private static class GuiButtonSidebarGroup extends GuiButton
 	{
-		public final List<ButtonInvLM> buttons;
+		public final List<GuiButtonSidebar> buttons;
 		private int prevGuiLeft = -1, prevGuiTop = -1;
 
-		public ButtonInvLMRenderer()
+		public GuiButtonSidebarGroup()
 		{
 			super(495829, -1000, -1000, 0, 0, "");
 			buttons = new ArrayList<>();
@@ -199,14 +334,12 @@ public class FTBLibClientEventHandler
 
 		public void updateButtonPositions()
 		{
-			Minecraft mc = Minecraft.getMinecraft();
-
-			if (!(mc.currentScreen instanceof InventoryEffectRenderer))
+			if (!(FTBLibClient.MC.currentScreen instanceof InventoryEffectRenderer))
 			{
 				return;
 			}
 
-			InventoryEffectRenderer gui = (InventoryEffectRenderer) mc.currentScreen;
+			InventoryEffectRenderer gui = (InventoryEffectRenderer) FTBLibClient.MC.currentScreen;
 			int guiLeft = GuiHelper.getGuiX(gui);
 			int guiTop = GuiHelper.getGuiY(gui);
 
@@ -223,7 +356,7 @@ public class FTBLibClientEventHandler
 				int x = 0;
 				int y = 0;
 
-				for (ButtonInvLM button : buttons)
+				for (GuiButtonSidebar button : buttons)
 				{
 					button.x = 4 + x * 18;
 					button.y = 4 + y * 18;
@@ -266,7 +399,7 @@ public class FTBLibClientEventHandler
 					buttonY -= 26;
 				}
 
-				for (ButtonInvLM button : buttons)
+				for (GuiButtonSidebar button : buttons)
 				{
 					if (hasPotions)
 					{
@@ -298,7 +431,7 @@ public class FTBLibClientEventHandler
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			for (ButtonInvLM b : buttons)
+			for (GuiButtonSidebar b : buttons)
 			{
 				b.button.icon.draw(b.x, b.y, b.width, b.height, Color4I.NONE);
 
@@ -308,7 +441,7 @@ public class FTBLibClientEventHandler
 				}
 			}
 
-			for (ButtonInvLM b : buttons)
+			for (GuiButtonSidebar b : buttons)
 			{
 				if (b.renderMessages && MyTeamData.unreadMessages > 0)
 				{

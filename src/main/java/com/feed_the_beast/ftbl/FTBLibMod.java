@@ -26,6 +26,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.io.File;
 import java.util.Locale;
 
+/**
+ * @author LatvianModder
+ */
 @Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.12,)", dependencies = FTBLibFinals.DEPENDENCIES)
 public class FTBLibMod
 {

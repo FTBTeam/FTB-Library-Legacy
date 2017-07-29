@@ -181,7 +181,7 @@ public class GuiMyTeam extends GuiBase
 				}
 				else if (teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
 				{
-					if (selectedPlayer.playerId.equals(mc.player.getGameProfile().getId()))
+					if (selectedPlayer.playerId.equals(FTBLibClient.MC.player.getGameProfile().getId()))
 					{
 						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit yourself!"));
 					}
@@ -239,7 +239,7 @@ public class GuiMyTeam extends GuiBase
 								public void onClicked(GuiBase gui, IMouseButton button)
 								{
 									GuiHelper.playClickSound();
-									mc.displayGuiScreen(new GuiYesNo((result, id) ->
+									FTBLibClient.MC.displayGuiScreen(new GuiYesNo((result, id) ->
 									{
 										if (result)
 										{
@@ -326,7 +326,7 @@ public class GuiMyTeam extends GuiBase
 			public void onClicked(GuiBase gui, IMouseButton button)
 			{
 				GuiHelper.playClickSound();
-				mc.displayGuiScreen(new GuiYesNo((result, id) ->
+				FTBLibClient.MC.displayGuiScreen(new GuiYesNo((result, id) ->
 				{
 					if (result)
 					{

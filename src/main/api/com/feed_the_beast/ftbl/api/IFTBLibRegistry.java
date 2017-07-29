@@ -21,8 +21,6 @@ public interface IFTBLibRegistry
 
 	void addOptionalServerMod(String mod);
 
-	void addNotification(INotification notification);
-
 	void addGuiContainer(ResourceLocation id, IContainerProvider provider);
 
 	void addInfoTextLine(String id, IGuideTextLineProvider provider);

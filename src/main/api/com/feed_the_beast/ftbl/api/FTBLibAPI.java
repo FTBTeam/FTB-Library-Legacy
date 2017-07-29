@@ -49,8 +49,6 @@ public abstract class FTBLibAPI
 
 	public abstract void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
-	public abstract void sendNotification(@Nullable EntityPlayer player, INotification n);
-
 	public abstract void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer);
 
 	public abstract void displayGuide(EntityPlayer player, GuidePage page);

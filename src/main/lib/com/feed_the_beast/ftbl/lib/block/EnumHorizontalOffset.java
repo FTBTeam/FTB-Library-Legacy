@@ -1,46 +1,44 @@
 package com.feed_the_beast.ftbl.lib.block;
 
-import com.feed_the_beast.ftbl.lib.EnumNameMap;
+import com.feed_the_beast.ftbl.lib.EnumScreenPosition;
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumHorizontalOffset implements IStringSerializable
 {
-	CENTER("center", new BlockPos(0, 0, 0)),
-	NORTH("north", new BlockPos(0, 0, 1)),
-	NORTH_EAST("north_east", new BlockPos(1, 0, 1)),
-	EAST("east", new BlockPos(1, 0, 0)),
-	SOUTH_EAST("south_east", new BlockPos(1, 0, -1)),
-	SOUTH("south", new BlockPos(0, 0, -1)),
-	SOUTH_WEST("south_west", new BlockPos(-1, 0, -1)),
-	WEST("west", new BlockPos(-1, 0, 0)),
-	NORTH_WEST("north_west", new BlockPos(-1, 0, 1));
+	CENTER("center", EnumScreenPosition.CENTER),
+	NORTH("north", EnumScreenPosition.BOTTOM),
+	NORTH_EAST("north_east", EnumScreenPosition.BOTTOM_RIGHT),
+	EAST("east", EnumScreenPosition.RIGHT),
+	SOUTH_EAST("south_east", EnumScreenPosition.TOP_RIGHT),
+	SOUTH("south", EnumScreenPosition.TOP),
+	SOUTH_WEST("south_west", EnumScreenPosition.TOP_LEFT),
+	WEST("west", EnumScreenPosition.LEFT),
+	NORTH_WEST("north_west", EnumScreenPosition.BOTTOM_LEFT);
 
-	/**
-	 * @author LatvianModder
-	 */
 	public static final EnumHorizontalOffset[] VALUES = values();
 	private static final EnumHorizontalOffset[] OPPOSITES = {CENTER, SOUTH, SOUTH_WEST, WEST, NORTH_WEST, NORTH, NORTH_EAST, EAST, SOUTH_EAST};
-	public static final EnumNameMap<EnumHorizontalOffset> NAME_MAP = new EnumNameMap<>(VALUES, false);
+	public static final NameMap<EnumHorizontalOffset> NAME_MAP = NameMap.create(CENTER, VALUES);
 
 	private final String name;
-	private final BlockPos offset;
+	public final EnumScreenPosition screenPosition;
+	public final BlockPos offset;
 
-	EnumHorizontalOffset(String n, BlockPos o)
+	EnumHorizontalOffset(String n, EnumScreenPosition p)
 	{
 		name = n;
-		offset = o;
+		screenPosition = p;
+		offset = new BlockPos(p.offsetX, 0, p.offsetY);
 	}
 
 	@Override
 	public String getName()
 	{
 		return name;
-	}
-
-	public BlockPos offset()
-	{
-		return offset;
 	}
 
 	public BlockPos offset(BlockPos pos)

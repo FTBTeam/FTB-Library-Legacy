@@ -1,23 +1,28 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
  */
-public interface INotification
+public interface INotification extends ITextComponent
 {
-	NotificationId getId();
+	ResourceLocation getId();
 
-	List<ITextComponent> getText();
+	ITextComponent getText();
 
 	IDrawableObject getIcon();
 
 	int getTimer();
 
-	Color4I getColor();
+	default void send(@Nullable EntityPlayer player)
+	{
+		ServerUtils.notify(player, this);
+	}
 }

@@ -1,5 +1,8 @@
 package com.feed_the_beast.ftbl.api;
 
+/**
+ * @author LatvianModder
+ */
 public enum EnumReloadType
 {
 	/**

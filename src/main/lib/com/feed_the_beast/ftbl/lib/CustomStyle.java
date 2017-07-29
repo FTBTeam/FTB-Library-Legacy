@@ -26,6 +26,13 @@ public class CustomStyle extends Style
 		}
 
 		@Override
+		@Nullable
+		public TextFormatting getBackground()
+		{
+			return null;
+		}
+
+		@Override
 		public boolean getBold()
 		{
 			return false;
@@ -56,7 +63,7 @@ public class CustomStyle extends Style
 		}
 
 		@Override
-		public boolean getCode()
+		public boolean getMonospaced()
 		{
 			return false;
 		}
@@ -84,6 +91,12 @@ public class CustomStyle extends Style
 
 		@Override
 		public Style setColor(TextFormatting color)
+		{
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public CustomStyle setBackground(TextFormatting color)
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -119,7 +132,7 @@ public class CustomStyle extends Style
 		}
 
 		@Override
-		public CustomStyle setCode(@Nullable Boolean obfuscated)
+		public CustomStyle setMonospaced(@Nullable Boolean obfuscated)
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -167,7 +180,8 @@ public class CustomStyle extends Style
 		}
 	};
 
-	public Boolean code;
+	public TextFormatting background;
+	public Boolean monospaced;
 
 	public CustomStyle()
 	{
@@ -182,23 +196,37 @@ public class CustomStyle extends Style
 	@Override
 	public boolean isEmpty()
 	{
-		return code == null && super.isEmpty();
+		return monospaced == null && super.isEmpty();
 	}
 
-	public boolean getCode()
+	@Nullable
+	public TextFormatting getBackground()
 	{
-		return code == null ? false : code;
+		Style style = getParent();
+		return background == null ? (style instanceof CustomStyle ? ((CustomStyle) style).getBackground() : null) : background;
 	}
 
-	public CustomStyle setCode(@Nullable Boolean _code)
+	public CustomStyle setBackground(@Nullable TextFormatting _color)
 	{
-		code = _code;
+		background = _color;
+		return this;
+	}
+
+	public boolean getMonospaced()
+	{
+		Style style = getParent();
+		return monospaced == null ? (style instanceof CustomStyle && ((CustomStyle) style).getMonospaced()) : monospaced;
+	}
+
+	public CustomStyle setMonospaced(@Nullable Boolean _code)
+	{
+		monospaced = _code;
 		return this;
 	}
 
 	public String toString()
 	{
-		return "Style{hasParent=" + (parentStyle != null) + ", color=" + color + ", bold=" + bold + ", italic=" + italic + ", underlined=" + underlined + ", obfuscated=" + obfuscated + ", code=" + code + ", clickEvent=" + getClickEvent() + ", hoverEvent=" + getHoverEvent() + ", insertion=" + getInsertion() + '}';
+		return "Style{hasParent=" + (parentStyle != null) + ", color=" + color + ", bold=" + bold + ", italic=" + italic + ", underlined=" + underlined + ", obfuscated=" + obfuscated + ", monospaced=" + monospaced + ", clickEvent=" + getClickEvent() + ", hoverEvent=" + getHoverEvent() + ", insertion=" + getInsertion() + '}';
 	}
 
 	public boolean equals(Object o)
@@ -210,7 +238,7 @@ public class CustomStyle extends Style
 		else if (o instanceof CustomStyle)
 		{
 			CustomStyle c = (CustomStyle) o;
-			return c.code == code && super.equals(c);
+			return c.monospaced == monospaced && super.equals(c);
 		}
 
 		return false;
@@ -219,12 +247,13 @@ public class CustomStyle extends Style
 	public int hashCode()
 	{
 		int i = Objects.hashCode(color);
+		i = 31 * i + Objects.hashCode(background);
 		i = 31 * i + Objects.hashCode(bold);
 		i = 31 * i + Objects.hashCode(italic);
 		i = 31 * i + Objects.hashCode(underlined);
 		i = 31 * i + Objects.hashCode(strikethrough);
 		i = 31 * i + Objects.hashCode(obfuscated);
-		i = 31 * i + Objects.hashCode(code);
+		i = 31 * i + Objects.hashCode(monospaced);
 		i = 31 * i + Objects.hashCode(clickEvent);
 		i = 31 * i + Objects.hashCode(hoverEvent);
 		i = 31 * i + Objects.hashCode(insertion);
@@ -238,8 +267,9 @@ public class CustomStyle extends Style
 		strikethrough = style.strikethrough;
 		underlined = style.underlined;
 		obfuscated = style.obfuscated;
-		code = style instanceof CustomStyle ? ((CustomStyle) style).code : null;
+		monospaced = style instanceof CustomStyle ? ((CustomStyle) style).monospaced : null;
 		color = style.color;
+		background = style instanceof CustomStyle ? ((CustomStyle) style).background : null;
 		clickEvent = style.clickEvent;
 		hoverEvent = style.hoverEvent;
 		parentStyle = style.parentStyle;
@@ -253,8 +283,9 @@ public class CustomStyle extends Style
 		setStrikethrough(style.getStrikethrough());
 		setUnderlined(style.getUnderlined());
 		setObfuscated(style.getObfuscated());
-		setCode(style instanceof CustomStyle ? ((CustomStyle) style).getCode() : null);
+		setMonospaced(style instanceof CustomStyle ? ((CustomStyle) style).getMonospaced() : null);
 		setColor(style.getColor());
+		setBackground(style instanceof CustomStyle ? ((CustomStyle) style).getBackground() : null);
 		setClickEvent(style.getClickEvent());
 		setHoverEvent(style.getHoverEvent());
 		setInsertion(style.getInsertion());
@@ -312,7 +343,7 @@ public class CustomStyle extends Style
 				sb.append(TextFormatting.OBFUSCATED);
 			}
 
-			if (getCode())
+			if (getMonospaced())
 			{
 				sb.append(StringUtils.FORMATTING + '`');
 			}

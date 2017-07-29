@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import java.util.EnumMap;
 
+/**
+ * @author LatvianModder
+ */
 public class EnumDyeColorHelper // ItemDye
 {
 	public static final EnumMap<EnumDyeColor, EnumDyeColorHelper> HELPERS = new EnumMap<>(EnumDyeColor.class);

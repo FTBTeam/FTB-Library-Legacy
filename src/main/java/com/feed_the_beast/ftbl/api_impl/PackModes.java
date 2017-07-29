@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author LatvianModder
+ */
 public enum PackModes implements IPackModes
 {
 	INSTANCE;
