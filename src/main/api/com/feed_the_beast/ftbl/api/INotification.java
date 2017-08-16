@@ -13,9 +13,9 @@ import javax.annotation.Nullable;
  */
 public interface INotification extends ITextComponent
 {
-	ResourceLocation getId();
+	ResourceLocation VANILLA_STATUS = new ResourceLocation("minecraft", "status");
 
-	ITextComponent getText();
+	ResourceLocation getId();
 
 	IDrawableObject getIcon();
 

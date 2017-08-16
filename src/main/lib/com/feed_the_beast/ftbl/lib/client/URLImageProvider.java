@@ -24,7 +24,7 @@ public class URLImageProvider extends ImageProvider
 	@SideOnly(Side.CLIENT)
 	public ITextureObject bindTexture()
 	{
-		ITextureObject obj = FTBLibClient.getDownloadImage(texture, url, ImageProvider.NULL.texture, null);
+		ITextureObject obj = ClientUtils.getDownloadImage(texture, url, ImageProvider.NULL.texture, null);
 		GlStateManager.bindTexture(obj.getGlTextureId());
 		return obj;
 	}

@@ -8,8 +8,8 @@ import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 
 public abstract class Button extends Widget
 {
-	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(new Color4I(false, 0xFFC0C0C0));
-	public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(Color4I.WHITE_A33);
+	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFFC0C0C0);
+	public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(Color4I.WHITE_A[33]);
 
 	private String title = "";
 	private IDrawableObject icon = ImageProvider.NULL;

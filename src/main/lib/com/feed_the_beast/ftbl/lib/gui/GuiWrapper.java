@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,7 +10,7 @@ import java.io.IOException;
 /**
  * @author LatvianModder
  */
-public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionGui
+public class GuiWrapper extends GuiScreen implements IGuiWrapper
 {
 	private GuiBase wrappedGui;
 
@@ -100,11 +99,5 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper, IClientActionG
 	public GuiBase getWrappedGui()
 	{
 		return wrappedGui;
-	}
-
-	@Override
-	public void onClientDataChanged()
-	{
-		wrappedGui.onClientDataChanged();
 	}
 }

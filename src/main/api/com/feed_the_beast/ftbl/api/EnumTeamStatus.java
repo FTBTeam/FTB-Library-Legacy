@@ -49,7 +49,7 @@ public enum EnumTeamStatus implements IStringSerializable
 		name = n;
 		status = s;
 		color = c;
-		langKey = new LangKey("ftbl.lang.team_status." + name);
+		langKey = LangKey.of("ftbl.lang.team_status." + name);
 		canBeSet = cs;
 	}
 

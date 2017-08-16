@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
@@ -33,9 +33,9 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 		groupData = json;
 		extraNBT = nbt;
 
-		if (LMUtils.DEV_ENV)
+		if (CommonUtils.DEV_ENV)
 		{
-			LMUtils.DEV_LOGGER.info("TX Response: " + groupData);
+			CommonUtils.DEV_LOGGER.info("TX Response: " + groupData);
 		}
 	}
 
@@ -66,9 +66,9 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 
 		if (cc != null)
 		{
-			if (LMUtils.DEV_ENV)
+			if (CommonUtils.DEV_ENV)
 			{
-				LMUtils.DEV_LOGGER.info("RX Response: " + m.groupData);
+				CommonUtils.DEV_LOGGER.info("RX Response: " + m.groupData);
 			}
 
 			cc.saveConfig(player, m.extraNBT, m.groupData);

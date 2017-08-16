@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedData;
 
 import java.util.Collection;
@@ -13,7 +11,6 @@ import java.util.UUID;
  */
 public abstract class SharedData implements ISharedData
 {
-	public IPackMode currentMode;
 	public UUID universeID;
 	public final Collection<String> optionalServerMods = new HashSet<>();
 
@@ -23,19 +20,7 @@ public abstract class SharedData implements ISharedData
 
 	public void reset()
 	{
-		currentMode = null;
 		universeID = null;
-	}
-
-	@Override
-	public IPackMode getPackMode()
-	{
-		if (currentMode == null)
-		{
-			currentMode = getSide().isClient() ? new PackMode("default") : FTBLibAPI.API.getPackModes().getDefault();
-		}
-
-		return currentMode;
 	}
 
 	@Override

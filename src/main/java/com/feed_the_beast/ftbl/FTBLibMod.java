@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -83,7 +83,7 @@ public class FTBLibMod
 		FTBLibFinals.LOGGER.info("FTBLib Loaded");
 		SharedServerData.INSTANCE.reset();
 		TickHandler.INSTANCE = new TickHandler();
-		LMUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
+		CommonUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getServer().getFolderName());
 		Universe.INSTANCE = new Universe();
 		Universe.INSTANCE.load();
 		PROXY.worldLoaded();

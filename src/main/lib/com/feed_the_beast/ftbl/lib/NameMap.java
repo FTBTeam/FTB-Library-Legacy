@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.api.IWithMetadata;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.base.Preconditions;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
@@ -16,14 +18,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
  */
 public final class NameMap<E> implements Iterable<E>
 {
+	private static final Function<Object, String> DEFAULT_OBJECT_TO_NAME = value -> StringUtils.getId(value, StringUtils.FLAG_ID_ONLY_LOWERCASE | StringUtils.FLAG_ID_FIX);
+
 	@SafeVarargs
-	public static <T> NameMap<T> create(T defaultValue, T... values)
+	public static <T> NameMap<T> create(T defaultValue, Function<Object, String> objectToName, T... values)
 	{
 		List<T> list = new ArrayList<>(values.length);
 
@@ -36,23 +41,38 @@ public final class NameMap<E> implements Iterable<E>
 		}
 
 		Preconditions.checkState(!list.isEmpty());
-		return new NameMap<>(defaultValue, list);
+		return new NameMap<>(defaultValue, objectToName, list);
 	}
 
+	@SafeVarargs
+	public static <T> NameMap<T> create(T defaultValue, T... values)
+	{
+		return create(defaultValue, DEFAULT_OBJECT_TO_NAME, values);
+	}
+
+	private final Function<Object, String> objectToName;
 	public final E defaultValue;
 	public final Map<String, E> map;
 	public final List<String> keys;
 	public final List<E> values;
+	public final TIntObjectHashMap<E> metaMap;
 
-	private NameMap(E def, List<E> v)
+	private NameMap(E def, Function<Object, String> o2n, List<E> v)
 	{
+		objectToName = o2n;
 		values = v;
 
 		Map<String, E> map0 = new LinkedHashMap<>(values.size());
+		metaMap = new TIntObjectHashMap<>();
 
-		for (E e : values)
+		for (E value : values)
 		{
-			map0.put(getName(e), e);
+			map0.put(getName(value), value);
+
+			if (value instanceof IWithMetadata)
+			{
+				metaMap.put(((IWithMetadata) value).getMetadata(), value);
+			}
 		}
 
 		map = Collections.unmodifiableMap(map0);
@@ -62,15 +82,17 @@ public final class NameMap<E> implements Iterable<E>
 
 	private NameMap(E def, NameMap<E> n)
 	{
+		objectToName = n.objectToName;
 		map = n.map;
 		keys = n.keys;
 		values = n.values;
 		defaultValue = get(getName(def));
+		metaMap = new TIntObjectHashMap<>(n.metaMap);
 	}
 
-	public static String getName(Object value)
+	public String getName(Object value)
 	{
-		return StringUtils.getId(value, StringUtils.FLAG_ID_ONLY_LOWERCASE | StringUtils.FLAG_ID_FIX);
+		return objectToName.apply(value);
 	}
 
 	public NameMap<E> withDefault(E def)
@@ -124,6 +146,12 @@ public final class NameMap<E> implements Iterable<E>
 	public int getStringIndex(String s)
 	{
 		return getIndex(map.get(s));
+	}
+
+	public E getFromMetadata(int meta)
+	{
+		E value = metaMap.get(meta);
+		return value == null ? defaultValue : value;
 	}
 
 	public void writeToNBT(NBTTagCompound nbt, String name, EnumSaveType type, Object value)

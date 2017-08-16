@@ -9,8 +9,8 @@ import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.event.ClickEvent;
@@ -46,7 +46,7 @@ public class SidebarButton extends FinalIDObject
 			icon = ImageProvider.get(o.get("icon"));
 		}
 
-		if (icon == ImageProvider.NULL)
+		if (icon.isNull())
 		{
 			icon = GuiIcons.ACCEPT_GRAY;
 		}
@@ -110,6 +110,6 @@ public class SidebarButton extends FinalIDObject
 
 	public boolean isVisible()
 	{
-		return !(hideWithNEI && LMUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
+		return !(hideWithNEI && CommonUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
 	}
 }

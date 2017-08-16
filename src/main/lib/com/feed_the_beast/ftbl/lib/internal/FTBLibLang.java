@@ -9,11 +9,6 @@ public class FTBLibLang
 {
 	//@formatter:off
     public static final LangKey
-    MODE_LOADED = get("mode.loaded"),
-    MODE_NOT_FOUND = get("mode.not_found"),
-    MODE_ALREADY_SET = get("mode.already_set"),
-    MODE_CURRENT = get("mode.current"),
-    MODE_LIST = get("mode.list"),
     RELOAD_SERVER = get("reload_server"),
     RELOAD_CLIENT = get("reload_client"),
     RELOAD_CLIENT_CONFIG_1 = get("reload_client_config_1"),
@@ -21,14 +16,14 @@ public class FTBLibLang
 
     //@Deprecated
     RAW = get("raw"),
-    WIP = new LangKey("wip"),
+    WIP = LangKey.of("wip"),
     DEPRECATED = get("deprecated"),
-    COMMAND_PERMISSION = new LangKey("commands.generic.permission"),
+    COMMAND_PERMISSION = LangKey.of("commands.generic.permission"),
     MISSING_ARGS = get("missing_args"),
     MISSING_ARGS_NUM = get("missing_args_num"),
     FEATURE_DISABLED = get("feature_disabled"),
     INVALID_SUBCMD = get("invalid_subcmd"),
-    CLIENT_CONFIG = new LangKey("client_config"),
+    CLIENT_CONFIG = LangKey.of("client_config"),
     OWNER = get("owner"),
     DELETE_ITEM = get("delete_item"),
     SERVER_FORCED = get("server_forced"),
@@ -59,6 +54,6 @@ public class FTBLibLang
 
 	private static LangKey get(String s)
 	{
-		return new LangKey("ftbl.lang." + s);
+		return LangKey.of("ftbl.lang." + s);
 	}
 }

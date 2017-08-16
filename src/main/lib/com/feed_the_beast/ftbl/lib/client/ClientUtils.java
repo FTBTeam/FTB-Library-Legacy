@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
+import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.NameMap;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.particle.Particle;
@@ -10,84 +12,82 @@ import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
-public class FTBLibClient
+public class ClientUtils
 {
 	public static final Minecraft MC = Minecraft.getMinecraft();
 	public static final Frustum FRUSTUM = new Frustum();
 	public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
-	/*
-	private static final Vector4f OBJECTCOORDS = new Vector4f();
-	private static final Vector4f TEMP_POINT = new Vector4f();
-	private static final Matrix4f MATRIX_MVM = new Matrix4f();
-	private static final Matrix4f MATRIX_PJM = new Matrix4f();
-	private static final Matrix4f MATRIX_OUT = new Matrix4f();
-	*/
+	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> MC.getTextureMapBlocks().registerSprite(location);
+	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
+
 	public static boolean isFirstPerson;
 	public static int currentDim, playerPosHash;
 	public static double playerX, playerY, playerZ;
 	public static double renderX, renderY, renderZ;
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;
-	//private static IntBuffer VIEWPORT;
-	//private static FloatBuffer MODELVIEW, PROJECTION;
+
 	public static PlayerHeadImage localPlayerHead;
 
-	// - Registry - //
+	public static void registerModel(Object _item, int meta, String variant)
+	{
+		Item item = _item instanceof Item ? (Item) _item : Item.getItemFromBlock((Block) _item);
+		ModelLoader.setCustomModelResourceLocation(item, meta, variant.indexOf('#') != -1 ? new ModelResourceLocation(variant) : new ModelResourceLocation(item.getRegistryName(), variant));
+	}
 
-    /*
-	public static <T extends Entity> void addEntityRenderer(@Nonnull Class<T> c, @Nonnull IRenderFactory<? super T> r)
-    {
-        RenderingRegistry.registerEntityRenderingHandler(c, r);
-    }
-    */
-
-	// -- //
+	public static void registerModel(Object _item)
+	{
+		registerModel(_item, 0, "inventory");
+	}
 
 	public static int getDim()
 	{
 		return MC.world != null ? MC.world.provider.getDimension() : 0;
 	}
 
-	public static void spawnPart(Particle e)
+	public static void spawnParticle(Particle e)
 	{
 		MC.effectRenderer.addEffect(e);
 	}
 
-	public static void onGuiClientAction()
+	public static void pushBrightness(int u, int t)
 	{
-		if (MC.currentScreen instanceof IClientActionGui)
-		{
-			((IClientActionGui) MC.currentScreen).onClientDataChanged();
-		}
+		lastBrightnessX = OpenGlHelper.lastBrightnessX;
+		lastBrightnessY = OpenGlHelper.lastBrightnessY;
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, u, t);
 	}
 
 	public static void pushMaxBrightness()
 	{
-		lastBrightnessX = OpenGlHelper.lastBrightnessX;
-		lastBrightnessY = OpenGlHelper.lastBrightnessY;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+		pushBrightness(240, 240);
 	}
 
-	public static void popMaxBrightness()
+	public static void popBrightness()
 	{
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
@@ -170,13 +170,13 @@ public class FTBLibClient
 			entityItem = new EntityItem(w);
 		}
 
-		entityItem.world = w;
+		entityItem.setWorld(w);
 		entityItem.hoverStart = 0F;
 		entityItem.setItem(is);
 		MC.getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
 	}
 
-	public static void drawOutlinedBoundingBox(AxisAlignedBB bb)
+	public static void drawOutlinedBoundingBox(AxisAlignedBB bb, Color4I color)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
@@ -213,7 +213,7 @@ public class FTBLibClient
 	{
 		Minecraft mc = MC;
 		isFirstPerson = mc.gameSettings.thirdPersonView == 0;
-		currentDim = FTBLibClient.getDim();
+		currentDim = ClientUtils.getDim();
 		//mc.thePlayer.posX
 
 		playerX = mc.getRenderManager().viewerPosX;
@@ -224,62 +224,10 @@ public class FTBLibClient
 		renderZ = TileEntityRendererDispatcher.staticPlayerZ;
 		playerPosHash = Objects.hash(currentDim, playerX, playerY, playerZ);
 		FRUSTUM.setPosition(playerX, playerY, playerZ);
-
-		/*
-		VIEWPORT = null;
-
-		if (VIEWPORT == null)
-		{
-			try
-			{
-				Field f = ReflectionHelper.findField(ActiveRenderInfo.class, "field_178814_a", "VIEWPORT");
-				f.setAccessible(true);
-				VIEWPORT = (IntBuffer) f.get(null);
-
-				ClippingHelperImpl inst = (ClippingHelperImpl) ClippingHelperImpl.getInstance();
-
-				f = ReflectionHelper.findField(ClippingHelperImpl.class, "field_78562_g", "modelviewMatrixBuffer");
-				f.setAccessible(true);
-				MODELVIEW = (FloatBuffer) f.get(inst);
-
-				f = ReflectionHelper.findField(ClippingHelperImpl.class, "field_78561_f", "projectionMatrixBuffer");
-				f.setAccessible(true);
-				PROJECTION = (FloatBuffer) f.get(inst);
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-		}
-
-		MODELVIEW.flip().limit(16);
-		MATRIX_MVM.load(MODELVIEW);
-
-		PROJECTION.flip().limit(16);
-		MATRIX_PJM.load(PROJECTION);
-
-		Matrix4f.mul(MATRIX_MVM, MATRIX_PJM, MATRIX_OUT);
-
-		// System.out.println(VIEWPORT);
-		// System.out.println(MODELVIEW);
-		// System.out.println(PROJECTION);
 	}
 
-	public static Vector4f worldToViewport(float x, float y, float z)
+	public static Map<String, TextureAtlasSprite> getRegisteredSpritesMap()
 	{
-		TEMP_POINT.x = x;
-		TEMP_POINT.y = y;
-		TEMP_POINT.z = z;
-		TEMP_POINT.w = 1F;
-
-		Matrix4f.transform(MATRIX_OUT, TEMP_POINT, OBJECTCOORDS);
-
-		if (Math.abs(OBJECTCOORDS.w) > 0.0000001F)
-		{
-			OBJECTCOORDS.scale(1F / OBJECTCOORDS.w);
-		}
-
-		return OBJECTCOORDS;
-		*/
+		return MC.getTextureMapBlocks().mapRegisteredSprites;
 	}
 }

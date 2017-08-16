@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
@@ -21,7 +22,7 @@ import java.util.function.Predicate;
 /**
  * Made by LatvianModder
  */
-public class LMUtils
+public class CommonUtils
 {
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 	public static final Logger DEV_LOGGER = LogManager.getLogger("FTBLibDev");
@@ -104,9 +105,51 @@ public class LMUtils
 		}
 	}
 
-	public static String getName(IBlockState state)
+	public static String getNameFromState(IBlockState state)
 	{
-		ResourceLocation id = state.getBlock().getRegistryName();
-		return id.getResourceDomain() + '_' + id.getResourcePath().replace('.', '_') + '_' + state.getBlock().getMetaFromState(state);
+		StringBuilder builder = new StringBuilder();
+		builder.append(Block.REGISTRY.getNameForObject(state.getBlock()));
+
+		if (!state.getProperties().isEmpty())
+		{
+			builder.append('[');
+			final boolean[] first = {true};
+
+			state.getProperties().forEach((iProperty, comparable) ->
+			{
+				if (first[0])
+				{
+					first[0] = false;
+				}
+				else
+				{
+					builder.append(',');
+				}
+				builder.append(iProperty.getName());
+				builder.append('=');
+				builder.append(iProperty.getName(cast(comparable)));
+			});
+
+			builder.append(']');
+		}
+
+		return builder.toString();
+	}
+
+	public static IBlockState getStateFromName(String name)
+	{
+		int p = name.indexOf('[');
+		String stateName = p == -1 ? name : name.substring(0, p - 1);
+		Block block = Block.REGISTRY.getObject(new ResourceLocation(stateName));
+
+		if (p >= 0)
+		{
+			for (String property : name.substring(p, name.length() - 1).split(","))
+			{
+
+			}
+		}
+
+		return block.getDefaultState();
 	}
 }

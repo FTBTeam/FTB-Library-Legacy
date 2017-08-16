@@ -79,7 +79,7 @@ public class GuiConfigValueField extends GuiBase
 			@Override
 			public void onTextChanged(GuiBase gui)
 			{
-				textBox.textColor.set(value.getColor(), 255);
+				textBox.textColor = value.getColor();
 			}
 
 			@Override

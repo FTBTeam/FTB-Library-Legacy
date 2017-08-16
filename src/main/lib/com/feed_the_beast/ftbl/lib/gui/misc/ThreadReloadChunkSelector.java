@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PixelBuffer;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import net.minecraft.block.Block;
@@ -193,7 +193,7 @@ public class ThreadReloadChunkSelector extends Thread
 		int cx, cz, x, z, wx, wz, by, color, topY;
 		boolean depth = GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean();
 
-		int startY = FTBLibClient.MC.player.getPosition().getY();
+		int startY = ClientUtils.MC.player.getPosition().getY();
 
 		try
 		{

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -57,6 +57,6 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		map.forEach((key, value) -> value.deserializeNBT(LMUtils.cast(nbt.getTag(key.toString()))));
+		map.forEach((key, value) -> value.deserializeNBT(CommonUtils.cast(nbt.getTag(key.toString()))));
 	}
 }

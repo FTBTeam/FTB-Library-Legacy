@@ -37,7 +37,7 @@ public enum EnumTeamColor implements IStringSerializable
 		name = n;
 		dyeColor = d;
 		textFormatting = t;
-		color = new Color4I(false, 0xFF000000 | c);
+		color = Color4I.rgb(c);
 		langKey = EnumDyeColorHelper.get(dyeColor).getLangKey();
 	}
 

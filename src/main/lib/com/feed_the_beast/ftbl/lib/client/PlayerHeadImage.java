@@ -24,7 +24,7 @@ public class PlayerHeadImage extends ImageProvider
 	@SideOnly(Side.CLIENT)
 	public ITextureObject bindTexture()
 	{
-		FTBLibClient.getSkinTexture(username);
+		ClientUtils.getSkinTexture(username);
 		return super.bindTexture();
 	}
 

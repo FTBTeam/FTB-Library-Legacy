@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -92,7 +92,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 			if (isSelected || gui.isMouseOver(this))
 			{
-				GuiHelper.drawBlankRect(ax, ay, 16, 16, Color4I.WHITE_A33);
+				GuiHelper.drawBlankRect(ax, ay, 16, 16, Color4I.WHITE_A[33]);
 			}
 		}
 	}
@@ -106,8 +106,8 @@ public class GuiChunkSelectorBase extends GuiBase
 	{
 		super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
 
-		startX = MathUtils.chunk(FTBLibClient.MC.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-		startZ = MathUtils.chunk(FTBLibClient.MC.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
 
 		panelButtons = new Panel(0, 0, 16, 0)
 		{
@@ -172,7 +172,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		buffer.setTranslation(0D, 0D, 0D);
 		GlStateManager.enableTexture2D();
 
-		EntityPlayer player = FTBLibClient.MC.player;
+		EntityPlayer player = ClientUtils.MC.player;
 
 		int cx = MathUtils.chunk(player.posX);
 		int cy = MathUtils.chunk(player.posZ);
@@ -187,9 +187,9 @@ public class GuiChunkSelectorBase extends GuiBase
 			GlStateManager.pushMatrix();
 			//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
-			GuiConfigs.TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A33);
+			GuiConfigs.TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A[33]);
 			GlStateManager.popMatrix();
-			FTBLibClient.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
+			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
 			GlStateManager.popMatrix();
 		}
 

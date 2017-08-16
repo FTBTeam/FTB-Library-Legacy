@@ -18,7 +18,7 @@ import java.util.List;
 public class PropertyString extends PropertyBase
 {
 	public static final String ID = "string";
-	public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
+	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private String value;
 	private int charLimit;

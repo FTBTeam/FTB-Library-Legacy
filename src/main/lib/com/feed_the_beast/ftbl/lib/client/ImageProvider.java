@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
-import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -26,6 +25,12 @@ public class ImageProvider implements IDrawableObject
 {
 	public static final ImageProvider NULL = new ImageProvider("textures/misc/unknown_pack.png", 0D, 0D, 1D, 1D)
 	{
+		@Override
+		public boolean isNull()
+		{
+			return true;
+		}
+
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void draw(int x, int y, int w, int h, Color4I col)
@@ -54,8 +59,7 @@ public class ImageProvider implements IDrawableObject
 				switch (o.get("id").getAsString())
 				{
 					case "colored":
-						Color4I col = new Color4I(true, ColorUtils.deserialize(o.get("color")));
-						return new ColoredObject(get(o.get("parent").getAsJsonObject()), o.has("color_alpha") ? new Color4I(true, col, o.get("color_alpha").getAsInt()) : col);
+						return new ColoredObject(get(o.get("parent").getAsJsonObject()), Color4I.fromJson(o.get("color")));
 				}
 			}
 		}
@@ -113,7 +117,7 @@ public class ImageProvider implements IDrawableObject
 	@SideOnly(Side.CLIENT)
 	public ITextureObject bindTexture()
 	{
-		return FTBLibClient.bindTexture(texture);
+		return ClientUtils.bindTexture(texture);
 	}
 
 	@Override

@@ -12,8 +12,6 @@ public interface ISharedData
 {
 	Side getSide();
 
-	IPackMode getPackMode();
-
 	UUID getUniverseID();
 
 	Collection<String> optionalServerMods();

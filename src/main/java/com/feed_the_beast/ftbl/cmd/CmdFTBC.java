@@ -13,6 +13,7 @@ public class CmdFTBC extends CmdTreeBase
 	{
 		super("ftbc");
 		addSubcommand(new CmdClientConfig());
+		addSubcommand(new CmdReloadClient());
 
 		new RegisterFTBClientCommandsEvent(this).post();
 		setCustomPermissionPrefix("");

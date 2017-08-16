@@ -15,7 +15,7 @@ public enum EnumIO implements IStringSerializable
 	NONE("none");
 
 	public static final EnumIO[] VALUES = values();
-	public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.io");
+	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftbl.io");
 
 	private final String name;
 	private final LangKey langKey;
@@ -23,7 +23,7 @@ public enum EnumIO implements IStringSerializable
 	EnumIO(String n)
 	{
 		name = n;
-		langKey = new LangKey("ftbl.io." + name);
+		langKey = LangKey.of("ftbl.io." + name);
 	}
 
 	@Override

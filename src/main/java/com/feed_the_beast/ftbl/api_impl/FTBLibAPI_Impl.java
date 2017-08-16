@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IPackModes;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
@@ -22,9 +21,8 @@ import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayGuide;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
@@ -39,6 +37,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
@@ -58,12 +57,6 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	public Collection<ITickable> ticking()
 	{
 		return TickHandler.INSTANCE.TICKABLES;
-	}
-
-	@Override
-	public IPackModes getPackModes()
-	{
-		return PackModes.INSTANCE;
 	}
 
 	@Override
@@ -122,26 +115,28 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 			}
 		}
 
+		String millis = (System.currentTimeMillis() - ms) + "ms";
+
 		if (type != EnumReloadType.CREATED)
 		{
 			if (!serverSide)
 			{
-				FTBLibLang.RELOAD_CLIENT.printChat(BroadcastSender.INSTANCE, (System.currentTimeMillis() - ms) + "ms");
+				FTBLibLang.RELOAD_CLIENT.printChat(BroadcastSender.INSTANCE, millis);
 			}
 
 			if (serverSide && type == EnumReloadType.RELOAD_COMMAND)
 			{
-				Notification notification = new Notification(FTBLibFinals.get("reload_client_config"));
-				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent((System.currentTimeMillis() - ms) + "ms"));
+				Notification notification = Notification.of(FTBLibFinals.get("reload_client_config"));
+				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
 				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent());
-				notification.addLine(StringUtils.text("/ftb reload_client"));
+				notification.addLine(new TextComponentString("/ftb reload_client"));
 				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent());
-				notification.setTimer(7000);
+				notification.setTimer(140);
 				notification.send(null);
 			}
 		}
 
-		FTBLibFinals.LOGGER.info("Reloaded " + side + " on packmode '" + getSidedData(side).getPackMode() + "'");
+		FTBLibFinals.LOGGER.info("Reloaded " + side + " in " + millis);
 	}
 
 	@Override
@@ -209,11 +204,11 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 		{
 			context.getServerHandler().player.mcServer.addScheduledTask(() ->
 			{
-				message.onMessage(LMUtils.cast(message), context.getServerHandler().player);
+				message.onMessage(CommonUtils.cast(message), context.getServerHandler().player);
 
 				if (LOG_NET)
 				{
-					LMUtils.DEV_LOGGER.info("TX MessageBase: " + message.getClass().getName());
+					CommonUtils.DEV_LOGGER.info("TX MessageBase: " + message.getClass().getName());
 				}
 			});
 		}

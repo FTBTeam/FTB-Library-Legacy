@@ -2,17 +2,17 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -37,7 +38,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -48,113 +48,108 @@ import java.util.List;
 public class FTBLibClientEventHandler
 {
 	private static Temp currentNotification;
-	private static final Notification MINECRAFT_NOTIFICATION = new Notification(new ResourceLocation("minecraft", "status"));
 
 	private static final IChatListener CHAT_LISTENER = (type, component) ->
 	{
 		if (type == ChatType.GAME_INFO)
 		{
-			if (component instanceof INotification)
+			if (component instanceof INotification || FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION.getBoolean())
 			{
-				addNotification((INotification) component);
-			}
-			else if (FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION.getBoolean())
-			{
-				MINECRAFT_NOTIFICATION.setDefaults();
-				MINECRAFT_NOTIFICATION.addLine(component);
-				addNotification(MINECRAFT_NOTIFICATION);
+				ResourceLocation id = component instanceof INotification ? ((INotification) component).getId() : INotification.VANILLA_STATUS;
+				Temp.MAP.remove(id);
+
+				if (currentNotification != null && currentNotification.widget.id.equals(id))
+				{
+					currentNotification = null;
+				}
+
+				Temp.MAP.put(id, component);
 			}
 			else
 			{
-				FTBLibClient.MC.ingameGUI.setOverlayMessage(component.getFormattedText(), false);
+				ClientUtils.MC.ingameGUI.setOverlayMessage(component.getFormattedText(), false);
 			}
 		}
 	};
 
 	public static class NotificationWidget
 	{
-		public final INotification notification;
+		public final ITextComponent notification;
+		public final ResourceLocation id;
 		public final List<String> text;
-		public final int height;
-		public int width;
+		public int width, height;
 		public final FontRenderer font;
+		public final long timer;
+		public final IDrawableObject icon;
 
-		public NotificationWidget(INotification n, FontRenderer f)
+		public NotificationWidget(ITextComponent n, FontRenderer f)
 		{
 			notification = n;
+			id = n instanceof INotification ? ((INotification) n).getId() : INotification.VANILLA_STATUS;
 			width = 0;
 			font = f;
+			text = new ArrayList<>();
+			timer = n instanceof INotification ? (((INotification) n).getTimer() & 0xFFL) : 60L;
+			icon = n instanceof INotification ? ((INotification) n).getIcon() : ImageProvider.NULL;
 
-			if (notification.getText() == null)
+			for (String s : font.listFormattedStringToWidth(notification.getFormattedText(), new ScaledResolution(ClientUtils.MC).getScaledWidth()))
 			{
-				text = Collections.emptyList();
-				width = 20;
-				height = 20;
-			}
-			else
-			{
-				text = new ArrayList<>();
-				width = 0;
-
-				for (String s : font.listFormattedStringToWidth(notification.getText().getFormattedText(), 250))
+				for (String line : s.split("\n"))
 				{
-					for (String line : s.split("\n"))
+					if (!line.isEmpty())
 					{
+						line = StringUtils.trimAllWhitespace(line);
 						text.add(line);
 						width = Math.max(width, font.getStringWidth(line));
 					}
 				}
+			}
 
-				width += 4;
-				height = text.size() * 12;
+			width += 4;
+			height = text.size() * 11;
 
-				if (notification.getIcon() != ImageProvider.NULL)
-				{
-					width += 10;
-				}
+			if (text.isEmpty())
+			{
+				width = 20;
+				height = 20;
+			}
+			else if (!icon.isNull())
+			{
+				width += 10;
 			}
 		}
 	}
 
 	private static class Temp
 	{
-		private static final LinkedHashMap<ResourceLocation, INotification> MAP = new LinkedHashMap<>();
+		private static final LinkedHashMap<ResourceLocation, ITextComponent> MAP = new LinkedHashMap<>();
 
-		private long time;
+		private long endTick;
 		private NotificationWidget widget;
 
-		private Temp(INotification n)
+		private Temp(ITextComponent n)
 		{
-			widget = new NotificationWidget(n, FTBLibClient.MC.fontRenderer);
-			time = -1L;
+			widget = new NotificationWidget(n, ClientUtils.MC.fontRenderer);
+			endTick = -1L;
 		}
 
-		public boolean render(ScaledResolution screen)
+		public boolean render(ScaledResolution screen, float partialTicks)
 		{
-			if (time == -1L)
+			long tick = ClientUtils.MC.world.getTotalWorldTime();
+
+			if (endTick == -1L)
 			{
-				time = System.currentTimeMillis();
+				endTick = tick + widget.timer;
 			}
-			else if (time <= 0L)
+
+			if (tick >= endTick)
 			{
 				return true;
 			}
 
-			int timeExisted = (int) (System.currentTimeMillis() - time);
-			int timer = widget.notification.getTimer() & 0xFFFF;
-			int alpha = 255;
+			int alpha = (int) Math.min(255F, (endTick - tick - partialTicks) * 255F / 20F);
 
-			if (timeExisted >= timer)
-			{
-				time = 0L;
-				return true;
-			}
-			else if (timeExisted >= timer - 255)
-			{
-				alpha = timer - timeExisted;
-			}
-
-			if (alpha <= 1)
+			if (alpha <= 2)
 			{
 				return true;
 			}
@@ -167,10 +162,10 @@ public class FTBLibClientEventHandler
 			GlStateManager.enableBlend();
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			if (widget.notification.getIcon() != ImageProvider.NULL)
+			if (!widget.icon.isNull())
 			{
 				int s = widget.text.isEmpty() ? 16 : 8;
-				widget.notification.getIcon().draw(0, (widget.height - s) / 2, s, s, alpha == 255 ? Color4I.NONE : new Color4I(false, Color4I.WHITE, alpha));
+				widget.icon.draw(0, (widget.height - s) / 2, s, s, alpha == 255 ? Color4I.NONE : Color4I.WHITE_A[alpha]);
 			}
 
 			int offy = -(widget.text.size() * 11) / 2;
@@ -178,7 +173,7 @@ public class FTBLibClientEventHandler
 			for (int i = 0; i < widget.text.size(); i++)
 			{
 				String string = widget.text.get(i);
-				widget.font.drawStringWithShadow(string, (widget.notification.getIcon() != ImageProvider.NULL ? 10 : 0) - widget.font.getStringWidth(string) / 2, offy + i * 11, 0xFFFFFF | (alpha << 24));
+				widget.font.drawStringWithShadow(string, (!widget.icon.isNull() ? 10 : 0) - widget.font.getStringWidth(string) / 2, offy + i * 11, 0xFFFFFF | (alpha << 24));
 			}
 
 			GlStateManager.depthMask(true);
@@ -196,8 +191,8 @@ public class FTBLibClientEventHandler
 		SharedClientData.INSTANCE.reset();
 		currentNotification = null;
 		Temp.MAP.clear();
-		FTBLibClient.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).clear();
-		FTBLibClient.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).add(CHAT_LISTENER);
+		ClientUtils.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).clear();
+		ClientUtils.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).add(CHAT_LISTENER);
 	}
 
 	@SubscribeEvent
@@ -262,7 +257,7 @@ public class FTBLibClientEventHandler
 		{
 			if (currentNotification != null)
 			{
-				if (currentNotification.render(event.getResolution()))
+				if (currentNotification.render(event.getResolution(), event.getPartialTicks()))
 				{
 					currentNotification = null;
 				}
@@ -275,28 +270,15 @@ public class FTBLibClientEventHandler
 			else if (!Temp.MAP.isEmpty())
 			{
 				currentNotification = new Temp(Temp.MAP.values().iterator().next());
-				Temp.MAP.remove(currentNotification.widget.notification.getId());
+				Temp.MAP.remove(currentNotification.widget.id);
 			}
 		}
-	}
-
-	public static void addNotification(INotification n)
-	{
-		ResourceLocation id = n.getId();
-		Temp.MAP.remove(id);
-
-		if (currentNotification != null && currentNotification.widget.notification.getId().equals(n.getId()))
-		{
-			currentNotification = null;
-		}
-
-		Temp.MAP.put(id, n);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void renderWorld(RenderWorldLastEvent event)
 	{
-		FTBLibClient.updateRenderInfo();
+		ClientUtils.updateRenderInfo();
 	}
 
 	private static class GuiButtonSidebar extends GuiButton
@@ -334,12 +316,12 @@ public class FTBLibClientEventHandler
 
 		public void updateButtonPositions()
 		{
-			if (!(FTBLibClient.MC.currentScreen instanceof InventoryEffectRenderer))
+			if (!(ClientUtils.MC.currentScreen instanceof InventoryEffectRenderer))
 			{
 				return;
 			}
 
-			InventoryEffectRenderer gui = (InventoryEffectRenderer) FTBLibClient.MC.currentScreen;
+			InventoryEffectRenderer gui = (InventoryEffectRenderer) ClientUtils.MC.currentScreen;
 			int guiLeft = GuiHelper.getGuiX(gui);
 			int guiTop = GuiHelper.getGuiY(gui);
 
@@ -351,7 +333,7 @@ public class FTBLibClientEventHandler
 
 			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).recipeBookGui.isVisible());
 
-			if (!LMUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+			if (!CommonUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
 			{
 				int x = 0;
 				int y = 0;
@@ -437,7 +419,7 @@ public class FTBLibClientEventHandler
 
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
-					GuiHelper.drawBlankRect(b.x, b.y, b.width, b.height, Color4I.WHITE_A33);
+					GuiHelper.drawBlankRect(b.x, b.y, b.width, b.height, Color4I.WHITE_A[33]);
 				}
 			}
 
@@ -462,7 +444,7 @@ public class FTBLibClientEventHandler
 
 					int tw = font.getStringWidth(b.title);
 
-					if (LMUtils.isNEILoaded() || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+					if (CommonUtils.isNEILoaded() || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
 					{
 						mx1 -= tw + 8;
 						my1 += 4;

@@ -20,7 +20,7 @@ import java.util.List;
 public final class PropertyList extends PropertyBase implements Iterable<IConfigValue>
 {
 	public static final String ID = "list";
-	public static final Color4I COLOR = new Color4I(false, 0xFFFFAA49);
+	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private final List<IConfigValue> list;
 	private String valueId;

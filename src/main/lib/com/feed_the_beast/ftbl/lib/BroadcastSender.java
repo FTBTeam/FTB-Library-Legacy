@@ -9,6 +9,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 
@@ -18,7 +19,7 @@ import net.minecraft.world.WorldServer;
 public enum BroadcastSender implements ICommandSender
 {
 	INSTANCE;
-	private static final ITextComponent DISPLAY_NAME = StringUtils.color(StringUtils.text("[Server]"), TextFormatting.LIGHT_PURPLE);
+	private static final ITextComponent DISPLAY_NAME = StringUtils.color(new TextComponentString("[Server]"), TextFormatting.LIGHT_PURPLE); //LANG
 
 	@Override
 	public String getName()

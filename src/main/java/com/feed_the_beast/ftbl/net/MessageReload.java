@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -25,7 +24,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 {
 	private int typeID;
 	private NBTTagCompound syncData;
-	private String currentMode;
 	private UUID universeID;
 
 	public MessageReload()
@@ -36,7 +34,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 	{
 		typeID = t.ordinal();
 		syncData = sync;
-		currentMode = SharedServerData.INSTANCE.getPackMode().getName();
 		universeID = SharedServerData.INSTANCE.getUniverseID();
 	}
 
@@ -51,7 +48,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 	{
 		io.writeByte(typeID);
 		ByteBufUtils.writeTag(io, syncData);
-		ByteBufUtils.writeUTF8String(io, currentMode);
 		NetUtils.writeUUID(io, universeID);
 	}
 
@@ -60,7 +56,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 	{
 		typeID = io.readUnsignedByte();
 		syncData = ByteBufUtils.readTag(io);
-		currentMode = ByteBufUtils.readUTF8String(io);
 		universeID = NetUtils.readUUID(io);
 	}
 
@@ -70,7 +65,6 @@ public class MessageReload extends MessageToClient<MessageReload>
 		EnumReloadType type = m.typeID >= EnumReloadType.VALUES.length ? EnumReloadType.MODE_CHANGED : EnumReloadType.VALUES[m.typeID];
 
 		SharedClientData.INSTANCE.universeID = m.universeID;
-		SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
 		for (String key : m.syncData.getKeySet())
 		{

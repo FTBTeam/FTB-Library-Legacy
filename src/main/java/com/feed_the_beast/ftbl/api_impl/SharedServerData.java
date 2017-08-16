@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IPackMode;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
@@ -20,29 +18,11 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
 	{
 	}
 
-	public int setMode(String mode)
-	{
-		IPackMode m = FTBLibAPI.API.getPackModes().getRawMode(mode);
-
-		if (m == null)
-		{
-			return 1;
-		}
-		if (m.equals(getPackMode()))
-		{
-			return 2;
-		}
-
-		currentMode = m;
-		return 0;
-	}
-
 	@Override
 	public void fromJson(JsonElement json)
 	{
 		JsonObject group = json.getAsJsonObject();
 		universeID = group.has("world_id") ? StringUtils.fromString(group.get("world_id").getAsString()) : null;
-		currentMode = group.has("mode") ? FTBLibAPI.API.getPackModes().getMode(group.get("mode").getAsString()) : FTBLibAPI.API.getPackModes().getDefault();
 	}
 
 	@Override
@@ -50,7 +30,6 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
 	{
 		JsonObject o = new JsonObject();
 		o.add("world_id", new JsonPrimitive(StringUtils.fromUUID(getUniverseID())));
-		o.add("mode", new JsonPrimitive(getPackMode().getName()));
 		return o;
 	}
 }

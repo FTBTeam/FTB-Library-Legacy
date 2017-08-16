@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.client;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MutableColor4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -22,7 +23,7 @@ public class CachedVertexData
 	private final VertexFormat format;
 	private final List<CachedVertex> list;
 	private final boolean hasTex, hasColor, hasNormal;
-	public final Color4I color;
+	public final MutableColor4I color;
 	public double minU = 0D, minV = 0D, maxU = 1D, maxV = 1D;
 
 	private CachedVertexData(int m, VertexFormat f, Collection<CachedVertex> oldList)
@@ -33,7 +34,7 @@ public class CachedVertexData
 		hasTex = f.hasUvOffset(0);
 		hasColor = f.hasColor();
 		hasNormal = f.hasNormal();
-		color = new Color4I(true, Color4I.WHITE);
+		color = Color4I.WHITE.mutable();
 	}
 
 	public CachedVertexData(int m, VertexFormat f)
@@ -81,7 +82,7 @@ public class CachedVertexData
 	public class CachedVertex
 	{
 		private double x, y, z, u, v;
-		private int r = color.red(), g = color.green(), b = color.blue(), a = color.alpha();
+		private int r = color.redi(), g = color.greeni(), b = color.bluei(), a = color.alphai();
 		private float nx, ny, nz;
 
 		private CachedVertex(double _x, double _y, double _z)

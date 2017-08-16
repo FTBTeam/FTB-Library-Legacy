@@ -21,7 +21,7 @@ import java.util.function.IntSupplier;
 public class PropertyInt extends PropertyBase implements IntSupplier
 {
 	public static final String ID = "int";
-	public static final Color4I COLOR = new Color4I(false, 0xFFAA5AE8);
+	public static final Color4I COLOR = Color4I.rgb(0xAA5AE8);
 
 	public static PropertyInt create(int defValue, int min, int max, IntSupplier getter, IntConsumer setter)
 	{

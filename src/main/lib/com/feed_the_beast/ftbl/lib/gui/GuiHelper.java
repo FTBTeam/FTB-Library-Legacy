@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -68,7 +68,7 @@ public class GuiHelper
 
 	public static void playClickSound()
 	{
-		FTBLibClient.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+		ClientUtils.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
 	}
 
 	public static void drawTexturedRect(int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
@@ -109,18 +109,18 @@ public class GuiHelper
 
 	private static void addRectToBuffer(BufferBuilder buffer, int x, int y, int w, int h, Color4I col)
 	{
-		buffer.pos(x, y + h, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
-		buffer.pos(x + w, y + h, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
-		buffer.pos(x + w, y, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
-		buffer.pos(x, y, 0D).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+		buffer.pos(x, y + h, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		buffer.pos(x + w, y + h, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		buffer.pos(x + w, y, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		buffer.pos(x, y, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 	}
 
 	private static void addRectToBufferWithUV(BufferBuilder buffer, int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
 	{
-		buffer.pos(x, y + h, 0D).tex(u0, v1).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
-		buffer.pos(x + w, y + h, 0D).tex(u1, v1).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
-		buffer.pos(x + w, y, 0D).tex(u1, v0).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
-		buffer.pos(x, y, 0D).tex(u0, v0).color(col.red(), col.green(), col.blue(), col.alpha()).endVertex();
+		buffer.pos(x, y + h, 0D).tex(u0, v1).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		buffer.pos(x + w, y + h, 0D).tex(u1, v1).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		buffer.pos(x + w, y, 0D).tex(u1, v0).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		buffer.pos(x, y, 0D).tex(u0, v0).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 	}
 
 	public static void drawHollowRect(int x, int y, int w, int h, Color4I col, boolean roundEdges)
@@ -161,14 +161,14 @@ public class GuiHelper
 
 	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay, Color4I color)
 	{
-		if (stack.isEmpty() || color.hasColor() && color.alpha() < 100) //TODO: Figure out how to change color
+		if (stack.isEmpty() || color.hasColor() && color.alphai() < 100) //TODO: Figure out how to change color
 		{
 			return false;
 		}
 
 		boolean result = true;
 
-		RenderItem renderItem = FTBLibClient.MC.getRenderItem();
+		RenderItem renderItem = ClientUtils.MC.getRenderItem();
 		renderItem.zLevel = 200F;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 32D);
@@ -194,7 +194,7 @@ public class GuiHelper
 
 				if (font == null)
 				{
-					font = FTBLibClient.MC.fontRenderer;
+					font = ClientUtils.MC.fontRenderer;
 				}
 
 				renderItem.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
@@ -260,7 +260,7 @@ public class GuiHelper
 
 	public static void setFixUnicode(boolean enabled)
 	{
-		TextureManager textureManager = FTBLibClient.MC.getTextureManager();
+		TextureManager textureManager = ClientUtils.MC.getTextureManager();
 		int mode = enabled ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 
 		for (int i = 0; i < 256; i++)
@@ -299,11 +299,11 @@ public class GuiHelper
 						throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
 					}
 
-					if (FTBLibClient.MC.gameSettings.chatLinksPrompt)
+					if (ClientUtils.MC.gameSettings.chatLinksPrompt)
 					{
-						final GuiScreen currentScreen = FTBLibClient.MC.currentScreen;
+						final GuiScreen currentScreen = ClientUtils.MC.currentScreen;
 
-						FTBLibClient.MC.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+						ClientUtils.MC.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
 						{
 							if (result)
 							{
@@ -316,7 +316,7 @@ public class GuiHelper
 									ex.printStackTrace();
 								}
 							}
-							FTBLibClient.MC.displayGuiScreen(currentScreen);
+							ClientUtils.MC.displayGuiScreen(currentScreen);
 						}, clickEvent.getValue(), 0, false));
 					}
 					else
@@ -354,12 +354,12 @@ public class GuiHelper
 			}
 			case RUN_COMMAND:
 			{
-				FTBLibClient.execClientCommand(clickEvent.getValue(), false);
+				ClientUtils.execClientCommand(clickEvent.getValue(), false);
 				return true;
 			}
 			case CHANGE_PAGE:
 			{
-				if (FTBLibClient.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) FTBLibClient.MC.currentScreen).getWrappedGui().changePage(clickEvent.getValue()))
+				if (ClientUtils.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) ClientUtils.MC.currentScreen).getWrappedGui().changePage(clickEvent.getValue()))
 				{
 					return true;
 				}

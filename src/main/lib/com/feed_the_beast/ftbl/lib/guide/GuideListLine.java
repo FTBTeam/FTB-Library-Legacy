@@ -26,8 +26,8 @@ import java.util.List;
  */
 public class GuideListLine extends EmptyGuidePageLine
 {
-	private static final IDrawableObject CODE_BACKGROUND = new TexturelessRectangle(new Color4I(true, 0x33AAAAAA));
-	private static final IDrawableObject SCROLL_BAR_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x33333333));
+	private static final IDrawableObject CODE_BACKGROUND = new TexturelessRectangle(0x33AAAAAA);
+	private static final IDrawableObject SCROLL_BAR_BACKGROUND = new TexturelessRectangle(0x33333333);
 
 	public enum Ordering implements IStringSerializable
 	{

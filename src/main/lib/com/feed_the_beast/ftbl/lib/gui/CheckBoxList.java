@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class CheckBoxList extends Button
 {
-	public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(new Color4I(false, 0xFFE0E0E0));
-	public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xFF919191));
+	public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(0xFFE0E0E0);
+	public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0xFF919191);
 
 	public final boolean radioButtons;
 	private final List<CheckBoxEntry> entries;

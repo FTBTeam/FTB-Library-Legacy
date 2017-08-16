@@ -22,8 +22,8 @@ public class PropertyBool extends PropertyBase implements BooleanSupplier
 {
 	private static final List<String> VARIANTS = Arrays.asList("true", "false");
 	public static final String ID = "bool";
-	public static final Color4I COLOR_TRUE = new Color4I(false, 0xFF33AA33);
-	public static final Color4I COLOR_FALSE = new Color4I(false, 0xFFD52834);
+	public static final Color4I COLOR_TRUE = Color4I.rgb(0x33AA33);
+	public static final Color4I COLOR_FALSE = Color4I.rgb(0xD52834);
 
 	public static PropertyBool create(boolean defValue, BooleanSupplier getter, Consumer<Boolean> setter)
 	{

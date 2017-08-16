@@ -4,8 +4,7 @@ import com.feed_the_beast.ftbl.lib.CustomStyle;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -731,6 +730,19 @@ public class StringUtils
 		return false;
 	}
 
+	public static CustomStyle getStyle(ITextComponent component)
+	{
+		Style s = component.getStyle();
+
+		if (!(s instanceof CustomStyle))
+		{
+			s = new CustomStyle(s);
+			component.setStyle(s);
+		}
+
+		return (CustomStyle) s;
+	}
+
 	public static ITextComponent color(ITextComponent component, TextFormatting color)
 	{
 		component.getStyle().setColor(color);
@@ -755,23 +767,16 @@ public class StringUtils
 		return component;
 	}
 
-	public static ITextComponent text(String text)
+	public static ITextComponent monospaced(ITextComponent component, boolean value)
 	{
-		ITextComponent c = new TextComponentString(text);
-		c.setStyle(new CustomStyle());
-		return c;
+		getStyle(component).setMonospaced(value);
+		return component;
 	}
 
-	public static ITextComponent translation(String key, Object... o)
+	public static ITextComponent background(ITextComponent component, TextFormatting background)
 	{
-		ITextComponent c = new TextComponentTranslation(key, o);
-		c.setStyle(new CustomStyle());
-		return c;
-	}
-
-	public static ITextComponent translation(String key)
-	{
-		return translation(key, LMUtils.NO_OBJECTS);
+		getStyle(component).setBackground(background);
+		return component;
 	}
 
 	public static String translate(String key)

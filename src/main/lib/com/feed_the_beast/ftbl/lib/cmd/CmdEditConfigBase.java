@@ -17,6 +17,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -89,7 +91,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 
 		if (key == null)
 		{
-			throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //TODO: Lang
+			throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //LANG
 		}
 
 		IConfigValue entry = tree.get(key);
@@ -97,12 +99,12 @@ public abstract class CmdEditConfigBase extends CmdBase
 		if (args.length >= 2)
 		{
 			String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
-			FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //TODO: Lang
+			FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //LANG
 
 			try
 			{
 				JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
-				sender.sendMessage(StringUtils.text("'").appendSibling(StringUtils.translation(key.getNameLangKey())).appendText("' set to " + value)); //TODO: Lang
+				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + value)); //LANG
 				JsonObject json1 = new JsonObject();
 				json1.add(args[0], value);
 				cc.saveConfig(sender, null, json1);
@@ -114,7 +116,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 			}
 		}
 
-		sender.sendMessage(StringUtils.text(String.valueOf(entry.getSerializableElement())));
+		sender.sendMessage(new TextComponentString(String.valueOf(entry.getSerializableElement())));
 	}
 
 	public abstract IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException;

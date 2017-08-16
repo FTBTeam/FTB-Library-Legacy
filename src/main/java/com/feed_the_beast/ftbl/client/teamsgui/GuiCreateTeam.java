@@ -4,7 +4,7 @@ import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -43,7 +43,7 @@ public class GuiCreateTeam extends GuiBase
 
 				if (!textBoxId.getText().isEmpty())
 				{
-					FTBLibClient.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
+					ClientUtils.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
 					gui.closeGui();
 				}
 			}
@@ -86,7 +86,7 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
-		textBoxId.writeText(this, FTBLibClient.MC.player.getGameProfile().getName().toLowerCase());
+		textBoxId.writeText(this, ClientUtils.MC.player.getGameProfile().getName().toLowerCase());
 		textBoxId.background = Button.DEFAULT_BACKGROUND;
 		textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
 		textBoxId.textColor = color.getColor();
@@ -110,7 +110,7 @@ public class GuiCreateTeam extends GuiBase
 				}
 			};
 
-			b.setIcon(new TexturelessRectangle(col.getColor()).setLineColor(DEFAULT_BACKGROUND.lineColor).setRoundEdges(true));
+			b.setIcon(new TexturelessRectangle(col.getColor()).setLineColor(DEFAULT_BACKGROUND.getLineColor()).setRoundEdges(true));
 			b.setTitle(col.getTextFormatting() + col.getLangKey().translate());
 			colorButtons.add(b);
 		}

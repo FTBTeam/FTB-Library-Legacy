@@ -45,7 +45,7 @@ public class MathUtils
 	public static final int OPPOSITE[] = {1, 0, 3, 2, 5, 4};
 	public static final int OPPOSITE_BIT[] = {2, 1, 8, 4, 32, 16};
 
-	public static final int ROTATION_X[] = {0, 180, 90, 90, 90, 90};
+	public static final int ROTATION_X[] = {90, 270, 0, 0, 0, 0};
 	public static final int ROTATION_Y[] = {0, 0, 180, 0, 90, 270};
 
 	@Nullable
@@ -297,36 +297,6 @@ public class MathUtils
 	public static int getRotations(double yaw, int max)
 	{
 		return MathHelper.floor((yaw * max / 360D) + 0.5D) & (max - 1);
-	}
-
-	public static int getRotYaw(EnumFacing facing)
-	{
-		switch (facing)
-		{
-			case NORTH:
-				return 180;
-			case SOUTH:
-				return 0;
-			case WEST:
-				return 90;
-			case EAST:
-				return -90;
-			default:
-				return 0;
-		}
-	}
-
-	public static int getRotPitch(EnumFacing facing)
-	{
-		switch (facing)
-		{
-			case DOWN:
-				return 90;
-			case UP:
-				return -90;
-			default:
-				return 0;
-		}
 	}
 
 	public static double wrap(double i, double n)

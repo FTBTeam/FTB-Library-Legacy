@@ -7,7 +7,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -28,6 +28,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class GuiMyTeam extends GuiBase
 	private static final int TOP_PANEL_HEIGHT = 20;
 	private static final int BOTTOM_PANEL_HEIGHT = 20;
 	private static final int LEFT_PANEL_WIDTH = 90;
-	private static final Color4I EXIT_TEAM_COLOR = new Color4I(false, 0xFFEA8383);
+	private static final Color4I EXIT_TEAM_COLOR = Color4I.rgb(0xEA8383);
 	private static final WidgetLayout LAYOUT_V_0_1_0 = new WidgetLayout.Vertical(0, 1, 0);
 	private static final WidgetLayout LAYOUT_V_2_1_2 = new WidgetLayout.Vertical(2, 1, 2);
 	private static final WidgetLayout LAYOUT_V_2_4_2 = new WidgetLayout.Vertical(2, 4, 2);
@@ -83,7 +84,7 @@ public class GuiMyTeam extends GuiBase
 			int ay = getAY();
 
 			//GuiHelper.render(ENTRY_TEX, ax, ay, width, getHeight());
-			GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1, DEFAULT_BACKGROUND.lineColor);
+			GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1, DEFAULT_BACKGROUND.getLineColor());
 			getIcon(gui).draw(ax + 2, ay + 2, 8, 8, Color4I.NONE);
 			gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -157,12 +158,12 @@ public class GuiMyTeam extends GuiBase
 
 						if (!sentByServer && loadedProfiles.get(msg.getSender()) == null)
 						{
-							c = StringUtils.text("<Removed>");
+							c = new TextComponentString("<Removed>"); //LANG
 							c.getStyle().setColor(TextFormatting.DARK_GRAY);
 						}
 						else
 						{
-							c = StringUtils.text(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
+							c = new TextComponentString(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
 						}
 
 						c.appendSibling(msg.getMessage());
@@ -181,7 +182,7 @@ public class GuiMyTeam extends GuiBase
 				}
 				else if (teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
 				{
-					if (selectedPlayer.playerId.equals(FTBLibClient.MC.player.getGameProfile().getId()))
+					if (selectedPlayer.playerId.equals(ClientUtils.MC.player.getGameProfile().getId()))
 					{
 						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit yourself!"));
 					}
@@ -215,7 +216,7 @@ public class GuiMyTeam extends GuiBase
 								{
 									if (value > 0)
 									{
-										FTBLibClient.execClientCommand("/ftb team set_status " + selectedPlayer.playerId + " " + status.getName());
+										ClientUtils.execClientCommand("/ftb team set_status " + selectedPlayer.playerId + " " + status.getName());
 										selectedPlayer.status = status;
 									}
 								}
@@ -239,11 +240,11 @@ public class GuiMyTeam extends GuiBase
 								public void onClicked(GuiBase gui, IMouseButton button)
 								{
 									GuiHelper.playClickSound();
-									FTBLibClient.MC.displayGuiScreen(new GuiYesNo((result, id) ->
+									ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
 									{
 										if (result)
 										{
-											FTBLibClient.execClientCommand("/ftb team kick " + selectedPlayer.playerName);
+											ClientUtils.execClientCommand("/ftb team kick " + selectedPlayer.playerName);
 											selectedPlayer.status = EnumTeamStatus.NONE;
 										}
 
@@ -326,11 +327,11 @@ public class GuiMyTeam extends GuiBase
 			public void onClicked(GuiBase gui, IMouseButton button)
 			{
 				GuiHelper.playClickSound();
-				FTBLibClient.MC.displayGuiScreen(new GuiYesNo((result, id) ->
+				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
 				{
 					if (result)
 					{
-						FTBLibClient.execClientCommand("/ftb team leave");
+						ClientUtils.execClientCommand("/ftb team leave");
 						closeGui();
 					}
 					else
@@ -352,8 +353,8 @@ public class GuiMyTeam extends GuiBase
 		scrollPlayers = new PanelScrollBar(LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 14, panelPlayers);
 		scrollText = new PanelScrollBar(0, TOP_PANEL_HEIGHT, 3, 0, 14, panelText);
 
-		scrollText.background = scrollPlayers.background = new TexturelessRectangle(new Color4I(false, 0x78666666));
-		scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(new Color4I(false, 0x50FFFFFF));
+		scrollText.background = scrollPlayers.background = new TexturelessRectangle(0x78666666);
+		scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(0x50FFFFFF);
 
 		topPanelButtons = new ArrayList<>();
 
@@ -367,7 +368,7 @@ public class GuiMyTeam extends GuiBase
 				public void onClicked(GuiBase gui, IMouseButton button)
 				{
 					GuiHelper.playClickSound();
-					FTBLibClient.execClientCommand("/ftb team gui add_player");
+					ClientUtils.execClientCommand("/ftb team gui add_player");
 					setTitle(GuiLang.BUTTON_REFRESH.translate());
 					setIcon(GuiIcons.REFRESH);
 				}
@@ -383,7 +384,7 @@ public class GuiMyTeam extends GuiBase
 				public void onClicked(GuiBase gui, IMouseButton button)
 				{
 					GuiHelper.playClickSound();
-					FTBLibClient.execClientCommand("/ftb team config");
+					ClientUtils.execClientCommand("/ftb team config");
 				}
 			};
 
@@ -397,7 +398,7 @@ public class GuiMyTeam extends GuiBase
 			@Override
 			public void onEnterPressed(GuiBase gui)
 			{
-				FTBLibClient.execClientCommand("/ftb team msg " + getText());
+				ClientUtils.execClientCommand("/ftb team msg " + getText());
 				setText(gui, "");
 				setFocused(true);
 			}
@@ -464,15 +465,15 @@ public class GuiMyTeam extends GuiBase
 		boolean playerGui = selectedPlayer != null;
 
 		getIcon(this).draw(ax, ay, width, height, Color4I.NONE);
-		GuiHelper.drawBlankRect(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1, DEFAULT_BACKGROUND.lineColor);
-		GuiHelper.drawBlankRect(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1, DEFAULT_BACKGROUND.lineColor);
+		GuiHelper.drawBlankRect(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1, getContentColor());
+		GuiHelper.drawBlankRect(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1, getContentColor());
 
 		if (!topPanelButtons.isEmpty())
 		{
-			GuiHelper.drawBlankRect(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT, DEFAULT_BACKGROUND.lineColor);
+			GuiHelper.drawBlankRect(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT, getContentColor());
 		}
 
-		GuiHelper.drawBlankRect(ax + LEFT_PANEL_WIDTH, ay, 1, height, DEFAULT_BACKGROUND.lineColor);
+		GuiHelper.drawBlankRect(ax + LEFT_PANEL_WIDTH, ay, 1, height, getContentColor());
 
 		if (!playerGui)
 		{
@@ -499,7 +500,7 @@ public class GuiMyTeam extends GuiBase
 	@Override
 	public Color4I getContentColor()
 	{
-		return DEFAULT_BACKGROUND.lineColor;
+		return DEFAULT_BACKGROUND.getLineColor();
 	}
 
 	public void loadAllPlayers(Collection<MyTeamPlayerData> players)

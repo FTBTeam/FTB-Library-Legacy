@@ -7,7 +7,8 @@ import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.MutableColor4I;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -40,7 +41,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		return i == 0 ? o1.getKey().getDisplayName().compareToIgnoreCase(o2.getKey().getDisplayName()) : i;
 	};
 
-	public static final Color4I COLOR_BACKGROUND = new Color4I(false, 0x99333333);
+	public static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
 
 	public class ButtonConfigGroup extends Button
 	{
@@ -170,7 +171,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 			if (mouseOver)
 			{
-				GuiHelper.drawBlankRect(ax, ay, width, height, Color4I.WHITE_A33);
+				GuiHelper.drawBlankRect(ax, ay, width, height, Color4I.WHITE_A[33]);
 			}
 
 			gui.drawString(keyText, ax + 4, ay + 4, mouseOver ? Color4I.WHITE : Color4I.GRAY);
@@ -186,7 +187,8 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				slen = 152;
 			}
 
-			Color4I textCol = new Color4I(true, value.getColor(), 255);
+			MutableColor4I textCol = value.getColor().mutable();
+			textCol.setAlpha(255);
 
 			if (mouseOver)
 			{
@@ -194,7 +196,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 				if (gui.getMouseX() > ax + width - slen - 9)
 				{
-					GuiHelper.drawBlankRect(ax + width - slen - 8, ay, slen + 8, height, Color4I.WHITE_A33);
+					GuiHelper.drawBlankRect(ax + width - slen - 8, ay, slen + 8, height, Color4I.WHITE_A[33]);
 				}
 			}
 
@@ -326,7 +328,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		buttonCancel.setIcon(GuiIcons.CANCEL);
 
-		buttonCollapseAll = new Button(0, 2, 16, 16, "Collapse All") //TODO: Lang
+		buttonCollapseAll = new Button(0, 2, 16, 16, "Collapse All") //LANG
 		{
 			@Override
 			public void onClicked(GuiBase gui, IMouseButton button)
@@ -348,7 +350,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		buttonCollapseAll.setIcon(GuiIcons.REMOVE);
 
-		buttonExpandAll = new Button(0, 2, 16, 16, "Expand All") //TODO: Lang
+		buttonExpandAll = new Button(0, 2, 16, 16, "Expand All") //LANG
 		{
 			@Override
 			public void onClicked(GuiBase gui, IMouseButton button)
@@ -422,7 +424,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	{
 		if (shouldClose == 1 && !modifiedConfig.entrySet().isEmpty())
 		{
-			configContainer.saveConfig(FTBLibClient.MC.player, extraNBT, modifiedConfig);
+			configContainer.saveConfig(ClientUtils.MC.player, extraNBT, modifiedConfig);
 		}
 	}
 
@@ -451,11 +453,5 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public String getTitle(GuiBase gui)
 	{
 		return title;
-	}
-
-	@Override
-	public void onClientDataChanged()
-	{
-		refreshWidgets();
 	}
 }

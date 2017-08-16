@@ -70,12 +70,6 @@ public class CmdSetStatus extends CmdBase
 		}
 
 		EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[1].toLowerCase());
-
-		if (status == null)
-		{
-			throw new IllegalArgumentException(args[1]);
-		}
-
 		team.setStatus(p1.getId(), status);
 		//TODO: Display notification
 	}

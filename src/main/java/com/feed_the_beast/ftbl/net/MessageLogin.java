@@ -6,11 +6,10 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api_impl.PackMode;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -37,7 +36,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	private static final byte OPTIONAL_SERVER_MODS = 2;
 
 	private byte flags;
-	private String currentMode;
 	private UUID universeId;
 	private NBTTagCompound syncData;
 	private Collection<String> optionalServerMods;
@@ -51,7 +49,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	{
 		flags = 0;
 		flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
-		currentMode = SharedServerData.INSTANCE.getPackMode().getName();
 		universeId = SharedServerData.INSTANCE.getUniverseID();
 		syncData = new NBTTagCompound();
 		FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
@@ -75,7 +72,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	public void toBytes(ByteBuf io)
 	{
 		io.writeByte(flags);
-		ByteBufUtils.writeUTF8String(io, currentMode);
 		NetUtils.writeUUID(io, universeId);
 		ByteBufUtils.writeTag(io, syncData);
 
@@ -96,7 +92,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	public void fromBytes(ByteBuf io)
 	{
 		flags = io.readByte();
-		currentMode = ByteBufUtils.readUTF8String(io);
 		universeId = NetUtils.readUUID(io);
 		syncData = ByteBufUtils.readTag(io);
 
@@ -120,7 +115,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 		SharedClientData.INSTANCE.reset();
 		SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
 		SharedClientData.INSTANCE.universeID = m.universeId;
-		SharedClientData.INSTANCE.currentMode = new PackMode(m.currentMode);
 
 		if (m.optionalServerMods != null && !m.optionalServerMods.isEmpty())
 		{
@@ -137,7 +131,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 			}
 		}
 
-		FTBLibClient.CACHED_SKINS.clear();
+		ClientUtils.CACHED_SKINS.clear();
 		FTBLibAPI.API.reload(Side.CLIENT, player, EnumReloadType.CREATED);
 		MyTeamData.lastMessageTime = m.lastMessageTime;
 	}

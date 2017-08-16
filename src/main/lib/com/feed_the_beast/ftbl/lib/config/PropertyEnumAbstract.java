@@ -21,7 +21,7 @@ import java.util.List;
 public abstract class PropertyEnumAbstract<E> extends PropertyBase
 {
 	public static final String ID = "enum";
-	public static final Color4I COLOR = new Color4I(false, 0xFF0094FF);
+	public static final Color4I COLOR = Color4I.rgb(0x0094FF);
 
 	@Override
 	public String getName()
@@ -40,7 +40,7 @@ public abstract class PropertyEnumAbstract<E> extends PropertyBase
 	@Override
 	public String getString()
 	{
-		return NameMap.getName(getValue());
+		return getNameMap().getName(getValue());
 	}
 
 	@Override

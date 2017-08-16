@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -26,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiGuide extends GuiBase implements IClientActionGui
+public class GuiGuide extends GuiBase
 {
 	private static final IDrawableObject TEXTURE = ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/info.png");
 
@@ -229,7 +228,7 @@ public class GuiGuide extends GuiBase implements IClientActionGui
 		{
 			if (p == null)
 			{
-				FTBLibClient.MC.player.closeScreen();
+				ClientUtils.MC.player.closeScreen();
 				return;
 			}
 			else
@@ -339,12 +338,6 @@ public class GuiGuide extends GuiBase implements IClientActionGui
 	public boolean drawDefaultBackground()
 	{
 		return false;
-	}
-
-	@Override
-	public void onClientDataChanged()
-	{
-		refreshWidgets();
 	}
 
 	@Override

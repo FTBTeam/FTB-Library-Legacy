@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -73,7 +73,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
 			if (g != null)
 			{
-				FTBLibClient.MC.displayGuiScreen(g);
+				ClientUtils.MC.displayGuiScreen(g);
 				player.openContainer.windowId = m.windowID;
 			}
 		}

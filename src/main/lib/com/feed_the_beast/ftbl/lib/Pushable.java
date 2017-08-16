@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 
 /**
  * @author LatvianModder
@@ -12,7 +12,7 @@ public final class Pushable<T>
 
 	public Pushable(int max)
 	{
-		data = LMUtils.cast(new Object[max]);
+		data = CommonUtils.cast(new Object[max]);
 	}
 
 	public T get()

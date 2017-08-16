@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MutableColor4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +16,7 @@ public class PropertyColor extends PropertyBase
 {
 	public static final String ID = "color";
 
-	private final Color4I value = new Color4I(true, Color4I.WHITE);
+	private final MutableColor4I value = Color4I.WHITE.mutable();
 
 	public PropertyColor()
 	{
@@ -38,7 +39,7 @@ public class PropertyColor extends PropertyBase
 	}
 
 	@Override
-	public Color4I getColor()
+	public MutableColor4I getColor()
 	{
 		return value;
 	}

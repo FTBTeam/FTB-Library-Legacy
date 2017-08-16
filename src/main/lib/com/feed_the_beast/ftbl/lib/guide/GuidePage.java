@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.MapUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -103,7 +102,7 @@ public class GuidePage extends FinalIDObject
 
 	public ITextComponent getDisplayName()
 	{
-		return (title == null) ? StringUtils.text(getName()) : title;
+		return (title == null) ? new TextComponentString(getName()) : title;
 	}
 
 	public void println(@Nullable Object o)
@@ -124,7 +123,7 @@ public class GuidePage extends FinalIDObject
 				}
 				else if (text.startsWith("# "))
 				{
-					ITextComponent component = StringUtils.text(text.substring(2));
+					ITextComponent component = new TextComponentString(text.substring(2));
 					component.getStyle().setBold(true);
 					component.getStyle().setUnderlined(true);
 					println(component);
@@ -132,7 +131,7 @@ public class GuidePage extends FinalIDObject
 				}
 				else if (text.startsWith("## "))
 				{
-					ITextComponent component = StringUtils.text(text.substring(3));
+					ITextComponent component = new TextComponentString(text.substring(3));
 					component.getStyle().setBold(true);
 					println(component);
 					return;
@@ -272,7 +271,7 @@ public class GuidePage extends FinalIDObject
 			childPages.forEach((key, value) -> o1.add(key, value.toJson()));
 			o.add("pages", o1);
 		}
-		if (pageIcon != ImageProvider.NULL)
+		if (!pageIcon.isNull())
 		{
 			o.add("icon", pageIcon.getJson());
 		}
@@ -362,7 +361,7 @@ public class GuidePage extends FinalIDObject
 
 				if (provider == null)
 				{
-					ITextComponent component = StringUtils.text("Unknown ID: " + id);
+					ITextComponent component = new TextComponentString("Unknown ID: " + id); //LANG
 					component.getStyle().setColor(TextFormatting.DARK_RED);
 					component.getStyle().setBold(true);
 					return new GuideExtendedTextLine(component);

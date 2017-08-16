@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -14,18 +13,47 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class TexturelessRectangle implements IDrawableObject
 {
-	public final Color4I color, lineColor;
+	private Color4I color, lineColor;
 	public boolean roundEdges = false;
 
 	public TexturelessRectangle(Color4I col)
 	{
-		color = new Color4I(true, col);
-		lineColor = new Color4I(true, Color4I.NONE);
+		color = col;
+		lineColor = Color4I.NONE;
+	}
+
+	public TexturelessRectangle(int col)
+	{
+		this(Color4I.rgba(col));
+	}
+
+	public Color4I getColor()
+	{
+		return color;
+	}
+
+	public Color4I getLineColor()
+	{
+		return lineColor;
 	}
 
 	public TexturelessRectangle setLineColor(Color4I col)
 	{
-		lineColor.set(col);
+		lineColor = col;
+		return this;
+	}
+
+	public TexturelessRectangle setLineColor(int col)
+	{
+		if (lineColor.isMutable())
+		{
+			lineColor.mutable().set(col);
+		}
+		else
+		{
+			lineColor = Color4I.rgba(col).mutable();
+		}
+
 		return this;
 	}
 
@@ -38,8 +66,8 @@ public class TexturelessRectangle implements IDrawableObject
 	public TexturelessRectangle copy()
 	{
 		TexturelessRectangle t = new TexturelessRectangle(color);
-		t.lineColor.set(lineColor);
-		t.roundEdges = roundEdges;
+		t.setLineColor(lineColor);
+		t.setRoundEdges(roundEdges);
 		return t;
 	}
 
@@ -71,21 +99,11 @@ public class TexturelessRectangle implements IDrawableObject
 		o.add("id", new JsonPrimitive("rect"));
 		if (color.hasColor())
 		{
-			o.add("color", ColorUtils.serialize(color.rgba()));
-
-			if (color.alpha() != 255)
-			{
-				o.add("color_alpha", new JsonPrimitive(color.alpha()));
-			}
+			o.add("color", color.toJson());
 		}
 		if (lineColor.hasColor())
 		{
-			o.add("line_color", ColorUtils.serialize(lineColor.rgba()));
-
-			if (lineColor.alpha() != 255)
-			{
-				o.add("line_color_alpha", new JsonPrimitive(lineColor.alpha()));
-			}
+			o.add("line_color", lineColor.toJson());
 		}
 		if (roundEdges)
 		{

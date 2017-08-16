@@ -7,11 +7,12 @@ import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -39,8 +40,8 @@ public class FTBLibEventHandler
 
 		try
 		{
-			JsonUtils.toJson(new File(LMUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
-			Universe.INSTANCE.save(new File(LMUtils.folderWorld, "data/ftb_lib"));
+			JsonUtils.toJson(new File(CommonUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
+			Universe.INSTANCE.save(new File(CommonUtils.folderWorld, "data/ftb_lib"));
 		}
 		catch (Exception ex)
 		{
@@ -99,19 +100,19 @@ public class FTBLibEventHandler
 
 		if (!p.hideTeamNotification() && p.getTeam() == null)
 		{
-			ITextComponent c = StringUtils.text("You haven't joined or created a team yet! ");
-			ITextComponent b1 = StringUtils.text("[Click Here]");
+			ITextComponent c = new TextComponentString("You haven't joined or created a team yet! "); //LANG
+			ITextComponent b1 = new TextComponentString("[Click Here]"); //LANG
 			b1.getStyle().setColor(TextFormatting.GOLD);
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
-			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text("TeamsGUI")));
+			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("TeamsGUI")));
 			c.appendSibling(b1);
-			c.appendText(" to open TeamsGUI or ");
-			ITextComponent b2 = StringUtils.text("[Click Here]");
+			c.appendText(" to open TeamsGUI or "); //LANG
+			ITextComponent b2 = new TextComponentString("[Click Here]"); //LANG
 			b2.getStyle().setColor(TextFormatting.GOLD);
 			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification true"));
-			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.text("Hide This Message")));
+			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message"))); //LANG
 			c.appendSibling(b2);
-			c.appendText(" to hide this message.");
+			c.appendText(" to hide this message."); //LANG
 			ep.sendMessage(c);
 		}
 	}

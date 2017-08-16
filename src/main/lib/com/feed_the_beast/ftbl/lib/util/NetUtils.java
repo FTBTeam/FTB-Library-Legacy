@@ -4,6 +4,8 @@ import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -172,5 +174,15 @@ public class NetUtils
 	{
 		UUID id = readUUID(io);
 		return new GameProfile(id, ByteBufUtils.readUTF8String(io));
+	}
+
+	public static void writeBlockState(ByteBuf buf, IBlockState state)
+	{
+		buf.writeInt(Block.getStateId(state));
+	}
+
+	public static IBlockState readBlockState(ByteBuf buf)
+	{
+		return Block.getStateById(buf.readInt());
 	}
 }

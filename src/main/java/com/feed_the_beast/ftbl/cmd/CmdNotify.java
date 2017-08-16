@@ -1,11 +1,16 @@
 package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
+import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.google.common.base.Preconditions;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,7 +30,7 @@ public class CmdNotify extends CmdBase
 	{
 		if (args.length == 2)
 		{
-			return getListOfStringsMatchingLastWord(args, "{\"id\":\"minecraft:test\", \"text\":[\"Hi\"]}");
+			return getListOfStringsMatchingLastWord(args, "{text:\"Hi!\",id:\"minecraft:test\"}");
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
@@ -40,13 +45,10 @@ public class CmdNotify extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 2, "<player> <id>");
+		checkArgs(args, 2, "<player> <json>");
 		EntityPlayerMP player = getPlayer(server, sender, args[0]);
-
-		if (args[1].startsWith("{") && args[1].endsWith("}"))
-		{
-			//TODO: Custom notification support
-			//FTBLibAPI.API.sendNotification(player, n);
-		}
+		ITextComponent component = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(String.join(" ", StringUtils.shiftArray(args))));
+		Preconditions.checkNotNull(component);
+		ServerUtils.notify(player, component);
 	}
 }

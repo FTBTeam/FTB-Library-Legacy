@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.IDataProvider;
 import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
@@ -21,9 +20,7 @@ import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
-import com.feed_the_beast.ftbl.api_impl.PackModes;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.client.EnumNotificationDisplay;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
@@ -55,13 +52,14 @@ import com.feed_the_beast.ftbl.lib.guide.GuideSwitchLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideTextLineString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
@@ -174,9 +172,9 @@ public class FTBLibModCommon implements IFTBLibRegistry
 
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + LMUtils.DEV_ENV);
+		FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + CommonUtils.DEV_ENV);
 		FTBLibAPI.API = new FTBLibAPI_Impl();
-		LMUtils.init(event.getModConfigurationDirectory());
+		CommonUtils.init(event.getModConfigurationDirectory());
 		Side side = event.getSide();
 
 		for (ASMDataTable.ASMData data : AsmHelper.getASMData(event.getAsmData(), EventHandler.class))
@@ -190,11 +188,10 @@ public class FTBLibModCommon implements IFTBLibRegistry
 			}
 		}
 
-		PackModes.INSTANCE.load();
 		FTBLibNetHandler.init();
 
 		addOptionalServerMod(FTBLibFinals.MOD_ID);
-		addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(LMUtils.folderLocal, "ftbl.json"));
+		addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbl.json"));
 
 		String group = FTBLibFinals.MOD_ID;
 		addConfig(group, "mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
@@ -252,7 +249,7 @@ public class FTBLibModCommon implements IFTBLibRegistry
 		if (id.charAt(0) != '-')
 		{
 			id = id.toLowerCase();
-			ConfigFile configFile = new ConfigFile(StringUtils.translation("config_group." + id + ".name"), provider);
+			ConfigFile configFile = new ConfigFile(new TextComponentTranslation("config_group." + id + ".name"), provider);
 			CONFIG_FILES.put(id, configFile);
 		}
 	}
@@ -286,7 +283,7 @@ public class FTBLibModCommon implements IFTBLibRegistry
 		key.setGroup(group0);
 		key.setNameLangKey("config." + group0 + "." + id + ".name");
 		key.setInfoLangKey("config." + group0 + "." + id + ".info");
-		IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(StringUtils.text(f), ConfigFile.NULL_FILE_PROVIDER));
+		IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(new TextComponentString(f), ConfigFile.NULL_FILE_PROVIDER));
 		configFile.add(key, value);
 		return key;
 	}
@@ -357,7 +354,7 @@ public class FTBLibModCommon implements IFTBLibRegistry
 	{
 		loadAllFiles();
 
-		JsonElement overridesE = JsonUtils.fromJson(new File(LMUtils.folderModpack, "overrides.json"));
+		JsonElement overridesE = JsonUtils.fromJson(new File(CommonUtils.folderModpack, "overrides.json"));
 
 		if (overridesE.isJsonObject())
 		{
@@ -419,10 +416,6 @@ public class FTBLibModCommon implements IFTBLibRegistry
 	}
 
 	public void displayGuide(GuidePage page)
-	{
-	}
-
-	public void displayNotification(EnumNotificationDisplay display, INotification n)
 	{
 	}
 }

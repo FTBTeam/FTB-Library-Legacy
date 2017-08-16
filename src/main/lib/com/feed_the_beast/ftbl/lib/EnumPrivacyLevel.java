@@ -14,7 +14,7 @@ public enum EnumPrivacyLevel implements IStringSerializable
 	TEAM("team");
 
 	public static final EnumPrivacyLevel[] VALUES = values();
-	public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.privacy");
+	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftbl.privacy");
 	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.create(PUBLIC, VALUES);
 
 	private final String name;
@@ -23,7 +23,7 @@ public enum EnumPrivacyLevel implements IStringSerializable
 	EnumPrivacyLevel(String n)
 	{
 		name = n;
-		langKey = new LangKey("ftbl.privacy." + name);
+		langKey = LangKey.of("ftbl.privacy." + name);
 	}
 
 	@Override

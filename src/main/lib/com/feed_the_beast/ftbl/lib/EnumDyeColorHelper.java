@@ -29,7 +29,7 @@ public class EnumDyeColorHelper // ItemDye
 	private EnumDyeColorHelper(EnumDyeColor col)
 	{
 		dye = col;
-		langKey = new LangKey("item.fireworksCharge." + col.getUnlocalizedName());
+		langKey = LangKey.of("item.fireworksCharge." + col.getUnlocalizedName());
 		oreName = StringUtils.firstUppercase(col.getUnlocalizedName());
 	}
 

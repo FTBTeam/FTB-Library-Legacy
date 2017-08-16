@@ -12,8 +12,8 @@ import java.util.List;
 
 public class Slider extends Widget
 {
-	public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(new Color4I(false, 0x99666666));
-	public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0x99333333));
+	public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(0x99666666);
+	public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0x99333333);
 
 	public int sliderSize;
 	private double value;

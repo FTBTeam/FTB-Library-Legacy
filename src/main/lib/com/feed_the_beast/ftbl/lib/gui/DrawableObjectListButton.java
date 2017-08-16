@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 
@@ -70,7 +70,7 @@ public class DrawableObjectListButton extends Button
 		{
 			ItemStack stack = ((DrawableItem) object).stack;
 			l.add(stack.getDisplayName());
-			stack.getItem().addInformation(stack, FTBLibClient.MC.world, l, ITooltipFlag.TooltipFlags.NORMAL);
+			stack.getItem().addInformation(stack, ClientUtils.MC.world, l, ITooltipFlag.TooltipFlags.NORMAL);
 		}
 	}
 

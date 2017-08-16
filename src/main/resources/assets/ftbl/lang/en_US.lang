@@ -40,11 +40,6 @@ wip=Work In Progress!
 example=Example:
 ftbl.lang.team_config_option=Team config option
 ftbl.lang.deprecated=This method is deprecated, please use %s
-ftbl.lang.mode.loaded=Mode set to '%s'!
-ftbl.lang.mode.not_found=Mode does not exist!
-ftbl.lang.mode.already_set=Mode already set!
-ftbl.lang.mode.current=Current mode: %s
-ftbl.lang.mode.list=Available modes: %s
 
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
 ftbl.lang.reload_client=FTBLib: Client reloaded in %s

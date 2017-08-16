@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
 
 import java.util.UUID;
 
@@ -35,17 +36,17 @@ public class CmdAddFakePlayer extends CmdBase
 		UUID id = StringUtils.fromString(args[0]);
 		if (id == null)
 		{
-			throw FTBLibLang.RAW.commandError("Invalid UUID!");
+			throw FTBLibLang.RAW.commandError("Invalid UUID!"); //LANG
 		}
 
 		if (Universe.INSTANCE.getPlayer(id) != null || Universe.INSTANCE.getPlayer(args[1]) != null)
 		{
-			throw FTBLibLang.RAW.commandError("Player already exists!");
+			throw FTBLibLang.RAW.commandError("Player already exists!"); //LANG
 		}
 
 		ForgePlayer p = new ForgePlayer(id, args[1]);
 		Universe.INSTANCE.playerMap.put(p.getId(), p);
 
-		sender.sendMessage(StringUtils.text("Fake player " + args[1] + " added!"));
+		sender.sendMessage(new TextComponentString("Fake player " + args[1] + " added!")); //LANG
 	}
 }

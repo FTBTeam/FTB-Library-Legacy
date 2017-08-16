@@ -11,9 +11,9 @@ import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedBeforePlay
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniversePostLoadedEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -55,7 +55,7 @@ public class Universe implements IUniverse
 
 		try
 		{
-			JsonElement worldData = JsonUtils.fromJson(new File(LMUtils.folderWorld, "world_data.json"));
+			JsonElement worldData = JsonUtils.fromJson(new File(CommonUtils.folderWorld, "world_data.json"));
 
 			if (worldData.isJsonObject())
 			{
@@ -65,7 +65,7 @@ public class Universe implements IUniverse
 			playerMap.clear();
 			teams.clear();
 
-			File oldFile = new File(LMUtils.folderWorld, "data/FTBLib.dat");
+			File oldFile = new File(CommonUtils.folderWorld, "data/FTBLib.dat");
 
 			if (oldFile.exists())
 			{
@@ -108,7 +108,7 @@ public class Universe implements IUniverse
 			}
 			else
 			{
-				File folder = new File(LMUtils.folderWorld, "data/ftb_lib/");
+				File folder = new File(CommonUtils.folderWorld, "data/ftb_lib/");
 				new ForgeUniverseLoadedBeforePlayersEvent(this).post();
 
 				Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();

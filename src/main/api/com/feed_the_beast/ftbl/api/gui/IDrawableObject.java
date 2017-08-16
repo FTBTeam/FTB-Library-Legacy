@@ -13,6 +13,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public interface IDrawableObject
 {
+	default boolean isNull()
+	{
+		return false;
+	}
+
 	@SideOnly(Side.CLIENT)
 	default ITextureObject bindTexture()
 	{

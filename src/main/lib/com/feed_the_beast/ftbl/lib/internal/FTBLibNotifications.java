@@ -10,6 +10,6 @@ import net.minecraft.item.ItemStack;
  */
 public class FTBLibNotifications
 {
-	public static final Notification NEW_TEAM_MESSAGE = new Notification(FTBLibFinals.get("team_msg")).setIcon(new DrawableItem(new ItemStack(Items.WRITABLE_BOOK)));
-	public static final Notification NO_TEAM = new Notification(FTBLibFinals.get("no_team")).setError(FTBLibLang.TEAM_NO_TEAM.textComponent());
+	public static final Notification NEW_TEAM_MESSAGE = Notification.of(FTBLibFinals.get("team_msg")).setIcon(new DrawableItem(new ItemStack(Items.WRITABLE_BOOK)));
+	public static final Notification NO_TEAM = Notification.of(FTBLibFinals.get("no_team"), FTBLibLang.TEAM_NO_TEAM.textComponent()).setError();
 }

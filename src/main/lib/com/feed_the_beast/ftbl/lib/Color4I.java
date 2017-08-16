@@ -1,36 +1,141 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import net.minecraft.util.math.MathHelper;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
  */
-public final class Color4I
+public class Color4I
 {
-	public static final Color4I NONE = new Color4I(false, 0x00000000);
-
-	public static final Color4I BLACK = new Color4I(false, 0xFF000000);
-	public static final Color4I DARK_GRAY = new Color4I(false, 0xFF212121);
-	public static final Color4I GRAY = new Color4I(false, 0xFF999999);
-	public static final Color4I WHITE = new Color4I(false, 0xFFFFFFFF);
-	public static final Color4I WHITE_A33 = new Color4I(false, 0x21FFFFFF);
-
-	public static final Color4I RED = new Color4I(false, 0xFFFF0000);
-	public static final Color4I LIGHT_RED = new Color4I(false, 0xFFFF5656);
-
-	private final boolean canEdit;
-	private int red = 255, green = 255, blue = 255, alpha = 255, rgba = 0xFFFFFFFF;
-
-	public Color4I(boolean canEdit)
+	public static final Color4I NONE = new Color4I(255, 255, 255, 255)
 	{
-		this.canEdit = canEdit;
+		@Override
+		public boolean hasColor()
+		{
+			return false;
+		}
+
+		@Override
+		public MutableColor4I mutable()
+		{
+			return new MutableColor4I.None();
+		}
+	};
+
+	public static Color4I fromJson(@Nullable JsonElement element)
+	{
+		if (element == null || element.isJsonNull())
+		{
+			return NONE;
+		}
+		else if (element.isJsonPrimitive())
+		{
+			String s = element.getAsString();
+
+			if (s.equals("-"))
+			{
+				return NONE;
+			}
+			else
+			{
+				String hex = element.getAsString().substring(1);
+				return hex.length() == 8 ? rgba((int) Long.parseLong(hex, 16)) : rgb((int) Long.parseLong(hex, 16));
+			}
+		}
+		else if (element.isJsonArray())
+		{
+			JsonArray array = element.getAsJsonArray();
+
+			if (array.size() >= 3)
+			{
+				int r = array.get(0).getAsInt();
+				int g = array.get(1).getAsInt();
+				int b = array.get(2).getAsInt();
+				int a = 255;
+
+				if (array.size() >= 3)
+				{
+					a = array.get(3).getAsInt();
+				}
+
+				return rgba(r, g, b, a);
+			}
+		}
+
+		JsonObject object = element.getAsJsonObject();
+
+		if (object.has("red") && object.has("green") && object.has("blue"))
+		{
+			int r = object.get("red").getAsInt();
+			int g = object.get("green").getAsInt();
+			int b = object.get("blue").getAsInt();
+			int a = 255;
+
+			if (object.has("alpha"))
+			{
+				a = object.get("alpha").getAsInt();
+			}
+
+			return rgba(r, g, b, a);
+		}
+
+		return NONE;
 	}
 
-	public Color4I(boolean canEdit, int r, int g, int b, int a)
+	public static Color4I rgba(int r, int g, int b, int a)
 	{
-		this.canEdit = canEdit;
+		return new Color4I(r, g, b, a);
+	}
+
+	public static Color4I rgb(int r, int g, int b)
+	{
+		return rgba(r, g, b, 255);
+	}
+
+	public static Color4I rgba(int col)
+	{
+		return rgba(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col), ColorUtils.getAlpha(col));
+	}
+
+	public static Color4I rgb(int col)
+	{
+		return rgb(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col));
+	}
+
+	public static final Color4I BLACK_A[] = new Color4I[256];
+	public static final Color4I WHITE_A[] = new Color4I[256];
+
+	static
+	{
+		for (int i = 0; i < 256; i++)
+		{
+			BLACK_A[i] = rgba(0, 0, 0, i);
+			WHITE_A[i] = rgba(255, 255, 255, i);
+		}
+	}
+
+	public static final Color4I BLACK = BLACK_A[255];
+	public static final Color4I DARK_GRAY = rgb(0x212121);
+	public static final Color4I GRAY = rgb(0x999999);
+	public static final Color4I WHITE = WHITE_A[255];
+	public static final Color4I RED = rgb(0xFF0000);
+	public static final Color4I GREEN = rgb(0xFF0000);
+	public static final Color4I BLUE = rgb(0xFF0000);
+	public static final Color4I LIGHT_RED = rgb(0xFFFF5656);
+	public static final Color4I LIGHT_GREEN = rgb(0xFFFF5656);
+	public static final Color4I LIGHT_BLUE = rgb(0xFFFF5656);
+
+	int red = 255, green = 255, blue = 255, alpha = 255, rgba = 0xFFFFFFFF;
+
+	Color4I(int r, int g, int b, int a)
+	{
 		red = r;
 		green = g;
 		blue = b;
@@ -38,91 +143,37 @@ public final class Color4I
 		rgba = ColorUtils.getRGBA(red, green, blue, alpha);
 	}
 
-	public Color4I(boolean canEdit, int rgba)
+	public Color4I copy()
 	{
-		this.canEdit = canEdit;
-		red = ColorUtils.getRed(rgba);
-		green = ColorUtils.getGreen(rgba);
-		blue = ColorUtils.getBlue(rgba);
-		alpha = ColorUtils.getAlpha(rgba);
-		this.rgba = rgba;
+		return rgba(red, green, blue, alpha);
 	}
 
-	public Color4I(boolean canEdit, Color4I col, int a)
+	public boolean isMutable()
 	{
-		this(canEdit, col.red, col.green, col.blue, a);
+		return false;
 	}
 
-	public Color4I(boolean canEdit, Color4I col)
+	public MutableColor4I mutable()
 	{
-		this(canEdit, col, col.alpha);
+		return new MutableColor4I(red, green, blue, alpha);
 	}
 
-	public boolean canEdit()
-	{
-		return canEdit;
-	}
-
-	public void set(int r, int g, int b, int a)
-	{
-		if (canEdit)
-		{
-			red = r;
-			green = g;
-			blue = b;
-			alpha = a;
-			rgba = ColorUtils.getRGBA(red, green, blue, alpha);
-		}
-	}
-
-	public void set(Color4I col, int a)
-	{
-		if (canEdit)
-		{
-			set(col.red, col.green, col.blue, a);
-		}
-	}
-
-	public void set(Color4I col)
-	{
-		if (canEdit)
-		{
-			set(col, col.alpha);
-		}
-	}
-
-	public void set(int col, int a)
-	{
-		if (canEdit)
-		{
-			set(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col), a);
-		}
-	}
-
-	public void set(int col)
-	{
-		if (canEdit)
-		{
-			set(col, ColorUtils.getAlpha(col));
-		}
-	}
-
-	public int red()
+	public int redi()
 	{
 		return red;
 	}
 
-	public int green()
+	public int greeni()
 	{
 		return green;
 	}
 
-	public int blue()
+	public int bluei()
 	{
 		return blue;
 	}
 
-	public int alpha()
+	public int alphai()
 	{
 		return alpha;
 	}
@@ -154,7 +205,7 @@ public final class Color4I
 
 	public boolean hasColor()
 	{
-		return alpha > 0;
+		return true;
 	}
 
 	public int hashCode()
@@ -174,69 +225,6 @@ public final class Color4I
 
 	public JsonElement toJson()
 	{
-		return ColorUtils.serialize(rgba());
-	}
-
-	public void addBrightness(int b)
-	{
-		if (canEdit)
-		{
-			set(MathHelper.clamp(red + b, 0, 255), MathHelper.clamp(green + b, 0, 255), MathHelper.clamp(blue + b, 0, 255), alpha);
-		}
-	}
-
-	public void setFromHSB(float h, float s, float b)
-	{
-		if (!canEdit)
-		{
-			return;
-		}
-
-		red = green = blue = 0;
-		if (s == 0)
-		{
-			red = green = blue = (int) (b * 255F + 0.5F);
-		}
-		else
-		{
-			float h6 = (h - MathHelper.floor(h)) * 6F;
-			float f = h6 - MathHelper.floor(h6);
-			float p = b * (1F - s);
-			float q = b * (1F - s * f);
-			float t = b * (1F - (s * (1F - f)));
-			switch ((int) h6)
-			{
-				case 0:
-					red = (int) (b * 255F + 0.5F);
-					green = (int) (t * 255F + 0.5F);
-					blue = (int) (p * 255F + 0.5F);
-					break;
-				case 1:
-					red = (int) (q * 255F + 0.5F);
-					green = (int) (b * 255F + 0.5F);
-					blue = (int) (p * 255F + 0.5F);
-					break;
-				case 2:
-					red = (int) (p * 255F + 0.5F);
-					green = (int) (b * 255F + 0.5F);
-					blue = (int) (t * 255F + 0.5F);
-					break;
-				case 3:
-					red = (int) (p * 255F + 0.5F);
-					green = (int) (q * 255F + 0.5F);
-					blue = (int) (b * 255F + 0.5F);
-					break;
-				case 4:
-					red = (int) (t * 255F + 0.5F);
-					green = (int) (p * 255F + 0.5F);
-					blue = (int) (b * 255F + 0.5F);
-					break;
-				case 5:
-					red = (int) (b * 255F + 0.5F);
-					green = (int) (p * 255F + 0.5F);
-					blue = (int) (q * 255F + 0.5F);
-					break;
-			}
-		}
+		return hasColor() ? new JsonPrimitive(toString()) : JsonNull.INSTANCE;
 	}
 }

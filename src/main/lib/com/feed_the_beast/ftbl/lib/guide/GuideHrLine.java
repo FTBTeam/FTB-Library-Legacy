@@ -2,11 +2,11 @@ package com.feed_the_beast.ftbl.lib.guide;
 
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MutableColor4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -17,19 +17,19 @@ import com.google.gson.JsonPrimitive;
 public class GuideHrLine extends EmptyGuidePageLine
 {
 	public final int height;
-	public final Color4I color;
+	public final MutableColor4I color;
 
 	public GuideHrLine(int h, Color4I c)
 	{
 		height = h;
-		color = c;
+		color = c.mutable();
 	}
 
 	public GuideHrLine(JsonElement e)
 	{
 		JsonObject o = e.getAsJsonObject();
 		height = o.has("height") ? Math.max(1, o.get("height").getAsInt()) : 1;
-		color = o.has("color") ? new Color4I(true, 0xFF000000 | ColorUtils.deserialize(o.get("color"))) : Color4I.NONE;
+		color = Color4I.fromJson(o.get("color")).mutable();
 	}
 
 	@Override

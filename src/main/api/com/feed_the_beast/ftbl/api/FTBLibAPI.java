@@ -28,8 +28,6 @@ public abstract class FTBLibAPI
 
 	public abstract Collection<ITickable> ticking();
 
-	public abstract IPackModes getPackModes();
-
 	public abstract ISharedServerData getServerData();
 
 	public abstract ISharedClientData getClientData();

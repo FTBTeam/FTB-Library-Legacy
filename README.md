@@ -9,18 +9,15 @@
 
 ### Adding as dependency
 
-```
+```groovy
 repositories {
-    ivy {
-        name "LatMod"
-        artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]"
-    }
+    ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
 }
 
 dependencies {
-    deobfCompile 'LatMod:FTBLib:1.10.2-3.3.0:api'
+    compile 'com.latmod.mods:FTBLib:4.1.0:api'
 }
 ```
 
 You probably also want to add "required-after:ftbl" or "after:ftbl" in your @Mod's dependencies.
-Most of the APIs don't need hard dependency, but things like GUIs, Notifications etc. won't work without FTBLib loaded
+Most of the APIs don't need hard dependency, but things like GUIs won't work without FTBLib loaded

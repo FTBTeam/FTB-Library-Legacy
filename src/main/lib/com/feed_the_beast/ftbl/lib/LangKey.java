@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * @author LatvianModder
@@ -13,7 +15,12 @@ public final class LangKey implements IStringSerializable
 {
 	private final String key;
 
-	public LangKey(String s)
+	public static LangKey of(String key)
+	{
+		return new LangKey(key);
+	}
+
+	private LangKey(String s)
 	{
 		key = s;
 	}
@@ -36,12 +43,12 @@ public final class LangKey implements IStringSerializable
 
 	public ITextComponent textComponent()
 	{
-		return StringUtils.translation(key);
+		return new TextComponentTranslation(key, CommonUtils.NO_OBJECTS);
 	}
 
 	public ITextComponent textComponent(Object... o)
 	{
-		return StringUtils.translation(key, o);
+		return new TextComponentTranslation(key, o);
 	}
 
 	public void printChat(ICommandSender sender, Object... o)

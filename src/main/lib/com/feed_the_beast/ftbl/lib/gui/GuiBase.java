@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IClientActionGui;
 import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -21,11 +20,11 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public abstract class GuiBase extends Panel implements IClientActionGui
+public abstract class GuiBase extends Panel
 {
 	public static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
-	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(new Color4I(false, 0xC8333333)).setLineColor(new Color4I(false, 0xFFC0C0C0)).setRoundEdges(true);
-	public static final Color4I DEFAULT_CONTENT_COLOR = new Color4I(false, 0xFFC0C0C0);
+	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0xC8333333).setLineColor(0xFFC0C0C0).setRoundEdges(true);
+	public static final Color4I DEFAULT_CONTENT_COLOR = Color4I.rgb(0xC0C0C0);
 
 	private final FontRenderer font;
 	private int mouseX, mouseY, mouseWheel;
@@ -51,7 +50,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public final void initGui()
 	{
-		screen = new ScaledResolution(FTBLibClient.MC);
+		screen = new ScaledResolution(ClientUtils.MC);
 
 		if (isFullscreen())
 		{
@@ -82,13 +81,13 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 	{
 		onClosed();
 
-		if (FTBLibClient.MC.player == null)
+		if (ClientUtils.MC.player == null)
 		{
-			FTBLibClient.MC.displayGuiScreen(null);
+			ClientUtils.MC.displayGuiScreen(null);
 		}
 		else
 		{
-			FTBLibClient.MC.player.closeScreen();
+			ClientUtils.MC.player.closeScreen();
 		}
 	}
 
@@ -108,7 +107,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	protected FontRenderer createFont()
 	{
-		return FTBLibClient.MC.fontRenderer;
+		return ClientUtils.MC.fontRenderer;
 	}
 
 	@Override
@@ -175,7 +174,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public final void openGui()
 	{
-		FTBLibClient.MC.displayGuiScreen(getWrapper());
+		ClientUtils.MC.displayGuiScreen(getWrapper());
 	}
 
 	public final FontRenderer getFont()
@@ -220,7 +219,7 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 
 	public void playSoundFX(SoundEvent e, float pitch)
 	{
-		FTBLibClient.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
+		ClientUtils.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
 	}
 
 	public boolean isMouseOver(int x, int y, int w, int h)
@@ -258,14 +257,9 @@ public abstract class GuiBase extends Panel implements IClientActionGui
 		drawCenteredString(text, x, y, getContentColor());
 	}
 
-	@Override
-	public void onClientDataChanged()
-	{
-	}
-
 	public boolean isOpen()
 	{
-		return FTBLibClient.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) FTBLibClient.MC.currentScreen).getWrappedGui() == this;
+		return ClientUtils.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) ClientUtils.MC.currentScreen).getWrappedGui() == this;
 	}
 
 	public boolean isShiftDown()

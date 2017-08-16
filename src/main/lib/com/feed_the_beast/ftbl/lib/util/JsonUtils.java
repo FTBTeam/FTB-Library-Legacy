@@ -1,6 +1,9 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.lib.CustomStyle;
+import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,6 +15,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentKeybind;
@@ -22,6 +27,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +61,7 @@ public class JsonUtils
 		GSON = gb.create();
 		gb.setPrettyPrinting();
 		gb.disableHtmlEscaping();
+		gb.setLenient();
 		GSON_PRETTY = gb.create();
 
 		DESERIALIZATION_CONTEXT = new JsonDeserializationContext()
@@ -167,6 +175,19 @@ public class JsonUtils
 			reader.close();
 			fis.close();
 			return e;
+		}
+		catch (Exception ex)
+		{
+			return JsonNull.INSTANCE;
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static JsonElement fromJson(IResource resource)
+	{
+		try
+		{
+			return fromJson(new InputStreamReader(resource.getInputStream()));
 		}
 		catch (Exception ex)
 		{
@@ -311,6 +332,26 @@ public class JsonUtils
 		if (c instanceof TextComponentString)
 		{
 			o.addProperty("text", ((TextComponentString) c).getText());
+
+			if (c instanceof INotification)
+			{
+				INotification n = (INotification) c;
+
+				if (!n.getId().equals(INotification.VANILLA_STATUS))
+				{
+					o.addProperty("nid", n.getId().toString());
+				}
+
+				if (n.getTimer() != 60)
+				{
+					o.addProperty("timer", n.getTimer());
+				}
+
+				if (!n.getIcon().isNull())
+				{
+					o.add("icon", n.getIcon().getJson());
+				}
+			}
 		}
 		else if (c instanceof TextComponentTranslation)
 		{
@@ -371,7 +412,7 @@ public class JsonUtils
 		}
 		else if (e.isJsonPrimitive())
 		{
-			return StringUtils.text(e.getAsString());
+			return new TextComponentString(e.getAsString());
 		}
 		else if (!e.isJsonObject())
 		{
@@ -385,6 +426,11 @@ public class JsonUtils
 			for (JsonElement jsonelement : e.getAsJsonArray())
 			{
 				ITextComponent t2 = deserializeTextComponent(jsonelement);
+
+				if (t2 == null)
+				{
+					t2 = new TextComponentString("");
+				}
 
 				if (t == null)
 				{
@@ -405,7 +451,26 @@ public class JsonUtils
 
 			if (o.has("text"))
 			{
-				t = new TextComponentString(o.get("text").getAsString());
+				String s = o.get("text").getAsString();
+
+				if (o.has("nid") || o.has("timer") || o.has("icon"))
+				{
+					t = Notification.of(new ResourceLocation(o.has("nid") ? o.get("nid").getAsString() : ""), s);
+
+					if (o.has("timer"))
+					{
+						((Notification) t).setTimer(net.minecraft.util.JsonUtils.getInt(o, "timer"));
+					}
+
+					if (o.has("icon"))
+					{
+						((Notification) t).setIcon(ImageProvider.get(o.get("icon")));
+					}
+				}
+				else
+				{
+					t = new TextComponentString(s);
+				}
 			}
 			else if (o.has("translate"))
 			{
@@ -435,7 +500,7 @@ public class JsonUtils
 				}
 				else
 				{
-					t = new TextComponentTranslation(s, LMUtils.NO_OBJECTS);
+					t = new TextComponentTranslation(s, CommonUtils.NO_OBJECTS);
 				}
 			}
 			else if (o.has("score"))

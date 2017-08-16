@@ -13,7 +13,7 @@ import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.net.MessageLogin;
@@ -295,7 +295,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		{
 			try
 			{
-				playerNBT = NBTUtils.readTag(new File(LMUtils.folderWorld, "playerdata/" + getId() + ".dat"));
+				playerNBT = NBTUtils.readTag(new File(CommonUtils.folderWorld, "playerdata/" + getId() + ".dat"));
 			}
 			catch (Exception ex)
 			{

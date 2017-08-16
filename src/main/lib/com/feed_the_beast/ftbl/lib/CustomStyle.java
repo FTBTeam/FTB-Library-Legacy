@@ -132,7 +132,7 @@ public class CustomStyle extends Style
 		}
 
 		@Override
-		public CustomStyle setMonospaced(@Nullable Boolean obfuscated)
+		public CustomStyle setMonospaced(@Nullable Boolean _monospaced)
 		{
 			throw new UnsupportedOperationException();
 		}
@@ -187,6 +187,11 @@ public class CustomStyle extends Style
 	{
 	}
 
+	public CustomStyle(Style style)
+	{
+		shallowCopyFrom(style);
+	}
+
 	@Override
 	public Style getParent()
 	{
@@ -218,9 +223,9 @@ public class CustomStyle extends Style
 		return monospaced == null ? (style instanceof CustomStyle && ((CustomStyle) style).getMonospaced()) : monospaced;
 	}
 
-	public CustomStyle setMonospaced(@Nullable Boolean _code)
+	public CustomStyle setMonospaced(@Nullable Boolean _monospaced)
 	{
-		monospaced = _code;
+		monospaced = _monospaced;
 		return this;
 	}
 

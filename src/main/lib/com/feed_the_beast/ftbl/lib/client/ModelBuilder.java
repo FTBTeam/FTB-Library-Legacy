@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,7 +21,6 @@ import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -56,8 +54,6 @@ public class ModelBuilder
 	{
 		return PerspectiveMapWrapper.handlePerspective(model, TRANSFORM_MAP, cameraTransformType);
 	}
-
-	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> FTBLibClient.MC.getTextureMapBlocks().registerSprite(location);
 
 	public final VertexFormat format;
 	private List<BakedQuad> quads;

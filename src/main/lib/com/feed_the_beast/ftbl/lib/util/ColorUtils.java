@@ -2,15 +2,12 @@ package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.BufferUtils;
 
-import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 
 public class ColorUtils
@@ -26,15 +23,25 @@ public class ColorUtils
 			int r = (i >> 2 & 1) * 170 + j;
 			int g = (i >> 1 & 1) * 170 + j;
 			int b = (i & 1) * 170 + j;
-			CHAT_FORMATTING_COLORS[i] = new Color4I(false, getRGBA((i == 6) ? r + 85 : r, g, b, 255));
+			CHAT_FORMATTING_COLORS[i] = Color4I.rgb((i == 6) ? r + 85 : r, g, b);
 		}
 
 		for (EnumDyeColor color : EnumDyeColor.values())
 		{
 			char c = getTextFormattingChar(getFromDyeColor(color));
-			DYE_TEXT_FORMATTING_COLORS[color.getMetadata()] = new Color4I(false, GuiUtils.getColorCode(c, true));
-			DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = new Color4I(false, GuiUtils.getColorCode(c, false));
+			DYE_TEXT_FORMATTING_COLORS[color.getMetadata()] = Color4I.rgb(GuiUtils.getColorCode(c, true));
+			DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = Color4I.rgb(GuiUtils.getColorCode(c, false));
 		}
+	}
+
+	public static TextFormatting getFromDyeColor(EnumDyeColor color)
+	{
+		return color.chatColor;
+	}
+
+	public static char getTextFormattingChar(TextFormatting formatting)
+	{
+		return formatting.formattingCode;
 	}
 
 	public static Color4I getChatFormattingColor(int id)
@@ -42,24 +49,14 @@ public class ColorUtils
 		return CHAT_FORMATTING_COLORS[id & 0xF];
 	}
 
-	public static JsonElement serialize(int col)
+	public static Color4I getDyeColor(EnumDyeColor color, boolean isLighter)
 	{
-		return new JsonPrimitive('#' + Integer.toHexString(col).toUpperCase());
-	}
-
-	public static int deserialize(@Nullable JsonElement e)
-	{
-		if (e == null || !e.isJsonPrimitive())
-		{
-			return 0xFF000000;
-		}
-
-		return (int) Long.parseLong(e.getAsString().substring(1), 16);
+		return DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + (isLighter ? 0 : 16)];
 	}
 
 	public static int getRGBA(int r, int g, int b, int a)
 	{
-		return ((a & 0xFF) << 24) | ((r & 0xFF) << 16) | ((g & 0xFF) << 8) | ((b & 255));
+		return ((a & 255) << 24) | ((r & 255) << 16) | ((g & 255) << 8) | ((b & 255));
 	}
 
 	public static int getRGBAF(float r, float g, float b, float a)
@@ -179,20 +176,5 @@ public class ColorUtils
 		float g = MathHelper.clamp(getGreenF(col1) * getGreenF(col2), 0F, 1F);
 		float b = MathHelper.clamp(getBlueF(col1) * getBlueF(col2), 0F, 1F);
 		return getRGBA((int) (r * 255F), (int) (g * 255F), (int) (b * 255F), a);
-	}
-
-	public static TextFormatting getFromDyeColor(EnumDyeColor color)
-	{
-		return color.chatColor;
-	}
-
-	public static char getTextFormattingChar(TextFormatting formatting)
-	{
-		return formatting.formattingCode;
-	}
-
-	public static Color4I getDyeColor(EnumDyeColor color, boolean isLighter)
-	{
-		return DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + (isLighter ? 0 : 16)];
 	}
 }

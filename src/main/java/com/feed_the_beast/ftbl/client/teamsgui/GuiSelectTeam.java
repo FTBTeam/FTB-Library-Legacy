@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -56,7 +56,7 @@ public class GuiSelectTeam extends GuiBase
 	{
 		private final PublicTeamData team;
 		private final IDrawableObject background;
-		private static final Color4I INVITED_COLOR = new Color4I(false, 0x6620A32B);
+		private static final Color4I INVITED_COLOR = Color4I.rgba(0x6620A32B);
 
 		private ButtonTeam(PublicTeamData t)
 		{
@@ -72,11 +72,11 @@ public class GuiSelectTeam extends GuiBase
 		{
 			if (team.isInvited)
 			{
-				FTBLibClient.execClientCommand("/ftb team join " + team.getName());
+				ClientUtils.execClientCommand("/ftb team join " + team.getName());
 			}
 			else
 			{
-				FTBLibClient.execClientCommand("/ftb team request_invite " + team.getName());
+				ClientUtils.execClientCommand("/ftb team request_invite " + team.getName());
 			}
 
 			gui.closeGui();

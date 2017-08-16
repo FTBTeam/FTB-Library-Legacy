@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
-import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
@@ -11,7 +10,7 @@ import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
-import com.feed_the_beast.ftbl.lib.client.FTBLibClient;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
@@ -20,18 +19,17 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -66,7 +64,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	{
 		super.preInit(event);
 
-		clientConfig = new ConfigFile(StringUtils.translation("sidebar_button.ftbl.settings"), () -> new File(LMUtils.folderLocal, "client_config.json"));
+		clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button.ftbl.settings"), () -> new File(CommonUtils.folderLocal, "client_config.json"));
 
 		String group = FTBLibFinals.MOD_ID;
 		addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
@@ -85,14 +83,14 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 		new FTBLibClientRegistryEvent(this).post();
 
 		//For Dev reasons
-		GameProfile profile = FTBLibClient.MC.getSession().getProfile();
+		GameProfile profile = ClientUtils.MC.getSession().getProfile();
 		if (profile.getId().equals(StringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
 		{
-			LMUtils.userIsLatvianModder = true;
+			CommonUtils.userIsLatvianModder = true;
 		}
 
-		FTBLibClient.localPlayerHead = new PlayerHeadImage(profile.getName());
-		((IReloadableResourceManager) FTBLibClient.MC.getResourceManager()).registerReloadListener(this);
+		ClientUtils.localPlayerHead = new PlayerHeadImage(profile.getName());
+		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
 	}
 
 	@Override
@@ -117,7 +115,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 							{
 								SidebarButton button = new SidebarButton(new ResourceLocation(domain, entry.getKey()), entry.getValue().getAsJsonObject());
 
-								if (button.devOnly && !LMUtils.DEV_ENV)
+								if (button.devOnly && !CommonUtils.DEV_ENV)
 								{
 									continue;
 								}
@@ -139,7 +137,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 			}
 			catch (Exception ex)
 			{
-				//LMUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
+				//CommonUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
 
 				if (!(ex instanceof FileNotFoundException))
 				{
@@ -274,13 +272,13 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	@Override
 	public void handleClientMessage(MessageBase<?> message)
 	{
-		FTBLibClient.MC.addScheduledTask(() ->
+		ClientUtils.MC.addScheduledTask(() ->
 		{
-			message.onMessage(LMUtils.cast(message), FTBLibClient.MC.player);
+			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
 
 			if (FTBLibAPI_Impl.LOG_NET)
 			{
-				LMUtils.DEV_LOGGER.info("RX MessageBase: " + message.getClass().getName());
+				CommonUtils.DEV_LOGGER.info("RX MessageBase: " + message.getClass().getName());
 			}
 		});
 	}
@@ -289,34 +287,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	public void displayGuide(GuidePage page)
 	{
 		new GuiGuide(page).openGui();
-	}
-
-	@Override
-	public void displayNotification(EnumNotificationDisplay display, INotification n)
-	{
-		if (display == EnumNotificationDisplay.SCREEN)
-		{
-			FTBLibClientEventHandler.addNotification(n);
-			return;
-		}
-
-		ITextComponent text = n.getText();
-
-		if (text == null)
-		{
-			return;
-		}
-
-		GuiNewChat chat = FTBLibClient.MC.ingameGUI.getChatGUI();
-
-		if (display == EnumNotificationDisplay.CHAT)
-		{
-			chat.printChatMessageWithOptionalDeletion(text, 2348927 + (n.getId().hashCode() & 0xFFFF));
-		}
-		else
-		{
-			chat.printChatMessage(text);
-		}
 	}
 
 	public static List<SidebarButton> getSidebarButtons(boolean ignoreConfig)

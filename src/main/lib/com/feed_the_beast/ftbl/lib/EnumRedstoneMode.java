@@ -16,7 +16,7 @@ public enum EnumRedstoneMode implements IStringSerializable
 
 	public static final NameMap<EnumRedstoneMode> NAME_MAP = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW);
 	public static final NameMap<EnumRedstoneMode> NAME_MAP_WITH_PULSE = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE);
-	public static final LangKey ENUM_LANG_KEY = new LangKey("ftbl.redstonemode");
+	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftbl.redstonemode");
 
 	private final LangKey langKey;
 	private final String name;
@@ -24,7 +24,7 @@ public enum EnumRedstoneMode implements IStringSerializable
 	EnumRedstoneMode(String n)
 	{
 		name = n;
-		langKey = new LangKey("ftbl.redstonemode." + name);
+		langKey = LangKey.of("ftbl.redstonemode." + name);
 	}
 
 	public LangKey getLangKey()

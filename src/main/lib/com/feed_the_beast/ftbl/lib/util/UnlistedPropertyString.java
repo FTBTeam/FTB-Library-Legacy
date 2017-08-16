@@ -16,7 +16,7 @@ public class UnlistedPropertyString implements IUnlistedProperty<String>
 
 	public static UnlistedPropertyString create(String name)
 	{
-		return create(name, LMUtils.alwaysTruePredicate());
+		return create(name, CommonUtils.alwaysTruePredicate());
 	}
 
 	private final String name;

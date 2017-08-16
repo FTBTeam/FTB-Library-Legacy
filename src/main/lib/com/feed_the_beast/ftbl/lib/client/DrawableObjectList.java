@@ -19,21 +19,14 @@ public class DrawableObjectList implements IDrawableObject
 
 	public DrawableObjectList(Collection<IDrawableObject> l)
 	{
-		if (l.contains(null) || l.contains(ImageProvider.NULL))
-		{
-			list = new ArrayList<>();
+		list = new ArrayList<>(l.size());
 
-			for (IDrawableObject o : l)
-			{
-				if (o != null && o != ImageProvider.NULL)
-				{
-					list.add(o);
-				}
-			}
-		}
-		else
+		for (IDrawableObject o : l)
 		{
-			list = new ArrayList<>(l);
+			if (o != null && !o.isNull())
+			{
+				list.add(o);
+			}
 		}
 
 		if (!list.isEmpty())

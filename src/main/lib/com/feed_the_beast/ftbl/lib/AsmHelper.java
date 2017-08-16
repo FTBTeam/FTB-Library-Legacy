@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.LMUtils;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ModCandidate;
 
@@ -77,7 +77,7 @@ public class AsmHelper
 	{
 		if (DUMP_INFO)
 		{
-			LMUtils.DEV_LOGGER.info("Scanning ASM Objects: Annotation: @" + annotationClass.getName() + ", Class: " + objClass.getName());
+			CommonUtils.DEV_LOGGER.info("Scanning ASM Objects: Annotation: @" + annotationClass.getName() + ", Class: " + objClass.getName());
 		}
 
 		for (ASMDataTable.ASMData data : getASMData(table, annotationClass))
@@ -91,13 +91,13 @@ public class AsmHelper
 
 				if (data.getClassName().startsWith("net.minecraft.client") || data.getObjectName().startsWith("net.minecraft.client"))
 				{
-					LMUtils.DEV_LOGGER.error("ERROR! invalid ASM entry found! :: " + data.getClassName() + "#" + data.getObjectName());
+					CommonUtils.DEV_LOGGER.error("ERROR! invalid ASM entry found! :: " + data.getClassName() + "#" + data.getObjectName());
 					continue;
 				}
 
 				if (DUMP_INFO)
 				{
-					LMUtils.DEV_LOGGER.info("-  " + data.getClassName() + "#" + data.getObjectName() + " with info " + data.getAnnotationInfo());
+					CommonUtils.DEV_LOGGER.info("-  " + data.getClassName() + "#" + data.getObjectName() + " with info " + data.getAnnotationInfo());
 				}
 
 				Field field = getClass(data).getDeclaredField(data.getObjectName());
@@ -109,7 +109,7 @@ public class AsmHelper
 
 				if (DUMP_INFO)
 				{
-					LMUtils.DEV_LOGGER.info("-  Match found!");
+					CommonUtils.DEV_LOGGER.info("-  Match found!");
 				}
 
 				field.setAccessible(true);
@@ -123,7 +123,7 @@ public class AsmHelper
 
 		if (DUMP_INFO)
 		{
-			LMUtils.DEV_LOGGER.info("End of ASM Scan");
+			CommonUtils.DEV_LOGGER.info("End of ASM Scan");
 		}
 	}
 
@@ -133,7 +133,7 @@ public class AsmHelper
 
 		if (DUMP_INFO)
 		{
-			LMUtils.DEV_LOGGER.info("Scanning ASM Plugins: Annotation: @" + annotationClass.getName() + ", Interface: " + pluginClass.getName());
+			CommonUtils.DEV_LOGGER.info("Scanning ASM Plugins: Annotation: @" + annotationClass.getName() + ", Interface: " + pluginClass.getName());
 		}
 
 		for (ASMDataTable.ASMData data : getASMData(table, annotationClass))
@@ -147,7 +147,7 @@ public class AsmHelper
 
 				if (DUMP_INFO)
 				{
-					LMUtils.DEV_LOGGER.info("-  " + data.getClassName() + "#" + data.getObjectName() + " with info " + data.getAnnotationInfo());
+					CommonUtils.DEV_LOGGER.info("-  " + data.getClassName() + "#" + data.getObjectName() + " with info " + data.getAnnotationInfo());
 				}
 
 				Field field = getClass(data).getDeclaredField(data.getObjectName());
@@ -159,7 +159,7 @@ public class AsmHelper
 
 				if (DUMP_INFO)
 				{
-					LMUtils.DEV_LOGGER.info("-  Match found!");
+					CommonUtils.DEV_LOGGER.info("-  Match found!");
 				}
 
 				field.setAccessible(true);
@@ -173,7 +173,7 @@ public class AsmHelper
 
 		if (DUMP_INFO)
 		{
-			LMUtils.DEV_LOGGER.info("End of ASM Scan");
+			CommonUtils.DEV_LOGGER.info("End of ASM Scan");
 		}
 
 		return Collections.unmodifiableList(list);
