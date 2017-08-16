@@ -2,7 +2,9 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.INotification;
+import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
+import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
@@ -11,6 +13,9 @@ import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -26,6 +31,7 @@ import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -38,6 +44,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -279,6 +286,27 @@ public class FTBLibClientEventHandler
 	public static void renderWorld(RenderWorldLastEvent event)
 	{
 		ClientUtils.updateRenderInfo();
+	}
+
+	@SubscribeEvent
+	public static void guideEvent(ClientGuideEvent event)
+	{
+		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
+		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
+		page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
+
+		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
+		{
+			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
+			{
+				GuidePage page1 = page.getSub(button.getName());
+				page1.setIcon(button.icon);
+				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
+				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
+			}
+		}
+
+		event.add(page);
 	}
 
 	private static class GuiButtonSidebar extends GuiButton
