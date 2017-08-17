@@ -98,6 +98,11 @@ public class ImageProvider implements IDrawableObject
 			return new URLImageProvider(id, 0D, 0D, 1D, 1D);
 		}
 
+		if (!id.endsWith(".png"))
+		{
+			return new AtlasSpriteProvider(new ResourceLocation(id));
+		}
+
 		return new ImageProvider(id, 0D, 0D, 1D, 1D);
 	}
 

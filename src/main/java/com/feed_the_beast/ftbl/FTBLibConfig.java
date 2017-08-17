@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
  */
 public class FTBLibConfig
 {
+	public static final PropertyBool CLIENTLESS_MODE = new PropertyBool(false);
 	public static final PropertyBool AUTOCREATE_TEAMS = new PropertyBool(false);
 	public static final PropertyBool MIRROR_FTB_COMMANDS = new PropertyBool(true);
 	public static final PropertyShort MAX_TEAM_CHAT_HISTORY = new PropertyShort(300, 0, 10000).setUnsigned();

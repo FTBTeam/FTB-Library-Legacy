@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.feed_the_beast.ftbl.lib.IconSet;
+import com.feed_the_beast.ftbl.lib.TextureSet;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +20,7 @@ public class SpriteSet
 		sprites = new TextureAtlasSprite[6];
 	}
 
-	public SpriteSet(IconSet set, Function<ResourceLocation, TextureAtlasSprite> function)
+	public SpriteSet(TextureSet set, Function<ResourceLocation, TextureAtlasSprite> function)
 	{
 		this();
 

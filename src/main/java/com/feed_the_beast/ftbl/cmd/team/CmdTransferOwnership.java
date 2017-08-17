@@ -53,6 +53,6 @@ public class CmdTransferOwnership extends CmdBase
 		}
 
 		team.changeOwner(p1);
-		team.printMessage(new ForgeTeam.Message(FTBLibLang.TEAM_TRANSFERED_OWNERSHIP.textComponent(p1.getName())));
+		team.printMessage(new ForgeTeam.Message(FTBLibLang.TEAM_TRANSFERRED_OWNERSHIP.textComponent(p1.getName())));
 	}
 }

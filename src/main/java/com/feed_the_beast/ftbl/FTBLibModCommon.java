@@ -22,6 +22,7 @@ import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
+import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
@@ -59,7 +60,6 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
@@ -194,6 +194,7 @@ public class FTBLibModCommon implements IFTBLibRegistry
 		addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbl.json"));
 
 		String group = FTBLibFinals.MOD_ID;
+		addConfig(group, "clientless_mode", FTBLibConfig.CLIENTLESS_MODE);
 		addConfig(group, "mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
 		addConfig(group, "merge_offline_mode_players", FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS);
 		group = FTBLibFinals.MOD_ID + ".teams";
@@ -239,17 +240,13 @@ public class FTBLibModCommon implements IFTBLibRegistry
 		}
 	}
 
-	public void loadRegistries()
-	{
-	}
-
 	@Override
 	public void addConfigFileProvider(String id, IConfigFileProvider provider)
 	{
 		if (id.charAt(0) != '-')
 		{
 			id = id.toLowerCase();
-			ConfigFile configFile = new ConfigFile(new TextComponentTranslation("config_group." + id + ".name"), provider);
+			ConfigFile configFile = new ConfigFile(LangKey.of("config_group." + id + ".name").textComponent(), provider);
 			CONFIG_FILES.put(id, configFile);
 		}
 	}

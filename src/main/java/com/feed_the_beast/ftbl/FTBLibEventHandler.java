@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -100,20 +101,15 @@ public class FTBLibEventHandler
 
 		if (!p.hideTeamNotification() && p.getTeam() == null)
 		{
-			ITextComponent c = new TextComponentString("You haven't joined or created a team yet! "); //LANG
-			ITextComponent b1 = new TextComponentString("[Click Here]"); //LANG
+			ITextComponent b1 = FTBLibLang.CLICK_HERE.textComponent();
 			b1.getStyle().setColor(TextFormatting.GOLD);
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
 			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("TeamsGUI")));
-			c.appendSibling(b1);
-			c.appendText(" to open TeamsGUI or "); //LANG
-			ITextComponent b2 = new TextComponentString("[Click Here]"); //LANG
+			ITextComponent b2 = FTBLibLang.CLICK_HERE.textComponent();
 			b2.getStyle().setColor(TextFormatting.GOLD);
-			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification true"));
-			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("Hide This Message"))); //LANG
-			c.appendSibling(b2);
-			c.appendText(" to hide this message."); //LANG
-			ep.sendMessage(c);
+			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification toggle"));
+			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.TEAM_NOTIFICATION_HIDE.textComponent()));
+			ep.sendMessage(FTBLibLang.TEAM_NOTIFICATION.textComponent(b1, b2));
 		}
 	}
 

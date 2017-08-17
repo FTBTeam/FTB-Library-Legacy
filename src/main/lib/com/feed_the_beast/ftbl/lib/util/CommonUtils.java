@@ -1,8 +1,11 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -107,28 +110,34 @@ public class CommonUtils
 
 	public static String getNameFromState(IBlockState state)
 	{
+		if (state == Blocks.AIR.getDefaultState())
+		{
+			return "minecraft:air";
+		}
+
 		StringBuilder builder = new StringBuilder();
 		builder.append(Block.REGISTRY.getNameForObject(state.getBlock()));
 
-		if (!state.getProperties().isEmpty())
+		if (state != state.getBlock().getDefaultState() && !state.getProperties().isEmpty())
 		{
 			builder.append('[');
-			final boolean[] first = {true};
+			boolean first = true;
 
-			state.getProperties().forEach((iProperty, comparable) ->
+			for (Map.Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
 			{
-				if (first[0])
+				if (first)
 				{
-					first[0] = false;
+					first = false;
 				}
 				else
 				{
 					builder.append(',');
 				}
-				builder.append(iProperty.getName());
+
+				builder.append(entry.getKey().getName());
 				builder.append('=');
-				builder.append(iProperty.getName(cast(comparable)));
-			});
+				builder.append(entry.getKey().getName(cast(entry.getValue())));
+			}
 
 			builder.append(']');
 		}
@@ -136,20 +145,46 @@ public class CommonUtils
 		return builder.toString();
 	}
 
-	public static IBlockState getStateFromName(String name)
+	public static IBlockState getStateFromName(String name, IBlockState def)
 	{
+		if (name.isEmpty())
+		{
+			return def;
+		}
+
 		int p = name.indexOf('[');
-		String stateName = p == -1 ? name : name.substring(0, p - 1);
-		Block block = Block.REGISTRY.getObject(new ResourceLocation(stateName));
+		String stateName = p == -1 ? name : name.substring(0, p);
+		IBlockState state = Block.REGISTRY.getObject(new ResourceLocation(stateName)).getDefaultState();
+
+		if (state == Blocks.AIR.getDefaultState())
+		{
+			return def;
+		}
 
 		if (p >= 0)
 		{
-			for (String property : name.substring(p, name.length() - 1).split(","))
+			for (String property : name.substring(p + 1, name.length() - 1).split(","))
 			{
+				String[] p1 = property.split("=", 2);
+				IProperty<?> property1 = state.getBlock().getBlockState().getProperty(p1[0]);
 
+				if (property1 != null)
+				{
+					Optional<?> propValue = property1.parseValue(p1[1]);
+
+					if (propValue.isPresent())
+					{
+						state = state.withProperty(property1, cast(propValue.get()));
+					}
+				}
 			}
 		}
 
-		return block.getDefaultState();
+		return state;
+	}
+
+	public static IBlockState getStateFromName(String name)
+	{
+		return getStateFromName(name, Blocks.AIR.getDefaultState());
 	}
 }

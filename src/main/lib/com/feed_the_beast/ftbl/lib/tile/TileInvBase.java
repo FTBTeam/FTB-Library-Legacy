@@ -32,7 +32,7 @@ public class TileInvBase extends TileBase
 	}
 
 	@Override
-	protected boolean updateComparator()
+	public boolean updateComparator()
 	{
 		return true;
 	}

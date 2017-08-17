@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -44,6 +45,7 @@ public class ClientUtils
 	public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
 	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> MC.getTextureMapBlocks().registerSprite(location);
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
+	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
 
 	public static boolean isFirstPerson;
 	public static int currentDim, playerPosHash;
@@ -229,5 +231,10 @@ public class ClientUtils
 	public static Map<String, TextureAtlasSprite> getRegisteredSpritesMap()
 	{
 		return MC.getTextureMapBlocks().mapRegisteredSprites;
+	}
+
+	public static BlockRenderLayer getStrongest(BlockRenderLayer layer1, BlockRenderLayer layer2)
+	{
+		return BLOCK_RENDER_LAYER_NAME_MAP.get(Math.max(layer1.ordinal(), layer2.ordinal()));
 	}
 }

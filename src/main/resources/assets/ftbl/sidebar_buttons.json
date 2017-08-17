@@ -10,7 +10,7 @@
 		"loading_screen": true
 	},
 	"settings": {
-		"icon": "ftbl:textures/icons/settings.png",
+		"icon": "ftbl:icons/settings",
 		"dependencies": "after:ftbl.teams_gui",
 		"click": {
 			"action": "run_command",
@@ -18,7 +18,7 @@
 		}
 	},
 	"my_server_settings": {
-		"icon": "ftbl:textures/icons/settings_red.png",
+		"icon": "ftbl:icons/settings_red",
 		"dependencies": "after:ftbl.settings",
 		"click": {
 			"action": "run_command",

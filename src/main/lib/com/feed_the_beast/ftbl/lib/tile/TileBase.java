@@ -17,6 +17,7 @@ public class TileBase extends TileEntity
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
+	public boolean destroyedByCreativePlayer = false;
 
 	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
 	{
@@ -87,7 +88,7 @@ public class TileBase extends TileEntity
 		return true;
 	}
 
-	protected boolean updateComparator()
+	public boolean updateComparator()
 	{
 		return false;
 	}
@@ -102,6 +103,11 @@ public class TileBase extends TileEntity
 	public void markDirty()
 	{
 		isDirty = true;
+	}
+
+	public boolean shouldDrop()
+	{
+		return !destroyedByCreativePlayer;
 	}
 
 	public final void checkIfDirty()
@@ -184,5 +190,19 @@ public class TileBase extends TileEntity
 	public BlockDimPos getDimPos()
 	{
 		return new BlockDimPos(pos, hasWorld() ? world.provider.getDimension() : 0);
+	}
+
+	public NBTTagCompound createItemData()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound nbt1 = new NBTTagCompound();
+		writeData(nbt1, EnumSaveType.SAVE);
+
+		if (!nbt1.hasNoTags())
+		{
+			nbt.setTag("BlockEntityTag", nbt1);
+		}
+
+		return nbt;
 	}
 }

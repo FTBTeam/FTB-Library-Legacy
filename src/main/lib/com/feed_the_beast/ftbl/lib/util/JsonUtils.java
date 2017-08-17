@@ -195,7 +195,18 @@ public class JsonUtils
 		}
 	}
 
-	// -- //
+	@Nonnull
+	public static JsonArray toArray(@Nonnull JsonElement element)
+	{
+		if (element.isJsonArray())
+		{
+			return element.getAsJsonArray();
+		}
+
+		JsonArray a = new JsonArray();
+		a.add(element);
+		return a;
+	}
 
 	public static JsonElement toIntArray(int... ai)
 	{

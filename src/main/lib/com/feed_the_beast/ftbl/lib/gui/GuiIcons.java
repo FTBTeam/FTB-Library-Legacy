@@ -71,8 +71,9 @@ public class GuiIcons
     CHECK = get("check"),
     STAR = get("star"),
     HEART = get("heart"),
-			BOOK = ImageProvider.get("minecraft:textures/items/book_normal.png"),
-			BOOK_RED = ImageProvider.get("minecraft:textures/items/book_enchanted.png"),
+			BOOK = ImageProvider.get("minecraft:items/book_normal"),
+			BOOK_RED = ImageProvider.get("minecraft:items/book_enchanted"),
+			BARRIER = ImageProvider.get("minecraft:items/barrier"),
     TOGGLE_GAMEMODE = get("toggle_gamemode"),
     TOGGLE_RAIN = get("toggle_rain"),
     TOGGLE_DAY = get("toggle_day"),
@@ -81,6 +82,6 @@ public class GuiIcons
 
 	private static IDrawableObject get(String id)
 	{
-		return ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/icons/" + id + ".png");
+		return ImageProvider.get(FTBLibFinals.MOD_ID + ":icons/" + id);
 	}
 }

@@ -20,13 +20,13 @@ import java.util.function.Function;
 /**
  * @author LatvianModder
  */
-public class IconSet
+public class TextureSet
 {
-	public static final IconSet DEFAULT = IconSet.of("all=blocks/planks_oak");
+	public static final TextureSet DEFAULT = TextureSet.of("all=blocks/planks_oak");
 
-	public static IconSet of(String v)
+	public static TextureSet of(String v)
 	{
-		IconSet set = new IconSet();
+		TextureSet set = new TextureSet();
 		Map<String, String> map = StringUtils.parse(StringUtils.TEMP_MAP, v);
 
 		String s = map.get("all");
@@ -54,19 +54,19 @@ public class IconSet
 		return set;
 	}
 
-	public static IconSet of(JsonElement json)
+	public static TextureSet of(JsonElement json)
 	{
 		return of(json.getAsString());
 	}
 
-	public static IconSet of(IBlockState state)
+	public static TextureSet of(IBlockState state)
 	{
 		return DEFAULT; //FIXME
 	}
 
 	public final ResourceLocation[] textures;
 
-	private IconSet()
+	private TextureSet()
 	{
 		textures = new ResourceLocation[6];
 	}

@@ -5,14 +5,16 @@ package com.feed_the_beast.ftbl.lib.tile;
  */
 public enum EnumSaveType
 {
-	SAVE(true),
-	NET_FULL(false),
-	NET_UPDATE(false);
+	SAVE(true, true),
+	NET_FULL(false, true),
+	NET_UPDATE(false, false);
 
 	public final boolean save;
+	public final boolean full;
 
-	EnumSaveType(boolean s)
+	EnumSaveType(boolean s, boolean f)
 	{
 		save = s;
+		full = f;
 	}
 }

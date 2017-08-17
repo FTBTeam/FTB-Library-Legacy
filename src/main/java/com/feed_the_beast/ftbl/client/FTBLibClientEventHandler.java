@@ -10,9 +10,11 @@ import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
+import com.feed_the_beast.ftbl.lib.client.AtlasSpriteProvider;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -32,9 +34,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -42,6 +46,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -219,10 +224,15 @@ public class FTBLibClientEventHandler
 				}
 			}
 		}
+
+		if (FTBLibClientConfig.ITEM_NBT.getBoolean() && event.getItemStack().hasTagCompound())
+		{
+			event.getToolTip().add(TextFormatting.DARK_GRAY.toString() + event.getItemStack().getTagCompound());
+		}
 	}
 
 	@SubscribeEvent
-	public static void guiInitEvent(final GuiScreenEvent.InitGuiEvent.Post event)
+	public static void onGuiInit(final GuiScreenEvent.InitGuiEvent.Post event)
 	{
 		if (!(event.getGui() instanceof InventoryEffectRenderer))
 		{
@@ -248,7 +258,7 @@ public class FTBLibClientEventHandler
 	}
 
 	@SubscribeEvent
-	public static void guiActionEvent(GuiScreenEvent.ActionPerformedEvent.Post event)
+	public static void onGuiAction(GuiScreenEvent.ActionPerformedEvent.Post event)
 	{
 		if (event.getButton() instanceof GuiButtonSidebar)
 		{
@@ -258,7 +268,7 @@ public class FTBLibClientEventHandler
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-	public static void renderGameOverlayEvent(RenderGameOverlayEvent.Pre event)
+	public static void onOverlayRender(RenderGameOverlayEvent.Pre event)
 	{
 		if ((currentNotification != null || !Temp.MAP.isEmpty()) && event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
 		{
@@ -283,13 +293,13 @@ public class FTBLibClientEventHandler
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void renderWorld(RenderWorldLastEvent event)
+	public static void onWorldRender(RenderWorldLastEvent event)
 	{
 		ClientUtils.updateRenderInfo();
 	}
 
 	@SubscribeEvent
-	public static void guideEvent(ClientGuideEvent event)
+	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
 		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
@@ -307,6 +317,28 @@ public class FTBLibClientEventHandler
 		}
 
 		event.add(page);
+	}
+
+	@SubscribeEvent
+	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
+	{
+		AtlasSpriteProvider.SPRITE_MAP.clear();
+
+		try
+		{
+			for (Field field : GuiIcons.class.getDeclaredFields())
+			{
+				field.setAccessible(true);
+				event.getMap().registerSprite(((AtlasSpriteProvider) field.get(null)).name);
+			}
+		}
+		catch (Exception ex)
+		{
+			if (CommonUtils.DEV_ENV)
+			{
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	private static class GuiButtonSidebar extends GuiButton

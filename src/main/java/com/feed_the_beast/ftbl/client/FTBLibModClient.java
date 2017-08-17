@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
+import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
@@ -29,7 +30,6 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -64,10 +64,11 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	{
 		super.preInit(event);
 
-		clientConfig = new ConfigFile(new TextComponentTranslation("sidebar_button.ftbl.settings"), () -> new File(CommonUtils.folderLocal, "client_config.json"));
+		clientConfig = new ConfigFile(LangKey.of("sidebar_button.ftbl.settings").textComponent(), () -> new File(CommonUtils.folderLocal, "client_config.json"));
 
 		String group = FTBLibFinals.MOD_ID;
 		addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
+		addClientConfig(group, "item_nbt", FTBLibClientConfig.ITEM_NBT);
 		addClientConfig(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
 		addClientConfig(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
 		addClientConfig(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);

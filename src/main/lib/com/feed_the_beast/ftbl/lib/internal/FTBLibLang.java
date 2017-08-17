@@ -15,14 +15,15 @@ public class FTBLibLang
     RELOAD_CLIENT_CONFIG_2 = get("reload_client_config_2"),
 
     //@Deprecated
-    RAW = get("raw"),
+    RAW = LangKey.of("raw"),
     WIP = LangKey.of("wip"),
-    DEPRECATED = get("deprecated"),
-    COMMAND_PERMISSION = LangKey.of("commands.generic.permission"),
-    MISSING_ARGS = get("missing_args"),
-    MISSING_ARGS_NUM = get("missing_args_num"),
-    FEATURE_DISABLED = get("feature_disabled"),
-    INVALID_SUBCMD = get("invalid_subcmd"),
+	EXAMPLE = LangKey.of("example"),
+	CLICK_HERE = LangKey.of("click_here"),
+	FEATURE_DISABLED = LangKey.of("feature_disabled"),
+	MISSING_ARGS = LangKey.of("missing_args"),
+    MISSING_ARGS_NUM = LangKey.of("missing_args_num"),
+	COMMAND_PERMISSION = LangKey.of("commands.generic.permission"),
+	COMMAND_USAGE = LangKey.of("commands.generic.usage"),
     CLIENT_CONFIG = LangKey.of("client_config"),
     OWNER = get("owner"),
     DELETE_ITEM = get("delete_item"),
@@ -37,7 +38,7 @@ public class FTBLibLang
     TEAM_DELETED = get("team.deleted"),
     TEAM_MEMBER_LEFT = get("team.member_left"),
     TEAM_MEMBER_JOINED = get("team.member_joined"),
-    TEAM_TRANSFERED_OWNERSHIP = get("team.transfered_ownership"),
+    TEAM_TRANSFERRED_OWNERSHIP = get("team.transferred_ownership"),
     TEAM_INVITED = get("team.invited"),
     TEAM_INVITED_YOU = get("team.invited_you"),
     TEAM_NOT_FOUND = get("team.error.not_found"),
@@ -49,7 +50,9 @@ public class FTBLibLang
     TEAM_ALREADY_INVITED = get("team.error.already_invited"),
     TEAM_FAILED_TO_JOIN = get("team.error.failed_to_join"),
     TEAM_STATUS_SET = get("team.status.set"),
-    TEAM_PERMISSION_OWNER = get("team.permission.owner");
+    TEAM_PERMISSION_OWNER = get("team.permission.owner"),
+	TEAM_NOTIFICATION = get("team.notification"),
+	TEAM_NOTIFICATION_HIDE = get("team.notification.hide");
     //@formatter:on
 
 	private static LangKey get(String s)

@@ -2,10 +2,8 @@ package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -74,7 +72,7 @@ public class Notification extends TextComponentString implements INotification
 	public Notification setError()
 	{
 		getStyle().setColor(TextFormatting.DARK_RED);
-		setIcon(new DrawableItem(new ItemStack(Blocks.BARRIER)));
+		setIcon(GuiIcons.BARRIER);
 		return this;
 	}
 

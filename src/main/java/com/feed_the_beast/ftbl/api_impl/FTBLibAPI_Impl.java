@@ -129,7 +129,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 				Notification notification = Notification.of(FTBLibFinals.get("reload_client_config"));
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
 				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent());
-				notification.addLine(new TextComponentString("/ftb reload_client"));
+				notification.addLine(new TextComponentString("/ftbc reload_client"));
 				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent());
 				notification.setTimer(140);
 				notification.send(null);

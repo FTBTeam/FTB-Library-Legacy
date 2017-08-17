@@ -104,10 +104,10 @@ public abstract class CmdEditConfigBase extends CmdBase
 			try
 			{
 				JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
-				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + value)); //LANG
 				JsonObject json1 = new JsonObject();
 				json1.add(args[0], value);
 				cc.saveConfig(sender, null, json1);
+				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(key.getNameLangKey())).appendText("' set to " + cc.getConfigTree().get(new SimpleConfigKey(args[0])))); //LANG
 				return;
 			}
 			catch (Exception ex)
