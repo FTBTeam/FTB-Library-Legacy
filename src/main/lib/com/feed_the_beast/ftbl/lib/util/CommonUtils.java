@@ -31,7 +31,7 @@ public class CommonUtils
 	public static final Logger DEV_LOGGER = LogManager.getLogger("FTBLibDev");
 
 	public static boolean userIsLatvianModder = false, isNEILoaded = false;
-	public static File folderConfig, folderMinecraft, folderModpack, folderLocal, folderWorld;
+	public static File folderConfig, folderMinecraft, folderLocal, folderWorld;
 
 	public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
@@ -56,13 +56,8 @@ public class CommonUtils
 	{
 		folderConfig = configFolder;
 		folderMinecraft = folderConfig.getParentFile();
-		folderModpack = new File(folderMinecraft, "modpack/");
 		folderLocal = new File(folderMinecraft, "local/");
 
-		if (!folderModpack.exists())
-		{
-			folderModpack.mkdirs();
-		}
 		if (!folderLocal.exists())
 		{
 			folderLocal.mkdirs();

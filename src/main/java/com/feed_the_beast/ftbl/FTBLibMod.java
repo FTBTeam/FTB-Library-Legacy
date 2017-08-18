@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.TickHandler;
 import com.feed_the_beast.ftbl.api_impl.Universe;
@@ -94,7 +95,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent event)
 	{
-		FTBLibAPI.API.reload(Side.SERVER, ServerUtils.getServer(), EnumReloadType.CREATED);
+		FTBLibAPI.API.reload(Side.SERVER, ServerUtils.getServer(), EnumReloadType.CREATED, ReloadEvent.ALL);
 	}
 
 	@Mod.EventHandler

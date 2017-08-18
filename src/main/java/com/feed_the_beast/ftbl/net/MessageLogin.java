@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ISyncData;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
@@ -132,7 +133,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 		}
 
 		ClientUtils.CACHED_SKINS.clear();
-		FTBLibAPI.API.reload(Side.CLIENT, player, EnumReloadType.CREATED);
+		FTBLibAPI.API.reload(Side.CLIENT, player, EnumReloadType.CREATED, ReloadEvent.ALL);
 		MyTeamData.lastMessageTime = m.lastMessageTime;
 	}
 }

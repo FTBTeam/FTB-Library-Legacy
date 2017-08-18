@@ -1,11 +1,10 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.IFTBLibClientRegistry;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.events.FTBLibClientRegistryEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
@@ -48,7 +47,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientRegistry, IResourceManagerReloadListener
+public class FTBLibModClient extends FTBLibModCommon implements IResourceManagerReloadListener
 {
 	private IConfigFile clientConfig;
 	private static final Map<String, SidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
@@ -66,22 +65,30 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 
 		clientConfig = new ConfigFile(LangKey.of("sidebar_button.ftbl.settings").textComponent(), () -> new File(CommonUtils.folderLocal, "client_config.json"));
 
-		String group = FTBLibFinals.MOD_ID;
-		addClientConfig(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
-		addClientConfig(group, "item_nbt", FTBLibClientConfig.ITEM_NBT);
-		addClientConfig(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
-		addClientConfig(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
-		addClientConfig(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
-		addClientConfig(group, "replace_status_message_with_notification", FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION);
-		group = FTBLibFinals.MOD_ID + ".gui";
-		addClientConfig(group, "enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
-		group = FTBLibFinals.MOD_ID + ".gui.info";
-		addClientConfig(group, "border_width", GuiConfigs.INFO_BORDER_WIDTH).addFlags(IConfigKey.USE_SCROLL_BAR);
-		addClientConfig(group, "border_height", GuiConfigs.INFO_BORDER_HEIGHT).addFlags(IConfigKey.USE_SCROLL_BAR);
-		addClientConfig(group, "color_background", GuiConfigs.INFO_BACKGROUND);
-		addClientConfig(group, "color_text", GuiConfigs.INFO_TEXT);
+		RegisterClientConfigEvent event1 = new RegisterClientConfigEvent((group1, id, value) ->
+		{
+			ConfigKey key = new ConfigKey(id, value.copy(), group1, "client_config");
+			clientConfig.add(key, value);
+			return key;
+		});
 
-		new FTBLibClientRegistryEvent(this).post();
+		String group = FTBLibFinals.MOD_ID;
+		event1.register(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
+		event1.register(group, "item_nbt", FTBLibClientConfig.ITEM_NBT);
+		event1.register(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
+		event1.register(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
+		event1.register(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
+		event1.register(group, "replace_status_message_with_notification", FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION);
+		group = FTBLibFinals.MOD_ID + ".gui";
+		event1.register(group, "enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
+		group = FTBLibFinals.MOD_ID + ".gui.info";
+		event1.register(group, "border_width", GuiConfigs.INFO_BORDER_WIDTH).addFlags(IConfigKey.USE_SCROLL_BAR);
+		event1.register(group, "border_height", GuiConfigs.INFO_BORDER_HEIGHT).addFlags(IConfigKey.USE_SCROLL_BAR);
+		event1.register(group, "color_background", GuiConfigs.INFO_BACKGROUND);
+		event1.register(group, "color_text", GuiConfigs.INFO_TEXT);
+		event1.post();
+
+		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 
 		//For Dev reasons
 		GameProfile profile = ClientUtils.MC.getSession().getProfile();
@@ -247,20 +254,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IFTBLibClientReg
 	{
 		super.saveAllFiles();
 		clientConfig.save();
-	}
-
-	@Override
-	public IConfigKey addClientConfig(String group, String id, IConfigValue value)
-	{
-		ConfigKey key = new ConfigKey(id, value.copy(), group, "client_config");
-		clientConfig.add(key, value);
-		return key;
-	}
-
-	@Override
-	public void addGui(ResourceLocation id, IGuiProvider provider)
-	{
-		GUI_PROVIDERS.put(id, provider);
 	}
 
 	@Override

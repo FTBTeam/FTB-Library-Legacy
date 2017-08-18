@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IDataProvider;
-import com.feed_the_beast.ftbl.api.IFTBLibRegistry;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IRankConfig;
@@ -11,14 +10,17 @@ import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
-import com.feed_the_beast.ftbl.api.config.IConfigFileProvider;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.FTBLibRegistryEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterContainerProvidersEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterGuideLineProvidersEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterRankConfigEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterSyncDataEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
-import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
@@ -80,7 +82,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class FTBLibModCommon implements IFTBLibRegistry
+public class FTBLibModCommon
 {
 	private static final EnumSet<Side> DEFAULT_SIDES = EnumSet.allOf(Side.class);
 	public static final Map<String, IConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
@@ -190,44 +192,97 @@ public class FTBLibModCommon implements IFTBLibRegistry
 
 		FTBLibNetHandler.init();
 
-		addOptionalServerMod(FTBLibFinals.MOD_ID);
-		addConfigFileProvider(FTBLibFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbl.json"));
+		RegisterOptionalServerModsEvent optionalServerMods = new RegisterOptionalServerModsEvent(SharedServerData.INSTANCE.optionalServerMods::add);
+		optionalServerMods.register(FTBLibFinals.MOD_ID);
+		optionalServerMods.post();
+
+		RegisterConfigEvent config = new RegisterConfigEvent((group0, id, value) ->
+		{
+			int i = group0.indexOf('.');
+
+			String file;
+			String group;
+
+			if (i >= 0)
+			{
+				file = group0.substring(0, i);
+				group = group0.substring(i + 1);
+			}
+			else
+			{
+				file = group0;
+				group = "";
+			}
+
+			ConfigKey key = new ConfigKey(id, value.copy(), group, "config");
+			key.setGroup(group0);
+			key.setNameLangKey("config." + group0 + "." + id + ".name");
+			key.setInfoLangKey("config." + group0 + "." + id + ".info");
+			IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(new TextComponentString(f), ConfigFile.NULL_FILE_PROVIDER));
+			configFile.add(key, value);
+			return key;
+		}, (id, provider) ->
+		{
+			if (id.charAt(0) != '-')
+			{
+				id = id.toLowerCase();
+				ConfigFile configFile = new ConfigFile(LangKey.of("config_group." + id + ".name").textComponent(), provider);
+				CONFIG_FILES.put(id, configFile);
+			}
+		}, (id, provider) -> CONFIG_VALUE_PROVIDERS.put(id.toLowerCase(), provider));
+
+		config.registerFile(FTBLibFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbl.json"));
+		config.registerValue(PropertyNull.ID, () -> PropertyNull.INSTANCE);
+		config.registerValue(PropertyList.ID, () -> new PropertyList(PropertyNull.ID));
+		config.registerValue(PropertyBool.ID, PropertyBool::new);
+		config.registerValue(PropertyTristate.ID, PropertyTristate::new);
+		config.registerValue(PropertyByte.ID, PropertyByte::new);
+		config.registerValue(PropertyShort.ID, PropertyShort::new);
+		config.registerValue(PropertyInt.ID, PropertyInt::new);
+		config.registerValue(PropertyDouble.ID, PropertyDouble::new);
+		config.registerValue(PropertyString.ID, PropertyString::new);
+		config.registerValue(PropertyColor.ID, PropertyColor::new);
+		config.registerValue(PropertyEnumAbstract.ID, PropertyStringEnum::new);
+		config.registerValue(PropertyJson.ID, PropertyJson::new);
+		config.registerValue(PropertyBlockState.ID, PropertyBlockState::new);
+		config.registerValue(PropertyItemStack.ID, PropertyItemStack::new);
+		config.registerValue(PropertyTextComponent.ID, PropertyTextComponent::new);
 
 		String group = FTBLibFinals.MOD_ID;
-		addConfig(group, "clientless_mode", FTBLibConfig.CLIENTLESS_MODE);
-		addConfig(group, "mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
-		addConfig(group, "merge_offline_mode_players", FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS);
+		config.register(group, "clientless_mode", FTBLibConfig.CLIENTLESS_MODE);
+		config.register(group, "mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
+		config.register(group, "merge_offline_mode_players", FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS);
 		group = FTBLibFinals.MOD_ID + ".teams";
-		addConfig(group, "autocreate_on_login", FTBLibConfig.AUTOCREATE_TEAMS);
-		addConfig(group, "max_team_chat_history", FTBLibConfig.MAX_TEAM_CHAT_HISTORY);
+		config.register(group, "autocreate_on_login", FTBLibConfig.AUTOCREATE_TEAMS);
+		config.register(group, "max_team_chat_history", FTBLibConfig.MAX_TEAM_CHAT_HISTORY);
+		config.post();
 
-		addConfigValueProvider(PropertyNull.ID, () -> PropertyNull.INSTANCE);
-		addConfigValueProvider(PropertyList.ID, () -> new PropertyList(PropertyNull.ID));
-		addConfigValueProvider(PropertyBool.ID, PropertyBool::new);
-		addConfigValueProvider(PropertyTristate.ID, PropertyTristate::new);
-		addConfigValueProvider(PropertyByte.ID, PropertyByte::new);
-		addConfigValueProvider(PropertyShort.ID, PropertyShort::new);
-		addConfigValueProvider(PropertyInt.ID, PropertyInt::new);
-		addConfigValueProvider(PropertyDouble.ID, PropertyDouble::new);
-		addConfigValueProvider(PropertyString.ID, PropertyString::new);
-		addConfigValueProvider(PropertyColor.ID, PropertyColor::new);
-		addConfigValueProvider(PropertyEnumAbstract.ID, PropertyStringEnum::new);
-		addConfigValueProvider(PropertyJson.ID, PropertyJson::new);
-		addConfigValueProvider(PropertyBlockState.ID, PropertyBlockState::new);
-		addConfigValueProvider(PropertyItemStack.ID, PropertyItemStack::new);
-		addConfigValueProvider(PropertyTextComponent.ID, PropertyTextComponent::new);
+		RegisterGuideLineProvidersEvent guideLines = new RegisterGuideLineProvidersEvent((id, provider) -> GuidePage.LINE_PROVIDERS.put(id.toLowerCase(), provider));
+		guideLines.register("img", (page, json) -> new GuideImageLine(json));
+		guideLines.register("image", (page, json) -> new GuideImageLine(json));
+		guideLines.register("text_component", (page, json) -> new GuideExtendedTextLine(json));
+		guideLines.register("text", (page, json) -> new GuideTextLineString(json));
+		guideLines.register("list", GuideListLine::new);
+		guideLines.register("hr", (page, json) -> new GuideHrLine(json));
+		guideLines.register("item_list", (page, json) -> new DrawableObjectListLine(json));
+		guideLines.register("switch", GuideSwitchLine::new);
+		guideLines.register("contents", (page, json) -> new GuideContentsLine(page));
+		guideLines.post();
 
-		addInfoTextLine("img", (page, json) -> new GuideImageLine(json));
-		addInfoTextLine("image", (page, json) -> new GuideImageLine(json));
-		addInfoTextLine("text_component", (page, json) -> new GuideExtendedTextLine(json));
-		addInfoTextLine("text", (page, json) -> new GuideTextLineString(json));
-		addInfoTextLine("list", GuideListLine::new);
-		addInfoTextLine("hr", (page, json) -> new GuideHrLine(json));
-		addInfoTextLine("item_list", (page, json) -> new DrawableObjectListLine(json));
-		addInfoTextLine("switch", GuideSwitchLine::new);
-		addInfoTextLine("contents", (page, json) -> new GuideContentsLine(page));
-
-		new FTBLibRegistryEvent(this).post();
+		new RegisterDataProvidersEvent.Universe(DATA_PROVIDER_UNIVERSE::put).post();
+		new RegisterDataProvidersEvent.Player(DATA_PROVIDER_PLAYER::put).post();
+		new RegisterDataProvidersEvent.Team(DATA_PROVIDER_TEAM::put).post();
+		new RegisterContainerProvidersEvent(GUI_CONTAINER_PROVIDERS::put).post();
+		new RegisterSyncDataEvent(SYNCED_DATA::put).post();
+		new RegisterRankConfigEvent((id, defPlayer, defOP) ->
+		{
+			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
+			RankConfig c = new RankConfig(id, defPlayer, defOP);
+			c.setNameLangKey("rank_config." + id + ".name");
+			c.setInfoLangKey("rank_config." + id + ".info");
+			RANK_CONFIGS.put(c.getName(), c);
+			return c;
+		}).post();
 	}
 
 	public void postInit(LoaderState.ModState state)
@@ -238,103 +293,6 @@ public class FTBLibModCommon implements IFTBLibRegistry
 		{
 			file.save();
 		}
-	}
-
-	@Override
-	public void addConfigFileProvider(String id, IConfigFileProvider provider)
-	{
-		if (id.charAt(0) != '-')
-		{
-			id = id.toLowerCase();
-			ConfigFile configFile = new ConfigFile(LangKey.of("config_group." + id + ".name").textComponent(), provider);
-			CONFIG_FILES.put(id, configFile);
-		}
-	}
-
-	@Override
-	public void addConfigValueProvider(String id, IConfigValueProvider provider)
-	{
-		CONFIG_VALUE_PROVIDERS.put(id.toLowerCase(), provider);
-	}
-
-	@Override
-	public IConfigKey addConfig(String group0, String id, IConfigValue value)
-	{
-		int i = group0.indexOf('.');
-
-		String file;
-		String group;
-
-		if (i >= 0)
-		{
-			file = group0.substring(0, i);
-			group = group0.substring(i + 1);
-		}
-		else
-		{
-			file = group0;
-			group = "";
-		}
-
-		ConfigKey key = new ConfigKey(id, value.copy(), group, "config");
-		key.setGroup(group0);
-		key.setNameLangKey("config." + group0 + "." + id + ".name");
-		key.setInfoLangKey("config." + group0 + "." + id + ".info");
-		IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(new TextComponentString(f), ConfigFile.NULL_FILE_PROVIDER));
-		configFile.add(key, value);
-		return key;
-	}
-
-	@Override
-	public void addOptionalServerMod(String mod)
-	{
-		SharedServerData.INSTANCE.optionalServerMods.add(mod);
-	}
-
-	@Override
-	public void addGuiContainer(ResourceLocation id, IContainerProvider provider)
-	{
-		GUI_CONTAINER_PROVIDERS.put(id, provider);
-	}
-
-	@Override
-	public void addInfoTextLine(String id, IGuideTextLineProvider provider)
-	{
-		GuidePage.LINE_PROVIDERS.put(id.toLowerCase(), provider);
-	}
-
-	@Override
-	public void addSyncData(String mod, ISyncData data)
-	{
-		SYNCED_DATA.put(mod, data);
-	}
-
-	@Override
-	public void addUniverseDataProvider(ResourceLocation id, IDataProvider<IUniverse> provider)
-	{
-		DATA_PROVIDER_UNIVERSE.put(id, provider);
-	}
-
-	@Override
-	public void addPlayerDataProvider(ResourceLocation id, IDataProvider<IForgePlayer> provider)
-	{
-		DATA_PROVIDER_PLAYER.put(id, provider);
-	}
-
-	@Override
-	public void addTeamDataProvider(ResourceLocation id, IDataProvider<IForgeTeam> provider)
-	{
-		DATA_PROVIDER_TEAM.put(id, provider);
-	}
-
-	@Override
-	public void addRankConfig(String id, IConfigValue defPlayer, IConfigValue defOP)
-	{
-		Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
-		RankConfig c = new RankConfig(id, defPlayer, defOP);
-		c.setNameLangKey("rank_config." + id + ".name");
-		c.setInfoLangKey("rank_config." + id + ".info");
-		RANK_CONFIGS.put(c.getName(), c);
 	}
 
 	public void loadAllFiles()
@@ -351,7 +309,7 @@ public class FTBLibModCommon implements IFTBLibRegistry
 	{
 		loadAllFiles();
 
-		JsonElement overridesE = JsonUtils.fromJson(new File(CommonUtils.folderModpack, "overrides.json"));
+		JsonElement overridesE = JsonUtils.fromJson(new File(CommonUtils.folderConfig, "config_overrides.json"));
 
 		if (overridesE.isJsonObject())
 		{

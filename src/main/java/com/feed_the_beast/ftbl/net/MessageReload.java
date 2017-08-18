@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -25,16 +26,18 @@ public class MessageReload extends MessageToClient<MessageReload>
 	private int typeID;
 	private NBTTagCompound syncData;
 	private UUID universeID;
+	private ResourceLocation reloadId;
 
 	public MessageReload()
 	{
 	}
 
-	public MessageReload(EnumReloadType t, NBTTagCompound sync)
+	public MessageReload(EnumReloadType t, NBTTagCompound sync, ResourceLocation id)
 	{
 		typeID = t.ordinal();
 		syncData = sync;
 		universeID = SharedServerData.INSTANCE.getUniverseID();
+		reloadId = id;
 	}
 
 	@Override
@@ -49,6 +52,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 		io.writeByte(typeID);
 		ByteBufUtils.writeTag(io, syncData);
 		NetUtils.writeUUID(io, universeID);
+		NetUtils.writeResourceLocation(io, reloadId);
 	}
 
 	@Override
@@ -57,6 +61,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 		typeID = io.readUnsignedByte();
 		syncData = ByteBufUtils.readTag(io);
 		universeID = NetUtils.readUUID(io);
+		reloadId = NetUtils.readResourceLocation(io);
 	}
 
 	@Override
@@ -78,7 +83,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 
 		if (type != EnumReloadType.RELOAD_COMMAND)
 		{
-			FTBLibAPI.API.reload(Side.CLIENT, player, type);
+			FTBLibAPI.API.reload(Side.CLIENT, player, type, m.reloadId);
 		}
 	}
 }

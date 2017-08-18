@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.events.RegisterFTBCommandsEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterFTBCommandsEvent;
 import com.feed_the_beast.ftbl.cmd.team.CmdTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;

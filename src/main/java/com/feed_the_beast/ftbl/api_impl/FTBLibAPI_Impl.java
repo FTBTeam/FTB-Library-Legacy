@@ -23,6 +23,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayGuide;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
@@ -38,12 +39,14 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -91,7 +94,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public void reload(Side side, ICommandSender sender, EnumReloadType type)
+	public void reload(Side side, ICommandSender sender, EnumReloadType type, ResourceLocation id)
 	{
 		long ms = System.currentTimeMillis();
 		boolean serverSide = side.isServer();
@@ -102,7 +105,8 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 			FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
 		}
 
-		new ReloadEvent(side, sender, type).post();
+		HashSet<ResourceLocation> failed = new HashSet<>();
+		new ReloadEvent(side, sender, type, id, failed).post();
 
 		if (serverSide && ServerUtils.hasOnlinePlayers())
 		{
@@ -111,7 +115,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 				NBTTagCompound syncData = new NBTTagCompound();
 				IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
 				FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
-				new MessageReload(type, syncData).sendTo(ep);
+				new MessageReload(type, syncData, id).sendTo(ep);
 			}
 		}
 
@@ -128,9 +132,9 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 			{
 				Notification notification = Notification.of(FTBLibFinals.get("reload_client_config"));
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
-				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent());
-				notification.addLine(new TextComponentString("/ftbc reload_client"));
-				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent());
+				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent()
+						.appendSibling(StringUtils.color(new TextComponentString("/ftbc reload_client"), TextFormatting.GOLD))
+						.appendSibling(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent()));
 				notification.setTimer(140);
 				notification.send(null);
 			}

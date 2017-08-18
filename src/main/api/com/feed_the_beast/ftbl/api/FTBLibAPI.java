@@ -43,7 +43,7 @@ public abstract class FTBLibAPI
 
 	public abstract void loadWorldData(MinecraftServer server);
 
-	public abstract void reload(Side side, ICommandSender sender, EnumReloadType type);
+	public abstract void reload(Side side, ICommandSender sender, EnumReloadType type, ResourceLocation id);
 
 	public abstract void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
