@@ -260,12 +260,12 @@ public class MathUtils
 		}
 	}
 
-	public static int lerp_int(int i1, int i2, double f)
+	public static int lerp(int i1, int i2, double f)
 	{
 		return i1 + (int) ((i2 - i1) * f);
 	}
 
-	public static double lerp_double(double f1, double f2, double f)
+	public static double lerp(double f1, double f2, double f)
 	{
 		return f1 + (f2 - f1) * f;
 	}
@@ -275,7 +275,7 @@ public class MathUtils
 		return min2 + (max2 - min2) * ((val - min1) / (max1 - min1));
 	}
 
-	public static int mapInt(int val, int min1, int max1, int min2, int max2)
+	public static int map(int val, int min1, int max1, int min2, int max2)
 	{
 		return min2 + (max2 - min2) * ((val - min1) / (max1 - min1));
 	}

@@ -1,9 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -33,14 +30,12 @@ public class Notification extends TextComponentString implements INotification
 
 	private final ResourceLocation id;
 	private int timer;
-	private IDrawableObject icon;
 
 	private Notification(ResourceLocation i, String text)
 	{
 		super(text);
 		id = i;
 		timer = 60;
-		icon = ImageProvider.NULL;
 	}
 
 	public Notification(INotification n)
@@ -55,7 +50,6 @@ public class Notification extends TextComponentString implements INotification
 		}
 
 		setTimer(n.getTimer());
-		setIcon(n.getIcon());
 	}
 
 	public Notification addLine(ITextComponent line)
@@ -72,7 +66,6 @@ public class Notification extends TextComponentString implements INotification
 	public Notification setError()
 	{
 		getStyle().setColor(TextFormatting.DARK_RED);
-		setIcon(GuiIcons.BARRIER);
 		return this;
 	}
 
@@ -103,25 +96,13 @@ public class Notification extends TextComponentString implements INotification
 
 	public String toString()
 	{
-		return "Notification{id=" + id + ", siblings=" + siblings + ", style=" + getStyle() + ", timer=" + timer + ", icon=" + icon + '}';
+		return "Notification{id=" + id + ", siblings=" + siblings + ", style=" + getStyle() + ", timer=" + timer + '}';
 	}
 
 	@Override
 	public ResourceLocation getId()
 	{
 		return id;
-	}
-
-	@Override
-	public IDrawableObject getIcon()
-	{
-		return icon;
-	}
-
-	public Notification setIcon(IDrawableObject i)
-	{
-		icon = i;
-		return this;
 	}
 
 	@Override

@@ -159,9 +159,9 @@ public class ColorUtils
 	public static int lerp(int col1, int col2, double m, int alpha)
 	{
 		m = MathHelper.clamp(m, 0D, 1D);
-		int r = MathUtils.lerp_int(getRed(col1), getRed(col2), m);
-		int g = MathUtils.lerp_int(getGreen(col1), getGreen(col2), m);
-		int b = MathUtils.lerp_int(getBlue(col1), getBlue(col2), m);
+		int r = MathUtils.lerp(getRed(col1), getRed(col2), m);
+		int g = MathUtils.lerp(getGreen(col1), getGreen(col2), m);
+		int b = MathUtils.lerp(getBlue(col1), getBlue(col2), m);
 		return getRGBA(r, g, b, alpha);
 	}
 

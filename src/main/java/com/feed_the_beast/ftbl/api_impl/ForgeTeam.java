@@ -23,7 +23,6 @@ import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
 import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibNotifications;
 import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
@@ -35,6 +34,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -544,14 +547,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		chatHistory.add(message);
 
 		MessageDisplayTeamMsg m = new MessageDisplayTeamMsg(message);
+		ITextComponent name = StringUtils.color(new TextComponentString(Universe.INSTANCE.getPlayer(message.getSender()).getProfile().getName()), color.getValue().getTextFormatting());
+		ITextComponent msg = FTBLibLang.TEAM_CHAT_MESSAGE.textComponent(name, message.getMessage());
+		msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.color(FTBLibLang.CLICK_HERE.textComponent(), TextFormatting.GOLD)));
+		msg.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/team msg "));
 
 		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
 		{
-			if (!ep.getGameProfile().getId().equals(message.getSender()) && !Universe.INSTANCE.getPlayer(ep).hideNewTeamMsgNotification())
-			{
-				FTBLibNotifications.NEW_TEAM_MESSAGE.send(ep);
-			}
-
+			ep.sendMessage(msg);
 			m.sendTo(ep);
 		}
 	}

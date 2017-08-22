@@ -1,9 +1,9 @@
-package com.feed_the_beast.ftbl.lib;
+package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.event.ClickEvent;
@@ -29,7 +30,8 @@ public class SidebarButton extends FinalIDObject
 	public IConfigValue config = null;
 	public final Map<String, Boolean> dependencies = new HashMap<>();
 	public final List<String> requiredServerMods = new ArrayList<>();
-	private ClickEvent clickEvent;
+	private final List<ClickEvent> clickEvents = new ArrayList<>();
+	private final List<ClickEvent> shiftClickEvents = new ArrayList<>();
 	public boolean requiresOp, devOnly, hideWithNEI, loadingScreen;
 
 	public SidebarButton(ResourceLocation id)
@@ -56,7 +58,17 @@ public class SidebarButton extends FinalIDObject
 		}
 		if (o.has("click"))
 		{
-			clickEvent = JsonUtils.deserializeClickEvent(o.get("click"));
+			for (JsonElement e : JsonUtils.toArray(o.get("click")))
+			{
+				clickEvents.add(JsonUtils.deserializeClickEvent(e));
+			}
+		}
+		if (o.has("shift_click"))
+		{
+			for (JsonElement e : JsonUtils.toArray(o.get("shift_click")))
+			{
+				shiftClickEvents.add(JsonUtils.deserializeClickEvent(e));
+			}
 		}
 		if (o.has("config"))
 		{
@@ -95,16 +107,16 @@ public class SidebarButton extends FinalIDObject
 		}
 	}
 
-	public void onClicked(IMouseButton button)
+	public void onClicked(boolean shift)
 	{
-		if (clickEvent != null)
+		if (loadingScreen)
 		{
-			if (loadingScreen)
-			{
-				new GuiLoading().openGui();
-			}
+			new GuiLoading().openGui();
+		}
 
-			GuiHelper.onClickEvent(clickEvent);
+		for (ClickEvent event : (shift ? shiftClickEvents : clickEvents))
+		{
+			GuiHelper.onClickEvent(event);
 		}
 	}
 

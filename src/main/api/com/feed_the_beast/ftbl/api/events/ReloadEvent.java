@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
@@ -54,5 +55,20 @@ public class ReloadEvent extends FTBLibEvent
 	public void failedToReload(ResourceLocation id)
 	{
 		failed.add(id);
+	}
+
+	public static class RegisterIds extends FTBLibEvent
+	{
+		private final Consumer<ResourceLocation> callback;
+
+		public RegisterIds(Consumer<ResourceLocation> c)
+		{
+			callback = c;
+		}
+
+		public void register(ResourceLocation id)
+		{
+			callback.accept(id);
+		}
 	}
 }

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.config.ConfigFile;

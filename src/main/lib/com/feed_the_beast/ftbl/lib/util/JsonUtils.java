@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.util;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.lib.CustomStyle;
 import com.feed_the_beast.ftbl.lib.Notification;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -357,11 +356,6 @@ public class JsonUtils
 				{
 					o.addProperty("timer", n.getTimer());
 				}
-
-				if (!n.getIcon().isNull())
-				{
-					o.add("icon", n.getIcon().getJson());
-				}
 			}
 		}
 		else if (c instanceof TextComponentTranslation)
@@ -464,18 +458,13 @@ public class JsonUtils
 			{
 				String s = o.get("text").getAsString();
 
-				if (o.has("nid") || o.has("timer") || o.has("icon"))
+				if (o.has("nid") || o.has("timer"))
 				{
 					t = Notification.of(new ResourceLocation(o.has("nid") ? o.get("nid").getAsString() : ""), s);
 
 					if (o.has("timer"))
 					{
 						((Notification) t).setTimer(net.minecraft.util.JsonUtils.getInt(o, "timer"));
-					}
-
-					if (o.has("icon"))
-					{
-						((Notification) t).setIcon(ImageProvider.get(o.get("icon")));
 					}
 				}
 				else

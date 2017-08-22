@@ -163,6 +163,8 @@ public class Universe implements IUniverse
 					player.deserializeNBT(playerNBT.get(player.getId()));
 				}
 
+				playerMap.put(ForgePlayerFake.SERVER.getId(), ForgePlayerFake.SERVER);
+
 				for (IForgeTeam team : teams.values())
 				{
 					team.deserializeNBT(teamNBT.get(team.getName()));
@@ -323,9 +325,12 @@ public class Universe implements IUniverse
 	{
 		for (ForgePlayer p : playerMap.values())
 		{
-			NBTTagCompound nbt = p.serializeNBT();
-			nbt.setString("Name", p.getName());
-			NBTUtils.writeTag(new File(folder, "players/" + StringUtils.fromUUID(p.getId()) + ".dat"), nbt);
+			if (!p.isFake())
+			{
+				NBTTagCompound nbt = p.serializeNBT();
+				nbt.setString("Name", p.getName());
+				NBTUtils.writeTag(new File(folder, "players/" + StringUtils.fromUUID(p.getId()) + ".dat"), nbt);
+			}
 		}
 
 		for (ForgeTeam team : teams.values())

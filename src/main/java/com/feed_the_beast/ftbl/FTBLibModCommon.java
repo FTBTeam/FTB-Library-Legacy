@@ -13,6 +13,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
@@ -75,6 +76,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -95,6 +97,7 @@ public class FTBLibModCommon
 	public static final Map<ResourceLocation, IDataProvider<IForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
 	private static final Map<String, IRankConfig> RANK_CONFIGS = new HashMap<>();
 	public static final Map<String, IRankConfig> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
+	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
 
 	private static class RankConfig extends ConfigKey implements IRankConfig
 	{
@@ -283,6 +286,7 @@ public class FTBLibModCommon
 			RANK_CONFIGS.put(c.getName(), c);
 			return c;
 		}).post();
+		new ReloadEvent.RegisterIds(RELOAD_IDS::add).post();
 	}
 
 	public void postInit(LoaderState.ModState state)

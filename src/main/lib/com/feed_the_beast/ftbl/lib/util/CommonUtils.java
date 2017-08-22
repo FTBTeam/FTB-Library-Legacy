@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -44,7 +43,7 @@ public class CommonUtils
 
 	public static <T> Predicate<T> alwaysTruePredicate()
 	{
-		return (Predicate<T>) PREDICATE_ALWAYS_TRUE;
+		return cast(PREDICATE_ALWAYS_TRUE);
 	}
 
 	public static boolean isNEILoaded()
@@ -90,25 +89,13 @@ public class CommonUtils
 		return immutable ? Collections.unmodifiableMap(map) : map;
 	}
 
-	@Nullable
-	public static URL get(String url)
-	{
-		try
-		{
-			return new URL(url);
-		}
-		catch (Exception ex)
-		{
-			return null;
-		}
-	}
-
 	public static String getNameFromState(IBlockState state)
 	{
 		if (state == Blocks.AIR.getDefaultState())
 		{
 			return "minecraft:air";
 		}
+
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(Block.REGISTRY.getNameForObject(state.getBlock()));
@@ -136,7 +123,6 @@ public class CommonUtils
 
 			builder.append(']');
 		}
-
 		return builder.toString();
 	}
 

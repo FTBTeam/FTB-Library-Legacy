@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -16,8 +15,6 @@ public interface INotification extends ITextComponent
 	ResourceLocation VANILLA_STATUS = new ResourceLocation("minecraft", "status");
 
 	ResourceLocation getId();
-
-	IDrawableObject getIcon();
 
 	int getTimer();
 

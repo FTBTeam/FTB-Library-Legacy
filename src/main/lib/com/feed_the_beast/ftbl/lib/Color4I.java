@@ -45,7 +45,7 @@ public class Color4I
 			}
 			else
 			{
-				String hex = element.getAsString().substring(1);
+				String hex = s.substring(1);
 				return hex.length() == 8 ? rgba((int) Long.parseLong(hex, 16)) : rgb((int) Long.parseLong(hex, 16));
 			}
 		}

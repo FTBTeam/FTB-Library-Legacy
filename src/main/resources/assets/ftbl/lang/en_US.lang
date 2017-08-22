@@ -126,6 +126,7 @@ ftbl.lang.team.permission.already_set=Permission '%s' for %s already is set to %
 ftbl.lang.team.permission.owner=Can't change owner's permissions!
 ftbl.lang.team.notification=You haven't joined or created a team yet! %s to open TeamsGUI or %s to hide this message.
 ftbl.lang.team.notification.hide=Hide this Message
+ftbl.lang.team.chat_message=[Team %s] %s
 
 ftbl.lang.team_color.blue=Blue
 ftbl.lang.team_color.cyan=Cyan
@@ -188,8 +189,8 @@ ftbl.guide=FTBLib
 
 # Commands
 commands.ftb.usage=/ftb
-commands.ftb.reload.usage=/ftb reload
-commands.ftb.reload_client.usage=/ftb reload_client
+commands.ftb.reload.usage=/ftb reload [*|domain:*|domain:id]
+commands.ftb.reload_client.usage=/ftb reload_client [*|domain:*|domain:id]
 commands.ftb.my_settings.usage=/ftb my_settings <id> [value]
 commands.ftb.team.usage=/ftb team
 commands.ftb.team.gui.usage=/ftb team gui

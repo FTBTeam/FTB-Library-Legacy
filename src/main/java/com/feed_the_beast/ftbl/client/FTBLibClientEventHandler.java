@@ -3,13 +3,10 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.MouseButton;
-import com.feed_the_beast.ftbl.lib.SidebarButton;
 import com.feed_the_beast.ftbl.lib.client.AtlasSpriteProvider;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
@@ -24,6 +21,7 @@ import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.chat.IChatListener;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -92,7 +90,6 @@ public class FTBLibClientEventHandler
 		public int width, height;
 		public final FontRenderer font;
 		public final long timer;
-		public final IDrawableObject icon;
 
 		public NotificationWidget(ITextComponent n, FontRenderer f)
 		{
@@ -102,7 +99,6 @@ public class FTBLibClientEventHandler
 			font = f;
 			text = new ArrayList<>();
 			timer = n instanceof INotification ? (((INotification) n).getTimer() & 0xFFL) : 60L;
-			icon = n instanceof INotification ? ((INotification) n).getIcon() : ImageProvider.NULL;
 
 			for (String s : font.listFormattedStringToWidth(notification.getFormattedText(), new ScaledResolution(ClientUtils.MC).getScaledWidth()))
 			{
@@ -124,10 +120,6 @@ public class FTBLibClientEventHandler
 			{
 				width = 20;
 				height = 20;
-			}
-			else if (!icon.isNull())
-			{
-				width += 10;
 			}
 		}
 	}
@@ -174,18 +166,12 @@ public class FTBLibClientEventHandler
 			GlStateManager.enableBlend();
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			if (!widget.icon.isNull())
-			{
-				int s = widget.text.isEmpty() ? 16 : 8;
-				widget.icon.draw(0, (widget.height - s) / 2, s, s, alpha == 255 ? Color4I.NONE : Color4I.WHITE_A[alpha]);
-			}
-
 			int offy = -(widget.text.size() * 11) / 2;
 
 			for (int i = 0; i < widget.text.size(); i++)
 			{
 				String string = widget.text.get(i);
-				widget.font.drawStringWithShadow(string, (!widget.icon.isNull() ? 10 : 0) - widget.font.getStringWidth(string) / 2, offy + i * 11, 0xFFFFFF | (alpha << 24));
+				widget.font.drawStringWithShadow(string, -widget.font.getStringWidth(string) / 2, offy + i * 11, 0xFFFFFF | (alpha << 24));
 			}
 
 			GlStateManager.depthMask(true);
@@ -263,7 +249,7 @@ public class FTBLibClientEventHandler
 		if (event.getButton() instanceof GuiButtonSidebar)
 		{
 			GuiHelper.playClickSound();
-			(((GuiButtonSidebar) event.getButton()).button).onClicked(MouseButton.LEFT);
+			(((GuiButtonSidebar) event.getButton()).button).onClicked(GuiScreen.isShiftKeyDown());
 		}
 	}
 
@@ -297,6 +283,13 @@ public class FTBLibClientEventHandler
 	{
 		ClientUtils.updateRenderInfo();
 	}
+
+	/*
+	@SubscribeEvent
+	public static void onBlockHighlightDraw(DrawBlockHighlightEvent event)
+	{
+	}
+	*/
 
 	@SubscribeEvent
 	public static void onGuideEvent(ClientGuideEvent event)

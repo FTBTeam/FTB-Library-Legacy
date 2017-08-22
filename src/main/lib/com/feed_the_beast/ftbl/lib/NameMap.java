@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -206,5 +207,10 @@ public final class NameMap<E> implements Iterable<E>
 	public Iterator<E> iterator()
 	{
 		return values.iterator();
+	}
+
+	public Comparator<E> getComparator()
+	{
+		return Comparator.comparing(this::getName);
 	}
 }

@@ -12,7 +12,6 @@ import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
@@ -43,7 +42,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	private final NBTDataStorage dataStorage;
 	private ForgeTeam team = null;
 	private final PropertyBool hideTeamNotification;
-	private final PropertyBool hideNewTeamMsgNotification;
 	private EntityPlayerMP entityPlayer;
 	private NBTTagCompound playerNBT;
 	private final IConfigTree cachedConfig;
@@ -55,14 +53,12 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		playerName = name;
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
 		hideTeamNotification = new PropertyBool();
-		hideNewTeamMsgNotification = new PropertyBool();
 
 		cachedConfig = new ConfigTree();
 		ForgePlayerSettingsEvent event = new ForgePlayerSettingsEvent(this, cachedConfig);
 		event.post();
 		String group = FTBLibFinals.MOD_ID;
 		event.add(group, "hide_team_notification", hideTeamNotification);
-		event.add(group, "hide_new_team_msg_notification", hideNewTeamMsgNotification);
 	}
 
 	@Override
@@ -189,17 +185,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		if (nbt.hasKey("Flags"))
-		{
-			int flags = nbt.getInteger("Flags");
-			hideTeamNotification.setBoolean(Bits.getFlag(flags, 1));
-			hideNewTeamMsgNotification.setBoolean(Bits.getFlag(flags, 2));
-		}
-		else
-		{
-			hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
-			hideNewTeamMsgNotification.setBoolean(nbt.getBoolean("HideNewTeamMsgNotification"));
-		}
+		hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
 
 		setTeamID(nbt.getString("TeamID"));
 
@@ -215,7 +201,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		NBTTagCompound nbt = new NBTTagCompound();
 
 		nbt.setBoolean("HideTeamNotification", hideTeamNotification.getBoolean());
-		nbt.setBoolean("HideNewTeamMsgNotification", hideNewTeamMsgNotification.getBoolean());
 
 		if (team != null && team.isValid())
 		{
@@ -310,12 +295,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	public boolean hideTeamNotification()
 	{
 		return hideTeamNotification.getBoolean() || isFake();
-	}
-
-	@Override
-	public boolean hideNewTeamMsgNotification()
-	{
-		return hideNewTeamMsgNotification.getBoolean();
 	}
 
 	public void setLoggingOut(boolean v)

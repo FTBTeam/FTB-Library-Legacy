@@ -52,7 +52,8 @@ public class FTBLibLang
     TEAM_STATUS_SET = get("team.status.set"),
     TEAM_PERMISSION_OWNER = get("team.permission.owner"),
 	TEAM_NOTIFICATION = get("team.notification"),
-	TEAM_NOTIFICATION_HIDE = get("team.notification.hide");
+			TEAM_NOTIFICATION_HIDE = get("team.notification.hide"),
+			TEAM_CHAT_MESSAGE = get("team.chat_message");
     //@formatter:on
 
 	private static LangKey get(String s)

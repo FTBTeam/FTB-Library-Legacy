@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
@@ -8,16 +9,58 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author LatvianModder
  */
 public class CmdReload extends CmdBase
 {
+	private Collection<String> tab;
+
+	public CmdReload(String id, Level l)
+	{
+		super(id, l);
+
+		tab = new HashSet<>();
+		tab.add("*");
+
+		for (ResourceLocation r : FTBLibModCommon.RELOAD_IDS)
+		{
+			tab.add(r.toString());
+			tab.add(r.getResourceDomain() + ":*");
+		}
+
+		tab = new ArrayList<>(tab);
+		((ArrayList<String>) tab).sort(null);
+	}
+
 	public CmdReload()
 	{
-		super("reload", Level.OP);
+		this("reload", Level.OP);
+	}
+
+	protected Side getSide()
+	{
+		return Side.SERVER;
+	}
+
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+	{
+		if (args.length == 1)
+		{
+			return getListOfStringsMatchingLastWord(args, tab);
+		}
+
+		return super.getTabCompletions(server, sender, args, pos);
 	}
 
 	@Override
@@ -31,12 +74,12 @@ public class CmdReload extends CmdBase
 			{
 				id = new ResourceLocation(args[0]);
 			}
-			else
+			else if (!args[0].equals("*"))
 			{
 				id = new ResourceLocation(args[0] + ":*");
 			}
 		}
 
-		FTBLibAPI.API.reload(Side.SERVER, sender, EnumReloadType.RELOAD_COMMAND, id);
+		FTBLibAPI.API.reload(getSide(), sender, EnumReloadType.RELOAD_COMMAND, id);
 	}
 }
