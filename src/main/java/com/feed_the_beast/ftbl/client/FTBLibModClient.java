@@ -28,7 +28,6 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.LoaderState;
@@ -247,13 +246,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 		if (FTBLibConfig.MIRROR_FTB_COMMANDS.getBoolean())
 		{
-			for (ICommand command : cmd.getSubCommands())
-			{
-				if (!command.getName().equals("reload"))
-				{
-					ClientCommandHandler.instance.registerCommand(command);
-				}
-			}
+			cmd.getSubCommands().forEach(ClientCommandHandler.instance::registerCommand);
 		}
 	}
 

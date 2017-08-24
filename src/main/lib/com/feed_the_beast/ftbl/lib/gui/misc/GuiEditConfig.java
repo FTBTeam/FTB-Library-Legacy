@@ -16,6 +16,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
+import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -302,76 +303,6 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		configPanel.addFlags(Panel.FLAG_DEFAULTS);
 
-		buttonAccept = new Button(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT.translate())
-		{
-			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
-			{
-				GuiHelper.playClickSound();
-				shouldClose = 1;
-				gui.closeGui();
-			}
-		};
-
-		buttonAccept.setIcon(GuiIcons.ACCEPT);
-
-		buttonCancel = new Button(0, 2, 16, 16, GuiLang.BUTTON_CANCEL.translate())
-		{
-			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
-			{
-				GuiHelper.playClickSound();
-				shouldClose = 2;
-				gui.closeGui();
-			}
-		};
-
-		buttonCancel.setIcon(GuiIcons.CANCEL);
-
-		buttonCollapseAll = new Button(0, 2, 16, 16, GuiLang.BUTTON_COLLAPSE_ALL.translate())
-		{
-			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
-			{
-				GuiHelper.playClickSound();
-
-				for (Widget w : configEntryButtons)
-				{
-					if (w instanceof ButtonConfigGroup)
-					{
-						((ButtonConfigGroup) w).setCollapsed(true);
-					}
-				}
-
-				scroll.setValue(gui, 0);
-				gui.refreshWidgets();
-			}
-		};
-
-		buttonCollapseAll.setIcon(GuiIcons.REMOVE);
-
-		buttonExpandAll = new Button(0, 2, 16, 16, GuiLang.BUTTON_EXPAND_ALL.translate())
-		{
-			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
-			{
-				GuiHelper.playClickSound();
-
-				for (Widget w : configEntryButtons)
-				{
-					if (w instanceof ButtonConfigGroup)
-					{
-						((ButtonConfigGroup) w).setCollapsed(false);
-					}
-				}
-
-				scroll.setValue(gui, 0);
-				gui.refreshWidgets();
-			}
-		};
-
-		buttonExpandAll.setIcon(GuiIcons.ADD);
-
 		scroll = new PanelScrollBar(-16, 20, 16, 0, 10, configPanel)
 		{
 			@Override
@@ -380,6 +311,46 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				return true;
 			}
 		};
+
+		buttonAccept = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+		{
+			shouldClose = 1;
+			gui.closeGui();
+		});
+
+		buttonCancel = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_CANCEL, GuiIcons.CANCEL, (gui, button) ->
+		{
+			shouldClose = 2;
+			gui.closeGui();
+		});
+
+		buttonCollapseAll = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+		{
+			for (Widget w : configEntryButtons)
+			{
+				if (w instanceof ButtonConfigGroup)
+				{
+					((ButtonConfigGroup) w).setCollapsed(true);
+				}
+			}
+
+			scroll.setValue(gui, 0);
+			gui.refreshWidgets();
+		});
+
+		buttonExpandAll = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+		{
+			for (Widget w : configEntryButtons)
+			{
+				if (w instanceof ButtonConfigGroup)
+				{
+					((ButtonConfigGroup) w).setCollapsed(false);
+				}
+			}
+
+			scroll.setValue(gui, 0);
+			gui.refreshWidgets();
+		});
 	}
 
 	@Override
@@ -441,7 +412,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public void drawBackground()
 	{
 		GuiHelper.drawBlankRect(0, 0, width, 20, COLOR_BACKGROUND);
-		getFont().drawString(getTitle(this), 6, 6, 0xFFFFFFFF);
+		drawString(getTitle(this), 6, 6);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 

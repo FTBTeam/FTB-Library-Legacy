@@ -145,9 +145,9 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
+	public void openGui(ResourceLocation guiId, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
 	{
-		IContainerProvider containerProvider = FTBLibModCommon.GUI_CONTAINER_PROVIDERS.get(guiID);
+		IContainerProvider containerProvider = FTBLibModCommon.GUI_CONTAINER_PROVIDERS.get(guiId);
 
 		if (containerProvider == null)
 		{
@@ -166,7 +166,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 
 		player.openContainer.windowId = player.currentWindowId;
 		player.openContainer.addListener(player);
-		new MessageOpenGui(guiID, pos, data, player.currentWindowId).sendTo(player);
+		new MessageOpenGui(guiId, pos, data, player.currentWindowId).sendTo(player);
 	}
 
 	@Override
