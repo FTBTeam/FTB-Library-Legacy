@@ -14,4 +14,5 @@ public class FTBLibClientConfig
 	public static final PropertyBool IGNORE_NEI = new PropertyBool(false);
 	public static final PropertyEnum<EnumNotificationDisplay> NOTIFICATIONS = new PropertyEnum<>(EnumNotificationDisplay.NAME_MAP);
 	public static final PropertyBool REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION = new PropertyBool(true);
+	public static final PropertyBool MIRROR_COMMANDS = new PropertyBool(true);
 }

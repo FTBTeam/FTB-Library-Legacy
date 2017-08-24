@@ -31,6 +31,8 @@ public interface GuiLang
 	LangKey BUTTON_CLOSE = LangKey.of("gui_lm.button.close");
 	LangKey BUTTON_SAVE = LangKey.of("gui_lm.button.save");
 	LangKey BUTTON_INFO = LangKey.of("gui_lm.button.info");
+	LangKey BUTTON_COLLAPSE_ALL = LangKey.of("gui_lm.button.collapse_all");
+	LangKey BUTTON_EXPAND_ALL = LangKey.of("gui_lm.button.expand_all");
 
 	LangKey LABEL_OTHER = LangKey.of("gui_lm.label.other");
 	LangKey LABEL_SERVER_FORCED = LangKey.of("gui_lm.label.server_forced");

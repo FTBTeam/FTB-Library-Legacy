@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 
 /**
@@ -7,7 +8,7 @@ import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
  */
 public class FTBLibNetHandler
 {
-	public static final NetworkWrapper NET = NetworkWrapper.newWrapper("FTBL");
+	public static final NetworkWrapper NET = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID);
 
 	public static void init()
 	{

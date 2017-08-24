@@ -328,7 +328,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		buttonCancel.setIcon(GuiIcons.CANCEL);
 
-		buttonCollapseAll = new Button(0, 2, 16, 16, "Collapse All") //LANG
+		buttonCollapseAll = new Button(0, 2, 16, 16, GuiLang.BUTTON_COLLAPSE_ALL.translate())
 		{
 			@Override
 			public void onClicked(GuiBase gui, IMouseButton button)
@@ -350,7 +350,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		buttonCollapseAll.setIcon(GuiIcons.REMOVE);
 
-		buttonExpandAll = new Button(0, 2, 16, 16, "Expand All") //LANG
+		buttonExpandAll = new Button(0, 2, 16, 16, GuiLang.BUTTON_EXPAND_ALL.translate())
 		{
 			@Override
 			public void onClicked(GuiBase gui, IMouseButton button)
@@ -411,12 +411,8 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	@Override
 	public void addWidgets()
 	{
-		add(scroll);
-		add(buttonAccept);
-		add(buttonCancel);
-		add(buttonCollapseAll);
-		add(buttonExpandAll);
-		add(configPanel);
+		addAll(buttonAccept, buttonCancel, buttonCollapseAll, buttonExpandAll);
+		addAll(configPanel, scroll);
 	}
 
 	@Override

@@ -27,9 +27,9 @@ public class NetworkWrapper // SimpleNetworkWrapper
 		clientChannels = channels.get(Side.CLIENT);
 	}
 
-	public static NetworkWrapper newWrapper(String ID)
+	public static NetworkWrapper newWrapper(String id)
 	{
-		return new NetworkWrapper(ID);
+		return new NetworkWrapper(id);
 	}
 
 	private FMLEmbeddedChannel get(Side s)

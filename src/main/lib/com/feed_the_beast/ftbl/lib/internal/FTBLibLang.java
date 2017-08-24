@@ -11,8 +11,7 @@ public class FTBLibLang
     public static final LangKey
     RELOAD_SERVER = get("reload_server"),
     RELOAD_CLIENT = get("reload_client"),
-    RELOAD_CLIENT_CONFIG_1 = get("reload_client_config_1"),
-    RELOAD_CLIENT_CONFIG_2 = get("reload_client_config_2"),
+    RELOAD_CLIENT_CONFIG = get("reload_client_config"),
 
     //@Deprecated
     RAW = LangKey.of("raw"),

@@ -5,6 +5,8 @@ gui_lm.button.add=Add
 gui_lm.button.close=Close
 gui_lm.button.save=Save
 gui_lm.button.info=Info
+gui_lm.button.collapse_all=Collapse All
+gui_lm.button.expand_all=Expand All
 
 ## Labels
 gui_lm.label.other=Other
@@ -49,8 +51,7 @@ ftbl.lang.deprecated=This method is deprecated, please use %s
 
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
 ftbl.lang.reload_client=FTBLib: Client reloaded in %s
-ftbl.lang.reload_client_config_1=Server Reloaded. You can run
-ftbl.lang.reload_client_config_2=to reload client data
+ftbl.lang.reload_client_config=Server Reloaded. You can run %s to reload client data
 
 ftbl.lang.owner=Owner: %s
 ftbl.lang.delete_item=Do you want to delete '%s'?
@@ -81,6 +82,7 @@ client_config.ftbl.action_buttons_on_top.name=Action Buttons on Top
 client_config.ftbl.ignore_nei.name=Ignore NEI
 client_config.ftbl.action_buttons_on_top.info=When NEI is installed, buttons will ignore this setting and be on left of your inventory, unless Ignore NEI is enabled
 client_config.ftbl.notifications.name=Notifications
+client_config.ftbl.mirror_commands.name=Mirror /ftbc Commands
 config_group.ftbl.gui.name=GUI
 client_config.ftbl.gui.enable_chunk_selector_depth.name=Enable Chunk Selector Depth
 config_group.ftbl.gui.info.name=Info GUI (Guide)

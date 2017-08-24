@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.IConfigFile;
 import com.feed_the_beast.ftbl.api.config.IConfigKey;
@@ -27,6 +28,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.LoaderState;
@@ -78,6 +80,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		event1.register(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
 		event1.register(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
 		event1.register(group, "replace_status_message_with_notification", FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION);
+		event1.register(group, "mirror_commands", FTBLibClientConfig.MIRROR_COMMANDS);
 		group = FTBLibFinals.MOD_ID + ".gui";
 		event1.register(group, "enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
 		group = FTBLibFinals.MOD_ID + ".gui.info";
@@ -238,7 +241,20 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public void postInit(LoaderState.ModState state)
 	{
 		super.postInit(state);
-		ClientCommandHandler.instance.registerCommand(new CmdFTBC());
+
+		CmdFTBC cmd = new CmdFTBC();
+		ClientCommandHandler.instance.registerCommand(cmd);
+
+		if (FTBLibConfig.MIRROR_FTB_COMMANDS.getBoolean())
+		{
+			for (ICommand command : cmd.getSubCommands())
+			{
+				if (!command.getName().equals("reload"))
+				{
+					ClientCommandHandler.instance.registerCommand(command);
+				}
+			}
+		}
 	}
 
 	@Override

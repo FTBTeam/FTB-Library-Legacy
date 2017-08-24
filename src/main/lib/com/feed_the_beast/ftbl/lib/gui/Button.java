@@ -31,14 +31,16 @@ public abstract class Button extends Widget
 		return title;
 	}
 
-	public void setTitle(String s)
+	public Button setTitle(String s)
 	{
 		title = s;
+		return this;
 	}
 
-	public void setIcon(IDrawableObject i)
+	public Button setIcon(IDrawableObject i)
 	{
 		icon = i;
+		return this;
 	}
 
 	@Override

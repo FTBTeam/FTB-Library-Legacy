@@ -15,6 +15,7 @@ import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
@@ -132,9 +133,9 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 			{
 				Notification notification = Notification.of(FTBLibFinals.get("reload_client_config"));
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
-				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG_1.textComponent()
-						.appendSibling(StringUtils.color(new TextComponentString("/ftbc reload_client"), TextFormatting.GOLD))
-						.appendSibling(FTBLibLang.RELOAD_CLIENT_CONFIG_2.textComponent()));
+				String cmd = FTBLibClientConfig.MIRROR_COMMANDS.getBoolean() ? "/reload_client" : "/ftbc reload_client";
+				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG.textComponent(StringUtils.color(new TextComponentString(cmd), TextFormatting.GOLD)));
+
 				notification.setTimer(140);
 				notification.send(null);
 			}
