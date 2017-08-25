@@ -13,16 +13,26 @@ public class SimpleButton extends Button
 {
 	private final BiConsumer<GuiBase, IMouseButton> consumer;
 
-	public SimpleButton(int x, int y, int w, int h, String text, IDrawableObject icon, BiConsumer<GuiBase, IMouseButton> c)
+	public SimpleButton(int x, int y, String text, IDrawableObject icon, BiConsumer<GuiBase, IMouseButton> c)
 	{
-		super(x, y, w, h, text);
+		super(x, y, 16, 16, text);
 		setIcon(icon);
 		consumer = c;
 	}
 
-	public SimpleButton(int x, int y, int w, int h, LangKey text, IDrawableObject icon, BiConsumer<GuiBase, IMouseButton> c)
+	public SimpleButton(int x, int y, LangKey text, IDrawableObject icon, BiConsumer<GuiBase, IMouseButton> c)
 	{
-		this(x, y, w, h, text.translate(), icon, c);
+		this(x, y, text.translate(), icon, c);
+	}
+
+	public SimpleButton(String text, IDrawableObject icon, BiConsumer<GuiBase, IMouseButton> c)
+	{
+		this(0, 0, text, icon, c);
+	}
+
+	public SimpleButton(LangKey text, IDrawableObject icon, BiConsumer<GuiBase, IMouseButton> c)
+	{
+		this(0, 0, text, icon, c);
 	}
 
 	@Override

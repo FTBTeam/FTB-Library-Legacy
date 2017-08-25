@@ -312,19 +312,19 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		};
 
-		buttonAccept = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+		buttonAccept = new SimpleButton(0, 2, GuiLang.BUTTON_ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 		{
 			shouldClose = 1;
 			gui.closeGui();
 		});
 
-		buttonCancel = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_CANCEL, GuiIcons.CANCEL, (gui, button) ->
+		buttonCancel = new SimpleButton(0, 2, GuiLang.BUTTON_CANCEL, GuiIcons.CANCEL, (gui, button) ->
 		{
 			shouldClose = 2;
 			gui.closeGui();
 		});
 
-		buttonCollapseAll = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+		buttonCollapseAll = new SimpleButton(0, 2, GuiLang.BUTTON_COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -338,7 +338,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			gui.refreshWidgets();
 		});
 
-		buttonExpandAll = new SimpleButton(0, 2, 16, 16, GuiLang.BUTTON_EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+		buttonExpandAll = new SimpleButton(0, 2, GuiLang.BUTTON_EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{

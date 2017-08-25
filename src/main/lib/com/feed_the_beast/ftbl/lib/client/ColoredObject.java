@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -47,7 +46,7 @@ public class ColoredObject implements IDrawableObject
 	public JsonObject getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("colored"));
+		o.addProperty("id", "colored");
 
 		if (color.hasColor())
 		{

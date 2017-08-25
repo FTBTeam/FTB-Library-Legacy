@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,7 @@ public class GuideContentsLine extends EmptyGuidePageLine
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("contents"));
+		o.addProperty("id", "contents");
 		return o;
 	}
 

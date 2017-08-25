@@ -2,7 +2,7 @@ package com.feed_the_beast.ftbl.lib.guide;
 
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
-import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
+import com.feed_the_beast.ftbl.lib.client.IconAnimation;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.DrawableObjectListButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -11,7 +11,6 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Collections;
@@ -19,20 +18,20 @@ import java.util.Collections;
 /**
  * @author LatvianModder
  */
-public class DrawableObjectListLine extends EmptyGuidePageLine
+public class IconAnimationLine extends EmptyGuidePageLine
 {
-	private final DrawableObjectList list;
+	private final IconAnimation list;
 	private final int cols;
 
-	public DrawableObjectListLine(DrawableObjectList l, int columns)
+	public IconAnimationLine(IconAnimation l, int columns)
 	{
 		list = l;
 		cols = MathHelper.clamp(columns, 0, 16);
 	}
 
-	public DrawableObjectListLine(JsonElement json)
+	public IconAnimationLine(JsonElement json)
 	{
-		list = new DrawableObjectList(Collections.emptyList());
+		list = new IconAnimation(Collections.emptyList());
 
 		if (json.isJsonObject())
 		{
@@ -62,8 +61,8 @@ public class DrawableObjectListLine extends EmptyGuidePageLine
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("item_list"));
-		o.add("columns", new JsonPrimitive(cols));
+		o.addProperty("id", "icon_animation");
+		o.addProperty("columns", cols);
 		JsonArray a = new JsonArray();
 
 		for (IDrawableObject item : list.list)
@@ -84,7 +83,7 @@ public class DrawableObjectListLine extends EmptyGuidePageLine
 	@Override
 	public IGuideTextLine copy(GuidePage page)
 	{
-		return new DrawableObjectListLine(list, cols);
+		return new IconAnimationLine(list, cols);
 	}
 
 	@Override

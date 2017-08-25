@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -96,8 +95,8 @@ public class GuideSwitchLine extends EmptyGuidePageLine
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("switch"));
-		o.add("var", new JsonPrimitive(id.toString()));
+		o.addProperty("id", "switch");
+		o.addProperty("var", id.toString());
 		JsonObject o1 = new JsonObject();
 
 		for (Map.Entry<String, List<IGuideTextLine>> entry : textLinesMap.entrySet())

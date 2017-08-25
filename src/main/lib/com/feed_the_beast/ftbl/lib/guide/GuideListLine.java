@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
 
@@ -157,15 +156,15 @@ public class GuideListLine extends EmptyGuidePageLine
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("list"));
-		o.add("type", new JsonPrimitive(type.getName()));
+		o.addProperty("id", "list");
+		o.addProperty("type", type.getName());
 		if (type != Type.HORIZONTAL && ordering != type.defaultOrdering)
 		{
-			o.add("ordering", new JsonPrimitive(ordering.getName()));
+			o.addProperty("ordering", ordering.getName());
 		}
 		if (spacing != 0)
 		{
-			o.add("spacing", new JsonPrimitive(spacing));
+			o.addProperty("spacing", spacing);
 		}
 		JsonArray a = new JsonArray();
 		for (IGuideTextLine line : textLines)

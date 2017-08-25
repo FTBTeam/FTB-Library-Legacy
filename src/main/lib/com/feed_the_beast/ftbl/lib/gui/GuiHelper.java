@@ -235,11 +235,12 @@ public class GuiHelper
 
 		if (scissorIndex < MAX_SCISSOR)
 		{
-			int scale = screen.getScaleFactor();
-			SCISSOR_X[scissorIndex] = x * scale;
-			SCISSOR_Y[scissorIndex] = (screen.getScaledHeight() - y - h) * scale;
-			SCISSOR_W[scissorIndex] = Math.max(w, 1) * scale;
-			SCISSOR_H[scissorIndex] = Math.max(h, 1) * scale;
+			double scaleW = ClientUtils.MC.displayWidth / (double) screen.getScaledWidth();
+			double scaleH = ClientUtils.MC.displayHeight / (double) screen.getScaledHeight();
+			SCISSOR_X[scissorIndex] = (int) (x * scaleW);
+			SCISSOR_Y[scissorIndex] = (int) (ClientUtils.MC.displayHeight - (y + h) * scaleH);
+			SCISSOR_W[scissorIndex] = (int) Math.max(1, w * scaleW);
+			SCISSOR_H[scissorIndex] = (int) Math.max(1, h * scaleH);
 			GL11.glScissor(SCISSOR_X[scissorIndex], SCISSOR_Y[scissorIndex], SCISSOR_W[scissorIndex], SCISSOR_H[scissorIndex]);
 		}
 	}

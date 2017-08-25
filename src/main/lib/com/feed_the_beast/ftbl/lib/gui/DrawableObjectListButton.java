@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.DrawableObjectList;
+import com.feed_the_beast.ftbl.lib.client.IconAnimation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 
@@ -13,10 +13,10 @@ import java.util.List;
 
 public class DrawableObjectListButton extends Button
 {
-	private final DrawableObjectList list;
+	private final IconAnimation list;
 	private final int cols;
 
-	public DrawableObjectListButton(int x, int y, DrawableObjectList i, int c)
+	public DrawableObjectListButton(int x, int y, IconAnimation i, int c)
 	{
 		super(x, y, 16, 16);
 		list = i;

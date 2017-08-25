@@ -10,10 +10,14 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IWorldNameable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileBase extends TileEntity
+public class TileBase extends TileEntity implements IWorldNameable
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
@@ -25,6 +29,25 @@ public class TileBase extends TileEntity
 
 	protected void readData(NBTTagCompound nbt, EnumSaveType type)
 	{
+	}
+
+	@Override
+	public String getName()
+	{
+		return getDisplayName().getFormattedText();
+	}
+
+	@Override
+	public boolean hasCustomName()
+	{
+		return false;
+	}
+
+	@Override
+	@Nonnull
+	public ITextComponent getDisplayName()
+	{
+		return new TextComponentTranslation(getBlockType().getUnlocalizedName() + ".name");
 	}
 
 	@Override

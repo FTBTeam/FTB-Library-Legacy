@@ -71,6 +71,13 @@ public class PropertyBool extends PropertyBase implements BooleanSupplier
 		value = v;
 	}
 
+	public final boolean toggle()
+	{
+		boolean value = !getBoolean();
+		setBoolean(value);
+		return value;
+	}
+
 	@Nullable
 	@Override
 	public Object getValue()

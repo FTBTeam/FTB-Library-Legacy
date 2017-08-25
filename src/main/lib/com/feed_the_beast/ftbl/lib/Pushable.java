@@ -1,57 +1,62 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
  */
-public final class Pushable<T>
+public class Pushable<E> implements Supplier<E>
 {
-	private final T[] data;
-	private int index = 0;
+	public final E defaultValue;
+	private final Consumer<E> consumer;
 
-	public Pushable(int max)
+	private E value;
+	private final List<E> pushedValues;
+
+	public Pushable(E def, Consumer<E> _set)
 	{
-		data = CommonUtils.cast(new Object[max]);
+		defaultValue = def;
+		consumer = _set;
+		pushedValues = new ArrayList<>(3);
+		consumer.accept(defaultValue);
 	}
 
-	public T get()
+	public final void set(E val)
 	{
-		return data[index];
-	}
-
-	public void set(T v)
-	{
-		data[index] = v;
-	}
-
-	public void push()
-	{
-		index++;
-
-		if (index >= data.length)
+		if (!Objects.equals(value, val))
 		{
-			throw new ArrayIndexOutOfBoundsException("Index >= " + data.length + "!");
+			value = val;
+			onSet();
 		}
 	}
 
-	public void pop()
+	public final void reset()
 	{
-		index--;
-
-		if (index < 0)
-		{
-			throw new ArrayIndexOutOfBoundsException("Index < 0!");
-		}
+		set(defaultValue);
 	}
 
-	public void reset()
+	protected void onSet()
 	{
-		index = 0;
+		consumer.accept(get());
 	}
 
-	public int getIndex()
+	@Override
+	public final E get()
 	{
-		return index;
+		return value;
+	}
+
+	public final void push()
+	{
+		pushedValues.add(value);
+	}
+
+	public final void pop()
+	{
+		set(pushedValues.remove(pushedValues.size() - 1));
 	}
 }

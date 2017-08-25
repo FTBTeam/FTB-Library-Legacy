@@ -3,6 +3,9 @@ package com.feed_the_beast.ftbl.lib.client;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,13 +14,13 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class DrawableObjectList implements IDrawableObject
+public class IconAnimation implements IDrawableObject
 {
 	public final List<IDrawableObject> list;
 	private IDrawableObject current = ImageProvider.NULL;
 	public long timer = 1000L;
 
-	public DrawableObjectList(Collection<IDrawableObject> l)
+	public IconAnimation(Collection<IDrawableObject> l)
 	{
 		list = new ArrayList<>(l.size());
 
@@ -67,5 +70,27 @@ public class DrawableObjectList implements IDrawableObject
 		{
 			setIndex((int) (System.currentTimeMillis() / timer));
 		}
+	}
+
+	@Override
+	public JsonElement getJson()
+	{
+		JsonObject json = new JsonObject();
+		json.addProperty("id", "animation");
+
+		if (timer != 1000L)
+		{
+			json.addProperty("timer", timer);
+		}
+
+		JsonArray array = new JsonArray();
+
+		for (IDrawableObject o : list)
+		{
+			array.add(o.getJson());
+		}
+
+		json.add("icons", array);
+		return json;
 	}
 }

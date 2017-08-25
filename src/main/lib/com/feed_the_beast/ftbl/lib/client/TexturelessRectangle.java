@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -96,7 +95,7 @@ public class TexturelessRectangle implements IDrawableObject
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("rect"));
+		o.addProperty("id", "rect");
 		if (color.hasColor())
 		{
 			o.add("color", color.toJson());
@@ -107,7 +106,7 @@ public class TexturelessRectangle implements IDrawableObject
 		}
 		if (roundEdges)
 		{
-			o.add("round_edges", new JsonPrimitive(true));
+			o.addProperty("round_edges", true);
 		}
 		return o;
 	}

@@ -222,7 +222,7 @@ public class JsonUtils
 
 		for (int anAi : ai)
 		{
-			a.add(new JsonPrimitive(anAi));
+			a.add(anAi);
 		}
 
 		return a;
@@ -375,7 +375,7 @@ public class JsonUtils
 					}
 					else
 					{
-						a.add(new JsonPrimitive(String.valueOf(object)));
+						a.add(String.valueOf(object));
 					}
 				}
 

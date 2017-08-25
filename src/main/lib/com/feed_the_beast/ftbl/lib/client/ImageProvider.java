@@ -60,6 +60,24 @@ public class ImageProvider implements IDrawableObject
 				{
 					case "colored":
 						return new ColoredObject(get(o.get("parent").getAsJsonObject()), Color4I.fromJson(o.get("color")));
+					case "animation":
+					{
+						List<IDrawableObject> icons = new ArrayList<>();
+
+						for (JsonElement e : o.get("icons").getAsJsonArray())
+						{
+							icons.add(get(e));
+						}
+
+						IconAnimation list = new IconAnimation(icons);
+
+						if (o.has("timer"))
+						{
+							list.timer = o.get("timer").getAsLong();
+						}
+
+						return list;
+					}
 				}
 			}
 		}
@@ -72,7 +90,7 @@ public class ImageProvider implements IDrawableObject
 				list.add(get(e));
 			}
 
-			return list.isEmpty() ? NULL : new DrawableObjectList(list);
+			return list.isEmpty() ? NULL : new CombinedIcon(list);
 		}
 
 		return get(json.getAsString());

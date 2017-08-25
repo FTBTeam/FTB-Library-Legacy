@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.IJsonSerializable;
 
 /**
@@ -29,7 +28,7 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
-		o.add("world_id", new JsonPrimitive(StringUtils.fromUUID(getUniverseID())));
+		o.addProperty("world_id", StringUtils.fromUUID(getUniverseID()));
 		return o;
 	}
 }

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
  * @author LatvianModder
@@ -48,8 +47,8 @@ public class GuideHrLine extends EmptyGuidePageLine
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("hr"));
-		o.add("height", new JsonPrimitive(height));
+		o.addProperty("id", "hr");
+		o.addProperty("height", height);
 		o.add("color", color.toJson());
 		return o;
 	}

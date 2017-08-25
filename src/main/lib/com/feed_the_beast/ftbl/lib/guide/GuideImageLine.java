@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
@@ -119,17 +118,17 @@ public class GuideImageLine extends EmptyGuidePageLine
 	public JsonElement getJson()
 	{
 		JsonObject o = new JsonObject();
-		o.add("id", new JsonPrimitive("img"));
+		o.addProperty("id", "img");
 		o.add("image", imageProvider.getJson());
 
 		if (imageScale != 1D)
 		{
-			o.add("scale", new JsonPrimitive(imageScale));
+			o.addProperty("scale", imageScale);
 		}
 		else if (imageWidth != 0 || imageHeight != 0)
 		{
-			o.add("width", new JsonPrimitive(imageWidth));
-			o.add("height", new JsonPrimitive(imageHeight));
+			o.addProperty("width", imageWidth);
+			o.addProperty("height", imageHeight);
 		}
 
 		if (clickEvent != null)
@@ -143,7 +142,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 
 			for (String s : hover)
 			{
-				a.add(new JsonPrimitive(s));
+				a.add(s);
 			}
 
 			o.add("hover", a);
