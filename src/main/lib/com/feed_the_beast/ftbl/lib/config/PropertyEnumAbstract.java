@@ -43,6 +43,11 @@ public abstract class PropertyEnumAbstract<E> extends PropertyBase
 		return getNameMap().getName(getValue());
 	}
 
+	public String toString()
+	{
+		return getString();
+	}
+
 	@Override
 	public boolean getBoolean()
 	{

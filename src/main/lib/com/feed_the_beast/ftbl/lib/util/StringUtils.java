@@ -46,9 +46,23 @@ public class StringUtils
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
 	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
 
+	public static String getRawId(Object o)
+	{
+		if (o instanceof IStringSerializable)
+		{
+			return ((IStringSerializable) o).getName();
+		}
+		else if (o instanceof Enum)
+		{
+			return ((Enum) o).name();
+		}
+
+		return String.valueOf(o);
+	}
+
 	public static String getId(Object o, int flags)
 	{
-		String id = o instanceof IStringSerializable ? ((IStringSerializable) o).getName() : ((o instanceof Enum<?>) ? ((Enum<?>) o).name() : String.valueOf(o));
+		String id = getRawId(o);
 
 		if (flags == 0)
 		{
@@ -571,6 +585,11 @@ public class StringUtils
 		}
 
 		return SMALL_DOUBLE_FORMATTER.format(d);
+	}
+
+	public static String getTimeStringTicks(long ticks)
+	{
+		return getTimeString(ticks * 1000L / CommonUtils.TICKS_SECOND);
 	}
 
 	public static String getTimeString(long millis)

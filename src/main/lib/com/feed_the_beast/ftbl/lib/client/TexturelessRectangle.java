@@ -12,6 +12,16 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class TexturelessRectangle implements IDrawableObject
 {
+	public static final TexturelessRectangle BUTTON_GRAY = new TexturelessRectangle(0xFF212121).setLineColor(0xFF141414);
+	public static final TexturelessRectangle BUTTON_RED = new TexturelessRectangle(0xFF1581B6).setLineColor(0xFFBF3726);
+	public static final TexturelessRectangle BUTTON_GREEN = new TexturelessRectangle(0xFF98C600).setLineColor(0xFF438700);
+	public static final TexturelessRectangle BUTTON_BLUE = new TexturelessRectangle(0xFF80C7F2).setLineColor(0xFF1581B6);
+
+	public static final TexturelessRectangle BUTTON_ROUND_GRAY = BUTTON_GRAY.copy().setRoundEdges(true);
+	public static final TexturelessRectangle BUTTON_ROUND_RED = BUTTON_RED.copy().setRoundEdges(true);
+	public static final TexturelessRectangle BUTTON_ROUND_GREEN = BUTTON_GREEN.copy().setRoundEdges(true);
+	public static final TexturelessRectangle BUTTON_ROUND_BLUE = BUTTON_BLUE.copy().setRoundEdges(true);
+
 	private Color4I color, lineColor;
 	public boolean roundEdges = false;
 

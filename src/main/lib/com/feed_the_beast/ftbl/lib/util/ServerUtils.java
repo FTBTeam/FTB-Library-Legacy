@@ -126,6 +126,16 @@ public class ServerUtils
 		return server;
 	}
 
+	public static long getWorldTime(MinecraftServer server)
+	{
+		return server.getWorld(0).getTotalWorldTime();
+	}
+
+	public static long getWorldTime()
+	{
+		return getWorldTime(getServer());
+	}
+
 	public static boolean hasOnlinePlayers()
 	{
 		return !getServer().getPlayerList().getPlayers().isEmpty();

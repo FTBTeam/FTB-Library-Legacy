@@ -27,6 +27,7 @@ public class ModelBuilder
 	private ModelRotation rotation;
 	private boolean uvLocked = true;
 	private boolean shade = true;
+	private int tintIndex = -1;
 
 	public ModelBuilder(VertexFormat f, ModelRotation r)
 	{
@@ -48,6 +49,11 @@ public class ModelBuilder
 	public void setShade(boolean b)
 	{
 		shade = b;
+	}
+
+	public void setTintIndex(int i)
+	{
+		tintIndex = -i;
 	}
 
 	public List<BakedQuad> getQuads()
@@ -106,7 +112,7 @@ public class ModelBuilder
 		if (sprite != null)
 		{
 			float[] uv = getUV(from, to, face);
-			quads.add(BAKERY.makeBakedQuad(from, to, new BlockPartFace(face, -1, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, uvLocked, shade));
+			quads.add(BAKERY.makeBakedQuad(from, to, new BlockPartFace(face, tintIndex, "", new BlockFaceUV(uv, 0)), sprite, face, rotation, null, uvLocked, shade));
 		}
 	}
 

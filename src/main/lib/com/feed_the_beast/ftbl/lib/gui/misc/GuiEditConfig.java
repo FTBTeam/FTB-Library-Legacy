@@ -144,7 +144,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			key = id;
 			value = e;
 			keyText = id.getDisplayName();
-			String infoText = id.getInfo();
+			String infoText = id.getDisplayInfo();
 
 			if (!infoText.isEmpty())
 			{

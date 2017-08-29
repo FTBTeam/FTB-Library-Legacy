@@ -16,7 +16,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -43,6 +45,20 @@ public class ImageProvider implements IDrawableObject
 		{
 		}
 	};
+
+	public static final Map<String, IDrawableObject> PRESETS = new HashMap<>();
+
+	static
+	{
+		PRESETS.put("gray_button", TexturelessRectangle.BUTTON_GRAY);
+		PRESETS.put("red_button", TexturelessRectangle.BUTTON_RED);
+		PRESETS.put("green_button", TexturelessRectangle.BUTTON_GREEN);
+		PRESETS.put("blue_button", TexturelessRectangle.BUTTON_BLUE);
+		PRESETS.put("gray_round_button", TexturelessRectangle.BUTTON_ROUND_GRAY);
+		PRESETS.put("red_round_button", TexturelessRectangle.BUTTON_ROUND_RED);
+		PRESETS.put("green_round_button", TexturelessRectangle.BUTTON_ROUND_GREEN);
+		PRESETS.put("blue_round_button", TexturelessRectangle.BUTTON_ROUND_BLUE);
+	}
 
 	public static IDrawableObject get(JsonElement json)
 	{
@@ -78,6 +94,22 @@ public class ImageProvider implements IDrawableObject
 
 						return list;
 					}
+					case "rect":
+					{
+						TexturelessRectangle icon = new TexturelessRectangle(o.has("color") ? Color4I.fromJson(o.get("color")) : Color4I.NONE);
+
+						if (o.has("line_color"))
+						{
+							icon.setLineColor(Color4I.fromJson(o.get("line_color")));
+						}
+
+						if (o.has("round_edges"))
+						{
+							icon.setRoundEdges(o.get("round_edges").getAsBoolean());
+						}
+
+						return icon;
+					}
 				}
 			}
 		}
@@ -93,7 +125,19 @@ public class ImageProvider implements IDrawableObject
 			return list.isEmpty() ? NULL : new CombinedIcon(list);
 		}
 
-		return get(json.getAsString());
+		String s = json.getAsString();
+
+		if (s.isEmpty())
+		{
+			return NULL;
+		}
+		else if (s.charAt(0) == '#')
+		{
+			IDrawableObject icon = PRESETS.get(s.substring(1));
+			return icon == null ? NULL : icon;
+		}
+
+		return get(s);
 	}
 
 	public static IDrawableObject get(String id)

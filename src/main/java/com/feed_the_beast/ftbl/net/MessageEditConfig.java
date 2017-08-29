@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
@@ -49,11 +48,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 		group = c.getConfigTree().copy();
 		extraNBT = nbt;
 		title = c.getTitle();
-
-		if (CommonUtils.DEV_ENV)
-		{
-			CommonUtils.DEV_LOGGER.info("TX Send: " + group.getTree());
-		}
 	}
 
 	@Override
@@ -81,11 +75,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 	@Override
 	public void onMessage(final MessageEditConfig m, EntityPlayer player)
 	{
-		if (CommonUtils.DEV_ENV)
-		{
-			CommonUtils.DEV_LOGGER.info("RX Send: " + RX_CONFIG_TREE.getTree());
-		}
-
 		new GuiEditConfig(RX_NBT, new BasicConfigContainer(m.title, RX_CONFIG_TREE)).openGui();
 	}
 }

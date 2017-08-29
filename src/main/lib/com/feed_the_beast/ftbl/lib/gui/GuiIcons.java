@@ -8,6 +8,7 @@ public class GuiIcons
 {
 	//@formatter:off
     public static final IDrawableObject
+	BLUE_BUTTON = get("blue_button"),
     UP = get("up"),
     DOWN = get("down"),
     LEFT = get("left"),
@@ -71,9 +72,9 @@ public class GuiIcons
     CHECK = get("check"),
     STAR = get("star"),
     HEART = get("heart"),
-			BOOK = ImageProvider.get("minecraft:items/book_normal"),
-			BOOK_RED = ImageProvider.get("minecraft:items/book_enchanted"),
-			BARRIER = ImageProvider.get("minecraft:items/barrier"),
+	BOOK = ImageProvider.get("minecraft:items/book_normal"),
+	BOOK_RED = ImageProvider.get("minecraft:items/book_enchanted"),
+	BARRIER = ImageProvider.get("minecraft:items/barrier"),
     TOGGLE_GAMEMODE = get("toggle_gamemode"),
     TOGGLE_RAIN = get("toggle_rain"),
     TOGGLE_DAY = get("toggle_day"),

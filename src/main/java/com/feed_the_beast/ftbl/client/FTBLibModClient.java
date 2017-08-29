@@ -21,9 +21,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -43,6 +41,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 /**
  * @author LatvianModder
@@ -57,6 +56,30 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	private static final SidebarButton DBUTTON_BEFORE = new SidebarButton(new ResourceLocation("before"));
 	private static final SidebarButton DBUTTON_AFTER = new SidebarButton(new ResourceLocation("after"));
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
+
+	private static class MessageTask implements Callable<Object>
+	{
+		private final MessageBase<?> message;
+
+		private MessageTask(MessageBase<?> m)
+		{
+			message = m;
+		}
+
+		@Override
+		@Nullable
+		public Object call() throws Exception
+		{
+			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
+
+			if (FTBLibAPI_Impl.LOG_NET)
+			{
+				CommonUtils.DEV_LOGGER.info("RX MessageBase: " + message.getClass().getName());
+			}
+
+			return null;
+		}
+	}
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
@@ -90,15 +113,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		event1.post();
 
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
-
-		//For Dev reasons
-		GameProfile profile = ClientUtils.MC.getSession().getProfile();
-		if (profile.getId().equals(StringUtils.fromString("5afb9a5b207d480e887967bc848f9a8f")))
-		{
-			CommonUtils.userIsLatvianModder = true;
-		}
-
-		ClientUtils.localPlayerHead = new PlayerHeadImage(profile.getName());
+		ClientUtils.localPlayerHead = new PlayerHeadImage(ClientUtils.MC.getSession().getProfile().getName());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
 	}
 
@@ -274,15 +289,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	@Override
 	public void handleClientMessage(MessageBase<?> message)
 	{
-		ClientUtils.MC.addScheduledTask(() ->
-		{
-			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
-
-			if (FTBLibAPI_Impl.LOG_NET)
-			{
-				CommonUtils.DEV_LOGGER.info("RX MessageBase: " + message.getClass().getName());
-			}
-		});
+		ClientUtils.MC.addScheduledTask(new MessageTask(message));
 	}
 
 	@Override

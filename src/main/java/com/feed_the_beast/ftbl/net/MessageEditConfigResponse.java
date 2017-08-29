@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
@@ -32,11 +31,6 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	{
 		groupData = json;
 		extraNBT = nbt;
-
-		if (CommonUtils.DEV_ENV)
-		{
-			CommonUtils.DEV_LOGGER.info("TX Response: " + groupData);
-		}
 	}
 
 	@Override
@@ -66,11 +60,6 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 
 		if (cc != null)
 		{
-			if (CommonUtils.DEV_ENV)
-			{
-				CommonUtils.DEV_LOGGER.info("RX Response: " + m.groupData);
-			}
-
 			cc.saveConfig(player, m.extraNBT, m.groupData);
 			new ConfigLoadedEvent(LoaderState.ModState.AVAILABLE).post();
 			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());

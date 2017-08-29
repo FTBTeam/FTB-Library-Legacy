@@ -29,12 +29,16 @@ public class CommonUtils
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 	public static final Logger DEV_LOGGER = LogManager.getLogger("FTBLibDev");
 
-	public static boolean userIsLatvianModder = false, isNEILoaded = false;
+	public static boolean isNEILoaded = false;
 	public static File folderConfig, folderMinecraft, folderLocal, folderWorld;
 
 	public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
 	public static final Object[] NO_OBJECTS = { };
+
+	public static final long TICKS_SECOND = 20L;
+	public static final long TICKS_MINUTE = TICKS_SECOND * 60L;
+	public static final long TICKS_HOUR = TICKS_MINUTE * 60L;
 
 	public static <T> T cast(Object o)
 	{

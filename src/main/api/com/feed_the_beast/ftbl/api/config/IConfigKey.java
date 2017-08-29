@@ -69,7 +69,7 @@ public interface IConfigKey extends IStringSerializable
 		return StringUtils.canTranslate(key) ? StringUtils.translate(key) : getName();
 	}
 
-	default String getInfo()
+	default String getDisplayInfo()
 	{
 		String key = getInfoLangKey();
 
