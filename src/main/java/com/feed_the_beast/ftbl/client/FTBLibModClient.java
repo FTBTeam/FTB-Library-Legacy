@@ -40,7 +40,6 @@ import java.util.concurrent.Callable;
  */
 public class FTBLibModClient extends FTBLibModCommon implements IResourceManagerReloadListener
 {
-	private JsonObject sidebarButtonConfig;
 	private static final Map<String, SidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
 	private static final List<SidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
 	private static final SidebarButton DBUTTON_BEFORE_ALL = new SidebarButton(new ResourceLocation("before_all"));
@@ -48,6 +47,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	private static final SidebarButton DBUTTON_BEFORE = new SidebarButton(new ResourceLocation("before"));
 	private static final SidebarButton DBUTTON_AFTER = new SidebarButton(new ResourceLocation("after"));
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
+	public static final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
 
 	private static class MessageTask implements Callable<Object>
 	{
@@ -78,18 +78,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	{
 		super.preInit(event);
 		FTBLibClientConfig.sync();
-
-		JsonElement element = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
-
-		if (element.isJsonObject())
-		{
-			sidebarButtonConfig = element.getAsJsonObject();
-		}
-		else
-		{
-			sidebarButtonConfig = new JsonObject();
-		}
-
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 		ClientUtils.localPlayerHead = new PlayerHeadImage(ClientUtils.MC.getSession().getProfile().getName());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
@@ -99,6 +87,41 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public void onResourceManagerReload(IResourceManager manager)
 	{
 		SIDEBAR_BUTTON_MAP.clear();
+		CLIENT_CONFIG_MAP.clear();
+
+		for (String domain : manager.getResourceDomains())
+		{
+			try
+			{
+				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "client_config.json")))
+				{
+					for (JsonElement e : JsonUtils.fromJson(resource).getAsJsonArray())
+					{
+						ClientConfig c = new ClientConfig(e.getAsJsonObject());
+						CLIENT_CONFIG_MAP.put(c.id, c);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				if (!(ex instanceof FileNotFoundException))
+				{
+					ex.printStackTrace();
+				}
+			}
+		}
+
+		JsonElement element = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
+		JsonObject sidebarButtonConfig;
+
+		if (element.isJsonObject())
+		{
+			sidebarButtonConfig = element.getAsJsonObject();
+		}
+		else
+		{
+			sidebarButtonConfig = new JsonObject();
+		}
 
 		for (String domain : manager.getResourceDomains())
 		{
@@ -125,12 +148,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 								if (button.defaultConfig != null)
 								{
-									if (!sidebarButtonConfig.has(button.getName()))
+									if (sidebarButtonConfig.has(button.getName()))
 									{
-										sidebarButtonConfig.addProperty(button.getName(), button.defaultConfig);
+										button.configValue = sidebarButtonConfig.get(button.getName()).getAsBoolean();
 									}
-
-									button.configValue = sidebarButtonConfig.get(button.getName()).getAsBoolean();
 								}
 							}
 						}
@@ -225,8 +246,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		sortedSidebarButtonList.removeAll(Arrays.asList(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE, DBUTTON_AFTER, DBUTTON_AFTER_ALL));
 		SIDEBAR_BUTTONS.clear();
 		SIDEBAR_BUTTONS.addAll(sortedSidebarButtonList);
-
-		JsonUtils.toJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"), sidebarButtonConfig);
+		saveSidebarButtonConfig();
 	}
 
 	@Override
@@ -279,5 +299,20 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public static IGuiProvider getGui(ResourceLocation id)
 	{
 		return GUI_PROVIDERS.get(id);
+	}
+
+	public static void saveSidebarButtonConfig()
+	{
+		JsonObject o = new JsonObject();
+
+		for (SidebarButton button : SIDEBAR_BUTTONS)
+		{
+			if (button.defaultConfig != null)
+			{
+				o.addProperty(button.getName(), button.configValue);
+			}
+		}
+
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"), o);
 	}
 }

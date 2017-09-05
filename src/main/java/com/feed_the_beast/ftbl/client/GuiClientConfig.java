@@ -1,14 +1,16 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
@@ -82,23 +84,13 @@ public class GuiClientConfig extends GuiBase
 		}
 	}
 
-	private class ButtonClientConfig extends Button
+	private abstract class ButtonConfigBase extends Button
 	{
-		private final String modId;
-
-		public ButtonClientConfig(String id, String title, IDrawableObject icon)
+		public ButtonConfigBase(String title, IDrawableObject icon)
 		{
 			super(2, 0, getFont().getStringWidth(title) + (icon.isNull() ? 6 : 24), 20);
 			setTitle(title);
 			setIcon(icon);
-			modId = id;
-		}
-
-		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
-		{
-			GuiHelper.playClickSound();
-			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle(gui)));
 		}
 
 		@Override
@@ -132,27 +124,54 @@ public class GuiClientConfig extends GuiBase
 		}
 	}
 
-	private final List<ButtonClientConfig> buttons;
+	private class ButtonClientConfig extends ButtonConfigBase
+	{
+		private final String modId;
+
+		public ButtonClientConfig(ClientConfig config)
+		{
+			super(config.name.getFormattedText(), config.icon);
+			modId = config.id;
+		}
+
+		@Override
+		public void onClicked(GuiBase gui, IMouseButton button)
+		{
+			GuiHelper.playClickSound();
+			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle(gui)));
+		}
+	}
+
+	private final List<Button> buttons;
 
 	public GuiClientConfig()
 	{
 		super(0, 0);
 		buttons = new ArrayList<>();
 
-		new RegisterClientConfigEvent((id, title, icon) ->
+		for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
 		{
-			buttons.add(new ButtonClientConfig(id, title, icon));
-			return null;
-		}).post();
+			buttons.add(new ButtonClientConfig(config));
+		}
+
+		buttons.add(new ButtonConfigBase(StringUtils.translate("sidebar_button"), ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		{
+			@Override
+			public void onClicked(GuiBase gui, IMouseButton button)
+			{
+				GuiHelper.playClickSound();
+				new GuiSidebarButtonConfig().openGui();
+			}
+		});
 
 		buttons.sort((o1, o2) -> o1.getTitle(this).compareToIgnoreCase(o2.getTitle(this)));
 
-		for (ButtonClientConfig b : buttons)
+		for (Button b : buttons)
 		{
 			setWidth(Math.max(width, b.width));
 		}
 
-		for (ButtonClientConfig b : buttons)
+		for (Button b : buttons)
 		{
 			b.setWidth(width);
 		}

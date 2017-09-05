@@ -79,8 +79,6 @@ public abstract class GuiBase extends Panel
 
 	public final void closeGui()
 	{
-		onClosed();
-
 		if (ClientUtils.MC.player == null)
 		{
 			ClientUtils.MC.displayGuiScreen(null);
@@ -89,6 +87,8 @@ public abstract class GuiBase extends Panel
 		{
 			ClientUtils.MC.player.closeScreen();
 		}
+
+		onClosed();
 	}
 
 	public boolean onClosedByKey()

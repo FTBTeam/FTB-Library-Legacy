@@ -1,20 +1,18 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
 import com.feed_the_beast.ftbl.lib.ConfigRGB;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @author LatvianModder
  */
-@EventHandler(Side.CLIENT)
+@Mod.EventBusSubscriber(modid = FTBLibFinals.MOD_ID, value = Side.CLIENT)
 @Config(modid = FTBLibFinals.MOD_ID + "_client", category = "config", name = "../local/client/" + FTBLibFinals.MOD_ID)
 public class FTBLibClientConfig
 {
@@ -59,7 +57,6 @@ public class FTBLibClientConfig
 		ConfigManager.sync(FTBLibFinals.MOD_ID + "_client", Config.Type.INSTANCE);
 		guide.background.updateColor();
 		guide.text.updateColor();
-		System.out.println("Synced! " + general.item_nbt);
 	}
 
 	@SubscribeEvent
@@ -69,11 +66,5 @@ public class FTBLibClientConfig
 		{
 			sync();
 		}
-	}
-
-	@SubscribeEvent
-	public static void registerClientConfig(RegisterClientConfigEvent event)
-	{
-		event.register(FTBLibFinals.MOD_ID + "_client", FTBLibFinals.MOD_NAME, ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/logo_guide.png"));
 	}
 }
