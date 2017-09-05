@@ -47,7 +47,7 @@ public final class LangKey implements IStringSerializable
 	{
 		TextComponentTranslation component = new TextComponentTranslation(key, CommonUtils.NO_OBJECTS);
 
-		if (FTBLibConfig.CLIENTLESS_MODE.getBoolean())
+		if (FTBLibConfig.general.clientless_mode)
 		{
 			return new TextComponentString(component.getFormattedText());
 		}
@@ -59,7 +59,7 @@ public final class LangKey implements IStringSerializable
 	{
 		TextComponentTranslation component = new TextComponentTranslation(key, o);
 
-		if (FTBLibConfig.CLIENTLESS_MODE.getBoolean())
+		if (FTBLibConfig.general.clientless_mode)
 		{
 			return new TextComponentString(component.getFormattedText());
 		}

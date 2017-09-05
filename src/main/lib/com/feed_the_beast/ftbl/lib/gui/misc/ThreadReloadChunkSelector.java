@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PixelBuffer;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -191,7 +191,7 @@ public class ThreadReloadChunkSelector extends Thread
 
 		Chunk chunk;
 		int cx, cz, x, z, wx, wz, by, color, topY;
-		boolean depth = GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH.getBoolean();
+		boolean depth = FTBLibClientConfig.general.enable_chunk_selector_depth;
 
 		int startY = ClientUtils.MC.player.getPosition().getY();
 
@@ -230,7 +230,16 @@ public class ThreadReloadChunkSelector extends Thread
 
 										if (depth)
 										{
-											color = ColorUtils.addBrightness(color, MathHelper.clamp(by - startY, -30, 30) * 5);
+											int i = by - startY;
+
+											if (i < 0)
+											{
+												color = ColorUtils.addBrightness(color, 0.05F);
+											}
+											else if (i > 0)
+											{
+												color = ColorUtils.addBrightness(color, 0.05F);
+											}
 										}
 
 										PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);

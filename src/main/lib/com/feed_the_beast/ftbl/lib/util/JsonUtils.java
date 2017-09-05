@@ -137,7 +137,19 @@ public class JsonUtils
 
 	public static JsonElement fromJson(String json)
 	{
-		return (json == null || json.isEmpty()) ? JsonNull.INSTANCE : PARSER.parse(json);
+		if (json == null || json.isEmpty())
+		{
+			return JsonNull.INSTANCE;
+		}
+
+		try
+		{
+			return PARSER.parse(json);
+		}
+		catch (Exception e)
+		{
+			return JsonNull.INSTANCE;
+		}
 	}
 
 	public static JsonElement fromJson(Reader json)

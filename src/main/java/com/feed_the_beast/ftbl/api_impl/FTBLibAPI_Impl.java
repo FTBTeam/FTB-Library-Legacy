@@ -133,7 +133,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 			{
 				Notification notification = Notification.of(FTBLibFinals.get("reload_client_config"));
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
-				String cmd = FTBLibClientConfig.MIRROR_COMMANDS.getBoolean() ? "/reload_client" : "/ftbc reload_client";
+				String cmd = FTBLibClientConfig.general.mirror_commands ? "/reload_client" : "/ftbc reload_client";
 				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG.textComponent(StringUtils.color(new TextComponentString(cmd), TextFormatting.GOLD)));
 
 				notification.setTimer(140);

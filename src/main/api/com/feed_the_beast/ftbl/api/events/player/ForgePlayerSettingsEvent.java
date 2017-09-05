@@ -21,7 +21,7 @@ public class ForgePlayerSettingsEvent extends ForgePlayerEvent
 
 	public IConfigKey add(String group, String id, IConfigValue value)
 	{
-		ConfigKey key = new ConfigKey(id, value, group, "player_config");
+		ConfigKey key = new ConfigKey(id, value, group);
 		settings.add(key, value);
 		return key;
 	}

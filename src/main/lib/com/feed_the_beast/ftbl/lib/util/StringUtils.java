@@ -46,6 +46,11 @@ public class StringUtils
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
 	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
 
+	public static String emptyIfNull(@Nullable Object o)
+	{
+		return o == null ? "" : o.toString();
+	}
+
 	public static String getRawId(Object o)
 	{
 		if (o instanceof IStringSerializable)

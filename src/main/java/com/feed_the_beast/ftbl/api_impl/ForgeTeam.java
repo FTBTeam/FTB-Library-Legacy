@@ -539,7 +539,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 			chatHistory = new ArrayList<>();
 		}
 
-		while (chatHistory.size() >= FTBLibConfig.MAX_TEAM_CHAT_HISTORY.getInt())
+		while (chatHistory.size() >= FTBLibConfig.teams.max_team_chat_history)
 		{
 			chatHistory.remove(0);
 		}

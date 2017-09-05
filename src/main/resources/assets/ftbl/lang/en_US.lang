@@ -4,7 +4,7 @@ gui_lm.button.accept=Accept
 gui_lm.button.add=Add
 gui_lm.button.close=Close
 gui_lm.button.save=Save
-gui_lm.button.info=Info
+gui_lm.button.tooltip=Info
 gui_lm.button.collapse_all=Collapse All
 gui_lm.button.expand_all=Expand All
 
@@ -46,6 +46,7 @@ feature_disabled=This feature is disabled!
 missing_args=Missing Arguments: %s!
 missing_args_num=Missing Arguments: %s more!
 
+ftbl=FTBLib
 ftbl.lang.team_config_option=Team config option
 ftbl.lang.deprecated=This method is deprecated, please use %s
 
@@ -62,48 +63,44 @@ ftbl.lang.all_permissions=All Permissions
 ftbl.lang.difficulty=Difficulty: %s
 
 # Config
-config_group.ftbl.name=FTBLib
-config_group.sidebar_button.name=Sidebar Buttons
+ftbl.config.general=General
+ftbl.config.general.clientless_mode=Clientless Mode
+ftbl.config.general.mirror_ftb_commands=Mirror /ftb Commands
+ftbl.config.general.merge_offline_mode_players=Merge Offline Mode Players
 
-config.ftbl.clientless_mode.name=Clientless Mode
-config.ftbl.clientless_mode.info=When this mode is enabled, FTBLib assumes that clients don't have FTBLib and/or other mods installed
-config.ftbl.mirror_ftb_commands.name=Mirror /ftb Commands
-config.ftbl.merge_offline_mode_players.name=Merge Offline Mode Players
-config.ftbl.merge_offline_mode_players.info=Merges player profiles, in case player logged in without internet connection/in offline mode server\nBy default, only does that in singleplayer worlds
-config_group.ftbl.teams.name=Teams
-config.ftbl.teams.autocreate_on_login.name=Autocreate on Login
-config.ftbl.teams.max_team_chat_history.name=Max Chat History
+ftbl.config.teams=Teams
+ftbl.config.teams.autocreate_teams=Autocreate on Login
+ftbl.config.teams.max_team_chat_history=Max Chat History
 
 # Client Config
-client_config.ftbl.item_ore_names.name=Display Item OreDictionary names
-client_config.ftbl.item_ore_names.tooltip=Ore Dictionary Names:
-client_config.ftbl.item_nbt.name=Display Item NBT
-client_config.ftbl.action_buttons_on_top.name=Action Buttons on Top
-client_config.ftbl.ignore_nei.name=Ignore NEI
-client_config.ftbl.action_buttons_on_top.info=When NEI is installed, buttons will ignore this setting and be on left of your inventory, unless Ignore NEI is enabled
-client_config.ftbl.notifications.name=Notifications
-client_config.ftbl.mirror_commands.name=Mirror /ftbc Commands
-config_group.ftbl.gui.name=GUI
-client_config.ftbl.gui.enable_chunk_selector_depth.name=Enable Chunk Selector Depth
-config_group.ftbl.gui.info.name=Info GUI (Guide)
-client_config.ftbl.gui.info.border_width.name=Border Width
-client_config.ftbl.gui.info.border_height.name=Border Height
-client_config.ftbl.gui.info.color_background.name=Background Color
-client_config.ftbl.gui.info.color_text.name=Text Color
+ftbl_client.config.general.item_ore_names=Display Item OreDictionary names
+ftbl_client.config.general.item_ore_names.item_tooltip=Ore Dictionary Names:
+ftbl_client.config.general.item_nbt=Display Item NBT
+ftbl_client.config.general.action_buttons=Action Buttons
+ftbl_client.config.general.ignore_nei=Ignore NEI
+ftbl_client.config.general.mirror_commands=Mirror /ftbc Commands
+ftbl_client.config.general.replace_vanilla_status_messages=Replace vanilla status messages
+ftbl_client.config.general.enable_chunk_selector_depth=Enable Chunk Selector Depth
+
+ftbl_client.config.guide=Guide
+ftbl_client.config.guide.border_width=Border Width
+ftbl_client.config.guide.border_height=Border Height
+ftbl_client.config.guide.background=Background Color
+ftbl_client.config.guide.text=Text Color
 
 # Player Settings
-player_config.ftbl.hide_team_notification.name=Hide Team Notification on Login
-player_config.ftbl.hide_new_team_msg_notification.name=Hide New Team Message Notification
+player_config.ftbl.hide_team_notification=Hide Team Notification on Login
+player_config.ftbl.hide_new_team_msg_notification=Hide New Team Message Notification
 
 # Team Settings
-config_group.ftbl.display.name=Display
-team_config.ftbl.display.color.name=Color
-team_config.ftbl.display.title.name=Title
-team_config.ftbl.display.title.info=Displays when you enter a claimed chunk
-team_config.ftbl.display.desc.name=Description
-team_config.ftbl.display.desc.info=Displays under Title
-team_config.ftbl.free_to_join.name=Free to Join
-team_config.ftbl.free_to_join.info=Anyone can join without invitation
+team_config.ftbl.display=Display
+team_config.ftbl.display.color=Color
+team_config.ftbl.display.title=Title
+team_config.ftbl.display.title.tooltip=Displays when you enter a claimed chunk
+team_config.ftbl.display.desc=Description
+team_config.ftbl.display.desc.tooltip=Displays under Title
+team_config.ftbl.free_to_join=Free to Join
+team_config.ftbl.free_to_join.tooltip=Anyone can join without invitation
 
 # Teams
 ftbl.lang.team.config='%s' team config
@@ -130,17 +127,6 @@ ftbl.lang.team.notification=You haven't joined or created a team yet! %s to open
 ftbl.lang.team.notification.hide=Hide this Message
 ftbl.lang.team.chat_message=[Team %s] %s
 
-ftbl.lang.team_color.blue=Blue
-ftbl.lang.team_color.cyan=Cyan
-ftbl.lang.team_color.green=Green
-ftbl.lang.team_color.yellow=Yellow
-ftbl.lang.team_color.orange=Orange
-ftbl.lang.team_color.red=Red
-ftbl.lang.team_color.pink=Pink
-ftbl.lang.team_color.magenta=Magenta
-ftbl.lang.team_color.purple=Purple
-ftbl.lang.team_color.gray=Gray
-
 ftbl.lang.team_status.enemy=Enemy
 ftbl.lang.team_status.none=None
 ftbl.lang.team_status.requesting_invite=Requesting Invite
@@ -151,12 +137,13 @@ ftbl.lang.team_status.mod=Moderator
 ftbl.lang.team_status.owner=Owner
 
 # Action Buttons
+sidebar_button=Sidebar Buttons
 sidebar_button.ftbl.teams_gui=Teams GUI
-sidebar_button.ftbl.teams_gui.info=Opens Teams GUI where you can manage your team, chat with them and edit team settings
+sidebar_button.ftbl.teams_gui.tooltip=Opens Teams GUI where you can manage your team, chat with them and edit team settings
 sidebar_button.ftbl.settings=Client Settings
-sidebar_button.ftbl.settings.info=Edit client-side-only settings
+sidebar_button.ftbl.settings.tooltip=Edit client-side-only settings
 sidebar_button.ftbl.my_server_settings=My Server Settings
-sidebar_button.ftbl.my_server_settings.info=Edit per-server settings for your player
+sidebar_button.ftbl.my_server_settings.tooltip=Edit per-server settings for your player
 sidebar_button.ftbl.notifications=Notifications
 
 # Privacy Level

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
@@ -52,7 +51,7 @@ public class CommonUtils
 
 	public static boolean isNEILoaded()
 	{
-		return isNEILoaded && !FTBLibClientConfig.IGNORE_NEI.getBoolean();
+		return isNEILoaded;
 	}
 
 	public static void init(File configFolder)
@@ -66,7 +65,7 @@ public class CommonUtils
 			folderLocal.mkdirs();
 		}
 
-		isNEILoaded = Loader.isModLoaded("NotEnoughItems") || Loader.isModLoaded("nei") || Loader.isModLoaded("notenoughitems");
+		isNEILoaded = Loader.isModLoaded("nei") || Loader.isModLoaded("notenoughitems");
 	}
 
 	public static <E> Map<String, E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj, boolean immutable)

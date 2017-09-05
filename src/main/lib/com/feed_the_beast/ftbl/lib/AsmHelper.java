@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ModCandidate;
 
@@ -70,7 +71,7 @@ public class AsmHelper
 
 	private static Class<?> getClass(ASMDataTable.ASMData data) throws Exception
 	{
-		return Class.forName(data.getClassName());
+		return Class.forName(data.getClassName(), true, Loader.instance().getModClassLoader());
 	}
 
 	public static <T> void findAnnotatedObjects(ASMDataTable table, Class<T> objClass, Class<? extends Annotation> annotationClass, IObjectCallback<T> callback)

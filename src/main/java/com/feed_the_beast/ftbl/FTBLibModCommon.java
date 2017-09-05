@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterGuideLineProvidersEvent;
@@ -25,26 +24,8 @@ import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
-import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.config.ConfigFile;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
-import com.feed_the_beast.ftbl.lib.config.PropertyBlockState;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyByte;
-import com.feed_the_beast.ftbl.lib.config.PropertyColor;
-import com.feed_the_beast.ftbl.lib.config.PropertyDouble;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnumAbstract;
-import com.feed_the_beast.ftbl.lib.config.PropertyInt;
-import com.feed_the_beast.ftbl.lib.config.PropertyItemStack;
-import com.feed_the_beast.ftbl.lib.config.PropertyJson;
-import com.feed_the_beast.ftbl.lib.config.PropertyList;
-import com.feed_the_beast.ftbl.lib.config.PropertyNull;
-import com.feed_the_beast.ftbl.lib.config.PropertyShort;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
-import com.feed_the_beast.ftbl.lib.config.PropertyStringEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyTextComponent;
-import com.feed_the_beast.ftbl.lib.config.PropertyTristate;
 import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
@@ -62,7 +43,6 @@ import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.LoaderState;
@@ -199,67 +179,6 @@ public class FTBLibModCommon
 		optionalServerMods.register(FTBLibFinals.MOD_ID);
 		optionalServerMods.post();
 
-		RegisterConfigEvent config = new RegisterConfigEvent((group0, id, value) ->
-		{
-			int i = group0.indexOf('.');
-
-			String file;
-			String group;
-
-			if (i >= 0)
-			{
-				file = group0.substring(0, i);
-				group = group0.substring(i + 1);
-			}
-			else
-			{
-				file = group0;
-				group = "";
-			}
-
-			ConfigKey key = new ConfigKey(id, value.copy(), group, "config");
-			key.setGroup(group0);
-			key.setNameLangKey("config." + group0 + "." + id + ".name");
-			key.setInfoLangKey("config." + group0 + "." + id + ".info");
-			IConfigFile configFile = CONFIG_FILES.computeIfAbsent(file, f -> new ConfigFile(new TextComponentString(f), ConfigFile.NULL_FILE_PROVIDER));
-			configFile.add(key, value);
-			return key;
-		}, (id, provider) ->
-		{
-			if (id.charAt(0) != '-')
-			{
-				id = id.toLowerCase();
-				ConfigFile configFile = new ConfigFile(LangKey.of("config_group." + id + ".name").textComponent(), provider);
-				CONFIG_FILES.put(id, configFile);
-			}
-		}, (id, provider) -> CONFIG_VALUE_PROVIDERS.put(id.toLowerCase(), provider));
-
-		config.registerFile(FTBLibFinals.MOD_ID, () -> new File(CommonUtils.folderLocal, "ftbl.json"));
-		config.registerValue(PropertyNull.ID, () -> PropertyNull.INSTANCE);
-		config.registerValue(PropertyList.ID, () -> new PropertyList(PropertyNull.ID));
-		config.registerValue(PropertyBool.ID, PropertyBool::new);
-		config.registerValue(PropertyTristate.ID, PropertyTristate::new);
-		config.registerValue(PropertyByte.ID, PropertyByte::new);
-		config.registerValue(PropertyShort.ID, PropertyShort::new);
-		config.registerValue(PropertyInt.ID, PropertyInt::new);
-		config.registerValue(PropertyDouble.ID, PropertyDouble::new);
-		config.registerValue(PropertyString.ID, PropertyString::new);
-		config.registerValue(PropertyColor.ID, PropertyColor::new);
-		config.registerValue(PropertyEnumAbstract.ID, PropertyStringEnum::new);
-		config.registerValue(PropertyJson.ID, PropertyJson::new);
-		config.registerValue(PropertyBlockState.ID, PropertyBlockState::new);
-		config.registerValue(PropertyItemStack.ID, PropertyItemStack::new);
-		config.registerValue(PropertyTextComponent.ID, PropertyTextComponent::new);
-
-		String group = FTBLibFinals.MOD_ID;
-		config.register(group, "clientless_mode", FTBLibConfig.CLIENTLESS_MODE);
-		config.register(group, "mirror_ftb_commands", FTBLibConfig.MIRROR_FTB_COMMANDS);
-		config.register(group, "merge_offline_mode_players", FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS);
-		group = FTBLibFinals.MOD_ID + ".teams";
-		config.register(group, "autocreate_on_login", FTBLibConfig.AUTOCREATE_TEAMS);
-		config.register(group, "max_team_chat_history", FTBLibConfig.MAX_TEAM_CHAT_HISTORY);
-		config.post();
-
 		RegisterGuideLineProvidersEvent guideLines = new RegisterGuideLineProvidersEvent((id, provider) -> GuidePage.LINE_PROVIDERS.put(id.toLowerCase(), provider));
 		guideLines.register("img", (page, json) -> new GuideImageLine(json));
 		guideLines.register("image", (page, json) -> new GuideImageLine(json));
@@ -281,8 +200,7 @@ public class FTBLibModCommon
 		{
 			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
 			RankConfig c = new RankConfig(id, defPlayer, defOP);
-			c.setNameLangKey("rank_config." + id + ".name");
-			c.setInfoLangKey("rank_config." + id + ".info");
+			c.setNameLangKey(id);
 			RANK_CONFIGS.put(c.getName(), c);
 			return c;
 		}).post();
@@ -362,12 +280,6 @@ public class FTBLibModCommon
 		});
 
 		return storage.isEmpty() ? null : storage;
-	}
-
-	@Nullable
-	public IConfigFile getClientConfig()
-	{
-		return null;
 	}
 
 	public void handleClientMessage(MessageBase<?> message)

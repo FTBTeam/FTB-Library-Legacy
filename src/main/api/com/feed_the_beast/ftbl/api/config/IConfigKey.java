@@ -47,11 +47,6 @@ public interface IConfigKey extends IStringSerializable
 		return "";
 	}
 
-	default String getInfoLangKey()
-	{
-		return "";
-	}
-
 	default String getGroup()
 	{
 		return "";
@@ -63,7 +58,7 @@ public interface IConfigKey extends IStringSerializable
 
 		if (key.isEmpty())
 		{
-			key = "config." + getName() + ".name";
+			key = getName();
 		}
 
 		return StringUtils.canTranslate(key) ? StringUtils.translate(key) : getName();
@@ -71,22 +66,17 @@ public interface IConfigKey extends IStringSerializable
 
 	default String getDisplayInfo()
 	{
-		String key = getInfoLangKey();
+		String key = getNameLangKey();
 
 		if (key.isEmpty())
 		{
-			key = "config." + getName() + ".info";
+			key = getName() + ".tooltip";
 		}
 
 		return StringUtils.canTranslate(key) ? StringUtils.translate(key) : "";
 	}
 
 	default IConfigKey setNameLangKey(String name)
-	{
-		return this;
-	}
-
-	default IConfigKey setInfoLangKey(String name)
 	{
 		return this;
 	}

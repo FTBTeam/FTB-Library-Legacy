@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
@@ -27,7 +25,8 @@ import java.util.Map;
 public class SidebarButton extends FinalIDObject
 {
 	public IDrawableObject icon = ImageProvider.NULL;
-	public IConfigValue config = null;
+	public Boolean defaultConfig = null;
+	public boolean configValue = true;
 	public final Map<String, Boolean> dependencies = new HashMap<>();
 	public final List<String> requiredServerMods = new ArrayList<>();
 	private final List<ClickEvent> clickEvents = new ArrayList<>();
@@ -72,7 +71,7 @@ public class SidebarButton extends FinalIDObject
 		}
 		if (o.has("config"))
 		{
-			config = new PropertyBool(o.get("config").getAsBoolean());
+			defaultConfig = configValue = o.get("config").getAsBoolean();
 		}
 
 		requiresOp = o.has("requires_op") && o.get("requires_op").getAsBoolean();
@@ -122,6 +121,11 @@ public class SidebarButton extends FinalIDObject
 
 	public boolean isVisible()
 	{
-		return !(hideWithNEI && CommonUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
+		if (FTBLibClientConfig.general.action_buttons == EnumSidebarButtonPlacement.DISABLED)
+		{
+			return false;
+		}
+
+		return configValue && !(hideWithNEI && CommonUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
 	}
 }

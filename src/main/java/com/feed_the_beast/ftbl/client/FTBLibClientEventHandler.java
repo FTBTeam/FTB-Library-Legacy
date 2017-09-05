@@ -63,7 +63,7 @@ public class FTBLibClientEventHandler
 	{
 		if (type == ChatType.GAME_INFO)
 		{
-			if (component instanceof INotification || FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION.getBoolean())
+			if (component instanceof INotification || FTBLibClientConfig.general.replace_vanilla_status_messages)
 			{
 				ResourceLocation id = component instanceof INotification ? ((INotification) component).getId() : INotification.VANILLA_STATUS;
 				Temp.MAP.remove(id);
@@ -196,13 +196,13 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onTooltip(ItemTooltipEvent event)
 	{
-		if (FTBLibClientConfig.ITEM_ORE_NAMES.getBoolean())
+		if (FTBLibClientConfig.general.item_ore_names)
 		{
 			Collection<String> ores = ODItems.getOreNames(null, event.getItemStack());
 
 			if (!ores.isEmpty())
 			{
-				event.getToolTip().add(StringUtils.translate("client_config.ftbl.item_ore_names.tooltip"));
+				event.getToolTip().add(StringUtils.translate("clint_config.ftbl.item_ore_names.item_tooltip"));
 
 				for (String or : ores)
 				{
@@ -211,7 +211,7 @@ public class FTBLibClientEventHandler
 			}
 		}
 
-		if (FTBLibClientConfig.ITEM_NBT.getBoolean() && event.getItemStack().hasTagCompound())
+		if (FTBLibClientConfig.general.item_nbt && event.getItemStack().hasTagCompound())
 		{
 			event.getToolTip().add(TextFormatting.DARK_GRAY.toString() + event.getItemStack().getTagCompound());
 		}
@@ -296,7 +296,7 @@ public class FTBLibClientEventHandler
 	{
 		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
 		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(new TextComponentTranslation("config_group.sidebar_button.name"));
+		page.setTitle(new TextComponentTranslation("sidebar_button.config"));
 
 		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
 		{
@@ -322,7 +322,14 @@ public class FTBLibClientEventHandler
 			for (Field field : GuiIcons.class.getDeclaredFields())
 			{
 				field.setAccessible(true);
-				event.getMap().registerSprite(((AtlasSpriteProvider) field.get(null)).name);
+				Object o = field.get(null);
+
+				if (o instanceof AtlasSpriteProvider)
+				{
+					AtlasSpriteProvider a = (AtlasSpriteProvider) o;
+					event.getMap().registerSprite(a.name);
+					ImageProvider.PRESETS.put(a.name.toString(), a);
+				}
 			}
 		}
 		catch (Exception ex)
@@ -386,7 +393,7 @@ public class FTBLibClientEventHandler
 
 			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).recipeBookGui.isVisible());
 
-			if (!CommonUtils.isNEILoaded() && FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+			if (FTBLibClientConfig.general.action_buttons.top())
 			{
 				int x = 0;
 				int y = 0;
@@ -497,7 +504,7 @@ public class FTBLibClientEventHandler
 
 					int tw = font.getStringWidth(b.title);
 
-					if (CommonUtils.isNEILoaded() || !FTBLibClientConfig.ACTION_BUTTONS_ON_TOP.getBoolean())
+					if (!FTBLibClientConfig.general.action_buttons.top())
 					{
 						mx1 -= tw + 8;
 						my1 += 4;

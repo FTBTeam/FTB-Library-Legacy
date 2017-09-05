@@ -21,7 +21,7 @@ public class ForgeTeamSettingsEvent extends ForgeTeamEvent
 
 	public IConfigKey add(String group, String id, IConfigValue value)
 	{
-		ConfigKey key = new ConfigKey(id, value, group, "team_config");
+		ConfigKey key = new ConfigKey(id, value, group);
 		settings.add(key, value);
 		return key;
 	}

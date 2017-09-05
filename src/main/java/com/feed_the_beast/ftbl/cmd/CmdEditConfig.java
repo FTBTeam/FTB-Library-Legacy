@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
@@ -33,12 +32,6 @@ public class CmdEditConfig extends CmdTreeBase
 	public CmdEditConfig()
 	{
 		super("edit_config");
-		FTBLibModCommon.CONFIG_FILES.forEach((key, value) ->
-		{
-			if (value != FTBLibMod.PROXY.getClientConfig())
-			{
-				addSubcommand(new CmdEditConfigFile(key, value));
-			}
-		});
+		FTBLibModCommon.CONFIG_FILES.forEach((key, value) -> addSubcommand(new CmdEditConfigFile(key, value)));
 	}
 }

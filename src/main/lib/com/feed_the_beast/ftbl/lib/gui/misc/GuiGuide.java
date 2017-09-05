@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
+import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.ColoredObject;
@@ -44,7 +45,7 @@ public class GuiGuide extends GuiBase
 	private static final IDrawableObject TEX_BG_NP = TEXTURE.withUVfromCoords(0, 16, 13, 13, 64, 64);
 	private static final IDrawableObject TEX_BG_PP = TEXTURE.withUVfromCoords(16, 16, 13, 13, 64, 64);
 
-	public static final IDrawableObject FILLING = (x, y, w, h, col) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : GuiConfigs.INFO_BACKGROUND.getColor());
+	public static final IDrawableObject FILLING = (x, y, w, h, col) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : FTBLibClientConfig.guide.background.getColor());
 	public static final IDrawableObject BORDERS = (x, y, w, h, col) ->
 	{
 		Color4I c = col.hasColor() ? col : Color4I.WHITE;
@@ -118,7 +119,7 @@ public class GuiGuide extends GuiBase
 			}
 		};
 
-		buttonBack.setIcon(new ColoredObject(TEX_CLOSE, GuiConfigs.INFO_TEXT.getColor()));
+		buttonBack.setIcon(new ColoredObject(TEX_CLOSE, FTBLibClientConfig.guide.text.getColor()));
 
 		panelPages = new Panel(0, 0, 0, 0)
 		{
@@ -274,8 +275,8 @@ public class GuiGuide extends GuiBase
 	@Override
 	public void onInit()
 	{
-		posX = GuiConfigs.INFO_BORDER_WIDTH.getInt();
-		posY = GuiConfigs.INFO_BORDER_HEIGHT.getInt();
+		posX = FTBLibClientConfig.guide.border_width;
+		posY = FTBLibClientConfig.guide.border_height;
 		setWidth(getScreen().getScaledWidth() - posX * 2);
 		setHeight(getScreen().getScaledHeight() - posY * 2);
 
@@ -331,7 +332,7 @@ public class GuiGuide extends GuiBase
 	@Override
 	public Color4I getContentColor()
 	{
-		return GuiConfigs.INFO_TEXT.getColor();
+		return FTBLibClientConfig.guide.text.getColor();
 	}
 
 	@Override

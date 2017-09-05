@@ -27,7 +27,7 @@ public class ConfigFile extends ConfigTree implements IConfigFile
 	@Override
 	public void load()
 	{
-		File f = fileProvider.getFile();
+		File f = fileProvider.get();
 
 		if (f != null)
 		{
@@ -43,7 +43,7 @@ public class ConfigFile extends ConfigTree implements IConfigFile
 	@Override
 	public void save()
 	{
-		File f = fileProvider.getFile();
+		File f = fileProvider.get();
 
 		if (f != null)
 		{

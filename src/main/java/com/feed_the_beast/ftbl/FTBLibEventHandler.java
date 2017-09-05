@@ -80,7 +80,7 @@ public class FTBLibEventHandler
 
 		p.onLoggedIn(ep, firstLogin);
 
-		if (firstLogin && FTBLibConfig.AUTOCREATE_TEAMS.getBoolean())
+		if (firstLogin && FTBLibConfig.teams.autocreate_teams)
 		{
 			String id = p.getName().toLowerCase();
 

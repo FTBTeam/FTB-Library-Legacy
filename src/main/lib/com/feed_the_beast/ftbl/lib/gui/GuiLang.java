@@ -21,7 +21,8 @@ public interface GuiLang
 	LangKey BUTTON_DELETE = LangKey.of("selectServer.delete");
 	LangKey BUTTON_REFRESH = LangKey.of("selectServer.refresh");
 
-	LangKey LABEL_ENABLED = LangKey.of("addServer.resourcePack.enabled");
+	String LANG_ENABLED = "addServer.resourcePack.enabled";
+	LangKey LABEL_ENABLED = LangKey.of(LANG_ENABLED);
 	LangKey LABEL_DISABLED = LangKey.of("addServer.resourcePack.disabled");
 	LangKey LABEL_ON = LangKey.of("options.on");
 	LangKey LABEL_OFF = LangKey.of("options.off");

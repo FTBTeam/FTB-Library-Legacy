@@ -69,4 +69,9 @@ public enum EnumTristate implements IStringSerializable
 	{
 		return NAME_MAP.get(opposite);
 	}
+
+	public String toString()
+	{
+		return name;
+	}
 }

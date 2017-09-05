@@ -131,12 +131,11 @@ public class ColorUtils
 		return bb;
 	}
 
-	public static int addBrightness(int c, int b)
+	public static int addBrightness(int c, float percent)
 	{
-		int red = MathHelper.clamp(getRed(c) + b, 0, 255);
-		int green = MathHelper.clamp(getGreen(c) + b, 0, 255);
-		int blue = MathHelper.clamp(getBlue(c) + b, 0, 255);
-		return getRGBA(red, green, blue, getAlpha(c));
+		float[] hsb = new float[3];
+		java.awt.Color.RGBtoHSB(getRed(c), getGreen(c), getBlue(c), hsb);
+		return (getAlpha(c) << 24) | java.awt.Color.HSBtoRGB(hsb[0], hsb[1], MathHelper.clamp(hsb[2] + percent, 0F, 1F));
 	}
 
 	public static void addHSB(int pixels[], float h, float s, float b)

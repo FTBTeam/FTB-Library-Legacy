@@ -9,21 +9,14 @@ public class ConfigKey extends SimpleConfigKey
 {
 	private final IConfigValue defValue;
 	private int flags;
-	private String displayNameLangKey, infoLangKey = "", group = "";
+	private String displayNameLangKey, group = "";
 
-	public ConfigKey(String id, IConfigValue def, String dn)
+	public ConfigKey(String id, IConfigValue def, String group)
 	{
-		super(id);
+		super(group.isEmpty() ? id : (group + "." + id));
 		defValue = def;
-		displayNameLangKey = dn;
-	}
-
-	public ConfigKey(String id, IConfigValue def, String group, String prefix)
-	{
-		this(group.isEmpty() ? id : (group + "." + id), def);
 		setGroup(group);
-		setNameLangKey(prefix + "." + getName() + ".name");
-		setInfoLangKey(prefix + "." + getName() + ".info");
+		setNameLangKey(getName());
 	}
 
 	public ConfigKey(String id, IConfigValue def)
@@ -35,13 +28,6 @@ public class ConfigKey extends SimpleConfigKey
 	public ConfigKey setNameLangKey(String key)
 	{
 		displayNameLangKey = key;
-		return this;
-	}
-
-	@Override
-	public ConfigKey setInfoLangKey(String key)
-	{
-		infoLangKey = key;
 		return this;
 	}
 
@@ -81,12 +67,6 @@ public class ConfigKey extends SimpleConfigKey
 	public String getNameLangKey()
 	{
 		return displayNameLangKey;
-	}
-
-	@Override
-	public String getInfoLangKey()
-	{
-		return infoLangKey;
 	}
 
 	@Override

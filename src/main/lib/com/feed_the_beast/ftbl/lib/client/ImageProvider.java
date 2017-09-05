@@ -50,14 +50,14 @@ public class ImageProvider implements IDrawableObject
 
 	static
 	{
-		PRESETS.put("gray_button", TexturelessRectangle.BUTTON_GRAY);
-		PRESETS.put("red_button", TexturelessRectangle.BUTTON_RED);
-		PRESETS.put("green_button", TexturelessRectangle.BUTTON_GREEN);
-		PRESETS.put("blue_button", TexturelessRectangle.BUTTON_BLUE);
-		PRESETS.put("gray_round_button", TexturelessRectangle.BUTTON_ROUND_GRAY);
-		PRESETS.put("red_round_button", TexturelessRectangle.BUTTON_ROUND_RED);
-		PRESETS.put("green_round_button", TexturelessRectangle.BUTTON_ROUND_GREEN);
-		PRESETS.put("blue_round_button", TexturelessRectangle.BUTTON_ROUND_BLUE);
+		PRESETS.put("#gray_button", TexturelessRectangle.BUTTON_GRAY);
+		PRESETS.put("#red_button", TexturelessRectangle.BUTTON_RED);
+		PRESETS.put("#green_button", TexturelessRectangle.BUTTON_GREEN);
+		PRESETS.put("#blue_button", TexturelessRectangle.BUTTON_BLUE);
+		PRESETS.put("#gray_round_button", TexturelessRectangle.BUTTON_ROUND_GRAY);
+		PRESETS.put("#red_round_button", TexturelessRectangle.BUTTON_ROUND_RED);
+		PRESETS.put("#green_round_button", TexturelessRectangle.BUTTON_ROUND_GREEN);
+		PRESETS.put("#blue_round_button", TexturelessRectangle.BUTTON_ROUND_BLUE);
 	}
 
 	public static IDrawableObject get(JsonElement json)
@@ -131,13 +131,9 @@ public class ImageProvider implements IDrawableObject
 		{
 			return NULL;
 		}
-		else if (s.charAt(0) == '#')
-		{
-			IDrawableObject icon = PRESETS.get(s.substring(1));
-			return icon == null ? NULL : icon;
-		}
 
-		return get(s);
+		IDrawableObject icon = PRESETS.get(s);
+		return icon == null ? get(s) : icon;
 	}
 
 	public static IDrawableObject get(String id)

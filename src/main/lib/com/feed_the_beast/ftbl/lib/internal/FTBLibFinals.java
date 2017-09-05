@@ -7,7 +7,8 @@ import org.apache.logging.log4j.Logger;
 public class FTBLibFinals
 {
 	public static final String MOD_ID = "ftbl";
-	public static final Logger LOGGER = LogManager.getLogger("FTBLib");
+	public static final String MOD_NAME = "FTBLib";
+	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 	public static final String DEPENDENCIES = /*"required-after:Forge@["
 			+ net.minecraftforge.common.ForgeVersion.majorVersion + '.'
             + net.minecraftforge.common.ForgeVersion.minorVersion + '.'

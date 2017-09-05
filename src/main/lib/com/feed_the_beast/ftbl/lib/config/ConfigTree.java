@@ -20,8 +20,7 @@ import java.util.Map;
 public class ConfigTree implements IConfigTree
 {
 	private static final int HAS_DISPLAY_NAME = 1;
-	private static final int HAS_INFO = 2;
-	private static final int HAS_GROUP = 4;
+	private static final int HAS_GROUP = 2;
 
 	private final Map<IConfigKey, IConfigValue> tree;
 
@@ -72,13 +71,6 @@ public class ConfigTree implements IConfigTree
 				extraFlags |= HAS_DISPLAY_NAME;
 			}
 
-			String info = key.getInfoLangKey();
-
-			if (!info.isEmpty())
-			{
-				extraFlags |= HAS_INFO;
-			}
-
 			if (!key.getGroup().isEmpty())
 			{
 				extraFlags |= HAS_GROUP;
@@ -89,11 +81,6 @@ public class ConfigTree implements IConfigTree
 			if (!displayName.isEmpty())
 			{
 				ByteBufUtils.writeUTF8String(data, displayName);
-			}
-
-			if (!info.isEmpty())
-			{
-				ByteBufUtils.writeUTF8String(data, info);
 			}
 
 			if (!key.getGroup().isEmpty())
@@ -128,11 +115,6 @@ public class ConfigTree implements IConfigTree
 			if (Bits.getFlag(extraFlags, HAS_DISPLAY_NAME))
 			{
 				key.setNameLangKey(ByteBufUtils.readUTF8String(data));
-			}
-
-			if (Bits.getFlag(extraFlags, HAS_INFO))
-			{
-				key.setInfoLangKey(ByteBufUtils.readUTF8String(data));
 			}
 
 			if (Bits.getFlag(extraFlags, HAS_GROUP))

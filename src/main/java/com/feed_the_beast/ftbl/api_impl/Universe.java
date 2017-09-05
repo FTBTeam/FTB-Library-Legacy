@@ -246,7 +246,7 @@ public class Universe implements IUniverse
 			GameProfile profile = (GameProfile) o;
 			ForgePlayer player = getPlayer(profile.getId());
 
-			if (player == null && FTBLibConfig.MERGE_OFFLINE_MODE_PLAYERS.get().get(!ServerUtils.getServer().isDedicatedServer()))
+			if (player == null && FTBLibConfig.general.merge_offline_mode_players.get(!ServerUtils.getServer().isDedicatedServer()))
 			{
 				player = getPlayer(profile.getName());
 

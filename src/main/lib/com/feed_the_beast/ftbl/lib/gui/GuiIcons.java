@@ -78,7 +78,9 @@ public class GuiIcons
     TOGGLE_GAMEMODE = get("toggle_gamemode"),
     TOGGLE_RAIN = get("toggle_rain"),
     TOGGLE_DAY = get("toggle_day"),
-    TOGGLE_NIGHT = get("toggle_night");
+			TOGGLE_NIGHT = get("toggle_night"),
+			LOCK = get("lock"),
+			LOCK_OPEN = get("lock_open");
     //@formatter:on
 
 	private static IDrawableObject get(String id)

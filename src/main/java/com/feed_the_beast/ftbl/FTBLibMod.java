@@ -30,7 +30,7 @@ import java.util.Locale;
 /**
  * @author LatvianModder
  */
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_ID, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.12,)", dependencies = FTBLibFinals.DEPENDENCIES)
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = "0.0.0", useMetadata = true, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.12,)", dependencies = FTBLibFinals.DEPENDENCIES)
 public class FTBLibMod
 {
 	@Mod.Instance(FTBLibFinals.MOD_ID)
@@ -43,6 +43,7 @@ public class FTBLibMod
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
 		Locale.setDefault(Locale.US);
+		FTBLibConfig.sync();
 		PROXY.preInit(event);
 		PROXY.reloadConfig(event.getModState());
 	}
@@ -66,7 +67,7 @@ public class FTBLibMod
 		CmdFTB cmd = new CmdFTB(event.getServer().isDedicatedServer());
 		event.registerServerCommand(cmd);
 
-		if (FTBLibConfig.MIRROR_FTB_COMMANDS.getBoolean())
+		if (FTBLibConfig.general.mirror_ftb_commands)
 		{
 			for (ICommand command : cmd.getSubCommands())
 			{

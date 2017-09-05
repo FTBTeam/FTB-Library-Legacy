@@ -1,27 +1,19 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.config.IConfigFile;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.events.registry.RegisterClientConfigEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
-import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
-import com.feed_the_beast.ftbl.lib.config.ConfigFile;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiConfigs;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -48,7 +40,7 @@ import java.util.concurrent.Callable;
  */
 public class FTBLibModClient extends FTBLibModCommon implements IResourceManagerReloadListener
 {
-	private IConfigFile clientConfig;
+	private JsonObject sidebarButtonConfig;
 	private static final Map<String, SidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
 	private static final List<SidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
 	private static final SidebarButton DBUTTON_BEFORE_ALL = new SidebarButton(new ResourceLocation("before_all"));
@@ -85,32 +77,18 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
+		FTBLibClientConfig.sync();
 
-		clientConfig = new ConfigFile(LangKey.of("sidebar_button.ftbl.settings").textComponent(), () -> new File(CommonUtils.folderLocal, "client_config.json"));
+		JsonElement element = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
 
-		RegisterClientConfigEvent event1 = new RegisterClientConfigEvent((group1, id, value) ->
+		if (element.isJsonObject())
 		{
-			ConfigKey key = new ConfigKey(id, value.copy(), group1, "client_config");
-			clientConfig.add(key, value);
-			return key;
-		});
-
-		String group = FTBLibFinals.MOD_ID;
-		event1.register(group, "item_ore_names", FTBLibClientConfig.ITEM_ORE_NAMES);
-		event1.register(group, "item_nbt", FTBLibClientConfig.ITEM_NBT);
-		event1.register(group, "action_buttons_on_top", FTBLibClientConfig.ACTION_BUTTONS_ON_TOP);
-		event1.register(group, "ignore_nei", FTBLibClientConfig.IGNORE_NEI);
-		event1.register(group, "notifications", FTBLibClientConfig.NOTIFICATIONS);
-		event1.register(group, "replace_status_message_with_notification", FTBLibClientConfig.REPLACE_STATUS_MESSAGE_WITH_NOTIFICATION);
-		event1.register(group, "mirror_commands", FTBLibClientConfig.MIRROR_COMMANDS);
-		group = FTBLibFinals.MOD_ID + ".gui";
-		event1.register(group, "enable_chunk_selector_depth", GuiConfigs.ENABLE_CHUNK_SELECTOR_DEPTH);
-		group = FTBLibFinals.MOD_ID + ".gui.info";
-		event1.register(group, "border_width", GuiConfigs.INFO_BORDER_WIDTH).addFlags(IConfigKey.USE_SCROLL_BAR);
-		event1.register(group, "border_height", GuiConfigs.INFO_BORDER_HEIGHT).addFlags(IConfigKey.USE_SCROLL_BAR);
-		event1.register(group, "color_background", GuiConfigs.INFO_BACKGROUND);
-		event1.register(group, "color_text", GuiConfigs.INFO_TEXT);
-		event1.post();
+			sidebarButtonConfig = element.getAsJsonObject();
+		}
+		else
+		{
+			sidebarButtonConfig = new JsonObject();
+		}
 
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 		ClientUtils.localPlayerHead = new PlayerHeadImage(ClientUtils.MC.getSession().getProfile().getName());
@@ -121,7 +99,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public void onResourceManagerReload(IResourceManager manager)
 	{
 		SIDEBAR_BUTTON_MAP.clear();
-		clientConfig.getTree().entrySet().removeIf(entry -> entry.getKey().getGroup().equals("sidebar_button"));
 
 		for (String domain : manager.getResourceDomains())
 		{
@@ -146,13 +123,14 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 								SIDEBAR_BUTTON_MAP.put(button.getName(), button);
 
-								if (button.config != null)
+								if (button.defaultConfig != null)
 								{
-									ConfigKey key = new ConfigKey(button.getName(), button.config.copy());
-									key.setGroup("sidebar_button");
-									key.setNameLangKey("sidebar_button." + key.getName());
-									key.setInfoLangKey("sidebar_button." + key.getName() + ".info");
-									clientConfig.add(key, button.config);
+									if (!sidebarButtonConfig.has(button.getName()))
+									{
+										sidebarButtonConfig.addProperty(button.getName(), button.defaultConfig);
+									}
+
+									button.configValue = sidebarButtonConfig.get(button.getName()).getAsBoolean();
 								}
 							}
 						}
@@ -247,8 +225,8 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		sortedSidebarButtonList.removeAll(Arrays.asList(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE, DBUTTON_AFTER, DBUTTON_AFTER_ALL));
 		SIDEBAR_BUTTONS.clear();
 		SIDEBAR_BUTTONS.addAll(sortedSidebarButtonList);
-		clientConfig.load();
-		clientConfig.save();
+
+		JsonUtils.toJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"), sidebarButtonConfig);
 	}
 
 	@Override
@@ -259,31 +237,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		CmdFTBC cmd = new CmdFTBC();
 		ClientCommandHandler.instance.registerCommand(cmd);
 
-		if (FTBLibConfig.MIRROR_FTB_COMMANDS.getBoolean())
+		if (FTBLibClientConfig.general.mirror_commands)
 		{
 			cmd.getSubCommands().forEach(ClientCommandHandler.instance::registerCommand);
 		}
-	}
-
-	@Override
-	public void loadAllFiles()
-	{
-		super.loadAllFiles();
-		clientConfig.load();
-	}
-
-	@Override
-	public void saveAllFiles()
-	{
-		super.saveAllFiles();
-		clientConfig.save();
-	}
-
-	@Override
-	@Nullable
-	public IConfigFile getClientConfig()
-	{
-		return clientConfig;
 	}
 
 	@Override
@@ -309,7 +266,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 		for (SidebarButton button : SIDEBAR_BUTTONS)
 		{
-			if (button.isVisible() && (button.config == null || button.config.getBoolean()))
+			if (button.isVisible())
 			{
 				list.add(button);
 			}
