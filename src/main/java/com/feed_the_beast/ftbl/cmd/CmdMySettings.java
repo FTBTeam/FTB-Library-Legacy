@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.cmd;
 
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
-import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
@@ -20,8 +20,14 @@ public class CmdMySettings extends CmdEditConfigBase
 	}
 
 	@Override
-	public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+	public ITextComponent getTitle(ICommandSender sender) throws CommandException
 	{
-		return new BasicConfigContainer(TITLE.textComponent(), getForgePlayer(sender).getSettings());
+		return TITLE.textComponent();
+	}
+
+	@Override
+	public ConfigTree getTree(ICommandSender sender) throws CommandException
+	{
+		return getForgePlayer(sender).getSettings();
 	}
 }

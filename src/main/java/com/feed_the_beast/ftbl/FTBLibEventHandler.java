@@ -1,17 +1,23 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
+import com.feed_the_beast.ftbl.api_impl.TickHandler;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -20,8 +26,10 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 
@@ -32,9 +40,48 @@ import java.io.File;
 public class FTBLibEventHandler
 {
 	@SubscribeEvent
+	public static void onWorldLoaded(WorldEvent.Load event)
+	{
+		MinecraftServer server = event.getWorld().getMinecraftServer();
+
+		if (event.getWorld().provider.getDimension() != 0 || server == null)
+		{
+			return;
+		}
+
+		SharedServerData.INSTANCE.reset();
+		CommonUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), server.getFolderName());
+
+		TickHandler.INSTANCE = new TickHandler();
+		ServerUtils.addTickable(server, TickHandler.INSTANCE);
+
+		Universe.INSTANCE = new Universe(server, (WorldServer) event.getWorld());
+		Universe.INSTANCE.load();
+		FTBLibAPI.API.loadWorldData(server);
+		FTBLibAPI.API.reload(Side.SERVER, server, EnumReloadType.CREATED, ReloadEvent.ALL);
+	}
+
+	@SubscribeEvent
+	public static void onWorldUnloaded(WorldEvent.Unload event)
+	{
+		MinecraftServer server = event.getWorld().getMinecraftServer();
+
+		if (event.getWorld().provider.getDimension() != 0 || server == null)
+		{
+			return;
+		}
+
+		Universe.INSTANCE.onClosed();
+		Universe.INSTANCE = null;
+		TickHandler.INSTANCE = null;
+	}
+
+	@SubscribeEvent
 	public static void onWorldSaved(WorldEvent.Save event)
 	{
-		if (event.getWorld().provider.getDimension() != 0 || !(event.getWorld() instanceof WorldServer))
+		MinecraftServer server = event.getWorld().getMinecraftServer();
+
+		if (event.getWorld().provider.getDimension() != 0 || server == null)
 		{
 			return;
 		}

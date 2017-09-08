@@ -1,8 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.NameMap;
@@ -18,7 +15,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public abstract class PropertyEnumAbstract<E> extends PropertyBase
+public abstract class ConfigEnumAbstract<E> extends ConfigValue
 {
 	public static final String ID = "enum";
 	public static final Color4I COLOR = Color4I.rgb(0x0094FF);
@@ -61,9 +58,9 @@ public abstract class PropertyEnumAbstract<E> extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigEnum<E> copy()
 	{
-		return new PropertyEnum<>(getNameMap().withDefault(getNameMap().get(getInt())));
+		return new ConfigEnum<>(getNameMap().withDefault(getNameMap().get(getInt())));
 	}
 
 	@Override
@@ -110,7 +107,7 @@ public abstract class PropertyEnumAbstract<E> extends PropertyBase
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
 	{
 		setValue(getNameMap().get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().values.size())));
 		gui.onChanged(key, getSerializableElement());

@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -15,7 +13,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class PropertyString extends PropertyBase
+public class ConfigString extends ConfigValue
 {
 	public static final String ID = "string";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
@@ -23,17 +21,17 @@ public class PropertyString extends PropertyBase
 	private String value;
 	private int charLimit;
 
-	public PropertyString()
+	public ConfigString()
 	{
 		this("");
 	}
 
-	public PropertyString(String v)
+	public ConfigString(String v)
 	{
 		this(v, 0);
 	}
 
-	public PropertyString(String v, int limit)
+	public ConfigString(String v, int limit)
 	{
 		value = v;
 		charLimit = limit;
@@ -76,9 +74,9 @@ public class PropertyString extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigString copy()
 	{
-		return new PropertyString(getString(), charLimit);
+		return new ConfigString(getString(), charLimit);
 	}
 
 	@Override
@@ -95,7 +93,7 @@ public class PropertyString extends PropertyBase
 	}
 
 	@Override
-	public void addInfo(IConfigKey key, List<String> list)
+	public void addInfo(ConfigKey key, List<String> list)
 	{
 		super.addInfo(key, list);
 

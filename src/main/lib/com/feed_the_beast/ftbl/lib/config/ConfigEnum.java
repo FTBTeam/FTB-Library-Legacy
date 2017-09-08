@@ -8,14 +8,14 @@ import java.util.function.Supplier;
 /**
  * @author LatvianModder
  */
-public class PropertyEnum<E> extends PropertyEnumAbstract<E>
+public class ConfigEnum<E> extends ConfigEnumAbstract<E>
 {
 	private final NameMap<E> nameMap;
 	private E value;
 
-	public static <T extends Enum<T>> PropertyEnum<T> create(NameMap<T> nm, Supplier<T> getter, Consumer<T> setter)
+	public static <T extends Enum<T>> ConfigEnum<T> create(NameMap<T> nm, Supplier<T> getter, Consumer<T> setter)
 	{
-		return new PropertyEnum<T>(nm)
+		return new ConfigEnum<T>(nm)
 		{
 			@Override
 			public T getValue()
@@ -31,7 +31,7 @@ public class PropertyEnum<E> extends PropertyEnumAbstract<E>
 		};
 	}
 
-	public PropertyEnum(NameMap<E> nm)
+	public ConfigEnum(NameMap<E> nm)
 	{
 		nameMap = nm;
 		value = nm.defaultValue;

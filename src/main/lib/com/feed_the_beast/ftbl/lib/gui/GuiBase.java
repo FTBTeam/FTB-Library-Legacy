@@ -4,8 +4,10 @@ import com.feed_the_beast.ftbl.api.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,6 +16,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +35,13 @@ public abstract class GuiBase extends Panel
 	private boolean refreshWidgets;
 	private ScaledResolution screen;
 	public boolean fixUnicode;
-	private boolean shiftDown;
+	private GuiScreen prevScreen;
 
 	public GuiBase(int w, int h)
 	{
 		super(0, 0, w, h);
 		font = createFont();
+		prevScreen = ClientUtils.MC.currentScreen;
 	}
 
 	public static void setupDrawing()
@@ -77,17 +81,29 @@ public abstract class GuiBase extends Panel
 	{
 	}
 
+	@Nullable
+	public GuiScreen getPrevScreen()
+	{
+		if (prevScreen instanceof GuiWrapper && ((GuiWrapper) prevScreen).getWrappedGui() instanceof GuiLoading)
+		{
+			return ((GuiWrapper) prevScreen).getWrappedGui().getPrevScreen();
+		}
+		else if (prevScreen instanceof GuiChat)
+		{
+			return null;
+		}
+
+		return prevScreen;
+	}
+
 	public final void closeGui()
 	{
-		if (ClientUtils.MC.player == null)
-		{
-			ClientUtils.MC.displayGuiScreen(null);
-		}
-		else
+		if (ClientUtils.MC.player != null)
 		{
 			ClientUtils.MC.player.closeScreen();
 		}
 
+		ClientUtils.MC.displayGuiScreen(getPrevScreen());
 		onClosed();
 	}
 

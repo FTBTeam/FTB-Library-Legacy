@@ -5,19 +5,20 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
 import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
+import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -39,6 +40,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.LoaderState;
@@ -170,9 +172,10 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public void editServerConfig(EntityPlayerMP player, @Nullable NBTTagCompound nbt, IConfigContainer configContainer)
+	public void editServerConfig(EntityPlayerMP player, ConfigTree tree, ITextComponent title, @Nullable NBTTagCompound data, IConfigCallback callback)
 	{
-		new MessageEditConfig(player.getGameProfile().getId(), nbt, configContainer).sendTo(player);
+		FTBLibModCommon.TEMP_SERVER_CONFIG.put(player.getGameProfile().getId(), new FTBLibModCommon.EditingConfig(tree, callback));
+		new MessageEditConfig(player.getGameProfile().getId(), data, tree, title).sendTo(player);
 	}
 
 	@Override
@@ -189,15 +192,15 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public IConfigValue getConfigValueFromID(String id)
+	public ConfigValue getConfigValueFromID(String id)
 	{
-		IConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
+		ConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
 		Preconditions.checkNotNull(provider, "Unknown Config ID: " + id);
-		return provider.createConfigValue();
+		return provider.get();
 	}
 
 	@Override
-	public Map<String, IRankConfig> getRankConfigRegistry()
+	public Map<String, RankConfigKey> getRankConfigRegistry()
 	{
 		return FTBLibModCommon.RANK_CONFIGS_MIRROR;
 	}

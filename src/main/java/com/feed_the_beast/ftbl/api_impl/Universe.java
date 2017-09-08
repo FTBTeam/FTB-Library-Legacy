@@ -22,7 +22,9 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -44,9 +46,17 @@ public class Universe implements IUniverse
 	public static Universe INSTANCE = null;
 	private static final Map<UUID, ForgePlayerFake> FAKE_PLAYER_MAP = new HashMap<>();
 
+	private final MinecraftServer server;
+	private final WorldServer overworld;
 	public final Map<UUID, ForgePlayer> playerMap = new HashMap<>();
 	public final Map<String, ForgeTeam> teams = new HashMap<>();
 	private NBTDataStorage dataStorage;
+
+	public Universe(MinecraftServer s, WorldServer w)
+	{
+		server = s;
+		overworld = w;
+	}
 
 	public void load()
 	{
@@ -187,6 +197,18 @@ public class Universe implements IUniverse
 		{
 			ex.printStackTrace();
 		}
+	}
+
+	@Override
+	public MinecraftServer getServer()
+	{
+		return server;
+	}
+
+	@Override
+	public WorldServer getOverworld()
+	{
+		return overworld;
 	}
 
 	@Override

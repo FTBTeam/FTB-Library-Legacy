@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
@@ -12,17 +11,17 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class PropertyTextComponent extends PropertyBase
+public class ConfigTextComponent extends ConfigValue
 {
 	public static final String ID = "text_component";
 
 	private ITextComponent value;
 
-	public PropertyTextComponent()
+	public ConfigTextComponent()
 	{
 	}
 
-	public PropertyTextComponent(@Nullable ITextComponent c)
+	public ConfigTextComponent(@Nullable ITextComponent c)
 	{
 		value = c;
 	}
@@ -77,9 +76,9 @@ public class PropertyTextComponent extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigTextComponent copy()
 	{
-		return new PropertyTextComponent(getText());
+		return new ConfigTextComponent(getText());
 	}
 
 	@Override

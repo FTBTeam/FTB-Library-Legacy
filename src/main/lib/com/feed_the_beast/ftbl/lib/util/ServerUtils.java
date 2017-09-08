@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
@@ -25,7 +25,6 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -121,29 +120,22 @@ public class ServerUtils
 
 	public static MinecraftServer getServer()
 	{
-		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-		Preconditions.checkNotNull(server);
-		return server;
+		return FTBLibAPI.API.getUniverse().getServer();
 	}
 
-	public static long getWorldTime(MinecraftServer server)
+	public static WorldServer getOverworld()
 	{
-		return server.getWorld(0).getTotalWorldTime();
+		return FTBLibAPI.API.getUniverse().getOverworld();
 	}
 
 	public static long getWorldTime()
 	{
-		return getWorldTime(getServer());
+		return getOverworld().getTotalWorldTime();
 	}
 
 	public static boolean hasOnlinePlayers()
 	{
 		return !getServer().getPlayerList().getPlayers().isEmpty();
-	}
-
-	public static WorldServer getServerWorld()
-	{
-		return getServer().getWorld(0);
 	}
 
 	public static boolean isOP(GameProfile p)

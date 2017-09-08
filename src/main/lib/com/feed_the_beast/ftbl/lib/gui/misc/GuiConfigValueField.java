@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -13,13 +13,13 @@ import com.feed_the_beast.ftbl.lib.gui.TextBox;
 
 public class GuiConfigValueField extends GuiBase
 {
-	private final IConfigValue defValue, value;
+	private final ConfigValue defValue, value;
 	private final IGuiFieldCallback callback;
 
 	private final Button buttonCancel, buttonAccept;
 	private final TextBox textBox;
 
-	GuiConfigValueField(IConfigValue val, IGuiFieldCallback c)
+	GuiConfigValueField(ConfigValue val, IGuiFieldCallback c)
 	{
 		super(200, 60);
 		defValue = val.copy();

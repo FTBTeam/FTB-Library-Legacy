@@ -1,8 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonElement;
@@ -18,16 +15,16 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public class PropertyBool extends PropertyBase implements BooleanSupplier
+public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 {
 	private static final List<String> VARIANTS = Arrays.asList("true", "false");
 	public static final String ID = "bool";
 	public static final Color4I COLOR_TRUE = Color4I.rgb(0x33AA33);
 	public static final Color4I COLOR_FALSE = Color4I.rgb(0xD52834);
 
-	public static PropertyBool create(boolean defValue, BooleanSupplier getter, Consumer<Boolean> setter)
+	public static ConfigBoolean create(boolean defValue, BooleanSupplier getter, Consumer<Boolean> setter)
 	{
-		return new PropertyBool(defValue)
+		return new ConfigBoolean(defValue)
 		{
 			@Override
 			public boolean getBoolean()
@@ -45,11 +42,11 @@ public class PropertyBool extends PropertyBase implements BooleanSupplier
 
 	private boolean value;
 
-	public PropertyBool()
+	public ConfigBoolean()
 	{
 	}
 
-	public PropertyBool(boolean v)
+	public ConfigBoolean(boolean v)
 	{
 		value = v;
 	}
@@ -98,13 +95,13 @@ public class PropertyBool extends PropertyBase implements BooleanSupplier
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigBoolean copy()
 	{
-		return new PropertyBool(getBoolean());
+		return new ConfigBoolean(getBoolean());
 	}
 
 	@Override
-	public boolean equalsValue(IConfigValue value)
+	public boolean equalsValue(ConfigValue value)
 	{
 		return getBoolean() == value.getBoolean();
 	}
@@ -122,7 +119,7 @@ public class PropertyBool extends PropertyBase implements BooleanSupplier
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
 	{
 		setBoolean(!getBoolean());
 		gui.onChanged(key, getSerializableElement());

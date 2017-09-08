@@ -1,15 +1,11 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,16 +21,9 @@ import java.util.UUID;
 public class MessageEditConfig extends MessageToClient<MessageEditConfig> // MessageEditConfigResponse
 {
 	private static NBTTagCompound RX_NBT;
-	private static final IConfigTree RX_CONFIG_TREE = new ConfigTree()
-	{
-		@Override
-		public void fromJson(JsonElement json)
-		{
-			new MessageEditConfigResponse(RX_NBT, json.getAsJsonObject()).sendToServer();
-		}
-	};
+	private static final IConfigCallback RX_CONFIG_TREE = (tree, sender, nbt, json) -> new MessageEditConfigResponse(RX_NBT, json.getAsJsonObject()).sendToServer();
 
-	private IConfigTree group;
+	private ConfigTree tree;
 	private NBTTagCompound extraNBT;
 	private ITextComponent title;
 
@@ -42,12 +31,11 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 	{
 	}
 
-	public MessageEditConfig(UUID id, @Nullable NBTTagCompound nbt, IConfigContainer c)
+	public MessageEditConfig(UUID id, @Nullable NBTTagCompound _data, ConfigTree _tree, ITextComponent _title)
 	{
-		FTBLibModCommon.TEMP_SERVER_CONFIG.put(id, c);
-		group = c.getConfigTree().copy();
-		extraNBT = nbt;
-		title = c.getTitle();
+		tree = _tree;
+		extraNBT = _data;
+		title = _title;
 	}
 
 	@Override
@@ -61,7 +49,8 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 	{
 		RX_NBT = ByteBufUtils.readTag(io);
 		title = NetUtils.readTextComponent(io);
-		RX_CONFIG_TREE.readData(io);
+		tree = new ConfigTree();
+		tree.readData(io);
 	}
 
 	@Override
@@ -69,12 +58,12 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig> // Mes
 	{
 		ByteBufUtils.writeTag(io, extraNBT);
 		NetUtils.writeTextComponent(io, title);
-		group.writeData(io);
+		tree.writeData(io);
 	}
 
 	@Override
 	public void onMessage(final MessageEditConfig m, EntityPlayer player)
 	{
-		new GuiEditConfig(RX_NBT, new BasicConfigContainer(m.title, RX_CONFIG_TREE)).openGui();
+		new GuiEditConfig(RX_NBT, m.tree, m.title, RX_CONFIG_TREE).openGui();
 	}
 }

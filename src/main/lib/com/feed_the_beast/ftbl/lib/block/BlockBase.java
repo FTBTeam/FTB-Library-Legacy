@@ -11,7 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 /**
@@ -54,6 +56,13 @@ public class BlockBase extends Block
 		{
 			super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
 		}
+	}
+
+	@Override
+	@Deprecated
+	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	{
+		return isNormalCube(state, world, pos);
 	}
 
 	@Override

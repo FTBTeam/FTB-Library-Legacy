@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.IJsonSerializable;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,12 +17,12 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class ConfigTree implements IConfigTree
+public final class ConfigTree implements IExtendedIOObject, IJsonSerializable
 {
 	private static final int HAS_DISPLAY_NAME = 1;
 	private static final int HAS_GROUP = 2;
 
-	private final Map<IConfigKey, IConfigValue> tree;
+	private final Map<ConfigKey, ConfigValue> tree;
 
 	public ConfigTree(boolean linked)
 	{
@@ -34,17 +34,55 @@ public class ConfigTree implements IConfigTree
 		this(false);
 	}
 
-	@Override
-	public final Map<IConfigKey, IConfigValue> getTree()
+	public void add(ConfigKey key, ConfigValue value)
+	{
+		tree.put(key, value);
+	}
+
+	public boolean has(ConfigKey key)
+	{
+		return tree.containsKey(key);
+	}
+
+	public void remove(ConfigKey key)
+	{
+		tree.remove(key);
+	}
+
+	public ConfigValue get(ConfigKey key)
+	{
+		ConfigValue v = tree.get(key);
+		return (v == null) ? ConfigNull.INSTANCE : v;
+	}
+
+	public boolean isEmpty()
+	{
+		return tree.isEmpty();
+	}
+
+	@Nullable
+	public ConfigKey getKey(String id)
+	{
+		for (ConfigKey key : tree.keySet())
+		{
+			if (key.getName().equalsIgnoreCase(id))
+			{
+				return key;
+			}
+		}
+
+		return null;
+	}
+
+	public final Map<ConfigKey, ConfigValue> getTree()
 	{
 		return tree;
 	}
 
-	@Override
-	public IConfigTree copy()
+	public ConfigTree copy()
 	{
 		ConfigTree t = new ConfigTree();
-		getTree().forEach((key, value) -> t.add(key, value.copy()));
+		tree.forEach((key, value) -> t.add(key, value.copy()));
 		return t;
 	}
 
@@ -56,9 +94,32 @@ public class ConfigTree implements IConfigTree
 		tree.forEach((key, value) ->
 		{
 			ByteBufUtils.writeUTF8String(data, key.getName());
-			data.writeInt(key.getFlags());
 
-			IConfigValue defValue = key.getDefValue();
+			int flags = 0;
+
+			if (key.isExcluded())
+			{
+				flags |= AdvancedConfigKey.EXCLUDED;
+			}
+
+			if (key.isHidden())
+			{
+				flags |= AdvancedConfigKey.HIDDEN;
+			}
+
+			if (key.cantEdit())
+			{
+				flags |= AdvancedConfigKey.CANT_EDIT;
+			}
+
+			if (key.useScrollBar())
+			{
+				flags |= AdvancedConfigKey.USE_SCROLL_BAR;
+			}
+
+			data.writeInt(flags);
+
+			ConfigValue defValue = key.getDefValue();
 			ByteBufUtils.writeUTF8String(data, defValue.getName());
 			defValue.writeData(data);
 
@@ -104,11 +165,30 @@ public class ConfigTree implements IConfigTree
 			String id = ByteBufUtils.readUTF8String(data);
 			int flags = data.readInt();
 
-			IConfigValue value = FTBLibAPI.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
+			ConfigValue value = FTBLibAPI.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
 			value.readData(data);
 
-			ConfigKey key = new ConfigKey(id, value);
-			key.setFlags(flags);
+			AdvancedConfigKey key = new AdvancedConfigKey(id, value);
+
+			if (Bits.getFlag(flags, AdvancedConfigKey.EXCLUDED))
+			{
+				key.setExcluded(true);
+			}
+
+			if (Bits.getFlag(flags, AdvancedConfigKey.HIDDEN))
+			{
+				key.setHidden(true);
+			}
+
+			if (Bits.getFlag(flags, AdvancedConfigKey.CANT_EDIT))
+			{
+				key.setCanEdit(false);
+			}
+
+			if (Bits.getFlag(flags, AdvancedConfigKey.USE_SCROLL_BAR))
+			{
+				key.setUseScrollBar(true);
+			}
 
 			int extraFlags = data.readUnsignedByte();
 
@@ -132,9 +212,9 @@ public class ConfigTree implements IConfigTree
 	public void fromJson(JsonElement json)
 	{
 		JsonObject o = json.getAsJsonObject();
-		getTree().forEach((key, value) ->
+		tree.forEach((key, value) ->
 		{
-			if (!key.getFlag(IConfigKey.EXCLUDED))
+			if (!key.isExcluded())
 			{
 				JsonElement e = o.get(key.getName());
 
@@ -152,7 +232,7 @@ public class ConfigTree implements IConfigTree
 		JsonObject o = new JsonObject();
 		tree.forEach((key, value) ->
 		{
-			if (!key.getFlag(IConfigKey.EXCLUDED))
+			if (!key.isExcluded())
 			{
 				o.add(key.getName(), value.getSerializableElement());
 			}

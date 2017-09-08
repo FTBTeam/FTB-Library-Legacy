@@ -183,6 +183,8 @@ public class GuiHelper
 		GlStateManager.enableRescaleNormal();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.enableBlend();
+		GlStateManager.enableTexture2D();
 
 		try
 		{

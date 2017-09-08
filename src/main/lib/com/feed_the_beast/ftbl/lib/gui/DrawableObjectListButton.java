@@ -68,7 +68,7 @@ public class DrawableObjectListButton extends Button
 
 		if (object instanceof DrawableItem)
 		{
-			ItemStack stack = ((DrawableItem) object).stack;
+			ItemStack stack = ((DrawableItem) object).getStack();
 			l.add(stack.getDisplayName());
 			stack.getItem().addInformation(stack, ClientUtils.MC.world, l, ITooltipFlag.TooltipFlags.NORMAL);
 		}

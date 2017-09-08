@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.events.registry;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.api.events.FTBLibEvent;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.server.command.CommandTreeBase;
 
@@ -24,7 +24,7 @@ public class RegisterFTBCommandsEvent extends FTBLibEvent
 		command.addSubcommand(cmd);
 	}
 
-	public void add(ICommand cmd, IConfigValue value)
+	public void add(ICommand cmd, ConfigValue value)
 	{
 		if (value.getBoolean())
 		{

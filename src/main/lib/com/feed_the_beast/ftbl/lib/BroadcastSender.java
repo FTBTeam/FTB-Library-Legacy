@@ -60,7 +60,7 @@ public enum BroadcastSender implements ICommandSender
 	@Override
 	public WorldServer getEntityWorld()
 	{
-		return ServerUtils.getServerWorld();
+		return ServerUtils.getOverworld();
 	}
 
 	@Override

@@ -201,7 +201,7 @@ public class GuideListLine extends EmptyGuidePageLine
 			gui = g;
 			//addFlags(FLAG_DEFAULTS);
 
-			scrollBar = new PanelScrollBar(0, 0, 1, 4, 10, this)
+			scrollBar = new PanelScrollBar(0, 0, 1, 4, 0, this)
 			{
 				@Override
 				public EnumFacing.Plane getPlane()

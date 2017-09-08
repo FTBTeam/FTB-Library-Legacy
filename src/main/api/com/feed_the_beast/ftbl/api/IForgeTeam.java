@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
@@ -59,7 +59,7 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
 	void changeOwner(IForgePlayer o);
 
-	IConfigTree getSettings();
+	ConfigTree getSettings();
 
 	void printMessage(ITeamMessage message);
 

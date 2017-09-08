@@ -1,77 +1,97 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
+import com.feed_the_beast.ftbl.lib.FinalIDObject;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 
 /**
  * @author LatvianModder
  */
-public class ConfigKey extends SimpleConfigKey
+public class ConfigKey extends FinalIDObject
 {
-	private final IConfigValue defValue;
-	private int flags;
-	private String displayNameLangKey, group = "";
-
-	public ConfigKey(String id, IConfigValue def, String group)
+	public ConfigKey(String id)
 	{
-		super(group.isEmpty() ? id : (group + "." + id));
-		defValue = def;
-		setGroup(group);
-		setNameLangKey(getName());
+		super(id, StringUtils.FLAG_ID_FIX | StringUtils.FLAG_ID_ONLY_UNDERLINE | StringUtils.FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
 	}
 
-	public ConfigKey(String id, IConfigValue def)
+	/**
+	 * Will be excluded from writing / reading from files
+	 */
+	public boolean isExcluded()
 	{
-		this(id, def, "");
+		return false;
 	}
 
-	@Override
-	public ConfigKey setNameLangKey(String key)
+	/**
+	 * Will be hidden from config gui
+	 */
+	public boolean isHidden()
 	{
-		displayNameLangKey = key;
-		return this;
+		return false;
 	}
 
-	@Override
-	public ConfigKey setGroup(String g)
+	/**
+	 * Will be visible in config gui, but uneditable
+	 */
+	public boolean cantEdit()
 	{
-		group = g;
-		return this;
+		return false;
 	}
 
-	@Override
-	public IConfigValue getDefValue()
+	/**
+	 * Use scroll bar on numbers whenever that is available
+	 */
+	public boolean useScrollBar()
 	{
-		return defValue;
+		return false;
 	}
 
-	@Override
-	public int getFlags()
+	public ConfigValue getDefValue()
 	{
-		return flags;
+		return ConfigNull.INSTANCE;
 	}
 
-	public ConfigKey setFlags(int f)
-	{
-		flags = f;
-		return this;
-	}
-
-	@Override
-	public ConfigKey addFlags(int f)
-	{
-		flags |= f;
-		return this;
-	}
-
-	@Override
 	public String getNameLangKey()
 	{
-		return displayNameLangKey;
+		return "";
 	}
 
-	@Override
 	public String getGroup()
 	{
-		return group;
+		return "";
+	}
+
+	public final String getDisplayName()
+	{
+		String key = getNameLangKey();
+
+		if (key.isEmpty())
+		{
+			key = getName();
+		}
+
+		return StringUtils.canTranslate(key) ? StringUtils.translate(key) : getName();
+	}
+
+	public final String getDisplayInfo()
+	{
+		String key = getNameLangKey();
+
+		if (key.isEmpty())
+		{
+			key = getName();
+		}
+
+		key = key + ".tooltip";
+		return StringUtils.canTranslate(key) ? StringUtils.translate(key) : "";
+	}
+
+	public ConfigKey setNameLangKey(String name)
+	{
+		return this;
+	}
+
+	public ConfigKey setGroup(String name)
+	{
+		return this;
 	}
 }

@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
@@ -17,10 +16,10 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
-import com.feed_the_beast.ftbl.lib.config.PropertyEnum;
-import com.feed_the_beast.ftbl.lib.config.PropertyString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -141,23 +140,23 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 	private boolean isValid;
 	private final NBTDataStorage dataStorage;
-	private final PropertyEnum<EnumTeamColor> color;
+	private final ConfigEnum<EnumTeamColor> color;
 	private IForgePlayer owner;
-	private final PropertyString title;
-	private final PropertyString desc;
-	private final PropertyBool freeToJoin;
+	private final ConfigString title;
+	private final ConfigString desc;
+	private final ConfigBoolean freeToJoin;
 	private List<ITeamMessage> chatHistory;
 	private Map<UUID, EnumTeamStatus> players;
-	private final IConfigTree cachedConfig;
+	private final ConfigTree cachedConfig;
 
 	public ForgeTeam(String id)
 	{
 		super(id);
 		isValid = true;
-		color = new PropertyEnum<>(EnumTeamColor.NAME_MAP);
-		title = new PropertyString("");
-		desc = new PropertyString("");
-		freeToJoin = new PropertyBool(false);
+		color = new ConfigEnum<>(EnumTeamColor.NAME_MAP);
+		title = new ConfigString("");
+		desc = new ConfigString("");
+		freeToJoin = new ConfigBoolean(false);
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
 
 		cachedConfig = new ConfigTree();
@@ -526,7 +525,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	}
 
 	@Override
-	public IConfigTree getSettings()
+	public ConfigTree getSettings()
 	{
 		return cachedConfig;
 	}

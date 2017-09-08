@@ -28,9 +28,10 @@ import java.util.List;
 
 public class GuiGuide extends GuiBase
 {
-	private static final IDrawableObject TEXTURE = ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/info.png");
+	private static final IDrawableObject TEXTURE = ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/guide.png");
 
-	private static final IDrawableObject TEX_SLIDER = TEXTURE.withUVfromCoords(0, 30, 12, 18, 64, 64);
+	private static final IDrawableObject TEX_SLIDER_V = TEXTURE.withUVfromCoords(0, 30, 12, 18, 64, 64);
+	private static final IDrawableObject TEX_SLIDER_H = TEXTURE.withUVfromCoords(30, 0, 18, 12, 64, 64);
 	private static final IDrawableObject TEX_BACK = TEXTURE.withUVfromCoords(13, 30, 14, 11, 64, 64);
 	private static final IDrawableObject TEX_CLOSE = TEXTURE.withUVfromCoords(13, 41, 14, 11, 64, 64);
 	public static final IDrawableObject TEX_BULLET = TEXTURE.withUVfromCoords(0, 49, 6, 6, 64, 64);
@@ -89,7 +90,7 @@ public class GuiGuide extends GuiBase
 
 	public final GuidePage pageTree;
 	public final Panel panelPages, panelText, panelTitle;
-	public final PanelScrollBar sliderPages, sliderText;
+	public final PanelScrollBar sliderPages, sliderTextV;
 	private final Button buttonBack;
 	public int panelWidth;
 	private final List<ButtonSpecial> specialButtons;
@@ -108,7 +109,7 @@ public class GuiGuide extends GuiBase
 			{
 				GuiHelper.playClickSound();
 				sliderPages.setValue(gui, 0D);
-				sliderText.setValue(gui, 0D);
+				sliderTextV.setValue(gui, 0D);
 				setSelectedPage(selectedPage.parent);
 			}
 
@@ -178,8 +179,8 @@ public class GuiGuide extends GuiBase
 				if (!widgets.isEmpty())
 				{
 					int s = align(LAYOUT);
-					sliderText.setElementSize(s);
-					sliderText.setSrollStepFromOneElementSize((s - 6) / widgets.size());
+					sliderTextV.setElementSize(s);
+					sliderTextV.setSrollStepFromOneElementSize((s - 6) / widgets.size());
 				}
 			}
 		};
@@ -206,12 +207,12 @@ public class GuiGuide extends GuiBase
 		};
 
 		sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
-		sliderPages.slider = TEX_SLIDER;
+		sliderPages.slider = TEX_SLIDER_V;
 		sliderPages.background = ImageProvider.NULL;
 
-		sliderText = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
-		sliderText.slider = TEX_SLIDER;
-		sliderText.background = ImageProvider.NULL;
+		sliderTextV = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
+		sliderTextV.slider = TEX_SLIDER_V;
+		sliderTextV.background = ImageProvider.NULL;
 
 		specialButtons = new ArrayList<>();
 	}
@@ -223,7 +224,7 @@ public class GuiGuide extends GuiBase
 
 	public void setSelectedPage(@Nullable GuidePage p)
 	{
-		sliderText.setValue(this, 0D);
+		sliderTextV.setValue(this, 0D);
 
 		if (selectedPage != p)
 		{
@@ -256,7 +257,7 @@ public class GuiGuide extends GuiBase
 	{
 		selectedPage.refreshGui(this);
 
-		add(sliderText);
+		add(sliderTextV);
 		add(panelPages);
 		add(panelText);
 		add(panelTitle);
@@ -292,16 +293,16 @@ public class GuiGuide extends GuiBase
 
 		panelText.posX = panelWidth + 10;
 		panelText.posY = 6;
-		panelText.setWidth(width - panelWidth - 23 - sliderText.width);
+		panelText.setWidth(width - panelWidth - 23 - sliderTextV.width);
 		panelText.setHeight(height - 12);
 
 		sliderPages.posX = panelWidth - sliderPages.width - 10;
 		sliderPages.posY = 46;
 		sliderPages.setHeight(height - 56);
 
-		sliderText.posY = 10;
-		sliderText.setHeight(height - 20);
-		sliderText.posX = width - 10 - sliderText.width;
+		sliderTextV.posY = 10;
+		sliderTextV.setHeight(height - 20);
+		sliderTextV.posX = width - 10 - sliderTextV.width;
 	}
 
 	@Override

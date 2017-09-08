@@ -10,9 +10,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public enum EnumTristate implements IStringSerializable
 {
-	TRUE("true", Event.Result.ALLOW, PropertyBool.COLOR_TRUE, 1),
-	FALSE("false", Event.Result.DENY, PropertyBool.COLOR_FALSE, 0),
-	DEFAULT("default", Event.Result.DEFAULT, PropertyEnumAbstract.COLOR, 2);
+	TRUE("true", Event.Result.ALLOW, ConfigBoolean.COLOR_TRUE, 1),
+	FALSE("false", Event.Result.DENY, ConfigBoolean.COLOR_FALSE, 0),
+	DEFAULT("default", Event.Result.DEFAULT, ConfigEnumAbstract.COLOR, 2);
 
 	public static final NameMap<EnumTristate> NAME_MAP = NameMap.create(DEFAULT, values());
 

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.api.config;
+package com.feed_the_beast.ftbl.lib.config;
 
 import com.google.gson.JsonElement;
 
@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
  */
 public interface IGuiEditConfig
 {
-	void onChanged(IConfigKey key, JsonElement json);
+	void onChanged(ConfigKey key, JsonElement json);
 
 	void openGui();
 }

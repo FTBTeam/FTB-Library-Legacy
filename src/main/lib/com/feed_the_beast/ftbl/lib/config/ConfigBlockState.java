@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -14,19 +13,19 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class PropertyBlockState extends PropertyBase
+public class ConfigBlockState extends ConfigValue
 {
 	public static final String ID = "blockstate";
 	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
 
 	private IBlockState value;
 
-	public PropertyBlockState()
+	public ConfigBlockState()
 	{
 		this(AIR_STATE);
 	}
 
-	public PropertyBlockState(IBlockState state)
+	public ConfigBlockState(IBlockState state)
 	{
 		value = state;
 	}
@@ -73,9 +72,9 @@ public class PropertyBlockState extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigBlockState copy()
 	{
-		return new PropertyBlockState(getBlockState());
+		return new ConfigBlockState(getBlockState());
 	}
 
 	@Override

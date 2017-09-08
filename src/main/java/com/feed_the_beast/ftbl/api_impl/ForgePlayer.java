@@ -3,14 +3,13 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
-import com.feed_the_beast.ftbl.lib.config.PropertyBool;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
@@ -41,10 +40,10 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	private String playerName;
 	private final NBTDataStorage dataStorage;
 	private ForgeTeam team = null;
-	private final PropertyBool hideTeamNotification;
+	private final ConfigBoolean hideTeamNotification;
 	private EntityPlayerMP entityPlayer;
 	private NBTTagCompound playerNBT;
-	private final IConfigTree cachedConfig;
+	private final ConfigTree cachedConfig;
 	private boolean loggingOut;
 
 	public ForgePlayer(UUID id, String name)
@@ -52,7 +51,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		playerId = id;
 		playerName = name;
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
-		hideTeamNotification = new PropertyBool();
+		hideTeamNotification = new ConfigBoolean();
 
 		cachedConfig = new ConfigTree();
 		ForgePlayerSettingsEvent event = new ForgePlayerSettingsEvent(this, cachedConfig);
@@ -255,7 +254,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	{
 		if (playerForStats == null)
 		{
-			playerForStats = new FakePlayer(ServerUtils.getServerWorld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
+			playerForStats = new FakePlayer(ServerUtils.getOverworld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
 		}
 
 		playerForStats.setUniqueId(getId());
@@ -263,7 +262,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	}
 
 	@Override
-	public IConfigTree getSettings()
+	public ConfigTree getSettings()
 	{
 		return cachedConfig;
 	}

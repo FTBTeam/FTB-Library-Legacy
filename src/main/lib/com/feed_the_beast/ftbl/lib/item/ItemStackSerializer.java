@@ -6,6 +6,8 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -15,9 +17,25 @@ public class ItemStackSerializer
 	public static ItemStack parseItem(String input)
 	{
 		input = input.trim();
-		if (input.isEmpty())
+		if (input.isEmpty() || input.equals("-"))
 		{
 			return ItemStack.EMPTY;
+		}
+		else if (input.startsWith("{") && input.endsWith("}"))
+		{
+			try
+			{
+				ItemStack stack = new ItemStack(JsonToNBT.getTagFromJson(input));
+
+				if (!stack.isEmpty())
+				{
+					return stack;
+				}
+			}
+			catch (NBTException e)
+			{
+				e.printStackTrace();
+			}
 		}
 
 		String[] s1 = input.split(" ", 4); //TODO: Use split limit
@@ -66,11 +84,34 @@ public class ItemStackSerializer
 	{
 		if (is.isEmpty())
 		{
-			return "";
+			return "-";
 		}
 
-		String output = Item.REGISTRY.getNameForObject(is.getItem()) + " " + is.getCount() + ' ' + is.getItemDamage();
-		return is.hasTagCompound() ? (output + ' ' + is.getTagCompound()) : output;
+		StringBuilder builder = new StringBuilder(String.valueOf(Item.REGISTRY.getNameForObject(is.getItem())));
+
+		int count = is.getCount();
+		int meta = is.getMetadata();
+		NBTTagCompound tag = is.getTagCompound();
+
+		if (count > 1 || meta != 0 || tag != null)
+		{
+			builder.append(' ');
+			builder.append(count);
+		}
+
+		if (meta != 0 || tag != null)
+		{
+			builder.append(' ');
+			builder.append(meta);
+		}
+
+		if (tag != null)
+		{
+			builder.append(' ');
+			builder.append(tag);
+		}
+
+		return builder.toString();
 	}
 
 	public static JsonElement serialize(ItemStack is)

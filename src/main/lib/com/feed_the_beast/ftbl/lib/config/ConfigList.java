@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,29 +16,29 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public final class PropertyList extends PropertyBase implements Iterable<IConfigValue>
+public final class ConfigList extends ConfigValue implements Iterable<ConfigValue>
 {
 	public static final String ID = "list";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
-	private final List<IConfigValue> list;
+	private final List<ConfigValue> list;
 	private String valueId;
 
-	public PropertyList(String id)
+	public ConfigList(String id)
 	{
 		list = new ArrayList<>();
 		valueId = id;
 	}
 
-	public PropertyList(Collection<IConfigValue> v)
+	public ConfigList(Collection<ConfigValue> v)
 	{
-		this(PropertyNull.ID);
+		this(ConfigNull.ID);
 		addAll(v);
 	}
 
-	public PropertyList(IConfigValue v0, IConfigValue... v)
+	public ConfigList(ConfigValue v0, ConfigValue... v)
 	{
-		this(PropertyNull.ID);
+		this(ConfigNull.ID);
 		add(v0);
 		addAll(v);
 	}
@@ -59,22 +58,22 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 	public void clear()
 	{
 		list.clear();
-		valueId = PropertyNull.ID;
+		valueId = ConfigNull.ID;
 	}
 
 	private boolean hasValidId()
 	{
-		return !valueId.equals(PropertyNull.ID);
+		return !valueId.equals(ConfigNull.ID);
 	}
 
-	public void add(IConfigValue v)
+	public void add(ConfigValue v)
 	{
 		if (v.isNull())
 		{
 			return;
 		}
 
-		if (valueId.equals(PropertyNull.ID))
+		if (valueId.equals(ConfigNull.ID))
 		{
 			valueId = v.getName();
 			list.add(v);
@@ -85,23 +84,23 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 		}
 	}
 
-	public void addAll(Collection<IConfigValue> v)
+	public void addAll(Collection<ConfigValue> v)
 	{
-		for (IConfigValue v1 : v)
+		for (ConfigValue v1 : v)
 		{
 			add(v1);
 		}
 	}
 
-	public void addAll(IConfigValue... v)
+	public void addAll(ConfigValue... v)
 	{
-		for (IConfigValue v1 : v)
+		for (ConfigValue v1 : v)
 		{
 			add(v1);
 		}
 	}
 
-	public Collection<IConfigValue> getList()
+	public Collection<ConfigValue> getList()
 	{
 		return list;
 	}
@@ -113,7 +112,7 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 			return false;
 		}
 
-		for (IConfigValue value : list)
+		for (ConfigValue value : list)
 		{
 			if (value.getValue() == val)
 			{
@@ -126,7 +125,7 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 			return false;
 		}
 
-		for (IConfigValue value : list)
+		for (ConfigValue value : list)
 		{
 			Object o = value.getValue();
 
@@ -144,15 +143,15 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 	{
 		ByteBufUtils.writeUTF8String(data, valueId);
 
-		if (valueId.equals(PropertyNull.ID))
+		if (valueId.equals(ConfigNull.ID))
 		{
 			return;
 		}
 
-		Collection<IConfigValue> list = getList();
+		Collection<ConfigValue> list = getList();
 		data.writeShort(list.size());
 
-		for (IConfigValue s : list)
+		for (ConfigValue s : list)
 		{
 			s.writeData(data);
 		}
@@ -164,17 +163,17 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 		clear();
 		valueId = ByteBufUtils.readUTF8String(data);
 
-		if (valueId.equals(PropertyNull.ID))
+		if (valueId.equals(ConfigNull.ID))
 		{
 			return;
 		}
 
 		int s = data.readUnsignedShort();
-		IConfigValue blank = FTBLibAPI.API.getConfigValueFromID(valueId);
+		ConfigValue blank = FTBLibAPI.API.getConfigValueFromID(valueId);
 
 		while (--s >= 0)
 		{
-			IConfigValue v = blank.copy();
+			ConfigValue v = blank.copy();
 			v.readData(data);
 			add(v);
 		}
@@ -213,9 +212,9 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigValue copy()
 	{
-		return new PropertyList(list);
+		return new ConfigList(list);
 	}
 
 	@Override
@@ -240,11 +239,11 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 			return;
 		}
 
-		IConfigValue blank = FTBLibAPI.API.getConfigValueFromID(valueId);
+		ConfigValue blank = FTBLibAPI.API.getConfigValueFromID(valueId);
 
 		for (JsonElement e : a)
 		{
-			IConfigValue v = blank.copy();
+			ConfigValue v = blank.copy();
 			v.fromJson(e);
 			add(v);
 		}
@@ -264,7 +263,7 @@ public final class PropertyList extends PropertyBase implements Iterable<IConfig
 	}
 
 	@Override
-	public Iterator<IConfigValue> iterator()
+	public Iterator<ConfigValue> iterator()
 	{
 		return list.iterator();
 	}

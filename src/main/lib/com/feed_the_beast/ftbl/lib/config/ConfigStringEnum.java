@@ -1,8 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
@@ -20,17 +17,17 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class PropertyStringEnum extends PropertyBase
+public class ConfigStringEnum extends ConfigValue
 {
 	private List<String> keys;
 	private String value;
 
-	public PropertyStringEnum()
+	public ConfigStringEnum()
 	{
 		this(Collections.emptyList(), "");
 	}
 
-	public PropertyStringEnum(Collection<String> k, String v)
+	public ConfigStringEnum(Collection<String> k, String v)
 	{
 		keys = new ArrayList<>(k);
 		value = v;
@@ -39,7 +36,7 @@ public class PropertyStringEnum extends PropertyBase
 	@Override
 	public String getName()
 	{
-		return PropertyEnumAbstract.ID;
+		return ConfigEnumAbstract.ID;
 	}
 
 	@Nullable
@@ -73,15 +70,15 @@ public class PropertyStringEnum extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigStringEnum copy()
 	{
-		return new PropertyStringEnum(keys, getString());
+		return new ConfigStringEnum(keys, getString());
 	}
 
 	@Override
 	public Color4I getColor()
 	{
-		return PropertyEnumAbstract.COLOR;
+		return ConfigEnumAbstract.COLOR;
 	}
 
 	@Override
@@ -91,7 +88,7 @@ public class PropertyStringEnum extends PropertyBase
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
 	{
 		setString(keys.get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
 		gui.onChanged(key, getSerializableElement());

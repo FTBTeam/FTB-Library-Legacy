@@ -1,27 +1,26 @@
 package com.feed_the_beast.ftbl.api.events.player;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.config.AdvancedConfigKey;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 
 /**
  * @author LatvianModder
  */
 public class ForgePlayerSettingsEvent extends ForgePlayerEvent
 {
-	private final IConfigTree settings;
+	private final ConfigTree settings;
 
-	public ForgePlayerSettingsEvent(IForgePlayer player, IConfigTree tree)
+	public ForgePlayerSettingsEvent(IForgePlayer player, ConfigTree tree)
 	{
 		super(player);
 		settings = tree;
 	}
 
-	public IConfigKey add(String group, String id, IConfigValue value)
+	public AdvancedConfigKey add(String group, String id, ConfigValue value)
 	{
-		ConfigKey key = new ConfigKey(id, value, group);
+		AdvancedConfigKey key = new AdvancedConfigKey(id, value, group);
 		settings.add(key, value);
 		return key;
 	}

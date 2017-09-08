@@ -14,17 +14,35 @@ import net.minecraft.item.ItemStack;
  */
 public class DrawableItem implements IDrawableObject
 {
-	public ItemStack stack;
+	private ItemStack stack;
+	private String lazyStackString;
 
 	public DrawableItem(ItemStack is)
 	{
 		stack = is;
+		lazyStackString = "";
+	}
+
+	public DrawableItem(String s)
+	{
+		stack = ItemStack.EMPTY;
+		lazyStackString = s;
+	}
+
+	public ItemStack getStack()
+	{
+		if (!lazyStackString.isEmpty())
+		{
+			stack = ItemStackSerializer.parseItem(lazyStackString);
+		}
+
+		return stack;
 	}
 
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		if (!GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true, col))
+		if (!GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, true, col))
 		{
 			stack = InvUtils.ERROR_ITEM;
 		}
@@ -33,6 +51,6 @@ public class DrawableItem implements IDrawableObject
 	@Override
 	public JsonElement getJson()
 	{
-		return new JsonPrimitive("item:" + ItemStackSerializer.toString(stack));
+		return new JsonPrimitive("item:" + ItemStackSerializer.toString(getStack()));
 	}
 }

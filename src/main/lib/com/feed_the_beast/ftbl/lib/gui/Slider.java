@@ -12,18 +12,18 @@ import java.util.List;
 
 public class Slider extends Widget
 {
-	public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(0x99666666);
-	public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0x99333333);
+	public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(Color4I.WHITE_A[33]).setLineColor(Button.DEFAULT_BACKGROUND.getLineColor());
+	public static final IDrawableObject DEFAULT_BACKGROUND = Button.DEFAULT_BACKGROUND;
 
 	public int sliderSize;
 	private double value;
-	private boolean isGrabbed;
+	private int grab = -10000;
 	public IDrawableObject slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
 
 	public Slider(int x, int y, int w, int h, int ss)
 	{
 		super(x, y, w, h);
-		sliderSize = ss;
+		sliderSize = Math.max(ss, 1);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class Slider extends Widget
 	{
 		if (gui.isMouseOver(this))
 		{
-			setGrabbed(gui, true);
+			grab = (getPlane() == EnumFacing.Plane.VERTICAL ? (gui.getMouseY() - (getAY() + getValueI(gui, height))) : (gui.getMouseX() - (getAX() + getValueI(gui, width))));
 			return true;
 		}
 
@@ -63,22 +63,22 @@ public class Slider extends Widget
 			double v = getValue(gui);
 			double v0 = v;
 
-			if (isGrabbed(gui))
+			if (grab != -10000)
 			{
 				if (gui.isMouseButtonDown(0))
 				{
 					if (getPlane() == EnumFacing.Plane.VERTICAL)
 					{
-						v = (gui.getMouseY() - (ay + (sliderSize / 2D))) / (double) (height - sliderSize);
+						v = (gui.getMouseY() - (ay + grab)) / (double) (height - sliderSize);
 					}
 					else
 					{
-						v = (gui.getMouseX() - (ax + (sliderSize / 2D))) / (double) (width - sliderSize);
+						v = (gui.getMouseX() - (ax + grab)) / (double) (width - sliderSize);
 					}
 				}
 				else
 				{
-					setGrabbed(gui, false);
+					grab = -10000;
 				}
 			}
 
@@ -99,22 +99,15 @@ public class Slider extends Widget
 
 		if (getPlane() == EnumFacing.Plane.VERTICAL)
 		{
-			slider.draw(ax, ay + getValueI(gui, height), width, sliderSize, Color4I.NONE);
+			if (sliderSize < height)
+			{
+				slider.draw(ax, ay + getValueI(gui, height), width, sliderSize, Color4I.NONE);
+			}
 		}
-		else
+		else if (sliderSize < width)
 		{
 			slider.draw(ax + getValueI(gui, width), ay, sliderSize, height, Color4I.NONE);
 		}
-	}
-
-	public boolean isGrabbed(GuiBase gui)
-	{
-		return isGrabbed;
-	}
-
-	public void setGrabbed(GuiBase gui, boolean b)
-	{
-		isGrabbed = b;
 	}
 
 	public void onMoved(GuiBase gui)

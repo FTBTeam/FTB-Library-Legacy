@@ -108,7 +108,7 @@ public class GuiSidebarButtonConfig extends GuiBase
 
 		panelButtons.addFlags(Panel.FLAG_DEFAULTS);
 
-		scrollBar = new PanelScrollBar(202, 2, 16, 160, 12, panelButtons)
+		scrollBar = new PanelScrollBar(202, 2, 16, 160, 0, panelButtons)
 		{
 			@Override
 			public boolean shouldRender(GuiBase gui)
@@ -118,6 +118,7 @@ public class GuiSidebarButtonConfig extends GuiBase
 		};
 
 		scrollBar.background = Button.DEFAULT_BACKGROUND;
+		scrollBar.slider = new TexturelessRectangle(Color4I.WHITE_A[33]).setLineColor(Button.DEFAULT_BACKGROUND.getLineColor());
 
 		setWidth(220);
 		setHeight(164);
@@ -136,7 +137,6 @@ public class GuiSidebarButtonConfig extends GuiBase
 	public void onClosed()
 	{
 		FTBLibModClient.saveSidebarButtonConfig();
-		new GuiClientConfig().openGui();
 	}
 
 	@Override

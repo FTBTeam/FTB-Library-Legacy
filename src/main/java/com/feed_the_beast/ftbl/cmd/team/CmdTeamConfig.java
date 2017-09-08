@@ -3,13 +3,13 @@ package com.feed_the_beast.ftbl.cmd.team;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
-import com.feed_the_beast.ftbl.lib.config.BasicConfigContainer;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
@@ -21,8 +21,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
 		super("config", Level.ALL);
 	}
 
-	@Override
-	public IConfigContainer getConfigContainer(ICommandSender sender) throws CommandException
+	private IForgeTeam getTeam(ICommandSender sender) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 		IForgePlayer p = getForgePlayer(ep);
@@ -37,6 +36,18 @@ public class CmdTeamConfig extends CmdEditConfigBase
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		return new BasicConfigContainer(FTBLibLang.TEAM_CONFIG.textComponent(team.getName()), team.getSettings());
+		return team;
+	}
+
+	@Override
+	public ITextComponent getTitle(ICommandSender sender) throws CommandException
+	{
+		return FTBLibLang.TEAM_CONFIG.textComponent(getTeam(sender).getName());
+	}
+
+	@Override
+	public ConfigTree getTree(ICommandSender sender) throws CommandException
+	{
+		return getTeam(sender).getSettings();
 	}
 }

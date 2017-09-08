@@ -8,18 +8,20 @@ import net.minecraft.util.EnumFacing;
 public class PanelScrollBar extends Slider
 {
 	public final Panel panel;
-	private int elementSize;
+	private int elementSize = 1;
 	private double scrollStep;
+	private boolean autoSize;
 
 	public PanelScrollBar(int x, int y, int w, int h, int ss, Panel p)
 	{
 		super(x, y, w, h, ss);
 		panel = p;
+		autoSize = ss <= 0;
 	}
 
 	public void setElementSize(int s)
 	{
-		elementSize = s;
+		elementSize = Math.max(1, s);
 
 		if (panel.widgets.isEmpty())
 		{
@@ -28,6 +30,11 @@ public class PanelScrollBar extends Slider
 		else
 		{
 			setSrollStepFromOneElementSize(elementSize / panel.widgets.size());
+		}
+
+		if (autoSize)
+		{
+			sliderSize = (int) (height * (double) panel.height / (double) elementSize);
 		}
 	}
 

@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
@@ -18,14 +16,14 @@ import java.util.function.IntSupplier;
 /**
  * @author LatvianModder
  */
-public class PropertyInt extends PropertyBase implements IntSupplier
+public class ConfigInt extends ConfigValue implements IntSupplier
 {
 	public static final String ID = "int";
 	public static final Color4I COLOR = Color4I.rgb(0xAA5AE8);
 
-	public static PropertyInt create(int defValue, int min, int max, IntSupplier getter, IntConsumer setter)
+	public static ConfigInt create(int defValue, int min, int max, IntSupplier getter, IntConsumer setter)
 	{
-		return new PropertyInt(defValue, min, max)
+		return new ConfigInt(defValue, min, max)
 		{
 			@Override
 			public int getInt()
@@ -45,16 +43,16 @@ public class PropertyInt extends PropertyBase implements IntSupplier
 	private int minValue = Integer.MIN_VALUE;
 	private int maxValue = Integer.MAX_VALUE;
 
-	public PropertyInt()
+	public ConfigInt()
 	{
 	}
 
-	public PropertyInt(int v)
+	public ConfigInt(int v)
 	{
 		value = v;
 	}
 
-	public PropertyInt(int v, int min, int max)
+	public ConfigInt(int v, int min, int max)
 	{
 		this(v);
 		minValue = min;
@@ -74,13 +72,13 @@ public class PropertyInt extends PropertyBase implements IntSupplier
 		return getInt();
 	}
 
-	public PropertyInt setMin(int v)
+	public ConfigInt setMin(int v)
 	{
 		minValue = v;
 		return this;
 	}
 
-	public PropertyInt setMax(int v)
+	public ConfigInt setMax(int v)
 	{
 		maxValue = v;
 		return this;
@@ -120,13 +118,13 @@ public class PropertyInt extends PropertyBase implements IntSupplier
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigInt copy()
 	{
-		return new PropertyInt(getInt(), getMin(), getMax());
+		return new ConfigInt(getInt(), getMin(), getMax());
 	}
 
 	@Override
-	public boolean equalsValue(IConfigValue value)
+	public boolean equalsValue(ConfigValue value)
 	{
 		return getInt() == value.getInt();
 	}
@@ -138,7 +136,7 @@ public class PropertyInt extends PropertyBase implements IntSupplier
 	}
 
 	@Override
-	public void addInfo(IConfigKey key, List<String> list)
+	public void addInfo(ConfigKey key, List<String> list)
 	{
 		super.addInfo(key, list);
 

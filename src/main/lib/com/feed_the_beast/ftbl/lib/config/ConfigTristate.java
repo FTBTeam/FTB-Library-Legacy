@@ -1,8 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonElement;
@@ -17,13 +14,13 @@ import java.util.function.Supplier;
 /**
  * @author LatvianModder
  */
-public class PropertyTristate extends PropertyBase
+public class ConfigTristate extends ConfigValue
 {
 	public static final String ID = "tristate";
 
-	public static PropertyTristate create(EnumTristate defValue, Supplier<EnumTristate> getter, Consumer<EnumTristate> setter)
+	public static ConfigTristate create(EnumTristate defValue, Supplier<EnumTristate> getter, Consumer<EnumTristate> setter)
 	{
-		return new PropertyTristate(defValue)
+		return new ConfigTristate(defValue)
 		{
 			@Override
 			public EnumTristate get()
@@ -41,12 +38,12 @@ public class PropertyTristate extends PropertyBase
 
 	private EnumTristate value;
 
-	public PropertyTristate()
+	public ConfigTristate()
 	{
 		value = EnumTristate.DEFAULT;
 	}
 
-	public PropertyTristate(EnumTristate v)
+	public ConfigTristate(EnumTristate v)
 	{
 		value = v;
 	}
@@ -93,15 +90,9 @@ public class PropertyTristate extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigTristate copy()
 	{
-		return new PropertyTristate(get());
-	}
-
-	@Override
-	public boolean equalsValue(IConfigValue value)
-	{
-		return get() == value.getValue();
+		return new ConfigTristate(get());
 	}
 
 	@Override
@@ -117,7 +108,7 @@ public class PropertyTristate extends PropertyBase
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
 	{
 		set(EnumTristate.NAME_MAP.getNext(get()));
 		gui.onChanged(key, getSerializableElement());

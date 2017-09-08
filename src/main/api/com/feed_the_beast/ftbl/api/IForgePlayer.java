@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.api.config.IConfigTree;
 import com.feed_the_beast.ftbl.lib.EnumPrivacyLevel;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -76,7 +76,7 @@ public interface IForgePlayer extends INBTSerializable<NBTTagCompound>
 
 	StatisticsManagerServer stats();
 
-	IConfigTree getSettings();
+	ConfigTree getSettings();
 
 	NBTTagCompound getPlayerNBT();
 

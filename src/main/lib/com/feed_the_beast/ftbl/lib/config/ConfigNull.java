@@ -1,8 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonElement;
@@ -15,12 +12,15 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public enum PropertyNull implements IConfigValue
+public class ConfigNull extends ConfigValue
 {
-	INSTANCE;
-
 	public static final String ID = "null";
+	public static final ConfigNull INSTANCE = new ConfigNull();
 	public static final Color4I COLOR = Color4I.rgb(0x333333);
+
+	private ConfigNull()
+	{
+	}
 
 	@Override
 	public String getName()
@@ -54,13 +54,13 @@ public enum PropertyNull implements IConfigValue
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigNull copy()
 	{
 		return INSTANCE;
 	}
 
 	@Override
-	public boolean equalsValue(IConfigValue value)
+	public boolean equalsValue(ConfigValue value)
 	{
 		return value == this;
 	}
@@ -72,12 +72,12 @@ public enum PropertyNull implements IConfigValue
 	}
 
 	@Override
-	public void addInfo(IConfigKey key, List<String> list)
+	public void addInfo(ConfigKey key, List<String> list)
 	{
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, IConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
 	{
 	}
 

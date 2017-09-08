@@ -5,15 +5,10 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IDataProvider;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IRankConfig;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigFile;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IConfigValueProvider;
-import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterGuideLineProvidersEvent;
@@ -25,7 +20,23 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.AsmHelper;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.config.ConfigBlockState;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftbl.lib.config.ConfigColor;
+import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
+import com.feed_the_beast.ftbl.lib.config.ConfigEnumAbstract;
+import com.feed_the_beast.ftbl.lib.config.ConfigInt;
+import com.feed_the_beast.ftbl.lib.config.ConfigItemStack;
+import com.feed_the_beast.ftbl.lib.config.ConfigList;
+import com.feed_the_beast.ftbl.lib.config.ConfigNull;
+import com.feed_the_beast.ftbl.lib.config.ConfigString;
+import com.feed_the_beast.ftbl.lib.config.ConfigStringEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigTextComponent;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigTristate;
+import com.feed_the_beast.ftbl.lib.config.ConfigValueProvider;
+import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
+import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
 import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
@@ -67,33 +78,26 @@ import java.util.UUID;
 public class FTBLibModCommon
 {
 	private static final EnumSet<Side> DEFAULT_SIDES = EnumSet.allOf(Side.class);
-	public static final Map<String, IConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
-	public static final Map<String, IConfigFile> CONFIG_FILES = new HashMap<>();
-	public static final Map<UUID, IConfigContainer> TEMP_SERVER_CONFIG = new HashMap<>();
+	public static final Map<String, ConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
+	public static final Map<UUID, EditingConfig> TEMP_SERVER_CONFIG = new HashMap<>();
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
-	private static final Map<String, IRankConfig> RANK_CONFIGS = new HashMap<>();
-	public static final Map<String, IRankConfig> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
+	private static final Map<String, RankConfigKey> RANK_CONFIGS = new HashMap<>();
+	public static final Map<String, RankConfigKey> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
 
-	private static class RankConfig extends ConfigKey implements IRankConfig
+	public static class EditingConfig
 	{
-		private final IConfigValue defaultOPValue;
+		public final ConfigTree tree;
+		public final IConfigCallback callback;
 
-		private RankConfig(String s, IConfigValue def, IConfigValue defOP)
+		public EditingConfig(ConfigTree t, IConfigCallback c)
 		{
-			super(s, def);
-			defaultOPValue = def.copy();
-			defaultOPValue.fromJson(defOP.getSerializableElement());
-		}
-
-		@Override
-		public IConfigValue getDefOPValue()
-		{
-			return defaultOPValue;
+			tree = t;
+			callback = c;
 		}
 	}
 
@@ -179,6 +183,21 @@ public class FTBLibModCommon
 		optionalServerMods.register(FTBLibFinals.MOD_ID);
 		optionalServerMods.post();
 
+		RegisterConfigValueProvidersEvent configValues = new RegisterConfigValueProvidersEvent(CONFIG_VALUE_PROVIDERS::put);
+		configValues.register(ConfigNull.ID, () -> ConfigNull.INSTANCE);
+		configValues.register(ConfigList.ID, () -> new ConfigList(ConfigNull.ID));
+		configValues.register(ConfigBoolean.ID, ConfigBoolean::new);
+		configValues.register(ConfigTristate.ID, ConfigTristate::new);
+		configValues.register(ConfigInt.ID, ConfigInt::new);
+		configValues.register(ConfigDouble.ID, ConfigDouble::new);
+		configValues.register(ConfigString.ID, ConfigString::new);
+		configValues.register(ConfigColor.ID, ConfigColor::new);
+		configValues.register(ConfigEnumAbstract.ID, ConfigStringEnum::new);
+		configValues.register(ConfigBlockState.ID, ConfigBlockState::new);
+		configValues.register(ConfigItemStack.ID, ConfigItemStack::new);
+		configValues.register(ConfigTextComponent.ID, ConfigTextComponent::new);
+		configValues.post();
+
 		RegisterGuideLineProvidersEvent guideLines = new RegisterGuideLineProvidersEvent((id, provider) -> GuidePage.LINE_PROVIDERS.put(id.toLowerCase(), provider));
 		guideLines.register("img", (page, json) -> new GuideImageLine(json));
 		guideLines.register("image", (page, json) -> new GuideImageLine(json));
@@ -198,8 +217,8 @@ public class FTBLibModCommon
 		new RegisterSyncDataEvent(SYNCED_DATA::put).post();
 		new RegisterRankConfigEvent((id, defPlayer, defOP) ->
 		{
-			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfig ID found: " + id);
-			RankConfig c = new RankConfig(id, defPlayer, defOP);
+			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfigKey ID found: " + id);
+			RankConfigKey c = new RankConfigKey(id, defPlayer, defOP);
 			c.setNameLangKey(id);
 			RANK_CONFIGS.put(c.getName(), c);
 			return c;
@@ -210,56 +229,15 @@ public class FTBLibModCommon
 	public void postInit(LoaderState.ModState state)
 	{
 		reloadConfig(state);
-
-		for (IConfigFile file : CONFIG_FILES.values())
-		{
-			file.save();
-		}
-	}
-
-	public void loadAllFiles()
-	{
-		CONFIG_FILES.values().forEach(IConfigFile::load);
-	}
-
-	public void saveAllFiles()
-	{
-		CONFIG_FILES.values().forEach(IConfigFile::save);
 	}
 
 	public void reloadConfig(LoaderState.ModState state)
 	{
-		loadAllFiles();
-
 		JsonElement overridesE = JsonUtils.fromJson(new File(CommonUtils.folderConfig, "config_overrides.json"));
 
 		if (overridesE.isJsonObject())
 		{
-			overridesE.getAsJsonObject().entrySet().forEach(entry ->
-			{
-				if (entry.getValue().isJsonObject())
-				{
-					IConfigFile file = CONFIG_FILES.get(entry.getKey());
-
-					if (file != null)
-					{
-						file.fromJson(entry.getValue());
-					}
-				}
-			});
-
-			if (state.ordinal() >= LoaderState.ModState.POSTINITIALIZED.ordinal())
-			{
-				saveAllFiles();
-			}
 		}
-
-		new ConfigLoadedEvent(state).post();
-	}
-
-	public void worldLoaded()
-	{
-		//Cache data here if any
 	}
 
 	@Nullable

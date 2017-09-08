@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.config.PropertyColor;
+import com.feed_the_beast.ftbl.lib.config.ConfigColor;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -11,7 +11,7 @@ public class GuiColorField extends GuiBase
 	private final Color4I initCol;
 	private final IGuiFieldCallback callback;
 
-	GuiColorField(PropertyColor p, IGuiFieldCallback c)
+	GuiColorField(ConfigColor p, IGuiFieldCallback c)
 	{
 		super(256, 256);
 		initCol = p.getColor();
@@ -21,7 +21,7 @@ public class GuiColorField extends GuiBase
 	@Override
 	public void onClosed()
 	{
-		callback.onCallback(new PropertyColor(initCol), false);
+		callback.onCallback(new ConfigColor(initCol), false);
 	}
 
 	@Override

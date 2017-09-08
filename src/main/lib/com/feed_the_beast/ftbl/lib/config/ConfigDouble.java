@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -17,7 +15,7 @@ import java.util.function.DoubleSupplier;
 /**
  * @author LatvianModder
  */
-public class PropertyDouble extends PropertyBase implements DoubleSupplier
+public class ConfigDouble extends ConfigValue implements DoubleSupplier
 {
 	public static final String ID = "double";
 
@@ -25,16 +23,16 @@ public class PropertyDouble extends PropertyBase implements DoubleSupplier
 	private double min = Double.NEGATIVE_INFINITY;
 	private double max = Double.POSITIVE_INFINITY;
 
-	public PropertyDouble()
+	public ConfigDouble()
 	{
 	}
 
-	public PropertyDouble(double v)
+	public ConfigDouble(double v)
 	{
 		value = v;
 	}
 
-	public PropertyDouble(double v, double mn, double mx)
+	public ConfigDouble(double v, double mn, double mx)
 	{
 		value = v;
 		min = mn;
@@ -65,13 +63,13 @@ public class PropertyDouble extends PropertyBase implements DoubleSupplier
 		return getDouble();
 	}
 
-	public PropertyDouble setMin(double v)
+	public ConfigDouble setMin(double v)
 	{
 		min = v;
 		return this;
 	}
 
-	public PropertyDouble setMax(double v)
+	public ConfigDouble setMax(double v)
 	{
 		max = v;
 		return this;
@@ -106,13 +104,13 @@ public class PropertyDouble extends PropertyBase implements DoubleSupplier
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigDouble copy()
 	{
-		return new PropertyDouble(getDouble());
+		return new ConfigDouble(getDouble());
 	}
 
 	@Override
-	public boolean equalsValue(IConfigValue value)
+	public boolean equalsValue(ConfigValue value)
 	{
 		return getDouble() == value.getDouble();
 	}
@@ -120,11 +118,11 @@ public class PropertyDouble extends PropertyBase implements DoubleSupplier
 	@Override
 	public Color4I getColor()
 	{
-		return PropertyInt.COLOR;
+		return ConfigInt.COLOR;
 	}
 
 	@Override
-	public void addInfo(IConfigKey key, List<String> list)
+	public void addInfo(ConfigKey key, List<String> list)
 	{
 		super.addInfo(key, list);
 

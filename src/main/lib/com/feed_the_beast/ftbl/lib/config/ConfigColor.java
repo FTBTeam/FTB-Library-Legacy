@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MutableColor4I;
 import com.google.gson.JsonElement;
@@ -12,22 +11,22 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class PropertyColor extends PropertyBase
+public class ConfigColor extends ConfigValue
 {
 	public static final String ID = "color";
 
 	private final MutableColor4I value = Color4I.WHITE.mutable();
 
-	public PropertyColor()
+	public ConfigColor()
 	{
 	}
 
-	public PropertyColor(Color4I v)
+	public ConfigColor(Color4I v)
 	{
 		value.set(v, 255);
 	}
 
-	public PropertyColor(int col)
+	public ConfigColor(int col)
 	{
 		value.set(0xFF000000 | col);
 	}
@@ -70,9 +69,9 @@ public class PropertyColor extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigColor copy()
 	{
-		return new PropertyColor(getColor());
+		return new ConfigColor(getColor());
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.events.ConfigLoadedEvent;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -10,7 +8,6 @@ import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
@@ -56,12 +53,11 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	@Override
 	public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
 	{
-		IConfigContainer cc = FTBLibModCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
+		FTBLibModCommon.EditingConfig c = FTBLibModCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
 
-		if (cc != null)
+		if (c != null)
 		{
-			cc.saveConfig(player, m.extraNBT, m.groupData);
-			new ConfigLoadedEvent(LoaderState.ModState.AVAILABLE).post();
+			c.callback.saveConfig(c.tree, player, m.extraNBT, m.groupData);
 			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
 		}
 	}

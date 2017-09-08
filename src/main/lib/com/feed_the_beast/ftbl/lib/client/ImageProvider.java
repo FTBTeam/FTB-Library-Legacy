@@ -4,13 +4,11 @@ import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -144,12 +142,7 @@ public class ImageProvider implements IDrawableObject
 		}
 		else if (id.startsWith("item:"))
 		{
-			ItemStack stack = ItemStackSerializer.parseItem(id.substring(5));
-
-			if (!stack.isEmpty())
-			{
-				return new DrawableItem(stack);
-			}
+			return new DrawableItem(id.substring(5));
 		}
 		else if (id.startsWith("http:") || id.startsWith("https:"))
 		{

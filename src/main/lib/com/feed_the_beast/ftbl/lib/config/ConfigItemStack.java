@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
@@ -13,17 +12,17 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class PropertyItemStack extends PropertyBase
+public class ConfigItemStack extends ConfigValue
 {
 	public static final String ID = "item_stack";
 
 	private ItemStack value;
 
-	public PropertyItemStack()
+	public ConfigItemStack()
 	{
 	}
 
-	public PropertyItemStack(@Nullable ItemStack is)
+	public ConfigItemStack(@Nullable ItemStack is)
 	{
 		value = is;
 	}
@@ -116,9 +115,9 @@ public class PropertyItemStack extends PropertyBase
 	}
 
 	@Override
-	public IConfigValue copy()
+	public ConfigItemStack copy()
 	{
-		return new PropertyItemStack(getItem());
+		return new ConfigItemStack(getItem());
 	}
 
 	@Override

@@ -1,14 +1,16 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.config.IConfigContainer;
-import com.feed_the_beast.ftbl.api.config.IConfigKey;
-import com.feed_the_beast.ftbl.api.config.IConfigValue;
-import com.feed_the_beast.ftbl.api.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.MutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.config.ConfigKey;
+import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
+import com.feed_the_beast.ftbl.lib.config.IGuiEditConfig;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -36,7 +38,7 @@ import java.util.Map;
 
 public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
-	public static final Comparator<Map.Entry<IConfigKey, IConfigValue>> COMPARATOR = (o1, o2) ->
+	public static final Comparator<Map.Entry<ConfigKey, ConfigValue>> COMPARATOR = (o1, o2) ->
 	{
 		int i = o1.getKey().getGroup().compareToIgnoreCase(o2.getKey().getGroup());
 		return i == 0 ? o1.getKey().getDisplayName().compareToIgnoreCase(o2.getKey().getDisplayName()) : i;
@@ -132,12 +134,12 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public class ButtonConfigEntry extends Button
 	{
 		public final ButtonConfigGroup group;
-		public final IConfigKey key;
-		public final IConfigValue value;
+		public final ConfigKey key;
+		public final ConfigValue value;
 		public String keyText;
 		public List<String> info;
 
-		public ButtonConfigEntry(ButtonConfigGroup g, IConfigKey id, IConfigValue e)
+		public ButtonConfigEntry(ButtonConfigGroup g, ConfigKey id, ConfigValue e)
 		{
 			super(0, 0, 0, 16);
 			group = g;
@@ -208,7 +210,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		@Override
 		public void onClicked(GuiBase gui, IMouseButton button)
 		{
-			if (gui.getMouseY() >= 20 && !key.getFlag(IConfigKey.CANT_EDIT))
+			if (gui.getMouseY() >= 20 && !key.cantEdit())
 			{
 				GuiHelper.playClickSound();
 				value.onClicked(GuiEditConfig.this, key, button);
@@ -233,7 +235,8 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 	}
 
-	private final IConfigContainer configContainer;
+	private final ConfigTree tree;
+	private final IConfigCallback callback;
 	private final NBTTagCompound extraNBT;
 	private final JsonObject modifiedConfig;
 
@@ -244,30 +247,31 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	private final PanelScrollBar scroll;
 	private int shouldClose = 0;
 
-	public GuiEditConfig(@Nullable NBTTagCompound nbt, IConfigContainer cc)
+	public GuiEditConfig(@Nullable NBTTagCompound nbt, ConfigTree t, ITextComponent titleC, IConfigCallback c)
 	{
 		super(0, 0);
-		configContainer = cc;
+		tree = t;
+		callback = c;
 
-		ITextComponent title0 = configContainer.getTitle().createCopy();
+		ITextComponent title0 = titleC.createCopy();
 		title0.getStyle().setBold(true);
-		title = title0.getFormattedText();// + TextFormatting.DARK_GRAY + " [WIP GUI]";
+		title = title0.getFormattedText();
 		extraNBT = nbt;
 		modifiedConfig = new JsonObject();
 
 		configEntryButtons = new ArrayList<>();
 
-		List<Map.Entry<IConfigKey, IConfigValue>> list = new ArrayList<>();
-		list.addAll(configContainer.getConfigTree().getTree().entrySet());
+		List<Map.Entry<ConfigKey, ConfigValue>> list = new ArrayList<>();
+		list.addAll(tree.getTree().entrySet());
 
 		if (!list.isEmpty())
 		{
 			list.sort(COMPARATOR);
 			ButtonConfigGroup group = null;
 
-			for (Map.Entry<IConfigKey, IConfigValue> entry : list)
+			for (Map.Entry<ConfigKey, ConfigValue> entry : list)
 			{
-				if (!entry.getKey().getFlag(IConfigKey.HIDDEN))
+				if (!entry.getKey().isHidden())
 				{
 					if (group == null || !group.groupId.equalsIgnoreCase(entry.getKey().getGroup()))
 					{
@@ -303,7 +307,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		configPanel.addFlags(Panel.FLAG_DEFAULTS);
 
-		scroll = new PanelScrollBar(-16, 20, 16, 0, 10, configPanel)
+		scroll = new PanelScrollBar(-16, 20, 16, 0, 0, configPanel)
 		{
 			@Override
 			public boolean shouldRender(GuiBase gui)
@@ -311,6 +315,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				return true;
 			}
 		};
+
+		scroll.slider = new TexturelessRectangle(0x99666666);
+		scroll.background = new TexturelessRectangle(0x99333333);
 
 		buttonAccept = new SimpleButton(0, 2, GuiLang.BUTTON_ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 		{
@@ -391,7 +398,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	{
 		if (shouldClose == 1 && !modifiedConfig.entrySet().isEmpty())
 		{
-			configContainer.saveConfig(ClientUtils.MC.player, extraNBT, modifiedConfig);
+			callback.saveConfig(tree, ClientUtils.MC.player, extraNBT, modifiedConfig);
 		}
 	}
 
@@ -403,7 +410,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public void onChanged(IConfigKey key, JsonElement val)
+	public void onChanged(ConfigKey key, JsonElement val)
 	{
 		modifiedConfig.add(key.getName(), val);
 	}
