@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
-import com.feed_the_beast.ftbl.lib.client.IconAnimation;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.DrawableObjectListButton;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -42,7 +41,7 @@ public class IconAnimationLine extends EmptyGuidePageLine
 			{
 				for (JsonElement e : o.get("objects").getAsJsonArray())
 				{
-					list.list.add(ImageProvider.get(e));
+					list.list.add(Icon.getIcon(e));
 				}
 			}
 		}
@@ -52,7 +51,7 @@ public class IconAnimationLine extends EmptyGuidePageLine
 
 			for (JsonElement e : json.getAsJsonArray())
 			{
-				list.list.add(ImageProvider.get(e));
+				list.list.add(Icon.getIcon(e));
 			}
 		}
 	}
@@ -65,7 +64,7 @@ public class IconAnimationLine extends EmptyGuidePageLine
 		o.addProperty("columns", cols);
 		JsonArray a = new JsonArray();
 
-		for (IDrawableObject item : list.list)
+		for (Icon item : list.list)
 		{
 			a.add(item.getJson());
 		}

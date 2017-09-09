@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,7 +19,7 @@ public class TextBox extends Widget
 	private boolean isFocused = false;
 	public int charLimit = 250;
 	public Color4I textColor = Color4I.NONE;
-	public IDrawableObject background = ImageProvider.NULL;
+	public Icon background = Icon.EMPTY;
 
 	public String ghostText = "";
 	private String text = "";
@@ -274,7 +273,7 @@ public class TextBox extends Widget
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	public boolean mousePressed(GuiBase gui, MouseButton button)
 	{
 		if (gui.isMouseOver(this))
 		{

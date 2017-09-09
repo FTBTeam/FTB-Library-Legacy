@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.api.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.util.text.ITextComponent;
@@ -14,10 +13,10 @@ import net.minecraft.util.text.event.ClickEvent;
 public class SpecialGuideButton
 {
 	public final ITextComponent title;
-	public final IDrawableObject icon;
+	public final Icon icon;
 	public final ClickEvent clickEvent;
 
-	public SpecialGuideButton(ITextComponent t, IDrawableObject icn, ClickEvent c)
+	public SpecialGuideButton(ITextComponent t, Icon icn, ClickEvent c)
 	{
 		title = t;
 		icon = icn;
@@ -27,7 +26,7 @@ public class SpecialGuideButton
 	public SpecialGuideButton(JsonObject o)
 	{
 		title = o.has("title") ? JsonUtils.deserializeTextComponent(o.get("title")) : new TextComponentString("");
-		icon = o.has("icon") ? ImageProvider.get(o.get("icon")) : ImageProvider.NULL;
+		icon = o.has("icon") ? Icon.getIcon(o.get("icon")) : Icon.EMPTY;
 		clickEvent = o.has("click") ? JsonUtils.deserializeClickEvent(o.get("click")) : null;
 	}
 

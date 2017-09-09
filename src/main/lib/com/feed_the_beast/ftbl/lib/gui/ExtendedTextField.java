@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.ITextComponent;
 
@@ -52,7 +52,7 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, IMouseButton button)
+	public void onClicked(GuiBase gui, MouseButton button)
 	{
 		GuiHelper.PositionedTextData data = getDataAtMouse(gui);
 

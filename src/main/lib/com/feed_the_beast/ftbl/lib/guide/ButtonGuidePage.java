@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -27,12 +27,12 @@ public class ButtonGuidePage extends Button
 		super(0, 0, 0, 0);
 		page = p;
 		isSmall = small;
-		setHeight((p.getIcon().isNull() || isSmall) ? 13 : 18);
+		setHeight((p.getIcon().isEmpty() || isSmall) ? 13 : 18);
 		updateTitle(g);
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, IMouseButton button)
+	public void onClicked(GuiBase gui, MouseButton button)
 	{
 		GuiHelper.playClickSound();
 		((GuiGuide) gui).setSelectedPage(page);
@@ -54,7 +54,7 @@ public class ButtonGuidePage extends Button
 
 		setTitle(titleC.getFormattedText());
 		hover = null;
-		setWidth(gui.getFont().getStringWidth(getTitle(gui)) + (page.getIcon().isNull() ? 0 : height));
+		setWidth(gui.getFont().getStringWidth(getTitle(gui)) + (page.getIcon().isEmpty() ? 0 : height));
 
 		if (width > getParentPanel().width)
 		{
@@ -92,7 +92,7 @@ public class ButtonGuidePage extends Button
 		int ay = getAY();
 		int ax = getAX();
 
-		if (!page.getIcon().isNull())
+		if (!page.getIcon().isEmpty())
 		{
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			page.getIcon().draw(ax + 1, ay + 1, isSmall ? 8 : 16, isSmall ? 8 : 16, Color4I.NONE);

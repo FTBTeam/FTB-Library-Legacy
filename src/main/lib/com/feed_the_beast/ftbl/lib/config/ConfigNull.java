@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import io.netty.buffer.ByteBuf;
@@ -77,7 +77,7 @@ public class ConfigNull extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
 	{
 	}
 

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.util.IStringSerializable;
 
 /**
@@ -14,7 +14,7 @@ public enum EnumIO implements IStringSerializable
 	OUT("out"),
 	NONE("none");
 
-	public static final EnumIO[] VALUES = values();
+	public static final NameMap<EnumIO> NAME_MAP = NameMap.create(IO, values());
 	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftbl.io");
 
 	private final String name;
@@ -37,7 +37,7 @@ public enum EnumIO implements IStringSerializable
 		return langKey;
 	}
 
-	public IDrawableObject getIcon()
+	public Icon getIcon()
 	{
 		switch (this)
 		{

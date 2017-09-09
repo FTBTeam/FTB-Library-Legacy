@@ -1,90 +1,86 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 
 public class GuiIcons
 {
-	//@formatter:off
-    public static final IDrawableObject
-	BLUE_BUTTON = get("blue_button"),
-    UP = get("up"),
-    DOWN = get("down"),
-    LEFT = get("left"),
-    RIGHT = get("right"),
-    ACCEPT = get("accept"),
-    ADD = get("add"),
-    REMOVE = get("remove"),
-    INFO = get("info"),
-    ACCEPT_GRAY = get("accept_gray"),
-    ADD_GRAY = get("add_gray"),
-    REMOVE_GRAY = get("remove_gray"),
-    INFO_GRAY = get("info_gray"),
-    SETTINGS = get("settings"),
-    SETTINGS_RED = get("settings_red"),
-    CANCEL = get("cancel"),
-    BACK = get("back"),
-    CLOSE = get("close"),
-    REFRESH = get("refresh"),
-    PLAYER = get("player"),
-    PLAYER_GRAY = get("player_gray"),
-    ONLINE = get("online"),
-    SORT_AZ = get("sort_az"),
-    FRIENDS = get("friends"),
-    BUG = get("bug"),
-    JACKET = get("jacket"),
-    BED = get("bed"),
-    BELL = get("bell"),
-    COMPASS = get("compass"),
-    MAP = get("map"),
-    SHIELD = get("shield"),
-    ART = get("art"),
-    MONEY_BAG = get("money_bag"),
-    CONTROLLER = get("controller"),
-    FEATHER = get("feather"),
-    CAMERA = get("camera"),
-    INV_IO = get("inv_io"),
-    INV_IN = get("inv_in"),
-    INV_OUT = get("inv_out"),
-    INV_NONE = get("inv_none"),
-    RS_NONE = get("rs_none"),
-    RS_HIGH = get("rs_high"),
-    RS_LOW = get("rs_low"),
-    RS_PULSE = get("rs_pulse"),
-    SECURITY_PUBLIC = get("security_public"),
-    SECURITY_PRIVATE = get("security_private"),
-    SECURITY_TEAM = get("security_team"),
-    COLOR_BLANK = get("color_blank"),
-    COLOR_HSB = get("color_hsb"),
-    COLOR_RGB = get("color_rgb"),
-    ONLINE_RED = get("online_red"),
-    NOTES = get("notes"),
-    CHAT = get("chat"),
-    BIN = get("bin"),
-    MARKER = get("marker"),
-    BEACON = get("beacon"),
-    DICE = get("dice"),
-    DIAMOND = get("diamond"),
-    TIME = get("time"),
-    GLOBE = get("globe"),
-    MONEY = get("money"),
-    CHECK = get("check"),
-    STAR = get("star"),
-    HEART = get("heart"),
-	BOOK = ImageProvider.get("minecraft:items/book_normal"),
-	BOOK_RED = ImageProvider.get("minecraft:items/book_enchanted"),
-	BARRIER = ImageProvider.get("minecraft:items/barrier"),
-    TOGGLE_GAMEMODE = get("toggle_gamemode"),
-    TOGGLE_RAIN = get("toggle_rain"),
-    TOGGLE_DAY = get("toggle_day"),
-			TOGGLE_NIGHT = get("toggle_night"),
-			LOCK = get("lock"),
-			LOCK_OPEN = get("lock_open");
-    //@formatter:on
+	public static final Icon BLUE_BUTTON = get("blue_button");
+	public static final Icon UP = get("up");
+	public static final Icon DOWN = get("down");
+	public static final Icon LEFT = get("left");
+	public static final Icon RIGHT = get("right");
+	public static final Icon ACCEPT = get("accept");
+	public static final Icon ADD = get("add");
+	public static final Icon REMOVE = get("remove");
+	public static final Icon INFO = get("info");
+	public static final Icon ACCEPT_GRAY = get("accept_gray");
+	public static final Icon ADD_GRAY = get("add_gray");
+	public static final Icon REMOVE_GRAY = get("remove_gray");
+	public static final Icon INFO_GRAY = get("info_gray");
+	public static final Icon SETTINGS = get("settings");
+	public static final Icon SETTINGS_RED = get("settings_red");
+	public static final Icon CANCEL = get("cancel");
+	public static final Icon BACK = get("back");
+	public static final Icon CLOSE = get("close");
+	public static final Icon REFRESH = get("refresh");
+	public static final Icon PLAYER = get("player");
+	public static final Icon PLAYER_GRAY = get("player_gray");
+	public static final Icon ONLINE = get("online");
+	public static final Icon SORT_AZ = get("sort_az");
+	public static final Icon FRIENDS = get("friends");
+	public static final Icon BUG = get("bug");
+	public static final Icon JACKET = get("jacket");
+	public static final Icon BED = get("bed");
+	public static final Icon BELL = get("bell");
+	public static final Icon COMPASS = get("compass");
+	public static final Icon MAP = get("map");
+	public static final Icon SHIELD = get("shield");
+	public static final Icon ART = get("art");
+	public static final Icon MONEY_BAG = get("money_bag");
+	public static final Icon CONTROLLER = get("controller");
+	public static final Icon FEATHER = get("feather");
+	public static final Icon CAMERA = get("camera");
+	public static final Icon INV_IO = get("inv_io");
+	public static final Icon INV_IN = get("inv_in");
+	public static final Icon INV_OUT = get("inv_out");
+	public static final Icon INV_NONE = get("inv_none");
+	public static final Icon RS_NONE = get("rs_none");
+	public static final Icon RS_HIGH = get("rs_high");
+	public static final Icon RS_LOW = get("rs_low");
+	public static final Icon RS_PULSE = get("rs_pulse");
+	public static final Icon SECURITY_PUBLIC = get("security_public");
+	public static final Icon SECURITY_PRIVATE = get("security_private");
+	public static final Icon SECURITY_TEAM = get("security_team");
+	public static final Icon COLOR_BLANK = get("color_blank");
+	public static final Icon COLOR_HSB = get("color_hsb");
+	public static final Icon COLOR_RGB = get("color_rgb");
+	public static final Icon ONLINE_RED = get("online_red");
+	public static final Icon NOTES = get("notes");
+	public static final Icon CHAT = get("chat");
+	public static final Icon BIN = get("bin");
+	public static final Icon MARKER = get("marker");
+	public static final Icon BEACON = get("beacon");
+	public static final Icon DICE = get("dice");
+	public static final Icon DIAMOND = get("diamond");
+	public static final Icon TIME = get("time");
+	public static final Icon GLOBE = get("globe");
+	public static final Icon MONEY = get("money");
+	public static final Icon CHECK = get("check");
+	public static final Icon STAR = get("star");
+	public static final Icon HEART = get("heart");
+	public static final Icon BOOK = Icon.getIcon("minecraft:items/book_normal");
+	public static final Icon BOOK_RED = Icon.getIcon("minecraft:items/book_enchanted");
+	public static final Icon BARRIER = Icon.getIcon("minecraft:items/barrier");
+	public static final Icon TOGGLE_GAMEMODE = get("toggle_gamemode");
+	public static final Icon TOGGLE_RAIN = get("toggle_rain");
+	public static final Icon TOGGLE_DAY = get("toggle_day");
+	public static final Icon TOGGLE_NIGHT = get("toggle_night");
+	public static final Icon LOCK = get("lock");
+	public static final Icon LOCK_OPEN = get("lock_open");
 
-	private static IDrawableObject get(String id)
+	private static Icon get(String id)
 	{
-		return ImageProvider.get(FTBLibFinals.MOD_ID + ":icons/" + id);
+		return Icon.getIcon(FTBLibFinals.MOD_ID + ":icons/" + id);
 	}
 }

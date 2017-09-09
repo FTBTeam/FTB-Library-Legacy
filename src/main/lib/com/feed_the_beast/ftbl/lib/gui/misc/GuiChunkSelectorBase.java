@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.CachedVertexData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -62,7 +62,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			GuiHelper.playClickSound();
 			currentSelectionMode = getSelectionMode(button);
@@ -234,7 +234,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		super.drawForeground();
 	}
 
-	public int getSelectionMode(IMouseButton button)
+	public int getSelectionMode(MouseButton button)
 	{
 		return -1;
 	}

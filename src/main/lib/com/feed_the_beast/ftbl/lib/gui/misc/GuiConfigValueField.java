@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
@@ -10,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 
 public class GuiConfigValueField extends GuiBase
 {
@@ -31,7 +30,7 @@ public class GuiConfigValueField extends GuiBase
 		buttonCancel = new Button(2, height - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				callback.onCallback(defValue, false);
@@ -49,7 +48,7 @@ public class GuiConfigValueField extends GuiBase
 		buttonAccept = new Button(width - bsize - 2, height - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 
@@ -109,7 +108,7 @@ public class GuiConfigValueField extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return DEFAULT_BACKGROUND;
 	}

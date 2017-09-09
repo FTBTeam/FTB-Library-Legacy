@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.api.IWithMetadata;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.base.Preconditions;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
@@ -56,7 +54,6 @@ public final class NameMap<E> implements Iterable<E>
 	public final Map<String, E> map;
 	public final List<String> keys;
 	public final List<E> values;
-	public final TIntObjectHashMap<E> metaMap;
 
 	private NameMap(E def, Function<Object, String> o2n, List<E> v)
 	{
@@ -64,16 +61,10 @@ public final class NameMap<E> implements Iterable<E>
 		values = v;
 
 		Map<String, E> map0 = new LinkedHashMap<>(values.size());
-		metaMap = new TIntObjectHashMap<>();
 
 		for (E value : values)
 		{
 			map0.put(getName(value), value);
-
-			if (value instanceof IWithMetadata)
-			{
-				metaMap.put(((IWithMetadata) value).getMetadata(), value);
-			}
 		}
 
 		map = Collections.unmodifiableMap(map0);
@@ -88,7 +79,6 @@ public final class NameMap<E> implements Iterable<E>
 		keys = n.keys;
 		values = n.values;
 		defaultValue = get(getName(def));
-		metaMap = new TIntObjectHashMap<>(n.metaMap);
 	}
 
 	public String getName(Object value)
@@ -149,23 +139,24 @@ public final class NameMap<E> implements Iterable<E>
 		return getIndex(map.get(s));
 	}
 
-	public E getFromMetadata(int meta)
-	{
-		E value = metaMap.get(meta);
-		return value == null ? defaultValue : value;
-	}
-
 	public void writeToNBT(NBTTagCompound nbt, String name, EnumSaveType type, Object value)
 	{
 		if (!type.save)
 		{
+			int index = getIndex(value);
+
+			if (index == 0)
+			{
+				return;
+			}
+
 			if (values.size() >= 128)
 			{
-				nbt.setShort(name, (short) getIndex(value));
+				nbt.setShort(name, (short) index);
 			}
 			else
 			{
-				nbt.setByte(name, (byte) getIndex(value));
+				nbt.setByte(name, (byte) index);
 			}
 		}
 		else

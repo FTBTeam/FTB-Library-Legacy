@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiButton;
@@ -86,9 +85,9 @@ public class GuiClientConfig extends GuiBase
 
 	private abstract class ButtonConfigBase extends Button
 	{
-		public ButtonConfigBase(String title, IDrawableObject icon)
+		public ButtonConfigBase(String title, Icon icon)
 		{
-			super(2, 0, getFont().getStringWidth(title) + (icon.isNull() ? 6 : 24), 20);
+			super(2, 0, getFont().getStringWidth(title) + (icon.isEmpty() ? 6 : 24), 20);
 			setTitle(title);
 			setIcon(icon);
 		}
@@ -105,9 +104,9 @@ public class GuiClientConfig extends GuiBase
 			int ay = getAY();
 
 			DEFAULT_BACKGROUND.draw(ax, ay, width, height, Color4I.NONE);
-			IDrawableObject icon = getIcon(gui);
+			Icon icon = getIcon(gui);
 
-			if (icon.isNull())
+			if (icon.isEmpty())
 			{
 				gui.drawString(getTitle(gui), ax + 2, ay + 6);
 			}
@@ -135,7 +134,7 @@ public class GuiClientConfig extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			GuiHelper.playClickSound();
 			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle(gui)));
@@ -154,10 +153,10 @@ public class GuiClientConfig extends GuiBase
 			buttons.add(new ButtonClientConfig(config));
 		}
 
-		buttons.add(new ButtonConfigBase(StringUtils.translate("sidebar_button"), ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		buttons.add(new ButtonConfigBase(StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				new GuiSidebarButtonConfig().openGui();
@@ -188,7 +187,7 @@ public class GuiClientConfig extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return Button.DEFAULT_BACKGROUND;
 	}

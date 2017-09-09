@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
@@ -93,9 +92,9 @@ public class Widget
 		return "";
 	}
 
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
-		return ImageProvider.NULL;
+		return Icon.EMPTY;
 	}
 
 	public void addMouseOverText(GuiBase gui, List<String> list)
@@ -133,7 +132,7 @@ public class Widget
 		}
 	}
 
-	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	public boolean mousePressed(GuiBase gui, MouseButton button)
 	{
 		return false;
 	}

@@ -1,6 +1,7 @@
-package com.feed_the_beast.ftbl.lib.client;
+package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -10,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class PlayerHeadImage extends ImageProvider
+public class PlayerHeadImage extends ImageIcon
 {
 	private final String username;
 

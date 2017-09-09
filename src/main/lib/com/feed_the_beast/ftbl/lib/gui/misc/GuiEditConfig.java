@@ -1,11 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.MutableColor4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.config.ConfigKey;
 import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
@@ -21,6 +19,7 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -124,7 +123,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			setCollapsed(!collapsed);
 			gui.refreshWidgets();
@@ -208,7 +207,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			if (gui.getMouseY() >= 20 && !key.cantEdit())
 			{

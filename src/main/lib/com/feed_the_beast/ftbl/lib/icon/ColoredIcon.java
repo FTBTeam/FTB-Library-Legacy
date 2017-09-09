@@ -1,6 +1,5 @@
-package com.feed_the_beast.ftbl.lib.client;
+package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.google.gson.JsonObject;
@@ -9,18 +8,18 @@ import net.minecraft.client.renderer.GlStateManager;
 /**
  * @author LatvianModder
  */
-public class ColoredObject implements IDrawableObject
+public class ColoredIcon extends Icon
 {
-	public final IDrawableObject parent;
+	public final Icon parent;
 	public final Color4I color;
 
-	public ColoredObject(IDrawableObject p, Color4I c)
+	public ColoredIcon(Icon p, Color4I c)
 	{
 		parent = p;
 		color = c;
 	}
 
-	public ColoredObject(IDrawableObject p, int c)
+	public ColoredIcon(Icon p, int c)
 	{
 		this(p, Color4I.rgba(c).mutable());
 	}
@@ -30,7 +29,7 @@ public class ColoredObject implements IDrawableObject
 	{
 		Color4I col1 = col.hasColor() ? col : color;
 
-		if (parent.isNull())
+		if (parent.isEmpty())
 		{
 			GuiHelper.drawBlankRect(x, y, w, h, col1);
 		}

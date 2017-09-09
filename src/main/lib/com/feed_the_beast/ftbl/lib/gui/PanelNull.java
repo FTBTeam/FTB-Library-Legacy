@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class PanelNull extends Panel
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	public boolean mousePressed(GuiBase gui, MouseButton button)
 	{
 		return false;
 	}

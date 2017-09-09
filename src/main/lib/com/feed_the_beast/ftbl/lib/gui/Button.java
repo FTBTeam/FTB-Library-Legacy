@@ -1,18 +1,17 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 
 public abstract class Button extends Widget
 {
 	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFFC0C0C0);
-	public static final IDrawableObject DEFAULT_MOUSE_OVER = new TexturelessRectangle(Color4I.WHITE_A[33]);
+	public static final Icon DEFAULT_MOUSE_OVER = new TexturelessRectangle(Color4I.WHITE_A[33]);
 
 	private String title = "";
-	private IDrawableObject icon = ImageProvider.NULL;
+	private Icon icon = Icon.EMPTY;
 
 	public Button(int x, int y, int w, int h)
 	{
@@ -37,20 +36,20 @@ public abstract class Button extends Widget
 		return this;
 	}
 
-	public Button setIcon(IDrawableObject i)
+	public Button setIcon(Icon i)
 	{
 		icon = i;
 		return this;
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return icon;
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	public boolean mousePressed(GuiBase gui, MouseButton button)
 	{
 		if (gui.isMouseOver(this))
 		{
@@ -61,5 +60,5 @@ public abstract class Button extends Widget
 		return false;
 	}
 
-	public abstract void onClicked(GuiBase gui, IMouseButton button);
+	public abstract void onClicked(GuiBase gui, MouseButton button);
 }

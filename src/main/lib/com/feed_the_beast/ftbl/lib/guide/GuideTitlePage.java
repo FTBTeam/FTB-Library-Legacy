@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.lib.guide;
 import com.feed_the_beast.ftbl.api.guide.GuideFormat;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.text.TextComponentString;
@@ -56,11 +56,11 @@ public class GuideTitlePage extends GuidePage
 
 		if (o.has("icon"))
 		{
-			setIcon(ImageProvider.get(o.get("icon")));
+			setIcon(Icon.getIcon(o.get("icon")));
 		}
 		else
 		{
-			setIcon(ImageProvider.get(id + ":textures/icon.png"));
+			setIcon(Icon.getIcon(id + ":textures/icon.png"));
 		}
 		if (o.has("button"))
 		{

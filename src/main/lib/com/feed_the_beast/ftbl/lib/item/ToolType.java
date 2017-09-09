@@ -2,6 +2,9 @@ package com.feed_the_beast.ftbl.lib.item;
 
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * @author LatvianModder
+ */
 public enum ToolType implements IStringSerializable
 {
 	PICK("pick"),
@@ -9,9 +12,6 @@ public enum ToolType implements IStringSerializable
 	AXE("axe"),
 	WRENCH("wrench");
 
-	/**
-	 * @author LatvianModder
-	 */
 	private String name;
 
 	ToolType(String n)

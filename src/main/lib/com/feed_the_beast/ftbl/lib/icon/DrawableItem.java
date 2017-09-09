@@ -1,6 +1,5 @@
-package com.feed_the_beast.ftbl.lib.client;
+package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
@@ -12,7 +11,7 @@ import net.minecraft.item.ItemStack;
 /**
  * @author LatvianModder
  */
-public class DrawableItem implements IDrawableObject
+public class DrawableItem extends Icon
 {
 	private ItemStack stack;
 	private String lazyStackString;

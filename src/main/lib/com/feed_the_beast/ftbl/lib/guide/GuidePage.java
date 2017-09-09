@@ -1,14 +1,13 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLineProvider;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.MapUtils;
 import com.google.gson.JsonArray;
@@ -37,7 +36,7 @@ public class GuidePage extends FinalIDObject
 	public final LinkedHashMap<String, GuidePage> childPages;
 	public GuidePage parent;
 	private ITextComponent title;
-	private IDrawableObject pageIcon;
+	private Icon pageIcon;
 	public final List<SpecialGuideButton> specialButtons;
 
 	public GuidePage(String id)
@@ -45,7 +44,7 @@ public class GuidePage extends FinalIDObject
 		super(id);
 		text = new ArrayList<>();
 		childPages = new LinkedHashMap<>(0);
-		pageIcon = ImageProvider.NULL;
+		pageIcon = Icon.EMPTY;
 		specialButtons = new ArrayList<>();
 	}
 
@@ -84,7 +83,7 @@ public class GuidePage extends FinalIDObject
 		}
 		if (o.has("icon"))
 		{
-			pageIcon = ImageProvider.get(o.get("icon"));
+			pageIcon = Icon.getIcon(o.get("icon"));
 		}
 		if (o.has("buttons"))
 		{
@@ -271,7 +270,7 @@ public class GuidePage extends FinalIDObject
 			childPages.forEach((key, value) -> o1.add(key, value.toJson()));
 			o.add("pages", o1);
 		}
-		if (!pageIcon.isNull())
+		if (!pageIcon.isEmpty())
 		{
 			o.add("icon", pageIcon.getJson());
 		}
@@ -312,13 +311,13 @@ public class GuidePage extends FinalIDObject
 		return this;
 	}
 
-	public GuidePage setIcon(IDrawableObject icon)
+	public GuidePage setIcon(Icon icon)
 	{
 		pageIcon = icon;
 		return this;
 	}
 
-	public IDrawableObject getIcon()
+	public Icon getIcon()
 	{
 		return pageIcon;
 	}

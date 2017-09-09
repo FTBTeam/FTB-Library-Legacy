@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -48,7 +48,7 @@ public class TextField extends Button
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, IMouseButton button)
+	public void onClicked(GuiBase gui, MouseButton button)
 	{
 	}
 

@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -11,6 +9,8 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 
 import java.util.List;
@@ -59,7 +59,7 @@ public class GuiSidebarButtonConfig extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			GuiHelper.playClickSound();
 			sidebarButton.configValue = !sidebarButton.configValue;
@@ -117,9 +117,6 @@ public class GuiSidebarButtonConfig extends GuiBase
 			}
 		};
 
-		scrollBar.background = Button.DEFAULT_BACKGROUND;
-		scrollBar.slider = new TexturelessRectangle(Color4I.WHITE_A[33]).setLineColor(Button.DEFAULT_BACKGROUND.getLineColor());
-
 		setWidth(220);
 		setHeight(164);
 	}
@@ -140,7 +137,7 @@ public class GuiSidebarButtonConfig extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return Button.DEFAULT_BACKGROUND;
 	}

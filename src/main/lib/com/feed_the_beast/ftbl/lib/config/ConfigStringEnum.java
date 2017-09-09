@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -88,7 +88,7 @@ public class ConfigStringEnum extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
 	{
 		setString(keys.get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
 		gui.onChanged(key, getSerializableElement());

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,7 +215,7 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	public boolean mousePressed(GuiBase gui, MouseButton button)
 	{
 		if (hasFlag(FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
 		{

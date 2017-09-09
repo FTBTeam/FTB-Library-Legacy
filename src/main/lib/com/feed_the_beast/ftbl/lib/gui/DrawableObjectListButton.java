@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.DrawableItem;
-import com.feed_the_beast.ftbl.lib.client.IconAnimation;
+import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 
@@ -64,7 +64,7 @@ public class DrawableObjectListButton extends Button
 			index = ((mx / 16) % cols + (my / 16) * cols);
 		}
 
-		IDrawableObject object = list.getObject(index);
+		Icon object = list.getObject(index);
 
 		if (object instanceof DrawableItem)
 		{
@@ -75,7 +75,7 @@ public class DrawableObjectListButton extends Button
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, IMouseButton button)
+	public void onClicked(GuiBase gui, MouseButton button)
 	{
 		/*
 		if (cols == 0)

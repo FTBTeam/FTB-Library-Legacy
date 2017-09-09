@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IContainerProvider;
 import com.feed_the_beast.ftbl.api.IDataProvider;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -15,7 +16,6 @@ import com.feed_the_beast.ftbl.api.events.registry.RegisterGuideLineProvidersEve
 import com.feed_the_beast.ftbl.api.events.registry.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterRankConfigEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterSyncDataEvent;
-import com.feed_the_beast.ftbl.api.gui.IContainerProvider;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.AsmHelper;

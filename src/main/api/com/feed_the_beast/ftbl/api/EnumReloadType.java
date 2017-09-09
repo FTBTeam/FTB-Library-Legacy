@@ -20,11 +20,6 @@ public enum EnumReloadType
 	 */
 	RELOAD_COMMAND(true);
 
-	/**
-	 * @author LatvianModder
-	 */
-	public static final EnumReloadType[] VALUES = values();
-
 	private final boolean command;
 
 	EnumReloadType(boolean b)

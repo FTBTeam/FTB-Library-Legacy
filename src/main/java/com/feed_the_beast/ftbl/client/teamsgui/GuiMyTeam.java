@@ -2,14 +2,10 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
 import com.feed_the_beast.ftbl.lib.gui.CheckBoxList;
@@ -24,6 +20,9 @@ import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -64,7 +63,7 @@ public class GuiMyTeam extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			selectedPlayer = playerInst;
 			buttonTeamTitle.setTitle(selectedPlayer.playerName);
@@ -237,7 +236,7 @@ public class GuiMyTeam extends GuiBase
 							add(new CentredTextButton(4, 0, 40, 16, "Kick")
 							{
 								@Override
-								public void onClicked(GuiBase gui, IMouseButton button)
+								public void onClicked(GuiBase gui, MouseButton button)
 								{
 									GuiHelper.playClickSound();
 									ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
@@ -281,7 +280,7 @@ public class GuiMyTeam extends GuiBase
 		buttonTeamsGui = new Button(0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				selectedPlayer = null;
 				buttonTeamTitle.setTitle(teamInfo.displayName);
@@ -301,7 +300,7 @@ public class GuiMyTeam extends GuiBase
 		buttonTeamTitle = new Button(LEFT_PANEL_WIDTH + 1, 1, 0, TOP_PANEL_HEIGHT - 2)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 			}
 
@@ -324,7 +323,7 @@ public class GuiMyTeam extends GuiBase
 		buttonExitTeam = new Button(1, 0, LEFT_PANEL_WIDTH - 1, BOTTOM_PANEL_HEIGHT - 2)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
@@ -350,8 +349,8 @@ public class GuiMyTeam extends GuiBase
 
 		buttonExitTeam.setTitle("Exit Team");
 
-		scrollPlayers = new PanelScrollBar(LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 14, panelPlayers);
-		scrollText = new PanelScrollBar(0, TOP_PANEL_HEIGHT, 3, 0, 14, panelText);
+		scrollPlayers = new PanelScrollBar(LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 0, panelPlayers);
+		scrollText = new PanelScrollBar(0, TOP_PANEL_HEIGHT, 3, 0, 0, panelText);
 
 		scrollText.background = scrollPlayers.background = new TexturelessRectangle(0x78666666);
 		scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(0x50FFFFFF);
@@ -365,7 +364,7 @@ public class GuiMyTeam extends GuiBase
 			b = new Button(0, 2, 16, 16)
 			{
 				@Override
-				public void onClicked(GuiBase gui, IMouseButton button)
+				public void onClicked(GuiBase gui, MouseButton button)
 				{
 					GuiHelper.playClickSound();
 					ClientUtils.execClientCommand("/ftb team gui add_player");
@@ -381,7 +380,7 @@ public class GuiMyTeam extends GuiBase
 			b = new Button(0, 2, 16, 16)
 			{
 				@Override
-				public void onClicked(GuiBase gui, IMouseButton button)
+				public void onClicked(GuiBase gui, MouseButton button)
 				{
 					GuiHelper.playClickSound();
 					ClientUtils.execClientCommand("/ftb team config");
@@ -492,7 +491,7 @@ public class GuiMyTeam extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return DEFAULT_BACKGROUND;
 	}

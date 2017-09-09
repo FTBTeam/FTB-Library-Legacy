@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
@@ -15,13 +14,13 @@ import java.util.List;
  */
 public class CheckBoxList extends Button
 {
-	public static final IDrawableObject DEFAULT_SELECTED_ICON = new TexturelessRectangle(0xFFE0E0E0);
-	public static final IDrawableObject DEFAULT_BACKGROUND = new TexturelessRectangle(0xFF919191);
+	public static final Icon DEFAULT_SELECTED_ICON = new TexturelessRectangle(0xFFE0E0E0);
+	public static final Icon DEFAULT_BACKGROUND = new TexturelessRectangle(0xFF919191);
 
 	public final boolean radioButtons;
 	private final List<CheckBoxEntry> entries;
-	public IDrawableObject background = DEFAULT_BACKGROUND;
-	public IDrawableObject[] icons = {ImageProvider.NULL, DEFAULT_SELECTED_ICON};
+	public Icon background = DEFAULT_BACKGROUND;
+	public Icon[] icons = {Icon.EMPTY, DEFAULT_SELECTED_ICON};
 
 	public static class CheckBoxEntry
 	{
@@ -34,7 +33,7 @@ public class CheckBoxList extends Button
 			name = n;
 		}
 
-		public void onClicked(GuiBase gui, IMouseButton button, int index)
+		public void onClicked(GuiBase gui, MouseButton button, int index)
 		{
 			select((value + 1) % checkBoxList.icons.length);
 			GuiHelper.playClickSound();
@@ -106,7 +105,7 @@ public class CheckBoxList extends Button
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, IMouseButton button)
+	public void onClicked(GuiBase gui, MouseButton button)
 	{
 		int y = gui.getMouseY() - getAY();
 

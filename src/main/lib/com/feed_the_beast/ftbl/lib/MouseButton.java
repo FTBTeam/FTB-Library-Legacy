@@ -1,64 +1,58 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
-
 /**
  * @author LatvianModder
  */
-public class MouseButton implements IMouseButton
+public class MouseButton
 {
-	public static final MouseButton LEFT = new MouseButton(0);
-	public static final MouseButton RIGHT = new MouseButton(1);
-	public static final MouseButton MIDDLE = new MouseButton(2);
+	private static final MouseButton[] BUTTONS = new MouseButton[16];
 
-	public final int ID;
+	static
+	{
+		for (int i = 0; i < BUTTONS.length; i++)
+		{
+			BUTTONS[i] = new MouseButton(i);
+		}
+	}
+
+	public static MouseButton get(int i)
+	{
+		return i >= 0 && i < BUTTONS.length ? BUTTONS[i] : BUTTONS[BUTTONS.length - 1];
+	}
+
+	public static final MouseButton LEFT = get(0);
+	public static final MouseButton RIGHT = get(1);
+	public static final MouseButton MIDDLE = get(2);
+
+	public final int id;
 
 	private MouseButton(int b)
 	{
-		ID = b;
-	}
-
-	public static IMouseButton get(int i)
-	{
-		switch (i)
-		{
-			case 0:
-				return LEFT;
-			case 1:
-				return RIGHT;
-			case 2:
-				return MIDDLE;
-			default:
-				return new MouseButton(i);
-		}
+		id = b;
 	}
 
 	public int hashCode()
 	{
-		return ID;
+		return id;
 	}
 
-	@Override
 	public boolean isLeft()
 	{
-		return ID == LEFT.ID;
+		return id == LEFT.id;
 	}
 
-	@Override
 	public boolean isRight()
 	{
-		return ID == RIGHT.ID;
+		return id == RIGHT.id;
 	}
 
-	@Override
 	public boolean isMiddle()
 	{
-		return ID == MIDDLE.ID;
+		return id == MIDDLE.id;
 	}
 
-	@Override
-	public int getButtonId()
+	public int getId()
 	{
-		return ID;
+		return id;
 	}
 }

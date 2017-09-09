@@ -1,6 +1,5 @@
-package com.feed_the_beast.ftbl.lib.client;
+package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.google.gson.JsonElement;
@@ -10,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 /**
  * @author LatvianModder
  */
-public class TexturelessRectangle implements IDrawableObject
+public class TexturelessRectangle extends Icon
 {
 	public static final TexturelessRectangle BUTTON_GRAY = new TexturelessRectangle(0xFF212121).setLineColor(0xFF141414);
 	public static final TexturelessRectangle BUTTON_RED = new TexturelessRectangle(0xFF1581B6).setLineColor(0xFFBF3726);

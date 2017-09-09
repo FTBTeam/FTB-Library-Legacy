@@ -7,13 +7,14 @@ import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.AtlasSpriteProvider;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
+import com.feed_the_beast.ftbl.lib.icon.AtlasSpriteProvider;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.IconPresets;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -202,7 +203,7 @@ public class FTBLibClientEventHandler
 
 			if (!ores.isEmpty())
 			{
-				event.getToolTip().add(StringUtils.translate("clint_config.ftbl.item_ore_names.item_tooltip"));
+				event.getToolTip().add(StringUtils.translate("ftbl_client.config.general.item_ore_names.item_tooltip"));
 
 				for (String or : ores)
 				{
@@ -295,7 +296,7 @@ public class FTBLibClientEventHandler
 	public static void onGuideEvent(ClientGuideEvent event)
 	{
 		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
-		page.setIcon(ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
+		page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
 		page.setTitle(new TextComponentTranslation("sidebar_button.config"));
 
 		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
@@ -328,7 +329,7 @@ public class FTBLibClientEventHandler
 				{
 					AtlasSpriteProvider a = (AtlasSpriteProvider) o;
 					event.getMap().registerSprite(a.name);
-					ImageProvider.PRESETS.put(a.name.toString(), a);
+					IconPresets.MAP.put(a.name.toString(), a);
 				}
 			}
 		}

@@ -1,6 +1,5 @@
-package com.feed_the_beast.ftbl.lib.client;
+package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -13,22 +12,22 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CombinedIcon implements IDrawableObject
+public class CombinedIcon extends Icon
 {
-	public final List<IDrawableObject> list;
+	public final List<Icon> list;
 
-	public CombinedIcon(Collection<IDrawableObject> icons)
+	public CombinedIcon(Collection<Icon> icons)
 	{
 		list = new ArrayList<>(icons);
 	}
 
-	public CombinedIcon(IDrawableObject... icons)
+	public CombinedIcon(Icon... icons)
 	{
 		list = new ArrayList<>(icons.length);
 		list.addAll(Arrays.asList(icons));
 	}
 
-	public CombinedIcon(IDrawableObject o1, IDrawableObject o2)
+	public CombinedIcon(Icon o1, Icon o2)
 	{
 		list = new ArrayList<>();
 		list.add(o1);
@@ -38,7 +37,7 @@ public class CombinedIcon implements IDrawableObject
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		for (IDrawableObject icon : list)
+		for (Icon icon : list)
 		{
 			icon.draw(x, y, w, h, col);
 		}
@@ -49,7 +48,7 @@ public class CombinedIcon implements IDrawableObject
 	{
 		JsonArray json = new JsonArray();
 
-		for (IDrawableObject o : list)
+		for (Icon o : list)
 		{
 			json.add(o.getJson());
 		}

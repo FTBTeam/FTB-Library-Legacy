@@ -1,7 +1,7 @@
-package com.feed_the_beast.ftbl.lib.client;
+package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class AtlasSpriteProvider implements IDrawableObject
+public class AtlasSpriteProvider extends Icon
 {
 	@SideOnly(Side.CLIENT)
 	public static final Map<ResourceLocation, TextureAtlasSprite> SPRITE_MAP = new HashMap<>();

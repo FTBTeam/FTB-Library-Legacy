@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -66,7 +66,7 @@ public abstract class ConfigValue implements IStringSerializable, IExtendedIOObj
 		return false;
 	}
 
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
 	{
 		GuiSelectors.selectJson(this, (value, set) ->
 		{

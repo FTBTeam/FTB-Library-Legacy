@@ -1,17 +1,17 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.PlayerHeadImage;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +26,7 @@ public class GuiSelectTeam extends GuiBase
 
 	private static class ButtonCreateTeam extends Button
 	{
-		private final IDrawableObject background;
+		private final Icon background;
 
 		private ButtonCreateTeam()
 		{
@@ -37,7 +37,7 @@ public class GuiSelectTeam extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			new GuiCreateTeam().openGui();
 		}
@@ -55,7 +55,7 @@ public class GuiSelectTeam extends GuiBase
 	private static class ButtonTeam extends Button
 	{
 		private final PublicTeamData team;
-		private final IDrawableObject background;
+		private final Icon background;
 		private static final Color4I INVITED_COLOR = Color4I.rgba(0x6620A32B);
 
 		private ButtonTeam(PublicTeamData t)
@@ -68,7 +68,7 @@ public class GuiSelectTeam extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			if (team.isInvited)
 			{
@@ -152,7 +152,7 @@ public class GuiSelectTeam extends GuiBase
 
 		panelTeams.addFlags(Panel.FLAG_DEFAULTS);
 
-		scrollTeams = new PanelScrollBar(168, 8, 16, 152, 10, panelTeams)
+		scrollTeams = new PanelScrollBar(168, 8, 16, 152, 0, panelTeams)
 		{
 			@Override
 			public boolean shouldRender(GuiBase gui)
@@ -160,8 +160,6 @@ public class GuiSelectTeam extends GuiBase
 				return true;
 			}
 		};
-
-		scrollTeams.background = Button.DEFAULT_BACKGROUND;
 	}
 
 	@Override
@@ -172,7 +170,7 @@ public class GuiSelectTeam extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return DEFAULT_BACKGROUND;
 	}

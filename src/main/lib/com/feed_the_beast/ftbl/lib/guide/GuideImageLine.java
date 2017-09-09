@@ -1,15 +1,14 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -27,7 +26,7 @@ import java.util.List;
  */
 public class GuideImageLine extends EmptyGuidePageLine
 {
-	public IDrawableObject imageProvider = ImageProvider.NULL;
+	public Icon icon = Icon.EMPTY;
 	public int imageWidth, imageHeight;
 	public double imageScale = 1D;
 	public ClickEvent clickEvent;
@@ -39,7 +38,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 
 	public GuideImageLine(JsonElement e)
 	{
-		imageProvider = ImageProvider.NULL;
+		icon = Icon.EMPTY;
 		imageWidth = imageHeight = 0;
 		imageScale = 1D;
 		hover = null;
@@ -51,7 +50,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 			return;
 		}
 
-		imageProvider = ImageProvider.get(o.get("image"));
+		icon = Icon.getIcon(o.get("image"));
 
 		if (o.has("scale"))
 		{
@@ -105,7 +104,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 	public IGuideTextLine copy(GuidePage page)
 	{
 		GuideImageLine line = new GuideImageLine();
-		line.imageProvider = imageProvider;
+		line.icon = icon;
 		line.imageWidth = imageWidth;
 		line.imageHeight = imageHeight;
 		line.imageScale = imageScale;
@@ -119,7 +118,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 	{
 		JsonObject o = new JsonObject();
 		o.addProperty("id", "img");
-		o.add("image", imageProvider.getJson());
+		o.add("image", icon.getJson());
 
 		if (imageScale != 1D)
 		{
@@ -170,7 +169,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 
 		private void checkSize()
 		{
-			imageProvider.bindTexture();
+			icon.bindTexture();
 
 			if (width == 1 || height == 1)
 			{
@@ -190,7 +189,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 		public void renderWidget(GuiBase gui)
 		{
 			checkSize();
-			imageProvider.draw(this, Color4I.NONE);
+			icon.draw(this, Color4I.NONE);
 		}
 
 		@Override
@@ -203,7 +202,7 @@ public class GuideImageLine extends EmptyGuidePageLine
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			if (GuiHelper.onClickEvent(clickEvent))
 			{

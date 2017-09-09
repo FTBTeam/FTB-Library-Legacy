@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.text.TextFormatting;
@@ -37,7 +37,7 @@ public class GuiCreateTeam extends GuiBase
 		buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 
@@ -61,7 +61,7 @@ public class GuiCreateTeam extends GuiBase
 		buttonCancel = new Button(4, height - 20, bwidth, 16)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				gui.closeGui();
@@ -103,7 +103,7 @@ public class GuiCreateTeam extends GuiBase
 			Button b = new Button(4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
 			{
 				@Override
-				public void onClicked(GuiBase gui, IMouseButton button)
+				public void onClicked(GuiBase gui, MouseButton button)
 				{
 					color = col;
 					textBoxId.textColor = color.getColor();
@@ -126,7 +126,7 @@ public class GuiCreateTeam extends GuiBase
 	}
 
 	@Override
-	public IDrawableObject getIcon(GuiBase gui)
+	public Icon getIcon(GuiBase gui)
 	{
 		return DEFAULT_BACKGROUND;
 	}

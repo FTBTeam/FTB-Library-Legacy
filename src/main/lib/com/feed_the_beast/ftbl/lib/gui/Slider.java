@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
@@ -12,13 +12,13 @@ import java.util.List;
 
 public class Slider extends Widget
 {
-	public static final IDrawableObject DEFAULT_SLIDER = new TexturelessRectangle(Color4I.WHITE_A[33]).setLineColor(Button.DEFAULT_BACKGROUND.getLineColor());
-	public static final IDrawableObject DEFAULT_BACKGROUND = Button.DEFAULT_BACKGROUND;
+	public static final Icon DEFAULT_SLIDER = new TexturelessRectangle(Color4I.WHITE_A[33]).setLineColor(Button.DEFAULT_BACKGROUND.getLineColor());
+	public static final Icon DEFAULT_BACKGROUND = Button.DEFAULT_BACKGROUND;
 
 	public int sliderSize;
 	private double value;
 	private int grab = -10000;
-	public IDrawableObject slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
+	public Icon slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
 
 	public Slider(int x, int y, int w, int h, int ss)
 	{
@@ -27,7 +27,7 @@ public class Slider extends Widget
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, IMouseButton button)
+	public boolean mousePressed(GuiBase gui, MouseButton button)
 	{
 		if (gui.isMouseOver(this))
 		{

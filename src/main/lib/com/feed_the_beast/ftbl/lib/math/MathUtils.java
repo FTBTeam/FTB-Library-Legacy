@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.math;
 
+import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.block.BlockLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -47,6 +48,8 @@ public class MathUtils
 
 	public static final int ROTATION_X[] = {90, 270, 0, 0, 0, 0};
 	public static final int ROTATION_Y[] = {0, 0, 180, 0, 90, 270};
+
+	public static final NameMap<EnumFacing> FACING_MAP = NameMap.create(EnumFacing.DOWN, EnumFacing.VALUES);
 
 	@Nullable
 	public static EnumFacing getFacing(int i)

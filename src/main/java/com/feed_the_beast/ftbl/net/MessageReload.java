@@ -67,7 +67,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 	@Override
 	public void onMessage(MessageReload m, EntityPlayer player)
 	{
-		EnumReloadType type = m.typeID >= EnumReloadType.VALUES.length ? EnumReloadType.MODE_CHANGED : EnumReloadType.VALUES[m.typeID];
+		EnumReloadType type = m.typeID >= EnumReloadType.values().length ? EnumReloadType.MODE_CHANGED : EnumReloadType.values()[m.typeID];
 
 		SharedClientData.INSTANCE.universeID = m.universeID;
 

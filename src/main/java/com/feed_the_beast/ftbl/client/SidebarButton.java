@@ -1,12 +1,11 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
@@ -24,7 +23,7 @@ import java.util.Map;
  */
 public class SidebarButton extends FinalIDObject
 {
-	public IDrawableObject icon = ImageProvider.NULL;
+	public Icon icon = Icon.EMPTY;
 	public Boolean defaultConfig = null;
 	public boolean configValue = true;
 	public final Map<String, Boolean> dependencies = new HashMap<>();
@@ -44,10 +43,10 @@ public class SidebarButton extends FinalIDObject
 
 		if (o.has("icon"))
 		{
-			icon = ImageProvider.get(o.get("icon"));
+			icon = Icon.getIcon(o.get("icon"));
 		}
 
-		if (icon.isNull())
+		if (icon.isEmpty())
 		{
 			icon = GuiIcons.ACCEPT_GRAY;
 		}

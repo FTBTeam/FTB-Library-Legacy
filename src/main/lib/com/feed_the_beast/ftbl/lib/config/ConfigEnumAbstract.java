@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.NameMap;
-import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
@@ -106,10 +105,15 @@ public abstract class ConfigEnumAbstract<E> extends ConfigValue
 		throw new IllegalStateException("Can't read Abstract Enum Property!");
 	}
 
-	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, IMouseButton button)
+	public void onClicked(MouseButton button)
 	{
-		setValue(getNameMap().get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), getNameMap().values.size())));
+		setValue(button.isLeft() ? getNameMap().getNext(getValue()) : getNameMap().getPrevious(getValue()));
+	}
+
+	@Override
+	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	{
+		onClicked(button);
 		gui.onChanged(key, getSerializableElement());
 	}
 }

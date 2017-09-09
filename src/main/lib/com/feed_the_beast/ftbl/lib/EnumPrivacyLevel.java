@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.util.IStringSerializable;
 
 /**
@@ -37,7 +37,7 @@ public enum EnumPrivacyLevel implements IStringSerializable
 		return langKey;
 	}
 
-	public IDrawableObject getIcon()
+	public Icon getIcon()
 	{
 		switch (this)
 		{

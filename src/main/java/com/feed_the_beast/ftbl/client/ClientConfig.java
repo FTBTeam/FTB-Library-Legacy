@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.util.text.ITextComponent;
@@ -16,9 +15,9 @@ public class ClientConfig
 {
 	public final String id;
 	public final ITextComponent name;
-	public final IDrawableObject icon;
+	public final Icon icon;
 
-	public ClientConfig(String _id, @Nullable ITextComponent _name, IDrawableObject _icon)
+	public ClientConfig(String _id, @Nullable ITextComponent _name, Icon _icon)
 	{
 		id = _id;
 		name = _name == null ? new TextComponentString(id) : _name;
@@ -27,6 +26,6 @@ public class ClientConfig
 
 	public ClientConfig(JsonObject o)
 	{
-		this(o.get("id").getAsString(), JsonUtils.deserializeTextComponent(o.get("name")), ImageProvider.get(o.get("icon")));
+		this(o.get("id").getAsString(), JsonUtils.deserializeTextComponent(o.get("name")), Icon.getIcon(o.get("icon")));
 	}
 }

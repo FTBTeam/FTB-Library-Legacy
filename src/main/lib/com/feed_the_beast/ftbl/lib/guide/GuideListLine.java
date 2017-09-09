@@ -1,16 +1,16 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.NameMap;
-import com.feed_the_beast.ftbl.lib.client.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,8 +25,8 @@ import java.util.List;
  */
 public class GuideListLine extends EmptyGuidePageLine
 {
-	private static final IDrawableObject CODE_BACKGROUND = new TexturelessRectangle(0x33AAAAAA);
-	private static final IDrawableObject SCROLL_BAR_BACKGROUND = new TexturelessRectangle(0x33333333);
+	private static final Icon CODE_BACKGROUND = new TexturelessRectangle(0x33AAAAAA);
+	private static final Icon SCROLL_BAR_BACKGROUND = new TexturelessRectangle(0x33333333);
 
 	public enum Ordering implements IStringSerializable
 	{

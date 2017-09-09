@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api.events.registry;
 
+import com.feed_the_beast.ftbl.api.IGuiProvider;
 import com.feed_the_beast.ftbl.api.events.FTBLibEvent;
-import com.feed_the_beast.ftbl.api.gui.IGuiProvider;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.BiConsumer;

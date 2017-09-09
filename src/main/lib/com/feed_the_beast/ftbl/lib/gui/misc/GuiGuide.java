@@ -1,14 +1,11 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.api.gui.IDrawableObject;
-import com.feed_the_beast.ftbl.api.gui.IMouseButton;
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.client.ColoredObject;
-import com.feed_the_beast.ftbl.lib.client.ImageProvider;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -19,6 +16,8 @@ import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.guide.ButtonGuidePage;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
+import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -28,37 +27,49 @@ import java.util.List;
 
 public class GuiGuide extends GuiBase
 {
-	private static final IDrawableObject TEXTURE = ImageProvider.get(FTBLibFinals.MOD_ID + ":textures/gui/guide.png");
+	private static final Icon TEXTURE = Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/guide.png");
 
-	private static final IDrawableObject TEX_SLIDER_V = TEXTURE.withUVfromCoords(0, 30, 12, 18, 64, 64);
-	private static final IDrawableObject TEX_SLIDER_H = TEXTURE.withUVfromCoords(30, 0, 18, 12, 64, 64);
-	private static final IDrawableObject TEX_BACK = TEXTURE.withUVfromCoords(13, 30, 14, 11, 64, 64);
-	private static final IDrawableObject TEX_CLOSE = TEXTURE.withUVfromCoords(13, 41, 14, 11, 64, 64);
-	public static final IDrawableObject TEX_BULLET = TEXTURE.withUVfromCoords(0, 49, 6, 6, 64, 64);
+	private static final Icon TEX_SLIDER_V = TEXTURE.withUVfromCoords(0, 30, 12, 18, 64, 64);
+	private static final Icon TEX_SLIDER_H = TEXTURE.withUVfromCoords(30, 0, 18, 12, 64, 64);
+	private static final Icon TEX_BACK = TEXTURE.withUVfromCoords(13, 30, 14, 11, 64, 64);
+	private static final Icon TEX_CLOSE = TEXTURE.withUVfromCoords(13, 41, 14, 11, 64, 64);
+	public static final Icon TEX_BULLET = TEXTURE.withUVfromCoords(0, 49, 6, 6, 64, 64);
 
-	private static final IDrawableObject TEX_BG_MU = TEXTURE.withUVfromCoords(14, 0, 1, 13, 64, 64);
-	private static final IDrawableObject TEX_BG_MD = TEXTURE.withUVfromCoords(14, 16, 1, 13, 64, 64);
-	private static final IDrawableObject TEX_BG_ML = TEXTURE.withUVfromCoords(0, 14, 13, 1, 64, 64);
-	private static final IDrawableObject TEX_BG_MR = TEXTURE.withUVfromCoords(16, 14, 13, 1, 64, 64);
+	private static final Icon TEX_BG_MU = TEXTURE.withUVfromCoords(14, 0, 1, 13, 64, 64);
+	private static final Icon TEX_BG_MD = TEXTURE.withUVfromCoords(14, 16, 1, 13, 64, 64);
+	private static final Icon TEX_BG_ML = TEXTURE.withUVfromCoords(0, 14, 13, 1, 64, 64);
+	private static final Icon TEX_BG_MR = TEXTURE.withUVfromCoords(16, 14, 13, 1, 64, 64);
 
-	private static final IDrawableObject TEX_BG_NN = TEXTURE.withUVfromCoords(0, 0, 13, 13, 64, 64);
-	private static final IDrawableObject TEX_BG_PN = TEXTURE.withUVfromCoords(16, 0, 13, 13, 64, 64);
-	private static final IDrawableObject TEX_BG_NP = TEXTURE.withUVfromCoords(0, 16, 13, 13, 64, 64);
-	private static final IDrawableObject TEX_BG_PP = TEXTURE.withUVfromCoords(16, 16, 13, 13, 64, 64);
+	private static final Icon TEX_BG_NN = TEXTURE.withUVfromCoords(0, 0, 13, 13, 64, 64);
+	private static final Icon TEX_BG_PN = TEXTURE.withUVfromCoords(16, 0, 13, 13, 64, 64);
+	private static final Icon TEX_BG_NP = TEXTURE.withUVfromCoords(0, 16, 13, 13, 64, 64);
+	private static final Icon TEX_BG_PP = TEXTURE.withUVfromCoords(16, 16, 13, 13, 64, 64);
 
-	public static final IDrawableObject FILLING = (x, y, w, h, col) -> GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : FTBLibClientConfig.guide.background.getColor());
-	public static final IDrawableObject BORDERS = (x, y, w, h, col) ->
+	public static final Icon FILLING = new Icon()
 	{
-		Color4I c = col.hasColor() ? col : Color4I.WHITE;
-		TEX_BG_MU.draw(x + 13, y, w - 24, 13, c);
-		TEX_BG_MR.draw(x + w - 13, y + 13, 13, h - 25, c);
-		TEX_BG_MD.draw(x + 13, y + h - 13, w - 24, 13, c);
-		TEX_BG_ML.draw(x, y + 13, 13, h - 25, c);
+		@Override
+		public void draw(int x, int y, int w, int h, Color4I col)
+		{
+			GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : FTBLibClientConfig.guide.background.getColor());
+		}
+	};
 
-		TEX_BG_NN.draw(x, y, 13, 13, c);
-		TEX_BG_NP.draw(x, y + h - 13, 13, 13, c);
-		TEX_BG_PN.draw(x + w - 13, y, 13, 13, c);
-		TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13, c);
+	public static final Icon BORDERS = new Icon()
+	{
+		@Override
+		public void draw(int x, int y, int w, int h, Color4I col)
+		{
+			Color4I c = col.hasColor() ? col : Color4I.WHITE;
+			TEX_BG_MU.draw(x + 13, y, w - 24, 13, c);
+			TEX_BG_MR.draw(x + w - 13, y + 13, 13, h - 25, c);
+			TEX_BG_MD.draw(x + 13, y + h - 13, w - 24, 13, c);
+			TEX_BG_ML.draw(x, y + 13, 13, h - 25, c);
+
+			TEX_BG_NN.draw(x, y, 13, 13, c);
+			TEX_BG_NP.draw(x, y + h - 13, 13, 13, c);
+			TEX_BG_PN.draw(x + w - 13, y, 13, 13, c);
+			TEX_BG_PP.draw(x + w - 13, y + h - 13, 13, 13, c);
+		}
 	};
 
 	private static class ButtonSpecial extends Button
@@ -73,7 +84,7 @@ public class GuiGuide extends GuiBase
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, IMouseButton button)
+		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			if (GuiHelper.onClickEvent(specialInfoButton.clickEvent))
 			{
@@ -105,7 +116,7 @@ public class GuiGuide extends GuiBase
 		buttonBack = new Button(12, 12, 14, 11)
 		{
 			@Override
-			public void onClicked(GuiBase gui, IMouseButton button)
+			public void onClicked(GuiBase gui, MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				sliderPages.setValue(gui, 0D);
@@ -120,7 +131,7 @@ public class GuiGuide extends GuiBase
 			}
 		};
 
-		buttonBack.setIcon(new ColoredObject(TEX_CLOSE, FTBLibClientConfig.guide.text.getColor()));
+		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, FTBLibClientConfig.guide.text.getColor()));
 
 		panelPages = new Panel(0, 0, 0, 0)
 		{
@@ -193,7 +204,7 @@ public class GuiGuide extends GuiBase
 			public void addWidgets()
 			{
 				add(buttonBack);
-				buttonBack.setIcon(new ColoredObject((selectedPage.parent == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
+				buttonBack.setIcon(new ColoredIcon((selectedPage.parent == null) ? TEX_CLOSE : TEX_BACK, getContentColor()));
 
 				specialButtons.clear();
 
@@ -208,11 +219,11 @@ public class GuiGuide extends GuiBase
 
 		sliderPages = new PanelScrollBar(0, 0, 12, 0, 18, panelPages);
 		sliderPages.slider = TEX_SLIDER_V;
-		sliderPages.background = ImageProvider.NULL;
+		sliderPages.background = Icon.EMPTY;
 
 		sliderTextV = new PanelScrollBar(0, 0, 12, 0, 18, panelText);
 		sliderTextV.slider = TEX_SLIDER_V;
-		sliderTextV.background = ImageProvider.NULL;
+		sliderTextV.background = Icon.EMPTY;
 
 		specialButtons = new ArrayList<>();
 	}
