@@ -108,10 +108,10 @@ public class ConfigTristate extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
 		set(EnumTristate.NAME_MAP.getNext(get()));
-		gui.onChanged(key, getSerializableElement());
+		gui.onChanged(info.id, getSerializableElement());
 	}
 
 	@Override

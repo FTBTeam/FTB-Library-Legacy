@@ -111,9 +111,9 @@ public abstract class ConfigEnumAbstract<E> extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
 		onClicked(button);
-		gui.onChanged(key, getSerializableElement());
+		gui.onChanged(info.id, getSerializableElement());
 	}
 }

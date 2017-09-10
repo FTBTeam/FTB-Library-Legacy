@@ -72,12 +72,12 @@ public class ConfigNull extends ConfigValue
 	}
 
 	@Override
-	public void addInfo(ConfigKey key, List<String> list)
+	public void addInfo(ConfigValueInfo info, List<String> list)
 	{
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
 	}
 

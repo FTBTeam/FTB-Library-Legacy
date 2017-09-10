@@ -14,11 +14,11 @@ import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.Notification;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
-import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
+import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -40,7 +40,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.LoaderState;
@@ -172,10 +171,10 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public void editServerConfig(EntityPlayerMP player, ConfigTree tree, ITextComponent title, @Nullable NBTTagCompound data, IConfigCallback callback)
+	public void editServerConfig(EntityPlayerMP player, ConfigGroup group, IConfigCallback callback)
 	{
-		FTBLibModCommon.TEMP_SERVER_CONFIG.put(player.getGameProfile().getId(), new FTBLibModCommon.EditingConfig(tree, callback));
-		new MessageEditConfig(player.getGameProfile().getId(), data, tree, title).sendTo(player);
+		FTBLibModCommon.TEMP_SERVER_CONFIG.put(player.getGameProfile().getId(), new FTBLibModCommon.EditingConfig(group, callback));
+		new MessageEditConfig(group).sendTo(player);
 	}
 
 	@Override
@@ -200,7 +199,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public Map<String, RankConfigKey> getRankConfigRegistry()
+	public Map<String, RankConfigValueInfo> getRankConfigRegistry()
 	{
 		return FTBLibModCommon.RANK_CONFIGS_MIRROR;
 	}

@@ -2,18 +2,15 @@ package com.feed_the_beast.ftbl.cmd;
 
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.lib.cmd.CmdTreeBase;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-import javax.annotation.Nullable;
 import java.io.File;
 
 /**
@@ -24,8 +21,7 @@ public class CmdEditConfig extends CmdTreeBase
 	public static class CmdEditConfigFile extends CmdEditConfigBase implements IConfigCallback
 	{
 		private final File file;
-		private final ITextComponent title;
-		private final ConfigTree tree;
+		private final ConfigGroup group;
 
 		private static String getId(File f)
 		{
@@ -37,20 +33,13 @@ public class CmdEditConfig extends CmdTreeBase
 		{
 			super(getId(f), Level.OP);
 			file = f;
-			title = new TextComponentString(getName());
-			tree = new ConfigTree();
+			group = new ConfigGroup(new TextComponentString(getName()));
 		}
 
 		@Override
-		public ITextComponent getTitle(ICommandSender sender) throws CommandException
+		public ConfigGroup getGroup(ICommandSender sender) throws CommandException
 		{
-			return title;
-		}
-
-		@Override
-		public ConfigTree getTree(ICommandSender sender) throws CommandException
-		{
-			return tree;
+			return group;
 		}
 
 		@Override
@@ -60,9 +49,9 @@ public class CmdEditConfig extends CmdTreeBase
 		}
 
 		@Override
-		public void saveConfig(ConfigTree tree, ICommandSender sender, @Nullable NBTTagCompound nbt, JsonObject json)
+		public void saveConfig(ConfigGroup group, ICommandSender sender, JsonObject json)
 		{
-			tree.fromJson(json);
+			group.fromJson(json);
 			//save file
 		}
 	}

@@ -25,6 +25,7 @@ import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigColor;
 import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnumAbstract;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigInt;
 import com.feed_the_beast.ftbl.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftbl.lib.config.ConfigList;
@@ -32,11 +33,10 @@ import com.feed_the_beast.ftbl.lib.config.ConfigNull;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.config.ConfigStringEnum;
 import com.feed_the_beast.ftbl.lib.config.ConfigTextComponent;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.config.ConfigTristate;
 import com.feed_the_beast.ftbl.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
-import com.feed_the_beast.ftbl.lib.config.RankConfigKey;
+import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftbl.lib.guide.GuideContentsLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideExtendedTextLine;
 import com.feed_the_beast.ftbl.lib.guide.GuideHrLine;
@@ -85,18 +85,18 @@ public class FTBLibModCommon
 	public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
-	private static final Map<String, RankConfigKey> RANK_CONFIGS = new HashMap<>();
-	public static final Map<String, RankConfigKey> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
+	private static final Map<String, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
+	public static final Map<String, RankConfigValueInfo> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
 
 	public static class EditingConfig
 	{
-		public final ConfigTree tree;
+		public final ConfigGroup group;
 		public final IConfigCallback callback;
 
-		public EditingConfig(ConfigTree t, IConfigCallback c)
+		public EditingConfig(ConfigGroup g, IConfigCallback c)
 		{
-			tree = t;
+			group = g;
 			callback = c;
 		}
 	}
@@ -218,9 +218,8 @@ public class FTBLibModCommon
 		new RegisterRankConfigEvent((id, defPlayer, defOP) ->
 		{
 			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfigKey ID found: " + id);
-			RankConfigKey c = new RankConfigKey(id, defPlayer, defOP);
-			c.setNameLangKey(id);
-			RANK_CONFIGS.put(c.getName(), c);
+			RankConfigValueInfo c = new RankConfigValueInfo(id, defPlayer, defOP);
+			RANK_CONFIGS.put(c.id, c);
 			return c;
 		}).post();
 		new ReloadEvent.RegisterIds(RELOAD_IDS::add).post();

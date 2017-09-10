@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbl.lib.config;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
-import com.feed_the_beast.ftbl.lib.io.IExtendedIOObject;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public abstract class ConfigValue implements IStringSerializable, IExtendedIOObject, IJsonSerializable
+public abstract class ConfigValue implements IStringSerializable, IJsonSerializable
 {
 	@Nullable
 	public abstract Object getValue();
@@ -34,11 +34,6 @@ public abstract class ConfigValue implements IStringSerializable, IExtendedIOObj
 		return getInt();
 	}
 
-	public boolean containsInt(int val)
-	{
-		return getInt() == val;
-	}
-
 	public abstract ConfigValue copy();
 
 	public boolean equalsValue(ConfigValue value)
@@ -51,9 +46,9 @@ public abstract class ConfigValue implements IStringSerializable, IExtendedIOObj
 		return Color4I.GRAY;
 	}
 
-	public void addInfo(ConfigKey key, List<String> list)
+	public void addInfo(ConfigValueInfo info, List<String> list)
 	{
-		list.add(TextFormatting.AQUA + "Def: " + key.getDefValue().getString());
+		list.add(TextFormatting.AQUA + "Def: " + info.defaultValue.getString());
 	}
 
 	public List<String> getVariants()
@@ -66,14 +61,14 @@ public abstract class ConfigValue implements IStringSerializable, IExtendedIOObj
 		return false;
 	}
 
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
 		GuiSelectors.selectJson(this, (value, set) ->
 		{
 			if (set)
 			{
 				fromJson(value.getSerializableElement());
-				gui.onChanged(key, getSerializableElement());
+				gui.onChanged(info.id, getSerializableElement());
 			}
 
 			gui.openGui();
@@ -114,4 +109,8 @@ public abstract class ConfigValue implements IStringSerializable, IExtendedIOObj
 	{
 		return getString();
 	}
+
+	public abstract void writeData(ByteBuf data);
+
+	public abstract void readData(ByteBuf data);
 }

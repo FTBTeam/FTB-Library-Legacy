@@ -9,20 +9,22 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ITeamMessage;
+import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerLeftEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamSettingsEvent;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -42,6 +44,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,26 +61,22 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public static class Message implements ITeamMessage
 	{
 		private final UUID sender;
-		private final long time;
 		private final ITextComponent text;
 
-		public Message(UUID s, long t, ITextComponent txt)
+		public Message(UUID s, ITextComponent txt)
 		{
 			sender = s;
-			time = t;
 			text = txt;
 		}
 
 		public Message(ITextComponent txt)
 		{
-			this(ForgePlayerFake.SERVER.getId(), System.currentTimeMillis(), txt);
+			this(ForgePlayerFake.SERVER.getId(), txt);
 		}
 
 		public Message(NBTTagCompound nbt)
 		{
 			sender = nbt.getUniqueId("Sender");
-			time = nbt.getLong("Time");
-
 			String m = nbt.getString("Msg");
 
 			if (m.isEmpty())
@@ -93,7 +92,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		public Message(ByteBuf io)
 		{
 			sender = NetUtils.readUUID(io);
-			time = io.readLong();
 			text = NetUtils.readTextComponent(io);
 		}
 
@@ -101,7 +99,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		{
 			NBTTagCompound nbt = new NBTTagCompound();
 			nbt.setUniqueId("Sender", msg.getSender());
-			nbt.setLong("Time", msg.getTime());
 			nbt.setString("Msg", ITextComponent.Serializer.componentToJson(msg.getMessage()));
 			return nbt;
 		}
@@ -109,26 +106,13 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		public static void write(ByteBuf io, ITeamMessage msg)
 		{
 			NetUtils.writeUUID(io, msg.getSender());
-			io.writeLong(msg.getTime());
 			NetUtils.writeTextComponent(io, msg.getMessage());
-		}
-
-		@Override
-		public int compareTo(ITeamMessage o)
-		{
-			return Long.compare(getTime(), o.getTime());
 		}
 
 		@Override
 		public UUID getSender()
 		{
 			return sender;
-		}
-
-		@Override
-		public long getTime()
-		{
-			return time;
 		}
 
 		@Override
@@ -147,28 +131,37 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	private final ConfigBoolean freeToJoin;
 	private List<ITeamMessage> chatHistory;
 	private Map<UUID, EnumTeamStatus> players;
-	private final ConfigTree cachedConfig;
+	private final ConfigGroup cachedConfig;
 
-	public ForgeTeam(String id)
+	public ForgeTeam(String id, @Nullable IForgePlayer _owner)
 	{
 		super(id);
 		isValid = true;
 		color = new ConfigEnum<>(EnumTeamColor.NAME_MAP);
+		owner = _owner;
 		title = new ConfigString("");
 		desc = new ConfigString("");
 		freeToJoin = new ConfigBoolean(false);
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
 
-		cachedConfig = new ConfigTree();
-		ForgeTeamSettingsEvent event = new ForgeTeamSettingsEvent(this, cachedConfig);
+		cachedConfig = new ConfigGroup(null);
+
+		if (owner != null)
+		{
+			cachedConfig.setTitle(FTBLibLang.TEAM_CONFIG.textComponent(getTitle()));
+		}
+
+		cachedConfig.setSupergroup("team_config");
+		ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 		event.post();
 
 		String group = FTBLibFinals.MOD_ID;
-		event.add(group, "free_to_join", freeToJoin);
+		event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
+		event.getConfig().add(group, "free_to_join", freeToJoin);
 		group = FTBLibFinals.MOD_ID + ".display";
-		event.add(group, "color", color);
-		event.add(group, "title", title);
-		event.add(group, "desc", desc);
+		event.getConfig().add(group, "color", color);
+		event.getConfig().add(group, "title", title);
+		event.getConfig().add(group, "desc", desc);
 	}
 
 	@Override
@@ -236,6 +229,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		color.setValueFromString(nbt.getString("Color"), false);
 		title.setString(nbt.getString("Title"));
 		desc.setString(nbt.getString("Desc"));
+		cachedConfig.setTitle(FTBLibLang.TEAM_CONFIG.textComponent(getTitle()));
 
 		if (nbt.hasKey("Flags"))
 		{
@@ -480,6 +474,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
 			Universe.INSTANCE.teams.remove(getName());
+			FileUtils.delete(new File(CommonUtils.folderWorld, "data/ftb_lib/teams/" + getName() + ".dar"));
 		}
 		else
 		{
@@ -507,7 +502,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public void changeOwner(IForgePlayer newOwner)
 	{
-		if (owner == null)
+		if (owner == null || owner.equalsPlayer(newOwner))
 		{
 			owner = newOwner;
 			newOwner.setTeamID(getName());
@@ -525,7 +520,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	}
 
 	@Override
-	public ConfigTree getSettings()
+	public ConfigGroup getSettings()
 	{
 		return cachedConfig;
 	}

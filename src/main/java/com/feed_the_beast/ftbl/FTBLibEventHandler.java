@@ -138,7 +138,7 @@ public class FTBLibEventHandler
 
 			if (Universe.INSTANCE.getTeam(id) == null)
 			{
-				ForgeTeam team = new ForgeTeam(id);
+				ForgeTeam team = new ForgeTeam(id, p);
 				team.changeOwner(p);
 				Universe.INSTANCE.teams.put(team.getName(), team);
 				new ForgeTeamCreatedEvent(team).post();

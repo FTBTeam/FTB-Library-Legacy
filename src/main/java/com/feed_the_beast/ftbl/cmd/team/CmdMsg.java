@@ -42,6 +42,6 @@ public class CmdMsg extends CmdBase
 			throw new IllegalArgumentException(m);
 		}
 
-		team.printMessage(new ForgeTeam.Message(p.getId(), System.currentTimeMillis(), ForgeHooks.newChatWithLinks(m)));
+		team.printMessage(new ForgeTeam.Message(p.getId(), ForgeHooks.newChatWithLinks(m)));
 	}
 }

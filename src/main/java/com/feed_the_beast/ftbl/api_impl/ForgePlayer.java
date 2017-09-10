@@ -3,14 +3,15 @@ package com.feed_the_beast.ftbl.api_impl;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerSettingsEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
@@ -22,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -43,7 +45,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	private final ConfigBoolean hideTeamNotification;
 	private EntityPlayerMP entityPlayer;
 	private NBTTagCompound playerNBT;
-	private final ConfigTree cachedConfig;
+	private final ConfigGroup cachedConfig;
 	private boolean loggingOut;
 
 	public ForgePlayer(UUID id, String name)
@@ -53,11 +55,13 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
 		hideTeamNotification = new ConfigBoolean();
 
-		cachedConfig = new ConfigTree();
-		ForgePlayerSettingsEvent event = new ForgePlayerSettingsEvent(this, cachedConfig);
+		cachedConfig = new ConfigGroup(FTBLibLang.MY_SERVER_SETTINGS.textComponent());
+		cachedConfig.setSupergroup("player_config");
+		ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 		event.post();
 		String group = FTBLibFinals.MOD_ID;
-		event.add(group, "hide_team_notification", hideTeamNotification);
+		event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
+		event.getConfig().add(group, "hide_team_notification", hideTeamNotification);
 	}
 
 	@Override
@@ -262,7 +266,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	}
 
 	@Override
-	public ConfigTree getSettings()
+	public ConfigGroup getSettings()
 	{
 		return cachedConfig;
 	}

@@ -136,9 +136,9 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public void addInfo(ConfigKey key, List<String> list)
+	public void addInfo(ConfigValueInfo info, List<String> list)
 	{
-		super.addInfo(key, list);
+		super.addInfo(info, list);
 
 		int m = getMin();
 

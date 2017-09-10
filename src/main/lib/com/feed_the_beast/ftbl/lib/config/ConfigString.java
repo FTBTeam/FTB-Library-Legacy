@@ -93,9 +93,9 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
-	public void addInfo(ConfigKey key, List<String> list)
+	public void addInfo(ConfigValueInfo info, List<String> list)
 	{
-		super.addInfo(key, list);
+		super.addInfo(info, list);
 
 		if (charLimit > 0)
 		{

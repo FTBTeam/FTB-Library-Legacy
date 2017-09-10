@@ -119,10 +119,10 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
 		setBoolean(!getBoolean());
-		gui.onChanged(key, getSerializableElement());
+		gui.onChanged(info.id, getSerializableElement());
 	}
 
 	@Override

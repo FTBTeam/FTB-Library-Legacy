@@ -4,12 +4,10 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -40,7 +38,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	private UUID universeId;
 	private NBTTagCompound syncData;
 	private Collection<String> optionalServerMods;
-	private long lastMessageTime;
 
 	public MessageLogin()
 	{
@@ -55,12 +52,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 		FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
 		optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
 		flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
-
-		IForgeTeam team = forgePlayer.getTeam();
-		if (team != null && team.getMessages().size() > 0)
-		{
-			lastMessageTime = team.getMessages().get(team.getMessages().size() - 1).getTime();
-		}
 	}
 
 	@Override
@@ -85,8 +76,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 				ByteBufUtils.writeUTF8String(io, s);
 			}
 		}
-
-		io.writeLong(lastMessageTime);
 	}
 
 	@Override
@@ -106,8 +95,6 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 				optionalServerMods.add(ByteBufUtils.readUTF8String(io));
 			}
 		}
-
-		lastMessageTime = io.readLong();
 	}
 
 	@Override
@@ -134,6 +121,5 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 
 		ClientUtils.CACHED_SKINS.clear();
 		FTBLibAPI.API.reload(Side.CLIENT, player, EnumReloadType.CREATED, ReloadEvent.ALL);
-		MyTeamData.lastMessageTime = m.lastMessageTime;
 	}
 }

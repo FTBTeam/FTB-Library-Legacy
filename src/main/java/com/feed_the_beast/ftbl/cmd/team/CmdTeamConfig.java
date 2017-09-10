@@ -4,12 +4,11 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
@@ -40,13 +39,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
 	}
 
 	@Override
-	public ITextComponent getTitle(ICommandSender sender) throws CommandException
-	{
-		return FTBLibLang.TEAM_CONFIG.textComponent(getTeam(sender).getName());
-	}
-
-	@Override
-	public ConfigTree getTree(ICommandSender sender) throws CommandException
+	public ConfigGroup getGroup(ICommandSender sender) throws CommandException
 	{
 		return getTeam(sender).getSettings();
 	}

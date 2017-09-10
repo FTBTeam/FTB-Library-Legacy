@@ -20,12 +20,13 @@ import java.util.List;
  */
 public class GuiSidebarButtonConfig extends GuiBase
 {
+	private static final TexturelessRectangle BACKGROUND_ENABLED = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF47BF41);
+	private static final TexturelessRectangle BACKGROUND_DISABLED = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFFBC4242);
+
 	private class ButtonConfigSidebarButton extends Button
 	{
 		private final SidebarButton sidebarButton;
-
-		private final TexturelessRectangle BACKGROUND_ENABLED = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF47BF41);
-		private final TexturelessRectangle BACKGROUND_DISABLED = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFFBC4242);
+		private String tooltip = "";
 
 		public ButtonConfigSidebarButton(SidebarButton s)
 		{
@@ -34,11 +35,20 @@ public class GuiSidebarButtonConfig extends GuiBase
 			String title = StringUtils.translate("sidebar_button." + s.getName());
 			setWidth(getFont().getStringWidth(title) + 28);
 			setTitle(title);
+
+			if (StringUtils.canTranslate("sidebar_button." + s.getName() + ".tooltip"))
+			{
+				tooltip = StringUtils.translate("sidebar_button." + s.getName() + ".tooltip");
+			}
 		}
 
 		@Override
 		public void addMouseOverText(GuiBase gui, List<String> list)
 		{
+			if (!tooltip.isEmpty())
+			{
+				list.add(tooltip);
+			}
 		}
 
 		@Override

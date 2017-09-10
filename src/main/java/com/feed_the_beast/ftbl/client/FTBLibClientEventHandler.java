@@ -297,16 +297,16 @@ public class FTBLibClientEventHandler
 	{
 		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
 		page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(new TextComponentTranslation("sidebar_button.config"));
+		page.setTitle(new TextComponentTranslation("sidebar_button"));
 
 		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
 		{
-			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".info"))
+			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".tooltip"))
 			{
 				GuidePage page1 = page.getSub(button.getName());
 				page1.setIcon(button.icon);
 				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".info"));
+				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".tooltip"));
 			}
 		}
 

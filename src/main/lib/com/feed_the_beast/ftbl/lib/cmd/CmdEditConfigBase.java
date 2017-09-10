@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.cmd;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.config.ConfigKey;
-import com.feed_the_beast.ftbl.lib.config.ConfigTree;
+import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
+import com.feed_the_beast.ftbl.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
@@ -16,13 +16,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -34,9 +32,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 		super(n, l);
 	}
 
-	public abstract ITextComponent getTitle(ICommandSender sender) throws CommandException;
-
-	public abstract ConfigTree getTree(ICommandSender sender) throws CommandException;
+	public abstract ConfigGroup getGroup(ICommandSender sender) throws CommandException;
 
 	public IConfigCallback getCallback(ICommandSender sender) throws CommandException
 	{
@@ -48,20 +44,24 @@ public abstract class CmdEditConfigBase extends CmdBase
 	{
 		try
 		{
-			Map<ConfigKey, ConfigValue> map = getTree(sender).getTree();
+			ConfigGroup group = getGroup(sender);
 
 			if (args.length == 1)
 			{
-				List<ConfigKey> keys = new ArrayList<>();
-				keys.addAll(map.keySet());
-				keys.sort(StringUtils.ID_COMPARATOR);
-				return getListOfStringsMatchingLastWord(args, keys);
+				List<String> keys = getListOfStringsMatchingLastWord(args, group.getMap().keySet());
+
+				if (keys.size() > 1)
+				{
+					keys.sort(StringUtils.ID_COMPARATOR);
+				}
+
+				return keys;
 			}
 			else if (args.length == 2)
 			{
-				ConfigValue entry = map.get(new ConfigKey(args[0]));
+				ConfigValue entry = group.get(args[0]);
 
-				if (entry != null)
+				if (!entry.isNull())
 				{
 					List<String> variants = entry.getVariants();
 
@@ -87,21 +87,19 @@ public abstract class CmdEditConfigBase extends CmdBase
 	{
 		if (args.length == 0 && sender instanceof EntityPlayerMP)
 		{
-			FTBLibAPI.API.editServerConfig(getCommandSenderAsPlayer(sender), getTree(sender), getTitle(sender), null, getCallback(sender));
+			FTBLibAPI.API.editServerConfig(getCommandSenderAsPlayer(sender), getGroup(sender), getCallback(sender));
 			return;
 		}
 
 		checkArgs(args, 1, "[ID] [value]");
 
-		ConfigTree tree = getTree(sender);
-		ConfigKey key = tree.getKey(args[0]);
+		ConfigGroup group = getGroup(sender);
+		ConfigValue entry = group.get(args[0]);
 
-		if (key == null)
+		if (entry.isNull())
 		{
 			throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //LANG
 		}
-
-		ConfigValue entry = tree.get(key);
 
 		if (args.length >= 2)
 		{
@@ -113,8 +111,9 @@ public abstract class CmdEditConfigBase extends CmdBase
 				JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
 				JsonObject json1 = new JsonObject();
 				json1.add(args[0], value);
-				getCallback(sender).saveConfig(tree, sender, null, json1);
-				sender.sendMessage(new TextComponentString("'" + key.getDisplayName() + "' set to " + tree.get(new ConfigKey(args[0])))); //LANG
+				getCallback(sender).saveConfig(group, sender, json1);
+				ConfigValueInstance instance = group.getMap().get(args[0]);
+				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(group.getNameKey(instance.info))).appendText("' set to " + group.get(args[0]))); //LANG
 				return;
 			}
 			catch (Exception ex)

@@ -7,11 +7,9 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public interface ITeamMessage extends Comparable<ITeamMessage>
+public interface ITeamMessage
 {
 	UUID getSender();
-
-	long getTime();
 
 	ITextComponent getMessage();
 }

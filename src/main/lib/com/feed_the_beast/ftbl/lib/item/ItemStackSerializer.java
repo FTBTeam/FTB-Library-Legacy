@@ -38,7 +38,7 @@ public class ItemStackSerializer
 			}
 		}
 
-		String[] s1 = input.split(" ", 4); //TODO: Use split limit
+		String[] s1 = input.split(" ", 4);
 
 		if (s1.length == 0)
 		{

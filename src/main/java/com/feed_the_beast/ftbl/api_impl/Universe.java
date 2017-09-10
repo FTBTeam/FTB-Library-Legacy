@@ -102,7 +102,7 @@ public class Universe implements IUniverse
 				for (int i = 0; i < teamsTag.tagCount(); i++)
 				{
 					NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-					ForgeTeam team = new ForgeTeam(tag2.getString("ID"));
+					ForgeTeam team = new ForgeTeam(tag2.getString("ID"), null);
 					team.deserializeNBT(tag2);
 					teams.put(team.getName(), team);
 				}
@@ -162,7 +162,7 @@ public class Universe implements IUniverse
 							{
 								String s = FileUtils.getRawFileName(f);
 								teamNBT.put(s, nbt);
-								teams.put(s, new ForgeTeam(s));
+								teams.put(s, new ForgeTeam(s, null));
 							}
 						}
 					}

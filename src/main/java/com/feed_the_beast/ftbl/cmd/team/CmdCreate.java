@@ -69,16 +69,11 @@ public class CmdCreate extends CmdBase
 			throw FTBLibLang.RAW.commandError("ID already registred!");
 		}
 
-		ForgeTeam team = new ForgeTeam(args[0]);
+		ForgeTeam team = new ForgeTeam(args[0], p);
 
 		if (args.length > 1)
 		{
-			EnumTeamColor c = EnumTeamColor.NAME_MAP.get(args[1]);
-
-			if (c != null)
-			{
-				team.setColor(c);
-			}
+			team.setColor(EnumTeamColor.NAME_MAP.get(args[1]));
 		}
 
 		Universe.INSTANCE.teams.put(team.getName(), team);

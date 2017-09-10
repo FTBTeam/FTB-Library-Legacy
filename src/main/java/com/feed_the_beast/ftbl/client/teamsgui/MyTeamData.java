@@ -19,7 +19,6 @@ import java.util.List;
 public class MyTeamData extends FinalIDObject
 {
 	public static int unreadMessages = 0;
-	public static long lastMessageTime = 0;
 
 	public String displayName, description;
 	public MyTeamPlayerData owner;

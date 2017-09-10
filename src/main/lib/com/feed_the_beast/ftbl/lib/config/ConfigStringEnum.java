@@ -88,10 +88,10 @@ public class ConfigStringEnum extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigKey key, MouseButton button)
+	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
 		setString(keys.get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
-		gui.onChanged(key, getSerializableElement());
+		gui.onChanged(info.id, getSerializableElement());
 	}
 
 	@Override
