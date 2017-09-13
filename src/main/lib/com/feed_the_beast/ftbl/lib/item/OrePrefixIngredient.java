@@ -48,9 +48,14 @@ public class OrePrefixIngredient extends Ingredient
 		{
 			if (ore.startsWith(prefix))
 			{
-				for (ItemStack stack : OreDictionary.getOres(prefix))
+				for (ItemStack stack : OreDictionary.getOres(ore))
 				{
-					map.put(new ItemEntry(stack), stack);
+					ItemEntry entry = ItemEntry.get(stack);
+
+					if (!entry.isEmpty())
+					{
+						map.put(entry, stack);
+					}
 				}
 			}
 		}

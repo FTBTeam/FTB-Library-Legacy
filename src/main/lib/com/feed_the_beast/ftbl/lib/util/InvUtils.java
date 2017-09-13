@@ -23,6 +23,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -364,5 +365,16 @@ public class InvUtils
 		}
 
 		return -1;
+	}
+
+	@Nullable
+	public static NBTTagCompound getTag(ItemStack stack)
+	{
+		return !stack.hasTagCompound() || stack.getTagCompound().hasNoTags() ? null : stack.getTagCompound();
+	}
+
+	public static boolean stacksAreEqual(ItemStack stackA, ItemStack stackB)
+	{
+		return stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && Objects.equals(getTag(stackA), getTag(stackB));
 	}
 }
