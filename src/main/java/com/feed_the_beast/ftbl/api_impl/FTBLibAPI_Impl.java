@@ -38,7 +38,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -48,7 +47,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -58,12 +56,6 @@ import java.util.Map;
 public class FTBLibAPI_Impl extends FTBLibAPI
 {
 	public static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
-
-	@Override
-	public Collection<ITickable> ticking()
-	{
-		return TickHandler.INSTANCE.TICKABLES;
-	}
 
 	@Override
 	public ISharedServerData getServerData()
@@ -85,9 +77,9 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public void addServerCallback(int timer, Runnable runnable)
+	public boolean hasUniverse()
 	{
-		TickHandler.INSTANCE.addServerCallback(timer, runnable);
+		return Universe.INSTANCE != null;
 	}
 
 	@Override

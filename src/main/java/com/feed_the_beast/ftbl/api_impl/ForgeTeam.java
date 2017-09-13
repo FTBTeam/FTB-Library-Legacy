@@ -495,20 +495,18 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public void changeOwner(IForgePlayer player)
 	{
-		if (owner == null || owner.equalsPlayer(player))
+		if (!hasStatus(player, EnumTeamStatus.MEMBER))
 		{
-			owner = player;
-			player.setTeamID(getName());
+			return;
 		}
-		else
-		{
-			IForgePlayer oldOwner = owner;
 
-			if (!oldOwner.equalsPlayer(player) && hasStatus(player, EnumTeamStatus.MEMBER))
-			{
-				owner = player;
-				new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
-			}
+		IForgePlayer oldOwner = owner;
+		owner = player;
+		player.setTeamID(getName());
+
+		if (!oldOwner.equalsPlayer(owner))
+		{
+			new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
 		}
 	}
 

@@ -25,6 +25,7 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -120,12 +121,12 @@ public class ServerUtils
 
 	public static MinecraftServer getServer()
 	{
-		return FTBLibAPI.API.getUniverse().getServer();
+		return FTBLibAPI.API.hasUniverse() ? FTBLibAPI.API.getUniverse().getServer() : FMLServerHandler.instance().getServer();
 	}
 
 	public static WorldServer getOverworld()
 	{
-		return FTBLibAPI.API.getUniverse().getOverworld();
+		return FTBLibAPI.API.hasUniverse() ? FTBLibAPI.API.getUniverse().getOverworld() : getServer().getWorld(0);
 	}
 
 	public static long getWorldTime()

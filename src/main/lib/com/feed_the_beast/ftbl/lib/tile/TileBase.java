@@ -17,19 +17,15 @@ import net.minecraft.world.IWorldNameable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileBase extends TileEntity implements IWorldNameable
+public abstract class TileBase extends TileEntity implements IWorldNameable
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
 	public boolean destroyedByCreativePlayer = false;
 
-	protected void writeData(NBTTagCompound nbt, EnumSaveType type)
-	{
-	}
+	protected abstract void writeData(NBTTagCompound nbt, EnumSaveType type);
 
-	protected void readData(NBTTagCompound nbt, EnumSaveType type)
-	{
-	}
+	protected abstract void readData(NBTTagCompound nbt, EnumSaveType type);
 
 	@Override
 	public String getName()

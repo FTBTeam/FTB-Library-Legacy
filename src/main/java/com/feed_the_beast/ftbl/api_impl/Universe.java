@@ -21,11 +21,8 @@ import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -46,22 +43,20 @@ public class Universe implements IUniverse
 	public static Universe INSTANCE = null;
 	private static final Map<UUID, ForgePlayerFake> FAKE_PLAYER_MAP = new HashMap<>();
 
-	private final MinecraftServer server;
-	private final WorldServer overworld;
+	private final WorldServer world;
 	public final Map<UUID, ForgePlayer> playerMap = new HashMap<>();
 	public final Map<String, ForgeTeam> teams = new HashMap<>();
 	private NBTDataStorage dataStorage;
 
-	public Universe(MinecraftServer s, WorldServer w)
+	public Universe(WorldServer w)
 	{
-		server = s;
-		overworld = w;
+		world = w;
 	}
 
 	public void load()
 	{
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_UNIVERSE);
-		new ForgeUniverseLoadedEvent(this).post();
+		new ForgeUniverseLoadedEvent(this).post(); //TODO: Move this to end?
 
 		try
 		{
@@ -75,121 +70,78 @@ public class Universe implements IUniverse
 			playerMap.clear();
 			teams.clear();
 
-			File oldFile = new File(CommonUtils.folderWorld, "data/FTBLib.dat");
 
-			if (oldFile.exists())
+			File folder = new File(CommonUtils.folderWorld, "data/ftb_lib/");
+			new ForgeUniverseLoadedBeforePlayersEvent(this).post();
+
+			Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
+			Map<String, NBTTagCompound> teamNBT = new HashMap<>();
+
+			File[] files = new File(folder, "players").listFiles();
+
+			if (files != null && files.length > 0)
 			{
-				NBTTagCompound nbt = NBTUtils.readTag(oldFile);
-				new ForgeUniverseLoadedBeforePlayersEvent(this).post();
-
-				NBTTagList list = nbt.getTagList("Players", Constants.NBT.TAG_COMPOUND);
-
-				for (int i = 0; i < list.tagCount(); i++)
+				for (File f : files)
 				{
-					NBTTagCompound tag = list.getCompoundTagAt(i);
-					UUID id = StringUtils.fromString(tag.getString("UUID"));
-
-					if (id != null)
+					if (f.getName().endsWith(".dat"))
 					{
-						ForgePlayer p = new ForgePlayer(id, tag.getString("Name"));
-						p.deserializeNBT(tag);
-						playerMap.put(id, p);
-					}
-				}
+						UUID uuid = StringUtils.fromString(FileUtils.getRawFileName(f));
 
-				NBTTagList teamsTag = nbt.getTagList("Teams", Constants.NBT.TAG_COMPOUND);
-
-				for (int i = 0; i < teamsTag.tagCount(); i++)
-				{
-					NBTTagCompound tag2 = teamsTag.getCompoundTagAt(i);
-					ForgeTeam team = new ForgeTeam(tag2.getString("ID"), null);
-					team.deserializeNBT(tag2);
-					teams.put(team.getName(), team);
-				}
-
-				new ForgeUniversePostLoadedEvent(this).post();
-
-				if (dataStorage != null)
-				{
-					dataStorage.deserializeNBT(nbt.hasKey("ForgeCaps") ? nbt.getCompoundTag("ForgeCaps") : nbt.getCompoundTag("Data"));
-				}
-
-				oldFile.delete();
-			}
-			else
-			{
-				File folder = new File(CommonUtils.folderWorld, "data/ftb_lib/");
-				new ForgeUniverseLoadedBeforePlayersEvent(this).post();
-
-				Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
-				Map<String, NBTTagCompound> teamNBT = new HashMap<>();
-
-				File[] files = new File(folder, "players").listFiles();
-
-				if (files != null && files.length > 0)
-				{
-					for (File f : files)
-					{
-						if (f.getName().endsWith(".dat"))
-						{
-							UUID uuid = StringUtils.fromString(FileUtils.getRawFileName(f));
-
-							if (uuid != null)
-							{
-								NBTTagCompound nbt = NBTUtils.readTag(f);
-
-								if (nbt != null)
-								{
-									playerNBT.put(uuid, nbt);
-									playerMap.put(uuid, new ForgePlayer(uuid, nbt.getString("Name")));
-								}
-							}
-						}
-					}
-				}
-
-				files = new File(folder, "teams").listFiles();
-
-				if (files != null && files.length > 0)
-				{
-					for (File f : files)
-					{
-						if (f.getName().endsWith(".dat"))
+						if (uuid != null)
 						{
 							NBTTagCompound nbt = NBTUtils.readTag(f);
 
 							if (nbt != null)
 							{
-								String s = FileUtils.getRawFileName(f);
-								teamNBT.put(s, nbt);
-								teams.put(s, new ForgeTeam(s, null));
+								playerNBT.put(uuid, nbt);
+								playerMap.put(uuid, new ForgePlayer(uuid, nbt.getString("Name")));
 							}
 						}
 					}
 				}
+			}
 
-				for (IForgePlayer player : playerMap.values())
+			files = new File(folder, "teams").listFiles();
+
+			if (files != null && files.length > 0)
+			{
+				for (File f : files)
 				{
-					player.deserializeNBT(playerNBT.get(player.getId()));
-				}
-
-				playerMap.put(ForgePlayerFake.SERVER.getId(), ForgePlayerFake.SERVER);
-
-				for (IForgeTeam team : teams.values())
-				{
-					team.deserializeNBT(teamNBT.get(team.getName()));
-				}
-
-				new ForgeUniversePostLoadedEvent(this).post();
-
-				if (dataStorage != null)
-				{
-					NBTTagCompound nbt = NBTUtils.readTag(new File(folder, "universe.dat"));
-
-					if (nbt != null)
+					if (f.getName().endsWith(".dat"))
 					{
-						dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
+						NBTTagCompound nbt = NBTUtils.readTag(f);
+
+						if (nbt != null)
+						{
+							String s = FileUtils.getRawFileName(f);
+							teamNBT.put(s, nbt);
+							teams.put(s, new ForgeTeam(s, null));
+						}
 					}
+				}
+			}
+
+			for (IForgePlayer player : playerMap.values())
+			{
+				player.deserializeNBT(playerNBT.get(player.getId()));
+			}
+
+			playerMap.put(ForgePlayerFake.SERVER.getId(), ForgePlayerFake.SERVER);
+
+			for (IForgeTeam team : teams.values())
+			{
+				team.deserializeNBT(teamNBT.get(team.getName()));
+			}
+
+			new ForgeUniversePostLoadedEvent(this).post();
+
+			if (dataStorage != null)
+			{
+				NBTTagCompound nbt = NBTUtils.readTag(new File(folder, "universe.dat"));
+
+				if (nbt != null)
+				{
+					dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
 				}
 			}
 		}
@@ -200,15 +152,9 @@ public class Universe implements IUniverse
 	}
 
 	@Override
-	public MinecraftServer getServer()
-	{
-		return server;
-	}
-
-	@Override
 	public WorldServer getOverworld()
 	{
-		return overworld;
+		return world;
 	}
 
 	@Override

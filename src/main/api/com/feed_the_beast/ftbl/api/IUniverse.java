@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
@@ -13,7 +14,10 @@ import java.util.Collection;
  */
 public interface IUniverse
 {
-	MinecraftServer getServer();
+	default MinecraftServer getServer()
+	{
+		return Preconditions.checkNotNull(getOverworld().getMinecraftServer());
+	}
 
 	WorldServer getOverworld();
 

@@ -11,14 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -27,8 +25,6 @@ import java.util.Map;
 public abstract class FTBLibAPI
 {
 	public static FTBLibAPI API;
-
-	public abstract Collection<ITickable> ticking();
 
 	public abstract ISharedServerData getServerData();
 
@@ -41,7 +37,7 @@ public abstract class FTBLibAPI
 
 	public abstract IUniverse getUniverse();
 
-	public abstract void addServerCallback(int timer, Runnable runnable);
+	public abstract boolean hasUniverse();
 
 	public abstract void loadWorldData(MinecraftServer server);
 

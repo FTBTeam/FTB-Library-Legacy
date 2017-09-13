@@ -9,13 +9,11 @@ import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.api_impl.TickHandler;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -56,10 +54,7 @@ public class FTBLibEventHandler
 		SharedServerData.INSTANCE.reset();
 		CommonUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), server.getFolderName());
 
-		TickHandler.INSTANCE = new TickHandler();
-		ServerUtils.addTickable(server, TickHandler.INSTANCE);
-
-		Universe.INSTANCE = new Universe(server, (WorldServer) event.getWorld());
+		Universe.INSTANCE = new Universe((WorldServer) event.getWorld());
 		Universe.INSTANCE.load();
 		FTBLibAPI.API.loadWorldData(server);
 		FTBLibAPI.API.reload(Side.SERVER, server, EnumReloadType.CREATED, ReloadEvent.ALL);
@@ -77,7 +72,6 @@ public class FTBLibEventHandler
 
 		Universe.INSTANCE.onClosed();
 		Universe.INSTANCE = null;
-		TickHandler.INSTANCE = null;
 	}
 
 	@SubscribeEvent
@@ -131,7 +125,7 @@ public class FTBLibEventHandler
 
 		p.onLoggedIn(ep, firstLogin);
 
-		if (firstLogin && (FTBLibConfig.teams.autocreate_teams || !ServerUtils.getServer().isDedicatedServer()))
+		if (firstLogin && (FTBLibConfig.teams.autocreate_teams || !ep.mcServer.isDedicatedServer()))
 		{
 			String id = p.getName().toLowerCase();
 
@@ -143,8 +137,8 @@ public class FTBLibEventHandler
 			if (Universe.INSTANCE.getTeam(id) == null)
 			{
 				ForgeTeam team = new ForgeTeam(id, p);
-				team.changeOwner(p);
 				Universe.INSTANCE.teams.put(team.getName(), team);
+				team.changeOwner(p);
 				new ForgeTeamCreatedEvent(team).post();
 				new ForgeTeamPlayerJoinedEvent(team, p).post();
 			}

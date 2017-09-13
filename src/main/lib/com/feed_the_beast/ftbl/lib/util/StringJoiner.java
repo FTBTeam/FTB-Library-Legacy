@@ -72,7 +72,7 @@ public abstract class StringJoiner
 
 	protected abstract void append(StringBuilder builder);
 
-	public String join(Object[] objects)
+	public String joinObjects(Object... objects)
 	{
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
@@ -96,6 +96,11 @@ public abstract class StringJoiner
 
 	public String join(Iterable objects)
 	{
+		if (objects instanceof Collection && ((Collection) objects).isEmpty())
+		{
+			return "";
+		}
+
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
 
@@ -114,10 +119,5 @@ public abstract class StringJoiner
 		}
 
 		return builder.toString();
-	}
-
-	public String join(Collection objects)
-	{
-		return objects.isEmpty() ? "" : join((Iterable) objects);
 	}
 }
