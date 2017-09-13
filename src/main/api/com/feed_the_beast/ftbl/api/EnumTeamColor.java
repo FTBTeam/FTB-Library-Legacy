@@ -6,12 +6,13 @@ import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.NameMap;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 /**
  * @author LatvianModder
  */
-public enum EnumTeamColor implements IStringSerializable
+public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomColor
 {
 	BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 0x0094FF),
 	CYAN("cyan", EnumDyeColor.CYAN, TextFormatting.AQUA, 0x00DDFF),
@@ -45,6 +46,18 @@ public enum EnumTeamColor implements IStringSerializable
 	public String getName()
 	{
 		return name;
+	}
+
+	@Override
+	public ITextComponent getCustomDisplayName()
+	{
+		return langKey.textComponent();
+	}
+
+	@Override
+	public Color4I getCustomColor()
+	{
+		return color;
 	}
 
 	public TextFormatting getTextFormatting()

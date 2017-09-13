@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -146,7 +147,7 @@ public abstract class Icon
 	@SideOnly(Side.CLIENT)
 	public ITextureObject bindTexture()
 	{
-		return null;
+		return ClientUtils.bindTexture(ImageIcon.MISSING_IMAGE);
 	}
 
 	@SideOnly(Side.CLIENT)

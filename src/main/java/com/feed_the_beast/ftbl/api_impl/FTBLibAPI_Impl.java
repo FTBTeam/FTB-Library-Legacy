@@ -25,6 +25,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.StringJoiner;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageDisplayGuide;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
@@ -136,6 +137,14 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
 				String cmd = FTBLibClientConfig.general.mirror_commands ? "/reload_client" : "/ftbc reload_client";
 				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG.textComponent(StringUtils.color(new TextComponentString(cmd), TextFormatting.GOLD)));
+
+				if (!failed.isEmpty())
+				{
+					notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(), TextFormatting.RED));
+					String ids = StringJoiner.with(", ").join(failed);
+					notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
+					FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
+				}
 
 				notification.setTimer(140);
 				notification.send(null);

@@ -159,7 +159,7 @@ public final class NameMap<E> implements Iterable<E>
 				nbt.setByte(name, (byte) index);
 			}
 		}
-		else
+		else if (value != defaultValue)
 		{
 			nbt.setString(name, getName(value));
 		}

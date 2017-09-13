@@ -1,13 +1,15 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
  */
-public enum EnumPrivacyLevel implements IStringSerializable
+public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 {
 	PUBLIC("public"),
 	PRIVATE("private"),
@@ -30,6 +32,12 @@ public enum EnumPrivacyLevel implements IStringSerializable
 	public String getName()
 	{
 		return name;
+	}
+
+	@Override
+	public ITextComponent getCustomDisplayName()
+	{
+		return langKey.textComponent();
 	}
 
 	public LangKey getLangKey()

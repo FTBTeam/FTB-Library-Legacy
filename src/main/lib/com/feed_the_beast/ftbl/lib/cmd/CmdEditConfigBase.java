@@ -98,13 +98,13 @@ public abstract class CmdEditConfigBase extends CmdBase
 
 		if (entry.isNull())
 		{
-			throw FTBLibLang.RAW.commandError("Can't find config entry '" + args[0] + "'!"); //LANG
+			throw FTBLibLang.CONFIG_COMMAND_INVALID_KEY.commandError(args[0]);
 		}
 
 		if (args.length >= 2)
 		{
 			String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
-			FTBLibFinals.LOGGER.info("Setting " + args[0] + " to " + json); //LANG
+			FTBLibFinals.LOGGER.info(FTBLibLang.CONFIG_COMMAND_SETTING.translate(args[0], json));
 
 			try
 			{
@@ -113,12 +113,13 @@ public abstract class CmdEditConfigBase extends CmdBase
 				json1.add(args[0], value);
 				getCallback(sender).saveConfig(group, sender, json1);
 				ConfigValueInstance instance = group.getMap().get(args[0]);
-				sender.sendMessage(new TextComponentString("'").appendSibling(new TextComponentTranslation(group.getNameKey(instance.info))).appendText("' set to " + group.get(args[0]))); //LANG
+				FTBLibLang.CONFIG_COMMAND_SET.printChat(sender, new TextComponentTranslation(group.getNameKey(instance.info)), group.get(args[0]));
 				return;
 			}
 			catch (Exception ex)
 			{
-				throw FTBLibLang.RAW.commandError(ex.toString());
+				ex.printStackTrace();
+				throw FTBLibLang.ERROR.commandError(ex.toString());
 			}
 		}
 

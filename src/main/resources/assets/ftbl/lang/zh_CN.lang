@@ -1,19 +1,19 @@
 # GuiLM
 ## Buttons
-gui_lm.button.accept=接受
-gui_lm.button.add=添加
-gui_lm.button.close=关闭
-gui_lm.button.save=保存
-gui_lm.button.info=信息
+gui.accept=接受
+gui.add=添加
+gui.close=关闭
+gui.save=保存
+gui.info=信息
 
 ## Labels
-gui_lm.label.other=其他
-gui_lm.label.server_forced=服务器强制加载：%s
-gui_lm.label.online=在线
-gui_lm.label.offline=离线
-gui_lm.label.whitelist=白名单
-gui_lm.label.blacklist=黑名单
-gui_lm.label.color=颜色
+gui.other=其他
+gui.server_forced=服务器强制加载：%s
+gui.online=在线
+gui.offline=离线
+gui.whitelist=白名单
+gui.blacklist=黑名单
+gui.color=颜色
 
 ## Stats
 ftbl.stat.time_played=游戏时间

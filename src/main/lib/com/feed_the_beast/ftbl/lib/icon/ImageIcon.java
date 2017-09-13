@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib.icon;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -16,6 +17,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ImageIcon extends Icon
 {
+	public static final ResourceLocation MISSING_IMAGE = FTBLibFinals.get("textures/gui/missing_image.png");
+
 	public final ResourceLocation texture;
 	public final double minU, minV, maxU, maxV;
 

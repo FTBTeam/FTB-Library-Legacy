@@ -12,7 +12,7 @@ public enum EnumTristate implements IStringSerializable
 {
 	TRUE("true", Event.Result.ALLOW, ConfigBoolean.COLOR_TRUE, 1),
 	FALSE("false", Event.Result.DENY, ConfigBoolean.COLOR_FALSE, 0),
-	DEFAULT("default", Event.Result.DEFAULT, ConfigEnumAbstract.COLOR, 2);
+	DEFAULT("default", Event.Result.DEFAULT, ConfigEnum.COLOR, 2);
 
 	public static final NameMap<EnumTristate> NAME_MAP = NameMap.create(DEFAULT, values());
 

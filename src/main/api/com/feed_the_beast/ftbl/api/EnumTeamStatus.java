@@ -2,7 +2,9 @@ package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.NameMap;
+import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collection;
@@ -11,7 +13,7 @@ import java.util.LinkedHashSet;
 /**
  * @author LatvianModder
  */
-public enum EnumTeamStatus implements IStringSerializable
+public enum EnumTeamStatus implements IStringSerializable, ICustomName
 {
 	ENEMY(-10, "enemy", TextFormatting.RED, true),
 	NONE(0, "none", TextFormatting.WHITE, true),
@@ -22,9 +24,10 @@ public enum EnumTeamStatus implements IStringSerializable
 	MOD(80, "mod", TextFormatting.DARK_PURPLE, true),
 	OWNER(100, "owner", TextFormatting.GOLD, false);
 
-
 	public static final EnumTeamStatus[] VALUES = values();
 	public static final NameMap<EnumTeamStatus> NAME_MAP = NameMap.create(NONE, VALUES);
+	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS = NameMap.create(ALLY, NONE, ALLY, MEMBER);
+	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS_MOD = NameMap.create(ALLY, NONE, ALLY, MEMBER, MOD);
 	public static final Collection<EnumTeamStatus> VALID_VALUES = new LinkedHashSet<>();
 
 	static
@@ -57,6 +60,12 @@ public enum EnumTeamStatus implements IStringSerializable
 	public String getName()
 	{
 		return name;
+	}
+
+	@Override
+	public ITextComponent getCustomDisplayName()
+	{
+		return StringUtils.color(langKey.textComponent(), color);
 	}
 
 	public int getStatus()

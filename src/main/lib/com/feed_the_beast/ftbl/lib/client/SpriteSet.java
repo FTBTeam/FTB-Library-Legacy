@@ -13,6 +13,22 @@ import java.util.function.Function;
  */
 public class SpriteSet
 {
+	public static final SpriteSet EMPTY = new SpriteSet()
+	{
+		@Override
+		@Nullable
+		public TextureAtlasSprite get(EnumFacing f)
+		{
+			return null;
+		}
+
+		@Override
+		public SpriteSet exclude(EnumFacing... f)
+		{
+			return this;
+		}
+	};
+
 	private final TextureAtlasSprite sprites[];
 
 	private SpriteSet()

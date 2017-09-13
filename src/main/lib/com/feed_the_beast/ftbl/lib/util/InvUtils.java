@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.item.ToolLevel;
 import com.feed_the_beast.ftbl.lib.item.ToolType;
 import net.minecraft.entity.Entity;
@@ -10,9 +11,11 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -290,9 +293,76 @@ public class InvUtils
 		}
 		catch (Exception ex)
 		{
-			FMLLog.warning("[Baubles API] Could not invoke baubles.common.lib.PlayerHandler method getPlayerBaubles");
+			FTBLibFinals.LOGGER.warn("[Baubles API] Could not invoke baubles.common.lib.PlayerHandler method getPlayerBaubles");
 		}
 
 		return ot;
+	}
+
+	public static void writeItemHandler(NBTTagCompound nbt, String key, IItemHandlerModifiable itemHandler)
+	{
+		NBTTagList list = new NBTTagList();
+
+		int slots = itemHandler.getSlots();
+		for (int i = 0; i < slots; i++)
+		{
+			ItemStack stack = itemHandler.getStackInSlot(i);
+
+			if (!stack.isEmpty())
+			{
+				NBTTagCompound nbt1 = stack.serializeNBT();
+				nbt1.setInteger("Slot", i);
+				list.appendTag(nbt1);
+			}
+		}
+
+		if (!list.hasNoTags())
+		{
+			nbt.setTag(key, list);
+		}
+	}
+
+	public static void readItemHandler(NBTTagCompound nbt, String key, IItemHandlerModifiable itemHandler)
+	{
+		NBTTagList list = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
+
+		int slots = itemHandler.getSlots();
+		for (int i = 0; i < slots; i++)
+		{
+			itemHandler.setStackInSlot(i, ItemStack.EMPTY);
+		}
+
+		for (int i = 0; i < list.tagCount(); i++)
+		{
+			NBTTagCompound nbt1 = list.getCompoundTagAt(i);
+			ItemStack stack = new ItemStack(nbt1);
+
+			if (!stack.isEmpty())
+			{
+				itemHandler.setStackInSlot(nbt1.getInteger("Slot"), stack);
+			}
+		}
+	}
+
+	public static int getFirstItemIndex(IItemHandler handler, ItemStack filter)
+	{
+		boolean filterEmpty = filter.isEmpty();
+		int slots = handler.getSlots();
+
+		for (int i = 0; i < slots; i++)
+		{
+			ItemStack stack = handler.getStackInSlot(i);
+			boolean stackEmpty = stack.isEmpty();
+
+			if (filterEmpty == stackEmpty)
+			{
+				if (filterEmpty || filter.getItem() == stack.getItem() && filter.getMetadata() == stack.getMetadata() && ItemStack.areItemStackTagsEqual(filter, stack))
+				{
+					return i;
+				}
+			}
+		}
+
+		return -1;
 	}
 }

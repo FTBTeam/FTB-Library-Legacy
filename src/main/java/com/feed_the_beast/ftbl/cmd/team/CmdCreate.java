@@ -61,12 +61,12 @@ public class CmdCreate extends CmdBase
 
 		if (!isValidTeamID(args[0]))
 		{
-			throw FTBLibLang.RAW.commandError("ID can only contain lowercase a-z, _ and |!");
+			throw FTBLibLang.TEAM_ID_INVALID.commandError();
 		}
 
 		if (Universe.INSTANCE.getTeam(args[0]) != null)
 		{
-			throw FTBLibLang.RAW.commandError("ID already registred!");
+			throw FTBLibLang.TEAM_ID_ALREADY_EXISTS.commandError();
 		}
 
 		ForgeTeam team = new ForgeTeam(args[0], p);

@@ -316,6 +316,11 @@ public class JsonUtils
 				{
 					o.addProperty("monospaced", cs.monospaced);
 				}
+
+				if (cs.background != null)
+				{
+					o.addProperty("background", cs.background.getFriendlyName());
+				}
 			}
 
 			if (s.color != null)
@@ -560,7 +565,7 @@ public class JsonUtils
 				}
 			}
 
-			CustomStyle style = new CustomStyle();
+			Style style = (o.has("monospaced") || o.has("background")) ? new CustomStyle() : new Style();
 
 			if (o.has("bold"))
 			{
@@ -587,19 +592,24 @@ public class JsonUtils
 				style.obfuscated = o.get("obfuscated").getAsBoolean();
 			}
 
-			if (o.has("monospaced"))
-			{
-				style.monospaced = o.get("monospaced").getAsBoolean();
-			}
-
 			if (o.has("color"))
 			{
 				style.color = TextFormatting.getValueByName(o.get("color").getAsString());
 			}
 
-			if (o.has("background"))
+			if (style instanceof CustomStyle)
 			{
-				style.background = TextFormatting.getValueByName(o.get("background").getAsString());
+				CustomStyle cs = (CustomStyle) style;
+
+				if (o.has("monospaced"))
+				{
+					cs.monospaced = o.get("monospaced").getAsBoolean();
+				}
+
+				if (o.has("background"))
+				{
+					cs.background = TextFormatting.getValueByName(o.get("background").getAsString());
+				}
 			}
 
 			if (o.has("insertion"))

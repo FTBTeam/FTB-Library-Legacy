@@ -1,13 +1,15 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
  */
-public enum EnumRedstoneMode implements IStringSerializable
+public enum EnumRedstoneMode implements IStringSerializable, ICustomName
 {
 	DISABLED("disabled"),
 	ACTIVE_HIGH("active_high"),
@@ -38,16 +40,22 @@ public enum EnumRedstoneMode implements IStringSerializable
 		return name;
 	}
 
-	public boolean isActive(boolean rsHigh)
+	@Override
+	public ITextComponent getCustomDisplayName()
+	{
+		return langKey.textComponent();
+	}
+
+	public boolean isActive(boolean prevValue, boolean value)
 	{
 		switch (this)
 		{
 			case DISABLED:
 				return false;
 			case ACTIVE_HIGH:
-				return rsHigh;
+				return value;
 			case ACTIVE_LOW:
-				return !rsHigh;
+				return !value;
 			default:
 				return false;
 		}

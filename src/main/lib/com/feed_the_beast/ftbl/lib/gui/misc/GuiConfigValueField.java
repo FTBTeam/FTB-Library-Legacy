@@ -27,7 +27,7 @@ public class GuiConfigValueField extends GuiBase
 
 		int bsize = width / 2 - 3;
 
-		buttonCancel = new Button(2, height - 28, bsize, 26, GuiLang.BUTTON_CANCEL.translate())
+		buttonCancel = new Button(2, height - 28, bsize, 26, GuiLang.CANCEL.translate())
 		{
 			@Override
 			public void onClicked(GuiBase gui, MouseButton button)
@@ -45,7 +45,7 @@ public class GuiConfigValueField extends GuiBase
 
 		buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
-		buttonAccept = new Button(width - bsize - 2, height - 28, bsize, 26, GuiLang.BUTTON_ACCEPT.translate())
+		buttonAccept = new Button(width - bsize - 2, height - 28, bsize, 26, GuiLang.ACCEPT.translate())
 		{
 			@Override
 			public void onClicked(GuiBase gui, MouseButton button)

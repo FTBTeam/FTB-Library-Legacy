@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.api.ICustomColor;
+import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
@@ -8,9 +10,9 @@ import com.google.gson.JsonElement;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -18,9 +20,8 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public abstract class ConfigValue implements IStringSerializable, IJsonSerializable
+public abstract class ConfigValue implements IStringSerializable, IJsonSerializable, ICustomName, ICustomColor
 {
-	@Nullable
 	public abstract Object getValue();
 
 	public abstract String getString();
@@ -113,4 +114,22 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 	public abstract void writeData(ByteBuf data);
 
 	public abstract void readData(ByteBuf data);
+
+	@Override
+	public boolean hasCustomName()
+	{
+		return getValue() instanceof ICustomName && ((ICustomName) getValue()).hasCustomName();
+	}
+
+	@Override
+	public ITextComponent getCustomDisplayName()
+	{
+		return ((ICustomName) getValue()).getCustomDisplayName();
+	}
+
+	@Override
+	public Color4I getCustomColor()
+	{
+		return getValue() instanceof ICustomColor ? ((ICustomColor) getValue()).getCustomColor() : Color4I.NONE;
+	}
 }

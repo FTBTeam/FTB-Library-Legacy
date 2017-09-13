@@ -127,7 +127,7 @@ public class GuiGuide extends GuiBase
 			@Override
 			public String getTitle(GuiBase gui)
 			{
-				return (selectedPage.parent == null) ? GuiLang.BUTTON_CLOSE.translate() : GuiLang.BUTTON_BACK.translate();
+				return (selectedPage.parent == null) ? GuiLang.CLOSE.translate() : GuiLang.BACK.translate();
 			}
 		};
 

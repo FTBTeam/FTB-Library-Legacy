@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,7 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class URLImageIcon extends ImageIcon
 {
-	public static final ResourceLocation DEFAULT_TEXTURE = FTBLibFinals.get("textures/gui/missing_image.png");
 	public final String url;
 
 	URLImageIcon(String _url, double u0, double v0, double u1, double v1)
@@ -28,7 +25,7 @@ public class URLImageIcon extends ImageIcon
 	@SideOnly(Side.CLIENT)
 	public ITextureObject bindTexture()
 	{
-		ITextureObject obj = ClientUtils.getDownloadImage(texture, url, DEFAULT_TEXTURE, null);
+		ITextureObject obj = ClientUtils.getDownloadImage(texture, url, MISSING_IMAGE, null);
 		GlStateManager.bindTexture(obj.getGlTextureId());
 		return obj;
 	}

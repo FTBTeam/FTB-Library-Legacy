@@ -368,12 +368,12 @@ public class GuiMyTeam extends GuiBase
 				{
 					GuiHelper.playClickSound();
 					ClientUtils.execClientCommand("/ftb team gui add_player");
-					setTitle(GuiLang.BUTTON_REFRESH.translate());
+					setTitle(GuiLang.REFRESH.translate());
 					setIcon(GuiIcons.REFRESH);
 				}
 			};
 
-			b.setTitle(GuiLang.BUTTON_ADD.translate());
+			b.setTitle(GuiLang.ADD.translate());
 			b.setIcon(GuiIcons.ADD);
 			topPanelButtons.add(b);
 

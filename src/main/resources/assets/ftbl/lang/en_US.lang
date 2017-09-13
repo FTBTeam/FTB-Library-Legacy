@@ -1,21 +1,25 @@
 # GuiLM
 ## Buttons
-gui_lm.button.accept=Accept
-gui_lm.button.add=Add
-gui_lm.button.close=Close
-gui_lm.button.save=Save
-gui_lm.button.tooltip=Info
-gui_lm.button.collapse_all=Collapse All
-gui_lm.button.expand_all=Expand All
+gui.accept=Accept
+gui.add=Add
+gui.remove=Remove
+gui.close=Close
+gui.save=Save
+gui.tooltip=Info
+gui.collapse_all=Collapse All
+gui.expand_all=Expand All
+gui.download=Download
+gui.update=Update
 
 ## Labels
-gui_lm.label.other=Other
-gui_lm.label.server_forced=Server Forced: %s
-gui_lm.label.online=Online
-gui_lm.label.offline=Offline
-gui_lm.label.whitelist=Whitelist
-gui_lm.label.blacklist=Blacklist
-gui_lm.label.color=Color
+gui.other=Other
+gui.server_forced=Server Forced: %s
+gui.online=Online
+gui.offline=Offline
+gui.whitelist=Whitelist
+gui.blacklist=Blacklist
+gui.color=Color
+gui.downloading=Downloading...
 
 ## Stats
 ftbl.stat.time_played=Time Played
@@ -53,7 +57,9 @@ ftbl.lang.deprecated=This method is deprecated, please use %s
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
 ftbl.lang.reload_client=FTBLib: Client reloaded in %s
 ftbl.lang.reload_client_config=Server Reloaded. You can run %s to reload client data
+ftbl.lang.reload_failed=These IDs failed to reload:
 
+ftbl.lang.error=Error: %s
 ftbl.lang.owner=Owner: %s
 ftbl.lang.delete_item=Do you want to delete '%s'?
 ftbl.lang.server_forced=Server overrides to '%s'
@@ -61,6 +67,14 @@ ftbl.lang.commands=Commands
 ftbl.lang.my_permissions=My Permissions
 ftbl.lang.all_permissions=All Permissions
 ftbl.lang.difficulty=Difficulty: %s
+
+ftbl.lang.config_command.invalid_key=Can't find config value '%s'!
+ftbl.lang.config_command.setting=Setting %s to %s
+ftbl.lang.config_command.set='%s' set to %s
+
+ftbl.lang.add_fake_player.invalid_uuid=Invalid UUID!
+ftbl.lang.add_fake_player.player_exists=Player already exists!
+ftbl.lang.add_fake_player.added=Fake player %s added!
 
 # Config
 ftbl.config.general=General
@@ -89,10 +103,12 @@ ftbl_client.config.guide.background=Background Color
 ftbl_client.config.guide.text=Text Color
 
 # Player Settings
+player_config=My Server Settings
 player_config.ftbl.hide_team_notification=Hide Team Notification on Login
 player_config.ftbl.hide_new_team_msg_notification=Hide New Team Message Notification
 
 # Team Settings
+team_config=My Team Config
 team_config.ftbl.display=Display
 team_config.ftbl.display.color=Color
 team_config.ftbl.display.title=Title
@@ -103,8 +119,9 @@ team_config.ftbl.free_to_join=Free to Join
 team_config.ftbl.free_to_join.tooltip=Anyone can join without invitation
 
 # Teams
-ftbl.lang.team.config='%s' team config
 ftbl.lang.team.created=Team '%s' created
+ftbl.lang.team.id_already_exists=ID already registered!
+ftbl.lang.team.id_invalid=ID can only contain lowercase a-z, _ and |!
 ftbl.lang.team.deleted=Team '%s' deleted
 ftbl.lang.team.member_left=%s left your team!
 ftbl.lang.team.member_joined=%s joined your team!
@@ -142,8 +159,6 @@ sidebar_button.ftbl.teams_gui=Teams GUI
 sidebar_button.ftbl.teams_gui.tooltip=Opens Teams GUI where you can manage your team, chat with them and edit team settings
 sidebar_button.ftbl.settings=Client Settings
 sidebar_button.ftbl.settings.tooltip=Edit client-side-only settings
-sidebar_button.ftbl.my_server_settings=My Server Settings
-sidebar_button.ftbl.my_server_settings.tooltip=Edit per-server settings for your player
 sidebar_button.ftbl.notifications=Notifications
 
 # Privacy Level

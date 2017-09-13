@@ -176,7 +176,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			gui.drawString(keyText, ax + 4, ay + 4, mouseOver ? Color4I.WHITE : Color4I.GRAY);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			String s = value.getString();
+			String s = value.hasCustomName() ? value.getCustomDisplayName().getFormattedText() : value.getString();
 
 			int slen = gui.getFont().getStringWidth(s);
 
@@ -186,7 +186,14 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				slen = 152;
 			}
 
-			MutableColor4I textCol = value.getColor().mutable();
+			Color4I col = value.getCustomColor();
+
+			if (!col.hasColor())
+			{
+				col = value.getColor();
+			}
+
+			MutableColor4I textCol = col.mutable();
 			textCol.setAlpha(255);
 
 			if (mouseOver)
@@ -322,19 +329,19 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		scroll.slider = new TexturelessRectangle(0x99666666);
 		scroll.background = new TexturelessRectangle(0x99333333);
 
-		buttonAccept = new SimpleButton(0, 2, GuiLang.BUTTON_ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+		buttonAccept = new SimpleButton(0, 2, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 		{
 			shouldClose = 1;
 			gui.closeGui();
 		});
 
-		buttonCancel = new SimpleButton(0, 2, GuiLang.BUTTON_CANCEL, GuiIcons.CANCEL, (gui, button) ->
+		buttonCancel = new SimpleButton(0, 2, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
 		{
 			shouldClose = 2;
 			gui.closeGui();
 		});
 
-		buttonCollapseAll = new SimpleButton(0, 2, GuiLang.BUTTON_COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+		buttonCollapseAll = new SimpleButton(0, 2, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -348,7 +355,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			gui.refreshWidgets();
 		});
 
-		buttonExpandAll = new SimpleButton(0, 2, GuiLang.BUTTON_EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+		buttonExpandAll = new SimpleButton(0, 2, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{

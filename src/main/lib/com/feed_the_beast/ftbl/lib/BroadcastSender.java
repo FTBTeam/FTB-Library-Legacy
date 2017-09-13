@@ -19,7 +19,7 @@ import net.minecraft.world.WorldServer;
 public enum BroadcastSender implements ICommandSender
 {
 	INSTANCE;
-	private static final ITextComponent DISPLAY_NAME = StringUtils.color(new TextComponentString("[Server]"), TextFormatting.LIGHT_PURPLE); //LANG
+	private static final ITextComponent DISPLAY_NAME = StringUtils.color(new TextComponentString("[Server]"), TextFormatting.LIGHT_PURPLE);
 
 	@Override
 	public String getName()
@@ -48,7 +48,8 @@ public enum BroadcastSender implements ICommandSender
 	@Override
 	public BlockPos getPosition()
 	{
-		return getEntityWorld().getSpawnCoordinate();
+		BlockPos pos = getEntityWorld().getSpawnCoordinate();
+		return pos == null ? BlockPos.ORIGIN : pos;
 	}
 
 	@Override

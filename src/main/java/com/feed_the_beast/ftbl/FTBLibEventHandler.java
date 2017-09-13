@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.TickHandler;
 import com.feed_the_beast.ftbl.api_impl.Universe;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -18,6 +19,7 @@ import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -39,6 +41,8 @@ import java.io.File;
 @EventHandler
 public class FTBLibEventHandler
 {
+	public static final ResourceLocation RELOAD_CONFIG = FTBLibFinals.get("config");
+
 	@SubscribeEvent
 	public static void onWorldLoaded(WorldEvent.Load event)
 	{
@@ -127,7 +131,7 @@ public class FTBLibEventHandler
 
 		p.onLoggedIn(ep, firstLogin);
 
-		if (firstLogin && FTBLibConfig.teams.autocreate_teams)
+		if (firstLogin && (FTBLibConfig.teams.autocreate_teams || !ServerUtils.getServer().isDedicatedServer()))
 		{
 			String id = p.getName().toLowerCase();
 
@@ -185,6 +189,24 @@ public class FTBLibEventHandler
 			if (p != null)
 			{
 				p.onDeath(ep, e.getSource());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void registerReloadIds(ReloadEvent.RegisterIds event)
+	{
+		event.register(RELOAD_CONFIG);
+	}
+
+	@SubscribeEvent
+	public static void onReload(ReloadEvent event)
+	{
+		if (event.getSide().isServer())
+		{
+			if (event.reload(RELOAD_CONFIG))
+			{
+				FTBLibConfig.sync();
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.net.MessageCloseGui;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,7 +21,8 @@ public class CmdTeamConfig extends CmdEditConfigBase
 		super("config", Level.ALL);
 	}
 
-	private IForgeTeam getTeam(ICommandSender sender) throws CommandException
+	@Override
+	public ConfigGroup getGroup(ICommandSender sender) throws CommandException
 	{
 		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
 		IForgePlayer p = getForgePlayer(ep);
@@ -28,19 +30,15 @@ public class CmdTeamConfig extends CmdEditConfigBase
 
 		if (team == null)
 		{
+			new MessageCloseGui().sendTo(ep);
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
 		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
 		{
+			new MessageCloseGui().sendTo(ep);
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		return team;
-	}
-
-	@Override
-	public ConfigGroup getGroup(ICommandSender sender) throws CommandException
-	{
-		return getTeam(sender).getSettings();
+		return team.getSettings();
 	}
 }

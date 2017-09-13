@@ -55,7 +55,7 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
-		buttonAccept.setTitle(GuiLang.BUTTON_ACCEPT.translate());
+		buttonAccept.setTitle(GuiLang.ACCEPT.translate());
 		buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
 
 		buttonCancel = new Button(4, height - 20, bwidth, 16)
@@ -74,7 +74,7 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
-		buttonCancel.setTitle(GuiLang.BUTTON_CANCEL.translate());
+		buttonCancel.setTitle(GuiLang.CANCEL.translate());
 		buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
 		textBoxId = new TextBox(4, 4, width - 8, 16)
@@ -98,8 +98,6 @@ public class GuiCreateTeam extends GuiBase
 
 		for (EnumTeamColor col : EnumTeamColor.NAME_MAP)
 		{
-			i++;
-
 			Button b = new Button(4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
 			{
 				@Override
@@ -113,6 +111,7 @@ public class GuiCreateTeam extends GuiBase
 			b.setIcon(new TexturelessRectangle(col.getColor()).setLineColor(DEFAULT_BACKGROUND.getLineColor()).setRoundEdges(true));
 			b.setTitle(col.getTextFormatting() + col.getLangKey().translate());
 			colorButtons.add(b);
+			i++;
 		}
 	}
 

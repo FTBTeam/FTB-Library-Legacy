@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.lib.EnumTeamPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
@@ -48,16 +47,11 @@ public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTag
 
 	Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
 
-	default boolean canInteract(UUID playerId, EnumTeamPrivacyLevel level)
-	{
-		return hasStatus(playerId, level.getRequiredStatus());
-	}
+	boolean addPlayer(IForgePlayer player);
 
-	boolean addPlayer(IForgePlayer p);
+	boolean removePlayer(IForgePlayer player);
 
-	boolean removePlayer(IForgePlayer p);
-
-	void changeOwner(IForgePlayer o);
+	void changeOwner(IForgePlayer player);
 
 	ConfigGroup getSettings();
 

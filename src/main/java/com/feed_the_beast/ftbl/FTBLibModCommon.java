@@ -24,7 +24,7 @@ import com.feed_the_beast.ftbl.lib.config.ConfigBlockState;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigColor;
 import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
-import com.feed_the_beast.ftbl.lib.config.ConfigEnumAbstract;
+import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigInt;
 import com.feed_the_beast.ftbl.lib.config.ConfigItemStack;
@@ -192,7 +192,7 @@ public class FTBLibModCommon
 		configValues.register(ConfigDouble.ID, ConfigDouble::new);
 		configValues.register(ConfigString.ID, ConfigString::new);
 		configValues.register(ConfigColor.ID, ConfigColor::new);
-		configValues.register(ConfigEnumAbstract.ID, ConfigStringEnum::new);
+		configValues.register(ConfigEnum.ID, ConfigStringEnum::new);
 		configValues.register(ConfigBlockState.ID, ConfigBlockState::new);
 		configValues.register(ConfigItemStack.ID, ConfigItemStack::new);
 		configValues.register(ConfigTextComponent.ID, ConfigTextComponent::new);

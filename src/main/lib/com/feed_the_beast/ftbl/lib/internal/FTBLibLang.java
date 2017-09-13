@@ -10,9 +10,8 @@ public class FTBLibLang
 	public static final LangKey RELOAD_SERVER = get("reload_server");
 	public static final LangKey RELOAD_CLIENT = get("reload_client");
 	public static final LangKey RELOAD_CLIENT_CONFIG = get("reload_client_config");
+	public static final LangKey RELOAD_FAILED = get("reload_failed");
 
-	@Deprecated
-	public static final LangKey RAW = LangKey.of("raw");
 	public static final LangKey WIP = LangKey.of("wip");
 	public static final LangKey EXAMPLE = LangKey.of("example");
 	public static final LangKey CLICK_HERE = LangKey.of("click_here");
@@ -22,6 +21,7 @@ public class FTBLibLang
 	public static final LangKey COMMAND_PERMISSION = LangKey.of("commands.generic.permission");
 	public static final LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage");
 	public static final LangKey CLIENT_CONFIG = LangKey.of("client_config");
+	public static final LangKey ERROR = get("error");
 	public static final LangKey OWNER = get("owner");
 	public static final LangKey DELETE_ITEM = get("delete_item");
 	public static final LangKey SERVER_FORCED = get("server_forced");
@@ -29,10 +29,20 @@ public class FTBLibLang
 	public static final LangKey MY_PERMISSIONS = get("my_permissions");
 	public static final LangKey ALL_PERMISSIONS = get("all_permissions");
 	public static final LangKey DIFFICULTY = get("difficulty");
-	public static final LangKey MY_SERVER_SETTINGS = LangKey.of("sidebar_button.ftbl.my_server_settings");
+	public static final LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
+	public static final LangKey MY_TEAM_SETTINGS = LangKey.of("team_config");
 
-	public static final LangKey TEAM_CONFIG = get("team.config");
+	public static final LangKey CONFIG_COMMAND_INVALID_KEY = get("config_command.invalid_key");
+	public static final LangKey CONFIG_COMMAND_SETTING = get("config_command.setting");
+	public static final LangKey CONFIG_COMMAND_SET = get("config_command.set");
+
+	public static final LangKey CONFIG_ADD_FAKE_PLAYER_INVALID_UUID = get("add_fake_player.invalid_uuid");
+	public static final LangKey CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS = get("add_fake_player.player_exists");
+	public static final LangKey CONFIG_ADD_FAKE_PLAYER_ADDED = get("add_fake_player.added");
+
 	public static final LangKey TEAM_CREATED = get("team.created");
+	public static final LangKey TEAM_ID_ALREADY_EXISTS = get("team.id_already_exists");
+	public static final LangKey TEAM_ID_INVALID = get("team.id_invalid");
 	public static final LangKey TEAM_DELETED = get("team.deleted");
 	public static final LangKey TEAM_MEMBER_LEFT = get("team.member_left");
 	public static final LangKey TEAM_MEMBER_JOINED = get("team.member_joined");

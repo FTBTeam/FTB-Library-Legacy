@@ -1,12 +1,15 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -153,7 +156,35 @@ public class GuiClientConfig extends GuiBase
 			buttons.add(new ButtonClientConfig(config));
 		}
 
-		buttons.add(new ButtonConfigBase(StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		buttons.sort((o1, o2) -> o1.getTitle(this).compareToIgnoreCase(o2.getTitle(this)));
+
+		if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
+		{
+			buttons.add(0, new ButtonConfigBase(StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+			{
+				@Override
+				public void onClicked(GuiBase gui, MouseButton button)
+				{
+					GuiHelper.playClickSound();
+					new GuiLoading().openGui();
+					ClientUtils.execClientCommand("/ftb my_settings");
+				}
+			});
+
+
+			buttons.add(1, new ButtonConfigBase(StringUtils.translate("team_config"), GuiIcons.FRIENDS)
+			{
+				@Override
+				public void onClicked(GuiBase gui, MouseButton button)
+				{
+					GuiHelper.playClickSound();
+					new GuiLoading().openGui();
+					ClientUtils.execClientCommand("/ftb team config");
+				}
+			});
+		}
+
+		buttons.add(2, new ButtonConfigBase(StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(GuiBase gui, MouseButton button)
@@ -162,8 +193,6 @@ public class GuiClientConfig extends GuiBase
 				new GuiSidebarButtonConfig().openGui();
 			}
 		});
-
-		buttons.sort((o1, o2) -> o1.getTitle(this).compareToIgnoreCase(o2.getTitle(this)));
 
 		for (Button b : buttons)
 		{

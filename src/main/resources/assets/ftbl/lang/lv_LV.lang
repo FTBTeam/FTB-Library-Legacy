@@ -1,19 +1,15 @@
 # GuiLM
 ## Buttons
-gui_lm.button.accept=Pieņemt
-gui_lm.button.add=Pievienot
-gui_lm.button.close=Aizvērt
-gui_lm.button.save=Saglabāt
-gui_lm.button.info=Informācija
+gui.accept=Pieņemt
+gui.add=Pievienot
+gui.close=Aizvērt
+gui.save=Saglabāt
+gui.info=Informācija
 
 ## Labels
-gui_lm.label.other=Cits
-gui_lm.label.server_forced=Servera Uzspiests: %s
-gui_lm.label.online=Online
-gui_lm.label.offline=Offline
-gui_lm.label.whitelist=Whitelist
-gui_lm.label.blacklist=Blacklist
-gui_lm.label.color=Krāsa
+gui.other=Cits
+gui.server_forced=Servera Uzspiests: %s
+gui.color=Krāsa
 
 ## Stats
 ftbl.stat.time_played=Laiks Nospēlēts

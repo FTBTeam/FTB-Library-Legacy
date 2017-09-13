@@ -144,13 +144,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		freeToJoin = new ConfigBoolean(false);
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
 
-		cachedConfig = new ConfigGroup(null);
-
-		if (owner != null)
-		{
-			cachedConfig.setTitle(FTBLibLang.TEAM_CONFIG.textComponent(getTitle()));
-		}
-
+		cachedConfig = new ConfigGroup(FTBLibLang.MY_TEAM_SETTINGS.textComponent());
 		cachedConfig.setSupergroup("team_config");
 		ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 		event.post();
@@ -229,7 +223,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		color.setValueFromString(nbt.getString("Color"), false);
 		title.setString(nbt.getString("Title"));
 		desc.setString(nbt.getString("Desc"));
-		cachedConfig.setTitle(FTBLibLang.TEAM_CONFIG.textComponent(getTitle()));
 
 		if (nbt.hasKey("Flags"))
 		{
@@ -474,7 +467,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
 			Universe.INSTANCE.teams.remove(getName());
-			FileUtils.delete(new File(CommonUtils.folderWorld, "data/ftb_lib/teams/" + getName() + ".dar"));
+			FileUtils.delete(new File(CommonUtils.folderWorld, "data/ftb_lib/teams/" + getName() + ".dat"));
 		}
 		else
 		{
@@ -500,21 +493,21 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	}
 
 	@Override
-	public void changeOwner(IForgePlayer newOwner)
+	public void changeOwner(IForgePlayer player)
 	{
-		if (owner == null || owner.equalsPlayer(newOwner))
+		if (owner == null || owner.equalsPlayer(player))
 		{
-			owner = newOwner;
-			newOwner.setTeamID(getName());
+			owner = player;
+			player.setTeamID(getName());
 		}
 		else
 		{
 			IForgePlayer oldOwner = owner;
 
-			if (!oldOwner.equalsPlayer(newOwner) && hasStatus(newOwner, EnumTeamStatus.MEMBER))
+			if (!oldOwner.equalsPlayer(player) && hasStatus(player, EnumTeamStatus.MEMBER))
 			{
-				owner = newOwner;
-				new ForgeTeamOwnerChangedEvent(this, oldOwner, newOwner).post();
+				owner = player;
+				new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
 			}
 		}
 	}

@@ -95,6 +95,14 @@ public class TextureSet
 	@SideOnly(Side.CLIENT)
 	public SpriteSet getSpriteSet(Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
-		return new SpriteSet(this, bakedTextureGetter);
+		for (ResourceLocation id : textures)
+		{
+			if (id != null)
+			{
+				return new SpriteSet(this, bakedTextureGetter);
+			}
+		}
+
+		return SpriteSet.EMPTY;
 	}
 }

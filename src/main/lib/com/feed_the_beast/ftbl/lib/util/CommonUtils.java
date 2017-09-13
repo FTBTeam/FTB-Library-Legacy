@@ -1,12 +1,16 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.google.common.base.Optional;
+import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -34,6 +39,7 @@ public class CommonUtils
 	public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
 	public static final Object[] NO_OBJECTS = { };
+	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
 
 	public static final long TICKS_SECOND = 20L;
 	public static final long TICKS_MINUTE = TICKS_SECOND * 60L;
@@ -170,5 +176,28 @@ public class CommonUtils
 	public static IBlockState getStateFromName(String name)
 	{
 		return getStateFromName(name, Blocks.AIR.getDefaultState());
+	}
+
+	public static boolean isOneOf(Object original, Object... objects)
+	{
+		for (Object o : objects)
+		{
+			if (Objects.equals(original, o))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static Ingredient getIngredient(@Nullable JsonElement element)
+	{
+		if (element == null || element.isJsonNull() || element.isJsonArray() && element.getAsJsonArray().size() == 0)
+		{
+			return Ingredient.EMPTY;
+		}
+
+		return CraftingHelper.getIngredient(element, MINECRAFT_JSON_CONTEXT);
 	}
 }
