@@ -2,14 +2,21 @@
 ## Buttons
 gui.accept=Accept
 gui.add=Add
+gui.added=Added
 gui.remove=Remove
+gui.removed=Removed
 gui.close=Close
 gui.save=Save
+gui.saved=Saved
+gui.load=Load
+gui.loaded=Loaded
 gui.tooltip=Info
 gui.collapse_all=Collapse All
 gui.expand_all=Expand All
 gui.download=Download
+gui.downloaded=Downloaded
 gui.update=Update
+gui.updated=Updated
 
 ## Labels
 gui.other=Other

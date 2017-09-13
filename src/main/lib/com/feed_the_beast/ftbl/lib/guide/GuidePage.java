@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.MapUtils;
 import com.google.gson.JsonArray;
@@ -360,7 +361,7 @@ public class GuidePage extends FinalIDObject
 
 				if (provider == null)
 				{
-					ITextComponent component = new TextComponentString("Unknown ID: " + id); //LANG
+					ITextComponent component = FTBLibLang.ERROR.textComponent(id);
 					component.getStyle().setColor(TextFormatting.DARK_RED);
 					component.getStyle().setBold(true);
 					return new GuideExtendedTextLine(component);

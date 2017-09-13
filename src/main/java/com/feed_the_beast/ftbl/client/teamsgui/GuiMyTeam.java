@@ -157,7 +157,7 @@ public class GuiMyTeam extends GuiBase
 
 						if (!sentByServer && loadedProfiles.get(msg.getSender()) == null)
 						{
-							c = new TextComponentString("<Removed>"); //LANG
+							c = new TextComponentString("<").appendSibling(GuiLang.REMOVED.textComponent()).appendText(">");
 							c.getStyle().setColor(TextFormatting.DARK_GRAY);
 						}
 						else

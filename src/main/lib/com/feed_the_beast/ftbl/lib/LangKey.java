@@ -67,7 +67,7 @@ public final class LangKey implements IStringSerializable
 		return component;
 	}
 
-	public void printChat(ICommandSender sender, Object... o)
+	public void sendMessage(ICommandSender sender, Object... o)
 	{
 		sender.sendMessage(textComponent(o));
 	}

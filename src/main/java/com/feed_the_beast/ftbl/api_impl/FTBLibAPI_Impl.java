@@ -128,7 +128,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 		{
 			if (!serverSide)
 			{
-				FTBLibLang.RELOAD_CLIENT.printChat(BroadcastSender.INSTANCE, millis);
+				FTBLibLang.RELOAD_CLIENT.sendMessage(BroadcastSender.INSTANCE, millis);
 			}
 
 			if (serverSide && type == EnumReloadType.RELOAD_COMMAND)

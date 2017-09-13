@@ -82,6 +82,6 @@ public class CmdCreate extends CmdBase
 		new ForgeTeamCreatedEvent(team).post();
 		new ForgeTeamPlayerJoinedEvent(team, p).post();
 
-		FTBLibLang.TEAM_CREATED.printChat(sender, team.getName());
+		FTBLibLang.TEAM_CREATED.sendMessage(sender, team.getName());
 	}
 }
