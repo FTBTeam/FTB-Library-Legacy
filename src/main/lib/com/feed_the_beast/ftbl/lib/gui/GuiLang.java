@@ -43,6 +43,8 @@ public interface GuiLang
 	LangKey DOWNLOADED = LangKey.of("gui.downloaded");
 	LangKey UPDATE = LangKey.of("gui.update");
 	LangKey UPDATED = LangKey.of("gui.updated");
+	LangKey ACTIVE = LangKey.of("gui.active");
+	LangKey INACTIVE = LangKey.of("gui.inactive");
 	LangKey OTHER = LangKey.of("gui.other");
 	LangKey SERVER_FORCED = LangKey.of("ftbl.label.server_forced");
 	LangKey ONLINE = LangKey.of("gui.online");

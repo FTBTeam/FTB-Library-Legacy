@@ -50,7 +50,7 @@ public class GuiGuide extends GuiBase
 		@Override
 		public void draw(int x, int y, int w, int h, Color4I col)
 		{
-			GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : FTBLibClientConfig.guide.background.getColor());
+			GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : FTBLibClientConfig.guide.getBackgroundColor());
 		}
 	};
 
@@ -131,7 +131,7 @@ public class GuiGuide extends GuiBase
 			}
 		};
 
-		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, FTBLibClientConfig.guide.text.getColor()));
+		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, FTBLibClientConfig.guide.getTextColor()));
 
 		panelPages = new Panel(0, 0, 0, 0)
 		{
@@ -344,7 +344,7 @@ public class GuiGuide extends GuiBase
 	@Override
 	public Color4I getContentColor()
 	{
-		return FTBLibClientConfig.guide.text.getColor();
+		return FTBLibClientConfig.guide.getTextColor();
 	}
 
 	@Override

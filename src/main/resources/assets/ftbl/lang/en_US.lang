@@ -17,6 +17,8 @@ gui.download=Download
 gui.downloaded=Downloaded
 gui.update=Update
 gui.updated=Updated
+gui.active=Active
+gui.inactive=Inactive
 
 ## Labels
 gui.other=Other

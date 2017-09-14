@@ -1,5 +1,5 @@
 {
 	"ingredients": {
-		"ore_prefix": "com.feed_the_beast.ftbl.lib.item.OrePrefixIngredient$Factory"
+		"ore_dict": "com.feed_the_beast.ftbl.lib.item.FTBLibOreIngredient$Factory"
 	}
 }

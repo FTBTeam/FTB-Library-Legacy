@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class OrePrefixIngredient extends Ingredient
+public class FTBLibOreIngredient extends Ingredient
 {
 	public static class Factory implements IIngredientFactory
 	{
@@ -29,7 +29,7 @@ public class OrePrefixIngredient extends Ingredient
 		@Override
 		public Ingredient parse(JsonContext context, JsonObject json)
 		{
-			return new OrePrefixIngredient(net.minecraft.util.JsonUtils.getString(json, "prefix"));
+			return new FTBLibOreIngredient(net.minecraft.util.JsonUtils.getString(json, "ore"));
 		}
 	}
 
@@ -38,30 +38,42 @@ public class OrePrefixIngredient extends Ingredient
 	private ItemStack[] array = null;
 	private int lastSizeA = -1, lastSizeL = -1;
 
-	public OrePrefixIngredient(String prefix)
+	public FTBLibOreIngredient(String ore)
 	{
 		super(0);
 
-		Map<ItemEntry, ItemStack> map = new HashMap<>();
-
-		for (String ore : OreDictionary.getOreNames())
+		if (ore.isEmpty())
 		{
-			if (ore.startsWith(prefix))
-			{
-				for (ItemStack stack : OreDictionary.getOres(ore))
-				{
-					ItemEntry entry = ItemEntry.get(stack);
+			ores = NonNullList.create();
+		}
+		else if (ore.endsWith("*"))
+		{
+			ores = NonNullList.create();
+			Map<ItemEntry, ItemStack> map = new HashMap<>();
+			ore = ore.substring(0, ore.length() - 1);
 
-					if (!entry.isEmpty())
+			for (String ore1 : OreDictionary.getOreNames())
+			{
+				if (ore1.startsWith(ore))
+				{
+					for (ItemStack stack : OreDictionary.getOres(ore1))
 					{
-						map.put(entry, stack);
+						ItemEntry entry = ItemEntry.get(stack);
+
+						if (!entry.isEmpty())
+						{
+							map.put(entry, stack);
+						}
 					}
 				}
 			}
-		}
 
-		ores = NonNullList.create();
-		ores.addAll(map.values());
+			ores.addAll(map.values());
+		}
+		else
+		{
+			ores = OreDictionary.getOres(ore);
+		}
 	}
 
 	@Override

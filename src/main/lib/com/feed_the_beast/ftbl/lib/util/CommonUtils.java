@@ -45,7 +45,7 @@ public class CommonUtils
 	public static final long TICKS_MINUTE = TICKS_SECOND * 60L;
 	public static final long TICKS_HOUR = TICKS_MINUTE * 60L;
 
-	public static <T> T cast(Object o)
+	public static <T> T cast(@Nullable Object o)
 	{
 		return (T) o;
 	}

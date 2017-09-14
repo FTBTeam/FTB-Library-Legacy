@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraftforge.common.config.Config;
@@ -50,13 +51,25 @@ public class FTBLibClientConfig
 
 		public final ConfigRGB background = new ConfigRGB(0xFFF7F4DA);
 		public final ConfigRGB text = new ConfigRGB(0xFF7B6534);
+
+		private Color4I backgroundColor, textColor;
+
+		public Color4I getBackgroundColor()
+		{
+			return backgroundColor;
+		}
+
+		public Color4I getTextColor()
+		{
+			return textColor;
+		}
 	}
 
 	public static void sync()
 	{
 		ConfigManager.sync(FTBLibFinals.MOD_ID + "_client", Config.Type.INSTANCE);
-		guide.background.updateColor();
-		guide.text.updateColor();
+		guide.backgroundColor = guide.background.createColor();
+		guide.textColor = guide.text.createColor();
 	}
 
 	@SubscribeEvent

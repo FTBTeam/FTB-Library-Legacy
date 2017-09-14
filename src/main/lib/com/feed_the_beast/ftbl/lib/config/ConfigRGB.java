@@ -21,8 +21,6 @@ public class ConfigRGB
 	@Config.LangKey("item.fireworksCharge.blue")
 	public int blue;
 
-	private Color4I color = Color4I.WHITE;
-
 	public ConfigRGB(int r, int g, int b)
 	{
 		red = r;
@@ -37,13 +35,13 @@ public class ConfigRGB
 		blue = ColorUtils.getBlue(color);
 	}
 
-	public void updateColor()
+	public Color4I createColor(int a)
 	{
-		color = Color4I.rgb(red, green, blue);
+		return Color4I.rgba(red, green, blue, a);
 	}
 
-	public Color4I getColor()
+	public Color4I createColor()
 	{
-		return color;
+		return createColor(255);
 	}
 }
