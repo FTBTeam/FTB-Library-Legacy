@@ -1,4 +1,4 @@
-# GuiLM
+# Gui
 ## Buttons
 gui.accept=Accept
 gui.add=Add
@@ -29,6 +29,7 @@ gui.whitelist=Whitelist
 gui.blacklist=Blacklist
 gui.color=Color
 gui.downloading=Downloading...
+gui.infinite=Infinite
 
 ## Stats
 ftbl.stat.time_played=Time Played

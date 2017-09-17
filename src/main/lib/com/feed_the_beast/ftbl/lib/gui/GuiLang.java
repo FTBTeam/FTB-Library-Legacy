@@ -52,4 +52,6 @@ public interface GuiLang
 	LangKey WHITELIST = LangKey.of("gui.whitelist");
 	LangKey BLACKLIST = LangKey.of("gui.blacklist");
 	LangKey COLOR = LangKey.of("gui.color");
+	LangKey DOWNLOADING = LangKey.of("gui.downloading");
+	LangKey INFINITE = LangKey.of("gui.infinite");
 }

@@ -5,66 +5,61 @@ import com.feed_the_beast.ftbl.lib.LangKey;
 /**
  * @author LatvianModder
  */
-public class FTBLibLang
+public interface FTBLibLang
 {
-	public static final LangKey RELOAD_SERVER = get("reload_server");
-	public static final LangKey RELOAD_CLIENT = get("reload_client");
-	public static final LangKey RELOAD_CLIENT_CONFIG = get("reload_client_config");
-	public static final LangKey RELOAD_FAILED = get("reload_failed");
+	LangKey RELOAD_SERVER = LangKey.of("ftbl.lang.reload_server");
+	LangKey RELOAD_CLIENT = LangKey.of("ftbl.lang.reload_client");
+	LangKey RELOAD_CLIENT_CONFIG = LangKey.of("ftbl.lang.reload_client_config");
+	LangKey RELOAD_FAILED = LangKey.of("ftbl.lang.reload_failed");
 
-	public static final LangKey WIP = LangKey.of("wip");
-	public static final LangKey EXAMPLE = LangKey.of("example");
-	public static final LangKey CLICK_HERE = LangKey.of("click_here");
-	public static final LangKey FEATURE_DISABLED = LangKey.of("feature_disabled");
-	public static final LangKey MISSING_ARGS = LangKey.of("missing_args");
-	public static final LangKey MISSING_ARGS_NUM = LangKey.of("missing_args_num");
-	public static final LangKey COMMAND_PERMISSION = LangKey.of("commands.generic.permission");
-	public static final LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage");
-	public static final LangKey CLIENT_CONFIG = LangKey.of("client_config");
-	public static final LangKey ERROR = get("error");
-	public static final LangKey OWNER = get("owner");
-	public static final LangKey DELETE_ITEM = get("delete_item");
-	public static final LangKey SERVER_FORCED = get("server_forced");
-	public static final LangKey COMMANDS = get("commands");
-	public static final LangKey MY_PERMISSIONS = get("my_permissions");
-	public static final LangKey ALL_PERMISSIONS = get("all_permissions");
-	public static final LangKey DIFFICULTY = get("difficulty");
-	public static final LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
-	public static final LangKey MY_TEAM_SETTINGS = LangKey.of("team_config");
+	LangKey WIP = LangKey.of("wip");
+	LangKey EXAMPLE = LangKey.of("example");
+	LangKey CLICK_HERE = LangKey.of("click_here");
+	LangKey FEATURE_DISABLED = LangKey.of("feature_disabled");
+	LangKey MISSING_ARGS = LangKey.of("missing_args");
+	LangKey MISSING_ARGS_NUM = LangKey.of("missing_args_num");
+	LangKey COMMAND_PERMISSION = LangKey.of("commands.generic.permission");
+	LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage");
+	LangKey CLIENT_CONFIG = LangKey.of("client_config");
+	LangKey ERROR = LangKey.of("ftbl.lang.error");
+	LangKey OWNER = LangKey.of("ftbl.lang.owner");
+	LangKey DELETE_ITEM = LangKey.of("ftbl.lang.delete_item");
+	LangKey SERVER_FORCED = LangKey.of("ftbl.lang.server_forced");
+	LangKey COMMANDS = LangKey.of("ftbl.lang.commands");
+	LangKey MY_PERMISSIONS = LangKey.of("ftbl.lang.my_permissions");
+	LangKey ALL_PERMISSIONS = LangKey.of("ftbl.lang.all_permissions");
+	LangKey DIFFICULTY = LangKey.of("ftbl.lang.difficulty");
+	LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
+	LangKey MY_TEAM_SETTINGS = LangKey.of("team_config");
 
-	public static final LangKey CONFIG_COMMAND_INVALID_KEY = get("config_command.invalid_key");
-	public static final LangKey CONFIG_COMMAND_SETTING = get("config_command.setting");
-	public static final LangKey CONFIG_COMMAND_SET = get("config_command.set");
+	LangKey CONFIG_COMMAND_INVALID_KEY = LangKey.of("ftbl.lang.config_command.invalid_key");
+	LangKey CONFIG_COMMAND_SETTING = LangKey.of("ftbl.lang.config_command.setting");
+	LangKey CONFIG_COMMAND_SET = LangKey.of("ftbl.lang.config_command.set");
 
-	public static final LangKey CONFIG_ADD_FAKE_PLAYER_INVALID_UUID = get("add_fake_player.invalid_uuid");
-	public static final LangKey CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS = get("add_fake_player.player_exists");
-	public static final LangKey CONFIG_ADD_FAKE_PLAYER_ADDED = get("add_fake_player.added");
+	LangKey CONFIG_ADD_FAKE_PLAYER_INVALID_UUID = LangKey.of("ftbl.lang.add_fake_player.invalid_uuid");
+	LangKey CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS = LangKey.of("ftbl.lang.add_fake_player.player_exists");
+	LangKey CONFIG_ADD_FAKE_PLAYER_ADDED = LangKey.of("ftbl.lang.add_fake_player.added");
 
-	public static final LangKey TEAM_CREATED = get("team.created");
-	public static final LangKey TEAM_ID_ALREADY_EXISTS = get("team.id_already_exists");
-	public static final LangKey TEAM_ID_INVALID = get("team.id_invalid");
-	public static final LangKey TEAM_DELETED = get("team.deleted");
-	public static final LangKey TEAM_MEMBER_LEFT = get("team.member_left");
-	public static final LangKey TEAM_MEMBER_JOINED = get("team.member_joined");
-	public static final LangKey TEAM_TRANSFERRED_OWNERSHIP = get("team.transferred_ownership");
-	public static final LangKey TEAM_INVITED = get("team.invited");
-	public static final LangKey TEAM_INVITED_YOU = get("team.invited_you");
-	public static final LangKey TEAM_NOT_FOUND = get("team.error.not_found");
-	public static final LangKey TEAM_NO_TEAM = get("team.error.no_team");
-	public static final LangKey TEAM_MUST_LEAVE = get("team.error.must_leave");
-	public static final LangKey TEAM_NOT_OWNER = get("team.error.not_owner");
-	public static final LangKey TEAM_NOT_MEMBER = get("team.error.not_member");
-	public static final LangKey TEAM_MUST_TRANSFER_OWNERSHIP = get("team.error.must_transfer_ownership");
-	public static final LangKey TEAM_ALREADY_INVITED = get("team.error.already_invited");
-	public static final LangKey TEAM_FAILED_TO_JOIN = get("team.error.failed_to_join");
-	public static final LangKey TEAM_STATUS_SET = get("team.status.set");
-	public static final LangKey TEAM_PERMISSION_OWNER = get("team.permission.owner");
-	public static final LangKey TEAM_NOTIFICATION = get("team.notification");
-	public static final LangKey TEAM_NOTIFICATION_HIDE = get("team.notification.hide");
-	public static final LangKey TEAM_CHAT_MESSAGE = get("team.chat_message");
-
-	private static LangKey get(String s)
-	{
-		return LangKey.of("ftbl.lang." + s);
-	}
+	LangKey TEAM_CREATED = LangKey.of("ftbl.lang.team.created");
+	LangKey TEAM_ID_ALREADY_EXISTS = LangKey.of("ftbl.lang.team.id_already_exists");
+	LangKey TEAM_ID_INVALID = LangKey.of("ftbl.lang.team.id_invalid");
+	LangKey TEAM_DELETED = LangKey.of("ftbl.lang.team.deleted");
+	LangKey TEAM_MEMBER_LEFT = LangKey.of("ftbl.lang.team.member_left");
+	LangKey TEAM_MEMBER_JOINED = LangKey.of("ftbl.lang.team.member_joined");
+	LangKey TEAM_TRANSFERRED_OWNERSHIP = LangKey.of("ftbl.lang.team.transferred_ownership");
+	LangKey TEAM_INVITED = LangKey.of("ftbl.lang.team.invited");
+	LangKey TEAM_INVITED_YOU = LangKey.of("ftbl.lang.team.invited_you");
+	LangKey TEAM_NOT_FOUND = LangKey.of("ftbl.lang.team.error.not_found");
+	LangKey TEAM_NO_TEAM = LangKey.of("ftbl.lang.team.error.no_team");
+	LangKey TEAM_MUST_LEAVE = LangKey.of("ftbl.lang.team.error.must_leave");
+	LangKey TEAM_NOT_OWNER = LangKey.of("ftbl.lang.team.error.not_owner");
+	LangKey TEAM_NOT_MEMBER = LangKey.of("ftbl.lang.team.error.not_member");
+	LangKey TEAM_MUST_TRANSFER_OWNERSHIP = LangKey.of("ftbl.lang.team.error.must_transfer_ownership");
+	LangKey TEAM_ALREADY_INVITED = LangKey.of("ftbl.lang.team.error.already_invited");
+	LangKey TEAM_FAILED_TO_JOIN = LangKey.of("ftbl.lang.team.error.failed_to_join");
+	LangKey TEAM_STATUS_SET = LangKey.of("ftbl.lang.team.status.set");
+	LangKey TEAM_PERMISSION_OWNER = LangKey.of("ftbl.lang.team.permission.owner");
+	LangKey TEAM_NOTIFICATION = LangKey.of("ftbl.lang.team.notification");
+	LangKey TEAM_NOTIFICATION_HIDE = LangKey.of("ftbl.lang.team.notification.hide");
+	LangKey TEAM_CHAT_MESSAGE = LangKey.of("ftbl.lang.team.chat_message");
 }
