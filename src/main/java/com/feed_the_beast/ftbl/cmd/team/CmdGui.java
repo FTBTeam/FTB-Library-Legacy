@@ -54,7 +54,7 @@ public class CmdGui extends CmdBase
 					UUID id = StringUtils.fromString(args[1]);
 					EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[2]);
 
-					if (id != null && status != null && status.canBeSet() && !team.hasStatus(id, EnumTeamStatus.MEMBER) && (!status.isEqualOrGreaterThan(EnumTeamStatus.MOD) || team.hasStatus(p, EnumTeamStatus.OWNER)))
+					if (id != null && status.canBeSet() && !team.hasStatus(id, EnumTeamStatus.MEMBER) && (!status.isEqualOrGreaterThan(EnumTeamStatus.MOD) || team.hasStatus(p, EnumTeamStatus.OWNER)))
 					{
 						team.setStatus(id, status);
 					}
@@ -65,7 +65,10 @@ public class CmdGui extends CmdBase
 
 					for (IForgePlayer player1 : Universe.INSTANCE.getPlayers())
 					{
-						players.add(new MyTeamPlayerData(player1, team.getHighestStatus(player1)));
+						if (!player1.isFake())
+						{
+							players.add(new MyTeamPlayerData(player1, team.getHighestStatus(player1)));
+						}
 					}
 
 					new MessageMyTeamAddPlayerGui(players).sendTo(player);

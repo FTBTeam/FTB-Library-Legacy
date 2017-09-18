@@ -4,9 +4,7 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerConfigEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerDeathEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedInEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
@@ -21,11 +19,8 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -40,18 +35,20 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
 	private final UUID playerId;
 	private String playerName;
-	private final NBTDataStorage dataStorage;
-	private ForgeTeam team = null;
-	private final ConfigBoolean hideTeamNotification;
-	private EntityPlayerMP entityPlayer;
-	private NBTTagCompound playerNBT;
-	private final ConfigGroup cachedConfig;
-	private boolean loggingOut;
+	public boolean firstLogin;
+	public final NBTDataStorage dataStorage;
+	public ForgeTeam team = null;
+	public final ConfigBoolean hideTeamNotification;
+	public EntityPlayerMP entityPlayer;
+	public NBTTagCompound playerNBT;
+	public final ConfigGroup cachedConfig;
+	public boolean loggingOut;
 
 	public ForgePlayer(UUID id, String name)
 	{
 		playerId = id;
 		playerName = name;
+		firstLogin = true;
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
 		hideTeamNotification = new ConfigBoolean();
 
@@ -76,7 +73,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	{
 		if (team != null && !team.isValid())
 		{
-			return null;
+			team = null;
 		}
 
 		return team;
@@ -111,10 +108,9 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	}
 
 	@Override
-	@Nullable
-	public INBTSerializable<?> getData(ResourceLocation id)
+	public NBTDataStorage getData()
 	{
-		return dataStorage == null ? null : dataStorage.get(id);
+		return dataStorage;
 	}
 
 	@Override
@@ -143,15 +139,11 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		{
 			return true;
 		}
-		else if (o instanceof UUID)
-		{
-			return playerId.equals(o);
-		}
 		else if (o instanceof IForgePlayer)
 		{
 			return equalsPlayer((IForgePlayer) o);
 		}
-		return equalsPlayer(Universe.INSTANCE.getPlayer(o));
+		return (o.getClass() == UUID.class) && playerId.equals(o);
 	}
 
 	@Override
@@ -185,39 +177,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		return ServerUtils.isOP(getProfile());
 	}
 
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
-
-		setTeamID(nbt.getString("TeamID"));
-
-		if (dataStorage != null)
-		{
-			dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
-		}
-	}
-
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-
-		nbt.setBoolean("HideTeamNotification", hideTeamNotification.getBoolean());
-
-		if (team != null && team.isValid())
-		{
-			nbt.setString("TeamID", team.getName());
-		}
-
-		if (dataStorage != null)
-		{
-			nbt.setTag("Data", dataStorage.serializeNBT());
-		}
-
-		return nbt;
-	}
-
 	public void onLoggedIn(EntityPlayerMP ep, boolean firstLogin)
 	{
 		entityPlayer = ep;
@@ -231,26 +190,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		}
 
 		new ForgePlayerLoggedInEvent(this, firstLogin).post();
-	}
-
-	public void onLoggedOut()
-	{
-		loggingOut = true;
-		//FTBLibStats.updateLastSeen(stats());
-		new ForgePlayerLoggedOutEvent(this).post();
-		entityPlayer = null;
-		playerNBT = null;
-	}
-
-	public void onDeath(EntityPlayerMP ep, DamageSource ds)
-	{
-		entityPlayer = ep;
-
-		if (isOnline())
-		{
-			//FTBLibStats.updateLastSeen(stats());
-			new ForgePlayerDeathEvent(this, ds).post();
-		}
 	}
 
 	@Override
@@ -292,6 +231,12 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		}
 
 		return playerNBT;
+	}
+
+	@Override
+	public void setPlayerNBT(NBTTagCompound nbt)
+	{
+		//FIXME
 	}
 
 	@Override

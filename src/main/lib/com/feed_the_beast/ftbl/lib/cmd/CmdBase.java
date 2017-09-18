@@ -128,13 +128,25 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 	// Static //
 
-	public static IForgePlayer getForgePlayer(Object o) throws CommandException
+	public static IForgePlayer getForgePlayer(ICommandSender sender) throws CommandException
 	{
-		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(o);
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(sender);
+
+		if (p.isFake())
+		{
+			throw new PlayerNotFoundException("commands.generic.player.notFound", sender.getDisplayName());
+		}
+
+		return p;
+	}
+
+	public static IForgePlayer getForgePlayer(String name) throws CommandException
+	{
+		IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(name);
 
 		if (p == null || p.isFake())
 		{
-			throw new PlayerNotFoundException("commands.generic.player.notFound", String.valueOf(o));
+			throw new PlayerNotFoundException("commands.generic.player.notFound", name);
 		}
 
 		return p;

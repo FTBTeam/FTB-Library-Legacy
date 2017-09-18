@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.client;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.config.ConfigRGB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -19,8 +17,6 @@ public class FTBLibClientConfig
 {
 	@Config.LangKey("ftbl.config.general")
 	public static final General general = new General();
-
-	public static final GuideCategory guide = new GuideCategory();
 
 	public static class General
 	{
@@ -41,35 +37,9 @@ public class FTBLibClientConfig
 		public boolean enable_chunk_selector_depth = true;
 	}
 
-	public static class GuideCategory
-	{
-		@Config.RangeInt(min = 0, max = 200)
-		public int border_width = 15;
-
-		@Config.RangeInt(min = 0, max = 200)
-		public int border_height = 15;
-
-		public final ConfigRGB background = new ConfigRGB(0xFFF7F4DA);
-		public final ConfigRGB text = new ConfigRGB(0xFF7B6534);
-
-		private Color4I backgroundColor, textColor;
-
-		public Color4I getBackgroundColor()
-		{
-			return backgroundColor;
-		}
-
-		public Color4I getTextColor()
-		{
-			return textColor;
-		}
-	}
-
 	public static void sync()
 	{
 		ConfigManager.sync(FTBLibFinals.MOD_ID + "_client", Config.Type.INSTANCE);
-		guide.backgroundColor = guide.background.createColor();
-		guide.textColor = guide.text.createColor();
 	}
 
 	@SubscribeEvent

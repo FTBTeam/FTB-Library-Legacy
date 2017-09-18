@@ -1,5 +1,5 @@
 {
-	"teams_gui": {
+	"my_team": {
 		"icon": "ftbl:textures/gui/teams.png",
 		"dependencies": "before:*",
 		"click": {

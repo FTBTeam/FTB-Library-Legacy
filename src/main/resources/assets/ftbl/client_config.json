@@ -3,5 +3,10 @@
 		"id": "ftbl_client",
 		"name": "FTBLib",
 		"icon": "ftbl:textures/logo_guide.png"
+	},
+	{
+		"id": "guide",
+		"name": {"translate": "guide"},
+		"icon": "minecraft:items/book_normal"
 	}
 ]

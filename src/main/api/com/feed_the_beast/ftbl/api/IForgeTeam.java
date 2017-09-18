@@ -1,12 +1,9 @@
 package com.feed_the_beast.ftbl.api;
 
+import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -14,12 +11,11 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public interface IForgeTeam extends IStringSerializable, INBTSerializable<NBTTagCompound>
+public interface IForgeTeam extends IStringSerializable
 {
 	boolean isValid();
 
-	@Nullable
-	INBTSerializable<?> getData(ResourceLocation id);
+	NBTDataStorage getData();
 
 	IForgePlayer getOwner();
 

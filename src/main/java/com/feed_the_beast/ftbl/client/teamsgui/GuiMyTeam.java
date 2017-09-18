@@ -183,11 +183,11 @@ public class GuiMyTeam extends GuiBase
 				{
 					if (selectedPlayer.playerId.equals(ClientUtils.MC.player.getGameProfile().getId()))
 					{
-						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit yourself!"));
+						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit yourself!")); //LANG
 					}
 					else if (selectedPlayer.playerId.equals(teamInfo.owner.playerId))
 					{
-						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit owner!"));
+						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit owner!")); //LANG
 					}
 					else
 					{
@@ -248,7 +248,7 @@ public class GuiMyTeam extends GuiBase
 										}
 
 										openGui();
-									}, "Kick " + selectedPlayer.playerName + "?", "", 0));
+									}, "Kick " + selectedPlayer.playerName + "?", "", 0)); //LANG
 								}
 							});
 						}
@@ -256,7 +256,7 @@ public class GuiMyTeam extends GuiBase
 				}
 				else
 				{
-					add(new TextField(1, 0, width - 5, -1, getFont(), "You don't have permission to manage players!"));
+					add(new TextField(1, 0, width - 5, -1, getFont(), "You don't have permission to manage players!")); //LANG
 				}
 			}
 
@@ -337,7 +337,7 @@ public class GuiMyTeam extends GuiBase
 					{
 						openGui();
 					}
-				}, "Exit Team?", TextFormatting.RED + "Warning: You can't rejoin the team, unless you are re-invited!", 0));
+				}, "Exit Team?", TextFormatting.RED + "Warning: You can't rejoin the team, unless you are re-invited!", 0)); //LANG
 			}
 
 			@Override
@@ -403,7 +403,7 @@ public class GuiMyTeam extends GuiBase
 			}
 		};
 
-		chatBox.ghostText = TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + "Chat...";
+		chatBox.ghostText = TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + "Chat..."; //LANG
 		chatBox.charLimit = 86;
 
 		buttonTeamsGui.onClicked(this, MouseButton.LEFT);

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
-import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
@@ -50,7 +49,7 @@ public class GuiGuide extends GuiBase
 		@Override
 		public void draw(int x, int y, int w, int h, Color4I col)
 		{
-			GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : FTBLibClientConfig.guide.getBackgroundColor());
+			GuiHelper.drawBlankRect(x + 4, y + 4, w - 8, h - 8, col.hasColor() ? col : GuideConfig.colors.getBackground());
 		}
 	};
 
@@ -131,7 +130,7 @@ public class GuiGuide extends GuiBase
 			}
 		};
 
-		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, FTBLibClientConfig.guide.getTextColor()));
+		buttonBack.setIcon(new ColoredIcon(TEX_CLOSE, GuideConfig.colors.getText()));
 
 		panelPages = new Panel(0, 0, 0, 0)
 		{
@@ -287,8 +286,8 @@ public class GuiGuide extends GuiBase
 	@Override
 	public void onInit()
 	{
-		posX = FTBLibClientConfig.guide.border_width;
-		posY = FTBLibClientConfig.guide.border_height;
+		posX = GuideConfig.border.width;
+		posY = GuideConfig.border.height;
 		setWidth(getScreen().getScaledWidth() - posX * 2);
 		setHeight(getScreen().getScaledHeight() - posY * 2);
 
@@ -344,7 +343,7 @@ public class GuiGuide extends GuiBase
 	@Override
 	public Color4I getContentColor()
 	{
-		return FTBLibClientConfig.guide.getTextColor();
+		return GuideConfig.colors.getText();
 	}
 
 	@Override

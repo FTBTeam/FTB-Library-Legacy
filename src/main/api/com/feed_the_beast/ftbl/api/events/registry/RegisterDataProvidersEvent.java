@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.api.events.registry;
 import com.feed_the_beast.ftbl.api.IDataProvider;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.events.FTBLibEvent;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,14 +23,6 @@ public abstract class RegisterDataProvidersEvent<T> extends FTBLibEvent
 	public void register(ResourceLocation id, IDataProvider<T> provider)
 	{
 		callback.accept(id, provider);
-	}
-
-	public static class Universe extends RegisterDataProvidersEvent<IUniverse>
-	{
-		public Universe(BiConsumer<ResourceLocation, IDataProvider<IUniverse>> c)
-		{
-			super(c);
-		}
 	}
 
 	public static class Player extends RegisterDataProvidersEvent<IForgePlayer>

@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -78,15 +77,7 @@ public class BlockBase extends Block
 
 				if (tile.shouldDrop())
 				{
-					ItemStack stack = new ItemStack(Item.getItemFromBlock(this));
-					NBTTagCompound nbt = ((TileBase) tileEntity).createItemData();
-
-					if (!nbt.hasNoTags())
-					{
-						stack.setTagCompound(nbt);
-					}
-
-					spawnAsEntity(worldIn, pos, stack);
+					spawnAsEntity(worldIn, pos, createStack(state, ((TileBase) tileEntity)));
 				}
 
 				if (tile.updateComparator())
@@ -99,11 +90,11 @@ public class BlockBase extends Block
 		super.breakBlock(worldIn, pos, state);
 	}
 
-	public ItemStack createStack(TileBase tile)
+	public ItemStack createStack(IBlockState state, TileBase tile)
 	{
 		ItemStack stack = new ItemStack(this);
 
-		if (dropSpecial(tile.getBlockState()))
+		if (dropSpecial(state))
 		{
 			NBTTagCompound nbt = tile.createItemData();
 

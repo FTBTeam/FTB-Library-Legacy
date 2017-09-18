@@ -15,6 +15,13 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
+import net.minecraft.nbt.NBTTagByteArray;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -26,12 +33,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNullableByDefault;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,78 +49,69 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Type for Lists: new TypeToken<List<E>>() {}.getType()
+ * @author LatvianModder
  */
-@ParametersAreNullableByDefault
 public class JsonUtils
 {
-	public static final JsonDeserializationContext DESERIALIZATION_CONTEXT;
-	public static final JsonSerializationContext SERIALIZATION_CONTEXT, PRETTY_SERIALIZATION_CONTEXT;
-	public static final Gson GSON;
-	public static final Gson GSON_PRETTY;
-	public static final JsonParser PARSER;
+	public static final Gson GSON = new GsonBuilder().create();
+	public static final Gson GSON_PRETTY = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().setLenient().create();
 
-	static
+	public static final JsonDeserializationContext DESERIALIZATION_CONTEXT = new JsonDeserializationContext()
 	{
-		GsonBuilder gb = new GsonBuilder();
-		GSON = gb.create();
-		gb.setPrettyPrinting();
-		gb.disableHtmlEscaping();
-		gb.setLenient();
-		GSON_PRETTY = gb.create();
-
-		DESERIALIZATION_CONTEXT = new JsonDeserializationContext()
+		@Override
+		public <T> T deserialize(JsonElement json, Type typeOfT) throws JsonParseException
 		{
-			@Override
-			public <T> T deserialize(@Nonnull JsonElement json, @Nonnull Type typeOfT) throws JsonParseException
-			{
-				return GSON.fromJson(json, typeOfT);
-			}
-		};
+			return GSON.fromJson(json, typeOfT);
+		}
+	};
 
-		SERIALIZATION_CONTEXT = new JsonSerializationContext()
+	public static final JsonSerializationContext SERIALIZATION_CONTEXT = new JsonSerializationContext()
+	{
+		@Override
+		public JsonElement serialize(Object src)
 		{
-			@Override
-			public JsonElement serialize(Object src)
-			{
-				return GSON.toJsonTree(src);
-			}
+			return GSON.toJsonTree(src);
+		}
 
-			@Override
-			public JsonElement serialize(@Nonnull Object src, @Nonnull Type typeOfSrc)
-			{
-				return GSON.toJsonTree(src, typeOfSrc);
-			}
-		};
-
-		PRETTY_SERIALIZATION_CONTEXT = new JsonSerializationContext()
+		@Override
+		public JsonElement serialize(Object src, Type typeOfSrc)
 		{
-			@Override
-			public JsonElement serialize(@Nonnull Object src)
-			{
-				return GSON_PRETTY.toJsonTree(src);
-			}
+			return GSON.toJsonTree(src, typeOfSrc);
+		}
+	};
 
-			@Override
-			public JsonElement serialize(@Nonnull Object src, @Nonnull Type typeOfSrc)
-			{
-				return GSON_PRETTY.toJsonTree(src, typeOfSrc);
-			}
-		};
+	public static final JsonSerializationContext PRETTY_SERIALIZATION_CONTEXT = new JsonSerializationContext()
+	{
+		@Override
+		public JsonElement serialize(Object src)
+		{
+			return GSON_PRETTY.toJsonTree(src);
+		}
 
-		PARSER = new JsonParser();
+		@Override
+		public JsonElement serialize(Object src, Type typeOfSrc)
+		{
+			return GSON_PRETTY.toJsonTree(src, typeOfSrc);
+		}
+	};
+
+	public static final JsonParser PARSER = new JsonParser();
+
+	public static boolean isNull(@Nullable JsonElement element)
+	{
+		return element == null || element == JsonNull.INSTANCE || element.isJsonNull();
 	}
 
-	public static String toJson(@Nonnull Gson gson, JsonElement e)
+	public static String toJson(Gson gson, @Nullable JsonElement element)
 	{
-		return gson.toJson(e == null ? JsonNull.INSTANCE : e);
+		return isNull(element) ? "null" : gson.toJson(element);
 	}
 
-	public static boolean toJson(@Nonnull Gson gson, @Nonnull File f, JsonElement o)
+	public static boolean toJson(Gson gson, File file, @Nullable JsonElement element)
 	{
 		try
 		{
-			FileUtils.save(f, toJson(gson, o));
+			FileUtils.save(file, toJson(gson, element));
 			return true;
 		}
 		catch (Exception e)
@@ -125,17 +122,17 @@ public class JsonUtils
 		return false;
 	}
 
-	public static String toJson(JsonElement o)
+	public static String toJson(@Nullable JsonElement element)
 	{
-		return toJson(GSON, o);
+		return toJson(GSON, element);
 	}
 
-	public static boolean toJson(@Nonnull File f, JsonElement o)
+	public static boolean toJson(File file, @Nullable JsonElement element)
 	{
-		return toJson(GSON_PRETTY, f, o);
+		return toJson(GSON_PRETTY, file, element);
 	}
 
-	public static JsonElement fromJson(String json)
+	public static JsonElement fromJson(@Nullable String json)
 	{
 		if (json == null || json.isEmpty())
 		{
@@ -152,17 +149,17 @@ public class JsonUtils
 		}
 	}
 
-	public static JsonElement fromJson(Reader json)
+	public static JsonElement fromJson(@Nullable Reader reader)
 	{
-		if (json == null)
+		if (reader == null)
 		{
 			return JsonNull.INSTANCE;
 		}
 
 		try
 		{
-			JsonElement element = PARSER.parse(json);
-			json.close();
+			JsonElement element = PARSER.parse(reader);
+			reader.close();
 			return element;
 		}
 		catch (IOException e)
@@ -171,16 +168,16 @@ public class JsonUtils
 		}
 	}
 
-	public static JsonElement fromJson(File json)
+	public static JsonElement fromJson(File file)
 	{
 		try
 		{
-			if (json == null || !json.exists())
+			if (!file.exists())
 			{
 				return JsonNull.INSTANCE;
 			}
 
-			FileInputStream fis = new FileInputStream(json);
+			FileInputStream fis = new FileInputStream(file);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StringUtils.UTF_8));
 			JsonElement e = fromJson(reader);
 			reader.close();
@@ -206,296 +203,259 @@ public class JsonUtils
 		}
 	}
 
-	@Nonnull
-	public static JsonArray toArray(@Nonnull JsonElement element)
+
+	public static JsonArray toArray(JsonElement element)
 	{
 		if (element.isJsonArray())
 		{
 			return element.getAsJsonArray();
 		}
 
-		JsonArray a = new JsonArray();
-		a.add(element);
-		return a;
+		JsonArray array = new JsonArray();
+		array.add(element);
+		return array;
 	}
 
-	public static JsonElement toIntArray(int... ai)
+	public static JsonElement serializeTextComponent(@Nullable ITextComponent component)
 	{
-		if (ai == null)
+		if (component == null)
 		{
 			return JsonNull.INSTANCE;
 		}
 
-		JsonArray a = new JsonArray();
-		if (ai.length == 0)
+		if (component instanceof TextComponentString && component.getStyle().isEmpty() && component.getSiblings().isEmpty())
 		{
-			return a;
+			return new JsonPrimitive(((TextComponentString) component).getText());
 		}
 
-		for (int anAi : ai)
+		JsonObject json = new JsonObject();
+		Style style = component.getStyle();
+
+		if (!style.isEmpty())
 		{
-			a.add(anAi);
-		}
-
-		return a;
-	}
-
-	@Nullable
-	public static int[] fromIntArray(JsonElement e)
-	{
-		if (e == null || e.isJsonNull())
-		{
-			return null;
-		}
-
-		if (e.isJsonArray())
-		{
-			JsonArray a = e.getAsJsonArray();
-			int[] ai = new int[a.size()];
-			if (ai.length == 0)
+			if (style.bold != null)
 			{
-				return ai;
-			}
-			for (int i = 0; i < ai.length; i++)
-			{
-				ai[i] = a.get(i).getAsInt();
-			}
-			return ai;
-		}
-
-		return new int[] {e.getAsInt()};
-	}
-
-	public static JsonElement serializeTextComponent(@Nullable ITextComponent c)
-	{
-		if (c == null)
-		{
-			return JsonNull.INSTANCE;
-		}
-
-		if (c instanceof TextComponentString && c.getStyle().isEmpty() && c.getSiblings().isEmpty())
-		{
-			return new JsonPrimitive(((TextComponentString) c).getText());
-		}
-
-		JsonObject o = new JsonObject();
-		Style s = c.getStyle();
-
-		if (!s.isEmpty())
-		{
-			if (s.bold != null)
-			{
-				o.addProperty("bold", s.bold);
+				json.addProperty("bold", style.bold);
 			}
 
-			if (s.italic != null)
+			if (style.italic != null)
 			{
-				o.addProperty("italic", s.italic);
+				json.addProperty("italic", style.italic);
 			}
 
-			if (s.underlined != null)
+			if (style.underlined != null)
 			{
-				o.addProperty("underlined", s.underlined);
+				json.addProperty("underlined", style.underlined);
 			}
 
-			if (s.strikethrough != null)
+			if (style.strikethrough != null)
 			{
-				o.addProperty("strikethrough", s.strikethrough);
+				json.addProperty("strikethrough", style.strikethrough);
 			}
 
-			if (s.obfuscated != null)
+			if (style.obfuscated != null)
 			{
-				o.addProperty("obfuscated", s.obfuscated);
+				json.addProperty("obfuscated", style.obfuscated);
 			}
 
-			if (s instanceof CustomStyle)
+			if (style instanceof CustomStyle)
 			{
-				CustomStyle cs = (CustomStyle) s;
+				CustomStyle customStyle = (CustomStyle) style;
 
-				if (cs.monospaced != null)
+				if (customStyle.monospaced != null)
 				{
-					o.addProperty("monospaced", cs.monospaced);
+					json.addProperty("monospaced", customStyle.monospaced);
 				}
 
-				if (cs.background != null)
+				if (customStyle.background != null)
 				{
-					o.addProperty("background", cs.background.getFriendlyName());
+					json.addProperty("background", customStyle.background.getFriendlyName());
 				}
 			}
 
-			if (s.color != null)
+			if (style.color != null)
 			{
-				o.addProperty("color", s.color.getFriendlyName());
+				json.addProperty("color", style.color.getFriendlyName());
 			}
 
-			if (s.insertion != null)
+			if (style.insertion != null)
 			{
-				o.addProperty("insertion", s.insertion);
+				json.addProperty("insertion", style.insertion);
 			}
 
-			if (s.clickEvent != null)
+			if (style.clickEvent != null)
 			{
-				o.add("clickEvent", serializeClickEvent(s.clickEvent));
+				json.add("clickEvent", serializeClickEvent(style.clickEvent));
 			}
 
-			if (s.hoverEvent != null)
+			if (style.hoverEvent != null)
 			{
-				o.add("hoverEvent", serializeHoverEvent(s.hoverEvent));
+				json.add("hoverEvent", serializeHoverEvent(style.hoverEvent));
 			}
 		}
 
-		if (!c.getSiblings().isEmpty())
+		if (!component.getSiblings().isEmpty())
 		{
-			JsonArray a = new JsonArray();
+			JsonArray array = new JsonArray();
 
-			for (ITextComponent itextcomponent : c.getSiblings())
+			for (ITextComponent itextcomponent : component.getSiblings())
 			{
-				a.add(serializeTextComponent(itextcomponent));
+				array.add(serializeTextComponent(itextcomponent));
 			}
 
-			o.add("extra", a);
+			json.add("extra", array);
 		}
 
-		if (c instanceof TextComponentString)
+		if (component instanceof TextComponentString)
 		{
-			o.addProperty("text", ((TextComponentString) c).getText());
+			json.addProperty("text", ((TextComponentString) component).getText());
 
-			if (c instanceof INotification)
+			if (component instanceof INotification)
 			{
-				INotification n = (INotification) c;
+				INotification n = (INotification) component;
 
 				if (!n.getId().equals(INotification.VANILLA_STATUS))
 				{
-					o.addProperty("nid", n.getId().toString());
+					json.addProperty("nid", n.getId().toString());
 				}
 
 				if (n.getTimer() != 60)
 				{
-					o.addProperty("timer", n.getTimer());
+					json.addProperty("timer", n.getTimer());
+				}
+
+				if (n.isImportant())
+				{
+					json.addProperty("important", true);
 				}
 			}
 		}
-		else if (c instanceof TextComponentTranslation)
+		else if (component instanceof TextComponentTranslation)
 		{
-			TextComponentTranslation t = (TextComponentTranslation) c;
-			o.addProperty("translate", t.getKey());
+			TextComponentTranslation translation = (TextComponentTranslation) component;
+			json.addProperty("translate", translation.getKey());
 
-			if (t.getFormatArgs().length > 0)
+			if (translation.getFormatArgs().length > 0)
 			{
-				JsonArray a = new JsonArray();
+				JsonArray array = new JsonArray();
 
-				for (Object object : t.getFormatArgs())
+				for (Object object : translation.getFormatArgs())
 				{
 					if (object instanceof ITextComponent)
 					{
-						a.add(serializeTextComponent((ITextComponent) object));
+						array.add(serializeTextComponent((ITextComponent) object));
 					}
 					else
 					{
-						a.add(String.valueOf(object));
+						array.add(String.valueOf(object));
 					}
 				}
 
-				o.add("with", a);
+				json.add("with", array);
 			}
 		}
-		else if (c instanceof TextComponentScore)
+		else if (component instanceof TextComponentScore)
 		{
-			TextComponentScore t = (TextComponentScore) c;
-			JsonObject o1 = new JsonObject();
-			o1.addProperty("name", t.getName());
-			o1.addProperty("objective", t.getObjective());
-			o1.addProperty("value", t.getUnformattedComponentText());
-			o.add("score", o1);
+			TextComponentScore score = (TextComponentScore) component;
+			JsonObject json1 = new JsonObject();
+			json1.addProperty("name", score.getName());
+			json1.addProperty("objective", score.getObjective());
+			json1.addProperty("value", score.getUnformattedComponentText());
+			json.add("score", json1);
 		}
-		else if (c instanceof TextComponentSelector)
+		else if (component instanceof TextComponentSelector)
 		{
-			o.addProperty("selector", ((TextComponentSelector) c).getSelector());
+			json.addProperty("selector", ((TextComponentSelector) component).getSelector());
 		}
 		else
 		{
-			if (!(c instanceof TextComponentKeybind))
+			if (!(component instanceof TextComponentKeybind))
 			{
-				throw new IllegalArgumentException("Don't know how to serialize " + c + " as a Component");
+				throw new IllegalArgumentException("Don't know how to serialize " + component + " as a Component");
 			}
 
-			o.addProperty("keybind", ((TextComponentKeybind) c).getKeybind());
+			json.addProperty("keybind", ((TextComponentKeybind) component).getKeybind());
 		}
 
-		return o;
+		return json;
 	}
 
 	@Nullable
-	public static ITextComponent deserializeTextComponent(JsonElement e)
+	public static ITextComponent deserializeTextComponent(@Nullable JsonElement element)
 	{
-		if (e == null || e.isJsonNull())
+		if (isNull(element))
 		{
 			return null;
 		}
-		else if (e.isJsonPrimitive())
+		else if (element.isJsonPrimitive())
 		{
-			return new TextComponentString(e.getAsString());
+			return new TextComponentString(element.getAsString());
 		}
-		else if (!e.isJsonObject())
+		else if (!element.isJsonObject())
 		{
-			if (!e.isJsonArray())
+			if (!element.isJsonArray())
 			{
-				throw new JsonParseException("Don't know how to turn " + e + " into a Component");
+				throw new JsonParseException("Don't know how to turn " + element + " into a Component");
 			}
 
-			ITextComponent t = null;
+			ITextComponent component = null;
 
-			for (JsonElement jsonelement : e.getAsJsonArray())
+			for (JsonElement jsonelement : element.getAsJsonArray())
 			{
-				ITextComponent t2 = deserializeTextComponent(jsonelement);
+				ITextComponent component1 = deserializeTextComponent(jsonelement);
 
-				if (t2 == null)
+				if (component1 == null)
 				{
-					t2 = new TextComponentString("");
+					component1 = new TextComponentString("");
 				}
 
-				if (t == null)
+				if (component == null)
 				{
-					t = t2;
+					component = component1;
 				}
 				else
 				{
-					t.appendSibling(t2);
+					component.appendSibling(component1);
 				}
 			}
 
-			return t;
+			return component;
 		}
 		else
 		{
-			JsonObject o = e.getAsJsonObject();
-			ITextComponent t;
+			JsonObject json = element.getAsJsonObject();
+			ITextComponent component;
 
-			if (o.has("text"))
+			if (json.has("text"))
 			{
-				String s = o.get("text").getAsString();
+				String s = json.get("text").getAsString();
 
-				if (o.has("nid") || o.has("timer"))
+				if (json.has("nid") || json.has("timer") || json.has("important"))
 				{
-					t = Notification.of(new ResourceLocation(o.has("nid") ? o.get("nid").getAsString() : ""), s);
+					component = Notification.of(new ResourceLocation(json.has("nid") ? json.get("nid").getAsString() : ""), s);
 
-					if (o.has("timer"))
+					if (json.has("timer"))
 					{
-						((Notification) t).setTimer(net.minecraft.util.JsonUtils.getInt(o, "timer"));
+						((Notification) component).setTimer(net.minecraft.util.JsonUtils.getInt(json, "timer"));
+					}
+
+					if (json.has("important"))
+					{
+						((Notification) component).setImportant(net.minecraft.util.JsonUtils.getBoolean(json, "important"));
 					}
 				}
 				else
 				{
-					t = new TextComponentString(s);
+					component = new TextComponentString(s);
 				}
 			}
-			else if (o.has("translate"))
+			else if (json.has("translate"))
 			{
-				String s = o.get("translate").getAsString();
+				String s = json.get("translate").getAsString();
 
-				if (o.has("with"))
+				if (json.has("with"))
 				{
-					JsonArray a = o.getAsJsonArray("with");
+					JsonArray a = json.getAsJsonArray("with");
 					Object[] o1 = new Object[a.size()];
 
 					for (int i = 0; i < o1.length; ++i)
@@ -513,46 +473,46 @@ public class JsonUtils
 						}
 					}
 
-					t = new TextComponentTranslation(s, o1);
+					component = new TextComponentTranslation(s, o1);
 				}
 				else
 				{
-					t = new TextComponentTranslation(s, CommonUtils.NO_OBJECTS);
+					component = new TextComponentTranslation(s, CommonUtils.NO_OBJECTS);
 				}
 			}
-			else if (o.has("score"))
+			else if (json.has("score"))
 			{
-				JsonObject o1 = o.getAsJsonObject("score");
+				JsonObject o1 = json.getAsJsonObject("score");
 
 				if (!o1.has("name") || !o1.has("objective"))
 				{
 					throw new JsonParseException("A score component needs a least a name and an objective");
 				}
 
-				t = new TextComponentScore(net.minecraft.util.JsonUtils.getString(o1, "name"), net.minecraft.util.JsonUtils.getString(o1, "objective"));
+				component = new TextComponentScore(net.minecraft.util.JsonUtils.getString(o1, "name"), net.minecraft.util.JsonUtils.getString(o1, "objective"));
 
 				if (o1.has("value"))
 				{
-					((TextComponentScore) t).setValue(net.minecraft.util.JsonUtils.getString(o1, "value"));
+					((TextComponentScore) component).setValue(net.minecraft.util.JsonUtils.getString(o1, "value"));
 				}
 			}
-			else if (o.has("selector"))
+			else if (json.has("selector"))
 			{
-				t = new TextComponentSelector(net.minecraft.util.JsonUtils.getString(o, "selector"));
+				component = new TextComponentSelector(net.minecraft.util.JsonUtils.getString(json, "selector"));
 			}
 			else
 			{
-				if (!o.has("keybind"))
+				if (!json.has("keybind"))
 				{
-					throw new JsonParseException("Don't know how to turn " + e + " into a Component");
+					throw new JsonParseException("Don't know how to turn " + element + " into a Component");
 				}
 
-				t = new TextComponentKeybind(net.minecraft.util.JsonUtils.getString(o, "keybind"));
+				component = new TextComponentKeybind(net.minecraft.util.JsonUtils.getString(json, "keybind"));
 			}
 
-			if (o.has("extra"))
+			if (json.has("extra"))
 			{
-				JsonArray a = o.getAsJsonArray("extra");
+				JsonArray a = json.getAsJsonArray("extra");
 
 				if (a.size() <= 0)
 				{
@@ -561,74 +521,74 @@ public class JsonUtils
 
 				for (int j = 0; j < a.size(); ++j)
 				{
-					t.appendSibling(deserializeTextComponent(a.get(j)));
+					component.appendSibling(deserializeTextComponent(a.get(j)));
 				}
 			}
 
-			Style style = (o.has("monospaced") || o.has("background")) ? new CustomStyle() : new Style();
+			Style style = (json.has("monospaced") || json.has("background")) ? new CustomStyle() : new Style();
 
-			if (o.has("bold"))
+			if (json.has("bold"))
 			{
-				style.bold = o.get("bold").getAsBoolean();
+				style.bold = json.get("bold").getAsBoolean();
 			}
 
-			if (o.has("italic"))
+			if (json.has("italic"))
 			{
-				style.italic = o.get("italic").getAsBoolean();
+				style.italic = json.get("italic").getAsBoolean();
 			}
 
-			if (o.has("underlined"))
+			if (json.has("underlined"))
 			{
-				style.underlined = o.get("underlined").getAsBoolean();
+				style.underlined = json.get("underlined").getAsBoolean();
 			}
 
-			if (o.has("strikethrough"))
+			if (json.has("strikethrough"))
 			{
-				style.strikethrough = o.get("strikethrough").getAsBoolean();
+				style.strikethrough = json.get("strikethrough").getAsBoolean();
 			}
 
-			if (o.has("obfuscated"))
+			if (json.has("obfuscated"))
 			{
-				style.obfuscated = o.get("obfuscated").getAsBoolean();
+				style.obfuscated = json.get("obfuscated").getAsBoolean();
 			}
 
-			if (o.has("color"))
+			if (json.has("color"))
 			{
-				style.color = TextFormatting.getValueByName(o.get("color").getAsString());
+				style.color = TextFormatting.getValueByName(json.get("color").getAsString());
 			}
 
 			if (style instanceof CustomStyle)
 			{
 				CustomStyle cs = (CustomStyle) style;
 
-				if (o.has("monospaced"))
+				if (json.has("monospaced"))
 				{
-					cs.monospaced = o.get("monospaced").getAsBoolean();
+					cs.monospaced = json.get("monospaced").getAsBoolean();
 				}
 
-				if (o.has("background"))
+				if (json.has("background"))
 				{
-					cs.background = TextFormatting.getValueByName(o.get("background").getAsString());
+					cs.background = TextFormatting.getValueByName(json.get("background").getAsString());
 				}
 			}
 
-			if (o.has("insertion"))
+			if (json.has("insertion"))
 			{
-				style.insertion = o.get("insertion").getAsString();
+				style.insertion = json.get("insertion").getAsString();
 			}
 
-			if (o.has("clickEvent"))
+			if (json.has("clickEvent"))
 			{
-				style.clickEvent = deserializeClickEvent(o.get("clickEvent"));
+				style.clickEvent = deserializeClickEvent(json.get("clickEvent"));
 			}
 
-			if (o.has("hoverEvent"))
+			if (json.has("hoverEvent"))
 			{
-				style.hoverEvent = deserializeHoverEvent(o.get("hoverEvent"));
+				style.hoverEvent = deserializeHoverEvent(json.get("hoverEvent"));
 			}
 
-			t.setStyle(style);
-			return t;
+			component.setStyle(style);
+			return component;
 		}
 	}
 
@@ -646,14 +606,14 @@ public class JsonUtils
 	}
 
 	@Nullable
-	public static ClickEvent deserializeClickEvent(JsonElement e)
+	public static ClickEvent deserializeClickEvent(JsonElement element)
 	{
-		if (e == null || !e.isJsonObject())
+		if (isNull(element))
 		{
 			return null;
 		}
 
-		JsonObject o = e.getAsJsonObject();
+		JsonObject o = element.getAsJsonObject();
 
 		if (o != null)
 		{
@@ -685,14 +645,14 @@ public class JsonUtils
 	}
 
 	@Nullable
-	public static HoverEvent deserializeHoverEvent(JsonElement e)
+	public static HoverEvent deserializeHoverEvent(@Nullable JsonElement element)
 	{
-		if (e == null || !e.isJsonObject())
+		if (isNull(element))
 		{
 			return null;
 		}
 
-		JsonObject o = e.getAsJsonObject();
+		JsonObject o = element.getAsJsonObject();
 
 		if (o != null)
 		{
@@ -710,14 +670,14 @@ public class JsonUtils
 		return null;
 	}
 
-	public static JsonObject fromJsonTree(@Nonnull JsonObject o)
+	public static JsonObject fromJsonTree(JsonObject o)
 	{
 		JsonObject map = new JsonObject();
 		fromJsonTree0(map, null, o);
 		return map;
 	}
 
-	private static void fromJsonTree0(@Nonnull JsonObject map, @Nullable String id0, @Nonnull JsonObject o)
+	private static void fromJsonTree0(JsonObject map, @Nullable String id0, JsonObject o)
 	{
 		for (Map.Entry<String, JsonElement> entry : o.entrySet())
 		{
@@ -732,14 +692,19 @@ public class JsonUtils
 		}
 	}
 
-	public static JsonObject toJsonTree(@Nonnull Collection<Map.Entry<String, JsonElement>> tree)
+	public static JsonObject toJsonTree(Collection<Map.Entry<String, JsonElement>> tree)
 	{
 		JsonObject o1 = new JsonObject();
-		tree.forEach(entry -> findGroup(o1, entry.getKey()).add(lastKeyPart(entry.getKey()), entry.getValue()));
+
+		for (Map.Entry<String, JsonElement> entry : tree)
+		{
+			findGroup(o1, entry.getKey()).add(lastKeyPart(entry.getKey()), entry.getValue());
+		}
+
 		return o1;
 	}
 
-	private static String lastKeyPart(@Nonnull String s)
+	private static String lastKeyPart(String s)
 	{
 		int idx = s.lastIndexOf('.');
 
@@ -751,7 +716,7 @@ public class JsonUtils
 		return s;
 	}
 
-	private static JsonObject findGroup(@Nonnull JsonObject parent, @Nonnull String s)
+	private static JsonObject findGroup(JsonObject parent, String s)
 	{
 		int idx = s.indexOf('.');
 
@@ -773,8 +738,8 @@ public class JsonUtils
 		return parent;
 	}
 
-	@Nonnull
-	public static String fixJsonString(@Nonnull String json)
+
+	public static String fixJsonString(String json)
 	{
 		if (json.isEmpty())
 		{
@@ -787,5 +752,92 @@ public class JsonUtils
 		}
 
 		return json;
+	}
+
+
+	public static JsonElement toJson(@Nullable NBTBase nbt)
+	{
+		if (nbt == null)
+		{
+			return JsonNull.INSTANCE;
+		}
+
+		switch (nbt.getId())
+		{
+			case Constants.NBT.TAG_COMPOUND:
+			{
+				JsonObject json = new JsonObject();
+
+				if (!nbt.hasNoTags())
+				{
+					NBTTagCompound tagCompound = (NBTTagCompound) nbt;
+					for (String s : tagCompound.getKeySet())
+					{
+						json.add(s, toJson(tagCompound.getTag(s)));
+					}
+				}
+
+				return json;
+			}
+			case Constants.NBT.TAG_LIST:
+			{
+				JsonArray json = new JsonArray();
+
+				if (!nbt.hasNoTags())
+				{
+					NBTTagList list = (NBTTagList) nbt;
+					for (int i = 0; i < list.tagCount(); i++)
+					{
+						json.add(toJson(list.get(i)));
+					}
+				}
+
+				return json;
+			}
+			case Constants.NBT.TAG_STRING:
+				return new JsonPrimitive(((NBTTagString) nbt).getString());
+			case Constants.NBT.TAG_BYTE:
+				return new JsonPrimitive(((NBTPrimitive) nbt).getByte());
+			case Constants.NBT.TAG_SHORT:
+				return new JsonPrimitive(((NBTPrimitive) nbt).getShort());
+			case Constants.NBT.TAG_INT:
+				return new JsonPrimitive(((NBTPrimitive) nbt).getInt());
+			case Constants.NBT.TAG_LONG:
+				return new JsonPrimitive(((NBTPrimitive) nbt).getLong());
+			case Constants.NBT.TAG_FLOAT:
+				return new JsonPrimitive(((NBTPrimitive) nbt).getFloat());
+			case Constants.NBT.TAG_DOUBLE:
+				return new JsonPrimitive(((NBTPrimitive) nbt).getDouble());
+			case Constants.NBT.TAG_BYTE_ARRAY:
+			{
+				JsonArray json = new JsonArray();
+
+				if (!nbt.hasNoTags())
+				{
+					for (byte v : ((NBTTagByteArray) nbt).getByteArray())
+					{
+						json.add(v);
+					}
+				}
+
+				return json;
+			}
+			case Constants.NBT.TAG_INT_ARRAY:
+			{
+				JsonArray json = new JsonArray();
+
+				if (!nbt.hasNoTags())
+				{
+					for (int v : ((NBTTagIntArray) nbt).getIntArray())
+					{
+						json.add(v);
+					}
+				}
+
+				return json;
+			}
+			default:
+				return JsonNull.INSTANCE;
+		}
 	}
 }

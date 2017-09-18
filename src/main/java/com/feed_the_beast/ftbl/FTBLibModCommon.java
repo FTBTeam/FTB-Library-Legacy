@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.api.IDataProvider;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftbl.api.events.registry.RegisterContainerProvidersEvent;
@@ -62,7 +61,6 @@ import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -82,7 +80,6 @@ public class FTBLibModCommon
 	public static final Map<UUID, EditingConfig> TEMP_SERVER_CONFIG = new HashMap<>();
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
-	public static final Map<ResourceLocation, IDataProvider<IUniverse>> DATA_PROVIDER_UNIVERSE = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
 	public static final Map<ResourceLocation, IDataProvider<IForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
 	private static final Map<String, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
@@ -210,7 +207,6 @@ public class FTBLibModCommon
 		guideLines.register("contents", (page, json) -> new GuideContentsLine(page));
 		guideLines.post();
 
-		new RegisterDataProvidersEvent.Universe(DATA_PROVIDER_UNIVERSE::put).post();
 		new RegisterDataProvidersEvent.Player(DATA_PROVIDER_PLAYER::put).post();
 		new RegisterDataProvidersEvent.Team(DATA_PROVIDER_TEAM::put).post();
 		new RegisterContainerProvidersEvent(GUI_CONTAINER_PROVIDERS::put).post();
@@ -239,24 +235,23 @@ public class FTBLibModCommon
 		}
 	}
 
-	@Nullable
 	public <T> NBTDataStorage createDataStorage(T owner, Map<ResourceLocation, IDataProvider<T>> map)
 	{
 		NBTDataStorage storage = new NBTDataStorage();
 
-		map.forEach((key, value) ->
+		for (Map.Entry<ResourceLocation, IDataProvider<T>> entry : map.entrySet())
 		{
 			try
 			{
-				storage.add(key, value.getData(owner));
+				storage.add(entry.getKey(), entry.getValue().getData(owner));
 			}
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
 			}
-		});
+		}
 
-		return storage.isEmpty() ? null : storage;
+		return storage.isEmpty() ? NBTDataStorage.EMPTY : storage;
 	}
 
 	public void handleClientMessage(MessageBase<?> message)

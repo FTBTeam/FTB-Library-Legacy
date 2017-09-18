@@ -1,8 +1,10 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.lib.LangKey;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Collections;
 import java.util.List;
@@ -14,9 +16,9 @@ public class TextField extends Button
 {
 	public List<String> text = Collections.emptyList();
 
-	public TextField(int x, int y, int width, int height, FontRenderer font, String txt)
+	public TextField(int x, int y, int w, int h, FontRenderer font, String txt)
 	{
-		super(x, y, width, height);
+		super(x, y, w, h);
 
 		if (!txt.isEmpty())
 		{
@@ -30,16 +32,26 @@ public class TextField extends Button
 			}
 		}
 
-		if (height <= 0)
+		if (height <= 1)
 		{
-			int h = font.FONT_HEIGHT + 1;
-			setHeight(text.isEmpty() ? h : h * text.size());
+			int h1 = font.FONT_HEIGHT + 1;
+			setHeight(text.isEmpty() ? h1 : h1 * text.size());
 		}
 
 		if (text.size() == 1 && !text.get(0).isEmpty())
 		{
 			setWidth(font.getStringWidth(text.get(0)));
 		}
+	}
+
+	public TextField(int x, int y, int w, int h, FontRenderer font, LangKey key)
+	{
+		this(x, y, w, h, font, key.translate());
+	}
+
+	public TextField(int x, int y, int w, int h, FontRenderer font, ITextComponent component)
+	{
+		this(x, y, w, h, font, component.getFormattedText());
 	}
 
 	@Override

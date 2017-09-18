@@ -22,7 +22,6 @@ import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -32,22 +31,17 @@ import com.feed_the_beast.ftbl.net.MessageDisplayTeamMsg;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,16 +116,16 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		}
 	}
 
-	private boolean isValid;
-	private final NBTDataStorage dataStorage;
-	private final ConfigEnum<EnumTeamColor> color;
-	private IForgePlayer owner;
-	private final ConfigString title;
-	private final ConfigString desc;
-	private final ConfigBoolean freeToJoin;
-	private List<ITeamMessage> chatHistory;
-	private Map<UUID, EnumTeamStatus> players;
-	private final ConfigGroup cachedConfig;
+	public boolean isValid;
+	public final NBTDataStorage dataStorage;
+	public final ConfigEnum<EnumTeamColor> color;
+	public IForgePlayer owner;
+	public final ConfigString title;
+	public final ConfigString desc;
+	public final ConfigBoolean freeToJoin;
+	public final List<ITeamMessage> chatHistory;
+	public final Map<UUID, EnumTeamStatus> players;
+	public final ConfigGroup cachedConfig;
 
 	public ForgeTeam(String id, @Nullable IForgePlayer _owner)
 	{
@@ -142,6 +136,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		title = new ConfigString("");
 		desc = new ConfigString("");
 		freeToJoin = new ConfigBoolean(false);
+		chatHistory = new ArrayList<>();
+		players = new HashMap<>();
+
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
 
 		cachedConfig = new ConfigGroup(FTBLibLang.MY_TEAM_SETTINGS.textComponent());
@@ -159,156 +156,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	}
 
 	@Override
-	@Nullable
-	public INBTSerializable<?> getData(ResourceLocation id)
+	public NBTDataStorage getData()
 	{
-		return dataStorage == null ? null : dataStorage.get(id);
-	}
-
-	@Override
-	public NBTTagCompound serializeNBT()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("Owner", StringUtils.fromUUID(owner.getId()));
-		nbt.setString("Color", color.getString());
-
-		if (!title.isEmpty())
-		{
-			nbt.setString("Title", title.getString());
-		}
-
-		if (!desc.isEmpty())
-		{
-			nbt.setString("Desc", desc.getString());
-		}
-
-		nbt.setBoolean("FreeToJoin", freeToJoin.getBoolean());
-
-		if (players != null && !players.isEmpty())
-		{
-			NBTTagCompound nbt1 = new NBTTagCompound();
-
-			for (Map.Entry<UUID, EnumTeamStatus> entry : players.entrySet())
-			{
-				nbt1.setString(StringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
-			}
-
-			nbt.setTag("Players", nbt1);
-		}
-
-		if (dataStorage != null)
-		{
-			nbt.setTag("Data", dataStorage.serializeNBT());
-		}
-
-		if (chatHistory != null && !chatHistory.isEmpty())
-		{
-			NBTTagList list = new NBTTagList();
-
-			for (ITeamMessage msg : chatHistory)
-			{
-				list.appendTag(Message.toNBT(msg));
-			}
-
-			nbt.setTag("Chat", list);
-		}
-
-		return nbt;
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		owner = Universe.INSTANCE.getPlayer(StringUtils.fromString(nbt.getString("Owner")));
-		color.setValueFromString(nbt.getString("Color"), false);
-		title.setString(nbt.getString("Title"));
-		desc.setString(nbt.getString("Desc"));
-
-		if (nbt.hasKey("Flags"))
-		{
-			int flags = nbt.getInteger("Flags");
-			freeToJoin.setBoolean(Bits.getFlag(flags, 1));
-			isValid = !Bits.getFlag(flags, 2);
-		}
-		else
-		{
-			freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
-		}
-
-		if (players != null)
-		{
-			players.clear();
-		}
-
-		if (nbt.hasKey("Players"))
-		{
-			if (players == null)
-			{
-				players = new HashMap<>();
-			}
-
-			NBTTagCompound nbt1 = nbt.getCompoundTag("Players");
-
-			for (String s : nbt1.getKeySet())
-			{
-				UUID id = StringUtils.fromString(s);
-
-				if (id != null)
-				{
-					EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(nbt1.getString(s));
-
-					if (status != null && status.canBeSet())
-					{
-						players.put(id, status);
-					}
-				}
-			}
-		}
-
-		if (nbt.hasKey("Invited"))
-		{
-			if (players == null)
-			{
-				players = new HashMap<>();
-			}
-
-			NBTTagList list = nbt.getTagList("Invited", Constants.NBT.TAG_STRING);
-
-			for (int i = 0; i < list.tagCount(); i++)
-			{
-				UUID id = StringUtils.fromString(list.getStringTagAt(i));
-
-				if (id != null && !players.containsKey(id))
-				{
-					players.put(id, EnumTeamStatus.INVITED);
-				}
-			}
-		}
-
-		if (dataStorage != null)
-		{
-			dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
-		}
-
-		if (chatHistory != null)
-		{
-			chatHistory.clear();
-		}
-
-		if (nbt.hasKey("Chat"))
-		{
-			if (chatHistory == null)
-			{
-				chatHistory = new ArrayList<>();
-			}
-
-			NBTTagList list = nbt.getTagList("Chat", Constants.NBT.TAG_COMPOUND);
-
-			for (int i = 0; i < list.tagCount(); i++)
-			{
-				chatHistory.add(new Message(list.getCompoundTagAt(i)));
-			}
-		}
+		return dataStorage;
 	}
 
 	@Override
@@ -411,14 +261,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	{
 		if (status.canBeSet() && !status.isNone())
 		{
-			if (players == null)
-			{
-				players = new HashMap<>();
-			}
-
 			players.put(playerId, status);
 		}
-		else if (players != null)
+		else
 		{
 			players.remove(playerId);
 		}
@@ -519,11 +364,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public void printMessage(ITeamMessage message)
 	{
-		if (chatHistory == null)
-		{
-			chatHistory = new ArrayList<>();
-		}
-
 		while (chatHistory.size() >= FTBLibConfig.teams.max_team_chat_history)
 		{
 			chatHistory.remove(0);
@@ -547,7 +387,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public List<ITeamMessage> getMessages()
 	{
-		return chatHistory == null ? Collections.emptyList() : chatHistory;
+		return chatHistory;
 	}
 
 	public Collection<EntityPlayerMP> getOnlineTeamPlayers(EnumTeamStatus status)

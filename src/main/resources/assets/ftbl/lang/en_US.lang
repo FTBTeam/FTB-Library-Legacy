@@ -30,6 +30,8 @@ gui.blacklist=Blacklist
 gui.color=Color
 gui.downloading=Downloading...
 gui.infinite=Infinite
+gui.width=Width
+gui.height=Height
 
 ## Stats
 ftbl.stat.time_played=Time Played
@@ -52,31 +54,27 @@ ftbl.dside.left=Left
 ftbl.dside.right=Right
 
 # FTBLib Lang
-raw=%s
+ftbl=FTBLib
 wip=Work In Progress!
+deprecated=This method is deprecated, please use %s
 example=Example:
 click_here=[Click Here]
 feature_disabled=This feature is disabled!
 missing_args=Missing Arguments: %s!
 missing_args_num=Missing Arguments: %s more!
-
-ftbl=FTBLib
-ftbl.lang.team_config_option=Team config option
-ftbl.lang.deprecated=This method is deprecated, please use %s
+error=Error: %s
+owner=Owner: %s
+delete_item=Do you want to delete '%s'?
+server_forced=Server overrides to '%s'
+commands=Commands
+my_permissions=My Permissions
+all_permissions=All Permissions
+difficulty=Difficulty: %s
 
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
 ftbl.lang.reload_client=FTBLib: Client reloaded in %s
 ftbl.lang.reload_client_config=Server Reloaded. You can run %s to reload client data
 ftbl.lang.reload_failed=These IDs failed to reload:
-
-ftbl.lang.error=Error: %s
-ftbl.lang.owner=Owner: %s
-ftbl.lang.delete_item=Do you want to delete '%s'?
-ftbl.lang.server_forced=Server overrides to '%s'
-ftbl.lang.commands=Commands
-ftbl.lang.my_permissions=My Permissions
-ftbl.lang.all_permissions=All Permissions
-ftbl.lang.difficulty=Difficulty: %s
 
 ftbl.lang.config_command.invalid_key=Can't find config value '%s'!
 ftbl.lang.config_command.setting=Setting %s to %s
@@ -106,11 +104,11 @@ ftbl_client.config.general.mirror_commands=Mirror /ftbc Commands
 ftbl_client.config.general.replace_vanilla_status_messages=Replace vanilla status messages
 ftbl_client.config.general.enable_chunk_selector_depth=Enable Chunk Selector Depth
 
-ftbl_client.config.guide=Guide
-ftbl_client.config.guide.border_width=Border Width
-ftbl_client.config.guide.border_height=Border Height
-ftbl_client.config.guide.background=Background Color
-ftbl_client.config.guide.text=Text Color
+guide=Guide
+guide.config.border=Border
+guide.config.colors=Colors
+guide.config.colors.background=Background
+guide.config.colors.text=Text
 
 # Player Settings
 player_config=My Server Settings
@@ -148,7 +146,6 @@ ftbl.lang.team.error.must_transfer_ownership=You must transfer ownership!
 ftbl.lang.team.error.already_invited=%s already is invited!
 ftbl.lang.team.error.failed_to_join=Can't join this team!
 ftbl.lang.team.permission.set=Permission '%s' for %s set to %s
-ftbl.lang.team.permission.already_set=Permission '%s' for %s already is set to %b!
 ftbl.lang.team.permission.owner=Can't change owner's permissions!
 ftbl.lang.team.notification=You haven't joined or created a team yet! %s to open TeamsGUI or %s to hide this message.
 ftbl.lang.team.notification.hide=Hide this Message
@@ -165,8 +162,8 @@ ftbl.lang.team_status.owner=Owner
 
 # Action Buttons
 sidebar_button=Sidebar Buttons
-sidebar_button.ftbl.teams_gui=Teams GUI
-sidebar_button.ftbl.teams_gui.tooltip=Opens Teams GUI where you can manage your team, chat with them and edit team settings
+sidebar_button.ftbl.my_team=My Team
+sidebar_button.ftbl.my_team.tooltip=Opens a GUI where you can manage your team
 sidebar_button.ftbl.settings=Client Settings
 sidebar_button.ftbl.settings.tooltip=Edit client-side-only settings
 sidebar_button.ftbl.notifications=Notifications

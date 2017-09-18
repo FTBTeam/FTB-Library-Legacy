@@ -18,6 +18,8 @@ public interface INotification extends ITextComponent
 
 	int getTimer();
 
+	boolean isImportant();
+
 	default void send(@Nullable EntityPlayer player)
 	{
 		ServerUtils.notify(player, this);

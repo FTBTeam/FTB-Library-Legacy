@@ -8,13 +8,15 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
+import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.config.GuiConfig;
@@ -60,7 +62,7 @@ public class GuiClientConfig extends GuiBase
 						if (requiresMcRestart)
 						{
 							flag = false;
-							mc.displayGuiScreen(new GuiMessageDialog(parentScreen, "fml.configgui.gameRestartTitle", new TextComponentString(I18n.format("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
+							mc.displayGuiScreen(new GuiMessageDialog(parentScreen, "fml.configgui.gameRestartTitle", new TextComponentString(StringUtils.translate("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
 						}
 
 						if (parentScreen instanceof GuiConfig)
@@ -90,8 +92,7 @@ public class GuiClientConfig extends GuiBase
 	{
 		public ButtonConfigBase(String title, Icon icon)
 		{
-			super(2, 0, getFont().getStringWidth(title) + (icon.isEmpty() ? 6 : 24), 20);
-			setTitle(title);
+			super(0, 0, getFont().getStringWidth(title) + 28, 20, title);
 			setIcon(icon);
 		}
 
@@ -144,75 +145,115 @@ public class GuiClientConfig extends GuiBase
 		}
 	}
 
-	private final List<Button> buttons;
+	private final Panel panelButtons;
+	private final PanelScrollBar scrollBar;
 
 	public GuiClientConfig()
 	{
 		super(0, 0);
-		buttons = new ArrayList<>();
 
-		for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
-		{
-			buttons.add(new ButtonClientConfig(config));
-		}
-
-		buttons.sort((o1, o2) -> o1.getTitle(this).compareToIgnoreCase(o2.getTitle(this)));
-
-		if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
-		{
-			buttons.add(0, new ButtonConfigBase(StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
-			{
-				@Override
-				public void onClicked(GuiBase gui, MouseButton button)
-				{
-					GuiHelper.playClickSound();
-					new GuiLoading().openGui();
-					ClientUtils.execClientCommand("/ftb my_settings");
-				}
-			});
-
-
-			buttons.add(1, new ButtonConfigBase(StringUtils.translate("team_config"), GuiIcons.FRIENDS)
-			{
-				@Override
-				public void onClicked(GuiBase gui, MouseButton button)
-				{
-					GuiHelper.playClickSound();
-					new GuiLoading().openGui();
-					ClientUtils.execClientCommand("/ftb team config");
-				}
-			});
-		}
-
-		buttons.add(2, new ButtonConfigBase(StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		panelButtons = new Panel(2, 1, 0, 162)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void addWidgets()
 			{
-				GuiHelper.playClickSound();
-				new GuiSidebarButtonConfig().openGui();
+				width = 0;
+				List<Button> buttons = new ArrayList<>();
+
+				for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
+				{
+					buttons.add(new ButtonClientConfig(config));
+				}
+
+				buttons.sort((o1, o2) -> o1.getTitle(GuiClientConfig.this).compareToIgnoreCase(o2.getTitle(GuiClientConfig.this)));
+
+				if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
+				{
+					buttons.add(0, new ButtonConfigBase(StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+					{
+						@Override
+						public void onClicked(GuiBase gui, MouseButton button)
+						{
+							GuiHelper.playClickSound();
+							new GuiLoading().openGui();
+							ClientUtils.execClientCommand("/ftb my_settings");
+						}
+					});
+
+
+					buttons.add(1, new ButtonConfigBase(StringUtils.translate("team_config"), GuiIcons.FRIENDS)
+					{
+						@Override
+						public void onClicked(GuiBase gui, MouseButton button)
+						{
+							GuiHelper.playClickSound();
+							new GuiLoading().openGui();
+							ClientUtils.execClientCommand("/ftb team config");
+						}
+					});
+				}
+
+				buttons.add(2, new ButtonConfigBase(StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+				{
+					@Override
+					public void onClicked(GuiBase gui, MouseButton button)
+					{
+						GuiHelper.playClickSound();
+						new GuiSidebarButtonConfig().openGui();
+					}
+				});
+
+				addAll(buttons);
+
+				for (Widget w : widgets)
+				{
+					setWidth(Math.max(width, w.width));
+				}
+
+				for (Widget w : widgets)
+				{
+					w.setWidth(width - 4);
+				}
+
+				updateWidgetPositions();
 			}
-		});
 
-		for (Button b : buttons)
+			@Override
+			public void updateWidgetPositions()
+			{
+				scrollBar.setElementSize(align(new WidgetLayout.Vertical(1, 1, 1)));
+				scrollBar.setSrollStepFromOneElementSize(19);
+			}
+		};
+
+		panelButtons.addFlags(Panel.FLAG_DEFAULTS);
+
+		scrollBar = new PanelScrollBar(202, 2, 16, 160, 0, panelButtons)
 		{
-			setWidth(Math.max(width, b.width));
-		}
+			@Override
+			public boolean shouldRender(GuiBase gui)
+			{
+				return true;
+			}
+		};
 
-		for (Button b : buttons)
-		{
-			b.setWidth(width);
-		}
-
-		setWidth(width + 4);
-		setHeight(3 + buttons.size() * 21);
+		setWidth(220);
+		setHeight(164);
 	}
 
 	@Override
 	public void addWidgets()
 	{
-		addAll(buttons);
-		align(new WidgetLayout.Vertical(2, 1, 2));
+		addAll(panelButtons, scrollBar);
+		scrollBar.setX(panelButtons.width - 1);
+		setWidth(panelButtons.width + 17);
+		posX = (getScreen().getScaledWidth() - width) / 2;
+	}
+
+	@Override
+	public void onClosed()
+	{
+		FTBLibModClient.saveSidebarButtonConfig();
 	}
 
 	@Override

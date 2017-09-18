@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuideConfig;
 import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
@@ -78,6 +79,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	{
 		super.preInit(event);
 		FTBLibClientConfig.sync();
+		GuideConfig.sync();
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 		ClientUtils.localPlayerHead = new PlayerHeadImage(ClientUtils.MC.getSession().getProfile().getName());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);

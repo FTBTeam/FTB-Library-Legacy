@@ -54,4 +54,6 @@ public interface GuiLang
 	LangKey COLOR = LangKey.of("gui.color");
 	LangKey DOWNLOADING = LangKey.of("gui.downloading");
 	LangKey INFINITE = LangKey.of("gui.infinite");
+	LangKey WIDTH = LangKey.of("gui.width");
+	LangKey HEIGHT = LangKey.of("gui.height");
 }
