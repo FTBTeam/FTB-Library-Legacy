@@ -3,9 +3,8 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 
 import java.util.UUID;
 
@@ -14,21 +13,34 @@ import java.util.UUID;
  */
 public class PublicTeamData extends FinalIDObject implements Comparable<PublicTeamData>
 {
+	public static final DataOut.Serializer<PublicTeamData> SERIALIZER = (data, d) ->
+	{
+		data.writeString(d.getName());
+		data.writeString(d.displayName);
+		data.writeString(d.description);
+		data.write(EnumTeamColor.NAME_MAP, d.color);
+		data.writeUUID(d.ownerId);
+		data.writeString(d.ownerName);
+		data.writeBoolean(d.isInvited);
+	};
+
+	public static final DataIn.Deserializer<PublicTeamData> DESERIALIZER = PublicTeamData::new;
+
 	public final String displayName, description;
 	public final EnumTeamColor color;
 	public final UUID ownerId;
 	public final String ownerName;
 	public final boolean isInvited;
 
-	public PublicTeamData(ByteBuf io)
+	public PublicTeamData(DataIn data)
 	{
-		super(ByteBufUtils.readUTF8String(io));
-		displayName = ByteBufUtils.readUTF8String(io);
-		description = ByteBufUtils.readUTF8String(io);
-		color = EnumTeamColor.NAME_MAP.read(io);
-		ownerId = NetUtils.readUUID(io);
-		ownerName = ByteBufUtils.readUTF8String(io);
-		isInvited = io.readBoolean();
+		super(data.readString());
+		displayName = data.readString();
+		description = data.readString();
+		color = data.read(EnumTeamColor.NAME_MAP);
+		ownerId = data.readUUID();
+		ownerName = data.readString();
+		isInvited = data.readBoolean();
 	}
 
 	public PublicTeamData(IForgeTeam team, boolean c)
@@ -40,17 +52,6 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 		ownerId = team.getOwner().getId();
 		ownerName = team.getOwner().getName();
 		isInvited = c;
-	}
-
-	public void write(ByteBuf io)
-	{
-		ByteBufUtils.writeUTF8String(io, getName());
-		ByteBufUtils.writeUTF8String(io, displayName);
-		ByteBufUtils.writeUTF8String(io, description);
-		EnumTeamColor.NAME_MAP.write(io, color);
-		NetUtils.writeUUID(io, ownerId);
-		ByteBufUtils.writeUTF8String(io, ownerName);
-		io.writeBoolean(isInvited);
 	}
 
 	@Override

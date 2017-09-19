@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import net.minecraft.util.IStringSerializable;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -50,10 +49,6 @@ public interface IForgeTeam extends IStringSerializable
 	void changeOwner(IForgePlayer player);
 
 	ConfigGroup getSettings();
-
-	void printMessage(ITeamMessage message);
-
-	List<ITeamMessage> getMessages();
 
 	boolean freeToJoin();
 }

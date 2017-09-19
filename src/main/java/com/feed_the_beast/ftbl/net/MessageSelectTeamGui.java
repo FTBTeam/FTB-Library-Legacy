@@ -6,9 +6,10 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiSelectTeam;
 import com.feed_the_beast.ftbl.client.teamsgui.PublicTeamData;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
@@ -42,24 +43,15 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		int s = io.readInt();
-		teams = new ArrayList<>(s);
-		while (--s >= 0)
-		{
-			teams.add(new PublicTeamData(io));
-		}
+		data.writeCollection(teams, PublicTeamData.SERIALIZER);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		io.writeInt(teams.size());
-		for (PublicTeamData t : teams)
-		{
-			t.write(io);
-		}
+		data.readCollection(teams, PublicTeamData.DESERIALIZER);
 	}
 
 	@Override

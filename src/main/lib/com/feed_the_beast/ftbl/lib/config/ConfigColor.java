@@ -2,9 +2,10 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MutableColor4I;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 
@@ -147,13 +148,13 @@ public class ConfigColor extends ConfigValue
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
 		data.writeInt(getInt());
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
 		getColor().set(data.readInt());
 	}

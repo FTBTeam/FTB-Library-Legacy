@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -94,14 +94,14 @@ public class ConfigTextComponent extends ConfigValue
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
-		NetUtils.writeTextComponent(data, getText());
+		data.writeTextComponent(getText());
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
-		setText(NetUtils.readTextComponent(data));
+		setText(data.readTextComponent());
 	}
 }

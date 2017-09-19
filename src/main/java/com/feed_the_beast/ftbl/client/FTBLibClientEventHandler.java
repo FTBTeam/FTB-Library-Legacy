@@ -3,9 +3,9 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
+import com.feed_the_beast.ftbl.api.events.CustomSidebarButtonTextEvent;
 import com.feed_the_beast.ftbl.api.guide.GuideType;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
-import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
@@ -347,7 +347,6 @@ public class FTBLibClientEventHandler
 		public final int index;
 		public final SidebarButton button;
 		public final String title;
-		public final boolean renderMessages;
 
 		public GuiButtonSidebar(int id, SidebarButton b)
 		{
@@ -355,7 +354,6 @@ public class FTBLibClientEventHandler
 			index = id;
 			button = b;
 			title = StringUtils.translate("sidebar_button." + b.getName());
-			renderMessages = b.getName().equals("ftbl.teams_gui");
 		}
 
 		@Override
@@ -486,15 +484,20 @@ public class FTBLibClientEventHandler
 
 			for (GuiButtonSidebar b : buttons)
 			{
-				if (b.renderMessages && MyTeamData.unreadMessages > 0)
+				if (b.button.customText)
 				{
-					String n = String.valueOf(MyTeamData.unreadMessages);
-					int nw = font.getStringWidth(n);
-					int width = 16;
-					GuiHelper.drawBlankRect(b.x + width - nw, b.y - 4, nw + 1, 9, Color4I.LIGHT_RED);
+					CustomSidebarButtonTextEvent event = new CustomSidebarButtonTextEvent(b.button.getName());
+					event.post();
 
-					font.drawString(n, b.x + width - nw + 1, b.y - 3, 0xFFFFFFFF);
-					GlStateManager.color(1F, 1F, 1F, 1F);
+					if (!event.getText().isEmpty())
+					{
+						int nw = font.getStringWidth(event.getText());
+						int width = 16;
+						GuiHelper.drawBlankRect(b.x + width - nw, b.y - 4, nw + 1, 9, Color4I.LIGHT_RED);
+
+						font.drawString(event.getText(), b.x + width - nw + 1, b.y - 3, 0xFFFFFFFF);
+						GlStateManager.color(1F, 1F, 1F, 1F);
+					}
 				}
 
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)

@@ -12,7 +12,7 @@ public interface ISharedData
 {
 	Side getSide();
 
-	UUID getUniverseID();
+	UUID getUniverseId();
 
 	Collection<String> optionalServerMods();
 }

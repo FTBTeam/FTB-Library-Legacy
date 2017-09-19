@@ -21,6 +21,7 @@ import java.util.List;
 public class GuiSidebarButtonConfig extends GuiBase
 {
 	private static final TexturelessRectangle BACKGROUND_ENABLED = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF47BF41);
+	private static final TexturelessRectangle BACKGROUND_UNAVAILABLE = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFF0094FF);
 	private static final TexturelessRectangle BACKGROUND_DISABLED = new TexturelessRectangle(Color4I.NONE).setLineColor(0xFFBC4242);
 
 	private class ButtonConfigSidebarButton extends Button
@@ -57,7 +58,7 @@ public class GuiSidebarButtonConfig extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 
-			(sidebarButton.configValue ? BACKGROUND_ENABLED : BACKGROUND_DISABLED).draw(ax, ay, width, height, Color4I.NONE);
+			(sidebarButton.configValue ? (sidebarButton.isAvailable() ? BACKGROUND_ENABLED : BACKGROUND_UNAVAILABLE) : BACKGROUND_DISABLED).draw(ax, ay, width, height, Color4I.NONE);
 
 			sidebarButton.icon.draw(ax + 2, ay + 2, 16, 16, Color4I.NONE);
 			gui.drawString(getTitle(gui), ax + 21, ay + 6);

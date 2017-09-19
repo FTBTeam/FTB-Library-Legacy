@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.IGuiWrapper;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -20,13 +19,9 @@ public class MessageCloseGui extends MessageToClient<MessageCloseGui>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public boolean hasData()
 	{
-	}
-
-	@Override
-	public void toBytes(ByteBuf io)
-	{
+		return false;
 	}
 
 	@Override

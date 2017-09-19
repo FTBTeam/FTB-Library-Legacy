@@ -8,6 +8,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -20,6 +21,7 @@ public final class LangKey implements IStringSerializable
 {
 	private final String key;
 	private final Class[] arguments;
+	private Style defaultStyle;
 
 	public static LangKey of(String key, Class... args)
 	{
@@ -30,6 +32,7 @@ public final class LangKey implements IStringSerializable
 	{
 		key = s;
 		arguments = a;
+		defaultStyle = null;
 	}
 
 	private static boolean canAssign(@Nullable Object o, @Nullable Class c)
@@ -78,6 +81,12 @@ public final class LangKey implements IStringSerializable
 		return key;
 	}
 
+	public LangKey setDefaultStyle(@Nullable Style style)
+	{
+		defaultStyle = style;
+		return this;
+	}
+
 	public String translate()
 	{
 		checkArguments(CommonUtils.NO_OBJECTS);
@@ -93,11 +102,16 @@ public final class LangKey implements IStringSerializable
 	public ITextComponent textComponent()
 	{
 		checkArguments(CommonUtils.NO_OBJECTS);
-		TextComponentTranslation component = new TextComponentTranslation(key, CommonUtils.NO_OBJECTS);
+		ITextComponent component = new TextComponentTranslation(key, CommonUtils.NO_OBJECTS);
 
 		if (FTBLibConfig.general.clientless_mode)
 		{
-			return new TextComponentString(component.getFormattedText());
+			component = new TextComponentString(component.getFormattedText());
+		}
+
+		if (defaultStyle != null)
+		{
+			component.setStyle(defaultStyle);
 		}
 
 		return component;
@@ -106,11 +120,16 @@ public final class LangKey implements IStringSerializable
 	public ITextComponent textComponent(Object... o)
 	{
 		checkArguments(o);
-		TextComponentTranslation component = new TextComponentTranslation(key, o);
+		ITextComponent component = new TextComponentTranslation(key, o);
 
 		if (FTBLibConfig.general.clientless_mode)
 		{
-			return new TextComponentString(component.getFormattedText());
+			component = new TextComponentString(component.getFormattedText());
+		}
+
+		if (defaultStyle != null)
+		{
+			component.setStyle(defaultStyle);
 		}
 
 		return component;

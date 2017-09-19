@@ -5,13 +5,12 @@ import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.NameMap;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -139,22 +138,22 @@ public class ConfigEnum<E> extends ConfigValue
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
 		data.writeShort(getNameMap().values.size());
 
 		for (Map.Entry<String, E> entry : getNameMap().map.entrySet())
 		{
-			ByteBufUtils.writeUTF8String(data, entry.getKey());
-			NetUtils.writeTextComponent(data, entry.getValue() instanceof ICustomName && ((ICustomName) entry.getValue()).hasCustomName() ? ((ICustomName) entry.getValue()).getCustomDisplayName() : null);
-			NetUtils.writeJsonElement(data, (entry.getValue() instanceof ICustomColor ? ((ICustomColor) entry.getValue()).getCustomColor() : Color4I.NONE).toJson());
+			data.writeString(entry.getKey());
+			data.writeTextComponent(entry.getValue() instanceof ICustomName && ((ICustomName) entry.getValue()).hasCustomName() ? ((ICustomName) entry.getValue()).getCustomDisplayName() : null);
+			data.writeJson((entry.getValue() instanceof ICustomColor ? ((ICustomColor) entry.getValue()).getCustomColor() : Color4I.NONE).toJson());
 		}
 
 		data.writeShort(getNameMap().getIndex(getValue()));
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
 		throw new IllegalStateException("Can't read Abstract Enum Property!");
 	}

@@ -36,9 +36,6 @@ public class FTBLibConfig
 	{
 		@Config.Comment("Automatically creates a team for player, based on their username and with a random color")
 		public boolean autocreate_teams = false;
-
-		@Config.RangeInt(min = 0, max = 10000)
-		public int max_team_chat_history = 300;
 	}
 
 	public static void sync()

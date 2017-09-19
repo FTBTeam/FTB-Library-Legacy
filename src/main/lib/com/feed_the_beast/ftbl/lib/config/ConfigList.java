@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -139,9 +139,9 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
-		ByteBufUtils.writeUTF8String(data, valueId);
+		data.writeString(valueId);
 
 		if (valueId.equals(ConfigNull.ID))
 		{
@@ -158,10 +158,10 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
 		clear();
-		valueId = ByteBufUtils.readUTF8String(data);
+		valueId = data.readString();
 
 		if (valueId.equals(ConfigNull.ID))
 		{

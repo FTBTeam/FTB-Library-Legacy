@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByteArray;
@@ -838,6 +839,24 @@ public class JsonUtils
 			}
 			default:
 				return JsonNull.INSTANCE;
+		}
+	}
+
+	@Nullable
+	public static NBTBase toNBT(@Nullable JsonElement element)
+	{
+		if (isNull(element))
+		{
+			return null;
+		}
+
+		try
+		{
+			return JsonToNBT.getTagFromJson(toJson(element));
+		}
+		catch (Exception ex)
+		{
+			return null;
 		}
 	}
 }

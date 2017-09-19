@@ -3,12 +3,10 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,43 +16,20 @@ import java.util.List;
  */
 public class MyTeamData extends FinalIDObject
 {
-	public static int unreadMessages = 0;
-
 	public String displayName, description;
-	public MyTeamPlayerData owner;
 	public List<MyTeamPlayerData> players;
-	public List<ITeamMessage> chatHistory;
+	public MyTeamPlayerData owner;
 	public MyTeamPlayerData me;
-	private int myPlayerIndex;
 
-	public MyTeamData(ByteBuf io)
+	public MyTeamData(DataIn data)
 	{
-		super(ByteBufUtils.readUTF8String(io));
-		displayName = ByteBufUtils.readUTF8String(io);
-		description = ByteBufUtils.readUTF8String(io);
-
-		int s = io.readInt();
+		super(data.readString());
+		displayName = data.readString();
+		description = data.readString();
 		players = new ArrayList<>();
-
-		while (--s >= 0)
-		{
-			MyTeamPlayerData pi = new MyTeamPlayerData(io);
-			players.add(pi);
-
-			if (owner == null && pi.status == EnumTeamStatus.OWNER)
-			{
-				owner = pi;
-			}
-		}
-
-		me = players.get(io.readInt());
-		s = io.readInt();
-		chatHistory = new ArrayList<>(s);
-
-		while (--s >= 0)
-		{
-			chatHistory.add(new ForgeTeam.Message(io));
-		}
+		data.readCollection(players, MyTeamPlayerData.DESERIALIZER);
+		owner = players.get(data.readUnsignedShort());
+		me = players.get(data.readUnsignedShort());
 	}
 
 	public MyTeamData(IUniverse universe, IForgeTeam team, IForgePlayer player)
@@ -64,7 +39,6 @@ public class MyTeamData extends FinalIDObject
 		description = team.getDesc();
 
 		players = new ArrayList<>();
-		chatHistory = team.getMessages();
 
 		int i = 0;
 		for (IForgePlayer p : universe.getPlayers())
@@ -76,7 +50,7 @@ public class MyTeamData extends FinalIDObject
 				MyTeamPlayerData pi = new MyTeamPlayerData(p, s);
 				players.add(pi);
 
-				if (owner == null && s == EnumTeamStatus.OWNER)
+				if (s == EnumTeamStatus.OWNER)
 				{
 					owner = pi;
 				}
@@ -84,7 +58,6 @@ public class MyTeamData extends FinalIDObject
 				if (p.equalsPlayer(player))
 				{
 					me = pi;
-					myPlayerIndex = i;
 				}
 
 				i++;
@@ -92,24 +65,31 @@ public class MyTeamData extends FinalIDObject
 		}
 	}
 
-	public void write(ByteBuf io)
+	public void write(DataOut data)
 	{
-		ByteBufUtils.writeUTF8String(io, getName());
-		ByteBufUtils.writeUTF8String(io, displayName);
-		ByteBufUtils.writeUTF8String(io, description);
-		io.writeInt(players.size());
+		data.writeString(getName());
+		data.writeString(displayName);
+		data.writeString(description);
+		data.writeCollection(players, MyTeamPlayerData.SERIALIZER);
+		int ownerIndex = -1;
+		int myIndex = -1;
 
-		for (MyTeamPlayerData p : players)
+		for (int i = 0; i < players.size(); i++)
 		{
-			p.write(io);
+			MyTeamPlayerData p = players.get(i);
+
+			if (p == me)
+			{
+				myIndex = i;
+			}
+
+			if (p.status == EnumTeamStatus.OWNER)
+			{
+				ownerIndex = i;
+			}
 		}
 
-		io.writeInt(myPlayerIndex);
-		io.writeInt(chatHistory.size());
-
-		for (ITeamMessage msg : chatHistory)
-		{
-			ForgeTeam.Message.write(io, msg);
-		}
+		data.writeInt(ownerIndex);
+		data.writeInt(myIndex);
 	}
 }

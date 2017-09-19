@@ -6,14 +6,13 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.UUID;
@@ -25,7 +24,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 {
 	private int typeID;
 	private NBTTagCompound syncData;
-	private UUID universeID;
+	private UUID universeId;
 	private ResourceLocation reloadId;
 
 	public MessageReload()
@@ -36,7 +35,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 	{
 		typeID = t.ordinal();
 		syncData = sync;
-		universeID = SharedServerData.INSTANCE.getUniverseID();
+		universeId = SharedServerData.INSTANCE.getUniverseId();
 		reloadId = id;
 	}
 
@@ -47,21 +46,21 @@ public class MessageReload extends MessageToClient<MessageReload>
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		io.writeByte(typeID);
-		ByteBufUtils.writeTag(io, syncData);
-		NetUtils.writeUUID(io, universeID);
-		NetUtils.writeResourceLocation(io, reloadId);
+		data.writeByte(typeID);
+		data.writeNBT(syncData);
+		data.writeUUID(universeId);
+		data.writeResourceLocation(reloadId);
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		typeID = io.readUnsignedByte();
-		syncData = ByteBufUtils.readTag(io);
-		universeID = NetUtils.readUUID(io);
-		reloadId = NetUtils.readResourceLocation(io);
+		typeID = data.readUnsignedByte();
+		syncData = data.readNBT();
+		universeId = data.readUUID();
+		reloadId = data.readResourceLocation();
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class MessageReload extends MessageToClient<MessageReload>
 	{
 		EnumReloadType type = m.typeID >= EnumReloadType.values().length ? EnumReloadType.MODE_CHANGED : EnumReloadType.values()[m.typeID];
 
-		SharedClientData.INSTANCE.universeID = m.universeID;
+		SharedClientData.INSTANCE.universeId = m.universeId;
 
 		for (String key : m.syncData.getKeySet())
 		{

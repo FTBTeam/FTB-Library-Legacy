@@ -2,14 +2,13 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -177,22 +176,22 @@ public class ConfigStringEnum extends ConfigValue
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
 		data.writeShort(keys.size());
 
 		for (String s : keys)
 		{
-			ByteBufUtils.writeUTF8String(data, s);
-			NetUtils.writeTextComponent(data, customNames.get(s));
-			NetUtils.writeJsonElement(data, customColors.get(s).toJson());
+			data.writeString(s);
+			data.writeTextComponent(customNames.get(s));
+			data.writeColor(customColors.get(s));
 		}
 
 		data.writeShort(getInt());
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
 		keys.clear();
 		customNames.clear();
@@ -201,10 +200,10 @@ public class ConfigStringEnum extends ConfigValue
 
 		while (--s >= 0)
 		{
-			String key = ByteBufUtils.readUTF8String(data);
+			String key = data.readString();
 			keys.add(key);
-			setCustomName(key, NetUtils.readTextComponent(data));
-			setCustomColor(key, Color4I.fromJson(NetUtils.readJsonElement(data)));
+			setCustomName(key, data.readTextComponent());
+			setCustomColor(key, data.readColor());
 		}
 
 		setString(keys.get(data.readUnsignedShort()));

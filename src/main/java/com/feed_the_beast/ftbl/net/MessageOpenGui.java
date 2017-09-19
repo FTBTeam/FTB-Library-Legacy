@@ -3,16 +3,15 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.api.IGuiProvider;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,10 +19,10 @@ import javax.annotation.Nullable;
 
 public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 {
-	private ResourceLocation guiID;
+	private ResourceLocation guiId;
 	private BlockPos pos;
-	private NBTTagCompound data;
-	private int windowID;
+	private NBTTagCompound nbt;
+	private int windowId;
 
 	public MessageOpenGui()
 	{
@@ -31,10 +30,10 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
 	public MessageOpenGui(ResourceLocation key, BlockPos p, @Nullable NBTTagCompound tag, int wid)
 	{
-		guiID = key;
+		guiId = key;
 		pos = p;
-		data = tag;
-		windowID = wid;
+		nbt = tag;
+		windowId = wid;
 	}
 
 	@Override
@@ -44,37 +43,37 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		guiID = NetUtils.readResourceLocation(io);
-		pos = NetUtils.readPos(io);
-		data = ByteBufUtils.readTag(io);
-		windowID = io.readUnsignedByte();
+		data.writeResourceLocation(guiId);
+		data.writePos(pos);
+		data.writeNBT(nbt);
+		data.writeByte(windowId);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		NetUtils.writeResourceLocation(io, guiID);
-		NetUtils.writePos(io, pos);
-		ByteBufUtils.writeTag(io, data);
-		io.writeByte(windowID);
+		guiId = data.readResourceLocation();
+		pos = data.readPos();
+		nbt = data.readNBT();
+		windowId = data.readUnsignedByte();
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void onMessage(MessageOpenGui m, EntityPlayer player)
 	{
-		IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiID);
+		IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiId);
 
 		if (guiProvider != null)
 		{
-			GuiScreen g = guiProvider.getGui(player, m.pos, m.data);
+			GuiScreen g = guiProvider.getGui(player, m.pos, m.nbt);
 
 			if (g != null)
 			{
 				ClientUtils.MC.displayGuiScreen(g);
-				player.openContainer.windowId = m.windowID;
+				player.openContainer.windowId = m.windowId;
 			}
 		}
 	}

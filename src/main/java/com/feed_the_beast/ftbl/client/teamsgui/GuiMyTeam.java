@@ -1,15 +1,12 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.api.ITeamMessage;
-import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
 import com.feed_the_beast.ftbl.lib.gui.CheckBoxList;
-import com.feed_the_beast.ftbl.lib.gui.ExtendedTextField;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -26,8 +23,6 @@ import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -148,36 +143,7 @@ public class GuiMyTeam extends GuiBase
 			{
 				if (selectedPlayer == null)
 				{
-					int messageID = 0;
-
-					for (ITeamMessage msg : teamInfo.chatHistory)
-					{
-						boolean sentByServer = msg.getSender().equals(ForgePlayerFake.SERVER.getId());
-						ITextComponent c;
-
-						if (!sentByServer && loadedProfiles.get(msg.getSender()) == null)
-						{
-							c = new TextComponentString("<").appendSibling(GuiLang.REMOVED.textComponent()).appendText(">");
-							c.getStyle().setColor(TextFormatting.DARK_GRAY);
-						}
-						else
-						{
-							c = new TextComponentString(sentByServer ? "" : ("<" + loadedProfiles.get(msg.getSender()).playerName + "> "));
-						}
-
-						c.appendSibling(msg.getMessage());
-
-						if (sentByServer)
-						{
-							c.getStyle().setColor(TextFormatting.DARK_AQUA);
-						}
-						else if (++messageID % 2 == 0)
-						{
-							c.getStyle().setColor(TextFormatting.WHITE);
-						}
-
-						add(new ExtendedTextField(1, 0, width - 5, -1, getFont(), c));
-					}
+					//FIXME
 				}
 				else if (teamInfo.me.status.isEqualOrGreaterThan(EnumTeamStatus.MOD))
 				{
@@ -522,16 +488,5 @@ public class GuiMyTeam extends GuiBase
 
 		Collections.sort(teamInfo.players);
 		refreshWidgets();
-	}
-
-	public void printMessage(ITeamMessage message)
-	{
-		teamInfo.chatHistory.add(message);
-
-		if (selectedPlayer == null)
-		{
-			panelText.refreshWidgets();
-			scrollText.onMoved(this);
-		}
 	}
 }

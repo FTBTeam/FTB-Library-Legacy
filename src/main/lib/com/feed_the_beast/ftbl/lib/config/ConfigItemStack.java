@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.item.ItemStackSerializer;
 import com.google.gson.JsonElement;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 
@@ -133,14 +133,14 @@ public class ConfigItemStack extends ConfigValue
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
-		ByteBufUtils.writeItemStack(data, getItem());
+		data.writeItemStack(getItem());
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
-		setItem(ByteBufUtils.readItemStack(data));
+		setItem(data.readItemStack());
 	}
 }

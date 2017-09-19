@@ -23,6 +23,5 @@ public class FTBLibNetHandler
 		NET.register(9, new MessageSelectTeamGui());
 		NET.register(10, new MessageMyTeamGui());
 		NET.register(11, new MessageMyTeamAddPlayerGui());
-		NET.register(12, new MessageDisplayTeamMsg());
 	}
 }

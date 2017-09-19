@@ -1,15 +1,13 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -121,54 +119,54 @@ public final class ConfigGroup implements IJsonSerializable
 		return g;
 	}
 
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut net)
 	{
-		NetUtils.writeTextComponent(data, title);
-		ByteBufUtils.writeUTF8String(data, supergroup);
+		net.writeTextComponent(title);
+		net.writeString(supergroup);
 
-		data.writeShort(map.size());
+		net.writeShort(map.size());
 
 		for (ConfigValueInstance instance : map.values())
 		{
-			ByteBufUtils.writeUTF8String(data, instance.info.id);
-			instance.info.writeData(data);
-			ByteBufUtils.writeUTF8String(data, instance.value.getName());
-			instance.value.writeData(data);
+			net.writeString(instance.info.id);
+			instance.info.writeData(net);
+			net.writeString(instance.value.getName());
+			instance.value.writeData(net);
 		}
 
-		data.writeShort(groupNames.size());
+		net.writeShort(groupNames.size());
 
 		for (Map.Entry<String, ITextComponent> entry : groupNames.entrySet())
 		{
-			ByteBufUtils.writeUTF8String(data, entry.getKey());
-			ByteBufUtils.writeUTF8String(data, JsonUtils.toJson(JsonUtils.serializeTextComponent(entry.getValue())));
+			net.writeString(entry.getKey());
+			net.writeTextComponent(entry.getValue());
 		}
 	}
 
-	public void readData(ByteBuf data)
+	public void readData(DataIn net)
 	{
-		title = NetUtils.readTextComponent(data);
-		supergroup = ByteBufUtils.readUTF8String(data);
+		title = net.readTextComponent();
+		supergroup = net.readString();
 
-		int s = data.readUnsignedShort();
+		int s = net.readUnsignedShort();
 		map.clear();
 
 		while (--s >= 0)
 		{
-			ConfigValueInfo info = new ConfigValueInfo(ByteBufUtils.readUTF8String(data));
-			info.readData(data);
-			ConfigValue value = FTBLibAPI.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
-			value.readData(data);
+			ConfigValueInfo info = new ConfigValueInfo(net.readString());
+			info.readData(net);
+			ConfigValue value = FTBLibAPI.API.getConfigValueFromID(net.readString());
+			value.readData(net);
 			map.put(info.id, new ConfigValueInstance(info, value));
 		}
 
-		s = data.readUnsignedShort();
+		s = net.readUnsignedShort();
 		groupNames.clear();
 
 		while (--s >= 0)
 		{
-			String group = ByteBufUtils.readUTF8String(data);
-			groupNames.put(group, JsonUtils.deserializeTextComponent(JsonUtils.fromJson(ByteBufUtils.readUTF8String(data))));
+			String group = net.readString();
+			groupNames.put(group, net.readTextComponent());
 		}
 	}
 

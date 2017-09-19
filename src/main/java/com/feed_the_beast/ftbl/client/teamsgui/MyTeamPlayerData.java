@@ -2,9 +2,8 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 
 import java.util.UUID;
 
@@ -13,6 +12,16 @@ import java.util.UUID;
  */
 public class MyTeamPlayerData implements Comparable<MyTeamPlayerData>
 {
+	public static final DataOut.Serializer<MyTeamPlayerData> SERIALIZER = (data, d) ->
+	{
+		data.writeUUID(d.playerId);
+		data.writeString(d.playerName);
+		data.writeBoolean(d.isOnline);
+		data.writeByte(d.status.ordinal());
+	};
+
+	public static final DataIn.Deserializer<MyTeamPlayerData> DESERIALIZER = MyTeamPlayerData::new;
+
 	public final UUID playerId;
 	public final String playerName;
 	public boolean isOnline;
@@ -26,20 +35,12 @@ public class MyTeamPlayerData implements Comparable<MyTeamPlayerData>
 		status = s;
 	}
 
-	public MyTeamPlayerData(ByteBuf io)
+	public MyTeamPlayerData(DataIn data)
 	{
-		playerId = NetUtils.readUUID(io);
-		playerName = ByteBufUtils.readUTF8String(io);
-		isOnline = io.readBoolean();
-		status = EnumTeamStatus.VALUES[io.readByte()];
-	}
-
-	public void write(ByteBuf io)
-	{
-		NetUtils.writeUUID(io, playerId);
-		ByteBufUtils.writeUTF8String(io, playerName);
-		io.writeBoolean(isOnline);
-		io.writeByte(status.ordinal());
+		playerId = data.readUUID();
+		playerName = data.readString();
+		isOnline = data.readBoolean();
+		status = EnumTeamStatus.VALUES[data.readUnsignedByte()];
 	}
 
 	@Override

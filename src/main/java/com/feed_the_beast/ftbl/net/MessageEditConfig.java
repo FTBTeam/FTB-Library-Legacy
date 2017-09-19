@@ -3,9 +3,10 @@ package com.feed_the_beast.ftbl.net;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -33,16 +34,16 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		group = new ConfigGroup(null);
-		group.readData(io);
+		group.writeData(data);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		group.writeData(io);
+		group = new ConfigGroup(null);
+		group.readData(data);
 	}
 
 	@Override

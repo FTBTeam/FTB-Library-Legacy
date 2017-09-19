@@ -2,12 +2,12 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamPlayerData;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -33,26 +33,15 @@ public class MessageMyTeamAddPlayerGui extends MessageToClient<MessageMyTeamAddP
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		int s = io.readInt();
-		players = new ArrayList<>(s);
-
-		while (--s >= 0)
-		{
-			players.add(new MyTeamPlayerData(io));
-		}
+		data.writeCollection(players, MyTeamPlayerData.SERIALIZER);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		io.writeInt(players.size());
-
-		for (MyTeamPlayerData d : players)
-		{
-			d.write(io);
-		}
+		players = data.readCollection(MyTeamPlayerData.DESERIALIZER);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.events.ReloadEvent;
 import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
@@ -32,7 +31,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
@@ -226,17 +224,6 @@ public class FTBLibEventHandler
 			}
 
 			team.dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
-			team.chatHistory.clear();
-
-			if (nbt.hasKey("Chat"))
-			{
-				NBTTagList list1 = nbt.getTagList("Chat", Constants.NBT.TAG_COMPOUND);
-
-				for (int i = 0; i < list1.tagCount(); i++)
-				{
-					team.chatHistory.add(new ForgeTeam.Message(list1.getCompoundTagAt(i)));
-				}
-			}
 		}
 
 		new ForgeUniverseLoadedEvent.Post(Universe.INSTANCE, data).post();
@@ -334,18 +321,6 @@ public class FTBLibEventHandler
 					nbt.setTag("Data", team.dataStorage.serializeNBT());
 				}
 
-				if (team.chatHistory != null && !team.chatHistory.isEmpty())
-				{
-					NBTTagList list = new NBTTagList();
-
-					for (ITeamMessage msg : team.chatHistory)
-					{
-						list.appendTag(ForgeTeam.Message.toNBT(msg));
-					}
-
-					nbt.setTag("Chat", list);
-				}
-
 				NBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), nbt);
 			}
 
@@ -414,11 +389,9 @@ public class FTBLibEventHandler
 		if (!p.hideTeamNotification() && p.getTeam() == null)
 		{
 			ITextComponent b1 = FTBLibLang.CLICK_HERE.textComponent();
-			b1.getStyle().setColor(TextFormatting.GOLD);
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
 			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.MY_TEAM.textComponent()));
 			ITextComponent b2 = FTBLibLang.CLICK_HERE.textComponent();
-			b2.getStyle().setColor(TextFormatting.GOLD);
 			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification toggle"));
 			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.TEAM_NOTIFICATION_HIDE.textComponent()));
 			player.sendMessage(FTBLibLang.TEAM_NOTIFICATION.textComponent(b1, b2));

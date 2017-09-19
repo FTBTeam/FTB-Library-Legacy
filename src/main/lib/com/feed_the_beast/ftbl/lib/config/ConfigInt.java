@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
@@ -184,7 +185,7 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
 		data.writeInt(getInt());
 		data.writeInt(getMin());
@@ -192,7 +193,7 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
 		setInt(data.readInt());
 		setMin(data.readInt());

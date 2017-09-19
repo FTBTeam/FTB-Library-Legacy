@@ -5,9 +5,10 @@ import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiSelectors;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
@@ -111,9 +112,9 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 		return getString();
 	}
 
-	public abstract void writeData(ByteBuf data);
+	public abstract void writeData(DataOut data);
 
-	public abstract void readData(ByteBuf data);
+	public abstract void readData(DataIn data);
 
 	@Override
 	public boolean hasCustomName()

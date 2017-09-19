@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.common.base.Preconditions;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 
@@ -168,25 +167,6 @@ public final class NameMap<E> implements Iterable<E>
 	public E readFromNBT(NBTTagCompound nbt, String name, EnumSaveType type)
 	{
 		return (!type.save || nbt.hasKey(name, Constants.NBT.TAG_ANY_NUMERIC)) ? get(nbt.getInteger(name)) : get(nbt.getString(name));
-	}
-
-	public void write(ByteBuf io, E value)
-	{
-		int index = getIndex(value);
-
-		if (values.size() >= 256)
-		{
-			io.writeShort(index);
-		}
-		else
-		{
-			io.writeByte(index);
-		}
-	}
-
-	public E read(ByteBuf io)
-	{
-		return get(values.size() >= 256 ? io.readUnsignedShort() : io.readUnsignedByte());
 	}
 
 	public E getRandom(Random rand)

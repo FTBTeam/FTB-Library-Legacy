@@ -11,19 +11,17 @@ import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.UUID;
 
 /**
@@ -32,7 +30,6 @@ import java.util.UUID;
 public class MessageLogin extends MessageToClient<MessageLogin>
 {
 	private static final byte IS_OP = 1;
-	private static final byte OPTIONAL_SERVER_MODS = 2;
 
 	private byte flags;
 	private UUID universeId;
@@ -47,11 +44,10 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	{
 		flags = 0;
 		flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
-		universeId = SharedServerData.INSTANCE.getUniverseID();
+		universeId = SharedServerData.INSTANCE.getUniverseId();
 		syncData = new NBTTagCompound();
 		FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(player, forgePlayer)));
 		optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
-		flags = Bits.setFlag(flags, OPTIONAL_SERVER_MODS, !optionalServerMods.isEmpty());
 	}
 
 	@Override
@@ -61,40 +57,21 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		io.writeByte(flags);
-		NetUtils.writeUUID(io, universeId);
-		ByteBufUtils.writeTag(io, syncData);
-
-		if (!optionalServerMods.isEmpty())
-		{
-			io.writeShort(optionalServerMods.size());
-
-			for (String s : optionalServerMods)
-			{
-				ByteBufUtils.writeUTF8String(io, s);
-			}
-		}
+		data.writeByte(flags);
+		data.writeUUID(universeId);
+		data.writeNBT(syncData);
+		data.writeCollection(optionalServerMods, DataOut.STRING);
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		flags = io.readByte();
-		universeId = NetUtils.readUUID(io);
-		syncData = ByteBufUtils.readTag(io);
-
-		if (Bits.getFlag(flags, OPTIONAL_SERVER_MODS))
-		{
-			int s = io.readUnsignedShort();
-			optionalServerMods = new HashSet<>(s);
-
-			while (--s >= 0)
-			{
-				optionalServerMods.add(ByteBufUtils.readUTF8String(io));
-			}
-		}
+		flags = data.readByte();
+		universeId = data.readUUID();
+		syncData = data.readNBT();
+		optionalServerMods = data.readCollection(DataIn.STRING);
 	}
 
 	@Override
@@ -102,7 +79,7 @@ public class MessageLogin extends MessageToClient<MessageLogin>
 	{
 		SharedClientData.INSTANCE.reset();
 		SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
-		SharedClientData.INSTANCE.universeID = m.universeId;
+		SharedClientData.INSTANCE.universeId = m.universeId;
 
 		if (m.optionalServerMods != null && !m.optionalServerMods.isEmpty())
 		{

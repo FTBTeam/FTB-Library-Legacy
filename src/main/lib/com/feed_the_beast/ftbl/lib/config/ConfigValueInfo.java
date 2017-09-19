@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 
 /**
  * @author LatvianModder
@@ -67,7 +67,7 @@ public class ConfigValueInfo
 		useScrollBar = false;
 	}
 
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut net)
 	{
 		int flags = 0;
 
@@ -78,26 +78,26 @@ public class ConfigValueInfo
 		flags = Bits.setFlag(flags, CANT_EDIT, cantEdit);
 		flags = Bits.setFlag(flags, USE_SCROLL_BAR, useScrollBar);
 
-		data.writeByte(flags);
+		net.writeByte(flags);
 
 		if (!displayName.isEmpty())
 		{
-			ByteBufUtils.writeUTF8String(data, displayName);
+			net.writeString(displayName);
 		}
 
 		if (!group.isEmpty())
 		{
-			ByteBufUtils.writeUTF8String(data, group);
+			net.writeString(group);
 		}
 
-		ByteBufUtils.writeUTF8String(data, defaultValue.getName());
-		defaultValue.writeData(data);
+		net.writeString(defaultValue.getName());
+		defaultValue.writeData(net);
 	}
 
-	public void readData(ByteBuf data)
+	public void readData(DataIn net)
 	{
 		setDefaults();
-		int flags = data.readUnsignedByte();
+		int flags = net.readUnsignedByte();
 		excluded = Bits.getFlag(flags, EXCLUDED);
 		hidden = Bits.getFlag(flags, HIDDEN);
 		cantEdit = Bits.getFlag(flags, CANT_EDIT);
@@ -105,16 +105,16 @@ public class ConfigValueInfo
 
 		if (Bits.getFlag(flags, DISPLAY_NAME))
 		{
-			displayName = ByteBufUtils.readUTF8String(data);
+			displayName = net.readString();
 		}
 
 		if (Bits.getFlag(flags, GROUP))
 		{
-			group = ByteBufUtils.readUTF8String(data);
+			group = net.readString();
 		}
 
-		defaultValue = FTBLibAPI.API.getConfigValueFromID(ByteBufUtils.readUTF8String(data));
-		defaultValue.readData(data);
+		defaultValue = FTBLibAPI.API.getConfigValueFromID(net.readString());
+		defaultValue.readData(net);
 	}
 
 	public ConfigValueInfo copy()

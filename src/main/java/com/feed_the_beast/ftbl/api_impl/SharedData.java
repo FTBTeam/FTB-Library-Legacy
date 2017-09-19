@@ -11,7 +11,7 @@ import java.util.UUID;
  */
 public abstract class SharedData implements ISharedData
 {
-	public UUID universeID;
+	public UUID universeId;
 	public final Collection<String> optionalServerMods = new HashSet<>();
 
 	SharedData()
@@ -20,18 +20,18 @@ public abstract class SharedData implements ISharedData
 
 	public void reset()
 	{
-		universeID = null;
+		universeId = null;
 	}
 
 	@Override
-	public UUID getUniverseID()
+	public UUID getUniverseId()
 	{
-		if (universeID == null || (universeID.getLeastSignificantBits() == 0L && universeID.getMostSignificantBits() == 0L))
+		if (universeId == null || (universeId.getLeastSignificantBits() == 0L && universeId.getMostSignificantBits() == 0L))
 		{
-			universeID = UUID.randomUUID();
+			universeId = UUID.randomUUID();
 		}
 
-		return universeID;
+		return universeId;
 	}
 
 	@Override

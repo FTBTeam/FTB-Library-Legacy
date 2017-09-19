@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.lib.Color4I;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -170,7 +171,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public void writeData(ByteBuf data)
+	public void writeData(DataOut data)
 	{
 		data.writeDouble(getDouble());
 		data.writeDouble(getMin());
@@ -178,7 +179,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public void readData(ByteBuf data)
+	public void readData(DataIn data)
 	{
 		setDouble(data.readDouble());
 		setMin(data.readDouble());

@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToServer;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.google.gson.JsonObject;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -31,15 +31,15 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		groupData = NetUtils.readJsonElement(io).getAsJsonObject();
+		data.writeJson(groupData);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		NetUtils.writeJsonElement(io, groupData);
+		groupData = data.readJson().getAsJsonObject();
 	}
 
 	@Override

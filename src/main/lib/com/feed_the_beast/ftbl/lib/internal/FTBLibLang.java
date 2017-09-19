@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.lib.LangKey;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * @author LatvianModder
@@ -10,7 +12,7 @@ public interface FTBLibLang
 	LangKey WIP = LangKey.of("wip");
 	LangKey DEPRECATED = LangKey.of("deprecated", String.class);
 	LangKey EXAMPLE = LangKey.of("example");
-	LangKey CLICK_HERE = LangKey.of("click_here");
+	LangKey CLICK_HERE = LangKey.of("click_here").setDefaultStyle(new Style().setColor(TextFormatting.GOLD));
 	LangKey FEATURE_DISABLED = LangKey.of("feature_disabled");
 	LangKey MISSING_ARGS = LangKey.of("missing_args", String.class);
 	LangKey MISSING_ARGS_NUM = LangKey.of("missing_args_num", String.class);

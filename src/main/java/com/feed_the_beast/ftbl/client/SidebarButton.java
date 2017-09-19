@@ -30,7 +30,7 @@ public class SidebarButton extends FinalIDObject
 	public final List<String> requiredServerMods = new ArrayList<>();
 	private final List<ClickEvent> clickEvents = new ArrayList<>();
 	private final List<ClickEvent> shiftClickEvents = new ArrayList<>();
-	public boolean requiresOp, devOnly, hideWithNEI, loadingScreen;
+	public boolean requiresOp, devOnly, hideWithNEI, loadingScreen, customText;
 
 	public SidebarButton(ResourceLocation id)
 	{
@@ -77,6 +77,7 @@ public class SidebarButton extends FinalIDObject
 		devOnly = o.has("dev_only") && o.get("dev_only").getAsBoolean();
 		hideWithNEI = o.has("hide_with_nei") && o.get("hide_with_nei").getAsBoolean();
 		loadingScreen = o.has("loading_screen") && o.get("loading_screen").getAsBoolean();
+		customText = o.has("custom_text") && o.get("custom_text").getAsBoolean();
 	}
 
 	public void setDependencies(String deps)
@@ -120,11 +121,11 @@ public class SidebarButton extends FinalIDObject
 
 	public boolean isVisible()
 	{
-		if (FTBLibClientConfig.general.action_buttons == EnumSidebarButtonPlacement.DISABLED)
-		{
-			return false;
-		}
+		return configValue && FTBLibClientConfig.general.action_buttons != EnumSidebarButtonPlacement.DISABLED && isAvailable();
+	}
 
-		return configValue && !(hideWithNEI && CommonUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
+	public boolean isAvailable()
+	{
+		return !(hideWithNEI && CommonUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
 	}
 }

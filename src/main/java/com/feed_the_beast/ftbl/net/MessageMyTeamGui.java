@@ -5,9 +5,10 @@ import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
+import com.feed_the_beast.ftbl.lib.io.DataIn;
+import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -33,15 +34,15 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 	}
 
 	@Override
-	public void fromBytes(ByteBuf io)
+	public void writeData(DataOut data)
 	{
-		teamInfo = new MyTeamData(io);
+		teamInfo.write(data);
 	}
 
 	@Override
-	public void toBytes(ByteBuf io)
+	public void readData(DataIn data)
 	{
-		teamInfo.write(io);
+		teamInfo = new MyTeamData(data);
 	}
 
 	@Override

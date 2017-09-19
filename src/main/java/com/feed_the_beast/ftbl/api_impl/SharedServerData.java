@@ -21,14 +21,14 @@ public class SharedServerData extends SharedData implements ISharedServerData, I
 	public void fromJson(JsonElement json)
 	{
 		JsonObject group = json.getAsJsonObject();
-		universeID = group.has("world_id") ? StringUtils.fromString(group.get("world_id").getAsString()) : null;
+		universeId = group.has("world_id") ? StringUtils.fromString(group.get("world_id").getAsString()) : null;
 	}
 
 	@Override
 	public JsonElement getSerializableElement()
 	{
 		JsonObject o = new JsonObject();
-		o.addProperty("world_id", StringUtils.fromUUID(getUniverseID()));
+		o.addProperty("world_id", StringUtils.fromUUID(getUniverseId()));
 		return o;
 	}
 }

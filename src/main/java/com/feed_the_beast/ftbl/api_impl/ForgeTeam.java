@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api_impl;
 
-import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
@@ -8,7 +7,6 @@ import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.ITeamMessage;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftbl.api.events.team.ForgeTeamOwnerChangedEvent;
@@ -24,26 +22,15 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
-import com.feed_the_beast.ftbl.lib.util.NetUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.net.MessageDisplayTeamMsg;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.common.ForgeHooks;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -52,70 +39,6 @@ import java.util.UUID;
  */
 public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 {
-	public static class Message implements ITeamMessage
-	{
-		private final UUID sender;
-		private final ITextComponent text;
-
-		public Message(UUID s, ITextComponent txt)
-		{
-			sender = s;
-			text = txt;
-		}
-
-		public Message(ITextComponent txt)
-		{
-			this(ForgePlayerFake.SERVER.getId(), txt);
-		}
-
-		public Message(NBTTagCompound nbt)
-		{
-			sender = nbt.getUniqueId("Sender");
-			String m = nbt.getString("Msg");
-
-			if (m.isEmpty())
-			{
-				text = ForgeHooks.newChatWithLinks(nbt.getString("Text"));
-			}
-			else
-			{
-				text = ITextComponent.Serializer.jsonToComponent(m);
-			}
-		}
-
-		public Message(ByteBuf io)
-		{
-			sender = NetUtils.readUUID(io);
-			text = NetUtils.readTextComponent(io);
-		}
-
-		public static NBTTagCompound toNBT(ITeamMessage msg)
-		{
-			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setUniqueId("Sender", msg.getSender());
-			nbt.setString("Msg", ITextComponent.Serializer.componentToJson(msg.getMessage()));
-			return nbt;
-		}
-
-		public static void write(ByteBuf io, ITeamMessage msg)
-		{
-			NetUtils.writeUUID(io, msg.getSender());
-			NetUtils.writeTextComponent(io, msg.getMessage());
-		}
-
-		@Override
-		public UUID getSender()
-		{
-			return sender;
-		}
-
-		@Override
-		public ITextComponent getMessage()
-		{
-			return text;
-		}
-	}
-
 	public boolean isValid;
 	public final NBTDataStorage dataStorage;
 	public final ConfigEnum<EnumTeamColor> color;
@@ -123,7 +46,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public final ConfigString title;
 	public final ConfigString desc;
 	public final ConfigBoolean freeToJoin;
-	public final List<ITeamMessage> chatHistory;
 	public final Map<UUID, EnumTeamStatus> players;
 	public final ConfigGroup cachedConfig;
 
@@ -136,7 +58,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		title = new ConfigString("");
 		desc = new ConfigString("");
 		freeToJoin = new ConfigBoolean(false);
-		chatHistory = new ArrayList<>();
 		players = new HashMap<>();
 
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
@@ -292,9 +213,8 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 			if (!hasStatus(player, EnumTeamStatus.MEMBER))
 			{
-				new ForgeTeamPlayerJoinedEvent(this, player).post();
 				setStatus(player.getId(), EnumTeamStatus.MEMBER);
-				printMessage(new Message(FTBLibLang.TEAM_MEMBER_JOINED.textComponent(player.getName())));
+				new ForgeTeamPlayerJoinedEvent(this, player).post();
 			}
 
 			return true;
@@ -308,7 +228,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	{
 		if (getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() == 1)
 		{
-			printMessage(new Message(FTBLibLang.TEAM_DELETED.textComponent(getTitle())));
 			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
 			Universe.INSTANCE.teams.remove(getName());
@@ -333,7 +252,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		{
 			player.setTeamID("");
 			new ForgeTeamPlayerLeftEvent(this, player).post();
-			printMessage(new Message(FTBLibLang.TEAM_MEMBER_LEFT.textComponent(player.getName())));
 		}
 	}
 
@@ -359,35 +277,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public ConfigGroup getSettings()
 	{
 		return cachedConfig;
-	}
-
-	@Override
-	public void printMessage(ITeamMessage message)
-	{
-		while (chatHistory.size() >= FTBLibConfig.teams.max_team_chat_history)
-		{
-			chatHistory.remove(0);
-		}
-
-		chatHistory.add(message);
-
-		MessageDisplayTeamMsg m = new MessageDisplayTeamMsg(message);
-		ITextComponent name = StringUtils.color(new TextComponentString(Universe.INSTANCE.getPlayer(message.getSender()).getProfile().getName()), color.getValue().getTextFormatting());
-		ITextComponent msg = FTBLibLang.TEAM_CHAT_MESSAGE.textComponent(name, message.getMessage());
-		msg.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, StringUtils.color(FTBLibLang.CLICK_HERE.textComponent(), TextFormatting.GOLD)));
-		msg.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/team msg "));
-
-		for (EntityPlayerMP ep : getOnlineTeamPlayers(EnumTeamStatus.MEMBER))
-		{
-			ep.sendMessage(msg);
-			m.sendTo(ep);
-		}
-	}
-
-	@Override
-	public List<ITeamMessage> getMessages()
-	{
-		return chatHistory;
 	}
 
 	public Collection<EntityPlayerMP> getOnlineTeamPlayers(EnumTeamStatus status)
