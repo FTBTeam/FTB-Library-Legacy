@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.lib;
 
 import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.util.StringJoiner;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.google.common.base.Preconditions;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
@@ -33,6 +33,22 @@ public final class LangKey implements IStringSerializable
 		key = s;
 		arguments = a;
 		defaultStyle = null;
+
+		for (int i = 0; i < a.length; i++)
+		{
+			if (a[i] == null)
+			{
+				a[i] = Object.class;
+			}
+			else if (a[i] == Byte.class || a[i] == Short.class)
+			{
+				a[i] = Integer.class;
+			}
+			else if (ITextComponent.class.isAssignableFrom(a[i]))
+			{
+				a[i] = String.class;
+			}
+		}
 	}
 
 	private static boolean canAssign(@Nullable Object o, @Nullable Class c)
@@ -65,13 +81,50 @@ public final class LangKey implements IStringSerializable
 		return c.isAssignableFrom(c1);
 	}
 
+	private void checkArgument(boolean b, Object[] o)
+	{
+		if (!b)
+		{
+			Object[] args = new Object[arguments.length];
+
+			for (int i = 0; i < arguments.length; i++)
+			{
+				args[i] = arguments[i].getSimpleName();
+			}
+
+			Object[] got = new Object[o.length];
+
+			for (int i = 0; i < o.length; i++)
+			{
+				Class c = Object.class;
+
+				if (o[i] instanceof ITextComponent)
+				{
+					c = String.class;
+				}
+				else if (o[i] != null)
+				{
+					c = o.getClass();
+				}
+				if (c == Byte.class || c == Short.class)
+				{
+					c = Integer.class;
+				}
+
+				got[i] = c.getSimpleName();
+			}
+
+			throw new IllegalArgumentException("Expected [" + StringJoiner.with(", ").joinObjects(args) + "], got [" + StringJoiner.with(", ").joinObjects(got) + "]");
+		}
+	}
+
 	private void checkArguments(Object[] o)
 	{
-		Preconditions.checkArgument(arguments.length == o.length);
+		checkArgument(arguments.length == o.length, o);
 
 		for (int i = 0; i < arguments.length; i++)
 		{
-			Preconditions.checkArgument(canAssign(o[i], arguments[i]));
+			checkArgument(canAssign(o[i], arguments[i]), o);
 		}
 	}
 

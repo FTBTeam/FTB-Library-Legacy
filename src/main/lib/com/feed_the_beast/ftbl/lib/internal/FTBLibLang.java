@@ -28,7 +28,7 @@ public interface FTBLibLang
 
 	LangKey RELOAD_SERVER = LangKey.of("ftbl.lang.reload_server", String.class);
 	LangKey RELOAD_CLIENT = LangKey.of("ftbl.lang.reload_client", String.class);
-	LangKey RELOAD_CLIENT_CONFIG = LangKey.of("ftbl.lang.reload_client_config");
+	LangKey RELOAD_CLIENT_CONFIG = LangKey.of("ftbl.lang.reload_client_config", String.class);
 	LangKey RELOAD_FAILED = LangKey.of("ftbl.lang.reload_failed");
 
 	LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
