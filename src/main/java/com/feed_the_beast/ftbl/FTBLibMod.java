@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.events.PermissionRegistryEvent;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -37,7 +37,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event)
 	{
-		FTBLibPerms.init();
+		new PermissionRegistryEvent().post();
 		PROXY.reloadConfig(event.getModState());
 	}
 

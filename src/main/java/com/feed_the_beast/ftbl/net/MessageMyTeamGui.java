@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.net;
 
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamData;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
@@ -22,9 +21,9 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 	{
 	}
 
-	public MessageMyTeamGui(IUniverse universe, IForgeTeam team, IForgePlayer player)
+	public MessageMyTeamGui(IForgeTeam team, IForgePlayer player)
 	{
-		teamInfo = new MyTeamData(universe, team, player);
+		teamInfo = new MyTeamData(team, player);
 	}
 
 	@Override

@@ -90,6 +90,10 @@ public abstract class Icon
 
 						return icon;
 					}
+					case "bullet":
+					{
+						return new IconBullet().setColor(o.has("color") ? Color4I.fromJson(o.get("color")) : Color4I.NONE);
+					}
 				}
 			}
 		}

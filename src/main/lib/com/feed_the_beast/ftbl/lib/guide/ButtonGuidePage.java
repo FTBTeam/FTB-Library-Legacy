@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftbl.lib.guide;
 
+import com.feed_the_beast.ftbl.api.guide.IGuideGui;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
@@ -22,7 +22,7 @@ public class ButtonGuidePage extends Button
 	private boolean prevMouseOver = false;
 	private boolean isSmall;
 
-	public ButtonGuidePage(GuiGuide g, GuidePage p, boolean small)
+	public ButtonGuidePage(GuiBase g, GuidePage p, boolean small)
 	{
 		super(0, 0, 0, 0);
 		page = p;
@@ -35,14 +35,14 @@ public class ButtonGuidePage extends Button
 	public void onClicked(GuiBase gui, MouseButton button)
 	{
 		GuiHelper.playClickSound();
-		((GuiGuide) gui).setSelectedPage(page);
+		((IGuideGui) gui).setSelectedPage(page);
 	}
 
-	public void updateTitle(GuiGuide gui)
+	public void updateTitle(GuiBase gui)
 	{
 		ITextComponent titleC = page.getDisplayName().createCopy();
 
-		if (gui.getSelectedPage() == page)
+		if (gui instanceof IGuideGui && ((IGuideGui) gui).getSelectedPage() == page)
 		{
 			titleC.getStyle().setBold(true);
 		}
@@ -85,7 +85,7 @@ public class ButtonGuidePage extends Button
 
 		if (prevMouseOver != mouseOver)
 		{
-			updateTitle((GuiGuide) gui);
+			updateTitle(gui);
 			prevMouseOver = mouseOver;
 		}
 

@@ -6,7 +6,6 @@ import com.feed_the_beast.ftbl.api.guide.SpecialGuideButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -325,7 +324,7 @@ public class GuidePage extends FinalIDObject
 
 	public Widget createWidget(GuiBase gui)
 	{
-		return new ButtonGuidePage((GuiGuide) gui, this, false);
+		return new ButtonGuidePage(gui, this, false);
 	}
 
 	public Side getSide()

@@ -22,6 +22,7 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
+import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -162,8 +163,9 @@ public class FTBLibEventHandler
 			NBTTagCompound nbt = playerNBT.get(player.getId());
 
 			player.hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
+			player.lastTimeSeen = nbt.getLong("LastTimeSeen");
 
-			player.setTeamID(nbt.getString("TeamID"));
+			player.setTeamId(nbt.getString("TeamID"));
 			player.dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
 		}
 
@@ -262,6 +264,12 @@ public class FTBLibEventHandler
 			JsonUtils.toJson(new File(CommonUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
 			File folder = new File(CommonUtils.folderWorld, "data/ftb_lib");
 
+			NBTTagCompound mainNbt = new NBTTagCompound();
+			NBTTagCompound data = new NBTTagCompound();
+			new ForgeUniverseSavedEvent(Universe.INSTANCE, data).post();
+			mainNbt.setTag("Data", data);
+			NBTUtils.writeTag(new File(folder, "universe.dat"), mainNbt);
+
 			for (ForgePlayer player : Universe.INSTANCE.players.values())
 			{
 				if (!player.isFake())
@@ -269,6 +277,7 @@ public class FTBLibEventHandler
 					NBTTagCompound nbt = new NBTTagCompound();
 
 					nbt.setBoolean("HideTeamNotification", player.hideTeamNotification.getBoolean());
+					nbt.setLong("LastTimeSeen", player.lastTimeSeen);
 
 					if (player.team != null && player.team.isValid())
 					{
@@ -323,12 +332,6 @@ public class FTBLibEventHandler
 
 				NBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), nbt);
 			}
-
-			NBTTagCompound nbt = new NBTTagCompound();
-			NBTTagCompound data = new NBTTagCompound();
-			new ForgeUniverseSavedEvent(Universe.INSTANCE, data).post();
-			nbt.setTag("Data", data);
-			NBTUtils.writeTag(new File(folder, "universe.dat"), nbt);
 
 		}
 		catch (Exception ex)
@@ -401,14 +404,15 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event)
 	{
-		if (event.player instanceof EntityPlayerMP && Universe.INSTANCE != null)
+		if (event.player instanceof EntityPlayerMP && FTBLibAPI.API.hasUniverse())
 		{
-			ForgePlayer p = Universe.INSTANCE.getPlayer(event.player);
-			p.loggingOut = true;
+			ForgePlayer player = Universe.INSTANCE.getPlayer(event.player);
+			player.lastTimeSeen = ServerUtils.getWorldTime();
+			player.loggingOut = true;
 			//FTBLibStats.updateLastSeen(stats());
-			new ForgePlayerLoggedOutEvent(p).post();
-			p.entityPlayer = null;
-			p.playerNBT = null;
+			new ForgePlayerLoggedOutEvent(player).post();
+			player.entityPlayer = null;
+			player.playerNBT = null;
 		}
 	}
 

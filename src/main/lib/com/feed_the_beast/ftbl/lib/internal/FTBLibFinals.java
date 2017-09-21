@@ -15,17 +15,10 @@ public class FTBLibFinals
 	public static final String NEI = "nei";
 	public static final String MC_MULTIPART = "mcmultipart";
 	public static final String CHISELS_AND_BITS = "chiselsandbits";
+	public static final String ICHUN_UTIL = "ichunutil";
+	public static final String FORESTRY = "forestry";
 
-	public static final String DEPENDENCIES = /*"required-after:Forge@["
-			+ net.minecraftforge.common.ForgeVersion.majorVersion + '.'
-            + net.minecraftforge.common.ForgeVersion.minorVersion + '.'
-            + net.minecraftforge.common.ForgeVersion.revisionVersion + '.'
-            + net.minecraftforge.common.ForgeVersion.buildVersion + ",);" +
-            */"after:" + BAUBLES +
-			";after:" + JEI +
-			";after:" + NEI +
-			";after:" + MC_MULTIPART +
-			";after:" + CHISELS_AND_BITS;
+	public static final String DEPENDENCIES = "after:" + BAUBLES + ";after:" + JEI + ";after:" + NEI + ";after:" + MC_MULTIPART + ";after:" + CHISELS_AND_BITS + ";after:" + ICHUN_UTIL;
 
 	public static ResourceLocation get(String path)
 	{

@@ -3,7 +3,8 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IUniverse;
+import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
+import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
@@ -32,7 +33,7 @@ public class MyTeamData extends FinalIDObject
 		me = players.get(data.readUnsignedShort());
 	}
 
-	public MyTeamData(IUniverse universe, IForgeTeam team, IForgePlayer player)
+	public MyTeamData(IForgeTeam team, IForgePlayer player)
 	{
 		super(team.getName());
 		displayName = team.getColor().getTextFormatting() + team.getTitle();
@@ -40,8 +41,7 @@ public class MyTeamData extends FinalIDObject
 
 		players = new ArrayList<>();
 
-		int i = 0;
-		for (IForgePlayer p : universe.getPlayers())
+		for (ForgePlayer p : Universe.INSTANCE.getPlayers())
 		{
 			EnumTeamStatus s = team.getHighestStatus(p);
 
@@ -59,8 +59,6 @@ public class MyTeamData extends FinalIDObject
 				{
 					me = pi;
 				}
-
-				i++;
 			}
 		}
 	}

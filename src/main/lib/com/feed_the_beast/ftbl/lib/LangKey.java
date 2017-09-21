@@ -114,7 +114,7 @@ public final class LangKey implements IStringSerializable
 				got[i] = c.getSimpleName();
 			}
 
-			throw new IllegalArgumentException("Expected [" + StringJoiner.with(", ").joinObjects(args) + "], got [" + StringJoiner.with(", ").joinObjects(got) + "]");
+			throw new IllegalArgumentException("Expected [" + StringJoiner.with(", ").joinObjects(args) + "] for " + key + ", got [" + StringJoiner.with(", ").joinObjects(got) + "]");
 		}
 	}
 

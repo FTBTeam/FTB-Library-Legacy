@@ -8,8 +8,8 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.IconBullet;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -138,7 +138,7 @@ public class GuideListLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new PanelList((GuiGuide) gui, parent.hasFlag(Panel.FLAG_UNICODE_FONT));
+		return new PanelList(gui, parent.hasFlag(Panel.FLAG_UNICODE_FONT));
 	}
 
 	@Override
@@ -191,11 +191,12 @@ public class GuideListLine extends EmptyGuidePageLine
 
 	private class PanelList extends Panel
 	{
-		private final GuiGuide gui;
+		private final GuiBase gui;
 		private final PanelScrollBar scrollBar;
 		private final WidgetLayout layout;
+		private IconBullet bullet;
 
-		private PanelList(GuiGuide g, boolean unicodeFont)
+		private PanelList(GuiBase g, boolean unicodeFont)
 		{
 			super(ordering.size, 0, 0, 0);
 			gui = g;
@@ -218,6 +219,7 @@ public class GuideListLine extends EmptyGuidePageLine
 			}
 
 			layout = type.plane == EnumFacing.Plane.VERTICAL ? new WidgetLayout.Vertical(0, spacing, 0) : new WidgetLayout.Horizontal(0, spacing, 0);
+			bullet = new IconBullet().setColor(g.getContentColor());
 		}
 
 		@Override
@@ -297,7 +299,7 @@ public class GuideListLine extends EmptyGuidePageLine
 				switch (ordering)
 				{
 					case BULLET:
-						GuiGuide.TEX_BULLET.draw(ax - 7, widget.getAY() + 3, 4, 4, gui.getContentColor());
+						bullet.draw(ax - 7, widget.getAY() + 3, 4, 4, Color4I.NONE);
 						break;
 					case NUMBER:
 						n = Integer.toString(index + 1);

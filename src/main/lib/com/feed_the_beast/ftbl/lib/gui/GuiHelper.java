@@ -106,7 +106,7 @@ public class GuiHelper
 		GlStateManager.enableTexture2D();
 	}
 
-	private static void addRectToBuffer(BufferBuilder buffer, int x, int y, int w, int h, Color4I col)
+	public static void addRectToBuffer(BufferBuilder buffer, int x, int y, int w, int h, Color4I col)
 	{
 		buffer.pos(x, y + h, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 		buffer.pos(x + w, y + h, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
@@ -114,7 +114,7 @@ public class GuiHelper
 		buffer.pos(x, y, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 	}
 
-	private static void addRectToBufferWithUV(BufferBuilder buffer, int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
+	public static void addRectToBufferWithUV(BufferBuilder buffer, int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
 	{
 		buffer.pos(x, y + h, 0D).tex(u0, v1).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 		buffer.pos(x + w, y + h, 0D).tex(u1, v1).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();

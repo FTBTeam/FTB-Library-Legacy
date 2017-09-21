@@ -38,6 +38,7 @@ public class DataOut
 
 	public static Serializer<String> STRING = DataOut::writeString;
 	public static Serializer<Integer> INT = DataOut::writeInt;
+	public static Serializer<Boolean> BOOLEAN = DataOut::writeBoolean;
 	public static Serializer<UUID> UUID = DataOut::writeUUID;
 	public static Serializer<BlockPos> BLOCK_POS = DataOut::writePos;
 	public static Serializer<BlockDimPos> BLOCK_DIM_POS = DataOut::writeDimPos;

@@ -23,7 +23,7 @@ public interface FTBLibLang
 	LangKey COMMANDS = LangKey.of("commands");
 	LangKey MY_PERMISSIONS = LangKey.of("my_permissions");
 	LangKey ALL_PERMISSIONS = LangKey.of("all_permissions");
-	LangKey DIFFICULTY = LangKey.of("difficulty");
+	LangKey DIFFICULTY = LangKey.of("difficulty", String.class);
 	LangKey MY_TEAM = LangKey.of("sidebar_button.ftbl.my_team");
 
 	LangKey RELOAD_SERVER = LangKey.of("ftbl.lang.reload_server", String.class);

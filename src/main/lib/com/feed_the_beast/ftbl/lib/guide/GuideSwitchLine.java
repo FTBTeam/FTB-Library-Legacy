@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.api.guide.IGuideTextLine;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -69,7 +68,7 @@ public class GuideSwitchLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new PanelList((GuiGuide) gui);
+		return new PanelList(gui);
 	}
 
 	@Override
@@ -150,9 +149,9 @@ public class GuideSwitchLine extends EmptyGuidePageLine
 
 	private class PanelList extends Panel
 	{
-		private final GuiGuide gui;
+		private final GuiBase gui;
 
-		private PanelList(GuiGuide g)
+		private PanelList(GuiBase g)
 		{
 			super(0, 0, 0, 0);
 			gui = g;

@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -27,7 +26,7 @@ public class GuideContentsLine extends EmptyGuidePageLine
 	@Override
 	public Widget createWidget(GuiBase gui, Panel parent)
 	{
-		return new PanelGuideContents((GuiGuide) gui);
+		return new PanelGuideContents(gui);
 	}
 
 	@Override
@@ -48,14 +47,14 @@ public class GuideContentsLine extends EmptyGuidePageLine
 	{
 		private final List<Widget> buttons;
 
-		private PanelGuideContents(GuiGuide gui)
+		private PanelGuideContents(GuiBase gui)
 		{
 			super(0, 0, 10, 10);
 			buttons = new ArrayList<>();
 			addButtons(gui, page, 0);
 		}
 
-		private void addButtons(GuiGuide gui, GuidePage from, int level)
+		private void addButtons(GuiBase gui, GuidePage from, int level)
 		{
 			setWidth(10000);
 

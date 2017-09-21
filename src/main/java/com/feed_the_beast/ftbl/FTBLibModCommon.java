@@ -257,8 +257,4 @@ public class FTBLibModCommon
 	public void handleClientMessage(MessageBase<?> message)
 	{
 	}
-
-	public void displayGuide(GuidePage page)
-	{
-	}
 }

@@ -8,7 +8,7 @@ import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
  */
 public class FTBLibNetHandler
 {
-	public static final NetworkWrapper NET = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID);
+	static final NetworkWrapper NET = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID);
 
 	public static void init()
 	{
@@ -17,7 +17,7 @@ public class FTBLibNetHandler
 		NET.register(3, new MessageEditConfigResponse());
 		NET.register(4, new MessageOpenGui());
 		NET.register(5, new MessageCloseGui());
-		NET.register(6, new MessageDisplayGuide());
+		//6
 		NET.register(7, new MessageLogin());
 		//8
 		NET.register(9, new MessageSelectTeamGui());

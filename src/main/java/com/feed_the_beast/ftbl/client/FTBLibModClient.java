@@ -6,9 +6,7 @@ import com.feed_the_beast.ftbl.api.events.registry.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiGuide;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuideConfig;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -269,12 +267,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public void handleClientMessage(MessageBase<?> message)
 	{
 		ClientUtils.MC.addScheduledTask(new MessageTask(message));
-	}
-
-	@Override
-	public void displayGuide(GuidePage page)
-	{
-		new GuiGuide(page).openGui();
 	}
 
 	public static List<SidebarButton> getSidebarButtons(boolean ignoreConfig)

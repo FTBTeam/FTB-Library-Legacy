@@ -3,7 +3,10 @@ package com.feed_the_beast.ftbl.api;
 import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import net.minecraft.util.IStringSerializable;
+import net.minecraftforge.server.permission.PermissionAPI;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -13,6 +16,11 @@ import java.util.UUID;
 public interface IForgeTeam extends IStringSerializable
 {
 	boolean isValid();
+
+	default boolean equalsTeam(@Nullable IForgeTeam team)
+	{
+		return team == this || (team != null && getName().equals(team.getName()));
+	}
 
 	NBTDataStorage getData();
 
@@ -51,4 +59,17 @@ public interface IForgeTeam extends IStringSerializable
 	ConfigGroup getSettings();
 
 	boolean freeToJoin();
+
+	default boolean anyPlayerHasPermission(String permission, EnumTeamStatus status)
+	{
+		for (IForgePlayer player : getPlayersWithStatus(new ArrayList<>(), status))
+		{
+			if (PermissionAPI.hasPermission(player.getProfile(), permission, null))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

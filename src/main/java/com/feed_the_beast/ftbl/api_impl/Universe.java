@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseClosedEvent;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -46,7 +45,7 @@ public class Universe implements IUniverse
 	}
 
 	@Override
-	public Collection<? extends IForgePlayer> getPlayers()
+	public Collection<ForgePlayer> getPlayers()
 	{
 		return players.values();
 	}
@@ -130,7 +129,7 @@ public class Universe implements IUniverse
 	}
 
 	@Override
-	public Collection<? extends IForgeTeam> getTeams()
+	public Collection<ForgeTeam> getTeams()
 	{
 		return teams.values();
 	}

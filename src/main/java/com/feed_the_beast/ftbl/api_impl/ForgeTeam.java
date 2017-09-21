@@ -209,7 +209,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	{
 		if (hasStatus(player, EnumTeamStatus.INVITED))
 		{
-			player.setTeamID(getName());
+			player.setTeamId(getName());
 
 			if (!hasStatus(player, EnumTeamStatus.MEMBER))
 			{
@@ -250,7 +250,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	{
 		if (hasStatus(player, EnumTeamStatus.MEMBER))
 		{
-			player.setTeamID("");
+			player.setTeamId("");
 			new ForgeTeamPlayerLeftEvent(this, player).post();
 		}
 	}
@@ -265,7 +265,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 		IForgePlayer oldOwner = owner;
 		owner = player;
-		player.setTeamID(getName());
+		player.setTeamId(getName());
 
 		if (!oldOwner.equalsPlayer(owner))
 		{

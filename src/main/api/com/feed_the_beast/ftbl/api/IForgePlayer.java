@@ -28,9 +28,12 @@ public interface IForgePlayer extends IStringSerializable
 
 	NBTDataStorage getData();
 
-	boolean equalsPlayer(@Nullable IForgePlayer player);
+	default boolean equalsPlayer(@Nullable IForgePlayer player)
+	{
+		return player == this || (player != null && getId().equals(player.getId()));
+	}
 
-	void setTeamID(String o);
+	void setTeamId(String o);
 
 	@Nullable
 	IForgeTeam getTeam();
@@ -82,4 +85,6 @@ public interface IForgePlayer extends IStringSerializable
 	boolean hideTeamNotification();
 
 	boolean isLoggingOut();
+
+	long getLastTimeSeen();
 }

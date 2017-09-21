@@ -43,6 +43,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	public NBTTagCompound playerNBT;
 	public final ConfigGroup cachedConfig;
 	public boolean loggingOut;
+	public long lastTimeSeen;
 
 	public ForgePlayer(UUID id, String name)
 	{
@@ -62,7 +63,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	}
 
 	@Override
-	public final void setTeamID(String id)
+	public final void setTeamId(String id)
 	{
 		team = Universe.INSTANCE.getTeam(id);
 	}
@@ -144,12 +145,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 			return equalsPlayer((IForgePlayer) o);
 		}
 		return (o.getClass() == UUID.class) && playerId.equals(o);
-	}
-
-	@Override
-	public boolean equalsPlayer(@Nullable IForgePlayer p)
-	{
-		return p == this || (p != null && getId().equals(p.getId()));
 	}
 
 	@Override
@@ -254,5 +249,11 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	public boolean isLoggingOut()
 	{
 		return loggingOut;
+	}
+
+	@Override
+	public long getLastTimeSeen()
+	{
+		return isOnline() ? ServerUtils.getWorldTime() : lastTimeSeen;
 	}
 }

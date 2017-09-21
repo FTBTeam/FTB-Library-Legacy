@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.client.teamsgui.MyTeamPlayerData;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
@@ -35,7 +33,6 @@ public class CmdGui extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		IUniverse universe = FTBLibAPI.API.getUniverse();
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		IForgePlayer p = getForgePlayer(player);
 		IForgeTeam team = p.getTeam();
@@ -76,12 +73,12 @@ public class CmdGui extends CmdBase
 			}
 			else
 			{
-				new MessageMyTeamGui(universe, team, p).sendTo(player);
+				new MessageMyTeamGui(team, p).sendTo(player);
 			}
 		}
 		else
 		{
-			new MessageSelectTeamGui(universe, p).sendTo(player);
+			new MessageSelectTeamGui(p).sendTo(player);
 		}
 	}
 }

@@ -4,10 +4,8 @@ import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
 import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -46,8 +44,6 @@ public abstract class FTBLibAPI
 	public abstract void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
 	public abstract void editServerConfig(EntityPlayerMP player, ConfigGroup group, IConfigCallback callback);
-
-	public abstract void displayGuide(EntityPlayer player, GuidePage page);
 
 	public abstract ConfigValue getConfigValueFromID(String id);
 
