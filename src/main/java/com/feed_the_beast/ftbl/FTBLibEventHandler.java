@@ -360,12 +360,12 @@ public class FTBLibEventHandler
 
 		if (firstLogin)
 		{
-			p = new ForgePlayer(player.getGameProfile().getId(), player.getGameProfile().getName());
+			p = new ForgePlayer(player.getUniqueID(), player.getName());
 			Universe.INSTANCE.players.put(p.getId(), p);
 		}
 		else if (!p.getName().equals(player.getName()))
 		{
-			p.setUsername(player.getGameProfile().getName());
+			p.setUsername(player.getName());
 		}
 
 		p.onLoggedIn(player, firstLogin);

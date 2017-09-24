@@ -104,12 +104,6 @@ ftbl_client.config.general.mirror_commands=Mirror /ftbc Commands
 ftbl_client.config.general.replace_vanilla_status_messages=Replace vanilla status messages
 ftbl_client.config.general.enable_chunk_selector_depth=Enable Chunk Selector Depth
 
-guide=Guide
-guide.config.border=Border
-guide.config.colors=Colors
-guide.config.colors.background=Background
-guide.config.colors.text=Text
-
 # Player Settings
 player_config=My Server Settings
 player_config.ftbl.hide_team_notification=Hide Team Notification on Login

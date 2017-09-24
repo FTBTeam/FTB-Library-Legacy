@@ -3,11 +3,13 @@ package com.feed_the_beast.ftbl.lib.io;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonElementIO;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -193,7 +195,14 @@ public class DataIn
 
 		if (map == null)
 		{
-			map = new HashMap<>(size);
+			if (keyDeserializer == INT)
+			{
+				map = CommonUtils.cast(new Int2ObjectOpenHashMap<V>(size));
+			}
+			else
+			{
+				map = new HashMap<>(size);
+			}
 		}
 
 		while (--size >= 0)

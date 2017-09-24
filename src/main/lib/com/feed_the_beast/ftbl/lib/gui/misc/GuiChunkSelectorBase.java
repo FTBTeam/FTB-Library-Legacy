@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.ChunkPos;
 import org.lwjgl.opengl.GL11;
 
@@ -27,22 +26,28 @@ import java.util.List;
  */
 public class GuiChunkSelectorBase extends GuiBase
 {
+	protected enum Corner
+	{
+		BOTTOM_LEFT,
+		BOTTOM_RIGHT
+	}
+
 	private static final CachedVertexData GRID = new CachedVertexData(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
 	static
 	{
 		GRID.color.set(128, 128, 128, 50);
 
-		for (int x = 0; x <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; x++)
+		for (int x = 0; x <= ChunkSelectorMap.TILES_GUI; x++)
 		{
 			GRID.pos(x * 16, 0D);
-			GRID.pos(x * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, 0D);
+			GRID.pos(x * 16, ChunkSelectorMap.TILES_GUI * 16, 0D);
 		}
 
-		for (int y = 0; y <= GuiConfigs.CHUNK_SELECTOR_TILES_GUI; y++)
+		for (int y = 0; y <= ChunkSelectorMap.TILES_GUI; y++)
 		{
 			GRID.pos(0D, y * 16, 0D);
-			GRID.pos(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, y * 16, 0D);
+			GRID.pos(ChunkSelectorMap.TILES_GUI * 16, y * 16, 0D);
 		}
 	}
 
@@ -55,9 +60,9 @@ public class GuiChunkSelectorBase extends GuiBase
 		private MapButton(int x, int y, int i)
 		{
 			super(x, y, 16, 16);
-			posX += (i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * width;
-			posY += (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI) * height;
-			chunkPos = new ChunkPos(startX + (i % GuiConfigs.CHUNK_SELECTOR_TILES_GUI), startZ + (i / GuiConfigs.CHUNK_SELECTOR_TILES_GUI));
+			posX += (i % ChunkSelectorMap.TILES_GUI) * width;
+			posY += (i / ChunkSelectorMap.TILES_GUI) * height;
+			chunkPos = new ChunkPos(startX + (i % ChunkSelectorMap.TILES_GUI), startZ + (i / ChunkSelectorMap.TILES_GUI));
 			index = i;
 		}
 
@@ -104,10 +109,10 @@ public class GuiChunkSelectorBase extends GuiBase
 
 	public GuiChunkSelectorBase()
 	{
-		super(GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16);
+		super(ChunkSelectorMap.TILES_GUI * 16, ChunkSelectorMap.TILES_GUI * 16);
 
-		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
-		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - GuiConfigs.CHUNK_SELECTOR_TILES_GUI2;
+		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
+		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
 
 		panelButtons = new Panel(0, 0, 16, 0)
 		{
@@ -118,12 +123,18 @@ public class GuiChunkSelectorBase extends GuiBase
 			}
 		};
 
-		mapButtons = new MapButton[GuiConfigs.CHUNK_SELECTOR_TILES_GUI * GuiConfigs.CHUNK_SELECTOR_TILES_GUI];
+		mapButtons = new MapButton[ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI];
 
 		for (int i = 0; i < mapButtons.length; i++)
 		{
 			mapButtons[i] = new MapButton(0, 0, i);
 		}
+	}
+
+	@Override
+	public void onInit()
+	{
+		ChunkSelectorMap.getMap().resetMap(startX, startZ);
 	}
 
 	@Override
@@ -147,12 +158,9 @@ public class GuiChunkSelectorBase extends GuiBase
 		GuiHelper.drawBlankRect(posX - 2, posY - 2, width + 4, height + 4, Color4I.BLACK);
 		//drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
 
-		ThreadReloadChunkSelector.updateTexture();
-		GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureID());
-		GuiHelper.drawTexturedRect(posX, posY, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, GuiConfigs.CHUNK_SELECTOR_TILES_GUI * 16, Color4I.WHITE, 0D, 0D, GuiConfigs.CHUNK_SELECTOR_UV, GuiConfigs.CHUNK_SELECTOR_UV);
+		ChunkSelectorMap.getMap().drawMap(this, posX, posY, startX, startZ);
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableTexture2D();
 
 		for (MapButton mapButton : mapButtons)
 		{
@@ -171,28 +179,6 @@ public class GuiChunkSelectorBase extends GuiBase
 		GRID.draw(tessellator, buffer);
 		buffer.setTranslation(0D, 0D, 0D);
 		GlStateManager.enableTexture2D();
-
-		EntityPlayer player = ClientUtils.MC.player;
-
-		int cx = MathUtils.chunk(player.posX);
-		int cy = MathUtils.chunk(player.posZ);
-
-		if (cx >= startX && cy >= startZ && cx < startX + GuiConfigs.CHUNK_SELECTOR_TILES_GUI && cy < startZ + GuiConfigs.CHUNK_SELECTOR_TILES_GUI)
-		{
-			double x = ((cx - startX) * 16D + MathUtils.wrap(player.posX, 16D));
-			double y = ((cy - startZ) * 16D + MathUtils.wrap(player.posZ, 16D));
-
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(posX + x, posY + y, 0D);
-			GlStateManager.pushMatrix();
-			//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
-			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
-			GuiConfigs.TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A[33]);
-			GlStateManager.popMatrix();
-			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
-			GlStateManager.popMatrix();
-		}
-
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 
@@ -222,7 +208,7 @@ public class GuiChunkSelectorBase extends GuiBase
 	@Override
 	public void drawForeground()
 	{
-		addCornerText(TEMP_TEXT_LIST);
+		addCornerText(TEMP_TEXT_LIST, Corner.BOTTOM_RIGHT);
 
 		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
 		{
@@ -231,6 +217,17 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		TEMP_TEXT_LIST.clear();
+
+		addCornerText(TEMP_TEXT_LIST, Corner.BOTTOM_LEFT);
+
+		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
+		{
+			String s = TEMP_TEXT_LIST.get((TEMP_TEXT_LIST.size() - 1) - i);
+			getFont().drawStringWithShadow(s, 4, getScreen().getScaledHeight() - 12 - i * 12, 0xFFFFFFFF);
+		}
+
+		TEMP_TEXT_LIST.clear();
+
 		super.drawForeground();
 	}
 
@@ -251,7 +248,7 @@ public class GuiChunkSelectorBase extends GuiBase
 	{
 	}
 
-	public void addCornerText(List<String> list)
+	public void addCornerText(List<String> list, Corner corner)
 	{
 	}
 

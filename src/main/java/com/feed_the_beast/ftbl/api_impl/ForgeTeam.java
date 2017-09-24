@@ -180,7 +180,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public void setStatus(UUID playerId, EnumTeamStatus status)
 	{
-		if (status.canBeSet() && !status.isNone())
+		if (!status.isNone())
 		{
 			players.put(playerId, status);
 		}

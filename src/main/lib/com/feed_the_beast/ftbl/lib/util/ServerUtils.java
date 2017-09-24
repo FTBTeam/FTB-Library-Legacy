@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib.util;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
+import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
@@ -121,7 +122,12 @@ public class ServerUtils
 
 	public static MinecraftServer getServer()
 	{
-		return FTBLibAPI.API.hasUniverse() ? FTBLibAPI.API.getUniverse().getServer() : FMLServerHandler.instance().getServer();
+		if (FTBLibAPI.API.hasUniverse())
+		{
+			return FTBLibAPI.API.getUniverse().getServer();
+		}
+
+		return Preconditions.checkNotNull(FMLServerHandler.instance().getServer());
 	}
 
 	public static WorldServer getOverworld()

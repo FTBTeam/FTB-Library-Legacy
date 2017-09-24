@@ -26,7 +26,7 @@ import java.util.Map;
 public class ThreadReloadChunkSelector extends Thread
 {
 	private static ByteBuffer pixelBuffer = null;
-	private static final PixelBuffer PIXELS = new PixelBuffer(GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16);
+	private static final PixelBuffer PIXELS = new PixelBuffer(ChunkSelectorMap.TILES_TEX * 16, ChunkSelectorMap.TILES_TEX * 16);
 	private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
 	private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
 	public final World world;
@@ -56,7 +56,7 @@ public class ThreadReloadChunkSelector extends Thread
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, GuiConfigs.CHUNK_SELECTOR_TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, ChunkSelectorMap.TILES_TEX * 16, ChunkSelectorMap.TILES_TEX * 16, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuffer);
 			pixelBuffer = null;
 		}
 	}
@@ -197,9 +197,9 @@ public class ThreadReloadChunkSelector extends Thread
 
 		try
 		{
-			for (cz = 0; cz < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; cz++)
+			for (cz = 0; cz < ChunkSelectorMap.TILES_GUI; cz++)
 			{
-				for (cx = 0; cx < GuiConfigs.CHUNK_SELECTOR_TILES_GUI; cx++)
+				for (cx = 0; cx < ChunkSelectorMap.TILES_GUI; cx++)
 				{
 					chunk = world.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
 
