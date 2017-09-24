@@ -144,6 +144,12 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 		return getBlockState().getBlock();
 	}
 
+	@Override
+	public final int getBlockMetadata()
+	{
+		return getBlockState().getBlock().getMetaFromState(getBlockState());
+	}
+
 	protected void sendDirtyUpdate()
 	{
 		updateContainingBlockInfo();
