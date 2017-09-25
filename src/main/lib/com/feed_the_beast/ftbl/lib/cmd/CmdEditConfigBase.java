@@ -91,7 +91,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 			return;
 		}
 
-		checkArgs(args, 1, "[ID] [value]");
+		checkArgs(sender, args, 1);
 
 		ConfigGroup group = getGroup(sender);
 		ConfigValue entry = group.get(args[0]);

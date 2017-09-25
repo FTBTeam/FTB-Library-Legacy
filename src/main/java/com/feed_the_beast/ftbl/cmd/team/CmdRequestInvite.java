@@ -47,7 +47,7 @@ public class CmdRequestInvite extends CmdBase
 			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
 		}
 
-		checkArgs(args, 1, "<team>");
+		checkArgs(sender, args, 1);
 
 		ForgeTeam team = Universe.INSTANCE.getTeam(args[0]);
 

@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.ChunkPos;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -175,7 +176,12 @@ public class GuiChunkSelectorBase extends GuiBase
 		buffer.setTranslation(mapButtons[0].getAX(), mapButtons[0].getAY(), 0D);
 		//GlStateManager.color(1F, 1F, 1F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.7F);
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		drawArea(tessellator, buffer);
+
+		if (!Keyboard.isKeyDown(Keyboard.KEY_TAB))
+		{
+			drawArea(tessellator, buffer);
+		}
+
 		GRID.draw(tessellator, buffer);
 		buffer.setTranslation(0D, 0D, 0D);
 		GlStateManager.enableTexture2D();

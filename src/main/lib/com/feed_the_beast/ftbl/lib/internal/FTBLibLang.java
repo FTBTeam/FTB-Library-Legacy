@@ -14,8 +14,6 @@ public interface FTBLibLang
 	LangKey EXAMPLE = LangKey.of("example");
 	LangKey CLICK_HERE = LangKey.of("click_here").setDefaultStyle(new Style().setColor(TextFormatting.GOLD));
 	LangKey FEATURE_DISABLED = LangKey.of("feature_disabled");
-	LangKey MISSING_ARGS = LangKey.of("missing_args", String.class);
-	LangKey MISSING_ARGS_NUM = LangKey.of("missing_args_num", String.class);
 	LangKey ERROR = LangKey.of("error");
 	LangKey OWNER = LangKey.of("owner");
 	LangKey DELETE_ITEM = LangKey.of("delete_item");

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
-import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PixelBuffer;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -22,18 +22,20 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ThreadReloadChunkSelector extends Thread
 {
 	private static ByteBuffer pixelBuffer = null;
-	private static final PixelBuffer PIXELS = new PixelBuffer(ChunkSelectorMap.TILES_TEX * 16, ChunkSelectorMap.TILES_TEX * 16);
+	private static final int PIXEL_SIZE = ChunkSelectorMap.TILES_TEX * 16;
+	private static final PixelBuffer PIXELS = new PixelBuffer(PIXEL_SIZE, PIXEL_SIZE);
 	private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
 	private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
-	public final World world;
-	private final int startX, startZ;
-	private boolean cancelled = false;
+	private static World world = null;
+	private static final Function<IBlockState, Integer> COLOR_GETTER = state1 -> 0xFF000000 | getBlockColor0(state1, world, CURRENT_BLOCK_POS);
 	private static ThreadReloadChunkSelector instance;
 	private static int textureID = -1;
+	private static final int[] HEIGHT_MAP = new int[PIXEL_SIZE * PIXEL_SIZE];
 
 	public static int getTextureID()
 	{
@@ -72,12 +74,16 @@ public class ThreadReloadChunkSelector extends Thread
 		instance = new ThreadReloadChunkSelector(w, sx, sz);
 		instance.cancelled = false;
 		instance.start();
+		COLOR_CACHE.clear();
 	}
 
 	public static boolean isReloading()
 	{
 		return instance != null && !instance.cancelled;
 	}
+
+	private final int startX, startZ;
+	private boolean cancelled = false;
 
 	private ThreadReloadChunkSelector(World w, int sx, int sz)
 	{
@@ -122,13 +128,13 @@ public class ThreadReloadChunkSelector extends Thread
 		}
 		else if (b == Blocks.GRASS)
 		{
-			return 0x74BC7C;
+			return 0x549954;
 		}
 		else if (b == Blocks.TORCH)
 		{
 			return 0xFFA530;
 		}
-		//else if(b.getMaterial(state) == Material.water)
+		//else if(b.getMaterial(state) == Material.WATER)
 		//	return ColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(world, pos), 200);
 		else if (b == Blocks.RED_FLOWER)
 		{
@@ -183,15 +189,22 @@ public class ThreadReloadChunkSelector extends Thread
 		return state.getMapColor(world, pos).colorValue;
 	}
 
+	private static int getHeight(int x, int z)
+	{
+		int index = x + z * PIXEL_SIZE;
+		return index < 0 || index >= HEIGHT_MAP.length ? -1 : HEIGHT_MAP[index];
+	}
+
 	@Override
 	public void run()
 	{
 		Arrays.fill(PIXELS.getPixels(), 0);
+		Arrays.fill(HEIGHT_MAP, -1);
 		pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
 
 		Chunk chunk;
-		int cx, cz, x, z, wx, wz, by, color, topY;
-		boolean depth = FTBLibClientConfig.general.enable_chunk_selector_depth;
+		int cx, cz, x, z, wi, wx, wz, by, color, topY;
+		IBlockState state;
 
 		int startY = ClientUtils.MC.player.getPosition().getY();
 
@@ -207,46 +220,75 @@ public class ThreadReloadChunkSelector extends Thread
 					{
 						x = (startX + cx) << 4;
 						z = (startZ + cz) << 4;
-						topY = Math.max(255, chunk.getTopFilledSegment() + 15);
+						topY = (world.provider.getDimension() == -1) ? startY + 30 : Math.max(255, chunk.getTopFilledSegment() + 15);
 
-						for (wz = 0; wz < 16; wz++)
+						for (wi = 0; wi < 256; wi++)
 						{
-							for (wx = 0; wx < 16; wx++)
+							wx = wi % 16;
+							wz = wi / 16;
+
+							for (by = topY; by > 0; --by)
 							{
-								for (by = topY; by > 0; --by)
+								if (cancelled)
 								{
-									if (cancelled)
-									{
-										return;
-									}
+									return;
+								}
 
-									IBlockState state = chunk.getBlockState(wx, by, wz);
+								CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
+								state = chunk.getBlockState(wx, by, wz);
 
-									CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
-
-									if (state.getBlock() != Blocks.TALLGRASS && !world.isAirBlock(CURRENT_BLOCK_POS))
-									{
-										color = COLOR_CACHE.computeIfAbsent(state, state1 -> 0xFF000000 | getBlockColor0(state, world, CURRENT_BLOCK_POS));
-
-										if (depth)
-										{
-											int i = by - startY;
-
-											if (i < 0)
-											{
-												color = ColorUtils.addBrightness(color, 0.05F);
-											}
-											else if (i > 0)
-											{
-												color = ColorUtils.addBrightness(color, 0.05F);
-											}
-										}
-
-										PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);
-										break;
-									}
+								if (state.getBlock() != Blocks.TALLGRASS && !state.getBlock().isAir(state, world, CURRENT_BLOCK_POS))
+								{
+									HEIGHT_MAP[(cx * 16 + wx) + (cz * 16 + wz) * PIXEL_SIZE] = by;
+									break;
 								}
 							}
+						}
+					}
+				}
+			}
+
+			for (cz = 0; cz < ChunkSelectorMap.TILES_GUI; cz++)
+			{
+				for (cx = 0; cx < ChunkSelectorMap.TILES_GUI; cx++)
+				{
+					chunk = world.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
+
+					if (chunk != null)
+					{
+						x = (startX + cx) << 4;
+						z = (startZ + cz) << 4;
+
+						for (wi = 0; wi < 256; wi++)
+						{
+							wx = wi % 16;
+							wz = wi / 16;
+							by = getHeight(cx * 16 + wx, cz * 16 + wz);
+
+							if (by < 0)
+							{
+								continue;
+							}
+
+							CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
+							state = chunk.getBlockState(wx, by, wz);
+
+							color = ColorUtils.addBrightness(COLOR_CACHE.computeIfAbsent(state, COLOR_GETTER), MathUtils.RAND.nextFloat() * 0.04F);
+
+							int bn = getHeight(cx * 16 + wx, cz * 16 + wz - 1);
+							int bw = getHeight(cx * 16 + wx - 1, cz * 16 + wz);
+
+							if (by > bn && bn != -1 || by > bw && bw != -1)
+							{
+								color = ColorUtils.addBrightness(color, 0.1F);
+							}
+
+							if (by < bn && bn != -1 || by < bw && bw != -1)
+							{
+								color = ColorUtils.addBrightness(color, -0.1F);
+							}
+
+							PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);
 						}
 					}
 
@@ -260,6 +302,7 @@ public class ThreadReloadChunkSelector extends Thread
 		}
 
 		pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+		world = null;
 		instance = null;
 	}
 }

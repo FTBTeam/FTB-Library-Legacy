@@ -42,7 +42,7 @@ public class CmdTransferOwnership extends CmdBase
 			throw FTBLibLang.TEAM_NOT_OWNER.commandError();
 		}
 
-		checkArgs(args, 1, "<player>");
+		checkArgs(sender, args, 1);
 
 		IForgePlayer p1 = getForgePlayer(args[0]);
 

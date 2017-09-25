@@ -83,7 +83,7 @@ public class IconBullet extends Icon
 		GuiHelper.addRectToBuffer(buffer, x, y + 1, 1, h - 2, cb);
 		GuiHelper.addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, cd);
 
-		GuiHelper.addRectToBuffer(buffer, x + 1, y, w - 2, 1, cd);
+		GuiHelper.addRectToBuffer(buffer, x + 1, y, w - 2, 1, cb);
 		GuiHelper.addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1, cd);
 
 		GuiHelper.addRectToBuffer(buffer, x + 1, y + 1, w - 2, h - 2, c);

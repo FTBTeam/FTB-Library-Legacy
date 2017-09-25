@@ -57,7 +57,7 @@ public class CmdCreate extends CmdBase
 			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
 		}
 
-		checkArgs(args, 1, "<id> [color]");
+		checkArgs(sender, args, 1);
 
 		if (!isValidTeamID(args[0]))
 		{

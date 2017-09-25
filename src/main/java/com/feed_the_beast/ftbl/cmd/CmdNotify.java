@@ -45,7 +45,7 @@ public class CmdNotify extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 2, "<player> <json>");
+		checkArgs(sender, args, 2);
 		EntityPlayerMP player = getPlayer(server, sender, args[0]);
 		ITextComponent component = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(String.join(" ", StringUtils.shiftArray(args))));
 		Preconditions.checkNotNull(component);

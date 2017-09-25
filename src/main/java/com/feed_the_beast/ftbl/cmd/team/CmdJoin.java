@@ -46,7 +46,7 @@ public class CmdJoin extends CmdBase
 			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
 		}
 
-		checkArgs(args, 1, "<ID>");
+		checkArgs(sender, args, 1);
 
 		IForgeTeam team = getTeam(args[0]);
 

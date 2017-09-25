@@ -30,7 +30,7 @@ public class CmdAddFakePlayer extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		checkArgs(args, 2, "<uuid> <name>");
+		checkArgs(sender, args, 2);
 
 		UUID id = StringUtils.fromString(args[0]);
 		if (id == null)

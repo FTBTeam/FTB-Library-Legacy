@@ -42,7 +42,7 @@ public class CmdKick extends CmdBase
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		checkArgs(args, 1, "<player>");
+		checkArgs(sender, args, 1);
 
 		IForgePlayer p1 = getForgePlayer(args[0]);
 

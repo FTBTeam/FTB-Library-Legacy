@@ -10,6 +10,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
@@ -40,18 +41,11 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 	protected static final List<String> LIST_TRUE_FALSE = Collections.unmodifiableList(Arrays.asList("true", "false"));
 
-	public static void checkArgs(String[] args, int i, String desc) throws CommandException
+	public void checkArgs(ICommandSender sender, String[] args, int i) throws CommandException
 	{
 		if (args.length < i)
 		{
-			if (desc.isEmpty())
-			{
-				throw FTBLibLang.MISSING_ARGS_NUM.commandError(Integer.toString(i - args.length));
-			}
-			else
-			{
-				throw FTBLibLang.MISSING_ARGS.commandError(desc);
-			}
+			throw new WrongUsageException(getUsage(sender));
 		}
 	}
 

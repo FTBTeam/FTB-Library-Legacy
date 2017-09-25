@@ -13,7 +13,8 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -108,10 +109,11 @@ public class GuiSelectTeam extends GuiBase
 		}
 	}
 
-	public GuiSelectTeam(List<PublicTeamData> teams)
+	public GuiSelectTeam(Collection<PublicTeamData> teams0)
 	{
 		super(192, 170);
-		Collections.sort(teams);
+		List<PublicTeamData> teams = new ArrayList<>(teams0);
+		teams.sort(null);
 
 		panelTeams = new Panel(0, 1, 168, 168)
 		{

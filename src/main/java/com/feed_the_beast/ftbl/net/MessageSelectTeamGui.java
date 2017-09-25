@@ -13,14 +13,14 @@ import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author LatvianModder
  */
 public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 {
-	private List<PublicTeamData> teams;
+	private Collection<PublicTeamData> teams;
 
 	public MessageSelectTeamGui()
 	{
@@ -51,7 +51,7 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 	@Override
 	public void readData(DataIn data)
 	{
-		data.readCollection(teams, PublicTeamData.DESERIALIZER);
+		teams = data.readCollection(null, PublicTeamData.DESERIALIZER);
 	}
 
 	@Override

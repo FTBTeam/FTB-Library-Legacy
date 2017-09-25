@@ -57,7 +57,7 @@ public class CmdSetStatus extends CmdBase
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		checkArgs(args, 2, "<player> <status>");
+		checkArgs(sender, args, 2);
 		IForgePlayer p1 = getForgePlayer(args[0]);
 
 		if (p1.equals(team.getOwner()))

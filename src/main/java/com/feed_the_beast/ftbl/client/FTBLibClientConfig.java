@@ -34,7 +34,6 @@ public class FTBLibClientConfig
 
 		public boolean replace_vanilla_status_messages = true;
 		public boolean mirror_commands = true;
-		public boolean enable_chunk_selector_depth = true;
 	}
 
 	public static void sync()
