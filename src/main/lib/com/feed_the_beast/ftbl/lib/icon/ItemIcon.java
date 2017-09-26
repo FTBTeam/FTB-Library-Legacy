@@ -11,18 +11,18 @@ import net.minecraft.item.ItemStack;
 /**
  * @author LatvianModder
  */
-public class DrawableItem extends Icon
+public class ItemIcon extends Icon
 {
 	private ItemStack stack;
 	private String lazyStackString;
 
-	public DrawableItem(ItemStack is)
+	public ItemIcon(ItemStack is)
 	{
 		stack = is;
 		lazyStackString = "";
 	}
 
-	public DrawableItem(String s)
+	public ItemIcon(String s)
 	{
 		stack = ItemStack.EMPTY;
 		lazyStackString = s;
@@ -33,6 +33,7 @@ public class DrawableItem extends Icon
 		if (!lazyStackString.isEmpty())
 		{
 			stack = ItemStackSerializer.parseItem(lazyStackString);
+			lazyStackString = "";
 		}
 
 		return stack;

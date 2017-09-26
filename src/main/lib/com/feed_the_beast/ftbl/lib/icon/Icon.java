@@ -134,7 +134,7 @@ public abstract class Icon
 		}
 		else if (id.startsWith("item:"))
 		{
-			return new DrawableItem(id.substring(5));
+			return new ItemIcon(id.substring(5));
 		}
 		else if (id.startsWith("http:") || id.startsWith("https:"))
 		{

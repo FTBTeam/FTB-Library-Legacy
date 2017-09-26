@@ -3,20 +3,20 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.icon.DrawableItem;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
+import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class DrawableObjectListButton extends Button
+public class IconAnimationButton extends Button
 {
 	private final IconAnimation list;
 	private final int cols;
 
-	public DrawableObjectListButton(int x, int y, IconAnimation i, int c)
+	public IconAnimationButton(int x, int y, IconAnimation i, int c)
 	{
 		super(x, y, 16, 16);
 		list = i;
@@ -66,9 +66,9 @@ public class DrawableObjectListButton extends Button
 
 		Icon object = list.getObject(index);
 
-		if (object instanceof DrawableItem)
+		if (object instanceof ItemIcon)
 		{
-			ItemStack stack = ((DrawableItem) object).getStack();
+			ItemStack stack = ((ItemIcon) object).getStack();
 			l.add(stack.getDisplayName());
 			stack.getItem().addInformation(stack, ClientUtils.MC.world, l, ITooltipFlag.TooltipFlags.NORMAL);
 		}

@@ -5,6 +5,8 @@ import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +17,18 @@ import java.util.List;
  */
 public class IconAnimation extends Icon
 {
+	public static Icon fromIngredient(Ingredient ingredient)
+	{
+		Collection<Icon> icons = new ArrayList<>();
+
+		for (ItemStack stack : ingredient.getMatchingStacks())
+		{
+			icons.add(new ItemIcon(stack));
+		}
+
+		return new IconAnimation(icons);
+	}
+
 	public final List<Icon> list;
 	private Icon current = Icon.EMPTY;
 	public long timer = 1000L;
@@ -25,7 +39,7 @@ public class IconAnimation extends Icon
 
 		for (Icon o : l)
 		{
-			if (o != null && !o.isEmpty())
+			if (!o.isEmpty())
 			{
 				list.add(o);
 			}
@@ -35,6 +49,12 @@ public class IconAnimation extends Icon
 		{
 			current = list.get(0);
 		}
+	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		return list.isEmpty();
 	}
 
 	public int getItemCount()
