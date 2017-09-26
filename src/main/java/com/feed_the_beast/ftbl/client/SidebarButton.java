@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.FinalIDObject;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
@@ -13,6 +14,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.event.ClickEvent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +23,13 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class SidebarButton extends FinalIDObject
+public class SidebarButton extends FinalIDObject implements ISidebarButton
 {
-	public Icon icon = Icon.EMPTY;
-	public Boolean defaultConfig = null;
-	public boolean configValue = true;
+	private Icon icon = Icon.EMPTY;
+	private Boolean defaultConfig = null;
+	private boolean configValue = true;
 	public final Map<String, Boolean> dependencies = new HashMap<>();
-	public final List<String> requiredServerMods = new ArrayList<>();
+	private final List<String> requiredServerMods = new ArrayList<>();
 	private final List<ClickEvent> clickEvents = new ArrayList<>();
 	private final List<ClickEvent> shiftClickEvents = new ArrayList<>();
 	public boolean requiresOp, devOnly, hideWithNEI, loadingScreen, customText;
@@ -80,6 +82,19 @@ public class SidebarButton extends FinalIDObject
 		customText = o.has("custom_text") && o.get("custom_text").getAsBoolean();
 	}
 
+	@Override
+	public Icon getIcon()
+	{
+		return icon;
+	}
+
+	@Override
+	@Nullable
+	public Boolean getDefaultConfig()
+	{
+		return defaultConfig;
+	}
+
 	public void setDependencies(String deps)
 	{
 		dependencies.clear();
@@ -106,6 +121,7 @@ public class SidebarButton extends FinalIDObject
 		}
 	}
 
+	@Override
 	public void onClicked(boolean shift)
 	{
 		if (loadingScreen)
@@ -119,13 +135,39 @@ public class SidebarButton extends FinalIDObject
 		}
 	}
 
+	@Override
 	public boolean isVisible()
 	{
 		return configValue && FTBLibClientConfig.general.action_buttons != EnumSidebarButtonPlacement.DISABLED && isAvailable();
 	}
 
+	@Override
 	public boolean isAvailable()
 	{
 		return !(hideWithNEI && CommonUtils.isNEILoaded()) && !(requiresOp && !FTBLibAPI.API.getClientData().isClientOP()) && !(!requiredServerMods.isEmpty() && FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
+	}
+
+	@Override
+	public boolean hasCustomText()
+	{
+		return customText;
+	}
+
+	@Override
+	public boolean getConfig()
+	{
+		return configValue;
+	}
+
+	@Override
+	public void setConfig(boolean value)
+	{
+		configValue = value;
+	}
+
+	@Override
+	public Map<String, Boolean> getDependencies()
+	{
+		return dependencies;
 	}
 }

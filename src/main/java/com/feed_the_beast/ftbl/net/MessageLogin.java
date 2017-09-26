@@ -5,7 +5,7 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISyncData;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.ReloadEvent;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;

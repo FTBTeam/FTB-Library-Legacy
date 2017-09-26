@@ -8,13 +8,14 @@ import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,8 +38,6 @@ public abstract class FTBLibAPI
 
 	public abstract boolean hasUniverse();
 
-	public abstract void loadWorldData(MinecraftServer server);
-
 	public abstract void reload(Side side, ICommandSender sender, EnumReloadType type, ResourceLocation id);
 
 	public abstract void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
@@ -50,4 +49,7 @@ public abstract class FTBLibAPI
 	public abstract Map<String, RankConfigValueInfo> getRankConfigRegistry();
 
 	public abstract void handleMessage(MessageBase<?> message, MessageContext context, Side side);
+
+	@SideOnly(Side.CLIENT)
+	public abstract List<ISidebarButton> getSidebarButtons(boolean ignoreConfig);
 }

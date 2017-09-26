@@ -1,21 +1,17 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.api.CustomSidebarButtonTextEvent;
 import com.feed_the_beast.ftbl.api.EventHandler;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.api.events.ClientGuideEvent;
-import com.feed_the_beast.ftbl.api.events.CustomSidebarButtonTextEvent;
-import com.feed_the_beast.ftbl.api.guide.GuideType;
+import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.guide.GuidePage;
-import com.feed_the_beast.ftbl.lib.guide.GuideTitlePage;
 import com.feed_the_beast.ftbl.lib.icon.AtlasSpriteProvider;
-import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.IconPresets;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
@@ -32,7 +28,6 @@ import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -48,7 +43,6 @@ import org.lwjgl.opengl.GL11;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -226,7 +220,7 @@ public class FTBLibClientEventHandler
 			return;
 		}
 
-		List<SidebarButton> buttons = FTBLibModClient.getSidebarButtons(false);
+		List<ISidebarButton> buttons = FTBLibAPI.API.getSidebarButtons(false);
 
 		if (!buttons.isEmpty())
 		{
@@ -293,27 +287,6 @@ public class FTBLibClientEventHandler
 	*/
 
 	@SubscribeEvent
-	public static void onGuideEvent(ClientGuideEvent event)
-	{
-		GuideTitlePage page = new GuideTitlePage("sidebar_buttons", GuideType.OTHER, Collections.singletonList("LatvianModder"), Collections.emptyList());
-		page.setIcon(Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"));
-		page.setTitle(new TextComponentTranslation("sidebar_button"));
-
-		for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
-		{
-			if (button.isVisible() && StringUtils.canTranslate("sidebar_button." + button.getName() + ".tooltip"))
-			{
-				GuidePage page1 = page.getSub(button.getName());
-				page1.setIcon(button.icon);
-				page1.setTitle(new TextComponentTranslation("sidebar_button." + button.getName()));
-				page1.println(new TextComponentTranslation("sidebar_button." + button.getName() + ".tooltip"));
-			}
-		}
-
-		event.add(page);
-	}
-
-	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
 	{
 		AtlasSpriteProvider.SPRITE_MAP.clear();
@@ -345,10 +318,10 @@ public class FTBLibClientEventHandler
 	private static class GuiButtonSidebar extends GuiButton
 	{
 		public final int index;
-		public final SidebarButton button;
+		public final ISidebarButton button;
 		public final String title;
 
-		public GuiButtonSidebar(int id, SidebarButton b)
+		public GuiButtonSidebar(int id, ISidebarButton b)
 		{
 			super(495830 + id, -16, -16, 16, 16, "");
 			index = id;
@@ -474,7 +447,7 @@ public class FTBLibClientEventHandler
 
 			for (GuiButtonSidebar b : buttons)
 			{
-				b.button.icon.draw(b.x, b.y, b.width, b.height, Color4I.NONE);
+				b.button.getIcon().draw(b.x, b.y, b.width, b.height, Color4I.NONE);
 
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
@@ -484,9 +457,9 @@ public class FTBLibClientEventHandler
 
 			for (GuiButtonSidebar b : buttons)
 			{
-				if (b.button.customText)
+				if (b.button.hasCustomText())
 				{
-					CustomSidebarButtonTextEvent event = new CustomSidebarButtonTextEvent(b.button.getName());
+					CustomSidebarButtonTextEvent event = new CustomSidebarButtonTextEvent(b.button);
 					event.post();
 
 					if (!event.getText().isEmpty())

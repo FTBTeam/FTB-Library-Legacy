@@ -30,9 +30,11 @@ public class GuiChunkSelectorBase extends GuiBase
 	protected enum Corner
 	{
 		BOTTOM_LEFT,
-		BOTTOM_RIGHT
+		BOTTOM_RIGHT,
+		TOP_LEFT
 	}
 
+	public static final int TILE_SIZE = 12;
 	private static final CachedVertexData GRID = new CachedVertexData(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 
 	static
@@ -41,14 +43,14 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int x = 0; x <= ChunkSelectorMap.TILES_GUI; x++)
 		{
-			GRID.pos(x * 16, 0D);
-			GRID.pos(x * 16, ChunkSelectorMap.TILES_GUI * 16, 0D);
+			GRID.pos(x * TILE_SIZE, 0D);
+			GRID.pos(x * TILE_SIZE, ChunkSelectorMap.TILES_GUI * TILE_SIZE, 0D);
 		}
 
 		for (int y = 0; y <= ChunkSelectorMap.TILES_GUI; y++)
 		{
-			GRID.pos(0D, y * 16, 0D);
-			GRID.pos(ChunkSelectorMap.TILES_GUI * 16, y * 16, 0D);
+			GRID.pos(0D, y * TILE_SIZE, 0D);
+			GRID.pos(ChunkSelectorMap.TILES_GUI * TILE_SIZE, y * TILE_SIZE, 0D);
 		}
 	}
 
@@ -60,7 +62,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		private MapButton(int x, int y, int i)
 		{
-			super(x, y, 16, 16);
+			super(x, y, TILE_SIZE, TILE_SIZE);
 			posX += (i % ChunkSelectorMap.TILES_GUI) * width;
 			posY += (i / ChunkSelectorMap.TILES_GUI) * height;
 			chunkPos = new ChunkPos(startX + (i % ChunkSelectorMap.TILES_GUI), startZ + (i / ChunkSelectorMap.TILES_GUI));
@@ -98,7 +100,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 			if (isSelected || gui.isMouseOver(this))
 			{
-				GuiHelper.drawBlankRect(ax, ay, 16, 16, Color4I.WHITE_A[33]);
+				GuiHelper.drawBlankRect(ax, ay, TILE_SIZE, TILE_SIZE, Color4I.WHITE_A[33]);
 			}
 		}
 	}
@@ -110,7 +112,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 	public GuiChunkSelectorBase()
 	{
-		super(ChunkSelectorMap.TILES_GUI * 16, ChunkSelectorMap.TILES_GUI * 16);
+		super(ChunkSelectorMap.TILES_GUI * TILE_SIZE, ChunkSelectorMap.TILES_GUI * TILE_SIZE);
 
 		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
 		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
@@ -157,7 +159,6 @@ public class GuiChunkSelectorBase extends GuiBase
 	{
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GuiHelper.drawBlankRect(posX - 2, posY - 2, width + 4, height + 4, Color4I.BLACK);
-		//drawBlankRect((xSize - 128) / 2, (ySize - 128) / 2, zLevel, 128, 128);
 
 		ChunkSelectorMap.getMap().drawMap(this, posX, posY, startX, startZ);
 
@@ -214,12 +215,13 @@ public class GuiChunkSelectorBase extends GuiBase
 	@Override
 	public void drawForeground()
 	{
+		int lineSpacing = getFont().FONT_HEIGHT + 1;
 		addCornerText(TEMP_TEXT_LIST, Corner.BOTTOM_RIGHT);
 
 		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
 		{
-			String s = TEMP_TEXT_LIST.get((TEMP_TEXT_LIST.size() - 1) - i);
-			getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 4, getScreen().getScaledHeight() - 12 - i * 12, 0xFFFFFFFF);
+			String s = TEMP_TEXT_LIST.get(i);
+			getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, 0xFFFFFFFF);
 		}
 
 		TEMP_TEXT_LIST.clear();
@@ -228,8 +230,16 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
 		{
-			String s = TEMP_TEXT_LIST.get((TEMP_TEXT_LIST.size() - 1) - i);
-			getFont().drawStringWithShadow(s, 4, getScreen().getScaledHeight() - 12 - i * 12, 0xFFFFFFFF);
+			getFont().drawStringWithShadow(TEMP_TEXT_LIST.get(i), 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, 0xFFFFFFFF);
+		}
+
+		TEMP_TEXT_LIST.clear();
+
+		addCornerText(TEMP_TEXT_LIST, Corner.TOP_LEFT);
+
+		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
+		{
+			getFont().drawStringWithShadow(TEMP_TEXT_LIST.get(i), 2, 2 + i * lineSpacing, 0xFFFFFFFF);
 		}
 
 		TEMP_TEXT_LIST.clear();

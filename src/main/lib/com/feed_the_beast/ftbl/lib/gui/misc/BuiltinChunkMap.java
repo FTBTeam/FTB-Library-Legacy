@@ -18,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BuiltinChunkMap extends ChunkSelectorMap
 {
 	public static final Icon TEX_ENTITY = Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/entity.png");
+	public static final double UV = (double) TILES_GUI / (double) TILES_TEX;
 
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -33,20 +34,20 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 		ThreadReloadChunkSelector.updateTexture();
 		GlStateManager.enableTexture2D();
 		GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureID());
-		GuiHelper.drawTexturedRect(ax, ay, ChunkSelectorMap.TILES_GUI * 16, ChunkSelectorMap.TILES_GUI * 16, Color4I.WHITE, 0D, 0D, ChunkSelectorMap.UV, ChunkSelectorMap.UV);
+		GuiHelper.drawTexturedRect(ax, ay, TILES_GUI * GuiChunkSelectorBase.TILE_SIZE, TILES_GUI * GuiChunkSelectorBase.TILE_SIZE, Color4I.WHITE, 0D, 0D, UV, UV);
 
 		EntityPlayer player = ClientUtils.MC.player;
 
 		int cx = MathUtils.chunk(player.posX);
 		int cy = MathUtils.chunk(player.posZ);
 
-		if (cx >= startX && cy >= startZ && cx < startX + ChunkSelectorMap.TILES_GUI && cy < startZ + ChunkSelectorMap.TILES_GUI)
+		if (cx >= startX && cy >= startZ && cx < startX + TILES_GUI && cy < startZ + TILES_GUI)
 		{
 			double x = ((cx - startX) * 16D + MathUtils.wrap(player.posX, 16D));
 			double y = ((cy - startZ) * 16D + MathUtils.wrap(player.posZ, 16D));
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(ax + x, ay + y, 0D);
+			GlStateManager.translate(ax + x * GuiChunkSelectorBase.TILE_SIZE / 16D, ay + y * GuiChunkSelectorBase.TILE_SIZE / 16D, 0D);
 			GlStateManager.pushMatrix();
 			//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);

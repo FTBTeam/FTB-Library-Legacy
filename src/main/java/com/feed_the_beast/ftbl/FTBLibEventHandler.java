@@ -4,17 +4,32 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
-import com.feed_the_beast.ftbl.api.events.player.ForgePlayerLoggedOutEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseLoadedEvent;
-import com.feed_the_beast.ftbl.api.events.universe.ForgeUniverseSavedEvent;
+import com.feed_the_beast.ftbl.api.RegisterConfigValueProvidersEvent;
+import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
+import com.feed_the_beast.ftbl.api.ReloadEvent;
+import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedOutEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftbl.api.universe.ForgeUniverseLoadedEvent;
+import com.feed_the_beast.ftbl.api.universe.ForgeUniverseSavedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.api_impl.Universe;
+import com.feed_the_beast.ftbl.lib.config.ConfigBlockState;
+import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
+import com.feed_the_beast.ftbl.lib.config.ConfigColor;
+import com.feed_the_beast.ftbl.lib.config.ConfigDouble;
+import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigInt;
+import com.feed_the_beast.ftbl.lib.config.ConfigItemStack;
+import com.feed_the_beast.ftbl.lib.config.ConfigList;
+import com.feed_the_beast.ftbl.lib.config.ConfigNull;
+import com.feed_the_beast.ftbl.lib.config.ConfigString;
+import com.feed_the_beast.ftbl.lib.config.ConfigStringEnum;
+import com.feed_the_beast.ftbl.lib.config.ConfigTextComponent;
+import com.feed_the_beast.ftbl.lib.config.ConfigTristate;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -55,6 +70,29 @@ import java.util.UUID;
 public class FTBLibEventHandler
 {
 	public static final ResourceLocation RELOAD_CONFIG = FTBLibFinals.get("config");
+
+	@SubscribeEvent
+	public static void registerOptionalServerMods(RegisterOptionalServerModsEvent event)
+	{
+		event.register(FTBLibFinals.MOD_ID);
+	}
+
+	@SubscribeEvent
+	public static void registerConfigValueProviders(RegisterConfigValueProvidersEvent event)
+	{
+		event.register(ConfigNull.ID, () -> ConfigNull.INSTANCE);
+		event.register(ConfigList.ID, () -> new ConfigList(ConfigNull.ID));
+		event.register(ConfigBoolean.ID, ConfigBoolean::new);
+		event.register(ConfigTristate.ID, ConfigTristate::new);
+		event.register(ConfigInt.ID, ConfigInt::new);
+		event.register(ConfigDouble.ID, ConfigDouble::new);
+		event.register(ConfigString.ID, ConfigString::new);
+		event.register(ConfigColor.ID, ConfigColor::new);
+		event.register(ConfigEnum.ID, ConfigStringEnum::new);
+		event.register(ConfigBlockState.ID, ConfigBlockState::new);
+		event.register(ConfigItemStack.ID, ConfigItemStack::new);
+		event.register(ConfigTextComponent.ID, ConfigTextComponent::new);
+	}
 
 	@SubscribeEvent
 	public static void onWorldLoaded(WorldEvent.Load event)
@@ -231,7 +269,6 @@ public class FTBLibEventHandler
 		new ForgeUniverseLoadedEvent.Post(Universe.INSTANCE, data).post();
 		new ForgeUniverseLoadedEvent.Finished(Universe.INSTANCE).post();
 
-		FTBLibAPI.API.loadWorldData(server);
 		FTBLibAPI.API.reload(Side.SERVER, server, EnumReloadType.CREATED, ReloadEvent.ALL);
 	}
 

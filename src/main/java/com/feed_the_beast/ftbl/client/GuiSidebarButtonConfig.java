@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -26,10 +28,10 @@ public class GuiSidebarButtonConfig extends GuiBase
 
 	private class ButtonConfigSidebarButton extends Button
 	{
-		private final SidebarButton sidebarButton;
+		private final ISidebarButton sidebarButton;
 		private String tooltip = "";
 
-		public ButtonConfigSidebarButton(SidebarButton s)
+		public ButtonConfigSidebarButton(ISidebarButton s)
 		{
 			super(0, 0, 0, 20);
 			sidebarButton = s;
@@ -58,9 +60,9 @@ public class GuiSidebarButtonConfig extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 
-			(sidebarButton.configValue ? (sidebarButton.isAvailable() ? BACKGROUND_ENABLED : BACKGROUND_UNAVAILABLE) : BACKGROUND_DISABLED).draw(ax, ay, width, height, Color4I.NONE);
+			(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? BACKGROUND_ENABLED : BACKGROUND_UNAVAILABLE) : BACKGROUND_DISABLED).draw(ax, ay, width, height, Color4I.NONE);
 
-			sidebarButton.icon.draw(ax + 2, ay + 2, 16, 16, Color4I.NONE);
+			sidebarButton.getIcon().draw(ax + 2, ay + 2, 16, 16, Color4I.NONE);
 			gui.drawString(getTitle(gui), ax + 21, ay + 6);
 
 			if (gui.isMouseOver(ax, ay, width, height))
@@ -73,7 +75,7 @@ public class GuiSidebarButtonConfig extends GuiBase
 		public void onClicked(GuiBase gui, MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			sidebarButton.configValue = !sidebarButton.configValue;
+			sidebarButton.setConfig(!sidebarButton.getConfig());
 		}
 	}
 
@@ -91,9 +93,9 @@ public class GuiSidebarButtonConfig extends GuiBase
 			{
 				width = 0;
 
-				for (SidebarButton button : FTBLibModClient.getSidebarButtons(true))
+				for (ISidebarButton button : FTBLibAPI.API.getSidebarButtons(true))
 				{
-					if (button.defaultConfig != null)
+					if (button.getDefaultConfig() != null)
 					{
 						Button b = new ButtonConfigSidebarButton(button);
 						add(b);

@@ -29,7 +29,6 @@ public abstract class ChunkSelectorMap
 	public static final int TILES_TEX = 16;
 	public static final int TILES_GUI = 15;
 	public static final int TILES_GUI2 = TILES_GUI / 2;
-	public static final double UV = (double) TILES_GUI / (double) TILES_TEX;
 
 	@SideOnly(Side.CLIENT)
 	public abstract void resetMap(int startX, int startZ);

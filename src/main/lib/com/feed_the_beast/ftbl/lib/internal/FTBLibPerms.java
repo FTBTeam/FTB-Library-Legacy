@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.internal;
 
 import com.feed_the_beast.ftbl.api.EventHandler;
-import com.feed_the_beast.ftbl.api.events.PermissionRegistryEvent;
+import com.feed_the_beast.ftbl.api.PermissionRegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 

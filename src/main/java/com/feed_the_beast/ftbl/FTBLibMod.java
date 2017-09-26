@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl;
 
-import com.feed_the_beast.ftbl.api.events.PermissionRegistryEvent;
+import com.feed_the_beast.ftbl.api.PermissionRegistryEvent;
 import com.feed_the_beast.ftbl.cmd.CmdFTB;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.command.ICommand;

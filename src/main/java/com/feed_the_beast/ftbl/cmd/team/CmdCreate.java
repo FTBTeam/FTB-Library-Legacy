@@ -2,8 +2,8 @@ package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamCreatedEvent;
-import com.feed_the_beast.ftbl.api.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;

@@ -4,14 +4,15 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IContainerProvider;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
+import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.events.LoadWorldDataEvent;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.ReloadEvent;
+import com.feed_the_beast.ftbl.api.player.IContainerProvider;
 import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
+import com.feed_the_beast.ftbl.client.FTBLibModClient;
 import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
@@ -34,7 +35,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -42,9 +42,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,12 +80,6 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	public boolean hasUniverse()
 	{
 		return Universe.INSTANCE != null;
-	}
-
-	@Override
-	public void loadWorldData(MinecraftServer server)
-	{
-		new LoadWorldDataEvent(server).post();
 	}
 
 	@Override
@@ -208,5 +205,27 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 		{
 			FTBLibMod.PROXY.handleClientMessage(message);
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)
+	{
+		if (ignoreConfig)
+		{
+			return FTBLibModClient.SIDEBAR_BUTTONS;
+		}
+
+		List<ISidebarButton> list = new ArrayList<>();
+
+		for (ISidebarButton button : FTBLibModClient.SIDEBAR_BUTTONS)
+		{
+			if (button.isVisible())
+			{
+				list.add(button);
+			}
+		}
+
+		return list;
 	}
 }

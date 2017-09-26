@@ -134,6 +134,10 @@ public class ThreadReloadChunkSelector extends Thread
 		{
 			return 0xFFA530;
 		}
+		else if (b == Blocks.NETHERRACK || b == Blocks.QUARTZ_ORE)
+		{
+			return 0x7F1321;
+		}
 		//else if(b.getMaterial(state) == Material.WATER)
 		//	return ColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(world, pos), 200);
 		else if (b == Blocks.RED_FLOWER)
@@ -220,7 +224,7 @@ public class ThreadReloadChunkSelector extends Thread
 					{
 						x = (startX + cx) << 4;
 						z = (startZ + cz) << 4;
-						topY = (world.provider.getDimension() == -1) ? startY + 30 : Math.max(255, chunk.getTopFilledSegment() + 15);
+						topY = (world.provider.getDimension() == -1) ? startY + 5 : Math.max(world.getActualHeight(), chunk.getTopFilledSegment() + 15);
 
 						for (wi = 0; wi < 256; wi++)
 						{

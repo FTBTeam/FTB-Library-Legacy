@@ -120,6 +120,21 @@ public class ServerUtils
 		}
 	}
 
+	public static String getDimensionName(int dim)
+	{
+		switch (dim)
+		{
+			case 0:
+				return "Overworld";
+			case -1:
+				return "Nether";
+			case 1:
+				return "The End";
+			default:
+				return "DIM_" + dim;
+		}
+	}
+
 	public static MinecraftServer getServer()
 	{
 		if (FTBLibAPI.API.hasUniverse())

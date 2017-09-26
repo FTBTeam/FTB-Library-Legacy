@@ -3,7 +3,7 @@ package com.feed_the_beast.ftbl.cmd;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.events.ReloadEvent;
+import com.feed_the_beast.ftbl.api.ReloadEvent;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
