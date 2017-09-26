@@ -176,7 +176,7 @@ public class ClientUtils
 		entityItem.setWorld(w);
 		entityItem.hoverStart = 0F;
 		entityItem.setItem(is);
-		MC.getRenderManager().doRenderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
+		MC.getRenderManager().renderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
 	}
 
 	public static void drawOutlinedBoundingBox(AxisAlignedBB bb, Color4I color)

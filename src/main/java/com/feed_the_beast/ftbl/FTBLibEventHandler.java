@@ -37,7 +37,6 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -443,13 +442,17 @@ public class FTBLibEventHandler
 	{
 		if (event.player instanceof EntityPlayerMP && FTBLibAPI.API.hasUniverse())
 		{
-			ForgePlayer player = Universe.INSTANCE.getPlayer(event.player);
-			player.lastTimeSeen = ServerUtils.getWorldTime();
-			player.loggingOut = true;
-			//FTBLibStats.updateLastSeen(stats());
-			new ForgePlayerLoggedOutEvent(player).post();
-			player.entityPlayer = null;
-			player.playerNBT = null;
+			ForgePlayer player = Universe.INSTANCE.getPlayer(event.player.getGameProfile());
+
+			if (player != null)
+			{
+				player.lastTimeSeen = event.player.world.getTotalWorldTime();
+				player.loggingOut = true;
+				//FTBLibStats.updateLastSeen(stats());
+				new ForgePlayerLoggedOutEvent(player).post();
+				player.entityPlayer = null;
+				player.playerNBT = null;
+			}
 		}
 	}
 

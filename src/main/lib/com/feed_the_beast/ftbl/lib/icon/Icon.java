@@ -54,6 +54,8 @@ public abstract class Icon
 			{
 				switch (o.get("id").getAsString())
 				{
+					case "loading":
+						return LoadingIcon.INSTANCE;
 					case "colored":
 						return new ColoredIcon(getIcon(o.get("parent").getAsJsonObject()), Color4I.fromJson(o.get("color")));
 					case "animation":
@@ -125,6 +127,10 @@ public abstract class Icon
 		if (id.isEmpty())
 		{
 			return EMPTY;
+		}
+		else if (id.equals("loading"))
+		{
+			return LoadingIcon.INSTANCE;
 		}
 		else if (id.startsWith("item:"))
 		{
