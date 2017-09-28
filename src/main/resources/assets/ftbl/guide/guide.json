@@ -1,5 +1,8 @@
 {
 	"type": "mod",
 	"authors": ["LatvianModder"],
-	"icon": "ftbl:textures/logo_guide.png"
+	"icon": "ftbl:textures/logo_guide.png",
+	"name": "FTBLib",
+	"pages": {
+	}
 }

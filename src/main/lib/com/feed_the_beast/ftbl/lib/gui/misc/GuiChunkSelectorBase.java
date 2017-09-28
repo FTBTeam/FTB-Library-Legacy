@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -123,6 +124,13 @@ public class GuiChunkSelectorBase extends GuiBase
 			public void addWidgets()
 			{
 				addCornerButtons(panelButtons);
+				updateWidgetPositions();
+			}
+
+			@Override
+			public void updateWidgetPositions()
+			{
+				align(WidgetLayout.VERTICAL);
 			}
 		};
 

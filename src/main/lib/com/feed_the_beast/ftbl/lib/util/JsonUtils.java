@@ -213,7 +213,12 @@ public class JsonUtils
 		}
 
 		JsonArray array = new JsonArray();
-		array.add(element);
+
+		if (!element.isJsonNull())
+		{
+			array.add(element);
+		}
+
 		return array;
 	}
 
@@ -390,7 +395,7 @@ public class JsonUtils
 		}
 		else if (element.isJsonPrimitive())
 		{
-			return new TextComponentString(element.getAsString());
+			return new TextComponentString(element.getAsString().replace("\t", "  "));
 		}
 		else if (!element.isJsonObject())
 		{
@@ -429,7 +434,7 @@ public class JsonUtils
 
 			if (json.has("text"))
 			{
-				String s = json.get("text").getAsString();
+				String s = json.get("text").getAsString().replace("\t", "  ");
 
 				if (json.has("nid") || json.has("timer") || json.has("important"))
 				{

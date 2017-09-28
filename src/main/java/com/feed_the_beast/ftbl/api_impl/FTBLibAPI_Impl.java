@@ -107,7 +107,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 
 			if (event.isClientReloadRequired())
 			{
-				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG.textComponent(StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
+				notification.addLine(FTBLibLang.RELOAD_CLIENT.textComponent(StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
 			}
 
 			if (!failed.isEmpty())
@@ -118,6 +118,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 				FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
 			}
 
+			notification.setImportant(true);
 			notification.setTimer(140);
 			notification.send(null);
 		}
