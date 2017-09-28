@@ -7,13 +7,11 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.ISharedClientData;
 import com.feed_the_beast.ftbl.api.ISharedServerData;
-import com.feed_the_beast.ftbl.api.ISidebarButton;
+import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api.IUniverse;
-import com.feed_the_beast.ftbl.api.ReloadEvent;
+import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbl.api.player.IContainerProvider;
-import com.feed_the_beast.ftbl.client.FTBLibClientConfig;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
-import com.feed_the_beast.ftbl.lib.BroadcastSender;
 import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
@@ -29,7 +27,7 @@ import com.feed_the_beast.ftbl.lib.util.StringJoiner;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
-import com.feed_the_beast.ftbl.net.MessageReload;
+import com.feed_the_beast.ftbl.net.MessageSyncData;
 import com.google.common.base.Preconditions;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,13 +37,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,61 +79,50 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public void reload(Side side, ICommandSender sender, EnumReloadType type, ResourceLocation id)
+	public void reloadServer(ICommandSender sender, EnumReloadType type, ResourceLocation id)
 	{
 		long ms = System.currentTimeMillis();
-		boolean serverSide = side.isServer();
 
-		if (serverSide)
-		{
-			Preconditions.checkNotNull(Universe.INSTANCE, "Can't reload yet!");
-			FTBLibMod.PROXY.reloadConfig(LoaderState.ModState.AVAILABLE);
-		}
+		Preconditions.checkState(hasUniverse(), "Can't reload yet!");
 
 		HashSet<ResourceLocation> failed = new HashSet<>();
-		new ReloadEvent(side, sender, type, id, failed).post();
+		ServerReloadEvent event = new ServerReloadEvent(sender, type, id, failed);
+		event.post();
 
-		if (serverSide && ServerUtils.hasOnlinePlayers())
+		if (ServerUtils.hasOnlinePlayers())
 		{
-			for (EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
+			for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers())
 			{
-				NBTTagCompound syncData = new NBTTagCompound();
-				IForgePlayer p = Universe.INSTANCE.getPlayer(ep);
-				FTBLibModCommon.SYNCED_DATA.forEach((key, value) -> syncData.setTag(key, value.writeSyncData(ep, p)));
-				new MessageReload(type, syncData, id).sendTo(ep);
+				IForgePlayer p = Universe.INSTANCE.getPlayer(player);
+				new MessageSyncData(player, p).sendTo(player);
 			}
 		}
 
 		String millis = (System.currentTimeMillis() - ms) + "ms";
 
-		if (type != EnumReloadType.CREATED)
+		if (type == EnumReloadType.RELOAD_COMMAND)
 		{
-			if (!serverSide)
+			Notification notification = Notification.of(FTBLibFinals.get("reload_server"));
+			notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
+
+			if (event.isClientReloadRequired())
 			{
-				FTBLibLang.RELOAD_CLIENT.sendMessage(BroadcastSender.INSTANCE, millis);
+				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG.textComponent(StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
 			}
 
-			if (serverSide && type == EnumReloadType.RELOAD_COMMAND)
+			if (!failed.isEmpty())
 			{
-				Notification notification = Notification.of(FTBLibFinals.get("reload_client_config"));
-				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
-				String cmd = FTBLibClientConfig.general.mirror_commands ? "/reload_client" : "/ftbc reload_client";
-				notification.addLine(FTBLibLang.RELOAD_CLIENT_CONFIG.textComponent(StringUtils.color(new TextComponentString(cmd), TextFormatting.GOLD)));
-
-				if (!failed.isEmpty())
-				{
-					notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(), TextFormatting.RED));
-					String ids = StringJoiner.with(", ").join(failed);
-					notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
-					FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
-				}
-
-				notification.setTimer(140);
-				notification.send(null);
+				notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(), TextFormatting.RED));
+				String ids = StringJoiner.with(", ").join(failed);
+				notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
+				FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
 			}
+
+			notification.setTimer(140);
+			notification.send(null);
 		}
 
-		FTBLibFinals.LOGGER.info("Reloaded " + side + " in " + millis);
+		FTBLibFinals.LOGGER.info("Reloaded server in " + millis);
 	}
 
 	@Override
@@ -209,23 +194,8 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public List<ISidebarButton> getSidebarButtons(boolean ignoreConfig)
+	public List<ISidebarButtonGroup> getSidebarButtonGroups()
 	{
-		if (ignoreConfig)
-		{
-			return FTBLibModClient.SIDEBAR_BUTTONS;
-		}
-
-		List<ISidebarButton> list = new ArrayList<>();
-
-		for (ISidebarButton button : FTBLibModClient.SIDEBAR_BUTTONS)
-		{
-			if (button.isVisible())
-			{
-				list.add(button);
-			}
-		}
-
-		return list;
+		return FTBLibModClient.SIDEBAR_BUTTON_GROUPS;
 	}
 }

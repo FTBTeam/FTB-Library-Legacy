@@ -4,15 +4,17 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * @author LatvianModder
  */
-public interface ISidebarButton extends IStringSerializable
+public interface ISidebarButton extends IStringSerializable, Comparable<ISidebarButton>
 {
+	ISidebarButtonGroup getGroup();
+
 	Icon getIcon();
+
+	int getX();
 
 	@Nullable
 	default Boolean getDefaultConfig()
@@ -22,10 +24,7 @@ public interface ISidebarButton extends IStringSerializable
 
 	void onClicked(boolean shift);
 
-	default boolean isVisible()
-	{
-		return getConfig() && isAvailable();
-	}
+	boolean isVisible();
 
 	boolean isAvailable();
 
@@ -35,8 +34,9 @@ public interface ISidebarButton extends IStringSerializable
 
 	void setConfig(boolean value);
 
-	default Map<String, Boolean> getDependencies()
+	@Override
+	default int compareTo(ISidebarButton button)
 	{
-		return Collections.emptyMap();
+		return Integer.compare(getX(), button.getX());
 	}
 }

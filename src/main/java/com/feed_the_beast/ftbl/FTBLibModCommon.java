@@ -11,7 +11,7 @@ import com.feed_the_beast.ftbl.api.RegisterDataProvidersEvent;
 import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbl.api.RegisterRankConfigEvent;
 import com.feed_the_beast.ftbl.api.RegisterSyncDataEvent;
-import com.feed_the_beast.ftbl.api.ReloadEvent;
+import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbl.api.player.IContainerProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
@@ -25,20 +25,16 @@ import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonElement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -166,14 +162,14 @@ public class FTBLibModCommon
 			RANK_CONFIGS.put(c.id, c);
 			return c;
 		}).post();
-		new ReloadEvent.RegisterIds(RELOAD_IDS::add).post();
+		new ServerReloadEvent.RegisterIds(RELOAD_IDS::add).post();
 	}
 
-	public void postInit(LoaderState.ModState state)
+	public void postInit()
 	{
-		reloadConfig(state);
 	}
 
+	/*
 	public void reloadConfig(LoaderState.ModState state)
 	{
 		JsonElement overridesE = JsonUtils.fromJson(new File(CommonUtils.folderConfig, "config_overrides.json"));
@@ -181,7 +177,7 @@ public class FTBLibModCommon
 		if (overridesE.isJsonObject())
 		{
 		}
-	}
+	}*/
 
 	public <T> NBTDataStorage createDataStorage(T owner, Map<ResourceLocation, IDataProvider<T>> map)
 	{

@@ -192,6 +192,11 @@ public abstract class GuiBase extends Panel
 		ClientUtils.MC.displayGuiScreen(getWrapper());
 	}
 
+	public final void openGuiLater()
+	{
+		ClientUtils.runLater(this::openGui);
+	}
+
 	public final FontRenderer getFont()
 	{
 		return font;

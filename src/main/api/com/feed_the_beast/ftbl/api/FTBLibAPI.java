@@ -38,7 +38,7 @@ public abstract class FTBLibAPI
 
 	public abstract boolean hasUniverse();
 
-	public abstract void reload(Side side, ICommandSender sender, EnumReloadType type, ResourceLocation id);
+	public abstract void reloadServer(ICommandSender sender, EnumReloadType type, ResourceLocation id);
 
 	public abstract void openGui(ResourceLocation guiID, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data);
 
@@ -51,5 +51,5 @@ public abstract class FTBLibAPI
 	public abstract void handleMessage(MessageBase<?> message, MessageContext context, Side side);
 
 	@SideOnly(Side.CLIENT)
-	public abstract List<ISidebarButton> getSidebarButtons(boolean ignoreConfig);
+	public abstract List<ISidebarButtonGroup> getSidebarButtonGroups();
 }

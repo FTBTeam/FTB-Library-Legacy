@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
+import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api.player.IGuiProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
@@ -19,16 +21,12 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.common.LoaderState;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.toposort.TopologicalSort;
 
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +37,7 @@ import java.util.concurrent.Callable;
  */
 public class FTBLibModClient extends FTBLibModCommon implements IResourceManagerReloadListener
 {
-	private static final Map<String, ISidebarButton> SIDEBAR_BUTTON_MAP = new HashMap<>();
-	public static final List<ISidebarButton> SIDEBAR_BUTTONS = new ArrayList<>();
-	private static final ISidebarButton DBUTTON_BEFORE_ALL = new SidebarButton(new ResourceLocation("before_all"));
-	private static final ISidebarButton DBUTTON_AFTER_ALL = new SidebarButton(new ResourceLocation("after_all"));
-	private static final ISidebarButton DBUTTON_BEFORE = new SidebarButton(new ResourceLocation("before"));
-	private static final ISidebarButton DBUTTON_AFTER = new SidebarButton(new ResourceLocation("after"));
+	public static final List<ISidebarButtonGroup> SIDEBAR_BUTTON_GROUPS = new ArrayList<>();
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 	public static final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
 
@@ -85,7 +78,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	@Override
 	public void onResourceManagerReload(IResourceManager manager)
 	{
-		SIDEBAR_BUTTON_MAP.clear();
+		SIDEBAR_BUTTON_GROUPS.clear();
 		CLIENT_CONFIG_MAP.clear();
 
 		for (String domain : manager.getResourceDomains())
@@ -122,13 +115,47 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 			sidebarButtonConfig = new JsonObject();
 		}
 
+		Map<ResourceLocation, SidebarButtonGroup> groupMap = new HashMap<>();
+
 		for (String domain : manager.getResourceDomains())
 		{
 			try
 			{
+				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "sidebar_button_groups.json")))
+				{
+					JsonElement json = JsonUtils.fromJson(resource);
+
+					for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
+					{
+						if (entry.getValue().isJsonObject())
+						{
+							JsonObject groupJson = entry.getValue().getAsJsonObject();
+							int y = 0;
+
+							if (groupJson.has("y"))
+							{
+								y = groupJson.get("y").getAsInt();
+							}
+
+							SidebarButtonGroup group = new SidebarButtonGroup(new ResourceLocation(domain, entry.getKey()), y);
+							groupMap.put(group.getId(), group);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				if (!(ex instanceof FileNotFoundException))
+				{
+					ex.printStackTrace();
+				}
+			}
+
+			try
+			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "sidebar_buttons.json")))
 				{
-					JsonElement json = JsonUtils.fromJson(new InputStreamReader(resource.getInputStream()));
+					JsonElement json = JsonUtils.fromJson(resource);
 
 					if (json.isJsonObject())
 					{
@@ -136,14 +163,28 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 						{
 							if (entry.getValue().isJsonObject())
 							{
-								SidebarButton button = new SidebarButton(new ResourceLocation(domain, entry.getKey()), entry.getValue().getAsJsonObject());
+								JsonObject buttonJson = entry.getValue().getAsJsonObject();
 
-								if (button.devOnly && !CommonUtils.DEV_ENV)
+								if (!buttonJson.has("group"))
 								{
 									continue;
 								}
 
-								SIDEBAR_BUTTON_MAP.put(button.getName(), button);
+								if (!CommonUtils.DEV_ENV && buttonJson.has("dev_only") && buttonJson.get("dev_only").getAsBoolean())
+								{
+									continue;
+								}
+
+								SidebarButtonGroup group = groupMap.get(new ResourceLocation(buttonJson.get("group").getAsString()));
+
+								if (group == null)
+								{
+									continue;
+								}
+
+								SidebarButton button = new SidebarButton(new ResourceLocation(domain, entry.getKey()), group, buttonJson);
+
+								group.getButtons().add(button);
 
 								if (button.getDefaultConfig() != null)
 								{
@@ -159,8 +200,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 			}
 			catch (Exception ex)
 			{
-				//CommonUtils.DEV_LOGGER.info("Error while loading guide from domain '" + domain + "'");
-
 				if (!(ex instanceof FileNotFoundException))
 				{
 					ex.printStackTrace();
@@ -168,90 +207,23 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 			}
 		}
 
-		TopologicalSort.DirectedGraph<ISidebarButton> sidebarButtonGraph = new TopologicalSort.DirectedGraph<>();
-		sidebarButtonGraph.addNode(DBUTTON_BEFORE_ALL);
-		sidebarButtonGraph.addNode(DBUTTON_BEFORE);
-		sidebarButtonGraph.addNode(DBUTTON_AFTER_ALL);
-		sidebarButtonGraph.addNode(DBUTTON_AFTER);
-		sidebarButtonGraph.addEdge(DBUTTON_BEFORE, DBUTTON_AFTER);
-		sidebarButtonGraph.addEdge(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE);
-		sidebarButtonGraph.addEdge(DBUTTON_AFTER, DBUTTON_AFTER_ALL);
-
-		SIDEBAR_BUTTON_MAP.values().forEach(sidebarButtonGraph::addNode);
-
-		for (ISidebarButton button : SIDEBAR_BUTTON_MAP.values())
+		for (ISidebarButtonGroup group : groupMap.values())
 		{
-			boolean preDepAdded = false;
-			boolean postDepAdded = false;
-
-			for (Map.Entry<String, Boolean> entry : button.getDependencies().entrySet())
+			if (!group.getButtons().isEmpty())
 			{
-				if (entry.getValue())
-				{
-					for (String id : button.getDependencies().keySet())
-					{
-						postDepAdded = true;
-
-						if (id.equals("*"))
-						{
-							sidebarButtonGraph.addEdge(DBUTTON_BEFORE_ALL, button);
-							sidebarButtonGraph.addEdge(button, DBUTTON_BEFORE);
-							preDepAdded = true;
-						}
-						else
-						{
-							sidebarButtonGraph.addEdge(button, DBUTTON_AFTER);
-							if (SIDEBAR_BUTTON_MAP.containsKey(id))
-							{
-								sidebarButtonGraph.addEdge(button, SIDEBAR_BUTTON_MAP.get(id));
-							}
-						}
-					}
-				}
-				else
-				{
-					preDepAdded = true;
-					String id = entry.getKey();
-
-					if (id.equals("*"))
-					{
-						sidebarButtonGraph.addEdge(button, DBUTTON_AFTER_ALL);
-						sidebarButtonGraph.addEdge(DBUTTON_AFTER, button);
-						postDepAdded = true;
-					}
-					else
-					{
-						sidebarButtonGraph.addEdge(DBUTTON_BEFORE, button);
-						if (SIDEBAR_BUTTON_MAP.containsKey(id))
-						{
-							sidebarButtonGraph.addEdge(SIDEBAR_BUTTON_MAP.get(id), button);
-						}
-					}
-				}
-			}
-
-			if (!preDepAdded)
-			{
-				sidebarButtonGraph.addEdge(DBUTTON_BEFORE, button);
-			}
-
-			if (!postDepAdded)
-			{
-				sidebarButtonGraph.addEdge(button, DBUTTON_AFTER);
+				group.getButtons().sort(null);
+				SIDEBAR_BUTTON_GROUPS.add(group);
 			}
 		}
 
-		List<ISidebarButton> sortedSidebarButtonList = TopologicalSort.topologicalSort(sidebarButtonGraph);
-		sortedSidebarButtonList.removeAll(Arrays.asList(DBUTTON_BEFORE_ALL, DBUTTON_BEFORE, DBUTTON_AFTER, DBUTTON_AFTER_ALL));
-		SIDEBAR_BUTTONS.clear();
-		SIDEBAR_BUTTONS.addAll(sortedSidebarButtonList);
+		SIDEBAR_BUTTON_GROUPS.sort(null);
 		saveSidebarButtonConfig();
 	}
 
 	@Override
-	public void postInit(LoaderState.ModState state)
+	public void postInit()
 	{
-		super.postInit(state);
+		super.postInit();
 
 		CmdFTBC cmd = new CmdFTBC();
 		ClientCommandHandler.instance.registerCommand(cmd);
@@ -278,11 +250,14 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	{
 		JsonObject o = new JsonObject();
 
-		for (ISidebarButton button : SIDEBAR_BUTTONS)
+		for (ISidebarButtonGroup group : FTBLibAPI.API.getSidebarButtonGroups())
 		{
-			if (button.getDefaultConfig() != null)
+			for (ISidebarButton button : group.getButtons())
 			{
-				o.addProperty(button.getName(), button.getDefaultConfig());
+				if (button.getDefaultConfig() != null)
+				{
+					o.addProperty(button.getName(), button.getDefaultConfig());
+				}
 			}
 		}
 

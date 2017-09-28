@@ -5,6 +5,7 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
+import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
@@ -220,18 +221,36 @@ public class FTBLibClientEventHandler
 			return;
 		}
 
-		List<ISidebarButton> buttons = FTBLibAPI.API.getSidebarButtons(false);
+		List<ISidebarButtonGroup> groups = FTBLibAPI.API.getSidebarButtonGroups();
 
-		if (!buttons.isEmpty())
+		if (!groups.isEmpty())
 		{
 			GuiButtonSidebarGroup renderer = new GuiButtonSidebarGroup();
 			event.getButtonList().add(renderer);
+			int x, y = 0;
+			boolean addedAny;
 
-			for (int i = 0; i < buttons.size(); i++)
+			for (ISidebarButtonGroup group : groups)
 			{
-				GuiButtonSidebar b = new GuiButtonSidebar(i, buttons.get(i));
-				event.getButtonList().add(b);
-				renderer.buttons.add(b);
+				x = 0;
+				addedAny = false;
+
+				for (ISidebarButton button : group.getButtons())
+				{
+					if (button.isVisible())
+					{
+						GuiButtonSidebar b = new GuiButtonSidebar(x, y, button);
+						event.getButtonList().add(b);
+						renderer.buttons.add(b);
+						x++;
+						addedAny = true;
+					}
+				}
+
+				if (addedAny)
+				{
+					y++;
+				}
 			}
 
 			renderer.updateButtonPositions();
@@ -317,14 +336,15 @@ public class FTBLibClientEventHandler
 
 	private static class GuiButtonSidebar extends GuiButton
 	{
-		public final int index;
+		public final int buttonX, buttonY;
 		public final ISidebarButton button;
 		public final String title;
 
-		public GuiButtonSidebar(int id, ISidebarButton b)
+		public GuiButtonSidebar(int x, int y, ISidebarButton b)
 		{
-			super(495830 + id, -16, -16, 16, 16, "");
-			index = id;
+			super(495830 + x + y * 16, -16, -16, 16, 16, "");
+			buttonX = x;
+			buttonY = y;
 			button = b;
 			title = StringUtils.translate("sidebar_button." + b.getName());
 		}
@@ -372,11 +392,11 @@ public class FTBLibClientEventHandler
 
 				for (GuiButtonSidebar button : buttons)
 				{
-					button.x = 4 + x * 18;
-					button.y = 4 + y * 18;
-
 					if (hasPotions)
 					{
+						button.x = 4 + x * 18;
+						button.y = 4 + y * 18;
+
 						x++;
 
 						if (x >= 15 || 4 + x * 18 >= gui.height)
@@ -387,13 +407,8 @@ public class FTBLibClientEventHandler
 					}
 					else
 					{
-						x++;
-
-						if (x == 4)
-						{
-							x = 0;
-							y++;
-						}
+						button.x = 4 + button.buttonX * 18;
+						button.y = 4 + button.buttonY * 18;
 					}
 				}
 			}
@@ -413,17 +428,19 @@ public class FTBLibClientEventHandler
 					buttonY -= 26;
 				}
 
-				for (GuiButtonSidebar button : buttons)
+				for (int index = 0; index < buttons.size(); index++)
 				{
+					GuiButtonSidebar button = buttons.get(index);
+
 					if (hasPotions)
 					{
-						button.x = guiLeft + buttonX - (button.index % 8) * 18;
-						button.y = guiTop + buttonY - (button.index / 8) * 18;
+						button.x = guiLeft + buttonX - (index % 8) * 18;
+						button.y = guiTop + buttonY - (index / 8) * 18;
 					}
 					else
 					{
-						button.x = guiLeft + buttonX - (button.index / 8) * 18;
-						button.y = guiTop + buttonY + (button.index % 8) * 18;
+						button.x = guiLeft + buttonX - (index / 8) * 18;
+						button.y = guiTop + buttonY + (index % 8) * 18;
 					}
 
 				}

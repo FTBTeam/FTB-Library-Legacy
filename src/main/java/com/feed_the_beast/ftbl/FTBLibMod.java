@@ -31,20 +31,18 @@ public class FTBLibMod
 		Locale.setDefault(Locale.US);
 		FTBLibConfig.sync();
 		PROXY.preInit(event);
-		PROXY.reloadConfig(event.getModState());
 	}
 
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event)
 	{
 		new PermissionRegistryEvent().post();
-		PROXY.reloadConfig(event.getModState());
 	}
 
 	@Mod.EventHandler
 	public void onPostInit(FMLPostInitializationEvent event)
 	{
-		PROXY.postInit(event.getModState());
+		PROXY.postInit();
 	}
 
 	@Mod.EventHandler

@@ -238,4 +238,9 @@ public class ClientUtils
 	{
 		return BLOCK_RENDER_LAYER_NAME_MAP.get(Math.max(layer1.ordinal(), layer2.ordinal()));
 	}
+
+	public static void runLater(final Runnable runnable)
+	{
+		new Thread(() -> MC.addScheduledTask(runnable)).start();
+	}
 }

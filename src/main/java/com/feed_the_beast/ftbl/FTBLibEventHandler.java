@@ -6,7 +6,7 @@ import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
-import com.feed_the_beast.ftbl.api.ReloadEvent;
+import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
@@ -55,7 +55,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.HashMap;
@@ -268,7 +267,7 @@ public class FTBLibEventHandler
 		new ForgeUniverseLoadedEvent.Post(Universe.INSTANCE, data).post();
 		new ForgeUniverseLoadedEvent.Finished(Universe.INSTANCE).post();
 
-		FTBLibAPI.API.reload(Side.SERVER, server, EnumReloadType.CREATED, ReloadEvent.ALL);
+		FTBLibAPI.API.reloadServer(server, EnumReloadType.CREATED, ServerReloadEvent.ALL);
 	}
 
 	@SubscribeEvent
@@ -457,20 +456,17 @@ public class FTBLibEventHandler
 	}
 
 	@SubscribeEvent
-	public static void registerReloadIds(ReloadEvent.RegisterIds event)
+	public static void registerReloadIds(ServerReloadEvent.RegisterIds event)
 	{
 		event.register(RELOAD_CONFIG);
 	}
 
 	@SubscribeEvent
-	public static void onReload(ReloadEvent event)
+	public static void onServerReload(ServerReloadEvent event)
 	{
-		if (event.getSide().isServer())
+		if (event.reload(RELOAD_CONFIG))
 		{
-			if (event.reload(RELOAD_CONFIG))
-			{
-				FTBLibConfig.sync();
-			}
+			FTBLibConfig.sync();
 		}
 	}
 

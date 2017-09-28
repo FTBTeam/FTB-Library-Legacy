@@ -11,11 +11,6 @@ public enum EnumReloadType
 	CREATED(false),
 
 	/**
-	 * On client side - mode change packet received, on server side - /packmode set [mode]
-	 */
-	MODE_CHANGED(true),
-
-	/**
 	 * On client side - /reload_client, on server side - /reload
 	 */
 	RELOAD_COMMAND(true);

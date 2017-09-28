@@ -2,7 +2,6 @@ package com.feed_the_beast.ftbl.api;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -10,28 +9,23 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public class ReloadEvent extends FTBLibEvent
+public class ServerReloadEvent extends FTBLibEvent
 {
 	public static final ResourceLocation ALL = new ResourceLocation("*:*");
 
-	private final Side side;
 	private final ICommandSender sender;
 	private final EnumReloadType type;
 	private final ResourceLocation reloadId;
 	private final Collection<ResourceLocation> failed;
+	private boolean clientReloadRequired;
 
-	public ReloadEvent(Side s, ICommandSender c, EnumReloadType t, ResourceLocation id, Collection<ResourceLocation> f)
+	public ServerReloadEvent(ICommandSender c, EnumReloadType t, ResourceLocation id, Collection<ResourceLocation> f)
 	{
-		side = s;
 		sender = c;
 		type = t;
 		reloadId = id;
 		failed = f;
-	}
-
-	public Side getSide()
-	{
-		return side;
+		clientReloadRequired = false;
 	}
 
 	public ICommandSender getSender()
@@ -42,6 +36,16 @@ public class ReloadEvent extends FTBLibEvent
 	public EnumReloadType getType()
 	{
 		return type;
+	}
+
+	public void setClientReloadRequired()
+	{
+		clientReloadRequired = true;
+	}
+
+	public boolean isClientReloadRequired()
+	{
+		return clientReloadRequired;
 	}
 
 	public boolean reload(ResourceLocation id)

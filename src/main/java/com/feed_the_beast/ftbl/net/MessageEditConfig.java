@@ -49,6 +49,6 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig>
 	@Override
 	public void onMessage(final MessageEditConfig m, EntityPlayer player)
 	{
-		new GuiEditConfig(m.group, RX_CONFIG_TREE).openGui();
+		new GuiEditConfig(m.group, RX_CONFIG_TREE).openGuiLater();
 	}
 }

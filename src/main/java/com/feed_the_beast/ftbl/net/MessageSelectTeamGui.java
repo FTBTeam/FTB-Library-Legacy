@@ -57,6 +57,6 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 	@Override
 	public void onMessage(MessageSelectTeamGui m, EntityPlayer player)
 	{
-		new GuiSelectTeam(m.teams).openGui();
+		new GuiSelectTeam(m.teams).openGuiLater();
 	}
 }

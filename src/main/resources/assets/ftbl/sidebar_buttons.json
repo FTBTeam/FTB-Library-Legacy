@@ -1,7 +1,8 @@
 {
 	"my_team": {
+		"group": "ftbl:info",
 		"icon": "ftbl:textures/gui/teams.png",
-		"dependencies": "before:*",
+		"x": 0,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb team gui"
@@ -10,8 +11,9 @@
 		"loading_screen": true
 	},
 	"settings": {
+		"group": "ftbl:info",
 		"icon": "ftbl:icons/settings",
-		"dependencies": "after:ftbl.teams_gui",
+		"x": 100,
 		"click": {
 			"action": "run_command",
 			"value": "/ftbc client_config"

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
+import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.gui.Button;
@@ -93,13 +94,16 @@ public class GuiSidebarButtonConfig extends GuiBase
 			{
 				width = 0;
 
-				for (ISidebarButton button : FTBLibAPI.API.getSidebarButtons(true))
+				for (ISidebarButtonGroup group : FTBLibAPI.API.getSidebarButtonGroups())
 				{
-					if (button.getDefaultConfig() != null)
+					for (ISidebarButton button : group.getButtons())
 					{
-						Button b = new ButtonConfigSidebarButton(button);
-						add(b);
-						setWidth(Math.max(width, b.width));
+						if (button.getDefaultConfig() != null)
+						{
+							Button b = new ButtonConfigSidebarButton(button);
+							add(b);
+							setWidth(Math.max(width, b.width));
+						}
 					}
 				}
 

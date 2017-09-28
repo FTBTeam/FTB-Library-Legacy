@@ -13,7 +13,7 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
-import com.feed_the_beast.ftbl.net.MessageLogin;
+import com.feed_the_beast.ftbl.net.MessageSyncData;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -181,7 +181,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		if (!isFake())
 		{
 			//FTBLibStats.updateLastSeen(stats());
-			new MessageLogin(ep, this).sendTo(entityPlayer);
+			new MessageSyncData(ep, this).sendTo(entityPlayer);
 		}
 
 		new ForgePlayerLoggedInEvent(this, firstLogin).post();

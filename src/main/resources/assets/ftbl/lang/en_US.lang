@@ -70,8 +70,7 @@ all_permissions=All Permissions
 difficulty=Difficulty: %s
 
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
-ftbl.lang.reload_client=FTBLib: Client reloaded in %s
-ftbl.lang.reload_client_config=Server Reloaded. You can run %s to reload client data
+ftbl.lang.reload_client=You can press %s to reload client
 ftbl.lang.reload_failed=These IDs failed to reload:
 
 ftbl.lang.config_command.invalid_key=Can't find config value '%s'!
