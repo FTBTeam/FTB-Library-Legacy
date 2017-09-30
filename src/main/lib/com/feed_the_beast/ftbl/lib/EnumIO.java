@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib;
 import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 
@@ -17,7 +18,7 @@ public enum EnumIO implements IStringSerializable, ICustomName
 	NONE("none");
 
 	public static final NameMap<EnumIO> NAME_MAP = NameMap.create(IO, values());
-	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftbl.io");
+	public static final LangKey ENUM_LANG_KEY = FTBLibFinals.lang("io");
 
 	private final String name;
 	private final LangKey langKey;
@@ -25,7 +26,7 @@ public enum EnumIO implements IStringSerializable, ICustomName
 	EnumIO(String n)
 	{
 		name = n;
-		langKey = LangKey.of("ftbl.io." + name);
+		langKey = FTBLibFinals.lang("io." + name);
 	}
 
 	@Override

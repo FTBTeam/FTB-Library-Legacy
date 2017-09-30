@@ -57,10 +57,10 @@ task apiJar(type: Jar) {
 		include "com/feed_the_beast/ftbl/lib/**"
 	}
 	from(sourceSets.main.resources) {
-		include "META-INF/ftbl_at.cfg"
+		include "META-INF/ftblib_at.cfg"
 	}
 	manifest {
-		attributes 'FMLAT': 'ftbl_at.cfg'
+		attributes 'FMLAT': 'ftblib_at.cfg'
 	}
 }
 
@@ -82,7 +82,7 @@ processResources {
 
 jar {
 	manifest {
-		attributes 'FMLAT': 'ftbl_at.cfg'
+		attributes 'FMLAT': 'ftblib_at.cfg'
 	}
 }
 
@@ -90,7 +90,7 @@ task deobfJar(type: Jar) {
 	from sourceSets.main.output
 	classifier = 'deobf'
 	manifest {
-		attributes 'FMLAT': 'ftbl_at.cfg'
+		attributes 'FMLAT': 'ftblib_at.cfg'
 	}
 }
 

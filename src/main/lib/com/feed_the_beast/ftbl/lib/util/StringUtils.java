@@ -604,6 +604,11 @@ public class StringUtils
 
 	public static String getTimeString(long millis, boolean days)
 	{
+		if (millis < 0L)
+		{
+			millis = 0L;
+		}
+
 		long secs = millis / 1000L;
 		StringBuilder sb = new StringBuilder();
 

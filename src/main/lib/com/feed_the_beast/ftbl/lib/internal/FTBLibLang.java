@@ -22,45 +22,45 @@ public interface FTBLibLang
 	LangKey MY_PERMISSIONS = LangKey.of("my_permissions");
 	LangKey ALL_PERMISSIONS = LangKey.of("all_permissions");
 	LangKey DIFFICULTY = LangKey.of("difficulty", String.class);
-	LangKey MY_TEAM = LangKey.of("sidebar_button.ftbl.my_team");
+	LangKey MY_TEAM = LangKey.of("sidebar_button." + FTBLibFinals.MOD_ID + ".my_team");
 
-	LangKey RELOAD_SERVER = LangKey.of("ftbl.lang.reload_server", String.class);
-	LangKey RELOAD_CLIENT = LangKey.of("ftbl.lang.reload_client", String.class);
-	LangKey RELOAD_FAILED = LangKey.of("ftbl.lang.reload_failed");
+	LangKey RELOAD_SERVER = FTBLibFinals.lang("lang.reload_server", String.class);
+	LangKey RELOAD_CLIENT = FTBLibFinals.lang("lang.reload_client", String.class);
+	LangKey RELOAD_FAILED = FTBLibFinals.lang("lang.reload_failed");
 
 	LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
 	LangKey MY_TEAM_SETTINGS = LangKey.of("team_config");
 	LangKey COMMAND_PERMISSION = LangKey.of("commands.generic.permission");
 	LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage");
 
-	LangKey CONFIG_COMMAND_INVALID_KEY = LangKey.of("ftbl.lang.config_command.invalid_key", String.class);
-	LangKey CONFIG_COMMAND_SETTING = LangKey.of("ftbl.lang.config_command.setting", String.class, String.class);
-	LangKey CONFIG_COMMAND_SET = LangKey.of("ftbl.lang.config_command.set", String.class, String.class);
+	LangKey CONFIG_COMMAND_INVALID_KEY = FTBLibFinals.lang("lang.config_command.invalid_key", String.class);
+	LangKey CONFIG_COMMAND_SETTING = FTBLibFinals.lang("lang.config_command.setting", String.class, String.class);
+	LangKey CONFIG_COMMAND_SET = FTBLibFinals.lang("lang.config_command.set", String.class, String.class);
 
-	LangKey CONFIG_ADD_FAKE_PLAYER_INVALID_UUID = LangKey.of("ftbl.lang.add_fake_player.invalid_uuid");
-	LangKey CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS = LangKey.of("ftbl.lang.add_fake_player.player_exists");
-	LangKey CONFIG_ADD_FAKE_PLAYER_ADDED = LangKey.of("ftbl.lang.add_fake_player.added", String.class);
+	LangKey CONFIG_ADD_FAKE_PLAYER_INVALID_UUID = FTBLibFinals.lang("lang.add_fake_player.invalid_uuid");
+	LangKey CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS = FTBLibFinals.lang("lang.add_fake_player.player_exists");
+	LangKey CONFIG_ADD_FAKE_PLAYER_ADDED = FTBLibFinals.lang("lang.add_fake_player.added", String.class);
 
-	LangKey TEAM_CREATED = LangKey.of("ftbl.lang.team.created", String.class);
-	LangKey TEAM_ID_ALREADY_EXISTS = LangKey.of("ftbl.lang.team.id_already_exists");
-	LangKey TEAM_ID_INVALID = LangKey.of("ftbl.lang.team.id_invalid");
-	LangKey TEAM_DELETED = LangKey.of("ftbl.lang.team.deleted", String.class);
-	LangKey TEAM_MEMBER_LEFT = LangKey.of("ftbl.lang.team.member_left", String.class);
-	LangKey TEAM_MEMBER_JOINED = LangKey.of("ftbl.lang.team.member_joined", String.class);
-	LangKey TEAM_TRANSFERRED_OWNERSHIP = LangKey.of("ftbl.lang.team.transferred_ownership", String.class);
-	LangKey TEAM_INVITED = LangKey.of("ftbl.lang.team.invited", String.class, String.class);
-	LangKey TEAM_INVITED_YOU = LangKey.of("ftbl.lang.team.invited_you", String.class, String.class);
-	LangKey TEAM_NOT_FOUND = LangKey.of("ftbl.lang.team.error.not_found");
-	LangKey TEAM_NO_TEAM = LangKey.of("ftbl.lang.team.error.no_team");
-	LangKey TEAM_MUST_LEAVE = LangKey.of("ftbl.lang.team.error.must_leave");
-	LangKey TEAM_NOT_OWNER = LangKey.of("ftbl.lang.team.error.not_owner");
-	LangKey TEAM_NOT_MEMBER = LangKey.of("ftbl.lang.team.error.not_member", String.class);
-	LangKey TEAM_MUST_TRANSFER_OWNERSHIP = LangKey.of("ftbl.lang.team.error.must_transfer_ownership");
-	LangKey TEAM_ALREADY_INVITED = LangKey.of("ftbl.lang.team.error.already_invited", String.class);
-	LangKey TEAM_FAILED_TO_JOIN = LangKey.of("ftbl.lang.team.error.failed_to_join");
-	LangKey TEAM_PERMISSION_SET = LangKey.of("ftbl.lang.team.permission.set", String.class, String.class, String.class);
-	LangKey TEAM_PERMISSION_OWNER = LangKey.of("ftbl.lang.team.permission.owner");
-	LangKey TEAM_NOTIFICATION = LangKey.of("ftbl.lang.team.notification", String.class, String.class);
-	LangKey TEAM_NOTIFICATION_HIDE = LangKey.of("ftbl.lang.team.notification.hide");
-	LangKey TEAM_CHAT_MESSAGE = LangKey.of("ftbl.lang.team.chat_message", String.class, String.class);
+	LangKey TEAM_CREATED = FTBLibFinals.lang("lang.team.created", String.class);
+	LangKey TEAM_ID_ALREADY_EXISTS = FTBLibFinals.lang("lang.team.id_already_exists");
+	LangKey TEAM_ID_INVALID = FTBLibFinals.lang("lang.team.id_invalid");
+	LangKey TEAM_DELETED = FTBLibFinals.lang("lang.team.deleted", String.class);
+	LangKey TEAM_MEMBER_LEFT = FTBLibFinals.lang("lang.team.member_left", String.class);
+	LangKey TEAM_MEMBER_JOINED = FTBLibFinals.lang("lang.team.member_joined", String.class);
+	LangKey TEAM_TRANSFERRED_OWNERSHIP = FTBLibFinals.lang("lang.team.transferred_ownership", String.class);
+	LangKey TEAM_INVITED = FTBLibFinals.lang("lang.team.invited", String.class, String.class);
+	LangKey TEAM_INVITED_YOU = FTBLibFinals.lang("lang.team.invited_you", String.class, String.class);
+	LangKey TEAM_NOT_FOUND = FTBLibFinals.lang("lang.team.error.not_found");
+	LangKey TEAM_NO_TEAM = FTBLibFinals.lang("lang.team.error.no_team");
+	LangKey TEAM_MUST_LEAVE = FTBLibFinals.lang("lang.team.error.must_leave");
+	LangKey TEAM_NOT_OWNER = FTBLibFinals.lang("lang.team.error.not_owner");
+	LangKey TEAM_NOT_MEMBER = FTBLibFinals.lang("lang.team.error.not_member", String.class);
+	LangKey TEAM_MUST_TRANSFER_OWNERSHIP = FTBLibFinals.lang("lang.team.error.must_transfer_ownership");
+	LangKey TEAM_ALREADY_INVITED = FTBLibFinals.lang("lang.team.error.already_invited", String.class);
+	LangKey TEAM_FAILED_TO_JOIN = FTBLibFinals.lang("lang.team.error.failed_to_join");
+	LangKey TEAM_PERMISSION_SET = FTBLibFinals.lang("lang.team.permission.set", String.class, String.class, String.class);
+	LangKey TEAM_PERMISSION_OWNER = FTBLibFinals.lang("lang.team.permission.owner");
+	LangKey TEAM_NOTIFICATION = FTBLibFinals.lang("lang.team.notification", String.class, String.class);
+	LangKey TEAM_NOTIFICATION_HIDE = FTBLibFinals.lang("lang.team.notification.hide");
+	LangKey TEAM_CHAT_MESSAGE = FTBLibFinals.lang("lang.team.chat_message", String.class, String.class);
 }

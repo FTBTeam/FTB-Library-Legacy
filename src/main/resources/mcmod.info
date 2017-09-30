@@ -1,6 +1,6 @@
 [
 	{
-		"modid": "ftbl",
+		"modid": "ftblib",
 		"name": "FTBLib",
 		"description": "FTBLib",
 		"version": "${version}",
@@ -9,7 +9,7 @@
 		"updateUrl": "",
 		"authorList": ["LatvianModder"],
 		"credits": "",
-		"logoFile": "assets/ftbl/textures/logo.png",
+		"logoFile": "assets/ftblib/textures/logo.png",
 		"screenshots": [],
 		"parent": "",
 		"dependencies": []

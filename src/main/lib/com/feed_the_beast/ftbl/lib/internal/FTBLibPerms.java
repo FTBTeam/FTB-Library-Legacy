@@ -11,7 +11,7 @@ import net.minecraftforge.server.permission.DefaultPermissionLevel;
 @EventHandler
 public class FTBLibPerms
 {
-	public static final String SHOW_OP_BUTTONS = "ftbl.op_buttons";
+	public static final String SHOW_OP_BUTTONS = FTBLibFinals.MOD_ID + ".op_buttons";
 
 	@SubscribeEvent
 	public static void registerPermissions(PermissionRegistryEvent event)

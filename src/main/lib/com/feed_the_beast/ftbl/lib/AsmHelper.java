@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib;
 
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class AsmHelper
 {
-	private static final boolean DUMP_INFO = System.getProperty("ftbl.logAsm", "0").equals("1");
+	private static final boolean DUMP_INFO = System.getProperty(FTBLibFinals.MOD_ID + ".log_asm", "0").equals("1");
 	private static final Comparator<ASMDataTable.ASMData> ASM_DATA_COMPARATOR = (o1, o2) ->
 	{
 		int i = o1.getClassName().compareToIgnoreCase(o2.getClassName());

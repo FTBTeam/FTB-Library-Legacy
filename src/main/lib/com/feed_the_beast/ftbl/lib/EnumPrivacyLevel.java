@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.lib;
 import com.feed_the_beast.ftbl.api.ICustomName;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 
@@ -16,7 +17,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 	TEAM("team");
 
 	public static final EnumPrivacyLevel[] VALUES = values();
-	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftbl.privacy");
+	public static final LangKey ENUM_LANG_KEY = FTBLibFinals.lang("privacy");
 	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.create(PUBLIC, VALUES);
 
 	private final String name;
@@ -25,7 +26,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 	EnumPrivacyLevel(String n)
 	{
 		name = n;
-		langKey = LangKey.of("ftbl.privacy." + name);
+		langKey = FTBLibFinals.lang("privacy." + name);
 	}
 
 	@Override

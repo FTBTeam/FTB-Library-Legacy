@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.internal;
 
+import com.feed_the_beast.ftbl.lib.LangKey;
 import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,5 +25,10 @@ public class FTBLibFinals
 	public static ResourceLocation get(String path)
 	{
 		return new ResourceLocation(MOD_ID, path);
+	}
+
+	public static LangKey lang(String key, Class... args)
+	{
+		return LangKey.of(MOD_ID + '.' + key, args);
 	}
 }

@@ -430,7 +430,7 @@ public class FTBLibEventHandler
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
 			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.MY_TEAM.textComponent()));
 			ITextComponent b2 = FTBLibLang.CLICK_HERE.textComponent();
-			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings ftbl.hide_team_notification toggle"));
+			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings " + FTBLibFinals.MOD_ID + ".hide_team_notification toggle"));
 			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.TEAM_NOTIFICATION_HIDE.textComponent()));
 			player.sendMessage(FTBLibLang.TEAM_NOTIFICATION.textComponent(b1, b2));
 		}

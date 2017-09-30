@@ -51,7 +51,7 @@ import java.util.Map;
  */
 public class FTBLibAPI_Impl extends FTBLibAPI
 {
-	public static final boolean LOG_NET = System.getProperty("ftbl.logNetwork", "0").equals("1");
+	public static final boolean LOG_NET = System.getProperty(FTBLibFinals.MOD_ID + ".log_network", "0").equals("1");
 
 	@Override
 	public ISharedServerData getServerData()
