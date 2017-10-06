@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -12,30 +11,27 @@ import java.net.URL;
  */
 public class NetUtils
 {
-	@Nullable
 	public static String getHostAddress()
 	{
 		try
 		{
-			return InetAddress.getLocalHost().getHostAddress();
+			return StringUtils.emptyIfNull(InetAddress.getLocalHost().getHostAddress());
 		}
 		catch (Exception e)
 		{
-			return null;
+			return "";
 		}
 	}
 
-	@Nullable
-	public static String getExternalAddress()
+	public static String getPublicAddress()
 	{
 		try
 		{
-			//Is there a better way?
-			return StringUtils.readString(new URL("http://checkip.amazonaws.com").openStream());
+			return StringUtils.emptyIfNull(StringUtils.readString(new URL("https://api.ipify.org").openStream()));
 		}
 		catch (Exception e)
 		{
-			return null;
+			return "";
 		}
 	}
 

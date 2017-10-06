@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.math;
 
-import com.feed_the_beast.ftbl.lib.NameMap;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.block.BlockLog;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

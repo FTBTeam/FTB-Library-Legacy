@@ -86,6 +86,7 @@ ftbl.config.general=General
 ftbl.config.general.clientless_mode=Clientless Mode
 ftbl.config.general.mirror_ftb_commands=Mirror /ftb Commands
 ftbl.config.general.merge_offline_mode_players=Merge Offline Mode Players
+ftbl.config.general.log_net=Log Network IO
 
 ftbl.config.teams=Teams
 ftbl.config.teams.autocreate_teams=Autocreate on Login

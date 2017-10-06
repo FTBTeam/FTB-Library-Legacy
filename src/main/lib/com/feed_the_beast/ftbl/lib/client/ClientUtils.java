@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.NameMap;
-import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -55,7 +55,7 @@ public class ClientUtils
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;
 
-	public static PlayerHeadImage localPlayerHead;
+	public static PlayerHeadIcon localPlayerHead;
 
 	public static void registerModel(Object _item, int meta, String variant)
 	{

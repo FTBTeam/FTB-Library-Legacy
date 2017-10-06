@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.CustomStyle;
 import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.util.text_components.CustomStyle;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -594,7 +594,7 @@ public class StringUtils
 
 	public static String getTimeStringTicks(long ticks)
 	{
-		return getTimeString(ticks * 1000L / CommonUtils.TICKS_SECOND);
+		return getTimeString(ticks <= 0L ? 0L : (ticks * 1000L / CommonUtils.TICKS_SECOND));
 	}
 
 	public static String getTimeString(long millis)
@@ -604,9 +604,9 @@ public class StringUtils
 
 	public static String getTimeString(long millis, boolean days)
 	{
-		if (millis < 0L)
+		if (millis <= 0L)
 		{
-			millis = 0L;
+			return "00:00:00";
 		}
 
 		long secs = millis / 1000L;

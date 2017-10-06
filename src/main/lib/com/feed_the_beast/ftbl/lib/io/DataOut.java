@@ -1,13 +1,14 @@
 package com.feed_the_beast.ftbl.lib.io;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.feed_the_beast.ftbl.lib.util.JsonElementIO;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -21,7 +22,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -42,6 +45,8 @@ public class DataOut
 	public static Serializer<UUID> UUID = DataOut::writeUUID;
 	public static Serializer<BlockPos> BLOCK_POS = DataOut::writePos;
 	public static Serializer<BlockDimPos> BLOCK_DIM_POS = DataOut::writeDimPos;
+	public static Serializer<JsonElement> JSON = DataOut::writeJson;
+	public static Serializer<ITextComponent> TEXT_COMPONENT = DataOut::writeTextComponent;
 
 	public static final DataOut.Serializer<ChunkPos> CHUNK_POS = (data, pos) ->
 	{
@@ -167,22 +172,25 @@ public class DataOut
 
 		if (size == 0)
 		{
-			writeByte(3);
+			writeByte(6);
 			return;
 		}
-		else if (size >= 65536)
+
+		boolean linked = map instanceof LinkedHashMap || map instanceof Int2ObjectLinkedOpenHashMap;
+
+		if (size >= 65536)
 		{
-			writeByte(2);
+			writeByte(linked ? 5 : 2);
 			writeInt(size);
 		}
 		else if (size >= 256)
 		{
-			writeByte(1);
+			writeByte(linked ? 4 : 1);
 			writeShort(size);
 		}
 		else
 		{
-			writeByte(0);
+			writeByte(linked ? 3 : 0);
 			writeByte(size);
 		}
 
@@ -208,9 +216,94 @@ public class DataOut
 		writeString(r.toString());
 	}
 
-	public void writeJson(JsonElement element)
+	public void writeJson(@Nullable JsonElement element)
 	{
-		JsonElementIO.write(byteBuf, element);
+		if (element == null || element.isJsonNull())
+		{
+			writeByte(0);
+		}
+		else if (element.isJsonObject())
+		{
+			writeByte(1);
+
+			Set<Map.Entry<String, JsonElement>> set = element.getAsJsonObject().entrySet();
+			Map<String, JsonElement> map = new LinkedHashMap<>(set.size());
+
+			for (Map.Entry<String, JsonElement> entry : set)
+			{
+				map.put(entry.getKey(), entry.getValue());
+			}
+
+			writeMap(map, STRING, JSON);
+		}
+		else if (element.isJsonArray())
+		{
+			writeByte(2);
+
+			JsonArray json = element.getAsJsonArray();
+			Collection<JsonElement> collection = new ArrayList<>(json.size());
+
+			for (JsonElement json1 : json)
+			{
+				collection.add(json1);
+			}
+
+			writeCollection(collection, JSON);
+		}
+		else
+		{
+			JsonPrimitive primitive = element.getAsJsonPrimitive();
+
+			if (primitive.isString())
+			{
+				writeByte(3);
+				writeString(primitive.getAsString());
+			}
+			else if (primitive.isBoolean())
+			{
+				writeByte(4);
+				writeBoolean(primitive.getAsBoolean());
+			}
+			else
+			{
+				Class<? extends Number> n = primitive.getAsNumber().getClass();
+
+				if (n == Integer.class)
+				{
+					writeByte(7);
+					writeInt(primitive.getAsInt());
+				}
+				else if (n == Byte.class)
+				{
+					writeByte(5);
+					writeByte(primitive.getAsByte());
+				}
+				else if (n == Short.class)
+				{
+					writeByte(6);
+					writeShort(primitive.getAsShort());
+				}
+				else if (n == Long.class)
+				{
+					writeByte(8);
+					writeLong(primitive.getAsLong());
+				}
+				else if (n == Float.class)
+				{
+					writeByte(9);
+					writeFloat(primitive.getAsFloat());
+				}
+				else if (n == Double.class)
+				{
+					writeByte(10);
+					writeDouble(primitive.getAsDouble());
+				}
+				else
+				{
+					writeByte(0);
+				}
+			}
+		}
 	}
 
 	public void writeTextComponent(@Nullable ITextComponent component)
@@ -234,17 +327,8 @@ public class DataOut
 		writeJson((color == null ? Color4I.NONE : color).toJson());
 	}
 
-	public <E> void write(NameMap<E> map, E value)
+	public <E> void write(Serializer<E> serializer, E object)
 	{
-		int index = map.getIndex(value);
-
-		if (map.values.size() >= 256)
-		{
-			writeShort(index);
-		}
-		else
-		{
-			writeByte(index);
-		}
+		serializer.write(this, object);
 	}
 }

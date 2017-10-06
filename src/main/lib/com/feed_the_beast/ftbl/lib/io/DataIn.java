@@ -1,14 +1,17 @@
 package com.feed_the_beast.ftbl.lib.io;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
-import com.feed_the_beast.ftbl.lib.util.JsonElementIO;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -29,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -49,6 +53,8 @@ public class DataIn
 	public static final Deserializer<UUID> UUID = DataIn::readUUID;
 	public static final Deserializer<BlockPos> BLOCK_POS = DataIn::readPos;
 	public static final Deserializer<BlockDimPos> BLOCK_DIM_POS = DataIn::readDimPos;
+	public static final Deserializer<JsonElement> JSON = DataIn::readJson;
+	public static final Deserializer<ITextComponent> TEXT_COMPONENT = DataIn::readTextComponent;
 
 	public static final DataIn.Deserializer<ChunkPos> CHUNK_POS = data ->
 	{
@@ -174,7 +180,7 @@ public class DataIn
 	{
 		int id = readUnsignedByte();
 
-		if (id == 3)
+		if (id == 6)
 		{
 			return Collections.emptyMap();
 		}
@@ -195,13 +201,15 @@ public class DataIn
 
 		if (map == null)
 		{
+			boolean linked = id >= 3;
+
 			if (keyDeserializer == INT)
 			{
-				map = CommonUtils.cast(new Int2ObjectOpenHashMap<V>(size));
+				map = CommonUtils.cast(linked ? new Int2ObjectLinkedOpenHashMap<>(size) : new Int2ObjectOpenHashMap<V>(size));
 			}
 			else
 			{
-				map = new HashMap<>(size);
+				map = linked ? new LinkedHashMap<>(size) : new HashMap<>(size);
 			}
 		}
 
@@ -275,7 +283,51 @@ public class DataIn
 
 	public JsonElement readJson()
 	{
-		return JsonElementIO.read(byteBuf);
+		switch (readUnsignedByte())
+		{
+			case 0:
+				return JsonNull.INSTANCE;
+			case 1:
+			{
+				JsonObject json = new JsonObject();
+
+				for (Map.Entry<String, JsonElement> entry : readMap(null, STRING, JSON).entrySet())
+				{
+					json.add(entry.getKey(), entry.getValue());
+				}
+
+				return json;
+			}
+			case 2:
+			{
+				JsonArray json = new JsonArray();
+
+				for (JsonElement json1 : readCollection(JSON))
+				{
+					json.add(json1);
+				}
+
+				return json;
+			}
+			case 3:
+				return new JsonPrimitive(readString());
+			case 4:
+				return new JsonPrimitive(readBoolean());
+			case 5:
+				return new JsonPrimitive(readByte());
+			case 6:
+				return new JsonPrimitive(readShort());
+			case 7:
+				return new JsonPrimitive(readInt());
+			case 8:
+				return new JsonPrimitive(readLong());
+			case 9:
+				return new JsonPrimitive(readFloat());
+			case 10:
+				return new JsonPrimitive(readDouble());
+		}
+
+		return JsonNull.INSTANCE;
 	}
 
 	@Nullable
@@ -301,8 +353,8 @@ public class DataIn
 		return Color4I.fromJson(readJson());
 	}
 
-	public <E> E read(NameMap<E> map)
+	public <E> E read(Deserializer<E> deserializer)
 	{
-		return map.get(map.values.size() >= 256 ? readUnsignedShort() : readUnsignedByte());
+		return deserializer.read(this);
 	}
 }

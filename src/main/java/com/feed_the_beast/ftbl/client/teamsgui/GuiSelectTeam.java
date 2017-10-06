@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
@@ -10,8 +8,10 @@ import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class GuiSelectTeam extends GuiBase
 			super(0, 0, 32, 32);
 			team = t;
 			setTitle(team.color.getTextFormatting() + team.displayName);
-			setIcon(new PlayerHeadImage(t.ownerName));
+			setIcon(new PlayerHeadIcon(t.ownerName));
 			background = new TexturelessRectangle(team.isInvited ? INVITED_COLOR : Color4I.NONE).setLineColor(team.color.getColor()).setRoundEdges(true);
 		}
 

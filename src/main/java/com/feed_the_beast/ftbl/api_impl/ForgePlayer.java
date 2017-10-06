@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedInEvent;
-import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -13,8 +12,8 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.NBTDataStorage;
 import com.feed_the_beast.ftbl.net.MessageSyncData;
-import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +23,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -156,7 +156,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	@Override
 	public EntityPlayerMP getPlayer()
 	{
-		Preconditions.checkNotNull(entityPlayer, "EntityPlayer can't be null!");
+		Objects.requireNonNull(entityPlayer, "EntityPlayer can't be null!");
 		return entityPlayer;
 	}
 
@@ -254,6 +254,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	@Override
 	public long getLastTimeSeen()
 	{
-		return isOnline() ? ServerUtils.getWorldTime() : lastTimeSeen;
+		return isOnline() ? CommonUtils.getWorldTime() : lastTimeSeen;
 	}
 }

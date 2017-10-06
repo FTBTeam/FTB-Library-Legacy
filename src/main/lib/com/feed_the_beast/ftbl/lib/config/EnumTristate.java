@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.config;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.NameMap;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 

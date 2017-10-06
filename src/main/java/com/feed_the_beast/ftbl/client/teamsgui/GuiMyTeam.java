@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.client.teamsgui;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.lib.Color4I;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.CentredTextButton;
@@ -18,9 +16,11 @@ import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
@@ -54,7 +54,7 @@ public class GuiMyTeam extends GuiBase
 		{
 			super(0, 0, LEFT_PANEL_WIDTH - 4, 12);
 			playerInst = p;
-			setIcon(new PlayerHeadImage(p.playerName));
+			setIcon(new PlayerHeadIcon(p.playerName));
 		}
 
 		@Override
@@ -149,15 +149,15 @@ public class GuiMyTeam extends GuiBase
 				{
 					if (selectedPlayer.playerId.equals(ClientUtils.MC.player.getGameProfile().getId()))
 					{
-						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit yourself!")); //LANG
+						add(new TextField(4, 0, width - 5, -1, "You can't edit yourself!")); //LANG
 					}
 					else if (selectedPlayer.playerId.equals(teamInfo.owner.playerId))
 					{
-						add(new TextField(4, 0, width - 5, -1, getFont(), "You can't edit owner!")); //LANG
+						add(new TextField(4, 0, width - 5, -1, "You can't edit owner!")); //LANG
 					}
 					else
 					{
-						add(new TextField(4, 0, width - 5, -1, getFont(), "ID: " + StringUtils.fromUUID(selectedPlayer.playerId)));
+						add(new TextField(4, 0, width - 5, -1, "ID: " + StringUtils.fromUUID(selectedPlayer.playerId)));
 
 						CheckBoxList checkBoxes = new CheckBoxList(4, 1, true);
 
@@ -222,7 +222,7 @@ public class GuiMyTeam extends GuiBase
 				}
 				else
 				{
-					add(new TextField(1, 0, width - 5, -1, getFont(), "You don't have permission to manage players!")); //LANG
+					add(new TextField(1, 0, width - 5, -1, "You don't have permission to manage players!")); //LANG
 				}
 			}
 

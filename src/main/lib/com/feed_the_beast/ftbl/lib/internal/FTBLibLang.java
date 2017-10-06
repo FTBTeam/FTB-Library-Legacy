@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.internal;
 
-import com.feed_the_beast.ftbl.lib.LangKey;
+import com.feed_the_beast.ftbl.lib.util.LangKey;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 

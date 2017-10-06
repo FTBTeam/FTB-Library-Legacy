@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
+import com.feed_the_beast.ftbl.lib.util.misc.NBTDataStorage;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.server.permission.PermissionAPI;
 

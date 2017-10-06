@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.lib.LangKey;
-import com.feed_the_beast.ftbl.lib.MouseButton;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.util.LangKey;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
 import java.util.function.BiConsumer;
 

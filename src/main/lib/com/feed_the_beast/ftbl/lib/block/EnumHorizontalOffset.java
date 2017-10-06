@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.block;
 
-import com.feed_the_beast.ftbl.lib.EnumScreenPosition;
-import com.feed_the_beast.ftbl.lib.NameMap;
+import com.feed_the_beast.ftbl.lib.util.misc.EnumScreenPosition;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 

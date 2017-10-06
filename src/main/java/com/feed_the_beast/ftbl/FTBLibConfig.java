@@ -30,6 +30,9 @@ public class FTBLibConfig
 
 		@Config.Comment("Merges player profiles, in case player logged in without internet connection/in offline mode server\\nBy default, only does that in singleplayer worlds")
 		public EnumTristate merge_offline_mode_players = EnumTristate.DEFAULT;
+
+		@Config.Comment("Prints incoming and outgoing network messages in console. Don't set to true, unless you are debugging net spam")
+		public boolean log_net = false;
 	}
 
 	public static class Teams

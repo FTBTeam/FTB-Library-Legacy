@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.lib.MouseButton;
-import net.minecraft.client.gui.FontRenderer;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -13,14 +13,27 @@ import java.util.List;
  */
 public class ExtendedTextField extends TextField
 {
-	public final ITextComponent textComponent;
+	public ITextComponent textComponent;
 	private List<GuiHelper.PositionedTextData> textData;
+	private long lastUpdate = 0L;
 
-	public ExtendedTextField(int x, int y, int width, int height, FontRenderer font, ITextComponent t)
+	public ExtendedTextField(int x, int y, int width, int height, ITextComponent t)
 	{
-		super(x, y, width, height, font, t.getFormattedText());
+		super(x, y, width, height, "");
 		textComponent = t;
-		textData = GuiHelper.createDataFrom(t, font, width);
+		setTitle("");
+	}
+
+	@Override
+	public ExtendedTextField setTitle(String txt)
+	{
+		if (textComponent != null)
+		{
+			super.setTitle(textComponent.getFormattedText());
+			textData = GuiHelper.createDataFrom(textComponent, ClientUtils.MC.fontRenderer, width);
+		}
+
+		return this;
 	}
 
 	@Nullable
@@ -60,5 +73,18 @@ public class ExtendedTextField extends TextField
 		{
 			GuiHelper.playClickSound();
 		}
+	}
+
+	@Override
+	public void renderWidget(GuiBase gui)
+	{
+		long ms = System.currentTimeMillis();
+		if (lastUpdate <= ms)
+		{
+			lastUpdate = ms + 500L;
+			setTitle("");
+		}
+
+		super.renderWidget(gui);
 	}
 }

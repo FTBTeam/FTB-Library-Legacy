@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -106,7 +107,7 @@ public class Universe implements IUniverse
 			return p;
 		}
 
-		return Preconditions.checkNotNull(p);
+		return Objects.requireNonNull(p);
 	}
 
 	@Override

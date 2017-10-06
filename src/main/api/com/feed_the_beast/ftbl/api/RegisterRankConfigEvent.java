@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.feed_the_beast.ftbl.lib.TriFunction;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftbl.lib.util.misc.TriFunction;
 
 /**
  * @author LatvianModder

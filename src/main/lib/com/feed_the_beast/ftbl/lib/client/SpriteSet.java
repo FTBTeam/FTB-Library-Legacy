@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.client;
 
-import com.feed_the_beast.ftbl.lib.TextureSet;
+import com.feed_the_beast.ftbl.lib.util.misc.TextureSet;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;

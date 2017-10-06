@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.api;
 
-import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -8,6 +7,7 @@ import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -17,7 +17,7 @@ public interface IUniverse
 {
 	default MinecraftServer getServer()
 	{
-		return Preconditions.checkNotNull(getOverworld().getMinecraftServer());
+		return Objects.requireNonNull(getOverworld().getMinecraftServer());
 	}
 
 	WorldServer getOverworld();

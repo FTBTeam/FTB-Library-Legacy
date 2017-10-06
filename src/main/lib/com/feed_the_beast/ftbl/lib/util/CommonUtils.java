@@ -201,4 +201,9 @@ public class CommonUtils
 
 		return CraftingHelper.getIngredient(element, MINECRAFT_JSON_CONTEXT);
 	}
+
+	public static long getWorldTime()
+	{
+		return UtilsCommon.INSTANCE.getWorldTime();
+	}
 }

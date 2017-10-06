@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.api_impl;
 
+import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumReloadType;
@@ -12,7 +13,6 @@ import com.feed_the_beast.ftbl.api.IUniverse;
 import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbl.api.player.IContainerProvider;
 import com.feed_the_beast.ftbl.client.FTBLibModClient;
-import com.feed_the_beast.ftbl.lib.Notification;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigValue;
 import com.feed_the_beast.ftbl.lib.config.ConfigValueProvider;
@@ -25,6 +25,7 @@ import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringJoiner;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageSyncData;
@@ -45,14 +46,13 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
  */
 public class FTBLibAPI_Impl extends FTBLibAPI
 {
-	public static final boolean LOG_NET = System.getProperty(FTBLibFinals.MOD_ID + ".log_network", "0").equals("1");
-
 	@Override
 	public ISharedServerData getServerData()
 	{
@@ -68,7 +68,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	@Override
 	public IUniverse getUniverse()
 	{
-		Preconditions.checkNotNull(Universe.INSTANCE);
+		Objects.requireNonNull(Universe.INSTANCE);
 		return Universe.INSTANCE;
 	}
 
@@ -162,7 +162,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	public ConfigValue getConfigValueFromID(String id)
 	{
 		ConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
-		Preconditions.checkNotNull(provider, "Unknown Config ID: " + id);
+		Objects.requireNonNull(provider, "Unknown Config ID: " + id);
 		return provider.get();
 	}
 
@@ -181,9 +181,9 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 			{
 				message.onMessage(CommonUtils.cast(message), context.getServerHandler().player);
 
-				if (LOG_NET)
+				if (FTBLibConfig.general.log_net)
 				{
-					CommonUtils.DEV_LOGGER.info("TX MessageBase: " + message.getClass().getName());
+					CommonUtils.DEV_LOGGER.info("Net TX: " + message.getClass().getName());
 				}
 			});
 		}

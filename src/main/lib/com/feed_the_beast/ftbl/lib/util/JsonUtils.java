@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.api.INotification;
-import com.feed_the_beast.ftbl.lib.CustomStyle;
-import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.util.text_components.CustomStyle;
+import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -228,8 +229,7 @@ public class JsonUtils
 		{
 			return JsonNull.INSTANCE;
 		}
-
-		if (component instanceof TextComponentString && component.getStyle().isEmpty() && component.getSiblings().isEmpty())
+		else if (component.getClass() == TextComponentString.class && component.getSiblings().isEmpty() && component.getStyle().isEmpty())
 		{
 			return new JsonPrimitive(((TextComponentString) component).getText());
 		}
@@ -316,13 +316,17 @@ public class JsonUtils
 		{
 			json.addProperty("text", ((TextComponentString) component).getText());
 
-			if (component instanceof INotification)
+			if (component instanceof TextComponentCountdown)
+			{
+				json.addProperty("countdown", ((TextComponentCountdown) component).countdown);
+			}
+			else if (component instanceof INotification)
 			{
 				INotification n = (INotification) component;
 
 				if (!n.getId().equals(INotification.VANILLA_STATUS))
 				{
-					json.addProperty("nid", n.getId().toString());
+					json.addProperty("notification", n.getId().toString());
 				}
 
 				if (n.getTimer() != 60)
@@ -373,14 +377,14 @@ public class JsonUtils
 		{
 			json.addProperty("selector", ((TextComponentSelector) component).getSelector());
 		}
-		else
+		else if (component instanceof TextComponentKeybind)
 		{
-			if (!(component instanceof TextComponentKeybind))
-			{
-				throw new IllegalArgumentException("Don't know how to serialize " + component + " as a Component");
-			}
-
 			json.addProperty("keybind", ((TextComponentKeybind) component).getKeybind());
+		}
+
+		if (json.entrySet().isEmpty())
+		{
+			throw new IllegalArgumentException("Don't know how to serialize " + component + " as a Component");
 		}
 
 		return json;
@@ -432,23 +436,28 @@ public class JsonUtils
 			JsonObject json = element.getAsJsonObject();
 			ITextComponent component;
 
-			if (json.has("text"))
+			if (json.has("text") || json.has("notification"))
 			{
-				String s = json.get("text").getAsString().replace("\t", "  ");
+				String s = json.has("text") ? json.get("text").getAsString().replace("\t", "  ") : "";
 
-				if (json.has("nid") || json.has("timer") || json.has("important"))
+				if (json.has("notification") || json.has("timer") || json.has("important"))
 				{
-					component = Notification.of(new ResourceLocation(json.has("nid") ? json.get("nid").getAsString() : ""), s);
+					Notification n = Notification.of(json.has("notification") ? new ResourceLocation(json.get("notification").getAsString()) : INotification.VANILLA_STATUS, s);
+					component = n;
 
 					if (json.has("timer"))
 					{
-						((Notification) component).setTimer(net.minecraft.util.JsonUtils.getInt(json, "timer"));
+						n.setTimer(net.minecraft.util.JsonUtils.getInt(json, "timer"));
 					}
 
 					if (json.has("important"))
 					{
-						((Notification) component).setImportant(net.minecraft.util.JsonUtils.getBoolean(json, "important"));
+						n.setImportant(net.minecraft.util.JsonUtils.getBoolean(json, "important"));
 					}
+				}
+				else if (json.has("countdown"))
+				{
+					component = new TextComponentCountdown(s, json.get("countdown").getAsLong());
 				}
 				else
 				{
@@ -468,7 +477,7 @@ public class JsonUtils
 					{
 						o1[i] = deserializeTextComponent(a.get(i));
 
-						if (o1[i] instanceof TextComponentString)
+						if (o1[i] != null && o1[i].getClass() == TextComponentString.class)
 						{
 							TextComponentString t2 = (TextComponentString) o1[i];
 
@@ -506,14 +515,13 @@ public class JsonUtils
 			{
 				component = new TextComponentSelector(net.minecraft.util.JsonUtils.getString(json, "selector"));
 			}
+			else if (json.has("keybind"))
+			{
+				component = new TextComponentKeybind(net.minecraft.util.JsonUtils.getString(json, "keybind"));
+			}
 			else
 			{
-				if (!json.has("keybind"))
-				{
-					throw new JsonParseException("Don't know how to turn " + element + " into a Component");
-				}
-
-				component = new TextComponentKeybind(net.minecraft.util.JsonUtils.getString(json, "keybind"));
+				return null;
 			}
 
 			if (json.has("extra"))
@@ -525,9 +533,10 @@ public class JsonUtils
 					throw new JsonParseException("Unexpected empty array of components");
 				}
 
-				for (int j = 0; j < a.size(); ++j)
+				for (JsonElement element1 : a)
 				{
-					component.appendSibling(deserializeTextComponent(a.get(j)));
+					ITextComponent component1 = deserializeTextComponent(element1);
+					component.appendSibling(component1 == null ? new TextComponentString("") : component1);
 				}
 			}
 

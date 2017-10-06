@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.internal;
 
-import com.feed_the_beast.ftbl.lib.Notification;
+import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
 
 /**
  * @author LatvianModder

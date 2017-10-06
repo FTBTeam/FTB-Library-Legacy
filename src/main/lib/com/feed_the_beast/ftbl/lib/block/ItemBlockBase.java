@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftbl.lib.block;
 
-import com.google.common.base.Preconditions;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
+
+import java.util.Objects;
 
 /**
  * @author LatvianModder
@@ -15,8 +16,8 @@ public class ItemBlockBase extends ItemBlock
 	public ItemBlockBase(Block b, boolean hasSubtypes)
 	{
 		super(b);
-		Preconditions.checkNotNull(b);
-		Preconditions.checkNotNull(b.getRegistryName());
+		Objects.requireNonNull(b);
+		Objects.requireNonNull(b.getRegistryName());
 		setRegistryName(b.getRegistryName());
 
 		if (hasSubtypes)

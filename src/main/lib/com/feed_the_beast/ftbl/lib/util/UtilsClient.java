@@ -33,4 +33,10 @@ public class UtilsClient extends UtilsCommon
 	{
 		ClientUtils.spawnParticle(new ParticleColoredDust(world, x, y, z, r, g, b, a));
 	}
+
+	@Override
+	long getWorldTime()
+	{
+		return ClientUtils.MC.world == null ? super.getWorldTime() : ClientUtils.MC.world.getTotalWorldTime();
+	}
 }

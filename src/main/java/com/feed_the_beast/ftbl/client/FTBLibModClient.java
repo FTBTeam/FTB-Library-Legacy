@@ -1,15 +1,15 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api.player.IGuiProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterGuiProvidersEvent;
-import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.icon.PlayerHeadImage;
+import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -56,9 +56,9 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		{
 			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
 
-			if (FTBLibAPI_Impl.LOG_NET)
+			if (FTBLibConfig.general.log_net)
 			{
-				CommonUtils.DEV_LOGGER.info("RX MessageBase: " + message.getClass().getName());
+				CommonUtils.DEV_LOGGER.info("Net RX: " + message.getClass().getName());
 			}
 
 			return null;
@@ -71,7 +71,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		super.preInit(event);
 		FTBLibClientConfig.sync();
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
-		ClientUtils.localPlayerHead = new PlayerHeadImage(ClientUtils.MC.getSession().getProfile().getName());
+		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getName());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
 	}
 

@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.lib.NameMap;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
-import com.google.common.base.Preconditions;
+import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
@@ -31,6 +30,7 @@ import net.minecraftforge.fml.server.FMLServerHandler;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -142,17 +142,12 @@ public class ServerUtils
 			return FTBLibAPI.API.getUniverse().getServer();
 		}
 
-		return Preconditions.checkNotNull(FMLServerHandler.instance().getServer());
+		return Objects.requireNonNull(FMLServerHandler.instance().getServer());
 	}
 
 	public static WorldServer getOverworld()
 	{
 		return FTBLibAPI.API.hasUniverse() ? FTBLibAPI.API.getUniverse().getOverworld() : getServer().getWorld(0);
-	}
-
-	public static long getWorldTime()
-	{
-		return getOverworld().getTotalWorldTime();
 	}
 
 	public static boolean hasOnlinePlayers()

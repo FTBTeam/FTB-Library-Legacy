@@ -16,8 +16,6 @@ import com.feed_the_beast.ftbl.api.player.IContainerProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
-import com.feed_the_beast.ftbl.lib.AsmHelper;
-import com.feed_the_beast.ftbl.lib.NBTDataStorage;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
@@ -25,6 +23,7 @@ import com.feed_the_beast.ftbl.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.NBTDataStorage;
 import com.feed_the_beast.ftbl.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
 import net.minecraft.util.ResourceLocation;
@@ -136,7 +135,7 @@ public class FTBLibModCommon
 		CommonUtils.init(event.getModConfigurationDirectory());
 		Side side = event.getSide();
 
-		for (ASMDataTable.ASMData data : AsmHelper.getASMData(event.getAsmData(), EventHandler.class))
+		for (ASMDataTable.ASMData data : event.getAsmData().getAll(EventHandler.class.getName()))
 		{
 			try
 			{

@@ -2,7 +2,8 @@ package com.feed_the_beast.ftbl.api.team;
 
 import com.feed_the_beast.ftbl.api.FTBLibEvent;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.google.common.base.Preconditions;
+
+import java.util.Objects;
 
 /**
  * @author LatvianModder
@@ -13,7 +14,7 @@ public class ForgeTeamEvent extends FTBLibEvent
 
 	public ForgeTeamEvent(IForgeTeam t)
 	{
-		team = Preconditions.checkNotNull(t, "Null IForgeTeam in ForgeTeamEvent!");
+		team = Objects.requireNonNull(t, "Null IForgeTeam in ForgeTeamEvent!");
 	}
 
 	public IForgeTeam getTeam()

@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -94,7 +94,7 @@ public abstract class Icon
 					}
 					case "bullet":
 					{
-						return new IconBullet().setColor(o.has("color") ? Color4I.fromJson(o.get("color")) : Color4I.NONE);
+						return new BulletIcon().setColor(o.has("color") ? Color4I.fromJson(o.get("color")) : Color4I.NONE);
 					}
 				}
 			}
@@ -143,7 +143,7 @@ public abstract class Icon
 
 		if (!id.endsWith(".png"))
 		{
-			return new AtlasSpriteProvider(new ResourceLocation(id));
+			return new AtlasSpriteIcon(new ResourceLocation(id));
 		}
 
 		return new ImageIcon(id, 0D, 0D, 1D, 1D);

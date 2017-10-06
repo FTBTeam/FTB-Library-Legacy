@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.google.common.base.Preconditions;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -14,6 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
@@ -48,7 +48,6 @@ public class CmdNotify extends CmdBase
 		checkArgs(sender, args, 2);
 		EntityPlayerMP player = getPlayer(server, sender, args[0]);
 		ITextComponent component = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(String.join(" ", StringUtils.shiftArray(args))));
-		Preconditions.checkNotNull(component);
-		ServerUtils.notify(player, component);
+		ServerUtils.notify(player, Objects.requireNonNull(component));
 	}
 }

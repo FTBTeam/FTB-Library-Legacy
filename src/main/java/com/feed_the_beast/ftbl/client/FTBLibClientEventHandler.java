@@ -7,15 +7,15 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
-import com.feed_the_beast.ftbl.lib.Color4I;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.icon.AtlasSpriteProvider;
+import com.feed_the_beast.ftbl.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftbl.lib.icon.IconPresets;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -37,6 +37,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
@@ -124,34 +125,27 @@ public class FTBLibClientEventHandler
 	{
 		private static final LinkedHashMap<ResourceLocation, ITextComponent> MAP = new LinkedHashMap<>();
 
-		private long endTick;
+		private long tick, endTick;
 		private NotificationWidget widget;
 
 		private Temp(ITextComponent n)
 		{
 			widget = new NotificationWidget(n, ClientUtils.MC.fontRenderer);
-			endTick = -1L;
+			tick = endTick = -1L;
 		}
 
-		public boolean render(ScaledResolution screen, float partialTicks)
+		public void render(ScaledResolution screen, float partialTicks)
 		{
-			long tick = ClientUtils.MC.world.getTotalWorldTime();
-
-			if (endTick == -1L)
+			if (tick == -1L || tick >= endTick)
 			{
-				endTick = tick + widget.timer;
-			}
-
-			if (tick >= endTick)
-			{
-				return true;
+				return;
 			}
 
 			int alpha = (int) Math.min(255F, (endTick - tick - partialTicks) * 255F / 20F);
 
 			if (alpha <= 2)
 			{
-				return true;
+				return;
 			}
 
 			GlStateManager.pushMatrix();
@@ -174,8 +168,23 @@ public class FTBLibClientEventHandler
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
+		}
 
-			return false;
+		private boolean tick()
+		{
+			tick = ClientUtils.MC.world.getTotalWorldTime();
+
+			if (endTick == -1L)
+			{
+				endTick = tick + widget.timer;
+			}
+
+			return tick >= endTick || Math.min(255F, (endTick - tick) * 255F / 20F) <= 2F;
+		}
+
+		private boolean isImportant()
+		{
+			return widget.notification instanceof INotification && ((INotification) widget.notification).isImportant();
 		}
 	}
 
@@ -267,28 +276,50 @@ public class FTBLibClientEventHandler
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
-	public static void onOverlayRender(RenderGameOverlayEvent.Pre event)
+	@SubscribeEvent
+	public static void onClientTick(TickEvent.ClientTickEvent event)
 	{
-		if ((currentNotification != null || !Temp.MAP.isEmpty()) && event.getType() == RenderGameOverlayEvent.ElementType.TEXT)
+		if (event.phase == TickEvent.Phase.START)
 		{
 			if (currentNotification != null)
 			{
-				if (currentNotification.render(event.getResolution(), event.getPartialTicks()))
+				if (currentNotification.tick())
 				{
 					currentNotification = null;
 				}
-
-				GlStateManager.color(1F, 1F, 1F, 1F);
-				GlStateManager.disableLighting();
-				GlStateManager.enableBlend();
-				GlStateManager.enableTexture2D();
 			}
-			else if (!Temp.MAP.isEmpty())
+
+			if (currentNotification == null && !Temp.MAP.isEmpty())
 			{
 				currentNotification = new Temp(Temp.MAP.values().iterator().next());
 				Temp.MAP.remove(currentNotification.widget.id);
 			}
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
+	public static void onGameOverlayRender(RenderGameOverlayEvent.Text event)
+	{
+		if (currentNotification != null && !currentNotification.isImportant())
+		{
+			currentNotification.render(event.getResolution(), event.getPartialTicks());
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.enableTexture2D();
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
+	public static void onRenderTick(TickEvent.RenderTickEvent event)
+	{
+		if (event.phase == TickEvent.Phase.END && currentNotification != null && currentNotification.isImportant())
+		{
+			currentNotification.render(new ScaledResolution(ClientUtils.MC), event.renderTickTime);
+			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.disableLighting();
+			GlStateManager.enableBlend();
+			GlStateManager.enableTexture2D();
 		}
 	}
 
@@ -308,7 +339,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
 	{
-		AtlasSpriteProvider.SPRITE_MAP.clear();
+		AtlasSpriteIcon.SPRITE_MAP.clear();
 
 		try
 		{
@@ -317,9 +348,9 @@ public class FTBLibClientEventHandler
 				field.setAccessible(true);
 				Object o = field.get(null);
 
-				if (o instanceof AtlasSpriteProvider)
+				if (o instanceof AtlasSpriteIcon)
 				{
-					AtlasSpriteProvider a = (AtlasSpriteProvider) o;
+					AtlasSpriteIcon a = (AtlasSpriteIcon) o;
 					event.getMap().registerSprite(a.name);
 					IconPresets.MAP.put(a.name.toString(), a);
 				}
