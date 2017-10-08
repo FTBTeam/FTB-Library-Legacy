@@ -2,9 +2,10 @@ package com.feed_the_beast.ftbl.lib.config;
 
 import com.feed_the_beast.ftbl.api.ICustomColor;
 import com.feed_the_beast.ftbl.api.ICustomName;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.google.gson.JsonElement;
@@ -108,8 +109,8 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public Color4I getColor()
 	{
-		Color4I col = getValue() instanceof ICustomColor ? ((ICustomColor) getValue()).getCustomColor() : Color4I.NONE;
-		return col.hasColor() ? col : COLOR;
+		Color4I col = getValue() instanceof ICustomColor ? ((ICustomColor) getValue()).getCustomColor() : Icon.EMPTY;
+		return col.isEmpty() ? COLOR : col;
 	}
 
 	@Override
@@ -146,7 +147,7 @@ public class ConfigEnum<E> extends ConfigValue
 		{
 			data.writeString(entry.getKey());
 			data.writeTextComponent(entry.getValue() instanceof ICustomName && ((ICustomName) entry.getValue()).hasCustomName() ? ((ICustomName) entry.getValue()).getCustomDisplayName() : null);
-			data.writeJson((entry.getValue() instanceof ICustomColor ? ((ICustomColor) entry.getValue()).getCustomColor() : Color4I.NONE).toJson());
+			data.writeJson((entry.getValue() instanceof ICustomColor ? ((ICustomColor) entry.getValue()).getCustomColor() : Icon.EMPTY).getJson());
 		}
 
 		data.writeShort(getNameMap().getIndex(getValue()));

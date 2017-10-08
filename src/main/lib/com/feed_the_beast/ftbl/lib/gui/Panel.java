@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
 import java.util.ArrayList;
@@ -8,25 +7,25 @@ import java.util.List;
 
 public abstract class Panel extends Widget
 {
-	public static final int FLAG_ONLY_RENDER_WIDGETS_INSIDE = 1;
-	public static final int FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE = 2;
-	public static final int FLAG_UNICODE_FONT = 4;
-	public static final int FLAG_DEFAULTS = FLAG_ONLY_RENDER_WIDGETS_INSIDE | FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE;
+	public static final int ONLY_RENDER_WIDGETS_INSIDE = 1;
+	public static final int ONLY_INTERACT_WITH_WIDGETS_INSIDE = 2;
+	public static final int UNICODE = 4;
+	public static final int DEFAULTS = ONLY_RENDER_WIDGETS_INSIDE | ONLY_INTERACT_WITH_WIDGETS_INSIDE;
 
 	public final List<Widget> widgets;
 	private int scrollX = 0, scrollY = 0;
 	private int offsetX = 0, offsetY = 0;
 	private int flags = 0;
 
-	public Panel(int x, int y, int w, int h)
+	public Panel(GuiBase gui, int x, int y, int w, int h)
 	{
-		super(x, y, w, h);
+		super(gui, x, y, w, h);
 		widgets = new ArrayList<>();
 	}
 
-	public Panel()
+	public Panel(GuiBase gui)
 	{
-		this(0, 0, 0, 0);
+		this(gui, 0, 0, 0, 0);
 	}
 
 	public void addFlags(int f)
@@ -144,22 +143,21 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
-		boolean renderInside = hasFlag(FLAG_ONLY_RENDER_WIDGETS_INSIDE);
-		boolean useUnicodeFont = hasFlag(FLAG_UNICODE_FONT);
-		boolean unicode = gui.getFont().getUnicodeFlag();
-		gui.getFont().setUnicodeFlag(useUnicodeFont);
+		boolean renderInside = hasFlag(ONLY_RENDER_WIDGETS_INSIDE);
+		gui.getFontUnicode().push();
+		gui.getFontUnicode().set(hasFlag(UNICODE));
 
 		int ax = getAX();
 		int ay = getAY();
+
+		renderPanelBackground(ax, ay);
 
 		if (renderInside)
 		{
 			GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
 		}
-
-		renderPanelBackground(gui, ax, ay);
 
 		setOffset(true);
 
@@ -167,9 +165,9 @@ public abstract class Panel extends Widget
 		{
 			Widget widget = widgets.get(i);
 
-			if (widget.shouldRender(gui) && (!renderInside || widget.collidesWith(ax, ay, width, height)))
+			if (widget.shouldRender() && (!renderInside || widget.collidesWith(ax, ay, width, height)))
 			{
-				renderWidget(gui, widget, i, ax + offsetX, ay + offsetY, width, height);
+				renderWidget(widget, i, ax + offsetX, ay + offsetY, width, height);
 			}
 		}
 
@@ -180,23 +178,23 @@ public abstract class Panel extends Widget
 			GuiHelper.popScissor();
 		}
 
-		gui.getFont().setUnicodeFlag(unicode);
+		gui.getFontUnicode().pop();
 	}
 
-	protected void renderPanelBackground(GuiBase gui, int ax, int ay)
+	protected void renderPanelBackground(int ax, int ay)
 	{
-		getIcon(gui).draw(ax, ay, width, height, Color4I.NONE);
+		getIcon().draw(ax, ay, width, height);
 	}
 
-	protected void renderWidget(GuiBase gui, Widget widget, int index, int ax, int ay, int w, int h)
+	protected void renderWidget(Widget widget, int index, int ax, int ay, int w, int h)
 	{
-		widget.renderWidget(gui);
+		widget.renderWidget();
 	}
 
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public void addMouseOverText(List<String> list)
 	{
-		if (hasFlag(FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
+		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
 		{
 			return;
 		}
@@ -205,9 +203,9 @@ public abstract class Panel extends Widget
 
 		for (Widget w : widgets)
 		{
-			if (w.isEnabled(gui) && gui.isMouseOver(w))
+			if (w.isEnabled() && gui.isMouseOver(w))
 			{
-				w.addMouseOverText(gui, list);
+				w.addMouseOverText(list);
 			}
 		}
 
@@ -215,9 +213,9 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, MouseButton button)
+	public boolean mousePressed(MouseButton button)
 	{
-		if (hasFlag(FLAG_ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
+		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
 		{
 			return false;
 		}
@@ -226,9 +224,9 @@ public abstract class Panel extends Widget
 
 		for (Widget w : widgets)
 		{
-			if (w.isEnabled(gui))
+			if (w.isEnabled())
 			{
-				if (w.mousePressed(gui, button))
+				if (w.mousePressed(button))
 				{
 					setOffset(false);
 					return true;
@@ -241,15 +239,15 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public void mouseReleased(GuiBase gui)
+	public void mouseReleased()
 	{
 		setOffset(true);
 
 		for (Widget w : widgets)
 		{
-			if (w.isEnabled(gui))
+			if (w.isEnabled())
 			{
-				w.mouseReleased(gui);
+				w.mouseReleased();
 			}
 		}
 
@@ -257,13 +255,13 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public boolean keyPressed(GuiBase gui, int key, char keyChar)
+	public boolean keyPressed(int key, char keyChar)
 	{
 		setOffset(true);
 
 		for (Widget w : widgets)
 		{
-			if (w.isEnabled(gui) && w.keyPressed(gui, key, keyChar))
+			if (w.isEnabled() && w.keyPressed(key, keyChar))
 			{
 				setOffset(false);
 				return true;

@@ -97,10 +97,9 @@ ftbl_client.config.general.item_ore_names=Display Item OreDictionary names
 ftbl_client.config.general.item_ore_names.item_tooltip=Ore Dictionary Names:
 ftbl_client.config.general.item_nbt=Display Item NBT
 ftbl_client.config.general.action_buttons=Action Buttons
-ftbl_client.config.general.ignore_nei=Ignore NEI
 ftbl_client.config.general.mirror_commands=Mirror /ftbc Commands
 ftbl_client.config.general.replace_vanilla_status_messages=Replace vanilla status messages
-ftbl_client.config.general.enable_chunk_selector_depth=Enable Chunk Selector Depth
+ftbl_client.config.general.theme=Theme
 
 # Player Settings
 player_config=My Server Settings
@@ -152,7 +151,7 @@ ftbl.lang.team_status.member=Member
 ftbl.lang.team_status.mod=Moderator
 ftbl.lang.team_status.owner=Owner
 
-# Action Buttons
+# Sidebar Buttons
 sidebar_button=Sidebar Buttons
 sidebar_button.ftbl.my_team=My Team
 sidebar_button.ftbl.my_team.tooltip=Opens a GUI where you can manage your team

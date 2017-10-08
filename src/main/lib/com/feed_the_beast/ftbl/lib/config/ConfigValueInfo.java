@@ -113,7 +113,7 @@ public class ConfigValueInfo
 			group = net.readString();
 		}
 
-		defaultValue = FTBLibAPI.API.getConfigValueFromID(net.readString());
+		defaultValue = FTBLibAPI.API.getConfigValueFromId(net.readString());
 		defaultValue.readData(net);
 	}
 

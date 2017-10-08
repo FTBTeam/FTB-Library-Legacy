@@ -15,11 +15,9 @@ import com.feed_the_beast.ftbl.lib.gui.TextBox;
 import com.feed_the_beast.ftbl.lib.gui.TextField;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
@@ -50,43 +48,38 @@ public class GuiMyTeam extends GuiBase
 	{
 		private final MyTeamPlayerData playerInst;
 
-		public ButtonPlayer(MyTeamPlayerData p)
+		public ButtonPlayer(GuiBase gui, MyTeamPlayerData p)
 		{
-			super(0, 0, LEFT_PANEL_WIDTH - 4, 12);
+			super(gui, 0, 0, LEFT_PANEL_WIDTH - 4, 12);
 			playerInst = p;
 			setIcon(new PlayerHeadIcon(p.playerName));
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			selectedPlayer = playerInst;
 			buttonTeamTitle.setTitle(selectedPlayer.playerName);
-			scrollText.setValue(gui, 0D);
+			scrollText.setValue(0D);
 			gui.refreshWidgets();
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			int ax = getAX();
 			int ay = getAY();
 
 			//GuiHelper.render(ENTRY_TEX, ax, ay, width, getHeight());
-			GuiHelper.drawBlankRect(ax, ay + height, width + 3, 1, DEFAULT_BACKGROUND.getLineColor());
-			getIcon(gui).draw(ax + 2, ay + 2, 8, 8, Color4I.NONE);
+			getTheme().getContentColor(false).draw(ax, ay + height, width + 3, 1);
+			getIcon().draw(ax + 2, ay + 2, 8, 8);
 			gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
 			GlStateManager.color(1F, 1F, 1F, 1F);
-
-			if (isMouseOver(this))
-			{
-				Button.DEFAULT_MOUSE_OVER.draw(ax, ay, width + 3, height, Color4I.NONE);
-			}
 		}
 	}
 
@@ -115,14 +108,14 @@ public class GuiMyTeam extends GuiBase
 			loadedProfiles.put(p.playerId, p);
 		}
 
-		panelPlayers = new Panel(1, TOP_PANEL_HEIGHT, LEFT_PANEL_WIDTH - 1, 0)
+		panelPlayers = new Panel(this, 1, TOP_PANEL_HEIGHT, LEFT_PANEL_WIDTH - 1, 0)
 		{
 			@Override
 			public void addWidgets()
 			{
 				for (MyTeamPlayerData p : teamInfo.players)
 				{
-					add(new ButtonPlayer(p));
+					add(new ButtonPlayer(gui, p));
 				}
 			}
 
@@ -134,9 +127,9 @@ public class GuiMyTeam extends GuiBase
 			}
 		};
 
-		panelPlayers.addFlags(Panel.FLAG_DEFAULTS);
+		panelPlayers.addFlags(Panel.DEFAULTS);
 
-		panelText = new Panel(LEFT_PANEL_WIDTH + 1, TOP_PANEL_HEIGHT, 0, 0)
+		panelText = new Panel(this, LEFT_PANEL_WIDTH + 1, TOP_PANEL_HEIGHT, 0, 0)
 		{
 			@Override
 			public void addWidgets()
@@ -149,17 +142,17 @@ public class GuiMyTeam extends GuiBase
 				{
 					if (selectedPlayer.playerId.equals(ClientUtils.MC.player.getGameProfile().getId()))
 					{
-						add(new TextField(4, 0, width - 5, -1, "You can't edit yourself!")); //LANG
+						add(new TextField(gui, 4, 0, width - 5, -1, "You can't edit yourself!")); //LANG
 					}
 					else if (selectedPlayer.playerId.equals(teamInfo.owner.playerId))
 					{
-						add(new TextField(4, 0, width - 5, -1, "You can't edit owner!")); //LANG
+						add(new TextField(gui, 4, 0, width - 5, -1, "You can't edit owner!")); //LANG
 					}
 					else
 					{
-						add(new TextField(4, 0, width - 5, -1, "ID: " + StringUtils.fromUUID(selectedPlayer.playerId)));
+						add(new TextField(gui, 4, 0, width - 5, -1, "ID: " + StringUtils.fromUUID(selectedPlayer.playerId)));
 
-						CheckBoxList checkBoxes = new CheckBoxList(4, 1, true);
+						CheckBoxList checkBoxes = new CheckBoxList(gui, 4, 1, true);
 
 						EnumTeamStatus[] VALUES;
 
@@ -187,7 +180,7 @@ public class GuiMyTeam extends GuiBase
 								}
 							};
 
-							checkBoxes.addBox(GuiMyTeam.this, entry);
+							checkBoxes.addBox(entry);
 
 							if (status == selectedPlayer.status)
 							{
@@ -199,10 +192,10 @@ public class GuiMyTeam extends GuiBase
 
 						if (selectedPlayer.status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER))
 						{
-							add(new CentredTextButton(4, 0, 40, 16, "Kick")
+							add(new CentredTextButton(gui, 4, 0, 40, 16, "Kick")
 							{
 								@Override
-								public void onClicked(GuiBase gui, MouseButton button)
+								public void onClicked(MouseButton button)
 								{
 									GuiHelper.playClickSound();
 									ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
@@ -222,7 +215,7 @@ public class GuiMyTeam extends GuiBase
 				}
 				else
 				{
-					add(new TextField(1, 0, width - 5, -1, "You don't have permission to manage players!")); //LANG
+					add(new TextField(gui, 1, 0, width - 5, -1, "You don't have permission to manage players!")); //LANG
 				}
 			}
 
@@ -241,37 +234,37 @@ public class GuiMyTeam extends GuiBase
 			}
 		};
 
-		panelText.addFlags(Panel.FLAG_DEFAULTS);
+		panelText.addFlags(Panel.DEFAULTS);
 
-		buttonTeamsGui = new Button(0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
+		buttonTeamsGui = new Button(this, 0, 0, LEFT_PANEL_WIDTH, TOP_PANEL_HEIGHT)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void onClicked(MouseButton button)
 			{
 				selectedPlayer = null;
 				buttonTeamTitle.setTitle(teamInfo.displayName);
-				scrollText.setValue(gui, 1D);
+				scrollText.setValue(1D);
 				gui.refreshWidgets();
 			}
 
 			@Override
-			public Color4I renderTitleInCenter(GuiBase gui)
+			public Color4I renderTitleInCenter()
 			{
-				return gui.getContentColor();
+				return gui.getTheme().getContentColor(false);
 			}
 		};
 
-		buttonTeamsGui.setTitle("Teams GUI");
+		buttonTeamsGui.setTitle(StringUtils.translate("sidebar_button.ftbl.my_team"));
 
-		buttonTeamTitle = new Button(LEFT_PANEL_WIDTH + 1, 1, 0, TOP_PANEL_HEIGHT - 2)
+		buttonTeamTitle = new Button(this, LEFT_PANEL_WIDTH + 1, 1, 0, TOP_PANEL_HEIGHT - 2)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void onClicked(MouseButton button)
 			{
 			}
 
 			@Override
-			public void addMouseOverText(GuiBase gui, List<String> list)
+			public void addMouseOverText(List<String> list)
 			{
 				if (!teamInfo.description.isEmpty())
 				{
@@ -280,16 +273,16 @@ public class GuiMyTeam extends GuiBase
 			}
 
 			@Override
-			public Color4I renderTitleInCenter(GuiBase gui)
+			public Color4I renderTitleInCenter()
 			{
-				return gui.getContentColor();
+				return gui.getTheme().getContentColor(false);
 			}
 		};
 
-		buttonExitTeam = new Button(1, 0, LEFT_PANEL_WIDTH - 1, BOTTOM_PANEL_HEIGHT - 2)
+		buttonExitTeam = new Button(this, 1, 0, LEFT_PANEL_WIDTH - 1, BOTTOM_PANEL_HEIGHT - 2)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
@@ -307,7 +300,7 @@ public class GuiMyTeam extends GuiBase
 			}
 
 			@Override
-			public Color4I renderTitleInCenter(GuiBase gui)
+			public Color4I renderTitleInCenter()
 			{
 				return EXIT_TEAM_COLOR;
 			}
@@ -315,11 +308,8 @@ public class GuiMyTeam extends GuiBase
 
 		buttonExitTeam.setTitle("Exit Team");
 
-		scrollPlayers = new PanelScrollBar(LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 0, panelPlayers);
-		scrollText = new PanelScrollBar(0, TOP_PANEL_HEIGHT, 3, 0, 0, panelText);
-
-		scrollText.background = scrollPlayers.background = new TexturelessRectangle(0x78666666);
-		scrollText.slider = scrollPlayers.slider = new TexturelessRectangle(0x50FFFFFF);
+		scrollPlayers = new PanelScrollBar(this, LEFT_PANEL_WIDTH - 3, TOP_PANEL_HEIGHT, 3, 0, 0, panelPlayers);
+		scrollText = new PanelScrollBar(this, 0, TOP_PANEL_HEIGHT, 3, 0, 0, panelText);
 
 		topPanelButtons = new ArrayList<>();
 
@@ -327,10 +317,10 @@ public class GuiMyTeam extends GuiBase
 		{
 			Button b;
 
-			b = new Button(0, 2, 16, 16)
+			b = new Button(this, 0, 2, 16, 16)
 			{
 				@Override
-				public void onClicked(GuiBase gui, MouseButton button)
+				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
 					ClientUtils.execClientCommand("/ftb team gui add_player");
@@ -343,10 +333,10 @@ public class GuiMyTeam extends GuiBase
 			b.setIcon(GuiIcons.ADD);
 			topPanelButtons.add(b);
 
-			b = new Button(0, 2, 16, 16)
+			b = new Button(this, 0, 2, 16, 16)
 			{
 				@Override
-				public void onClicked(GuiBase gui, MouseButton button)
+				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
 					ClientUtils.execClientCommand("/ftb team config");
@@ -358,13 +348,13 @@ public class GuiMyTeam extends GuiBase
 			topPanelButtons.add(b);
 		}
 
-		chatBox = new TextBox(LEFT_PANEL_WIDTH, 0, 0, BOTTOM_PANEL_HEIGHT)
+		chatBox = new TextBox(this, LEFT_PANEL_WIDTH, 0, 0, BOTTOM_PANEL_HEIGHT)
 		{
 			@Override
-			public void onEnterPressed(GuiBase gui)
+			public void onEnterPressed()
 			{
 				ClientUtils.execClientCommand("/ftb team msg " + getText());
-				setText(gui, "");
+				setText("");
 				setFocused(true);
 			}
 		};
@@ -372,7 +362,7 @@ public class GuiMyTeam extends GuiBase
 		chatBox.ghostText = TextFormatting.DARK_GRAY.toString() + TextFormatting.ITALIC + "Chat..."; //LANG
 		chatBox.charLimit = 86;
 
-		buttonTeamsGui.onClicked(this, MouseButton.LEFT);
+		buttonTeamsGui.onClicked(MouseButton.LEFT);
 	}
 
 	@Override
@@ -418,7 +408,7 @@ public class GuiMyTeam extends GuiBase
 			add(chatBox);
 		}
 
-		scrollText.onMoved(this);
+		scrollText.onMoved();
 	}
 
 	@Override
@@ -429,43 +419,16 @@ public class GuiMyTeam extends GuiBase
 
 		boolean playerGui = selectedPlayer != null;
 
-		getIcon(this).draw(ax, ay, width, height, Color4I.NONE);
-		GuiHelper.drawBlankRect(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1, getContentColor());
-		GuiHelper.drawBlankRect(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1, getContentColor());
+		getIcon().draw(ax, ay, width, height);
+		getTheme().getContentColor(false).draw(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1);
+		getTheme().getContentColor(false).draw(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1);
 
 		if (!topPanelButtons.isEmpty())
 		{
-			GuiHelper.drawBlankRect(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT, getContentColor());
+			getTheme().getContentColor(false).draw(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT);
 		}
 
-		GuiHelper.drawBlankRect(ax + LEFT_PANEL_WIDTH, ay, 1, height, getContentColor());
-
-		if (!playerGui)
-		{
-			//getFont().drawString(, ax + LEFT_PANEL_WIDTH + 6, ay + height - 14, 0x33FFFFFF);
-		}
-
-		if (isMouseOver(buttonExitTeam))
-		{
-			Button.DEFAULT_MOUSE_OVER.draw(buttonExitTeam, Color4I.NONE);
-		}
-
-		if (isMouseOver(buttonTeamsGui))
-		{
-			Button.DEFAULT_MOUSE_OVER.draw(buttonTeamsGui, Color4I.NONE);
-		}
-	}
-
-	@Override
-	public Icon getIcon(GuiBase gui)
-	{
-		return DEFAULT_BACKGROUND;
-	}
-
-	@Override
-	public Color4I getContentColor()
-	{
-		return DEFAULT_BACKGROUND.getLineColor();
+		getTheme().getContentColor(false).draw(ax + LEFT_PANEL_WIDTH, ay, 1, height);
 	}
 
 	public void loadAllPlayers(Collection<MyTeamPlayerData> players)

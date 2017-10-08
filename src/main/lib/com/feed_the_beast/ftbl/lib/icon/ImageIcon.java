@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.icon;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.common.base.Objects;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -43,7 +42,7 @@ public class ImageIcon extends Icon
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		bindTexture();
-		GuiHelper.drawTexturedRect(x, y, w, h, col.hasColor() ? col : Color4I.WHITE, minU, minV, maxU, maxV);
+		GuiHelper.drawTexturedRect(x, y, w, h, col.whiteIfEmpty(), minU, minV, maxU, maxV);
 	}
 
 	@Override

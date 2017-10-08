@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -41,7 +40,7 @@ public class AtlasSpriteIcon extends Icon
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 		TextureAtlasSprite sprite = SPRITE_MAP.computeIfAbsent(name, ClientUtils.DEFAULT_TEXTURE_GETTER);
-		col = col.hasColor() ? col : Color4I.WHITE;
+		col = col.isEmpty() ? Color4I.WHITE : col;
 		buffer.pos(x, y + h, 0D).tex(sprite.getMinU(), sprite.getMaxV()).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 		buffer.pos(x + w, y + h, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 		buffer.pos(x + w, y, 0D).tex(sprite.getMaxU(), sprite.getMinV()).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();

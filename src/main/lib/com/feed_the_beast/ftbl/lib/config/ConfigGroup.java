@@ -155,7 +155,7 @@ public final class ConfigGroup implements IJsonSerializable
 		{
 			ConfigValueInfo info = new ConfigValueInfo(net.readString());
 			info.readData(net);
-			ConfigValue value = FTBLibAPI.API.getConfigValueFromID(net.readString());
+			ConfigValue value = FTBLibAPI.API.getConfigValueFromId(net.readString());
 			value.readData(net);
 			map.put(info.id, new ConfigValueInstance(info, value));
 		}

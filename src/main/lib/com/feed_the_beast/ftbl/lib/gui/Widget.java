@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -9,15 +9,22 @@ import java.util.List;
 
 public class Widget
 {
-	public int posX, posY, width, height;
-	private Panel parentPanel = PanelNull.INSTANCE;
+	protected static final int DARK = 1;
+	protected static final int SHADOW = 2;
+	protected static final int CENTERED = 4;
 
-	public Widget(int x, int y, int w, int h)
+	public GuiBase gui;
+	public int posX, posY, width, height;
+	private Panel parentPanel;
+
+	public Widget(GuiBase g, int x, int y, int w, int h)
 	{
+		gui = g;
 		posX = x;
 		posY = y;
 		width = Math.max(w, 1);
 		height = Math.max(h, 1);
+		parentPanel = gui;
 	}
 
 	public void setX(int v)
@@ -72,76 +79,78 @@ public class Widget
 		return ax < x + w && ax + height > x;
 	}
 
-	public boolean isEnabled(GuiBase gui)
+	public boolean isEnabled()
 	{
 		return true;
 	}
 
-	public boolean shouldRender(GuiBase gui)
+	public boolean shouldRender()
 	{
 		return true;
 	}
 
-	public Color4I renderTitleInCenter(GuiBase gui)
-	{
-		return Color4I.NONE;
-	}
-
-	public String getTitle(GuiBase gui)
-	{
-		return "";
-	}
-
-	public Icon getIcon(GuiBase gui)
+	public Color4I renderTitleInCenter()
 	{
 		return Icon.EMPTY;
 	}
 
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public String getTitle()
 	{
-		Color4I col = renderTitleInCenter(gui);
+		return "";
+	}
 
-		if (col.hasColor())
+	public Icon getIcon()
+	{
+		return Icon.EMPTY;
+	}
+
+	public void addMouseOverText(List<String> list)
+	{
+		Color4I col = renderTitleInCenter();
+
+		if (!col.isEmpty())
 		{
 			return;
 		}
 
-		String t = getTitle(gui);
+		String title = getTitle();
 
-		if (!t.isEmpty())
+		if (!title.isEmpty())
 		{
-			list.add(t);
+			list.add(title);
 		}
 	}
 
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
-		getIcon(gui).draw(this, Color4I.NONE);
+		Color4I col = renderTitleInCenter();
 
-		Color4I col = renderTitleInCenter(gui);
-
-		if (col.hasColor())
+		if (col.isEmpty())
 		{
-			String t = getTitle(gui);
+			getIcon().draw(this);
+		}
+		else
+		{
+			String title = getTitle();
 
-			if (!t.isEmpty())
+			if (!title.isEmpty())
 			{
-				gui.drawCenteredString(t, getAX() + width / 2, getAY() + height / 2, col);
+				gui.drawString(title, getAX() + width / 2, getAY() + height / 2, col, DARK | CENTERED);
 				GlStateManager.color(1F, 1F, 1F, 1F);
 			}
 		}
 	}
 
-	public boolean mousePressed(GuiBase gui, MouseButton button)
+	public boolean mousePressed(MouseButton button)
 	{
 		return false;
 	}
 
-	public void mouseReleased(GuiBase gui)
+	public void mouseReleased()
 	{
 	}
 
-	public boolean keyPressed(GuiBase gui, int key, char keyChar)
+	public boolean keyPressed(int key, char keyChar)
 	{
 		return false;
 	}

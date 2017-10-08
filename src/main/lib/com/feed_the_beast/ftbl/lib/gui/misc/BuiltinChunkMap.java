@@ -3,10 +3,10 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.relauncher.Side;
@@ -53,7 +53,7 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
 			TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A[33]);
 			GlStateManager.popMatrix();
-			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4, Color4I.NONE);
+			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4);
 			GlStateManager.popMatrix();
 		}
 	}

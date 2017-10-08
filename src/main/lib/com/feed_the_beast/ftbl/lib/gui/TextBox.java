@@ -1,10 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,8 +17,7 @@ public class TextBox extends Widget
 {
 	private boolean isFocused = false;
 	public int charLimit = 250;
-	public Color4I textColor = Color4I.NONE;
-	public Icon background = Icon.EMPTY;
+	public Color4I textColor = Icon.EMPTY;
 
 	public String ghostText = "";
 	private String text = "";
@@ -28,9 +26,9 @@ public class TextBox extends Widget
 	private int selectionEnd;
 	private boolean validText;
 
-	public TextBox(int x, int y, int w, int h)
+	public TextBox(GuiBase gui, int x, int y, int w, int h)
 	{
-		super(x, y, w, h);
+		super(gui, x, y, w, h);
 		text = getText();
 	}
 
@@ -42,6 +40,7 @@ public class TextBox extends Widget
 	public final void setFocused(boolean v)
 	{
 		isFocused = v;
+		validText = isValid(text);
 	}
 
 	public final String getText()
@@ -54,7 +53,7 @@ public class TextBox extends Widget
 		return text.substring(cursorPosition < selectionEnd ? cursorPosition : selectionEnd, cursorPosition < selectionEnd ? selectionEnd : cursorPosition);
 	}
 
-	public final void setText(GuiBase gui, String s, boolean triggerChange)
+	public final void setText(String s, boolean triggerChange)
 	{
 		text = s;
 
@@ -69,29 +68,29 @@ public class TextBox extends Widget
 
 		if (validText && triggerChange)
 		{
-			onTextChanged(gui);
+			onTextChanged();
 		}
 	}
 
-	public final void setText(GuiBase gui, String s)
+	public final void setText(String s)
 	{
-		setText(gui, s, true);
+		setText(s, true);
 	}
 
-	public void setCursorPosition(GuiBase gui, int pos)
+	public void setCursorPosition(int pos)
 	{
 		cursorPosition = pos;
 		int i = text.length();
 		cursorPosition = MathHelper.clamp(cursorPosition, 0, i);
-		setSelectionPos(gui, cursorPosition);
+		setSelectionPos(cursorPosition);
 	}
 
-	public void moveCursorBy(GuiBase gui, int num)
+	public void moveCursorBy(int num)
 	{
-		setCursorPosition(gui, selectionEnd + num);
+		setCursorPosition(selectionEnd + num);
 	}
 
-	public void writeText(GuiBase gui, String textToWrite)
+	public void writeText(String textToWrite)
 	{
 		String s = "";
 		String s1 = ChatAllowedCharacters.filterAllowedCharacters(textToWrite);
@@ -122,11 +121,11 @@ public class TextBox extends Widget
 			s = s + text.substring(j);
 		}
 
-		setText(gui, s);
-		moveCursorBy(gui, i - selectionEnd + l);
+		setText(s);
+		moveCursorBy(i - selectionEnd + l);
 	}
 
-	public void setSelectionPos(GuiBase gui, int position)
+	public void setSelectionPos(int position)
 	{
 		int i = text.length();
 
@@ -148,12 +147,12 @@ public class TextBox extends Widget
 		}
 
 		int j = width - 10;
-		String s = gui.getFont().trimStringToWidth(text.substring(lineScrollOffset), j);
+		String s = gui.trimStringToWidth(text.substring(lineScrollOffset), j, false);
 		int k = s.length() + lineScrollOffset;
 
 		if (position == lineScrollOffset)
 		{
-			lineScrollOffset -= gui.getFont().trimStringToWidth(text, j, true).length();
+			lineScrollOffset -= gui.trimStringToWidth(text, j, true).length();
 		}
 
 		if (position > k)
@@ -220,22 +219,22 @@ public class TextBox extends Widget
 		return i;
 	}
 
-	public void deleteWords(GuiBase gui, int num)
+	public void deleteWords(int num)
 	{
 		if (!text.isEmpty())
 		{
 			if (selectionEnd != cursorPosition)
 			{
-				writeText(gui, "");
+				writeText("");
 			}
 			else
 			{
-				deleteFromCursor(gui, getNthWordFromCursor(num) - cursorPosition);
+				deleteFromCursor(getNthWordFromCursor(num) - cursorPosition);
 			}
 		}
 	}
 
-	public void deleteFromCursor(GuiBase gui, int num)
+	public void deleteFromCursor(int num)
 	{
 		if (text.isEmpty())
 		{
@@ -244,7 +243,7 @@ public class TextBox extends Widget
 
 		if (selectionEnd != cursorPosition)
 		{
-			writeText(gui, "");
+			writeText("");
 		}
 		else
 		{
@@ -263,17 +262,17 @@ public class TextBox extends Widget
 				s = s + text.substring(j);
 			}
 
-			setText(gui, s);
+			setText(s);
 
 			if (flag)
 			{
-				moveCursorBy(gui, num);
+				moveCursorBy(num);
 			}
 		}
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, MouseButton button)
+	public boolean mousePressed(MouseButton button)
 	{
 		if (gui.isMouseOver(this))
 		{
@@ -285,13 +284,13 @@ public class TextBox extends Widget
 				if (isFocused)
 				{
 					int i = gui.getMouseX() - getAX();
-					String s = gui.getFont().trimStringToWidth(text.substring(lineScrollOffset), width);
-					setCursorPosition(gui, gui.getFont().trimStringToWidth(s, i).length() + lineScrollOffset);
+					String s = gui.trimStringToWidth(text.substring(lineScrollOffset), width, false);
+					setCursorPosition(gui.trimStringToWidth(s, i, false).length() + lineScrollOffset);
 				}
 			}
 			else if (getText().length() > 0)
 			{
-				setText(gui, "");
+				setText("");
 			}
 
 			return true;
@@ -306,7 +305,7 @@ public class TextBox extends Widget
 	}
 
 	@Override
-	public boolean keyPressed(GuiBase gui, int keyCode, char keyChar)
+	public boolean keyPressed(int keyCode, char keyChar)
 	{
 		if (!isFocused())
 		{
@@ -314,8 +313,8 @@ public class TextBox extends Widget
 		}
 		else if (GuiScreen.isKeyComboCtrlA(keyCode))
 		{
-			setCursorPosition(gui, text.length());
-			setSelectionPos(gui, 0);
+			setCursorPosition(text.length());
+			setSelectionPos(0);
 			return true;
 		}
 		else if (GuiScreen.isKeyComboCtrlC(keyCode))
@@ -325,13 +324,13 @@ public class TextBox extends Widget
 		}
 		else if (GuiScreen.isKeyComboCtrlV(keyCode))
 		{
-			writeText(gui, GuiScreen.getClipboardString());
+			writeText(GuiScreen.getClipboardString());
 			return true;
 		}
 		else if (GuiScreen.isKeyComboCtrlX(keyCode))
 		{
 			GuiScreen.setClipboardString(getSelectedText());
-			writeText(gui, "");
+			writeText("");
 			return true;
 		}
 		else
@@ -341,21 +340,21 @@ public class TextBox extends Widget
 				case Keyboard.KEY_BACK:
 					if (GuiScreen.isCtrlKeyDown())
 					{
-						deleteWords(gui, -1);
+						deleteWords(-1);
 					}
 					else
 					{
-						deleteFromCursor(gui, -1);
+						deleteFromCursor(-1);
 					}
 					return true;
 				case Keyboard.KEY_HOME:
 					if (GuiScreen.isShiftKeyDown())
 					{
-						setSelectionPos(gui, 0);
+						setSelectionPos(0);
 					}
 					else
 					{
-						setCursorPosition(gui, 0);
+						setCursorPosition(0);
 					}
 					return true;
 				case Keyboard.KEY_LEFT:
@@ -363,20 +362,20 @@ public class TextBox extends Widget
 					{
 						if (GuiScreen.isCtrlKeyDown())
 						{
-							setSelectionPos(gui, getNthWordFromPos(-1, selectionEnd));
+							setSelectionPos(getNthWordFromPos(-1, selectionEnd));
 						}
 						else
 						{
-							setSelectionPos(gui, selectionEnd - 1);
+							setSelectionPos(selectionEnd - 1);
 						}
 					}
 					else if (GuiScreen.isCtrlKeyDown())
 					{
-						setCursorPosition(gui, getNthWordFromCursor(-1));
+						setCursorPosition(getNthWordFromCursor(-1));
 					}
 					else
 					{
-						moveCursorBy(gui, -1);
+						moveCursorBy(-1);
 					}
 					return true;
 				case Keyboard.KEY_RIGHT:
@@ -384,60 +383,60 @@ public class TextBox extends Widget
 					{
 						if (GuiScreen.isCtrlKeyDown())
 						{
-							setSelectionPos(gui, getNthWordFromPos(1, selectionEnd));
+							setSelectionPos(getNthWordFromPos(1, selectionEnd));
 						}
 						else
 						{
-							setSelectionPos(gui, selectionEnd + 1);
+							setSelectionPos(selectionEnd + 1);
 						}
 					}
 					else if (GuiScreen.isCtrlKeyDown())
 					{
-						setCursorPosition(gui, getNthWordFromCursor(1));
+						setCursorPosition(getNthWordFromCursor(1));
 					}
 					else
 					{
-						moveCursorBy(gui, 1);
+						moveCursorBy(1);
 					}
 					return true;
 				case Keyboard.KEY_END:
 					if (GuiScreen.isShiftKeyDown())
 					{
-						setSelectionPos(gui, text.length());
+						setSelectionPos(text.length());
 					}
 					else
 					{
-						setCursorPosition(gui, text.length());
+						setCursorPosition(text.length());
 					}
 					return true;
 				case Keyboard.KEY_DELETE:
 					if (GuiScreen.isCtrlKeyDown())
 					{
-						deleteWords(gui, 1);
+						deleteWords(1);
 					}
 					else
 					{
-						deleteFromCursor(gui, 1);
+						deleteFromCursor(1);
 					}
 					return true;
 				case Keyboard.KEY_RETURN:
 					if (validText)
 					{
 						setFocused(false);
-						onEnterPressed(gui);
+						onEnterPressed();
 					}
 					return true;
 				case Keyboard.KEY_TAB:
 					if (validText)
 					{
 						setFocused(false);
-						onTabPressed(gui);
+						onTabPressed();
 					}
 					return true;
 				default:
 					if (ChatAllowedCharacters.isAllowedCharacter(keyChar))
 					{
-						writeText(gui, Character.toString(keyChar));
+						writeText(Character.toString(keyChar));
 						return true;
 					}
 					else
@@ -448,34 +447,33 @@ public class TextBox extends Widget
 		}
 	}
 
-	public void onTextChanged(GuiBase gui)
+	public void onTextChanged()
 	{
 	}
 
-	public void onTabPressed(GuiBase gui)
+	public void onTabPressed()
 	{
 	}
 
-	public void onEnterPressed(GuiBase gui)
+	public void onEnterPressed()
 	{
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
-		background.draw(this, Color4I.NONE);
+		getIcon().draw(this);
 
 		String textToDraw = (!isFocused() && text.isEmpty()) ? ghostText : text;
 
-		FontRenderer font = gui.getFont();
 		int ax = getAX();
 		int ay = getAY();
 		GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
 
-		Color4I col = validText ? (textColor.hasColor() ? textColor : gui.getContentColor()) : Color4I.RED;
+		Color4I col = validText ? (textColor.isEmpty() ? gui.getTheme().getContentColor(false) : textColor) : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
-		String s = font.trimStringToWidth(textToDraw.substring(lineScrollOffset), width);
+		String s = gui.trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);
 		boolean flag = j >= 0 && j <= s.length();
 		boolean flag1 = isFocused() && flag && (Minecraft.getSystemTime() % 1000L > 500L);
 		int textX = ax + 4;
@@ -490,7 +488,7 @@ public class TextBox extends Widget
 		if (!s.isEmpty())
 		{
 			String s1 = flag ? s.substring(0, j) : s;
-			textX1 = font.drawString(s1, textX, textY, col.rgba());
+			textX1 = gui.drawString(s1, textX, textY, col, 0);
 		}
 
 		boolean drawCursor = cursorPosition < textToDraw.length() || textToDraw.length() >= charLimit;
@@ -508,26 +506,26 @@ public class TextBox extends Widget
 
 		if (!s.isEmpty() && flag && j < s.length())
 		{
-			font.drawString(s.substring(j), textX1, textY, col.rgba());
+			gui.drawString(s.substring(j), textX1, textY, col, 0);
 		}
 
 		if (flag1)
 		{
 			if (drawCursor)
 			{
-				GuiHelper.drawBlankRect(cursorX, textY - 1, 1, font.FONT_HEIGHT + 2, col);
+				col.draw(cursorX, textY - 1, 1, gui.getFontHeight() + 2);
 			}
 			else
 			{
-				GuiHelper.drawBlankRect(cursorX, textY + font.FONT_HEIGHT - 2, 5, 1, col);
+				col.draw(cursorX, textY + gui.getFontHeight() - 2, 5, 1);
 			}
 		}
 
 		if (k != j)
 		{
-			int l1 = textX + font.getStringWidth(s.substring(0, k));
+			int l1 = textX + gui.getStringWidth(s.substring(0, k));
 
-			int startX = cursorX, startY = textY - 1, endX = l1 - 1, endY = textY + 1 + font.FONT_HEIGHT;
+			int startX = cursorX, startY = textY - 1, endX = l1 - 1, endY = textY + 1 + gui.getFontHeight();
 
 			if (startX < endX)
 			{
@@ -571,6 +569,12 @@ public class TextBox extends Widget
 
 		GuiHelper.popScissor();
 		GlStateManager.color(1F, 1F, 1F, 1F);
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return gui.getTheme().getTextBox();
 	}
 
 	public boolean isValid(String txt)

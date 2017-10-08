@@ -156,7 +156,7 @@ public class FTBLibModCommon
 		new RegisterSyncDataEvent(SYNCED_DATA::put).post();
 		new RegisterRankConfigEvent((id, defPlayer, defOP) ->
 		{
-			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate RankConfigKey ID found: " + id);
+			Preconditions.checkArgument(!RANK_CONFIGS.containsKey(id), "Duplicate rank config ID found: " + id);
 			RankConfigValueInfo c = new RankConfigValueInfo(id, defPlayer, defOP);
 			RANK_CONFIGS.put(c.id, c);
 			return c;

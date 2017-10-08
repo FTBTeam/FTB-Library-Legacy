@@ -1,6 +1,9 @@
 package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.gui.Theme;
+import com.feed_the_beast.ftbl.lib.gui.misc.ThemeGlass;
+import com.feed_the_beast.ftbl.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -16,6 +19,12 @@ import net.minecraftforge.fml.relauncher.Side;
 @Config(modid = FTBLibFinals.MOD_ID + "_client", category = "config", name = "../local/client/ftblib")
 public class FTBLibClientConfig
 {
+	public enum EnumTheme
+	{
+		VANILLA,
+		GLASS
+	}
+
 	@Config.LangKey(GuiLang.LANG_GENERAL)
 	public static final General general = new General();
 
@@ -33,13 +42,24 @@ public class FTBLibClientConfig
 		})
 		public EnumSidebarButtonPlacement action_buttons = EnumSidebarButtonPlacement.AUTO;
 
-		public boolean replace_vanilla_status_messages = true;
 		public boolean mirror_commands = true;
+		public boolean replace_vanilla_status_messages = true;
+
+		public EnumTheme theme = EnumTheme.VANILLA;
 	}
 
 	public static void sync()
 	{
 		ConfigManager.sync(FTBLibFinals.MOD_ID + "_client", Config.Type.INSTANCE);
+
+		switch (general.theme)
+		{
+			case GLASS:
+				Theme.CURRENT = ThemeGlass.INSTANCE;
+				break;
+			default:
+				Theme.CURRENT = ThemeVanilla.INSTANCE;
+		}
 	}
 
 	@SubscribeEvent

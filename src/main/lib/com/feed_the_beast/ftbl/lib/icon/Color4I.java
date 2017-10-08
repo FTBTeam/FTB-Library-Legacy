@@ -1,39 +1,34 @@
-package com.feed_the_beast.ftbl.lib.util.misc;
+package com.feed_the_beast.ftbl.lib.icon;
 
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
  */
-public class Color4I
+public class Color4I extends Icon
 {
-	public static final Color4I NONE = new Color4I(255, 255, 255, 255)
-	{
-		@Override
-		public boolean hasColor()
-		{
-			return false;
-		}
-
-		@Override
-		public MutableColor4I mutable()
-		{
-			return new MutableColor4I.None();
-		}
-	};
+	public static final Object EMPTY = new Object();
 
 	public static Color4I fromJson(@Nullable JsonElement element)
 	{
 		if (element == null || element.isJsonNull())
 		{
-			return NONE;
+			return Icon.EMPTY;
 		}
 		else if (element.isJsonPrimitive())
 		{
@@ -41,7 +36,7 @@ public class Color4I
 
 			if (s.equals("-"))
 			{
-				return NONE;
+				return Icon.EMPTY;
 			}
 			else
 			{
@@ -86,7 +81,7 @@ public class Color4I
 			return rgba(r, g, b, a);
 		}
 
-		return NONE;
+		return Icon.EMPTY;
 	}
 
 	public static Color4I rgba(int r, int g, int b, int a)
@@ -136,6 +131,7 @@ public class Color4I
 
 	Color4I(int r, int g, int b, int a)
 	{
+		super();
 		red = r;
 		green = g;
 		blue = b;
@@ -156,6 +152,11 @@ public class Color4I
 	public MutableColor4I mutable()
 	{
 		return new MutableColor4I(red, green, blue, alpha);
+	}
+
+	public Color4I whiteIfEmpty()
+	{
+		return isEmpty() ? WHITE : this;
 	}
 
 	public int redi()
@@ -203,11 +204,6 @@ public class Color4I
 		return rgba;
 	}
 
-	public boolean hasColor()
-	{
-		return true;
-	}
-
 	public int hashCode()
 	{
 		return rgba();
@@ -223,8 +219,36 @@ public class Color4I
 		return ColorUtils.getHex(rgba());
 	}
 
-	public JsonElement toJson()
+	@Override
+	public JsonElement getJson()
 	{
-		return hasColor() ? new JsonPrimitive(toString()) : JsonNull.INSTANCE;
+		return isEmpty() ? JsonNull.INSTANCE : new JsonPrimitive(toString());
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void draw(int x, int y, int w, int h, Color4I col)
+	{
+		if (w <= 0 || h <= 0)
+		{
+			return;
+		}
+		else if (col.isEmpty())
+		{
+			col = this;
+		}
+
+		if (col.isEmpty())
+		{
+			return;
+		}
+
+		GlStateManager.disableTexture2D();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		GuiHelper.addRectToBuffer(buffer, x, y, w, h, col);
+		tessellator.draw();
+		GlStateManager.enableTexture2D();
 	}
 }

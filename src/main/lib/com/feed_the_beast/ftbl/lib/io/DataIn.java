@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.io;
 
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -348,9 +348,9 @@ public class DataIn
 		return id == 0 ? Blocks.AIR.getDefaultState() : Block.getStateById(id);
 	}
 
-	public Color4I readColor()
+	public Icon readIcon()
 	{
-		return Color4I.fromJson(readJson());
+		return Icon.getIcon(readJson());
 	}
 
 	public <E> E read(Deserializer<E> deserializer)

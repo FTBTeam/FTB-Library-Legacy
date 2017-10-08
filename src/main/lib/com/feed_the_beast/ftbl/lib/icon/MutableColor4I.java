@@ -1,6 +1,9 @@
-package com.feed_the_beast.ftbl.lib.util.misc;
+package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -20,16 +23,16 @@ public class MutableColor4I extends Color4I
 		}
 
 		@Override
-		public void set(int r, int g, int b, int a)
+		public Color4I set(int r, int g, int b, int a)
 		{
 			hasColor = true;
-			super.set(r, g, b, a);
+			return super.set(r, g, b, a);
 		}
 
 		@Override
-		public boolean hasColor()
+		public boolean isEmpty()
 		{
-			return hasColor;
+			return !hasColor;
 		}
 	}
 
@@ -56,43 +59,67 @@ public class MutableColor4I extends Color4I
 		return this;
 	}
 
-	public void set(int r, int g, int b, int a)
+	@Override
+	public JsonElement getJson()
+	{
+		if (isEmpty())
+		{
+			return JsonNull.INSTANCE;
+		}
+
+		JsonObject json = new JsonObject();
+		json.addProperty("red", red);
+		json.addProperty("green", green);
+		json.addProperty("blue", blue);
+
+		if (alpha != 255)
+		{
+			json.addProperty("alpha", alpha);
+		}
+
+		json.addProperty("mutable", true);
+		return json;
+	}
+
+	public Color4I set(int r, int g, int b, int a)
 	{
 		red = r;
 		green = g;
 		blue = b;
 		alpha = a;
 		rgba = ColorUtils.getRGBA(red, green, blue, alpha);
+		return this;
 	}
 
-	public void set(Color4I col, int a)
+	public Color4I set(Color4I col, int a)
 	{
-		set(col.red, col.green, col.blue, a);
+		return set(col.red, col.green, col.blue, a);
 	}
 
-	public void set(Color4I col)
+	public Color4I set(Color4I col)
 	{
-		set(col, col.alpha);
+		return set(col, col.alpha);
 	}
 
-	public void set(int col, int a)
+	public Color4I set(int col, int a)
 	{
-		set(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col), a);
+		return set(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col), a);
 	}
 
-	public void set(int col)
+	public Color4I set(int col)
 	{
-		set(col, ColorUtils.getAlpha(col));
+		return set(col, ColorUtils.getAlpha(col));
 	}
 
-	public void setAlpha(int a)
+	public Color4I setAlpha(int a)
 	{
 		alpha = a;
+		return this;
 	}
 
-	public void addBrightness(int b)
+	public Color4I addBrightness(int b)
 	{
-		set(MathHelper.clamp(red + b, 0, 255), MathHelper.clamp(green + b, 0, 255), MathHelper.clamp(blue + b, 0, 255), alpha);
+		return set(MathHelper.clamp(red + b, 0, 255), MathHelper.clamp(green + b, 0, 255), MathHelper.clamp(blue + b, 0, 255), alpha);
 	}
 
 	private static int toint(float f)
@@ -100,13 +127,23 @@ public class MutableColor4I extends Color4I
 		return (int) (f * 255F + 0.5F);
 	}
 
-	public void setFromHSB(float h, float s, float b)
+	public Color4I setFromHSB(float h, float s, float b)
 	{
 		red = green = blue = 0;
-		if (s == 0)
+		if (s <= 0 || b <= 0)
 		{
 			red = green = blue = toint(b);
-			return;
+			return this;
+		}
+
+		if (s > 1F)
+		{
+			s = 1F;
+		}
+
+		if (b > 1F)
+		{
+			b = 1F;
 		}
 
 		float h6 = (h - MathHelper.floor(h)) * 6F;
@@ -120,32 +157,32 @@ public class MutableColor4I extends Color4I
 				red = toint(b);
 				green = toint(t);
 				blue = toint(p);
-				break;
+				return this;
 			case 1:
 				red = toint(q);
 				green = toint(b);
 				blue = toint(p);
-				break;
+				return this;
 			case 2:
 				red = toint(p);
 				green = toint(b);
 				blue = toint(t);
-				break;
+				return this;
 			case 3:
 				red = toint(p);
 				green = toint(q);
 				blue = toint(b);
-				break;
+				return this;
 			case 4:
 				red = toint(t);
 				green = toint(p);
 				blue = toint(b);
-				break;
-			case 5:
+				return this;
+			default:
 				red = toint(b);
 				green = toint(p);
 				blue = toint(q);
-				break;
+				return this;
 		}
 	}
 }

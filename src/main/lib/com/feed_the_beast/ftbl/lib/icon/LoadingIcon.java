@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.icon;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,6 +24,7 @@ public class LoadingIcon extends Icon
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		long t = System.currentTimeMillis() % 3600L;
+		col = col.whiteIfEmpty();
 		ClientUtils.MC.getTextureManager().bindTexture(TEXTURE);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x + w / 2D, y + h / 2D, 0D);

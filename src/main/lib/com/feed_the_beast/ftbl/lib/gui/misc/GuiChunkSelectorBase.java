@@ -7,8 +7,9 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -55,53 +56,55 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 	}
 
-	public class MapButton extends Button
+	public static class MapButton extends Button
 	{
+		public final GuiChunkSelectorBase gui;
 		public final ChunkPos chunkPos;
 		public final int index;
 		private boolean isSelected = false;
 
-		private MapButton(int x, int y, int i)
+		private MapButton(GuiChunkSelectorBase g, int x, int y, int i)
 		{
-			super(x, y, TILE_SIZE, TILE_SIZE);
+			super(g, x, y, TILE_SIZE, TILE_SIZE);
+			gui = g;
 			posX += (i % ChunkSelectorMap.TILES_GUI) * width;
 			posY += (i / ChunkSelectorMap.TILES_GUI) * height;
-			chunkPos = new ChunkPos(startX + (i % ChunkSelectorMap.TILES_GUI), startZ + (i / ChunkSelectorMap.TILES_GUI));
+			chunkPos = new ChunkPos(gui.startX + (i % ChunkSelectorMap.TILES_GUI), gui.startZ + (i / ChunkSelectorMap.TILES_GUI));
 			index = i;
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			currentSelectionMode = getSelectionMode(button);
+			gui.currentSelectionMode = gui.getSelectionMode(button);
 
-			if (currentSelectionMode == -1)
+			if (gui.currentSelectionMode == -1)
 			{
-				onChunksSelected(Collections.singleton(chunkPos));
+				gui.onChunksSelected(Collections.singleton(chunkPos));
 			}
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
-			addButtonText(this, list);
+			gui.addButtonText(this, list);
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			int ax = getAX();
 			int ay = getAY();
 
-			if (!isSelected && currentSelectionMode != -1 && isMouseOver(this))
+			if (!isSelected && gui.currentSelectionMode != -1 && gui.isMouseOver(this))
 			{
 				isSelected = true;
 			}
 
 			if (isSelected || gui.isMouseOver(this))
 			{
-				GuiHelper.drawBlankRect(ax, ay, TILE_SIZE, TILE_SIZE, Color4I.WHITE_A[33]);
+				Color4I.WHITE_A[33].draw(ax, ay, TILE_SIZE, TILE_SIZE);
 			}
 		}
 	}
@@ -118,7 +121,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
 		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
 
-		panelButtons = new Panel(0, 0, 16, 0)
+		panelButtons = new Panel(this, 0, 0, 16, 0)
 		{
 			@Override
 			public void addWidgets()
@@ -138,7 +141,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < mapButtons.length; i++)
 		{
-			mapButtons[i] = new MapButton(0, 0, i);
+			mapButtons[i] = new MapButton(this, 0, 0, i);
 		}
 	}
 
@@ -166,7 +169,7 @@ public class GuiChunkSelectorBase extends GuiBase
 	public void drawBackground()
 	{
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		GuiHelper.drawBlankRect(posX - 2, posY - 2, width + 4, height + 4, Color4I.BLACK);
+		Color4I.BLACK.draw(posX - 2, posY - 2, width + 4, height + 4);
 
 		ChunkSelectorMap.getMap().drawMap(this, posX, posY, startX, startZ);
 
@@ -174,7 +177,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (MapButton mapButton : mapButtons)
 		{
-			mapButton.renderWidget(this);
+			mapButton.renderWidget();
 		}
 
 		GlStateManager.disableTexture2D();
@@ -198,9 +201,9 @@ public class GuiChunkSelectorBase extends GuiBase
 	}
 
 	@Override
-	public void mouseReleased(GuiBase gui)
+	public void mouseReleased()
 	{
-		super.mouseReleased(gui);
+		super.mouseReleased();
 
 		if (currentSelectionMode != -1)
 		{
@@ -223,13 +226,13 @@ public class GuiChunkSelectorBase extends GuiBase
 	@Override
 	public void drawForeground()
 	{
-		int lineSpacing = getFont().FONT_HEIGHT + 1;
+		int lineSpacing = getFontHeight() + 1;
 		addCornerText(TEMP_TEXT_LIST, Corner.BOTTOM_RIGHT);
 
 		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
 		{
 			String s = TEMP_TEXT_LIST.get(i);
-			getFont().drawStringWithShadow(s, getScreen().getScaledWidth() - getFont().getStringWidth(s) - 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, 0xFFFFFFFF);
+			drawString(s, getScreen().getScaledWidth() - getStringWidth(s) - 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, SHADOW);
 		}
 
 		TEMP_TEXT_LIST.clear();
@@ -238,7 +241,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
 		{
-			getFont().drawStringWithShadow(TEMP_TEXT_LIST.get(i), 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, 0xFFFFFFFF);
+			drawString(TEMP_TEXT_LIST.get(i), 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, SHADOW);
 		}
 
 		TEMP_TEXT_LIST.clear();
@@ -247,7 +250,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
 		{
-			getFont().drawStringWithShadow(TEMP_TEXT_LIST.get(i), 2, 2 + i * lineSpacing, 0xFFFFFFFF);
+			drawString(TEMP_TEXT_LIST.get(i), 2, 2 + i * lineSpacing, SHADOW);
 		}
 
 		TEMP_TEXT_LIST.clear();
@@ -278,5 +281,11 @@ public class GuiChunkSelectorBase extends GuiBase
 
 	public void addButtonText(MapButton button, List<String> list)
 	{
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return Icon.EMPTY;
 	}
 }

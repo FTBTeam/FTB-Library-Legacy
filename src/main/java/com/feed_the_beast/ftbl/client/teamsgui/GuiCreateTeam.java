@@ -7,11 +7,10 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.util.text.TextFormatting;
 
@@ -34,10 +33,10 @@ public class GuiCreateTeam extends GuiBase
 		color = EnumTeamColor.NAME_MAP.getRandom(MathUtils.RAND);
 
 		int bwidth = width / 2 - 6;
-		buttonAccept = new Button(width - bwidth - 4, height - 20, bwidth, 16)
+		buttonAccept = new Button(this, width - bwidth - 4, height - 20, bwidth, 16)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
 
@@ -49,45 +48,42 @@ public class GuiCreateTeam extends GuiBase
 			}
 
 			@Override
-			public Color4I renderTitleInCenter(GuiBase gui)
+			public Color4I renderTitleInCenter()
 			{
-				return gui.getContentColor();
+				return gui.getTheme().getContentColor(false);
 			}
 		};
 
 		buttonAccept.setTitle(GuiLang.ACCEPT.translate());
-		buttonAccept.setIcon(Button.DEFAULT_BACKGROUND);
 
-		buttonCancel = new Button(4, height - 20, bwidth, 16)
+		buttonCancel = new Button(this, 4, height - 20, bwidth, 16)
 		{
 			@Override
-			public void onClicked(GuiBase gui, MouseButton button)
+			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
 				gui.closeGui();
 			}
 
 			@Override
-			public Color4I renderTitleInCenter(GuiBase gui)
+			public Color4I renderTitleInCenter()
 			{
-				return gui.getContentColor();
+				return gui.getTheme().getContentColor(false);
 			}
 		};
 
 		buttonCancel.setTitle(GuiLang.CANCEL.translate());
-		buttonCancel.setIcon(Button.DEFAULT_BACKGROUND);
 
-		textBoxId = new TextBox(4, 4, width - 8, 16)
+		textBoxId = new TextBox(this, 4, 4, width - 8, 16)
 		{
 			@Override
-			public void onTextChanged(GuiBase gui)
+			public void onTextChanged()
 			{
-				setText(gui, StringUtils.getId(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
+				setText(StringUtils.getId(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
 			}
 		};
 
-		textBoxId.writeText(this, ClientUtils.MC.player.getGameProfile().getName().toLowerCase());
-		textBoxId.background = Button.DEFAULT_BACKGROUND;
+		textBoxId.writeText(ClientUtils.MC.player.getGameProfile().getName().toLowerCase());
 		textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
 		textBoxId.textColor = color.getColor();
 		textBoxId.setFocused(true);
@@ -98,17 +94,22 @@ public class GuiCreateTeam extends GuiBase
 
 		for (EnumTeamColor col : EnumTeamColor.NAME_MAP)
 		{
-			Button b = new Button(4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
+			Button b = new Button(this, 4 + (i % 5) * 30, 24 + (i / 5) * 30, 25, 25)
 			{
 				@Override
-				public void onClicked(GuiBase gui, MouseButton button)
+				public void onClicked(MouseButton button)
 				{
 					color = col;
 					textBoxId.textColor = color.getColor();
 				}
+
+				@Override
+				public Icon getIcon()
+				{
+					return getTheme().getGui(gui.isMouseOver(this));
+				}
 			};
 
-			b.setIcon(new TexturelessRectangle(col.getColor()).setLineColor(DEFAULT_BACKGROUND.getLineColor()).setRoundEdges(true));
 			b.setTitle(col.getTextFormatting() + col.getLangKey().translate());
 			colorButtons.add(b);
 			i++;
@@ -122,11 +123,5 @@ public class GuiCreateTeam extends GuiBase
 		add(buttonCancel);
 		addAll(colorButtons);
 		add(textBoxId);
-	}
-
-	@Override
-	public Icon getIcon(GuiBase gui)
-	{
-		return DEFAULT_BACKGROUND;
 	}
 }

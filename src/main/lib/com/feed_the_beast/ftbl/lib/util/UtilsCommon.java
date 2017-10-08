@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.SidedProxy;

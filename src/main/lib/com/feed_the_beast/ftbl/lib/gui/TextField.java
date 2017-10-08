@@ -17,9 +17,19 @@ public class TextField extends Button
 {
 	public List<String> text = Collections.emptyList();
 
-	public TextField(int x, int y, int w, int h, String txt)
+	public TextField(GuiBase gui, int x, int y, int w, int h, String txt)
 	{
-		super(x, y, w, h, txt);
+		super(gui, x, y, w, h, txt);
+	}
+
+	public TextField(GuiBase gui, int x, int y, int w, int h, LangKey key)
+	{
+		this(gui, x, y, w, h, key.translate());
+	}
+
+	public TextField(GuiBase gui, int x, int y, int w, int h, ITextComponent component)
+	{
+		this(gui, x, y, w, h, component.getFormattedText());
 	}
 
 	@Override
@@ -53,28 +63,18 @@ public class TextField extends Button
 		return this;
 	}
 
-	public TextField(int x, int y, int w, int h, LangKey key)
-	{
-		this(x, y, w, h, key.translate());
-	}
-
-	public TextField(int x, int y, int w, int h, ITextComponent component)
-	{
-		this(x, y, w, h, component.getFormattedText());
-	}
-
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public void addMouseOverText(List<String> list)
 	{
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, MouseButton button)
+	public void onClicked(MouseButton button)
 	{
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
 		if (text.isEmpty())
 		{

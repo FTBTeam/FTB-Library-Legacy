@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
+import com.feed_the_beast.ftbl.lib.util.misc.Pushable;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.ClickEvent;
@@ -32,18 +34,74 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
  */
 public class GuiHelper
 {
-	private final static int MAX_SCISSOR = 16;
-	private static final int SCISSOR_X[] = new int[MAX_SCISSOR];
-	private static final int SCISSOR_Y[] = new int[MAX_SCISSOR];
-	private static final int SCISSOR_W[] = new int[MAX_SCISSOR];
-	private static final int SCISSOR_H[] = new int[MAX_SCISSOR];
-	private static int scissorIndex = -1;
+	private static class Scissor
+	{
+		private final ScaledResolution screen;
+		private final int x, y, w, h;
+
+		private Scissor(@Nullable ScaledResolution s, int _x, int _y, int _w, int _h)
+		{
+			screen = s;
+			x = _x;
+			y = _y;
+			w = Math.max(0, _w);
+			h = Math.max(0, _h);
+		}
+
+		public boolean valid()
+		{
+			return w > 0 && h > 0;
+		}
+
+		public int hashCode()
+		{
+			return Objects.hash(x, y, w, h);
+		}
+
+		public boolean equals(Object o)
+		{
+			if (o == this)
+			{
+				return true;
+			}
+			else if (o != null && o.getClass() == Scissor.class)
+			{
+				Scissor s = (Scissor) o;
+				return x == s.x && y == s.y && w == s.w && h == s.h;
+			}
+
+			return false;
+		}
+
+		public Scissor crop(Scissor s)
+		{
+			int x0 = Math.max(x, s.x);
+			int y0 = Math.max(y, s.y);
+			int x1 = Math.min(x + w, s.x + s.w);
+			int y1 = Math.min(y + h, s.y + s.h);
+			return new Scissor(screen, x0, y0, x1 - x0, y1 - y0);
+		}
+	}
+
+	private static final Pushable<Scissor> SCISSOR = new Pushable<>(new Scissor(null, 0, 0, 0, 0), value ->
+	{
+		if (value.screen != null)
+		{
+			int scale = value.screen.getScaleFactor();
+			int sx = value.x * scale;
+			int sy = ClientUtils.MC.displayHeight - (value.y + value.h) * scale;
+			int sw = Math.max(0, value.w) * scale;
+			int sh = Math.max(0, value.h) * scale;
+			GL11.glScissor(sx, sy, sw, sh);
+		}
+	});
 
 	public static int getGuiWidth(GuiContainer gui)
 	{
@@ -65,13 +123,23 @@ public class GuiHelper
 		return gui.guiTop;
 	}
 
+	public static void playSound(SoundEvent event, float pitch)
+	{
+		ClientUtils.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(event, pitch));
+	}
+
 	public static void playClickSound()
 	{
-		ClientUtils.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+		playSound(SoundEvents.UI_BUTTON_CLICK, 1F);
 	}
 
 	public static void drawTexturedRect(int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
 	{
+		if (col.isEmpty())
+		{
+			col = Color4I.WHITE;
+		}
+
 		if (u0 == u1 || v0 == v1)
 		{
 			Tessellator tessellator = Tessellator.getInstance();
@@ -88,22 +156,6 @@ public class GuiHelper
 			addRectToBufferWithUV(buffer, x, y, w, h, col, u0, v0, u1, v1);
 			tessellator.draw();
 		}
-	}
-
-	public static void drawBlankRect(int x, int y, int w, int h, Color4I col)
-	{
-		if (w <= 0 || h <= 0 || !col.hasColor())
-		{
-			return;
-		}
-
-		GlStateManager.disableTexture2D();
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		addRectToBuffer(buffer, x, y, w, h, col);
-		tessellator.draw();
-		GlStateManager.enableTexture2D();
 	}
 
 	public static void addRectToBuffer(BufferBuilder buffer, int x, int y, int w, int h, Color4I col)
@@ -124,9 +176,9 @@ public class GuiHelper
 
 	public static void drawHollowRect(int x, int y, int w, int h, Color4I col, boolean roundEdges)
 	{
-		if (w <= 1 || h <= 1 || !col.hasColor())
+		if (w <= 1 || h <= 1 || col.isEmpty())
 		{
-			drawBlankRect(x, y, w, h, col);
+			col.draw(x, y, w, h);
 			return;
 		}
 
@@ -153,14 +205,9 @@ public class GuiHelper
 		GlStateManager.enableTexture2D();
 	}
 
-	public static void drawCenteredString(FontRenderer font, String txt, float x, float y, Color4I color)
-	{
-		font.drawString(txt, (int) (x - font.getStringWidth(txt) / 2F), (int) (y - font.FONT_HEIGHT / 2F), color.rgba(), false);
-	}
-
 	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay, Color4I color)
 	{
-		if (stack.isEmpty() || color.hasColor() && color.alphai() < 100) //TODO: Figure out how to change color
+		if (stack.isEmpty() || !color.isEmpty() && color.alphai() < 100) //TODO: Figure out how to change color
 		{
 			return false;
 		}
@@ -218,45 +265,29 @@ public class GuiHelper
 
 	public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)
 	{
-		pushScissor(screen, x, y, w, h, false);
-	}
+		Scissor prev = SCISSOR.get();
 
-	public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h, boolean ingorePrevious)
-	{
-		if (scissorIndex == -1)
+		if (SCISSOR.size() == 0)
 		{
 			GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		}
-		else if (!ingorePrevious)
+
+		Scissor scissor = new Scissor(screen, x, y, w, h);
+
+		if (prev.valid())
 		{
-			//FIXME
+			scissor = prev.crop(scissor);
 		}
 
-		scissorIndex++;
-
-		if (scissorIndex < MAX_SCISSOR)
-		{
-			double scaleW = ClientUtils.MC.displayWidth / (double) screen.getScaledWidth();
-			double scaleH = ClientUtils.MC.displayHeight / (double) screen.getScaledHeight();
-			SCISSOR_X[scissorIndex] = (int) (x * scaleW);
-			SCISSOR_Y[scissorIndex] = (int) (ClientUtils.MC.displayHeight - (y + h) * scaleH);
-			SCISSOR_W[scissorIndex] = (int) Math.max(1, w * scaleW);
-			SCISSOR_H[scissorIndex] = (int) Math.max(1, h * scaleH);
-			GL11.glScissor(SCISSOR_X[scissorIndex], SCISSOR_Y[scissorIndex], SCISSOR_W[scissorIndex], SCISSOR_H[scissorIndex]);
-		}
+		SCISSOR.push();
+		SCISSOR.set(scissor);
 	}
 
 	public static void popScissor()
 	{
-		scissorIndex--;
-
-		if (scissorIndex == -1)
+		if (!SCISSOR.pop().valid())
 		{
 			GL11.glDisable(GL11.GL_SCISSOR_TEST);
-		}
-		else if (scissorIndex < MAX_SCISSOR)
-		{
-			GL11.glScissor(SCISSOR_X[scissorIndex], SCISSOR_Y[scissorIndex], SCISSOR_W[scissorIndex], SCISSOR_H[scissorIndex]);
 		}
 	}
 
@@ -389,6 +420,7 @@ public class GuiHelper
 			hoverEvent = s.getHoverEvent();
 			insertion = s.getInsertion();
 		}
+
 	}
 
 	//TODO: Improve me to fix occasional offset

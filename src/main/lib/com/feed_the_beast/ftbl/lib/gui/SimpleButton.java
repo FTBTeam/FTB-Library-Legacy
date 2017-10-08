@@ -4,41 +4,44 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.LangKey;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
-import java.util.function.BiConsumer;
-
 /**
  * @author LatvianModder
  */
 public class SimpleButton extends Button
 {
-	private final BiConsumer<GuiBase, MouseButton> consumer;
-
-	public SimpleButton(int x, int y, String text, Icon icon, BiConsumer<GuiBase, MouseButton> c)
+	public interface Callback
 	{
-		super(x, y, 16, 16, text);
+		void onClicked(GuiBase gui, MouseButton button);
+	}
+
+	private final Callback consumer;
+
+	public SimpleButton(GuiBase gui, int x, int y, String text, Icon icon, Callback c)
+	{
+		super(gui, x, y, 16, 16, text);
 		setIcon(icon);
 		consumer = c;
 	}
 
-	public SimpleButton(int x, int y, LangKey text, Icon icon, BiConsumer<GuiBase, MouseButton> c)
+	public SimpleButton(GuiBase gui, int x, int y, LangKey text, Icon icon, Callback c)
 	{
-		this(x, y, text.translate(), icon, c);
+		this(gui, x, y, text.translate(), icon, c);
 	}
 
-	public SimpleButton(String text, Icon icon, BiConsumer<GuiBase, MouseButton> c)
+	public SimpleButton(GuiBase gui, String text, Icon icon, Callback c)
 	{
-		this(0, 0, text, icon, c);
+		this(gui, 0, 0, text, icon, c);
 	}
 
-	public SimpleButton(LangKey text, Icon icon, BiConsumer<GuiBase, MouseButton> c)
+	public SimpleButton(GuiBase gui, LangKey text, Icon icon, Callback c)
 	{
-		this(0, 0, text, icon, c);
+		this(gui, 0, 0, text, icon, c);
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, MouseButton button)
+	public void onClicked(MouseButton button)
 	{
 		GuiHelper.playClickSound();
-		consumer.accept(gui, button);
+		consumer.onClicked(gui, button);
 	}
 }

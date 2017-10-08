@@ -1,37 +1,31 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
-public class Slider extends Widget
+public class ScrollBar extends Widget
 {
-	public static final Icon DEFAULT_SLIDER = new TexturelessRectangle(Color4I.WHITE_A[33]).setLineColor(Button.DEFAULT_BACKGROUND.getLineColor());
-	public static final Icon DEFAULT_BACKGROUND = Button.DEFAULT_BACKGROUND;
-
 	public int sliderSize;
 	private double value;
 	private int grab = -10000;
-	public Icon slider = DEFAULT_SLIDER, background = DEFAULT_BACKGROUND;
 
-	public Slider(int x, int y, int w, int h, int ss)
+	public ScrollBar(GuiBase gui, int x, int y, int w, int h, int ss)
 	{
-		super(x, y, w, h);
+		super(gui, x, y, w, h);
 		sliderSize = Math.max(ss, 1);
 	}
 
 	@Override
-	public boolean mousePressed(GuiBase gui, MouseButton button)
+	public boolean mousePressed(MouseButton button)
 	{
 		if (gui.isMouseOver(this))
 		{
-			grab = (getPlane() == EnumFacing.Plane.VERTICAL ? (gui.getMouseY() - (getAY() + getValueI(gui, height))) : (gui.getMouseX() - (getAX() + getValueI(gui, width))));
+			grab = (getPlane() == EnumFacing.Plane.VERTICAL ? (gui.getMouseY() - (getAY() + getValueI(height))) : (gui.getMouseX() - (getAX() + getValueI(width))));
 			return true;
 		}
 
@@ -39,7 +33,7 @@ public class Slider extends Widget
 	}
 
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public void addMouseOverText(List<String> list)
 	{
 		double min = getDisplayMin();
 		double max = getDisplayMax();
@@ -47,20 +41,20 @@ public class Slider extends Widget
 		if (min < max)
 		{
 			String s = "" + (int) MathUtils.map(value, 0D, 1D, min, max);
-			String t = getTitle(gui);
+			String t = getTitle();
 			list.add(t.isEmpty() ? s : (t + ": " + s));
 		}
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
 		int ax = getAX();
 		int ay = getAY();
 
-		if (isEnabled(gui))
+		if (isEnabled())
 		{
-			double v = getValue(gui);
+			double v = getValue();
 			double v0 = v;
 
 			if (grab != -10000)
@@ -82,7 +76,7 @@ public class Slider extends Widget
 				}
 			}
 
-			if (gui.getMouseWheel() != 0 && canMouseScroll(gui) && gui.isShiftDown() == (getPlane() == EnumFacing.Plane.HORIZONTAL))
+			if (gui.getMouseWheel() != 0 && canMouseScroll() && gui.isShiftDown() == (getPlane() == EnumFacing.Plane.HORIZONTAL))
 			{
 				v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
 			}
@@ -91,51 +85,62 @@ public class Slider extends Widget
 
 			if (v0 != v)
 			{
-				setValue(gui, v);
+				setValue(v);
 			}
 		}
 
-		background.draw(ax, ay, width, height, Color4I.NONE);
+		getBackground().draw(ax, ay, width, height);
 
 		if (getPlane() == EnumFacing.Plane.VERTICAL)
 		{
 			if (sliderSize < height)
 			{
-				slider.draw(ax, ay + getValueI(gui, height), width, sliderSize, Color4I.NONE);
+				getIcon().draw(ax, ay + getValueI(height), width, sliderSize);
 			}
 		}
 		else if (sliderSize < width)
 		{
-			slider.draw(ax + getValueI(gui, width), ay, sliderSize, height, Color4I.NONE);
+			getIcon().draw(ax + getValueI(width), ay, sliderSize, height);
 		}
 	}
 
-	public void onMoved(GuiBase gui)
+	public Icon getBackground()
+	{
+		return gui.getTheme().getScrollBarBackground();
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return gui.getTheme().getScrollBar(grab != -10000, getPlane() == EnumFacing.Plane.VERTICAL);
+	}
+
+	public void onMoved()
 	{
 	}
 
-	public boolean canMouseScroll(GuiBase gui)
+	public boolean canMouseScroll()
 	{
 		return gui.isMouseOver(this);
 	}
 
-	public void setValue(GuiBase gui, double v)
+	public void setValue(double v)
 	{
 		if (value != v)
 		{
 			value = MathHelper.clamp(v, 0D, 1D);
-			onMoved(gui);
+			onMoved();
 		}
 	}
 
-	public double getValue(GuiBase gui)
+	public double getValue()
 	{
 		return value;
 	}
 
-	public int getValueI(GuiBase gui, int max)
+	public int getValueI(int max)
 	{
-		return (int) (getValue(gui) * (max - sliderSize));
+		return (int) (getValue() * (max - sliderSize));
 	}
 
 	public double getScrollStep()

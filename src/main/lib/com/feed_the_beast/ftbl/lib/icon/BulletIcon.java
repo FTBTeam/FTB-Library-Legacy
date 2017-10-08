@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
-import com.feed_the_beast.ftbl.lib.util.misc.MutableColor4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,19 +19,20 @@ public class BulletIcon extends Icon
 	private static final MutableColor4I DEFAULT_COLOR_D = Color4I.rgb(0xDDDDDD).mutable();
 
 	private Color4I color, colorB, colorD;
+	private boolean inversed;
 
 	public BulletIcon()
 	{
-		color = Color4I.NONE;
-		colorB = Color4I.NONE;
-		colorD = Color4I.NONE;
+		color = Icon.EMPTY;
+		colorB = Icon.EMPTY;
+		colorD = Icon.EMPTY;
 	}
 
 	public BulletIcon setColor(Color4I col)
 	{
 		color = col;
 
-		if (!color.hasColor())
+		if (color.isEmpty())
 		{
 			return this;
 		}
@@ -47,12 +46,18 @@ public class BulletIcon extends Icon
 		return this;
 	}
 
+	public BulletIcon setInversed(boolean v)
+	{
+		inversed = v;
+		return this;
+	}
+
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		Color4I c, cb, cd;
 
-		if (col.hasColor())
+		if (!col.isEmpty())
 		{
 			c = col;
 			MutableColor4I cm = col.mutable();
@@ -62,17 +67,17 @@ public class BulletIcon extends Icon
 			cm.addBrightness(-18);
 			cd = cm.copy();
 		}
-		else if (color.hasColor())
-		{
-			c = color;
-			cb = colorB;
-			cd = colorD;
-		}
-		else
+		else if (color.isEmpty())
 		{
 			c = DEFAULT_COLOR;
 			cb = DEFAULT_COLOR_B;
 			cd = DEFAULT_COLOR_D;
+		}
+		else
+		{
+			c = color;
+			cb = colorB;
+			cd = colorD;
 		}
 
 		GlStateManager.disableTexture2D();
@@ -80,12 +85,10 @@ public class BulletIcon extends Icon
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-		GuiHelper.addRectToBuffer(buffer, x, y + 1, 1, h - 2, cb);
-		GuiHelper.addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, cd);
-
-		GuiHelper.addRectToBuffer(buffer, x + 1, y, w - 2, 1, cb);
-		GuiHelper.addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1, cd);
-
+		GuiHelper.addRectToBuffer(buffer, x, y + 1, 1, h - 2, inversed ? cd : cb);
+		GuiHelper.addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, inversed ? cb : cd);
+		GuiHelper.addRectToBuffer(buffer, x + 1, y, w - 2, 1, inversed ? cd : cb);
+		GuiHelper.addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1, inversed ? cb : cd);
 		GuiHelper.addRectToBuffer(buffer, x + 1, y + 1, w - 2, h - 2, c);
 
 		tessellator.draw();
@@ -98,9 +101,9 @@ public class BulletIcon extends Icon
 	{
 		JsonObject o = new JsonObject();
 		o.addProperty("id", "bullet");
-		if (color.hasColor())
+		if (!color.isEmpty())
 		{
-			o.add("color", color.toJson());
+			o.add("color", color.getJson());
 		}
 		return o;
 	}

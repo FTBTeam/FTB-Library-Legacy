@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.client;
 
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
-import com.feed_the_beast.ftbl.lib.util.misc.MutableColor4I;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.VertexFormat;

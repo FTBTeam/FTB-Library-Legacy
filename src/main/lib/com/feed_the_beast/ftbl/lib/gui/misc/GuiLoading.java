@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.gui.misc;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.LoadingIcon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 
 /**
  * @author LatvianModder
@@ -33,7 +33,7 @@ public class GuiLoading extends GuiBase
 
 		if (isLoading())
 		{
-			LoadingIcon.INSTANCE.draw(this, Color4I.WHITE);
+			LoadingIcon.INSTANCE.draw(this);
 		}
 		else
 		{
@@ -58,5 +58,11 @@ public class GuiLoading extends GuiBase
 
 	public void finishLoading()
 	{
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return Icon.EMPTY;
 	}
 }

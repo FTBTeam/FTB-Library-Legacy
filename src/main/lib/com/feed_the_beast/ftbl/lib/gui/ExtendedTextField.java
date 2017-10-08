@@ -17,9 +17,9 @@ public class ExtendedTextField extends TextField
 	private List<GuiHelper.PositionedTextData> textData;
 	private long lastUpdate = 0L;
 
-	public ExtendedTextField(int x, int y, int width, int height, ITextComponent t)
+	public ExtendedTextField(GuiBase gui, int x, int y, int width, int height, ITextComponent t)
 	{
-		super(x, y, width, height, "");
+		super(gui, x, y, width, height, "");
 		textComponent = t;
 		setTitle("");
 	}
@@ -37,7 +37,7 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Nullable
-	private GuiHelper.PositionedTextData getDataAtMouse(GuiBase gui)
+	private GuiHelper.PositionedTextData getDataAtMouse()
 	{
 		int ax = getAX();
 		int ay = getAY();
@@ -54,9 +54,9 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public void addMouseOverText(List<String> list)
 	{
-		GuiHelper.PositionedTextData data = getDataAtMouse(gui);
+		GuiHelper.PositionedTextData data = getDataAtMouse();
 
 		if (data != null && data.hoverEvent != null) //TODO: Special handling for each data.hoverEvent.getAction()
 		{
@@ -65,9 +65,9 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, MouseButton button)
+	public void onClicked(MouseButton button)
 	{
-		GuiHelper.PositionedTextData data = getDataAtMouse(gui);
+		GuiHelper.PositionedTextData data = getDataAtMouse();
 
 		if (data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
 		{
@@ -76,7 +76,7 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
 		long ms = System.currentTimeMillis();
 		if (lastUpdate <= ms)
@@ -85,6 +85,6 @@ public class ExtendedTextField extends TextField
 			setTitle("");
 		}
 
-		super.renderWidget(gui);
+		super.renderWidget();
 	}
 }

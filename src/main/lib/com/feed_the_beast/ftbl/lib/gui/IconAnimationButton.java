@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.icon.IconAnimation;
 import com.feed_the_beast.ftbl.lib.icon.ItemIcon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -16,9 +15,9 @@ public class IconAnimationButton extends Button
 	private final IconAnimation list;
 	private final int cols;
 
-	public IconAnimationButton(int x, int y, IconAnimation i, int c)
+	public IconAnimationButton(GuiBase gui, int x, int y, IconAnimation i, int c)
 	{
-		super(x, y, 16, 16);
+		super(gui, x, y, 16, 16);
 		list = i;
 
 		cols = c;
@@ -27,27 +26,27 @@ public class IconAnimationButton extends Button
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public void renderWidget()
 	{
 		int ax = getAX();
 		int ay = getAY();
 
 		if (cols == 0)
 		{
-			list.draw(ax, ay, 16, 16, Color4I.NONE);
+			list.draw(ax, ay, 16, 16);
 		}
 		else
 		{
 			for (int i = list.getItemCount() - 1; i >= 0; i--)
 			{
 				list.setIndex(i);
-				list.draw(ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, 16, 16, Color4I.NONE);
+				list.draw(ax + 2 + (i % cols) * 16, ay + 2 + (i / cols) * 16, 16, 16);
 			}
 		}
 	}
 
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> l)
+	public void addMouseOverText(List<String> l)
 	{
 		int index = -1;
 
@@ -75,7 +74,7 @@ public class IconAnimationButton extends Button
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, MouseButton button)
+	public void onClicked(MouseButton button)
 	{
 		/*
 		if (cols == 0)

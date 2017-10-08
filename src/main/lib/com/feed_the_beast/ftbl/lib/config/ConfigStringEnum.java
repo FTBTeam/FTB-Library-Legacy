@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftbl.lib.config;
 
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -80,7 +81,7 @@ public class ConfigStringEnum extends ConfigValue
 	public Color4I getCustomColor()
 	{
 		Color4I col = customColors.get(getString());
-		return col == null ? Color4I.NONE : col;
+		return col == null ? Icon.EMPTY : col;
 	}
 
 	public void setCustomName(String key, @Nullable ITextComponent component)
@@ -97,7 +98,7 @@ public class ConfigStringEnum extends ConfigValue
 
 	public void setCustomColor(String key, Color4I col)
 	{
-		if (!col.hasColor())
+		if (col.isEmpty())
 		{
 			customColors.remove(key);
 		}
@@ -184,7 +185,7 @@ public class ConfigStringEnum extends ConfigValue
 		{
 			data.writeString(s);
 			data.writeTextComponent(customNames.get(s));
-			data.writeColor(customColors.get(s));
+			data.writeIcon(customColors.get(s));
 		}
 
 		data.writeShort(getInt());
@@ -203,7 +204,12 @@ public class ConfigStringEnum extends ConfigValue
 			String key = data.readString();
 			keys.add(key);
 			setCustomName(key, data.readTextComponent());
-			setCustomColor(key, data.readColor());
+			Icon i = data.readIcon();
+
+			if (i instanceof Color4I)
+			{
+				setCustomColor(key, (Color4I) i);
+			}
 		}
 
 		setString(keys.get(data.readUnsignedShort()));

@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
-import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -12,26 +10,28 @@ public class ColoredIcon extends Icon
 {
 	public final Icon parent;
 	public final Color4I color;
+	public int border;
 
-	public ColoredIcon(Icon p, Color4I c)
+	public ColoredIcon(Icon p, Color4I c, int b)
 	{
 		parent = p;
 		color = c;
-	}
-
-	public ColoredIcon(Icon p, int c)
-	{
-		this(p, Color4I.rgba(c).mutable());
+		border = b;
 	}
 
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		Color4I col1 = col.hasColor() ? col : color;
+		x += border;
+		y += border;
+		w -= border * 2;
+		h -= border * 2;
+
+		Color4I col1 = col.isEmpty() ? color : col;
 
 		if (parent.isEmpty())
 		{
-			GuiHelper.drawBlankRect(x, y, w, h, col1);
+			col1.draw(x, y, w, h);
 		}
 		else
 		{
@@ -47,9 +47,14 @@ public class ColoredIcon extends Icon
 		JsonObject o = new JsonObject();
 		o.addProperty("id", "colored");
 
-		if (color.hasColor())
+		if (!color.isEmpty())
 		{
-			o.add("color", color.toJson());
+			o.add("color", color.getJson());
+		}
+
+		if (border != 0)
+		{
+			o.addProperty("border", border);
 		}
 
 		o.add("parent", parent.getJson());

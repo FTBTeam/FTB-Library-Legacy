@@ -1,62 +1,70 @@
 package com.feed_the_beast.ftbl.lib.util.misc;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.ArrayDeque;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
  */
-public class Pushable<E> implements Supplier<E>
+public final class Pushable<E> implements Supplier<E>
 {
 	public final E defaultValue;
 	private final Consumer<E> consumer;
 
 	private E value;
-	private final List<E> pushedValues;
+	private final Queue<E> pushedValues;
 
 	public Pushable(E def, Consumer<E> _set)
 	{
 		defaultValue = def;
+		value = def;
 		consumer = _set;
-		pushedValues = new ArrayList<>(3);
+		pushedValues = new ArrayDeque<>(3);
 		consumer.accept(defaultValue);
 	}
 
-	public final void set(E val)
+	public void set(@Nullable E val)
 	{
+		if (val == null)
+		{
+			val = defaultValue;
+		}
+
 		if (!Objects.equals(value, val))
 		{
 			value = val;
-			onSet();
+			consumer.accept(value);
 		}
 	}
 
-	public final void reset()
+	public void reset()
 	{
 		set(defaultValue);
 	}
 
-	protected void onSet()
-	{
-		consumer.accept(get());
-	}
-
 	@Override
-	public final E get()
+	public E get()
 	{
 		return value;
 	}
 
-	public final void push()
+	public void push()
 	{
 		pushedValues.add(value);
 	}
 
-	public final void pop()
+	public E pop()
 	{
-		set(pushedValues.remove(pushedValues.size() - 1));
+		set(pushedValues.poll());
+		return value;
+	}
+
+	public int size()
+	{
+		return pushedValues.size();
 	}
 }

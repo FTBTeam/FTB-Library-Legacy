@@ -2,10 +2,10 @@ package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public abstract class Icon
 {
-	public static final Icon EMPTY = new Icon()
+	public static final Color4I EMPTY = new Color4I(255, 255, 255, 255)
 	{
 		@Override
 		public boolean isEmpty()
@@ -37,6 +37,12 @@ public abstract class Icon
 		@SideOnly(Side.CLIENT)
 		public void draw(Widget widget, Color4I col)
 		{
+		}
+
+		@Override
+		public MutableColor4I mutable()
+		{
+			return new MutableColor4I.None();
 		}
 	};
 
@@ -56,8 +62,13 @@ public abstract class Icon
 				{
 					case "loading":
 						return LoadingIcon.INSTANCE;
+					case "color":
+					{
+						Color4I color = Color4I.fromJson(o.get("color"));
+						return (o.has("mutable") && o.get("mutable").getAsBoolean()) ? color.mutable() : color;
+					}
 					case "colored":
-						return new ColoredIcon(getIcon(o.get("parent").getAsJsonObject()), Color4I.fromJson(o.get("color")));
+						return new ColoredIcon(getIcon(o.get("parent").getAsJsonObject()), Color4I.fromJson(o.get("color")), o.has("border") ? o.get("border").getAsInt() : 0);
 					case "animation":
 					{
 						List<Icon> icons = new ArrayList<>();
@@ -76,25 +87,32 @@ public abstract class Icon
 
 						return list;
 					}
-					case "rect":
+					case "outline":
 					{
-						TexturelessRectangle icon = new TexturelessRectangle(o.has("color") ? Color4I.fromJson(o.get("color")) : Color4I.NONE);
+						Icon icon = EMPTY;
+						Color4I outline = EMPTY;
+						boolean roundEdges = false;
 
-						if (o.has("line_color"))
+						if (o.has("icon"))
 						{
-							icon.setLineColor(Color4I.fromJson(o.get("line_color")));
+							icon = getIcon(o.get("icon"));
+						}
+
+						if (o.has("color"))
+						{
+							outline = Color4I.fromJson(o.get("color"));
 						}
 
 						if (o.has("round_edges"))
 						{
-							icon.setRoundEdges(o.get("round_edges").getAsBoolean());
+							roundEdges = o.get("round_edges").getAsBoolean();
 						}
 
-						return icon;
+						return IconWithOutline.getIconWithOutline(icon, outline, roundEdges);
 					}
 					case "bullet":
 					{
-						return new BulletIcon().setColor(o.has("color") ? Color4I.fromJson(o.get("color")) : Color4I.NONE);
+						return new BulletIcon().setColor(o.has("color") ? Color4I.fromJson(o.get("color")) : EMPTY);
 					}
 				}
 			}
@@ -127,6 +145,10 @@ public abstract class Icon
 		if (id.isEmpty())
 		{
 			return EMPTY;
+		}
+		else if (id.charAt(0) == '#')
+		{
+			return Color4I.fromJson(new JsonPrimitive(id));
 		}
 		else if (id.equals("loading"))
 		{
@@ -164,9 +186,21 @@ public abstract class Icon
 	public abstract void draw(int x, int y, int w, int h, Color4I col);
 
 	@SideOnly(Side.CLIENT)
+	public final void draw(int x, int y, int w, int h)
+	{
+		draw(x, y, w, h, EMPTY);
+	}
+
+	@SideOnly(Side.CLIENT)
 	public void draw(Widget widget, Color4I col)
 	{
 		draw(widget.getAX(), widget.getAY(), widget.width, widget.height, col);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public final void draw(Widget widget)
+	{
+		draw(widget, EMPTY);
 	}
 
 	public JsonElement getJson()

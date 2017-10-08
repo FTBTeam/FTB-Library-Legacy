@@ -410,9 +410,9 @@ public class JsonUtils
 
 			ITextComponent component = null;
 
-			for (JsonElement jsonelement : element.getAsJsonArray())
+			for (JsonElement element1 : element.getAsJsonArray())
 			{
-				ITextComponent component1 = deserializeTextComponent(jsonelement);
+				ITextComponent component1 = deserializeTextComponent(element1);
 
 				if (component1 == null)
 				{

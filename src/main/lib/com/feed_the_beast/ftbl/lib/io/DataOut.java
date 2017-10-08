@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.lib.io;
 
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -322,9 +322,9 @@ public class DataOut
 		writeInt(state == Blocks.AIR.getDefaultState() ? 0 : Block.getStateId(state));
 	}
 
-	public void writeColor(@Nullable Color4I color)
+	public void writeIcon(@Nullable Icon icon)
 	{
-		writeJson((color == null ? Color4I.NONE : color).toJson());
+		writeJson((icon == null ? Icon.EMPTY : icon).getJson());
 	}
 
 	public <E> void write(Serializer<E> serializer, E object)

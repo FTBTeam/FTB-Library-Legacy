@@ -34,21 +34,21 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	@Override
 	protected final void mouseClicked(int mx, int my, int b) throws IOException
 	{
-		wrappedGui.mousePressed(wrappedGui, MouseButton.get(b));
+		wrappedGui.mousePressed(MouseButton.get(b));
 		super.mouseClicked(mx, my, b);
 	}
 
 	@Override
 	protected void mouseReleased(int mx, int my, int state)
 	{
-		wrappedGui.mouseReleased(wrappedGui);
+		wrappedGui.mouseReleased();
 		super.mouseReleased(mx, my, state);
 	}
 
 	@Override
 	protected void keyTyped(char keyChar, int key) throws IOException
 	{
-		if (wrappedGui.keyPressed(wrappedGui, key, keyChar))
+		if (wrappedGui.keyPressed(key, keyChar))
 		{
 			return;
 		}
@@ -82,6 +82,8 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		}
 
 		GuiBase.setupDrawing();
+		wrappedGui.getFontUnicode().reset();
+		wrappedGui.getIcon().draw(wrappedGui);
 		wrappedGui.drawBackground();
 		GuiBase.setupDrawing();
 		wrappedGui.renderWidgets();

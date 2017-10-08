@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftbl.lib.client;
 
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;

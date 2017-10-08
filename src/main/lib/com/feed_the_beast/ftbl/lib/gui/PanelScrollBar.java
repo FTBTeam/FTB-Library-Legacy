@@ -5,16 +5,16 @@ import net.minecraft.util.EnumFacing;
 /**
  * @author LatvianModder
  */
-public class PanelScrollBar extends Slider
+public class PanelScrollBar extends ScrollBar
 {
 	public final Panel panel;
 	private int elementSize = 1;
 	private double scrollStep;
 	private boolean autoSize;
 
-	public PanelScrollBar(int x, int y, int w, int h, int ss, Panel p)
+	public PanelScrollBar(GuiBase gui, int x, int y, int w, int h, int ss, Panel p)
 	{
-		super(x, y, w, h, ss);
+		super(gui, x, y, w, h, ss);
 		panel = p;
 		autoSize = ss <= 0;
 	}
@@ -49,9 +49,9 @@ public class PanelScrollBar extends Slider
 	}
 
 	@Override
-	public boolean canMouseScroll(GuiBase gui)
+	public boolean canMouseScroll()
 	{
-		return super.canMouseScroll(gui) || gui.isMouseOver(panel);
+		return super.canMouseScroll() || gui.isMouseOver(panel);
 	}
 
 	@Override
@@ -61,27 +61,27 @@ public class PanelScrollBar extends Slider
 	}
 
 	@Override
-	public void onMoved(GuiBase gui)
+	public void onMoved()
 	{
 		if (getPlane() == EnumFacing.Plane.VERTICAL)
 		{
-			panel.setScrollY(getValue(gui), elementSize);
+			panel.setScrollY(getValue(), elementSize);
 		}
 		else
 		{
-			panel.setScrollX(getValue(gui), elementSize);
+			panel.setScrollX(getValue(), elementSize);
 		}
 	}
 
 	@Override
-	public boolean isEnabled(GuiBase gui)
+	public boolean isEnabled()
 	{
 		return elementSize > (getPlane() == EnumFacing.Plane.VERTICAL ? panel.height : panel.width);
 	}
 
 	@Override
-	public boolean shouldRender(GuiBase gui)
+	public boolean shouldRender()
 	{
-		return isEnabled(gui);
+		return isEnabled();
 	}
 }

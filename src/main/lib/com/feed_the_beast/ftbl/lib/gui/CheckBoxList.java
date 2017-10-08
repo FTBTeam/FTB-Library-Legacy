@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -14,14 +12,6 @@ import java.util.List;
  */
 public class CheckBoxList extends Button
 {
-	public static final Icon DEFAULT_SELECTED_ICON = new TexturelessRectangle(0xFFE0E0E0);
-	public static final Icon DEFAULT_BACKGROUND = new TexturelessRectangle(0xFF919191);
-
-	public final boolean radioButtons;
-	private final List<CheckBoxEntry> entries;
-	public Icon background = DEFAULT_BACKGROUND;
-	public Icon[] icons = {Icon.EMPTY, DEFAULT_SELECTED_ICON};
-
 	public static class CheckBoxEntry
 	{
 		public String name;
@@ -33,13 +23,13 @@ public class CheckBoxList extends Button
 			name = n;
 		}
 
-		public void onClicked(GuiBase gui, MouseButton button, int index)
+		public void onClicked(MouseButton button, int index)
 		{
-			select((value + 1) % checkBoxList.icons.length);
+			select((value + 1) % checkBoxList.getValueCount());
 			GuiHelper.playClickSound();
 		}
 
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 		}
 
@@ -82,30 +72,48 @@ public class CheckBoxList extends Button
 		}
 	}
 
-	public CheckBoxList(int x, int y, boolean radiobutton)
+	public final boolean radioButtons;
+	private final List<CheckBoxEntry> entries;
+
+	public CheckBoxList(GuiBase gui, int x, int y, boolean radiobutton)
 	{
-		super(x, y, 10, 2);
+		super(gui, x, y, 10, 2);
 		radioButtons = radiobutton;
 		entries = new ArrayList<>();
 	}
 
-	public void addBox(GuiBase gui, CheckBoxEntry checkBox)
+	public int getValueCount()
+	{
+		return 2;
+	}
+
+	public Icon getCheckboxBackground()
+	{
+		return gui.getTheme().getCheckboxBackground(radioButtons);
+	}
+
+	public Icon getCheckboxIcon(int index, int value)
+	{
+		return gui.getTheme().getCheckbox(gui.isMouseOver(this), value != 0, radioButtons);
+	}
+
+	public void addBox(CheckBoxEntry checkBox)
 	{
 		checkBox.checkBoxList = this;
 		entries.add(checkBox);
-		setWidth(Math.max(width, gui.getFont().getStringWidth(checkBox.name)));
+		setWidth(Math.max(width, gui.getStringWidth(checkBox.name)));
 		setHeight(height + 11);
 	}
 
-	public CheckBoxEntry addBox(GuiBase gui, String name)
+	public CheckBoxEntry addBox(String name)
 	{
 		CheckBoxEntry entry = new CheckBoxEntry(name);
-		addBox(gui, entry);
+		addBox(entry);
 		return entry;
 	}
 
 	@Override
-	public void onClicked(GuiBase gui, MouseButton button)
+	public void onClicked(MouseButton button)
 	{
 		int y = gui.getMouseY() - getAY();
 
@@ -118,27 +126,35 @@ public class CheckBoxList extends Button
 
 		if (i >= 0 && i < entries.size())
 		{
-			entries.get(i).onClicked(gui, button, i);
+			entries.get(i).onClicked(button, i);
 		}
 	}
 
 	@Override
-	public void addMouseOverText(GuiBase gui, List<String> list)
+	public void addMouseOverText(List<String> list)
 	{
 	}
 
 	@Override
-	public void renderWidget(GuiBase gui)
+	public Icon getIcon()
+	{
+		return Icon.EMPTY;
+	}
+
+	@Override
+	public void renderWidget()
 	{
 		int ax = getAX();
 		int ay = getAY();
+		getIcon().draw(ax, ay, width, height);
+		Icon bg = getCheckboxBackground();
 
 		for (int i = 0; i < entries.size(); i++)
 		{
 			CheckBoxEntry entry = entries.get(i);
 			int y = ay + i * 11 + 1;
-			background.draw(ax, y, 10, 10, Color4I.NONE);
-			icons[entry.value].draw(ax + 1, y + 1, 8, 8, Color4I.NONE);
+			bg.draw(ax, y, 10, 10);
+			getCheckboxIcon(i, entry.value).draw(ax + 1, y + 1, 8, 8);
 			gui.drawString(entry.name, ax + 12, y + 1);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}

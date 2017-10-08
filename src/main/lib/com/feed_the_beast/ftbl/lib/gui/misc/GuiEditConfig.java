@@ -17,11 +17,11 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.SimpleButton;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.MutableColor4I;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftbl.lib.util.misc.MutableColor4I;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,9 +42,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		public String title = "-", info = "";
 		public boolean collapsed = false;
 
-		public ButtonConfigGroup(String id)
+		public ButtonConfigGroup(GuiBase gui, String id)
 		{
-			super(0, 0, 0, 16);
+			super(gui, 0, 0, 0, 16);
 			groupId = id;
 
 			if (!groupId.isEmpty())
@@ -94,23 +94,23 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			int ax = getAX();
 			int ay = getAY();
 
-			GuiHelper.drawBlankRect(ax, ay, width, height, COLOR_BACKGROUND);
-			gui.drawString(getTitle(gui), ax + 3, ay + 4, gui.getContentColor());
+			COLOR_BACKGROUND.draw(ax, ay, width, height);
+			gui.drawString(getTitle(), ax + 3, ay + 4);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			if (gui.isMouseOver(this))
 			{
-				DEFAULT_MOUSE_OVER.draw(ax, ay, width, height, Color4I.NONE);
+				Color4I.WHITE_A[33].draw(ax, ay, width, height);
 			}
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 			if (!info.isEmpty())
 			{
@@ -119,7 +119,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			setCollapsed(!collapsed);
 			gui.refreshWidgets();
@@ -134,13 +134,13 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		public String keyText;
 		public List<String> infoText;
 
-		public ButtonConfigEntry(ButtonConfigGroup g, ConfigValueInfo i, ConfigValue e)
+		public ButtonConfigEntry(GuiEditConfig gui, ButtonConfigGroup g, ConfigValueInfo i, ConfigValue e)
 		{
-			super(0, 0, 0, 16);
+			super(gui, 0, 0, 0, 16);
 			group = g;
 			info = i;
 			value = e;
-			String keyLang = GuiEditConfig.this.group.getNameKey(info);
+			String keyLang = gui.group.getNameKey(info);
 			keyText = StringUtils.translate(keyLang);
 			String infoText = StringUtils.canTranslate(keyLang + ".tooltip") ? StringUtils.translate(keyLang + ".tooltip") : "";
 
@@ -150,7 +150,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 				for (String s : infoText.split("\\\\n"))
 				{
-					this.infoText.addAll(getFont().listFormattedStringToWidth(s, 230));
+					this.infoText.addAll(gui.listFormattedStringToWidth(s, 230));
 				}
 			}
 
@@ -161,7 +161,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			boolean mouseOver = gui.getMouseY() >= 20 && gui.isMouseOver(this);
 
@@ -170,25 +170,25 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 			if (mouseOver)
 			{
-				GuiHelper.drawBlankRect(ax, ay, width, height, Color4I.WHITE_A[33]);
+				Color4I.WHITE_A[33].draw(ax, ay, width, height);
 			}
 
-			gui.drawString(keyText, ax + 4, ay + 4, mouseOver ? Color4I.WHITE : Color4I.GRAY);
+			gui.drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, DARK, !mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			String s = value.hasCustomName() ? value.getCustomDisplayName().getFormattedText() : value.getString();
 
-			int slen = gui.getFont().getStringWidth(s);
+			int slen = gui.getStringWidth(s);
 
 			if (slen > 150)
 			{
-				s = gui.getFont().trimStringToWidth(s, 150) + "...";
+				s = gui.trimStringToWidth(s, 150, false) + "...";
 				slen = 152;
 			}
 
 			Color4I col = value.getCustomColor();
 
-			if (!col.hasColor())
+			if (col.isEmpty())
 			{
 				col = value.getColor();
 			}
@@ -202,16 +202,16 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 				if (gui.getMouseX() > ax + width - slen - 9)
 				{
-					GuiHelper.drawBlankRect(ax + width - slen - 8, ay, slen + 8, height, Color4I.WHITE_A[33]);
+					Color4I.WHITE_A[33].draw(ax + width - slen - 8, ay, slen + 8, height);
 				}
 			}
 
-			gui.drawString(s, gui.width - (slen + 20), ay + 4, textCol);
+			gui.drawString(s, gui.width - (slen + 20), ay + 4, textCol, 0);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			if (gui.getMouseY() >= 20 && !info.cantEdit)
 			{
@@ -221,16 +221,16 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 			if (gui.getMouseY() > 18)
 			{
-				if (!infoText.isEmpty() && gui.getMouseX() < getAX() + gui.getFont().getStringWidth(keyText) + 10)
+				if (!infoText.isEmpty() && gui.getMouseX() < getAX() + gui.getStringWidth(keyText) + 10)
 				{
 					list.addAll(infoText);
 				}
 
-				if (gui.getMouseX() > gui.width - (Math.min(150, gui.getFont().getStringWidth(value.getString())) + 25))
+				if (gui.getMouseX() > gui.width - (Math.min(150, gui.getStringWidth(value.getString())) + 25))
 				{
 					value.addInfo(info, list);
 				}
@@ -286,15 +286,15 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			{
 				if (group == null || !group.groupId.equalsIgnoreCase(instance.info.group))
 				{
-					group = new ButtonConfigGroup(instance.info.group);
+					group = new ButtonConfigGroup(this, instance.info.group);
 					configEntryButtons.add(group);
 				}
 
-				configEntryButtons.add(new ButtonConfigEntry(group, instance.info, instance.value.copy()));
+				configEntryButtons.add(new ButtonConfigEntry(this, group, instance.info, instance.value.copy()));
 			}
 		}
 
-		configPanel = new Panel(0, 20, 0, 20)
+		configPanel = new Panel(this, 0, 20, 0, 20)
 		{
 			@Override
 			public void addWidgets()
@@ -315,33 +315,30 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		};
 
-		configPanel.addFlags(Panel.FLAG_DEFAULTS);
+		configPanel.addFlags(Panel.DEFAULTS);
 
-		scroll = new PanelScrollBar(-16, 20, 16, 0, 0, configPanel)
+		scroll = new PanelScrollBar(this, -16, 20, 16, 0, 0, configPanel)
 		{
 			@Override
-			public boolean shouldRender(GuiBase gui)
+			public boolean shouldRender()
 			{
 				return true;
 			}
 		};
 
-		scroll.slider = new TexturelessRectangle(0x99666666);
-		scroll.background = new TexturelessRectangle(0x99333333);
-
-		buttonAccept = new SimpleButton(0, 2, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+		buttonAccept = new SimpleButton(this, 0, 2, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 		{
 			shouldClose = 1;
 			gui.closeGui();
 		});
 
-		buttonCancel = new SimpleButton(0, 2, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
+		buttonCancel = new SimpleButton(this, 0, 2, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
 		{
 			shouldClose = 2;
 			gui.closeGui();
 		});
 
-		buttonCollapseAll = new SimpleButton(0, 2, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+		buttonCollapseAll = new SimpleButton(this, 0, 2, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -351,11 +348,11 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				}
 			}
 
-			scroll.setValue(gui, 0);
+			scroll.setValue(0D);
 			gui.refreshWidgets();
 		});
 
-		buttonExpandAll = new SimpleButton(0, 2, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+		buttonExpandAll = new SimpleButton(this, 0, 2, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -365,7 +362,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				}
 			}
 
-			scroll.setValue(gui, 0);
+			scroll.setValue(0D);
 			gui.refreshWidgets();
 		});
 	}
@@ -415,7 +412,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	@Override
 	public boolean onClosedByKey()
 	{
-		buttonCancel.onClicked(this, MouseButton.LEFT);
+		buttonCancel.onClicked(MouseButton.LEFT);
 		return false;
 	}
 
@@ -428,13 +425,12 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	@Override
 	public void drawBackground()
 	{
-		GuiHelper.drawBlankRect(0, 0, width, 20, COLOR_BACKGROUND);
-		drawString(getTitle(this), 6, 6);
-		GlStateManager.color(1F, 1F, 1F, 1F);
+		COLOR_BACKGROUND.draw(0, 0, width, 20);
+		drawString(getTitle(), 6, 6, DARK);
 	}
 
 	@Override
-	public String getTitle(GuiBase gui)
+	public String getTitle()
 	{
 		return title;
 	}

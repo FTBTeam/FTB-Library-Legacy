@@ -14,7 +14,6 @@ import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.text.TextComponentString;
@@ -90,39 +89,34 @@ public class GuiClientConfig extends GuiBase
 
 	private abstract class ButtonConfigBase extends Button
 	{
-		public ButtonConfigBase(String title, Icon icon)
+		public ButtonConfigBase(GuiBase gui, String title, Icon icon)
 		{
-			super(0, 0, getFont().getStringWidth(title) + 28, 20, title);
+			super(gui, 0, 0, gui.getStringWidth(title) + 28, 20, title);
 			setIcon(icon);
 		}
 
 		@Override
-		public void addMouseOverText(GuiBase gui, List<String> list)
+		public void addMouseOverText(List<String> list)
 		{
 		}
 
 		@Override
-		public void renderWidget(GuiBase gui)
+		public void renderWidget()
 		{
 			int ax = getAX();
 			int ay = getAY();
 
-			DEFAULT_BACKGROUND.draw(ax, ay, width, height, Color4I.NONE);
-			Icon icon = getIcon(gui);
+			gui.getTheme().getButton(gui.isMouseOver(this)).draw(ax, ay, width, height);
+			Icon icon = getIcon();
 
 			if (icon.isEmpty())
 			{
-				gui.drawString(getTitle(gui), ax + 2, ay + 6);
+				gui.drawString(getTitle(), ax + 2, ay + 6, SHADOW);
 			}
 			else
 			{
-				icon.draw(ax + 2, ay + 2, 16, 16, Color4I.NONE);
-				gui.drawString(getTitle(gui), ax + 21, ay + 6);
-			}
-
-			if (gui.isMouseOver(ax, ay, width, height))
-			{
-				DEFAULT_MOUSE_OVER.draw(ax, ay, width, height, Color4I.NONE);
+				icon.draw(ax + 2, ay + 2, 16, 16);
+				gui.drawString(getTitle(), ax + 21, ay + 6, SHADOW);
 			}
 		}
 	}
@@ -131,17 +125,17 @@ public class GuiClientConfig extends GuiBase
 	{
 		private final String modId;
 
-		public ButtonClientConfig(ClientConfig config)
+		public ButtonClientConfig(GuiBase gui, ClientConfig config)
 		{
-			super(config.name.getFormattedText(), config.icon);
+			super(gui, config.name.getFormattedText(), config.icon);
 			modId = config.id;
 		}
 
 		@Override
-		public void onClicked(GuiBase gui, MouseButton button)
+		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle(gui)));
+			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle()));
 		}
 	}
 
@@ -152,7 +146,7 @@ public class GuiClientConfig extends GuiBase
 	{
 		super(0, 0);
 
-		panelButtons = new Panel(2, 1, 0, 162)
+		panelButtons = new Panel(gui, 9, 9, 0, 146)
 		{
 			@Override
 			public void addWidgets()
@@ -162,17 +156,17 @@ public class GuiClientConfig extends GuiBase
 
 				for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
 				{
-					buttons.add(new ButtonClientConfig(config));
+					buttons.add(new ButtonClientConfig(gui, config));
 				}
 
-				buttons.sort((o1, o2) -> o1.getTitle(GuiClientConfig.this).compareToIgnoreCase(o2.getTitle(GuiClientConfig.this)));
+				buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
 				if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
 				{
-					buttons.add(0, new ButtonConfigBase(StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+					buttons.add(0, new ButtonConfigBase(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
 					{
 						@Override
-						public void onClicked(GuiBase gui, MouseButton button)
+						public void onClicked(MouseButton button)
 						{
 							GuiHelper.playClickSound();
 							new GuiLoading().openGui();
@@ -181,10 +175,10 @@ public class GuiClientConfig extends GuiBase
 					});
 
 
-					buttons.add(1, new ButtonConfigBase(StringUtils.translate("team_config"), GuiIcons.FRIENDS)
+					buttons.add(1, new ButtonConfigBase(gui, StringUtils.translate("team_config"), GuiIcons.FRIENDS)
 					{
 						@Override
-						public void onClicked(GuiBase gui, MouseButton button)
+						public void onClicked(MouseButton button)
 						{
 							GuiHelper.playClickSound();
 							new GuiLoading().openGui();
@@ -193,10 +187,10 @@ public class GuiClientConfig extends GuiBase
 					});
 				}
 
-				buttons.add(2, new ButtonConfigBase(StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+				buttons.add(2, new ButtonConfigBase(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
 				{
 					@Override
-					public void onClicked(GuiBase gui, MouseButton button)
+					public void onClicked(MouseButton button)
 					{
 						GuiHelper.playClickSound();
 						new GuiSidebarButtonConfig().openGui();
@@ -212,7 +206,7 @@ public class GuiClientConfig extends GuiBase
 
 				for (Widget w : widgets)
 				{
-					w.setWidth(width - 4);
+					w.setWidth(width);
 				}
 
 				updateWidgetPositions();
@@ -221,23 +215,28 @@ public class GuiClientConfig extends GuiBase
 			@Override
 			public void updateWidgetPositions()
 			{
-				scrollBar.setElementSize(align(new WidgetLayout.Vertical(1, 1, 1)));
+				scrollBar.setElementSize(align(new WidgetLayout.Vertical(0, 1, 0)));
 				scrollBar.setSrollStepFromOneElementSize(19);
+			}
+
+			@Override
+			public Icon getIcon()
+			{
+				return gui.getTheme().getPanelBackground();
 			}
 		};
 
-		panelButtons.addFlags(Panel.FLAG_DEFAULTS);
+		panelButtons.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(202, 2, 16, 160, 0, panelButtons)
+		scrollBar = new PanelScrollBar(this, 0, 8, 16, 148, 0, panelButtons)
 		{
 			@Override
-			public boolean shouldRender(GuiBase gui)
+			public boolean shouldRender()
 			{
 				return true;
 			}
 		};
 
-		setWidth(220);
 		setHeight(164);
 	}
 
@@ -245,8 +244,8 @@ public class GuiClientConfig extends GuiBase
 	public void addWidgets()
 	{
 		addAll(panelButtons, scrollBar);
-		scrollBar.setX(panelButtons.width - 1);
-		setWidth(panelButtons.width + 17);
+		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
+		setWidth(scrollBar.posX + scrollBar.width + 8);
 		posX = (getScreen().getScaledWidth() - width) / 2;
 	}
 
@@ -254,11 +253,5 @@ public class GuiClientConfig extends GuiBase
 	public void onClosed()
 	{
 		FTBLibModClient.saveSidebarButtonConfig();
-	}
-
-	@Override
-	public Icon getIcon(GuiBase gui)
-	{
-		return Button.DEFAULT_BACKGROUND;
 	}
 }

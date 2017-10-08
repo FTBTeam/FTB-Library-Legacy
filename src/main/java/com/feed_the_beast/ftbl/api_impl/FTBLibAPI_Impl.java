@@ -159,7 +159,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	}
 
 	@Override
-	public ConfigValue getConfigValueFromID(String id)
+	public ConfigValue getConfigValueFromId(String id)
 	{
 		ConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
 		Objects.requireNonNull(provider, "Unknown Config ID: " + id);

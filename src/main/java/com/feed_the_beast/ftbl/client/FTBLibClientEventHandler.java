@@ -11,11 +11,11 @@ import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.icon.AtlasSpriteIcon;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.IconPresets;
 import com.feed_the_beast.ftbl.lib.item.ODItems;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -495,11 +495,11 @@ public class FTBLibClientEventHandler
 
 			for (GuiButtonSidebar b : buttons)
 			{
-				b.button.getIcon().draw(b.x, b.y, b.width, b.height, Color4I.NONE);
+				b.button.getIcon().draw(b.x, b.y, b.width, b.height);
 
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
-					GuiHelper.drawBlankRect(b.x, b.y, b.width, b.height, Color4I.WHITE_A[33]);
+					Color4I.WHITE_A[33].draw(b.x, b.y, b.width, b.height);
 				}
 			}
 
@@ -514,7 +514,7 @@ public class FTBLibClientEventHandler
 					{
 						int nw = font.getStringWidth(event.getText());
 						int width = 16;
-						GuiHelper.drawBlankRect(b.x + width - nw, b.y - 4, nw + 1, 9, Color4I.LIGHT_RED);
+						Color4I.LIGHT_RED.draw(b.x + width - nw, b.y - 4, nw + 1, 9);
 
 						font.drawString(event.getText(), b.x + width - nw + 1, b.y - 3, 0xFFFFFFFF);
 						GlStateManager.color(1F, 1F, 1F, 1F);
@@ -548,7 +548,7 @@ public class FTBLibClientEventHandler
 
 					GlStateManager.enableBlend();
 					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-					GuiHelper.drawBlankRect(-3, -2, tw + 6, 12, Color4I.DARK_GRAY);
+					Color4I.DARK_GRAY.draw(-3, -2, tw + 6, 12);
 					font.drawString(b.title, 0, 0, 0xFFFFFFFF);
 					GlStateManager.color(1F, 1F, 1F, 1F);
 					GlStateManager.popMatrix();

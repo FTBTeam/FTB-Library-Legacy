@@ -2,15 +2,16 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
-import com.feed_the_beast.ftbl.lib.icon.TexturelessRectangle;
-import com.feed_the_beast.ftbl.lib.util.misc.Color4I;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import com.feed_the_beast.ftbl.lib.gui.misc.ThemeVanilla;
+import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
+import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.util.misc.Pushable;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -25,8 +26,6 @@ import java.util.List;
 public abstract class GuiBase extends Panel
 {
 	public static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
-	public static final TexturelessRectangle DEFAULT_BACKGROUND = new TexturelessRectangle(0xC8333333).setLineColor(0xFFC0C0C0).setRoundEdges(true);
-	public static final Color4I DEFAULT_CONTENT_COLOR = Color4I.rgb(0xC0C0C0);
 
 	private final FontRenderer font;
 	private int mouseX, mouseY, mouseWheel;
@@ -35,12 +34,16 @@ public abstract class GuiBase extends Panel
 	private ScaledResolution screen;
 	public boolean fixUnicode;
 	private GuiScreen prevScreen;
+	private final Pushable<Boolean> fontUnicode;
 
 	public GuiBase(int w, int h)
 	{
-		super(0, 0, w, h);
+		super(null, 0, 0, w, h);
+		gui = this;
+		setParentPanel(this);
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
+		fontUnicode = new Pushable<>(false, font::setUnicodeFlag);
 	}
 
 	public static void setupDrawing()
@@ -48,6 +51,7 @@ public abstract class GuiBase extends Panel
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.enableTexture2D();
 	}
 
@@ -74,6 +78,50 @@ public abstract class GuiBase extends Panel
 		refreshWidgets();
 		updateWidgetPositions();
 		fixUnicode = screen.getScaleFactor() % 2 == 1;
+	}
+
+	public Theme getTheme()
+	{
+		return Theme.CURRENT == null ? ThemeVanilla.INSTANCE : Theme.CURRENT;
+	}
+
+	@Override
+	public Panel getParentPanel()
+	{
+		return this;
+	}
+
+	@Override
+	public void setParentPanel(Panel p)
+	{
+	}
+
+	@Override
+	public int getAX()
+	{
+		return posX;
+	}
+
+	@Override
+	public int getAY()
+	{
+		return posY;
+	}
+
+	@Override
+	public void setScrollX(int scroll)
+	{
+	}
+
+	@Override
+	public void setScrollY(int scroll)
+	{
+	}
+
+	@Override
+	public boolean hasFlag(int flag)
+	{
+		return false;
 	}
 
 	public void onInit()
@@ -151,7 +199,7 @@ public abstract class GuiBase extends Panel
 	}
 
 	@Override
-	public final void renderWidget(GuiBase gui)
+	public final void renderWidget()
 	{
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.disableLighting();
@@ -162,7 +210,7 @@ public abstract class GuiBase extends Panel
 
 	public void renderWidgets()
 	{
-		super.renderWidget(this);
+		super.renderWidget();
 	}
 
 	public boolean drawDefaultBackground()
@@ -172,12 +220,11 @@ public abstract class GuiBase extends Panel
 
 	public void drawBackground()
 	{
-		getIcon(this).draw(this, Color4I.NONE);
 	}
 
 	public void drawForeground()
 	{
-		addMouseOverText(this, TEMP_TEXT_LIST);
+		addMouseOverText(TEMP_TEXT_LIST);
 		GuiUtils.drawHoveringText(TEMP_TEXT_LIST, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
 		TEMP_TEXT_LIST.clear();
 	}
@@ -195,11 +242,6 @@ public abstract class GuiBase extends Panel
 	public final void openGuiLater()
 	{
 		ClientUtils.runLater(this::openGui);
-	}
-
-	public final FontRenderer getFont()
-	{
-		return font;
 	}
 
 	public final ScaledResolution getScreen()
@@ -237,11 +279,6 @@ public abstract class GuiBase extends Panel
 		return Keyboard.isKeyDown(key);
 	}
 
-	public void playSoundFX(SoundEvent e, float pitch)
-	{
-		ClientUtils.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(e, pitch));
-	}
-
 	public boolean isMouseOver(int x, int y, int w, int h)
 	{
 		return getMouseX() >= x && getMouseY() >= y && getMouseX() < x + w && getMouseY() < y + h;
@@ -252,34 +289,62 @@ public abstract class GuiBase extends Panel
 		return isMouseOver(w.getAX(), w.getAY(), w.width, w.height);
 	}
 
-	public Color4I getContentColor()
+	public Pushable<Boolean> getFontUnicode()
 	{
-		return DEFAULT_CONTENT_COLOR;
+		return fontUnicode;
 	}
 
-	public void drawString(String text, float x, float y, Color4I col)
+	public int getStringWidth(String text)
 	{
-		getFont().drawString(text, (int) x, (int) y, col.rgba(), false);
+		return font.getStringWidth(text);
 	}
 
-	public void drawString(String text, float x, float y)
+	public int getFontHeight()
 	{
-		drawString(text, x, y, getContentColor());
+		return font.FONT_HEIGHT;
 	}
 
-	public void drawCenteredString(String text, float x, float y, Color4I col)
+	public String trimStringToWidth(String text, int width, boolean reverse)
 	{
-		GuiHelper.drawCenteredString(getFont(), text, x, y, col);
+		return font.trimStringToWidth(text, width, reverse);
 	}
 
-	public void drawCenteredString(String text, float x, float y)
+	public List<String> listFormattedStringToWidth(String text, int width)
 	{
-		drawCenteredString(text, x, y, getContentColor());
+		return font.listFormattedStringToWidth(text, width);
 	}
 
-	public boolean isOpen()
+	public int drawString(String text, int x, int y, Color4I color, boolean shadow, boolean centered)
 	{
-		return ClientUtils.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) ClientUtils.MC.currentScreen).getWrappedGui() == this;
+		if (text.isEmpty() || color.isEmpty())
+		{
+			return 0;
+		}
+
+		if (centered)
+		{
+			x -= font.getStringWidth(text) / 2;
+			y -= font.FONT_HEIGHT / 2;
+		}
+
+		int i = font.drawString(text, x, y, color.rgba(), shadow);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		return i;
+	}
+
+	public int drawString(String text, int x, int y, Color4I color, int flags)
+	{
+		return drawString(text, x, y, color, Bits.getFlag(flags, SHADOW), Bits.getFlag(flags, CENTERED));
+	}
+
+	public final int drawString(String text, int x, int y, int flags)
+	{
+		return drawString(text, x, y, getTheme().getContentColor(Bits.getFlag(flags, DARK)), flags);
+	}
+
+	public final int drawString(String text, int x, int y)
+	{
+		return drawString(text, x, y, getTheme().getContentColor(false), false, false);
 	}
 
 	public boolean isShiftDown()
@@ -295,5 +360,11 @@ public abstract class GuiBase extends Panel
 	public boolean changePage(String value)
 	{
 		return false;
+	}
+
+	@Override
+	public Icon getIcon()
+	{
+		return getTheme().getGui(false);
 	}
 }

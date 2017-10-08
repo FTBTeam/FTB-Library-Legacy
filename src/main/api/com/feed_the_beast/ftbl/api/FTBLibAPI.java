@@ -44,7 +44,7 @@ public abstract class FTBLibAPI
 
 	public abstract void editServerConfig(EntityPlayerMP player, ConfigGroup group, IConfigCallback callback);
 
-	public abstract ConfigValue getConfigValueFromID(String id);
+	public abstract ConfigValue getConfigValueFromId(String id);
 
 	public abstract Map<String, RankConfigValueInfo> getRankConfigRegistry();
 
