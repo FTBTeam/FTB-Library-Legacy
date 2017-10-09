@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.lib.util.misc;
 
+import com.google.common.base.Preconditions;
+
 import javax.annotation.Nullable;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -16,14 +18,14 @@ public final class Pushable<E> implements Supplier<E>
 	private final Consumer<E> consumer;
 
 	private E value;
-	private final Queue<E> pushedValues;
+	private final List<E> pushedValues;
 
 	public Pushable(E def, Consumer<E> _set)
 	{
 		defaultValue = def;
 		value = def;
 		consumer = _set;
-		pushedValues = new ArrayDeque<>(3);
+		pushedValues = new ArrayList<>(3);
 		consumer.accept(defaultValue);
 	}
 
@@ -59,7 +61,8 @@ public final class Pushable<E> implements Supplier<E>
 
 	public E pop()
 	{
-		set(pushedValues.poll());
+		Preconditions.checkState(pushedValues.size() > 0);
+		set(pushedValues.remove(pushedValues.size() - 1));
 		return value;
 	}
 

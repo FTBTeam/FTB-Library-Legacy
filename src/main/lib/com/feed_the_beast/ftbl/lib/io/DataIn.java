@@ -178,11 +178,16 @@ public class DataIn
 
 	public <K, V> Map<K, V> readMap(@Nullable Map<K, V> map, Deserializer<K> keyDeserializer, Deserializer<V> valueDeserializer)
 	{
+		if (map != null)
+		{
+			map.clear();
+		}
+
 		int id = readUnsignedByte();
 
 		if (id == 6)
 		{
-			return Collections.emptyMap();
+			return map == null ? Collections.emptyMap() : map;
 		}
 
 		int size;

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
+import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -15,7 +16,7 @@ public class ExtendedTextField extends TextField
 {
 	public ITextComponent textComponent;
 	private List<GuiHelper.PositionedTextData> textData;
-	private long lastUpdate = 0L;
+	private long lastUpdate = -1L;
 
 	public ExtendedTextField(GuiBase gui, int x, int y, int width, int height, ITextComponent t)
 	{
@@ -27,8 +28,18 @@ public class ExtendedTextField extends TextField
 	@Override
 	public ExtendedTextField setTitle(String txt)
 	{
+		lastUpdate = -1L;
+
 		if (textComponent != null)
 		{
+			for (ITextComponent component : textComponent)
+			{
+				if (component instanceof TextComponentCountdown)
+				{
+					lastUpdate = 0L;
+				}
+			}
+
 			super.setTitle(textComponent.getFormattedText());
 			textData = GuiHelper.createDataFrom(textComponent, ClientUtils.MC.fontRenderer, width);
 		}
@@ -78,11 +89,16 @@ public class ExtendedTextField extends TextField
 	@Override
 	public void renderWidget()
 	{
-		long ms = System.currentTimeMillis();
-		if (lastUpdate <= ms)
+		if (lastUpdate != -1L)
 		{
-			lastUpdate = ms + 500L;
-			setTitle("");
+			long ms = System.currentTimeMillis();
+
+			if (lastUpdate <= ms)
+			{
+				lastUpdate = ms + 500L;
+				setTitle("");
+				getParentPanel().refreshWidgets();
+			}
 		}
 
 		super.renderWidget();
