@@ -39,7 +39,7 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.NET;
+		return FTBLibNetHandler.MY_TEAM;
 	}
 
 	@Override

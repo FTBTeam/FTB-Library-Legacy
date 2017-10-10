@@ -55,7 +55,7 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.NET;
+		return FTBLibNetHandler.GENERAL;
 	}
 
 	@Override

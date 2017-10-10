@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.Pushable;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
@@ -34,7 +33,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.Stack;
 
 /**
  * @author LatvianModder
@@ -43,65 +42,37 @@ public class GuiHelper
 {
 	private static class Scissor
 	{
-		private final ScaledResolution screen;
 		private final int x, y, w, h;
 
-		private Scissor(@Nullable ScaledResolution s, int _x, int _y, int _w, int _h)
+		private Scissor(int _x, int _y, int _w, int _h)
 		{
-			screen = s;
 			x = _x;
 			y = _y;
 			w = Math.max(0, _w);
 			h = Math.max(0, _h);
 		}
 
-		public boolean valid()
+		public Scissor crop(int sx, int sy, int sw, int sh)
 		{
-			return w > 0 && h > 0;
+			int x0 = Math.max(x, sx);
+			int y0 = Math.max(y, sy);
+			int x1 = Math.min(x + w, sx + sw);
+			int y1 = Math.min(y + h, sy + sh);
+			return new Scissor(x0, y0, x1 - x0, y1 - y0);
 		}
 
-		public int hashCode()
+		public void scissor(ScaledResolution screen)
 		{
-			return Objects.hash(x, y, w, h);
-		}
-
-		public boolean equals(Object o)
-		{
-			if (o == this)
-			{
-				return true;
-			}
-			else if (o != null && o.getClass() == Scissor.class)
-			{
-				Scissor s = (Scissor) o;
-				return x == s.x && y == s.y && w == s.w && h == s.h;
-			}
-
-			return false;
-		}
-
-		public Scissor crop(Scissor s)
-		{
-			int x0 = Math.max(x, s.x);
-			int y0 = Math.max(y, s.y);
-			int x1 = Math.min(x + w, s.x + s.w);
-			int y1 = Math.min(y + h, s.y + s.h);
-			return new Scissor(screen, x0, y0, x1 - x0, y1 - y0);
+			int scale = screen.getScaleFactor();
+			int sx = x * scale;
+			int sy = (screen.getScaledHeight() - (y + h)) * scale;
+			int sw = w * scale;
+			int sh = h * scale;
+			GL11.glScissor(sx, sy, sw, sh);
 		}
 	}
 
-	private static final Pushable<Scissor> SCISSOR = new Pushable<>(new Scissor(null, 0, 0, 0, 0), value ->
-	{
-		if (value.screen != null)
-		{
-			int scale = value.screen.getScaleFactor();
-			int sx = value.x * scale;
-			int sy = ClientUtils.MC.displayHeight - (value.y + value.h) * scale;
-			int sw = Math.max(0, value.w) * scale;
-			int sh = Math.max(0, value.h) * scale;
-			GL11.glScissor(sx, sy, sw, sh);
-		}
-	});
+	private static final Stack<Scissor> SCISSOR = new Stack<>();
 
 	public static int getGuiWidth(GuiContainer gui)
 	{
@@ -265,27 +236,21 @@ public class GuiHelper
 
 	public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)
 	{
-		Scissor prev = SCISSOR.get();
-
-		if (SCISSOR.size() == 0)
+		if (SCISSOR.isEmpty())
 		{
 			GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		}
 
-		Scissor scissor = new Scissor(screen, x, y, w, h);
-
-		if (prev.valid())
-		{
-			scissor = prev.crop(scissor);
-		}
-
-		SCISSOR.push();
-		SCISSOR.set(scissor);
+		Scissor scissor = SCISSOR.isEmpty() ? new Scissor(x, y, w, h) : SCISSOR.lastElement().crop(x, y, w, h);
+		SCISSOR.push(scissor);
+		scissor.scissor(screen);
 	}
 
-	public static void popScissor()
+	public static void popScissor(ScaledResolution screen)
 	{
-		if (!SCISSOR.pop().valid())
+		SCISSOR.pop().scissor(screen);
+
+		if (SCISSOR.isEmpty())
 		{
 			GL11.glDisable(GL11.GL_SCISSOR_TEST);
 		}

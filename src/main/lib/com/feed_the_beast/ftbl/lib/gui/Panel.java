@@ -132,6 +132,11 @@ public abstract class Panel extends Widget
 		}
 	}
 
+	public boolean isOffset()
+	{
+		return offsetX != 0 || offsetY != 0;
+	}
+
 	public void setScrollX(int scroll)
 	{
 		scrollX = scroll;
@@ -146,8 +151,7 @@ public abstract class Panel extends Widget
 	public void renderWidget()
 	{
 		boolean renderInside = hasFlag(ONLY_RENDER_WIDGETS_INSIDE);
-		gui.getFontUnicode().push();
-		gui.getFontUnicode().set(hasFlag(UNICODE));
+		gui.pushFontUnicode(hasFlag(UNICODE));
 
 		int ax = getAX();
 		int ay = getAY();
@@ -175,10 +179,10 @@ public abstract class Panel extends Widget
 
 		if (renderInside)
 		{
-			GuiHelper.popScissor();
+			GuiHelper.popScissor(gui.getScreen());
 		}
 
-		gui.getFontUnicode().pop();
+		gui.popFontUnicode();
 	}
 
 	protected void renderPanelBackground(int ax, int ay)

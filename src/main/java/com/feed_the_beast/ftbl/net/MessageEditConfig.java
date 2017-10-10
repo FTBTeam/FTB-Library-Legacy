@@ -30,7 +30,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.NET;
+		return FTBLibNetHandler.EDIT_CONFIG;
 	}
 
 	@Override

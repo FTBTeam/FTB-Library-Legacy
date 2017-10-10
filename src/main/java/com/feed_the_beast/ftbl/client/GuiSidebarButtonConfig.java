@@ -8,9 +8,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
-import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.CombinedIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
@@ -22,7 +20,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class GuiSidebarButtonConfig extends GuiBase
+public class GuiSidebarButtonConfig extends GuiButtonListBase
 {
 	private static final Color4I COLOR_ENABLED = Color4I.rgba(0x5547BF41);
 	private static final Color4I COLOR_UNAVAILABLE = Color4I.rgba(0x550094FF);
@@ -83,70 +81,19 @@ public class GuiSidebarButtonConfig extends GuiBase
 		}
 	}
 
-	private final Panel panelButtons;
-	private final PanelScrollBar scrollBar;
-
-	public GuiSidebarButtonConfig()
-	{
-		super(0, 0);
-
-		panelButtons = new Panel(this, 3, 3, 0, 158)
-		{
-			@Override
-			public void addWidgets()
-			{
-				width = 0;
-
-				for (ISidebarButtonGroup group : FTBLibAPI.API.getSidebarButtonGroups())
-				{
-					for (ISidebarButton button : group.getButtons())
-					{
-						if (button.getDefaultConfig() != null)
-						{
-							Button b = new ButtonConfigSidebarButton(gui, button);
-							add(b);
-							setWidth(Math.max(width, b.width));
-						}
-					}
-				}
-
-				for (Widget w : widgets)
-				{
-					w.setWidth(width - 4);
-				}
-
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
-				scrollBar.setElementSize(align(new WidgetLayout.Vertical(1, 2, 1)));
-				scrollBar.setSrollStepFromOneElementSize(20);
-			}
-		};
-
-		panelButtons.addFlags(Panel.DEFAULTS);
-
-		scrollBar = new PanelScrollBar(this, 0, 3, 16, 158, 0, panelButtons)
-		{
-			@Override
-			public boolean shouldRender()
-			{
-				return true;
-			}
-		};
-
-		setHeight(164);
-	}
-
 	@Override
-	public void addWidgets()
+	public void addButtons(Panel panel)
 	{
-		addAll(panelButtons, scrollBar);
-		scrollBar.setX(panelButtons.width + 1);
-		setWidth(panelButtons.width + 20);
-		posX = (getScreen().getScaledWidth() - width) / 2;
+		for (ISidebarButtonGroup group : FTBLibAPI.API.getSidebarButtonGroups())
+		{
+			for (ISidebarButton button : group.getButtons())
+			{
+				if (button.getDefaultConfig() != null)
+				{
+					panel.add(new ButtonConfigSidebarButton(gui, button));
+				}
+			}
+		}
 	}
 
 	@Override

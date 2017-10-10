@@ -27,7 +27,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.NET;
+		return FTBLibNetHandler.EDIT_CONFIG;
 	}
 
 	@Override

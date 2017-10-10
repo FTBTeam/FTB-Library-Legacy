@@ -76,14 +76,20 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void onClicked(MouseButton button)
+	public boolean mousePressed(MouseButton button)
 	{
-		GuiHelper.PositionedTextData data = getDataAtMouse();
-
-		if (data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
+		if (gui.isMouseOver(this))
 		{
-			GuiHelper.playClickSound();
+			GuiHelper.PositionedTextData data = getDataAtMouse();
+
+			if (data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
+			{
+				GuiHelper.playClickSound();
+				return true;
+			}
 		}
+
+		return false;
 	}
 
 	@Override

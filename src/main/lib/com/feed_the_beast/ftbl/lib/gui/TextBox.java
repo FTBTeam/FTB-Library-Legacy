@@ -567,7 +567,7 @@ public class TextBox extends Widget
 			GlStateManager.enableTexture2D();
 		}
 
-		GuiHelper.popScissor();
+		GuiHelper.popScissor(gui.getScreen());
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 

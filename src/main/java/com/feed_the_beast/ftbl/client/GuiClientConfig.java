@@ -7,9 +7,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
-import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftbl.lib.gui.Widget;
-import com.feed_the_beast.ftbl.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -30,7 +28,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class GuiClientConfig extends GuiBase
+public class GuiClientConfig extends GuiButtonListBase
 {
 	private class GuiCustomConfig extends GuiConfig
 	{
@@ -139,114 +137,55 @@ public class GuiClientConfig extends GuiBase
 		}
 	}
 
-	private final Panel panelButtons;
-	private final PanelScrollBar scrollBar;
-
-	public GuiClientConfig()
-	{
-		super(0, 0);
-
-		panelButtons = new Panel(gui, 9, 9, 0, 146)
-		{
-			@Override
-			public void addWidgets()
-			{
-				width = 0;
-				List<Button> buttons = new ArrayList<>();
-
-				for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
-				{
-					buttons.add(new ButtonClientConfig(gui, config));
-				}
-
-				buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
-
-				if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
-				{
-					buttons.add(0, new ButtonConfigBase(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
-					{
-						@Override
-						public void onClicked(MouseButton button)
-						{
-							GuiHelper.playClickSound();
-							new GuiLoading().openGui();
-							ClientUtils.execClientCommand("/ftb my_settings");
-						}
-					});
-
-
-					buttons.add(1, new ButtonConfigBase(gui, StringUtils.translate("team_config"), GuiIcons.FRIENDS)
-					{
-						@Override
-						public void onClicked(MouseButton button)
-						{
-							GuiHelper.playClickSound();
-							new GuiLoading().openGui();
-							ClientUtils.execClientCommand("/ftb team config");
-						}
-					});
-				}
-
-				buttons.add(2, new ButtonConfigBase(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
-				{
-					@Override
-					public void onClicked(MouseButton button)
-					{
-						GuiHelper.playClickSound();
-						new GuiSidebarButtonConfig().openGui();
-					}
-				});
-
-				addAll(buttons);
-
-				for (Widget w : widgets)
-				{
-					setWidth(Math.max(width, w.width));
-				}
-
-				for (Widget w : widgets)
-				{
-					w.setWidth(width);
-				}
-
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
-				scrollBar.setElementSize(align(new WidgetLayout.Vertical(0, 1, 0)));
-				scrollBar.setSrollStepFromOneElementSize(19);
-			}
-
-			@Override
-			public Icon getIcon()
-			{
-				return gui.getTheme().getPanelBackground();
-			}
-		};
-
-		panelButtons.addFlags(Panel.DEFAULTS);
-
-		scrollBar = new PanelScrollBar(this, 0, 8, 16, 148, 0, panelButtons)
-		{
-			@Override
-			public boolean shouldRender()
-			{
-				return true;
-			}
-		};
-
-		setHeight(164);
-	}
-
 	@Override
-	public void addWidgets()
+	public void addButtons(Panel panel)
 	{
-		addAll(panelButtons, scrollBar);
-		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
-		setWidth(scrollBar.posX + scrollBar.width + 8);
-		posX = (getScreen().getScaledWidth() - width) / 2;
+		List<Button> buttons = new ArrayList<>();
+
+		for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
+		{
+			buttons.add(new ButtonClientConfig(gui, config));
+		}
+
+		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
+
+		if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
+		{
+			buttons.add(0, new ButtonConfigBase(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+			{
+				@Override
+				public void onClicked(MouseButton button)
+				{
+					GuiHelper.playClickSound();
+					new GuiLoading().openGui();
+					ClientUtils.execClientCommand("/ftb my_settings");
+				}
+			});
+
+
+			buttons.add(1, new ButtonConfigBase(gui, StringUtils.translate("team_config"), GuiIcons.FRIENDS)
+			{
+				@Override
+				public void onClicked(MouseButton button)
+				{
+					GuiHelper.playClickSound();
+					new GuiLoading().openGui();
+					ClientUtils.execClientCommand("/ftb team config");
+				}
+			});
+		}
+
+		buttons.add(2, new ButtonConfigBase(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		{
+			@Override
+			public void onClicked(MouseButton button)
+			{
+				GuiHelper.playClickSound();
+				new GuiSidebarButtonConfig().openGui();
+			}
+		});
+
+		panel.addAll(buttons);
 	}
 
 	@Override

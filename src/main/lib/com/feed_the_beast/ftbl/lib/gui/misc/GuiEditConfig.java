@@ -368,9 +368,10 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public boolean isFullscreen()
+	public void onInit()
 	{
-		return true;
+		setWidth(getScreen().getScaledWidth());
+		setHeight(getScreen().getScaledHeight());
 	}
 
 	@Override

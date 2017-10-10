@@ -29,7 +29,7 @@ public class MessageMyTeamAddPlayerGui extends MessageToClient<MessageMyTeamAddP
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.NET;
+		return FTBLibNetHandler.MY_TEAM;
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -123,20 +122,17 @@ public class Widget
 
 	public void renderWidget()
 	{
+		getIcon().draw(this);
+
 		Color4I col = renderTitleInCenter();
 
-		if (col.isEmpty())
-		{
-			getIcon().draw(this);
-		}
-		else
+		if (!col.isEmpty())
 		{
 			String title = getTitle();
 
 			if (!title.isEmpty())
 			{
-				gui.drawString(title, getAX() + width / 2, getAY() + height / 2, col, DARK | CENTERED);
-				GlStateManager.color(1F, 1F, 1F, 1F);
+				gui.drawString(title, getAX() + width / 2, getAY() + height / 2, col, CENTERED);
 			}
 		}
 	}

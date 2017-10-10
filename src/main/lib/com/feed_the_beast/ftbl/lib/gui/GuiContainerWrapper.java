@@ -82,7 +82,6 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		}
 
 		GuiBase.setupDrawing();
-		wrappedGui.getFontUnicode().reset();
 		wrappedGui.getIcon().draw(wrappedGui);
 		wrappedGui.drawBackground();
 		GuiBase.setupDrawing();

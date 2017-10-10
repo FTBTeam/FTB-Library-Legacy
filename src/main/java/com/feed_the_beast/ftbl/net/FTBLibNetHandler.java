@@ -8,20 +8,21 @@ import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
  */
 public class FTBLibNetHandler
 {
-	static final NetworkWrapper NET = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID);
+	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID);
+	static final NetworkWrapper EDIT_CONFIG = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID + "_edit_config");
+	static final NetworkWrapper MY_TEAM = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID + "_my_team");
 
 	public static void init()
 	{
-		NET.register(1, new MessageSyncData());
-		NET.register(2, new MessageEditConfig());
-		NET.register(3, new MessageEditConfigResponse());
-		NET.register(4, new MessageOpenGui());
-		NET.register(5, new MessageCloseGui());
-		//6
-		//7
-		//8
-		NET.register(9, new MessageSelectTeamGui());
-		NET.register(10, new MessageMyTeamGui());
-		NET.register(11, new MessageMyTeamAddPlayerGui());
+		GENERAL.register(1, new MessageSyncData());
+		GENERAL.register(2, new MessageOpenGui());
+		GENERAL.register(3, new MessageCloseGui());
+
+		EDIT_CONFIG.register(1, new MessageEditConfig());
+		EDIT_CONFIG.register(2, new MessageEditConfigResponse());
+
+		MY_TEAM.register(1, new MessageSelectTeamGui());
+		MY_TEAM.register(2, new MessageMyTeamGui());
+		MY_TEAM.register(3, new MessageMyTeamAddPlayerGui());
 	}
 }

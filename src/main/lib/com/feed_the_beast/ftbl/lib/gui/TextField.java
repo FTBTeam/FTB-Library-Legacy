@@ -1,9 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.util.LangKey;
-import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
@@ -13,13 +10,14 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class TextField extends Button
+public class TextField extends Widget
 {
 	public List<String> text = Collections.emptyList();
 
 	public TextField(GuiBase gui, int x, int y, int w, int h, String txt)
 	{
-		super(gui, x, y, w, h, txt);
+		super(gui, x, y, w, h);
+		setTitle(txt);
 	}
 
 	public TextField(GuiBase gui, int x, int y, int w, int h, LangKey key)
@@ -32,32 +30,32 @@ public class TextField extends Button
 		this(gui, x, y, w, h, component.getFormattedText());
 	}
 
-	@Override
 	public TextField setTitle(String txt)
 	{
-		FontRenderer font = ClientUtils.MC.fontRenderer;
+		text.clear();
 
 		if (!txt.isEmpty())
 		{
-			if (width >= 10)
-			{
-				text = font.listFormattedStringToWidth(txt, width);
-			}
-			else
-			{
-				text = Collections.singletonList(txt);
-			}
+			text = gui.listFormattedStringToWidth(txt, width);
+		}
+
+		if (text.isEmpty())
+		{
+			text = Collections.emptyList();
 		}
 
 		if (height <= 1)
 		{
-			int h1 = font.FONT_HEIGHT + 1;
+			int h1 = gui.getFontHeight() + 1;
 			setHeight(text.isEmpty() ? h1 : h1 * text.size());
 		}
 
-		if (text.size() == 1 && !text.get(0).isEmpty())
+		if (width <= 1)
 		{
-			setWidth(font.getStringWidth(text.get(0)));
+			for (String s : text)
+			{
+				setWidth(Math.max(width, gui.getStringWidth(s)));
+			}
 		}
 
 		return this;
@@ -65,11 +63,6 @@ public class TextField extends Button
 
 	@Override
 	public void addMouseOverText(List<String> list)
-	{
-	}
-
-	@Override
-	public void onClicked(MouseButton button)
 	{
 	}
 
@@ -86,7 +79,7 @@ public class TextField extends Button
 
 		for (int i = 0; i < text.size(); i++)
 		{
-			gui.drawString(text.get(i), ax, ay + i * 10 + 1);
+			gui.drawString(text.get(i), ax, ay + i * 10 + 1, DARK);
 		}
 
 		GlStateManager.color(1F, 1F, 1F, 1F);

@@ -6,7 +6,8 @@ import com.feed_the_beast.ftbl.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.io.Bits;
-import com.feed_the_beast.ftbl.lib.util.misc.Pushable;
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.booleans.BooleanStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -34,7 +35,7 @@ public abstract class GuiBase extends Panel
 	private ScaledResolution screen;
 	public boolean fixUnicode;
 	private GuiScreen prevScreen;
-	private final Pushable<Boolean> fontUnicode;
+	private final BooleanStack fontUnicode;
 
 	public GuiBase(int w, int h)
 	{
@@ -43,7 +44,7 @@ public abstract class GuiBase extends Panel
 		setParentPanel(this);
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
-		fontUnicode = new Pushable<>(false, font::setUnicodeFlag);
+		fontUnicode = new BooleanArrayList();
 	}
 
 	public static void setupDrawing()
@@ -58,23 +59,9 @@ public abstract class GuiBase extends Panel
 	public final void initGui()
 	{
 		screen = new ScaledResolution(ClientUtils.MC);
-
-		if (isFullscreen())
-		{
-			posX = 0;
-			posY = 0;
-			setWidth(screen.getScaledWidth());
-			setHeight(screen.getScaledHeight());
-		}
-
 		onInit();
-
-		if (!isFullscreen())
-		{
-			posX = (screen.getScaledWidth() - width) / 2;
-			posY = (screen.getScaledHeight() - height) / 2;
-		}
-
+		posX = (screen.getScaledWidth() - width) / 2;
+		posY = (screen.getScaledHeight() - height) / 2;
 		refreshWidgets();
 		updateWidgetPositions();
 		fixUnicode = screen.getScaleFactor() % 2 == 1;
@@ -179,11 +166,6 @@ public abstract class GuiBase extends Panel
 		refreshWidgets = true;
 	}
 
-	public boolean isFullscreen()
-	{
-		return false;
-	}
-
 	public final void updateGui(int mx, int my, float pt)
 	{
 		partialTicks = pt;
@@ -286,12 +268,32 @@ public abstract class GuiBase extends Panel
 
 	public boolean isMouseOver(Widget w)
 	{
-		return isMouseOver(w.getAX(), w.getAY(), w.width, w.height);
+		if (w == this)
+		{
+			return true;
+		}
+		else if (isMouseOver(w.getAX(), w.getAY(), w.width, w.height))
+		{
+			Panel p = w.getParentPanel();
+			boolean offset = p.isOffset();
+			p.setOffset(false);
+			boolean b = isMouseOver(p);
+			p.setOffset(offset);
+			return b;
+		}
+
+		return false;
 	}
 
-	public Pushable<Boolean> getFontUnicode()
+	public void pushFontUnicode(boolean flag)
 	{
-		return fontUnicode;
+		fontUnicode.push(font.getUnicodeFlag());
+		font.setUnicodeFlag(flag);
+	}
+
+	public void popFontUnicode()
+	{
+		font.setUnicodeFlag(fontUnicode.pop());
 	}
 
 	public int getStringWidth(String text)

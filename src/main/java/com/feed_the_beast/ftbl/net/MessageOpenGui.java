@@ -39,7 +39,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.NET;
+		return FTBLibNetHandler.GENERAL;
 	}
 
 	@Override

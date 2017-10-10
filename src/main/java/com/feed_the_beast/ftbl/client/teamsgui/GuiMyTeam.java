@@ -75,7 +75,6 @@ public class GuiMyTeam extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 
-			//GuiHelper.render(ENTRY_TEX, ax, ay, width, getHeight());
 			getTheme().getContentColor(false).draw(ax, ay + height, width + 3, 1);
 			getIcon().draw(ax + 2, ay + 2, 8, 8);
 			gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
