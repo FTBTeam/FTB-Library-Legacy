@@ -9,7 +9,6 @@ import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftbl.lib.gui.Widget;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.IconWithOutline;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
@@ -62,7 +61,7 @@ public class GuiSelectTeam extends GuiBase
 			team = t;
 			setTitle(team.color.getTextFormatting() + team.displayName);
 			setIcon(new PlayerHeadIcon(t.ownerName));
-			background = IconWithOutline.getIconWithOutline(team.isInvited ? INVITED_COLOR : Icon.EMPTY, team.color.getColor(), true);
+			background = team.isInvited ? INVITED_COLOR : Icon.EMPTY.withOutline(team.color.getColor(), true);
 		}
 
 		@Override

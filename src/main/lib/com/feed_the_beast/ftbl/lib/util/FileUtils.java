@@ -9,6 +9,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -56,7 +57,7 @@ public class FileUtils
 
 	public static void save(File f, String s) throws Exception
 	{
-		OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(f)), StringUtils.UTF_8);
+		OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(f)), StandardCharsets.UTF_8);
 		BufferedWriter br = new BufferedWriter(fw);
 		br.write(s);
 		br.close();

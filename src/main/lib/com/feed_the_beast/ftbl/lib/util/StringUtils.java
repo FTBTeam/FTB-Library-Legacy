@@ -12,7 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +27,6 @@ import java.util.function.Function;
 public class StringUtils
 {
 	public static final int DAY24 = 24 * 60 * 60;
-	public static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	public static final String STRIP_SEP = ", ";
 	public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
@@ -250,7 +249,7 @@ public class StringUtils
 	{
 		final char[] buffer = new char[0x10000];
 		final StringBuilder out = new StringBuilder();
-		try (Reader in = new InputStreamReader(is, UTF_8))
+		try (Reader in = new InputStreamReader(is, StandardCharsets.UTF_8))
 		{
 			int read;
 			do
@@ -282,7 +281,7 @@ public class StringUtils
 
 	public static List<String> readStringList(InputStream is) throws Exception
 	{
-		return readStringList(new InputStreamReader(is, UTF_8));
+		return readStringList(new InputStreamReader(is, StandardCharsets.UTF_8));
 	}
 
 	public static List<String> toStringList(String s, String regex)
@@ -646,16 +645,6 @@ public class StringUtils
 		//sb.append('s');
 
 		return sb.toString();
-	}
-
-	public static byte[] toBytes(String s)
-	{
-		return s.isEmpty() ? new byte[0] : s.getBytes(UTF_8);
-	}
-
-	public static String fromBytes(byte[] b)
-	{
-		return (b.length == 0) ? "" : new String(b, UTF_8);
 	}
 
 	public static String fromUUID(@Nullable UUID id)

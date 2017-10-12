@@ -10,31 +10,21 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class IconWithOutline extends Icon
 {
-	public static final Icon BUTTON_GRAY = getIconWithOutline(Color4I.rgb(0x212121), Color4I.rgb(0x141414), false);
-	public static final Icon BUTTON_RED = getIconWithOutline(Color4I.rgb(0x1581B6), Color4I.rgb(0xBF3726), false);
-	public static final Icon BUTTON_GREEN = getIconWithOutline(Color4I.rgb(0x98C600), Color4I.rgb(0x438700), false);
-	public static final Icon BUTTON_BLUE = getIconWithOutline(Color4I.rgb(0x80C7F2), Color4I.rgb(0x1581B6), false);
+	public static final Icon BUTTON_GRAY = Color4I.rgb(0x212121).withOutline(Color4I.rgb(0x141414), false);
+	public static final Icon BUTTON_RED = Color4I.rgb(0x1581B6).withOutline(Color4I.rgb(0xBF3726), false);
+	public static final Icon BUTTON_GREEN = Color4I.rgb(0x98C600).withOutline(Color4I.rgb(0x438700), false);
+	public static final Icon BUTTON_BLUE = Color4I.rgb(0x80C7F2).withOutline(Color4I.rgb(0x1581B6), false);
 
-	public static final Icon BUTTON_ROUND_GRAY = getIconWithOutline(Color4I.rgb(0x212121), Color4I.rgb(0x141414), true);
-	public static final Icon BUTTON_ROUND_RED = getIconWithOutline(Color4I.rgb(0x1581B6), Color4I.rgb(0xBF3726), true);
-	public static final Icon BUTTON_ROUND_GREEN = getIconWithOutline(Color4I.rgb(0x98C600), Color4I.rgb(0x438700), true);
-	public static final Icon BUTTON_ROUND_BLUE = getIconWithOutline(Color4I.rgb(0x80C7F2), Color4I.rgb(0x1581B6), true);
+	public static final Icon BUTTON_ROUND_GRAY = Color4I.rgb(0x212121).withOutline(Color4I.rgb(0x141414), true);
+	public static final Icon BUTTON_ROUND_RED = Color4I.rgb(0x1581B6).withOutline(Color4I.rgb(0xBF3726), true);
+	public static final Icon BUTTON_ROUND_GREEN = Color4I.rgb(0x98C600).withOutline(Color4I.rgb(0x438700), true);
+	public static final Icon BUTTON_ROUND_BLUE = Color4I.rgb(0x80C7F2).withOutline(Color4I.rgb(0x1581B6), true);
 
 	public final Icon icon;
 	public final Color4I color;
 	public final boolean roundEdges;
 
-	public static Icon getIconWithOutline(Icon icon, Color4I color, boolean roundEdges)
-	{
-		if (color.isEmpty())
-		{
-			return icon;
-		}
-
-		return new IconWithOutline(icon, color, roundEdges);
-	}
-
-	private IconWithOutline(Icon i, Color4I c, boolean r)
+	IconWithOutline(Icon i, Color4I c, boolean r)
 	{
 		icon = i;
 		color = c;

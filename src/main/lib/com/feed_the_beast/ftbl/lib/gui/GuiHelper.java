@@ -131,18 +131,26 @@ public class GuiHelper
 
 	public static void addRectToBuffer(BufferBuilder buffer, int x, int y, int w, int h, Color4I col)
 	{
-		buffer.pos(x, y + h, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
-		buffer.pos(x + w, y + h, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
-		buffer.pos(x + w, y, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
-		buffer.pos(x, y, 0D).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		int r = col.redi();
+		int g = col.greeni();
+		int b = col.bluei();
+		int a = col.alphai();
+		buffer.pos(x, y + h, 0D).color(r, g, b, a).endVertex();
+		buffer.pos(x + w, y + h, 0D).color(r, g, b, a).endVertex();
+		buffer.pos(x + w, y, 0D).color(r, g, b, a).endVertex();
+		buffer.pos(x, y, 0D).color(r, g, b, a).endVertex();
 	}
 
 	public static void addRectToBufferWithUV(BufferBuilder buffer, int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
 	{
-		buffer.pos(x, y + h, 0D).tex(u0, v1).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
-		buffer.pos(x + w, y + h, 0D).tex(u1, v1).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
-		buffer.pos(x + w, y, 0D).tex(u1, v0).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
-		buffer.pos(x, y, 0D).tex(u0, v0).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
+		int r = col.redi();
+		int g = col.greeni();
+		int b = col.bluei();
+		int a = col.alphai();
+		buffer.pos(x, y + h, 0D).tex(u0, v1).color(r, g, b, a).endVertex();
+		buffer.pos(x + w, y + h, 0D).tex(u1, v1).color(r, g, b, a).endVertex();
+		buffer.pos(x + w, y, 0D).tex(u1, v0).color(r, g, b, a).endVertex();
+		buffer.pos(x, y, 0D).tex(u0, v0).color(r, g, b, a).endVertex();
 	}
 
 	public static void drawHollowRect(int x, int y, int w, int h, Color4I col, boolean roundEdges)

@@ -416,31 +416,12 @@ public class FTBLibClientEventHandler
 
 			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).recipeBookGui.isVisible());
 
-			if (FTBLibClientConfig.general.action_buttons.top())
+			if (hasPotions || FTBLibClientConfig.general.action_buttons.top())
 			{
-				int x = 0;
-				int y = 0;
-
 				for (GuiButtonSidebar button : buttons)
 				{
-					if (hasPotions)
-					{
-						button.x = 4 + x * 18;
-						button.y = 4 + y * 18;
-
-						x++;
-
-						if (x >= 15 || 4 + x * 18 >= gui.height)
-						{
-							x = 0;
-							y++;
-						}
-					}
-					else
-					{
-						button.x = 4 + button.buttonX * 18;
-						button.y = 4 + button.buttonY * 18;
-					}
+					button.x = 2 + button.buttonX * 17;
+					button.y = 2 + button.buttonY * 17;
 				}
 			}
 			else
@@ -453,27 +434,11 @@ public class FTBLibClientEventHandler
 					buttonY = 6;
 				}
 
-				if (hasPotions)
-				{
-					buttonX -= 4;
-					buttonY -= 26;
-				}
-
 				for (int index = 0; index < buttons.size(); index++)
 				{
 					GuiButtonSidebar button = buttons.get(index);
-
-					if (hasPotions)
-					{
-						button.x = guiLeft + buttonX - (index % 8) * 18;
-						button.y = guiTop + buttonY - (index / 8) * 18;
-					}
-					else
-					{
-						button.x = guiLeft + buttonX - (index / 8) * 18;
-						button.y = guiTop + buttonY + (index % 8) * 18;
-					}
-
+					button.x = guiLeft + buttonX - (index / 8) * 17;
+					button.y = guiTop + buttonY + (index % 8) * 17;
 				}
 			}
 		}
@@ -481,12 +446,13 @@ public class FTBLibClientEventHandler
 		@Override
 		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 		{
-			//if(creativeContainer != null && creativeContainer.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex())
-			//	return;
-
 			updateButtonPositions();
 
 			zLevel = 0F;
+
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 0, 310);
+
 			FontRenderer font = mc.fontRenderer;
 
 			GlStateManager.enableBlend();
@@ -523,7 +489,6 @@ public class FTBLibClientEventHandler
 
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
-					GlStateManager.pushMatrix();
 					double mx1 = mx - 4D;
 					double my1 = my - 12D;
 
@@ -544,7 +509,8 @@ public class FTBLibClientEventHandler
 						my1 = 4D;
 					}
 
-					GlStateManager.translate(mx1, my1, zLevel + 400);
+					GlStateManager.pushMatrix();
+					GlStateManager.translate(mx1, my1, 600);
 
 					GlStateManager.enableBlend();
 					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -556,6 +522,8 @@ public class FTBLibClientEventHandler
 			}
 
 			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.popMatrix();
+			zLevel = 0F;
 		}
 	}
 }

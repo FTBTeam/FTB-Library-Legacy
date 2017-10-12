@@ -108,7 +108,7 @@ public abstract class Icon
 							roundEdges = o.get("round_edges").getAsBoolean();
 						}
 
-						return IconWithOutline.getIconWithOutline(icon, outline, roundEdges);
+						return icon.withOutline(outline, roundEdges);
 					}
 					case "bullet":
 					{
@@ -232,28 +232,26 @@ public abstract class Icon
 		return new CombinedIcon(this, icon);
 	}
 
-	/*
-		public static Icon getCombined(Icon... icons)
+	public final Icon combineWith(Icon... icons)
+	{
+		if (icons.length == 0)
 		{
-			if (icons.length == 0)
-			{
-				return EMPTY;
-			}
-			else if (icons.length == 1)
+			return this;
+		}
+		else if (icons.length == 1)
+		{
+			if (isEmpty())
 			{
 				return icons[0];
 			}
-			else if (icons.length == 2)
+			else if (icons[0].isEmpty())
 			{
-				return getCombined(icons[0], icons[1]);
+				return this;
 			}
-	
-			return new CombinedIcon(Arrays.asList(icons));
-		}
-	*/
 
-	public final Icon combineWith(Icon... icons)
-	{
+			return new CombinedIcon(this, icons[0]);
+		}
+
 		List<Icon> list = new ArrayList<>(icons.length + 1);
 		list.add(this);
 
@@ -263,5 +261,15 @@ public abstract class Icon
 		}
 
 		return CombinedIcon.getCombined(list);
+	}
+
+	public final Icon withOutline(Color4I color, boolean roundEdges)
+	{
+		if (color.isEmpty())
+		{
+			return new ColoredIcon(this, EMPTY, 1);
+		}
+
+		return new IconWithOutline(this, color, roundEdges);
 	}
 }

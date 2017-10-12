@@ -17,6 +17,7 @@ public class ThemeVanilla extends Theme
 	private static final Icon TEXTURE_WIDGETS = Icon.getIcon("textures/gui/widgets.png");
 	private static final Icon TEXTURE_RECIPE_BOOK = Icon.getIcon("textures/gui/recipe_book.png");
 	private static final Icon TEXTURE_ADV_WIDGETS = Icon.getIcon("textures/gui/advancements/widgets.png");
+	private static final Icon TEXTURE_ENCHANTING_TABLE = Icon.getIcon("textures/gui/container/enchanting_table.png");
 
 	private static final Icon GUI = new PartIcon(TEXTURE_RECIPE_BOOK, 82, 208, 256, 256, 8, 16, 16, true);
 	private static final Icon GUI_MOUSE_OVER = new ColoredIcon(GUI, Color4I.rgb(0xAFB6DA), 0);
@@ -30,7 +31,7 @@ public class ThemeVanilla extends Theme
 	private static final Icon SLOT_MOUSE_OVER = SLOT.combineWith(Color4I.WHITE_A[33]);
 	private static final Icon SCROLL_BAR = new ColoredIcon(WIDGET, Icon.EMPTY, 1);
 	private static final Icon SCROLL_BAR_GRABBED = new ColoredIcon(WIDGET_MOUSE_OVER, Icon.EMPTY, 1);
-	private static final Icon TEXT_BOX = new PartIcon(TEXTURE_ADV_WIDGETS, 0, 55, 256, 256, 4, 192, 12, false);
+	private static final Icon TEXT_BOX = new PartIcon(TEXTURE_ENCHANTING_TABLE, 0, 185, 256, 256, 6, 96, 7, false);
 	private static final Icon PANEL_BACKGROUND = new ColoredIcon(SLOT, Icon.EMPTY, -1);
 
 	@Override

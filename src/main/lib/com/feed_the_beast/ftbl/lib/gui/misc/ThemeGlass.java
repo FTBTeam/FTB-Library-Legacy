@@ -3,8 +3,8 @@ package com.feed_the_beast.ftbl.lib.gui.misc;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.Theme;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.ColoredIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
-import com.feed_the_beast.ftbl.lib.icon.IconWithOutline;
 import com.feed_the_beast.ftbl.lib.icon.MutableColor4I;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,16 +20,17 @@ public class ThemeGlass extends Theme
 	public static final ThemeGlass INSTANCE = new ThemeGlass();
 	private static final Color4I COLOR = Color4I.rgb(0xC0C0C0);
 	private static final Color4I MOUSE_OVER_COLOR = Color4I.rgb(0x71C0C0);
-	private static final Icon GUI = IconWithOutline.getIconWithOutline(Color4I.rgba(0xC8333333), COLOR, true);
-	private static final Icon GUI_MOUSE_OVER = IconWithOutline.getIconWithOutline(Color4I.rgba(0xC8333333), MOUSE_OVER_COLOR, true);
-	private static final Icon WIDGET = IconWithOutline.getIconWithOutline(Icon.EMPTY, COLOR, false);
-	private static final Icon WIDGET_MOUSE_OVER = IconWithOutline.getIconWithOutline(Color4I.rgba(0xC8333333), COLOR, false);
+	private static final Icon GUI = Color4I.rgba(0xC8333333).withOutline(COLOR, true);
+	private static final Icon GUI_MOUSE_OVER = Color4I.rgba(0xC8333333).withOutline(MOUSE_OVER_COLOR, true);
+	private static final Icon WIDGET = Icon.EMPTY.withOutline(COLOR, false);
+	private static final Icon WIDGET_MOUSE_OVER = Color4I.rgba(0xC8333333).withOutline(COLOR, false);
 	private static final Icon SLOT = new SlotIcon(COLOR);
 	private static final Icon SLOT_MOUSE_OVER = new SlotIcon(MOUSE_OVER_COLOR);
-	private static final Icon SCROLL_BAR = IconWithOutline.getIconWithOutline(Color4I.WHITE_A[33], COLOR, false);
-	private static final Icon SCROLL_BAR_GRABBED = IconWithOutline.getIconWithOutline(Color4I.WHITE_A[33], MOUSE_OVER_COLOR, false);
-	private static final Icon CHECKBOX = IconWithOutline.getIconWithOutline(COLOR, Color4I.WHITE_A[33], false);
-	private static final Icon CHECKBOX_MOUSE_OVER = IconWithOutline.getIconWithOutline(MOUSE_OVER_COLOR, Color4I.WHITE_A[33], false);
+	private static final Icon SCROLL_BAR = Color4I.WHITE_A[33].withOutline(COLOR, true);
+	private static final Icon SCROLL_BAR_GRABBED = Color4I.WHITE_A[33].withOutline(MOUSE_OVER_COLOR, true);
+	private static final Icon CHECKBOX = COLOR.withOutline(Color4I.WHITE_A[33], false);
+	private static final Icon CHECKBOX_MOUSE_OVER = MOUSE_OVER_COLOR.withOutline(Color4I.WHITE_A[33], false);
+	private static final Icon PANEL_BACKGROUND = new ColoredIcon(SLOT, Icon.EMPTY, -1);
 
 	private static class SlotIcon extends Icon
 	{
@@ -77,7 +78,7 @@ public class ThemeGlass extends Theme
 			GuiHelper.addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, cb);
 			GuiHelper.addRectToBuffer(buffer, x + 1, y, w - 2, 1, cd);
 			GuiHelper.addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1, cb);
-			GuiHelper.addRectToBuffer(buffer, x + 1, y + 1, w - 2, h - 2, c);
+			//GuiHelper.addRectToBuffer(buffer, x + 1, y + 1, w - 2, h - 2, c);
 
 			tessellator.draw();
 			GlStateManager.enableTexture2D();
@@ -119,5 +120,11 @@ public class ThemeGlass extends Theme
 	public Icon getCheckbox(boolean mouseOver, boolean selected, boolean radioButton)
 	{
 		return selected ? (mouseOver ? CHECKBOX_MOUSE_OVER : CHECKBOX) : Icon.EMPTY;
+	}
+
+	@Override
+	public Icon getPanelBackground()
+	{
+		return PANEL_BACKGROUND;
 	}
 }
