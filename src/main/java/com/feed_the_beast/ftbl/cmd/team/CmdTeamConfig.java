@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.net.MessageCloseGui;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,12 +30,12 @@ public class CmdTeamConfig extends CmdEditConfigBase
 
 		if (team == null)
 		{
-			new MessageCloseGui().sendTo(ep);
+			FTBLibAPI.API.sendCloseGuiPacket(ep);
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
 		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
 		{
-			new MessageCloseGui().sendTo(ep);
+			FTBLibAPI.API.sendCloseGuiPacket(ep);
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 

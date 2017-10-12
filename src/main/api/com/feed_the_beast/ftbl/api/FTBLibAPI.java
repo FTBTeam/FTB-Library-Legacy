@@ -52,4 +52,6 @@ public abstract class FTBLibAPI
 
 	@SideOnly(Side.CLIENT)
 	public abstract List<ISidebarButtonGroup> getSidebarButtonGroups();
+
+	public abstract void sendCloseGuiPacket(EntityPlayerMP player);
 }

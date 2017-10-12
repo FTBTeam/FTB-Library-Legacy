@@ -26,6 +26,7 @@ import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.StringJoiner;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
+import com.feed_the_beast.ftbl.net.MessageCloseGui;
 import com.feed_the_beast.ftbl.net.MessageEditConfig;
 import com.feed_the_beast.ftbl.net.MessageOpenGui;
 import com.feed_the_beast.ftbl.net.MessageSyncData;
@@ -198,5 +199,11 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 	public List<ISidebarButtonGroup> getSidebarButtonGroups()
 	{
 		return FTBLibModClient.SIDEBAR_BUTTON_GROUPS;
+	}
+
+	@Override
+	public void sendCloseGuiPacket(EntityPlayerMP player)
+	{
+		new MessageCloseGui().sendTo(player);
 	}
 }
