@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -821,5 +822,27 @@ public class StringUtils
 	public static boolean canTranslate(String key)
 	{
 		return UtilsCommon.INSTANCE.canTranslate(key);
+	}
+
+	public static String fixTabs(String string, int tabSize) //FIXME
+	{
+		String with;
+
+		if (tabSize == 2)
+		{
+			with = "  ";
+		}
+		else if (tabSize == 4)
+		{
+			with = "    ";
+		}
+		else
+		{
+			char c[] = new char[tabSize];
+			Arrays.fill(c, ' ');
+			with = new String(c);
+		}
+
+		return string.replace("\t", "  ");
 	}
 }

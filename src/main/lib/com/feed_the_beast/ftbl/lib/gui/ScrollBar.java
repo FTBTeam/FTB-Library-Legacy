@@ -3,13 +3,23 @@ package com.feed_the_beast.ftbl.lib.gui;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
 public class ScrollBar extends Widget
 {
+	public enum Plane
+	{
+		HORIZONTAL,
+		VERTICAL;
+
+		public boolean isVertical()
+		{
+			return this == VERTICAL;
+		}
+	}
+
 	public int sliderSize;
 	private double value;
 	private int grab = -10000;
@@ -25,7 +35,7 @@ public class ScrollBar extends Widget
 	{
 		if (gui.isMouseOver(this))
 		{
-			grab = (getPlane() == EnumFacing.Plane.VERTICAL ? (gui.getMouseY() - (getAY() + getValueI(height))) : (gui.getMouseX() - (getAX() + getValueI(width))));
+			grab = (getPlane().isVertical() ? (gui.getMouseY() - (getAY() + getValueI(height))) : (gui.getMouseX() - (getAX() + getValueI(width))));
 			return true;
 		}
 
@@ -61,7 +71,7 @@ public class ScrollBar extends Widget
 			{
 				if (gui.isMouseButtonDown(0))
 				{
-					if (getPlane() == EnumFacing.Plane.VERTICAL)
+					if (getPlane().isVertical())
 					{
 						v = (gui.getMouseY() - (ay + grab)) / (double) (height - sliderSize);
 					}
@@ -76,7 +86,7 @@ public class ScrollBar extends Widget
 				}
 			}
 
-			if (gui.getMouseWheel() != 0 && canMouseScroll() && gui.isShiftDown() == (getPlane() == EnumFacing.Plane.HORIZONTAL))
+			if (gui.getMouseWheel() != 0 && gui.isShiftDown() != getPlane().isVertical() && canMouseScroll())
 			{
 				v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
 			}
@@ -91,7 +101,7 @@ public class ScrollBar extends Widget
 
 		getBackground().draw(ax, ay, width, height);
 
-		if (getPlane() == EnumFacing.Plane.VERTICAL)
+		if (getPlane().isVertical())
 		{
 			if (sliderSize < height)
 			{
@@ -112,7 +122,7 @@ public class ScrollBar extends Widget
 	@Override
 	public Icon getIcon()
 	{
-		return gui.getTheme().getScrollBar(grab != -10000, getPlane() == EnumFacing.Plane.VERTICAL);
+		return gui.getTheme().getScrollBar(grab != -10000, getPlane().isVertical());
 	}
 
 	public void onMoved()
@@ -148,9 +158,9 @@ public class ScrollBar extends Widget
 		return 0.1D;
 	}
 
-	public EnumFacing.Plane getPlane()
+	public Plane getPlane()
 	{
-		return EnumFacing.Plane.VERTICAL;
+		return Plane.VERTICAL;
 	}
 
 	public double getDisplayMin()

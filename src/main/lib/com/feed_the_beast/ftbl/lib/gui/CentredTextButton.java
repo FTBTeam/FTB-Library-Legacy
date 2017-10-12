@@ -15,6 +15,6 @@ public abstract class CentredTextButton extends Button
 	@Override
 	public Color4I renderTitleInCenter()
 	{
-		return gui.getTheme().getContentColor(false);
+		return gui.getTheme().getContentColor();
 	}
 }

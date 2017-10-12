@@ -19,6 +19,7 @@ import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -132,12 +133,21 @@ public abstract class GuiBase extends Panel
 
 	public final void closeGui()
 	{
+		closeGui(true);
+	}
+
+	public final void closeGui(boolean openPrevScreen)
+	{
 		if (ClientUtils.MC.player != null)
 		{
 			ClientUtils.MC.player.closeScreen();
 		}
 
-		ClientUtils.MC.displayGuiScreen(getPrevScreen());
+		if (openPrevScreen)
+		{
+			ClientUtils.MC.displayGuiScreen(getPrevScreen());
+		}
+
 		onClosed();
 	}
 
@@ -313,6 +323,11 @@ public abstract class GuiBase extends Panel
 
 	public List<String> listFormattedStringToWidth(String text, int width)
 	{
+		if (width <= 0)
+		{
+			return Collections.emptyList();
+		}
+
 		return font.listFormattedStringToWidth(text, width);
 	}
 
@@ -341,12 +356,12 @@ public abstract class GuiBase extends Panel
 
 	public final int drawString(String text, int x, int y, int flags)
 	{
-		return drawString(text, x, y, getTheme().getContentColor(Bits.getFlag(flags, DARK)), flags);
+		return drawString(text, x, y, getTheme().getContentColor(), flags);
 	}
 
 	public final int drawString(String text, int x, int y)
 	{
-		return drawString(text, x, y, getTheme().getContentColor(false), false, false);
+		return drawString(text, x, y, getTheme().getContentColor(), false, false);
 	}
 
 	public boolean isShiftDown()

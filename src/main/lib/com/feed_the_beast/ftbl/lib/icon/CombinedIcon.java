@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,22 +12,48 @@ import java.util.List;
  */
 public class CombinedIcon extends Icon
 {
+	public static Icon getCombined(Collection<Icon> icons)
+	{
+		List<Icon> list = new ArrayList<>(icons.size());
+
+		for (Icon icon : icons)
+		{
+			if (!icon.isEmpty())
+			{
+				list.add(icon);
+			}
+		}
+
+		if (list.isEmpty())
+		{
+			return EMPTY;
+		}
+		else if (list.size() == 1)
+		{
+			return list.get(0);
+		}
+
+		return new CombinedIcon(list);
+	}
+
 	public final List<Icon> list;
 
-	public CombinedIcon(Collection<Icon> icons)
+	CombinedIcon(Collection<Icon> icons)
 	{
-		list = new ArrayList<>(icons);
+		list = new ArrayList<>(icons.size());
+
+		for (Icon icon : icons)
+		{
+			if (!icon.isEmpty())
+			{
+				list.add(icon);
+			}
+		}
 	}
 
-	public CombinedIcon(Icon... icons)
+	CombinedIcon(Icon o1, Icon o2)
 	{
-		list = new ArrayList<>(icons.length);
-		list.addAll(Arrays.asList(icons));
-	}
-
-	public CombinedIcon(Icon o1, Icon o2)
-	{
-		list = new ArrayList<>();
+		list = new ArrayList<>(2);
 		list.add(o1);
 		list.add(o2);
 	}

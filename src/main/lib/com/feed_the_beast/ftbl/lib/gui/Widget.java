@@ -11,6 +11,7 @@ public class Widget
 	protected static final int DARK = 1;
 	protected static final int SHADOW = 2;
 	protected static final int CENTERED = 4;
+	public static final int UNICODE = 8;
 
 	public GuiBase gui;
 	public int posX, posY, width, height;
@@ -21,8 +22,8 @@ public class Widget
 		gui = g;
 		posX = x;
 		posY = y;
-		width = Math.max(w, 1);
-		height = Math.max(h, 1);
+		width = Math.max(w, 0);
+		height = Math.max(h, 0);
 		parentPanel = gui;
 	}
 
@@ -38,12 +39,12 @@ public class Widget
 
 	public void setWidth(int v)
 	{
-		width = Math.max(v, 1);
+		width = Math.max(v, 0);
 	}
 
 	public void setHeight(int v)
 	{
-		height = Math.max(v, 1);
+		height = Math.max(v, 0);
 	}
 
 	public Panel getParentPanel()
@@ -69,13 +70,13 @@ public class Widget
 	public boolean collidesWith(int x, int y, int w, int h)
 	{
 		int ay = getAY();
-		if (ay >= y + h || ay + width <= y)
+		if (ay >= y + h || ay + height <= y)
 		{
 			return false;
 		}
 
 		int ax = getAX();
-		return ax < x + w && ax + height > x;
+		return ax < x + w && ax + width > x;
 	}
 
 	public boolean isEnabled()

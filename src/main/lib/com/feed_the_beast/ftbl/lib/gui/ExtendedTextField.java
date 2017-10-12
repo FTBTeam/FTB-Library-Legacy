@@ -18,11 +18,16 @@ public class ExtendedTextField extends TextField
 	private List<GuiHelper.PositionedTextData> textData;
 	private long lastUpdate = -1L;
 
-	public ExtendedTextField(GuiBase gui, int x, int y, int width, int height, ITextComponent t)
+	public ExtendedTextField(GuiBase gui, int x, int y, int w, int h, ITextComponent t, int flags)
 	{
-		super(gui, x, y, width, height, "");
+		super(gui, x, y, w, h, "", flags);
 		textComponent = t;
 		setTitle("");
+	}
+
+	public ExtendedTextField(GuiBase gui, int x, int y, int w, int h, ITextComponent t)
+	{
+		this(gui, x, y, w, h, t, 0);
 	}
 
 	@Override

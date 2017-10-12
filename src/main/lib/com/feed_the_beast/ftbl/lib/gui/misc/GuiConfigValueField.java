@@ -38,7 +38,7 @@ public class GuiConfigValueField extends GuiBase
 			@Override
 			public Color4I renderTitleInCenter()
 			{
-				return gui.getTheme().getContentColor(false);
+				return gui.getTheme().getContentColor();
 			}
 		};
 
@@ -58,7 +58,7 @@ public class GuiConfigValueField extends GuiBase
 			@Override
 			public Color4I renderTitleInCenter()
 			{
-				return gui.getTheme().getContentColor(false);
+				return gui.getTheme().getContentColor();
 			}
 		};
 

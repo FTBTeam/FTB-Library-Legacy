@@ -37,12 +37,17 @@ public abstract class Button extends Widget
 		return this;
 	}
 
+	public Icon getButtonBackground()
+	{
+		return gui.getTheme().getButton(gui.isMouseOver(this));
+	}
+
 	@Override
 	public Icon getIcon()
 	{
 		if (icon.isEmpty())
 		{
-			return gui.getTheme().getButton(gui.isMouseOver(this));
+			return getButtonBackground();
 		}
 
 		return icon;

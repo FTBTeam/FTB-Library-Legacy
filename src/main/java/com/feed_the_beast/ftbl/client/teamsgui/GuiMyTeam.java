@@ -75,7 +75,7 @@ public class GuiMyTeam extends GuiBase
 			int ax = getAX();
 			int ay = getAY();
 
-			getTheme().getContentColor(false).draw(ax, ay + height, width + 3, 1);
+			getTheme().getContentColor().draw(ax, ay + height, width + 3, 1);
 			getIcon().draw(ax + 2, ay + 2, 8, 8);
 			gui.drawString(playerInst.status.getColor() + playerInst.playerName, ax + 12, ay + 2);
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -249,7 +249,7 @@ public class GuiMyTeam extends GuiBase
 			@Override
 			public Color4I renderTitleInCenter()
 			{
-				return gui.getTheme().getContentColor(false);
+				return gui.getTheme().getContentColor();
 			}
 		};
 
@@ -274,7 +274,7 @@ public class GuiMyTeam extends GuiBase
 			@Override
 			public Color4I renderTitleInCenter()
 			{
-				return gui.getTheme().getContentColor(false);
+				return gui.getTheme().getContentColor();
 			}
 		};
 
@@ -419,15 +419,15 @@ public class GuiMyTeam extends GuiBase
 		boolean playerGui = selectedPlayer != null;
 
 		getIcon().draw(ax, ay, width, height);
-		getTheme().getContentColor(false).draw(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1);
-		getTheme().getContentColor(false).draw(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1);
+		getTheme().getContentColor().draw(ax, ay + TOP_PANEL_HEIGHT - 1, width, 1);
+		getTheme().getContentColor().draw(ax, ay + height - BOTTOM_PANEL_HEIGHT, playerGui ? LEFT_PANEL_WIDTH : width, 1);
 
 		if (!topPanelButtons.isEmpty())
 		{
-			getTheme().getContentColor(false).draw(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT);
+			getTheme().getContentColor().draw(ax + width - 3 - topPanelButtons.size() * 20, ay, 1, TOP_PANEL_HEIGHT);
 		}
 
-		getTheme().getContentColor(false).draw(ax + LEFT_PANEL_WIDTH, ay, 1, height);
+		getTheme().getContentColor().draw(ax + LEFT_PANEL_WIDTH, ay, 1, height);
 	}
 
 	public void loadAllPlayers(Collection<MyTeamPlayerData> players)

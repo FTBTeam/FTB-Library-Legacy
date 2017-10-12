@@ -544,7 +544,7 @@ public class FTBLibClientEventHandler
 						my1 = 4D;
 					}
 
-					GlStateManager.translate(mx1, my1, zLevel);
+					GlStateManager.translate(mx1, my1, zLevel + 400);
 
 					GlStateManager.enableBlend();
 					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

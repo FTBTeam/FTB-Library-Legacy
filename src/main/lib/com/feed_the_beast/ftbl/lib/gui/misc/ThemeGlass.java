@@ -86,9 +86,9 @@ public class ThemeGlass extends Theme
 	}
 
 	@Override
-	public Color4I getContentColor(boolean dark)
+	public Color4I getContentColor()
 	{
-		return dark ? COLOR : Color4I.WHITE;
+		return Color4I.WHITE;
 	}
 
 	@Override

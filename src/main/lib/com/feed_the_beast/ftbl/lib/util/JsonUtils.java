@@ -399,7 +399,7 @@ public class JsonUtils
 		}
 		else if (element.isJsonPrimitive())
 		{
-			return new TextComponentString(element.getAsString().replace("\t", "  "));
+			return new TextComponentString(StringUtils.fixTabs(element.getAsString(), 2));
 		}
 		else if (!element.isJsonObject())
 		{
@@ -438,7 +438,7 @@ public class JsonUtils
 
 			if (json.has("text") || json.has("notification"))
 			{
-				String s = json.has("text") ? json.get("text").getAsString().replace("\t", "  ") : "";
+				String s = json.has("text") ? StringUtils.fixTabs(json.get("text").getAsString(), 2) : "";
 
 				if (json.has("notification") || json.has("timer") || json.has("important"))
 				{

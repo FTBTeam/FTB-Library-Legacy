@@ -11,7 +11,7 @@ public abstract class Theme
 {
 	public static Theme CURRENT;
 
-	public abstract Color4I getContentColor(boolean dark);
+	public abstract Color4I getContentColor();
 
 	public abstract Icon getGui(boolean mouseOver);
 

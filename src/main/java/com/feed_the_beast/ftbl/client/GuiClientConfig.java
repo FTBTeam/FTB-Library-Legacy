@@ -104,7 +104,7 @@ public class GuiClientConfig extends GuiButtonListBase
 			int ax = getAX();
 			int ay = getAY();
 
-			gui.getTheme().getButton(gui.isMouseOver(this)).draw(ax, ay, width, height);
+			getButtonBackground().draw(ax, ay, width, height);
 			Icon icon = getIcon();
 
 			if (icon.isEmpty())

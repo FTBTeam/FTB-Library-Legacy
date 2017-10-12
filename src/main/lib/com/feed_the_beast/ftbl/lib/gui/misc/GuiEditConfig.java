@@ -173,7 +173,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				Color4I.WHITE_A[33].draw(ax, ay, width, height);
 			}
 
-			gui.drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, DARK, !mouseOver));
+			gui.drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			String s = value.hasCustomName() ? value.getCustomDisplayName().getFormattedText() : value.getString();
@@ -427,7 +427,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public void drawBackground()
 	{
 		COLOR_BACKGROUND.draw(0, 0, width, 20);
-		drawString(getTitle(), 6, 6, DARK);
+		drawString(getTitle(), 6, 6, Color4I.DARK_GRAY, 0);
 	}
 
 	@Override

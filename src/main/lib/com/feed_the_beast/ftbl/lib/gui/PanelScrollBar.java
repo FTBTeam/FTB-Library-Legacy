@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import net.minecraft.util.EnumFacing;
-
 /**
  * @author LatvianModder
  */
@@ -34,7 +32,14 @@ public class PanelScrollBar extends ScrollBar
 
 		if (autoSize)
 		{
-			sliderSize = (int) (height * (double) panel.height / (double) elementSize);
+			if (getPlane().isVertical())
+			{
+				sliderSize = (int) (height * (double) panel.height / (double) elementSize);
+			}
+			else
+			{
+				sliderSize = (int) (width * (double) panel.width / (double) elementSize);
+			}
 		}
 	}
 
@@ -45,7 +50,7 @@ public class PanelScrollBar extends ScrollBar
 
 	public void setSrollStepFromOneElementSize(int s)
 	{
-		setScrollStep(s / (double) (elementSize - (getPlane() == EnumFacing.Plane.VERTICAL ? panel.height : panel.width)));
+		setScrollStep(s / (double) (elementSize - (getPlane().isVertical() ? panel.height : panel.width)));
 	}
 
 	@Override
@@ -63,7 +68,7 @@ public class PanelScrollBar extends ScrollBar
 	@Override
 	public void onMoved()
 	{
-		if (getPlane() == EnumFacing.Plane.VERTICAL)
+		if (getPlane().isVertical())
 		{
 			panel.setScrollY(getValue(), elementSize);
 		}
@@ -76,7 +81,7 @@ public class PanelScrollBar extends ScrollBar
 	@Override
 	public boolean isEnabled()
 	{
-		return elementSize > (getPlane() == EnumFacing.Plane.VERTICAL ? panel.height : panel.width);
+		return elementSize > (getPlane().isVertical() ? panel.height : panel.width);
 	}
 
 	@Override

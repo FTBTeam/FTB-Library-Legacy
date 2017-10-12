@@ -126,7 +126,7 @@ public abstract class Icon
 				list.add(getIcon(e));
 			}
 
-			return list.isEmpty() ? EMPTY : new CombinedIcon(list);
+			return CombinedIcon.getCombined(list);
 		}
 
 		String s = json.getAsString();
@@ -216,5 +216,52 @@ public abstract class Icon
 	public Icon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
 	{
 		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
+	}
+
+	public final Icon combineWith(Icon icon)
+	{
+		if (icon.isEmpty())
+		{
+			return this;
+		}
+		else if (isEmpty())
+		{
+			return icon;
+		}
+
+		return new CombinedIcon(this, icon);
+	}
+
+	/*
+		public static Icon getCombined(Icon... icons)
+		{
+			if (icons.length == 0)
+			{
+				return EMPTY;
+			}
+			else if (icons.length == 1)
+			{
+				return icons[0];
+			}
+			else if (icons.length == 2)
+			{
+				return getCombined(icons[0], icons[1]);
+			}
+	
+			return new CombinedIcon(Arrays.asList(icons));
+		}
+	*/
+
+	public final Icon combineWith(Icon... icons)
+	{
+		List<Icon> list = new ArrayList<>(icons.length + 1);
+		list.add(this);
+
+		for (Icon i : icons)
+		{
+			list.add(i);
+		}
+
+		return CombinedIcon.getCombined(list);
 	}
 }

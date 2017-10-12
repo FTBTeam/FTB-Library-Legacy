@@ -39,6 +39,11 @@ public class GuiButtonListBase extends GuiBase
 				}
 
 				updateWidgetPositions();
+
+				if (scrollToEnd())
+				{
+					scrollBar.setValue(1D);
+				}
 			}
 
 			@Override
@@ -82,6 +87,11 @@ public class GuiButtonListBase extends GuiBase
 		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
 		setWidth(scrollBar.posX + scrollBar.width + 8);
 		posX = (getScreen().getScaledWidth() - width) / 2;
+	}
+
+	public boolean scrollToEnd()
+	{
+		return false;
 	}
 
 	public void addButtons(Panel panel)

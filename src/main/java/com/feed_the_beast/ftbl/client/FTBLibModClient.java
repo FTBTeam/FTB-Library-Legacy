@@ -256,7 +256,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 			{
 				if (button.getDefaultConfig() != null)
 				{
-					o.addProperty(button.getName(), button.getDefaultConfig());
+					o.addProperty(button.getName(), button.getConfig());
 				}
 			}
 		}

@@ -45,7 +45,7 @@ public class GuiSelectTeam extends GuiBase
 		{
 			int ax = getAX();
 			int ay = getAY();
-			gui.getTheme().getButton(gui.isMouseOver(this)).draw(ax, ay, 32, 32);
+			getButtonBackground().draw(ax, ay, 32, 32);
 			getIcon().draw(ax + 8, ay + 8, 16, 16);
 		}
 	}

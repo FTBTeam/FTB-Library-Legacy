@@ -9,7 +9,6 @@ public abstract class Panel extends Widget
 {
 	public static final int ONLY_RENDER_WIDGETS_INSIDE = 1;
 	public static final int ONLY_INTERACT_WITH_WIDGETS_INSIDE = 2;
-	public static final int UNICODE = 4;
 	public static final int DEFAULTS = ONLY_RENDER_WIDGETS_INSIDE | ONLY_INTERACT_WITH_WIDGETS_INSIDE;
 
 	public final List<Widget> widgets;

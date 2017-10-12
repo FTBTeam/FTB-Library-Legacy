@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.lib.util.LangKey;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.ITextComponent;
+import com.feed_the_beast.ftbl.lib.io.Bits;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,51 +13,56 @@ import java.util.List;
 public class TextField extends Widget
 {
 	public List<String> text = Collections.emptyList();
+	public int textFlags = 0;
+	public boolean autoSizeWidth, autoSizeHeight;
 
-	public TextField(GuiBase gui, int x, int y, int w, int h, String txt)
+	public TextField(GuiBase gui, int x, int y, int w, int h, String txt, int flags)
 	{
 		super(gui, x, y, w, h);
+		textFlags = flags;
+		autoSizeWidth = w <= 0;
+		autoSizeHeight = h <= 0;
 		setTitle(txt);
 	}
 
-	public TextField(GuiBase gui, int x, int y, int w, int h, LangKey key)
+	public TextField(GuiBase gui, int x, int y, int w, int h, String txt)
 	{
-		this(gui, x, y, w, h, key.translate());
-	}
-
-	public TextField(GuiBase gui, int x, int y, int w, int h, ITextComponent component)
-	{
-		this(gui, x, y, w, h, component.getFormattedText());
+		this(gui, x, y, w, h, txt, 0);
 	}
 
 	public TextField setTitle(String txt)
 	{
-		text.clear();
+		text = null;
+
+		gui.pushFontUnicode(Bits.getFlag(textFlags, Widget.UNICODE));
 
 		if (!txt.isEmpty())
 		{
-			text = gui.listFormattedStringToWidth(txt, width);
+			text = new ArrayList<>(autoSizeWidth ? Arrays.asList(txt.split("\n")) : gui.listFormattedStringToWidth(txt, width));
 		}
 
-		if (text.isEmpty())
+		if (text == null || text.isEmpty())
 		{
 			text = Collections.emptyList();
 		}
 
-		if (height <= 1)
+		if (autoSizeWidth)
 		{
-			int h1 = gui.getFontHeight() + 1;
-			setHeight(text.isEmpty() ? h1 : h1 * text.size());
-		}
+			setWidth(0);
 
-		if (width <= 1)
-		{
 			for (String s : text)
 			{
 				setWidth(Math.max(width, gui.getStringWidth(s)));
 			}
 		}
 
+		if (autoSizeHeight)
+		{
+			int h1 = gui.getFontHeight() + 1;
+			setHeight(text.isEmpty() ? h1 : h1 * text.size());
+		}
+
+		gui.popFontUnicode();
 		return this;
 	}
 
@@ -69,19 +74,19 @@ public class TextField extends Widget
 	@Override
 	public void renderWidget()
 	{
+		int ay = getAY();
+		int ax = getAX();
+
+		getIcon().draw(ax, ay, width, height);
+
 		if (text.isEmpty())
 		{
 			return;
 		}
 
-		int ay = getAY();
-		int ax = getAX();
-
 		for (int i = 0; i < text.size(); i++)
 		{
-			gui.drawString(text.get(i), ax, ay + i * 10 + 1, DARK);
+			gui.drawString(text.get(i), ax, ay + i * 10 + 1, textFlags);
 		}
-
-		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 }

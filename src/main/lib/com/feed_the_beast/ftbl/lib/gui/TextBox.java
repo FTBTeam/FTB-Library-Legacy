@@ -470,7 +470,7 @@ public class TextBox extends Widget
 		int ay = getAY();
 		GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
 
-		Color4I col = validText ? (textColor.isEmpty() ? gui.getTheme().getContentColor(false) : textColor) : Color4I.RED;
+		Color4I col = validText ? (textColor.isEmpty() ? gui.getTheme().getContentColor() : textColor) : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
 		String s = gui.trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);

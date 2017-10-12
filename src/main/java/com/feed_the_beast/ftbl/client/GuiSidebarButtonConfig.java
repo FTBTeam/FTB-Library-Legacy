@@ -10,7 +10,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
-import com.feed_the_beast.ftbl.lib.icon.CombinedIcon;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
@@ -70,7 +69,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		@Override
 		public Icon getIcon()
 		{
-			return gui.isMouseOver(this) ? gui.getTheme().getButton(true) : new CombinedIcon(gui.getTheme().getButton(false), sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED);
+			return gui.isMouseOver(this) ? gui.getTheme().getButton(true) : gui.getTheme().getButton(false).combineWith(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED);
 		}
 
 		@Override
