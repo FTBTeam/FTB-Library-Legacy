@@ -54,7 +54,7 @@ public class MessageMyTeamAction extends MessageToServer<MessageMyTeamAction>
 		{
 			IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 
-			if (p.getTeam() != null)
+			if (p.getTeam() != null && action.isAvailable(p.getTeam(), p))
 			{
 				action.onAction(p.getTeam(), p);
 			}

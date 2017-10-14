@@ -141,6 +141,10 @@ ftbl.lang.team.notification=You haven't joined or created a team yet! %s to open
 ftbl.lang.team.notification.hide=Hide this Message
 ftbl.lang.team.chat_message=[Team %s] %s
 
+ftbl.lang.team.gui.members=Members
+ftbl.lang.team.gui.allies=Allies
+ftbl.lang.team.gui.mods=Moderators
+ftbl.lang.team.gui.enemies=Enemies
 ftbl.lang.team.gui.leave=Exit Team
 ftbl.lang.team.gui.transfer_ownership=Transfer Ownership
 

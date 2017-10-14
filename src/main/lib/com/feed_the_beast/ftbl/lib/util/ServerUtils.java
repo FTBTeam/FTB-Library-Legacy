@@ -99,6 +99,7 @@ public class ServerUtils
 		player.connection.setPlayerLocation(pos.x, pos.y, pos.z, player.rotationYaw, player.rotationPitch);
 		player.motionX = player.motionY = player.motionZ = 0D;
 		player.fallDistance = 0F;
+		player.addExperienceLevel(0);
 		player.world.updateEntityWithOptionalForce(player, true);
 	}
 

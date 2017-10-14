@@ -62,7 +62,7 @@ public class Universe implements IUniverse
 	@Nullable
 	public ForgePlayer getPlayer(CharSequence nameOrId)
 	{
-		String s = nameOrId.toString();
+		String s = nameOrId.toString().toLowerCase();
 
 		if (s.isEmpty())
 		{
@@ -78,7 +78,15 @@ public class Universe implements IUniverse
 
 		for (ForgePlayer p : players.values())
 		{
-			if (p.getName().equalsIgnoreCase(s))
+			if (p.getName().toLowerCase().equals(s))
+			{
+				return p;
+			}
+		}
+
+		for (ForgePlayer p : players.values())
+		{
+			if (p.getName().toLowerCase().contains(s))
 			{
 				return p;
 			}

@@ -53,7 +53,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -135,7 +134,7 @@ public class FTBLibEventHandler
 			}
 		});
 
-		event.register(new TeamGuiAction(FTBLibFinals.get("members"), new TextComponentString("Members"), GuiIcons.FRIENDS, 30) //LANG
+		event.register(new TeamGuiAction(FTBLibFinals.get("members"), new TextComponentTranslation("ftbl.lang.team.gui.members"), GuiIcons.FRIENDS, 30) //LANG
 		{
 			@Override
 			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
@@ -150,7 +149,7 @@ public class FTBLibEventHandler
 			}
 		});
 
-		event.register(new TeamGuiAction(FTBLibFinals.get("allies"), new TextComponentString("Allies"), GuiIcons.STAR, 40) //LANG
+		event.register(new TeamGuiAction(FTBLibFinals.get("allies"), new TextComponentTranslation("ftbl.lang.team.gui.allies"), GuiIcons.STAR, 40) //LANG
 		{
 			@Override
 			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
@@ -165,7 +164,7 @@ public class FTBLibEventHandler
 			}
 		});
 
-		event.register(new TeamGuiAction(FTBLibFinals.get("moderators"), new TextComponentString("Moderators"), GuiIcons.SHIELD, 50) //LANG
+		event.register(new TeamGuiAction(FTBLibFinals.get("moderators"), new TextComponentTranslation("ftbl.lang.team.gui.mods"), GuiIcons.SHIELD, 50) //LANG
 		{
 			@Override
 			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
@@ -180,7 +179,7 @@ public class FTBLibEventHandler
 			}
 		});
 
-		event.register(new TeamGuiAction(FTBLibFinals.get("enemies"), new TextComponentString("Enemies"), GuiIcons.CLOSE, 60) //LANG
+		event.register(new TeamGuiAction(FTBLibFinals.get("enemies"), new TextComponentTranslation("ftbl.lang.team.gui.enemies"), GuiIcons.CLOSE, 60) //LANG
 		{
 			@Override
 			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
