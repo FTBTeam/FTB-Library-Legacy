@@ -54,15 +54,12 @@ public abstract class GuiBase extends Panel
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableTexture2D();
 	}
 
 	public final void initGui()
 	{
 		screen = new ScaledResolution(ClientUtils.MC);
 		onInit();
-		posX = (screen.getScaledWidth() - width) / 2;
-		posY = (screen.getScaledHeight() - height) / 2;
 		refreshWidgets();
 		updateWidgetPositions();
 		fixUnicode = screen.getScaleFactor() % 2 == 1;
@@ -70,7 +67,7 @@ public abstract class GuiBase extends Panel
 
 	public Theme getTheme()
 	{
-		return Theme.CURRENT == null ? ThemeVanilla.INSTANCE : Theme.CURRENT;
+		return ThemeVanilla.INSTANCE;
 	}
 
 	@Override
@@ -87,13 +84,13 @@ public abstract class GuiBase extends Panel
 	@Override
 	public int getAX()
 	{
-		return posX;
+		return (screen.getScaledWidth() - width) / 2;
 	}
 
 	@Override
 	public int getAY()
 	{
-		return posY;
+		return (screen.getScaledHeight() - height) / 2;
 	}
 
 	@Override
@@ -188,14 +185,15 @@ public abstract class GuiBase extends Panel
 			super.refreshWidgets();
 			refreshWidgets = false;
 		}
+
+		posX = getAX();
+		posY = getAY();
 	}
 
 	@Override
 	public final void renderWidget()
 	{
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
+		setupDrawing();
 		drawBackground();
 		renderWidgets();
 	}

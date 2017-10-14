@@ -80,15 +80,6 @@ public class GuiSelectTeam extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
-		{
-			int ax = getAX();
-			int ay = getAY();
-			background.draw(ax, ay, 32, 32);
-			getIcon().draw(ax + 8, ay + 8, 16, 16);
-		}
-
-		@Override
 		public void addMouseOverText(List<String> list)
 		{
 			list.add(getTitle());
@@ -101,7 +92,17 @@ public class GuiSelectTeam extends GuiBase
 			}
 
 			list.add("");
-			list.add("Click to " + (team.isInvited ? "join the team" : "request invite to this team"));
+			list.add("Click to " + (team.isInvited ? "join the team" : "request invite to this team")); //LANG
+		}
+
+		@Override
+		public void renderWidget()
+		{
+			int ax = getAX();
+			int ay = getAY();
+			getButtonBackground().draw(ax, ay, width, height);
+			background.draw(ax + 6, ay + 6, 20, 20);
+			getIcon().draw(ax + 8, ay + 8, 16, 16);
 		}
 	}
 

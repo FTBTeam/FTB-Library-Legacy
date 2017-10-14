@@ -7,6 +7,7 @@ import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
@@ -85,47 +86,13 @@ public class GuiClientConfig extends GuiButtonListBase
 		}
 	}
 
-	private abstract class ButtonConfigBase extends Button
-	{
-		public ButtonConfigBase(GuiBase gui, String title, Icon icon)
-		{
-			super(gui, 0, 0, gui.getStringWidth(title) + 28, 20, title);
-			setIcon(icon);
-		}
-
-		@Override
-		public void addMouseOverText(List<String> list)
-		{
-		}
-
-		@Override
-		public void renderWidget()
-		{
-			int ax = getAX();
-			int ay = getAY();
-
-			getButtonBackground().draw(ax, ay, width, height);
-			Icon icon = getIcon();
-
-			if (icon.isEmpty())
-			{
-				gui.drawString(getTitle(), ax + 2, ay + 6, SHADOW);
-			}
-			else
-			{
-				icon.draw(ax + 2, ay + 2, 16, 16);
-				gui.drawString(getTitle(), ax + 21, ay + 6, SHADOW);
-			}
-		}
-	}
-
-	private class ButtonClientConfig extends ButtonConfigBase
+	private class ButtonClientConfig extends SimpleTextButton
 	{
 		private final String modId;
 
 		public ButtonClientConfig(GuiBase gui, ClientConfig config)
 		{
-			super(gui, config.name.getFormattedText(), config.icon);
+			super(gui, 0, 0, config.name.getFormattedText(), config.icon);
 			modId = config.id;
 		}
 
@@ -135,6 +102,11 @@ public class GuiClientConfig extends GuiButtonListBase
 			GuiHelper.playClickSound();
 			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle()));
 		}
+	}
+
+	public GuiClientConfig()
+	{
+		setTitle(StringUtils.translate("sidebar_button.ftbl.settings"));
 	}
 
 	@Override
@@ -149,9 +121,19 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
+		buttons.add(0, new SimpleTextButton(gui, 0, 0, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		{
+			@Override
+			public void onClicked(MouseButton button)
+			{
+				GuiHelper.playClickSound();
+				new GuiSidebarButtonConfig().openGui();
+			}
+		});
+
 		if (FTBLibAPI.API.getClientData().optionalServerMods().contains(FTBLibFinals.MOD_ID))
 		{
-			buttons.add(0, new ButtonConfigBase(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+			buttons.add(0, new SimpleTextButton(gui, 0, 0, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
 			{
 				@Override
 				public void onClicked(MouseButton button)
@@ -161,29 +143,7 @@ public class GuiClientConfig extends GuiButtonListBase
 					ClientUtils.execClientCommand("/ftb my_settings");
 				}
 			});
-
-
-			buttons.add(1, new ButtonConfigBase(gui, StringUtils.translate("team_config"), GuiIcons.FRIENDS)
-			{
-				@Override
-				public void onClicked(MouseButton button)
-				{
-					GuiHelper.playClickSound();
-					new GuiLoading().openGui();
-					ClientUtils.execClientCommand("/ftb team config");
-				}
-			});
 		}
-
-		buttons.add(2, new ButtonConfigBase(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
-		{
-			@Override
-			public void onClicked(MouseButton button)
-			{
-				GuiHelper.playClickSound();
-				new GuiSidebarButtonConfig().openGui();
-			}
-		});
 
 		panel.addAll(buttons);
 	}

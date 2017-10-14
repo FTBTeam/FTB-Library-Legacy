@@ -18,8 +18,7 @@ public class SimpleButton extends Button
 
 	public SimpleButton(GuiBase gui, int x, int y, String text, Icon icon, Callback c)
 	{
-		super(gui, x, y, 16, 16, text);
-		setIcon(icon);
+		super(gui, x, y, 16, 16, text, icon);
 		consumer = c;
 	}
 

@@ -4,12 +4,15 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftbl.api.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseSavedEvent;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
@@ -30,6 +33,9 @@ import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.config.ConfigStringEnum;
 import com.feed_the_beast.ftbl.lib.config.ConfigTextComponent;
 import com.feed_the_beast.ftbl.lib.config.ConfigTristate;
+import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
+import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -38,6 +44,7 @@ import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
+import com.feed_the_beast.ftbl.lib.util.misc.TeamGuiAction;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,6 +53,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
@@ -57,6 +66,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -90,6 +100,131 @@ public class FTBLibEventHandler
 		event.register(ConfigBlockState.ID, ConfigBlockState::new);
 		event.register(ConfigItemStack.ID, ConfigItemStack::new);
 		event.register(ConfigTextComponent.ID, ConfigTextComponent::new);
+	}
+
+	@SubscribeEvent
+	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
+	{
+		event.register(new TeamGuiAction(FTBLibFinals.get("config"), new TextComponentTranslation("team_config"), GuiIcons.SETTINGS, -100)
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return team.hasStatus(player, EnumTeamStatus.MOD);
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				FTBLibAPI.API.editServerConfig(player.getPlayer(), team.getSettings(), IConfigCallback.DEFAULT);
+			}
+		});
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("info"), GuiLang.INFO.textComponent(), GuiIcons.INFO, 0)
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return true;
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				//TODO: Open info gui
+			}
+		});
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("members"), new TextComponentString("Members"), GuiIcons.FRIENDS, 30) //LANG
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return team.hasStatus(player, EnumTeamStatus.MOD);
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				//TODO: Open player checklist gui
+			}
+		});
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("allies"), new TextComponentString("Allies"), GuiIcons.STAR, 40) //LANG
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return team.hasStatus(player, EnumTeamStatus.MOD);
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				//TODO: Open player checklist gui
+			}
+		});
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("moderators"), new TextComponentString("Moderators"), GuiIcons.SHIELD, 50) //LANG
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return player.equalsPlayer(team.getOwner());
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				//TODO: Open player checklist gui
+			}
+		});
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("enemies"), new TextComponentString("Enemies"), GuiIcons.CLOSE, 60) //LANG
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return team.hasStatus(player, EnumTeamStatus.MOD);
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				//TODO: Open player checklist gui
+			}
+		});
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("leave"), new TextComponentTranslation("ftbl.lang.team.gui.leave"), GuiIcons.REMOVE, 100)
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return !player.equalsPlayer(team.getOwner()) || team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() <= 1;
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				team.removePlayer(player);
+				FTBLibAPI.API.sendCloseGuiPacket(player.getPlayer());
+			}
+		}.setRequiresConfirm());
+
+		event.register(new TeamGuiAction(FTBLibFinals.get("transter_ownership"), new TextComponentTranslation("ftbl.lang.team.gui.transfer_ownership"), GuiIcons.RIGHT, 100)
+		{
+			@Override
+			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
+			{
+				return player.equalsPlayer(team.getOwner()) && team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() > 1;
+			}
+
+			@Override
+			public void onAction(IForgeTeam team, IForgePlayer player)
+			{
+				//TODO: Open player list gui
+			}
+		}.setRequiresConfirm());
 	}
 
 	@SubscribeEvent

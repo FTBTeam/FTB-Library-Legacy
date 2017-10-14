@@ -76,7 +76,7 @@ public class ColorUtils
 
 	public static int getBlue(int c)
 	{
-		return (c) & 255;
+		return c & 255;
 	}
 
 	public static int getAlpha(int c)
@@ -106,7 +106,40 @@ public class ColorUtils
 
 	public static String getHex(int c)
 	{
-		return '#' + Integer.toHexString(getRGBA(c, 255)).substring(2).toUpperCase();
+		int a = getAlpha(c);
+		char[] chars;
+
+		if (a < 255)
+		{
+			chars = new char[9];
+			chars[1] = CommonUtils.HEX[(a & 0xF0) >> 4];
+			chars[2] = CommonUtils.HEX[a & 0xF];
+			int r = getRed(c);
+			chars[3] = CommonUtils.HEX[(r & 0xF0) >> 4];
+			chars[4] = CommonUtils.HEX[r & 0xF];
+			int g = getGreen(c);
+			chars[5] = CommonUtils.HEX[(g & 0xF0) >> 4];
+			chars[6] = CommonUtils.HEX[g & 0xF];
+			int b = getBlue(c);
+			chars[7] = CommonUtils.HEX[(b & 0xF0) >> 4];
+			chars[8] = CommonUtils.HEX[b & 0xF];
+		}
+		else
+		{
+			chars = new char[7];
+			int r = getRed(c);
+			chars[1] = CommonUtils.HEX[(r & 0xF0) >> 4];
+			chars[2] = CommonUtils.HEX[r & 0xF];
+			int g = getGreen(c);
+			chars[3] = CommonUtils.HEX[(g & 0xF0) >> 4];
+			chars[4] = CommonUtils.HEX[g & 0xF];
+			int b = getBlue(c);
+			chars[5] = CommonUtils.HEX[(b & 0xF0) >> 4];
+			chars[6] = CommonUtils.HEX[b & 0xF];
+		}
+
+		chars[0] = '#';
+		return new String(chars);
 	}
 
 	public static int getRGBA(int c, int a)

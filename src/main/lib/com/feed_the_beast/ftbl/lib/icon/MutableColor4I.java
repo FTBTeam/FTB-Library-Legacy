@@ -72,7 +72,7 @@ public class MutableColor4I extends Color4I
 		json.addProperty("green", green);
 		json.addProperty("blue", blue);
 
-		if (alpha != 255)
+		if (alpha < 255)
 		{
 			json.addProperty("alpha", alpha);
 		}

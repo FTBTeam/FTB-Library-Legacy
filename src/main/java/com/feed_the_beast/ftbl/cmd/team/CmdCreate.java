@@ -8,6 +8,7 @@ import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
+import com.feed_the_beast.ftbl.net.MessageMyTeamGui;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,8 +50,8 @@ public class CmdCreate extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-		IForgePlayer p = getForgePlayer(ep);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
 
 		if (p.getTeam() != null)
 		{
@@ -83,5 +84,6 @@ public class CmdCreate extends CmdBase
 		new ForgeTeamPlayerJoinedEvent(team, p).post();
 
 		FTBLibLang.TEAM_CREATED.sendMessage(sender, team.getName());
+		new MessageMyTeamGui(team, p).sendTo(player);
 	}
 }

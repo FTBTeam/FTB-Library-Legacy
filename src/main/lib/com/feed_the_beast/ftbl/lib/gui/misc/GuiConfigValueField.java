@@ -5,8 +5,9 @@ import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
+import com.feed_the_beast.ftbl.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftbl.lib.gui.TextBox;
-import com.feed_the_beast.ftbl.lib.icon.Color4I;
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
 public class GuiConfigValueField extends GuiBase
@@ -19,14 +20,14 @@ public class GuiConfigValueField extends GuiBase
 
 	GuiConfigValueField(ConfigValue val, IGuiFieldCallback c)
 	{
-		super(200, 60);
+		super(200, 54);
 		defValue = val.copy();
 		value = val.copy();
 		callback = c;
 
-		int bsize = width / 2 - 3;
+		int bsize = width / 2 - 10;
 
-		buttonCancel = new Button(this, 2, height - 28, bsize, 26, GuiLang.CANCEL.translate())
+		buttonCancel = new SimpleTextButton(this, 8, height - 24, GuiLang.CANCEL.translate(), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -36,13 +37,16 @@ public class GuiConfigValueField extends GuiBase
 			}
 
 			@Override
-			public Color4I renderTitleInCenter()
+			public boolean renderTitleInCenter()
 			{
-				return gui.getTheme().getContentColor();
+				return true;
 			}
 		};
 
-		buttonAccept = new Button(this, width - bsize - 2, height - 28, bsize, 26, GuiLang.ACCEPT.translate())
+		buttonCancel.setWidth(bsize);
+		buttonCancel.setHeight(16);
+
+		buttonAccept = new SimpleTextButton(this, width - bsize - 8, height - 24, GuiLang.ACCEPT.translate(), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -56,13 +60,16 @@ public class GuiConfigValueField extends GuiBase
 			}
 
 			@Override
-			public Color4I renderTitleInCenter()
+			public boolean renderTitleInCenter()
 			{
-				return gui.getTheme().getContentColor();
+				return true;
 			}
 		};
 
-		textBox = new TextBox(this, 2, 2, width - 4, 28)
+		buttonAccept.setWidth(bsize);
+		buttonAccept.setHeight(16);
+
+		textBox = new TextBox(this, 8, 8, width - 16, 16)
 		{
 			@Override
 			public boolean isValid(String txt)

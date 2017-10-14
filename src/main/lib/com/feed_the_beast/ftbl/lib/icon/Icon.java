@@ -68,7 +68,7 @@ public abstract class Icon
 						return (o.has("mutable") && o.get("mutable").getAsBoolean()) ? color.mutable() : color;
 					}
 					case "colored":
-						return new ColoredIcon(getIcon(o.get("parent").getAsJsonObject()), Color4I.fromJson(o.get("color")), o.has("border") ? o.get("border").getAsInt() : 0);
+						return getIcon(o.get("parent").getAsJsonObject()).withColorAndBorder(Color4I.fromJson(o.get("color")), o.has("border") ? o.get("border").getAsInt() : 0);
 					case "animation":
 					{
 						List<Icon> icons = new ArrayList<>();
@@ -267,9 +267,24 @@ public abstract class Icon
 	{
 		if (color.isEmpty())
 		{
-			return new ColoredIcon(this, EMPTY, 1);
+			return withBorder(1);
 		}
 
 		return new IconWithOutline(this, color, roundEdges);
+	}
+
+	public final Icon withColorAndBorder(Color4I color, int border)
+	{
+		return border == 0 && color.isEmpty() ? this : new ColoredIcon(this, color, border);
+	}
+
+	public final Icon withColor(Color4I color)
+	{
+		return withColorAndBorder(color, 0);
+	}
+
+	public final Icon withBorder(int border)
+	{
+		return withColorAndBorder(EMPTY, border);
 	}
 }

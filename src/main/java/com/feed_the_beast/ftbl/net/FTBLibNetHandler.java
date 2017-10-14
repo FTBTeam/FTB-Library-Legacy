@@ -23,6 +23,6 @@ public class FTBLibNetHandler
 
 		MY_TEAM.register(1, new MessageSelectTeamGui());
 		MY_TEAM.register(2, new MessageMyTeamGui());
-		MY_TEAM.register(3, new MessageMyTeamAddPlayerGui());
+		MY_TEAM.register(3, new MessageMyTeamAction());
 	}
 }

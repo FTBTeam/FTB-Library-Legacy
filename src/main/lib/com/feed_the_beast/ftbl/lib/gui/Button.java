@@ -6,17 +6,18 @@ import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 public abstract class Button extends Widget
 {
 	private String title = "";
-	private Icon icon = Icon.EMPTY;
+	protected Icon icon = Icon.EMPTY;
 
 	public Button(GuiBase gui, int x, int y, int w, int h)
 	{
 		super(gui, x, y, w, h);
 	}
 
-	public Button(GuiBase gui, int x, int y, int w, int h, String t)
+	public Button(GuiBase gui, int x, int y, int w, int h, String title, Icon icon)
 	{
 		this(gui, x, y, w, h);
-		setTitle(t);
+		setIcon(icon);
+		setTitle(title);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ public class GuiButtonListBase extends GuiBase
 {
 	private final Panel panelButtons;
 	private final PanelScrollBar scrollBar;
+	private String title = "";
 
 	public GuiButtonListBase()
 	{
@@ -39,18 +40,16 @@ public class GuiButtonListBase extends GuiBase
 				}
 
 				updateWidgetPositions();
-
-				if (scrollToEnd())
-				{
-					scrollBar.setValue(1D);
-				}
 			}
 
 			@Override
 			public void updateWidgetPositions()
 			{
-				scrollBar.setElementSize(align(WidgetLayout.VERTICAL));
+				int size = align(WidgetLayout.VERTICAL);
+				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
+				setHeight(widgets.size() > 7 ? 144 : size);
+				gui.setHeight(height + 20);
 			}
 
 			@Override
@@ -76,25 +75,46 @@ public class GuiButtonListBase extends GuiBase
 				return true;
 			}
 		};
-
-		setHeight(164);
 	}
 
 	@Override
 	public void addWidgets()
 	{
-		addAll(panelButtons, scrollBar);
-		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
-		setWidth(scrollBar.posX + scrollBar.width + 8);
-		posX = (getScreen().getScaledWidth() - width) / 2;
-	}
+		add(panelButtons);
 
-	public boolean scrollToEnd()
-	{
-		return false;
+		if (panelButtons.widgets.size() > 7)
+		{
+			add(scrollBar);
+		}
+
+		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
+		setWidth(scrollBar.posX + (panelButtons.widgets.size() > 7 ? scrollBar.width + 8 : 4));
+		posX = (getScreen().getScaledWidth() - width) / 2;
 	}
 
 	public void addButtons(Panel panel)
 	{
+	}
+
+	public void setTitle(String txt)
+	{
+		title = txt;
+	}
+
+	@Override
+	public String getTitle()
+	{
+		return title;
+	}
+
+	@Override
+	public void drawBackground()
+	{
+		String title = getTitle();
+
+		if (!title.isEmpty())
+		{
+			drawString(title, getAX() + (width - gui.getStringWidth(title)) / 2, getAY() - getFontHeight() - 2, SHADOW);
+		}
 	}
 }

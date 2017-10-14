@@ -12,7 +12,7 @@ public class ColoredIcon extends Icon
 	public final Color4I color;
 	public int border;
 
-	public ColoredIcon(Icon p, Color4I c, int b)
+	ColoredIcon(Icon p, Color4I c, int b)
 	{
 		parent = p;
 		color = c;

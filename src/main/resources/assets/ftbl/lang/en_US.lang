@@ -99,7 +99,6 @@ ftbl_client.config.general.item_nbt=Display Item NBT
 ftbl_client.config.general.action_buttons=Action Buttons
 ftbl_client.config.general.mirror_commands=Mirror /ftbc Commands
 ftbl_client.config.general.replace_vanilla_status_messages=Replace vanilla status messages
-ftbl_client.config.general.theme=Theme
 
 # Player Settings
 player_config=My Server Settings
@@ -107,7 +106,7 @@ player_config.ftbl.hide_team_notification=Hide Team Notification on Login
 player_config.ftbl.hide_new_team_msg_notification=Hide New Team Message Notification
 
 # Team Settings
-team_config=My Team Config
+team_config=Config
 team_config.ftbl.display=Display
 team_config.ftbl.display.color=Color
 team_config.ftbl.display.title=Title
@@ -141,6 +140,9 @@ ftbl.lang.team.permission.owner=Can't change owner's permissions!
 ftbl.lang.team.notification=You haven't joined or created a team yet! %s to open TeamsGUI or %s to hide this message.
 ftbl.lang.team.notification.hide=Hide this Message
 ftbl.lang.team.chat_message=[Team %s] %s
+
+ftbl.lang.team.gui.leave=Exit Team
+ftbl.lang.team.gui.transfer_ownership=Transfer Ownership
 
 ftbl.lang.team_status.enemy=Enemy
 ftbl.lang.team_status.none=None

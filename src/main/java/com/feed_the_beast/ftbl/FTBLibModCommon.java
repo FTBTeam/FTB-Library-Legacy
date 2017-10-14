@@ -14,6 +14,8 @@ import com.feed_the_beast.ftbl.api.RegisterSyncDataEvent;
 import com.feed_the_beast.ftbl.api.ServerReloadEvent;
 import com.feed_the_beast.ftbl.api.player.IContainerProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterContainerProvidersEvent;
+import com.feed_the_beast.ftbl.api.team.ITeamGuiAction;
+import com.feed_the_beast.ftbl.api.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
@@ -57,6 +59,7 @@ public class FTBLibModCommon
 	private static final Map<String, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
 	public static final Map<String, RankConfigValueInfo> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
+	public static final Map<ResourceLocation, ITeamGuiAction> TEAM_GUI_ACTIONS = new HashMap<>();
 
 	public static class EditingConfig
 	{
@@ -162,6 +165,7 @@ public class FTBLibModCommon
 			return c;
 		}).post();
 		new ServerReloadEvent.RegisterIds(RELOAD_IDS::add).post();
+		new RegisterTeamGuiActionsEvent(action -> TEAM_GUI_ACTIONS.put(action.getId(), action)).post();
 	}
 
 	public void postInit()

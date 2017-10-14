@@ -3,11 +3,11 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
-import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
+import com.feed_the_beast.ftbl.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
@@ -25,18 +25,15 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 	private static final Color4I COLOR_UNAVAILABLE = Color4I.rgba(0x550094FF);
 	private static final Color4I COLOR_DISABLED = Color4I.rgba(0x55BC4242);
 
-	private class ButtonConfigSidebarButton extends Button
+	private class ButtonConfigSidebarButton extends SimpleTextButton
 	{
 		private final ISidebarButton sidebarButton;
 		private String tooltip = "";
 
 		public ButtonConfigSidebarButton(GuiBase gui, ISidebarButton s)
 		{
-			super(gui, 0, 0, 0, 20);
+			super(gui, 0, 0, StringUtils.translate("sidebar_button." + s.getName()), s.getIcon());
 			sidebarButton = s;
-			String title = StringUtils.translate("sidebar_button." + s.getName());
-			setWidth(gui.getStringWidth(title) + 28);
-			setTitle(title);
 
 			if (StringUtils.canTranslate("sidebar_button." + s.getName() + ".tooltip"))
 			{
@@ -56,20 +53,9 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		}
 
 		@Override
-		public void renderWidget()
+		public Icon getButtonBackground()
 		{
-			int ax = getAX();
-			int ay = getAY();
-
-			getIcon().draw(ax, ay, width, height);
-			sidebarButton.getIcon().draw(ax + 2, ay + 2, 16, 16);
-			gui.drawString(getTitle(), ax + 21, ay + 6, SHADOW);
-		}
-
-		@Override
-		public Icon getIcon()
-		{
-			return gui.isMouseOver(this) ? gui.getTheme().getButton(true) : gui.getTheme().getButton(false).combineWith(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED);
+			return super.getButtonBackground().combineWith(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED);
 		}
 
 		@Override
@@ -78,6 +64,11 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 			GuiHelper.playClickSound();
 			sidebarButton.setConfig(!sidebarButton.getConfig());
 		}
+	}
+
+	public GuiSidebarButtonConfig()
+	{
+		setTitle(StringUtils.translate("sidebar_button"));
 	}
 
 	@Override

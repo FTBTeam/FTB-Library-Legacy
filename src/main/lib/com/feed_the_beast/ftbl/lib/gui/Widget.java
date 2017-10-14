@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
-import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 
@@ -89,11 +88,6 @@ public class Widget
 		return true;
 	}
 
-	public Color4I renderTitleInCenter()
-	{
-		return Icon.EMPTY;
-	}
-
 	public String getTitle()
 	{
 		return "";
@@ -106,13 +100,6 @@ public class Widget
 
 	public void addMouseOverText(List<String> list)
 	{
-		Color4I col = renderTitleInCenter();
-
-		if (!col.isEmpty())
-		{
-			return;
-		}
-
 		String title = getTitle();
 
 		if (!title.isEmpty())
@@ -124,18 +111,6 @@ public class Widget
 	public void renderWidget()
 	{
 		getIcon().draw(this);
-
-		Color4I col = renderTitleInCenter();
-
-		if (!col.isEmpty())
-		{
-			String title = getTitle();
-
-			if (!title.isEmpty())
-			{
-				gui.drawString(title, getAX() + width / 2, getAY() + height / 2, col, CENTERED);
-			}
-		}
 	}
 
 	public boolean mousePressed(MouseButton button)
