@@ -278,13 +278,21 @@ public class FTBLibEventHandler
 				{
 					if (f.getName().endsWith(".dat"))
 					{
-						UUID uuid = StringUtils.fromString(FileUtils.getRawFileName(f));
+						NBTTagCompound nbt = NBTUtils.readTag(f);
 
-						if (uuid != null)
+						if (nbt != null)
 						{
-							NBTTagCompound nbt = NBTUtils.readTag(f);
+							String uuidString = nbt.getString("UUID");
 
-							if (nbt != null)
+							if (uuidString.isEmpty())
+							{
+								uuidString = FileUtils.getRawFileName(f);
+								FileUtils.delete(f);
+							}
+
+							UUID uuid = StringUtils.fromString(uuidString);
+
+							if (uuid != null)
 							{
 								playerNBT.put(uuid, nbt);
 								ForgePlayer player = new ForgePlayer(uuid, nbt.getString("Name"));
@@ -459,8 +467,9 @@ public class FTBLibEventHandler
 					}
 
 					nbt.setString("Name", player.getName());
+					nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
 
-					NBTUtils.writeTag(new File(folder, "players/" + StringUtils.fromUUID(player.getId()) + ".dat"), nbt);
+					NBTUtils.writeTag(new File(folder, "players/" + player.getName().toLowerCase() + ".dat"), nbt);
 				}
 			}
 
