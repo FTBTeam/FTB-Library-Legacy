@@ -10,7 +10,7 @@ import com.feed_the_beast.ftbl.lib.icon.Icon;
 /**
  * @author LatvianModder
  */
-public class GuiButtonListBase extends GuiBase
+public abstract class GuiButtonListBase extends GuiBase
 {
 	private final Panel panelButtons;
 	private final PanelScrollBar scrollBar;
@@ -92,9 +92,7 @@ public class GuiButtonListBase extends GuiBase
 		posX = (getScreen().getScaledWidth() - width) / 2;
 	}
 
-	public void addButtons(Panel panel)
-	{
-	}
+	public abstract void addButtons(Panel panel);
 
 	public void setTitle(String txt)
 	{

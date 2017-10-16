@@ -18,17 +18,16 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 {
 	ENEMY(-10, "enemy", TextFormatting.RED, true),
 	NONE(0, "none", TextFormatting.WHITE, true),
-	REQUESTING_INVITE(5, "requesting_invite", TextFormatting.WHITE, false),
-	INVITED(10, "invited", TextFormatting.DARK_AQUA, true),
-	ALLY(30, "ally", TextFormatting.BLUE, true),
-	MEMBER(50, "member", TextFormatting.GREEN, false),
-	MOD(80, "mod", TextFormatting.DARK_PURPLE, true),
+	REQUESTING_INVITE(5, "requesting_invite", TextFormatting.DARK_AQUA, false),
+	INVITED(10, "invited", TextFormatting.DARK_GREEN, true),
+	ALLY(30, "ally", TextFormatting.DARK_GREEN, true),
+	MEMBER(50, "member", TextFormatting.BLUE, false),
+	MOD(80, "mod", TextFormatting.BLUE, true),
 	OWNER(100, "owner", TextFormatting.GOLD, false);
 
 	public static final EnumTeamStatus[] VALUES = values();
 	public static final NameMap<EnumTeamStatus> NAME_MAP = NameMap.create(NONE, VALUES);
 	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS = NameMap.create(ALLY, NONE, ALLY, MEMBER);
-	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS_MOD = NameMap.create(ALLY, NONE, ALLY, MEMBER, MOD);
 	public static final Collection<EnumTeamStatus> VALID_VALUES = new LinkedHashSet<>();
 
 	static

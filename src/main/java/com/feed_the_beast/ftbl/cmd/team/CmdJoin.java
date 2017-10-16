@@ -50,7 +50,7 @@ public class CmdJoin extends CmdBase
 
 		IForgeTeam team = getTeam(args[0]);
 
-		if (!team.addPlayer(p))
+		if (!team.addMember(p))
 		{
 			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getName());
 		}

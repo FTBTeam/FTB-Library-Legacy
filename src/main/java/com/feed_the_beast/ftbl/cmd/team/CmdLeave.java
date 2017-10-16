@@ -30,7 +30,7 @@ public class CmdLeave extends CmdBase
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!team.removePlayer(p))
+		else if (!team.removeMember(p))
 		{
 			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
 		}

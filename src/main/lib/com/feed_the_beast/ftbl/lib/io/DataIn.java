@@ -160,6 +160,11 @@ public class DataIn
 
 		if (collection == null)
 		{
+			if (size == 1)
+			{
+				return (id / 3 == 0) ? Collections.singletonList(deserializer.read(this)) : Collections.singleton(deserializer.read(this));
+			}
+
 			collection = (id / 3 == 0) ? new ArrayList<>(size) : new HashSet<>(size);
 		}
 

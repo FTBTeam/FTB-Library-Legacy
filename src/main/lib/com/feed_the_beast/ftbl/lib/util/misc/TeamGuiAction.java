@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftbl.lib.util.misc;
 
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.team.ITeamGuiAction;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import net.minecraft.util.ResourceLocation;
@@ -80,12 +78,6 @@ public abstract class TeamGuiAction implements ITeamGuiAction
 	{
 		return order;
 	}
-
-	@Override
-	public abstract boolean isAvailable(IForgeTeam team, IForgePlayer player);
-
-	@Override
-	public abstract void onAction(IForgeTeam team, IForgePlayer player);
 
 	public final int hashCode()
 	{

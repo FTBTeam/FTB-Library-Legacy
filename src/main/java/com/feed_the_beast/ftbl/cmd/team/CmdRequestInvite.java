@@ -60,7 +60,7 @@ public class CmdRequestInvite extends CmdBase
 
 		if (status == EnumTeamStatus.NONE)
 		{
-			team.setStatus(p.getId(), EnumTeamStatus.REQUESTING_INVITE);
+			team.setStatus(p, EnumTeamStatus.REQUESTING_INVITE);
 		}
 	}
 }

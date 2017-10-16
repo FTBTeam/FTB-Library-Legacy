@@ -8,7 +8,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -32,37 +32,126 @@ public interface IForgeTeam extends IStringSerializable
 
 	EnumTeamColor getColor();
 
-	EnumTeamStatus getHighestStatus(UUID playerId);
-
-	boolean hasStatus(UUID playerId, EnumTeamStatus status);
-
-	default EnumTeamStatus getHighestStatus(IForgePlayer player)
+	default EnumTeamStatus getHighestStatus(@Nullable IForgePlayer player)
 	{
-		return getHighestStatus(player.getId());
+		if (player == null)
+		{
+			return EnumTeamStatus.NONE;
+		}
+		else if (isOwner(player))
+		{
+			return EnumTeamStatus.OWNER;
+		}
+		else if (isModerator(player))
+		{
+			return EnumTeamStatus.MOD;
+		}
+		else if (isMember(player))
+		{
+			return EnumTeamStatus.MEMBER;
+		}
+		else if (isEnemy(player))
+		{
+			return EnumTeamStatus.ENEMY;
+		}
+		else if (isAlly(player))
+		{
+			return EnumTeamStatus.ALLY;
+		}
+		else if (isInvited(player))
+		{
+			return EnumTeamStatus.INVITED;
+		}
+
+		return EnumTeamStatus.NONE;
 	}
 
-	default boolean hasStatus(IForgePlayer player, EnumTeamStatus status)
+	default boolean hasStatus(@Nullable IForgePlayer player, EnumTeamStatus status)
 	{
-		return hasStatus(player.getId(), status);
+		if (player == null)
+		{
+			return false;
+		}
+
+		switch (status)
+		{
+			case NONE:
+				return true;
+			case ENEMY:
+				return isEnemy(player);
+			case REQUESTING_INVITE:
+				return isRequestingInvite(player);
+			case ALLY:
+				return isAlly(player);
+			case INVITED:
+				return isInvited(player);
+			case MEMBER:
+				return isMember(player);
+			case MOD:
+				return isModerator(player);
+			case OWNER:
+				return isOwner(player);
+			default:
+				return false;
+		}
 	}
 
-	void setStatus(UUID playerId, EnumTeamStatus status);
+	boolean setStatus(IForgePlayer player, EnumTeamStatus status);
 
-	Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status);
+	default Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> collection, EnumTeamStatus status)
+	{
+		for (IForgePlayer player : FTBLibAPI.API.getUniverse().getPlayers())
+		{
+			if (hasStatus(player, status))
+			{
+				collection.add(player);
+			}
+		}
 
-	boolean addPlayer(IForgePlayer player);
+		return collection;
+	}
 
-	boolean removePlayer(IForgePlayer player);
+	default List<IForgePlayer> getPlayersWithStatus(EnumTeamStatus status)
+	{
+		List<IForgePlayer> list = new ArrayList<>();
+		getPlayersWithStatus(list, status);
+		return list;
+	}
 
-	void changeOwner(IForgePlayer player);
+	boolean addMember(IForgePlayer player);
+
+	boolean removeMember(IForgePlayer player);
+
+	default List<IForgePlayer> getMembers()
+	{
+		return getPlayersWithStatus(EnumTeamStatus.MEMBER);
+	}
+
+	default boolean isMember(@Nullable IForgePlayer player)
+	{
+		return player != null && equalsTeam(player.getTeam());
+	}
+
+	boolean isAlly(@Nullable IForgePlayer player);
+
+	boolean isInvited(@Nullable IForgePlayer player);
+
+	boolean isRequestingInvite(@Nullable IForgePlayer player);
+
+	boolean isEnemy(@Nullable IForgePlayer player);
+
+	boolean isModerator(@Nullable IForgePlayer player);
+
+	default boolean isOwner(@Nullable IForgePlayer player)
+	{
+		return getOwner().equalsPlayer(player);
+	}
 
 	ConfigGroup getSettings();
 
-	boolean freeToJoin();
-
 	default boolean anyPlayerHasPermission(String permission, EnumTeamStatus status)
 	{
-		for (IForgePlayer player : getPlayersWithStatus(new ArrayList<>(), status))
+		for (IForgePlayer player : getPlayersWithStatus(status))
 		{
 			if (PermissionAPI.hasPermission(player.getProfile(), permission, null))
 			{

@@ -37,6 +37,6 @@ public interface ISidebarButton extends IStringSerializable, Comparable<ISidebar
 	@Override
 	default int compareTo(ISidebarButton button)
 	{
-		return Integer.compare(getX(), button.getX());
+		return getX() - button.getX();
 	}
 }

@@ -52,7 +52,7 @@ public class CmdSetStatus extends CmdBase
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
+		else if (!team.isModerator(p))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
@@ -60,11 +60,11 @@ public class CmdSetStatus extends CmdBase
 		checkArgs(sender, args, 2);
 		IForgePlayer p1 = getForgePlayer(args[0]);
 
-		if (p1.equals(team.getOwner()))
+		if (team.isOwner(p1))
 		{
 			throw FTBLibLang.TEAM_PERMISSION_OWNER.commandError();
 		}
-		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
+		else if (!team.isModerator(p))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
@@ -73,7 +73,7 @@ public class CmdSetStatus extends CmdBase
 
 		if (status.canBeSet())
 		{
-			team.setStatus(p1.getId(), status);
+			team.setStatus(p1, status);
 		}
 
 		//TODO: Display notification

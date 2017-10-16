@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.api.team;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -21,7 +22,7 @@ public interface ITeamGuiAction
 
 	int getOrder();
 
-	boolean isAvailable(IForgeTeam team, IForgePlayer player);
+	boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data);
 
-	void onAction(IForgeTeam team, IForgePlayer player);
+	void onAction(IForgeTeam team, IForgePlayer player, NBTTagCompound data);
 }

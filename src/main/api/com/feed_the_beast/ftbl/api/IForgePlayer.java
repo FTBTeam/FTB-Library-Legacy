@@ -56,12 +56,9 @@ public interface IForgePlayer extends IStringSerializable
 		{
 			IForgeTeam team = owner.getTeam();
 
-			if (team != null)
+			if (team != null && team.isAlly(this))
 			{
-				if (team.hasStatus(this, EnumTeamStatus.ALLY))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 

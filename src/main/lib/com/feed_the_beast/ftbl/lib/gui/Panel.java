@@ -204,8 +204,10 @@ public abstract class Panel extends Widget
 
 		setOffset(true);
 
-		for (Widget w : widgets)
+		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
+			Widget w = widgets.get(i);
+
 			if (w.isEnabled() && gui.isMouseOver(w))
 			{
 				w.addMouseOverText(list);
@@ -225,8 +227,10 @@ public abstract class Panel extends Widget
 
 		setOffset(true);
 
-		for (Widget w : widgets)
+		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
+			Widget w = widgets.get(i);
+
 			if (w.isEnabled())
 			{
 				if (w.mousePressed(button))
@@ -246,8 +250,10 @@ public abstract class Panel extends Widget
 	{
 		setOffset(true);
 
-		for (Widget w : widgets)
+		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
+			Widget w = widgets.get(i);
+
 			if (w.isEnabled())
 			{
 				w.mouseReleased();
@@ -262,8 +268,10 @@ public abstract class Panel extends Widget
 	{
 		setOffset(true);
 
-		for (Widget w : widgets)
+		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
+			Widget w = widgets.get(i);
+
 			if (w.isEnabled() && w.keyPressed(key, keyChar))
 			{
 				setOffset(false);

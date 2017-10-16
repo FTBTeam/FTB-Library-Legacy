@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
+import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
@@ -78,7 +79,7 @@ public class CmdCreate extends CmdBase
 		}
 
 		Universe.INSTANCE.teams.put(team.getName(), team);
-		team.changeOwner(p);
+		team.setStatus(p, EnumTeamStatus.OWNER);
 
 		new ForgeTeamCreatedEvent(team).post();
 		new ForgeTeamPlayerJoinedEvent(team, p).post();

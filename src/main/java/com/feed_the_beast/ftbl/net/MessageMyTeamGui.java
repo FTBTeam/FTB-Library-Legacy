@@ -11,6 +11,7 @@ import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
 import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -24,11 +25,11 @@ import java.util.List;
  */
 public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 {
-	public static class ActionContainer
+	public static class Action
 	{
-		private static final DataOut.Serializer<ActionContainer> SERIALIZER = (data, object) -> object.writeData(data);
-		private static final DataIn.Deserializer<ActionContainer> DESERIALIZER = ActionContainer::new;
-		private static final Comparator<ActionContainer> COMPARATOR = Comparator.comparingInt(o -> o.order);
+		private static final DataOut.Serializer<Action> SERIALIZER = (data, object) -> object.writeData(data);
+		private static final DataIn.Deserializer<Action> DESERIALIZER = Action::new;
+		private static final Comparator<Action> COMPARATOR = (o1, o2) -> o1.order - o2.order;
 
 		public final ResourceLocation id;
 		public final ITextComponent title;
@@ -36,7 +37,7 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 		public final Icon icon;
 		private int order;
 
-		private ActionContainer(DataIn data)
+		private Action(DataIn data)
 		{
 			id = data.readResourceLocation();
 			title = data.readTextComponent();
@@ -44,7 +45,7 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 			icon = data.readIcon();
 		}
 
-		public ActionContainer(ITeamGuiAction action)
+		public Action(ITeamGuiAction action)
 		{
 			id = action.getId();
 			title = action.getTitle();
@@ -63,7 +64,7 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 	}
 
 	private String title;
-	private Collection<ActionContainer> actions;
+	private Collection<Action> actions;
 
 	public MessageMyTeamGui()
 	{
@@ -76,13 +77,13 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 
 		for (ITeamGuiAction action : FTBLibModCommon.TEAM_GUI_ACTIONS.values())
 		{
-			if (action.isAvailable(team, player))
+			if (action.isAvailable(team, player, new NBTTagCompound()))
 			{
-				actions.add(new ActionContainer(action));
+				actions.add(new Action(action));
 			}
 		}
 
-		((List<ActionContainer>) actions).sort(ActionContainer.COMPARATOR);
+		((List<Action>) actions).sort(Action.COMPARATOR);
 	}
 
 	@Override
@@ -95,14 +96,14 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 	public void writeData(DataOut data)
 	{
 		data.writeString(title);
-		data.writeCollection(actions, ActionContainer.SERIALIZER);
+		data.writeCollection(actions, Action.SERIALIZER);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
 		title = data.readString();
-		actions = data.readCollection(ActionContainer.DESERIALIZER);
+		actions = data.readCollection(Action.DESERIALIZER);
 	}
 
 	@Override

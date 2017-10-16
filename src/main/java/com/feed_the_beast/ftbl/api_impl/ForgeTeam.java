@@ -4,7 +4,6 @@ import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
-import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamConfigEvent;
@@ -21,16 +20,14 @@ import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
-import com.feed_the_beast.ftbl.lib.util.ServerUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.NBTDataStorage;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.UUID;
 
@@ -46,6 +43,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public final ConfigString title;
 	public final ConfigString desc;
 	public final ConfigBoolean freeToJoin;
+	public final Collection<UUID> requestingInvite;
 	public final Map<UUID, EnumTeamStatus> players;
 	public final ConfigGroup cachedConfig;
 
@@ -58,6 +56,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		title = new ConfigString("");
 		desc = new ConfigString("");
 		freeToJoin = new ConfigBoolean(false);
+		requestingInvite = new HashSet<>();
 		players = new HashMap<>();
 
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
@@ -111,109 +110,63 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		color.setValue(col);
 	}
 
-	@Override
-	public EnumTeamStatus getHighestStatus(UUID playerId)
+	private EnumTeamStatus getSetStatus(@Nullable IForgePlayer player)
 	{
-		if (owner.getId().equals(playerId))
-		{
-			return EnumTeamStatus.OWNER;
-		}
-
-		EnumTeamStatus status = getSetStatus(playerId);
-
-		if (status == EnumTeamStatus.MOD)
-		{
-			if (!isMember(playerId))
-			{
-				status = EnumTeamStatus.NONE;
-			}
-		}
-		else if (!status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER) && isMember(playerId))
-		{
-			status = EnumTeamStatus.MEMBER;
-		}
-
-		return status;
-	}
-
-	private boolean isMember(UUID playerId)
-	{
-		IForgePlayer player = FTBLibAPI.API.getUniverse().getPlayer(playerId);
-		return player != null && equals(player.getTeam());
-
-	}
-
-	private EnumTeamStatus getSetStatus(UUID playerId)
-	{
-		if (players == null || players.isEmpty())
+		if (player == null)
 		{
 			return EnumTeamStatus.NONE;
 		}
 
-		EnumTeamStatus status = players.get(playerId);
+		EnumTeamStatus status = players.get(player.getId());
+		return status == null ? EnumTeamStatus.NONE : status;
+	}
 
-		if (status == null)
+	@Override
+	public boolean setStatus(@Nullable IForgePlayer player, EnumTeamStatus status)
+	{
+		if (player == null || status == EnumTeamStatus.REQUESTING_INVITE)
 		{
-			status = EnumTeamStatus.NONE;
-
-			if (freeToJoin.getBoolean())
+			return false;
+		}
+		else if (status == EnumTeamStatus.OWNER)
+		{
+			if (!isMember(player))
 			{
-				status = EnumTeamStatus.INVITED;
+				return false;
 			}
+
+			IForgePlayer oldOwner = owner;
+			owner = player;
+			player.setTeamId(getName());
+
+			if (!oldOwner.equalsPlayer(owner))
+			{
+				new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
+				return true;
+			}
+
+			return false;
 		}
-
-		return status;
-	}
-
-	@Override
-	public boolean hasStatus(UUID playerId, EnumTeamStatus status)
-	{
-		if (status.isNone())
+		else if (!status.isNone())
 		{
-			return true;
-		}
-
-		EnumTeamStatus status1 = getHighestStatus(playerId);
-		return status1.isEqualOrGreaterThan(status);
-	}
-
-	@Override
-	public void setStatus(UUID playerId, EnumTeamStatus status)
-	{
-		if (!status.isNone())
-		{
-			players.put(playerId, status);
+			return players.put(player.getId(), status) != status;
 		}
 		else
 		{
-			players.remove(playerId);
+			return players.remove(player.getId()) != status;
 		}
 	}
 
 	@Override
-	public Collection<IForgePlayer> getPlayersWithStatus(Collection<IForgePlayer> c, EnumTeamStatus status)
+	public boolean addMember(IForgePlayer player)
 	{
-		for (IForgePlayer p : Universe.INSTANCE.getPlayers())
-		{
-			if (hasStatus(p, status))
-			{
-				c.add(p);
-			}
-		}
-
-		return c;
-	}
-
-	@Override
-	public boolean addPlayer(IForgePlayer player)
-	{
-		if (hasStatus(player, EnumTeamStatus.INVITED))
+		if (isInvited(player))
 		{
 			player.setTeamId(getName());
 
-			if (!hasStatus(player, EnumTeamStatus.MEMBER))
+			if (!isMember(player))
 			{
-				setStatus(player.getId(), EnumTeamStatus.MEMBER);
+				setStatus(player, EnumTeamStatus.MEMBER);
 				new ForgeTeamPlayerJoinedEvent(this, player).post();
 			}
 
@@ -224,9 +177,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	}
 
 	@Override
-	public boolean removePlayer(IForgePlayer player)
+	public boolean removeMember(IForgePlayer player)
 	{
-		if (getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() == 1)
+		if (getMembers().size() == 1)
 		{
 			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
@@ -235,7 +188,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		}
 		else
 		{
-			if (hasStatus(player, EnumTeamStatus.OWNER))
+			if (isOwner(player))
 			{
 				return false;
 			}
@@ -248,7 +201,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 	private void removePlayer0(IForgePlayer player)
 	{
-		if (hasStatus(player, EnumTeamStatus.MEMBER))
+		if (isMember(player))
 		{
 			player.setTeamId("");
 			new ForgeTeamPlayerLeftEvent(this, player).post();
@@ -256,21 +209,33 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	}
 
 	@Override
-	public void changeOwner(IForgePlayer player)
+	public boolean isAlly(@Nullable IForgePlayer player)
 	{
-		if (!hasStatus(player, EnumTeamStatus.MEMBER))
-		{
-			return;
-		}
+		return isMember(player) || getSetStatus(player).isEqualOrGreaterThan(EnumTeamStatus.ALLY);
+	}
 
-		IForgePlayer oldOwner = owner;
-		owner = player;
-		player.setTeamId(getName());
+	@Override
+	public boolean isInvited(@Nullable IForgePlayer player)
+	{
+		return (freeToJoin.getBoolean() || getSetStatus(player).isEqualOrGreaterThan(EnumTeamStatus.INVITED)) && !isEnemy(player);
+	}
 
-		if (!oldOwner.equalsPlayer(owner))
-		{
-			new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
-		}
+	@Override
+	public boolean isRequestingInvite(@Nullable IForgePlayer player)
+	{
+		return player != null && !isMember(player) && requestingInvite.contains(player.getId());
+	}
+
+	@Override
+	public boolean isEnemy(@Nullable IForgePlayer player)
+	{
+		return getSetStatus(player) == EnumTeamStatus.ENEMY;
+	}
+
+	@Override
+	public boolean isModerator(@Nullable IForgePlayer player)
+	{
+		return isOwner(player) || isMember(player) && getSetStatus(player).isEqualOrGreaterThan(EnumTeamStatus.MOD);
 	}
 
 	@Override
@@ -279,30 +244,9 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		return cachedConfig;
 	}
 
-	public Collection<EntityPlayerMP> getOnlineTeamPlayers(EnumTeamStatus status)
-	{
-		Collection<EntityPlayerMP> list = new ArrayList<>();
-
-		for (EntityPlayerMP ep : ServerUtils.getServer().getPlayerList().getPlayers())
-		{
-			if (hasStatus(ep.getGameProfile().getId(), status))
-			{
-				list.add(ep);
-			}
-		}
-
-		return list;
-	}
-
 	@Override
 	public boolean isValid()
 	{
 		return isValid;
-	}
-
-	@Override
-	public boolean freeToJoin()
-	{
-		return freeToJoin.getBoolean();
 	}
 }

@@ -37,7 +37,7 @@ public class CmdTransferOwnership extends CmdBase
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!team.hasStatus(p, EnumTeamStatus.OWNER))
+		else if (!team.isOwner(p))
 		{
 			throw FTBLibLang.TEAM_NOT_OWNER.commandError();
 		}
@@ -51,6 +51,6 @@ public class CmdTransferOwnership extends CmdBase
 			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
 		}
 
-		team.changeOwner(p1);
+		team.setStatus(p1, EnumTeamStatus.OWNER);
 	}
 }

@@ -142,6 +142,11 @@ ftbl.lang.team.notification.hide=Hide this Message
 ftbl.lang.team.chat_message=[Team %s] %s
 
 ftbl.lang.team.gui.members=Members
+ftbl.lang.team.gui.members.invite=Click to invite to your team
+ftbl.lang.team.gui.members.requesting_invite=This player is requesting invite
+ftbl.lang.team.gui.members.deny_request=Right-click to deny request
+ftbl.lang.team.gui.members.cancel_invite=Right-click to cancel invite
+ftbl.lang.team.gui.members.kick=Right-click to kick member
 ftbl.lang.team.gui.allies=Allies
 ftbl.lang.team.gui.mods=Moderators
 ftbl.lang.team.gui.enemies=Enemies

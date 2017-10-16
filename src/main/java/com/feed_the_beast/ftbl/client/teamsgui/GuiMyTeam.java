@@ -10,6 +10,7 @@ import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbl.net.MessageMyTeamAction;
 import com.feed_the_beast.ftbl.net.MessageMyTeamGui;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 
@@ -20,9 +21,9 @@ public class GuiMyTeam extends GuiButtonListBase
 {
 	private static class TeamActionButton extends SimpleTextButton
 	{
-		private final MessageMyTeamGui.ActionContainer action;
+		private final MessageMyTeamGui.Action action;
 
-		private TeamActionButton(GuiBase gui, MessageMyTeamGui.ActionContainer a)
+		private TeamActionButton(GuiBase gui, MessageMyTeamGui.Action a)
 		{
 			super(gui, 0, 0, a.title.getFormattedText(), a.icon);
 			action = a;
@@ -37,17 +38,17 @@ public class GuiMyTeam extends GuiButtonListBase
 			{
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
 				{
+					gui.openGui();
+
 					if (result)
 					{
-						new MessageMyTeamAction(action.id).sendToServer();
+						new MessageMyTeamAction(action.id, new NBTTagCompound()).sendToServer();
 					}
-
-					gui.openGui();
 				}, action.title.getFormattedText() + "?", "", 0)); //LANG
 			}
 			else
 			{
-				new MessageMyTeamAction(action.id).sendToServer();
+				new MessageMyTeamAction(action.id, new NBTTagCompound()).sendToServer();
 			}
 		}
 
@@ -58,9 +59,9 @@ public class GuiMyTeam extends GuiButtonListBase
 		}
 	}
 
-	private Collection<MessageMyTeamGui.ActionContainer> actions;
+	private Collection<MessageMyTeamGui.Action> actions;
 
-	public GuiMyTeam(String t, Collection<MessageMyTeamGui.ActionContainer> l)
+	public GuiMyTeam(String t, Collection<MessageMyTeamGui.Action> l)
 	{
 		setTitle(t);
 		actions = l;
@@ -69,7 +70,7 @@ public class GuiMyTeam extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
-		for (MessageMyTeamGui.ActionContainer action : actions)
+		for (MessageMyTeamGui.Action action : actions)
 		{
 			panel.add(new TeamActionButton(this, action));
 		}

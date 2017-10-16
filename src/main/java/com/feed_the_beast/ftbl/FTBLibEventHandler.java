@@ -4,8 +4,6 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
-import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbl.api.ServerReloadEvent;
@@ -15,6 +13,7 @@ import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftbl.api.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseLoadedEvent;
 import com.feed_the_beast.ftbl.api.universe.ForgeUniverseSavedEvent;
+import com.feed_the_beast.ftbl.api_impl.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayerFake;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
@@ -33,9 +32,6 @@ import com.feed_the_beast.ftbl.lib.config.ConfigString;
 import com.feed_the_beast.ftbl.lib.config.ConfigStringEnum;
 import com.feed_the_beast.ftbl.lib.config.ConfigTextComponent;
 import com.feed_the_beast.ftbl.lib.config.ConfigTristate;
-import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
-import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
-import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.io.Bits;
@@ -44,7 +40,6 @@ import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
 import com.feed_the_beast.ftbl.lib.util.NBTUtils;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
-import com.feed_the_beast.ftbl.lib.util.misc.TeamGuiAction;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,7 +48,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
@@ -65,8 +59,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -104,126 +98,14 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public static void registerTeamGuiActions(RegisterTeamGuiActionsEvent event)
 	{
-		event.register(new TeamGuiAction(FTBLibFinals.get("config"), new TextComponentTranslation("team_config"), GuiIcons.SETTINGS, -100)
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return team.hasStatus(player, EnumTeamStatus.MOD);
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				FTBLibAPI.API.editServerConfig(player.getPlayer(), team.getSettings(), IConfigCallback.DEFAULT);
-			}
-		});
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("info"), GuiLang.INFO.textComponent(), GuiIcons.INFO, 0)
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return true;
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				//TODO: Open info gui
-			}
-		});
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("members"), new TextComponentTranslation("ftbl.lang.team.gui.members"), GuiIcons.FRIENDS, 30) //LANG
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return team.hasStatus(player, EnumTeamStatus.MOD);
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				//TODO: Open player checklist gui
-			}
-		});
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("allies"), new TextComponentTranslation("ftbl.lang.team.gui.allies"), GuiIcons.STAR, 40) //LANG
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return team.hasStatus(player, EnumTeamStatus.MOD);
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				//TODO: Open player checklist gui
-			}
-		});
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("moderators"), new TextComponentTranslation("ftbl.lang.team.gui.mods"), GuiIcons.SHIELD, 50) //LANG
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return player.equalsPlayer(team.getOwner());
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				//TODO: Open player checklist gui
-			}
-		});
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("enemies"), new TextComponentTranslation("ftbl.lang.team.gui.enemies"), GuiIcons.CLOSE, 60) //LANG
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return team.hasStatus(player, EnumTeamStatus.MOD);
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				//TODO: Open player checklist gui
-			}
-		});
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("leave"), new TextComponentTranslation("ftbl.lang.team.gui.leave"), GuiIcons.REMOVE, 100)
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return !player.equalsPlayer(team.getOwner()) || team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() <= 1;
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				team.removePlayer(player);
-				FTBLibAPI.API.sendCloseGuiPacket(player.getPlayer());
-			}
-		}.setRequiresConfirm());
-
-		event.register(new TeamGuiAction(FTBLibFinals.get("transter_ownership"), new TextComponentTranslation("ftbl.lang.team.gui.transfer_ownership"), GuiIcons.RIGHT, 100)
-		{
-			@Override
-			public boolean isAvailable(IForgeTeam team, IForgePlayer player)
-			{
-				return player.equalsPlayer(team.getOwner()) && team.getPlayersWithStatus(new ArrayList<>(), EnumTeamStatus.MEMBER).size() > 1;
-			}
-
-			@Override
-			public void onAction(IForgeTeam team, IForgePlayer player)
-			{
-				//TODO: Open player list gui
-			}
-		}.setRequiresConfirm());
+		event.register(FTBLibTeamGuiActions.CONFIG);
+		event.register(FTBLibTeamGuiActions.INFO);
+		event.register(FTBLibTeamGuiActions.MEMBERS);
+		event.register(FTBLibTeamGuiActions.ALLIES);
+		event.register(FTBLibTeamGuiActions.MODERATORS);
+		event.register(FTBLibTeamGuiActions.ENEMIES);
+		event.register(FTBLibTeamGuiActions.LEAVE);
+		event.register(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP);
 	}
 
 	@SubscribeEvent
@@ -349,11 +231,21 @@ public class FTBLibEventHandler
 
 		Universe.INSTANCE.players.put(ForgePlayerFake.SERVER.getId(), ForgePlayerFake.SERVER);
 
-		for (ForgeTeam team : Universe.INSTANCE.teams.values())
+		Iterator<ForgeTeam> teamIterator = Universe.INSTANCE.teams.values().iterator();
+
+		while (teamIterator.hasNext())
 		{
+			ForgeTeam team = teamIterator.next();
 			NBTTagCompound nbt = teamNBT.get(team.getName());
 
 			team.owner = Universe.INSTANCE.getPlayer(StringUtils.fromString(nbt.getString("Owner")));
+
+			if (team.owner == null)
+			{
+				teamIterator.remove();
+				continue;
+			}
+
 			team.color.setValueFromString(nbt.getString("Color"), false);
 			team.title.setString(nbt.getString("Title"));
 			team.desc.setString(nbt.getString("Desc"));
@@ -391,7 +283,19 @@ public class FTBLibEventHandler
 				}
 			}
 
-			NBTTagList list = nbt.getTagList("Invited", Constants.NBT.TAG_STRING);
+			NBTTagList list = nbt.getTagList("RequestingInvite", Constants.NBT.TAG_STRING);
+
+			for (int i = 0; i < list.tagCount(); i++)
+			{
+				UUID id = StringUtils.fromString(list.getStringTagAt(i));
+
+				if (id != null && !team.players.containsKey(id))
+				{
+					team.players.put(id, EnumTeamStatus.REQUESTING_INVITE);
+				}
+			}
+
+			list = nbt.getTagList("Invited", Constants.NBT.TAG_STRING);
 
 			for (int i = 0; i < list.tagCount(); i++)
 			{
@@ -452,20 +356,10 @@ public class FTBLibEventHandler
 				if (!player.isFake())
 				{
 					NBTTagCompound nbt = new NBTTagCompound();
-
 					nbt.setBoolean("HideTeamNotification", player.hideTeamNotification.getBoolean());
 					nbt.setLong("LastTimeSeen", player.lastTimeSeen);
-
-					if (player.team != null && player.team.isValid())
-					{
-						nbt.setString("TeamID", player.team.getName());
-					}
-
-					if (!player.dataStorage.isEmpty())
-					{
-						nbt.setTag("Data", player.dataStorage.serializeNBT());
-					}
-
+					nbt.setString("TeamID", (player.team != null && player.team.isValid()) ? player.team.getName() : "");
+					nbt.setTag("Data", player.dataStorage.serializeNBT());
 					nbt.setString("Name", player.getName());
 					nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
 
@@ -476,37 +370,25 @@ public class FTBLibEventHandler
 			for (ForgeTeam team : Universe.INSTANCE.teams.values())
 			{
 				NBTTagCompound nbt = new NBTTagCompound();
+
 				nbt.setString("Owner", StringUtils.fromUUID(team.owner.getId()));
 				nbt.setString("Color", team.color.getString());
-
-				if (!team.title.isEmpty())
-				{
-					nbt.setString("Title", team.title.getString());
-				}
-
-				if (!team.desc.isEmpty())
-				{
-					nbt.setString("Desc", team.desc.getString());
-				}
-
+				nbt.setString("Title", team.title.getString());
+				nbt.setString("Desc", team.desc.getString());
 				nbt.setBoolean("FreeToJoin", team.freeToJoin.getBoolean());
+
+				NBTTagCompound nbt1 = new NBTTagCompound();
 
 				if (team.players != null && !team.players.isEmpty())
 				{
-					NBTTagCompound nbt1 = new NBTTagCompound();
-
 					for (Map.Entry<UUID, EnumTeamStatus> entry : team.players.entrySet())
 					{
 						nbt1.setString(StringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
 					}
-
-					nbt.setTag("Players", nbt1);
 				}
 
-				if (!team.dataStorage.isEmpty())
-				{
-					nbt.setTag("Data", team.dataStorage.serializeNBT());
-				}
+				nbt.setTag("Players", nbt1);
+				nbt.setTag("Data", team.dataStorage.serializeNBT());
 
 				NBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), nbt);
 			}
@@ -561,7 +443,7 @@ public class FTBLibEventHandler
 			{
 				ForgeTeam team = new ForgeTeam(id, p);
 				Universe.INSTANCE.teams.put(team.getName(), team);
-				team.changeOwner(p);
+				team.setStatus(p, EnumTeamStatus.OWNER);
 				new ForgeTeamCreatedEvent(team).post();
 				new ForgeTeamPlayerJoinedEvent(team, p).post();
 			}

@@ -78,7 +78,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 	public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
 	{
 		readData(pkt.getNbtCompound(), EnumSaveType.NET_UPDATE);
-		onUpdatePacket();
+		onUpdatePacket(EnumSaveType.NET_UPDATE);
 	}
 
 	@Override
@@ -94,10 +94,10 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 	public final void handleUpdateTag(NBTTagCompound tag)
 	{
 		readData(tag, EnumSaveType.NET_FULL);
-		onUpdatePacket();
+		onUpdatePacket(EnumSaveType.NET_FULL);
 	}
 
-	public void onUpdatePacket()
+	public void onUpdatePacket(EnumSaveType type)
 	{
 		markDirty();
 	}

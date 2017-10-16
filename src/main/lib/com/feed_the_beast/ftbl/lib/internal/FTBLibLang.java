@@ -63,4 +63,16 @@ public interface FTBLibLang
 	LangKey TEAM_NOTIFICATION = FTBLibFinals.lang("lang.team.notification", String.class, String.class);
 	LangKey TEAM_NOTIFICATION_HIDE = FTBLibFinals.lang("lang.team.notification.hide");
 	LangKey TEAM_CHAT_MESSAGE = FTBLibFinals.lang("lang.team.chat_message", String.class, String.class);
+
+	LangKey TEAM_GUI_MEMBERS = FTBLibFinals.lang("lang.team.gui.members");
+	LangKey TEAM_GUI_MEMBERS_INVITE = FTBLibFinals.lang("lang.team.gui.members.invite");
+	LangKey TEAM_GUI_MEMBERS_REQUESTING_INVITE = FTBLibFinals.lang("lang.team.gui.members.requesting_invite");
+	LangKey TEAM_GUI_MEMBERS_DENY_REQUEST = FTBLibFinals.lang("lang.team.gui.members.deny_request");
+	LangKey TEAM_GUI_MEMBERS_CANCEL_INVITE = FTBLibFinals.lang("lang.team.gui.members.cancel_invite");
+	LangKey TEAM_GUI_MEMBERS_KICK = FTBLibFinals.lang("lang.team.gui.members.kick");
+	LangKey TEAM_GUI_ALLIES = FTBLibFinals.lang("lang.team.gui.allies");
+	LangKey TEAM_GUI_MODS = FTBLibFinals.lang("lang.team.gui.mods");
+	LangKey TEAM_GUI_ENEMIES = FTBLibFinals.lang("lang.team.gui.enemies");
+	LangKey TEAM_GUI_LEAVE = FTBLibFinals.lang("lang.team.gui.leave");
+	LangKey TEAM_GUI_TRANSFER_OWNERSHIP = FTBLibFinals.lang("lang.team.gui.transfer_ownership");
 }

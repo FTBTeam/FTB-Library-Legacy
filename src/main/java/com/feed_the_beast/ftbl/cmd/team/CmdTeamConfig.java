@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
@@ -33,7 +32,7 @@ public class CmdTeamConfig extends CmdEditConfigBase
 			FTBLibAPI.API.sendCloseGuiPacket(ep);
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
+		else if (!team.isModerator(p))
 		{
 			FTBLibAPI.API.sendCloseGuiPacket(ep);
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();

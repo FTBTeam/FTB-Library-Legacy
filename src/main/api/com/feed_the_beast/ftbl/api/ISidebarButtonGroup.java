@@ -18,6 +18,6 @@ public interface ISidebarButtonGroup extends Comparable<ISidebarButtonGroup>
 	@Override
 	default int compareTo(ISidebarButtonGroup group)
 	{
-		return Integer.compare(getY(), group.getY());
+		return getY() - group.getY();
 	}
 }

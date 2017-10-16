@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
@@ -37,7 +36,7 @@ public class CmdKick extends CmdBase
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!team.hasStatus(p, EnumTeamStatus.MOD))
+		else if (!team.isModerator(p))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
@@ -46,14 +45,13 @@ public class CmdKick extends CmdBase
 
 		IForgePlayer p1 = getForgePlayer(args[0]);
 
-		if (!team.hasStatus(p1, EnumTeamStatus.MEMBER))
+		if (!team.isMember(p1))
 		{
 			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
 		}
-
-		if (!p1.equalsPlayer(p))
+		else if (!p1.equalsPlayer(p))
 		{
-			team.removePlayer(p1);
+			team.removeMember(p1);
 		}
 		else
 		{

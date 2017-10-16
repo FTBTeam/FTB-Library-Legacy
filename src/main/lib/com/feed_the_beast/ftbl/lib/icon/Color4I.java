@@ -121,11 +121,11 @@ public class Color4I extends Icon
 	public static final Color4I GRAY = rgb(0x999999);
 	public static final Color4I WHITE = WHITE_A[255];
 	public static final Color4I RED = rgb(0xFF0000);
-	public static final Color4I GREEN = rgb(0xFF0000);
-	public static final Color4I BLUE = rgb(0xFF0000);
-	public static final Color4I LIGHT_RED = rgb(0xFFFF5656);
-	public static final Color4I LIGHT_GREEN = rgb(0xFFFF5656);
-	public static final Color4I LIGHT_BLUE = rgb(0xFFFF5656);
+	public static final Color4I GREEN = rgb(0x00FF00);
+	public static final Color4I BLUE = rgb(0x0000FF);
+	public static final Color4I LIGHT_RED = rgb(0xFF5656);
+	public static final Color4I LIGHT_GREEN = rgb(0x56FF56);
+	public static final Color4I LIGHT_BLUE = rgb(0x5656FF);
 
 	int red = 255, green = 255, blue = 255, alpha = 255, rgba = 0xFFFFFFFF;
 

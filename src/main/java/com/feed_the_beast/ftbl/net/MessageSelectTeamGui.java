@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftbl.net;
 
-import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.Universe;
@@ -32,7 +31,7 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 
 		for (ForgeTeam team : Universe.INSTANCE.getTeams())
 		{
-			teams.add(new PublicTeamData(team, team.hasStatus(player, EnumTeamStatus.INVITED)));
+			teams.add(new PublicTeamData(team, team.isInvited(player)));
 		}
 	}
 

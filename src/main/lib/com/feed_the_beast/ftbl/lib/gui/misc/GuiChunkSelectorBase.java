@@ -160,9 +160,9 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		add(panelButtons);
-		panelButtons.posX = getScreen().getScaledWidth() - 16 - posX;
-		panelButtons.posY = -posY;
-		panelButtons.setHeight(panelButtons.widgets.size() * 16);
+		panelButtons.posX = getScreen().getScaledWidth() - 20 - getAX();
+		panelButtons.posY = -getAY();
+		panelButtons.setHeight(panelButtons.widgets.size() * 20);
 	}
 
 	@Override
