@@ -79,6 +79,7 @@ public class CmdCreate extends CmdBase
 		}
 
 		Universe.INSTANCE.teams.put(team.getName(), team);
+		p.setTeamId(team.getName());
 		team.setStatus(p, EnumTeamStatus.OWNER);
 
 		new ForgeTeamCreatedEvent(team).post();
