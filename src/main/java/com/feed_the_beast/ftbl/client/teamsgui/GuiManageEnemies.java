@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class GuiManageAllies extends GuiManagePlayersBase
+public class GuiManageEnemies extends GuiManagePlayersBase
 {
 	private static class ButtonPlayer extends ButtonPlayerBase
 	{
@@ -32,13 +32,13 @@ public class GuiManageAllies extends GuiManagePlayersBase
 		@Override
 		Color4I getPlayerColor()
 		{
-			return entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY) ? ColorUtils.getChatFormattingColor(TextFormatting.DARK_GREEN.ordinal()) : Color4I.BLACK;
+			return entry.status == EnumTeamStatus.ENEMY ? ColorUtils.getChatFormattingColor(TextFormatting.RED.ordinal()) : Color4I.BLACK;
 		}
 
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			list.add((entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY) ? EnumTeamStatus.ALLY : EnumTeamStatus.MEMBER).getLangKey().translate());
+			list.add((entry.status == EnumTeamStatus.ENEMY ? EnumTeamStatus.ENEMY : EnumTeamStatus.NONE).getLangKey().translate());
 		}
 
 		@Override
@@ -48,7 +48,7 @@ public class GuiManageAllies extends GuiManagePlayersBase
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("player", StringUtils.fromUUID(entry.uuid));
 
-			if (entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY))
+			if (entry.status == EnumTeamStatus.ENEMY)
 			{
 				data.setBoolean("add", false);
 				entry.status = EnumTeamStatus.NONE;
@@ -56,16 +56,16 @@ public class GuiManageAllies extends GuiManagePlayersBase
 			else
 			{
 				data.setBoolean("add", true);
-				entry.status = EnumTeamStatus.ALLY;
+				entry.status = EnumTeamStatus.ENEMY;
 			}
 
-			new MessageMyTeamAction(FTBLibTeamGuiActions.ALLIES.getId(), data).sendToServer();
+			new MessageMyTeamAction(FTBLibTeamGuiActions.ENEMIES.getId(), data).sendToServer();
 			updateIcon();
 		}
 	}
 
-	public GuiManageAllies(Collection<MessageMyTeamPlayerList.Entry> m)
+	public GuiManageEnemies(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(FTBLibLang.TEAM_GUI_ALLIES.translate(), m, ButtonPlayer::new);
+		super(FTBLibLang.TEAM_GUI_ENEMIES.translate(), m, ButtonPlayer::new);
 	}
 }

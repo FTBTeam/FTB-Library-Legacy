@@ -141,13 +141,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 			if (!oldOwner.equalsPlayer(owner))
 			{
+				players.remove(player.getId());
 				new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
 				return true;
 			}
 
 			return false;
 		}
-		else if (!status.isNone())
+		else if (!status.isNone() && status.canBeSet())
 		{
 			return players.put(player.getId(), status) != status;
 		}

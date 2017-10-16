@@ -140,7 +140,7 @@ public class FTBLibTeamGuiActions
 
 			if (p != null && p != player)
 			{
-				team.setStatus(p, data.getBoolean("add") ? EnumTeamStatus.ALLY : EnumTeamStatus.MEMBER);
+				team.setStatus(p, data.getBoolean("add") ? EnumTeamStatus.ALLY : EnumTeamStatus.NONE);
 			}
 		}
 	};
@@ -166,7 +166,7 @@ public class FTBLibTeamGuiActions
 
 			if (p != null && p != player)
 			{
-				team.setStatus(p, data.getBoolean("add") ? EnumTeamStatus.MOD : EnumTeamStatus.MEMBER);
+				team.setStatus(p, data.getBoolean("add") ? EnumTeamStatus.MOD : EnumTeamStatus.NONE);
 			}
 		}
 	};
@@ -185,6 +185,13 @@ public class FTBLibTeamGuiActions
 			if (data.hasNoTags())
 			{
 				new MessageMyTeamPlayerList(getId(), team, player, ENEMIES_PREDICATE).sendTo(player.getPlayer());
+			}
+
+			IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(data.getString("player"));
+
+			if (p != null && p != player)
+			{
+				team.setStatus(p, data.getBoolean("add") ? EnumTeamStatus.ENEMY : EnumTeamStatus.NONE);
 			}
 		}
 	};
@@ -220,6 +227,13 @@ public class FTBLibTeamGuiActions
 			{
 				new MessageMyTeamPlayerList(getId(), team, player, MEMBERS_PREDICATE).sendTo(player.getPlayer());
 			}
+
+			IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(data.getString("player"));
+
+			if (p != null && p != player)
+			{
+				team.setStatus(p, EnumTeamStatus.OWNER);
+			}
 		}
-	}.setRequiresConfirm();
+	};
 }

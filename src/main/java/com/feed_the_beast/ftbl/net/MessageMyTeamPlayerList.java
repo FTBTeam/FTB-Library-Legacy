@@ -6,8 +6,10 @@ import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api_impl.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiManageAllies;
+import com.feed_the_beast.ftbl.client.teamsgui.GuiManageEnemies;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiManageMembers;
 import com.feed_the_beast.ftbl.client.teamsgui.GuiManageModerators;
+import com.feed_the_beast.ftbl.client.teamsgui.GuiTransferOwnership;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -119,9 +121,11 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 		}
 		else if (m.id.equals(FTBLibTeamGuiActions.ENEMIES.getId()))
 		{
+			new GuiManageEnemies(m.entries).openGuiLater();
 		}
 		else if (m.id.equals(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP.getId()))
 		{
+			new GuiTransferOwnership(m.entries).openGuiLater();
 		}
 	}
 }
