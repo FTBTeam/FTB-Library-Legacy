@@ -31,7 +31,7 @@ public interface FTBLibLang
 	LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
 	LangKey MY_TEAM_SETTINGS = LangKey.of("team_config");
 	LangKey COMMAND_PERMISSION = LangKey.of("commands.generic.permission");
-	LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage");
+	LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage", String.class);
 
 	LangKey CONFIG_COMMAND_INVALID_KEY = FTBLibFinals.lang("lang.config_command.invalid_key", String.class);
 	LangKey CONFIG_COMMAND_SETTING = FTBLibFinals.lang("lang.config_command.setting", String.class, String.class);
