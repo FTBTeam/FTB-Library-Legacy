@@ -2,6 +2,7 @@ package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamColor;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftbl.api.team.ForgeTeamPlayerJoinedEvent;
@@ -66,7 +67,7 @@ public class CmdCreate extends CmdBase
 			throw FTBLibLang.TEAM_ID_INVALID.commandError();
 		}
 
-		if (Universe.INSTANCE.getTeam(args[0]) != null)
+		if (FTBLibAPI.API.getUniverse().getTeam(args[0]) != null)
 		{
 			throw FTBLibLang.TEAM_ID_ALREADY_EXISTS.commandError();
 		}

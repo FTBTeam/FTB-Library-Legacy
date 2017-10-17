@@ -94,7 +94,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 		{
 			for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers())
 			{
-				IForgePlayer p = Universe.INSTANCE.getPlayer(player);
+				IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 				new MessageSyncData(player, p).sendTo(player);
 			}
 		}

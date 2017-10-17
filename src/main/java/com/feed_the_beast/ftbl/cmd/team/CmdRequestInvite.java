@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
-import com.feed_the_beast.ftbl.api_impl.ForgeTeam;
-import com.feed_the_beast.ftbl.api_impl.Universe;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
@@ -49,7 +49,7 @@ public class CmdRequestInvite extends CmdBase
 
 		checkArgs(sender, args, 1);
 
-		ForgeTeam team = Universe.INSTANCE.getTeam(args[0]);
+		IForgeTeam team = FTBLibAPI.API.getUniverse().getTeam(args[0]);
 
 		if (team == null)
 		{

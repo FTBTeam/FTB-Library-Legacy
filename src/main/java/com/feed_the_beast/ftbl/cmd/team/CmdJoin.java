@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.cmd.team;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.IForgeTeam;
-import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import net.minecraft.command.CommandException;
@@ -29,7 +29,7 @@ public class CmdJoin extends CmdBase
 	{
 		if (args.length == 1)
 		{
-			return getListOfStringsMatchingLastWord(args, Universe.INSTANCE.teams.keySet());
+			return getListOfStringsMatchingLastWord(args, FTBLibAPI.API.getUniverse().getTeams());
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);

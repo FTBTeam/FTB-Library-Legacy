@@ -2,7 +2,9 @@ package com.feed_the_beast.ftbl.api_impl;
 
 import com.feed_the_beast.ftbl.FTBLibMod;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IForgePlayer;
+import com.feed_the_beast.ftbl.api.IForgeTeam;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftbl.api.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
@@ -37,7 +39,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	private String playerName;
 	public boolean firstLogin;
 	public final NBTDataStorage dataStorage;
-	public ForgeTeam team = null;
+	public IForgeTeam team = null;
 	public final ConfigBoolean hideTeamNotification;
 	public EntityPlayerMP entityPlayer;
 	public NBTTagCompound playerNBT;
@@ -65,12 +67,12 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	@Override
 	public final void setTeamId(String id)
 	{
-		team = Universe.INSTANCE.getTeam(id);
+		team = FTBLibAPI.API.getUniverse().getTeam(id);
 	}
 
 	@Override
 	@Nullable
-	public final ForgeTeam getTeam()
+	public final IForgeTeam getTeam()
 	{
 		if (team != null && !team.isValid())
 		{

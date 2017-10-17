@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.cmd;
 
+import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api_impl.ForgePlayer;
 import com.feed_the_beast.ftbl.api_impl.Universe;
 import com.feed_the_beast.ftbl.lib.cmd.CmdBase;
@@ -33,12 +34,13 @@ public class CmdAddFakePlayer extends CmdBase
 		checkArgs(sender, args, 2);
 
 		UUID id = StringUtils.fromString(args[0]);
+
 		if (id == null)
 		{
 			throw FTBLibLang.CONFIG_ADD_FAKE_PLAYER_INVALID_UUID.commandError();
 		}
 
-		if (Universe.INSTANCE.getPlayer(id) != null || Universe.INSTANCE.getPlayer(args[1]) != null)
+		if (FTBLibAPI.API.getUniverse().getPlayer(id) != null || FTBLibAPI.API.getUniverse().getPlayer(args[1]) != null)
 		{
 			throw FTBLibLang.CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS.commandError();
 		}
