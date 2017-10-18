@@ -45,7 +45,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
 		{
-			return true;
+			return false;
 		}
 
 		@Override
@@ -60,7 +60,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
 		{
-			return team.isModerator(player);
+			return team.isModerator(player) && FTBLibAPI.API.getUniverse().getRealPlayers().size() > 1;
 		}
 
 		@Override
@@ -125,7 +125,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
 		{
-			return team.isModerator(player);
+			return team.isModerator(player) && FTBLibAPI.API.getUniverse().getRealPlayers().size() > 1;
 		}
 
 		@Override
@@ -176,7 +176,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
 		{
-			return team.isModerator(player);
+			return team.isModerator(player) && FTBLibAPI.API.getUniverse().getRealPlayers().size() > 1;
 		}
 
 		@Override

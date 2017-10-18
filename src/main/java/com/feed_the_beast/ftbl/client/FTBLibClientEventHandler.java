@@ -281,6 +281,12 @@ public class FTBLibClientEventHandler
 	{
 		if (event.phase == TickEvent.Phase.START)
 		{
+			if (ClientUtils.MC.world == null)
+			{
+				currentNotification = null;
+				Temp.MAP.clear();
+			}
+
 			if (currentNotification != null)
 			{
 				if (currentNotification.tick())
@@ -339,7 +345,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
 	{
-		AtlasSpriteIcon.SPRITE_MAP.clear();
+		ClientUtils.SPRITE_MAP.clear();
 
 		try
 		{

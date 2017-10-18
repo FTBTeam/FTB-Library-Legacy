@@ -6,7 +6,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,6 +25,21 @@ public interface IUniverse
 	WorldServer getOverworld();
 
 	Collection<? extends IForgePlayer> getPlayers();
+
+	default List<IForgePlayer> getRealPlayers()
+	{
+		List<IForgePlayer> list = new ArrayList<>();
+
+		for (IForgePlayer player : getPlayers())
+		{
+			if (!player.isFake())
+			{
+				list.add(player);
+			}
+		}
+
+		return list;
+	}
 
 	@Nullable
 	IForgePlayer getPlayer(@Nullable UUID id);

@@ -72,7 +72,7 @@ public class CmdCreate extends CmdBase
 			throw FTBLibLang.TEAM_ID_ALREADY_EXISTS.commandError();
 		}
 
-		ForgeTeam team = new ForgeTeam(args[0], p);
+		ForgeTeam team = new ForgeTeam(args[0]);
 
 		if (args.length > 1)
 		{

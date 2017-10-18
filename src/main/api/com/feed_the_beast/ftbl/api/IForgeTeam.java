@@ -102,7 +102,7 @@ public interface IForgeTeam extends IStringSerializable
 	{
 		for (IForgePlayer player : FTBLibAPI.API.getUniverse().getPlayers())
 		{
-			if (hasStatus(player, status))
+			if (!player.isFake() && hasStatus(player, status))
 			{
 				collection.add(player);
 			}

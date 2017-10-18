@@ -47,12 +47,11 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public final Map<UUID, EnumTeamStatus> players;
 	public final ConfigGroup cachedConfig;
 
-	public ForgeTeam(String id, @Nullable IForgePlayer _owner)
+	public ForgeTeam(String id)
 	{
 		super(id);
 		isValid = true;
 		color = new ConfigEnum<>(EnumTeamColor.NAME_MAP);
-		owner = _owner;
 		title = new ConfigString("");
 		desc = new ConfigString("");
 		freeToJoin = new ConfigBoolean(false);
@@ -135,12 +134,12 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 				return false;
 			}
 
-			if (!owner.equalsPlayer(player))
+			if (!player.equalsPlayer(owner))
 			{
 				IForgePlayer oldOwner = owner;
 				owner = player;
 				players.remove(player.getId());
-				new ForgeTeamOwnerChangedEvent(this, oldOwner, player).post();
+				new ForgeTeamOwnerChangedEvent(this, oldOwner).post();
 				return true;
 			}
 

@@ -13,17 +13,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author LatvianModder
  */
 public class AtlasSpriteIcon extends Icon
 {
-	@SideOnly(Side.CLIENT)
-	public static final Map<ResourceLocation, TextureAtlasSprite> SPRITE_MAP = new HashMap<>();
-
 	public final ResourceLocation name;
 
 	AtlasSpriteIcon(ResourceLocation n)
@@ -39,7 +33,7 @@ public class AtlasSpriteIcon extends Icon
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-		TextureAtlasSprite sprite = SPRITE_MAP.computeIfAbsent(name, ClientUtils.DEFAULT_TEXTURE_GETTER);
+		TextureAtlasSprite sprite = ClientUtils.getAtlasSprite(name);
 		col = col.isEmpty() ? Color4I.WHITE : col;
 		buffer.pos(x, y + h, 0D).tex(sprite.getMinU(), sprite.getMaxV()).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();
 		buffer.pos(x + w, y + h, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).color(col.redi(), col.greeni(), col.bluei(), col.alphai()).endVertex();

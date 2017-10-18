@@ -207,7 +207,7 @@ public class FTBLibEventHandler
 						{
 							String s = FileUtils.getRawFileName(f);
 							teamNBT.put(s, nbt);
-							Universe.INSTANCE.teams.put(s, new ForgeTeam(s, null));
+							Universe.INSTANCE.teams.put(s, new ForgeTeam(s));
 						}
 					}
 				}
@@ -441,8 +441,9 @@ public class FTBLibEventHandler
 
 			if (Universe.INSTANCE.getTeam(id) == null)
 			{
-				ForgeTeam team = new ForgeTeam(id, p);
+				ForgeTeam team = new ForgeTeam(id);
 				Universe.INSTANCE.teams.put(team.getName(), team);
+				p.setTeamId(team.getName());
 				team.setStatus(p, EnumTeamStatus.OWNER);
 				new ForgeTeamCreatedEvent(team).post();
 				new ForgeTeamPlayerJoinedEvent(team, p).post();

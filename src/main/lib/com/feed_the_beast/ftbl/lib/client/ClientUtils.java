@@ -47,6 +47,7 @@ public class ClientUtils
 	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> MC.getTextureMapBlocks().registerSprite(location);
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
+	public static final Map<ResourceLocation, TextureAtlasSprite> SPRITE_MAP = new HashMap<>();
 
 	public static boolean isFirstPerson;
 	public static int currentDim, playerPosHash;
@@ -242,5 +243,10 @@ public class ClientUtils
 	public static void runLater(final Runnable runnable)
 	{
 		new Thread(() -> MC.addScheduledTask(runnable)).start();
+	}
+
+	public static TextureAtlasSprite getAtlasSprite(ResourceLocation name)
+	{
+		return SPRITE_MAP.computeIfAbsent(name, DEFAULT_TEXTURE_GETTER);
 	}
 }
