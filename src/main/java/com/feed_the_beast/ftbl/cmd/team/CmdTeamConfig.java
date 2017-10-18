@@ -23,18 +23,18 @@ public class CmdTeamConfig extends CmdEditConfigBase
 	@Override
 	public ConfigGroup getGroup(ICommandSender sender) throws CommandException
 	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-		IForgePlayer p = getForgePlayer(ep);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
 		IForgeTeam team = p.getTeam();
 
 		if (team == null)
 		{
-			FTBLibAPI.API.sendCloseGuiPacket(ep);
+			FTBLibAPI.API.sendCloseGuiPacket(player);
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
 		else if (!team.isModerator(p))
 		{
-			FTBLibAPI.API.sendCloseGuiPacket(ep);
+			FTBLibAPI.API.sendCloseGuiPacket(player);
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 

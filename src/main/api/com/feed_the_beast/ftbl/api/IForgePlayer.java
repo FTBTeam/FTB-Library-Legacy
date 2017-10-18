@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.api;
 
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.misc.EnumPrivacyLevel;
 import com.feed_the_beast.ftbl.lib.util.misc.NBTDataStorage;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
@@ -25,6 +27,16 @@ public interface IForgePlayer extends IStringSerializable
 	}
 
 	EntityPlayerMP getPlayer();
+
+	default EntityPlayerMP getCommandPlayer() throws CommandException
+	{
+		if (!isOnline())
+		{
+			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(getName());
+		}
+
+		return getPlayer();
+	}
 
 	NBTDataStorage getData();
 

@@ -9,10 +9,11 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -128,7 +129,7 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 		if (p.isFake())
 		{
-			throw new PlayerNotFoundException("commands.generic.player.notFound", sender.getDisplayName());
+			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(sender.getDisplayName());
 		}
 
 		return p;
@@ -140,7 +141,7 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 		if (p == null || p.isFake())
 		{
-			throw new PlayerNotFoundException("commands.generic.player.notFound", name);
+			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(name);
 		}
 
 		return p;
@@ -156,5 +157,24 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 		}
 
 		throw FTBLibLang.TEAM_NOT_FOUND.commandError();
+	}
+
+	public static EntityPlayerMP getSelfOrOther(ICommandSender sender, String[] args, int index) throws CommandException
+	{
+		return getSelfOrOther(sender, args, index, "");
+	}
+
+	public static EntityPlayerMP getSelfOrOther(ICommandSender sender, String[] args, int index, String specialPerm) throws CommandException
+	{
+		if (args.length <= index)
+		{
+			return getCommandSenderAsPlayer(sender);
+		}
+		else if (!specialPerm.isEmpty() && sender instanceof EntityPlayerMP && !PermissionAPI.hasPermission((EntityPlayerMP) sender, specialPerm))
+		{
+			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+		}
+
+		return getForgePlayer(args[index]).getCommandPlayer();
 	}
 }

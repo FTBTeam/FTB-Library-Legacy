@@ -38,8 +38,8 @@ public class CmdJoin extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		EntityPlayerMP ep = getCommandSenderAsPlayer(sender);
-		IForgePlayer p = getForgePlayer(ep);
+		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+		IForgePlayer p = getForgePlayer(player);
 
 		if (p.getTeam() != null)
 		{
