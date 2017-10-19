@@ -18,8 +18,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 {
 	ENEMY(-10, "enemy", TextFormatting.RED, true),
 	NONE(0, "none", TextFormatting.WHITE, true),
-	REQUESTING_INVITE(5, "requesting_invite", TextFormatting.DARK_AQUA, false),
-	INVITED(10, "invited", TextFormatting.DARK_GREEN, true),
+	INVITED(10, "invited", TextFormatting.DARK_AQUA, true),
 	ALLY(30, "ally", TextFormatting.DARK_GREEN, true),
 	MEMBER(50, "member", TextFormatting.BLUE, false),
 	MOD(80, "mod", TextFormatting.BLUE, true),

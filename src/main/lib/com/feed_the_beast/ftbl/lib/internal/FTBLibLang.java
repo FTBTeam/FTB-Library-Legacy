@@ -76,4 +76,5 @@ public interface FTBLibLang
 	LangKey TEAM_GUI_ENEMIES = FTBLibFinals.lang("lang.team.gui.enemies");
 	LangKey TEAM_GUI_LEAVE = FTBLibFinals.lang("lang.team.gui.leave");
 	LangKey TEAM_GUI_TRANSFER_OWNERSHIP = FTBLibFinals.lang("lang.team.gui.transfer_ownership");
+	LangKey TEAM_GUI_REQUESTING_INVITE = FTBLibFinals.lang("lang.team_status.requesting_invite");
 }

@@ -108,6 +108,11 @@ public class Widget
 		}
 	}
 
+	public boolean shouldAddMouseOverText()
+	{
+		return isEnabled() && gui.isMouseOver(this);
+	}
+
 	public void renderWidget()
 	{
 		getIcon().draw(this);

@@ -54,11 +54,6 @@ public class CmdRequestInvite extends CmdBase
 			throw FTBLibLang.ERROR.commandError(args[0]);
 		}
 
-		EnumTeamStatus status = team.getHighestStatus(p);
-
-		if (status == EnumTeamStatus.NONE)
-		{
-			team.setStatus(p, EnumTeamStatus.REQUESTING_INVITE);
-		}
+		team.setRequestingInvite(p, true);
 	}
 }

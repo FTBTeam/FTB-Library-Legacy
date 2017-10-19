@@ -86,16 +86,18 @@ public class FTBLibTeamGuiActions
 					if (team.isMember(p))
 					{
 						team.removeMember(p);
-						team.setStatus(p, EnumTeamStatus.REQUESTING_INVITE);
+						team.setRequestingInvite(p, true);
 					}
 
 					break;
 				}
 				case "invite":
 				{
-					if (!team.isInvited(p))
+					team.setStatus(p, EnumTeamStatus.INVITED);
+
+					if (team.isRequestingInvite(p))
 					{
-						team.setStatus(p, EnumTeamStatus.INVITED);
+						team.addMember(p);
 					}
 
 					break;
@@ -111,10 +113,8 @@ public class FTBLibTeamGuiActions
 				}
 				case "deny_request":
 				{
-					if (team.getHighestStatus(p) == EnumTeamStatus.REQUESTING_INVITE)
-					{
-						team.setStatus(p, EnumTeamStatus.NONE);
-					}
+					team.setRequestingInvite(p, false);
+					break;
 				}
 			}
 		}

@@ -219,6 +219,12 @@ public abstract class GuiBase extends Panel
 		TEMP_TEXT_LIST.clear();
 	}
 
+	@Override
+	public boolean shouldAddMouseOverText()
+	{
+		return true;
+	}
+
 	public GuiScreen getWrapper()
 	{
 		return new GuiWrapper(this);

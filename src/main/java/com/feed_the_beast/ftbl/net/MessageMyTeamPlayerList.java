@@ -35,19 +35,22 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 		public final UUID uuid;
 		public final String name;
 		public EnumTeamStatus status;
+		public boolean requestingInvite;
 
 		private Entry(DataIn data)
 		{
 			uuid = data.readUUID();
 			name = data.readString();
 			status = data.read(EnumTeamStatus.NAME_MAP);
+			requestingInvite = data.readBoolean();
 		}
 
-		public Entry(IForgePlayer player, EnumTeamStatus s)
+		public Entry(IForgePlayer player, EnumTeamStatus s, boolean i)
 		{
 			uuid = player.getId();
 			name = player.getName();
 			status = s;
+			requestingInvite = i;
 		}
 
 		private void writeData(DataOut data)
@@ -55,6 +58,12 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 			data.writeUUID(uuid);
 			data.writeString(name);
 			data.write(EnumTeamStatus.NAME_MAP, status);
+			data.writeBoolean(requestingInvite);
+		}
+
+		public int getSortIndex()
+		{
+			return requestingInvite ? 1000 : Math.max(status.getStatus(), status == EnumTeamStatus.ENEMY ? 1 : 0);
 		}
 	}
 
@@ -78,7 +87,7 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 
 				if (status != EnumTeamStatus.OWNER && predicate.test(status))
 				{
-					entries.add(new Entry(p, status));
+					entries.add(new Entry(p, status, team.isRequestingInvite(p)));
 				}
 			}
 		}

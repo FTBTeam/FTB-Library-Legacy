@@ -208,7 +208,7 @@ public abstract class Panel extends Widget
 		{
 			Widget w = widgets.get(i);
 
-			if (w.isEnabled() && gui.isMouseOver(w))
+			if (w.shouldAddMouseOverText())
 			{
 				w.addMouseOverText(list);
 			}

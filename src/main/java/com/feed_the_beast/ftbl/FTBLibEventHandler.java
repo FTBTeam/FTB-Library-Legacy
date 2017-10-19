@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.EnumReloadType;
 import com.feed_the_beast.ftbl.api.EnumTeamStatus;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.api.IForgePlayer;
 import com.feed_the_beast.ftbl.api.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftbl.api.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftbl.api.ServerReloadEvent;
@@ -34,7 +35,6 @@ import com.feed_the_beast.ftbl.lib.config.ConfigTextComponent;
 import com.feed_the_beast.ftbl.lib.config.ConfigTristate;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.JsonUtils;
@@ -45,6 +45,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -224,9 +225,8 @@ public class FTBLibEventHandler
 
 			player.hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
 			player.lastTimeSeen = nbt.getLong("LastTimeSeen");
-
 			player.setTeamId(nbt.getString("TeamID"));
-			player.dataStorage.deserializeNBT(nbt.hasKey("Caps") ? nbt.getCompoundTag("Caps") : nbt.getCompoundTag("Data"));
+			player.dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
 		}
 
 		Universe.INSTANCE.players.put(ForgePlayerFake.SERVER.getId(), ForgePlayerFake.SERVER);
@@ -238,7 +238,7 @@ public class FTBLibEventHandler
 			ForgeTeam team = teamIterator.next();
 			NBTTagCompound nbt = teamNBT.get(team.getName());
 
-			team.owner = Universe.INSTANCE.getPlayer(StringUtils.fromString(nbt.getString("Owner")));
+			team.owner = Universe.INSTANCE.getPlayer(nbt.getString("Owner"));
 
 			if (team.owner == null)
 			{
@@ -249,17 +249,7 @@ public class FTBLibEventHandler
 			team.color.setValueFromString(nbt.getString("Color"), false);
 			team.title.setString(nbt.getString("Title"));
 			team.desc.setString(nbt.getString("Desc"));
-
-			if (nbt.hasKey("Flags"))
-			{
-				int flags = nbt.getInteger("Flags");
-				team.freeToJoin.setBoolean(Bits.getFlag(flags, 1));
-				team.isValid = !Bits.getFlag(flags, 2);
-			}
-			else
-			{
-				team.freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
-			}
+			team.freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
 
 			team.players.clear();
 
@@ -269,15 +259,15 @@ public class FTBLibEventHandler
 
 				for (String s : nbt1.getKeySet())
 				{
-					UUID id = StringUtils.fromString(s);
+					IForgePlayer player = Universe.INSTANCE.getPlayer(s);
 
-					if (id != null)
+					if (player != null)
 					{
 						EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(nbt1.getString(s));
 
 						if (status.canBeSet())
 						{
-							team.players.put(id, status);
+							team.setStatus(player, status);
 						}
 					}
 				}
@@ -287,11 +277,11 @@ public class FTBLibEventHandler
 
 			for (int i = 0; i < list.tagCount(); i++)
 			{
-				UUID id = StringUtils.fromString(list.getStringTagAt(i));
+				IForgePlayer player = Universe.INSTANCE.getPlayer(list.getStringTagAt(i));
 
-				if (id != null && !team.players.containsKey(id))
+				if (player != null && !team.isMember(player))
 				{
-					team.players.put(id, EnumTeamStatus.REQUESTING_INVITE);
+					team.setRequestingInvite(player, true);
 				}
 			}
 
@@ -299,11 +289,11 @@ public class FTBLibEventHandler
 
 			for (int i = 0; i < list.tagCount(); i++)
 			{
-				UUID id = StringUtils.fromString(list.getStringTagAt(i));
+				IForgePlayer player = Universe.INSTANCE.getPlayer(list.getStringTagAt(i));
 
-				if (id != null && !team.players.containsKey(id))
+				if (player != null && !team.isMember(player))
 				{
-					team.players.put(id, EnumTeamStatus.INVITED);
+					team.setStatus(player, EnumTeamStatus.INVITED);
 				}
 			}
 
@@ -371,7 +361,7 @@ public class FTBLibEventHandler
 			{
 				NBTTagCompound nbt = new NBTTagCompound();
 
-				nbt.setString("Owner", StringUtils.fromUUID(team.owner.getId()));
+				nbt.setString("Owner", team.owner.getName());
 				nbt.setString("Color", team.color.getString());
 				nbt.setString("Title", team.title.getString());
 				nbt.setString("Desc", team.desc.getString());
@@ -379,15 +369,25 @@ public class FTBLibEventHandler
 
 				NBTTagCompound nbt1 = new NBTTagCompound();
 
-				if (team.players != null && !team.players.isEmpty())
+				if (!team.players.isEmpty())
 				{
-					for (Map.Entry<UUID, EnumTeamStatus> entry : team.players.entrySet())
+					for (Map.Entry<IForgePlayer, EnumTeamStatus> entry : team.players.entrySet())
 					{
-						nbt1.setString(StringUtils.fromUUID(entry.getKey()), entry.getValue().getName());
+						nbt1.setString(entry.getKey().getName(), entry.getValue().getName());
 					}
 				}
 
 				nbt.setTag("Players", nbt1);
+
+				NBTTagList list = new NBTTagList();
+
+				for (IForgePlayer player : team.requestingInvite)
+				{
+					list.appendTag(new NBTTagString(player.getName()));
+				}
+
+				nbt.setTag("RequestingInvite", list);
+
 				nbt.setTag("Data", team.dataStorage.serializeNBT());
 
 				NBTUtils.writeTag(new File(folder, "teams/" + team.getName() + ".dat"), nbt);

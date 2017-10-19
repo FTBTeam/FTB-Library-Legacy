@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbl.net.MessageMyTeamAction;
 import com.feed_the_beast.ftbl.net.MessageMyTeamPlayerList;
@@ -32,7 +31,7 @@ public class GuiManageAllies extends GuiManagePlayersBase
 		@Override
 		Color4I getPlayerColor()
 		{
-			return entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY) ? ColorUtils.getChatFormattingColor(TextFormatting.DARK_GREEN.ordinal()) : Color4I.BLACK;
+			return entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY) ? ColorUtils.getChatFormattingColor(TextFormatting.DARK_AQUA.ordinal()) : getDefaultPlayerColor();
 		}
 
 		@Override
@@ -46,7 +45,7 @@ public class GuiManageAllies extends GuiManagePlayersBase
 		{
 			GuiHelper.playClickSound();
 			NBTTagCompound data = new NBTTagCompound();
-			data.setString("player", StringUtils.fromUUID(entry.uuid));
+			data.setString("player", entry.name);
 
 			if (entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY))
 			{

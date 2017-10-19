@@ -79,8 +79,6 @@ public interface IForgeTeam extends IStringSerializable
 				return true;
 			case ENEMY:
 				return isEnemy(player);
-			case REQUESTING_INVITE:
-				return isRequestingInvite(player);
 			case ALLY:
 				return isAlly(player);
 			case INVITED:
@@ -135,6 +133,8 @@ public interface IForgeTeam extends IStringSerializable
 	boolean isAlly(@Nullable IForgePlayer player);
 
 	boolean isInvited(@Nullable IForgePlayer player);
+
+	boolean setRequestingInvite(@Nullable IForgePlayer player, boolean requestingInvite);
 
 	boolean isRequestingInvite(@Nullable IForgePlayer player);
 

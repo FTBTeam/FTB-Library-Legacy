@@ -4,9 +4,7 @@ import com.feed_the_beast.ftbl.api_impl.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
-import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbl.net.MessageMyTeamAction;
 import com.feed_the_beast.ftbl.net.MessageMyTeamPlayerList;
@@ -29,12 +27,6 @@ public class GuiTransferOwnership extends GuiManagePlayersBase
 		}
 
 		@Override
-		Color4I getPlayerColor()
-		{
-			return Color4I.BLACK;
-		}
-
-		@Override
 		public void addMouseOverText(List<String> list)
 		{
 		}
@@ -49,7 +41,7 @@ public class GuiTransferOwnership extends GuiManagePlayersBase
 				if (result)
 				{
 					NBTTagCompound data = new NBTTagCompound();
-					data.setString("player", StringUtils.fromUUID(entry.uuid));
+					data.setString("player", entry.name);
 					new MessageMyTeamAction(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP.getId(), data).sendToServer();
 				}
 

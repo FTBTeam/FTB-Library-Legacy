@@ -7,7 +7,6 @@ import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
-import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftbl.net.MessageMyTeamAction;
 import com.feed_the_beast.ftbl.net.MessageMyTeamPlayerList;
@@ -32,21 +31,25 @@ public class GuiManageMembers extends GuiManagePlayersBase
 		@Override
 		Color4I getPlayerColor()
 		{
+			if (entry.requestingInvite)
+			{
+				return ColorUtils.getChatFormattingColor(TextFormatting.GOLD.ordinal());
+			}
+
 			switch (entry.status)
 			{
 				case NONE:
-					break;
+					return getDefaultPlayerColor();
 				case MEMBER:
 				case MOD:
 					return ColorUtils.getChatFormattingColor(TextFormatting.DARK_GREEN.ordinal());
 				case INVITED:
-				case ALLY:
 					return ColorUtils.getChatFormattingColor(TextFormatting.BLUE.ordinal());
-				case REQUESTING_INVITE:
-					return ColorUtils.getChatFormattingColor(TextFormatting.GOLD.ordinal());
+				case ALLY:
+					return ColorUtils.getChatFormattingColor(TextFormatting.DARK_AQUA.ordinal());
 			}
 
-			return Color4I.BLACK;
+			return getDefaultPlayerColor();
 		}
 
 		@Override
@@ -56,8 +59,16 @@ public class GuiManageMembers extends GuiManagePlayersBase
 			{
 				list.add(entry.status.getLangKey().translate());
 			}
+			else if (entry.requestingInvite)
+			{
+				list.add(FTBLibLang.TEAM_GUI_REQUESTING_INVITE.translate());
+			}
 
-			if (entry.status == EnumTeamStatus.MEMBER)
+			if (entry.requestingInvite)
+			{
+				list.add(FTBLibLang.TEAM_GUI_MEMBERS_REQUESTING_INVITE.translate());
+			}
+			else if (entry.status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER))
 			{
 				list.add(FTBLibLang.TEAM_GUI_MEMBERS_KICK.translate());
 			}
@@ -65,17 +76,13 @@ public class GuiManageMembers extends GuiManagePlayersBase
 			{
 				list.add(FTBLibLang.TEAM_GUI_MEMBERS_CANCEL_INVITE.translate());
 			}
-			else if (entry.status == EnumTeamStatus.REQUESTING_INVITE)
-			{
-				list.add(FTBLibLang.TEAM_GUI_MEMBERS_REQUESTING_INVITE.translate());
-			}
 
-			if (entry.status == EnumTeamStatus.NONE || entry.status == EnumTeamStatus.REQUESTING_INVITE)
+			if (entry.status == EnumTeamStatus.NONE || entry.requestingInvite)
 			{
 				list.add(FTBLibLang.TEAM_GUI_MEMBERS_INVITE.translate());
 			}
 
-			if (entry.status == EnumTeamStatus.REQUESTING_INVITE)
+			if (entry.requestingInvite)
 			{
 				list.add(FTBLibLang.TEAM_GUI_MEMBERS_DENY_REQUEST.translate());
 			}
@@ -86,30 +93,9 @@ public class GuiManageMembers extends GuiManagePlayersBase
 		{
 			GuiHelper.playClickSound();
 			NBTTagCompound data = new NBTTagCompound();
-			data.setString("player", StringUtils.fromUUID(entry.uuid));
+			data.setString("player", entry.name);
 
-			if (entry.status == EnumTeamStatus.NONE)
-			{
-				data.setString("action", "invite");
-				entry.status = EnumTeamStatus.INVITED;
-			}
-			else if (entry.status == EnumTeamStatus.MEMBER)
-			{
-				if (!button.isLeft())
-				{
-					data.setString("action", "kick");
-					entry.status = EnumTeamStatus.REQUESTING_INVITE;
-				}
-			}
-			else if (entry.status == EnumTeamStatus.INVITED)
-			{
-				if (!button.isLeft())
-				{
-					data.setString("action", "cancel_invite");
-					entry.status = EnumTeamStatus.NONE;
-				}
-			}
-			else if (entry.status == EnumTeamStatus.REQUESTING_INVITE)
+			if (entry.requestingInvite)
 			{
 				if (button.isLeft())
 				{
@@ -119,6 +105,30 @@ public class GuiManageMembers extends GuiManagePlayersBase
 				else
 				{
 					data.setString("action", "deny_request");
+					entry.status = EnumTeamStatus.NONE;
+				}
+
+				entry.requestingInvite = false;
+			}
+			else if (entry.status == EnumTeamStatus.NONE)
+			{
+				data.setString("action", "invite");
+				entry.status = EnumTeamStatus.INVITED;
+			}
+			else if (entry.status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER))
+			{
+				if (!button.isLeft())
+				{
+					data.setString("action", "kick");
+					entry.requestingInvite = true;
+					entry.status = EnumTeamStatus.NONE;
+				}
+			}
+			else if (entry.status == EnumTeamStatus.INVITED)
+			{
+				if (!button.isLeft())
+				{
+					data.setString("action", "cancel_invite");
 					entry.status = EnumTeamStatus.NONE;
 				}
 			}

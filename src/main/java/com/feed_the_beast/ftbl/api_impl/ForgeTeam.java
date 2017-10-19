@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -43,8 +42,8 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public final ConfigString title;
 	public final ConfigString desc;
 	public final ConfigBoolean freeToJoin;
-	public final Collection<UUID> requestingInvite;
-	public final Map<UUID, EnumTeamStatus> players;
+	public final Collection<IForgePlayer> requestingInvite;
+	public final Map<IForgePlayer, EnumTeamStatus> players;
 	public final ConfigGroup cachedConfig;
 
 	public ForgeTeam(String id)
@@ -116,14 +115,14 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 			return EnumTeamStatus.NONE;
 		}
 
-		EnumTeamStatus status = players.get(player.getId());
+		EnumTeamStatus status = players.get(player);
 		return status == null ? EnumTeamStatus.NONE : status;
 	}
 
 	@Override
 	public boolean setStatus(@Nullable IForgePlayer player, EnumTeamStatus status)
 	{
-		if (player == null || status == EnumTeamStatus.REQUESTING_INVITE)
+		if (player == null)
 		{
 			return false;
 		}
@@ -138,7 +137,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 			{
 				IForgePlayer oldOwner = owner;
 				owner = player;
-				players.remove(player.getId());
+				players.remove(player);
 				new ForgeTeamOwnerChangedEvent(this, oldOwner).post();
 				return true;
 			}
@@ -147,27 +146,23 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		}
 		else if (!status.isNone() && status.canBeSet())
 		{
-			return players.put(player.getId(), status) != status;
+			return players.put(player, status) != status;
 		}
 		else
 		{
-			return players.remove(player.getId()) != status;
+			return players.remove(player) != status;
 		}
 	}
 
 	@Override
 	public boolean addMember(IForgePlayer player)
 	{
-		if (isInvited(player))
+		if (isInvited(player) && !isMember(player))
 		{
 			player.setTeamId(getName());
-
-			if (!isMember(player))
-			{
-				setStatus(player, EnumTeamStatus.MEMBER);
-				new ForgeTeamPlayerJoinedEvent(this, player).post();
-			}
-
+			players.remove(player);
+			requestingInvite.remove(player);
+			new ForgeTeamPlayerJoinedEvent(this, player).post();
 			return true;
 		}
 
@@ -177,33 +172,31 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public boolean removeMember(IForgePlayer player)
 	{
-		if (getMembers().size() == 1)
+		if (!isMember(player))
+		{
+			return false;
+		}
+		else if (getMembers().size() == 1)
 		{
 			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
 			Universe.INSTANCE.teams.remove(getName());
 			FileUtils.delete(new File(CommonUtils.folderWorld, "data/ftb_lib/teams/" + getName() + ".dat"));
 		}
-		else
+		else if (isOwner(player))
 		{
-			if (isOwner(player))
-			{
-				return false;
-			}
-
-			removePlayer0(player);
+			return false;
 		}
 
+		removePlayer0(player);
 		return true;
 	}
 
 	private void removePlayer0(IForgePlayer player)
 	{
-		if (isMember(player))
-		{
-			player.setTeamId("");
-			new ForgeTeamPlayerLeftEvent(this, player).post();
-		}
+		player.setTeamId("");
+		setStatus(player, EnumTeamStatus.NONE);
+		new ForgeTeamPlayerLeftEvent(this, player).post();
 	}
 
 	@Override
@@ -215,13 +208,31 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public boolean isInvited(@Nullable IForgePlayer player)
 	{
-		return (freeToJoin.getBoolean() || getSetStatus(player).isEqualOrGreaterThan(EnumTeamStatus.INVITED)) && !isEnemy(player);
+		return isMember(player) || ((freeToJoin.getBoolean() || getSetStatus(player).isEqualOrGreaterThan(EnumTeamStatus.INVITED)) && !isEnemy(player));
+	}
+
+	@Override
+	public boolean setRequestingInvite(@Nullable IForgePlayer player, boolean value)
+	{
+		if (player != null)
+		{
+			if (value)
+			{
+				return requestingInvite.add(player);
+			}
+			else
+			{
+				return requestingInvite.remove(player);
+			}
+		}
+
+		return false;
 	}
 
 	@Override
 	public boolean isRequestingInvite(@Nullable IForgePlayer player)
 	{
-		return player != null && !isMember(player) && requestingInvite.contains(player.getId());
+		return player != null && !isMember(player) && requestingInvite.contains(player) && !isEnemy(player);
 	}
 
 	@Override

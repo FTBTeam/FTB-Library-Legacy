@@ -134,19 +134,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
 	public boolean equals(Object o)
 	{
-		if (o == null)
-		{
-			return false;
-		}
-		else if (o == this || o == playerId)
-		{
-			return true;
-		}
-		else if (o instanceof IForgePlayer)
-		{
-			return equalsPlayer((IForgePlayer) o);
-		}
-		return (o.getClass() == UUID.class) && playerId.equals(o);
+		return o == this || o instanceof IForgePlayer && equalsPlayer((IForgePlayer) o);
 	}
 
 	@Override

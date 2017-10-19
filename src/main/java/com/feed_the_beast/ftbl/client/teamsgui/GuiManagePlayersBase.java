@@ -23,8 +23,9 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 {
 	static final Comparator<MessageMyTeamPlayerList.Entry> COMPARATOR = (o1, o2) ->
 	{
-		int o = o2.status.getStatus() - o1.status.getStatus();
-		return o == 0 ? o1.name.compareToIgnoreCase(o2.name) : o;
+		int o1s = o1.getSortIndex();
+		int o2s = o2.getSortIndex();
+		return o1s == o2s ? o1.name.compareToIgnoreCase(o2.name) : o2s - o1s;
 	};
 
 	static class ButtonPlayerBase extends SimpleTextButton
@@ -41,12 +42,18 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 
 		Color4I getPlayerColor()
 		{
-			return Color4I.BLACK;
+			return getDefaultPlayerColor();
+		}
+
+		Color4I getDefaultPlayerColor()
+		{
+			return Color4I.GRAY;
 		}
 
 		final void updateIcon()
 		{
-			setIcon(new PlayerHeadIcon(entry.name).withOutline(getPlayerColor(), false).withBorder(3));
+			//Variant 2: setIcon(gui.getTheme().getWidget(false).withColorAndBorder(getPlayerColor(), 1).combineWith(gui.getTheme().getSlot(false).withColorAndBorder(Color4I.DARK_GRAY, 3), new PlayerHeadIcon(entry.name).withBorder(4)));
+			setIcon(new PlayerHeadIcon(entry.name).withOutline(getPlayerColor(), false).withOutline(Color4I.DARK_GRAY, true).withBorder(2));
 		}
 
 		@Override
