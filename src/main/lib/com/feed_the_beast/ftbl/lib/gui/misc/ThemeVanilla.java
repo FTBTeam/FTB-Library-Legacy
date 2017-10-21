@@ -19,7 +19,7 @@ public class ThemeVanilla extends Theme
 	private static final Icon TEXTURE_ENCHANTING_TABLE = Icon.getIcon("textures/gui/container/enchanting_table.png");
 
 	private static final Icon GUI = new PartIcon(TEXTURE_RECIPE_BOOK, 82, 208, 256, 256, 8, 16, 16, true);
-	private static final Icon GUI_MOUSE_OVER = GUI.withColor(Color4I.rgb(0xAFB6DA));
+	private static final Icon GUI_MOUSE_OVER = GUI.withTint(Color4I.rgb(0xAFB6DA));
 	private static final Icon BUTTON = new PartIcon(TEXTURE_WIDGETS, 0, 66, 256, 256, 4, 192, 12, false);
 	private static final Icon DISABLED_BUTTON = new PartIcon(TEXTURE_WIDGETS, 0, 46, 256, 256, 4, 192, 12, false);
 	private static final Icon BUTTON_MOUSE_OVER = new PartIcon(TEXTURE_WIDGETS, 0, 86, 256, 256, 4, 192, 12, false);

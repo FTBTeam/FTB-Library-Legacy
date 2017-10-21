@@ -201,11 +201,7 @@ public class MathUtils
 
 	public static double distSq(double x1, double y1, double x2, double y2)
 	{
-		if (x1 == x2 && y1 == y2)
-		{
-			return 0D;
-		}
-		return (sq(x2 - x1) + sq(y2 - y1));
+		return sq(x2 - x1) + sq(y2 - y1);
 	}
 
 	public static double dist(double x1, double y1, double x2, double y2)
@@ -268,9 +264,14 @@ public class MathUtils
 		return i1 + (int) ((i2 - i1) * f);
 	}
 
-	public static double lerp(double f1, double f2, double f)
+	public static float lerp(float f1, float f2, float f)
 	{
 		return f1 + (f2 - f1) * f;
+	}
+
+	public static double lerp(double d1, double d2, double d)
+	{
+		return d1 + (d2 - d1) * d;
 	}
 
 	public static double map(double val, double min1, double max1, double min2, double max2)

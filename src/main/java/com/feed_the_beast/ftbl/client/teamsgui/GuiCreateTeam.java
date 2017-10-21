@@ -108,7 +108,7 @@ public class GuiCreateTeam extends GuiBase
 				@Override
 				public Icon getIcon()
 				{
-					return getTheme().getGui(false).withColor(col.getColor().mutable().setAlpha(color == col || gui.isMouseOver(this) ? 200 : 100));
+					return getTheme().getGui(false).withTint(col.getColor().mutable().setAlpha(color == col || gui.isMouseOver(this) ? 200 : 100));
 				}
 			};
 

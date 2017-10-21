@@ -316,7 +316,11 @@ public class FTBLibEventHandler
 			return;
 		}
 
-		Universe.INSTANCE.onClosed();
+		if (Universe.INSTANCE != null)
+		{
+			Universe.INSTANCE.onClosed();
+		}
+
 		Universe.INSTANCE = null;
 	}
 

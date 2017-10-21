@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.icon;
 
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -22,8 +24,6 @@ import javax.annotation.Nullable;
  */
 public class Color4I extends Icon
 {
-	public static final Object EMPTY = new Object();
-
 	public static Color4I fromJson(@Nullable JsonElement element)
 	{
 		if (element == null || element.isJsonNull())
@@ -86,6 +86,15 @@ public class Color4I extends Icon
 
 	public static Color4I rgba(int r, int g, int b, int a)
 	{
+		if (a <= 0)
+		{
+			return EMPTY;
+		}
+		else if (a >= 255 && r >= 255 && g >= 255 && b >= 255)
+		{
+			return WHITE;
+		}
+
 		return new Color4I(r, g, b, a);
 	}
 
@@ -111,8 +120,23 @@ public class Color4I extends Icon
 	{
 		for (int i = 0; i < 256; i++)
 		{
-			BLACK_A[i] = rgba(0, 0, 0, i);
-			WHITE_A[i] = rgba(255, 255, 255, i);
+			BLACK_A[i] = new Color4I(0, 0, 0, i)
+			{
+				@Override
+				public Color4I withAlpha(int a)
+				{
+					return alpha == a ? this : BLACK_A[MathHelper.clamp(a, 0, 255)];
+				}
+			};
+
+			WHITE_A[i] = new Color4I(255, 255, 255, i)
+			{
+				@Override
+				public Color4I withAlpha(int a)
+				{
+					return alpha == a ? this : WHITE_A[MathHelper.clamp(a, 0, 255)];
+				}
+			};
 		}
 	}
 
@@ -250,5 +274,37 @@ public class Color4I extends Icon
 		GuiHelper.addRectToBuffer(buffer, x, y, w, h, col);
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
+	}
+
+	@Override
+	public Color4I withTint(Color4I col)
+	{
+		if (isEmpty() || col == WHITE)
+		{
+			return this;
+		}
+
+		float r0 = redf();
+		float g0 = greenf();
+		float b0 = bluef();
+		float a0 = alphaf();
+		float r1 = col.redf();
+		float g1 = col.greenf();
+		float b1 = col.bluef();
+		float a1 = col.alphaf();
+		float r = MathUtils.lerp(r0, r0 * r1, a1);
+		float g = MathUtils.lerp(g0, g0 * g1, a1);
+		float b = MathUtils.lerp(b0, b0 * b1, a1);
+		return rgba((int) (r * 255F), (int) (g * 255F), (int) (b * 255F), (int) (a0 * 255F));
+	}
+
+	public Color4I withAlpha(int a)
+	{
+		return alpha == a ? this : rgba(red, green, blue, a);
+	}
+
+	public final Color4I withAlphaf(float alpha)
+	{
+		return withAlpha((int) (alpha * 255F));
 	}
 }
