@@ -15,8 +15,8 @@ import com.feed_the_beast.ftbl.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftbl.lib.config.ConfigEnum;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.ConfigString;
+import com.feed_the_beast.ftbl.lib.gui.GuiLang;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibLang;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 import com.feed_the_beast.ftbl.lib.util.FileUtils;
 import com.feed_the_beast.ftbl.lib.util.FinalIDObject;
@@ -59,7 +59,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
 
-		cachedConfig = new ConfigGroup(FTBLibLang.MY_TEAM_SETTINGS.textComponent());
+		cachedConfig = new ConfigGroup(GuiLang.SETTINGS.textComponent());
 		cachedConfig.setSupergroup("team_config");
 		ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 		event.post();

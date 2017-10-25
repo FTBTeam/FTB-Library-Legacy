@@ -29,7 +29,6 @@ public interface FTBLibLang
 	LangKey RELOAD_FAILED = FTBLibFinals.lang("lang.reload_failed");
 
 	LangKey MY_SERVER_SETTINGS = LangKey.of("player_config");
-	LangKey MY_TEAM_SETTINGS = LangKey.of("team_config");
 	LangKey COMMAND_PERMISSION = LangKey.of("commands.generic.permission");
 	LangKey COMMAND_USAGE = LangKey.of("commands.generic.usage", String.class);
 	LangKey PLAYER_NOT_FOUND = LangKey.of("commands.generic.player.notFound", String.class);

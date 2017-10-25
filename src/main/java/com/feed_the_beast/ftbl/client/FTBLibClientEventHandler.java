@@ -218,7 +218,7 @@ public class FTBLibClientEventHandler
 
 		if (FTBLibClientConfig.general.item_nbt && event.getItemStack().hasTagCompound())
 		{
-			event.getToolTip().add(TextFormatting.DARK_GRAY.toString() + event.getItemStack().getTagCompound());
+			event.getToolTip().add(TextFormatting.DARK_GRAY.toString() + TextFormatting.getTextWithoutFormattingCodes(event.getItemStack().getTagCompound().toString()));
 		}
 	}
 

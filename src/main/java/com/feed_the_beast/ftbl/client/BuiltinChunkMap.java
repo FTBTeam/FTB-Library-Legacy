@@ -1,8 +1,10 @@
-package com.feed_the_beast.ftbl.lib.gui.misc;
+package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
+import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
+import com.feed_the_beast.ftbl.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
@@ -33,7 +35,7 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 	{
 		ThreadReloadChunkSelector.updateTexture();
 		GlStateManager.enableTexture2D();
-		GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureID());
+		GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureId());
 		GuiHelper.drawTexturedRect(ax, ay, TILES_GUI * GuiChunkSelectorBase.TILE_SIZE, TILES_GUI * GuiChunkSelectorBase.TILE_SIZE, Color4I.WHITE, 0D, 0D, UV, UV);
 
 		EntityPlayer player = ClientUtils.MC.player;

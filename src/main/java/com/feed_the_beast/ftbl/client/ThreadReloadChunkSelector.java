@@ -1,7 +1,8 @@
-package com.feed_the_beast.ftbl.lib.gui.misc;
+package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.client.PixelBuffer;
+import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import com.feed_the_beast.ftbl.lib.util.ColorUtils;
 import net.minecraft.block.Block;
@@ -37,7 +38,7 @@ public class ThreadReloadChunkSelector extends Thread
 	private static int textureID = -1;
 	private static final int[] HEIGHT_MAP = new int[PIXEL_SIZE * PIXEL_SIZE];
 
-	public static int getTextureID()
+	static int getTextureId()
 	{
 		if (textureID == -1)
 		{
@@ -47,13 +48,13 @@ public class ThreadReloadChunkSelector extends Thread
 		return textureID;
 	}
 
-	public static void updateTexture()
+	static void updateTexture()
 	{
 		if (pixelBuffer != null)
 		{
 			//boolean hasBlur = false;
 			//int filter = hasBlur ? GL11.GL_LINEAR : GL11.GL_NEAREST;
-			GlStateManager.bindTexture(getTextureID());
+			GlStateManager.bindTexture(getTextureId());
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
@@ -63,7 +64,7 @@ public class ThreadReloadChunkSelector extends Thread
 		}
 	}
 
-	public static void reloadArea(World w, int sx, int sz)
+	static void reloadArea(World w, int sx, int sz)
 	{
 		if (instance != null)
 		{
@@ -75,11 +76,6 @@ public class ThreadReloadChunkSelector extends Thread
 		instance.cancelled = false;
 		instance.start();
 		COLOR_CACHE.clear();
-	}
-
-	public static boolean isReloading()
-	{
-		return instance != null && !instance.cancelled;
 	}
 
 	private final int startX, startZ;

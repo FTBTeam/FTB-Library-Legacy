@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.lib.gui.misc;
+package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
@@ -34,7 +34,7 @@ import java.util.List;
 
 public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
-	public static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
+	private static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
 
 	public class ButtonConfigGroup extends Button
 	{

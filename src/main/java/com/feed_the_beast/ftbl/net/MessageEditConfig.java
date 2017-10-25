@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftbl.net;
 
+import com.feed_the_beast.ftbl.client.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
 import com.feed_the_beast.ftbl.lib.config.IConfigCallback;
-import com.feed_the_beast.ftbl.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;

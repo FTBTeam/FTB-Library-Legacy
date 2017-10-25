@@ -9,6 +9,7 @@ import com.feed_the_beast.ftbl.api.player.IGuiProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
+import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftbl.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftbl.lib.net.MessageBase;
 import com.feed_the_beast.ftbl.lib.util.CommonUtils;
@@ -73,6 +74,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getName());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
+		ChunkSelectorMap.setMap(new BuiltinChunkMap());
 	}
 
 	@Override

@@ -19,6 +19,7 @@ gui.update=Update
 gui.updated=Updated
 gui.active=Active
 gui.inactive=Inactive
+gui.settings=Settings
 
 ## Labels
 gui.other=Other
@@ -106,7 +107,6 @@ player_config.ftbl.hide_team_notification=Hide Team Notification on Login
 player_config.ftbl.hide_new_team_msg_notification=Hide New Team Message Notification
 
 # Team Settings
-team_config=Config
 team_config.ftbl.display=Display
 team_config.ftbl.display.color=Color
 team_config.ftbl.display.title=Title

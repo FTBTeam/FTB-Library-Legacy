@@ -21,6 +21,8 @@ public class FTBLibFinals
 	public static final String FORESTRY = "forestry";
 	public static final String TINKERS_CONSTRUCT = "tconstruct";
 	public static final String JOURNEYMAP = "journeymap";
+	public static final String CHISEL = "chisel";
+	public static final String SILENTGEMS = "silentgems";
 
 	public static final String DEPENDENCIES = "after:" + BAUBLES + ";after:" + JEI + ";after:" + NEI + ";after:" + MC_MULTIPART + ";after:" + CHISELS_AND_BITS + ";after:" + ICHUN_UTIL;
 

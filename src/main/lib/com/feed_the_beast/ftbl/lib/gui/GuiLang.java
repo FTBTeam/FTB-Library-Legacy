@@ -46,6 +46,7 @@ public interface GuiLang
 	LangKey UPDATED = LangKey.of("gui.updated");
 	LangKey ACTIVE = LangKey.of("gui.active");
 	LangKey INACTIVE = LangKey.of("gui.inactive");
+	LangKey SETTINGS = LangKey.of("gui.settings");
 	LangKey OTHER = LangKey.of("gui.other");
 	LangKey SERVER_FORCED = LangKey.of(FTBLibFinals.MOD_ID + ".label.server_forced");
 	LangKey ONLINE = LangKey.of("gui.online");

@@ -25,7 +25,7 @@ public class FTBLibTeamGuiActions
 	private static final Predicate<EnumTeamStatus> ALLIES_PREDICATE = MEMBERS_PREDICATE.negate().and(NO_ENEMIES_PREDICATE);
 	private static final Predicate<EnumTeamStatus> ENEMIES_PREDICATE = status -> status == EnumTeamStatus.ENEMY || status == EnumTeamStatus.NONE;
 
-	public static final TeamGuiAction CONFIG = new TeamGuiAction(FTBLibFinals.get("config"), FTBLibLang.MY_TEAM_SETTINGS.textComponent(), GuiIcons.SETTINGS, -100)
+	public static final TeamGuiAction CONFIG = new TeamGuiAction(FTBLibFinals.get("config"), GuiLang.SETTINGS.textComponent(), GuiIcons.SETTINGS, -100)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)

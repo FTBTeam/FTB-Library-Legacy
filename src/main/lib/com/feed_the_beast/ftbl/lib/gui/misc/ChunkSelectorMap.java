@@ -13,11 +13,6 @@ public abstract class ChunkSelectorMap
 
 	public static ChunkSelectorMap getMap()
 	{
-		if (INSTANCE == null)
-		{
-			INSTANCE = new BuiltinChunkMap();
-		}
-
 		return INSTANCE;
 	}
 
