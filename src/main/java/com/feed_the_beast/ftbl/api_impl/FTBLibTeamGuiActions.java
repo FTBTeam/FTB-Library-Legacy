@@ -25,7 +25,7 @@ public class FTBLibTeamGuiActions
 	private static final Predicate<EnumTeamStatus> ALLIES_PREDICATE = MEMBERS_PREDICATE.negate().and(NO_ENEMIES_PREDICATE);
 	private static final Predicate<EnumTeamStatus> ENEMIES_PREDICATE = status -> status == EnumTeamStatus.ENEMY || status == EnumTeamStatus.NONE;
 
-	public static final TeamGuiAction CONFIG = new TeamGuiAction(FTBLibFinals.get("config"), GuiLang.SETTINGS.textComponent(), GuiIcons.SETTINGS, -100)
+	public static final TeamGuiAction CONFIG = new TeamGuiAction(FTBLibFinals.get("config"), GuiLang.SETTINGS.textComponent(null), GuiIcons.SETTINGS, -100)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -40,7 +40,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction INFO = new TeamGuiAction(FTBLibFinals.get("info"), GuiLang.INFO.textComponent(), GuiIcons.INFO, 0)
+	public static final TeamGuiAction INFO = new TeamGuiAction(FTBLibFinals.get("info"), GuiLang.INFO.textComponent(null), GuiIcons.INFO, 0)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -55,7 +55,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction MEMBERS = new TeamGuiAction(FTBLibFinals.get("members"), FTBLibLang.TEAM_GUI_MEMBERS.textComponent(), GuiIcons.FRIENDS, 30)
+	public static final TeamGuiAction MEMBERS = new TeamGuiAction(FTBLibFinals.get("members"), FTBLibLang.TEAM_GUI_MEMBERS.textComponent(null), GuiIcons.FRIENDS, 30)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -120,7 +120,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction ALLIES = new TeamGuiAction(FTBLibFinals.get("allies"), FTBLibLang.TEAM_GUI_ALLIES.textComponent(), GuiIcons.STAR, 40)
+	public static final TeamGuiAction ALLIES = new TeamGuiAction(FTBLibFinals.get("allies"), FTBLibLang.TEAM_GUI_ALLIES.textComponent(null), GuiIcons.STAR, 40)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -145,7 +145,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction MODERATORS = new TeamGuiAction(FTBLibFinals.get("moderators"), FTBLibLang.TEAM_GUI_MODS.textComponent(), GuiIcons.SHIELD, 50)
+	public static final TeamGuiAction MODERATORS = new TeamGuiAction(FTBLibFinals.get("moderators"), FTBLibLang.TEAM_GUI_MODS.textComponent(null), GuiIcons.SHIELD, 50)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -171,7 +171,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction ENEMIES = new TeamGuiAction(FTBLibFinals.get("enemies"), FTBLibLang.TEAM_GUI_ENEMIES.textComponent(), GuiIcons.CLOSE, 60)
+	public static final TeamGuiAction ENEMIES = new TeamGuiAction(FTBLibFinals.get("enemies"), FTBLibLang.TEAM_GUI_ENEMIES.textComponent(null), GuiIcons.CLOSE, 60)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -196,7 +196,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction LEAVE = new TeamGuiAction(FTBLibFinals.get("leave"), FTBLibLang.TEAM_GUI_LEAVE.textComponent(), GuiIcons.REMOVE, 10000)
+	public static final TeamGuiAction LEAVE = new TeamGuiAction(FTBLibFinals.get("leave"), FTBLibLang.TEAM_GUI_LEAVE.textComponent(null), GuiIcons.REMOVE, 10000)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)
@@ -212,7 +212,7 @@ public class FTBLibTeamGuiActions
 		}
 	}.setRequiresConfirm();
 
-	public static final TeamGuiAction TRANSFER_OWNERSHIP = new TeamGuiAction(FTBLibFinals.get("transfer_ownership"), FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.textComponent(), GuiIcons.RIGHT, 10000)
+	public static final TeamGuiAction TRANSFER_OWNERSHIP = new TeamGuiAction(FTBLibFinals.get("transfer_ownership"), FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.textComponent(null), GuiIcons.RIGHT, 10000)
 	{
 		@Override
 		public boolean isAvailable(IForgeTeam team, IForgePlayer player, NBTTagCompound data)

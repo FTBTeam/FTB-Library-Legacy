@@ -113,7 +113,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 				json1.add(args[0], value);
 				getCallback(sender).saveConfig(group, sender, json1);
 				ConfigValueInstance instance = group.getMap().get(args[0]);
-				FTBLibLang.CONFIG_COMMAND_SET.sendMessage(sender, new TextComponentTranslation(group.getNameKey(instance.info)), group.get(args[0]));
+				FTBLibLang.CONFIG_COMMAND_SET.sendMessage(sender, new TextComponentTranslation(group.getNameKey(instance.info)), group.get(args[0]).toString());
 				return;
 			}
 			catch (Exception ex)

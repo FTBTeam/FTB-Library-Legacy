@@ -92,7 +92,7 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 
 		if (ServerUtils.hasOnlinePlayers())
 		{
-			for (EntityPlayerMP player : ServerUtils.getServer().getPlayerList().getPlayers())
+			for (EntityPlayerMP player : ServerUtils.getPlayers())
 			{
 				IForgePlayer p = FTBLibAPI.API.getUniverse().getPlayer(player);
 				new MessageSyncData(player, p).sendTo(player);
@@ -103,25 +103,28 @@ public class FTBLibAPI_Impl extends FTBLibAPI
 
 		if (type == EnumReloadType.RELOAD_COMMAND)
 		{
-			Notification notification = Notification.of(FTBLibFinals.get("reload_server"));
-			notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(millis));
-
-			if (event.isClientReloadRequired())
+			for (EntityPlayerMP player : ServerUtils.getPlayers())
 			{
-				notification.addLine(FTBLibLang.RELOAD_CLIENT.textComponent(StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
-			}
+				Notification notification = Notification.of(FTBLibFinals.get("reload_server"));
+				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(player, millis));
 
-			if (!failed.isEmpty())
-			{
-				notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(), TextFormatting.RED));
-				String ids = StringJoiner.with(", ").join(failed);
-				notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
-				FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
-			}
+				if (event.isClientReloadRequired())
+				{
+					notification.addLine(FTBLibLang.RELOAD_CLIENT.textComponent(player, StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
+				}
 
-			notification.setImportant(true);
-			notification.setTimer(140);
-			notification.send(null);
+				if (!failed.isEmpty())
+				{
+					notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(player), TextFormatting.RED));
+					String ids = StringJoiner.with(", ").join(failed);
+					notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
+					FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
+				}
+
+				notification.setImportant(true);
+				notification.setTimer(140);
+				notification.send(player);
+			}
 		}
 
 		FTBLibFinals.LOGGER.info("Reloaded server in " + millis);

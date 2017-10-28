@@ -55,7 +55,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
 		hideTeamNotification = new ConfigBoolean();
 
-		cachedConfig = new ConfigGroup(FTBLibLang.MY_SERVER_SETTINGS.textComponent());
+		cachedConfig = new ConfigGroup(FTBLibLang.MY_SERVER_SETTINGS.textComponent(null));
 		cachedConfig.setSupergroup("player_config");
 		ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 		event.post();

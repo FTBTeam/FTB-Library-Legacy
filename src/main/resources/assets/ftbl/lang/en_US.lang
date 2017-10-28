@@ -70,6 +70,10 @@ my_permissions=My Permissions
 all_permissions=All Permissions
 difficulty=Difficulty: %s
 
+dimension.overworld=Overworld
+dimension.nether=Nether
+dimension.end=The End
+
 ftbl.lang.reload_server=FTBLib: Server reloaded in %s
 ftbl.lang.reload_client=You can press %s to reload client
 ftbl.lang.reload_failed=These IDs failed to reload:

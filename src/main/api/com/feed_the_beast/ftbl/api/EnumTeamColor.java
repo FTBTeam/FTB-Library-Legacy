@@ -51,7 +51,7 @@ public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomCo
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return langKey.textComponent();
+		return langKey.textComponent(null);
 	}
 
 	@Override

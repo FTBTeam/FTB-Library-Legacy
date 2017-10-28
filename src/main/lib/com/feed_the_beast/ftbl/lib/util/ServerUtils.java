@@ -4,6 +4,7 @@ import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.mojang.authlib.GameProfile;
+import io.netty.channel.Channel;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Teleporter;
@@ -25,11 +27,14 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.server.FMLServerHandler;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -121,18 +126,18 @@ public class ServerUtils
 		}
 	}
 
-	public static String getDimensionName(int dim)
+	public static ITextComponent getDimensionName(@Nullable ICommandSender sender, int dim)
 	{
 		switch (dim)
 		{
 			case 0:
-				return "Overworld";
+				return TextComponentHelper.createComponentTranslation(sender, "dimension.overworld");
 			case -1:
-				return "Nether";
+				return TextComponentHelper.createComponentTranslation(sender, "dimension.nether");
 			case 1:
-				return "The End";
+				return TextComponentHelper.createComponentTranslation(sender, "dimension.end");
 			default:
-				return "DIM_" + dim;
+				return new TextComponentString("DIM_" + dim);
 		}
 	}
 
@@ -151,9 +156,26 @@ public class ServerUtils
 		return FTBLibAPI.API.hasUniverse() ? FTBLibAPI.API.getUniverse().getOverworld() : getServer().getWorld(0);
 	}
 
+	public static List<EntityPlayerMP> getPlayers()
+	{
+		return getServer().getPlayerList().getPlayers();
+	}
+
 	public static boolean hasOnlinePlayers()
 	{
-		return !getServer().getPlayerList().getPlayers().isEmpty();
+		return !getPlayers().isEmpty();
+	}
+
+	public static boolean isVanillaClient(ICommandSender sender)
+	{
+		if (sender instanceof EntityPlayerMP)
+		{
+			EntityPlayerMP playerMP = (EntityPlayerMP) sender;
+			Channel channel = playerMP.connection.netManager.channel();
+			return !channel.attr(NetworkRegistry.FML_MARKER).get();
+		}
+
+		return false;
 	}
 
 	public static boolean isOP(GameProfile p)

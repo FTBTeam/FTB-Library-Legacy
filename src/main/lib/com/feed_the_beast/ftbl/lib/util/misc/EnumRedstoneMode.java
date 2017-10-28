@@ -45,7 +45,7 @@ public enum EnumRedstoneMode implements IStringSerializable, ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return langKey.textComponent();
+		return langKey.textComponent(null);
 	}
 
 	public boolean isActive(boolean prevValue, boolean value)

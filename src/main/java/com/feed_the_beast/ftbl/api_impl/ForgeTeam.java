@@ -59,7 +59,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
 
-		cachedConfig = new ConfigGroup(GuiLang.SETTINGS.textComponent());
+		cachedConfig = new ConfigGroup(GuiLang.SETTINGS.textComponent(null));
 		cachedConfig.setSupergroup("team_config");
 		ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 		event.post();

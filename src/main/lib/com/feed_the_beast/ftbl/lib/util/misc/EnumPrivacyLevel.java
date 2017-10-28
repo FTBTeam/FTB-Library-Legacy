@@ -39,7 +39,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return langKey.textComponent();
+		return langKey.textComponent(null);
 	}
 
 	public LangKey getLangKey()

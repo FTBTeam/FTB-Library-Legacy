@@ -16,7 +16,7 @@ import java.util.Locale;
 /**
  * @author LatvianModder
  */
-@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.10,)", dependencies = FTBLibFinals.DEPENDENCIES)
+@Mod(modid = FTBLibFinals.MOD_ID, name = FTBLibFinals.MOD_NAME, version = FTBLibFinals.VERSION, acceptableRemoteVersions = "*", acceptedMinecraftVersions = "[1.12,)", dependencies = FTBLibFinals.DEPENDENCIES)
 public class FTBLibMod
 {
 	@Mod.Instance(FTBLibFinals.MOD_ID)

@@ -14,10 +14,10 @@ public interface FTBLibLang
 	LangKey EXAMPLE = LangKey.of("example");
 	LangKey CLICK_HERE = LangKey.of("click_here").setDefaultStyle(new Style().setColor(TextFormatting.GOLD));
 	LangKey FEATURE_DISABLED = LangKey.of("feature_disabled");
-	LangKey ERROR = LangKey.of("error");
-	LangKey OWNER = LangKey.of("owner");
-	LangKey DELETE_ITEM = LangKey.of("delete_item");
-	LangKey SERVER_FORCED = LangKey.of("server_forced");
+	LangKey ERROR = LangKey.of("error", String.class);
+	LangKey OWNER = LangKey.of("owner", String.class);
+	LangKey DELETE_ITEM = LangKey.of("delete_item", String.class);
+	LangKey SERVER_FORCED = LangKey.of("server_forced", String.class);
 	LangKey COMMANDS = LangKey.of("commands");
 	LangKey MY_PERMISSIONS = LangKey.of("my_permissions");
 	LangKey ALL_PERMISSIONS = LangKey.of("all_permissions");

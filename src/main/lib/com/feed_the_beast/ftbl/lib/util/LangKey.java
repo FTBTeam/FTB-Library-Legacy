@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftbl.lib.util;
 
-import com.feed_the_beast.ftbl.FTBLibConfig;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 
@@ -78,7 +76,7 @@ public final class LangKey implements IStringSerializable
 		return c.isAssignableFrom(c1);
 	}
 
-	private void checkArgument(boolean b, Object[] o)
+	private void checkArgument(boolean b, Object[] with)
 	{
 		if (!b)
 		{
@@ -89,19 +87,19 @@ public final class LangKey implements IStringSerializable
 				args[i] = arguments[i].getSimpleName();
 			}
 
-			Object[] got = new Object[o.length];
+			Object[] got = new Object[with.length];
 
-			for (int i = 0; i < o.length; i++)
+			for (int i = 0; i < with.length; i++)
 			{
 				Class c = Object.class;
 
-				if (o[i] instanceof ITextComponent)
+				if (with[i] instanceof ITextComponent)
 				{
 					c = String.class;
 				}
-				else if (o[i] != null)
+				else if (with[i] != null)
 				{
-					c = o.getClass();
+					c = with.getClass();
 				}
 				if (c == Byte.class || c == Short.class)
 				{
@@ -115,13 +113,13 @@ public final class LangKey implements IStringSerializable
 		}
 	}
 
-	private void checkArguments(Object[] o)
+	private void checkArguments(Object[] with)
 	{
-		checkArgument(arguments.length == o.length, o);
+		checkArgument(arguments.length == with.length, with);
 
 		for (int i = 0; i < arguments.length; i++)
 		{
-			checkArgument(canAssign(o[i], arguments[i]), o);
+			checkArgument(canAssign(with[i], arguments[i]), with);
 		}
 	}
 
@@ -149,51 +147,40 @@ public final class LangKey implements IStringSerializable
 		return StringUtils.translate(key, o);
 	}
 
-	public ITextComponent textComponent()
+	public ITextComponent textComponent(@Nullable ICommandSender sender)
 	{
 		checkArguments(CommonUtils.NO_OBJECTS);
-		ITextComponent component = new TextComponentTranslation(key, CommonUtils.NO_OBJECTS);
-
-		if (FTBLibConfig.general.clientless_mode)
-		{
-			component = new TextComponentString(component.getFormattedText());
-		}
+		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, key, CommonUtils.NO_OBJECTS);
 
 		if (defaultStyle != null)
 		{
-			component.setStyle(defaultStyle);
+			component.setStyle(defaultStyle.createShallowCopy());
 		}
 
 		return component;
 	}
 
-	public ITextComponent textComponent(Object... o)
+	public ITextComponent textComponent(@Nullable ICommandSender sender, Object... with)
 	{
-		checkArguments(o);
-		ITextComponent component = new TextComponentTranslation(key, o);
-
-		if (FTBLibConfig.general.clientless_mode)
-		{
-			component = new TextComponentString(component.getFormattedText());
-		}
+		checkArguments(with);
+		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, key, with);
 
 		if (defaultStyle != null)
 		{
-			component.setStyle(defaultStyle);
+			component.setStyle(defaultStyle.createShallowCopy());
 		}
 
 		return component;
 	}
 
-	public void sendMessage(ICommandSender sender, Object... o)
+	public void sendMessage(ICommandSender sender, Object... with)
 	{
-		checkArguments(o);
-		sender.sendMessage(textComponent(o));
+		sender.sendMessage(textComponent(sender, with));
 	}
 
-	public CommandException commandError(Object... o)
+	public CommandException commandError(Object... with)
 	{
-		checkArguments(o);
-		return new CommandException(key, o);
+		checkArguments(with);
+		return new CommandException(key, with);
 	}
 }

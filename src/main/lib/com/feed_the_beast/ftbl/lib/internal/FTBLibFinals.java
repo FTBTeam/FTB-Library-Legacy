@@ -24,7 +24,7 @@ public class FTBLibFinals
 	public static final String CHISEL = "chisel";
 	public static final String SILENTGEMS = "silentgems";
 
-	public static final String DEPENDENCIES = "after:" + BAUBLES + ";after:" + JEI + ";after:" + NEI + ";after:" + MC_MULTIPART + ";after:" + CHISELS_AND_BITS + ";after:" + ICHUN_UTIL;
+	public static final String DEPENDENCIES = "required-after:forge@[14.23.0.2517,);after:" + BAUBLES + ";after:" + JEI + ";after:" + NEI + ";after:" + MC_MULTIPART + ";after:" + CHISELS_AND_BITS + ";after:" + ICHUN_UTIL;
 
 	public static ResourceLocation get(String path)
 	{

@@ -64,7 +64,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return StringUtils.color(langKey.textComponent(), color);
+		return StringUtils.color(langKey.textComponent(null), color);
 	}
 
 	public int getStatus()
