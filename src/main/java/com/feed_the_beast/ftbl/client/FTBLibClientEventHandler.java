@@ -168,6 +168,7 @@ public class FTBLibClientEventHandler
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
+			GlStateManager.enableDepth();
 		}
 
 		private boolean tick()

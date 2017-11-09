@@ -594,7 +594,7 @@ public class StringUtils
 
 	public static String getTimeStringTicks(long ticks)
 	{
-		return getTimeString(ticks <= 0L ? 0L : (ticks * 1000L / CommonUtils.TICKS_SECOND));
+		return getTimeString(ticks * 1000L / CommonUtils.TICKS_SECOND);
 	}
 
 	public static String getTimeString(long millis)
@@ -604,13 +604,20 @@ public class StringUtils
 
 	public static String getTimeString(long millis, boolean days)
 	{
+		boolean neg = false;
 		if (millis <= 0L)
 		{
-			return "00:00:00";
+			neg = true;
+			millis = -millis + 999;
 		}
 
 		long secs = millis / 1000L;
 		StringBuilder sb = new StringBuilder();
+
+		if (neg)
+		{
+			sb.append('-');
+		}
 
 		long h = (secs / 3600L) % 24;
 		long m = (secs / 60L) % 60L;
