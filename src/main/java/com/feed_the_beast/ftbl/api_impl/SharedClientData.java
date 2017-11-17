@@ -8,7 +8,6 @@ import com.feed_the_beast.ftbl.api.ISharedClientData;
 public class SharedClientData extends SharedData implements ISharedClientData
 {
 	public static final SharedClientData INSTANCE = new SharedClientData();
-	public boolean isClientPlayerOP;
 
 	private SharedClientData()
 	{
@@ -19,12 +18,5 @@ public class SharedClientData extends SharedData implements ISharedClientData
 	{
 		super.reset();
 		optionalServerMods.clear();
-		isClientPlayerOP = false;
-	}
-
-	@Override
-	public boolean isClientOP()
-	{
-		return isClientPlayerOP;
 	}
 }

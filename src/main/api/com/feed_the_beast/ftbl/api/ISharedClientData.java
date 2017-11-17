@@ -12,6 +12,4 @@ public interface ISharedClientData extends ISharedData
 	{
 		return Side.CLIENT;
 	}
-
-	boolean isClientOP();
 }

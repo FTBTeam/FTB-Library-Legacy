@@ -38,19 +38,21 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public boolean isValid;
 	public final NBTDataStorage dataStorage;
 	public final ConfigEnum<EnumTeamColor> color;
+	public final ConfigEnum<EnumTeamStatus> fakePlayerStatus;
 	public IForgePlayer owner;
 	public final ConfigString title;
 	public final ConfigString desc;
 	public final ConfigBoolean freeToJoin;
 	public final Collection<IForgePlayer> requestingInvite;
 	public final Map<IForgePlayer, EnumTeamStatus> players;
-	public final ConfigGroup cachedConfig;
+	private ConfigGroup cachedConfig;
 
 	public ForgeTeam(String id)
 	{
 		super(id);
 		isValid = true;
 		color = new ConfigEnum<>(EnumTeamColor.NAME_MAP);
+		fakePlayerStatus = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
 		title = new ConfigString("");
 		desc = new ConfigString("");
 		freeToJoin = new ConfigBoolean(false);
@@ -58,19 +60,6 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 		players = new HashMap<>();
 
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
-
-		cachedConfig = new ConfigGroup(GuiLang.SETTINGS.textComponent(null));
-		cachedConfig.setSupergroup("team_config");
-		ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
-		event.post();
-
-		String group = FTBLibFinals.MOD_ID;
-		event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
-		event.getConfig().add(group, "free_to_join", freeToJoin);
-		group = FTBLibFinals.MOD_ID + ".display";
-		event.getConfig().add(group, "color", color);
-		event.getConfig().add(group, "title", title);
-		event.getConfig().add(group, "desc", desc);
 	}
 
 	@Override
@@ -101,6 +90,12 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	public EnumTeamColor getColor()
 	{
 		return color.getValue();
+	}
+
+	@Override
+	public EnumTeamStatus getFakePlayerStatus()
+	{
+		return fakePlayerStatus.getValue();
 	}
 
 	public void setColor(EnumTeamColor col)
@@ -250,6 +245,23 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public ConfigGroup getSettings()
 	{
+		if (cachedConfig == null)
+		{
+			cachedConfig = new ConfigGroup(GuiLang.SETTINGS.textComponent(null));
+			cachedConfig.setSupergroup("team_config");
+			ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
+			event.post();
+
+			String group = FTBLibFinals.MOD_ID;
+			event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
+			event.getConfig().add(group, "free_to_join", freeToJoin);
+			group = FTBLibFinals.MOD_ID + ".display";
+			event.getConfig().add(group, "color", color);
+			event.getConfig().add(group, "fake_player_status", fakePlayerStatus);
+			event.getConfig().add(group, "title", title);
+			event.getConfig().add(group, "desc", desc);
+		}
+
 		return cachedConfig;
 	}
 

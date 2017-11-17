@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.client;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
+import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.misc.GuiLoading;
@@ -134,7 +135,7 @@ public class SidebarButton extends FinalIDObject implements ISidebarButton
 	@Override
 	public boolean isAvailable()
 	{
-		return (!hideWithNEI || !CommonUtils.isNEILoaded()) && (!requiresOp || FTBLibAPI.API.getClientData().isClientOP()) && (requiredServerMods.isEmpty() || FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
+		return (!hideWithNEI || !CommonUtils.isNEILoaded()) && (!requiresOp || ClientUtils.isClientOP()) && (requiredServerMods.isEmpty() || FTBLibAPI.API.getClientData().optionalServerMods().containsAll(requiredServerMods));
 	}
 
 	@Override

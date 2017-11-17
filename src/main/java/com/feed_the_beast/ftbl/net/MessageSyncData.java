@@ -6,8 +6,6 @@ import com.feed_the_beast.ftbl.api.ISyncData;
 import com.feed_the_beast.ftbl.api_impl.SharedClientData;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
-import com.feed_the_beast.ftbl.lib.internal.FTBLibPerms;
-import com.feed_the_beast.ftbl.lib.io.Bits;
 import com.feed_the_beast.ftbl.lib.io.DataIn;
 import com.feed_the_beast.ftbl.lib.io.DataOut;
 import com.feed_the_beast.ftbl.lib.net.MessageToClient;
@@ -15,7 +13,6 @@ import com.feed_the_beast.ftbl.lib.net.NetworkWrapper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import java.util.Collection;
 import java.util.Map;
@@ -26,8 +23,6 @@ import java.util.UUID;
  */
 public class MessageSyncData extends MessageToClient<MessageSyncData>
 {
-	private static final int IS_OP = 1;
-
 	private int flags;
 	private UUID universeId;
 	private NBTTagCompound syncData;
@@ -39,8 +34,7 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 
 	public MessageSyncData(EntityPlayerMP player, IForgePlayer forgePlayer)
 	{
-		flags = 0;
-		flags = Bits.setFlag(flags, IS_OP, PermissionAPI.hasPermission(player, FTBLibPerms.SHOW_OP_BUTTONS));
+		flags = 0;//unused currently, 1 was used for OP
 		universeId = SharedServerData.INSTANCE.getUniverseId();
 		syncData = new NBTTagCompound();
 
@@ -80,7 +74,6 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 	public void onMessage(MessageSyncData m, EntityPlayer player)
 	{
 		SharedClientData.INSTANCE.reset();
-		SharedClientData.INSTANCE.isClientPlayerOP = Bits.getFlag(m.flags, IS_OP);
 		SharedClientData.INSTANCE.universeId = m.universeId;
 		SharedClientData.INSTANCE.optionalServerMods.addAll(m.optionalServerMods);
 

@@ -113,6 +113,7 @@ player_config.ftbl.hide_new_team_msg_notification=Hide New Team Message Notifica
 # Team Settings
 team_config.ftbl.display=Display
 team_config.ftbl.display.color=Color
+team_config.ftbl.display.fake_player_status=Fake Player Status
 team_config.ftbl.display.title=Title
 team_config.ftbl.display.title.tooltip=Displays when you enter a claimed chunk
 team_config.ftbl.display.desc=Description

@@ -43,7 +43,7 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	public final ConfigBoolean hideTeamNotification;
 	public EntityPlayerMP entityPlayer;
 	public NBTTagCompound playerNBT;
-	public final ConfigGroup cachedConfig;
+	private ConfigGroup cachedConfig;
 	public boolean loggingOut;
 	public long lastTimeSeen;
 
@@ -54,14 +54,6 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 		firstLogin = true;
 		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
 		hideTeamNotification = new ConfigBoolean();
-
-		cachedConfig = new ConfigGroup(FTBLibLang.MY_SERVER_SETTINGS.textComponent(null));
-		cachedConfig.setSupergroup("player_config");
-		ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
-		event.post();
-		String group = FTBLibFinals.MOD_ID;
-		event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
-		event.getConfig().add(group, "hide_team_notification", hideTeamNotification);
 	}
 
 	@Override
@@ -192,6 +184,17 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 	@Override
 	public ConfigGroup getSettings()
 	{
+		if (cachedConfig == null)
+		{
+			cachedConfig = new ConfigGroup(FTBLibLang.MY_SERVER_SETTINGS.textComponent(null));
+			cachedConfig.setSupergroup("player_config");
+			ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
+			event.post();
+			String group = FTBLibFinals.MOD_ID;
+			event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
+			event.getConfig().add(group, "hide_team_notification", hideTeamNotification);
+		}
+
 		return cachedConfig;
 	}
 

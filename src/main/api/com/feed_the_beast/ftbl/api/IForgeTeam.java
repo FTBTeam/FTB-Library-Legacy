@@ -32,6 +32,8 @@ public interface IForgeTeam extends IStringSerializable
 
 	EnumTeamColor getColor();
 
+	EnumTeamStatus getFakePlayerStatus();
+
 	default EnumTeamStatus getHighestStatus(@Nullable IForgePlayer player)
 	{
 		if (player == null)
@@ -71,6 +73,11 @@ public interface IForgeTeam extends IStringSerializable
 		if (player == null)
 		{
 			return false;
+		}
+
+		if (player.isFake())
+		{
+			return getFakePlayerStatus().isEqualOrGreaterThan(status);
 		}
 
 		switch (status)

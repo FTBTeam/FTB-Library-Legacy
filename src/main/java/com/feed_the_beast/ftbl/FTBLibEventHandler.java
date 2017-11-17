@@ -247,6 +247,7 @@ public class FTBLibEventHandler
 			}
 
 			team.color.setValueFromString(nbt.getString("Color"), false);
+			team.fakePlayerStatus.setValueFromString(nbt.getString("FakePlayerStatus"), false);
 			team.title.setString(nbt.getString("Title"));
 			team.desc.setString(nbt.getString("Desc"));
 			team.freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
@@ -367,6 +368,7 @@ public class FTBLibEventHandler
 
 				nbt.setString("Owner", team.owner.getName());
 				nbt.setString("Color", team.color.getString());
+				nbt.setString("FakePlayerStatus", team.fakePlayerStatus.getString());
 				nbt.setString("Title", team.title.getString());
 				nbt.setString("Desc", team.desc.getString());
 				nbt.setBoolean("FreeToJoin", team.freeToJoin.getBoolean());

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftbl.client.teamsgui;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.Button;
 import com.feed_the_beast.ftbl.lib.gui.GuiBase;
+import com.feed_the_beast.ftbl.lib.gui.GuiHelper;
 import com.feed_the_beast.ftbl.lib.gui.GuiIcons;
 import com.feed_the_beast.ftbl.lib.gui.Panel;
 import com.feed_the_beast.ftbl.lib.gui.PanelScrollBar;
@@ -36,6 +37,7 @@ public class GuiSelectTeam extends GuiBase
 		@Override
 		public void onClicked(MouseButton button)
 		{
+			GuiHelper.playClickSound();
 			new GuiCreateTeam().openGui();
 		}
 
@@ -67,6 +69,8 @@ public class GuiSelectTeam extends GuiBase
 		@Override
 		public void onClicked(MouseButton button)
 		{
+			GuiHelper.playClickSound();
+
 			if (team.isInvited)
 			{
 				ClientUtils.execClientCommand("/ftb team join " + team.getName());

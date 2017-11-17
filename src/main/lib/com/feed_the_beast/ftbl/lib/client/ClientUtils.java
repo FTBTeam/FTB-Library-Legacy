@@ -249,4 +249,9 @@ public class ClientUtils
 	{
 		return SPRITE_MAP.computeIfAbsent(name, DEFAULT_TEXTURE_GETTER);
 	}
+
+	public static boolean isClientOP()
+	{
+		return MC.player != null && MC.player.getPermissionLevel() > 0;
+	}
 }
