@@ -21,6 +21,11 @@ public abstract class Theme
 
 	public abstract Icon getSlot(boolean mouseOver);
 
+	public Icon getContainerSlot()
+	{
+		return getSlot(false).withBorder(-1);
+	}
+
 	public Icon getButton(boolean mouseOver)
 	{
 		return getWidget(mouseOver);
@@ -58,6 +63,6 @@ public abstract class Theme
 
 	public Icon getPanelBackground()
 	{
-		return getSlot(false).withBorder(-1);
+		return getContainerSlot();
 	}
 }

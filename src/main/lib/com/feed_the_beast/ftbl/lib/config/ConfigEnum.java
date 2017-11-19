@@ -91,7 +91,7 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public boolean getBoolean()
 	{
-		return !getString().equals("-");
+		return getValue() != getNameMap().defaultValue;
 	}
 
 	@Override

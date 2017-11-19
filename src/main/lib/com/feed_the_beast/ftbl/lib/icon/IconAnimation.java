@@ -18,14 +18,17 @@ public class IconAnimation extends Icon
 {
 	public static Icon fromIngredient(Ingredient ingredient)
 	{
-		Collection<Icon> icons = new ArrayList<>();
+		List<Icon> icons = new ArrayList<>();
 
 		for (ItemStack stack : ingredient.getMatchingStacks())
 		{
-			icons.add(new ItemIcon(stack));
+			if (!stack.isEmpty())
+			{
+				icons.add(ItemIcon.getItemIcon(stack));
+			}
 		}
 
-		return new IconAnimation(icons);
+		return icons.isEmpty() ? EMPTY : icons.size() == 1 ? icons.get(0) : new IconAnimation(icons);
 	}
 
 	public final List<Icon> list;

@@ -142,6 +142,11 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 
 	public void writeToNBT(NBTTagCompound nbt, String name, EnumSaveType type, Object value)
 	{
+		if (value == defaultValue)
+		{
+			return;
+		}
+
 		if (!type.save)
 		{
 			int index = getIndex(value);
@@ -160,7 +165,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 				nbt.setByte(name, (byte) index);
 			}
 		}
-		else if (value != defaultValue)
+		else
 		{
 			nbt.setString(name, getName(value));
 		}
@@ -168,6 +173,11 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 
 	public E readFromNBT(NBTTagCompound nbt, String name, EnumSaveType type)
 	{
+		if (!nbt.hasKey(name))
+		{
+			return defaultValue;
+		}
+
 		return (!type.save || nbt.hasKey(name, Constants.NBT.TAG_ANY_NUMERIC)) ? get(nbt.getInteger(name)) : get(nbt.getString(name));
 	}
 

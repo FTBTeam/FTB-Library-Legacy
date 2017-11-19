@@ -4,17 +4,16 @@ import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.lib.util.text_components.CustomStyle;
 import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
 import com.feed_the_beast.ftbl.lib.util.text_components.TextComponentCountdown;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
@@ -41,12 +40,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.lang.reflect.Type;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
@@ -56,48 +59,6 @@ import java.util.Map;
  */
 public class JsonUtils
 {
-	public static final Gson GSON = new GsonBuilder().create();
-	public static final Gson GSON_PRETTY = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().setLenient().create();
-
-	public static final JsonDeserializationContext DESERIALIZATION_CONTEXT = new JsonDeserializationContext()
-	{
-		@Override
-		public <T> T deserialize(JsonElement json, Type typeOfT) throws JsonParseException
-		{
-			return GSON.fromJson(json, typeOfT);
-		}
-	};
-
-	public static final JsonSerializationContext SERIALIZATION_CONTEXT = new JsonSerializationContext()
-	{
-		@Override
-		public JsonElement serialize(Object src)
-		{
-			return GSON.toJsonTree(src);
-		}
-
-		@Override
-		public JsonElement serialize(Object src, Type typeOfSrc)
-		{
-			return GSON.toJsonTree(src, typeOfSrc);
-		}
-	};
-
-	public static final JsonSerializationContext PRETTY_SERIALIZATION_CONTEXT = new JsonSerializationContext()
-	{
-		@Override
-		public JsonElement serialize(Object src)
-		{
-			return GSON_PRETTY.toJsonTree(src);
-		}
-
-		@Override
-		public JsonElement serialize(Object src, Type typeOfSrc)
-		{
-			return GSON_PRETTY.toJsonTree(src, typeOfSrc);
-		}
-	};
-
 	public static final JsonParser PARSER = new JsonParser();
 
 	public static boolean isNull(@Nullable JsonElement element)
@@ -105,34 +66,70 @@ public class JsonUtils
 		return element == null || element == JsonNull.INSTANCE || element.isJsonNull();
 	}
 
-	public static String toJson(Gson gson, @Nullable JsonElement element)
+	public static void toJson(@Nullable JsonElement element, Writer writer, boolean prettyPrinting)
 	{
-		return isNull(element) ? "null" : gson.toJson(element);
-	}
+		if (isNull(element))
+		{
+			try
+			{
+				writer.write("null");
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 
-	public static boolean toJson(Gson gson, File file, @Nullable JsonElement element)
-	{
+			return;
+		}
+
+		JsonWriter jsonWriter = new JsonWriter(writer);
+		jsonWriter.setLenient(true);
+		jsonWriter.setHtmlSafe(false);
+		jsonWriter.setSerializeNulls(true);
+
+		if (prettyPrinting)
+		{
+			jsonWriter.setIndent("\t");
+		}
+
 		try
 		{
-			FileUtils.save(file, toJson(gson, element));
-			return true;
+			Streams.write(element, jsonWriter);
 		}
-		catch (Exception e)
+		catch (Exception ex)
 		{
-			e.printStackTrace();
+			throw new JsonIOException(ex);
 		}
+	}
 
-		return false;
+	public static String toJson(@Nullable JsonElement element, boolean prettyPrinting)
+	{
+		StringWriter writer = new StringWriter();
+		toJson(element, writer, prettyPrinting);
+		return writer.toString();
+	}
+
+	public static void toJson(@Nullable JsonElement element, File file, boolean prettyPrinting)
+	{
+		try (OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(FileUtils.newFile(file)), StandardCharsets.UTF_8);
+			 BufferedWriter writer = new BufferedWriter(output))
+		{
+			toJson(element, writer, prettyPrinting);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public static String toJson(@Nullable JsonElement element)
 	{
-		return toJson(GSON, element);
+		return toJson(element, false);
 	}
 
-	public static boolean toJson(File file, @Nullable JsonElement element)
+	public static void toJson(@Nullable JsonElement element, File file)
 	{
-		return toJson(GSON_PRETTY, file, element);
+		toJson(element, file, true);
 	}
 
 	public static JsonElement fromJson(@Nullable String json)

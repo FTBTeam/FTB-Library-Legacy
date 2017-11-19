@@ -12,29 +12,55 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemIcon extends Icon
 {
-	private ItemStack stack;
-	private String lazyStackString;
-
-	public ItemIcon(ItemStack is)
+	private static class LazyItemIcon extends ItemIcon
 	{
-		stack = is;
-		lazyStackString = "";
+		private String lazyStackString;
+		private boolean createdStack;
+
+		private LazyItemIcon(String s)
+		{
+			super(ItemStack.EMPTY);
+			lazyStackString = s;
+		}
+
+		@Override
+		public ItemStack getStack()
+		{
+			if (!createdStack)
+			{
+				stack = ItemStackSerializer.parseItem(lazyStackString);
+				createdStack = true;
+			}
+
+			return stack;
+		}
+
+		@Override
+		public JsonElement getJson()
+		{
+			return new JsonPrimitive("item:" + lazyStackString);
+		}
 	}
 
-	public ItemIcon(String s)
+	ItemStack stack;
+
+	public static Icon getItemIcon(ItemStack stack)
 	{
-		stack = ItemStack.EMPTY;
-		lazyStackString = s;
+		return stack.isEmpty() ? EMPTY : new ItemIcon(stack);
+	}
+
+	public static Icon getItemIcon(String lazyStackString)
+	{
+		return lazyStackString.isEmpty() ? EMPTY : new LazyItemIcon(lazyStackString);
+	}
+
+	private ItemIcon(ItemStack is)
+	{
+		stack = is;
 	}
 
 	public ItemStack getStack()
 	{
-		if (!lazyStackString.isEmpty())
-		{
-			stack = ItemStackSerializer.parseItem(lazyStackString);
-			lazyStackString = "";
-		}
-
 		return stack;
 	}
 

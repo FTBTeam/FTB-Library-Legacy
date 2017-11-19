@@ -11,11 +11,9 @@ import com.feed_the_beast.ftbl.lib.icon.PartIcon;
 public class ThemeVanilla extends Theme
 {
 	public static final ThemeVanilla INSTANCE = new ThemeVanilla();
-	private static final Color4I COLOR_DARK = Color4I.rgb(0x404040);
 	private static final Icon TEXTURE_BEACON = Icon.getIcon("textures/gui/container/beacon.png");
 	private static final Icon TEXTURE_WIDGETS = Icon.getIcon("textures/gui/widgets.png");
 	private static final Icon TEXTURE_RECIPE_BOOK = Icon.getIcon("textures/gui/recipe_book.png");
-	private static final Icon TEXTURE_ADV_WIDGETS = Icon.getIcon("textures/gui/advancements/widgets.png");
 	private static final Icon TEXTURE_ENCHANTING_TABLE = Icon.getIcon("textures/gui/container/enchanting_table.png");
 
 	private static final Icon GUI = new PartIcon(TEXTURE_RECIPE_BOOK, 82, 208, 256, 256, 8, 16, 16, true);
@@ -26,12 +24,12 @@ public class ThemeVanilla extends Theme
 	private static final Icon WIDGET = new PartIcon(TEXTURE_BEACON, 0, 219, 256, 256, 6, 10, 10, true);
 	private static final Icon DISABLED_WIDGET = new PartIcon(TEXTURE_BEACON, 44, 219, 256, 256, 6, 10, 10, true);
 	private static final Icon WIDGET_MOUSE_OVER = new PartIcon(TEXTURE_BEACON, 66, 219, 256, 256, 6, 10, 10, true);
-	private static final Icon SLOT = new PartIcon(TEXTURE_BEACON, 35, 136, 256, 256, 6, 6, 6, true);
+	private static final Icon SLOT = new PartIcon(TEXTURE_BEACON, 35, 136, 256, 256, 3, 12, 12, true);
 	private static final Icon SLOT_MOUSE_OVER = SLOT.combineWith(Color4I.WHITE_A[33]);
 	private static final Icon SCROLL_BAR = WIDGET.withBorder(1);
 	private static final Icon SCROLL_BAR_GRABBED = WIDGET_MOUSE_OVER.withBorder(1);
 	private static final Icon TEXT_BOX = new PartIcon(TEXTURE_ENCHANTING_TABLE, 0, 185, 256, 256, 6, 96, 7, false);
-	private static final Icon PANEL_BACKGROUND = SLOT.withBorder(-1);
+	private static final Icon CONTAINER_SLOT = SLOT.withBorder(-1);
 
 	@Override
 	public Color4I getContentColor()
@@ -61,6 +59,12 @@ public class ThemeVanilla extends Theme
 	public Icon getSlot(boolean mouseOver)
 	{
 		return mouseOver ? SLOT_MOUSE_OVER : SLOT;
+	}
+
+	@Override
+	public Icon getContainerSlot()
+	{
+		return CONTAINER_SLOT;
 	}
 
 	@Override
@@ -97,11 +101,5 @@ public class ThemeVanilla extends Theme
 	public Icon getCheckbox(boolean mouseOver, boolean selected, boolean radioButton)
 	{
 		return selected ? getWidget(mouseOver) : Icon.EMPTY;
-	}
-
-	@Override
-	public Icon getPanelBackground()
-	{
-		return PANEL_BACKGROUND;
 	}
 }

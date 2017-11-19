@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.lib.icon.Icon;
 import com.feed_the_beast.ftbl.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -82,10 +84,18 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		}
 
 		GuiBase.setupDrawing();
+		drawDefaultBackground();
 		wrappedGui.getIcon().draw(wrappedGui);
 		wrappedGui.drawBackground();
-		GuiBase.setupDrawing();
-		wrappedGui.renderWidgets();
+
+		Icon icon = wrappedGui.getTheme().getContainerSlot();
+
+		for (Slot slot : inventorySlots.inventorySlots)
+		{
+			icon.draw(guiLeft + slot.xPos, guiTop + slot.yPos, 16, 16);
+		}
+
+		wrappedGui.renderWidget();
 
 		if (wrappedGui.fixUnicode)
 		{
@@ -105,6 +115,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		GlStateManager.translate(-guiLeft, -guiTop, 0D);
 		GuiBase.setupDrawing();
 		wrappedGui.drawForeground();
+		renderHoveredToolTip(mx, my);
 		GlStateManager.popMatrix();
 
 		if (wrappedGui.fixUnicode)

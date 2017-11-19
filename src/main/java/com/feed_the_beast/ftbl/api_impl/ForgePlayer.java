@@ -99,7 +99,11 @@ public class ForgePlayer implements IForgePlayer, Comparable<ForgePlayer>
 
 	public final void setUsername(String n)
 	{
-		playerName = n;
+		if (!playerName.equals(n))
+		{
+			new File(CommonUtils.folderWorld, "data/ftb_lib/players/" + playerName.toLowerCase() + ".dat").delete();
+			playerName = n;
+		}
 	}
 
 	@Override

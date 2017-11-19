@@ -75,23 +75,25 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		}
 
 		wrappedGui.updateGui(mouseX, mouseY, partialTicks);
-
-		if (wrappedGui.drawDefaultBackground())
-		{
-			drawDefaultBackground();
-		}
-
+		drawDefaultBackground();
 		GuiBase.setupDrawing();
 		wrappedGui.getIcon().draw(wrappedGui);
 		wrappedGui.drawBackground();
-		GuiBase.setupDrawing();
-		wrappedGui.renderWidgets();
-		GuiBase.setupDrawing();
+		wrappedGui.renderWidget();
 		wrappedGui.drawForeground();
 
 		if (wrappedGui.fixUnicode)
 		{
 			GuiHelper.setFixUnicode(false);
+		}
+	}
+
+	@Override
+	public void drawDefaultBackground()
+	{
+		if (wrappedGui.drawDefaultBackground())
+		{
+			super.drawDefaultBackground();
 		}
 	}
 

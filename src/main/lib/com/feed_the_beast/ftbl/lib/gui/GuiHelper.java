@@ -194,7 +194,7 @@ public class GuiHelper
 		boolean result = true;
 
 		RenderItem renderItem = ClientUtils.MC.getRenderItem();
-		renderItem.zLevel = 200F;
+		renderItem.zLevel = 180F;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 32D);
 

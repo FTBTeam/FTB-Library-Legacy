@@ -126,7 +126,9 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 
 	public boolean shouldDrop()
 	{
-		return !destroyedByCreativePlayer;
+		NBTTagCompound nbt = new NBTTagCompound();
+		writeData(nbt, EnumSaveType.SAVE);
+		return !nbt.hasNoTags();
 	}
 
 	public final void checkIfDirty()

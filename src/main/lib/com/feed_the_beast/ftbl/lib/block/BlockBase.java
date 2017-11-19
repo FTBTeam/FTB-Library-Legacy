@@ -75,7 +75,7 @@ public class BlockBase extends Block
 			{
 				TileBase tile = (TileBase) tileEntity;
 
-				if (tile.shouldDrop())
+				if (!tile.destroyedByCreativePlayer || tile.shouldDrop())
 				{
 					spawnAsEntity(worldIn, pos, createStack(state, ((TileBase) tileEntity)));
 				}

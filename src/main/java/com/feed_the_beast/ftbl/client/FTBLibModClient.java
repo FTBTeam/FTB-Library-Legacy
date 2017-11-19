@@ -263,6 +263,6 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 			}
 		}
 
-		JsonUtils.toJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"), o);
+		JsonUtils.toJson(o, new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
 	}
 }

@@ -195,12 +195,12 @@ public abstract class GuiBase extends Panel
 	{
 		setupDrawing();
 		drawBackground();
-		renderWidgets();
+		super.renderWidget();
 	}
 
-	public void renderWidgets()
+	@Override
+	protected final void renderPanelBackground(int ax, int ay)
 	{
-		super.renderWidget();
 	}
 
 	public boolean drawDefaultBackground()

@@ -40,6 +40,12 @@ public class InvUtils
 		ERROR_ITEM.setStackDisplayName("Broken Item!");
 	}
 
+	@Nullable
+	public static NBTTagCompound nullIfEmpty(@Nullable NBTTagCompound nbt)
+	{
+		return nbt == null || nbt.hasNoTags() ? null : nbt;
+	}
+
 	public static void addPlayerSlots(Container container, EntityPlayer player, int posX, int posY, boolean ignoreCurrent)
 	{
 		if (player.inventory == null)

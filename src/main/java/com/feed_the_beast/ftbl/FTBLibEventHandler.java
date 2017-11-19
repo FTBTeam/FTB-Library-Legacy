@@ -337,7 +337,7 @@ public class FTBLibEventHandler
 
 		try
 		{
-			JsonUtils.toJson(new File(CommonUtils.folderWorld, "world_data.json"), SharedServerData.INSTANCE.getSerializableElement());
+			JsonUtils.toJson(SharedServerData.INSTANCE.getSerializableElement(), new File(CommonUtils.folderWorld, "world_data.json"));
 			File folder = new File(CommonUtils.folderWorld, "data/ftb_lib");
 
 			NBTTagCompound mainNbt = new NBTTagCompound();
