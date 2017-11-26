@@ -33,6 +33,11 @@ public abstract class StringJoiner
 		}
 	}
 
+	public static StringJoiner properties()
+	{
+		return new PropertiesJoiner();
+	}
+
 	private static class WithString extends StringJoiner
 	{
 		private static final WithString WITH_NOTHING = new WithString("");
@@ -67,6 +72,26 @@ public abstract class StringJoiner
 		protected void append(StringBuilder builder)
 		{
 			builder.append(c);
+		}
+	}
+
+	private static class PropertiesJoiner extends StringJoiner
+	{
+		private int index = 0;
+
+		@Override
+		protected void append(StringBuilder builder)
+		{
+			if (index % 2 == 0)
+			{
+				builder.append(", ");
+			}
+			else
+			{
+				builder.append('=');
+			}
+
+			index++;
 		}
 	}
 

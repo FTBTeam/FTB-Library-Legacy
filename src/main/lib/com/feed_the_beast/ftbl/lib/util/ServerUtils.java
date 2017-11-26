@@ -5,7 +5,6 @@ import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.Channel;
-import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -13,7 +12,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -36,7 +34,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -233,16 +230,6 @@ public class ServerUtils
 		}
 
 		return null;
-	}
-
-	public static void addTickable(MinecraftServer server, ITickable tickable)
-	{
-		server.tickables.add(tickable);
-	}
-
-	public static Set<ICommand> getCommandSet(CommandHandler handler)
-	{
-		return handler.commandSet;
 	}
 
 	public static void notify(@Nullable EntityPlayer player, ITextComponent component)

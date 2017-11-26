@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
+import com.feed_the_beast.ftbl.api.ClientATHelper;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.util.NetUtils;
@@ -8,7 +9,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -73,26 +74,6 @@ public class GuiHelper
 	}
 
 	private static final Stack<Scissor> SCISSOR = new Stack<>();
-
-	public static int getGuiWidth(GuiContainer gui)
-	{
-		return gui.xSize;
-	}
-
-	public static int getGuiHeight(GuiContainer gui)
-	{
-		return gui.ySize;
-	}
-
-	public static int getGuiX(GuiContainer gui)
-	{
-		return gui.guiLeft;
-	}
-
-	public static int getGuiY(GuiContainer gui)
-	{
-		return gui.guiTop;
-	}
 
 	public static void playSound(SoundEvent event, float pitch)
 	{
@@ -271,9 +252,11 @@ public class GuiHelper
 
 		for (int i = 0; i < 256; i++)
 		{
-			if (FontRenderer.UNICODE_PAGE_LOCATIONS[i] != null)
+			ResourceLocation loc = ClientATHelper.INSTANCE.getFontUnicodePage(i);
+
+			if (loc != null)
 			{
-				textureManager.bindTexture(FontRenderer.UNICODE_PAGE_LOCATIONS[i]);
+				textureManager.bindTexture(loc);
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
 			}

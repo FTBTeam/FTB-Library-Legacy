@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util.text_components;
 
+import com.feed_the_beast.ftbl.lib.util.StringJoiner;
 import com.feed_the_beast.ftbl.lib.util.StringUtils;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -231,7 +232,19 @@ public class CustomStyle extends Style
 
 	public String toString()
 	{
-		return "Style{hasParent=" + (parentStyle != null) + ", color=" + color + ", bold=" + bold + ", italic=" + italic + ", underlined=" + underlined + ", obfuscated=" + obfuscated + ", monospaced=" + monospaced + ", clickEvent=" + getClickEvent() + ", hoverEvent=" + getHoverEvent() + ", insertion=" + getInsertion() + '}';
+		return "Style{" + StringJoiner.properties().joinObjects(
+				"hasParent", parentStyle != null,
+				"color", color,
+				"background", background,
+				"bold", bold,
+				"italic", italic,
+				"underlined", underlined,
+				"obfuscated", obfuscated,
+				"monospaced", monospaced,
+				"clickEvent", clickEvent,
+				"hoverEvent", hoverEvent,
+				"insertion", insertion
+		) + "}";
 	}
 
 	public boolean equals(Object o)
@@ -243,7 +256,7 @@ public class CustomStyle extends Style
 		else if (o instanceof CustomStyle)
 		{
 			CustomStyle c = (CustomStyle) o;
-			return c.monospaced == monospaced && super.equals(c);
+			return monospaced == c.monospaced && background == c.background && super.equals(c);
 		}
 
 		return false;

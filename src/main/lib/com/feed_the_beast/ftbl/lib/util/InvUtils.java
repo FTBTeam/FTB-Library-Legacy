@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.api.ATHelper;
 import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.item.ToolLevel;
 import com.feed_the_beast.ftbl.lib.item.ToolType;
@@ -57,7 +58,7 @@ public class InvUtils
 		{
 			for (int x = 0; x < 9; x++)
 			{
-				container.addSlotToContainer(new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
+				ATHelper.INSTANCE.addSlot(container, new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
 			}
 		}
 
@@ -67,11 +68,11 @@ public class InvUtils
 		{
 			if (x != i)
 			{
-				container.addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58));
+				ATHelper.INSTANCE.addSlot(container, new Slot(player.inventory, x, posX + x * 18, posY + 58));
 			}
 			else
 			{
-				container.addSlotToContainer(new Slot(player.inventory, x, posX + x * 18, posY + 58)
+				ATHelper.INSTANCE.addSlot(container, new Slot(player.inventory, x, posX + x * 18, posY + 58)
 				{
 					@Override
 					public boolean canTakeStack(EntityPlayer ep)
@@ -100,12 +101,12 @@ public class InvUtils
 
 			if (index < nonPlayerSlots)
 			{
-				if (!container.mergeItemStack(is1, nonPlayerSlots, container.inventorySlots.size(), true))
+				if (!ATHelper.INSTANCE.mergeItemStack(container, is1, nonPlayerSlots, container.inventorySlots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
 			}
-			else if (!container.mergeItemStack(is1, 0, nonPlayerSlots, false))
+			else if (!ATHelper.INSTANCE.mergeItemStack(container, is1, 0, nonPlayerSlots, false))
 			{
 				return ItemStack.EMPTY;
 			}

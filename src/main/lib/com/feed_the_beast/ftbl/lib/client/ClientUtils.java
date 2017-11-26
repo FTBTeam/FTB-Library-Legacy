@@ -230,11 +230,6 @@ public class ClientUtils
 		FRUSTUM.setPosition(playerX, playerY, playerZ);
 	}
 
-	public static Map<String, TextureAtlasSprite> getRegisteredSpritesMap()
-	{
-		return MC.getTextureMapBlocks().mapRegisteredSprites;
-	}
-
 	public static BlockRenderLayer getStrongest(BlockRenderLayer layer1, BlockRenderLayer layer2)
 	{
 		return BLOCK_RENDER_LAYER_NAME_MAP.get(Math.max(layer1.ordinal(), layer2.ordinal()));

@@ -2,11 +2,13 @@ package com.feed_the_beast.ftbl.client;
 
 import com.feed_the_beast.ftbl.FTBLibConfig;
 import com.feed_the_beast.ftbl.FTBLibModCommon;
+import com.feed_the_beast.ftbl.api.ClientATHelper;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.ISidebarButton;
 import com.feed_the_beast.ftbl.api.ISidebarButtonGroup;
 import com.feed_the_beast.ftbl.api.player.IGuiProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterGuiProvidersEvent;
+import com.feed_the_beast.ftbl.api_impl.ClientATHelperImpl;
 import com.feed_the_beast.ftbl.cmd.CmdFTBC;
 import com.feed_the_beast.ftbl.lib.client.ClientUtils;
 import com.feed_the_beast.ftbl.lib.gui.misc.ChunkSelectorMap;
@@ -70,6 +72,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		super.preInit(event);
+		ClientATHelper.INSTANCE = new ClientATHelperImpl();
 		FTBLibClientConfig.sync();
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getName());

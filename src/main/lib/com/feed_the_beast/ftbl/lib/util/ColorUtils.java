@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.api.ATHelper;
 import com.feed_the_beast.ftbl.lib.icon.Color4I;
 import com.feed_the_beast.ftbl.lib.math.MathUtils;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.BufferUtils;
 
@@ -25,23 +25,6 @@ public class ColorUtils
 			int b = (i & 1) * 170 + j;
 			CHAT_FORMATTING_COLORS[i] = Color4I.rgb((i == 6) ? r + 85 : r, g, b);
 		}
-
-		for (EnumDyeColor color : EnumDyeColor.values())
-		{
-			char c = getTextFormattingChar(getFromDyeColor(color));
-			DYE_TEXT_FORMATTING_COLORS[color.getMetadata()] = Color4I.rgb(GuiUtils.getColorCode(c, true));
-			DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + 16] = Color4I.rgb(GuiUtils.getColorCode(c, false));
-		}
-	}
-
-	public static TextFormatting getFromDyeColor(EnumDyeColor color)
-	{
-		return color.chatColor;
-	}
-
-	public static char getTextFormattingChar(TextFormatting formatting)
-	{
-		return formatting.formattingCode;
 	}
 
 	public static Color4I getChatFormattingColor(int id)
@@ -51,7 +34,16 @@ public class ColorUtils
 
 	public static Color4I getDyeColor(EnumDyeColor color, boolean isLighter)
 	{
-		return DYE_TEXT_FORMATTING_COLORS[color.getMetadata() + (isLighter ? 0 : 16)];
+		int id = color.ordinal();
+
+		if (DYE_TEXT_FORMATTING_COLORS[id] == null)
+		{
+			char c = ATHelper.INSTANCE.getTextFormattingChar(ATHelper.INSTANCE.getTextFormattingFromDyeColor(color));
+			DYE_TEXT_FORMATTING_COLORS[id] = Color4I.rgb(GuiUtils.getColorCode(c, true));
+			DYE_TEXT_FORMATTING_COLORS[id + 16] = Color4I.rgb(GuiUtils.getColorCode(c, false));
+		}
+
+		return DYE_TEXT_FORMATTING_COLORS[id + (isLighter ? 0 : 16)];
 	}
 
 	public static int getRGBA(int r, int g, int b, int a)

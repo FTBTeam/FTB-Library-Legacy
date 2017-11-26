@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.lib.util;
 
+import com.feed_the_beast.ftbl.api.ATHelper;
 import com.feed_the_beast.ftbl.api.INotification;
 import com.feed_the_beast.ftbl.lib.util.text_components.CustomStyle;
 import com.feed_the_beast.ftbl.lib.util.text_components.Notification;
@@ -237,29 +238,29 @@ public class JsonUtils
 
 		if (!style.isEmpty())
 		{
-			if (style.bold != null)
+			if (ATHelper.INSTANCE.getBold(style) != null)
 			{
-				json.addProperty("bold", style.bold);
+				json.addProperty("bold", style.getBold());
 			}
 
-			if (style.italic != null)
+			if (ATHelper.INSTANCE.getItalic(style) != null)
 			{
-				json.addProperty("italic", style.italic);
+				json.addProperty("italic", style.getItalic());
 			}
 
-			if (style.underlined != null)
+			if (ATHelper.INSTANCE.getUnderlined(style) != null)
 			{
-				json.addProperty("underlined", style.underlined);
+				json.addProperty("underlined", style.getUnderlined());
 			}
 
-			if (style.strikethrough != null)
+			if (ATHelper.INSTANCE.getStriketrough(style) != null)
 			{
-				json.addProperty("strikethrough", style.strikethrough);
+				json.addProperty("strikethrough", style.getStrikethrough());
 			}
 
-			if (style.obfuscated != null)
+			if (ATHelper.INSTANCE.getObfuscated(style) != null)
 			{
-				json.addProperty("obfuscated", style.obfuscated);
+				json.addProperty("obfuscated", style.getObfuscated());
 			}
 
 			if (style instanceof CustomStyle)
@@ -268,33 +269,33 @@ public class JsonUtils
 
 				if (customStyle.monospaced != null)
 				{
-					json.addProperty("monospaced", customStyle.monospaced);
+					json.addProperty("monospaced", customStyle.getMonospaced());
 				}
 
 				if (customStyle.background != null)
 				{
-					json.addProperty("background", customStyle.background.getFriendlyName());
+					json.addProperty("background", customStyle.getBackground().getFriendlyName());
 				}
 			}
 
-			if (style.color != null)
+			if (ATHelper.INSTANCE.getColor(style) != null)
 			{
-				json.addProperty("color", style.color.getFriendlyName());
+				json.addProperty("color", style.getColor().getFriendlyName());
 			}
 
-			if (style.insertion != null)
+			if (ATHelper.INSTANCE.getInsertion(style) != null)
 			{
-				json.addProperty("insertion", style.insertion);
+				json.addProperty("insertion", style.getInsertion());
 			}
 
-			if (style.clickEvent != null)
+			if (ATHelper.INSTANCE.getClickEvent(style) != null)
 			{
-				json.add("clickEvent", serializeClickEvent(style.clickEvent));
+				json.add("clickEvent", serializeClickEvent(style.getClickEvent()));
 			}
 
-			if (style.hoverEvent != null)
+			if (ATHelper.INSTANCE.getHoverEvent(style) != null)
 			{
-				json.add("hoverEvent", serializeHoverEvent(style.hoverEvent));
+				json.add("hoverEvent", serializeHoverEvent(style.getHoverEvent()));
 			}
 		}
 
@@ -542,32 +543,32 @@ public class JsonUtils
 
 			if (json.has("bold"))
 			{
-				style.bold = json.get("bold").getAsBoolean();
+				style.setBold(json.get("bold").getAsBoolean());
 			}
 
 			if (json.has("italic"))
 			{
-				style.italic = json.get("italic").getAsBoolean();
+				style.setItalic(json.get("italic").getAsBoolean());
 			}
 
 			if (json.has("underlined"))
 			{
-				style.underlined = json.get("underlined").getAsBoolean();
+				style.setUnderlined(json.get("underlined").getAsBoolean());
 			}
 
 			if (json.has("strikethrough"))
 			{
-				style.strikethrough = json.get("strikethrough").getAsBoolean();
+				style.setStrikethrough(json.get("strikethrough").getAsBoolean());
 			}
 
 			if (json.has("obfuscated"))
 			{
-				style.obfuscated = json.get("obfuscated").getAsBoolean();
+				style.setObfuscated(json.get("obfuscated").getAsBoolean());
 			}
 
 			if (json.has("color"))
 			{
-				style.color = TextFormatting.getValueByName(json.get("color").getAsString());
+				style.setColor(TextFormatting.getValueByName(json.get("color").getAsString()));
 			}
 
 			if (style instanceof CustomStyle)
@@ -576,28 +577,28 @@ public class JsonUtils
 
 				if (json.has("monospaced"))
 				{
-					cs.monospaced = json.get("monospaced").getAsBoolean();
+					cs.setMonospaced(json.get("monospaced").getAsBoolean());
 				}
 
 				if (json.has("background"))
 				{
-					cs.background = TextFormatting.getValueByName(json.get("background").getAsString());
+					cs.setBackground(TextFormatting.getValueByName(json.get("background").getAsString()));
 				}
 			}
 
 			if (json.has("insertion"))
 			{
-				style.insertion = json.get("insertion").getAsString();
+				style.setInsertion(json.get("insertion").getAsString());
 			}
 
 			if (json.has("clickEvent"))
 			{
-				style.clickEvent = deserializeClickEvent(json.get("clickEvent"));
+				style.setClickEvent(deserializeClickEvent(json.get("clickEvent")));
 			}
 
 			if (json.has("hoverEvent"))
 			{
-				style.hoverEvent = deserializeHoverEvent(json.get("hoverEvent"));
+				style.setHoverEvent(deserializeHoverEvent(json.get("hoverEvent")));
 			}
 
 			component.setStyle(style);

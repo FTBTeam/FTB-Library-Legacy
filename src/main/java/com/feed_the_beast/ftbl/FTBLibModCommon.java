@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl;
 
+import com.feed_the_beast.ftbl.api.ATHelper;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
 import com.feed_the_beast.ftbl.api.IDataProvider;
@@ -16,6 +17,7 @@ import com.feed_the_beast.ftbl.api.player.IContainerProvider;
 import com.feed_the_beast.ftbl.api.player.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftbl.api.team.ITeamGuiAction;
 import com.feed_the_beast.ftbl.api.team.RegisterTeamGuiActionsEvent;
+import com.feed_the_beast.ftbl.api_impl.ATHelperImpl;
 import com.feed_the_beast.ftbl.api_impl.FTBLibAPI_Impl;
 import com.feed_the_beast.ftbl.api_impl.SharedServerData;
 import com.feed_the_beast.ftbl.lib.config.ConfigGroup;
@@ -135,6 +137,7 @@ public class FTBLibModCommon
 	{
 		FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + CommonUtils.DEV_ENV);
 		FTBLibAPI.API = new FTBLibAPI_Impl();
+		ATHelper.INSTANCE = new ATHelperImpl();
 		CommonUtils.init(event.getModConfigurationDirectory());
 		Side side = event.getSide();
 

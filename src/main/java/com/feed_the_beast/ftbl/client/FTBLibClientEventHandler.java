@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftbl.client;
 
+import com.feed_the_beast.ftbl.api.ClientATHelper;
 import com.feed_the_beast.ftbl.api.CustomSidebarButtonTextEvent;
 import com.feed_the_beast.ftbl.api.EventHandler;
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
@@ -195,8 +196,8 @@ public class FTBLibClientEventHandler
 		SharedClientData.INSTANCE.reset();
 		currentNotification = null;
 		Temp.MAP.clear();
-		ClientUtils.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).clear();
-		ClientUtils.MC.ingameGUI.chatListeners.get(ChatType.GAME_INFO).add(CHAT_LISTENER);
+		ClientATHelper.INSTANCE.getChatListeners().get(ChatType.GAME_INFO).clear();
+		ClientATHelper.INSTANCE.getChatListeners().get(ChatType.GAME_INFO).add(CHAT_LISTENER);
 	}
 
 	@SubscribeEvent
@@ -412,8 +413,8 @@ public class FTBLibClientEventHandler
 			}
 
 			InventoryEffectRenderer gui = (InventoryEffectRenderer) ClientUtils.MC.currentScreen;
-			int guiLeft = GuiHelper.getGuiX(gui);
-			int guiTop = GuiHelper.getGuiY(gui);
+			int guiLeft = ClientATHelper.INSTANCE.getGuiX(gui);
+			int guiTop = ClientATHelper.INSTANCE.getGuiY(gui);
 
 			if (prevGuiLeft != guiLeft || prevGuiTop != guiTop)
 			{
@@ -421,7 +422,7 @@ public class FTBLibClientEventHandler
 				prevGuiTop = guiTop;
 			}
 
-			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).recipeBookGui.isVisible());
+			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ClientATHelper.INSTANCE.getRecipeBook((GuiInventory) gui).isVisible());
 
 			if (hasPotions || FTBLibClientConfig.general.action_buttons.top())
 			{
