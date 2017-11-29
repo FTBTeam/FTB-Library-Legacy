@@ -19,9 +19,11 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -57,6 +59,13 @@ public class CommonUtils
 	public static <T> Predicate<T> alwaysTruePredicate()
 	{
 		return cast(PREDICATE_ALWAYS_TRUE);
+	}
+
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static <T> List<T> asList(@Nullable T... objects)
+	{
+		return objects == null || objects.length == 0 ? Collections.emptyList() : Arrays.asList(objects);
 	}
 
 	public static boolean isNEILoaded()

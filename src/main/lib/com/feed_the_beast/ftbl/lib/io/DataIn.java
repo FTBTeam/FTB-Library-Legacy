@@ -55,6 +55,7 @@ public class DataIn
 	public static final Deserializer<BlockDimPos> BLOCK_DIM_POS = DataIn::readDimPos;
 	public static final Deserializer<JsonElement> JSON = DataIn::readJson;
 	public static final Deserializer<ITextComponent> TEXT_COMPONENT = DataIn::readTextComponent;
+	public static final Deserializer<ResourceLocation> RESOURCE_LOCATION = DataIn::readResourceLocation;
 
 	public static final DataIn.Deserializer<ChunkPos> CHUNK_POS = data ->
 	{
@@ -233,6 +234,11 @@ public class DataIn
 		return map;
 	}
 
+	public <K, V> Map<K, V> readMap(Deserializer<K> keyDeserializer, Deserializer<V> valueDeserializer)
+	{
+		return readMap(null, keyDeserializer, valueDeserializer);
+	}
+
 	public ItemStack readItemStack()
 	{
 		return ByteBufUtils.readItemStack(byteBuf);
@@ -301,7 +307,7 @@ public class DataIn
 			{
 				JsonObject json = new JsonObject();
 
-				for (Map.Entry<String, JsonElement> entry : readMap(null, STRING, JSON).entrySet())
+				for (Map.Entry<String, JsonElement> entry : readMap(STRING, JSON).entrySet())
 				{
 					json.add(entry.getKey(), entry.getValue());
 				}

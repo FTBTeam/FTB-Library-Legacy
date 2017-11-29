@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftbl.lib.gui;
 
 import com.feed_the_beast.ftbl.lib.io.Bits;
+import com.feed_the_beast.ftbl.lib.util.CommonUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class TextField extends Widget
 
 		if (!txt.isEmpty())
 		{
-			text = new ArrayList<>(autoSizeWidth ? Arrays.asList(txt.split("\n")) : gui.listFormattedStringToWidth(txt, width));
+			text = new ArrayList<>(autoSizeWidth ? CommonUtils.asList(txt.split("\n")) : gui.listFormattedStringToWidth(txt, width));
 		}
 
 		if (text == null || text.isEmpty())

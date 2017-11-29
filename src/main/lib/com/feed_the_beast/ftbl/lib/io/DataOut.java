@@ -47,6 +47,7 @@ public class DataOut
 	public static Serializer<BlockDimPos> BLOCK_DIM_POS = DataOut::writeDimPos;
 	public static Serializer<JsonElement> JSON = DataOut::writeJson;
 	public static Serializer<ITextComponent> TEXT_COMPONENT = DataOut::writeTextComponent;
+	public static Serializer<ResourceLocation> RESOURCE_LOCATION = DataOut::writeResourceLocation;
 
 	public static final DataOut.Serializer<ChunkPos> CHUNK_POS = (data, pos) ->
 	{

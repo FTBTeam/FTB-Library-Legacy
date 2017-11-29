@@ -769,7 +769,8 @@ public class StringUtils
 		return (CustomStyle) s;
 	}
 
-	public static ITextComponent color(ITextComponent component, TextFormatting color)
+	@SuppressWarnings("ConstantConditions")
+	public static ITextComponent color(ITextComponent component, @Nullable TextFormatting color)
 	{
 		component.getStyle().setColor(color);
 		return component;
