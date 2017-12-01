@@ -34,11 +34,6 @@ gui.infinite=Infinite
 gui.width=Width
 gui.height=Height
 
-## Stats
-ftbl.stat.time_played=Time Played
-ftbl.stat.last_seen=Last Seen
-ftbl.stat.first_joined=First Joined
-
 ## Sides
 facing.down=Down
 facing.up=Up

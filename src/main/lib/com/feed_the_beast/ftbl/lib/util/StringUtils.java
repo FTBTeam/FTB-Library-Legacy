@@ -45,6 +45,7 @@ public class StringUtils
 
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
 	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
+	public final static int[] INT_SIZE_TABLE = {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
 
 	public static String emptyIfNull(@Nullable Object o)
 	{
@@ -840,6 +841,32 @@ public class StringUtils
 			with = new String(c);
 		}
 
-		return string.replace("\t", "  ");
+		return string.replace("\t", with);
+	}
+
+	public static int stringSize(int x)
+	{
+		for (int i = 0; ; i++)
+		{
+			if (x <= INT_SIZE_TABLE[i])
+			{
+				return i + 1;
+			}
+		}
+	}
+
+	public static String add0s(int number, int max)
+	{
+		int size = stringSize(max);
+		int nsize = stringSize(number);
+		StringBuilder builder = new StringBuilder(size);
+
+		for (int i = 0; i < size - nsize; i++)
+		{
+			builder.append('0');
+		}
+
+		builder.append(number);
+		return builder.toString();
 	}
 }

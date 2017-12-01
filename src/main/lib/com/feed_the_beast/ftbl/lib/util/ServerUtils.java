@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftbl.lib.util;
 
 import com.feed_the_beast.ftbl.api.FTBLibAPI;
+import com.feed_the_beast.ftbl.lib.internal.FTBLibFinals;
 import com.feed_the_beast.ftbl.lib.math.BlockDimPos;
 import com.feed_the_beast.ftbl.lib.util.misc.NameMap;
 import com.mojang.authlib.GameProfile;
@@ -11,10 +12,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
@@ -25,6 +27,7 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.server.command.TextComponentHelper;
@@ -72,7 +75,10 @@ public class ServerUtils
 		@Override
 		public void placeInPortal(Entity entity, float rotationYaw)
 		{
-			entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
+			int x = MathHelper.floor(entity.posX);
+			int y = MathHelper.floor(entity.posY) - 1;
+			int z = MathHelper.floor(entity.posZ);
+			entity.setLocationAndAngles(x, y, z, entity.rotationPitch, entity.rotationYaw);
 			entity.motionX = 0D;
 			entity.motionY = 0D;
 			entity.motionZ = 0D;
@@ -85,13 +91,84 @@ public class ServerUtils
 		}
 	}
 
-	public static void teleportPlayer(EntityPlayerMP player, BlockDimPos pos)
+	public static boolean teleportEntity(Entity entity, BlockDimPos pos)
 	{
-		teleportPlayer(player, pos.toVec(), pos.dim);
+		return teleportEntity(entity, pos.getBlockPos(), pos.dim);
 	}
 
-	public static void teleportPlayer(EntityPlayerMP player, Vec3d pos, int dim)
+	//Most of this code comes from EnderIO
+	public static boolean teleportEntity(Entity entity, BlockPos pos, int targetDim)
 	{
+		EntityPlayerMP player = null;
+
+		if (entity instanceof EntityPlayerMP)
+		{
+			player = (EntityPlayerMP) entity;
+		}
+
+		int from = entity.dimension;
+		if (from != targetDim)
+		{
+			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+			WorldServer fromDim = server.getWorld(from);
+			WorldServer toDim = server.getWorld(targetDim);
+			Teleporter teleporter = new TeleporterBlank(toDim);
+
+			if (player != null)
+			{
+				server.getPlayerList().transferPlayerToDimension(player, targetDim, teleporter);
+				if (from == 1 && entity.isEntityAlive())
+				{
+					toDim.spawnEntity(entity);
+					toDim.updateEntityWithOptionalForce(entity, false);
+				}
+			}
+			else
+			{
+				NBTTagCompound tagCompound = new NBTTagCompound();
+				float rotationYaw = entity.rotationYaw;
+				float rotationPitch = entity.rotationPitch;
+				entity.writeToNBT(tagCompound);
+				Class<? extends Entity> entityClass = entity.getClass();
+				fromDim.removeEntity(entity);
+
+				try
+				{
+					Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
+					newEntity.readFromNBT(tagCompound);
+					newEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), rotationYaw, rotationPitch);
+					newEntity.forceSpawn = true;
+					toDim.spawnEntity(newEntity);
+					newEntity.forceSpawn = false;
+				}
+				catch (Exception ex)
+				{
+					FTBLibFinals.LOGGER.error("Error creating an entity to be created in new dimension." + ex);
+					return false;
+				}
+			}
+		}
+
+		if (!entity.world.isBlockLoaded(pos))
+		{
+			entity.world.getChunkFromBlockCoords(pos);
+		}
+
+		if (player != null)
+		{
+			player.connection.setPlayerLocation(pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D, player.rotationYaw, player.rotationPitch);
+			player.addExperienceLevel(0);
+		}
+		else
+		{
+			entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D);
+		}
+
+		entity.fallDistance = 0;
+		return true;
+
+		/*
+		//Old teleporter code
 		if (dim != player.dimension)
 		{
 			WorldServer toDim = player.mcServer.getWorld(dim);
@@ -103,6 +180,8 @@ public class ServerUtils
 		player.fallDistance = 0F;
 		player.addExperienceLevel(0);
 		player.world.updateEntityWithOptionalForce(player, true);
+		return true;
+		*/
 	}
 
 	public static double getMovementFactor(int dim)

@@ -49,7 +49,7 @@ public abstract class GuiButtonListBase extends GuiBase
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
 				setHeight(widgets.size() > 7 ? 144 : size);
-				gui.setHeight(height + 20);
+				gui.setHeight(height + 18);
 			}
 
 			@Override
@@ -61,7 +61,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 		panelButtons.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, 0, 8, 16, 148, 0, panelButtons)
+		scrollBar = new PanelScrollBar(this, 0, 8, 16, 146, 0, panelButtons)
 		{
 			@Override
 			public boolean shouldRender()

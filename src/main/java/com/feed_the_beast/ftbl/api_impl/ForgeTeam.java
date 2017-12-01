@@ -152,7 +152,7 @@ public final class ForgeTeam extends FinalIDObject implements IForgeTeam
 	@Override
 	public boolean addMember(IForgePlayer player)
 	{
-		if (isInvited(player) && !isMember(player))
+		if ((isOwner(player) || isInvited(player)) && !isMember(player))
 		{
 			player.setTeamId(getName());
 			players.remove(player);

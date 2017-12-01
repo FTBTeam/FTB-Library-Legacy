@@ -151,7 +151,7 @@ public interface IForgeTeam extends IStringSerializable
 
 	default boolean isOwner(@Nullable IForgePlayer player)
 	{
-		return getOwner().equalsPlayer(player);
+		return player != null && player.equalsPlayer(getOwner());
 	}
 
 	ConfigGroup getSettings();

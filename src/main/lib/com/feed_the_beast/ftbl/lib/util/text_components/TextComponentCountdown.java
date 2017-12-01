@@ -27,7 +27,7 @@ public class TextComponentCountdown extends TextComponentString
 	@Override
 	public String getText()
 	{
-		return StringUtils.getTimeStringTicks(countdown - CommonUtils.getWorldTime());
+		return StringUtils.getTimeStringTicks(countdown - CommonUtils.getWorldTime() - (countdown % 20L));
 	}
 
 	@Override
