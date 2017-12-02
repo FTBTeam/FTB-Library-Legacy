@@ -135,6 +135,9 @@ public abstract class GuiBase extends Panel
 
 	public final void closeGui(boolean openPrevScreen)
 	{
+		int mx = Mouse.getX();
+		int my = Mouse.getY();
+
 		if (ClientUtils.MC.player != null)
 		{
 			ClientUtils.MC.player.closeScreen();
@@ -143,6 +146,7 @@ public abstract class GuiBase extends Panel
 		if (openPrevScreen)
 		{
 			ClientUtils.MC.displayGuiScreen(getPrevScreen());
+			Mouse.setCursorPosition(mx, my);
 		}
 
 		onClosed();
