@@ -2,14 +2,14 @@
 	{
 		"modid": "ftbl",
 		"name": "FTBLib",
-		"description": "FTBLib",
+		"description": "",
 		"version": "${version}",
 		"mcversion": "${mcversion}",
 		"url": "http://minecraft.curseforge.com/projects/ftblib",
 		"updateUrl": "",
 		"authorList": ["LatvianModder"],
 		"credits": "",
-		"logoFile": "assets/ftblib/textures/logo.png",
+		"logoFile": "assets/ftbl/textures/logo.png",
 		"screenshots": [],
 		"parent": "",
 		"dependencies": []

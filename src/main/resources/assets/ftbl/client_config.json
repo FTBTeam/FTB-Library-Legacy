@@ -2,6 +2,6 @@
 	{
 		"id": "ftbl_client",
 		"name": "FTBLib",
-		"icon": "ftbl:textures/logo_guide.png"
+		"icon": "ftbl:textures/logo_small.png"
 	}
 ]

@@ -64,6 +64,7 @@ commands=Commands
 my_permissions=My Permissions
 all_permissions=All Permissions
 difficulty=Difficulty: %s
+key.categories.ftbmods=FTB Mods
 
 dimension.overworld=Overworld
 dimension.nether=Nether
@@ -82,23 +83,24 @@ ftbl.lang.add_fake_player.player_exists=Player already exists!
 ftbl.lang.add_fake_player.added=Fake player %s added!
 
 # Config
-ftbl.config.general=General
-ftbl.config.general.clientless_mode=Clientless Mode
-ftbl.config.general.mirror_ftb_commands=Mirror /ftb Commands
-ftbl.config.general.merge_offline_mode_players=Merge Offline Mode Players
-ftbl.config.general.log_net=Log Network IO
+ftbl.general=General
+ftbl.general.clientless_mode=Clientless Mode
+ftbl.general.mirror_ftb_commands=Mirror /ftb Commands
+ftbl.general.merge_offline_mode_players=Merge Offline Mode Players
+ftbl.general.log_net=Log Network IO
 
-ftbl.config.teams=Teams
-ftbl.config.teams.autocreate_teams=Autocreate on Login
-ftbl.config.teams.max_team_chat_history=Max Chat History
+ftbl.teams=Teams
+ftbl.teams.autocreate_sp=Autocreate on Singleplayer
+ftbl.teams.autocreate_mp=Autocreate on Multiplayer
+ftbl.teams.max_team_chat_history=Max Chat History
 
 # Client Config
-ftbl_client.config.general.item_ore_names=Display Item OreDictionary names
-ftbl_client.config.general.item_ore_names.item_tooltip=Ore Dictionary Names:
-ftbl_client.config.general.item_nbt=Display Item NBT
-ftbl_client.config.general.action_buttons=Action Buttons
-ftbl_client.config.general.mirror_commands=Mirror /ftbc Commands
-ftbl_client.config.general.replace_vanilla_status_messages=Replace vanilla status messages
+ftbl_client.general.item_ore_names=Display Item OreDictionary names
+ftbl_client.general.item_ore_names.item_tooltip=Ore Dictionary Names:
+ftbl_client.general.item_nbt=Display Item NBT
+ftbl_client.general.action_buttons=Action Buttons
+ftbl_client.general.mirror_commands=Mirror /ftbc Commands
+ftbl_client.general.replace_vanilla_status_messages=Replace vanilla status messages
 
 # Player Settings
 player_config=My Server Settings

@@ -27,45 +27,6 @@ minecraft {
 	replaceIn "${mod_reference}"
 }
 
-repositories {
-}
-
-dependencies {
-}
-
-sourceSets {
-	main {
-		java {
-			srcDir 'src/main/java'
-			srcDir 'src/main/api'
-			srcDir 'src/main/lib'
-		}
-		resources {
-			srcDir 'src/main/resources'
-		}
-	}
-}
-
-task apiJar(type: Jar) {
-	classifier = 'api'
-	from(sourceSets.main.java) {
-		include "com/feed_the_beast/ftbl/api/**"
-		include "com/feed_the_beast/ftbl/lib/**"
-	}
-	from(sourceSets.main.output) {
-		include "com/feed_the_beast/ftbl/api/**"
-		include "com/feed_the_beast/ftbl/lib/**"
-	}
-	from(sourceSets.main.resources) {
-		include "META-INF/ftblib_at.cfg"
-	}
-	manifest {
-		attributes 'FMLAT': 'ftblib_at.cfg'
-	}
-}
-
-build.dependsOn apiJar
-
 processResources {
 	inputs.property "version", project.version
 	inputs.property "mcversion", project.minecraft.version
