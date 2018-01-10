@@ -40,8 +40,8 @@ public class NetUtils
 	public static boolean openURI(URI uri) throws Exception
 	{
 		Class<?> oclass = Class.forName("java.awt.Desktop");
-		Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null);
-		oclass.getMethod("browse", new Class[] {URI.class}).invoke(object, uri);
+		Object object = oclass.getMethod("getDesktop").invoke(null);
+		oclass.getMethod("browse", URI.class).invoke(object, uri);
 		return true;
 	}
 

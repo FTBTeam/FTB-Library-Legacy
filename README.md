@@ -11,13 +11,15 @@
 
 ```groovy
 repositories {
-    ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
+	ivy { name "com.latmod.mods"; artifactPattern "http://mods.latmod.com/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" }
 }
 
 dependencies {
-    compile 'com.latmod.mods:FTBLib:4.1.0:api'
+	compile "com.latmod.mods:FTBLib:${ftblib_version}:deobf"
 }
 ```
+
+And `ftblib_version=4.3.0` line in your `gradle.properties` file
 
 You probably also want to add "required-after:ftbl" or "after:ftbl" in your @Mod's dependencies.
 Most of the APIs don't need hard dependency, but things like GUIs won't work without FTBLib loaded

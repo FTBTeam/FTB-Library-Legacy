@@ -11,6 +11,7 @@ public class GuiLoading extends GuiBase
 {
 	private boolean startedLoading = false;
 	private boolean isLoading = true;
+	private String title = "";
 
 	public GuiLoading()
 	{
@@ -33,13 +34,37 @@ public class GuiLoading extends GuiBase
 
 		if (isLoading())
 		{
-			LoadingIcon.INSTANCE.draw(this);
+			int ax = getAX();
+			int ay = getAY();
+			LoadingIcon.INSTANCE.draw(ax, ay, width, height);
+			String s = getTitle();
+
+			if (!s.isEmpty())
+			{
+				String[] s1 = s.split("\n");
+
+				for (int i = 0; i < s1.length; i++)
+				{
+					drawString(s1[i], ax + width / 2, ay - 30 + i * 12, CENTERED);
+				}
+			}
 		}
 		else
 		{
 			closeGui();
 			finishLoading();
 		}
+	}
+
+	@Override
+	public synchronized String getTitle()
+	{
+		return title;
+	}
+
+	public synchronized void setTitle(String s)
+	{
+		title = s;
 	}
 
 	public void setFinished()

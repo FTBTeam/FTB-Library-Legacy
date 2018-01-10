@@ -1,18 +1,18 @@
 {
 	"my_team": {
-		"group": "ftbl:info",
-		"icon": "ftbl:textures/gui/teams.png",
+		"group": "ftblib:info",
+		"icon": "ftblib:textures/gui/teams.png",
 		"x": 0,
 		"click": {
 			"action": "run_command",
 			"value": "/ftb team gui"
 		},
-		"required_server_mods": ["ftbl"],
+		"required_server_mods": ["ftblib"],
 		"loading_screen": true
 	},
 	"settings": {
-		"group": "ftbl:info",
-		"icon": "ftbl:icons/settings",
+		"group": "ftblib:info",
+		"icon": "ftblib:icons/settings",
 		"x": 100,
 		"click": {
 			"action": "run_command",

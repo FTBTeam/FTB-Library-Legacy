@@ -97,10 +97,4 @@ public final class ATHelper
 	{
 		return style.insertion;
 	}
-
-	@Nullable
-	public static Style getParentStyle(Style style)
-	{
-		return style.parentStyle;
-	}
 }

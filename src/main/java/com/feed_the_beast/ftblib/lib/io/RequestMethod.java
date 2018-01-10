@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftbl.lib.io;
+package com.feed_the_beast.ftblib.lib.io;
 
 public enum RequestMethod
 {
@@ -8,6 +8,5 @@ public enum RequestMethod
 	OPTIONS,
 	PUT,
 	DELETE,
-	TRACE,
-	FILE
+	TRACE
 }

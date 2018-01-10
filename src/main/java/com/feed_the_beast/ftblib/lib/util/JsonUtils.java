@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
-import com.feed_the_beast.ftblib.lib.util.text_components.CustomStyle;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentCountdown;
 import com.google.gson.JsonArray;
@@ -44,7 +43,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
@@ -158,31 +157,37 @@ public class JsonUtils
 
 		try
 		{
-			JsonElement element = PARSER.parse(reader);
-			reader.close();
-			return element;
+			return PARSER.parse(reader);
 		}
-		catch (IOException e)
+		catch (Exception ex)
 		{
 			return JsonNull.INSTANCE;
 		}
 	}
 
-	public static JsonElement fromJson(File file)
+	public static JsonElement fromJson(@Nullable File file)
+	{
+		if (file == null || !file.exists())
+		{
+			return JsonNull.INSTANCE;
+		}
+
+		try (FileInputStream fis = new FileInputStream(file);
+			 BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8)))
+		{
+			return PARSER.parse(reader);
+		}
+		catch (Exception ex)
+		{
+			return JsonNull.INSTANCE;
+		}
+	}
+
+	public static JsonElement fromJson(InputStream stream)
 	{
 		try
 		{
-			if (!file.exists())
-			{
-				return JsonNull.INSTANCE;
-			}
-
-			FileInputStream fis = new FileInputStream(file);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8));
-			JsonElement e = fromJson(reader);
-			reader.close();
-			fis.close();
-			return e;
+			return PARSER.parse(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		}
 		catch (Exception ex)
 		{
@@ -193,16 +198,8 @@ public class JsonUtils
 	@SideOnly(Side.CLIENT)
 	public static JsonElement fromJson(IResource resource)
 	{
-		try
-		{
-			return fromJson(new InputStreamReader(resource.getInputStream()));
-		}
-		catch (Exception ex)
-		{
-			return JsonNull.INSTANCE;
-		}
+		return fromJson(resource.getInputStream());
 	}
-
 
 	public static JsonArray toArray(JsonElement element)
 	{
@@ -260,21 +257,6 @@ public class JsonUtils
 			if (ATHelper.getObfuscated(style) != null)
 			{
 				json.addProperty("obfuscated", style.getObfuscated());
-			}
-
-			if (style instanceof CustomStyle)
-			{
-				CustomStyle customStyle = (CustomStyle) style;
-
-				if (customStyle.monospaced != null)
-				{
-					json.addProperty("monospaced", customStyle.getMonospaced());
-				}
-
-				if (customStyle.background != null)
-				{
-					json.addProperty("background", customStyle.getBackground().getFriendlyName());
-				}
 			}
 
 			if (ATHelper.getColor(style) != null)
@@ -538,7 +520,7 @@ public class JsonUtils
 				}
 			}
 
-			Style style = (json.has("monospaced") || json.has("background")) ? new CustomStyle() : new Style();
+			Style style = new Style();
 
 			if (json.has("bold"))
 			{
@@ -568,21 +550,6 @@ public class JsonUtils
 			if (json.has("color"))
 			{
 				style.setColor(TextFormatting.getValueByName(json.get("color").getAsString()));
-			}
-
-			if (style instanceof CustomStyle)
-			{
-				CustomStyle cs = (CustomStyle) style;
-
-				if (json.has("monospaced"))
-				{
-					cs.setMonospaced(json.get("monospaced").getAsBoolean());
-				}
-
-				if (json.has("background"))
-				{
-					cs.setBackground(TextFormatting.getValueByName(json.get("background").getAsString()));
-				}
 			}
 
 			if (json.has("insertion"))
@@ -624,6 +591,10 @@ public class JsonUtils
 		if (isNull(element))
 		{
 			return null;
+		}
+		else if (element.isJsonPrimitive())
+		{
+			return new ClickEvent(ClickEvent.Action.OPEN_URL, element.getAsString());
 		}
 
 		JsonObject o = element.getAsJsonObject();

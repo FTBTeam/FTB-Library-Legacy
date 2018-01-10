@@ -15,7 +15,7 @@ import java.util.List;
 public class ExtendedTextField extends TextField
 {
 	public ITextComponent textComponent;
-	private List<GuiHelper.PositionedTextData> textData;
+	private List<GuiBase.PositionedTextData> textData;
 	private long lastUpdate = -1L;
 
 	public ExtendedTextField(GuiBase gui, int x, int y, int w, int h, ITextComponent t, int flags)
@@ -46,19 +46,19 @@ public class ExtendedTextField extends TextField
 			}
 
 			super.setTitle(textComponent.getFormattedText());
-			textData = GuiHelper.createDataFrom(textComponent, ClientUtils.MC.fontRenderer, width);
+			textData = gui.createDataFrom(textComponent, ClientUtils.MC.fontRenderer, width);
 		}
 
 		return this;
 	}
 
 	@Nullable
-	private GuiHelper.PositionedTextData getDataAtMouse()
+	private GuiBase.PositionedTextData getDataAtMouse()
 	{
 		int ax = getAX();
 		int ay = getAY();
 
-		for (GuiHelper.PositionedTextData data : textData)
+		for (GuiBase.PositionedTextData data : textData)
 		{
 			if (gui.isMouseOver(data.posX + ax, data.posY + ay, data.width, data.height))
 			{
@@ -72,7 +72,7 @@ public class ExtendedTextField extends TextField
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
-		GuiHelper.PositionedTextData data = getDataAtMouse();
+		GuiBase.PositionedTextData data = getDataAtMouse();
 
 		if (data != null && data.hoverEvent != null) //TODO: Special handling for each data.hoverEvent.getAction()
 		{
@@ -85,9 +85,9 @@ public class ExtendedTextField extends TextField
 	{
 		if (gui.isMouseOver(this))
 		{
-			GuiHelper.PositionedTextData data = getDataAtMouse();
+			GuiBase.PositionedTextData data = getDataAtMouse();
 
-			if (data != null && data.clickEvent != null && GuiHelper.onClickEvent(data.clickEvent))
+			if (data != null && data.clickEvent != null && gui.onClickEvent(data.clickEvent))
 			{
 				GuiHelper.playClickSound();
 				return true;

@@ -115,7 +115,7 @@ public class SidebarButton extends FinalIDObject implements Comparable<SidebarBu
 
 		for (ClickEvent event : (shift ? shiftClickEvents : clickEvents))
 		{
-			GuiHelper.onClickEvent(event);
+			GuiHelper.BLANK_GUI.onClickEvent(event);
 		}
 	}
 

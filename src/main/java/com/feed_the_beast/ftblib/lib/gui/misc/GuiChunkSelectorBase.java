@@ -227,33 +227,32 @@ public class GuiChunkSelectorBase extends GuiBase
 	public void drawForeground()
 	{
 		int lineSpacing = getFontHeight() + 1;
-		addCornerText(TEMP_TEXT_LIST, Corner.BOTTOM_RIGHT);
+		List<String> tempTextList = new ArrayList<>();
+		addCornerText(tempTextList, Corner.BOTTOM_RIGHT);
 
-		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
+		for (int i = 0; i < tempTextList.size(); i++)
 		{
-			String s = TEMP_TEXT_LIST.get(i);
-			drawString(s, getScreen().getScaledWidth() - getStringWidth(s) - 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, SHADOW);
+			String s = tempTextList.get(i);
+			drawString(s, getScreen().getScaledWidth() - getStringWidth(s) - 2, getScreen().getScaledHeight() - (tempTextList.size() - i) * lineSpacing, SHADOW);
 		}
 
-		TEMP_TEXT_LIST.clear();
+		tempTextList.clear();
 
-		addCornerText(TEMP_TEXT_LIST, Corner.BOTTOM_LEFT);
+		addCornerText(tempTextList, Corner.BOTTOM_LEFT);
 
-		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
+		for (int i = 0; i < tempTextList.size(); i++)
 		{
-			drawString(TEMP_TEXT_LIST.get(i), 2, getScreen().getScaledHeight() - (TEMP_TEXT_LIST.size() - i) * lineSpacing, SHADOW);
+			drawString(tempTextList.get(i), 2, getScreen().getScaledHeight() - (tempTextList.size() - i) * lineSpacing, SHADOW);
 		}
 
-		TEMP_TEXT_LIST.clear();
+		tempTextList.clear();
 
-		addCornerText(TEMP_TEXT_LIST, Corner.TOP_LEFT);
+		addCornerText(tempTextList, Corner.TOP_LEFT);
 
-		for (int i = 0; i < TEMP_TEXT_LIST.size(); i++)
+		for (int i = 0; i < tempTextList.size(); i++)
 		{
-			drawString(TEMP_TEXT_LIST.get(i), 2, 2 + i * lineSpacing, SHADOW);
+			drawString(tempTextList.get(i), 2, 2 + i * lineSpacing, SHADOW);
 		}
-
-		TEMP_TEXT_LIST.clear();
 
 		super.drawForeground();
 	}

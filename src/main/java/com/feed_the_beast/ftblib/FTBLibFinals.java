@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 public class FTBLibFinals
 {
-	public static final String MOD_ID = "ftbl";
+	public static final String MOD_ID = "ftblib";
 	public static final String MOD_NAME = "FTBLib";
 	public static final String VERSION = "@VERSION@";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);

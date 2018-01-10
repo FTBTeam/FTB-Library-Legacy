@@ -3,11 +3,8 @@ package com.feed_the_beast.ftblib.lib.gui;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiConfirmOpenLink;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,19 +18,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -74,6 +60,14 @@ public class GuiHelper
 	}
 
 	private static final Stack<Scissor> SCISSOR = new Stack<>();
+
+	public static final GuiBase BLANK_GUI = new GuiBase(0, 0)
+	{
+		@Override
+		public void addWidgets()
+		{
+		}
+	};
 
 	public static void playSound(SoundEvent event, float pitch)
 	{
@@ -261,163 +255,5 @@ public class GuiHelper
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
 			}
 		}
-	}
-
-	public static boolean onClickEvent(@Nullable ClickEvent clickEvent)
-	{
-		if (clickEvent == null)
-		{
-			return false;
-		}
-
-		switch (clickEvent.getAction())
-		{
-			case OPEN_URL:
-			{
-				try
-				{
-					final URI uri = new URI(clickEvent.getValue());
-					String s = uri.getScheme();
-
-					if (s == null)
-					{
-						throw new URISyntaxException(clickEvent.getValue(), "Missing protocol");
-					}
-					if (!s.toLowerCase().contains("http") && !s.toLowerCase().contains("https"))
-					{
-						throw new URISyntaxException(clickEvent.getValue(), "Unsupported protocol: " + s.toLowerCase());
-					}
-
-					if (ClientUtils.MC.gameSettings.chatLinksPrompt)
-					{
-						final GuiScreen currentScreen = ClientUtils.MC.currentScreen;
-
-						ClientUtils.MC.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
-						{
-							if (result)
-							{
-								try
-								{
-									NetUtils.openURI(uri);
-								}
-								catch (Exception ex)
-								{
-									ex.printStackTrace();
-								}
-							}
-							ClientUtils.MC.displayGuiScreen(currentScreen);
-						}, clickEvent.getValue(), 0, false));
-					}
-					else
-					{
-						NetUtils.openURI(uri);
-					}
-
-					return true;
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-
-				return false;
-			}
-			case OPEN_FILE:
-			{
-				try
-				{
-					NetUtils.openURI((new File(clickEvent.getValue())).toURI());
-					return true;
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-
-				return false;
-			}
-			case SUGGEST_COMMAND:
-			{
-				//FIXME
-				return true;
-			}
-			case RUN_COMMAND:
-			{
-				ClientUtils.execClientCommand(clickEvent.getValue(), false);
-				return true;
-			}
-			case CHANGE_PAGE:
-			{
-				if (ClientUtils.MC.currentScreen instanceof IGuiWrapper && ((IGuiWrapper) ClientUtils.MC.currentScreen).getWrappedGui().changePage(clickEvent.getValue()))
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	public static class PositionedTextData
-	{
-		public final int posX, posY;
-		public final int width, height;
-		public final ClickEvent clickEvent;
-		public final HoverEvent hoverEvent;
-		public final String insertion;
-
-		public PositionedTextData(int x, int y, int w, int h, Style s)
-		{
-			posX = x;
-			posY = y;
-			width = w;
-			height = h;
-			clickEvent = s.getClickEvent();
-			hoverEvent = s.getHoverEvent();
-			insertion = s.getInsertion();
-		}
-
-	}
-
-	//TODO: Improve me to fix occasional offset
-	public static List<PositionedTextData> createDataFrom(ITextComponent component, FontRenderer font, int width)
-	{
-		if (width <= 0 || component.getUnformattedText().isEmpty())
-		{
-			return Collections.emptyList();
-		}
-
-		List<PositionedTextData> list = new ArrayList<>();
-
-		int line = 0;
-		int currentWidth = 0;
-
-		for (ITextComponent t : component.createCopy())
-		{
-			String text = t.getUnformattedComponentText();
-			int textWidth = font.getStringWidth(text);
-
-			while (textWidth > 0)
-			{
-				int w = textWidth;
-				if (w > width - currentWidth)
-				{
-					w = width - currentWidth;
-				}
-
-				list.add(new PositionedTextData(currentWidth, line * 10, w, 10, t.getStyle()));
-
-				currentWidth += w;
-				textWidth -= w;
-
-				if (currentWidth >= width)
-				{
-					currentWidth = 0;
-					line++;
-				}
-			}
-		}
-
-		return list;
 	}
 }

@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.Bits;
-import com.feed_the_beast.ftblib.lib.util.text_components.CustomStyle;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -757,19 +755,6 @@ public class StringUtils
 		return false;
 	}
 
-	public static CustomStyle getStyle(ITextComponent component)
-	{
-		Style s = component.getStyle();
-
-		if (!(s instanceof CustomStyle))
-		{
-			s = new CustomStyle(s);
-			component.setStyle(s);
-		}
-
-		return (CustomStyle) s;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	public static ITextComponent color(ITextComponent component, @Nullable TextFormatting color)
 	{
@@ -792,18 +777,6 @@ public class StringUtils
 	public static ITextComponent underlined(ITextComponent component, boolean value)
 	{
 		component.getStyle().setUnderlined(value);
-		return component;
-	}
-
-	public static ITextComponent monospaced(ITextComponent component, boolean value)
-	{
-		getStyle(component).setMonospaced(value);
-		return component;
-	}
-
-	public static ITextComponent background(ITextComponent component, TextFormatting background)
-	{
-		getStyle(component).setBackground(background);
 		return component;
 	}
 

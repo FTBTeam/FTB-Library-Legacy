@@ -6,18 +6,25 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.Bits;
+import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +34,25 @@ import java.util.List;
  */
 public abstract class GuiBase extends Panel
 {
-	public static final List<String> TEMP_TEXT_LIST = new ArrayList<>();
+	public static class PositionedTextData
+	{
+		public final int posX, posY;
+		public final int width, height;
+		public final ClickEvent clickEvent;
+		public final HoverEvent hoverEvent;
+		public final String insertion;
+
+		public PositionedTextData(int x, int y, int w, int h, Style s)
+		{
+			posX = x;
+			posY = y;
+			width = w;
+			height = h;
+			clickEvent = s.getClickEvent();
+			hoverEvent = s.getHoverEvent();
+			insertion = s.getInsertion();
+		}
+	}
 
 	private final FontRenderer font;
 	private int mouseX, mouseY, mouseWheel;
@@ -42,7 +67,7 @@ public abstract class GuiBase extends Panel
 	{
 		super(null, 0, 0, w, h);
 		gui = this;
-		setParentPanel(this);
+		super.setParentPanel(this);
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
 		fontUnicode = new BooleanArrayList();
@@ -218,9 +243,9 @@ public abstract class GuiBase extends Panel
 
 	public void drawForeground()
 	{
-		addMouseOverText(TEMP_TEXT_LIST);
-		GuiUtils.drawHoveringText(TEMP_TEXT_LIST, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
-		TEMP_TEXT_LIST.clear();
+		List<String> tempTextList = new ArrayList<>(0);
+		addMouseOverText(tempTextList);
+		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
 	}
 
 	@Override
@@ -382,14 +407,157 @@ public abstract class GuiBase extends Panel
 		return GuiScreen.isCtrlKeyDown();
 	}
 
-	public boolean changePage(String value)
-	{
-		return false;
-	}
-
 	@Override
 	public Icon getIcon()
 	{
 		return getTheme().getGui(false);
+	}
+
+	public final boolean onClickEvent(@Nullable ClickEvent clickEvent)
+	{
+		if (clickEvent == null)
+		{
+			return false;
+		}
+
+		switch (clickEvent.getAction())
+		{
+			case OPEN_URL:
+				return onClickEvent(clickEvent.getValue());
+			case OPEN_FILE:
+				return onClickEvent("file", clickEvent.getValue());
+			case RUN_COMMAND:
+				return onClickEvent("command", clickEvent.getValue());
+			case SUGGEST_COMMAND:
+				return onClickEvent("suggest_command", clickEvent.getValue());
+			case CHANGE_PAGE:
+				return onClickEvent("", clickEvent.getValue());
+			default:
+				return false;
+		}
+	}
+
+	public final boolean onClickEvent(String click)
+	{
+		int i = click.indexOf(':');
+
+		if (i != -1)
+		{
+			return onClickEvent(click.substring(0, i), click.substring(i + 1, click.length()));
+		}
+		else
+		{
+			return onClickEvent("", click);
+		}
+	}
+
+	public boolean onClickEvent(String scheme, String path)
+	{
+		switch (scheme)
+		{
+			case "http":
+			case "https":
+			{
+				try
+				{
+					final URI uri = new URI(scheme + ':' + path);
+					if (ClientUtils.MC.gameSettings.chatLinksPrompt)
+					{
+						final GuiScreen currentScreen = ClientUtils.MC.currentScreen;
+
+						ClientUtils.MC.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+						{
+							if (result)
+							{
+								try
+								{
+									NetUtils.openURI(uri);
+								}
+								catch (Exception ex)
+								{
+									ex.printStackTrace();
+								}
+							}
+							ClientUtils.MC.displayGuiScreen(currentScreen);
+						}, scheme + ':' + path, 0, false));
+					}
+					else
+					{
+						NetUtils.openURI(uri);
+					}
+
+					return true;
+				}
+				catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+
+				return false;
+			}
+			case "file":
+			{
+				try
+				{
+					NetUtils.openURI(new URI("file:" + path));
+					return true;
+				}
+				catch (Exception ex)
+				{
+					ex.printStackTrace();
+				}
+
+				return false;
+			}
+			case "command":
+			{
+				ClientUtils.execClientCommand(path, false);
+				return true;
+			}
+			default:
+				return false;
+		}
+	}
+
+	//TODO: Improve me to fix occasional offset
+	public List<PositionedTextData> createDataFrom(ITextComponent component, FontRenderer font, int width)
+	{
+		if (width <= 0 || component.getUnformattedText().isEmpty())
+		{
+			return Collections.emptyList();
+		}
+
+		List<PositionedTextData> list = new ArrayList<>();
+
+		int line = 0;
+		int currentWidth = 0;
+
+		for (ITextComponent t : component.createCopy())
+		{
+			String text = t.getUnformattedComponentText();
+			int textWidth = font.getStringWidth(text);
+
+			while (textWidth > 0)
+			{
+				int w = textWidth;
+				if (w > width - currentWidth)
+				{
+					w = width - currentWidth;
+				}
+
+				list.add(new PositionedTextData(currentWidth, line * 10, w, 10, t.getStyle()));
+
+				currentWidth += w;
+				textWidth -= w;
+
+				if (currentWidth >= width)
+				{
+					currentWidth = 0;
+					line++;
+				}
+			}
+		}
+
+		return list;
 	}
 }
