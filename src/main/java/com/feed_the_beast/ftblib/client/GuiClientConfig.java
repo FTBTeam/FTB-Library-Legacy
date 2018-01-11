@@ -106,7 +106,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 	public GuiClientConfig()
 	{
-		setTitle(StringUtils.translate("sidebar_button.ftbl.settings"));
+		setTitle(StringUtils.translate("sidebar_button.ftblib.settings"));
 	}
 
 	@Override
