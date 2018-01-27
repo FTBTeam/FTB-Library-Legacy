@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class TextField extends Widget
 		textFlags = flags;
 		autoSizeWidth = w <= 0;
 		autoSizeHeight = h <= 0;
-		setTitle(txt);
+		setText(txt);
 	}
 
 	public TextField(GuiBase gui, int x, int y, int w, int h, String txt)
@@ -30,11 +29,9 @@ public class TextField extends Widget
 		this(gui, x, y, w, h, txt, 0);
 	}
 
-	public TextField setTitle(String txt)
+	public TextField setText(String txt)
 	{
 		text = null;
-
-		gui.pushFontUnicode(Bits.getFlag(textFlags, Widget.UNICODE));
 
 		if (!txt.isEmpty())
 		{
@@ -62,7 +59,6 @@ public class TextField extends Widget
 			setHeight(text.isEmpty() ? h1 : h1 * text.size());
 		}
 
-		gui.popFontUnicode();
 		return this;
 	}
 
@@ -72,7 +68,7 @@ public class TextField extends Widget
 	}
 
 	@Override
-	public void renderWidget()
+	public void draw()
 	{
 		int ay = getAY();
 		int ax = getAX();

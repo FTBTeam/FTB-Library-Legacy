@@ -380,7 +380,7 @@ public class FTBLibClientEventHandler
 			buttonX = x;
 			buttonY = y;
 			button = b;
-			title = StringUtils.translate("sidebar_button." + b.getName());
+			title = StringUtils.translate(b.getLangKey());
 		}
 
 		@Override

@@ -62,12 +62,12 @@ public abstract class GuiBase extends Panel
 	public boolean fixUnicode;
 	private GuiScreen prevScreen;
 	private final BooleanStack fontUnicode;
+	private Theme theme;
 
 	public GuiBase(int w, int h)
 	{
 		super(null, 0, 0, w, h);
 		gui = this;
-		super.setParentPanel(this);
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
 		fontUnicode = new BooleanArrayList();
@@ -84,26 +84,27 @@ public abstract class GuiBase extends Panel
 	public final void initGui()
 	{
 		screen = new ScaledResolution(ClientUtils.MC);
-		onInit();
-		refreshWidgets();
-		updateWidgetPositions();
-		fixUnicode = screen.getScaleFactor() % 2 == 1;
+		if (onInit())
+		{
+			refreshWidgets();
+			fixUnicode = screen.getScaleFactor() % 2 == 1;
+			onPostInit();
+		}
 	}
 
 	public Theme getTheme()
 	{
+		if (theme == null)
+		{
+			theme = createTheme();
+		}
+
+		return theme;
+	}
+
+	protected Theme createTheme()
+	{
 		return ThemeVanilla.INSTANCE;
-	}
-
-	@Override
-	public Panel getParentPanel()
-	{
-		return this;
-	}
-
-	@Override
-	public void setParentPanel(Panel p)
-	{
 	}
 
 	@Override
@@ -134,7 +135,19 @@ public abstract class GuiBase extends Panel
 		return false;
 	}
 
-	public void onInit()
+	public boolean onInit()
+	{
+		return true;
+	}
+
+	protected boolean setFullscreen()
+	{
+		setWidth(screen.getScaledWidth());
+		setHeight(screen.getScaledHeight());
+		return true;
+	}
+
+	public void onPostInit()
 	{
 	}
 
@@ -220,11 +233,11 @@ public abstract class GuiBase extends Panel
 	}
 
 	@Override
-	public final void renderWidget()
+	public final void draw()
 	{
 		setupDrawing();
 		drawBackground();
-		super.renderWidget();
+		super.draw();
 	}
 
 	@Override
@@ -309,19 +322,18 @@ public abstract class GuiBase extends Panel
 		return getMouseX() >= x && getMouseY() >= y && getMouseX() < x + w && getMouseY() < y + h;
 	}
 
-	public boolean isMouseOver(Widget w)
+	public boolean isMouseOver(Widget widget)
 	{
-		if (w == this)
+		if (widget == this)
 		{
 			return true;
 		}
-		else if (isMouseOver(w.getAX(), w.getAY(), w.width, w.height))
+		else if (isMouseOver(widget.getAX(), widget.getAY(), widget.width, widget.height))
 		{
-			Panel p = w.getParentPanel();
-			boolean offset = p.isOffset();
-			p.setOffset(false);
-			boolean b = isMouseOver(p);
-			p.setOffset(offset);
+			boolean offset = widget.parent.isOffset();
+			widget.parent.setOffset(false);
+			boolean b = isMouseOver(widget.parent);
+			widget.parent.setOffset(offset);
 			return b;
 		}
 
@@ -389,12 +401,12 @@ public abstract class GuiBase extends Panel
 
 	public final int drawString(String text, int x, int y, int flags)
 	{
-		return drawString(text, x, y, getTheme().getContentColor(), flags);
+		return drawString(text, x, y, getTheme().getContentColor(Bits.getFlag(flags, MOUSE_OVER)), flags);
 	}
 
 	public final int drawString(String text, int x, int y)
 	{
-		return drawString(text, x, y, getTheme().getContentColor(), false, false);
+		return drawString(text, x, y, getTheme().getContentColor(false), false, false);
 	}
 
 	public boolean isShiftDown()

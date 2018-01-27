@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,9 +20,10 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class SidebarButton extends FinalIDObject implements Comparable<SidebarButton>
+public class SidebarButton implements Comparable<SidebarButton>
 {
-	private final SidebarButtonGroup group;
+	public final ResourceLocation id;
+	public final SidebarButtonGroup group;
 	private Icon icon = Icon.EMPTY;
 	private int x = 0;
 	private Boolean defaultConfig = null;
@@ -33,11 +33,10 @@ public class SidebarButton extends FinalIDObject implements Comparable<SidebarBu
 	private final List<ClickEvent> shiftClickEvents = new ArrayList<>();
 	private boolean requiresOp, hideWithNEI, loadingScreen, customText;
 
-	public SidebarButton(ResourceLocation id, SidebarButtonGroup g, JsonObject json)
+	public SidebarButton(ResourceLocation _id, SidebarButtonGroup g, JsonObject json)
 	{
-		super(id.toString().replace(':', '.'));
-
 		group = g;
+		id = _id;
 
 		if (json.has("icon"))
 		{
@@ -85,9 +84,32 @@ public class SidebarButton extends FinalIDObject implements Comparable<SidebarBu
 		customText = json.has("custom_text") && json.get("custom_text").getAsBoolean();
 	}
 
-	public SidebarButtonGroup getGroup()
+	public String getLangKey()
 	{
-		return group;
+		return "sidebar_button." + id.getResourceDomain() + '.' + id.getResourcePath();
+	}
+
+	public String getTooltipLangKey()
+	{
+		return getLangKey() + ".tooltip";
+	}
+
+	@Override
+	public String toString()
+	{
+		return id.toString();
+	}
+
+	@Override
+	public final int hashCode()
+	{
+		return id.hashCode();
+	}
+
+	@Override
+	public final boolean equals(Object o)
+	{
+		return o == this || o instanceof SidebarButton && id.equals(((SidebarButton) o).id);
 	}
 
 	public Icon getIcon()

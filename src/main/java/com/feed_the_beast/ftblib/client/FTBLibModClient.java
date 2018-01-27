@@ -187,9 +187,18 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 								if (button.getDefaultConfig() != null)
 								{
-									if (sidebarButtonConfig.has(button.getName()))
+									if (sidebarButtonConfig.has(button.id.getResourceDomain()))
 									{
-										button.setConfig(sidebarButtonConfig.get(button.getName()).getAsBoolean());
+										JsonElement e = sidebarButtonConfig.get(button.id.getResourceDomain());
+
+										if (e.isJsonObject() && e.getAsJsonObject().has(button.id.getResourcePath()))
+										{
+											button.setConfig(e.getAsJsonObject().get(button.id.getResourcePath()).getAsBoolean());
+										}
+									}
+									else if (sidebarButtonConfig.has(button.id.toString()))
+									{
+										button.setConfig(sidebarButtonConfig.get(button.id.toString()).getAsBoolean());
 									}
 								}
 							}
@@ -255,7 +264,15 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 			{
 				if (button.getDefaultConfig() != null)
 				{
-					o.addProperty(button.getName(), button.getConfig());
+					JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
+
+					if (o1 == null)
+					{
+						o1 = new JsonObject();
+						o.add(button.id.getResourceDomain(), o1);
+					}
+
+					o1.addProperty(button.id.getResourcePath(), button.getConfig());
 				}
 			}
 		}

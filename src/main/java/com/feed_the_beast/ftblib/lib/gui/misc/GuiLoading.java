@@ -67,7 +67,7 @@ public class GuiLoading extends GuiBase
 		title = s;
 	}
 
-	public void setFinished()
+	public synchronized void setFinished()
 	{
 		isLoading = false;
 	}
@@ -76,7 +76,7 @@ public class GuiLoading extends GuiBase
 	{
 	}
 
-	public boolean isLoading()
+	public synchronized boolean isLoading()
 	{
 		return isLoading;
 	}

@@ -94,7 +94,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -161,7 +161,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			boolean mouseOver = gui.getMouseY() >= 20 && gui.isMouseOver(this);
 
@@ -306,11 +306,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 						add(w);
 					}
 				}
-			}
 
-			@Override
-			public void updateWidgetPositions()
-			{
 				scroll.setElementSize(align(WidgetLayout.VERTICAL));
 			}
 		};
@@ -320,7 +316,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		scroll = new PanelScrollBar(this, -16, 20, 16, 0, 0, configPanel)
 		{
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}
@@ -368,14 +364,13 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public void onInit()
+	public boolean onInit()
 	{
-		setWidth(getScreen().getScaledWidth());
-		setHeight(getScreen().getScaledHeight());
+		return setFullscreen();
 	}
 
 	@Override
-	public void updateWidgetPositions()
+	public void onPostInit()
 	{
 		buttonAccept.posX = width - 18;
 		buttonCancel.posX = width - 38;

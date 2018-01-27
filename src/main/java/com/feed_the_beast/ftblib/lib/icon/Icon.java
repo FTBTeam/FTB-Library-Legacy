@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -30,12 +29,6 @@ public abstract class Icon
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void draw(int x, int y, int w, int h, Color4I col)
-		{
-		}
-
-		@Override
-		@SideOnly(Side.CLIENT)
-		public void draw(Widget widget, Color4I col)
 		{
 		}
 
@@ -165,12 +158,7 @@ public abstract class Icon
 			return new URLImageIcon(id, 0D, 0D, 1D, 1D);
 		}
 
-		if (!id.endsWith(".png"))
-		{
-			return new AtlasSpriteIcon(new ResourceLocation(id));
-		}
-
-		return new ImageIcon(id, 0D, 0D, 1D, 1D);
+		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(id, 0D, 0D, 1D, 1D) : new AtlasSpriteIcon(new ResourceLocation(id));
 	}
 
 	public boolean isEmpty()
@@ -193,31 +181,9 @@ public abstract class Icon
 		draw(x, y, w, h, EMPTY);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void draw(Widget widget, Color4I col)
-	{
-		draw(widget.getAX(), widget.getAY(), widget.width, widget.height, col);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public final void draw(Widget widget)
-	{
-		draw(widget, EMPTY);
-	}
-
 	public JsonElement getJson()
 	{
 		return JsonNull.INSTANCE;
-	}
-
-	public Icon withUV(double u0, double v0, double u1, double v1)
-	{
-		return this;
-	}
-
-	public Icon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
-	{
-		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
 	}
 
 	public final Icon combineWith(Icon icon)

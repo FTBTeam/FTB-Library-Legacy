@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.gui.misc;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.icon.ImageIcon;
 import com.feed_the_beast.ftblib.lib.icon.PartIcon;
 
 /**
@@ -11,10 +12,10 @@ import com.feed_the_beast.ftblib.lib.icon.PartIcon;
 public class ThemeVanilla extends Theme
 {
 	public static final ThemeVanilla INSTANCE = new ThemeVanilla();
-	private static final Icon TEXTURE_BEACON = Icon.getIcon("textures/gui/container/beacon.png");
-	private static final Icon TEXTURE_WIDGETS = Icon.getIcon("textures/gui/widgets.png");
-	private static final Icon TEXTURE_RECIPE_BOOK = Icon.getIcon("textures/gui/recipe_book.png");
-	private static final Icon TEXTURE_ENCHANTING_TABLE = Icon.getIcon("textures/gui/container/enchanting_table.png");
+	private static final ImageIcon TEXTURE_BEACON = (ImageIcon) Icon.getIcon("textures/gui/container/beacon.png");
+	private static final ImageIcon TEXTURE_WIDGETS = (ImageIcon) Icon.getIcon("textures/gui/widgets.png");
+	private static final ImageIcon TEXTURE_RECIPE_BOOK = (ImageIcon) Icon.getIcon("textures/gui/recipe_book.png");
+	private static final ImageIcon TEXTURE_ENCHANTING_TABLE = (ImageIcon) Icon.getIcon("textures/gui/container/enchanting_table.png");
 
 	private static final Icon GUI = new PartIcon(TEXTURE_RECIPE_BOOK, 82, 208, 256, 256, 8, 16, 16, true);
 	private static final Icon GUI_MOUSE_OVER = GUI.withTint(Color4I.rgb(0xAFB6DA));
@@ -32,7 +33,7 @@ public class ThemeVanilla extends Theme
 	private static final Icon CONTAINER_SLOT = SLOT.withBorder(-1);
 
 	@Override
-	public Color4I getContentColor()
+	public Color4I getContentColor(boolean mouseOver)
 	{
 		return Color4I.WHITE;
 	}

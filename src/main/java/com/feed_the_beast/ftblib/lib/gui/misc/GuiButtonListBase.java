@@ -39,12 +39,6 @@ public abstract class GuiButtonListBase extends GuiBase
 					w.setWidth(width);
 				}
 
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
 				int size = align(WidgetLayout.VERTICAL);
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
@@ -64,7 +58,7 @@ public abstract class GuiButtonListBase extends GuiBase
 		scrollBar = new PanelScrollBar(this, 0, 8, 16, 146, 0, panelButtons)
 		{
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}

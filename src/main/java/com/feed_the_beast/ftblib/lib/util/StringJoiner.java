@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
+import net.minecraft.util.math.MathHelper;
+
 import java.util.Collection;
 
 /**
@@ -9,15 +11,20 @@ public abstract class StringJoiner
 {
 	public static StringJoiner with(String string)
 	{
-		switch (string.length())
+		if (string.isEmpty())
 		{
-			case 0:
-				return WithString.WITH_NOTHING;
-			case 1:
-				return with(string.charAt(0));
-			default:
-				return new WithString(string);
+			return WithString.WITH_NOTHING;
 		}
+		else if (string.length() == 1)
+		{
+			return with(string.charAt(0));
+		}
+		else if (string.equals(WithString.WITH_COMMA_AND_SPACE.s))
+		{
+			return WithString.WITH_NOTHING;
+		}
+
+		return new WithString(string);
 	}
 
 	public static StringJoiner with(char character)
@@ -41,6 +48,7 @@ public abstract class StringJoiner
 	private static class WithString extends StringJoiner
 	{
 		private static final WithString WITH_NOTHING = new WithString("");
+		private static final WithString WITH_COMMA_AND_SPACE = new WithString(", ");
 
 		private final String s;
 
@@ -141,6 +149,50 @@ public abstract class StringJoiner
 			}
 
 			builder.append(object);
+		}
+
+		return builder.toString();
+	}
+
+	public String joinDoubles(double... values)
+	{
+		StringBuilder builder = new StringBuilder();
+		boolean first = true;
+
+		for (double d : values)
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				append(builder);
+			}
+
+			builder.append(StringUtils.formatDouble(d));
+		}
+
+		return builder.toString();
+	}
+
+	public String joinFloorDoubles(double... values)
+	{
+		StringBuilder builder = new StringBuilder();
+		boolean first = true;
+
+		for (double d : values)
+		{
+			if (first)
+			{
+				first = false;
+			}
+			else
+			{
+				append(builder);
+			}
+
+			builder.append(MathHelper.lfloor(d));
 		}
 
 		return builder.toString();

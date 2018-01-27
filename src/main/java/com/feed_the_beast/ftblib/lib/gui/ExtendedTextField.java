@@ -22,7 +22,7 @@ public class ExtendedTextField extends TextField
 	{
 		super(gui, x, y, w, h, "", flags);
 		textComponent = t;
-		setTitle("");
+		setText("");
 	}
 
 	public ExtendedTextField(GuiBase gui, int x, int y, int w, int h, ITextComponent t)
@@ -31,7 +31,7 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public ExtendedTextField setTitle(String txt)
+	public ExtendedTextField setText(String txt)
 	{
 		lastUpdate = -1L;
 
@@ -45,7 +45,7 @@ public class ExtendedTextField extends TextField
 				}
 			}
 
-			super.setTitle(textComponent.getFormattedText());
+			super.setText(textComponent.getFormattedText());
 			textData = gui.createDataFrom(textComponent, ClientUtils.MC.fontRenderer, width);
 		}
 
@@ -98,7 +98,7 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void renderWidget()
+	public void draw()
 	{
 		if (lastUpdate != -1L)
 		{
@@ -107,11 +107,11 @@ public class ExtendedTextField extends TextField
 			if (lastUpdate <= ms)
 			{
 				lastUpdate = ms + 500L;
-				setTitle("");
-				getParentPanel().refreshWidgets();
+				setText("");
+				parent.refreshWidgets();
 			}
 		}
 
-		super.renderWidget();
+		super.draw();
 	}
 }

@@ -42,13 +42,24 @@ public abstract class Panel extends Widget
 	public void refreshWidgets()
 	{
 		widgets.clear();
+		boolean unicode = hasFlag(UNICODE);
+
+		if (unicode)
+		{
+			gui.pushFontUnicode(true);
+		}
+
 		addWidgets();
-		updateWidgetPositions();
+
+		if (unicode)
+		{
+			gui.popFontUnicode();
+		}
 	}
 
 	public void add(Widget widget)
 	{
-		widget.setParentPanel(this);
+		widget.parent = this;
 		widgets.add(widget);
 
 		if (widget instanceof Panel)
@@ -71,10 +82,6 @@ public abstract class Panel extends Widget
 		{
 			add(w);
 		}
-	}
-
-	public void updateWidgetPositions()
-	{
 	}
 
 	public void setScrollX(double scroll, int elementsWidth)
@@ -147,7 +154,7 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public void renderWidget()
+	public void draw()
 	{
 		boolean renderInside = hasFlag(ONLY_RENDER_WIDGETS_INSIDE);
 		gui.pushFontUnicode(hasFlag(UNICODE));
@@ -168,7 +175,7 @@ public abstract class Panel extends Widget
 		{
 			Widget widget = widgets.get(i);
 
-			if (widget.shouldRender() && (!renderInside || widget.collidesWith(ax, ay, width, height)))
+			if (widget.shouldDraw() && (!renderInside || widget.collidesWith(ax, ay, width, height)))
 			{
 				renderWidget(widget, i, ax + offsetX, ay + offsetY, width, height);
 			}
@@ -191,7 +198,7 @@ public abstract class Panel extends Widget
 
 	protected void renderWidget(Widget widget, int index, int ax, int ay, int w, int h)
 	{
-		widget.renderWidget();
+		widget.draw();
 	}
 
 	@Override

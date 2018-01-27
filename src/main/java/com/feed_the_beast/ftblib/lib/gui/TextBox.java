@@ -460,17 +460,15 @@ public class TextBox extends Widget
 	}
 
 	@Override
-	public void renderWidget()
+	public void draw()
 	{
-		getIcon().draw(this);
-
-		String textToDraw = (!isFocused() && text.isEmpty()) ? ghostText : text;
-
 		int ax = getAX();
 		int ay = getAY();
+		getIcon().draw(ax, ay, width, height);
+		String textToDraw = (!isFocused() && text.isEmpty()) ? ghostText : text;
 		GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
 
-		Color4I col = validText ? (textColor.isEmpty() ? gui.getTheme().getContentColor() : textColor) : Color4I.RED;
+		Color4I col = validText ? (textColor.isEmpty() ? gui.getTheme().getContentColor(false) : textColor) : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
 		String s = gui.trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);

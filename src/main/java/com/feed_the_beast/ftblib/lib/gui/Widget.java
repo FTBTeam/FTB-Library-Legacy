@@ -11,19 +11,25 @@ public class Widget
 	protected static final int SHADOW = 2;
 	protected static final int CENTERED = 4;
 	public static final int UNICODE = 8;
+	protected static final int MOUSE_OVER = 16;
 
 	public GuiBase gui;
 	public int posX, posY, width, height;
-	private Panel parentPanel;
+	public Panel parent;
 
-	public Widget(GuiBase g, int x, int y, int w, int h)
+	public Widget(GuiBase _gui, int x, int y, int w, int h)
 	{
-		gui = g;
+		gui = _gui;
 		posX = x;
 		posY = y;
 		width = Math.max(w, 0);
 		height = Math.max(h, 0);
-		parentPanel = gui;
+		parent = gui;
+	}
+
+	public Widget(GuiBase gui)
+	{
+		this(gui, 0, 0, 0, 0);
 	}
 
 	public void setX(int v)
@@ -46,24 +52,14 @@ public class Widget
 		height = Math.max(v, 0);
 	}
 
-	public Panel getParentPanel()
-	{
-		return parentPanel;
-	}
-
-	public void setParentPanel(Panel p)
-	{
-		parentPanel = p;
-	}
-
 	public int getAX()
 	{
-		return getParentPanel().getAX() + posX;
+		return parent.getAX() + posX;
 	}
 
 	public int getAY()
 	{
-		return getParentPanel().getAY() + posY;
+		return parent.getAY() + posY;
 	}
 
 	public boolean collidesWith(int x, int y, int w, int h)
@@ -83,7 +79,7 @@ public class Widget
 		return true;
 	}
 
-	public boolean shouldRender()
+	public boolean shouldDraw()
 	{
 		return true;
 	}
@@ -113,9 +109,9 @@ public class Widget
 		return isEnabled() && gui.isMouseOver(this);
 	}
 
-	public void renderWidget()
+	public void draw()
 	{
-		getIcon().draw(this);
+		getIcon().draw(getAX(), getAY(), width, height);
 	}
 
 	public boolean mousePressed(MouseButton button)
@@ -130,5 +126,10 @@ public class Widget
 	public boolean keyPressed(int key, char keyChar)
 	{
 		return false;
+	}
+
+	public final int getMouseOverFlag(int ax, int ay)
+	{
+		return gui.isMouseOver(ax, ay, width, height) ? MOUSE_OVER : 0;
 	}
 }

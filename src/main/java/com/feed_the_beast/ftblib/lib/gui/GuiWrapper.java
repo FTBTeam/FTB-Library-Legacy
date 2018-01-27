@@ -77,9 +77,9 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		wrappedGui.updateGui(mouseX, mouseY, partialTicks);
 		drawDefaultBackground();
 		GuiBase.setupDrawing();
-		wrappedGui.getIcon().draw(wrappedGui);
+		wrappedGui.getIcon().draw(wrappedGui.getAX(), wrappedGui.getAY(), wrappedGui.width, wrappedGui.height);
 		wrappedGui.drawBackground();
-		wrappedGui.renderWidget();
+		wrappedGui.draw();
 		wrappedGui.drawForeground();
 
 		if (wrappedGui.fixUnicode)

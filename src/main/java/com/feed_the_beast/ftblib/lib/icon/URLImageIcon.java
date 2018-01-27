@@ -37,8 +37,14 @@ public class URLImageIcon extends ImageIcon
 	}
 
 	@Override
-	public ImageIcon withUV(double u0, double v0, double u1, double v1)
+	public URLImageIcon withUV(double u0, double v0, double u1, double v1)
 	{
 		return new URLImageIcon(url, u0, v0, u1, v1);
+	}
+
+	@Override
+	public URLImageIcon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
+	{
+		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
 	}
 }

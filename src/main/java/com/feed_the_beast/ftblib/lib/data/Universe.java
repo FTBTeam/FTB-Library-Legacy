@@ -303,7 +303,7 @@ public class Universe
 	{
 		MinecraftServer server = event.getWorld().getMinecraftServer();
 
-		if (server != null && event.getWorld().provider.getDimension() == 0)
+		if (Universe.INSTANCE != null && server != null && event.getWorld().provider.getDimension() == 0)
 		{
 			try
 			{

@@ -26,10 +26,10 @@ public class StringUtils
 {
 	public static final int DAY24 = 24 * 60 * 60;
 
-	public static final String STRIP_SEP = ", ";
 	public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
 	public static final char FORMATTING_CHAR = '\u00a7';
 	public static final String FORMATTING = "\u00a7";
+	public static final String[] EMPTY_ARRAY = { };
 
 	public static final int FLAG_ID_ALLOW_EMPTY = 1;
 	public static final int FLAG_ID_FIX = 2;
@@ -234,9 +234,9 @@ public class StringUtils
 
 	public static String[] shiftArray(@Nullable String[] s)
 	{
-		if (s == null || s.length == 0)
+		if (s == null || s.length <= 1)
 		{
-			return new String[0];
+			return EMPTY_ARRAY;
 		}
 
 		String[] s1 = new String[s.length - 1];
@@ -336,167 +336,6 @@ public class StringUtils
 		{
 			char c1 = s.charAt(i);
 			sb.append((c1 == c) ? with : c1);
-		}
-
-		return sb.toString();
-	}
-
-	public static <E> String[] toStrings(E[] o)
-	{
-		String[] s = new String[o.length];
-		for (int i = 0; i < o.length; i++)
-		{
-			s[i] = String.valueOf(o[i]);
-		}
-
-		return s;
-	}
-
-	public static String strip(String... o)
-	{
-		if (o.length == 0)
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i]);
-			if (i != o.length - 1)
-			{
-				sb.append(STRIP_SEP);
-			}
-		}
-
-		return sb.toString();
-	}
-
-	public static String strip(Collection<?> c)
-	{
-		if (c.isEmpty())
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		int idx = 0;
-		int eidx = c.size() - 1;
-		for (Object o : c)
-		{
-			sb.append(o);
-			if (idx != eidx)
-			{
-				sb.append(STRIP_SEP);
-			}
-			idx++;
-		}
-
-		return sb.toString();
-	}
-
-	public static String stripD(double... o)
-	{
-		if (o.length == 0)
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < o.length; i++)
-		{
-			sb.append(formatDouble(o[i]));
-			if (i != o.length - 1)
-			{
-				sb.append(STRIP_SEP);
-			}
-		}
-
-		return sb.toString();
-	}
-
-	public static String stripDI(double... o)
-	{
-		if (o.length == 0)
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < o.length; i++)
-		{
-			sb.append((long) o[i]);
-			if (i != o.length - 1)
-			{
-				sb.append(STRIP_SEP);
-			}
-		}
-
-		return sb.toString();
-	}
-
-	public static String stripI(int... o)
-	{
-		if (o.length == 0)
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i]);
-			if (i != o.length - 1)
-			{
-				sb.append(STRIP_SEP);
-			}
-		}
-
-		return sb.toString();
-	}
-
-	public static String stripB(boolean... o)
-	{
-		if (o.length == 0)
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i] ? '1' : '0');
-			if (i != o.length - 1)
-			{
-				sb.append(STRIP_SEP);
-			}
-		}
-
-		return sb.toString();
-	}
-
-	public static String stripB(byte... o)
-	{
-		if (o.length == 0)
-		{
-			return "";
-		}
-
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < o.length; i++)
-		{
-			sb.append(o[i]);
-			if (i != o.length - 1)
-			{
-				sb.append(STRIP_SEP);
-			}
 		}
 
 		return sb.toString();

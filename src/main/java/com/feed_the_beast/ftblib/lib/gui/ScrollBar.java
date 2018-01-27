@@ -57,7 +57,7 @@ public class ScrollBar extends Widget
 	}
 
 	@Override
-	public void renderWidget()
+	public void draw()
 	{
 		int ax = getAX();
 		int ay = getAY();

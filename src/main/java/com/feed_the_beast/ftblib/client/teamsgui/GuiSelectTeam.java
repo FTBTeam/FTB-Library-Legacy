@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
@@ -42,7 +41,7 @@ public class GuiSelectTeam extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -100,7 +99,7 @@ public class GuiSelectTeam extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -121,35 +120,31 @@ public class GuiSelectTeam extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				add(new ButtonCreateTeam(gui));
+				Button b = new ButtonCreateTeam(gui);
+				b.setX(8);
+				b.setY(8);
+				add(b);
+
+				int x = 1;
+				int y = 8;
 
 				for (PublicTeamData t : teams)
 				{
-					add(new ButtonTeam(gui, t));
-				}
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
-				int size = 8;
-				int x = 0;
-
-				for (Widget widget : widgets)
-				{
-					widget.setX(8 + x * 40);
-					widget.setY(size);
+					b = new ButtonTeam(gui, t);
+					b.setX(8 + x * 40);
+					b.setY(y);
+					add(b);
 
 					x++;
 
 					if (x == 4)
 					{
 						x = 0;
-						size += 40;
+						y += 40;
 					}
 				}
 
-				scrollTeams.setElementSize(size);
+				scrollTeams.setElementSize(y);
 			}
 		};
 
@@ -158,7 +153,7 @@ public class GuiSelectTeam extends GuiBase
 		scrollTeams = new PanelScrollBar(this, 168, 8, 16, 152, 0, panelTeams)
 		{
 			@Override
-			public boolean shouldRender()
+			public boolean shouldDraw()
 			{
 				return true;
 			}

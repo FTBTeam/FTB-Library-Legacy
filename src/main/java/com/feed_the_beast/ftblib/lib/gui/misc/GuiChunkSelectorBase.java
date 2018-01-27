@@ -92,7 +92,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		@Override
-		public void renderWidget()
+		public void draw()
 		{
 			int ax = getAX();
 			int ay = getAY();
@@ -127,12 +127,6 @@ public class GuiChunkSelectorBase extends GuiBase
 			public void addWidgets()
 			{
 				addCornerButtons(panelButtons);
-				updateWidgetPositions();
-			}
-
-			@Override
-			public void updateWidgetPositions()
-			{
 				align(WidgetLayout.VERTICAL);
 			}
 		};
@@ -146,9 +140,10 @@ public class GuiChunkSelectorBase extends GuiBase
 	}
 
 	@Override
-	public void onInit()
+	public boolean onInit()
 	{
 		ChunkSelectorMap.getMap().resetMap(startX, startZ);
+		return true;
 	}
 
 	@Override
@@ -177,7 +172,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (MapButton mapButton : mapButtons)
 		{
-			mapButton.renderWidget();
+			mapButton.draw();
 		}
 
 		GlStateManager.disableTexture2D();

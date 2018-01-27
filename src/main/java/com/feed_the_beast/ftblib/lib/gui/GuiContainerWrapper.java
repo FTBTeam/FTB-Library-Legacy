@@ -85,7 +85,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 
 		GuiBase.setupDrawing();
 		drawDefaultBackground();
-		wrappedGui.getIcon().draw(wrappedGui);
+		wrappedGui.getIcon().draw(guiLeft, guiTop, xSize, ySize);
 		wrappedGui.drawBackground();
 
 		Icon icon = wrappedGui.getTheme().getContainerSlot();
@@ -95,7 +95,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 			icon.draw(guiLeft + slot.xPos, guiTop + slot.yPos, 16, 16);
 		}
 
-		wrappedGui.renderWidget();
+		wrappedGui.draw();
 
 		if (wrappedGui.fixUnicode)
 		{

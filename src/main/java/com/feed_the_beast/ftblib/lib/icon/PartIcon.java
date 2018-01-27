@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class PartIcon extends ImageIcon
 {
-	public final Icon parent;
+	public final ImageIcon parent;
 	public final boolean repeat;
 	public final int width, height;
 	public final int corner;
@@ -19,7 +19,7 @@ public class PartIcon extends ImageIcon
 
 	private final Icon all, middleU, middleD, middleL, middleR, cornerNN, cornerPN, cornerNP, cornerPP, center;
 
-	public PartIcon(Icon icon, int x, int y, int w, int h, int c, int mh, int mv, boolean r)
+	public PartIcon(ImageIcon icon, int x, int y, int w, int h, int c, int mh, int mv, boolean r)
 	{
 		super(icon.getJson().getAsString(), 0D, 0D, 1D, 1D);
 		parent = icon;
@@ -44,7 +44,7 @@ public class PartIcon extends ImageIcon
 		center = parent.withUVfromCoords(x + c, y + c, mh, mv, w, h);
 	}
 
-	public PartIcon(Icon icon, int s, int c, int m)
+	public PartIcon(ImageIcon icon, int s, int c, int m)
 	{
 		this(icon, 0, 0, s, s, c, m, m, true);
 	}

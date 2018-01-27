@@ -85,7 +85,7 @@ public class PanelScrollBar extends ScrollBar
 	}
 
 	@Override
-	public boolean shouldRender()
+	public boolean shouldDraw()
 	{
 		return isEnabled();
 	}

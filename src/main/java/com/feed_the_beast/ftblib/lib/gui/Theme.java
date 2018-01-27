@@ -8,7 +8,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
  */
 public abstract class Theme
 {
-	public abstract Color4I getContentColor();
+	public abstract Color4I getContentColor(boolean mouseOver);
 
 	public abstract Icon getGui(boolean mouseOver);
 

@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
@@ -34,7 +33,7 @@ public class ThreadReloadChunkSelector extends Thread
 	private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
 	private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
 	private static World world = null;
-	private static final Function<IBlockState, Integer> COLOR_GETTER = state1 -> 0xFF000000 | getBlockColor0(state1, world, CURRENT_BLOCK_POS);
+	private static final Function<IBlockState, Integer> COLOR_GETTER = state1 -> 0xFF000000 | getBlockColor0(state1);
 	private static ThreadReloadChunkSelector instance;
 	private static int textureID = -1;
 	private static final int[] HEIGHT_MAP = new int[PIXEL_SIZE * PIXEL_SIZE];
@@ -91,11 +90,11 @@ public class ThreadReloadChunkSelector extends Thread
 		startZ = sz;
 	}
 
-	private static int getBlockColor0(IBlockState state, IBlockAccess world, BlockPos pos)
+	private static int getBlockColor0(IBlockState state)
 	{
 		Block b = state.getBlock();
 
-		if (b == Blocks.SANDSTONE)
+		if (b == Blocks.SANDSTONE || b == Blocks.END_STONE)
 		{
 			return MapColor.SAND.colorValue;
 		}
@@ -110,10 +109,6 @@ public class ThreadReloadChunkSelector extends Thread
 		else if (b == Blocks.LAVA)
 		{
 			return MapColor.ADOBE.colorValue;
-		}
-		else if (b == Blocks.END_STONE)
-		{
-			return MapColor.SAND.colorValue;
 		}
 		else if (b == Blocks.OBSIDIAN)
 		{
@@ -135,8 +130,6 @@ public class ThreadReloadChunkSelector extends Thread
 		{
 			return 0x7F1321;
 		}
-		//else if(b.getMaterial(state) == Material.WATER)
-		//	return ColorUtils.multiply(MapColor.waterColor.colorValue, b.colorMultiplier(world, pos), 200);
 		else if (b == Blocks.RED_FLOWER)
 		{
 			switch (state.getValue(Blocks.RED_FLOWER.getTypeProperty()))
@@ -182,12 +175,7 @@ public class ThreadReloadChunkSelector extends Thread
 			}
 		}
 
-		//if(b == Blocks.leaves || b == Blocks.vine || b == Blocks.waterlily)
-		//	return ColorUtils.addBrightness(b.colorMultiplier(world, pos), -40);
-		//else if(b == Blocks.grass && state.getValue(BlockGrass.SNOWY))
-		//	return ColorUtils.addBrightness(b.colorMultiplier(world, pos), -15);
-
-		return state.getMapColor(world, pos).colorValue;
+		return state.getMapColor(world, CURRENT_BLOCK_POS).colorValue;
 	}
 
 	private static int getHeight(int x, int z)

@@ -156,12 +156,12 @@ public class ServerUtils
 
 		if (player != null)
 		{
-			player.connection.setPlayerLocation(pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D, player.rotationYaw, player.rotationPitch);
+			player.connection.setPlayerLocation(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D, player.rotationYaw, player.rotationPitch);
 			player.addExperienceLevel(0);
 		}
 		else
 		{
-			entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 1.1D, pos.getZ() + 0.5D);
+			entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D);
 		}
 
 		entity.fallDistance = 0;
