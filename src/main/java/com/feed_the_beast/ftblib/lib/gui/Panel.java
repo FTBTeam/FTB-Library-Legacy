@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 import java.util.ArrayList;
@@ -16,15 +17,10 @@ public abstract class Panel extends Widget
 	private int offsetX = 0, offsetY = 0;
 	private int flags = 0;
 
-	public Panel(GuiBase gui, int x, int y, int w, int h)
-	{
-		super(gui, x, y, w, h);
-		widgets = new ArrayList<>();
-	}
-
 	public Panel(GuiBase gui)
 	{
-		this(gui, 0, 0, 0, 0);
+		super(gui);
+		widgets = new ArrayList<>();
 	}
 
 	public void addFlags(int f)
@@ -39,6 +35,8 @@ public abstract class Panel extends Widget
 
 	public abstract void addWidgets();
 
+	public abstract void alignWidgets();
+
 	public void refreshWidgets()
 	{
 		widgets.clear();
@@ -50,10 +48,19 @@ public abstract class Panel extends Widget
 		}
 
 		addWidgets();
+		alignWidgets();
 
 		if (unicode)
 		{
 			gui.popFontUnicode();
+		}
+
+		for (Widget widget : widgets)
+		{
+			if (widget instanceof Panel)
+			{
+				((Panel) widget).refreshWidgets();
+			}
 		}
 	}
 
@@ -61,11 +68,6 @@ public abstract class Panel extends Widget
 	{
 		widget.parent = this;
 		widgets.add(widget);
-
-		if (widget instanceof Panel)
-		{
-			((Panel) widget).refreshWidgets();
-		}
 	}
 
 	public void addAll(Widget... widgets)
@@ -162,7 +164,7 @@ public abstract class Panel extends Widget
 		int ax = getAX();
 		int ay = getAY();
 
-		renderPanelBackground(ax, ay);
+		drawPanelBackground(ax, ay);
 
 		if (renderInside)
 		{
@@ -177,7 +179,7 @@ public abstract class Panel extends Widget
 
 			if (widget.shouldDraw() && (!renderInside || widget.collidesWith(ax, ay, width, height)))
 			{
-				renderWidget(widget, i, ax + offsetX, ay + offsetY, width, height);
+				drawWidget(widget, i, ax + offsetX, ay + offsetY, width, height);
 			}
 		}
 
@@ -191,14 +193,19 @@ public abstract class Panel extends Widget
 		gui.popFontUnicode();
 	}
 
-	protected void renderPanelBackground(int ax, int ay)
+	protected void drawPanelBackground(int ax, int ay)
 	{
 		getIcon().draw(ax, ay, width, height);
 	}
 
-	protected void renderWidget(Widget widget, int index, int ax, int ay, int w, int h)
+	protected void drawWidget(Widget widget, int index, int ax, int ay, int w, int h)
 	{
 		widget.draw();
+
+		if (gui.renderDebugBoxes)
+		{
+			GuiHelper.drawHollowRect(widget.getAX(), widget.getAY(), widget.width, widget.height, Color4I.rgb(java.awt.Color.HSBtoRGB((widget.hashCode() & 255) / 255F, 1F, 1F)).withAlpha(150), false);
+		}
 	}
 
 	@Override
@@ -253,7 +260,7 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public void mouseReleased()
+	public void mouseReleased(MouseButton button)
 	{
 		setOffset(true);
 
@@ -263,7 +270,7 @@ public abstract class Panel extends Widget
 
 			if (w.isEnabled())
 			{
-				w.mouseReleased();
+				w.mouseReleased(button);
 			}
 		}
 
@@ -288,5 +295,23 @@ public abstract class Panel extends Widget
 
 		setOffset(false);
 		return false;
+	}
+
+	@Override
+	public void keyReleased(int key)
+	{
+		setOffset(true);
+
+		for (int i = widgets.size() - 1; i >= 0; i--)
+		{
+			Widget w = widgets.get(i);
+
+			if (w.isEnabled())
+			{
+				w.keyReleased(key);
+			}
+		}
+
+		setOffset(false);
 	}
 }

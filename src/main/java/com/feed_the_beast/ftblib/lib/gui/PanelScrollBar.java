@@ -10,11 +10,16 @@ public class PanelScrollBar extends ScrollBar
 	private double scrollStep;
 	private boolean autoSize;
 
-	public PanelScrollBar(GuiBase gui, int x, int y, int w, int h, int ss, Panel p)
+	public PanelScrollBar(GuiBase gui, int ss, Panel p)
 	{
-		super(gui, x, y, w, h, ss);
+		super(gui, ss);
 		panel = p;
 		autoSize = ss <= 0;
+	}
+
+	public PanelScrollBar(GuiBase gui, Panel p)
+	{
+		this(gui, 0, p);
 	}
 
 	public void setElementSize(int s)

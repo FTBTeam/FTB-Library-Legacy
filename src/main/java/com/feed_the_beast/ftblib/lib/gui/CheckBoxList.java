@@ -75,9 +75,10 @@ public class CheckBoxList extends Button
 	public final boolean radioButtons;
 	private final List<CheckBoxEntry> entries;
 
-	public CheckBoxList(GuiBase gui, int x, int y, boolean radiobutton)
+	public CheckBoxList(GuiBase gui, boolean radiobutton)
 	{
-		super(gui, x, y, 10, 2);
+		super(gui);
+		setSize(10, 2);
 		radioButtons = radiobutton;
 		entries = new ArrayList<>();
 	}

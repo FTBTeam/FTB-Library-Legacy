@@ -15,18 +15,16 @@ public class TextField extends Widget
 	public int textFlags = 0;
 	public boolean autoSizeWidth, autoSizeHeight;
 
-	public TextField(GuiBase gui, int x, int y, int w, int h, String txt, int flags)
+	public TextField(GuiBase gui, String txt, int flags)
 	{
-		super(gui, x, y, w, h);
+		super(gui);
 		textFlags = flags;
-		autoSizeWidth = w <= 0;
-		autoSizeHeight = h <= 0;
 		setText(txt);
 	}
 
-	public TextField(GuiBase gui, int x, int y, int w, int h, String txt)
+	public TextField(GuiBase gui, String txt)
 	{
-		this(gui, x, y, w, h, txt, 0);
+		this(gui, txt, 0);
 	}
 
 	public TextField setText(String txt)

@@ -4,8 +4,6 @@ import com.feed_the_beast.ftblib.FTBLibFinals;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.common.base.Objects;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,12 +44,6 @@ public class ImageIcon extends Icon
 	}
 
 	@Override
-	public JsonElement getJson()
-	{
-		return new JsonPrimitive(texture.toString());
-	}
-
-	@Override
 	public boolean equals(Object o)
 	{
 		if (o == this)
@@ -75,7 +67,7 @@ public class ImageIcon extends Icon
 	@Override
 	public String toString()
 	{
-		return Double.toString(minU) + ',' + minV + ',' + maxU + ',' + maxV;
+		return texture.toString();
 	}
 
 	public ImageIcon withUV(double u0, double v0, double u1, double v1)

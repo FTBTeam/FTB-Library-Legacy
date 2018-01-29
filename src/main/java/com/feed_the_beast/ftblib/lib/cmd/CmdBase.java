@@ -137,6 +137,7 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 	public static ForgePlayer getForgePlayer(String name) throws CommandException
 	{
+		//FIXME: @p and @r
 		ForgePlayer p = Universe.get().getPlayer(name);
 
 		if (p == null || p.isFake())

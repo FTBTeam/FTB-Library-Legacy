@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,10 +28,9 @@ public class URLImageIcon extends ImageIcon
 		return obj;
 	}
 
-	@Override
-	public JsonElement getJson()
+	public String toString()
 	{
-		return new JsonPrimitive(url);
+		return url;
 	}
 
 	@Override

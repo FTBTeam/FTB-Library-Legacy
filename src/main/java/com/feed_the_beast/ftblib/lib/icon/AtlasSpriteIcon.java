@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -43,8 +41,8 @@ public class AtlasSpriteIcon extends Icon
 	}
 
 	@Override
-	public JsonElement getJson()
+	public String toString()
 	{
-		return new JsonPrimitive(name.toString());
+		return name.toString();
 	}
 }

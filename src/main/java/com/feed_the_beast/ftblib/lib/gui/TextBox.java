@@ -26,9 +26,9 @@ public class TextBox extends Widget
 	private int selectionEnd;
 	private boolean validText;
 
-	public TextBox(GuiBase gui, int x, int y, int w, int h)
+	public TextBox(GuiBase gui)
 	{
-		super(gui, x, y, w, h);
+		super(gui);
 		text = getText();
 	}
 

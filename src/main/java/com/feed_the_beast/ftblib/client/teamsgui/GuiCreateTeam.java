@@ -29,11 +29,11 @@ public class GuiCreateTeam extends GuiBase
 
 	public GuiCreateTeam()
 	{
-		super(162, 118);
+		setSize(162, 118);
 		color = EnumTeamColor.NAME_MAP.getRandom(MathUtils.RAND);
 
 		int bwidth = width / 2 - 10;
-		buttonAccept = new SimpleTextButton(this, width - bwidth - 9, height - 24, GuiLang.ACCEPT.translate(), Icon.EMPTY)
+		buttonAccept = new SimpleTextButton(this, GuiLang.ACCEPT.translate(), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -54,10 +54,9 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
-		buttonAccept.setWidth(bwidth);
-		buttonAccept.setHeight(16);
+		buttonAccept.setPosAndSize(width - bwidth - 9, height - 24, bwidth, 16);
 
-		buttonCancel = new SimpleTextButton(this, 8, height - 24, GuiLang.CANCEL.translate(), Icon.EMPTY)
+		buttonCancel = new SimpleTextButton(this, GuiLang.CANCEL.translate(), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -73,10 +72,9 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
-		buttonCancel.setWidth(bwidth);
-		buttonCancel.setHeight(16);
+		buttonCancel.setPosAndSize(8, height - 24, bwidth, 16);
 
-		textBoxId = new TextBox(this, 8, 8, width - 16, 16)
+		textBoxId = new TextBox(this)
 		{
 			@Override
 			public void onTextChanged()
@@ -85,6 +83,7 @@ public class GuiCreateTeam extends GuiBase
 			}
 		};
 
+		textBoxId.setPosAndSize(8, 8, width - 16, 16);
 		textBoxId.writeText(ClientUtils.MC.player.getGameProfile().getName().toLowerCase());
 		textBoxId.ghostText = TextFormatting.ITALIC.toString() + TextFormatting.DARK_GRAY + "Enter ID";
 		textBoxId.textColor = color.getColor();
@@ -96,7 +95,7 @@ public class GuiCreateTeam extends GuiBase
 
 		for (EnumTeamColor col : EnumTeamColor.NAME_MAP)
 		{
-			Button b = new Button(this, 8 + (i % 5) * 30, 32 + (i / 5) * 30, 25, 25)
+			Button b = new Button(this)
 			{
 				@Override
 				public void onClicked(MouseButton button)
@@ -112,6 +111,7 @@ public class GuiCreateTeam extends GuiBase
 				}
 			};
 
+			b.setPosAndSize(8 + (i % 5) * 30, 32 + (i / 5) * 30, 25, 25);
 			b.setTitle(col.getTextFormatting() + col.getLangKey().translate());
 			colorButtons.add(b);
 			i++;

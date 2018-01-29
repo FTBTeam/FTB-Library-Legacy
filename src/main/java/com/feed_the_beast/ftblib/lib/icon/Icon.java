@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -183,7 +182,7 @@ public abstract class Icon
 
 	public JsonElement getJson()
 	{
-		return JsonNull.INSTANCE;
+		return new JsonPrimitive(toString());
 	}
 
 	public final Icon combineWith(Icon icon)

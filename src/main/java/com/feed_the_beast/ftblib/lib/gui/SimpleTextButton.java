@@ -9,9 +9,10 @@ import java.util.List;
  */
 public abstract class SimpleTextButton extends Button
 {
-	public SimpleTextButton(GuiBase gui, int x, int y, String txt, Icon icon)
+	public SimpleTextButton(GuiBase gui, String txt, Icon icon)
 	{
-		super(gui, x, y, 0, 20, txt, icon);
+		super(gui, txt, icon);
+		setHeight(20);
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 
 		ButtonPlayerBase(GuiBase gui, MessageMyTeamPlayerList.Entry m)
 		{
-			super(gui, 0, 0, "", Icon.EMPTY);
+			super(gui, "", Icon.EMPTY);
 			entry = m;
 			updateIcon();
 			setTitle(entry.name);

@@ -63,14 +63,13 @@ public class GuiChunkSelectorBase extends GuiBase
 		public final int index;
 		private boolean isSelected = false;
 
-		private MapButton(GuiChunkSelectorBase g, int x, int y, int i)
+		private MapButton(GuiChunkSelectorBase g, int i)
 		{
-			super(g, x, y, TILE_SIZE, TILE_SIZE);
+			super(g);
 			gui = g;
-			posX += (i % ChunkSelectorMap.TILES_GUI) * width;
-			posY += (i / ChunkSelectorMap.TILES_GUI) * height;
-			chunkPos = new ChunkPos(gui.startX + (i % ChunkSelectorMap.TILES_GUI), gui.startZ + (i / ChunkSelectorMap.TILES_GUI));
 			index = i;
+			setPosAndSize((index % ChunkSelectorMap.TILES_GUI) * TILE_SIZE, (index / ChunkSelectorMap.TILES_GUI) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+			chunkPos = new ChunkPos(gui.startX + (i % ChunkSelectorMap.TILES_GUI), gui.startZ + (i / ChunkSelectorMap.TILES_GUI));
 		}
 
 		@Override
@@ -116,18 +115,33 @@ public class GuiChunkSelectorBase extends GuiBase
 
 	public GuiChunkSelectorBase()
 	{
-		super(ChunkSelectorMap.TILES_GUI * TILE_SIZE, ChunkSelectorMap.TILES_GUI * TILE_SIZE);
-
 		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
 		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
 
-		panelButtons = new Panel(this, 0, 0, 16, 0)
+		panelButtons = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
 			{
 				addCornerButtons(panelButtons);
+			}
+
+			@Override
+			public void alignWidgets()
+			{
 				align(WidgetLayout.VERTICAL);
+			}
+
+			@Override
+			public int getAX()
+			{
+				return getScreen().getScaledWidth() - 20;
+			}
+
+			@Override
+			public int getAY()
+			{
+				return 0;
 			}
 		};
 
@@ -135,7 +149,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < mapButtons.length; i++)
 		{
-			mapButtons[i] = new MapButton(this, 0, 0, i);
+			mapButtons[i] = new MapButton(this, i);
 		}
 	}
 
@@ -155,9 +169,13 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		add(panelButtons);
-		panelButtons.posX = getScreen().getScaledWidth() - 20 - getAX();
-		panelButtons.posY = -getAY();
-		panelButtons.setHeight(panelButtons.widgets.size() * 20);
+	}
+
+	@Override
+	public void alignWidgets()
+	{
+		setSize(ChunkSelectorMap.TILES_GUI * TILE_SIZE, ChunkSelectorMap.TILES_GUI * TILE_SIZE);
+		panelButtons.setSize(16, panelButtons.widgets.size() * 20);
 	}
 
 	@Override
@@ -196,9 +214,9 @@ public class GuiChunkSelectorBase extends GuiBase
 	}
 
 	@Override
-	public void mouseReleased()
+	public void mouseReleased(MouseButton button)
 	{
-		super.mouseReleased();
+		super.mouseReleased(button);
 
 		if (currentSelectionMode != -1)
 		{

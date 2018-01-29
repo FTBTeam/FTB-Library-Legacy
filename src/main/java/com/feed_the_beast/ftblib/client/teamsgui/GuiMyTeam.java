@@ -25,7 +25,7 @@ public class GuiMyTeam extends GuiButtonListBase
 
 		private TeamActionButton(GuiBase gui, MessageMyTeamGui.Action a)
 		{
-			super(gui, 0, 0, a.title.getFormattedText(), a.icon);
+			super(gui, a.title.getFormattedText(), a.icon);
 			action = a;
 		}
 

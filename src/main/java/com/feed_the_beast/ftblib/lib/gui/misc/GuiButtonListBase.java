@@ -18,16 +18,18 @@ public abstract class GuiButtonListBase extends GuiBase
 
 	public GuiButtonListBase()
 	{
-		super(0, 0);
-
-		panelButtons = new Panel(gui, 9, 9, 0, 146)
+		panelButtons = new Panel(gui)
 		{
 			@Override
 			public void addWidgets()
 			{
-				width = 0;
-
 				addButtons(this);
+			}
+
+			@Override
+			public void alignWidgets()
+			{
+				setWidth(0);
 
 				for (Widget w : widgets)
 				{
@@ -42,7 +44,11 @@ public abstract class GuiButtonListBase extends GuiBase
 				int size = align(WidgetLayout.VERTICAL);
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
-				setHeight(widgets.size() > 7 ? 144 : size);
+
+				setPosAndSize(9, 9, widgets.size() > 7 ? 144 : size, 146);
+				scrollBar.setPosAndSize(posX + width + 6, 8, 16, 146);
+
+				gui.setWidth(scrollBar.posX + (widgets.size() > 7 ? scrollBar.width + 8 : 4));
 				gui.setHeight(height + 18);
 			}
 
@@ -55,7 +61,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 		panelButtons.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, 0, 8, 16, 146, 0, panelButtons)
+		scrollBar = new PanelScrollBar(this, panelButtons)
 		{
 			@Override
 			public boolean shouldDraw()
@@ -80,10 +86,11 @@ public abstract class GuiButtonListBase extends GuiBase
 		{
 			add(scrollBar);
 		}
+	}
 
-		scrollBar.setX(panelButtons.posX + panelButtons.width + 6);
-		setWidth(scrollBar.posX + (panelButtons.widgets.size() > 7 ? scrollBar.width + 8 : 4));
-		posX = (getScreen().getScaledWidth() - width) / 2;
+	@Override
+	public void alignWidgets()
+	{
 	}
 
 	public abstract void addButtons(Panel panel);

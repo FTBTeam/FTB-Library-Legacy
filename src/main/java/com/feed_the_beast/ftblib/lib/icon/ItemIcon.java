@@ -3,8 +3,6 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -35,10 +33,9 @@ public class ItemIcon extends Icon
 			return stack;
 		}
 
-		@Override
-		public JsonElement getJson()
+		public String toString()
 		{
-			return new JsonPrimitive("item:" + lazyStackString);
+			return "item:" + lazyStackString;
 		}
 	}
 
@@ -73,9 +70,8 @@ public class ItemIcon extends Icon
 		}
 	}
 
-	@Override
-	public JsonElement getJson()
+	public String toString()
 	{
-		return new JsonPrimitive("item:" + ItemStackSerializer.toString(getStack()));
+		return "item:" + ItemStackSerializer.toString(getStack());
 	}
 }

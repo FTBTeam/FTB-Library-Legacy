@@ -13,14 +13,15 @@ public class GuiLoading extends GuiBase
 	private boolean isLoading = true;
 	private String title = "";
 
-	public GuiLoading()
-	{
-		super(128, 128);
-	}
-
 	@Override
 	public void addWidgets()
 	{
+	}
+
+	@Override
+	public void alignWidgets()
+	{
+		setSize(128, 128);
 	}
 
 	@Override

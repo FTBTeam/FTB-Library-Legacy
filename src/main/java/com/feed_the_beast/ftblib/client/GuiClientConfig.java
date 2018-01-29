@@ -92,7 +92,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		public ButtonClientConfig(GuiBase gui, ClientConfig config)
 		{
-			super(gui, 0, 0, config.name.getFormattedText(), config.icon);
+			super(gui, config.name.getFormattedText(), config.icon);
 			modId = config.id;
 		}
 
@@ -121,7 +121,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
-		buttons.add(0, new SimpleTextButton(gui, 0, 0, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -133,7 +133,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		if (SharedClientData.INSTANCE.optionalServerMods().contains(FTBLibFinals.MOD_ID))
 		{
-			buttons.add(0, new SimpleTextButton(gui, 0, 0, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+			buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
 			{
 				@Override
 				public void onClicked(MouseButton button)

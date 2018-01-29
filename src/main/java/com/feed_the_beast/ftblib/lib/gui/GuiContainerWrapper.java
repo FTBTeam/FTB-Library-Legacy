@@ -48,10 +48,10 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	}
 
 	@Override
-	protected void mouseReleased(int mx, int my, int state)
+	protected void mouseReleased(int mx, int my, int b)
 	{
-		wrappedGui.mouseReleased();
-		super.mouseReleased(mx, my, state);
+		wrappedGui.mouseReleased(MouseButton.get(b));
+		super.mouseReleased(mx, my, b);
 	}
 
 	@Override
@@ -76,6 +76,19 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	}
 
 	@Override
+	public void handleKeyboardInput() throws IOException
+	{
+		if (!Keyboard.getEventKeyState())
+		{
+			wrappedGui.keyReleased(Keyboard.getEventKey());
+		}
+		else
+		{
+			super.handleKeyboardInput();
+		}
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mx, int my)
 	{
 		if (wrappedGui.fixUnicode)
@@ -83,7 +96,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 			GuiHelper.setFixUnicode(true);
 		}
 
-		GuiBase.setupDrawing();
+		GuiHelper.setupDrawing();
 		drawDefaultBackground();
 		wrappedGui.getIcon().draw(guiLeft, guiTop, xSize, ySize);
 		wrappedGui.drawBackground();
@@ -113,7 +126,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-guiLeft, -guiTop, 0D);
-		GuiBase.setupDrawing();
+		GuiHelper.setupDrawing();
 		wrappedGui.drawForeground();
 		renderHoveredToolTip(mx, my);
 		GlStateManager.popMatrix();

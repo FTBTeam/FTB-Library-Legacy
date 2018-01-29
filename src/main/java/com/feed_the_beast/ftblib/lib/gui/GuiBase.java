@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.Bits;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanStack;
@@ -63,22 +64,20 @@ public abstract class GuiBase extends Panel
 	private GuiScreen prevScreen;
 	private final BooleanStack fontUnicode;
 	private Theme theme;
+	public boolean renderDebugBoxes = false;
 
-	public GuiBase(int w, int h)
+	public GuiBase()
 	{
-		super(null, 0, 0, w, h);
+		super(null);
 		gui = this;
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
 		fontUnicode = new BooleanArrayList();
 	}
 
-	public static void setupDrawing()
+	@Override
+	public void alignWidgets()
 	{
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.disableLighting();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 	}
 
 	public final void initGui()
@@ -86,7 +85,7 @@ public abstract class GuiBase extends Panel
 		screen = new ScaledResolution(ClientUtils.MC);
 		if (onInit())
 		{
-			refreshWidgets();
+			super.refreshWidgets();
 			fixUnicode = screen.getScaleFactor() % 2 == 1;
 			onPostInit();
 		}
@@ -235,13 +234,12 @@ public abstract class GuiBase extends Panel
 	@Override
 	public final void draw()
 	{
-		setupDrawing();
-		drawBackground();
+		GuiHelper.setupDrawing();
 		super.draw();
 	}
 
 	@Override
-	protected final void renderPanelBackground(int ax, int ay)
+	protected final void drawPanelBackground(int ax, int ay)
 	{
 	}
 
@@ -259,6 +257,33 @@ public abstract class GuiBase extends Panel
 		List<String> tempTextList = new ArrayList<>(0);
 		addMouseOverText(tempTextList);
 		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
+	}
+
+	@Override
+	public boolean keyPressed(int key, char keyChar)
+	{
+		if (CommonUtils.DEV_ENV && key == Keyboard.KEY_B)
+		{
+			renderDebugBoxes = true;
+			return true;
+		}
+		else
+		{
+			return super.keyPressed(key, keyChar);
+		}
+	}
+
+	@Override
+	public void keyReleased(int key)
+	{
+		if (CommonUtils.DEV_ENV && key == Keyboard.KEY_B)
+		{
+			renderDebugBoxes = false;
+		}
+		else
+		{
+			super.keyReleased(key);
+		}
 	}
 
 	@Override

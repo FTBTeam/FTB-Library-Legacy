@@ -28,7 +28,8 @@ public class GuiSelectTeam extends GuiBase
 	{
 		private ButtonCreateTeam(GuiBase gui)
 		{
-			super(gui, 0, 0, 32, 32);
+			super(gui);
+			setSize(32, 32);
 			setTitle("Create a New Team");
 			setIcon(GuiIcons.ADD);
 		}
@@ -58,8 +59,9 @@ public class GuiSelectTeam extends GuiBase
 
 		private ButtonTeam(GuiBase gui, PublicTeamData t)
 		{
-			super(gui, 0, 0, 32, 32);
+			super(gui);
 			team = t;
+			setSize(32, 32);
 			setTitle(team.color.getTextFormatting() + team.displayName);
 			setIcon(new PlayerHeadIcon(t.ownerName));
 			background = team.isInvited ? INVITED_COLOR : Icon.EMPTY.withOutline(team.color.getColor(), true);
@@ -111,11 +113,11 @@ public class GuiSelectTeam extends GuiBase
 
 	public GuiSelectTeam(Collection<PublicTeamData> teams0)
 	{
-		super(192, 170);
+		setSize(192, 170);
 		List<PublicTeamData> teams = new ArrayList<>(teams0);
 		teams.sort(null);
 
-		panelTeams = new Panel(this, 0, 1, 168, 168)
+		panelTeams = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -146,11 +148,17 @@ public class GuiSelectTeam extends GuiBase
 
 				scrollTeams.setElementSize(y);
 			}
+
+			@Override
+			public void alignWidgets()
+			{
+			}
 		};
 
+		panelTeams.setPosAndSize(0, 1, 168, 168);
 		panelTeams.addFlags(Panel.DEFAULTS);
 
-		scrollTeams = new PanelScrollBar(this, 168, 8, 16, 152, 0, panelTeams)
+		scrollTeams = new PanelScrollBar(this, panelTeams)
 		{
 			@Override
 			public boolean shouldDraw()
@@ -158,6 +166,8 @@ public class GuiSelectTeam extends GuiBase
 				return true;
 			}
 		};
+
+		scrollTeams.setPosAndSize(168, 8, 16, 152);
 	}
 
 	@Override
@@ -165,5 +175,10 @@ public class GuiSelectTeam extends GuiBase
 	{
 		add(panelTeams);
 		add(scrollTeams);
+	}
+
+	@Override
+	public void alignWidgets()
+	{
 	}
 }

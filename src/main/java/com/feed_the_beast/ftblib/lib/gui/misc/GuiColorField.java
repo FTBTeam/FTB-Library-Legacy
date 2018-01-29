@@ -12,7 +12,7 @@ public class GuiColorField extends GuiBase
 
 	GuiColorField(ConfigColor p, IGuiFieldCallback c)
 	{
-		super(256, 256);
+		setSize(256, 256);
 		initCol = p.getColor();
 		callback = c;
 	}

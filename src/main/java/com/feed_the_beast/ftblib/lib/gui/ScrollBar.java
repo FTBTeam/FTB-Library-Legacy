@@ -24,9 +24,9 @@ public class ScrollBar extends Widget
 	private double value;
 	private int grab = -10000;
 
-	public ScrollBar(GuiBase gui, int x, int y, int w, int h, int ss)
+	public ScrollBar(GuiBase gui, int ss)
 	{
-		super(gui, x, y, w, h);
+		super(gui);
 		sliderSize = Math.max(ss, 1);
 	}
 

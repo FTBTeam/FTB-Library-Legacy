@@ -17,19 +17,10 @@ public class Widget
 	public int posX, posY, width, height;
 	public Panel parent;
 
-	public Widget(GuiBase _gui, int x, int y, int w, int h)
+	public Widget(GuiBase _gui)
 	{
 		gui = _gui;
-		posX = x;
-		posY = y;
-		width = Math.max(w, 0);
-		height = Math.max(h, 0);
 		parent = gui;
-	}
-
-	public Widget(GuiBase gui)
-	{
-		this(gui, 0, 0, 0, 0);
 	}
 
 	public void setX(int v)
@@ -50,6 +41,26 @@ public class Widget
 	public void setHeight(int v)
 	{
 		height = Math.max(v, 0);
+	}
+
+	public final void setPos(int x, int y)
+	{
+		setX(x);
+		setY(y);
+	}
+
+	public final void setSize(int w, int h)
+	{
+		setWidth(w);
+		setHeight(h);
+	}
+
+	public final void setPosAndSize(int x, int y, int w, int h)
+	{
+		setX(x);
+		setY(y);
+		setWidth(w);
+		setHeight(h);
 	}
 
 	public int getAX()
@@ -119,7 +130,7 @@ public class Widget
 		return false;
 	}
 
-	public void mouseReleased()
+	public void mouseReleased(MouseButton button)
 	{
 	}
 
@@ -128,8 +139,7 @@ public class Widget
 		return false;
 	}
 
-	public final int getMouseOverFlag(int ax, int ay)
+	public void keyReleased(int key)
 	{
-		return gui.isMouseOver(ax, ay, width, height) ? MOUSE_OVER : 0;
 	}
 }

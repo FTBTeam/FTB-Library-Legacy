@@ -39,10 +39,10 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	}
 
 	@Override
-	protected void mouseReleased(int mx, int my, int state)
+	protected void mouseReleased(int mx, int my, int b)
 	{
-		wrappedGui.mouseReleased();
-		super.mouseReleased(mx, my, state);
+		wrappedGui.mouseReleased(MouseButton.get(b));
+		super.mouseReleased(mx, my, b);
 	}
 
 	@Override
@@ -67,6 +67,19 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	}
 
 	@Override
+	public void handleKeyboardInput() throws IOException
+	{
+		if (!Keyboard.getEventKeyState())
+		{
+			wrappedGui.keyReleased(Keyboard.getEventKey());
+		}
+		else
+		{
+			super.handleKeyboardInput();
+		}
+	}
+
+	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
 		if (wrappedGui.fixUnicode)
@@ -76,7 +89,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 
 		wrappedGui.updateGui(mouseX, mouseY, partialTicks);
 		drawDefaultBackground();
-		GuiBase.setupDrawing();
+		GuiHelper.setupDrawing();
 		wrappedGui.getIcon().draw(wrappedGui.getAX(), wrappedGui.getAY(), wrappedGui.width, wrappedGui.height);
 		wrappedGui.drawBackground();
 		wrappedGui.draw();

@@ -8,14 +8,15 @@ public abstract class Button extends Widget
 	private String title = "";
 	protected Icon icon = Icon.EMPTY;
 
-	public Button(GuiBase gui, int x, int y, int w, int h)
+	public Button(GuiBase gui)
 	{
-		super(gui, x, y, w, h);
+		super(gui);
+		setSize(16, 16);
 	}
 
-	public Button(GuiBase gui, int x, int y, int w, int h, String title, Icon icon)
+	public Button(GuiBase gui, String title, Icon icon)
 	{
-		this(gui, x, y, w, h);
+		this(gui);
 		setIcon(icon);
 		setTitle(title);
 	}

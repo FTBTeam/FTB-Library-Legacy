@@ -61,13 +61,26 @@ public class GuiHelper
 
 	private static final Stack<Scissor> SCISSOR = new Stack<>();
 
-	public static final GuiBase BLANK_GUI = new GuiBase(0, 0)
+	public static final GuiBase BLANK_GUI = new GuiBase()
 	{
 		@Override
 		public void addWidgets()
 		{
 		}
+
+		@Override
+		public void alignWidgets()
+		{
+		}
 	};
+
+	public static void setupDrawing()
+	{
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+	}
 
 	public static void playSound(SoundEvent event, float pitch)
 	{

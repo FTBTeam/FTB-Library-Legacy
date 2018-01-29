@@ -44,7 +44,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		public ButtonConfigGroup(GuiBase gui, String id)
 		{
-			super(gui, 0, 0, 0, 16);
+			super(gui);
 			groupId = id;
 
 			if (!groupId.isEmpty())
@@ -136,7 +136,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		public ButtonConfigEntry(GuiEditConfig gui, ButtonConfigGroup g, ConfigValueInfo i, ConfigValue e)
 		{
-			super(gui, 0, 0, 0, 16);
+			super(gui);
 			group = g;
 			info = i;
 			value = e;
@@ -251,7 +251,6 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 	public GuiEditConfig(ConfigGroup g, IConfigCallback c)
 	{
-		super(0, 0);
 		group = g;
 		callback = c;
 
@@ -294,7 +293,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		}
 
-		configPanel = new Panel(this, 0, 20, 0, 20)
+		configPanel = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -309,11 +308,20 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 				scroll.setElementSize(align(WidgetLayout.VERTICAL));
 			}
+
+			@Override
+			public void alignWidgets()
+			{
+				for (Widget w : widgets)
+				{
+					w.setPosAndSize(0, 0, width - 16, 16);
+				}
+			}
 		};
 
 		configPanel.addFlags(Panel.DEFAULTS);
 
-		scroll = new PanelScrollBar(this, -16, 20, 16, 0, 0, configPanel)
+		scroll = new PanelScrollBar(this, configPanel)
 		{
 			@Override
 			public boolean shouldDraw()
@@ -322,19 +330,19 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		};
 
-		buttonAccept = new SimpleButton(this, 0, 2, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+		buttonAccept = new SimpleButton(this, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
 		{
 			shouldClose = 1;
 			gui.closeGui();
 		});
 
-		buttonCancel = new SimpleButton(this, 0, 2, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
+		buttonCancel = new SimpleButton(this, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
 		{
 			shouldClose = 2;
 			gui.closeGui();
 		});
 
-		buttonCollapseAll = new SimpleButton(this, 0, 2, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
+		buttonCollapseAll = new SimpleButton(this, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -348,7 +356,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			gui.refreshWidgets();
 		});
 
-		buttonExpandAll = new SimpleButton(this, 0, 2, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+		buttonExpandAll = new SimpleButton(this, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -370,30 +378,23 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public void onPostInit()
-	{
-		buttonAccept.posX = width - 18;
-		buttonCancel.posX = width - 38;
-		buttonExpandAll.posX = width - 58;
-		buttonCollapseAll.posX = width - 78;
-
-		configPanel.setHeight(height - 20);
-		configPanel.setWidth(width);
-
-		scroll.posX = width - 16;
-		scroll.setHeight(configPanel.height);
-
-		for (Widget b : configEntryButtons)
-		{
-			b.setWidth(scroll.posX);
-		}
-	}
-
-	@Override
 	public void addWidgets()
 	{
 		addAll(buttonAccept, buttonCancel, buttonCollapseAll, buttonExpandAll);
 		addAll(configPanel, scroll);
+	}
+
+	@Override
+	public void alignWidgets()
+	{
+		configPanel.setPosAndSize(0, 20, width, height - 20);
+		configPanel.alignWidgets();
+		scroll.setPosAndSize(width - 16, 20, 16, height - 20);
+
+		buttonAccept.setPos(width - 18, 2);
+		buttonCancel.setPos(width - 38, 2);
+		buttonExpandAll.setPos(width - 58, 2);
+		buttonCollapseAll.setPos(width - 78, 2);
 	}
 
 	@Override

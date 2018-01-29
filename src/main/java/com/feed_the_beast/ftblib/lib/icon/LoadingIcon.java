@@ -3,8 +3,6 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.feed_the_beast.ftblib.FTBLibFinals;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -40,9 +38,8 @@ public class LoadingIcon extends Icon
 		GlStateManager.popMatrix();
 	}
 
-	@Override
-	public JsonElement getJson()
+	public String toString()
 	{
-		return new JsonPrimitive("loading");
+		return "loading";
 	}
 }

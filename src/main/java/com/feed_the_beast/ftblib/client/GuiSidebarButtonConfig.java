@@ -29,7 +29,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 
 		public ButtonConfigSidebarButton(GuiBase gui, SidebarButton s)
 		{
-			super(gui, 0, 0, StringUtils.translate(s.getLangKey()), s.getIcon());
+			super(gui, StringUtils.translate(s.getLangKey()), s.getIcon());
 			sidebarButton = s;
 
 			if (StringUtils.canTranslate(s.getTooltipLangKey()))

@@ -20,14 +20,14 @@ public class GuiConfigValueField extends GuiBase
 
 	GuiConfigValueField(ConfigValue val, IGuiFieldCallback c)
 	{
-		super(200, 54);
+		setSize(200, 54);
 		defValue = val.copy();
 		value = val.copy();
 		callback = c;
 
 		int bsize = width / 2 - 10;
 
-		buttonCancel = new SimpleTextButton(this, 8, height - 24, GuiLang.CANCEL.translate(), Icon.EMPTY)
+		buttonCancel = new SimpleTextButton(this, GuiLang.CANCEL.translate(), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -43,10 +43,9 @@ public class GuiConfigValueField extends GuiBase
 			}
 		};
 
-		buttonCancel.setWidth(bsize);
-		buttonCancel.setHeight(16);
+		buttonCancel.setPosAndSize(8, height - 24, bsize, 16);
 
-		buttonAccept = new SimpleTextButton(this, width - bsize - 8, height - 24, GuiLang.ACCEPT.translate(), Icon.EMPTY)
+		buttonAccept = new SimpleTextButton(this, GuiLang.ACCEPT.translate(), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -66,10 +65,9 @@ public class GuiConfigValueField extends GuiBase
 			}
 		};
 
-		buttonAccept.setWidth(bsize);
-		buttonAccept.setHeight(16);
+		buttonAccept.setPosAndSize(width - bsize - 8, height - 24, bsize, 16);
 
-		textBox = new TextBox(this, 8, 8, width - 16, 16)
+		textBox = new TextBox(this)
 		{
 			@Override
 			public boolean isValid(String txt)
@@ -90,6 +88,7 @@ public class GuiConfigValueField extends GuiBase
 			}
 		};
 
+		textBox.setPosAndSize(8, 8, width - 16, 16);
 		textBox.writeText(val.toString());
 		textBox.setFocused(true);
 	}
