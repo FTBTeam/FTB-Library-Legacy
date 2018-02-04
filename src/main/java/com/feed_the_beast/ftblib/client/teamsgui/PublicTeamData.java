@@ -18,7 +18,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 		data.writeString(d.getName());
 		data.writeString(d.displayName);
 		data.writeString(d.description);
-		data.write(EnumTeamColor.NAME_MAP, d.color);
+		data.write(d.color, EnumTeamColor.NAME_MAP);
 		data.writeUUID(d.ownerId);
 		data.writeString(d.ownerName);
 		data.writeBoolean(d.isInvited);

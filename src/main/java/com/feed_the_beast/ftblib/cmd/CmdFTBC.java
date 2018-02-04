@@ -15,6 +15,5 @@ public class CmdFTBC extends CmdTreeBase
 		addSubcommand(new CmdClientConfig());
 
 		new RegisterFTBClientCommandsEvent(this).post();
-		setCustomPermissionPrefix("");
 	}
 }

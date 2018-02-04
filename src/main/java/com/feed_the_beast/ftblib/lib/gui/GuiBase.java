@@ -69,6 +69,7 @@ public abstract class GuiBase extends Panel
 	public GuiBase()
 	{
 		super(null);
+		setSize(176, 166);
 		gui = this;
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
@@ -450,45 +451,21 @@ public abstract class GuiBase extends Panel
 		return getTheme().getGui(false);
 	}
 
-	public final boolean onClickEvent(@Nullable ClickEvent clickEvent)
-	{
-		if (clickEvent == null)
-		{
-			return false;
-		}
-
-		switch (clickEvent.getAction())
-		{
-			case OPEN_URL:
-				return onClickEvent(clickEvent.getValue());
-			case OPEN_FILE:
-				return onClickEvent("file", clickEvent.getValue());
-			case RUN_COMMAND:
-				return onClickEvent("command", clickEvent.getValue());
-			case SUGGEST_COMMAND:
-				return onClickEvent("suggest_command", clickEvent.getValue());
-			case CHANGE_PAGE:
-				return onClickEvent("", clickEvent.getValue());
-			default:
-				return false;
-		}
-	}
-
-	public final boolean onClickEvent(String click)
+	public final boolean handleClick(String click)
 	{
 		int i = click.indexOf(':');
 
 		if (i != -1)
 		{
-			return onClickEvent(click.substring(0, i), click.substring(i + 1, click.length()));
+			return handleClick(click.substring(0, i), click.substring(i + 1, click.length()));
 		}
 		else
 		{
-			return onClickEvent("", click);
+			return handleClick("", click);
 		}
 	}
 
-	public boolean onClickEvent(String scheme, String path)
+	public boolean handleClick(String scheme, String path)
 	{
 		switch (scheme)
 		{

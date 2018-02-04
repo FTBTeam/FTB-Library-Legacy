@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
-import com.feed_the_beast.ftblib.lib.ICustomPermission;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -13,6 +13,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CmdBase extends CommandBase implements ICustomPermission
+public abstract class CmdBase extends CommandBase implements ICommandWithParent
 {
 	public enum Level
 	{
@@ -52,14 +53,12 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 
 	private final String name;
 	public final Level level;
-	private String customPermission;
-	private String usage;
+	private ICommand parent;
 
 	public CmdBase(String n, Level l)
 	{
 		name = n;
 		level = l;
-		setCustomPermissionPrefix("");
 	}
 
 	@Override
@@ -69,35 +68,21 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 	}
 
 	@Override
-	public final String getCustomPermission()
-	{
-		return customPermission;
-	}
-
-	@Override
 	public final int getRequiredPermissionLevel()
 	{
 		return level.level;
 	}
 
 	@Override
-	public final String getUsage(ICommandSender ics)
+	public String getUsage(ICommandSender ics)
 	{
-		return usage;
+		return "commands." + ICommandWithParent.getFullPath(this) + ".usage";
 	}
 
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
 	{
 		return level.checkPermission(sender, this);
-	}
-
-	@Override
-	public void setCustomPermissionPrefix(String prefix)
-	{
-		String s = prefix.isEmpty() ? name : (prefix + "." + name);
-		customPermission = "command." + s;
-		usage = "commands." + s + ".usage";
 	}
 
 	@Override
@@ -121,6 +106,19 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 		return false;
 	}
 
+	@Override
+	public void setParent(@Nullable ICommand p)
+	{
+		parent = p;
+	}
+
+	@Override
+	@Nullable
+	public ICommand getParent()
+	{
+		return parent;
+	}
+
 	// Static //
 
 	public static ForgePlayer getForgePlayer(ICommandSender sender) throws CommandException
@@ -135,10 +133,52 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 		return p;
 	}
 
-	public static ForgePlayer getForgePlayer(String name) throws CommandException
+	public static ForgePlayer getForgePlayer(ICommandSender sender, String name) throws CommandException
 	{
-		//FIXME: @p and @r
-		ForgePlayer p = Universe.get().getPlayer(name);
+		ForgePlayer p;
+
+		switch (name)
+		{
+			case "@r":
+			{
+				ForgePlayer[] players = Universe.get().getOnlinePlayers().toArray(new ForgePlayer[0]);
+				p = players[MathUtils.RAND.nextInt(players.length)];
+				break;
+			}
+			case "@ra":
+			{
+				ForgePlayer[] players = Universe.get().getPlayers().toArray(new ForgePlayer[0]);
+				p = players[MathUtils.RAND.nextInt(players.length)];
+				break;
+			}
+			case "@p":
+			{
+				p = null;
+				double dist = Double.POSITIVE_INFINITY;
+
+				for (ForgePlayer p1 : Universe.get().getOnlinePlayers())
+				{
+					if (p == null)
+					{
+						p = p1;
+					}
+					else
+					{
+						Vec3d pos = sender.getPositionVector();
+						double d = p1.getPlayer().getDistanceSq(pos.x, pos.y, pos.z);
+
+						if (d < dist)
+						{
+							dist = d;
+							p = p1;
+						}
+					}
+				}
+				break;
+			}
+			default:
+				p = null;
+		}
 
 		if (p == null || p.isFake())
 		{
@@ -176,6 +216,6 @@ public abstract class CmdBase extends CommandBase implements ICustomPermission
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
-		return getForgePlayer(args[index]).getCommandPlayer();
+		return getForgePlayer(sender, args[index]).getCommandPlayer();
 	}
 }

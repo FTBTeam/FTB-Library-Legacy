@@ -10,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -18,11 +17,11 @@ import com.feed_the_beast.ftblib.net.MessageCloseGui;
 import com.feed_the_beast.ftblib.net.MessageEditConfig;
 import com.feed_the_beast.ftblib.net.MessageOpenGui;
 import com.feed_the_beast.ftblib.net.MessageSyncData;
-import com.google.common.base.Preconditions;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -31,36 +30,33 @@ import net.minecraft.util.text.TextFormatting;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author LatvianModder
  */
 public class FTBLibAPI
 {
-	public static void reloadServer(ICommandSender sender, EnumReloadType type, ResourceLocation id)
+	public static void reloadServer(Universe universe, ICommandSender sender, EnumReloadType type, ResourceLocation id)
 	{
+		MinecraftServer server = sender.getServer();
 		long ms = System.currentTimeMillis();
 
-		Preconditions.checkState(Universe.loaded(), "Can't reload yet!");
-
 		HashSet<ResourceLocation> failed = new HashSet<>();
-		ServerReloadEvent event = new ServerReloadEvent(sender, type, id, failed);
+		ServerReloadEvent event = new ServerReloadEvent(universe, sender, type, id, failed);
 		event.post();
 
-		if (ServerUtils.hasOnlinePlayers())
+		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
-			for (EntityPlayerMP player : ServerUtils.getPlayers())
-			{
-				ForgePlayer p = Universe.get().getPlayer(player);
-				new MessageSyncData(player, p).sendTo(player);
-			}
+			ForgePlayer p = universe.getPlayer(player);
+			new MessageSyncData(player, p).sendTo(player);
 		}
 
 		String millis = (System.currentTimeMillis() - ms) + "ms";
 
 		if (type == EnumReloadType.RELOAD_COMMAND)
 		{
-			for (EntityPlayerMP player : ServerUtils.getPlayers())
+			for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 			{
 				Notification notification = Notification.of(FTBLibFinals.get("reload_server"));
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(player, millis));
@@ -80,7 +76,7 @@ public class FTBLibAPI
 
 				notification.setImportant(true);
 				notification.setTimer(140);
-				notification.send(player);
+				notification.send(server, player);
 			}
 		}
 
@@ -127,5 +123,26 @@ public class FTBLibAPI
 	public static void sendCloseGuiPacket(EntityPlayerMP player)
 	{
 		new MessageCloseGui().sendTo(player);
+	}
+
+	/**
+	 * Helper method for other mods so they don't have to deal with other classes than this
+	 */
+	public static boolean arePlayersInSameTeam(UUID player1, UUID player2)
+	{
+		if (!Universe.loaded())
+		{
+			return false;
+		}
+
+		ForgePlayer p1 = Universe.get().getPlayer(player1);
+
+		if (p1 == null)
+		{
+			return false;
+		}
+
+		ForgePlayer p2 = Universe.get().getPlayer(player2);
+		return p2 != null && p1.getTeam() != null && p1.getTeam().equalsTeam(p2.getTeam());
 	}
 }

@@ -56,7 +56,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
 		{
-			return team.isModerator(player) && Universe.get().getRealPlayers().size() > 1;
+			return team.isModerator(player) && team.universe.getRealPlayers().size() > 1;
 		}
 
 		@Override
@@ -68,7 +68,7 @@ public class FTBLibTeamGuiActions
 				return;
 			}
 
-			ForgePlayer p = Universe.get().getPlayer(data.getString("player"));
+			ForgePlayer p = team.universe.getPlayer(data.getString("player"));
 
 			if (p == null || p == player)
 			{
@@ -121,7 +121,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
 		{
-			return team.isModerator(player) && Universe.get().getRealPlayers().size() > 1;
+			return team.isModerator(player) && team.universe.getRealPlayers().size() > 1;
 		}
 
 		@Override
@@ -132,7 +132,7 @@ public class FTBLibTeamGuiActions
 				new MessageMyTeamPlayerList(getId(), team, player, ALLIES_PREDICATE).sendTo(player.getPlayer());
 			}
 
-			ForgePlayer p = Universe.get().getPlayer(data.getString("player"));
+			ForgePlayer p = team.universe.getPlayer(data.getString("player"));
 
 			if (p != null && p != player)
 			{
@@ -158,7 +158,7 @@ public class FTBLibTeamGuiActions
 				return;
 			}
 
-			ForgePlayer p = Universe.get().getPlayer(data.getString("player"));
+			ForgePlayer p = team.universe.getPlayer(data.getString("player"));
 
 			if (p != null && p != player)
 			{
@@ -172,7 +172,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data)
 		{
-			return team.isModerator(player) && Universe.get().getRealPlayers().size() > 1;
+			return team.isModerator(player) && team.universe.getRealPlayers().size() > 1;
 		}
 
 		@Override
@@ -183,7 +183,7 @@ public class FTBLibTeamGuiActions
 				new MessageMyTeamPlayerList(getId(), team, player, ENEMIES_PREDICATE).sendTo(player.getPlayer());
 			}
 
-			ForgePlayer p = Universe.get().getPlayer(data.getString("player"));
+			ForgePlayer p = team.universe.getPlayer(data.getString("player"));
 
 			if (p != null && p != player)
 			{
@@ -224,7 +224,7 @@ public class FTBLibTeamGuiActions
 				new MessageMyTeamPlayerList(getId(), team, player, MEMBERS_PREDICATE).sendTo(player.getPlayer());
 			}
 
-			ForgePlayer p = Universe.get().getPlayer(data.getString("player"));
+			ForgePlayer p = team.universe.getPlayer(data.getString("player"));
 
 			if (p != null && p != player)
 			{

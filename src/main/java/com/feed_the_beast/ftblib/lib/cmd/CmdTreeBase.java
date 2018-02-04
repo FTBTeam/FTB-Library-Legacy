@@ -1,25 +1,25 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
-import com.feed_the_beast.ftblib.lib.ICustomPermission;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.command.CommandTreeBase;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
-public class CmdTreeBase extends CommandTreeBase implements ICustomPermission
+public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 {
 	private final String name;
-	private CmdBase.Level level = CmdBase.Level.OP;
-	private String customPermission;
-	private String usage;
+	private int level = 4;
+	private ICommand parent;
 
 	public CmdTreeBase(String n)
 	{
 		name = n;
-		setCustomPermissionPrefix("");
 	}
 
 	@Override
@@ -27,20 +27,15 @@ public class CmdTreeBase extends CommandTreeBase implements ICustomPermission
 	{
 		super.addSubcommand(command);
 
-		if (command instanceof CmdBase && ((CmdBase) command).level == CmdBase.Level.ALL)
+		if (command instanceof ICommandWithParent)
 		{
-			level = CmdBase.Level.ALL;
+			((ICommandWithParent) command).setParent(this);
 		}
 
-		if (command instanceof CmdTreeBase && ((CmdTreeBase) command).level == CmdBase.Level.ALL)
+		if (command instanceof CommandBase)
 		{
-			level = CmdBase.Level.ALL;
+			level = Math.min(level, ((CommandBase) command).getRequiredPermissionLevel());
 		}
-	}
-
-	public void setLevel(CmdBase.Level l)
-	{
-		level = l;
 	}
 
 	@Override
@@ -50,42 +45,33 @@ public class CmdTreeBase extends CommandTreeBase implements ICustomPermission
 	}
 
 	@Override
-	public final String getCustomPermission()
-	{
-		return customPermission;
-	}
-
-	@Override
 	public final int getRequiredPermissionLevel()
 	{
-		return level.level;
+		return level;
 	}
 
 	@Override
-	public final String getUsage(ICommandSender ics)
+	public String getUsage(ICommandSender ics)
 	{
-		return usage;
+		return "commands." + ICommandWithParent.getFullPath(this) + ".usage";
 	}
 
 	@Override
 	public final boolean checkPermission(MinecraftServer server, ICommandSender sender)
 	{
-		return level.checkPermission(sender, this);
+		return level <= 0 || sender.canUseCommand(level, getName());
 	}
 
 	@Override
-	public void setCustomPermissionPrefix(String prefix)
+	public void setParent(@Nullable ICommand p)
 	{
-		String s = prefix.isEmpty() ? name : (prefix + "." + name);
-		customPermission = "command." + s;
-		usage = "commands." + s + ".usage";
+		parent = p;
+	}
 
-		for (ICommand command : getSubCommands())
-		{
-			if (command instanceof ICustomPermission)
-			{
-				((ICustomPermission) command).setCustomPermissionPrefix(s);
-			}
-		}
+	@Override
+	@Nullable
+	public ICommand getParent()
+	{
+		return parent;
 	}
 }

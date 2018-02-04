@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.cmd.CmdFTBC;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.events.player.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.net.MessageBase;
@@ -17,6 +18,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -50,7 +52,7 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 		@Override
 		@Nullable
-		public Object call() throws Exception
+		public Object call()
 		{
 			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
 
@@ -238,7 +240,10 @@ public class FTBLibModClient extends FTBLibModCommon implements IResourceManager
 
 		if (FTBLibClientConfig.general.mirror_commands)
 		{
-			cmd.getSubCommands().forEach(ClientCommandHandler.instance::registerCommand);
+			for (ICommand command : cmd.getSubCommands())
+			{
+				ClientCommandHandler.instance.registerCommand(new CommandMirror(command));
+			}
 		}
 	}
 

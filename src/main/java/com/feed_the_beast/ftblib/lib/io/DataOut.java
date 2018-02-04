@@ -328,7 +328,7 @@ public class DataOut
 		writeJson((icon == null ? Icon.EMPTY : icon).getJson());
 	}
 
-	public <E> void write(Serializer<E> serializer, E object)
+	public <E> void write(E object, Serializer<E> serializer)
 	{
 		serializer.write(this, object);
 	}

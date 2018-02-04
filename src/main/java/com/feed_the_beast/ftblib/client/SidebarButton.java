@@ -11,7 +11,6 @@ import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.event.ClickEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -29,8 +28,8 @@ public class SidebarButton implements Comparable<SidebarButton>
 	private Boolean defaultConfig = null;
 	private boolean configValue = true;
 	private final List<String> requiredServerMods = new ArrayList<>();
-	private final List<ClickEvent> clickEvents = new ArrayList<>();
-	private final List<ClickEvent> shiftClickEvents = new ArrayList<>();
+	private final List<String> clickEvents = new ArrayList<>();
+	private final List<String> shiftClickEvents = new ArrayList<>();
 	private boolean requiresOp, hideWithNEI, loadingScreen, customText;
 
 	public SidebarButton(ResourceLocation _id, SidebarButtonGroup g, JsonObject json)
@@ -52,14 +51,28 @@ public class SidebarButton implements Comparable<SidebarButton>
 		{
 			for (JsonElement e : JsonUtils.toArray(json.get("click")))
 			{
-				clickEvents.add(JsonUtils.deserializeClickEvent(e));
+				if (e.isJsonPrimitive())
+				{
+					clickEvents.add(e.getAsString());
+				}
+				else
+				{
+					clickEvents.add(GuiHelper.clickEventToString(JsonUtils.deserializeClickEvent(e)));
+				}
 			}
 		}
 		if (json.has("shift_click"))
 		{
 			for (JsonElement e : JsonUtils.toArray(json.get("shift_click")))
 			{
-				shiftClickEvents.add(JsonUtils.deserializeClickEvent(e));
+				if (e.isJsonPrimitive())
+				{
+					shiftClickEvents.add(e.getAsString());
+				}
+				else
+				{
+					shiftClickEvents.add(GuiHelper.clickEventToString(JsonUtils.deserializeClickEvent(e)));
+				}
 			}
 		}
 		if (json.has("config"))
@@ -135,9 +148,9 @@ public class SidebarButton implements Comparable<SidebarButton>
 			new GuiLoading().openGui();
 		}
 
-		for (ClickEvent event : (shift ? shiftClickEvents : clickEvents))
+		for (String event : (shift ? shiftClickEvents : clickEvents))
 		{
-			GuiHelper.BLANK_GUI.onClickEvent(event);
+			GuiHelper.BLANK_GUI.handleClick(event);
 		}
 	}
 

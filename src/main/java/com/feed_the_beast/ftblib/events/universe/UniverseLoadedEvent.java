@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.events.universe;
 
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
@@ -11,8 +12,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 {
 	private WorldServer world;
 
-	public UniverseLoadedEvent(WorldServer w)
+	public UniverseLoadedEvent(Universe u, WorldServer w)
 	{
+		super(u);
 		world = w;
 	}
 
@@ -25,9 +27,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 	{
 		private final NBTTagCompound data;
 
-		public Pre(WorldServer world, NBTTagCompound nbt)
+		public Pre(Universe u, WorldServer world, NBTTagCompound nbt)
 		{
-			super(world);
+			super(u, world);
 			data = nbt;
 		}
 
@@ -41,9 +43,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 	{
 		private final NBTTagCompound data;
 
-		public Post(WorldServer world, NBTTagCompound nbt)
+		public Post(Universe u, WorldServer world, NBTTagCompound nbt)
 		{
-			super(world);
+			super(u, world);
 			data = nbt;
 		}
 
@@ -55,9 +57,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 
 	public static class Finished extends UniverseLoadedEvent
 	{
-		public Finished(WorldServer world)
+		public Finished(Universe u, WorldServer world)
 		{
-			super(world);
+			super(u, world);
 		}
 	}
 }

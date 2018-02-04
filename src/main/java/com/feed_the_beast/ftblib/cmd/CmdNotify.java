@@ -48,6 +48,6 @@ public class CmdNotify extends CmdBase
 		checkArgs(sender, args, 2);
 		EntityPlayerMP player = getPlayer(server, sender, args[0]);
 		ITextComponent component = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(String.join(" ", StringUtils.shiftArray(args))));
-		ServerUtils.notify(player, Objects.requireNonNull(component));
+		ServerUtils.notify(server, player, Objects.requireNonNull(component));
 	}
 }

@@ -57,7 +57,7 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 		{
 			data.writeUUID(uuid);
 			data.writeString(name);
-			data.write(EnumTeamStatus.NAME_MAP, status);
+			data.write(status, EnumTeamStatus.NAME_MAP);
 			data.writeBoolean(requestingInvite);
 		}
 

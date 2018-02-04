@@ -36,6 +36,7 @@ import java.util.Map;
  */
 public final class ForgeTeam extends FinalIDObject implements IStringSerializable
 {
+	public final Universe universe;
 	public boolean isValid;
 	public final NBTDataStorage dataStorage;
 	public final ConfigEnum<EnumTeamColor> color;
@@ -48,9 +49,10 @@ public final class ForgeTeam extends FinalIDObject implements IStringSerializabl
 	public final Map<ForgePlayer, EnumTeamStatus> players;
 	private ConfigGroup cachedConfig;
 
-	public ForgeTeam(String id)
+	public ForgeTeam(Universe u, String id)
 	{
 		super(id);
+		universe = u;
 		isValid = true;
 		color = new ConfigEnum<>(EnumTeamColor.NAME_MAP);
 		fakePlayerStatus = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
@@ -212,7 +214,7 @@ public final class ForgeTeam extends FinalIDObject implements IStringSerializabl
 
 	public Collection<ForgePlayer> getPlayersWithStatus(Collection<ForgePlayer> collection, EnumTeamStatus status)
 	{
-		for (ForgePlayer player : Universe.get().getPlayers())
+		for (ForgePlayer player : universe.getPlayers())
 		{
 			if (!player.isFake() && hasStatus(player, status))
 			{
@@ -254,7 +256,7 @@ public final class ForgeTeam extends FinalIDObject implements IStringSerializabl
 		{
 			new ForgeTeamDeletedEvent(this).post();
 			removePlayer0(player);
-			Universe.get().teams.remove(getName());
+			universe.teams.remove(getName());
 			FileUtils.delete(new File(CommonUtils.folderWorld, "data/ftb_lib/teams/" + getName() + ".dat"));
 		}
 		else if (isOwner(player))

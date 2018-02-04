@@ -34,8 +34,6 @@ import net.minecraftforge.server.command.TextComponentHelper;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -44,7 +42,6 @@ import java.util.UUID;
 public class ServerUtils
 {
 	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TextFormatting.values());
-	private static MinecraftServer server = null;
 
 	public enum SpawnType
 	{
@@ -217,36 +214,6 @@ public class ServerUtils
 		}
 	}
 
-	public static void setServer(@Nullable MinecraftServer s)
-	{
-		server = s;
-	}
-
-	public static MinecraftServer getServer()
-	{
-		if (server != null)
-		{
-			return server;
-		}
-
-		return Objects.requireNonNull(FMLServerHandler.instance().getServer());
-	}
-
-	public static WorldServer getOverworld()
-	{
-		return getServer().getWorld(0);
-	}
-
-	public static List<EntityPlayerMP> getPlayers()
-	{
-		return getServer().getPlayerList().getPlayers();
-	}
-
-	public static boolean hasOnlinePlayers()
-	{
-		return !getPlayers().isEmpty();
-	}
-
 	public static boolean isVanillaClient(ICommandSender sender)
 	{
 		if (sender instanceof EntityPlayerMP)
@@ -259,9 +226,15 @@ public class ServerUtils
 		return false;
 	}
 
-	public static boolean isOP(GameProfile p)
+	public static boolean isOP(@Nullable MinecraftServer server, GameProfile p)
 	{
-		return getServer().getPlayerList().canSendCommands(p);
+		if (server == null)
+		{
+			//Does this even work?
+			server = FMLServerHandler.instance().getServer();
+		}
+
+		return server.getPlayerList().canSendCommands(p);
 	}
 
 	public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
@@ -316,11 +289,11 @@ public class ServerUtils
 		return null;
 	}
 
-	public static void notify(@Nullable EntityPlayer player, ITextComponent component)
+	public static void notify(MinecraftServer server, @Nullable EntityPlayer player, ITextComponent component)
 	{
 		if (player == null)
 		{
-			for (EntityPlayer player1 : getServer().getPlayerList().getPlayers())
+			for (EntityPlayer player1 : server.getPlayerList().getPlayers())
 			{
 				player1.sendStatusMessage(component, true);
 			}

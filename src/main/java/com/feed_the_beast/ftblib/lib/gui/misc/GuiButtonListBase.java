@@ -45,10 +45,9 @@ public abstract class GuiButtonListBase extends GuiBase
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
 
-				setPosAndSize(9, 9, widgets.size() > 7 ? 144 : size, 146);
 				scrollBar.setPosAndSize(posX + width + 6, 8, 16, 146);
 
-				gui.setWidth(scrollBar.posX + (widgets.size() > 7 ? scrollBar.width + 8 : 4));
+				gui.setWidth(scrollBar.posX + scrollBar.width + 8);
 				gui.setHeight(height + 18);
 			}
 
@@ -59,6 +58,7 @@ public abstract class GuiButtonListBase extends GuiBase
 			}
 		};
 
+		panelButtons.setPosAndSize(9, 9, 144, 146);
 		panelButtons.addFlags(Panel.DEFAULTS);
 
 		scrollBar = new PanelScrollBar(this, panelButtons)
@@ -81,16 +81,13 @@ public abstract class GuiButtonListBase extends GuiBase
 	public void addWidgets()
 	{
 		add(panelButtons);
-
-		if (panelButtons.widgets.size() > 7)
-		{
-			add(scrollBar);
-		}
+		add(scrollBar);
 	}
 
 	@Override
 	public void alignWidgets()
 	{
+		panelButtons.alignWidgets();
 	}
 
 	public abstract void addButtons(Panel panel);

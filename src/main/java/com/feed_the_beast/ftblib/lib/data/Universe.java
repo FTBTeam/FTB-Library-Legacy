@@ -15,7 +15,6 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
@@ -39,6 +38,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
@@ -85,15 +85,14 @@ public class Universe
 			return;
 		}
 
-		ServerUtils.setServer(event.getWorld().getMinecraftServer());
 		SharedServerData.INSTANCE.reset();
-		CommonUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), ServerUtils.getServer().getFolderName());
+		CommonUtils.folderWorld = new File(FMLCommonHandler.instance().getSavesDirectory(), event.getWorld().getMinecraftServer().getFolderName());
 
-		INSTANCE = new Universe();
-		INSTANCE.load((WorldServer) event.getWorld());
+		INSTANCE = new Universe((WorldServer) event.getWorld());
+		INSTANCE.load();
 	}
 
-	private void load(WorldServer world)
+	private void load()
 	{
 		File folder = new File(CommonUtils.folderWorld, "data/ftb_lib/");
 
@@ -118,7 +117,7 @@ public class Universe
 		}
 
 		SharedServerData.INSTANCE.fromJson(jsonWorldData);
-		new UniverseLoadedEvent.Pre(world, data).post();
+		new UniverseLoadedEvent.Pre(this, world, data).post();
 
 		Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
 		Map<String, NBTTagCompound> teamNBT = new HashMap<>();
@@ -150,7 +149,7 @@ public class Universe
 							if (uuid != null)
 							{
 								playerNBT.put(uuid, nbt);
-								ForgePlayer player = new ForgePlayer(uuid, nbt.getString("Name"));
+								ForgePlayer player = new ForgePlayer(this, uuid, nbt.getString("Name"));
 								player.firstLogin = false;
 								players.put(uuid, player);
 							}
@@ -180,7 +179,7 @@ public class Universe
 						{
 							String s = FileUtils.getRawFileName(f);
 							teamNBT.put(s, nbt);
-							teams.put(s, new ForgeTeam(s));
+							teams.put(s, new ForgeTeam(this, s));
 						}
 					}
 				}
@@ -201,7 +200,7 @@ public class Universe
 			player.dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
 		}
 
-		players.put(ForgePlayerFake.SERVER.getId(), ForgePlayerFake.SERVER);
+		players.put(serverPlayer.getId(), serverPlayer);
 
 		Iterator<ForgeTeam> teamIterator = teams.values().iterator();
 
@@ -273,25 +272,23 @@ public class Universe
 			team.dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
 		}
 
-		new UniverseLoadedEvent.Post(world, data).post();
-		new UniverseLoadedEvent.Finished(world).post();
+		new UniverseLoadedEvent.Post(this, world, data).post();
+		new UniverseLoadedEvent.Finished(this, world).post();
 
-		FTBLibAPI.reloadServer(ServerUtils.getServer(), EnumReloadType.CREATED, ServerReloadEvent.ALL);
+		FTBLibAPI.reloadServer(this, server, EnumReloadType.CREATED, ServerReloadEvent.ALL);
 	}
 
 	@SubscribeEvent
 	public static void onWorldUnloaded(WorldEvent.Unload event)
 	{
-		MinecraftServer server = event.getWorld().getMinecraftServer();
-
-		if (server != null && INSTANCE != null && event.getWorld().provider.getDimension() == 0)
+		if (!event.getWorld().isRemote && INSTANCE != null && event.getWorld().provider.getDimension() == 0)
 		{
 			for (ForgePlayer player : INSTANCE.getPlayers())
 			{
 				player.onLoggedOut();
 			}
 
-			new UniverseClosedEvent().post();
+			new UniverseClosedEvent(INSTANCE).post();
 			INSTANCE.players.clear();
 			INSTANCE.teams.clear();
 			INSTANCE = null;
@@ -316,14 +313,14 @@ public class Universe
 		}
 	}
 
-	private void save() throws Exception
+	private void save()
 	{
 		JsonUtils.toJson(SharedServerData.INSTANCE.getSerializableElement(), new File(CommonUtils.folderWorld, "world_data.json"));
 		File folder = new File(CommonUtils.folderWorld, "data/ftb_lib");
 
 		NBTTagCompound mainNbt = new NBTTagCompound();
 		NBTTagCompound data = new NBTTagCompound();
-		new UniverseSavedEvent(data).post();
+		new UniverseSavedEvent(this, data).post();
 		mainNbt.setTag("Data", data);
 		NBTUtils.writeTag(new File(folder, "universe.dat"), mainNbt);
 
@@ -401,7 +398,7 @@ public class Universe
 
 		if (firstLogin)
 		{
-			p = new ForgePlayer(player.getUniqueID(), player.getName());
+			p = new ForgePlayer(INSTANCE, player.getUniqueID(), player.getName());
 			INSTANCE.players.put(p.getId(), p);
 		}
 		else if (!p.getName().equals(player.getName()))
@@ -424,7 +421,7 @@ public class Universe
 
 				if (INSTANCE.getTeam(id) == null)
 				{
-					ForgeTeam team = new ForgeTeam(id);
+					ForgeTeam team = new ForgeTeam(INSTANCE, id);
 					INSTANCE.teams.put(team.getName(), team);
 					p.setTeamId(team.getName());
 					team.setStatus(p, EnumTeamStatus.OWNER);
@@ -438,7 +435,7 @@ public class Universe
 
 				if (team == null)
 				{
-					team = new ForgeTeam("singleplayer");
+					team = new ForgeTeam(INSTANCE, "singleplayer");
 					INSTANCE.teams.put(team.getName(), team);
 					p.setTeamId(team.getName());
 					team.setStatus(p, EnumTeamStatus.OWNER);
@@ -481,13 +478,21 @@ public class Universe
 
 	// Event handler end //
 
+	@Nonnull
+	public final MinecraftServer server;
+	public final WorldServer world;
 	public final Map<UUID, ForgePlayer> players;
 	public final Map<String, ForgeTeam> teams;
+	private ForgePlayer serverPlayer = null;
 
-	public Universe()
+	@SuppressWarnings("ConstantConditions")
+	public Universe(WorldServer w)
 	{
+		server = w.getMinecraftServer();
+		world = w;
 		players = new HashMap<>();
 		teams = new HashMap<>();
+		serverPlayer = new ForgePlayerFake(this, UUID.nameUUIDFromBytes("FTBLib_Server".getBytes()), "Server");
 	}
 
 	public Collection<ForgePlayer> getPlayers()
@@ -554,9 +559,9 @@ public class Universe
 
 	public ForgePlayer getPlayer(ICommandSender sender)
 	{
-		if (sender == ServerUtils.getServer())
+		if (sender instanceof MinecraftServer)
 		{
-			return ForgePlayerFake.SERVER;
+			return serverPlayer;
 		}
 
 		Preconditions.checkArgument(sender instanceof EntityPlayerMP);
@@ -565,7 +570,7 @@ public class Universe
 
 		if (p == null && player instanceof FakePlayer)
 		{
-			p = new ForgePlayerFake((FakePlayer) player);
+			p = new ForgePlayerFake(this, player.getUniqueID(), player.getName());
 			players.put(p.getId(), p);
 			p.onLoggedIn(player, false);
 			return p;
@@ -585,7 +590,7 @@ public class Universe
 	{
 		ForgePlayer player = getPlayer(profile.getId());
 
-		if (player == null && FTBLibConfig.general.merge_offline_mode_players.get(!ServerUtils.getServer().isDedicatedServer()))
+		if (player == null && FTBLibConfig.general.merge_offline_mode_players.get(!server.isDedicatedServer()))
 		{
 			player = getPlayer(profile.getName());
 

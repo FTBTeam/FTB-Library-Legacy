@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftblib.lib.data;
 
-import net.minecraftforge.common.util.FakePlayer;
-
 import java.util.UUID;
 
 /**
@@ -9,16 +7,9 @@ import java.util.UUID;
  */
 public final class ForgePlayerFake extends ForgePlayer
 {
-	public static final ForgePlayerFake SERVER = new ForgePlayerFake(UUID.nameUUIDFromBytes("FTBLib_Server".getBytes()), "Server");
-
-	public ForgePlayerFake(UUID id, String name)
+	public ForgePlayerFake(Universe u, UUID id, String name)
 	{
-		super(id, name);
-	}
-
-	ForgePlayerFake(FakePlayer p)
-	{
-		this(p.getGameProfile().getId(), p.getGameProfile().getName());
+		super(u, id, name);
 	}
 
 	@Override

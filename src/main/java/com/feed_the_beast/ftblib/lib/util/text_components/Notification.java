@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.util.text_components;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -139,8 +140,8 @@ public class Notification extends TextComponentString
 		return new Notification(this);
 	}
 
-	public void send(@Nullable EntityPlayer player)
+	public void send(MinecraftServer server, @Nullable EntityPlayer player)
 	{
-		ServerUtils.notify(player, this);
+		ServerUtils.notify(server, player, this);
 	}
 }

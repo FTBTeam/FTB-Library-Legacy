@@ -50,7 +50,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 		if (c != null)
 		{
 			c.callback.saveConfig(c.group, player, m.groupData);
-			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getGameProfile().getId());
+			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
 		}
 	}
 }

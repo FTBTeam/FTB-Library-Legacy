@@ -87,7 +87,7 @@ public class ExtendedTextField extends TextField
 		{
 			GuiBase.PositionedTextData data = getDataAtMouse();
 
-			if (data != null && data.clickEvent != null && gui.onClickEvent(data.clickEvent))
+			if (data != null && data.clickEvent != null && gui.handleClick(GuiHelper.clickEventToString(data.clickEvent)))
 			{
 				GuiHelper.playClickSound();
 				return true;

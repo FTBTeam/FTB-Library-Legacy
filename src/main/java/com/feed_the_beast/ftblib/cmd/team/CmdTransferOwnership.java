@@ -42,7 +42,7 @@ public class CmdTransferOwnership extends CmdBase
 
 		checkArgs(sender, args, 1);
 
-		ForgePlayer p1 = getForgePlayer(args[0]);
+		ForgePlayer p1 = getForgePlayer(sender, args[0]);
 
 		if (!team.equals(p1.getTeam()))
 		{

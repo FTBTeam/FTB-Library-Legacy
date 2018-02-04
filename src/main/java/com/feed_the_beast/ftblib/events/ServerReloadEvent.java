@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftblib.events;
 
+import com.feed_the_beast.ftblib.events.universe.UniverseEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ResourceLocation;
 
@@ -10,7 +12,7 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public class ServerReloadEvent extends FTBLibEvent
+public class ServerReloadEvent extends UniverseEvent
 {
 	public static final ResourceLocation ALL = new ResourceLocation("*:*");
 
@@ -20,8 +22,9 @@ public class ServerReloadEvent extends FTBLibEvent
 	private final Collection<ResourceLocation> failed;
 	private boolean clientReloadRequired;
 
-	public ServerReloadEvent(ICommandSender c, EnumReloadType t, ResourceLocation id, Collection<ResourceLocation> f)
+	public ServerReloadEvent(Universe u, ICommandSender c, EnumReloadType t, ResourceLocation id, Collection<ResourceLocation> f)
 	{
+		super(u);
 		sender = c;
 		type = t;
 		reloadId = id;

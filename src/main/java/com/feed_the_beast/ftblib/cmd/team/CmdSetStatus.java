@@ -56,7 +56,7 @@ public class CmdSetStatus extends CmdBase
 		}
 
 		checkArgs(sender, args, 2);
-		ForgePlayer p1 = getForgePlayer(args[0]);
+		ForgePlayer p1 = getForgePlayer(sender, args[0]);
 
 		if (team.isOwner(p1))
 		{

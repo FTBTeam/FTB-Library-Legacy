@@ -18,8 +18,10 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.Stack;
 
 /**
@@ -267,6 +269,29 @@ public class GuiHelper
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
 				GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, mode);
 			}
+		}
+	}
+
+	public static String clickEventToString(@Nullable ClickEvent event)
+	{
+		if (event == null)
+		{
+			return "";
+		}
+
+		switch (event.getAction())
+		{
+			case OPEN_URL:
+			case CHANGE_PAGE:
+				return event.getValue();
+			case OPEN_FILE:
+				return "file:" + event.getValue();
+			case RUN_COMMAND:
+				return "command:" + event.getValue();
+			case SUGGEST_COMMAND:
+				return "suggest_command:" + event.getValue();
+			default:
+				return "";
 		}
 	}
 }

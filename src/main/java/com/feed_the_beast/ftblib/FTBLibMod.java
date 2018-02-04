@@ -2,7 +2,7 @@ package com.feed_the_beast.ftblib;
 
 import com.feed_the_beast.ftblib.cmd.CmdFTB;
 import com.feed_the_beast.ftblib.events.PermissionRegistryEvent;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -49,8 +49,7 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent event)
 	{
-		ServerUtils.setServer(event.getServer());
-		CmdFTB cmd = new CmdFTB(ServerUtils.getServer().isDedicatedServer());
+		CmdFTB cmd = new CmdFTB(event.getServer().isDedicatedServer());
 		event.registerServerCommand(cmd);
 
 		if (FTBLibConfig.general.mirror_ftb_commands)
@@ -59,7 +58,7 @@ public class FTBLibMod
 			{
 				if (!command.getName().equals("reload"))
 				{
-					event.registerServerCommand(command);
+					event.registerServerCommand(new CommandMirror(command));
 				}
 			}
 		}
@@ -68,6 +67,5 @@ public class FTBLibMod
 	@Mod.EventHandler
 	public void onServerStopped(FMLServerStoppedEvent event)
 	{
-		ServerUtils.setServer(null);
 	}
 }

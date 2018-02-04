@@ -25,6 +25,5 @@ public class CmdFTB extends CmdTreeBase
 		}
 
 		new RegisterFTBCommandsEvent(this, dedi).post();
-		setCustomPermissionPrefix("");
 	}
 }

@@ -22,6 +22,8 @@ import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.server.permission.PermissionAPI;
+import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -35,6 +37,7 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 {
 	private static FakePlayer playerForStats;
 
+	public final Universe universe;
 	private final UUID playerId;
 	private String playerName;
 	public boolean firstLogin;
@@ -46,8 +49,9 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 	private ConfigGroup cachedConfig;
 	public long lastTimeSeen;
 
-	public ForgePlayer(UUID id, String name)
+	public ForgePlayer(Universe u, UUID id, String name)
 	{
+		universe = u;
 		playerId = id;
 		playerName = name;
 		firstLogin = true;
@@ -57,7 +61,7 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 
 	public final void setTeamId(String id)
 	{
-		team = Universe.get().getTeam(id);
+		team = universe.getTeam(id);
 	}
 
 	@Nullable
@@ -160,10 +164,7 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 		{
 			ForgeTeam team = owner.getTeam();
 
-			if (team != null && team.isAlly(this))
-			{
-				return true;
-			}
+			return team != null && team.isAlly(this);
 		}
 
 		return false;
@@ -187,7 +188,7 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 
 	public boolean isOP()
 	{
-		return ServerUtils.isOP(getProfile());
+		return ServerUtils.isOP(universe.server, getProfile());
 	}
 
 	public void onLoggedIn(EntityPlayerMP player, boolean firstLogin)
@@ -220,11 +221,12 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 	{
 		if (playerForStats == null)
 		{
-			playerForStats = new FakePlayer(ServerUtils.getOverworld(), new GameProfile(new UUID(0L, 0L), "_unknown"));
+			playerForStats = new FakePlayer(universe.world, new GameProfile(new UUID(0L, 0L), "_unknown"));
 		}
 
+		playerForStats.setWorld(universe.world);
 		playerForStats.setUniqueId(getId());
-		return ServerUtils.getServer().getPlayerList().getPlayerStatsFile(playerForStats);
+		return universe.server.getPlayerList().getPlayerStatsFile(playerForStats);
 	}
 
 	public ConfigGroup getSettings()
@@ -278,5 +280,15 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 	public long getLastTimeSeen()
 	{
 		return isOnline() ? CommonUtils.getWorldTime() : lastTimeSeen;
+	}
+
+	public boolean hasPermission(String node, @Nullable IContext context)
+	{
+		return PermissionAPI.hasPermission(getProfile(), node, context);
+	}
+
+	public boolean hasPermission(String node)
+	{
+		return isOnline() ? PermissionAPI.hasPermission(getPlayer(), node) : PermissionAPI.hasPermission(getProfile(), node, null);
 	}
 }

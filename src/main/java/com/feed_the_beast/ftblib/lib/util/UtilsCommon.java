@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 /**
  * @author LatvianModder
@@ -40,6 +41,6 @@ public class UtilsCommon
 
 	long getWorldTime()
 	{
-		return ServerUtils.getOverworld().getTotalWorldTime();
+		return FMLServerHandler.instance().getServer().getEntityWorld().getTotalWorldTime();
 	}
 }
