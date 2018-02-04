@@ -8,6 +8,7 @@ buildscript {
 	}
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 version = "${mod_version}"
 group = package_group
@@ -25,6 +26,10 @@ minecraft {
 
 	replace "@VERSION@", project.version
 	replaceIn "${mod_reference}"
+}
+
+repositories {
+	mavenLocal()
 }
 
 processResources {
@@ -47,12 +52,19 @@ jar {
 	}
 }
 
-task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	classifier = 'deobf'
-	manifest {
-		attributes 'FMLAT': 'ftblib_at.cfg'
-	}
+artifacts {
+	archives jar
+	archives sourceJar
 }
 
-build.dependsOn deobfJar
+publishing {
+	publications {
+		FTBLib(MavenPublication) {
+			groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+			artifact jar
+			artifact sourceJar
+		}
+	}
+}
