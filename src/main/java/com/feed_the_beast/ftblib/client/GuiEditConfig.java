@@ -15,9 +15,12 @@ import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -34,7 +37,34 @@ import java.util.List;
 
 public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
-	private static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
+	public static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
+
+	public static Theme THEME = new ThemeVanilla()
+	{
+		@Override
+		public Color4I getContentColor(boolean mouseOver)
+		{
+			return super.getContentColor(mouseOver);
+		}
+
+		@Override
+		public Icon getGui(boolean mouseOver)
+		{
+			return Icon.EMPTY;
+		}
+
+		@Override
+		public Icon getWidget(boolean mouseOver)
+		{
+			return super.getWidget(mouseOver);
+		}
+
+		@Override
+		public Icon getSlot(boolean mouseOver)
+		{
+			return super.getSlot(mouseOver);
+		}
+	};
 
 	public class ButtonConfigGroup extends Button
 	{
@@ -305,8 +335,6 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 						add(w);
 					}
 				}
-
-				scroll.setElementSize(align(WidgetLayout.VERTICAL));
 			}
 
 			@Override
@@ -316,6 +344,8 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				{
 					w.setPosAndSize(0, 0, width - 16, 16);
 				}
+
+				scroll.setElementSize(align(WidgetLayout.VERTICAL));
 			}
 		};
 
@@ -423,12 +453,18 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public void drawBackground()
 	{
 		COLOR_BACKGROUND.draw(0, 0, width, 20);
-		drawString(getTitle(), 6, 6, Color4I.DARK_GRAY, 0);
+		drawString(getTitle(), 6, 6);
 	}
 
 	@Override
 	public String getTitle()
 	{
 		return title;
+	}
+
+	@Override
+	public Theme createTheme()
+	{
+		return THEME;
 	}
 }

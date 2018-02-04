@@ -54,7 +54,7 @@ public class GuiHelper
 		{
 			int scale = screen.getScaleFactor();
 			int sx = x * scale;
-			int sy = (screen.getScaledHeight() - (y + h)) * scale;
+			int sy = (int) ((screen.getScaledHeight_double() - (y + h)) * scale);
 			int sw = w * scale;
 			int sh = h * scale;
 			GL11.glScissor(sx, sy, sw, sh);
