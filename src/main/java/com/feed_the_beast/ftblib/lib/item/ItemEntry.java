@@ -22,6 +22,7 @@ public final class ItemEntry
 	public final int metadata;
 	public final NBTTagCompound nbt;
 	private int hashCode;
+	private ItemStack stack = null;
 
 	private ItemEntry(ItemStack stack)
 	{
@@ -65,5 +66,33 @@ public final class ItemEntry
 	public boolean equals(Object o)
 	{
 		return o == this || o != null && o.getClass() == ItemEntry.class && equalsEntry((ItemEntry) o);
+	}
+
+	public ItemStack getStack(int count, boolean copy)
+	{
+		if (count <= 0 || isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		if (stack == null)
+		{
+			stack = new ItemStack(item, 1, metadata);
+			stack.setTagCompound(nbt);
+		}
+
+		ItemStack stack1;
+
+		if (copy)
+		{
+			stack1 = stack.copy();
+		}
+		else
+		{
+			stack1 = stack;
+		}
+
+		stack1.setCount(count);
+		return stack1;
 	}
 }
