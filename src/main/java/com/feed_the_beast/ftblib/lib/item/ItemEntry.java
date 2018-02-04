@@ -21,6 +21,7 @@ public final class ItemEntry
 	public final Item item;
 	public final int metadata;
 	public final NBTTagCompound nbt;
+	private int hashCode;
 
 	private ItemEntry(ItemStack stack)
 	{
@@ -28,6 +29,7 @@ public final class ItemEntry
 		metadata = stack.getMetadata();
 		NBTTagCompound nbt0 = stack.getTagCompound();
 		nbt = (nbt0 == null || nbt0.hasNoTags()) ? null : nbt0;
+		hashCode = 0;
 	}
 
 	public boolean isEmpty()
@@ -37,14 +39,24 @@ public final class ItemEntry
 
 	public int hashCode()
 	{
-		return Objects.hash(item, metadata, nbt);
+		if (hashCode == 0)
+		{
+			hashCode = Objects.hash(item, metadata, nbt);
+
+			if (hashCode == 0)
+			{
+				hashCode = 1;
+			}
+		}
+
+		return hashCode;
 	}
 
 	public boolean equalsEntry(ItemEntry entry)
 	{
-		if (entry == EMPTY)
+		if (entry == this)
 		{
-			return this == EMPTY;
+			return true;
 		}
 
 		return item == entry.item && metadata == entry.metadata && Objects.equals(nbt, entry.nbt);
