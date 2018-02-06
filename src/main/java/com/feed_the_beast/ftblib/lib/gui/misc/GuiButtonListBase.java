@@ -45,7 +45,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 				setHeight(Math.min(size, 146));
 
-				scrollBar.setPosAndSize(posX + width + 6, 8, 16, height);
+				scrollBar.setPosAndSize(posX + width + 6, 8, 16, height + 2);
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
 
