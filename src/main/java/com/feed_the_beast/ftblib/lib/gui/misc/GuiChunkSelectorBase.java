@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -129,19 +130,15 @@ public class GuiChunkSelectorBase extends GuiBase
 			@Override
 			public void alignWidgets()
 			{
-				align(WidgetLayout.VERTICAL);
-			}
+				int h = align(WidgetLayout.VERTICAL);
+				int w = 0;
 
-			@Override
-			public int getAX()
-			{
-				return getScreen().getScaledWidth() - 20;
-			}
+				for (Widget widget : widgets)
+				{
+					w = Math.max(w, widget.width);
+				}
 
-			@Override
-			public int getAY()
-			{
-				return 0;
+				panelButtons.setPosAndSize(gui.width + 2, -2, w, h);
 			}
 		};
 
@@ -175,7 +172,7 @@ public class GuiChunkSelectorBase extends GuiBase
 	public void alignWidgets()
 	{
 		setSize(ChunkSelectorMap.TILES_GUI * TILE_SIZE, ChunkSelectorMap.TILES_GUI * TILE_SIZE);
-		panelButtons.setSize(16, panelButtons.widgets.size() * 20);
+		panelButtons.alignWidgets();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
@@ -116,7 +117,7 @@ public class ScrollBar extends Widget
 
 	public Icon getBackground()
 	{
-		return gui.getTheme().getScrollBarBackground();
+		return isEnabled() ? gui.getTheme().getScrollBarBackground() : gui.getTheme().getScrollBarBackground().withTint(Color4I.BLACK_A[100]);
 	}
 
 	@Override

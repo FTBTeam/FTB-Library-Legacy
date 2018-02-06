@@ -408,8 +408,8 @@ public class FTBLibClientEventHandler
 			}
 
 			InventoryEffectRenderer gui = (InventoryEffectRenderer) ClientUtils.MC.currentScreen;
-			int guiLeft = ClientATHelper.getGuiX(gui);
-			int guiTop = ClientATHelper.getGuiY(gui);
+			int guiLeft = gui.getGuiLeft();
+			int guiTop = gui.getGuiTop();
 
 			if (prevGuiLeft != guiLeft || prevGuiTop != guiTop)
 			{
@@ -417,7 +417,7 @@ public class FTBLibClientEventHandler
 				prevGuiTop = guiTop;
 			}
 
-			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ClientATHelper.getRecipeBook((GuiInventory) gui).isVisible());
+			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).func_194310_f().isVisible());
 
 			if (hasPotions || FTBLibClientConfig.general.action_buttons.top())
 			{

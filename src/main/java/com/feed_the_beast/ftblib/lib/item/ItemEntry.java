@@ -68,6 +68,34 @@ public final class ItemEntry
 		return o == this || o != null && o.getClass() == ItemEntry.class && equalsEntry((ItemEntry) o);
 	}
 
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		toString(builder);
+		return builder.toString();
+	}
+
+	public void toString(StringBuilder builder)
+	{
+		builder.append(item.getRegistryName());
+		builder.append(' ');
+
+		if (metadata == 32767)
+		{
+			builder.append('*');
+		}
+		else
+		{
+			builder.append(metadata);
+		}
+
+		if (nbt != null)
+		{
+			builder.append(' ');
+			builder.append(nbt);
+		}
+	}
+
 	public ItemStack getStack(int count, boolean copy)
 	{
 		if (count <= 0 || isEmpty())
