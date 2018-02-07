@@ -462,18 +462,18 @@ public class FTBLibClientEventHandler
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
+			GuiButtonSidebar mouseOver = null;
+
 			for (GuiButtonSidebar b : buttons)
 			{
 				b.button.getIcon().draw(b.x, b.y, b.width, b.height);
 
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
+					mouseOver = b;
 					Color4I.WHITE_A[33].draw(b.x, b.y, b.width, b.height);
 				}
-			}
 
-			for (GuiButtonSidebar b : buttons)
-			{
 				if (b.button.hasCustomText())
 				{
 					CustomSidebarButtonTextEvent event = new CustomSidebarButtonTextEvent(b.button);
@@ -483,45 +483,43 @@ public class FTBLibClientEventHandler
 					{
 						int nw = font.getStringWidth(event.getText());
 						int width = 16;
-						Color4I.LIGHT_RED.draw(b.x + width - nw, b.y - 4, nw + 1, 9);
-
-						font.drawString(event.getText(), b.x + width - nw + 1, b.y - 3, 0xFFFFFFFF);
+						Color4I.LIGHT_RED.draw(b.x + width - nw, b.y - 2, nw + 1, 9);
+						font.drawString(event.getText(), b.x + width - nw + 1, b.y - 1, 0xFFFFFFFF);
 						GlStateManager.color(1F, 1F, 1F, 1F);
 					}
 				}
+			}
 
-				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
+			if (mouseOver != null)
+			{
+				int mx1 = mx - 4;
+				int my1 = my - 12;
+
+				int tw = font.getStringWidth(mouseOver.title);
+
+				if (!FTBLibClientConfig.general.action_buttons.top())
 				{
-					double mx1 = mx - 4D;
-					double my1 = my - 12D;
-
-					int tw = font.getStringWidth(b.title);
-
-					if (!FTBLibClientConfig.general.action_buttons.top())
-					{
-						mx1 -= tw + 8;
-						my1 += 4;
-					}
-
-					if (mx1 < 4D)
-					{
-						mx1 = 4D;
-					}
-					if (my1 < 4D)
-					{
-						my1 = 4D;
-					}
-
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(mx1, my1, 600);
-
-					GlStateManager.enableBlend();
-					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-					Color4I.DARK_GRAY.draw(-3, -2, tw + 6, 12);
-					font.drawString(b.title, 0, 0, 0xFFFFFFFF);
-					GlStateManager.color(1F, 1F, 1F, 1F);
-					GlStateManager.popMatrix();
+					mx1 -= tw + 8;
+					my1 += 4;
 				}
+
+				if (mx1 < 4)
+				{
+					mx1 = 4;
+				}
+				if (my1 < 4)
+				{
+					my1 = 4;
+				}
+
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(0, 0, 500);
+				GlStateManager.enableBlend();
+				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				Color4I.DARK_GRAY.draw(mx1 - 3, my1 - 2, tw + 6, 12);
+				font.drawString(mouseOver.title, mx1, my1, 0xFFFFFFFF);
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.popMatrix();
 			}
 
 			GlStateManager.color(1F, 1F, 1F, 1F);
