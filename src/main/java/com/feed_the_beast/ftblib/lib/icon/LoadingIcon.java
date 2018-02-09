@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 public class LoadingIcon extends Icon
 {
 	public static final LoadingIcon INSTANCE = new LoadingIcon();
-	public static final ResourceLocation TEXTURE = FTBLibFinals.get("textures/gui/loading.png");
+	public static final ResourceLocation TEXTURE = new ResourceLocation(FTBLib.MOD_ID, "textures/gui/loading.png");
 
 	private LoadingIcon()
 	{

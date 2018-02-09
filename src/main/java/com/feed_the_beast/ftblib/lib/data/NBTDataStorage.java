@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
@@ -19,7 +18,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 	{
 		@Override
 		@Nullable
-		public INBTSerializable<NBTTagCompound> getRaw(ResourceLocation id)
+		public INBTSerializable<NBTTagCompound> getRaw(String id)
 		{
 			return null;
 		}
@@ -42,25 +41,25 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 		}
 	};
 
-	private final Map<ResourceLocation, INBTSerializable<NBTTagCompound>> map;
+	private final Map<String, INBTSerializable<NBTTagCompound>> map;
 
 	public NBTDataStorage()
 	{
 		map = new HashMap<>();
 	}
 
-	public void add(ResourceLocation id, INBTSerializable<NBTTagCompound> data)
+	public void add(String id, INBTSerializable<NBTTagCompound> data)
 	{
 		map.put(id, data);
 	}
 
 	@Nullable
-	public INBTSerializable<NBTTagCompound> getRaw(ResourceLocation id)
+	public INBTSerializable<NBTTagCompound> getRaw(String id)
 	{
 		return map.get(id);
 	}
 
-	public <T extends INBTSerializable<NBTTagCompound>> T get(ResourceLocation id)
+	public <T extends INBTSerializable<NBTTagCompound>> T get(String id)
 	{
 		return CommonUtils.cast(Objects.requireNonNull(getRaw(id)));
 	}
@@ -75,13 +74,13 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
-		for (Map.Entry<ResourceLocation, INBTSerializable<NBTTagCompound>> entry : map.entrySet())
+		for (Map.Entry<String, INBTSerializable<NBTTagCompound>> entry : map.entrySet())
 		{
 			NBTTagCompound nbt1 = entry.getValue().serializeNBT();
 
 			if (!nbt1.hasNoTags())
 			{
-				nbt.setTag(entry.getKey().toString(), nbt1);
+				nbt.setTag(entry.getKey(), nbt1);
 			}
 		}
 
@@ -91,9 +90,16 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		for (Map.Entry<ResourceLocation, INBTSerializable<NBTTagCompound>> entry : map.entrySet())
+		for (Map.Entry<String, INBTSerializable<NBTTagCompound>> entry : map.entrySet())
 		{
-			entry.getValue().deserializeNBT(nbt.getCompoundTag(entry.getKey().toString()));
+			NBTTagCompound tag = nbt.getCompoundTag(entry.getKey());
+
+			if (tag.hasNoTags())
+			{
+				tag = nbt.getCompoundTag(entry.getKey() + ":data");
+			}
+
+			entry.getValue().deserializeNBT(tag);
 		}
 	}
 }

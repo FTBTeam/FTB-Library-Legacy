@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -53,7 +53,7 @@ public class MessageMyTeamAction extends MessageToServer<MessageMyTeamAction>
 	@Override
 	public void onMessage(MessageMyTeamAction m, EntityPlayer player)
 	{
-		TeamGuiAction action = FTBLibModCommon.TEAM_GUI_ACTIONS.get(m.action);
+		TeamGuiAction action = FTBLibCommon.TEAM_GUI_ACTIONS.get(m.action);
 
 		if (action != null)
 		{

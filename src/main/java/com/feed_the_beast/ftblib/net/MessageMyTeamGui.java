@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
@@ -75,7 +75,7 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 		title = team.getColor().getTextFormatting() + team.getTitle();
 		actions = new ArrayList<>();
 
-		for (TeamGuiAction action : FTBLibModCommon.TEAM_GUI_ACTIONS.values())
+		for (TeamGuiAction action : FTBLibCommon.TEAM_GUI_ACTIONS.values())
 		{
 			if (action.isAvailable(team, player, new NBTTagCompound()))
 			{

@@ -71,7 +71,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
-		for (SidebarButtonGroup group : FTBLibModClient.SIDEBAR_BUTTON_GROUPS)
+		for (SidebarButtonGroup group : FTBLibClient.SIDEBAR_BUTTON_GROUPS)
 		{
 			for (SidebarButton button : group.getButtons())
 			{
@@ -86,6 +86,6 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 	@Override
 	public void onClosed()
 	{
-		FTBLibModClient.saveSidebarButtonConfig();
+		FTBLibClient.saveSidebarButtonConfig();
 	}
 }

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
@@ -38,7 +38,7 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 		universeId = SharedServerData.INSTANCE.getUniverseId();
 		syncData = new NBTTagCompound();
 
-		for (Map.Entry<String, ISyncData> entry : FTBLibModCommon.SYNCED_DATA.entrySet())
+		for (Map.Entry<String, ISyncData> entry : FTBLibCommon.SYNCED_DATA.entrySet())
 		{
 			syncData.setTag(entry.getKey(), entry.getValue().writeSyncData(player, forgePlayer));
 		}
@@ -79,7 +79,7 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 
 		for (String key : m.syncData.getKeySet())
 		{
-			ISyncData nbt = FTBLibModCommon.SYNCED_DATA.get(key);
+			ISyncData nbt = FTBLibCommon.SYNCED_DATA.get(key);
 
 			if (nbt != null)
 			{

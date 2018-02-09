@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -20,7 +20,7 @@ public enum EnumRedstoneMode implements IStringSerializable, ICustomName
 
 	public static final NameMap<EnumRedstoneMode> NAME_MAP = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW);
 	public static final NameMap<EnumRedstoneMode> NAME_MAP_WITH_PULSE = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE);
-	public static final LangKey ENUM_LANG_KEY = FTBLibFinals.lang("redstonemode");
+	public static final LangKey ENUM_LANG_KEY = FTBLibLang.get("redstonemode");
 
 	private final LangKey langKey;
 	private final String name;
@@ -28,7 +28,7 @@ public enum EnumRedstoneMode implements IStringSerializable, ICustomName
 	EnumRedstoneMode(String n)
 	{
 		name = n;
-		langKey = FTBLibFinals.lang("redstonemode." + name);
+		langKey = FTBLibLang.get("redstonemode." + name);
 	}
 
 	public LangKey getLangKey()

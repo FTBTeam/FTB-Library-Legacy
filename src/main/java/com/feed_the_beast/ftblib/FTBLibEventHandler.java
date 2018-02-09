@@ -28,12 +28,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @EventHandler
 public class FTBLibEventHandler
 {
-	public static final ResourceLocation RELOAD_CONFIG = FTBLibFinals.get("config");
+	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBLib.MOD_ID, "config");
 
 	@SubscribeEvent
 	public static void registerOptionalServerMods(RegisterOptionalServerModsEvent event)
 	{
-		event.register(FTBLibFinals.MOD_ID);
+		event.register(FTBLib.MOD_ID);
 	}
 
 	@SubscribeEvent

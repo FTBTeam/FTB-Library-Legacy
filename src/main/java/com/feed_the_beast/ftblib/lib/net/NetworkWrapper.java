@@ -29,6 +29,11 @@ public class NetworkWrapper // SimpleNetworkWrapper
 
 	public static NetworkWrapper newWrapper(String id)
 	{
+		if (id.length() > 20)
+		{
+			throw new IllegalArgumentException("Network wrapper " + id + " id isn't valid, must be <= 20 characters!");
+		}
+
 		return new NetworkWrapper(id);
 	}
 

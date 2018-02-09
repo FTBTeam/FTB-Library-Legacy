@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.lib.data;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.FTBLibFinals;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
@@ -55,7 +55,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBLibFinals.MOD_ID)
+@Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
 public class Universe
 {
 	private static Universe INSTANCE = null;
@@ -456,7 +456,7 @@ public class Universe
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
 			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.MY_TEAM.textComponent(player)));
 			ITextComponent b2 = FTBLibLang.CLICK_HERE.textComponent(player);
-			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings " + FTBLibFinals.MOD_ID + ".hide_team_notification toggle"));
+			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
 			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.TEAM_NOTIFICATION_HIDE.textComponent(player)));
 			FTBLibLang.TEAM_NOTIFICATION.sendMessage(player, b1, b2);
 		}

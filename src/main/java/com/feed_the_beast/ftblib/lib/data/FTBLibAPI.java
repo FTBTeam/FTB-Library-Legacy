@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftblib.lib.data;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibLang;
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibNotifications;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.IContainerProvider;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
@@ -21,7 +22,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -39,14 +39,13 @@ public class FTBLibAPI
 {
 	public static void reloadServer(Universe universe, ICommandSender sender, EnumReloadType type, ResourceLocation id)
 	{
-		MinecraftServer server = sender.getServer();
 		long ms = System.currentTimeMillis();
 
 		HashSet<ResourceLocation> failed = new HashSet<>();
 		ServerReloadEvent event = new ServerReloadEvent(universe, sender, type, id, failed);
 		event.post();
 
-		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
+		for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 		{
 			ForgePlayer p = universe.getPlayer(player);
 			new MessageSyncData(player, p).sendTo(player);
@@ -56,9 +55,9 @@ public class FTBLibAPI
 
 		if (type == EnumReloadType.RELOAD_COMMAND)
 		{
-			for (EntityPlayerMP player : server.getPlayerList().getPlayers())
+			for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 			{
-				Notification notification = Notification.of(FTBLibFinals.get("reload_server"));
+				Notification notification = Notification.of(FTBLibNotifications.RELOAD_SERVER);
 				notification.addLine(FTBLibLang.RELOAD_SERVER.textComponent(player, millis));
 
 				if (event.isClientReloadRequired())
@@ -71,21 +70,21 @@ public class FTBLibAPI
 					notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(player), TextFormatting.RED));
 					String ids = StringJoiner.with(", ").join(failed);
 					notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
-					FTBLibFinals.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
+					FTBLib.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
 				}
 
 				notification.setImportant(true);
 				notification.setTimer(140);
-				notification.send(server, player);
+				notification.send(universe.server, player);
 			}
 		}
 
-		FTBLibFinals.LOGGER.info("Reloaded server in " + millis);
+		FTBLib.LOGGER.info("Reloaded server in " + millis);
 	}
 
 	public static void openGui(ResourceLocation guiId, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
 	{
-		IContainerProvider containerProvider = FTBLibModCommon.GUI_CONTAINER_PROVIDERS.get(guiId);
+		IContainerProvider containerProvider = FTBLibCommon.GUI_CONTAINER_PROVIDERS.get(guiId);
 
 		if (containerProvider == null)
 		{
@@ -109,13 +108,13 @@ public class FTBLibAPI
 
 	public static void editServerConfig(EntityPlayerMP player, ConfigGroup group, IConfigCallback callback)
 	{
-		FTBLibModCommon.TEMP_SERVER_CONFIG.put(player.getGameProfile().getId(), new FTBLibModCommon.EditingConfig(group, callback));
+		FTBLibCommon.TEMP_SERVER_CONFIG.put(player.getGameProfile().getId(), new FTBLibCommon.EditingConfig(group, callback));
 		new MessageEditConfig(group).sendTo(player);
 	}
 
 	public static ConfigValue getConfigValueFromId(String id)
 	{
-		ConfigValueProvider provider = FTBLibModCommon.CONFIG_VALUE_PROVIDERS.get(id);
+		ConfigValueProvider provider = FTBLibCommon.CONFIG_VALUE_PROVIDERS.get(id);
 		Objects.requireNonNull(provider, "Unknown Config ID: " + id);
 		return provider.get();
 	}

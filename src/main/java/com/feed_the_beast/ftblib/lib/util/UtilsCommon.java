@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.server.FMLServerHandler;
  */
 public class UtilsCommon
 {
-	@SidedProxy(modId = FTBLibFinals.MOD_ID, serverSide = "com.feed_the_beast.ftblib.lib.util.UtilsCommon", clientSide = "com.feed_the_beast.ftblib.lib.util.UtilsClient")
+	@SidedProxy(modId = FTBLib.MOD_ID, serverSide = "com.feed_the_beast.ftblib.lib.util.UtilsCommon", clientSide = "com.feed_the_beast.ftblib.lib.util.UtilsClient")
 	public static UtilsCommon INSTANCE;
 
 	String translate(String key)

@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.mojang.authlib.GameProfile;
@@ -140,7 +140,7 @@ public class ServerUtils
 				}
 				catch (Exception ex)
 				{
-					FTBLibFinals.LOGGER.error("Error creating an entity to be created in new dimension." + ex);
+					FTBLib.LOGGER.error("Error creating an entity to be created in new dimension." + ex);
 					return false;
 				}
 			}

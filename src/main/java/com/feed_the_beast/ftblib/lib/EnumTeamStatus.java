@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.util.LangKey;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
@@ -51,7 +51,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 		name = n;
 		status = s;
 		color = c;
-		langKey = FTBLibFinals.lang("lang.team_status." + name);
+		langKey = FTBLibLang.get("lang.team_status." + name);
 		canBeSet = cs;
 	}
 

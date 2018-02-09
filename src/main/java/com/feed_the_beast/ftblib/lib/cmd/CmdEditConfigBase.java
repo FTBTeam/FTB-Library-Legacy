@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
@@ -104,7 +104,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 		if (args.length >= 2)
 		{
 			String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
-			FTBLibFinals.LOGGER.info(FTBLibLang.CONFIG_COMMAND_SETTING.translate(args[0], json));
+			FTBLib.LOGGER.info(FTBLibLang.CONFIG_COMMAND_SETTING.translate(args[0], json));
 
 			try
 			{

@@ -1,8 +1,7 @@
 package com.feed_the_beast.ftblib.lib.data;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
-import com.feed_the_beast.ftblib.FTBLibMod;
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamOwnerChangedEvent;
@@ -62,7 +61,7 @@ public final class ForgeTeam extends FinalIDObject implements IStringSerializabl
 		requestingInvite = new HashSet<>();
 		players = new HashMap<>();
 
-		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_TEAM);
+		dataStorage = FTBLib.PROXY.createDataStorage(this, FTBLibCommon.DATA_PROVIDER_TEAM);
 	}
 
 	public NBTDataStorage getData()
@@ -341,14 +340,12 @@ public final class ForgeTeam extends FinalIDObject implements IStringSerializabl
 			ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 			event.post();
 
-			String group = FTBLibFinals.MOD_ID;
-			event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
-			event.getConfig().add(group, "free_to_join", freeToJoin);
-			group = FTBLibFinals.MOD_ID + ".display";
-			event.getConfig().add(group, "color", color);
-			event.getConfig().add(group, "fake_player_status", fakePlayerStatus);
-			event.getConfig().add(group, "title", title);
-			event.getConfig().add(group, "desc", desc);
+			event.getConfig().setGroupName(FTBLib.MOD_ID, new TextComponentString(FTBLib.MOD_NAME));
+			event.getConfig().add(FTBLib.MOD_ID, "free_to_join", freeToJoin);
+			event.getConfig().add(FTBLib.MOD_ID + ".display", "color", color);
+			event.getConfig().add(FTBLib.MOD_ID + ".display", "fake_player_status", fakePlayerStatus);
+			event.getConfig().add(FTBLib.MOD_ID + ".display", "title", title);
+			event.getConfig().add(FTBLib.MOD_ID + ".display", "desc", desc);
 		}
 
 		return cachedConfig;

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.client;
 
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.FTBLibModCommon;
 import com.feed_the_beast.ftblib.cmd.CmdFTBC;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.events.player.RegisterGuiProvidersEvent;
@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
 /**
  * @author LatvianModder
  */
-public class FTBLibModClient extends FTBLibModCommon implements IResourceManagerReloadListener
+public class FTBLibClient extends FTBLibCommon implements IResourceManagerReloadListener
 {
 	public static final List<SidebarButtonGroup> SIDEBAR_BUTTON_GROUPS = new ArrayList<>();
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();

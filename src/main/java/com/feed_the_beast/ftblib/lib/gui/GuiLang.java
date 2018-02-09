@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.util.LangKey;
 
 public interface GuiLang
@@ -48,7 +48,7 @@ public interface GuiLang
 	LangKey INACTIVE = LangKey.of("gui.inactive");
 	LangKey SETTINGS = LangKey.of("gui.settings");
 	LangKey OTHER = LangKey.of("gui.other");
-	LangKey SERVER_FORCED = LangKey.of(FTBLibFinals.MOD_ID + ".label.server_forced");
+	LangKey SERVER_FORCED = LangKey.of(FTBLib.MOD_ID + ".label.server_forced");
 	LangKey ONLINE = LangKey.of("gui.online");
 	LangKey OFFLINE = LangKey.of("gui.offline");
 	LangKey WHITELIST = LangKey.of("gui.whitelist");
@@ -58,5 +58,5 @@ public interface GuiLang
 	LangKey INFINITE = LangKey.of("gui.infinite");
 	LangKey WIDTH = LangKey.of("gui.width");
 	LangKey HEIGHT = LangKey.of("gui.height");
-	String LANG_GENERAL = FTBLibFinals.MOD_ID + ".general";
+	String LANG_GENERAL = FTBLib.MOD_ID + ".general";
 }

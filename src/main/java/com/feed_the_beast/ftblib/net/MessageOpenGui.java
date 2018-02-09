@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.client.FTBLibModClient;
+import com.feed_the_beast.ftblib.client.FTBLibClient;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
@@ -64,7 +64,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 	@SideOnly(Side.CLIENT)
 	public void onMessage(MessageOpenGui m, EntityPlayer player)
 	{
-		IGuiProvider guiProvider = FTBLibModClient.getGui(m.guiId);
+		IGuiProvider guiProvider = FTBLibClient.getGui(m.guiId);
 
 		if (guiProvider != null)
 		{

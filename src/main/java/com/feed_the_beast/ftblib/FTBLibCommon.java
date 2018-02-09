@@ -44,15 +44,15 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class FTBLibModCommon
+public class FTBLibCommon
 {
 	private static final EnumSet<Side> DEFAULT_SIDES = EnumSet.allOf(Side.class);
 	public static final Map<String, ConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
 	public static final Map<UUID, EditingConfig> TEMP_SERVER_CONFIG = new HashMap<>();
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
-	public static final Map<ResourceLocation, IDataProvider<ForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
-	public static final Map<ResourceLocation, IDataProvider<ForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
+	public static final Map<String, IDataProvider<ForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
+	public static final Map<String, IDataProvider<ForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
 	private static final Map<String, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
 	public static final Map<String, RankConfigValueInfo> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
@@ -130,7 +130,7 @@ public class FTBLibModCommon
 
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		FTBLibFinals.LOGGER.info("Loading FTBLib, DevEnv:" + CommonUtils.DEV_ENV);
+		FTBLib.LOGGER.info("Loading FTBLib, DevEnv:" + CommonUtils.DEV_ENV);
 		CommonUtils.init(event.getModConfigurationDirectory());
 		Side side = event.getSide();
 
@@ -178,11 +178,11 @@ public class FTBLibModCommon
 		}
 	}*/
 
-	public <T> NBTDataStorage createDataStorage(T owner, Map<ResourceLocation, IDataProvider<T>> map)
+	public <T> NBTDataStorage createDataStorage(T owner, Map<String, IDataProvider<T>> map)
 	{
 		NBTDataStorage storage = new NBTDataStorage();
 
-		for (Map.Entry<ResourceLocation, IDataProvider<T>> entry : map.entrySet())
+		for (Map.Entry<String, IDataProvider<T>> entry : map.entrySet())
 		{
 			try
 			{

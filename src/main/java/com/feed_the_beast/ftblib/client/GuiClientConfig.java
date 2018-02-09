@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.client;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.SharedClientData;
 import com.feed_the_beast.ftblib.lib.gui.Button;
@@ -114,14 +114,14 @@ public class GuiClientConfig extends GuiButtonListBase
 	{
 		List<Button> buttons = new ArrayList<>();
 
-		for (ClientConfig config : FTBLibModClient.CLIENT_CONFIG_MAP.values())
+		for (ClientConfig config : FTBLibClient.CLIENT_CONFIG_MAP.values())
 		{
 			buttons.add(new ButtonClientConfig(gui, config));
 		}
 
 		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
-		buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/teams.png"))
+		buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -131,7 +131,7 @@ public class GuiClientConfig extends GuiButtonListBase
 			}
 		});
 
-		if (SharedClientData.INSTANCE.optionalServerMods().contains(FTBLibFinals.MOD_ID))
+		if (SharedClientData.INSTANCE.optionalServerMods().contains(FTBLib.MOD_ID))
 		{
 			buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
 			{
@@ -151,6 +151,6 @@ public class GuiClientConfig extends GuiButtonListBase
 	@Override
 	public void onClosed()
 	{
-		FTBLibModClient.saveSidebarButtonConfig();
+		FTBLibClient.saveSidebarButtonConfig();
 	}
 }

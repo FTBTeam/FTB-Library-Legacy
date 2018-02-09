@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.lib.net;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.FTBLibMod;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
@@ -65,7 +65,7 @@ public abstract class MessageBase<E extends MessageBase<E>> implements IMessage,
 		}
 		else
 		{
-			FTBLibMod.PROXY.handleClientMessage(message);
+			FTBLib.PROXY.handleClientMessage(message);
 		}
 
 		return null;

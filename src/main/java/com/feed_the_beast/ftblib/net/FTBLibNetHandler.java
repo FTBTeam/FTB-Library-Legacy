@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 
 /**
@@ -8,9 +8,9 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
  */
 public class FTBLibNetHandler
 {
-	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID);
-	static final NetworkWrapper EDIT_CONFIG = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID + "_edit_config");
-	static final NetworkWrapper MY_TEAM = NetworkWrapper.newWrapper(FTBLibFinals.MOD_ID + "_my_team");
+	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBLib.MOD_ID);
+	static final NetworkWrapper EDIT_CONFIG = NetworkWrapper.newWrapper(FTBLib.MOD_ID + "_edit_config");
+	static final NetworkWrapper MY_TEAM = NetworkWrapper.newWrapper(FTBLib.MOD_ID + "_my_team");
 
 	public static void init()
 	{

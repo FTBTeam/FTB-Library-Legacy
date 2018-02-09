@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
@@ -84,7 +84,7 @@ public class CommonUtils
 			folderLocal.mkdirs();
 		}
 
-		isNEILoaded = Loader.isModLoaded(FTBLibFinals.NEI);
+		isNEILoaded = Loader.isModLoaded(OtherMods.NEI);
 	}
 
 	public static <E> Map<String, E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj, boolean immutable)

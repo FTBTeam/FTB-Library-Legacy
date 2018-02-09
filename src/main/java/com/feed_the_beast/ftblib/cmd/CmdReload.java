@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.cmd;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
@@ -32,7 +32,7 @@ public class CmdReload extends CmdBase
 		tab = new HashSet<>();
 		tab.add("*");
 
-		for (ResourceLocation r : FTBLibModCommon.RELOAD_IDS)
+		for (ResourceLocation r : FTBLibCommon.RELOAD_IDS)
 		{
 			tab.add(r.toString());
 			tab.add(r.getResourceDomain() + ":*");

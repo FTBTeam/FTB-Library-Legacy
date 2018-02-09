@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.client;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BuiltinChunkMap extends ChunkSelectorMap
 {
-	public static final Icon TEX_ENTITY = Icon.getIcon(FTBLibFinals.MOD_ID + ":textures/gui/entity.png");
+	public static final Icon TEX_ENTITY = Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/entity.png");
 	public static final double UV = (double) TILES_GUI / (double) TILES_TEX;
 
 	@Override

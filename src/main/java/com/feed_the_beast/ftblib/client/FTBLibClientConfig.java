@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.client;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBLibFinals.MOD_ID, value = Side.CLIENT)
-@Config(modid = FTBLibFinals.MOD_ID + "_client", category = "", name = "../local/client/ftblib")
+@Mod.EventBusSubscriber(modid = FTBLib.MOD_ID, value = Side.CLIENT)
+@Config(modid = FTBLib.MOD_ID + "_client", category = "", name = "../local/client/" + FTBLib.MOD_ID)
 public class FTBLibClientConfig
 {
 	@Config.LangKey(GuiLang.LANG_GENERAL)
@@ -39,13 +39,13 @@ public class FTBLibClientConfig
 
 	public static void sync()
 	{
-		ConfigManager.sync(FTBLibFinals.MOD_ID + "_client", Config.Type.INSTANCE);
+		ConfigManager.sync(FTBLib.MOD_ID + "_client", Config.Type.INSTANCE);
 	}
 
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
-		if (event.getModID().equals(FTBLibFinals.MOD_ID + "_client"))
+		if (event.getModID().equals(FTBLib.MOD_ID + "_client"))
 		{
 			sync();
 		}

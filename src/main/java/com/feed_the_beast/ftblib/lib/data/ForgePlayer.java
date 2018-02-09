@@ -1,9 +1,8 @@
 package com.feed_the_beast.ftblib.lib.data;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibLang;
-import com.feed_the_beast.ftblib.FTBLibMod;
-import com.feed_the_beast.ftblib.FTBLibModCommon;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
@@ -55,7 +54,7 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 		playerId = id;
 		playerName = name;
 		firstLogin = true;
-		dataStorage = FTBLibMod.PROXY.createDataStorage(this, FTBLibModCommon.DATA_PROVIDER_PLAYER);
+		dataStorage = FTBLib.PROXY.createDataStorage(this, FTBLibCommon.DATA_PROVIDER_PLAYER);
 		hideTeamNotification = new ConfigBoolean();
 	}
 
@@ -237,9 +236,8 @@ public class ForgePlayer implements IStringSerializable, Comparable<ForgePlayer>
 			cachedConfig.setSupergroup("player_config");
 			ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 			event.post();
-			String group = FTBLibFinals.MOD_ID;
-			event.getConfig().setGroupName(group, new TextComponentString(FTBLibFinals.MOD_NAME));
-			event.getConfig().add(group, "hide_team_notification", hideTeamNotification);
+			event.getConfig().setGroupName(FTBLib.MOD_ID, new TextComponentString(FTBLib.MOD_NAME));
+			event.getConfig().add(FTBLib.MOD_ID, "hide_team_notification", hideTeamNotification);
 		}
 
 		return cachedConfig;

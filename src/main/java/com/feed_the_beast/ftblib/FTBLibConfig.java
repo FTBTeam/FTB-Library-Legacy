@@ -11,9 +11,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author LatvianModder
  */
-@Mod.EventBusSubscriber(modid = FTBLibFinals.MOD_ID)
-@Config(modid = FTBLibFinals.MOD_ID, category = "", name = "../local/ftblib")
-@Config.LangKey(FTBLibFinals.MOD_ID)
+@Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
+@Config(modid = FTBLib.MOD_ID, category = "", name = "../local/" + FTBLib.MOD_ID)
+@Config.LangKey(FTBLib.MOD_ID)
 public class FTBLibConfig
 {
 	@Config.LangKey(GuiLang.LANG_GENERAL)
@@ -48,13 +48,13 @@ public class FTBLibConfig
 
 	public static void sync()
 	{
-		ConfigManager.sync(FTBLibFinals.MOD_ID, Config.Type.INSTANCE);
+		ConfigManager.sync(FTBLib.MOD_ID, Config.Type.INSTANCE);
 	}
 
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
-		if (event.getModID().equals(FTBLibFinals.MOD_ID))
+		if (event.getModID().equals(FTBLib.MOD_ID))
 		{
 			sync();
 		}

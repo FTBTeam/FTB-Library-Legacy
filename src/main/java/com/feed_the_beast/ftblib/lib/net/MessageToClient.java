@@ -6,8 +6,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nullable;
-
 /**
  * @author LatvianModder
  */
@@ -19,16 +17,14 @@ public abstract class MessageToClient<E extends MessageToClient<E>> extends Mess
 		return Side.CLIENT;
 	}
 
-	public final void sendTo(@Nullable EntityPlayer player)
+	public final void sendTo(EntityPlayer player)
 	{
-		if (player != null)
-		{
-			getWrapper().sendTo(this, (EntityPlayerMP) player);
-		}
-		else
-		{
-			getWrapper().sendToAll(this);
-		}
+		getWrapper().sendTo(this, (EntityPlayerMP) player);
+	}
+
+	public final void sendToAll()
+	{
+		getWrapper().sendToAll(this);
 	}
 
 	public final void sendToDimension(int dim)

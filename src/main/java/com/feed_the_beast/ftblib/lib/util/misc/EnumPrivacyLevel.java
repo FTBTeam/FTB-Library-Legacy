@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -18,7 +18,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 	TEAM("team");
 
 	public static final EnumPrivacyLevel[] VALUES = values();
-	public static final LangKey ENUM_LANG_KEY = FTBLibFinals.lang("privacy");
+	public static final LangKey ENUM_LANG_KEY = FTBLibLang.get("privacy");
 	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.create(PUBLIC, VALUES);
 
 	private final String name;
@@ -27,7 +27,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 	EnumPrivacyLevel(String n)
 	{
 		name = n;
-		langKey = FTBLibFinals.lang("privacy." + name);
+		langKey = FTBLibLang.get("privacy." + name);
 	}
 
 	@Override

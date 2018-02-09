@@ -228,14 +228,14 @@ public class FTBLibClientEventHandler
 			return;
 		}
 
-		if (!FTBLibModClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
+		if (!FTBLibClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
 		{
 			GuiButtonSidebarGroup renderer = new GuiButtonSidebarGroup();
 			event.getButtonList().add(renderer);
 			int x, y = 0;
 			boolean addedAny;
 
-			for (SidebarButtonGroup group : FTBLibModClient.SIDEBAR_BUTTON_GROUPS)
+			for (SidebarButtonGroup group : FTBLibClient.SIDEBAR_BUTTON_GROUPS)
 			{
 				x = 0;
 				addedAny = false;

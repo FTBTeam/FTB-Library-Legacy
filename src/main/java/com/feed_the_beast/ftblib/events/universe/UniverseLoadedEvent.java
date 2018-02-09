@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.events.universe;
 
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 
 /**
@@ -33,9 +32,10 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 			data = nbt;
 		}
 
-		public NBTTagCompound getData(ResourceLocation id)
+		public NBTTagCompound getData(String id)
 		{
-			return data.getCompoundTag(id.toString());
+			NBTTagCompound tag = data.getCompoundTag(id);
+			return tag.hasNoTags() ? data.getCompoundTag(id + ":data") : tag;
 		}
 	}
 
@@ -49,9 +49,10 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 			data = nbt;
 		}
 
-		public NBTTagCompound getData(ResourceLocation id)
+		public NBTTagCompound getData(String id)
 		{
-			return data.getCompoundTag(id.toString());
+			NBTTagCompound tag = data.getCompoundTag(id);
+			return tag.hasNoTags() ? data.getCompoundTag(id + ":data") : tag;
 		}
 	}
 

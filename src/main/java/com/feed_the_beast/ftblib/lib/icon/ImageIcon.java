@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.FTBLibFinals;
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.common.base.Objects;
@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ImageIcon extends Icon
 {
-	public static final ResourceLocation MISSING_IMAGE = FTBLibFinals.get("textures/gui/missing_image.png");
+	public static final ResourceLocation MISSING_IMAGE = new ResourceLocation(FTBLib.MOD_ID, "textures/gui/missing_image.png");
 
 	public final ResourceLocation texture;
 	public final double minU, minV, maxU, maxV;

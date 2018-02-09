@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.events.universe;
 
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * @author LatvianModder
@@ -17,8 +16,8 @@ public class UniverseSavedEvent extends UniverseEvent
 		data = nbt;
 	}
 
-	public void setData(ResourceLocation id, NBTTagCompound nbt)
+	public void setData(String id, NBTTagCompound nbt)
 	{
-		data.setTag(id.toString(), nbt);
+		data.setTag(id, nbt);
 	}
 }

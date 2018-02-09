@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftblib.lib.item;
 
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -114,10 +116,37 @@ public class ItemStackSerializer
 		return builder.toString();
 	}
 
-	public static JsonElement serialize(ItemStack is)
+	public static JsonElement serialize(ItemStack is, boolean string)
 	{
-		String s = toString(is);
-		return s.isEmpty() ? JsonNull.INSTANCE : new JsonPrimitive(s);
+		if (is.isEmpty())
+		{
+			return JsonNull.INSTANCE;
+		}
+		else if (string)
+		{
+			return new JsonPrimitive(toString(is));
+		}
+
+		NBTTagCompound nbt = is.serializeNBT();
+		JsonObject json = new JsonObject();
+		json.addProperty("item", nbt.getString("id"));
+
+		if (is.getHasSubtypes())
+		{
+			json.addProperty("data", is.getMetadata());
+		}
+
+		if (is.getCount() > 1)
+		{
+			json.addProperty("count", is.getCount());
+		}
+
+		if (is.hasTagCompound())
+		{
+			json.add("nbt", JsonUtils.toJson(is.getTagCompound()));
+		}
+
+		return json;
 	}
 
 	public static ItemStack deserialize(JsonElement e)
@@ -132,14 +161,47 @@ public class ItemStackSerializer
 		}
 		else
 		{
-			try
-			{
-				return new ItemStack(JsonToNBT.getTagFromJson(e.toString()));
-			}
-			catch (Exception ex)
+			JsonObject json = e.getAsJsonObject();
+
+			if (!json.has("item"))
 			{
 				return ItemStack.EMPTY;
 			}
+
+			Item item = Item.getByNameOrId(json.get("id").getAsString());
+
+			if (item == null)
+			{
+				return ItemStack.EMPTY;
+			}
+
+			int meta = 0;
+
+			if (item.getHasSubtypes() && json.has("data"))
+			{
+				meta = json.get("data").getAsInt();
+			}
+
+			int count = 1;
+
+			if (json.has("count"))
+			{
+				count = json.get("count").getAsInt();
+			}
+
+			ItemStack stack = new ItemStack(item, count, meta);
+
+			if (stack.isEmpty())
+			{
+				return ItemStack.EMPTY;
+			}
+
+			if (json.has("nbt"))
+			{
+				stack.setTagCompound((NBTTagCompound) JsonUtils.toNBT(json.get("nbt")));
+			}
+
+			return stack;
 		}
 	}
 }

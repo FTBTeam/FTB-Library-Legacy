@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.FTBLibModCommon;
+import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
@@ -45,12 +45,12 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	@Override
 	public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
 	{
-		FTBLibModCommon.EditingConfig c = FTBLibModCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
+		FTBLibCommon.EditingConfig c = FTBLibCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
 
 		if (c != null)
 		{
 			c.callback.saveConfig(c.group, player, m.groupData);
-			FTBLibModCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
+			FTBLibCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
 		}
 	}
 }
