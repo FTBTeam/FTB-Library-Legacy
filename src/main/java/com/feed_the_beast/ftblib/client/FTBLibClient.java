@@ -151,7 +151,10 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 					ex.printStackTrace();
 				}
 			}
+		}
 
+		for (String domain : manager.getResourceDomains())
+		{
 			try
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "sidebar_buttons.json")))

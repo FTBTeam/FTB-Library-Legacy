@@ -129,7 +129,7 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public JsonElement getSerializableElement()
 	{
-		return ItemStackSerializer.serialize(getItem(), true);
+		return ItemStackSerializer.serialize(getItem(), false, true);
 	}
 
 	@Override

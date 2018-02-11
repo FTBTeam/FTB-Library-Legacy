@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +40,9 @@ public abstract class Icon
 		}
 	};
 
-	public static Icon getIcon(JsonElement json)
+	public static Icon getIcon(@Nullable JsonElement json)
 	{
-		if (json.isJsonNull())
+		if (JsonUtils.isNull(json))
 		{
 			return EMPTY;
 		}
@@ -248,5 +250,15 @@ public abstract class Icon
 	public Icon withTint(Color4I color)
 	{
 		return (isEmpty() || color == Color4I.WHITE) ? this : new IconWithTint(this, color);
+	}
+
+	public int hashCode()
+	{
+		return getJson().hashCode();
+	}
+
+	public boolean equals(Object o)
+	{
+		return o == this || o instanceof Icon && getJson().equals(((Icon) o).getJson());
 	}
 }

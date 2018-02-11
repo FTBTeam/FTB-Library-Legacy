@@ -1,9 +1,15 @@
 package com.feed_the_beast.ftblib.lib.item;
 
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 /**
@@ -18,11 +24,56 @@ public final class ItemEntry
 		return stack.isEmpty() ? EMPTY : new ItemEntry(stack);
 	}
 
+	public static ItemEntry fromJson(@Nullable JsonElement json0)
+	{
+		if (!JsonUtils.isNull(json0) && json0.isJsonObject())
+		{
+			JsonObject json = json0.getAsJsonObject();
+
+			Item item = null;
+
+			if (json.has("item"))
+			{
+				item = Item.REGISTRY.getObject(new ResourceLocation(json.get("item").getAsString()));
+			}
+
+			if (item == null || item == Items.AIR)
+			{
+				return EMPTY;
+			}
+
+			int meta = 0;
+
+			if (json.has("data") && item.getHasSubtypes())
+			{
+				meta = json.get("data").getAsInt();
+			}
+
+			NBTTagCompound nbt = null;
+
+			if (json.has("nbt"))
+			{
+				nbt = (NBTTagCompound) JsonUtils.toNBT(json.get("nbt"));
+			}
+
+			return new ItemEntry(item, meta, nbt);
+		}
+
+		return EMPTY;
+	}
+
 	public final Item item;
 	public final int metadata;
 	public final NBTTagCompound nbt;
 	private int hashCode;
 	private ItemStack stack = null;
+
+	private ItemEntry(Item i, int m, @Nullable NBTTagCompound n)
+	{
+		item = i;
+		metadata = m;
+		nbt = n;
+	}
 
 	private ItemEntry(ItemStack stack)
 	{
@@ -122,5 +173,25 @@ public final class ItemEntry
 
 		stack1.setCount(count);
 		return stack1;
+	}
+
+	public JsonObject toJson()
+	{
+		JsonObject json = new JsonObject();
+
+		ResourceLocation id = Item.REGISTRY.getNameForObject(item);
+		json.addProperty("item", id == null ? "minecraft:air" : id.toString());
+
+		if (item.getHasSubtypes())
+		{
+			json.addProperty("data", metadata);
+		}
+
+		if (nbt != null)
+		{
+			json.add("nbt", JsonUtils.toJson(nbt));
+		}
+
+		return json;
 	}
 }

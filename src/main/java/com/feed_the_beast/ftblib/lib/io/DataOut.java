@@ -219,7 +219,7 @@ public class DataOut
 
 	public void writeJson(@Nullable JsonElement element)
 	{
-		if (element == null || element.isJsonNull())
+		if (JsonUtils.isNull(element))
 		{
 			writeByte(0);
 		}

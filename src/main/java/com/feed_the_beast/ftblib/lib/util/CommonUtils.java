@@ -206,7 +206,7 @@ public class CommonUtils
 
 	public static Ingredient getIngredient(@Nullable JsonElement element)
 	{
-		if (element == null || element.isJsonNull() || element.isJsonArray() && element.getAsJsonArray().size() == 0)
+		if (JsonUtils.isNull(element) || element.isJsonArray() && element.getAsJsonArray().size() == 0)
 		{
 			return Ingredient.EMPTY;
 		}

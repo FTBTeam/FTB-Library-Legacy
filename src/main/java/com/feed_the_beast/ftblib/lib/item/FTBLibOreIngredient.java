@@ -15,7 +15,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -38,7 +38,7 @@ public class FTBLibOreIngredient extends Ingredient
 	private ItemStack[] array = null;
 	private int lastSizeA = -1, lastSizeL = -1;
 
-	public FTBLibOreIngredient(String ore)
+	public FTBLibOreIngredient(String ore, @Nullable Map<ItemEntry, ItemStack> map)
 	{
 		super(0);
 
@@ -49,7 +49,12 @@ public class FTBLibOreIngredient extends Ingredient
 		else if (ore.endsWith("*"))
 		{
 			ores = NonNullList.create();
-			Map<ItemEntry, ItemStack> map = new HashMap<>();
+
+			if (map == null)
+			{
+				map = new LinkedHashMap<>();
+			}
+
 			ore = ore.substring(0, ore.length() - 1);
 
 			for (String ore1 : OreDictionary.getOreNames())
@@ -74,6 +79,11 @@ public class FTBLibOreIngredient extends Ingredient
 		{
 			ores = OreDictionary.getOres(ore);
 		}
+	}
+
+	public FTBLibOreIngredient(String ore)
+	{
+		this(ore, null);
 	}
 
 	@Override

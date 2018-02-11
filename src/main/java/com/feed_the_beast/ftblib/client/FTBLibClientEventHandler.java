@@ -205,7 +205,7 @@ public class FTBLibClientEventHandler
 
 			if (!ores.isEmpty())
 			{
-				event.getToolTip().add(StringUtils.translate("ftbl_client.general.item_ore_names.item_tooltip"));
+				event.getToolTip().add(StringUtils.translate("ftblib_client.general.item_ore_names.item_tooltip"));
 
 				for (String or : ores)
 				{

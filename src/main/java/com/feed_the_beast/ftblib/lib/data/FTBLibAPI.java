@@ -11,7 +11,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
-import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.net.MessageCloseGui;
@@ -68,9 +67,13 @@ public class FTBLibAPI
 				if (!failed.isEmpty())
 				{
 					notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(player), TextFormatting.RED));
-					String ids = StringJoiner.with(", ").join(failed);
-					notification.addLine(StringUtils.color(new TextComponentString(ids), TextFormatting.RED));
-					FTBLib.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate() + " " + ids);
+					FTBLib.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate());
+
+					for (ResourceLocation f : failed)
+					{
+						notification.addLine(StringUtils.color(new TextComponentString(f.toString()), TextFormatting.RED));
+						FTBLib.LOGGER.warn("- " + f);
+					}
 				}
 
 				notification.setImportant(true);

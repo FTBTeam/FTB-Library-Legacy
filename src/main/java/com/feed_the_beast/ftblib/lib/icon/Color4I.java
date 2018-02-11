@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.ColorUtils;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -26,7 +27,7 @@ public class Color4I extends Icon
 {
 	public static Color4I fromJson(@Nullable JsonElement element)
 	{
-		if (element == null || element.isJsonNull())
+		if (JsonUtils.isNull(element))
 		{
 			return Icon.EMPTY;
 		}
@@ -235,7 +236,7 @@ public class Color4I extends Icon
 
 	public boolean equals(Object o)
 	{
-		return o == this || (o != null && o.hashCode() == rgba());
+		return o == this || (o instanceof Color4I && o.hashCode() == rgba());
 	}
 
 	public String toString()

@@ -174,6 +174,24 @@ public class GuiHelper
 		GlStateManager.enableTexture2D();
 	}
 
+	public static void drawRectWithShade(int x, int y, int w, int h, Color4I col, int intensity)
+	{
+		GlStateManager.disableTexture2D();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		addRectToBuffer(buffer, x, y, w - 1, 1, col);
+		addRectToBuffer(buffer, x, y + 1, 1, h - 1, col);
+		col = col.mutable().addBrightness(-intensity);
+		addRectToBuffer(buffer, x + w - 1, y, 1, 1, col);
+		addRectToBuffer(buffer, x, y + h - 1, 1, 1, col);
+		col = col.mutable().addBrightness(-intensity);
+		addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, col);
+		addRectToBuffer(buffer, x + 1, y + h - 1, w - 1, 1, col);
+		tessellator.draw();
+		GlStateManager.enableTexture2D();
+	}
+
 	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay, Color4I color)
 	{
 		if (stack.isEmpty() || !color.isEmpty() && color.alphai() < 100) //TODO: Figure out how to change color

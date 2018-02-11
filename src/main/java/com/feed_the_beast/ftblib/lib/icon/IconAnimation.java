@@ -43,7 +43,14 @@ public class IconAnimation extends Icon
 		{
 			if (!o.isEmpty())
 			{
-				list.add(o);
+				if (o instanceof IconAnimation)
+				{
+					list.addAll(((IconAnimation) o).list);
+				}
+				else
+				{
+					list.add(o);
+				}
 			}
 		}
 
@@ -57,21 +64,6 @@ public class IconAnimation extends Icon
 	public boolean isEmpty()
 	{
 		return list.isEmpty();
-	}
-
-	public int getItemCount()
-	{
-		return list.size();
-	}
-
-	public Icon getObject(int index)
-	{
-		if (index < 0 || index >= list.size())
-		{
-			return current;
-		}
-
-		return list.get(index);
 	}
 
 	public void setIndex(int i)

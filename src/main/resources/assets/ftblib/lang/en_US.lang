@@ -50,7 +50,7 @@ ftblib.dside.left=Left
 ftblib.dside.right=Right
 
 # FTBLib Lang
-ftbl=FTBLib
+ftblib=FTBLib
 wip=Work In Progress!
 deprecated=This method is deprecated, please use %s
 example=Example:
@@ -95,12 +95,12 @@ ftblib.teams.autocreate_mp=Autocreate on Multiplayer
 ftblib.teams.max_team_chat_history=Max Chat History
 
 # Client Config
-ftbl_client.general.item_ore_names=Display Item OreDictionary names
-ftbl_client.general.item_ore_names.item_tooltip=Ore Dictionary Names:
-ftbl_client.general.item_nbt=Display Item NBT
-ftbl_client.general.action_buttons=Action Buttons
-ftbl_client.general.mirror_commands=Mirror /ftbc Commands
-ftbl_client.general.replace_vanilla_status_messages=Replace vanilla status messages
+ftblib_client.general.item_ore_names=Display Item OreDictionary names
+ftblib_client.general.item_ore_names.item_tooltip=Ore Dictionary Names:
+ftblib_client.general.item_nbt=Display Item NBT
+ftblib_client.general.action_buttons=Action Buttons
+ftblib_client.general.mirror_commands=Mirror /ftbc Commands
+ftblib_client.general.replace_vanilla_status_messages=Replace vanilla status messages
 
 # Player Settings
 player_config=My Server Settings

@@ -116,9 +116,9 @@ public class ItemStackSerializer
 		return builder.toString();
 	}
 
-	public static JsonElement serialize(ItemStack is, boolean string)
+	public static JsonElement serialize(ItemStack is, boolean forceNonnull, boolean string)
 	{
-		if (is.isEmpty())
+		if (!forceNonnull && is.isEmpty())
 		{
 			return JsonNull.INSTANCE;
 		}
@@ -127,9 +127,9 @@ public class ItemStackSerializer
 			return new JsonPrimitive(toString(is));
 		}
 
-		NBTTagCompound nbt = is.serializeNBT();
 		JsonObject json = new JsonObject();
-		json.addProperty("item", nbt.getString("id"));
+		ResourceLocation id = Item.REGISTRY.getNameForObject(is.getItem());
+		json.addProperty("item", id == null ? "minecraft:air" : id.toString());
 
 		if (is.getHasSubtypes())
 		{
